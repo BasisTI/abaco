@@ -1,0 +1,58 @@
+{
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipName": "analise",
+      "otherEntityName": "analise",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "relationshipName": "funcionalidade",
+      "otherEntityName": "funcionalidade",
+      "otherEntityRelationshipName": "funcaoDados"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "relationshipName": "fatorAjuste",
+      "otherEntityName": "fatorAjuste",
+      "otherEntityField": "nome"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "relationshipName": "rlr",
+      "otherEntityName": "rlr",
+      "otherEntityRelationshipName": "funcaoDados"
+    },
+    {
+      "relationshipName": "alr",
+      "otherEntityName": "alr",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "tipo",
+      "comment": "<Enter note text here>",
+      "fieldType": "TipoFuncaoDados",
+      "fieldValues": "ALI,AIE"
+    },
+    {
+      "fieldName": "complexidade",
+      "comment": "<Enter note text here>",
+      "fieldType": "Complexidade",
+      "fieldValues": "BAIXA,MEDIA,ALTA"
+    },
+    {
+      "fieldName": "pf",
+      "fieldType": "BigDecimal"
+    }
+  ],
+  "changelogDate": "20170307193249",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "entityTableName": "funcao_dados"
+}

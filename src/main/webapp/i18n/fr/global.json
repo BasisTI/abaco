@@ -7,6 +7,21 @@
             "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
             "entities": {
                 "main": "Entités",
+                "organizacao": "Organizacao",
+                "manual": "Manual",
+                "sistema": "Sistema",
+                "modulo": "Modulo",
+                "funcionalidade": "Funcionalidade",
+                "analise": "Analise",
+                "fatorAjuste": "Fator Ajuste",
+                "rlr": "Rlr",
+                "der": "Der",
+                "esforcoFase": "Esforco Fase",
+                "fase": "Fase",
+                "contrato": "Contrato",
+                "funcaoDados": "Funcao Dados",
+                "funcaoTransacao": "Funcao Transacao",
+                "alr": "Alr",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

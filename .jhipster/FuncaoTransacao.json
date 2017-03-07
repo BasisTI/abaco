@@ -1,0 +1,52 @@
+{
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipName": "analise",
+      "otherEntityName": "analise",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "relationshipName": "funcionalidade",
+      "otherEntityName": "funcionalidade",
+      "otherEntityRelationshipName": "funcaoTransacao"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "relationshipName": "fatorAjuste",
+      "otherEntityName": "fatorAjuste",
+      "otherEntityField": "nome"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "relationshipName": "alr",
+      "otherEntityName": "alr",
+      "otherEntityRelationshipName": "funcaoTransacao"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "tipo",
+      "comment": "<Enter note text here>",
+      "fieldType": "TipoFuncaoTransacao",
+      "fieldValues": "EE,SE,CE"
+    },
+    {
+      "fieldName": "complexidade",
+      "fieldType": "Complexidade",
+      "fieldValues": "BAIXA,MEDIA,ALTA"
+    },
+    {
+      "fieldName": "pf",
+      "comment": "<Enter note text here>",
+      "fieldType": "BigDecimal"
+    }
+  ],
+  "changelogDate": "20170307193250",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "entityTableName": "funcao_transacao"
+}

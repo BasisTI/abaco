@@ -1,0 +1,26 @@
+{
+    "abacoApp": {
+        "sistema" : {
+            "home": {
+                "title": "Sistemas",
+                "createLabel": "Criar novo Sistema",
+                "createOrEditLabel": "Criar ou editar Sistema",
+                "search": "Pesquisar por Sistema"
+            },
+            "created": "Um novo Sistema é criado com o identificador {{ param }}",
+            "updated": "Um Sistema é atualizado com o identificador {{ param }}",
+            "deleted": "Um Sistema é deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Sistema {{ id }}?"
+            },
+            "detail": {
+                "title": "Sistema"
+            },
+            "sigla": "Sigla",
+            "nome": "Nome",
+            "numeroOcorrencia": "Numero Ocorrencia",
+            "organizacao": "Organizacao",
+            "modulo": "Modulo"
+        }
+    }
+}

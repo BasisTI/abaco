@@ -1,0 +1,22 @@
+{
+    "abacoApp": {
+        "fase" : {
+            "home": {
+                "title": "Fases",
+                "createLabel": "Criar novo Fase",
+                "createOrEditLabel": "Criar ou editar Fase",
+                "search": "Pesquisar por Fase"
+            },
+            "created": "Um novo Fase é criado com o identificador {{ param }}",
+            "updated": "Um Fase é atualizado com o identificador {{ param }}",
+            "deleted": "Um Fase é deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Fase {{ id }}?"
+            },
+            "detail": {
+                "title": "Fase"
+            },
+            "nome": "Nome"
+        }
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "abacoApp": {
+        "contrato" : {
+            "home": {
+                "title": "Contratoes",
+                "createLabel": "Criar novo Contrato",
+                "createOrEditLabel": "Criar ou editar Contrato",
+                "search": "Pesquisar por Contrato"
+            },
+            "created": "Um novo Contrato é criado com o identificador {{ param }}",
+            "updated": "Um Contrato é atualizado com o identificador {{ param }}",
+            "deleted": "Um Contrato é deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Contrato {{ id }}?"
+            },
+            "detail": {
+                "title": "Contrato"
+            },
+            "numeroContrato": "Numero Contrato",
+            "dataInicioVigencia": "Data Inicio Vigencia",
+            "dataFimVigencia": "Data Fim Vigencia",
+            "manual": "Manual"
+        }
+    }
+}

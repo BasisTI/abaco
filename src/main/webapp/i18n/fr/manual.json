@@ -1,0 +1,27 @@
+{
+    "abacoApp": {
+        "manual" : {
+            "home": {
+                "title": "Manuals",
+                "createLabel": "Créer un nouveau Manual",
+                "createOrEditLabel": "Créer ou éditer un Manual",
+                "search": "Recherche pour Manual"
+            },
+            "created": "Un nouveau Manual a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Manual avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Manual avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Manual {{ id }} ?"
+            },
+            "detail": {
+                "title": "Manual"
+            },
+            "nome": "Nome",
+            "observacao": "Observacao",
+            "valorVariacaoEstimada": "Valor Variacao Estimada",
+            "valorVariacaoIndicativa": "Valor Variacao Indicativa",
+            "arquivoManual": "Arquivo Manual",
+            "esforcoFase": "Esforco Fase"
+        }
+    }
+}

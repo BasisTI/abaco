@@ -1,0 +1,80 @@
+<div>
+    <h2>
+        <span jhiTranslate="abacoApp.manual.home.title">Manuals</span>
+        <button class="btn btn-primary float-right create-manual" [routerLink]="['/', { outlets: { popup: ['manual-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span class="hidden-sm-down"  jhiTranslate="abacoApp.manual.home.createLabel">
+            Create new Manual
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-sm-12 no-padding-right">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'abacoApp.manual.home.search' | translate }}">
+                    <button class="input-group-addon btn btn-info" (click)="search(currentSearch)">
+                        <span class="fa fa-search"></span>
+                    </button>
+                    <button class="input-group-addon btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                        <span class="fa fa-trash-o"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="manuals">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="abacoApp.manual.nome">Nome</span></th>
+            <th><span jhiTranslate="abacoApp.manual.observacao">Observacao</span></th>
+            <th><span jhiTranslate="abacoApp.manual.valorVariacaoEstimada">Valor Variacao Estimada</span></th>
+            <th><span jhiTranslate="abacoApp.manual.valorVariacaoIndicativa">Valor Variacao Indicativa</span></th>
+            <th><span jhiTranslate="abacoApp.manual.arquivoManual">Arquivo Manual</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let manual of manuals ;trackBy: trackId">
+                <td><a [routerLink]="['../manual', manual.id ]">{{manual.id}}</a></td>
+                <td>{{manual.nome}}</td>
+                <td>{{manual.observacao}}</td>
+                <td>{{manual.valorVariacaoEstimada}}</td>
+                <td>{{manual.valorVariacaoIndicativa}}</td>
+                <td>
+                    <a *ngIf="manual.arquivoManual" (click)="openFile(manual.arquivoManualContentType, manual.arquivoManual)" jhiTranslate="entity.action.open">open</a>
+                    <span *ngIf="manual.arquivoManual">{{manual.arquivoManualContentType}}, {{byteSize(manual.arquivoManual)}}</span>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../manual', manual.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="hidden-md-down" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'manual/'+ manual.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="hidden-md-down" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'manual/'+ manual.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="hidden-md-down" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

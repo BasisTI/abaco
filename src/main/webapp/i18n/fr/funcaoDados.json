@@ -1,0 +1,29 @@
+{
+    "abacoApp": {
+        "funcaoDados" : {
+            "home": {
+                "title": "FuncaoDados",
+                "createLabel": "Créer un nouveau Funcao Dados",
+                "createOrEditLabel": "Créer ou éditer un Funcao Dados",
+                "search": "Recherche pour Funcao Dados"
+            },
+            "created": "Un nouveau Funcao Dados a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Funcao Dados avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Funcao Dados avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Funcao Dados {{ id }} ?"
+            },
+            "detail": {
+                "title": "Funcao Dados"
+            },
+            "tipo": "Tipo",
+            "complexidade": "Complexidade",
+            "pf": "Pf",
+            "analise": "Analise",
+            "funcionalidade": "Funcionalidade",
+            "fatorAjuste": "Fator Ajuste",
+            "rlr": "Rlr",
+            "alr": "Alr"
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "abacoApp": {
+        "alr" : {
+            "home": {
+                "title": "Alrs",
+                "createLabel": "Criar novo Alr",
+                "createOrEditLabel": "Criar ou editar Alr",
+                "search": "Pesquisar por Alr"
+            },
+            "created": "Um novo Alr é criado com o identificador {{ param }}",
+            "updated": "Um Alr é atualizado com o identificador {{ param }}",
+            "deleted": "Um Alr é deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Alr {{ id }}?"
+            },
+            "detail": {
+                "title": "Alr"
+            },
+            "funcaoTransacao": "Funcao Transacao",
+            "funcaoDados": "Funcao Dados"
+        }
+    }
+}

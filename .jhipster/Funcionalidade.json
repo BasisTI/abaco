@@ -1,0 +1,37 @@
+{
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipName": "modulo",
+      "otherEntityName": "modulo",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipName": "funcaoDados",
+      "otherEntityName": "funcaoDados",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipName": "funcaoTransacao",
+      "otherEntityName": "funcaoTransacao",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "changelogDate": "20170307193241",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "entityTableName": "funcionalidade"
+}

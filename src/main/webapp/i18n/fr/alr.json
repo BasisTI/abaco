@@ -1,0 +1,23 @@
+{
+    "abacoApp": {
+        "alr" : {
+            "home": {
+                "title": "Alrs",
+                "createLabel": "Créer un nouveau Alr",
+                "createOrEditLabel": "Créer ou éditer un Alr",
+                "search": "Recherche pour Alr"
+            },
+            "created": "Un nouveau Alr a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Alr avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Alr avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Alr {{ id }} ?"
+            },
+            "detail": {
+                "title": "Alr"
+            },
+            "funcaoTransacao": "Funcao Transacao",
+            "funcaoDados": "Funcao Dados"
+        }
+    }
+}

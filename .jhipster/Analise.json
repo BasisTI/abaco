@@ -1,0 +1,89 @@
+{
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "relationshipName": "sistema",
+      "otherEntityName": "sistema",
+      "otherEntityField": "nome"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "relationshipName": "funcaoDados",
+      "otherEntityName": "funcaoDados",
+      "otherEntityRelationshipName": "analise"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "relationshipName": "funcaoTransacao",
+      "otherEntityName": "funcaoTransacao",
+      "otherEntityRelationshipName": "analise"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "numeroOs",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tipoContagem",
+      "comment": "<Enter note text here>",
+      "fieldType": "MetodoContagem",
+      "fieldValues": "DETALHADA,INDICATIVA,ESTIMADA"
+    },
+    {
+      "fieldName": "valorAjuste",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "pfTotal",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "escopo",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "maxlength"
+      ],
+      "fieldValidateRulesMaxlength": "4000"
+    },
+    {
+      "fieldName": "fronteiras",
+      "comment": "<Enter note text here>",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "maxlength"
+      ],
+      "fieldValidateRulesMaxlength": "4000"
+    },
+    {
+      "fieldName": "documentacao",
+      "comment": "<Enter note text here>",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "maxlength"
+      ],
+      "fieldValidateRulesMaxlength": "4000"
+    },
+    {
+      "fieldName": "tipoAnalise",
+      "comment": "<Enter note text here>",
+      "fieldType": "TipoAnalise",
+      "fieldValues": "DESENVOLVIMENTO,MELHORIA,APLICACAO"
+    },
+    {
+      "fieldName": "propositoContagem",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "maxlength"
+      ],
+      "fieldValidateRulesMaxlength": "4000"
+    }
+  ],
+  "changelogDate": "20170307193242",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "javadoc": "<Enter note text here>",
+  "entityTableName": "analise"
+}

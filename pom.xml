@@ -665,7 +665,7 @@
                     <changeLogFile>src/main/resources/config/liquibase/master.xml</changeLogFile>
                     <diffChangeLogFile>src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
                     <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://localhost:5432/abaco</url>
+                    <url>jdbc:postgresql://192.168.99.100:32768/abaco</url>
                     <defaultSchemaName></defaultSchemaName>
                     <username>abaco</username>
                     <password></password>

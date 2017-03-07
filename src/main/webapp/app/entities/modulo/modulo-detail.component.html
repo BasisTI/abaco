@@ -1,0 +1,31 @@
+
+<div *ngIf="modulo">
+    <h2><span jhiTranslate="abacoApp.modulo.detail.title">Modulo</span> {{modulo.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="abacoApp.modulo.nome">Nome</span></dt>
+        <dd>
+            <span>{{modulo.nome}}</span>
+        </dd>
+        <dt><span jhiTranslate="abacoApp.modulo.sistema">Sistema</span></dt>
+        <dd>
+            <div *ngIf="modulo.sistema">
+                <a [routerLink]="['/sistema', modulo.sistema?.id]">{{modulo.sistema?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'modulo/'+ modulo.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

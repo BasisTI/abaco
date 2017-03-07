@@ -1,0 +1,22 @@
+{
+    "abacoApp": {
+        "fase" : {
+            "home": {
+                "title": "Fases",
+                "createLabel": "Create a new Fase",
+                "createOrEditLabel": "Create or edit a Fase",
+                "search": "Search for Fase"
+            },
+            "created": "A new Fase is created with identifier {{ param }}",
+            "updated": "A Fase is updated with identifier {{ param }}",
+            "deleted": "A Fase is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Fase {{ id }}?"
+            },
+            "detail": {
+                "title": "Fase"
+            },
+            "nome": "Nome"
+        }
+    }
+}

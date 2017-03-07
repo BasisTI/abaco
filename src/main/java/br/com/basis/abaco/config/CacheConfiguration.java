@@ -43,6 +43,33 @@ public class CacheConfiguration {
             cm.createCache(br.com.basis.abaco.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(br.com.basis.abaco.domain.User.class.getName() + ".authorities", jcacheConfiguration);
             cm.createCache(br.com.basis.abaco.domain.SocialUserConnection.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Organizacao.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Organizacao.class.getName() + ".sistemas", jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Manual.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Manual.class.getName() + ".esforcoFases", jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Sistema.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Sistema.class.getName() + ".modulos", jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Modulo.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Modulo.class.getName() + ".funcionalidades", jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Funcionalidade.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Analise.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Analise.class.getName() + ".funcaoDados", jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Analise.class.getName() + ".funcaoTransacaos", jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.FatorAjuste.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Rlr.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Rlr.class.getName() + ".ders", jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Der.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.EsforcoFase.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Fase.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Contrato.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.FuncaoDados.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.FuncaoDados.class.getName() + ".funcionalidades", jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.FuncaoDados.class.getName() + ".rlrs", jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.FuncaoTransacao.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.FuncaoTransacao.class.getName() + ".funcionalidades", jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.FuncaoTransacao.class.getName() + ".alrs", jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Alr.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.Alr.class.getName() + ".funcaoDados", jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

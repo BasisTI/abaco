@@ -1,0 +1,27 @@
+{
+    "abacoApp": {
+        "fatorAjuste" : {
+            "home": {
+                "title": "Fator Ajustes",
+                "createLabel": "Criar novo Fator Ajuste",
+                "createOrEditLabel": "Criar ou editar Fator Ajuste",
+                "search": "Pesquisar por Fator Ajuste"
+            },
+            "created": "Um novo Fator Ajuste é criado com o identificador {{ param }}",
+            "updated": "Um Fator Ajuste é atualizado com o identificador {{ param }}",
+            "deleted": "Um Fator Ajuste é deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Fator Ajuste {{ id }}?"
+            },
+            "detail": {
+                "title": "Fator Ajuste"
+            },
+            "nome": "Nome",
+            "fator": "Fator",
+            "ativo": "Ativo",
+            "tipoAjuste": "Tipo Ajuste",
+            "impacto": "Impacto",
+            "manual": "Manual"
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipName": "organizacao",
+      "otherEntityName": "organizacao",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "relationshipName": "modulo",
+      "otherEntityName": "modulo",
+      "otherEntityRelationshipName": "sistema"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "sigla",
+      "comment": "<Enter note text here>",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "maxlength"
+      ],
+      "fieldValidateRulesMaxlength": "20"
+    },
+    {
+      "fieldName": "nome",
+      "comment": "<Enter note text here>",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "numeroOcorrencia",
+      "comment": "<Enter note text here>",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20170307193239",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "entityTableName": "sistema"
+}

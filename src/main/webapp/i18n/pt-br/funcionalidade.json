@@ -1,0 +1,25 @@
+{
+    "abacoApp": {
+        "funcionalidade" : {
+            "home": {
+                "title": "Funcionalidades",
+                "createLabel": "Criar novo Funcionalidade",
+                "createOrEditLabel": "Criar ou editar Funcionalidade",
+                "search": "Pesquisar por Funcionalidade"
+            },
+            "created": "Um novo Funcionalidade é criado com o identificador {{ param }}",
+            "updated": "Um Funcionalidade é atualizado com o identificador {{ param }}",
+            "deleted": "Um Funcionalidade é deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Funcionalidade {{ id }}?"
+            },
+            "detail": {
+                "title": "Funcionalidade"
+            },
+            "nome": "Nome",
+            "modulo": "Modulo",
+            "funcaoDados": "Funcao Dados",
+            "funcaoTransacao": "Funcao Transacao"
+        }
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "abacoApp": {
+        "Complexidade" : {
+            "null": "",
+            "BAIXA": "BAIXA",
+            "MEDIA": "MEDIA",
+            "ALTA": "ALTA"
+        }
+    }
+}

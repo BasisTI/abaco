@@ -1,0 +1,33 @@
+{
+    "abacoApp": {
+        "analise" : {
+            "home": {
+                "title": "Analises",
+                "createLabel": "Create a new Analise",
+                "createOrEditLabel": "Create or edit a Analise",
+                "search": "Search for Analise"
+            },
+            "created": "A new Analise is created with identifier {{ param }}",
+            "updated": "A Analise is updated with identifier {{ param }}",
+            "deleted": "A Analise is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Analise {{ id }}?"
+            },
+            "detail": {
+                "title": "Analise"
+            },
+            "numeroOs": "Numero Os",
+            "tipoContagem": "Tipo Contagem",
+            "valorAjuste": "Valor Ajuste",
+            "pfTotal": "Pf Total",
+            "escopo": "Escopo",
+            "fronteiras": "Fronteiras",
+            "documentacao": "Documentacao",
+            "tipoAnalise": "Tipo Analise",
+            "propositoContagem": "Proposito Contagem",
+            "sistema": "Sistema",
+            "funcaoDados": "Funcao Dados",
+            "funcaoTransacao": "Funcao Transacao"
+        }
+    }
+}

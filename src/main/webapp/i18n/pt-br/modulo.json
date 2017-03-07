@@ -1,0 +1,24 @@
+{
+    "abacoApp": {
+        "modulo" : {
+            "home": {
+                "title": "Modulos",
+                "createLabel": "Criar novo Modulo",
+                "createOrEditLabel": "Criar ou editar Modulo",
+                "search": "Pesquisar por Modulo"
+            },
+            "created": "Um novo Modulo é criado com o identificador {{ param }}",
+            "updated": "Um Modulo é atualizado com o identificador {{ param }}",
+            "deleted": "Um Modulo é deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Modulo {{ id }}?"
+            },
+            "detail": {
+                "title": "Modulo"
+            },
+            "nome": "Nome",
+            "sistema": "Sistema",
+            "funcionalidade": "Funcionalidade"
+        }
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "abacoApp": {
+        "MetodoContagem" : {
+            "null": "",
+            "DETALHADA": "DETALHADA",
+            "INDICATIVA": "INDICATIVA",
+            "ESTIMADA": "ESTIMADA"
+        }
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "abacoApp": {
+        "esforcoFase" : {
+            "home": {
+                "title": "EsforcoFases",
+                "createLabel": "Créer un nouveau Esforco Fase",
+                "createOrEditLabel": "Créer ou éditer un Esforco Fase",
+                "search": "Recherche pour Esforco Fase"
+            },
+            "created": "Un nouveau Esforco Fase a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Esforco Fase avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Esforco Fase avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Esforco Fase {{ id }} ?"
+            },
+            "detail": {
+                "title": "Esforco Fase"
+            },
+            "esforco": "Esforco",
+            "manual": "Manual",
+            "fase": "Fase"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <!--
+        Added the constraints for entity Funcionalidade.
+    -->
+    <changeSet id="20170307193241-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="modulo_id"
+                                 baseTableName="funcionalidade"
+                                 constraintName="fk_funcionalidade_modulo_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="modulo"/>
+
+        <addForeignKeyConstraint baseColumnNames="funcao_dados_id"
+                                 baseTableName="funcionalidade"
+                                 constraintName="fk_funcionalidade_funcao_dados_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="funcao_dados"/>
+
+        <addForeignKeyConstraint baseColumnNames="funcao_transacao_id"
+                                 baseTableName="funcionalidade"
+                                 constraintName="fk_funcionalidade_funcao_transacao_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="funcao_transacao"/>
+
+    </changeSet>
+</databaseChangeLog>

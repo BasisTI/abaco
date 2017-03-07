@@ -1,0 +1,27 @@
+{
+    "abacoApp": {
+        "organizacao" : {
+            "home": {
+                "title": "Organizacaos",
+                "createLabel": "Crear nuevo Organizacao",
+                "createOrEditLabel": "Crear o editar Organizacao",
+                "search": "Search for Organizacao"
+            },
+            "created": "Un nuevo Organizacao ha sido creado con el identificador {{ param }}",
+            "updated": "Un Organizacao ha sido actualizado con el identificador {{ param }}",
+            "deleted": "Un Organizacao ha sido eliminado con el identificador {{ param }}",
+            "delete": {
+                "question": "¿Seguro que quiere eliminar Organizacao {{ id }}?"
+            },
+            "detail": {
+                "title": "Organizacao"
+            },
+            "nome": "Nome",
+            "cnpj": "Cnpj",
+            "ativo": "Ativo",
+            "numeroOcorrencia": "Numero Ocorrencia",
+            "contrato": "Contrato",
+            "sistema": "Sistema"
+        }
+    }
+}

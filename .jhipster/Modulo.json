@@ -1,0 +1,31 @@
+{
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipName": "sistema",
+      "otherEntityName": "sistema",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "relationshipName": "funcionalidade",
+      "otherEntityName": "funcionalidade",
+      "otherEntityRelationshipName": "modulo"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "changelogDate": "20170307193240",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "entityTableName": "modulo"
+}

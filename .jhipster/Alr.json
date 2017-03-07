@@ -1,0 +1,23 @@
+{
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipName": "funcaoTransacao",
+      "otherEntityName": "funcaoTransacao",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "relationshipName": "funcaoDados",
+      "otherEntityName": "funcaoDados",
+      "otherEntityRelationshipName": "alr"
+    }
+  ],
+  "fields": [],
+  "changelogDate": "20170307193251",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "entityTableName": "alr"
+}

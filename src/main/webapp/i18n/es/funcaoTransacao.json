@@ -1,0 +1,28 @@
+{
+    "abacoApp": {
+        "funcaoTransacao" : {
+            "home": {
+                "title": "Funcao Transacaos",
+                "createLabel": "Crear nuevo Funcao Transacao",
+                "createOrEditLabel": "Crear o editar Funcao Transacao",
+                "search": "Search for Funcao Transacao"
+            },
+            "created": "Un nuevo Funcao Transacao ha sido creado con el identificador {{ param }}",
+            "updated": "Un Funcao Transacao ha sido actualizado con el identificador {{ param }}",
+            "deleted": "Un Funcao Transacao ha sido eliminado con el identificador {{ param }}",
+            "delete": {
+                "question": "¿Seguro que quiere eliminar Funcao Transacao {{ id }}?"
+            },
+            "detail": {
+                "title": "Funcao Transacao"
+            },
+            "tipo": "Tipo",
+            "complexidade": "Complexidade",
+            "pf": "Pf",
+            "analise": "Analise",
+            "funcionalidade": "Funcionalidade",
+            "fatorAjuste": "Fator Ajuste",
+            "alr": "Alr"
+        }
+    }
+}

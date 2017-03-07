@@ -1,0 +1,25 @@
+{
+    "abacoApp": {
+        "contrato" : {
+            "home": {
+                "title": "Contratoes",
+                "createLabel": "Créer un nouveau Contrato",
+                "createOrEditLabel": "Créer ou éditer un Contrato",
+                "search": "Recherche pour Contrato"
+            },
+            "created": "Un nouveau Contrato a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Contrato avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Contrato avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Contrato {{ id }} ?"
+            },
+            "detail": {
+                "title": "Contrato"
+            },
+            "numeroContrato": "Numero Contrato",
+            "dataInicioVigencia": "Data Inicio Vigencia",
+            "dataFimVigencia": "Data Fim Vigencia",
+            "manual": "Manual"
+        }
+    }
+}

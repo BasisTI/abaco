@@ -1,0 +1,54 @@
+{
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "relationshipName": "contrato",
+      "otherEntityName": "contrato",
+      "otherEntityField": "numeroContrato"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "relationshipName": "sistema",
+      "otherEntityName": "sistema",
+      "otherEntityRelationshipName": "organizacao"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "maxlength"
+      ],
+      "fieldValidateRulesMaxlength": "80"
+    },
+    {
+      "fieldName": "cnpj",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "pattern",
+        "maxlength"
+      ],
+      "fieldValidateRulesPattern": "(^(\\d{2}.\\d{3}.\\d{3}/\\d{4}-\\d{2})|(\\d{14})$)",
+      "fieldValidateRulesMaxlength": "19"
+    },
+    {
+      "fieldName": "ativo",
+      "fieldType": "Boolean",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "numeroOcorrencia",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20170307193237",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "javadoc": "<Enter note text here>",
+  "entityTableName": "organizacao"
+}

@@ -1,0 +1,39 @@
+
+<div *ngIf="contrato">
+    <h2><span jhiTranslate="abacoApp.contrato.detail.title">Contrato</span> {{contrato.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="abacoApp.contrato.numeroContrato">Numero Contrato</span></dt>
+        <dd>
+            <span>{{contrato.numeroContrato}}</span>
+        </dd>
+        <dt><span jhiTranslate="abacoApp.contrato.dataInicioVigencia">Data Inicio Vigencia</span></dt>
+        <dd>
+            <span>{{contrato.dataInicioVigencia | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span jhiTranslate="abacoApp.contrato.dataFimVigencia">Data Fim Vigencia</span></dt>
+        <dd>
+            <span>{{contrato.dataFimVigencia | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span jhiTranslate="abacoApp.contrato.manual">Manual</span></dt>
+        <dd>
+            <div *ngIf="contrato.manual">
+                <a [routerLink]="['/manual', contrato.manual?.id]">{{contrato.manual?.nome}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'contrato/'+ contrato.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

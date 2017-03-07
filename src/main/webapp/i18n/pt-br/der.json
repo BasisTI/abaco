@@ -1,0 +1,23 @@
+{
+    "abacoApp": {
+        "der" : {
+            "home": {
+                "title": "Ders",
+                "createLabel": "Criar novo Der",
+                "createOrEditLabel": "Criar ou editar Der",
+                "search": "Pesquisar por Der"
+            },
+            "created": "Um novo Der é criado com o identificador {{ param }}",
+            "updated": "Um Der é atualizado com o identificador {{ param }}",
+            "deleted": "Um Der é deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Der {{ id }}?"
+            },
+            "detail": {
+                "title": "Der"
+            },
+            "nome": "Nome",
+            "rlr": "Rlr"
+        }
+    }
+}

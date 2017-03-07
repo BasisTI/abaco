@@ -1,0 +1,91 @@
+
+
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myFatorAjusteLabel" jhiTranslate="abacoApp.fatorAjuste.home.createOrEditLabel">Create or edit a Fator Ajuste</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!fatorAjuste.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="fatorAjuste.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.fatorAjuste.nome" for="field_nome">Nome</label>
+            <input type="text" class="form-control" name="nome" id="field_nome"
+                [(ngModel)]="fatorAjuste.nome"
+            required />
+            <div [hidden]="!(editForm.controls.nome?.dirty && editForm.controls.nome?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.nome?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.fatorAjuste.fator" for="field_fator">Fator</label>
+            <input type="number" class="form-control" name="fator" id="field_fator"
+                [(ngModel)]="fatorAjuste.fator"
+            required />
+            <div [hidden]="!(editForm.controls.fator?.dirty && editForm.controls.fator?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.fator?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.fator?.errors?.number" jhiTranslate="entity.validation.number">
+                    This field should be a number.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.fatorAjuste.ativo" for="field_ativo">Ativo</label>
+            <input type="checkbox" class="form-control" name="ativo" id="field_ativo"
+                [(ngModel)]="fatorAjuste.ativo"
+             />
+            <div [hidden]="!(editForm.controls.ativo?.dirty && editForm.controls.ativo?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.ativo?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.fatorAjuste.tipoAjuste" for="field_tipoAjuste">Tipo Ajuste</label>
+            <select class="form-control" name="tipoAjuste" [(ngModel)]="fatorAjuste.tipoAjuste" id="field_tipoAjuste" >
+                <option value="PERCENTUAL" jhiTranslate="abacoApp.TipoFatorAjuste.PERCENTUAL">PERCENTUAL</option>
+                <option value="UNITARIO" jhiTranslate="abacoApp.TipoFatorAjuste.UNITARIO">UNITARIO</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.fatorAjuste.impacto" for="field_impacto">Impacto</label>
+            <select class="form-control" name="impacto" [(ngModel)]="fatorAjuste.impacto" id="field_impacto" >
+                <option value="INCLUSAO" jhiTranslate="abacoApp.ImpactoFatorAjuste.INCLUSAO">INCLUSAO</option>
+                <option value="ALTERACAO" jhiTranslate="abacoApp.ImpactoFatorAjuste.ALTERACAO">ALTERACAO</option>
+                <option value="EXCLUSAO" jhiTranslate="abacoApp.ImpactoFatorAjuste.EXCLUSAO">EXCLUSAO</option>
+                <option value="CONVERSAO" jhiTranslate="abacoApp.ImpactoFatorAjuste.CONVERSAO">CONVERSAO</option>
+                <option value="ITENS_NAO_MENSURAVEIS" jhiTranslate="abacoApp.ImpactoFatorAjuste.ITENS_NAO_MENSURAVEIS">ITENS_NAO_MENSURAVEIS</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label jhiTranslate="abacoApp.fatorAjuste.manual" for="field_manual">Manual</label>
+            <select class="form-control" id="field_manual" name="manual" [(ngModel)]="fatorAjuste.manual" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="manualOption.id === fatorAjuste.manual?.id ? fatorAjuste.manual : manualOption" *ngFor="let manualOption of manuals; trackBy: trackManualById">{{manualOption.nome}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

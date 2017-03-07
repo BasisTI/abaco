@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <!--
+        Added the constraints for entity FuncaoTransacao.
+    -->
+    <changeSet id="20170307193250-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="analise_id"
+                                 baseTableName="funcao_transacao"
+                                 constraintName="fk_funcao_transacao_analise_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="analise"/>
+
+        <addForeignKeyConstraint baseColumnNames="fator_ajuste_id"
+                                 baseTableName="funcao_transacao"
+                                 constraintName="fk_funcao_transacao_fator_ajuste_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="fator_ajuste"/>
+
+    </changeSet>
+</databaseChangeLog>

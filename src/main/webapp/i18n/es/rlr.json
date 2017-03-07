@@ -1,0 +1,24 @@
+{
+    "abacoApp": {
+        "rlr" : {
+            "home": {
+                "title": "Rlrs",
+                "createLabel": "Crear nuevo Rlr",
+                "createOrEditLabel": "Crear o editar Rlr",
+                "search": "Search for Rlr"
+            },
+            "created": "Un nuevo Rlr ha sido creado con el identificador {{ param }}",
+            "updated": "Un Rlr ha sido actualizado con el identificador {{ param }}",
+            "deleted": "Un Rlr ha sido eliminado con el identificador {{ param }}",
+            "delete": {
+                "question": "¿Seguro que quiere eliminar Rlr {{ id }}?"
+            },
+            "detail": {
+                "title": "Rlr"
+            },
+            "nome": "Nome",
+            "der": "Der",
+            "funcaoDados": "Funcao Dados"
+        }
+    }
+}

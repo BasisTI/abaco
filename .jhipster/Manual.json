@@ -1,0 +1,62 @@
+{
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "relationshipName": "esforcoFase",
+      "otherEntityName": "esforcoFase",
+      "otherEntityRelationshipName": "manual"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "nome",
+      "comment": "<Enter note text here>",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "observacao",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "maxlength"
+      ],
+      "fieldValidateRulesMaxlength": "4000"
+    },
+    {
+      "fieldName": "valorVariacaoEstimada",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": [
+        "min",
+        "max",
+        "required"
+      ],
+      "fieldValidateRulesMin": "0",
+      "fieldValidateRulesMax": "1"
+    },
+    {
+      "fieldName": "valorVariacaoIndicativa",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": [
+        "min",
+        "max",
+        "required"
+      ],
+      "fieldValidateRulesMin": "0",
+      "fieldValidateRulesMax": "1"
+    },
+    {
+      "fieldName": "arquivoManual",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any",
+      "fieldValidateRules": [
+        "maxbytes"
+      ],
+      "fieldValidateRulesMaxbytes": "20000000"
+    }
+  ],
+  "changelogDate": "20170307193238",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "entityTableName": "manual"
+}

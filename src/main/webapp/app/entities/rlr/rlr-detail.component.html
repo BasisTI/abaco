@@ -1,0 +1,31 @@
+
+<div *ngIf="rlr">
+    <h2><span jhiTranslate="abacoApp.rlr.detail.title">Rlr</span> {{rlr.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="abacoApp.rlr.nome">Nome</span></dt>
+        <dd>
+            <span>{{rlr.nome}}</span>
+        </dd>
+        <dt><span jhiTranslate="abacoApp.rlr.funcaoDados">Funcao Dados</span></dt>
+        <dd>
+            <div *ngIf="rlr.funcaoDados">
+                <a [routerLink]="['/funcao-dados', rlr.funcaoDados?.id]">{{rlr.funcaoDados?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'rlr/'+ rlr.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

@@ -1,0 +1,25 @@
+{
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipName": "rlr",
+      "otherEntityName": "rlr",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "changelogDate": "20170307193245",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "entityTableName": "der"
+}

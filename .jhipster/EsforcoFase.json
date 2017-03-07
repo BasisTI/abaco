@@ -1,0 +1,28 @@
+{
+  "fluentMethods": true,
+  "relationships": [
+    {
+      "relationshipName": "manual",
+      "otherEntityName": "manual",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "relationshipName": "fase",
+      "otherEntityName": "fase",
+      "otherEntityField": "nome"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "esforco",
+      "fieldType": "BigDecimal"
+    }
+  ],
+  "changelogDate": "20170307193246",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "entityTableName": "esforco_fase"
+}

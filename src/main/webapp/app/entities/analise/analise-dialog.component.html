@@ -1,0 +1,116 @@
+
+
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myAnaliseLabel" jhiTranslate="abacoApp.analise.home.createOrEditLabel">Create or edit a Analise</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!analise.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="analise.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.analise.numeroOs" for="field_numeroOs">Numero Os</label>
+            <input type="text" class="form-control" name="numeroOs" id="field_numeroOs"
+                [(ngModel)]="analise.numeroOs"
+             />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.analise.tipoContagem" for="field_tipoContagem">Tipo Contagem</label>
+            <select class="form-control" name="tipoContagem" [(ngModel)]="analise.tipoContagem" id="field_tipoContagem" >
+                <option value="DETALHADA" jhiTranslate="abacoApp.MetodoContagem.DETALHADA">DETALHADA</option>
+                <option value="INDICATIVA" jhiTranslate="abacoApp.MetodoContagem.INDICATIVA">INDICATIVA</option>
+                <option value="ESTIMADA" jhiTranslate="abacoApp.MetodoContagem.ESTIMADA">ESTIMADA</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.analise.valorAjuste" for="field_valorAjuste">Valor Ajuste</label>
+            <input type="number" class="form-control" name="valorAjuste" id="field_valorAjuste"
+                [(ngModel)]="analise.valorAjuste"
+             />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.analise.pfTotal" for="field_pfTotal">Pf Total</label>
+            <input type="text" class="form-control" name="pfTotal" id="field_pfTotal"
+                [(ngModel)]="analise.pfTotal"
+             />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.analise.escopo" for="field_escopo">Escopo</label>
+            <input type="text" class="form-control" name="escopo" id="field_escopo"
+                [(ngModel)]="analise.escopo"
+            maxlength="4000" />
+            <div [hidden]="!(editForm.controls.escopo?.dirty && editForm.controls.escopo?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.escopo?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 4000 }">
+                   This field cannot be longer than 4000 characters.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.analise.fronteiras" for="field_fronteiras">Fronteiras</label>
+            <input type="text" class="form-control" name="fronteiras" id="field_fronteiras"
+                [(ngModel)]="analise.fronteiras"
+            maxlength="4000" />
+            <div [hidden]="!(editForm.controls.fronteiras?.dirty && editForm.controls.fronteiras?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.fronteiras?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 4000 }">
+                   This field cannot be longer than 4000 characters.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.analise.documentacao" for="field_documentacao">Documentacao</label>
+            <input type="text" class="form-control" name="documentacao" id="field_documentacao"
+                [(ngModel)]="analise.documentacao"
+            maxlength="4000" />
+            <div [hidden]="!(editForm.controls.documentacao?.dirty && editForm.controls.documentacao?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.documentacao?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 4000 }">
+                   This field cannot be longer than 4000 characters.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.analise.tipoAnalise" for="field_tipoAnalise">Tipo Analise</label>
+            <select class="form-control" name="tipoAnalise" [(ngModel)]="analise.tipoAnalise" id="field_tipoAnalise" >
+                <option value="DESENVOLVIMENTO" jhiTranslate="abacoApp.TipoAnalise.DESENVOLVIMENTO">DESENVOLVIMENTO</option>
+                <option value="MELHORIA" jhiTranslate="abacoApp.TipoAnalise.MELHORIA">MELHORIA</option>
+                <option value="APLICACAO" jhiTranslate="abacoApp.TipoAnalise.APLICACAO">APLICACAO</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.analise.propositoContagem" for="field_propositoContagem">Proposito Contagem</label>
+            <input type="text" class="form-control" name="propositoContagem" id="field_propositoContagem"
+                [(ngModel)]="analise.propositoContagem"
+            maxlength="4000" />
+            <div [hidden]="!(editForm.controls.propositoContagem?.dirty && editForm.controls.propositoContagem?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.propositoContagem?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 4000 }">
+                   This field cannot be longer than 4000 characters.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label jhiTranslate="abacoApp.analise.sistema" for="field_sistema">Sistema</label>
+            <select class="form-control" id="field_sistema" name="sistema" [(ngModel)]="analise.sistema" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="sistemaOption.id === analise.sistema?.id ? analise.sistema : sistemaOption" *ngFor="let sistemaOption of sistemas; trackBy: trackSistemaById">{{sistemaOption.nome}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>
