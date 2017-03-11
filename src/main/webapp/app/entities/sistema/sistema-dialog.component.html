@@ -52,6 +52,16 @@
                 <option [ngValue]="organizacaoOption.id === sistema.organizacao?.id ? sistema.organizacao : organizacaoOption" *ngFor="let organizacaoOption of organizacaos; trackBy: trackOrganizacaoById">{{organizacaoOption.id}}</option>
             </select>
         </div>
+
+		<h2>
+	        <span jhiTranslate="abacoApp.modulo.home.title">Modulos</span>
+	        <button class="btn btn-primary float-right create-modulo" (click)="chamarModuloPopup()" >
+	            <span class="fa fa-plus"></span>
+	        </button>
+	    </h2>
+        <jhi-modulo [noCadastroDeSistema]="true" [sistema]="sistema">Carregando...</jhi-modulo>
+
+
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">

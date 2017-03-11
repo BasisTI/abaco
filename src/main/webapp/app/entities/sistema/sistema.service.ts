@@ -1,3 +1,4 @@
+import { Modulo } from '../modulo/modulo.model';
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, BaseRequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
@@ -10,7 +11,9 @@ export class SistemaService {
     private resourceSearchUrl = 'api/_search/sistemas';
 
     constructor(private http: Http) { }
-
+    
+    public modulosDeSistema: Modulo[];
+  
     create(sistema: Sistema): Observable<Sistema> {
         let copy: Sistema = Object.assign({}, sistema);
         return this.http.post(this.resourceUrl, copy).map((res: Response) => {

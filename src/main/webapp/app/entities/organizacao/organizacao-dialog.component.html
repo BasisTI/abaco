@@ -67,7 +67,11 @@
                 <option [ngValue]="null"></option>
                 <option [ngValue]="contratoOption.id === organizacao.contrato?.id ? organizacao.contrato : contratoOption" *ngFor="let contratoOption of contratoes; trackBy: trackContratoById">{{contratoOption.numeroContrato}}</option>
             </select>
+	        <button class="btn btn-primary float-right create-contrato" [routerLink]="['/', { outlets: { popup: ['contrato-new'] } }]">
+	            <span class="fa fa-plus"></span>
+	        </button>
         </div>
+        <br/>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">

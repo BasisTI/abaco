@@ -2,6 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { AbacoSharedModule } from '../../shared';
+import { ModuloComponent } from '../modulo';
 
 import {
     SistemaService,
@@ -27,6 +28,7 @@ let ENTITY_STATES = [
         RouterModule.forRoot(ENTITY_STATES, { useHash: true })
     ],
     declarations: [
+        ModuloComponent,
         SistemaComponent,
         SistemaDetailComponent,
         SistemaDialogComponent,

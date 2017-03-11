@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Organizacao } from './organizacao.model';
 import { OrganizacaoService } from './organizacao.service';
+import { Contrato } from '../contrato/contrato.model';
 @Injectable()
 export class OrganizacaoPopupService {
     private isOpen = false;
@@ -28,6 +29,23 @@ export class OrganizacaoPopupService {
         }
     }
 
+  
+    openParaEditar (component: Component, id: number, contrato: Contrato): NgbModalRef {
+        if (this.isOpen) {
+            return;
+        }
+        this.isOpen = true;
+
+        if (id) {
+            this.organizacaoService.find(id).subscribe(organizacao => {
+                organizacao.contrato = contrato;
+                this.organizacaoModalRef(component, organizacao);
+            });
+        } else {
+            return this.organizacaoModalRef(component, new Organizacao());
+        }
+    }
+    
     organizacaoModalRef(component: Component, organizacao: Organizacao): NgbModalRef {
         let modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.organizacao = organizacao;

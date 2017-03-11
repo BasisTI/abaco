@@ -38,7 +38,7 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://192.168.99.100:32768/abaco
+        url: jdbc:postgresql://localhost:5432/abaco
         username: abaco
         password:
     jpa:

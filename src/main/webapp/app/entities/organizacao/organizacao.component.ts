@@ -8,6 +8,8 @@ import { Organizacao } from './organizacao.model';
 import { OrganizacaoService } from './organizacao.service';
 import { ITEMS_PER_PAGE, Principal } from '../../shared';
 import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
+import { OrganizacaoPopupService } from './organizacao-popup.service';
+import { OrganizacaoDialogComponent } from './organizacao-dialog.component';
 
 @Component({
     selector: 'jhi-organizacao',
@@ -25,7 +27,8 @@ organizacaos: Organizacao[];
         private alertService: AlertService,
         private eventManager: EventManager,
         private activatedRoute: ActivatedRoute,
-        private principal: Principal
+        private principal: Principal,
+        private organizacaoPopupService: OrganizacaoPopupService
     ) {
         this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
         this.jhiLanguageService.setLocations(['organizacao']);
@@ -68,6 +71,7 @@ organizacaos: Organizacao[];
             this.currentAccount = account;
         });
         this.registerChangeInOrganizacaos();
+        this.registerChangeInContrato();
     }
 
     ngOnDestroy() {
@@ -78,10 +82,17 @@ organizacaos: Organizacao[];
         return item.id;
     }
 
-
+    abrirModelEdit() {
+      this.organizacaoPopupService
+                    .openParaEditar(OrganizacaoDialogComponent, this.organizacaoService.idOrganizacaoParaInvocarModal,this.organizacaoService.contrato);
+    }
 
     registerChangeInOrganizacaos() {
         this.eventSubscriber = this.eventManager.subscribe('organizacaoListModification', (response) => this.loadAll());
+    }
+  
+    registerChangeInContrato() {
+        this.eventSubscriber = this.eventManager.subscribe('organizacaoChangeInContrato', (response) => this.abrirModelEdit());
     }
 
 

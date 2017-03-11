@@ -2,7 +2,7 @@
     "abacoApp": {
         "organizacao" : {
             "home": {
-                "title": "Organizacaos",
+                "title": "Organisations",
                 "createLabel": "Créer un nouveau Organizacao",
                 "createOrEditLabel": "Créer ou éditer un Organizacao",
                 "search": "Recherche pour Organizacao"
@@ -19,7 +19,7 @@
             "nome": "Nome",
             "cnpj": "Cnpj",
             "ativo": "Ativo",
-            "numeroOcorrencia": "Numero Ocorrencia",
+            "numeroOcorrencia": "Numéro Occurrence",
             "contrato": "Contrato",
             "sistema": "Sistema"
         }

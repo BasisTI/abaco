@@ -3,12 +3,18 @@ import { Http, Response, URLSearchParams, BaseRequestOptions } from '@angular/ht
 import { Observable } from 'rxjs/Rx';
 
 import { Organizacao } from './organizacao.model';
+import { Contrato } from '../contrato/contrato.model';
+
 @Injectable()
 export class OrganizacaoService {
 
     private resourceUrl = 'api/organizacaos';
     private resourceSearchUrl = 'api/_search/organizacaos';
 
+  
+    public idOrganizacaoParaInvocarModal;
+    public contrato: Contrato;
+    
     constructor(private http: Http) { }
 
     create(organizacao: Organizacao): Observable<Organizacao> {

@@ -62,6 +62,7 @@ export class OrganizacaoDialogComponent implements OnInit {
         this.eventManager.broadcast({ name: 'organizacaoListModification', content: 'OK'});
         this.isSaving = false;
         this.activeModal.dismiss(result);
+        this.organizacaoService.idOrganizacaoParaInvocarModal = result.id;
     }
 
     private onSaveError (error) {

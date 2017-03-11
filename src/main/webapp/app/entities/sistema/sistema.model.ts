@@ -7,7 +7,7 @@ export class Sistema {
         public nome?: string,
         public numeroOcorrencia?: string,
         public organizacao?: Organizacao,
-        public modulo?: Modulo,
+        public modulos?: Modulo[],
     ) {
     }
 }

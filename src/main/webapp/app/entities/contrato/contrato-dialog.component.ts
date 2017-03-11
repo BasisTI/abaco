@@ -9,6 +9,7 @@ import { Contrato } from './contrato.model';
 import { ContratoPopupService } from './contrato-popup.service';
 import { ContratoService } from './contrato.service';
 import { Manual, ManualService } from '../manual';
+import { Organizacao, OrganizacaoService } from '../organizacao';
 @Component({
     selector: 'jhi-contrato-dialog',
     templateUrl: './contrato-dialog.component.html'
@@ -26,9 +27,12 @@ export class ContratoDialogComponent implements OnInit {
         private alertService: AlertService,
         private contratoService: ContratoService,
         private manualService: ManualService,
-        private eventManager: EventManager
+        private organizacaoService: OrganizacaoService,
+        private eventManager: EventManager,
+        private route: ActivatedRoute,
+        private contratoPopupService: ContratoPopupService
     ) {
-        this.jhiLanguageService.setLocations(['contrato']);
+        //this.jhiLanguageService.setLocations(['contrato']);
     }
 
     ngOnInit() {
@@ -39,6 +43,7 @@ export class ContratoDialogComponent implements OnInit {
     }
     clear () {
         this.activeModal.dismiss('cancel');
+        this.eventManager.broadcast({ name: 'organizacaoChangeInContrato', content: 'OK'});
     }
 
     save () {
@@ -56,8 +61,14 @@ export class ContratoDialogComponent implements OnInit {
         this.eventManager.broadcast({ name: 'contratoListModification', content: 'OK'});
         this.isSaving = false;
         this.activeModal.dismiss(result);
+        this.invocarModalEdicaoDeOrganizacao(result);
     }
 
+    private invocarModalEdicaoDeOrganizacao(contrato: Contrato) {
+      this.organizacaoService.contrato = contrato;
+      this.eventManager.broadcast({ name: 'organizacaoChangeInContrato', content: 'OK'});
+     }
+    
     private onSaveError (error) {
         this.isSaving = false;
         this.onError(error);

@@ -109,7 +109,8 @@ public class SistemaResource {
     @Timed
     public ResponseEntity<Sistema> getSistema(@PathVariable Long id) {
         log.debug("REST request to get Sistema : {}", id);
-        Sistema sistema = sistemaRepository.findOne(id);
+        //Sistema sistema = sistemaRepository.findOne(id);
+        Sistema sistema = sistemaRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(sistema));
     }
 

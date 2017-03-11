@@ -6,6 +6,9 @@ import { EventManager, ParseLinks, PaginationUtil, JhiLanguageService, AlertServ
 
 import { Sistema } from './sistema.model';
 import { SistemaService } from './sistema.service';
+import { SistemaPopupService } from './sistema-popup.service';
+import { SistemaDialogComponent } from './sistema-dialog.component';
+import { ModuloService } from '../modulo/modulo.service';
 import { ITEMS_PER_PAGE, Principal } from '../../shared';
 import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
@@ -25,7 +28,9 @@ sistemas: Sistema[];
         private alertService: AlertService,
         private eventManager: EventManager,
         private activatedRoute: ActivatedRoute,
-        private principal: Principal
+        private principal: Principal,
+        private sistemaPopupService: SistemaPopupService,
+        private moduloService: ModuloService
     ) {
         this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
         this.jhiLanguageService.setLocations(['sistema']);
@@ -68,6 +73,7 @@ sistemas: Sistema[];
             this.currentAccount = account;
         });
         this.registerChangeInSistemas();
+        this.registerChangeInModulosDeSistema();
     }
 
     ngOnDestroy() {
@@ -78,7 +84,15 @@ sistemas: Sistema[];
         return item.id;
     }
 
+    chamarPopupSistema () {
+        console.log('Chamar popup aqui.');
+        this.sistemaPopupService.openParaEditar(SistemaDialogComponent,this.moduloService.sistemaSendoCadastrado);
 
+    }
+
+    registerChangeInModulosDeSistema () {
+        this.eventSubscriber = this.eventManager.subscribe('changeInModulosDeSistema', (response) => this.chamarPopupSistema());
+    }
 
     registerChangeInSistemas() {
         this.eventSubscriber = this.eventManager.subscribe('sistemaListModification', (response) => this.loadAll());

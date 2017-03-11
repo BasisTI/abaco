@@ -665,7 +665,7 @@
                     <changeLogFile>src/main/resources/config/liquibase/master.xml</changeLogFile>
                     <diffChangeLogFile>src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
                     <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://192.168.99.100:32768/abaco</url>
+                    <url>jdbc:postgresql://localhost:5432/abaco</url>
                     <defaultSchemaName></defaultSchemaName>
                     <username>abaco</username>
                     <password></password>
@@ -702,10 +702,10 @@
                 <configuration>
                     <executable>true</executable>
                     <fork>true</fork>
-                    <!--
-                    Enable the line below to have remote debugging of your application on port 5005
+                    
+                    <!-- Enable the line below to have remote debugging of your application on port 5005 -->
                     <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</jvmArguments>
-                    -->
+                   
                 </configuration>
             </plugin>
             <plugin>
@@ -984,9 +984,9 @@
                             <fork>true</fork>
                             <addResources>true</addResources>
                             <!--
-                            Enable the line below to have remote debugging of your application on port 5005
+                            Enable the line below to have remote debugging of your application on port 5005-->
                             <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</jvmArguments>
-                            -->
+                            
                         </configuration>
                     </plugin>
                     <plugin>

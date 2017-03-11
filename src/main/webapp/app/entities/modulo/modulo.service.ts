@@ -3,12 +3,15 @@ import { Http, Response, URLSearchParams, BaseRequestOptions } from '@angular/ht
 import { Observable } from 'rxjs/Rx';
 
 import { Modulo } from './modulo.model';
+import { Sistema } from '../sistema/sistema.model';
 @Injectable()
 export class ModuloService {
 
     private resourceUrl = 'api/modulos';
     private resourceSearchUrl = 'api/_search/modulos';
 
+    public sistemaSendoCadastrado: Sistema;
+    
     constructor(private http: Http) { }
 
     create(modulo: Modulo): Observable<Modulo> {
@@ -32,6 +35,7 @@ export class ModuloService {
     }
 
     query(req?: any): Observable<Response> {
+        console.log('query(req?: any): Observable<Response> {'+req);
         let options = this.createRequestOption(req);
         return this.http.get(this.resourceUrl, options)
         ;

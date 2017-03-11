@@ -2,7 +2,7 @@
     "abacoApp": {
         "contrato" : {
             "home": {
-                "title": "Contratoes",
+                "title": "Contratos",
                 "createLabel": "Criar novo Contrato",
                 "createOrEditLabel": "Criar ou editar Contrato",
                 "search": "Pesquisar por Contrato"
@@ -16,9 +16,9 @@
             "detail": {
                 "title": "Contrato"
             },
-            "numeroContrato": "Numero Contrato",
-            "dataInicioVigencia": "Data Inicio Vigencia",
-            "dataFimVigencia": "Data Fim Vigencia",
+            "numeroContrato": "Número Contrato",
+            "dataInicioVigencia": "Data Início Vigência",
+            "dataFimVigencia": "Data Fim Vigência",
             "manual": "Manual"
         }
     }
