@@ -84,14 +84,13 @@ sistemas: Sistema[];
         return item.id;
     }
 
-    chamarPopupSistema () {
-        console.log('Chamar popup aqui.');
+    chamarPopupSistemaEditar () {
         this.sistemaPopupService.openParaEditar(SistemaDialogComponent,this.moduloService.sistemaSendoCadastrado);
 
     }
 
     registerChangeInModulosDeSistema () {
-        this.eventSubscriber = this.eventManager.subscribe('changeInModulosDeSistema', (response) => this.chamarPopupSistema());
+        this.eventSubscriber = this.eventManager.subscribe('changeInModulosDeSistema', (response) => this.chamarPopupSistemaEditar());
     }
 
     registerChangeInSistemas() {
