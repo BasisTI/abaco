@@ -18,8 +18,12 @@
             <label class="form-control-label" jhiTranslate="abacoApp.organizacao.nome" for="field_nome">Nome</label>
             <input type="text" class="form-control" name="nome" id="field_nome"
                 [(ngModel)]="organizacao.nome"
-            maxlength="80" />
+            maxlength="80" required />
             <div [hidden]="!(editForm.controls.nome?.dirty && editForm.controls.nome?.invalid)">
+                <small class="form-text text-danger"
+                       [hidden]="!editForm.controls.nome?.errors?.required" jhiTranslate="entity.validation.required">
+                    This field is required.
+                </small>
                 <small class="form-text text-danger"
                    [hidden]="!editForm.controls.nome?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 80 }">
                    This field cannot be longer than 80 characters.

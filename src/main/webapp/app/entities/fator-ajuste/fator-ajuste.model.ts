@@ -2,7 +2,6 @@
 const enum TipoFatorAjuste {
     'PERCENTUAL',
     'UNITARIO'
-
 };
 
 const enum ImpactoFatorAjuste {
@@ -11,7 +10,6 @@ const enum ImpactoFatorAjuste {
     'EXCLUSAO',
     'CONVERSAO',
     'ITENS_NAO_MENSURAVEIS'
-
 };
 import { Manual } from '../manual';
 export class FatorAjuste {
@@ -24,6 +22,6 @@ export class FatorAjuste {
         public impacto?: ImpactoFatorAjuste,
         public manual?: Manual,
     ) {
-        this.ativo = false; 
+        this.ativo = true;
     }
 }

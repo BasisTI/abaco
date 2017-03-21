@@ -31,7 +31,7 @@
             <label jhiTranslate="abacoApp.funcionalidade.modulo" for="field_modulo">Modulo</label>
             <select class="form-control" id="field_modulo" name="modulo" [(ngModel)]="funcionalidade.modulo" >
                 <option [ngValue]="null"></option>
-                <option [ngValue]="moduloOption.id === funcionalidade.modulo?.id ? funcionalidade.modulo : moduloOption" *ngFor="let moduloOption of modulos; trackBy: trackModuloById">{{moduloOption.id}}</option>
+                <option [ngValue]="moduloOption.id === funcionalidade.modulo?.id ? funcionalidade.modulo : moduloOption" *ngFor="let moduloOption of modulos; trackBy: trackModuloById">{{moduloOption.nome}}</option>
             </select>
         </div>
         <div class="form-group">
