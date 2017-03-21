@@ -1090,5 +1090,30 @@
                 </dependency>
             </dependencies>
         </profile>
+        <profile>
+            <id>ambiente-teste</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.spotify</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>0.4.10</version>
+                        <configuration>
+                            <imageName>ancara.basis.com.br/jenkins/basis-abaco</imageName>
+                            <serverId>docker-registry-basis</serverId>
+                            <registryUrl>https://ancara.basis.com.br</registryUrl>
+                            <dockerDirectory>src/main/docker</dockerDirectory>
+                            <resources>
+                                <resource>
+                                    <targetPath>/</targetPath>
+                                    <directory>${project.build.directory}</directory>
+                                    <include>${project.build.finalName}.war</include>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>
