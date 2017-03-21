@@ -25,7 +25,7 @@
             <label jhiTranslate="abacoApp.esforcoFase.manual" for="field_manual">Manual</label>
             <select class="form-control" id="field_manual" name="manual" [(ngModel)]="esforcoFase.manual" >
                 <option [ngValue]="null"></option>
-                <option [ngValue]="manualOption.id === esforcoFase.manual?.id ? esforcoFase.manual : manualOption" *ngFor="let manualOption of manuals; trackBy: trackManualById">{{manualOption.id}}</option>
+                <option [ngValue]="manualOption.id === esforcoFase.manual?.id ? esforcoFase.manual : manualOption" *ngFor="let manualOption of manuals; trackBy: trackManualById">{{manualOption.nome}}</option>
             </select>
         </div>
         <div class="form-group">

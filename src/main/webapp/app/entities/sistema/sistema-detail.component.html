@@ -19,7 +19,7 @@
         <dt><span jhiTranslate="abacoApp.sistema.organizacao">Organizacao</span></dt>
         <dd>
             <div *ngIf="sistema.organizacao">
-                <a [routerLink]="['/organizacao', sistema.organizacao?.id]">{{sistema.organizacao?.id}}</a>
+                <a [routerLink]="['/organizacao', sistema.organizacao?.id]">{{sistema.organizacao?.nome}}</a>
             </div>
         </dd>
     </dl>

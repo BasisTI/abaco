@@ -11,7 +11,7 @@
         <dt><span jhiTranslate="abacoApp.esforcoFase.manual">Manual</span></dt>
         <dd>
             <div *ngIf="esforcoFase.manual">
-                <a [routerLink]="['/manual', esforcoFase.manual?.id]">{{esforcoFase.manual?.id}}</a>
+                <a [routerLink]="['/manual', esforcoFase.manual?.id]">{{esforcoFase.manual?.nome}}</a>
             </div>
         </dd>
         <dt><span jhiTranslate="abacoApp.esforcoFase.fase">Fase</span></dt>
