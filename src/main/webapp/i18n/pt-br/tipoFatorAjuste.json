@@ -1,9 +1,8 @@
 {
     "abacoApp": {
         "TipoFatorAjuste" : {
-            "null": "",
             "PERCENTUAL": "PERCENTUAL",
-            "UNITARIO": "UNITARIO"
+            "UNITARIO": "UNITÁRIO"
         }
     }
 }

@@ -32,7 +32,7 @@ public class SistemaResource {
     private final Logger log = LoggerFactory.getLogger(SistemaResource.class);
 
     private static final String ENTITY_NAME = "sistema";
-        
+
     private final SistemaRepository sistemaRepository;
 
     private final SistemaSearchRepository sistemaSearchRepository;
@@ -109,8 +109,7 @@ public class SistemaResource {
     @Timed
     public ResponseEntity<Sistema> getSistema(@PathVariable Long id) {
         log.debug("REST request to get Sistema : {}", id);
-        //Sistema sistema = sistemaRepository.findOne(id);
-        Sistema sistema = sistemaRepository.findById(id);
+        Sistema sistema = sistemaRepository.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(sistema));
     }
 
@@ -133,7 +132,7 @@ public class SistemaResource {
      * SEARCH  /_search/sistemas?query=:query : search for the sistema corresponding
      * to the query.
      *
-     * @param query the query of the sistema search 
+     * @param query the query of the sistema search
      * @return the result of the search
      */
     @GetMapping("/_search/sistemas")

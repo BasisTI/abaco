@@ -11,10 +11,10 @@ export class OrganizacaoService {
     private resourceUrl = 'api/organizacaos';
     private resourceSearchUrl = 'api/_search/organizacaos';
 
-  
+
     public idOrganizacaoParaInvocarModal;
     public contrato: Contrato;
-    
+
     constructor(private http: Http) { }
 
     create(organizacao: Organizacao): Observable<Organizacao> {
@@ -40,7 +40,7 @@ export class OrganizacaoService {
     query(req?: any): Observable<Response> {
         let options = this.createRequestOption(req);
         return this.http.get(this.resourceUrl, options)
-        ;
+            ;
     }
 
     delete(id: number): Observable<Response> {
@@ -50,7 +50,7 @@ export class OrganizacaoService {
     search(req?: any): Observable<Response> {
         let options = this.createRequestOption(req);
         return this.http.get(this.resourceSearchUrl, options)
-        ;
+            ;
     }
 
 

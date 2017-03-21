@@ -27,15 +27,6 @@ export class SistemaPopupService {
             return this.sistemaModalRef(component, new Sistema());
         }
     }
-    
-    openParaEditar (component: Component, sistema: Sistema): NgbModalRef {
-        if (this.isOpen) {
-            return;
-        }
-        this.isOpen = true;
-
-        this.sistemaModalRef(component, sistema);
-    }
 
     sistemaModalRef(component: Component, sistema: Sistema): NgbModalRef {
         let modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});

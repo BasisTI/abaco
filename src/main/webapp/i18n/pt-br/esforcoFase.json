@@ -2,21 +2,21 @@
     "abacoApp": {
         "esforcoFase" : {
             "home": {
-                "title": "Esforco Fases",
-                "createLabel": "Criar novo Esforco Fase",
-                "createOrEditLabel": "Criar ou editar Esforco Fase",
-                "search": "Pesquisar por Esforco Fase"
+                "title": "Esforço Fases",
+                "createLabel": "Criar novo Esforço Fase",
+                "createOrEditLabel": "Criar ou editar Esforço Fase",
+                "search": "Pesquisar por Esforço Fase"
             },
-            "created": "Um novo Esforco Fase é criado com o identificador {{ param }}",
-            "updated": "Um Esforco Fase é atualizado com o identificador {{ param }}",
-            "deleted": "Um Esforco Fase é deletado com o identificador {{ param }}",
+            "created": "Um novo Esforço Fase é criado com o identificador {{ param }}",
+            "updated": "Um Esforço Fase é atualizado com o identificador {{ param }}",
+            "deleted": "Um Esforço Fase é deletado com o identificador {{ param }}",
             "delete": {
-                "question": "Tem certeza de que deseja excluir Esforco Fase {{ id }}?"
+                "question": "Tem certeza de que deseja excluir Esforço Fase {{ id }}?"
             },
             "detail": {
-                "title": "Esforco Fase"
+                "title": "Esforço Fase"
             },
-            "esforco": "Esforco",
+            "esforco": "Esforço",
             "manual": "Manual",
             "fase": "Fase"
         }

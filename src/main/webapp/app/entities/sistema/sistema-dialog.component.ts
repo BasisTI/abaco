@@ -7,10 +7,9 @@ import { EventManager, AlertService, JhiLanguageService } from 'ng-jhipster';
 
 import { Sistema } from './sistema.model';
 import { SistemaPopupService } from './sistema-popup.service';
-import { ModuloPopupService } from '../modulo/modulo-popup.service';
 import { SistemaService } from './sistema.service';
 import { Organizacao, OrganizacaoService } from '../organizacao';
-import { Modulo, ModuloService, ModuloDialogComponent } from '../modulo';
+import { Modulo, ModuloService } from '../modulo';
 @Component({
     selector: 'jhi-sistema-dialog',
     templateUrl: './sistema-dialog.component.html'
@@ -31,8 +30,7 @@ export class SistemaDialogComponent implements OnInit {
         private sistemaService: SistemaService,
         private organizacaoService: OrganizacaoService,
         private moduloService: ModuloService,
-        private eventManager: EventManager,
-        private moduloPopupService: ModuloPopupService
+        private eventManager: EventManager
     ) {
         this.jhiLanguageService.setLocations(['sistema']);
     }
@@ -47,13 +45,6 @@ export class SistemaDialogComponent implements OnInit {
     }
     clear () {
         this.activeModal.dismiss('cancel');
-    }
-    
-    chamarModuloPopup () {
-    	this.moduloService.sistemaSendoCadastrado = this.sistema;
-    	this.activeModal.dismiss(this.sistema);
-        this.moduloPopupService.open(ModuloDialogComponent);
-    	
     }
 
     save () {

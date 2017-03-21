@@ -16,18 +16,18 @@
             "detail": {
                 "title": "Analise"
             },
-            "numeroOs": "Numero Os",
+            "numeroOs": "Némero Os",
             "tipoContagem": "Tipo Contagem",
             "valorAjuste": "Valor Ajuste",
             "pfTotal": "Pf Total",
             "escopo": "Escopo",
             "fronteiras": "Fronteiras",
-            "documentacao": "Documentacao",
+            "documentacao": "Documentação",
             "tipoAnalise": "Tipo Analise",
-            "propositoContagem": "Proposito Contagem",
+            "propositoContagem": "Propósito Contagem",
             "sistema": "Sistema",
-            "funcaoDados": "Funcao Dados",
-            "funcaoTransacao": "Funcao Transacao"
+            "funcaoDados": "Função Dados",
+            "funcaoTransacao": "Funcao Transação"
         }
     }
 }

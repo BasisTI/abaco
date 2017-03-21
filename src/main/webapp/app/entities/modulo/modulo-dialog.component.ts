@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
 
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { EventManager, AlertService, JhiLanguageService } from 'ng-jhipster';
@@ -11,7 +10,6 @@ import { ModuloPopupService } from './modulo-popup.service';
 import { ModuloService } from './modulo.service';
 import { Sistema, SistemaService } from '../sistema';
 import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
-import {isNullOrUndefined} from "util";
 @Component({
     selector: 'jhi-modulo-dialog',
     templateUrl: './modulo-dialog.component.html'
@@ -34,7 +32,7 @@ export class ModuloDialogComponent implements OnInit {
         private funcionalidadeService: FuncionalidadeService,
         private eventManager: EventManager
     ) {
-        //this.jhiLanguageService.setLocations(['modulo']);
+        this.jhiLanguageService.setLocations(['modulo']);
     }
 
     ngOnInit() {
@@ -47,59 +45,23 @@ export class ModuloDialogComponent implements OnInit {
     }
     clear () {
         this.activeModal.dismiss('cancel');
-        this.eventManager.broadcast({ name: 'changeInModulosDeSistema', content: 'OK'});
-
     }
-    private data: Observable<Array<Modulo>>;
+
     save () {
         this.isSaving = true;
-
-        if (this.moduloService.sistemaSendoCadastrado.modulos == undefined) {
-            this.moduloService.sistemaSendoCadastrado.modulos = [this.modulo];
+        if (this.modulo.id !== undefined) {
+            this.moduloService.update(this.modulo)
+                .subscribe((res: Modulo) => this.onSaveSuccess(res), (res: Response) => this.onSaveError(res.json()));
         } else {
-            //TODO. tratar a duplicação do elemento no momento de editar o móoodulo.
-            let i = this.moduloService.sistemaSendoCadastrado.modulos.indexOf(this.modulo)
-            if (i == -1) {
-                this.moduloService.sistemaSendoCadastrado.modulos.push(this.modulo);
-            } else {
-                this.moduloService.sistemaSendoCadastrado.modulos.splice(i,1,this.modulo);
-            }
-
+            this.moduloService.create(this.modulo)
+                .subscribe((res: Modulo) => this.onSaveSuccess(res), (res: Response) => this.onSaveError(res.json()));
         }
-
-//        if (this.modulo.id !== undefined) {
-//            this.moduloService.update(this.modulo)
-//                .subscribe((res: Modulo) => this.onSaveSuccess(res), (res: Response) => this.onSaveError(res.json()));
-//        } else {
-//            this.moduloService.create(this.modulo)
-//                .subscribe((res: Modulo) => this.onSaveSuccess(res), (res: Response) => this.onSaveError(res.json()));
-//        }
-        this.onSaveSuccess(this.modulo)
     }
 
-    // save () {
-    //     this.isSaving = true;
-
-    //     if (this.moduloService.sistemaSendoCadastrado.modulos == undefined) {
-    //        this.moduloService.sistemaSendoCadastrado.modulos = [];
-    //     }
-
-    //     if (this.modulo.id !== undefined) {
-    //         this.moduloService.update(this.modulo)
-    //             .subscribe((res: Modulo) => this.onSaveSuccess(res), (res: Response) => this.onSaveError(res.json()));
-    //     } else {
-    //         this.moduloService.create(this.modulo)
-    //             .subscribe((res: Modulo) => this.onSaveSuccess(res), (res: Response) => this.onSaveError(res.json()));
-    //     }
-    // }
-
-
-
     private onSaveSuccess (result: Modulo) {
+        this.eventManager.broadcast({ name: 'moduloListModification', content: 'OK'});
         this.isSaving = false;
         this.activeModal.dismiss(result);
-        this.eventManager.broadcast({ name: 'changeInModulosDeSistema', content: 'OK'});
-        this.eventManager.broadcast({ name: 'moduloListModification', content: 'OK'});
     }
 
     private onSaveError (error) {

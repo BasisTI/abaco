@@ -15,6 +15,8 @@ import { LayoutRoutingModule } from './layouts';
 import { customHttpProvider } from './blocks/interceptor/http.provider';
 import { PaginationConfig } from './blocks/config/uib-pagination.config';
 
+import * as $ from 'jquery';
+
 import {
     JhiMainComponent,
     NavbarComponent,

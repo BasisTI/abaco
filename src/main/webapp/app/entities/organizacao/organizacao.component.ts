@@ -10,7 +10,6 @@ import { ITEMS_PER_PAGE, Principal } from '../../shared';
 import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 import { OrganizacaoPopupService } from './organizacao-popup.service';
 import { OrganizacaoDialogComponent } from './organizacao-dialog.component';
-
 @Component({
     selector: 'jhi-organizacao',
     templateUrl: './organizacao.component.html'
@@ -90,7 +89,7 @@ organizacaos: Organizacao[];
     registerChangeInOrganizacaos() {
         this.eventSubscriber = this.eventManager.subscribe('organizacaoListModification', (response) => this.loadAll());
     }
-  
+
     registerChangeInContrato() {
         this.eventSubscriber = this.eventManager.subscribe('organizacaoChangeInContrato', (response) => this.abrirModelEdit());
     }

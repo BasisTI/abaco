@@ -1,7 +1,6 @@
 {
     "abacoApp": {
         "TipoFuncaoTransacao" : {
-            "null": "",
             "EE": "EE",
             "SE": "SE",
             "CE": "CE"

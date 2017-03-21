@@ -43,7 +43,7 @@
                 <td>{{funcionalidade.nome}}</td>
                 <td>
                     <div *ngIf="funcionalidade.modulo">
-                        <a [routerLink]="['../modulo', funcionalidade.modulo?.id ]" >{{funcionalidade.modulo?.id}}</a>
+                        <a [routerLink]="['../modulo', funcionalidade.modulo?.id ]" >{{funcionalidade.modulo?.nome}}</a>
                     </div>
                 </td>
                 <td>

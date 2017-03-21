@@ -2,7 +2,7 @@
     "abacoApp": {
         "manual" : {
             "home": {
-                "title": "Manuals",
+                "title": "Manuais",
                 "createLabel": "Criar novo Manual",
                 "createOrEditLabel": "Criar ou editar Manual",
                 "search": "Pesquisar por Manual"
@@ -17,11 +17,11 @@
                 "title": "Manual"
             },
             "nome": "Nome",
-            "observacao": "Observacao",
-            "valorVariacaoEstimada": "Valor Variacao Estimada",
-            "valorVariacaoIndicativa": "Valor Variacao Indicativa",
-            "arquivoManual": "Arquivo Manual",
-            "esforcoFase": "Esforco Fase"
+            "observacao": "Observação",
+            "valorVariacaoEstimada": "Valor Variacão - Estimada",
+            "valorVariacaoIndicativa": "Valor Variacão - Indicativa",
+            "arquivoManual": "Arquivo PDF Manual",
+            "esforcoFase": "Esforço Fase"
         }
     }
 }

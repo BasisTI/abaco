@@ -22,7 +22,7 @@ export class ModuloDeleteDialogComponent {
         public activeModal: NgbActiveModal,
         private eventManager: EventManager
     ) {
-        //this.jhiLanguageService.setLocations(['modulo']);
+        this.jhiLanguageService.setLocations(['modulo']);
     }
 
     clear () {
@@ -30,26 +30,13 @@ export class ModuloDeleteDialogComponent {
     }
 
     confirmDelete (id: number) {
-
-        this.moduloService.sistemaSendoCadastrado.modulos.splice(
-            this.moduloService.sistemaSendoCadastrado.modulos.indexOf(this.modulo),
-            1);
-        this.activeModal.dismiss(true);
-
-        this.eventManager.broadcast({
-            name: 'changeInModulosDeSistema',
-            content: 'OK'});
-
-        // this.moduloService.delete(id).subscribe(response => {
-        //     // this.eventManager.broadcast({
-        //     //     name: 'moduloListModification',
-        //     //     content: 'Deleted an modulo'
-        //     // });
-        //     this.eventManager.broadcast({
-        //         name: 'changeDeleteInModulosDeSistema',
-        //         content: 'OK'});
-        //     this.activeModal.dismiss(true);
-        // });
+        this.moduloService.delete(id).subscribe(response => {
+            this.eventManager.broadcast({
+                name: 'moduloListModification',
+                content: 'Deleted an modulo'
+            });
+            this.activeModal.dismiss(true);
+        });
     }
 }
 

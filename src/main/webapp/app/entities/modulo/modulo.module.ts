@@ -27,7 +27,7 @@ let ENTITY_STATES = [
         RouterModule.forRoot(ENTITY_STATES, { useHash: true })
     ],
     declarations: [
-        //ModuloComponent,
+        ModuloComponent,
         ModuloDetailComponent,
         ModuloDialogComponent,
         ModuloDeleteDialogComponent,
@@ -45,7 +45,6 @@ let ENTITY_STATES = [
         ModuloService,
         ModuloPopupService,
     ],
-    //exports: [ModuloComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AbacoModuloModule {}

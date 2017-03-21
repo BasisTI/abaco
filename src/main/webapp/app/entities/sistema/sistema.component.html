@@ -45,7 +45,7 @@
                 <td>{{sistema.numeroOcorrencia}}</td>
                 <td>
                     <div *ngIf="sistema.organizacao">
-                        <a [routerLink]="['../organizacao', sistema.organizacao?.id ]" >{{sistema.organizacao?.id}}</a>
+                        <a [routerLink]="['../organizacao', sistema.organizacao?.id ]" >{{sistema.organizacao?.nome}}</a>
                     </div>
                 </td>
                 <td class="text-right">

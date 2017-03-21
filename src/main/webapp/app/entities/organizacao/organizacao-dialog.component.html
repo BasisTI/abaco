@@ -29,7 +29,7 @@
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="abacoApp.organizacao.cnpj" for="field_cnpj">Cnpj</label>
             <input type="text" class="form-control" name="cnpj" id="field_cnpj"
-                [(ngModel)]="organizacao.cnpj"
+                [(ngModel)]="organizacao.cnpj" [textMask]="{mask: cnpjMask}"
             maxlength="19" pattern="(^(\d{2}.\d{3}.\d{3}/\d{4}-\d{2})|(\d{14})$)" />
             <div [hidden]="!(editForm.controls.cnpj?.dirty && editForm.controls.cnpj?.invalid)">
                 <small class="form-text text-danger"
@@ -67,8 +67,11 @@
                 <option [ngValue]="null"></option>
                 <option [ngValue]="contratoOption.id === organizacao.contrato?.id ? organizacao.contrato : contratoOption" *ngFor="let contratoOption of contratoes; trackBy: trackContratoById">{{contratoOption.numeroContrato}}</option>
             </select>
-	        <button class="btn btn-primary float-right create-contrato" [routerLink]="['/', { outlets: { popup: ['contrato-new'] } }]">
-	            <span class="fa fa-plus"></span>
+	        <button class="btn btn btn-warning float-right create-contrato" [routerLink]="['/', { outlets: { popup: ['contrato-new'] } }]">
+                <span class="fa fa-plus"></span>
+                <span class="hidden-sm-down"  jhiTranslate="abacoApp.contrato.home.createLabel">
+                 Create new Contrato
+                </span>
 	        </button>
         </div>
         <br/>

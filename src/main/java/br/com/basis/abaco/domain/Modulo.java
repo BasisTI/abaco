@@ -1,6 +1,5 @@
 package br.com.basis.abaco.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -34,7 +33,6 @@ public class Modulo implements Serializable {
     private String nome;
 
     @ManyToOne
-    @JsonBackReference
     private Sistema sistema;
 
     @OneToMany(mappedBy = "modulo")

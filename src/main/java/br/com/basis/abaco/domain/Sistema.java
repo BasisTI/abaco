@@ -1,11 +1,8 @@
 package br.com.basis.abaco.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
@@ -22,7 +19,6 @@ import java.util.Objects;
 @Table(name = "sistema")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "sistema")
-
 public class Sistema implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,8 +42,8 @@ public class Sistema implements Serializable {
     @ManyToOne
     private Organizacao organizacao;
 
-    @OneToMany(mappedBy = "sistema",cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE}, orphanRemoval = true)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "sistema")
+    @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Modulo> modulos = new HashSet<>();
 

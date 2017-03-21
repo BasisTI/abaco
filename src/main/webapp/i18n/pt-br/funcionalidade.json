@@ -17,9 +17,9 @@
                 "title": "Funcionalidade"
             },
             "nome": "Nome",
-            "modulo": "Modulo",
-            "funcaoDados": "Funcao Dados",
-            "funcaoTransacao": "Funcao Transacao"
+            "modulo": "Módulo",
+            "funcaoDados": "Função Dados",
+            "funcaoTransacao": "Função transação"
         }
     }
 }

@@ -2,19 +2,19 @@
     "abacoApp": {
         "modulo" : {
             "home": {
-                "title": "Modulos",
-                "createLabel": "Criar novo Modulo",
-                "createOrEditLabel": "Criar ou editar Modulo",
-                "search": "Pesquisar por Modulo"
+                "title": "Módulos",
+                "createLabel": "Criar novo Módulo",
+                "createOrEditLabel": "Criar ou editar Módulo",
+                "search": "Pesquisar por Módulo"
             },
-            "created": "Um novo Modulo é criado com o identificador {{ param }}",
-            "updated": "Um Modulo é atualizado com o identificador {{ param }}",
-            "deleted": "Um Modulo é deletado com o identificador {{ param }}",
+            "created": "Um novo Módulo é criado com o identificador {{ param }}",
+            "updated": "Um Módulo é atualizado com o identificador {{ param }}",
+            "deleted": "Um Módulo é deletado com o identificador {{ param }}",
             "delete": {
-                "question": "Tem certeza de que deseja excluir Modulo {{ id }}?"
+                "question": "Tem certeza de que deseja excluir Módulo {{ id }}?"
             },
             "detail": {
-                "title": "Modulo"
+                "title": "Módulo"
             },
             "nome": "Nome",
             "sistema": "Sistema",

@@ -19,8 +19,8 @@
             "sigla": "Sigla",
             "nome": "Nome",
             "numeroOcorrencia": "Número Ocorrência",
-            "organizacao": "Organizacao",
-            "modulo": "Modulo"
+            "organizacao": "Organização",
+            "modulo": "Módulo"
         },
         "modulo" : {
             "home": {

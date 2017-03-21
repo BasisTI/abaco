@@ -1,12 +1,11 @@
 {
     "abacoApp": {
         "ImpactoFatorAjuste" : {
-            "null": "",
-            "INCLUSAO": "INCLUSAO",
-            "ALTERACAO": "ALTERACAO",
-            "EXCLUSAO": "EXCLUSAO",
-            "CONVERSAO": "CONVERSAO",
-            "ITENS_NAO_MENSURAVEIS": "ITENS_NAO_MENSURAVEIS"
+            "INCLUSAO": "INCLUSÃO",
+            "ALTERACAO": "ALTERAÇÃO",
+            "EXCLUSAO": "EXCLUSÃO",
+            "CONVERSAO": "CONVERSÃO",
+            "ITENS_NAO_MENSURAVEIS": "ITENS NÃO MENSURÁVEIS"
         }
     }
 }

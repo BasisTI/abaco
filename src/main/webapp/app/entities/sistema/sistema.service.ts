@@ -1,4 +1,3 @@
-import { Modulo } from '../modulo/modulo.model';
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams, BaseRequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
@@ -11,9 +10,7 @@ export class SistemaService {
     private resourceSearchUrl = 'api/_search/sistemas';
 
     constructor(private http: Http) { }
-    
-    public modulosDeSistema: Modulo[];
-  
+
     create(sistema: Sistema): Observable<Sistema> {
         let copy: Sistema = Object.assign({}, sistema);
         return this.http.post(this.resourceUrl, copy).map((res: Response) => {
@@ -37,7 +34,7 @@ export class SistemaService {
     query(req?: any): Observable<Response> {
         let options = this.createRequestOption(req);
         return this.http.get(this.resourceUrl, options)
-        ;
+            ;
     }
 
     delete(id: number): Observable<Response> {
@@ -47,7 +44,7 @@ export class SistemaService {
     search(req?: any): Observable<Response> {
         let options = this.createRequestOption(req);
         return this.http.get(this.resourceSearchUrl, options)
-        ;
+            ;
     }
 
 

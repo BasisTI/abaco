@@ -1,26 +1,26 @@
 {
     "global": {
-        "title": "Abaco",
+        "title": "Ábaco",
         "browsehappy": "Você está usando um navegador <strong>desatualizado</strong>. Favor <a href=\"http://browsehappy.com/?locale=pt_BR\">atualizar o seu navegador</a> para ter uma experiência melhor.",
         "menu": {
             "home": "Início",
             "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
             "entities": {
                 "main": "Entidades",
-                "organizacao": "Organizacao",
+                "organizacao": "Organização",
                 "manual": "Manual",
                 "sistema": "Sistema",
-                "modulo": "Modulo",
+                "modulo": "Módulo",
                 "funcionalidade": "Funcionalidade",
-                "analise": "Analise",
+                "analise": "Análise",
                 "fatorAjuste": "Fator Ajuste",
                 "rlr": "Rlr",
                 "der": "Der",
-                "esforcoFase": "Esforco Fase",
+                "esforcoFase": "Esforço Fase",
                 "fase": "Fase",
                 "contrato": "Contrato",
-                "funcaoDados": "Funcao Dados",
-                "funcaoTransacao": "Funcao Transacao",
+                "funcaoDados": "Função Dados",
+                "funcaoTransacao": "Função transação",
                 "alr": "Alr",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
@@ -142,5 +142,5 @@
         "emailexists": "Este email já está cadastrado!",
         "idexists": "Novo(a) {{entityName}} não pode ter uma ID"
     },
-    "footer": "Este é o seu rodapé"
+    "footer": "© 2017 Todos os Direitos Reservados. Basis Tecnologia da Informação. - Licença exclusiva para uso do Cliente"
 }

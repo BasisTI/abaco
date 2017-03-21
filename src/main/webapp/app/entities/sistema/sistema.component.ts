@@ -6,9 +6,6 @@ import { EventManager, ParseLinks, PaginationUtil, JhiLanguageService, AlertServ
 
 import { Sistema } from './sistema.model';
 import { SistemaService } from './sistema.service';
-import { SistemaPopupService } from './sistema-popup.service';
-import { SistemaDialogComponent } from './sistema-dialog.component';
-import { ModuloService } from '../modulo/modulo.service';
 import { ITEMS_PER_PAGE, Principal } from '../../shared';
 import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
@@ -17,7 +14,7 @@ import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
     templateUrl: './sistema.component.html'
 })
 export class SistemaComponent implements OnInit, OnDestroy {
-sistemas: Sistema[];
+    sistemas: Sistema[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
@@ -28,9 +25,7 @@ sistemas: Sistema[];
         private alertService: AlertService,
         private eventManager: EventManager,
         private activatedRoute: ActivatedRoute,
-        private principal: Principal,
-        private sistemaPopupService: SistemaPopupService,
-        private moduloService: ModuloService
+        private principal: Principal
     ) {
         this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
         this.jhiLanguageService.setLocations(['sistema']);
@@ -40,12 +35,12 @@ sistemas: Sistema[];
         if (this.currentSearch) {
             this.sistemaService.search({
                 query: this.currentSearch,
-                }).subscribe(
-                    (res: Response) => this.sistemas = res.json(),
-                    (res: Response) => this.onError(res.json())
-                );
+            }).subscribe(
+                (res: Response) => this.sistemas = res.json(),
+                (res: Response) => this.onError(res.json())
+            );
             return;
-       }
+        }
         this.sistemaService.query().subscribe(
             (res: Response) => {
                 this.sistemas = res.json();
@@ -73,7 +68,6 @@ sistemas: Sistema[];
             this.currentAccount = account;
         });
         this.registerChangeInSistemas();
-        this.registerChangeInModulosDeSistema();
     }
 
     ngOnDestroy() {
@@ -84,14 +78,7 @@ sistemas: Sistema[];
         return item.id;
     }
 
-    chamarPopupSistemaEditar () {
-        this.sistemaPopupService.openParaEditar(SistemaDialogComponent,this.moduloService.sistemaSendoCadastrado);
 
-    }
-
-    registerChangeInModulosDeSistema () {
-        this.eventSubscriber = this.eventManager.subscribe('changeInModulosDeSistema', (response) => this.chamarPopupSistemaEditar());
-    }
 
     registerChangeInSistemas() {
         this.eventSubscriber = this.eventManager.subscribe('sistemaListModification', (response) => this.loadAll());

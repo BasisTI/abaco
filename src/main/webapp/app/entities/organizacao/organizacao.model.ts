@@ -10,6 +10,6 @@ export class Organizacao {
         public contrato?: Contrato,
         public sistema?: Sistema,
     ) {
-        this.ativo = false; 
+        this.ativo = true;
     }
 }

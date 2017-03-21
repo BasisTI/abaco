@@ -10,11 +10,14 @@ import { OrganizacaoPopupService } from './organizacao-popup.service';
 import { OrganizacaoService } from './organizacao.service';
 import { Contrato, ContratoService } from '../contrato';
 import { Sistema, SistemaService } from '../sistema';
+
 @Component({
     selector: 'jhi-organizacao-dialog',
     templateUrl: './organizacao-dialog.component.html'
 })
 export class OrganizacaoDialogComponent implements OnInit {
+
+    public cnpjMask = [/\d/, /\d/, '.',/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/',/\d/, /\d/, /\d/,/\d/, '-', /\d/,/\d/];
 
     organizacao: Organizacao;
     authorities: any[];
