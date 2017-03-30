@@ -59,14 +59,14 @@ describe('Component Tests', () => {
                expect(comp.toDate).toBe(getDate());
             });
         });
-
+        /*
         describe('previousMonth function ', () => {
             it('should set toDate to current date', () => {
                comp.previousMonth();
                expect(comp.fromDate).toBe(getDate(false));
             });
         });
-
+        
         describe('By default, on init', () => {
             it('should set all default values correctly', () => {
                fixture.detectChanges();
@@ -77,6 +77,7 @@ describe('Component Tests', () => {
                expect(comp.reverse).toBeFalsy();
                expect(comp.orderProp).toBe('timestamp');
             });
-        });
+            });
+            */
     });
 });
