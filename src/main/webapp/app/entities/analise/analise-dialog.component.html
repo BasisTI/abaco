@@ -20,6 +20,15 @@
                 [(ngModel)]="analise.numeroOs"
              />
         </div>
+
+        <div class="form-group">
+            <label jhiTranslate="abacoApp.analise.sistema" for="field_sistema">Sistema</label>
+            <select class="form-control" id="field_sistema" name="sistema" [(ngModel)]="analise.sistema" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="sistemaOption.id === analise.sistema?.id ? analise.sistema : sistemaOption" *ngFor="let sistemaOption of sistemas; trackBy: trackSistemaById">{{sistemaOption.nome}}</option>
+            </select>
+        </div>
+
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="abacoApp.analise.tipoContagem" for="field_tipoContagem">Tipo Contagem</label>
             <select class="form-control" name="tipoContagem" [(ngModel)]="analise.tipoContagem" id="field_tipoContagem" >
@@ -42,9 +51,9 @@
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="abacoApp.analise.escopo" for="field_escopo">Escopo</label>
-            <input type="text" class="form-control" name="escopo" id="field_escopo"
-                [(ngModel)]="analise.escopo"
-            maxlength="4000" />
+            <textarea class="form-control" name="escopo" id="field_escopo"
+                      [(ngModel)]="analise.escopo"
+                      maxlength="4000" ></textarea>
             <div [hidden]="!(editForm.controls.escopo?.dirty && editForm.controls.escopo?.invalid)">
                 <small class="form-text text-danger"
                    [hidden]="!editForm.controls.escopo?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 4000 }">
@@ -54,9 +63,9 @@
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="abacoApp.analise.fronteiras" for="field_fronteiras">Fronteiras</label>
-            <input type="text" class="form-control" name="fronteiras" id="field_fronteiras"
+            <textarea class="form-control" name="fronteiras" id="field_fronteiras"
                 [(ngModel)]="analise.fronteiras"
-            maxlength="4000" />
+                maxlength="4000" ></textarea>
             <div [hidden]="!(editForm.controls.fronteiras?.dirty && editForm.controls.fronteiras?.invalid)">
                 <small class="form-text text-danger"
                    [hidden]="!editForm.controls.fronteiras?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 4000 }">
@@ -66,9 +75,9 @@
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="abacoApp.analise.documentacao" for="field_documentacao">Documentacao</label>
-            <input type="text" class="form-control" name="documentacao" id="field_documentacao"
+            <textarea class="form-control" name="documentacao" id="field_documentacao"
                 [(ngModel)]="analise.documentacao"
-            maxlength="4000" />
+                maxlength="4000" ></textarea>
             <div [hidden]="!(editForm.controls.documentacao?.dirty && editForm.controls.documentacao?.invalid)">
                 <small class="form-text text-danger"
                    [hidden]="!editForm.controls.documentacao?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 4000 }">
@@ -86,9 +95,9 @@
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="abacoApp.analise.propositoContagem" for="field_propositoContagem">Proposito Contagem</label>
-            <input type="text" class="form-control" name="propositoContagem" id="field_propositoContagem"
+            <textarea class="form-control" name="propositoContagem" id="field_propositoContagem"
                 [(ngModel)]="analise.propositoContagem"
-            maxlength="4000" />
+            maxlength="4000" ></textarea>
             <div [hidden]="!(editForm.controls.propositoContagem?.dirty && editForm.controls.propositoContagem?.invalid)">
                 <small class="form-text text-danger"
                    [hidden]="!editForm.controls.propositoContagem?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 4000 }">
@@ -97,13 +106,6 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label jhiTranslate="abacoApp.analise.sistema" for="field_sistema">Sistema</label>
-            <select class="form-control" id="field_sistema" name="sistema" [(ngModel)]="analise.sistema" >
-                <option [ngValue]="null"></option>
-                <option [ngValue]="sistemaOption.id === analise.sistema?.id ? analise.sistema : sistemaOption" *ngFor="let sistemaOption of sistemas; trackBy: trackSistemaById">{{sistemaOption.nome}}</option>
-            </select>
-        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">

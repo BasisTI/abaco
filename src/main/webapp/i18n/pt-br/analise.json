@@ -2,19 +2,19 @@
     "abacoApp": {
         "analise" : {
             "home": {
-                "title": "Analises",
-                "createLabel": "Criar novo Analise",
-                "createOrEditLabel": "Criar ou editar Analise",
-                "search": "Pesquisar por Analise"
+                "title": "Análises",
+                "createLabel": "Criar nova Análise",
+                "createOrEditLabel": "Criar ou editar Análise",
+                "search": "Pesquisar por Análise"
             },
-            "created": "Um novo Analise é criado com o identificador {{ param }}",
-            "updated": "Um Analise é atualizado com o identificador {{ param }}",
-            "deleted": "Um Analise é deletado com o identificador {{ param }}",
+            "created": "Uma nova Análise é criada com o identificador {{ param }}",
+            "updated": "Uma Análise é atualizada com o identificador {{ param }}",
+            "deleted": "Uma Análise é deletada com o identificador {{ param }}",
             "delete": {
-                "question": "Tem certeza de que deseja excluir Analise {{ id }}?"
+                "question": "Tem certeza de que deseja excluir a Análise {{ id }}?"
             },
             "detail": {
-                "title": "Analise"
+                "title": "Análise"
             },
             "numeroOs": "Número OS",
             "tipoContagem": "Tipo Contagem",

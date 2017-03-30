@@ -22,21 +22,6 @@
             </select>
         </div>
         <div class="form-group">
-            <label class="form-control-label" jhiTranslate="abacoApp.funcaoDados.complexidade" for="field_complexidade">Complexidade</label>
-            <select class="form-control" name="complexidade" [(ngModel)]="funcaoDados.complexidade" id="field_complexidade" >
-                <option value="BAIXA" jhiTranslate="abacoApp.Complexidade.BAIXA">BAIXA</option>
-                <option value="MEDIA" jhiTranslate="abacoApp.Complexidade.MEDIA">MEDIA</option>
-                <option value="ALTA" jhiTranslate="abacoApp.Complexidade.ALTA">ALTA</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="abacoApp.funcaoDados.pf" for="field_pf">Pf</label>
-            <input type="number" class="form-control" name="pf" id="field_pf"
-                [(ngModel)]="funcaoDados.pf"
-             />
-        </div>
-
-        <div class="form-group">
             <label jhiTranslate="abacoApp.funcaoDados.analise" for="field_analise">Analise</label>
             <select class="form-control" id="field_analise" name="analise" [(ngModel)]="funcaoDados.analise" >
                 <option [ngValue]="null"></option>
@@ -51,11 +36,18 @@
             </select>
         </div>
         <div class="form-group">
-            <label jhiTranslate="abacoApp.funcaoDados.alr" for="field_alr">Alr</label>
-            <select class="form-control" id="field_alr" name="alr" [(ngModel)]="funcaoDados.alr" >
-                <option [ngValue]="null"></option>
-                <option [ngValue]="alrOption.id === funcaoDados.alr?.id ? funcaoDados.alr : alrOption" *ngFor="let alrOption of alrs; trackBy: trackAlrById">{{alrOption.id}}</option>
+            <label class="form-control-label" jhiTranslate="abacoApp.funcaoDados.complexidade" for="field_complexidade">Complexidade</label>
+            <select class="form-control" name="complexidade" [(ngModel)]="funcaoDados.complexidade" id="field_complexidade" >
+                <option value="BAIXA" jhiTranslate="abacoApp.Complexidade.BAIXA">BAIXA</option>
+                <option value="MEDIA" jhiTranslate="abacoApp.Complexidade.MEDIA">MEDIA</option>
+                <option value="ALTA" jhiTranslate="abacoApp.Complexidade.ALTA">ALTA</option>
             </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.funcaoDados.pf" for="field_pf">Pf</label>
+            <input type="number" class="form-control" name="pf" id="field_pf"
+                   [(ngModel)]="funcaoDados.pf"
+            />
         </div>
     </div>
     <div class="modal-footer">
