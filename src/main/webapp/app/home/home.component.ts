@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { MdTabsModule } from '@angular/material';
 import { EventManager, JhiLanguageService } from 'ng-jhipster';
 
 import { Account, LoginModalService, Principal } from '../shared';
