@@ -8,39 +8,39 @@
                 <div class="form-group col-sm-6  required" style="text-align:left;">
                     <label for="id1" class="control-label">Fotor Ajuste:</label>
 
-                    <select id="id1" class="form-control">
-                        <option value="1">Value_1</option>
-                        <option value="2">Value_2</option>
+                    <select id="field_factor" name="factor" class="form-control">
+                        <option [ngValue]="null"></option>
+                        <option *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
                     </select>
                   </div>
-            
+
                 </div>
 
             <div class="row">
                 <div class="form-group col-sm-6  required" style="text-align:left;">
-                    <label for="id2" class="control-label">Modulo:</label>
+                    <label for="field_module" class="control-label">Modulo:</label>
 
-                    <select id="id1" class="form-control">
-                        <option value="1">Value_1</option>
-                        <option value="2">Value_2</option>
+                    <select id="field_module" name="module" class="form-control">
+                        <option [ngValue]="null"></option>
+                        <option *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
                     </select>
                 </div>
-           </div> 
-            <div class="row"> 
+           </div>
+            <div class="row">
                 <div class="form-group col-sm-6  required">
                     <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right">+ Criar novo Modulo</button>
-                </div> 
+                </div>
             </div>
             <div class="row">
                 <div class="form-group col-sm-6  required" style="text-align:left;">
-                    <label for="id2" class="control-label">Functionalidade:</label>
+                    <label for="field_function" class="control-label">Functionalidade:</label>
 
-                    <select id="id1" class="form-control">
-                        <option value="1">Value_1</option>
-                        <option value="2">Value_2</option>
+                    <select id="field_function" name="function" class="form-control">
+                        <option [ngValue]="null"></option>
+                        <option *ngFor="let f of funcionalidades; trackBy: trackFuncById">{{f.nome}}</option>
                     </select>
                 </div>
-            </div> 
+            </div>
             <div class="row">
                 <div class="form-group col-sm-6  required">
                     <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right">+ Criar nova Functionalidade</button>
@@ -56,15 +56,15 @@
                         <option value="2">Value_2</option>
                     </select>
                 </div>
-            </div> 
+            </div>
 
             <div class="row">
                 <div class="form-group col-sm-6  required" style="text-align:left;">
                     <label for="id6" class="control-label">Name Processo Elementar:</label>
                     <input id="id6" class="form-control"/>
-                    
+
                 </div>
-            </div> 
+            </div>
 
             <div class="row">
                 <div class="form-group col-sm-3" >
@@ -404,6 +404,6 @@
                 <textarea id="id12" class="form-control" style="height: 140px;"> </textarea>
             </div>
 </tab>
-       
+
     </tabset>
 </div>

@@ -87,6 +87,10 @@
     webpack-sources "^0.1.3"
     zone.js "^0.7.2"
 
+"@angular/common@2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@angular/common/-/common-2.2.1.tgz#ad7996a865b7b11fc315363827f2414a48c6589c"
+
 "@angular/common@2.4.7":
   version "2.4.7"
   resolved "https://registry.yarnpkg.com/@angular/common/-/common-2.4.7.tgz#9316daf90e353e67187d2e0afec5521c2001bd4b"
@@ -99,13 +103,25 @@
     minimist "^1.2.0"
     reflect-metadata "^0.1.2"
 
+"@angular/compiler@2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-2.2.1.tgz#16e7faf588cf9121a0f6c16d0bae2830f4cafdc1"
+
 "@angular/compiler@2.4.7", "@angular/compiler@^2.3.1":
   version "2.4.7"
   resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-2.4.7.tgz#008c1f0d1409c46fbba215fe8ab0d886252c7ff0"
 
+"@angular/core@2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@angular/core/-/core-2.2.1.tgz#86fdc34a370a4fcfe84ed9de4b3c43548612919c"
+
 "@angular/core@2.4.7", "@angular/core@^2.3.1":
   version "2.4.7"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-2.4.7.tgz#8bed9a2d37e81342bd41d189df88aa3e02393cfb"
+
+"@angular/forms@2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-2.2.1.tgz#0e7154acc5127c583b4b52c59eac45d672c29da4"
 
 "@angular/forms@2.4.7":
   version "2.4.7"
@@ -115,9 +131,17 @@
   version "2.4.7"
   resolved "https://registry.yarnpkg.com/@angular/http/-/http-2.4.7.tgz#b024b2b49ae0234258d42309e46f65862a42070d"
 
+"@angular/platform-browser-dynamic@2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.2.1.tgz#561d32982fee4b68b474ba474c7f3c4d94bfeb6c"
+
 "@angular/platform-browser-dynamic@2.4.7":
   version "2.4.7"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.4.7.tgz#9632586f9ce596186be4c124c3ea0a4a74b27b46"
+
+"@angular/platform-browser@2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-2.2.1.tgz#d51b36260089f3054e745efad05993523d5a5293"
 
 "@angular/platform-browser@2.4.7":
   version "2.4.7"
@@ -153,6 +177,16 @@
 "@types/jasmine@2.5.42":
   version "2.5.42"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.5.42.tgz#60ed723d08d2ddd277333ebe1e39761b46fdb755"
+
+"@types/jquery-mask-plugin@^1.14.0":
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/@types/jquery-mask-plugin/-/jquery-mask-plugin-1.14.1.tgz#052128e8836954f6239bc044bf9f687d9bd19fba"
+  dependencies:
+    "@types/jquery" "*"
+
+"@types/jquery@*", "@types/jquery@^2.0.41":
+  version "2.0.43"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-2.0.43.tgz#e30d971d56dce22bf0d62e02bd4b28a7ffdba076"
 
 "@types/node@7.0.5":
   version "7.0.5"
@@ -259,13 +293,9 @@ alphanum-sort@^1.0.1, alphanum-sort@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
 
-amdefine@1.0.0:
+amdefine@1.0.0, amdefine@>=0.0.4, amdefine@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.0.tgz#fd17474700cb5cc9c2b709f0be9d23ce3c198c33"
-
-amdefine@>=0.0.4, amdefine@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
 angular2-cookie@1.2.6:
   version "1.2.6"
@@ -280,6 +310,12 @@ angular2-template-loader@0.6.2:
   resolved "https://registry.yarnpkg.com/angular2-template-loader/-/angular2-template-loader-0.6.2.tgz#c0d44e90fff0fac95e8b23f043acda7fd1c51d7c"
   dependencies:
     loader-utils "^0.2.15"
+
+angular2-text-mask@^6.3.2:
+  version "6.3.2"
+  resolved "https://registry.yarnpkg.com/angular2-text-mask/-/angular2-text-mask-6.3.2.tgz#7cc47d36c2de0adaacccf53dc808fde9d080f12d"
+  dependencies:
+    text-mask-core "^3.2.0"
 
 ansi-align@^1.1.0:
   version "1.1.0"
@@ -3968,9 +4004,17 @@ jodid25519@^1.0.0:
   dependencies:
     jsbn "~0.1.0"
 
+jquery-mask-plugin@^1.14.10, jquery-mask-plugin@^1.14.8:
+  version "1.14.10"
+  resolved "https://registry.yarnpkg.com/jquery-mask-plugin/-/jquery-mask-plugin-1.14.10.tgz#72468dfac2fced869818e7b704d713ada713417a"
+
 jquery@3.1.1, jquery@>=1.9.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.1.1.tgz#347c1c21c7e004115e0a4da32cece041fad3c8a3"
+
+jquery@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02"
 
 js-base64@^2.1.9:
   version "2.1.9"
@@ -4746,9 +4790,9 @@ mkdirp@0.5.1, mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdi
   dependencies:
     minimist "0.0.8"
 
-moment@^2.11.2:
-  version "2.17.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.17.1.tgz#fed9506063f36b10f066c8b59a144d7faebe1d82"
+moment@2.18.1, moment@^2.11.2:
+  version "2.18.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
 mozjpeg@^4.0.0:
   version "4.1.1"
@@ -4809,6 +4853,21 @@ ng-jhipster@0.1.9:
   dependencies:
     ng2-translate "4.2.0"
 
+ng2-input-mask@0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/ng2-input-mask/-/ng2-input-mask-0.0.7.tgz#d64f67e23d38778b4ca1e31a451cbe4990769d9e"
+  dependencies:
+    "@angular/common" "2.2.1"
+    "@angular/compiler" "2.2.1"
+    "@angular/core" "2.2.1"
+    "@angular/forms" "2.2.1"
+    "@angular/platform-browser" "2.2.1"
+    "@angular/platform-browser-dynamic" "2.2.1"
+    jquery "^2.2.4"
+    jquery-mask-plugin "^1.14.8"
+    rxjs "5.0.0-beta.12"
+    zone.js "^0.6.23"
+
 ng2-translate@4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/ng2-translate/-/ng2-translate-4.2.0.tgz#83bc8feca329b5fc56a636e36073241c6280c659"
@@ -4816,6 +4875,12 @@ ng2-translate@4.2.0:
 ng2-webstorage@1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/ng2-webstorage/-/ng2-webstorage-1.5.0.tgz#65c8c1269d2bcff99a14299eaf16ca7a0105ec5e"
+
+ngx-bootstrap@^1.6.6:
+  version "1.6.6"
+  resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-1.6.6.tgz#0057141cfbdd7e8a50e81bda735fad8e95acb0dd"
+  dependencies:
+    moment "2.18.1"
 
 no-case@^2.2.0:
   version "2.3.1"
@@ -6298,6 +6363,12 @@ rx@4.1.0, rx@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/rx/-/rx-4.1.0.tgz#a5f13ff79ef3b740fe30aa803fb09f98805d4782"
 
+rxjs@5.0.0-beta.12:
+  version "5.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.0.0-beta.12.tgz#cdfde2d8c4639d20ae7794bff8fddf32da7ad337"
+  dependencies:
+    symbol-observable "^1.0.1"
+
 rxjs@5.1.0, rxjs@^5.0.1:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.1.0.tgz#0aa9018b7f440b505fa42bd742b6738be550e720"
@@ -7080,6 +7151,10 @@ tempfile@^1.0.0:
 tether@1.4.0, tether@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/tether/-/tether-1.4.0.tgz#0f9fa171f75bf58485d8149e94799d7ae74d1c1a"
+
+text-mask-core@^3.2.0:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/text-mask-core/-/text-mask-core-3.2.3.tgz#338457a232dd846ed49539a0aaf8c2e19e6f175e"
 
 text-table@^0.2.0:
   version "0.2.0"
@@ -7905,16 +7980,9 @@ write-file-webpack-plugin@3.4.2:
     mkdirp "^0.5.1"
     moment "^2.11.2"
 
-ws@1.1.1:
+ws@1.1.1, ws@^1.0.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.1.tgz#082ddb6c641e85d4bb451f03d52f06eabdb1f018"
-  dependencies:
-    options ">=0.0.5"
-    ultron "1.0.x"
-
-ws@^1.0.1:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.2.tgz#8a244fa052401e08c9886cf44a85189e1fd4067f"
   dependencies:
     options ">=0.0.5"
     ultron "1.0.x"
@@ -8233,3 +8301,7 @@ yosay@^1.0.0:
 zone.js@0.7.6, zone.js@^0.7.2:
   version "0.7.6"
   resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.7.6.tgz#fbbc39d3e0261d0986f1ba06306eb3aeb0d22009"
+
+zone.js@^0.6.23:
+  version "0.6.26"
+  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.6.26.tgz#067c13b8b80223a89b62e9dc82680f09762c4636"
