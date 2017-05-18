@@ -20,15 +20,18 @@
                 <div class="form-group col-sm-6  required" style="text-align:left;">
                     <label for="field_module" class="control-label">Modulo:</label>
 
-                    <select id="field_module" name="module" class="form-control">
-                        <option [ngValue]="null"></option>
-                        <option *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
+                    <select id="field_module" name="module" class="form-control" [(ngModel)]="selectedModulo" >
+                        <option [ngValue]="null" disabled selected>Select</option>
+                        <option [ngValue]="module" *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
                     </select>
                 </div>
            </div>
             <div class="row">
                 <div class="form-group col-sm-6  required">
-                    <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right">+ Criar novo Modulo</button>
+                    <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"  [routerLink]="['/', { outlets: { popup: ['modulo-new'] } }]">
+                    <span class="fa fa-plus"></span>
+                        <span> Criar novo Modulo</span>
+                    </button>
                 </div>
             </div>
             <div class="row">
@@ -43,7 +46,9 @@
             </div>
             <div class="row">
                 <div class="form-group col-sm-6  required">
-                    <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right">+ Criar nova Functionalidade</button>
+                    <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"   [routerLink]="['/', { outlets: { popup: ['funcionalidade-new'] } }]">
+                        <span class="fa fa-plus"></span>
+                        <span>Criar nova Functionalidade</span></button>
                 </div>
             </div>
 
