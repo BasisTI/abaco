@@ -20,7 +20,7 @@
                 <div class="form-group col-sm-6  required" style="text-align:left;">
                     <label for="field_module" class="control-label">Modulo:</label>
 
-                    <select id="field_module" name="module" class="form-control" [(ngModel)]="selectedModulo" >
+                    <select id="field_module" name="module" class="form-control" [(ngModel)]="selectedModulo" (change)="onModuleChange($event.target.value)">
                         <option [ngValue]="null" disabled selected>Select</option>
                         <option [ngValue]="module" *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
                     </select>
@@ -38,9 +38,9 @@
                 <div class="form-group col-sm-6  required" style="text-align:left;">
                     <label for="field_function" class="control-label">Functionalidade:</label>
 
-                    <select id="field_function" name="function" class="form-control">
-                        <option [ngValue]="null"></option>
-                        <option *ngFor="let f of funcionalidades; trackBy: trackFuncById">{{f.nome}}</option>
+                    <select id="field_function" name="function" class="form-control" [(ngModel)]="selectedFunc">
+                        <option [ngValue]="null" disabled selected>Select</option>
+                        <option [ngValue]="f" *ngFor="let f of filteredFunc; trackBy: trackFuncById">{{f.nome}}</option>
                     </select>
                 </div>
             </div>

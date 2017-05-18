@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/Rx';
 
 import { TabsetComponent } from 'ngx-bootstrap';
 import { FatorAjuste, FatorAjusteService } from '../../entities/fator-ajuste';
@@ -19,16 +20,23 @@ export class AnalisEditComponent implements OnInit {
     @ViewChild('staticTabs') staticTabs: TabsetComponent;
     factors: FatorAjuste[];
     funcionalidades: Funcionalidade[];
+    filteredFunc: Funcionalidade[];
     modules: Modulo[];
-
+    eventSubscriber: Subscription;
+    eventFuncSubscriber: Subscription;
     selectedModulo: Modulo;
+    selectedFunc: Funcionalidade;
 
     constructor(
         private alertService: AlertService,
         private funcionalidadeService: FuncionalidadeService,
         private moduloService: ModuloService,
+        private eventManager: EventManager,
         private  fatorAjusteService:FatorAjusteService
-    ){};
+    ){
+        this.selectedModulo=null;
+        this.selectedFunc = null;
+    };
     selectTab(tab_id: number) {
         this.staticTabs.tabs[tab_id].active = true;
     }
@@ -44,6 +52,8 @@ export class AnalisEditComponent implements OnInit {
             (res: Response) => { this.funcionalidades = res.json(); }, (res: Response) => this.onError(res.json()));
         this.moduloService.query().subscribe(
             (res: Response) => { this.modules = res.json(); }, (res: Response) => this.onError(res.json()));
+        this.registerChangeInModulos();
+        this.registerChangeInFunc()
     }
 
 
@@ -52,8 +62,60 @@ export class AnalisEditComponent implements OnInit {
     }
 
 
-    trackModulleById(index: number, item: Modulo) {
+    trackModulleById(index: number, item: Funcionalidade) {
         return item.id;
+    }
+
+
+
+    refreshFunctionsList(){
+        if (this.selectedModulo==null) {
+            this.filteredFunc = [];
+            this.selectedFunc = null;
+        }
+        this.filteredFunc=this.funcionalidades.filter(f=>{
+            return f.modulo.id==this.selectedModulo.id;
+        });
+    }
+
+
+    onModuleChange(item:any)
+    {
+        this.refreshFunctionsList();
+        this.selectedFunc = null;
+    }
+
+
+    trackFuncById(index: number, item: Modulo) {
+        return item.id;
+    }
+
+
+    reloadModulesList() {
+        this.moduloService.query().subscribe(
+            (res: Response) => {
+                    this.modules = res.json();
+                    this.selectedModulo=null;
+                }, (res: Response) => this.onError(res.json()));
+    }
+
+
+
+    reloadFuncList(){
+        this.funcionalidadeService.query().subscribe(
+            (res: Response) => {
+                this.funcionalidades = res.json();
+                this.onModuleChange(null);
+                }, (res: Response) => this.onError(res.json()));
+    }
+
+
+    registerChangeInModulos() {
+        this.eventSubscriber = this.eventManager.subscribe('moduloListModification', (response) => this.reloadModulesList());
+    }
+
+    registerChangeInFunc() {
+        this.eventFuncSubscriber = this.eventManager.subscribe('funcionalidadeListModification', (response) => this.reloadFuncList());
     }
 
 }
