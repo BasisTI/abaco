@@ -21,6 +21,7 @@ export class AnalisEditComponent implements OnInit {
     funcionalidades: Funcionalidade[];
     modules: Modulo[];
 
+    selectedModulo: Modulo;
 
     constructor(
         private alertService: AlertService,
@@ -48,6 +49,11 @@ export class AnalisEditComponent implements OnInit {
 
     private onError (error) {
         this.alertService.error(error.message, null, null);
+    }
+
+
+    trackModulleById(index: number, item: Modulo) {
+        return item.id;
     }
 
 }
