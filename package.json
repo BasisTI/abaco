@@ -17,6 +17,7 @@
     "@angular/router": "3.4.7",
     "@ng-bootstrap/ng-bootstrap": "1.0.0-alpha.20",
     "angular2-cookie": "1.2.6",
+    "angular2-datatable": "^0.6.0",
     "angular2-infinite-scroll": "0.3.0",
     "angular2-text-mask": "^6.3.2",
     "bootstrap": "4.0.0-alpha.6",

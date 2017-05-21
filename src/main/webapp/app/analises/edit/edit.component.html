@@ -4,13 +4,16 @@
     <tabset #staticTabs>
         <tab heading="Geral" style="padding-left: 30px;padding-right: 30px;"></tab>
         <tab heading="Função de Dados" style="padding-left: 30px;padding-right: 30px;">
+
+            <form #dadosForm="ngForm" >
+
             <div class="row" style="margin-top:30px;">
                 <div class="form-group col-sm-6  required" style="text-align:left;">
                     <label for="id1" class="control-label">Fotor Ajuste:</label>
 
-                    <select id="field_factor" name="factor" class="form-control">
-                        <option [ngValue]="null"></option>
-                        <option *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
+                    <select id="field_factor" name="factor" class="form-control" [(ngModel)]="selectedFactor" required>
+                        <option [ngValue]="null"  disabled selected>Select</option>
+                        <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
                     </select>
                   </div>
 
@@ -20,7 +23,7 @@
                 <div class="form-group col-sm-6  required" style="text-align:left;">
                     <label for="field_module" class="control-label">Modulo:</label>
 
-                    <select id="field_module" name="module" class="form-control" [(ngModel)]="selectedModulo" (change)="onModuleChange($event.target.value)">
+                    <select id="field_module" name="module" class="form-control" [(ngModel)]="selectedModulo" (change)="onModuleChange($event.target.value)" required>
                         <option [ngValue]="null" disabled selected>Select</option>
                         <option [ngValue]="module" *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
                     </select>
@@ -38,7 +41,7 @@
                 <div class="form-group col-sm-6  required" style="text-align:left;">
                     <label for="field_function" class="control-label">Functionalidade:</label>
 
-                    <select id="field_function" name="function" class="form-control" [(ngModel)]="selectedFunc">
+                    <select id="field_function" name="function" class="form-control" [(ngModel)]="selectedFunc" required>
                         <option [ngValue]="null" disabled selected>Select</option>
                         <option [ngValue]="f" *ngFor="let f of filteredFunc; trackBy: trackFuncById">{{f.nome}}</option>
                     </select>
@@ -54,38 +57,38 @@
 
             <div class="row">
                 <div class="form-group col-sm-6  required" style="text-align:left;">
-                    <label for="id5" class="control-label">Clossificado:</label>
+                    <label for="field_class" class="control-label">Clossificado:</label>
 
-                    <select id="id5" class="form-control">
-                        <option value="1">Selecie - ALI - AIE</option>
-                        <option value="2">Value_2</option>
+                    <select id="field_class" name="class" class="form-control" [(ngModel)]="selectedLogicalFile" required>
+                        <option [ngValue]="null" disabled selected>Select</option>
+                        <option [ngValue]="file" *ngFor="let file of logicalFiles;">{{file.title}}</option>
                     </select>
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-group col-sm-6  required" style="text-align:left;">
-                    <label for="id6" class="control-label">Name Processo Elementar:</label>
-                    <input id="id6" class="form-control"/>
+                    <label for="field_process" class="control-label">Name Processo Elementar:</label>
+                    <input id="field_process" name="process" class="form-control" [(ngModel)]="elementaryProcess" required/>
 
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-group col-sm-3" >
-                    <label for="id7" class="control-label">DER</label>
-                    <textarea id="id7" class="form-control" style="height: 140px;"> </textarea>
+                    <label for="field_ret" class="control-label">DER</label>
+                    <textarea id="field_ret"  name="ret" class="form-control" style="height: 140px;" [(ngModel)]="det"> </textarea>
 
                 </div>
                 <div class="form-group col-sm-3">
-                    <label for="id8" class="control-label">RLR</label>
-                    <textarea id="id8" class="form-control" style="height: 140px;"> </textarea>
+                    <label for="field_det" class="control-label">RLR</label>
+                    <textarea id="field_det" name="det" class="form-control" style="height: 140px;" [(ngModel)]="ret"> </textarea>
 
                 </div>
                 <div class="form-group col-sm-4" style="margin-left:60px;">
                     <div class="table-responsive">
-                        <label for="table1" class="control-label">Resumo</label>
-                        <table id="table1" class="table table-striped">
+                        <label for="total-table1" class="control-label">Resumo</label>
+                        <table id="total-table1" class="table table-striped" [mfData]="totals" #mf="mfDataTable">
                             <thead>
                                 <tr>
                                     <th style="width:15%;"></th>
@@ -97,22 +100,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td> ALI </td>
-                                    <td> 0 </td>
-                                    <td> 0 </td>
-                                    <td> 0 </td>
-                                    <td> 0 </td>
-                                    <td> 0 </td>
+                                <tr *ngFor="let total of totals;">
+                                    <td> {{logicalFiles[total.input].title}} </td>
+                                    <td> {{total.low}} </td>
+                                    <td> {{total.medium}} </td>
+                                    <td> {{total.high}} </td>
+                                    <td> {{total.total}} </td>
+                                    <td> {{total.pf}} </td>
                                 </tr>
-                                <tr>
-                                    <td> AIE </td>
-                                    <td> 0 </td>
-                                    <td> 0 </td>
-                                    <td> 0 </td>
-                                    <td> 0 </td>
-                                    <td> 0 </td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
@@ -120,12 +116,15 @@
                 </div>
             <div class="row" style="border-bottom-width: 1px;border-bottom-style: groove;">
                 <div class="form-group col-sm-6  required">
-                    <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right">Adicionar</button>
+                    <button class="btn btn-primary" value="" style="float:right"  [disabled]="!dadosForm.form.valid" (click)="add()">Adicionar</button>
                 </div>
             </div>
+
+            </form>
+
             <div class="row">
                 <div class="table-responsive">
-                    <table id="table2" class="table table-striped">
+                    <table id="process_table" class="table table-striped" [mfData]="listOfProcess" #mf="mfDataTable" >
                         <thead>
                             <tr>
                                 <th style="width:15%;">Fator Ajuste</th>
@@ -141,34 +140,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td> Xxxxxxxx </td>
-                                <td> Coadostro de Imovesis </td>
-                                <td> Inseir Benfeitara </td>
-                                <td> Indicator </td>
-                                <td> ALI </td>
-                                <td> 2 </td>
-                                <td> 1 </td>
-                                <td> Baxia </td>
-                                <td> 7 </td>
-                                <td> </td>
+                            <tr *ngFor="let process of listOfProcess; trackBy: trackProcessById">
+                                <td>{{process.factor.nome}} </td>
+                                <td>{{process.module.nome}} </td>
+                                <td>{{process.func.nome}} </td>
+                                <td>{{process.name}} </td>
+                                <td> {{logicalFiles[process.classification].title}} </td>
+                                <td>{{process.det}}</td>
+                                <td>{{process.ret}}</td>
+                                <td>{{complexities[process.complexity]}} </td>
+                                <td>{{process.pf}}</td>
+                                <td><a  (click)="remove(process)"> <i class="fa fa-trash" style="font-size:24px"></i></a> </td>
                             </tr>
-                            <tr>
-                                <td> Yyyyyyyyy </td>
-                                <td> Coadostro de Imovesis </td>
-                                <td> Inseir Benfeitara </td>
-                                <td> Teste </td>
-                                <td> AIE </td>
-                                <td> 3 </td>
-                                <td> 1 </td>
-                                <td> Baxia </td>
-                                <td> 7 </td>
-                                <td> </td>
-                            </tr>
+
                         </tbody>
                     </table>
                     </div>
                 </div>
+
 </tab>
         <tab heading="Função de Transação" style="padding-left: 30px;padding-right: 30px;">
             <div class="row" style="margin-top:30px;">
