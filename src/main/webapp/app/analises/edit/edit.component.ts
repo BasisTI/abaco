@@ -25,13 +25,20 @@ export class AnalisEditComponent implements OnInit {
     factors: FatorAjuste[];
     funcionalidades: Funcionalidade[];
     filteredFunc: Funcionalidade[];
+    filteredTranFunc: Funcionalidade[];
     modules: Modulo[];
     eventSubscriber: Subscription;
     eventFuncSubscriber: Subscription;
     selectedModulo: Modulo;
     selectedFunc: Funcionalidade;
     selectedFactor: FatorAjuste;
-    selectedLogicalFile: IdTile;
+    selectedLogicalFile: IdTitle;
+
+    selectedTranModulo: Modulo;
+    selectedTranFunc: Funcionalidade;
+    selectedTranFactor: FatorAjuste;
+
+
     logicalFiles:Object[];
     complexities:String[];
     elementaryProcess:String ="";
@@ -52,8 +59,11 @@ export class AnalisEditComponent implements OnInit {
         this.selectedModulo=null;
         this.selectedFunc = null;
         this.selectedFactor = null;
+        this.selectedTranModulo=null;
+        this.selectedTranFunc = null;
+        this.selectedTranFactor = null;
         this.selectedLogicalFile = null;
-        this.logicalFiles = Object.keys(LogicalFile).filter(v=> v==String(Number(v))).map(k => new IdTile(Number(k),LogicalFile[k]));
+        this.logicalFiles = Object.keys(LogicalFile).filter(v=> v==String(Number(v))).map(k => new IdTitle(Number(k),LogicalFile[k]));
         this.complexities = Object.keys(Complexity).filter(v=> v==String(Number(v))).map(k => Complexity[k]);
         //alert(JSON.stringify(this.complexities));
         this.selectedProcess = null;
@@ -72,13 +82,7 @@ export class AnalisEditComponent implements OnInit {
     }
 
 
-    selectTab(tab_id: number) {
-        this.staticTabs.tabs[tab_id].active = true;
-    }
 
-    disableEnable() {
-        this.staticTabs.tabs[2].disabled = !this.staticTabs.tabs[2].disabled
-    }
 
     ngOnInit () {
         this.fatorAjusteService.query().subscribe(
@@ -219,7 +223,7 @@ export class AnalisEditComponent implements OnInit {
 /**
  * Class that represent simple Object with ID and title
  */
-class IdTile{
+class IdTitle{
 
     public id:number;
     public title:String;

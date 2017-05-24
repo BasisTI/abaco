@@ -162,37 +162,37 @@
         <tab heading="Função de Transação" style="padding-left: 30px;padding-right: 30px;">
             <div class="row" style="margin-top:30px;">
                 <div class="form-group col-sm-6  required" style="text-align:left;">
-                    <label for="id1" class="control-label">Fotor Ajuste:</label>
-
-                    <select id="id1" class="form-control">
-                        <option value="1">Value_1</option>
-                        <option value="2">Value_2</option>
+                    <label for="field_func_factor" class="control-label">Fotor Ajuste:</label>
+                    <select id="field_func_factor" class="form-control" [(ngModel)]="selectedTranFactor" required>
+                        <option [ngValue]="null"  disabled selected>Select</option>
+                        <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
                     </select>
                 </div>
 
             </div>
             <div class="row">
                 <div class="form-group col-sm-6  required" style="text-align:left;">
-                    <label for="id2" class="control-label">Modulo:</label>
-
-                    <select id="id1" class="form-control">
-                        <option value="1">Value_1</option>
-                        <option value="2">Value_2</option>
+                    <label for="field_func_module" class="control-label">Modulo:</label>
+                    <select id="field_func_module" class="form-control"  [(ngModel)]="selectedTranModulo" (change)="onModuleTranChange($event.target.value)" required>
+                        <option [ngValue]="null" disabled selected>Select</option>
+                        <option [ngValue]="module" *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
                     </select>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-sm-6  required">
-                    <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right">+ Criar novo Modulo</button>
+                    <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"  [routerLink]="['/', { outlets: { popup: ['modulo-new'] } }]">
+                        <span class="fa fa-plus"></span>
+                        <span> Criar novo Modulo</span>
+                    </button>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-sm-6  required" style="text-align:left;">
-                    <label for="id2" class="control-label">Functionalidade:</label>
-
-                    <select id="id1" class="form-control">
-                        <option value="1">Value_1</option>
-                        <option value="2">Value_2</option>
+                    <label for="field_func_funcal" class="control-label">Functionalidade:</label>
+                    <select id="field_func_funcal" class="form-control" [(ngModel)]="selectedTranFunc" required>
+                        <option [ngValue]="null" disabled selected>Select</option>
+                        <option [ngValue]="f" *ngFor="let f of filteredTranFunc; trackBy: trackFuncById">{{f.nome}}</option>
                     </select>
                 </div>
             </div>
