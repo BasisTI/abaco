@@ -5,7 +5,7 @@
 import { FatorAjuste} from '../../entities/fator-ajuste';
 import { Funcionalidade} from '../../entities/funcionalidade';
 import { Modulo } from '../../entities/modulo';
-import { Complexity, LogicalFile } from "./enums";
+import {Complexity, LogicalFile, OutputTypes} from "./enums";
 
 
 
@@ -90,5 +90,121 @@ export class Process{
 
 
     }
+
+
+    public calculateTran(){
+
+
+
+        if (this.classification == OutputTypes.EO || this.classification == OutputTypes.EI) {
+
+            if (this.ret==0 || this.ret==1 ) {
+                if (this.det<=15) {
+                    this.complexity = Complexity.LOW;
+                } else {
+                    this.complexity = Complexity.MEDIUM;
+                }
+            }
+
+            if (this.ret==2 ) {
+                if (this.det<=4) {
+                    this.complexity = Complexity.LOW;
+                }
+
+                if (this.det>=5 && this.det<=15) {
+                    this.complexity = Complexity.MEDIUM;
+                }
+                if (this.det>=16) {
+                    this.complexity = Complexity.HIGH;
+                }
+            }
+
+
+            if (this.ret>=3 ) {
+                if (this.det<=4) {
+                    this.complexity = Complexity.MEDIUM;
+                }
+
+                if (this.det>=5) {
+                    this.complexity = Complexity.HIGH;
+                }
+            }
+
+        } else {
+
+            if (this.ret==0 || this.ret==1 ) {
+                if (this.det<=19) {
+                    this.complexity = Complexity.LOW;
+                } else {
+                    this.complexity = Complexity.MEDIUM;
+                }
+            }
+
+            if (this.ret==2 || this.ret==3 ) {
+                if (this.det<=5) {
+                    this.complexity = Complexity.LOW;
+                }
+
+                if (this.det>=6 && this.det<=19) {
+                    this.complexity = Complexity.MEDIUM;
+                }
+                if (this.det>=20) {
+                    this.complexity = Complexity.HIGH;
+                }
+            }
+
+
+            if (this.ret>=4 ) {
+                if (this.det<=5) {
+                    this.complexity = Complexity.MEDIUM;
+                }
+
+                if (this.det>=6) {
+                    this.complexity = Complexity.HIGH;
+                }
+            }
+
+
+        }
+
+        if (this.classification == OutputTypes.EI || this.classification == OutputTypes.EQ) {
+
+            switch (this.complexity) {
+                case Complexity.LOW:{
+                    this.pf=3;
+                    break;
+                }
+                case Complexity.MEDIUM:{
+                    this.pf=4;
+                    break;
+                }
+                case Complexity.HIGH:{
+                    this.pf=5;
+                    break;
+                }
+                default: this.pf=3;
+            }
+        } else {
+            switch (this.complexity) {
+                case Complexity.LOW:{
+                    this.pf=4;
+                    break;
+                }
+                case Complexity.MEDIUM:{
+                    this.pf=5;
+                    break;
+                }
+                case Complexity.HIGH:{
+                    this.pf=7;
+                    break;
+                }
+                default: this.pf=4;
+            }
+        }
+
+
+    }
+
+
 
 }

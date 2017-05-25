@@ -18,3 +18,12 @@ export enum LogicalFile {
     ILF,
     EIF
 }
+
+/**
+ * Determine values of logical files
+ */
+export enum OutputTypes {
+    EI,
+    EO,
+    EQ
+}

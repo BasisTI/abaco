@@ -9,7 +9,7 @@ import { Response } from '@angular/http';
 import { EventManager, AlertService, JhiLanguageService } from 'ng-jhipster';
 import { Funcionalidade, FuncionalidadeService } from '../../entities/funcionalidade';
 import { Modulo, ModuloService } from '../../entities/modulo';
-import {Complexity, LogicalFile} from "./enums";
+import {Complexity, LogicalFile, OutputTypes} from "./enums";
 import {Process} from "./process.model";
 import Any = jasmine.Any;
 
@@ -33,6 +33,7 @@ export class AnalisEditComponent implements OnInit {
     selectedFunc: Funcionalidade;
     selectedFactor: FatorAjuste;
     selectedLogicalFile: IdTitle;
+    selectedOutputType: IdTitle;
 
     selectedTranModulo: Modulo;
     selectedTranFunc: Funcionalidade;
@@ -40,13 +41,19 @@ export class AnalisEditComponent implements OnInit {
 
 
     logicalFiles:Object[];
+    outputTypes:Object[];
     complexities:String[];
     elementaryProcess:String ="";
+    elementaryTranProcess:String ="";
     ret:String = "0";
     det:String = "0";
+    retTran:String = "0";
+    detTran:String = "0";
     listOfProcess:Process[]=[];
+    listOfTranProcess:Process[]=[];
     selectedProcess:Process;
     totals:TotalRecord[];
+    totalsTran:TotalRecord[];
 
 
     constructor(
@@ -63,22 +70,27 @@ export class AnalisEditComponent implements OnInit {
         this.selectedTranFunc = null;
         this.selectedTranFactor = null;
         this.selectedLogicalFile = null;
+        this.selectedOutputType = null;
         this.logicalFiles = Object.keys(LogicalFile).filter(v=> v==String(Number(v))).map(k => new IdTitle(Number(k),LogicalFile[k]));
+        this.outputTypes = Object.keys(OutputTypes).filter(v=> v==String(Number(v))).map(k => new IdTitle(Number(k),OutputTypes[k]));
         this.complexities = Object.keys(Complexity).filter(v=> v==String(Number(v))).map(k => Complexity[k]);
         //alert(JSON.stringify(this.complexities));
         this.selectedProcess = null;
         this.totals = [];
+        this.totalsTran = [];
         this.initTotalsTable();
     };
 
 
+    /**
+     * Init summary tables
+     */
     initTotalsTable(){
-        let row1 = new TotalRecord();
-        row1.input = LogicalFile.ILF
-        let row2 = new TotalRecord();
-        row2.input = LogicalFile.EIF
-        this.totals[LogicalFile.ILF] = row1;
-        this.totals[LogicalFile.EIF] = row2;
+        this.totals[LogicalFile.ILF] = new TotalRecord(LogicalFile.ILF);
+        this.totals[LogicalFile.EIF] = new TotalRecord(LogicalFile.EIF);
+        this.totalsTran[OutputTypes.EI] = new TotalRecord(OutputTypes.EI);
+        this.totalsTran[OutputTypes.EO] = new TotalRecord(OutputTypes.EO);
+        this.totalsTran[OutputTypes.EQ] = new TotalRecord(OutputTypes.EQ);
     }
 
 
@@ -106,22 +118,36 @@ export class AnalisEditComponent implements OnInit {
     }
 
 
-
-    refreshFunctionsList(){
-        if (this.selectedModulo==null) {
-            this.filteredFunc = [];
-            this.selectedFunc = null;
+    /**
+     * Get list of functions by selected module
+     *
+     * @param model
+     *          given module
+     *
+     */
+    filteredFunctionsByModule(model:Modulo){
+        if (model==null) {
+            return [];
         }
-        this.filteredFunc=this.funcionalidades.filter(f=>{
-            return f.modulo.id==this.selectedModulo.id;
+        let func:Funcionalidade[];
+        func=this.funcionalidades.filter(f=>{
+            return f.modulo.id==model.id;
         });
+
+        return func;
     }
 
 
     onModuleChange(item:any)
     {
-        this.refreshFunctionsList();
+        this.filteredFunc = this.filteredFunctionsByModule(this.selectedModulo);
         this.selectedFunc = null;
+    }
+
+
+    onModuleTranChange(item:any){
+        this.filteredTranFunc = this.filteredFunctionsByModule(this.selectedTranModulo);
+        this.selectedTranFunc = null;
     }
 
 
@@ -139,6 +165,7 @@ export class AnalisEditComponent implements OnInit {
             (res: Response) => {
                     this.modules = res.json();
                     this.selectedModulo=null;
+                    this.selectedTranModulo=null;
                 }, (res: Response) => this.onError(res.json()));
     }
 
@@ -149,6 +176,7 @@ export class AnalisEditComponent implements OnInit {
             (res: Response) => {
                 this.funcionalidades = res.json();
                 this.onModuleChange(null);
+                this.onModuleTranChange(null);
                 }, (res: Response) => this.onError(res.json()));
     }
 
@@ -172,6 +200,24 @@ export class AnalisEditComponent implements OnInit {
     }
 
 
+    /*
+     Add new elementary process for "de Transacao" page
+     */
+    addTran(){
+        let newProcess = new Process();
+        newProcess.id = new Date().getTime();
+        newProcess.factor = this.selectedTranFactor;
+        newProcess.module = this.selectedTranModulo;
+        newProcess.func = this.selectedTranFunc;
+        newProcess.classification = this.selectedOutputType.id;
+        newProcess.name = this.elementaryTranProcess;
+        newProcess.ret = Number(this.retTran);
+        newProcess.det = Number(this.detTran);
+        newProcess.calculateTran();
+        this.listOfTranProcess.push(newProcess);
+        this.recalculateTranTotals();
+    }
+
     remove(process){
 
         let searchedIndex=-1;
@@ -184,6 +230,22 @@ export class AnalisEditComponent implements OnInit {
         if (searchedIndex>=0) {
             this.listOfProcess.splice(searchedIndex,1);
             this.recalculateTotals();
+        }
+    }
+
+
+    removeTran(process){
+
+        let searchedIndex=-1;
+        for (var index in this.listOfTranProcess) {
+            if (this.listOfTranProcess[index].id == process.id) {
+                searchedIndex=Number(index);
+
+            }
+        }
+        if (searchedIndex>=0) {
+            this.listOfTranProcess.splice(searchedIndex,1);
+            this.recalculateTranTotals();
         }
     }
 
@@ -208,6 +270,30 @@ export class AnalisEditComponent implements OnInit {
             this.totals[process.classification].pf+=process.pf;
         });
     }
+
+
+    recalculateTranTotals() {
+        this.totalsTran[OutputTypes.EO].init();
+        this.totalsTran[OutputTypes.EI].init();
+        this.totalsTran[OutputTypes.EQ].init();
+        this.listOfTranProcess.forEach(process => {
+            switch(process.complexity) {
+                case Complexity.LOW:
+                    this.totalsTran[process.classification].low++;
+                    break;
+                case Complexity.MEDIUM:
+                    this.totalsTran[process.classification].medium++;
+                    break;
+                case Complexity.HIGH:
+                    this.totalsTran[process.classification].high++;
+                    break;
+            };
+
+            this.totalsTran[process.classification].total++;
+            this.totalsTran[process.classification].pf+=process.pf;
+        });
+    }
+
 
 
     registerChangeInModulos() {
@@ -244,6 +330,10 @@ class TotalRecord{
     public high:number=0;
     public total:number=0;
     public pf:number=0;
+
+    constructor(input:number) {
+        this.input=input;
+    }
 
     public init(){
         this.low=0;
