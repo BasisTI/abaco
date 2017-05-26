@@ -40,8 +40,8 @@ export class AnalisEditComponent implements OnInit {
     selectedTranFactor: FatorAjuste;
 
 
-    logicalFiles:Object[];
-    outputTypes:Object[];
+    logicalFiles:IdTitle[];
+    outputTypes:IdTitle[];
     complexities:String[];
     elementaryProcess:String ="";
     elementaryTranProcess:String ="";
@@ -54,7 +54,10 @@ export class AnalisEditComponent implements OnInit {
     selectedProcess:Process;
     totals:TotalRecord[];
     totalsTran:TotalRecord[];
+    summary:TotalRecord[]=[];
+    totalRow:TotalRecord = new TotalRecord(0);
 
+    editedProcess:Process=null; // Define the process that it is in editabled mode
 
     constructor(
         private alertService: AlertService,
@@ -71,10 +74,10 @@ export class AnalisEditComponent implements OnInit {
         this.selectedTranFactor = null;
         this.selectedLogicalFile = null;
         this.selectedOutputType = null;
+
         this.logicalFiles = Object.keys(LogicalFile).filter(v=> v==String(Number(v))).map(k => new IdTitle(Number(k),LogicalFile[k]));
         this.outputTypes = Object.keys(OutputTypes).filter(v=> v==String(Number(v))).map(k => new IdTitle(Number(k),OutputTypes[k]));
         this.complexities = Object.keys(Complexity).filter(v=> v==String(Number(v))).map(k => Complexity[k]);
-        //alert(JSON.stringify(this.complexities));
         this.selectedProcess = null;
         this.totals = [];
         this.totalsTran = [];
@@ -88,9 +91,15 @@ export class AnalisEditComponent implements OnInit {
     initTotalsTable(){
         this.totals[LogicalFile.ILF] = new TotalRecord(LogicalFile.ILF);
         this.totals[LogicalFile.EIF] = new TotalRecord(LogicalFile.EIF);
-        this.totalsTran[OutputTypes.EI] = new TotalRecord(OutputTypes.EI);
-        this.totalsTran[OutputTypes.EO] = new TotalRecord(OutputTypes.EO);
-        this.totalsTran[OutputTypes.EQ] = new TotalRecord(OutputTypes.EQ);
+        this.totalsTran[OutputTypes.EI-2] = new TotalRecord(OutputTypes.EI);
+        this.totalsTran[OutputTypes.EO-2] = new TotalRecord(OutputTypes.EO);
+        this.totalsTran[OutputTypes.EQ-2] = new TotalRecord(OutputTypes.EQ);
+
+        this.summary[LogicalFile.ILF] = new TotalRecord(LogicalFile.ILF);
+        this.summary[LogicalFile.EIF] = new TotalRecord(LogicalFile.EIF);
+        this.summary[OutputTypes.EI] = new TotalRecord(OutputTypes.EI);
+        this.summary[OutputTypes.EO] = new TotalRecord(OutputTypes.EO);
+        this.summary[OutputTypes.EQ] = new TotalRecord(OutputTypes.EQ);
     }
 
 
@@ -185,8 +194,8 @@ export class AnalisEditComponent implements OnInit {
         Add new elementary process for "de Dados" page
      */
     add(){
-        let newProcess = new Process();
-        newProcess.id = new Date().getTime();
+        let newProcess = (this.editedProcess!=null)? this.editedProcess: new Process();
+        if (this.editedProcess==null) newProcess.id = new Date().getTime();
         newProcess.factor = this.selectedFactor;
         newProcess.module = this.selectedModulo;
         newProcess.func = this.selectedFunc;
@@ -195,8 +204,18 @@ export class AnalisEditComponent implements OnInit {
         newProcess.ret = Number(this.ret);
         newProcess.det = Number(this.det);
         newProcess.calculate();
-        this.listOfProcess.push(newProcess);
+        if (this.editedProcess==null) {
+            this.listOfProcess.push(newProcess);
+        } else {
+
+            let searchedIndex=this.getIndexOfProcessById(this.listOfProcess,this.editedProcess.id);
+            if (searchedIndex>=0) {
+                this.listOfProcess[searchedIndex] = newProcess;
+            }
+        }
         this.recalculateTotals();
+        this.editedProcess = null;
+        document.getElementById("buttonAdd").innerText = "Adicionar";
     }
 
 
@@ -220,17 +239,43 @@ export class AnalisEditComponent implements OnInit {
 
     remove(process){
 
-        let searchedIndex=-1;
-        for (var index in this.listOfProcess) {
-            if (this.listOfProcess[index].id == process.id) {
-                searchedIndex=Number(index);
+        let searchedIndex=this.getIndexOfProcessById(this.listOfProcess,process.id);
 
-            }
-        }
         if (searchedIndex>=0) {
             this.listOfProcess.splice(searchedIndex,1);
             this.recalculateTotals();
         }
+    }
+
+
+
+    getIndexOfProcessById(list:Process[], id:number){
+        let searchedIndex=-1;
+        for (var index in list) {
+            if (list[index].id == id) {
+                searchedIndex=Number(index);
+
+            }
+        }
+
+        return searchedIndex;
+    }
+
+    /**
+     * Fired when process is in edit mode
+     *
+     * @param process
+     */
+    edit(process:Process) {
+        this.editedProcess = process;
+        this.selectedModulo = process.module;
+        this.selectedFactor = process.factor;
+        this.selectedFunc = process.func;
+        this.selectedLogicalFile = this.logicalFiles[process.classification];
+        this.elementaryProcess = process.name;
+        this.det = process.det.toString();
+        this.ret = process.ret.toString();
+        document.getElementById("buttonAdd").innerText = "Accept changes";
     }
 
 
@@ -248,6 +293,25 @@ export class AnalisEditComponent implements OnInit {
             this.recalculateTranTotals();
         }
     }
+
+
+    recalculateSummary(){
+        this.summary[LogicalFile.ILF] = this.totals[LogicalFile.ILF];
+        this.summary[LogicalFile.EIF] = this.totals[LogicalFile.EIF];
+        this.summary[OutputTypes.EO] = this.totalsTran[OutputTypes.EO-2];
+        this.summary[OutputTypes.EI] = this.totalsTran[OutputTypes.EI-2];
+        this.summary[OutputTypes.EQ] = this.totalsTran[OutputTypes.EQ-2];
+        this.totalRow.init();
+        let index:any;
+        for(index in this.summary){
+            this.totalRow.low+=this.summary[index].low;
+            this.totalRow.medium+=this.summary[index].medium;
+            this.totalRow.high+=this.summary[index].high;
+            this.totalRow.total+=this.summary[index].total;
+            this.totalRow.pf+=this.summary[index].pf;
+        }
+    }
+
 
 
     recalculateTotals() {
@@ -269,29 +333,31 @@ export class AnalisEditComponent implements OnInit {
             this.totals[process.classification].total++;
             this.totals[process.classification].pf+=process.pf;
         });
+        this.recalculateSummary();
     }
 
 
     recalculateTranTotals() {
-        this.totalsTran[OutputTypes.EO].init();
-        this.totalsTran[OutputTypes.EI].init();
-        this.totalsTran[OutputTypes.EQ].init();
+        this.totalsTran[OutputTypes.EO-2].init();
+        this.totalsTran[OutputTypes.EI-2].init();
+        this.totalsTran[OutputTypes.EQ-2].init();
         this.listOfTranProcess.forEach(process => {
             switch(process.complexity) {
                 case Complexity.LOW:
-                    this.totalsTran[process.classification].low++;
+                    this.totalsTran[process.classification-2].low++;
                     break;
                 case Complexity.MEDIUM:
-                    this.totalsTran[process.classification].medium++;
+                    this.totalsTran[process.classification-2].medium++;
                     break;
                 case Complexity.HIGH:
-                    this.totalsTran[process.classification].high++;
+                    this.totalsTran[process.classification-2].high++;
                     break;
             };
 
-            this.totalsTran[process.classification].total++;
-            this.totalsTran[process.classification].pf+=process.pf;
+            this.totalsTran[process.classification-2].total++;
+            this.totalsTran[process.classification-2].pf+=process.pf;
         });
+        this.recalculateSummary();
     }
 
 

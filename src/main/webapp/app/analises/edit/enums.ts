@@ -23,7 +23,7 @@ export enum LogicalFile {
  * Determine values of logical files
  */
 export enum OutputTypes {
-    EI,
-    EO,
-    EQ
+    EI=2,
+    EO=3,
+    EQ=4
 }
