@@ -6,3 +6,5 @@ export * from './analise-delete-dialog.component';
 export * from './analise-detail.component';
 export * from './analise.component';
 export * from './analise.route';
+export * from 'angular2-datatable';
+export * from  '@angular/forms';

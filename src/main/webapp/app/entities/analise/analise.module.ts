@@ -1,7 +1,9 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
+import { TabsetComponent } from 'ngx-bootstrap';
 import { AbacoSharedModule } from '../../shared';
+import { DataTableModule } from "angular2-datatable";
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 import {
     AnaliseService,
@@ -10,8 +12,10 @@ import {
     AnaliseDetailComponent,
     AnaliseDialogComponent,
     AnalisePopupComponent,
+
     AnaliseDeletePopupComponent,
     AnaliseDeleteDialogComponent,
+
     analiseRoute,
     analisePopupRoute,
 } from './';
@@ -24,6 +28,8 @@ let ENTITY_STATES = [
 @NgModule({
     imports: [
         AbacoSharedModule,
+        TabsModule.forRoot(),
+        DataTableModule,
         RouterModule.forRoot(ENTITY_STATES, { useHash: true })
     ],
     declarations: [

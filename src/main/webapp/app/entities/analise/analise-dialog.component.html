@@ -1,12 +1,14 @@
-
-
-<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm" >
 
     <div class="modal-header">
         <h4 class="modal-title" id="myAnaliseLabel" jhiTranslate="abacoApp.analise.home.createOrEditLabel">Create or edit a Analise</h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 (click)="clear()">&times;</button>
     </div>
+
+    <tabset #staticTabs>
+        <tab heading="Geral" style="padding-left: 30px;padding-right: 30px;">
+
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
         <div class="form-group" [hidden]="!analise.id">
@@ -107,6 +109,358 @@
         </div>
 
     </div>
+
+        </tab>
+
+
+        <tab heading="Função de Dados" style="padding-left: 30px;padding-right: 30px;">
+
+            <form #dadosForm="ngForm" >
+
+                <div class="row" style="margin-top:30px;">
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_factor" class="control-label">Fotor Ajuste:</label>
+
+                        <select id="field_factor" name="factor" class="form-control" [(ngModel)]="selectedFactor" required>
+                            <option [ngValue]="null"  disabled selected>Select</option>
+                            <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_module" class="control-label">Modulo:</label>
+
+                        <select id="field_module" name="module" class="form-control" [(ngModel)]="selectedModulo" (change)="onModuleChange($event.target.value)" required>
+                            <option [ngValue]="null" disabled selected>Select</option>
+                            <option [ngValue]="module" *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6  required">
+                        <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"  [routerLink]="['/', { outlets: { popup: ['modulo-new'] } }]">
+                            <span class="fa fa-plus"></span>
+                            <span> Criar novo Modulo</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_function" class="control-label">Functionalidade:</label>
+
+                        <select id="field_function" name="function" class="form-control" [(ngModel)]="selectedFunc" required>
+                            <option [ngValue]="null" disabled selected>Select</option>
+                            <option [ngValue]="f" *ngFor="let f of filteredFunc; trackBy: trackFuncById">{{f.nome}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6  required">
+                        <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"   [routerLink]="['/', { outlets: { popup: ['funcionalidade-new'] } }]">
+                            <span class="fa fa-plus"></span>
+                            <span>Criar nova Functionalidade</span></button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_class" class="control-label">Clossificado:</label>
+
+                        <select id="field_class" name="class" class="form-control" [(ngModel)]="selectedLogicalFile" required>
+                            <option [ngValue]="null" disabled selected>Select</option>
+                            <option [ngValue]="file" *ngFor="let file of logicalFiles;">{{file.title}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_process" class="control-label">Name Processo Elementar:</label>
+                        <input id="field_process" name="process" class="form-control" [(ngModel)]="elementaryProcess" required/>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-3" >
+                        <label for="field_ret" class="control-label">DER</label>
+                        <textarea id="field_ret"  name="ret" class="form-control" style="height: 140px;" [(ngModel)]="det"> </textarea>
+
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="field_det" class="control-label">RLR</label>
+                        <textarea id="field_det" name="det" class="form-control" style="height: 140px;" [(ngModel)]="ret"> </textarea>
+
+                    </div>
+                    <div class="form-group col-sm-4" style="margin-left:60px;">
+                        <div class="table-responsive">
+                            <label for="total-table1" class="control-label">Resumo</label>
+                            <table id="total-table1" class="table table-striped" [mfData]="totals" #mf="mfDataTable">
+                                <thead>
+                                <tr>
+                                    <th style="width:15%;"></th>
+                                    <th> Baixa </th>
+                                    <th> Média </th>
+                                    <th> Alta </th>
+                                    <th> Total </th>
+                                    <th> PF </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let total of totals;">
+                                    <td> {{logicalFiles[total.input].title}} </td>
+                                    <td> {{total.low}} </td>
+                                    <td> {{total.medium}} </td>
+                                    <td> {{total.high}} </td>
+                                    <td> {{total.total}} </td>
+                                    <td> {{total.pf}} </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="border-bottom-width: 1px;border-bottom-style: groove;">
+                    <div class="form-group col-sm-6  required">
+                        <button class="btn btn-primary" id="buttonAdd" value="" style="float:right"  [disabled]="!dadosForm.form.valid" (click)="add()">Adicionar</button>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="row">
+                <div class="table-responsive">
+                    <table id="process_table" class="table table-striped" [mfData]="listOfProcess" #mf="mfDataTable" >
+                        <thead>
+                        <tr>
+                            <th style="width:15%;">Fator Ajuste</th>
+                            <th> Modulo </th>
+                            <th> Functionalidade </th>
+                            <th> Name </th>
+                            <th> Classificado </th>
+                            <th style="width:60px"> RLR </th>
+                            <th style="width:60px"> DER </th>
+                            <th> Complexidade </th>
+                            <th> PF </th>
+                            <th> Acdo</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let process of listOfProcess; trackBy: trackProcessById">
+                            <td>{{process.factor.nome}} </td>
+                            <td>{{process.module.nome}} </td>
+                            <td>{{process.func.nome}} </td>
+                            <td>{{process.name}} </td>
+                            <td> {{logicalFiles[process.classification].title}} </td>
+                            <td>{{process.ret}}</td>
+                            <td>{{process.det}}</td>
+                            <td>{{complexities[process.complexity]}} </td>
+                            <td>{{process.pf}}</td>
+                            <td><a  (click)="edit(process)"> <i class="fa fa-edit" style="font-size:24px"></i></a>
+                                <a  (click)="remove(process)"> <i class="fa fa-trash" style="font-size:24px"></i></a>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </tab>
+        <tab heading="Função de Transação" style="padding-left: 30px;padding-right: 30px;">
+            <form #tranForm="ngForm">
+                <div class="row" style="margin-top:30px;">
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_func_factor" class="control-label">Fotor Ajuste:</label>
+                        <select id="field_func_factor"  name = "tranFactor" class="form-control" [(ngModel)]="selectedTranFactor" required>
+                            <option [ngValue]="null"  disabled selected>Select</option>
+                            <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_func_module" class="control-label">Modulo:</label>
+                        <select id="field_func_module" name = "tranModule" class="form-control"  [(ngModel)]="selectedTranModulo" (change)="onModuleTranChange($event.target.value)" required>
+                            <option [ngValue]="null" disabled selected>Select</option>
+                            <option [ngValue]="module" *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6  required">
+                        <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"  [routerLink]="['/', { outlets: { popup: ['modulo-new'] } }]">
+                            <span class="fa fa-plus"></span>
+                            <span> Criar novo Modulo</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_func_funcal" class="control-label">Functionalidade:</label>
+                        <select id="field_func_funcal" name = "tranFucal" class="form-control" [(ngModel)]="selectedTranFunc" required>
+                            <option [ngValue]="null" disabled selected>Select</option>
+                            <option [ngValue]="f" *ngFor="let f of filteredTranFunc; trackBy: trackFuncById">{{f.nome}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6  required">
+                        <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right" [routerLink]="['/', { outlets: { popup: ['funcionalidade-new'] } }]">
+                            <span class="fa fa-plus"></span>
+                            <span>Criar nova Functionalidade</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="id5" class="control-label">Clossificado:</label>
+
+                        <select id="id5" class="form-control" name = "tranClass" [(ngModel)]="selectedOutputType" required >
+                            <option [ngValue]="null" disabled selected>Select</option>
+                            <option [ngValue]="file" *ngFor="let file of outputTypes;">{{file.title}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="id6" class="control-label">Name Processo Elementar:</label>
+                        <input id="id6" name = "tranName" class="form-control"  [(ngModel)]="elementaryTranProcess" required />
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label for="id7" class="control-label">DER</label>
+                        <textarea id="id7" class="form-control"  name="tranDet" style="height: 140px;" [(ngModel)]="detTran"> </textarea>
+
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="id8" class="control-label">FTR</label>
+                        <textarea id="id8" class="form-control"  name="tranRet" style="height: 140px;" [(ngModel)]="retTran"> </textarea>
+
+                    </div>
+                    <div class="form-group col-sm-4" style="margin-left:60px;margin-top: -60px;">
+                        <div class="table-responsive">
+                            <label for="table1" class="control-label">Resumo</label>
+                            <table id="table1" class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th style="width:15%;"></th>
+                                    <th> Baixa </th>
+                                    <th> Média </th>
+                                    <th> Alta </th>
+                                    <th> Total </th>
+                                    <th> PF </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let total1 of totalsTran;">
+                                    <td> {{outputTypes[total1.input-2].title}} </td>
+                                    <td> {{total1.low}} </td>
+                                    <td> {{total1.medium}} </td>
+                                    <td> {{total1.high}} </td>
+                                    <td> {{total1.total}} </td>
+                                    <td> {{total1.pf}} </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="border-bottom-width: 1px;border-bottom-style: groove;">
+                    <div class="form-group col-sm-6  required">
+                        <button class="btn btn-primary" style="float:right"  [disabled]="!tranForm.form.valid" (click)="addTran()">Adicionar</button>
+                    </div>
+                </div>
+
+            </form>
+            <div class="row">
+                <div class="table-responsive">
+                    <table id="table2" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th style="width:15%;">Fator Ajuste</th>
+                            <th> Modulo </th>
+                            <th> Functionalidade </th>
+                            <th> Name </th>
+                            <th> Classificado </th>
+                            <th style="width:60px"> FTR </th>
+                            <th style="width:60px"> DER </th>
+                            <th> Complexidade </th>
+                            <th> PF </th>
+                            <th> Acdo</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let process of listOfTranProcess;">
+                            <td>{{process.factor.nome}} </td>
+                            <td>{{process.module.nome}} </td>
+                            <td>{{process.func.nome}} </td>
+                            <td>{{process.name}} </td>
+                            <td> {{outputTypes[process.classification-2].title}} </td>
+                            <td>{{process.ret}}</td>
+                            <td>{{process.det}}</td>
+                            <td>{{complexities[process.complexity]}} </td>
+                            <td>{{process.pf}}</td>
+                            <td><a  (click)="removeTran(process)"> <i class="fa fa-trash" style="font-size:24px"></i></a> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </tab>
+        <tab heading="Resumo" style="padding-left: 30px;padding-right: 30px;">
+            <div class="row" style="margin-top:30px;">
+                <div class="form-group col-sm-6  required" style="text-align:left;">
+                    <table id="table5" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th style="width:15%;"></th>
+                            <th> Baixa </th>
+                            <th> Média </th>
+                            <th> Alta </th>
+                            <th> Total </th>
+                            <th> PF </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr  *ngFor="let total of summary;">
+                            <td> {{total.input<=1?logicalFiles[total.input].title:outputTypes[total.input-2].title}} </td>
+                            <td> {{total.low}} </td>
+                            <td> {{total.medium}} </td>
+                            <td> {{total.high}} </td>
+                            <td> {{total.total}} </td>
+                            <td> {{total.pf}} </td>
+                        </tr>
+
+                        <tr>
+                            <td> Total </td>
+                            <td> {{totalRow.low}} </td>
+                            <td> {{totalRow.medium}} </td>
+                            <td> {{totalRow.high}} </td>
+                            <td> {{totalRow.total}} </td>
+                            <td> {{totalRow.pf}} </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="id12" class="control-label">Observações</label>
+                <textarea id="id12" class="form-control" style="height: 140px;"> </textarea>
+            </div>
+        </tab>
+
+    </tabset>
+
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">
             <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
