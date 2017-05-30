@@ -148,8 +148,14 @@ export class AnaliseDialogComponent implements OnInit {
         this.moduloService.query().subscribe(
             (res: Response) => { this.modules = res.json(); }, (res: Response) => this.onError(res.json()));
         this.registerChangeInModulos();
-        this.registerChangeInFunc()
+        this.registerChangeInFunc();
+
+        // Stupid way for set width of modal window. I could not find another way.
+        let elem =document.querySelector(".modal-dialog")  as HTMLInputElement ;
+        elem.style['max-width'] = 1200+"px";
     }
+
+
     clear () {
         this.activeModal.dismiss('cancel');
     }
@@ -382,6 +388,7 @@ export class AnaliseDialogComponent implements OnInit {
             this.totalRow.total+=this.summary[index].total;
             this.totalRow.pf+=this.summary[index].pf;
         }
+      this.analise.pfTotal = this.totalRow.pf.toString();
     }
 
 

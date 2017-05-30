@@ -123,7 +123,7 @@
                         <label for="field_factor" class="control-label">Fotor Ajuste:</label>
 
                         <select id="field_factor" name="factor" class="form-control" [(ngModel)]="selectedFactor" >
-                            <option [ngValue]="null"  disabled selected>Select</option>
+                            <option [ngValue]="null"  selected>Select</option>
                             <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
                         </select>
                     </div>
@@ -278,7 +278,7 @@
                     <div class="form-group col-sm-6  required" style="text-align:left;">
                         <label for="field_func_factor" class="control-label">Fotor Ajuste:</label>
                         <select id="field_func_factor"  name = "tranFactor" class="form-control" [(ngModel)]="selectedTranFactor" >
-                            <option [ngValue]="null"  disabled selected>Select</option>
+                            <option [ngValue]="null"  selected>Select</option>
                             <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
                         </select>
                     </div>
