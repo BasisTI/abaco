@@ -2,8 +2,8 @@
  * Created by Wizi on 21.05.2017.
  */
 
-import { FatorAjuste} from '../../entities/fator-ajuste';
-import { Funcionalidade} from '../../entities/funcionalidade';
+import { FatorAjuste, TipoFatorAjuste} from '../fator-ajuste/fator-ajuste.model';
+import { Funcionalidade} from '../funcionalidade';
 import { Modulo } from '../../entities/modulo';
 import {Complexity, LogicalFile, OutputTypes} from "./enums";
 
@@ -11,7 +11,7 @@ import {Complexity, LogicalFile, OutputTypes} from "./enums";
 
 export class Process{
     public id:number;
-    public factor:FatorAjuste;
+    public factor?:FatorAjuste;
     public module:Modulo;
     public func:Funcionalidade;
     public name:String;
@@ -20,8 +20,46 @@ export class Process{
     public det:number;
     public complexity:Complexity;
     public pf:number;
+    public retStr:String;
+    public detStr:String;
+
+
+    private applyFactor(){
+        if (this.factor==null) {
+            return;
+        }
+
+        let factorValue:number = (this.factor.tipoAjuste==TipoFatorAjuste.PERCENTUAL)?(this.pf/100)*this.factor.fator:this.factor.fator;
+        if (this.factor.tipoAjuste.toString()=='PERCENTUAL'){
+            factorValue = (this.pf/100)*this.factor.fator;
+        } else {
+            factorValue = this.factor.fator;
+        }
+        this.pf+=factorValue;
+    }
+
+
+    private checkIsNumber(val:String){
+        return !isNaN(Number(val));
+    }
+
+    public calculateRetDet(){
+        if (this.checkIsNumber(this.detStr)) {
+            this.det = Number(this.detStr);
+        } else {
+            this.det=this.detStr.split("\n", 1000).length;
+        }
+
+        if (this.checkIsNumber(this.retStr)) {
+            this.ret = Number(this.retStr);
+        } else {
+            this.ret=this.retStr.split("\n", 1000).length;
+        }
+
+    }
 
     public calculate(){
+        this.calculateRetDet();
         if (this.ret==1) {
             if (this.det<=50) {
                 this.complexity = Complexity.LOW;
@@ -88,14 +126,12 @@ export class Process{
             }
         }
 
-
+        this.applyFactor();
     }
 
 
     public calculateTran(){
-
-
-
+        this.calculateRetDet();
         if (this.classification == OutputTypes.EO || this.classification == OutputTypes.EI) {
 
             if (this.ret==0 || this.ret==1 ) {
@@ -202,7 +238,7 @@ export class Process{
             }
         }
 
-
+        this.applyFactor();
     }
 
 

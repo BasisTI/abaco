@@ -24,6 +24,7 @@ import {FatorAjusteService} from "../fator-ajuste/fator-ajuste.service";
 @Component({
     selector: 'jhi-analise-dialog',
     templateUrl: './analise-dialog.component.html'
+
 })
 export class AnaliseDialogComponent implements OnInit {
 
@@ -61,10 +62,10 @@ export class AnaliseDialogComponent implements OnInit {
     complexities:String[];
     elementaryProcess:String ="";
     elementaryTranProcess:String ="";
-    ret:String = "0";
-    det:String = "0";
-    retTran:String = "0";
-    detTran:String = "0";
+    ret:String = "";
+    det:String = "";
+    retTran:String = "";
+    detTran:String = "";
     listOfProcess:Process[]=[];
     listOfTranProcess:Process[]=[];
     selectedProcess:Process;
@@ -271,8 +272,8 @@ export class AnaliseDialogComponent implements OnInit {
         newProcess.func = this.selectedFunc;
         newProcess.classification = this.selectedLogicalFile.id;
         newProcess.name = this.elementaryProcess;
-        newProcess.ret = Number(this.ret);
-        newProcess.det = Number(this.det);
+        newProcess.retStr = this.ret;
+        newProcess.detStr = this.det;
         newProcess.calculate();
         if (this.editedProcess==null) {
             this.listOfProcess.push(newProcess);
@@ -300,8 +301,9 @@ export class AnaliseDialogComponent implements OnInit {
         newProcess.func = this.selectedTranFunc;
         newProcess.classification = this.selectedOutputType.id;
         newProcess.name = this.elementaryTranProcess;
-        newProcess.ret = Number(this.retTran);
-        newProcess.det = Number(this.detTran);
+
+        newProcess.retStr = this.retTran;
+        newProcess.detStr = this.detTran;
         newProcess.calculateTran();
         this.listOfTranProcess.push(newProcess);
         this.recalculateTranTotals();
@@ -343,8 +345,8 @@ export class AnaliseDialogComponent implements OnInit {
         this.selectedFunc = process.func;
         this.selectedLogicalFile = this.logicalFiles[process.classification];
         this.elementaryProcess = process.name;
-        this.det = process.det.toString();
-        this.ret = process.ret.toString();
+        this.det = process.detStr;
+        this.ret = process.retStr;
         document.getElementById("buttonAdd").innerText = "Accept changes";
     }
 

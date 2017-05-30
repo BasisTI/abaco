@@ -1,10 +1,10 @@
 
-const enum TipoFatorAjuste {
+export  enum TipoFatorAjuste {
     'PERCENTUAL',
     'UNITARIO'
 };
 
-const enum ImpactoFatorAjuste {
+export  enum ImpactoFatorAjuste {
     'INCLUSAO',
     'ALTERACAO',
     'EXCLUSAO',

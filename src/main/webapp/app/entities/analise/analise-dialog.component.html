@@ -1,3 +1,4 @@
+
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm" >
 
     <div class="modal-header">
@@ -121,7 +122,7 @@
                     <div class="form-group col-sm-6  required" style="text-align:left;">
                         <label for="field_factor" class="control-label">Fotor Ajuste:</label>
 
-                        <select id="field_factor" name="factor" class="form-control" [(ngModel)]="selectedFactor" required>
+                        <select id="field_factor" name="factor" class="form-control" [(ngModel)]="selectedFactor" >
                             <option [ngValue]="null"  disabled selected>Select</option>
                             <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
                         </select>
@@ -187,12 +188,12 @@
                 <div class="row">
                     <div class="form-group col-sm-3" >
                         <label for="field_ret" class="control-label">DER</label>
-                        <textarea id="field_ret"  name="ret" class="form-control" style="height: 140px;" [(ngModel)]="det"> </textarea>
+                        <textarea id="field_ret"  name="ret" class="form-control" style="height: 140px;" [(ngModel)]="det" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-3">
                         <label for="field_det" class="control-label">RLR</label>
-                        <textarea id="field_det" name="det" class="form-control" style="height: 140px;" [(ngModel)]="ret"> </textarea>
+                        <textarea id="field_det" name="det" class="form-control" style="height: 140px;" [(ngModel)]="ret" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-4" style="margin-left:60px;">
@@ -251,7 +252,7 @@
                         </thead>
                         <tbody>
                         <tr *ngFor="let process of listOfProcess; trackBy: trackProcessById">
-                            <td>{{process.factor.nome}} </td>
+                            <td><span *ngIf="process.factor">{{process.factor.nome}} </span> </td>
                             <td>{{process.module.nome}} </td>
                             <td>{{process.func.nome}} </td>
                             <td>{{process.name}} </td>
@@ -276,7 +277,7 @@
                 <div class="row" style="margin-top:30px;">
                     <div class="form-group col-sm-6  required" style="text-align:left;">
                         <label for="field_func_factor" class="control-label">Fotor Ajuste:</label>
-                        <select id="field_func_factor"  name = "tranFactor" class="form-control" [(ngModel)]="selectedTranFactor" required>
+                        <select id="field_func_factor"  name = "tranFactor" class="form-control" [(ngModel)]="selectedTranFactor" >
                             <option [ngValue]="null"  disabled selected>Select</option>
                             <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
                         </select>
@@ -337,12 +338,12 @@
                 <div class="row">
                     <div class="form-group col-sm-3">
                         <label for="id7" class="control-label">DER</label>
-                        <textarea id="id7" class="form-control"  name="tranDet" style="height: 140px;" [(ngModel)]="detTran"> </textarea>
+                        <textarea id="id7" class="form-control"  name="tranDet" style="height: 140px;" [(ngModel)]="detTran" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-3">
                         <label for="id8" class="control-label">FTR</label>
-                        <textarea id="id8" class="form-control"  name="tranRet" style="height: 140px;" [(ngModel)]="retTran"> </textarea>
+                        <textarea id="id8" class="form-control"  name="tranRet" style="height: 140px;" [(ngModel)]="retTran" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-4" style="margin-left:60px;margin-top: -60px;">
@@ -399,7 +400,7 @@
                         </thead>
                         <tbody>
                         <tr *ngFor="let process of listOfTranProcess;">
-                            <td>{{process.factor.nome}} </td>
+                            <td><span *ngIf="process.factor">{{process.factor.nome}}</span> </td>
                             <td>{{process.module.nome}} </td>
                             <td>{{process.func.nome}} </td>
                             <td>{{process.name}} </td>

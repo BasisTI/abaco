@@ -11,7 +11,8 @@ import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-analise',
-    templateUrl: './analise.component.html'
+    templateUrl: './analise.component.html',
+    styleUrls: ['./analise-dialog.component.css']
 })
 export class AnaliseComponent implements OnInit, OnDestroy {
 analises: Analise[];
