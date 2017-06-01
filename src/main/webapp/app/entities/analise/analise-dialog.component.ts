@@ -75,7 +75,7 @@ export class AnaliseDialogComponent implements OnInit {
     totalRow:TotalRecord = new TotalRecord(0);
 
     editedProcess:Process=null; // Define the process that it is in editabled mode
-
+    editedTranProcess:Process=null;
 
 
 
@@ -300,7 +300,8 @@ export class AnaliseDialogComponent implements OnInit {
      Add new elementary process for "de Transacao" page
      */
     addTran(){
-        let newProcess = new Process();
+        let newProcess = (this.editedTranProcess!=null)? this.editedTranProcess: new Process();
+        if (this.editedTranProcess==null) newProcess.id = new Date().getTime();
         newProcess.id = new Date().getTime();
         newProcess.factor = this.selectedTranFactor;
         newProcess.module = this.selectedTranModulo;
@@ -311,8 +312,17 @@ export class AnaliseDialogComponent implements OnInit {
         newProcess.retStr = this.retTran;
         newProcess.detStr = this.detTran;
         newProcess.calculateTran();
-        this.listOfTranProcess.push(newProcess);
+        if (this.editedTranProcess==null) {
+            this.listOfTranProcess.push(newProcess);
+        } else {
+            let searchedIndex=this.getIndexOfProcessById(this.listOfTranProcess,this.editedProcess.id);
+            if (searchedIndex>=0) {
+                this.listOfTranProcess[searchedIndex] = newProcess;
+            }
+        }
         this.recalculateTranTotals();
+        this.editedTranProcess = null;
+        document.getElementById("buttonAddTran").innerText = "Adicionar";
     }
 
     remove(process){
@@ -355,6 +365,24 @@ export class AnaliseDialogComponent implements OnInit {
         this.ret = process.retStr;
         document.getElementById("buttonAdd").innerText = "Accept changes";
     }
+
+    /**
+     * Fired when process is in edit mode
+     *
+     * @param process
+     */
+    editTran(process:Process) {
+        this.editedTranProcess = process;
+        this.selectedTranModulo = process.module;
+        this.selectedTranFactor = process.factor;
+        this.selectedTranFunc = process.func;
+        this.selectedOutputType = this.outputTypes[process.classification-2];
+        this.elementaryTranProcess = process.name;
+        this.detTran = process.detStr;
+        this.retTran = process.retStr;
+        document.getElementById("buttonAddTran").innerText = "Accept changes";
+    }
+
 
 
     removeTran(process){

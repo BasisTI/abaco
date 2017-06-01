@@ -376,7 +376,7 @@
                 </div>
                 <div class="row" style="border-bottom-width: 1px;border-bottom-style: groove;">
                     <div class="form-group col-sm-6  required">
-                        <button class="btn btn-primary" style="float:right"  [disabled]="!tranForm.form.valid" (click)="addTran()">Adicionar</button>
+                        <button class="btn btn-primary" style="float:right"  id="buttonAddTran"  [disabled]="!tranForm.form.valid" (click)="addTran()">Adicionar</button>
                     </div>
                 </div>
 
@@ -409,7 +409,9 @@
                             <td>{{process.det}}</td>
                             <td>{{complexities[process.complexity]}} </td>
                             <td>{{process.pf}}</td>
-                            <td><a  (click)="removeTran(process)"> <i class="fa fa-trash" style="font-size:24px"></i></a> </td>
+                            <td>
+                                <a  (click)="editTran(process)"> <i class="fa fa-edit" style="font-size:24px"></i></a>
+                                <a  (click)="removeTran(process)"> <i class="fa fa-trash" style="font-size:24px"></i></a> </td>
                         </tr>
                         </tbody>
                     </table>
