@@ -6,6 +6,7 @@ import { FatorAjuste, TipoFatorAjuste} from '../fator-ajuste/fator-ajuste.model'
 import { Funcionalidade} from '../funcionalidade';
 import { Modulo } from '../../entities/modulo';
 import {Complexity, LogicalFile, OutputTypes} from "./enums";
+import {FuncaoTransacao} from "../funcao-transacao/funcao-transacao.model";
 
 
 
@@ -242,5 +243,26 @@ export class Process{
     }
 
 
+    public convertFromTransacao(funcaoTransacao:FuncaoTransacao){
+        this.id = funcaoTransacao.id;
+        this.pf = funcaoTransacao.pf;
+        this.func = funcaoTransacao.funcionalidade;
+        this.factor = funcaoTransacao.fatorAjuste;
+        this.detStr = funcaoTransacao.detStr;
+        this.retStr = funcaoTransacao.ftrStr;
+        this.module = funcaoTransacao.funcionalidade.modulo;
+        this.name = funcaoTransacao.name;
+
+        if (funcaoTransacao.tipo.toString()=="EE") {
+            this.classification = OutputTypes.EI;
+        } else if (funcaoTransacao.tipo.toString()=="SE"){
+            this.classification = OutputTypes.EO;
+        } else {
+            this.classification = OutputTypes.EQ;
+        }
+
+
+        this.calculateTran();
+    }
 
 }

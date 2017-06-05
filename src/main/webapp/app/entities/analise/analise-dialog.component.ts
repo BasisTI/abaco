@@ -20,6 +20,7 @@ import {TabsetComponent} from "ngx-bootstrap";
 import {FatorAjuste} from "../fator-ajuste/fator-ajuste.model";
 import {Subscription} from "rxjs/Subscription";
 import {FatorAjusteService} from "../fator-ajuste/fator-ajuste.service";
+import {Complexidade, TipoFuncaoDados} from "../funcao-dados/funcao-dados.model";
 
 @Component({
     selector: 'jhi-analise-dialog',
@@ -152,7 +153,49 @@ export class AnaliseDialogComponent implements OnInit {
 
         // Stupid way for set width of modal window. I could not find another way.
         let elem =document.querySelector(".modal-dialog")  as HTMLInputElement ;
-        elem.style['max-width'] = 1200+"px";
+        elem.style['max-width'] = 1300+"px";
+
+        if (this.analise.funcaoTransacaos!=null) {
+            this.analise.funcaoTransacaos.forEach(f=>{
+                let process:Process = new Process();
+                process.convertFromTransacao(f);
+                this.listOfTranProcess.push(process);
+            });
+        }
+        this.recalculateTranTotals();
+
+        if (this.analise.funcaoDados!=null) {
+
+            for (var index in this.analise.funcaoDados) {
+                let funcaoDados:FuncaoDados = this.analise.funcaoDados[index] as FuncaoDados;
+                let process:Process = new Process();
+                process.id = funcaoDados.id;
+                process.pf = funcaoDados.pf;
+                process.func = funcaoDados.funcionalidade;
+                process.factor = funcaoDados.fatorAjuste;
+                process.module = funcaoDados.funcionalidade.modulo;
+                process.detStr = funcaoDados.detStr;
+                process.retStr = funcaoDados.retStr;
+                process.name = funcaoDados.name;
+
+                if (funcaoDados.tipo.toString() == 'ALI') {
+                    process.classification = LogicalFile.ILF;
+                } else {
+                    process.classification = LogicalFile.EIF;
+                }
+                switch (funcaoDados.complexidade) {
+                    case Complexidade.BAIXA: process.complexity = Complexity.LOW; break;
+                    case Complexidade.MEDIA: process.complexity = Complexity.MEDIUM; break;
+                    case Complexidade.ALTA: process.complexity = Complexity.HIGH; break;
+                }
+
+                process.calculate();
+                this.listOfProcess.push(process);
+
+            }
+            this.recalculateTotals();
+
+        }
     }
 
 
@@ -160,7 +203,35 @@ export class AnaliseDialogComponent implements OnInit {
         this.activeModal.dismiss('cancel');
     }
 
+
+    /**
+     * Convert process list to FuncaoDados entity
+     */
+    prepareFuncaoDadosArray(){
+
+        this.analise.funcaoDados = [];
+        this.listOfProcess.forEach(process => {
+        let funcaoDados:FuncaoDados = new FuncaoDados();
+            funcaoDados.convertFromProcess(process);
+            this.analise.funcaoDados.push(funcaoDados);
+        });
+    }
+
+
+    prepareFuncaoTransacaoArray(){
+
+        this.analise.funcaoTransacaos = [];
+        this.listOfTranProcess.forEach(process => {
+            let funcaoTransacao:FuncaoTransacao = new FuncaoTransacao();
+            funcaoTransacao.convertFromProcess(process);
+            this.analise.funcaoTransacaos.push(funcaoTransacao);
+        });
+    }
+
+
     save () {
+        this.prepareFuncaoDadosArray();
+        this.prepareFuncaoTransacaoArray();
         this.isSaving = true;
         if (this.analise.id !== undefined) {
             this.analiseService.update(this.analise)
@@ -315,7 +386,7 @@ export class AnaliseDialogComponent implements OnInit {
         if (this.editedTranProcess==null) {
             this.listOfTranProcess.push(newProcess);
         } else {
-            let searchedIndex=this.getIndexOfProcessById(this.listOfTranProcess,this.editedProcess.id);
+            let searchedIndex=this.getIndexOfProcessById(this.listOfTranProcess,this.editedTranProcess.id);
             if (searchedIndex>=0) {
                 this.listOfTranProcess[searchedIndex] = newProcess;
             }
@@ -416,7 +487,7 @@ export class AnaliseDialogComponent implements OnInit {
             this.totalRow.total+=this.summary[index].total;
             this.totalRow.pf+=this.summary[index].pf;
         }
-      this.analise.pfTotal = this.totalRow.pf.toString();
+      this.analise.pfTotal = this.totalRow.pf.toFixed(2).toString();
     }
 
 

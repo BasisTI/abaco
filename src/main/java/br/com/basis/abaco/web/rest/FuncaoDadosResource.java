@@ -31,7 +31,7 @@ public class FuncaoDadosResource {
     private final Logger log = LoggerFactory.getLogger(FuncaoDadosResource.class);
 
     private static final String ENTITY_NAME = "funcaoDados";
-        
+
     private final FuncaoDadosRepository funcaoDadosRepository;
 
     private final FuncaoDadosSearchRepository funcaoDadosSearchRepository;
@@ -95,6 +95,10 @@ public class FuncaoDadosResource {
     public List<FuncaoDados> getAllFuncaoDados() {
         log.debug("REST request to get all FuncaoDados");
         List<FuncaoDados> funcaoDados = funcaoDadosRepository.findAll();
+        funcaoDados.forEach(f->{
+            if (f.getAnalise().getFuncaoDados()!=null) f.getAnalise().getFuncaoDados().clear();
+            if (f.getAnalise().getFuncaoTransacaos()!=null) f.getAnalise().getFuncaoTransacaos().clear();
+        });
         return funcaoDados;
     }
 
@@ -109,6 +113,8 @@ public class FuncaoDadosResource {
     public ResponseEntity<FuncaoDados> getFuncaoDados(@PathVariable Long id) {
         log.debug("REST request to get FuncaoDados : {}", id);
         FuncaoDados funcaoDados = funcaoDadosRepository.findOne(id);
+        if (funcaoDados.getAnalise().getFuncaoDados()!=null) funcaoDados.getAnalise().getFuncaoDados().clear();
+        if (funcaoDados.getAnalise().getFuncaoTransacaos()!=null) funcaoDados.getAnalise().getFuncaoTransacaos().clear();
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDados));
     }
 
@@ -131,7 +137,7 @@ public class FuncaoDadosResource {
      * SEARCH  /_search/funcao-dados?query=:query : search for the funcaoDados corresponding
      * to the query.
      *
-     * @param query the query of the funcaoDados search 
+     * @param query the query of the funcaoDados search
      * @return the result of the search
      */
     @GetMapping("/_search/funcao-dados")

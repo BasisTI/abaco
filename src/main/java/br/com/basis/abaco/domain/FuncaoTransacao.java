@@ -52,7 +52,21 @@ public class FuncaoTransacao implements Serializable {
     private Set<Funcionalidade> funcionalidades = new HashSet<>();
 
     @ManyToOne
+    @JoinColumn(name = "funcionalidade_id")
+    private Funcionalidade funcionalidade;
+
+    @Column
+    private String detStr;
+
+    @Column
+    private String ftrStr;
+
+
+    @ManyToOne
     private FatorAjuste fatorAjuste;
+
+    @Column
+    private String name;
 
     @OneToMany(mappedBy = "funcaoTransacao")
     @JsonIgnore
@@ -180,6 +194,38 @@ public class FuncaoTransacao implements Serializable {
 
     public void setAlrs(Set<Alr> alrs) {
         this.alrs = alrs;
+    }
+
+    public Funcionalidade getFuncionalidade() {
+        return funcionalidade;
+    }
+
+    public void setFuncionalidade(Funcionalidade funcionalidade) {
+        this.funcionalidade = funcionalidade;
+    }
+
+    public String getDetStr() {
+        return detStr;
+    }
+
+    public void setDetStr(String detStr) {
+        this.detStr = detStr;
+    }
+
+    public String getFtrStr() {
+        return ftrStr;
+    }
+
+    public void setFtrStr(String ftrStr) {
+        this.ftrStr = ftrStr;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

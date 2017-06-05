@@ -44,6 +44,7 @@ public class FuncaoDados implements Serializable {
     private BigDecimal pf;
 
     @ManyToOne
+    @JoinColumn(name = "analise_id")
     private Analise analise;
 
     @OneToMany(mappedBy = "funcaoDados")
@@ -52,7 +53,21 @@ public class FuncaoDados implements Serializable {
     private Set<Funcionalidade> funcionalidades = new HashSet<>();
 
     @ManyToOne
+    @JoinColumn(name = "funcionalidade_id")
+    private Funcionalidade funcionalidade;
+
+    @Column
+    private String detStr;
+
+    @Column
+    private String retStr;
+
+
+    @ManyToOne
     private FatorAjuste fatorAjuste;
+
+    @Column
+    private String name;
 
     @OneToMany(mappedBy = "funcaoDados")
     @JsonIgnore
@@ -196,6 +211,40 @@ public class FuncaoDados implements Serializable {
 
     public void setAlr(Alr alr) {
         this.alr = alr;
+    }
+
+
+    public Funcionalidade getFuncionalidade() {
+        return funcionalidade;
+    }
+
+    public void setFuncionalidade(Funcionalidade funcionalidade) {
+        this.funcionalidade = funcionalidade;
+    }
+
+    public String getDetStr() {
+        return detStr;
+    }
+
+    public void setDetStr(String detStr) {
+        this.detStr = detStr;
+    }
+
+    public String getRetStr() {
+        return retStr;
+    }
+
+    public void setRetStr(String retStr) {
+        this.retStr = retStr;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

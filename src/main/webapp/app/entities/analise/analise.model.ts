@@ -28,8 +28,8 @@ export class Analise {
         public tipoAnalise?: TipoAnalise,
         public propositoContagem?: string,
         public sistema?: Sistema,
-        public funcaoDados?: FuncaoDados,
-        public funcaoTransacao?: FuncaoTransacao,
+        public funcaoDados?: FuncaoDados[],
+        public funcaoTransacaos?: FuncaoTransacao[],
     ) {
     }
 }

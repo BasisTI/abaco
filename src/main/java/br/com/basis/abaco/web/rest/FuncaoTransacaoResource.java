@@ -31,7 +31,7 @@ public class FuncaoTransacaoResource {
     private final Logger log = LoggerFactory.getLogger(FuncaoTransacaoResource.class);
 
     private static final String ENTITY_NAME = "funcaoTransacao";
-        
+
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
 
     private final FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository;
@@ -95,6 +95,10 @@ public class FuncaoTransacaoResource {
     public List<FuncaoTransacao> getAllFuncaoTransacaos() {
         log.debug("REST request to get all FuncaoTransacaos");
         List<FuncaoTransacao> funcaoTransacaos = funcaoTransacaoRepository.findAll();
+        funcaoTransacaos.forEach(f->{
+            if (f.getAnalise().getFuncaoDados()!=null) f.getAnalise().getFuncaoDados().clear();
+            if (f.getAnalise().getFuncaoTransacaos()!=null) f.getAnalise().getFuncaoTransacaos().clear();
+        });
         return funcaoTransacaos;
     }
 
@@ -109,6 +113,8 @@ public class FuncaoTransacaoResource {
     public ResponseEntity<FuncaoTransacao> getFuncaoTransacao(@PathVariable Long id) {
         log.debug("REST request to get FuncaoTransacao : {}", id);
         FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
+        if (funcaoTransacao.getAnalise().getFuncaoDados()!=null) funcaoTransacao.getAnalise().getFuncaoDados().clear();
+        if (funcaoTransacao.getAnalise().getFuncaoTransacaos()!=null) funcaoTransacao.getAnalise().getFuncaoTransacaos().clear();
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoTransacao));
     }
 
@@ -131,7 +137,7 @@ public class FuncaoTransacaoResource {
      * SEARCH  /_search/funcao-transacaos?query=:query : search for the funcaoTransacao corresponding
      * to the query.
      *
-     * @param query the query of the funcaoTransacao search 
+     * @param query the query of the funcaoTransacao search
      * @return the result of the search
      */
     @GetMapping("/_search/funcao-transacaos")

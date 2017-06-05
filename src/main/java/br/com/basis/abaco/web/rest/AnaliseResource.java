@@ -32,7 +32,7 @@ public class AnaliseResource {
     private final Logger log = LoggerFactory.getLogger(AnaliseResource.class);
 
     private static final String ENTITY_NAME = "analise";
-        
+
     private final AnaliseRepository analiseRepository;
 
     private final AnaliseSearchRepository analiseSearchRepository;
@@ -56,7 +56,19 @@ public class AnaliseResource {
         if (analise.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
         }
+        analise.getFuncaoDados().forEach(entry->{
+            entry.setAnalise(analise);
+        });
+        analise.getFuncaoTransacaos().forEach(entry->{
+            entry.setAnalise(analise);
+        });
         Analise result = analiseRepository.save(analise);
+        result.getFuncaoDados().forEach(entry->{
+            entry.setAnalise(null);
+        });
+        result.getFuncaoTransacaos().forEach(entry->{
+            entry.setAnalise(null);
+        });
         analiseSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/analises/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -79,7 +91,19 @@ public class AnaliseResource {
         if (analise.getId() == null) {
             return createAnalise(analise);
         }
+        analise.getFuncaoDados().forEach(entry->{
+            entry.setAnalise(analise);
+        });
+        analise.getFuncaoTransacaos().forEach(entry->{
+            entry.setAnalise(analise);
+        });
         Analise result = analiseRepository.save(analise);
+        result.getFuncaoDados().forEach(entry->{
+            entry.setAnalise(null);
+        });
+        result.getFuncaoTransacaos().forEach(entry->{
+            entry.setAnalise(null);
+        });
         analiseSearchRepository.save(result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
@@ -96,6 +120,15 @@ public class AnaliseResource {
     public List<Analise> getAllAnalises() {
         log.debug("REST request to get all Analises");
         List<Analise> analises = analiseRepository.findAll();
+        analises.forEach(analise->{
+            analise.getFuncaoDados().forEach(entry->{
+                entry.setAnalise(null);
+
+            });
+            analise.getFuncaoTransacaos().forEach(entry-> {
+                entry.setAnalise(null);
+            });
+        });
         return analises;
     }
 
@@ -110,6 +143,12 @@ public class AnaliseResource {
     public ResponseEntity<Analise> getAnalise(@PathVariable Long id) {
         log.debug("REST request to get Analise : {}", id);
         Analise analise = analiseRepository.findOne(id);
+        analise.getFuncaoDados().forEach(entry->{
+            entry.setAnalise(null);
+        });
+        analise.getFuncaoTransacaos().forEach(entry-> {
+            entry.setAnalise(null);
+        });
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
     }
 
@@ -132,7 +171,7 @@ public class AnaliseResource {
      * SEARCH  /_search/analises?query=:query : search for the analise corresponding
      * to the query.
      *
-     * @param query the query of the analise search 
+     * @param query the query of the analise search
      * @return the result of the search
      */
     @GetMapping("/_search/analises")
