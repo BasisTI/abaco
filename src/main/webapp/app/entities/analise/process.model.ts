@@ -48,13 +48,13 @@ export class Process{
         if (this.checkIsNumber(this.detStr)) {
             this.det = Number(this.detStr);
         } else {
-            this.det=this.detStr.split("\n", 1000).length;
+            this.det=this.detStr.split("\n", 1000).filter(e=>e.split(' ').join('').length!=0).length;
         }
 
         if (this.checkIsNumber(this.retStr)) {
             this.ret = Number(this.retStr);
         } else {
-            this.ret=this.retStr.split("\n", 1000).length;
+            this.ret=this.retStr.split("\n", 1000).filter(e=>e.split(' ').join('').length!=0).length;
         }
 
     }
