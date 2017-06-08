@@ -1,5 +1,7 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoTransacao;
 import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.Analise;
 
@@ -15,8 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -62,7 +66,14 @@ public class AnaliseResource {
         analise.getFuncaoTransacaos().forEach(entry->{
             entry.setAnalise(analise);
         });
+        Set<FuncaoDados> copyDados = new HashSet<>(analise.getFuncaoDados());
+        Set<FuncaoTransacao> copyTransacao = new HashSet<>(analise.getFuncaoTransacaos());
+        analise.setFuncaoDados(null);
+        analise.setFuncaoTransacaos(null);
         Analise result = analiseRepository.save(analise);
+        result.setFuncaoDados(copyDados);
+        result.setFuncaoTransacaos(copyTransacao);
+        result = analiseRepository.save(result);
         result.getFuncaoDados().forEach(entry->{
             entry.setAnalise(null);
         });

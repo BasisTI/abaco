@@ -44,6 +44,7 @@ public class FuncaoTransacao implements Serializable {
     private BigDecimal pf;
 
     @ManyToOne
+    @JoinColumn(name = "analise_id")
     private Analise analise;
 
     @OneToMany(mappedBy = "funcaoTransacao")

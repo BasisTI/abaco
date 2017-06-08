@@ -1,5 +1,6 @@
 package br.com.basis.abaco.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -33,9 +34,11 @@ public class Funcionalidade implements Serializable {
     private Modulo modulo;
 
     @ManyToOne
+    @JsonIgnore
     private FuncaoDados funcaoDados;
 
     @ManyToOne
+    @JsonIgnore
     private FuncaoTransacao funcaoTransacao;
 
     public Long getId() {

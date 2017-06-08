@@ -32,7 +32,7 @@ export class ModuloDialogComponent implements OnInit {
         private funcionalidadeService: FuncionalidadeService,
         private eventManager: EventManager
     ) {
-        this.jhiLanguageService.setLocations(['modulo']);
+        this.jhiLanguageService.setLocations(['modulo','analise', 'metodoContagem', 'tipoAnalise']);
     }
 
     ngOnInit() {

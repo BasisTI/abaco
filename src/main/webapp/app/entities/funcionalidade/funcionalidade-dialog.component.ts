@@ -36,7 +36,7 @@ export class FuncionalidadeDialogComponent implements OnInit {
         private funcaoTransacaoService: FuncaoTransacaoService,
         private eventManager: EventManager
     ) {
-        this.jhiLanguageService.setLocations(['funcionalidade']);
+        this.jhiLanguageService.setLocations(['funcionalidade','analise', 'metodoContagem', 'tipoAnalise']);
     }
 
     ngOnInit() {

@@ -420,6 +420,41 @@ export class AnaliseDialogComponent implements OnInit {
         return searchedIndex;
     }
 
+
+    getModuleById(id:number){
+         let module:Modulo = null;
+        this.modules.forEach(m=>{
+           if (m.id==id) module=m;
+        });
+        return module;
+    }
+
+    getFuncById(id:number){
+        let func:Funcionalidade = null;
+        this.filteredFunc.forEach(f=>{
+            if (f.id==id) func=f;
+        });
+        return func;
+    }
+
+
+
+    getFuncTranById(id:number){
+        let func:Funcionalidade = null;
+        this.filteredTranFunc.forEach(f=>{
+            if (f.id==id) func=f;
+        });
+        return func;
+    }
+
+    getFactorsById(id:number){
+        let factor:FatorAjuste = null;
+        this.factors.forEach(f=>{
+            if (f.id==id) factor=f;
+        });
+        return factor;
+    }
+
     /**
      * Fired when process is in edit mode
      *
@@ -427,9 +462,10 @@ export class AnaliseDialogComponent implements OnInit {
      */
     edit(process:Process) {
         this.editedProcess = process;
-        this.selectedModulo = process.module;
-        this.selectedFactor = process.factor;
-        this.selectedFunc = process.func;
+        this.selectedModulo = this.getModuleById(process.module.id);
+        this.filteredFunc = this.filteredFunctionsByModule(this.selectedModulo);
+        this.selectedFactor = (process.factor!=null)?this.getFactorsById(process.factor.id):null;
+        this.selectedFunc = this.getFuncById(process.func.id);
         this.selectedLogicalFile = this.logicalFiles[process.classification];
         this.elementaryProcess = process.name;
         this.det = process.detStr;
@@ -444,9 +480,10 @@ export class AnaliseDialogComponent implements OnInit {
      */
     editTran(process:Process) {
         this.editedTranProcess = process;
-        this.selectedTranModulo = process.module;
-        this.selectedTranFactor = process.factor;
-        this.selectedTranFunc = process.func;
+        this.selectedTranModulo = this.getModuleById(process.module.id);
+        this.filteredTranFunc = this.filteredFunctionsByModule(this.selectedTranModulo);
+        this.selectedTranFactor = (process.factor!=null)?this.getFactorsById(process.factor.id):null;
+        this.selectedTranFunc = this.getFuncTranById(process.func.id);
         this.selectedOutputType = this.outputTypes[process.classification-2];
         this.elementaryTranProcess = process.name;
         this.detTran = process.detStr;

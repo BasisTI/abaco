@@ -76,7 +76,6 @@ public class Analise implements Serializable {
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
 
     @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
 
