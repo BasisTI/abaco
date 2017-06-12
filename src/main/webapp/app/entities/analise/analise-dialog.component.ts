@@ -44,6 +44,7 @@ export class AnaliseDialogComponent implements OnInit {
     funcionalidades: Funcionalidade[];
     filteredFunc: Funcionalidade[];
     filteredTranFunc: Funcionalidade[];
+    allModules: Modulo[];
     modules: Modulo[];
     eventSubscriber: Subscription;
     eventFuncSubscriber: Subscription;
@@ -147,9 +148,10 @@ export class AnaliseDialogComponent implements OnInit {
         this.funcionalidadeService.query().subscribe(
             (res: Response) => { this.funcionalidades = res.json(); }, (res: Response) => this.onError(res.json()));
         this.moduloService.query().subscribe(
-            (res: Response) => { this.modules = res.json(); }, (res: Response) => this.onError(res.json()));
+            (res: Response) => { this.allModules = res.json();  this.onSystemChange(null);}, (res: Response) => this.onError(res.json()));
         this.registerChangeInModulos();
         this.registerChangeInFunc();
+
 
         // Stupid way for set width of modal window. I could not find another way.
         let elem =document.querySelector(".modal-dialog")  as HTMLInputElement ;
@@ -196,6 +198,8 @@ export class AnaliseDialogComponent implements OnInit {
             this.recalculateTotals();
 
         }
+
+        //alert(JSON.stringify(this.jhiLanguageService));
     }
 
 
@@ -292,6 +296,23 @@ export class AnaliseDialogComponent implements OnInit {
         });
 
         return func;
+    }
+
+
+    /**
+     *
+     * Select system event
+     *
+     * @param item
+     */
+    onSystemChange(item:any){
+        if (this.analise==null || this.analise.sistema==null) {
+            return;
+        }
+        this.modules = this.allModules.filter(m=>{
+            return m.sistema.id=this.analise.sistema.id;
+        });
+
     }
 
 

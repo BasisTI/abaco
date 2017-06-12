@@ -27,7 +27,8 @@
             "propositoContagem": "Propósito Contagem",
             "sistema": "Sistema",
             "funcaoDados": "Função Dados",
-            "funcaoTransacao": "Funcao Transação"
+            "funcaoTransacao": "Funcao Transação",
+            "general":"Geral"
         }
     }
 }

@@ -8,7 +8,8 @@
     </div>
 
     <tabset #staticTabs>
-        <tab heading="Geral" style="padding-left: 30px;padding-right: 30px;">
+        <tab  style="padding-left: 30px;padding-right: 30px;" >
+
 
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
@@ -26,7 +27,7 @@
 
         <div class="form-group">
             <label jhiTranslate="abacoApp.analise.sistema" for="field_sistema">Sistema</label>
-            <select class="form-control" id="field_sistema" name="sistema" [(ngModel)]="analise.sistema" >
+            <select class="form-control" id="field_sistema" name="sistema" [(ngModel)]="analise.sistema" (change)="onSystemChange($event.target.value)">
                 <option [ngValue]="null"></option>
                 <option [ngValue]="sistemaOption.id === analise.sistema?.id ? analise.sistema : sistemaOption" *ngFor="let sistemaOption of sistemas; trackBy: trackSistemaById">{{sistemaOption.nome}}</option>
             </select>
