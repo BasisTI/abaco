@@ -8,8 +8,10 @@
     </div>
 
     <tabset #staticTabs>
-        <tab  style="padding-left: 30px;padding-right: 30px;" >
-
+        <tab style="padding-left: 30px;padding-right: 30px;" >
+            <span *tabHeading jhiTranslate="abacoApp.analise.general">
+              Geral
+         </span>
 
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
@@ -28,7 +30,7 @@
         <div class="form-group">
             <label jhiTranslate="abacoApp.analise.sistema" for="field_sistema">Sistema</label>
             <select class="form-control" id="field_sistema" name="sistema" [(ngModel)]="analise.sistema" (change)="onSystemChange($event.target.value)">
-                <option [ngValue]="null"></option>
+                <option [ngValue]="null" selected disabled jhiTranslate="abacoApp.analise.select">Select</option>
                 <option [ngValue]="sistemaOption.id === analise.sistema?.id ? analise.sistema : sistemaOption" *ngFor="let sistemaOption of sistemas; trackBy: trackSistemaById">{{sistemaOption.nome}}</option>
             </select>
         </div>
@@ -115,16 +117,20 @@
         </tab>
 
 
-        <tab heading="Função de Dados" style="padding-left: 30px;padding-right: 30px;">
+        <tab  style="padding-left: 30px;padding-right: 30px;" >
+            <span *tabHeading jhiTranslate="abacoApp.analise.funcaoDados">
+               Funcao de Dados
+            </span>
 
             <form #dadosForm="ngForm" >
 
                 <div class="row" style="margin-top:30px;">
                     <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_factor" class="control-label">Fotor Ajuste:</label>
+
+                        <label for="field_factor" class="control-label" jhiTranslate="abacoApp.analise.factorAdjustment">Fator Ajuste:</label>
 
                         <select id="field_factor" name="factor" class="form-control" [(ngModel)]="selectedFactor" >
-                            <option [ngValue]="null"  selected>Select</option>
+                            <option [ngValue]="null"  selected jhiTranslate="abacoApp.analise.select">Select</option>
                             <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
                         </select>
                     </div>
@@ -133,10 +139,10 @@
 
                 <div class="row">
                     <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_module" class="control-label">Modulo:</label>
+                        <label for="field_module" class="control-label" jhiTranslate="abacoApp.analise.module">Modulo:</label>
 
                         <select id="field_module" name="module" class="form-control" [(ngModel)]="selectedModulo" (change)="onModuleChange($event.target.value)" required>
-                            <option [ngValue]="null" disabled selected>Select</option>
+                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
                             <option [ngValue]="module" *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
                         </select>
                     </div>
@@ -145,16 +151,16 @@
                     <div class="form-group col-sm-6  required">
                         <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"  [routerLink]="['/', { outlets: { popup: ['modulo-new'] } }]">
                             <span class="fa fa-plus"></span>
-                            <span> Criar novo Modulo</span>
+                            <span jhiTranslate="abacoApp.analise.createNewModule"> Criar novo Modulo</span>
                         </button>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_function" class="control-label">Functionalidade:</label>
+                        <label for="field_function" class="control-label" jhiTranslate="abacoApp.analise.functional">Functionalidade:</label>
 
                         <select id="field_function" name="function" class="form-control" [(ngModel)]="selectedFunc" required>
-                            <option [ngValue]="null" disabled selected>Select</option>
+                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
                             <option [ngValue]="f" *ngFor="let f of filteredFunc; trackBy: trackFuncById">{{f.nome}}</option>
                         </select>
                     </div>
@@ -163,24 +169,24 @@
                     <div class="form-group col-sm-6  required">
                         <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"   [routerLink]="['/', { outlets: { popup: ['funcionalidade-new'] } }]">
                             <span class="fa fa-plus"></span>
-                            <span>Criar nova Functionalidade</span></button>
+                            <span jhiTranslate="abacoApp.analise.createNewFunctional">Criar nova Functionalidade</span></button>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_class" class="control-label">Clossificado:</label>
+                        <label for="field_class" class="control-label" jhiTranslate="abacoApp.analise.classification">Clossificado:</label>
 
                         <select id="field_class" name="class" class="form-control" [(ngModel)]="selectedLogicalFile" required>
-                            <option [ngValue]="null" disabled selected>Select</option>
-                            <option [ngValue]="file" *ngFor="let file of logicalFiles;">{{file.title}}</option>
+                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
+                            <option [ngValue]="file" *ngFor="let file of logicalFiles;" jhiTranslate="abacoApp.analise.{{file.title}}">{{file.title}}</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_process" class="control-label">Name Processo Elementar:</label>
+                        <label for="field_process" class="control-label" jhiTranslate="abacoApp.analise.elementaryProcessName">Name Processo Elementar:</label>
                         <input id="field_process" name="process" class="form-control" [(ngModel)]="elementaryProcess" required/>
 
                     </div>
@@ -188,32 +194,32 @@
 
                 <div class="row">
                     <div class="form-group col-sm-3" >
-                        <label for="field_ret" class="control-label">DER</label>
+                        <label for="field_ret" class="control-label" jhiTranslate="abacoApp.analise.det">DER</label>
                         <textarea id="field_ret"  name="ret" class="form-control" style="height: 140px;" [(ngModel)]="det" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-3">
-                        <label for="field_det" class="control-label">RLR</label>
+                        <label for="field_det" class="control-label" jhiTranslate="abacoApp.analise.ret">RLR</label>
                         <textarea id="field_det" name="det" class="form-control" style="height: 140px;" [(ngModel)]="ret" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-4" style="margin-left:60px;">
                         <div class="table-responsive">
-                            <label for="total-table1" class="control-label">Resumo</label>
+                            <label for="total-table1" class="control-label" jhiTranslate="abacoApp.analise.summary">Resumo</label>
                             <table id="total-table1" class="table table-striped" [mfData]="totals" #mf="mfDataTable">
                                 <thead>
                                 <tr>
                                     <th style="width:15%;"></th>
-                                    <th> Baixa </th>
-                                    <th> Média </th>
-                                    <th> Alta </th>
-                                    <th> Total </th>
-                                    <th> PF </th>
+                                    <th jhiTranslate="abacoApp.analise.low"> Baixa </th>
+                                    <th jhiTranslate="abacoApp.analise.media"> Média </th>
+                                    <th jhiTranslate="abacoApp.analise.high"> Alta </th>
+                                    <th jhiTranslate="abacoApp.analise.total"> Total </th>
+                                    <th jhiTranslate="abacoApp.analise.pf"> PF </th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr *ngFor="let total of totals;">
-                                    <td> {{logicalFiles[total.input].title}} </td>
+                                    <td jhiTranslate="abacoApp.analise.{{logicalFiles[total.input].title}}"> {{logicalFiles[total.input].title}} </td>
                                     <td> {{total.low}} </td>
                                     <td> {{total.medium}} </td>
                                     <td> {{total.high}} </td>
@@ -239,16 +245,16 @@
                     <table id="process_table" class="table table-striped" [mfData]="listOfProcess" #mf="mfDataTable" >
                         <thead>
                         <tr>
-                            <th style="width:15%;">Fator Ajuste</th>
-                            <th> Modulo </th>
-                            <th> Functionalidade </th>
-                            <th> Name </th>
-                            <th> Classificado </th>
-                            <th style="width:60px"> RLR </th>
-                            <th style="width:60px"> DER </th>
-                            <th> Complexidade </th>
-                            <th> PF </th>
-                            <th> Acdo</th>
+                            <th style="width:15%;" jhiTranslate="abacoApp.analise.factorAdjustment">Fator Ajuste</th>
+                            <th jhiTranslate="abacoApp.analise.module"> Modulo </th>
+                            <th jhiTranslate="abacoApp.analise.functional"> Functionalidade </th>
+                            <th jhiTranslate="abacoApp.analise.name"> Name </th>
+                            <th jhiTranslate="abacoApp.analise.classification"> Classificado </th>
+                            <th style="width:60px" jhiTranslate="abacoApp.analise.ret"> RLR </th>
+                            <th style="width:60px" jhiTranslate="abacoApp.analise.det"> DER </th>
+                            <th jhiTranslate="abacoApp.analise.complexcity"> Complexidade </th>
+                            <th jhiTranslate="abacoApp.analise.pf"> PF </th>
+                            <th jhiTranslate="abacoApp.analise.action"> Acdo</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -257,10 +263,10 @@
                             <td>{{process.module.nome}} </td>
                             <td>{{process.func.nome}} </td>
                             <td>{{process.name}} </td>
-                            <td> {{logicalFiles[process.classification].title}} </td>
+                            <td jhiTranslate="abacoApp.analise.{{logicalFiles[process.classification].title}}"> {{logicalFiles[process.classification].title}} </td>
                             <td>{{process.ret}}</td>
                             <td>{{process.det}}</td>
-                            <td>{{complexities[process.complexity]}} </td>
+                            <td jhiTranslate="abacoApp.analise.{{complexities[process.complexity].toLowerCase()}}" style="text-transform: uppercase;" >{{complexities[process.complexity]}} </td>
                             <td>{{process.pf}}</td>
                             <td><a  (click)="edit(process)"> <i class="fa fa-edit" style="font-size:24px"></i></a>
                                 <a  (click)="remove(process)"> <i class="fa fa-trash" style="font-size:24px"></i></a>
@@ -273,13 +279,17 @@
             </div>
 
         </tab>
-        <tab heading="Função de Transação" style="padding-left: 30px;padding-right: 30px;">
+        <tab  style="padding-left: 30px;padding-right: 30px;">
+            <span *tabHeading jhiTranslate="abacoApp.analise.funcaoTransacao">
+               Função de Transação
+            </span>
             <form #tranForm="ngForm">
                 <div class="row" style="margin-top:30px;">
                     <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_func_factor" class="control-label">Fotor Ajuste:</label>
+
+                        <label for="field_func_factor" class="control-label" jhiTranslate="abacoApp.analise.factorAdjustment">Fotor Ajuste:</label>
                         <select id="field_func_factor"  name = "tranFactor" class="form-control" [(ngModel)]="selectedTranFactor" >
-                            <option [ngValue]="null"  selected>Select</option>
+                            <option [ngValue]="null"  selected jhiTranslate="abacoApp.analise.select">Select</option>
                             <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
                         </select>
                     </div>
@@ -287,9 +297,9 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_func_module" class="control-label">Modulo:</label>
+                        <label for="field_func_module" class="control-label" jhiTranslate="abacoApp.analise.module">Modulo:</label>
                         <select id="field_func_module" name = "tranModule" class="form-control"  [(ngModel)]="selectedTranModulo" (change)="onModuleTranChange($event.target.value)" required>
-                            <option [ngValue]="null" disabled selected>Select</option>
+                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
                             <option [ngValue]="module" *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
                         </select>
                     </div>
@@ -298,15 +308,15 @@
                     <div class="form-group col-sm-6  required">
                         <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"  [routerLink]="['/', { outlets: { popup: ['modulo-new'] } }]">
                             <span class="fa fa-plus"></span>
-                            <span> Criar novo Modulo</span>
+                            <span jhiTranslate="abacoApp.analise.createNewModule"> Criar novo Modulo</span>
                         </button>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_func_funcal" class="control-label">Functionalidade:</label>
+                        <label for="field_func_funcal" class="control-label" jhiTranslate="abacoApp.analise.functional">Functionalidade:</label>
                         <select id="field_func_funcal" name = "tranFucal" class="form-control" [(ngModel)]="selectedTranFunc" required>
-                            <option [ngValue]="null" disabled selected>Select</option>
+                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
                             <option [ngValue]="f" *ngFor="let f of filteredTranFunc; trackBy: trackFuncById">{{f.nome}}</option>
                         </select>
                     </div>
@@ -315,55 +325,56 @@
                     <div class="form-group col-sm-6  required">
                         <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right" [routerLink]="['/', { outlets: { popup: ['funcionalidade-new'] } }]">
                             <span class="fa fa-plus"></span>
-                            <span>Criar nova Functionalidade</span>
+                            <span jhiTranslate="abacoApp.analise.createNewFunctional">Criar nova Functionalidade</span>
                         </button>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="id5" class="control-label">Clossificado:</label>
+                        <label for="id5" class="control-label" jhiTranslate="abacoApp.analise.classification">Clossificado:</label>
 
                         <select id="id5" class="form-control" name = "tranClass" [(ngModel)]="selectedOutputType" required >
-                            <option [ngValue]="null" disabled selected>Select</option>
-                            <option [ngValue]="file" *ngFor="let file of outputTypes;">{{file.title}}</option>
+                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
+                            <option [ngValue]="file" *ngFor="let file of outputTypes;" jhiTranslate="abacoApp.analise.{{file.title}}">{{file.title}}</option>
                         </select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="id6" class="control-label">Name Processo Elementar:</label>
+
+                        <label for="id6" class="control-label" jhiTranslate="abacoApp.analise.elementaryProcessName">Name Processo Elementar:</label>
                         <input id="id6" name = "tranName" class="form-control"  [(ngModel)]="elementaryTranProcess" required />
 
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-3">
-                        <label for="id7" class="control-label">DER</label>
+                        <label for="id7" class="control-label" jhiTranslate="abacoApp.analise.det">DER</label>
                         <textarea id="id7" class="form-control"  name="tranDet" style="height: 140px;" [(ngModel)]="detTran" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-3">
-                        <label for="id8" class="control-label">FTR</label>
+                        <label for="id8" class="control-label" jhiTranslate="abacoApp.analise.ftr">FTR</label>
                         <textarea id="id8" class="form-control"  name="tranRet" style="height: 140px;" [(ngModel)]="retTran" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-4" style="margin-left:60px;margin-top: -60px;">
                         <div class="table-responsive">
-                            <label for="table1" class="control-label">Resumo</label>
+                            <label for="table1" class="control-label" jhiTranslate="abacoApp.analise.summary">Resumo</label>
                             <table id="table1" class="table table-striped">
                                 <thead>
                                 <tr>
                                     <th style="width:15%;"></th>
-                                    <th> Baixa </th>
-                                    <th> Média </th>
-                                    <th> Alta </th>
-                                    <th> Total </th>
-                                    <th> PF </th>
+                                    <th jhiTranslate="abacoApp.analise.low"> Baixa </th>
+                                    <th jhiTranslate="abacoApp.analise.media"> Média </th>
+                                    <th jhiTranslate="abacoApp.analise.high"> Alta </th>
+                                    <th jhiTranslate="abacoApp.analise.total"> Total </th>
+                                    <th jhiTranslate="abacoApp.analise.pf"> PF </th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr *ngFor="let total1 of totalsTran;">
-                                    <td> {{outputTypes[total1.input-2].title}} </td>
+                                    <td jhiTranslate="abacoApp.analise.{{outputTypes[total1.input-2].title}}"> {{outputTypes[total1.input-2].title}} </td>
                                     <td> {{total1.low}} </td>
                                     <td> {{total1.medium}} </td>
                                     <td> {{total1.high}} </td>
@@ -387,16 +398,16 @@
                     <table id="table2" class="table table-striped">
                         <thead>
                         <tr>
-                            <th style="width:15%;">Fator Ajuste</th>
-                            <th> Modulo </th>
-                            <th> Functionalidade </th>
-                            <th> Name </th>
-                            <th> Classificado </th>
-                            <th style="width:60px"> FTR </th>
-                            <th style="width:60px"> DER </th>
-                            <th> Complexidade </th>
-                            <th> PF </th>
-                            <th> Acdo</th>
+                            <th style="width:15%;" jhiTranslate="abacoApp.analise.factorAdjustment">Fator Ajuste</th>
+                            <th jhiTranslate="abacoApp.analise.module"> Modulo </th>
+                            <th jhiTranslate="abacoApp.analise.functional"> Functionalidade </th>
+                            <th jhiTranslate="abacoApp.analise.name"> Name </th>
+                            <th jhiTranslate="abacoApp.analise.classification"> Classificado </th>
+                            <th style="width:60px" jhiTranslate="abacoApp.analise.ftr"> FTR </th>
+                            <th style="width:60px" jhiTranslate="abacoApp.analise.det"> DER </th>
+                            <th jhiTranslate="abacoApp.analise.complexcity"> Complexidade </th>
+                            <th jhiTranslate="abacoApp.analise.pf"> PF </th>
+                            <th jhiTranslate="abacoApp.analise.action"> Acdo</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -405,10 +416,10 @@
                             <td>{{process.module.nome}} </td>
                             <td>{{process.func.nome}} </td>
                             <td>{{process.name}} </td>
-                            <td> {{outputTypes[process.classification-2].title}} </td>
+                            <td jhiTranslate="abacoApp.analise.{{outputTypes[process.classification-2].title}}"> {{outputTypes[process.classification-2].title}} </td>
                             <td>{{process.ret}}</td>
                             <td>{{process.det}}</td>
-                            <td>{{complexities[process.complexity]}} </td>
+                            <td jhiTranslate="abacoApp.analise.{{complexities[process.complexity].toLowerCase()}}" style="text-transform: uppercase;">{{complexities[process.complexity]}} </td>
                             <td>{{process.pf}}</td>
                             <td>
                                 <a  (click)="editTran(process)"> <i class="fa fa-edit" style="font-size:24px"></i></a>
@@ -419,23 +430,26 @@
                 </div>
             </div>
         </tab>
-        <tab heading="Resumo" style="padding-left: 30px;padding-right: 30px;">
+        <tab style="padding-left: 30px;padding-right: 30px;">
+            <span *tabHeading jhiTranslate="abacoApp.analise.summary">
+               Summary
+            </span>
             <div class="row" style="margin-top:30px;">
                 <div class="form-group col-sm-6  required" style="text-align:left;">
                     <table id="table5" class="table table-striped">
                         <thead>
                         <tr>
                             <th style="width:15%;"></th>
-                            <th> Baixa </th>
-                            <th> Média </th>
-                            <th> Alta </th>
-                            <th> Total </th>
-                            <th> PF </th>
+                            <th jhiTranslate="abacoApp.analise.low"> Baixa </th>
+                            <th jhiTranslate="abacoApp.analise.media"> Média </th>
+                            <th jhiTranslate="abacoApp.analise.high"> Alta </th>
+                            <th jhiTranslate="abacoApp.analise.total"> Total </th>
+                            <th jhiTranslate="abacoApp.analise.pf"> PF </th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr  *ngFor="let total of summary;">
-                            <td> {{total.input<=1?logicalFiles[total.input].title:outputTypes[total.input-2].title}} </td>
+                            <td jhiTranslate="abacoApp.analise.{{total.input<=1?logicalFiles[total.input].title:outputTypes[total.input-2].title}}"> {{total.input<=1?logicalFiles[total.input].title:outputTypes[total.input-2].title}} </td>
                             <td> {{total.low}} </td>
                             <td> {{total.medium}} </td>
                             <td> {{total.high}} </td>
