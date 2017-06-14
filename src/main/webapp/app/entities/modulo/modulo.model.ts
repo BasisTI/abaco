@@ -6,6 +6,7 @@ export class Modulo {
         public nome?: string,
         public sistema?: Sistema,
         public funcionalidade?: Funcionalidade,
+        public system_id?:number
     ) {
     }
 }

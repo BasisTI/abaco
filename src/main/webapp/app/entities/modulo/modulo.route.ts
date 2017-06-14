@@ -41,6 +41,15 @@ export const moduloPopupRoute: Routes = [
     outlet: 'popup'
   },
   {
+    path: 'modulo-new/:system_id',
+    component: ModuloPopupComponent,
+      data: {
+         authorities: ['ROLE_USER'],
+         pageTitle: 'abacoApp.modulo.home.title'
+       },
+      outlet: 'popup'
+  },
+  {
     path: 'modulo/:id/edit',
     component: ModuloPopupComponent,
     data: {

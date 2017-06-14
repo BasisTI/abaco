@@ -13,7 +13,7 @@ export class ModuloPopupService {
 
     ) {}
 
-    open (component: Component, id?: number | any): NgbModalRef {
+    open (component: Component, id?: number | any, system_id?: number | any): NgbModalRef {
         if (this.isOpen) {
             return;
         }
@@ -24,7 +24,14 @@ export class ModuloPopupService {
                 this.moduloModalRef(component, modulo);
             });
         } else {
-            return this.moduloModalRef(component, new Modulo());
+            if (system_id) {
+               let module:Modulo = new Modulo();
+               module.system_id=system_id;
+               return this.moduloModalRef(component, module);
+
+            } else {
+                return this.moduloModalRef(component, new Modulo());
+            }
         }
     }
 

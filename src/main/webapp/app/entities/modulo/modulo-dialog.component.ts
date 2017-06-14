@@ -42,6 +42,11 @@ export class ModuloDialogComponent implements OnInit {
             (res: Response) => { this.sistemas = res.json(); }, (res: Response) => this.onError(res.json()));
         this.funcionalidadeService.query().subscribe(
             (res: Response) => { this.funcionalidades = res.json(); }, (res: Response) => this.onError(res.json()));
+        if (this.modulo.system_id) {
+            this.sistemaService.find(this.modulo.system_id).subscribe(system => {
+                this.modulo.sistema=system;
+            });
+        }
     }
     clear () {
         this.activeModal.dismiss('cancel');
@@ -102,8 +107,13 @@ export class ModuloPopupComponent implements OnInit, OnDestroy {
                 this.modalRef = this.moduloPopupService
                     .open(ModuloDialogComponent, params['id']);
             } else {
-                this.modalRef = this.moduloPopupService
-                    .open(ModuloDialogComponent);
+                if (params['system_id']) {
+                    this.modalRef = this.moduloPopupService
+                        .open(ModuloDialogComponent,0,params['system_id']);
+                } else {
+                    this.modalRef = this.moduloPopupService
+                        .open(ModuloDialogComponent);
+                }
             }
 
         });

@@ -149,8 +149,9 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-6  required">
-                        <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"  [routerLink]="['/', { outlets: { popup: ['modulo-new'] } }]">
+                        <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"  [routerLink]="['/', { outlets: { popup: analise.sistema!=null?'modulo-new/'+analise.sistema?.id:'modulo-new' } }]">
                             <span class="fa fa-plus"></span>
+
                             <span jhiTranslate="abacoApp.analise.createNewModule"> Criar novo Modulo</span>
                         </button>
                     </div>
@@ -306,7 +307,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-6  required">
-                        <button class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"  [routerLink]="['/', { outlets: { popup: ['modulo-new'] } }]">
+                        <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"  [routerLink]="['/', { outlets: { popup: analise.sistema!=null?'modulo-new/'+analise.sistema?.id:'modulo-new' }  }]">
                             <span class="fa fa-plus"></span>
                             <span jhiTranslate="abacoApp.analise.createNewModule"> Criar novo Modulo</span>
                         </button>
