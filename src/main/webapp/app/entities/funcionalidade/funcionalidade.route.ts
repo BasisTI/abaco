@@ -41,6 +41,15 @@ export const funcionalidadePopupRoute: Routes = [
     outlet: 'popup'
   },
   {
+    path: 'funcionalidade-new/:module_id',
+    component: FuncionalidadePopupComponent,
+    data: {
+       authorities: ['ROLE_USER'],
+       pageTitle: 'abacoApp.funcionalidade.home.title'
+      },
+    outlet: 'popup'
+  },
+  {
     path: 'funcionalidade/:id/edit',
     component: FuncionalidadePopupComponent,
     data: {

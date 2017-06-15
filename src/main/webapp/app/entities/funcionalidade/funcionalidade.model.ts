@@ -8,6 +8,7 @@ export class Funcionalidade {
         public modulo?: Modulo,
         public funcaoDados?: FuncaoDados,
         public funcaoTransacao?: FuncaoTransacao,
+        public module_id?: number
     ) {
     }
 }

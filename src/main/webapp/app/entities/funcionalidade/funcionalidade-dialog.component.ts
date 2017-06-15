@@ -48,6 +48,11 @@ export class FuncionalidadeDialogComponent implements OnInit {
             (res: Response) => { this.funcaodados = res.json(); }, (res: Response) => this.onError(res.json()));
         this.funcaoTransacaoService.query().subscribe(
             (res: Response) => { this.funcaotransacaos = res.json(); }, (res: Response) => this.onError(res.json()));
+        if (this.funcionalidade.module_id) {
+            this.moduloService.find(this.funcionalidade.module_id).subscribe(module => {
+                this.funcionalidade.modulo=module;
+            });
+        }
     }
     clear () {
         this.activeModal.dismiss('cancel');
@@ -112,8 +117,13 @@ export class FuncionalidadePopupComponent implements OnInit, OnDestroy {
                 this.modalRef = this.funcionalidadePopupService
                     .open(FuncionalidadeDialogComponent, params['id']);
             } else {
-                this.modalRef = this.funcionalidadePopupService
-                    .open(FuncionalidadeDialogComponent);
+                if (params['module_id']) {
+                   this.modalRef = this.funcionalidadePopupService
+                        .open(FuncionalidadeDialogComponent,0,params['module_id']);
+                } else {
+                    this.modalRef = this.funcionalidadePopupService
+                        .open(FuncionalidadeDialogComponent);
+                }
             }
 
         });

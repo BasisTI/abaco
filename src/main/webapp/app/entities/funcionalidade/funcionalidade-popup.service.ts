@@ -13,7 +13,7 @@ export class FuncionalidadePopupService {
 
     ) {}
 
-    open (component: Component, id?: number | any): NgbModalRef {
+    open (component: Component, id?: number | any, module_id?: number | any): NgbModalRef {
         if (this.isOpen) {
             return;
         }
@@ -24,7 +24,13 @@ export class FuncionalidadePopupService {
                 this.funcionalidadeModalRef(component, funcionalidade);
             });
         } else {
-            return this.funcionalidadeModalRef(component, new Funcionalidade());
+            if (module_id){
+                let func:Funcionalidade = new Funcionalidade();
+                func.module_id=module_id;
+                return this.funcionalidadeModalRef(component, func);
+            } else {
+                return this.funcionalidadeModalRef(component, new Funcionalidade());
+            }
         }
     }
 
