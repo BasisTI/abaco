@@ -6,7 +6,7 @@ import { PaginationUtil } from 'ng-jhipster';
 
 import { AnaliseComponent } from './analise.component';
 import { AnaliseDetailComponent } from './analise-detail.component';
-import { AnalisePopupComponent } from './analise-dialog.component';
+import {AnaliseDialogComponent, AnalisePopupComponent} from './analise-dialog.component';
 import { AnaliseDeletePopupComponent } from './analise-delete-dialog.component';
 
 import { Principal } from '../../shared';
@@ -27,7 +27,14 @@ export const analiseRoute: Routes = [
         authorities: ['ROLE_USER'],
         pageTitle: 'abacoApp.analise.home.title'
     }
-  }
+  }, {
+        path: 'analise/editor/:id',
+        component: AnaliseDialogComponent,
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'abacoApp.analise.home.title'
+        }
+    }
 ];
 
 export const analisePopupRoute: Routes = [
@@ -40,15 +47,15 @@ export const analisePopupRoute: Routes = [
     },
     outlet: 'popup'
   },
-  {
-    path: 'analise/:id/edit',
-    component: AnalisePopupComponent,
-    data: {
-        authorities: ['ROLE_USER'],
-        pageTitle: 'abacoApp.analise.home.title'
-    },
-    outlet: 'popup'
-  },
+  //{
+  //  path: 'analise/:id/edit',
+  //  component: AnalisePopupComponent,
+  //  data: {
+  //      authorities: ['ROLE_USER'],
+  //      pageTitle: 'abacoApp.analise.home.title'
+  //  },
+  //  outlet: 'popup'
+  //},
   {
     path: 'analise/:id/delete',
     component: AnaliseDeletePopupComponent,

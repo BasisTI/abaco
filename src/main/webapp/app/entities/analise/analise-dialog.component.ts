@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { Response } from '@angular/http';
 
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -29,7 +29,7 @@ import {Complexidade, TipoFuncaoDados} from "../funcao-dados/funcao-dados.model"
 })
 export class AnaliseDialogComponent implements OnInit {
 
-    analise: Analise;
+    analise: Analise = new Analise();
     authorities: any[];
     isSaving: boolean;
 
@@ -82,7 +82,7 @@ export class AnaliseDialogComponent implements OnInit {
 
 
     constructor(
-        public activeModal: NgbActiveModal,
+       // public activeModal: NgbActiveModal,
         private jhiLanguageService: JhiLanguageService,
         private alertService: AlertService,
         private analiseService: AnaliseService,
@@ -92,8 +92,11 @@ export class AnaliseDialogComponent implements OnInit {
         private eventManager: EventManager,
         private funcionalidadeService: FuncionalidadeService,
         private moduloService: ModuloService,
-        private  fatorAjusteService:FatorAjusteService
+        private  fatorAjusteService:FatorAjusteService,
+        private route: ActivatedRoute,
+        private router: Router
     ) {
+
         this.jhiLanguageService.setLocations(['analise', 'metodoContagem', 'tipoAnalise']);
         this.selectedModulo=null;
         this.selectedFunc = null;
@@ -147,6 +150,40 @@ export class AnaliseDialogComponent implements OnInit {
             (res: Response) => { this.factors = res.json(); }, (res: Response) => this.onError(res.json()));
         this.funcionalidadeService.query().subscribe(
             (res: Response) => { this.funcionalidades = res.json(); }, (res: Response) => this.onError(res.json()));
+
+        this.route.params.subscribe(params => {
+            if (params['id']!=0) {
+                this.load(params['id']);
+            } else {
+                this.moduloService.query().subscribe(
+                    (res: Response) => { this.allModules = res.json();  this.onSystemChange(null);}, (res: Response) => this.onError(res.json()));
+            }
+        });
+
+
+        //alert(JSON.stringify(this.jhiLanguageService));
+    }
+
+
+    clear () {
+        //window.history.back();
+        this.router.navigate(['analise'])
+       // this.activeModal.dismiss('cancel');
+    }
+
+
+    /**
+     *
+     * Load analise by ID
+     *
+     * @param id
+     */
+    load(id){
+        this.analiseService.find(id).subscribe(analise=>{
+        this.analise=analise;
+
+
+
         this.moduloService.query().subscribe(
             (res: Response) => { this.allModules = res.json();  this.onSystemChange(null);}, (res: Response) => this.onError(res.json()));
         this.registerChangeInModulos();
@@ -154,8 +191,8 @@ export class AnaliseDialogComponent implements OnInit {
 
 
         // Stupid way for set width of modal window. I could not find another way.
-        let elem =document.querySelector(".modal-dialog")  as HTMLInputElement ;
-        elem.style['max-width'] = 1300+"px";
+        //let elem =document.querySelector(".modal-dialog")  as HTMLInputElement ;
+        //elem.style['max-width'] = 1300+"px";
 
         if (this.analise.funcaoTransacaos!=null) {
             this.analise.funcaoTransacaos.forEach(f=>{
@@ -197,14 +234,10 @@ export class AnaliseDialogComponent implements OnInit {
             }
             this.recalculateTotals();
 
-        }
+            }
 
-        //alert(JSON.stringify(this.jhiLanguageService));
-    }
+        });
 
-
-    clear () {
-        this.activeModal.dismiss('cancel');
     }
 
 
@@ -249,7 +282,8 @@ export class AnaliseDialogComponent implements OnInit {
     private onSaveSuccess (result: Analise) {
         this.eventManager.broadcast({ name: 'analiseListModification', content: 'OK'});
         this.isSaving = false;
-        this.activeModal.dismiss(result);
+        this.router.navigate(['analise'])
+
     }
 
     private onSaveError (error) {

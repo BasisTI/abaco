@@ -1,7 +1,7 @@
 <div>
     <h2>
         <span jhiTranslate="abacoApp.analise.home.title">Analises</span>
-        <button class="btn btn-primary float-right create-analise" [routerLink]="['/', { outlets: { popup: ['analise-new'] } }]">
+        <button class="btn btn-primary float-right create-analise" [routerLink]="['../analise/editor', 0]">
             <span class="fa fa-plus"></span>
             <span class="hidden-sm-down"  jhiTranslate="abacoApp.analise.home.createLabel">
             Create new Analise
@@ -63,14 +63,16 @@
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
+
                                 [routerLink]="['../analise', analise.id ]"
                                 class="btn btn-info btn-sm">
                             <span class="fa fa-eye"></span>
                             <span class="hidden-md-down" jhiTranslate="entity.action.view">View</span>
                         </button>
-                        <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'analise/'+ analise.id + '/edit'} }]"
-                                replaceUrl="true"
+
+                        <button type="button"
+
+                                [routerLink]="['../analise/editor', analise.id]"
                                 class="btn btn-primary btn-sm">
                             <span class="fa fa-pencil"></span>
                             <span class="hidden-md-down" jhiTranslate="entity.action.edit">Edit</span>
