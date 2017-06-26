@@ -40,6 +40,14 @@ export class AnaliseDialogComponent implements OnInit {
     funcaotransacaos: FuncaoTransacao[];
 
     @ViewChild('staticTabs') staticTabs: TabsetComponent;
+
+    // Define that RET and DET are disabled/enabled
+    is_disabled:boolean=false;
+
+    // Define that RET and DET are disabled/enabled in FuncaoTransacao tab
+    is_disabledTran:boolean=false;
+
+
     factors: FatorAjuste[];
     funcionalidades: Funcionalidade[];
     filteredFunc: Funcionalidade[];
@@ -47,7 +55,7 @@ export class AnaliseDialogComponent implements OnInit {
     allModules: Modulo[];
     modules: Modulo[];
     eventSubscriber: Subscription;
-    eventFuncSubscriber: Subscription;
+     eventFuncSubscriber: Subscription;
     selectedModulo: Modulo;
     selectedFunc: Funcionalidade;
     selectedFactor: FatorAjuste;
@@ -474,6 +482,53 @@ export class AnaliseDialogComponent implements OnInit {
 
         return searchedIndex;
     }
+
+
+     cast<T>(obj, cl): T {
+      obj.__proto__ = cl.prototype;
+    return obj;
+    }
+
+
+    getFactorTitle(factor:FatorAjuste){
+        let f:FatorAjuste = this.cast<FatorAjuste>(factor, FatorAjuste);
+        return f.getTitleWithValue();
+    }
+
+
+    // Disable or enable RET and DET fields according to selected Fator Adjuste
+    onFactorChange(factor:FatorAjuste){
+        if (this.selectedFactor==null) {
+            this.is_disabled=false;
+            return;
+        }
+
+        if (this.selectedFactor.tipoAjuste.toString()=='PERCENTUAL') {
+            this.is_disabled=false;
+        } else {
+            this.det="";
+            this.ret="";
+            this.is_disabled=true;
+        }
+    }
+
+
+    // Disable or enable RET and DET for FuncaoDados fields according to selected Fator Adjuste
+    onFactorChangeTran(factor:FatorAjuste){
+        if (this.selectedTranFactor==null) {
+            this.is_disabledTran=false;
+            return;
+        }
+
+        if (this.selectedTranFactor.tipoAjuste.toString()=='PERCENTUAL') {
+            this.is_disabledTran=false;
+        } else {
+            this.detTran="";
+            this.retTran="";
+            this.is_disabledTran=true;
+        }
+    }
+
 
 
     getModuleById(id:number){

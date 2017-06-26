@@ -129,9 +129,9 @@
 
                         <label for="field_factor" class="control-label" jhiTranslate="abacoApp.analise.factorAdjustment">Fator Ajuste:</label>
 
-                        <select id="field_factor" name="factor" class="form-control" [(ngModel)]="selectedFactor" >
+                        <select id="field_factor" name="factor" class="form-control" [(ngModel)]="selectedFactor" (change)="onFactorChange($event.target.value)">
                             <option [ngValue]="null"  selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
+                            <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{getFactorTitle(factor)}}</option>
                         </select>
                     </div>
 
@@ -196,12 +196,12 @@
                 <div class="row">
                     <div class="form-group col-sm-3" >
                         <label for="field_ret" class="control-label" jhiTranslate="abacoApp.analise.det">DER</label>
-                        <textarea id="field_ret"  name="ret" class="form-control" style="height: 140px;" [(ngModel)]="det" required> </textarea>
+                        <textarea id="field_ret" [disabled]="is_disabled" name="ret" class="form-control" style="height: 140px;" [(ngModel)]="det" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-3">
                         <label for="field_det" class="control-label" jhiTranslate="abacoApp.analise.ret">RLR</label>
-                        <textarea id="field_det" name="det" class="form-control" style="height: 140px;" [(ngModel)]="ret" required> </textarea>
+                        <textarea id="field_det" [disabled]="is_disabled" name="det" class="form-control" style="height: 140px;" [(ngModel)]="ret" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-4" style="margin-left:60px;">
@@ -289,9 +289,9 @@
                     <div class="form-group col-sm-6  required" style="text-align:left;">
 
                         <label for="field_func_factor" class="control-label" jhiTranslate="abacoApp.analise.factorAdjustment">Fotor Ajuste:</label>
-                        <select id="field_func_factor"  name = "tranFactor" class="form-control" [(ngModel)]="selectedTranFactor" >
+                        <select id="field_func_factor"  name = "tranFactor" class="form-control" (change)="onFactorChangeTran($event.target.value)"  [(ngModel)]="selectedTranFactor" >
                             <option [ngValue]="null"  selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{factor.nome}}</option>
+                            <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{getFactorTitle(factor)}}</option>
                         </select>
                     </div>
 
@@ -351,12 +351,12 @@
                 <div class="row">
                     <div class="form-group col-sm-3">
                         <label for="id7" class="control-label" jhiTranslate="abacoApp.analise.det">DER</label>
-                        <textarea id="id7" class="form-control"  name="tranDet" style="height: 140px;" [(ngModel)]="detTran" required> </textarea>
+                        <textarea id="id7" class="form-control"  [disabled]="is_disabledTran" name="tranDet" style="height: 140px;" [(ngModel)]="detTran" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-3">
                         <label for="id8" class="control-label" jhiTranslate="abacoApp.analise.ftr">FTR</label>
-                        <textarea id="id8" class="form-control"  name="tranRet" style="height: 140px;" [(ngModel)]="retTran" required> </textarea>
+                        <textarea id="id8" class="form-control"  [disabled]="is_disabledTran" name="tranRet" style="height: 140px;" [(ngModel)]="retTran" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-4" style="margin-left:60px;margin-top: -60px;">

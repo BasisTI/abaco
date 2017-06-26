@@ -30,13 +30,13 @@ export class Process{
             return;
         }
 
-        let factorValue:number = (this.factor.tipoAjuste==TipoFatorAjuste.PERCENTUAL)?(this.pf/100)*this.factor.fator:this.factor.fator;
+        let factorValue:number = 0;
         if (this.factor.tipoAjuste.toString()=='PERCENTUAL'){
-            factorValue = (this.pf/100)*this.factor.fator;
+            factorValue = this.pf*this.factor.fator;
         } else {
             factorValue = this.factor.fator;
         }
-        this.pf+=factorValue;
+        this.pf=factorValue;
     }
 
 
@@ -61,6 +61,7 @@ export class Process{
 
     public calculate(){
         this.calculateRetDet();
+        this.complexity = Complexity.LOW;
         if (this.ret==1) {
             if (this.det<=50) {
                 this.complexity = Complexity.LOW;
@@ -132,6 +133,7 @@ export class Process{
 
 
     public calculateTran(){
+        this.complexity = Complexity.LOW;
         this.calculateRetDet();
         if (this.classification == OutputTypes.EO || this.classification == OutputTypes.EI) {
 

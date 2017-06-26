@@ -24,4 +24,15 @@ export class FatorAjuste {
     ) {
         this.ativo = true;
     }
+
+
+    public getTitleWithValue() {
+        if (this.tipoAjuste.toString()=='PERCENTUAL'){
+            let s:string = this.nome+"-"+(this.fator*100).toString()+"%";
+            return this.nome+" - "+(this.fator*100).toString()+"%";
+        } else {
+            return this.nome+" - "+this.fator.toString()+" Pfs";
+        }
+
+    }
 }
