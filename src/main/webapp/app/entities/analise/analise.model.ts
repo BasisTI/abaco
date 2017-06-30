@@ -1,12 +1,12 @@
 
-const enum MetodoContagem {
+export const enum MetodoContagem {
     'DETALHADA',
     'INDICATIVA',
     'ESTIMADA'
 
 };
 
-const enum TipoAnalise {
+export const enum TipoAnalise {
     'DESENVOLVIMENTO',
     'MELHORIA',
     'APLICACAO'

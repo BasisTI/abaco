@@ -39,12 +39,14 @@
             "createNewFunctional": "Criar Nova Functionalidade",
             "classification":"Classificado",
             "elementaryProcessName":"Name Processo Elementar",
+            "none":"Sem",
             "det":"DER",
             "ret":"RLR",
             "ftr":"FTR",
             "summary":"Resumo",
             "low":"Baixa",
             "media":"Média",
+            "medium":"Média",
             "high":"Alta",
             "total":"Total",
             "pf":"PF",
@@ -55,7 +57,8 @@
             "EIF":"AIF",
             "EI":"EE",
             "EO":"SE",
-            "EQ":"CE"
+            "EQ":"CE",
+            "confirmRemove":"Warning !!! All processes will be removed. Do you want to continue ?"
         }
     }
 }

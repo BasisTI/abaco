@@ -43,8 +43,10 @@
             "ret":"RET",
             "ftr":"FTR",
             "summary":"Summary",
+            "none":"None",
             "low":"Low",
             "media":"Media",
+            "medium":"Medium",
             "high":"High",
             "total":"Total",
             "pf":"PF",
@@ -55,7 +57,8 @@
             "EIF":"EIF",
             "EI":"EI",
             "EO":"EO",
-            "EQ":"EQ"
+            "EQ":"EQ",
+            "confirmRemove":"Warning !!! All processes will be removed. Do you want to continue ?"
         }
     }
 }

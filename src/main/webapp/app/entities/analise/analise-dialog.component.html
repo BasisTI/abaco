@@ -37,7 +37,7 @@
 
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="abacoApp.analise.tipoContagem" for="field_tipoContagem">Tipo Contagem</label>
-            <select class="form-control" name="tipoContagem" [(ngModel)]="analise.tipoContagem" id="field_tipoContagem" >
+            <select class="form-control" name="tipoContagem" [(ngModel)]="analise.tipoContagem" (focus)="savePreviousValue()"  (ngModelChange)="onCountingTypeChange($event)" id="field_tipoContagem" >
                 <option value="DETALHADA" jhiTranslate="abacoApp.MetodoContagem.DETALHADA">DETALHADA</option>
                 <option value="INDICATIVA" jhiTranslate="abacoApp.MetodoContagem.INDICATIVA">INDICATIVA</option>
                 <option value="ESTIMADA" jhiTranslate="abacoApp.MetodoContagem.ESTIMADA">ESTIMADA</option>
@@ -211,6 +211,7 @@
                                 <thead>
                                 <tr>
                                     <th style="width:15%;"></th>
+                                    <th jhiTranslate="abacoApp.analise.none"> Sam </th>
                                     <th jhiTranslate="abacoApp.analise.low"> Baixa </th>
                                     <th jhiTranslate="abacoApp.analise.media"> Média </th>
                                     <th jhiTranslate="abacoApp.analise.high"> Alta </th>
@@ -221,6 +222,7 @@
                                 <tbody>
                                 <tr *ngFor="let total of totals;">
                                     <td jhiTranslate="abacoApp.analise.{{logicalFiles[total.input].title}}"> {{logicalFiles[total.input].title}} </td>
+                                    <td> {{total.none}} </td>
                                     <td> {{total.low}} </td>
                                     <td> {{total.medium}} </td>
                                     <td> {{total.high}} </td>
@@ -366,6 +368,7 @@
                                 <thead>
                                 <tr>
                                     <th style="width:15%;"></th>
+                                    <th jhiTranslate="abacoApp.analise.none"> Sam </th>
                                     <th jhiTranslate="abacoApp.analise.low"> Baixa </th>
                                     <th jhiTranslate="abacoApp.analise.media"> Média </th>
                                     <th jhiTranslate="abacoApp.analise.high"> Alta </th>
@@ -376,6 +379,7 @@
                                 <tbody>
                                 <tr *ngFor="let total1 of totalsTran;">
                                     <td jhiTranslate="abacoApp.analise.{{outputTypes[total1.input-2].title}}"> {{outputTypes[total1.input-2].title}} </td>
+                                    <td> {{total1.none}} </td>
                                     <td> {{total1.low}} </td>
                                     <td> {{total1.medium}} </td>
                                     <td> {{total1.high}} </td>
@@ -441,6 +445,7 @@
                         <thead>
                         <tr>
                             <th style="width:15%;"></th>
+                            <th jhiTranslate="abacoApp.analise.none"> Sem </th>
                             <th jhiTranslate="abacoApp.analise.low"> Baixa </th>
                             <th jhiTranslate="abacoApp.analise.media"> Média </th>
                             <th jhiTranslate="abacoApp.analise.high"> Alta </th>
@@ -451,6 +456,7 @@
                         <tbody>
                         <tr  *ngFor="let total of summary;">
                             <td jhiTranslate="abacoApp.analise.{{total.input<=1?logicalFiles[total.input].title:outputTypes[total.input-2].title}}"> {{total.input<=1?logicalFiles[total.input].title:outputTypes[total.input-2].title}} </td>
+                            <td> {{total.none}} </td>
                             <td> {{total.low}} </td>
                             <td> {{total.medium}} </td>
                             <td> {{total.high}} </td>
@@ -460,6 +466,7 @@
 
                         <tr>
                             <td> Total </td>
+                            <td> {{totalRow.none}} </td>
                             <td> {{totalRow.low}} </td>
                             <td> {{totalRow.medium}} </td>
                             <td> {{totalRow.high}} </td>
@@ -488,4 +495,8 @@
             <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
         </button>
     </div>
+
+    <span id="confirmText" style="display: none" jhiTranslate="abacoApp.analise.confirmRemove"></span>
+
+
 </form>

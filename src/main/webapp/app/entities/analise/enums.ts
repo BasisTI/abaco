@@ -6,6 +6,7 @@
  * Determine values of complexity
  */
 export enum Complexity{
+    NONE,
     LOW,
     MEDIUM,
     HIGH

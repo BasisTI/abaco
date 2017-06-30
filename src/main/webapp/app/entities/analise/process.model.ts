@@ -7,6 +7,7 @@ import { Funcionalidade} from '../funcionalidade';
 import { Modulo } from '../../entities/modulo';
 import {Complexity, LogicalFile, OutputTypes} from "./enums";
 import {FuncaoTransacao} from "../funcao-transacao/funcao-transacao.model";
+import {MetodoContagem} from "./analise.model";
 
 
 
@@ -25,6 +26,10 @@ export class Process{
     public detStr:String;
 
 
+    private INDICATIVE_ILF_FP:number=35;
+    private INDICATIVE_EIF_FP:number=15;
+
+
     private applyFactor(){
         if (this.factor==null) {
             return;
@@ -34,6 +39,7 @@ export class Process{
         if (this.factor.tipoAjuste.toString()=='PERCENTUAL'){
             factorValue = this.pf*this.factor.fator;
         } else {
+            this.complexity = Complexity.NONE;
             factorValue = this.factor.fator;
         }
         this.pf=factorValue;
@@ -59,40 +65,60 @@ export class Process{
 
     }
 
-    public calculate(){
+    public calculate(countingType:MetodoContagem){
+
+
+        if (countingType.toString()=="INDICATIVA"){
+            this.retStr="";
+            this.detStr="";
+            this.ret=0;
+            this.det=0;
+            if (this.classification == LogicalFile.ILF) {
+                this.pf = this.INDICATIVE_ILF_FP;
+            } else {
+                this.pf = this.INDICATIVE_EIF_FP;
+            }
+            this.complexity = Complexity.NONE;
+            return;
+        }
+
         this.calculateRetDet();
         this.complexity = Complexity.LOW;
-        if (this.ret==1) {
-            if (this.det<=50) {
-                this.complexity = Complexity.LOW;
-            } else {
-                this.complexity = Complexity.MEDIUM;
+        if (countingType.toString()=="ESTIMADA"){ // If couting type is ESTMADA - Complexity is Medium
+            this.complexity = Complexity.MEDIUM;
+        } else { // Calculate Complexity by REt AND DET values
+
+            if (this.ret == 1) {
+                if (this.det <= 50) {
+                    this.complexity = Complexity.LOW;
+                } else {
+                    this.complexity = Complexity.MEDIUM;
+                }
+            }
+
+            if (this.ret >= 2 && this.ret <= 5) {
+                if (this.det <= 19) {
+                    this.complexity = Complexity.LOW;
+                }
+
+                if (this.det >= 20 && this.det <= 50) {
+                    this.complexity = Complexity.MEDIUM;
+                }
+                if (this.det >= 51) {
+                    this.complexity = Complexity.HIGH;
+                }
+            }
+
+            if (this.ret >= 6) {
+                if (this.det <= 19) {
+                    this.complexity = Complexity.MEDIUM;
+                }
+
+                if (this.det >= 20) {
+                    this.complexity = Complexity.HIGH;
+                }
             }
         }
-
-        if (this.ret>=2 && this.ret<=5) {
-            if (this.det<=19) {
-                this.complexity = Complexity.LOW;
-            }
-
-            if (this.det>=20 && this.det<=50) {
-                this.complexity = Complexity.MEDIUM;
-            }
-            if (this.det>=51) {
-                this.complexity = Complexity.HIGH;
-            }
-        }
-
-        if (this.ret>=6) {
-            if (this.det<=19) {
-                this.complexity = Complexity.MEDIUM;
-            }
-
-            if (this.det>=20) {
-                this.complexity = Complexity.HIGH;
-            }
-        }
-
         if (this.classification == LogicalFile.ILF) {
 
             switch (this.complexity) {
@@ -132,80 +158,83 @@ export class Process{
     }
 
 
-    public calculateTran(){
+    public calculateTran(countingType:MetodoContagem){
         this.complexity = Complexity.LOW;
         this.calculateRetDet();
-        if (this.classification == OutputTypes.EO || this.classification == OutputTypes.EI) {
-
-            if (this.ret==0 || this.ret==1 ) {
-                if (this.det<=15) {
-                    this.complexity = Complexity.LOW;
-                } else {
-                    this.complexity = Complexity.MEDIUM;
-                }
-            }
-
-            if (this.ret==2 ) {
-                if (this.det<=4) {
-                    this.complexity = Complexity.LOW;
-                }
-
-                if (this.det>=5 && this.det<=15) {
-                    this.complexity = Complexity.MEDIUM;
-                }
-                if (this.det>=16) {
-                    this.complexity = Complexity.HIGH;
-                }
-            }
-
-
-            if (this.ret>=3 ) {
-                if (this.det<=4) {
-                    this.complexity = Complexity.MEDIUM;
-                }
-
-                if (this.det>=5) {
-                    this.complexity = Complexity.HIGH;
-                }
-            }
-
+        if (countingType.toString()=="ESTIMADA"){ // If couting type is ESTMADA - Complexity is Medium
+            this.complexity = Complexity.MEDIUM;
         } else {
+            if (this.classification == OutputTypes.EO || this.classification == OutputTypes.EI) {
 
-            if (this.ret==0 || this.ret==1 ) {
-                if (this.det<=19) {
-                    this.complexity = Complexity.LOW;
-                } else {
-                    this.complexity = Complexity.MEDIUM;
+                if (this.ret == 0 || this.ret == 1) {
+                    if (this.det <= 15) {
+                        this.complexity = Complexity.LOW;
+                    } else {
+                        this.complexity = Complexity.MEDIUM;
+                    }
                 }
+
+                if (this.ret == 2) {
+                    if (this.det <= 4) {
+                        this.complexity = Complexity.LOW;
+                    }
+
+                    if (this.det >= 5 && this.det <= 15) {
+                        this.complexity = Complexity.MEDIUM;
+                    }
+                    if (this.det >= 16) {
+                        this.complexity = Complexity.HIGH;
+                    }
+                }
+
+
+                if (this.ret >= 3) {
+                    if (this.det <= 4) {
+                        this.complexity = Complexity.MEDIUM;
+                    }
+
+                    if (this.det >= 5) {
+                        this.complexity = Complexity.HIGH;
+                    }
+                }
+
+            } else {
+
+                if (this.ret == 0 || this.ret == 1) {
+                    if (this.det <= 19) {
+                        this.complexity = Complexity.LOW;
+                    } else {
+                        this.complexity = Complexity.MEDIUM;
+                    }
+                }
+
+                if (this.ret == 2 || this.ret == 3) {
+                    if (this.det <= 5) {
+                        this.complexity = Complexity.LOW;
+                    }
+
+                    if (this.det >= 6 && this.det <= 19) {
+                        this.complexity = Complexity.MEDIUM;
+                    }
+                    if (this.det >= 20) {
+                        this.complexity = Complexity.HIGH;
+                    }
+                }
+
+
+                if (this.ret >= 4) {
+                    if (this.det <= 5) {
+                        this.complexity = Complexity.MEDIUM;
+                    }
+
+                    if (this.det >= 6) {
+                        this.complexity = Complexity.HIGH;
+                    }
+                }
+
+
             }
-
-            if (this.ret==2 || this.ret==3 ) {
-                if (this.det<=5) {
-                    this.complexity = Complexity.LOW;
-                }
-
-                if (this.det>=6 && this.det<=19) {
-                    this.complexity = Complexity.MEDIUM;
-                }
-                if (this.det>=20) {
-                    this.complexity = Complexity.HIGH;
-                }
-            }
-
-
-            if (this.ret>=4 ) {
-                if (this.det<=5) {
-                    this.complexity = Complexity.MEDIUM;
-                }
-
-                if (this.det>=6) {
-                    this.complexity = Complexity.HIGH;
-                }
-            }
-
-
         }
-
         if (this.classification == OutputTypes.EI || this.classification == OutputTypes.EQ) {
 
             switch (this.complexity) {
@@ -245,7 +274,7 @@ export class Process{
     }
 
 
-    public convertFromTransacao(funcaoTransacao:FuncaoTransacao){
+    public convertFromTransacao(funcaoTransacao:FuncaoTransacao,countingType:MetodoContagem){
         this.id = funcaoTransacao.id;
         this.pf = funcaoTransacao.pf;
         this.func = funcaoTransacao.funcionalidade;
@@ -264,7 +293,7 @@ export class Process{
         }
 
 
-        this.calculateTran();
+        this.calculateTran(countingType);
     }
 
 }

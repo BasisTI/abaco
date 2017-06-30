@@ -8,6 +8,7 @@ const enum TipoFuncaoTransacao {
 };
 
 const enum Complexidade {
+    'SEM',
     'BAIXA',
     'MEDIA',
     'ALTA'
@@ -52,6 +53,7 @@ export class FuncaoTransacao {
         }
 
         switch (process.complexity) {
+            case Complexity.NONE:this.complexidade = Complexidade.SEM;break;
             case Complexity.LOW: this.complexidade = Complexidade.BAIXA; break;
             case Complexity.MEDIUM: this.complexidade = Complexidade.MEDIA; break;
             case Complexity.HIGH: this.complexidade = Complexidade.ALTA; break;

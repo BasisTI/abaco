@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ElementRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { Response } from '@angular/http';
 
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { EventManager, AlertService, JhiLanguageService } from 'ng-jhipster';
 
-import { Analise } from './analise.model';
+import {Analise, MetodoContagem} from './analise.model';
 import { AnalisePopupService } from './analise-popup.service';
 import { AnaliseService } from './analise.service';
 import { Sistema, SistemaService } from '../sistema';
@@ -40,6 +40,7 @@ export class AnaliseDialogComponent implements OnInit {
     funcaotransacaos: FuncaoTransacao[];
 
     @ViewChild('staticTabs') staticTabs: TabsetComponent;
+
 
     // Define that RET and DET are disabled/enabled
     is_disabled:boolean=false;
@@ -83,6 +84,7 @@ export class AnaliseDialogComponent implements OnInit {
     totalsTran:TotalRecord[];
     summary:TotalRecord[]=[];
     totalRow:TotalRecord = new TotalRecord(0);
+    previousCountingType:any;
 
     editedProcess:Process=null; // Define the process that it is in editabled mode
     editedTranProcess:Process=null;
@@ -102,7 +104,8 @@ export class AnaliseDialogComponent implements OnInit {
         private moduloService: ModuloService,
         private  fatorAjusteService:FatorAjusteService,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private changeDetector: ChangeDetectorRef
     ) {
 
         this.jhiLanguageService.setLocations(['analise', 'metodoContagem', 'tipoAnalise']);
@@ -198,14 +201,10 @@ export class AnaliseDialogComponent implements OnInit {
         this.registerChangeInFunc();
 
 
-        // Stupid way for set width of modal window. I could not find another way.
-        //let elem =document.querySelector(".modal-dialog")  as HTMLInputElement ;
-        //elem.style['max-width'] = 1300+"px";
-
         if (this.analise.funcaoTransacaos!=null) {
             this.analise.funcaoTransacaos.forEach(f=>{
                 let process:Process = new Process();
-                process.convertFromTransacao(f);
+                process.convertFromTransacao(f, this.analise.tipoContagem);
                 this.listOfTranProcess.push(process);
             });
         }
@@ -231,12 +230,13 @@ export class AnaliseDialogComponent implements OnInit {
                     process.classification = LogicalFile.EIF;
                 }
                 switch (funcaoDados.complexidade) {
+                    case Complexidade.SEM: process.complexity = Complexity.NONE;break;
                     case Complexidade.BAIXA: process.complexity = Complexity.LOW; break;
                     case Complexidade.MEDIA: process.complexity = Complexity.MEDIUM; break;
                     case Complexidade.ALTA: process.complexity = Complexity.HIGH; break;
                 }
 
-                process.calculate();
+                process.calculate(this.analise.tipoContagem);
                 this.listOfProcess.push(process);
 
             }
@@ -414,7 +414,7 @@ export class AnaliseDialogComponent implements OnInit {
         newProcess.name = this.elementaryProcess;
         newProcess.retStr = this.ret;
         newProcess.detStr = this.det;
-        newProcess.calculate();
+        newProcess.calculate(this.analise.tipoContagem);
         if (this.editedProcess==null) {
             this.listOfProcess.push(newProcess);
         } else {
@@ -445,7 +445,7 @@ export class AnaliseDialogComponent implements OnInit {
 
         newProcess.retStr = this.retTran;
         newProcess.detStr = this.detTran;
-        newProcess.calculateTran();
+        newProcess.calculateTran(this.analise.tipoContagem);
         if (this.editedTranProcess==null) {
             this.listOfTranProcess.push(newProcess);
         } else {
@@ -459,10 +459,9 @@ export class AnaliseDialogComponent implements OnInit {
         document.getElementById("buttonAddTran").innerText = "Adicionar";
     }
 
+
     remove(process){
-
         let searchedIndex=this.getIndexOfProcessById(this.listOfProcess,process.id);
-
         if (searchedIndex>=0) {
             this.listOfProcess.splice(searchedIndex,1);
             this.recalculateTotals();
@@ -470,23 +469,29 @@ export class AnaliseDialogComponent implements OnInit {
     }
 
 
-
+    /**
+     *
+     * Find index of process in array by Id. If not found - return -1
+     *
+     * @param list
+     *           given list of processes
+     * @param id
+     *          the id of searched process
+     * @returns {number}
+     *           index of process. If process not found - will be returned -1
+     */
     getIndexOfProcessById(list:Process[], id:number){
         let searchedIndex=-1;
-        for (var index in list) {
-            if (list[index].id == id) {
-                searchedIndex=Number(index);
-
-            }
-        }
-
+        searchedIndex = list.findIndex(process=>{
+           return process.id == id;
+        });
         return searchedIndex;
     }
 
 
-     cast<T>(obj, cl): T {
-      obj.__proto__ = cl.prototype;
-    return obj;
+    cast<T>(obj, cl): T {
+        obj.__proto__ = cl.prototype;
+        return obj;
     }
 
 
@@ -527,6 +532,43 @@ export class AnaliseDialogComponent implements OnInit {
             this.retTran="";
             this.is_disabledTran=true;
         }
+    }
+
+
+
+    savePreviousValue(){
+     this.previousCountingType = this.analise.tipoContagem;
+    }
+
+
+    /**
+     *  Counting tupe is changed
+     */
+    onCountingTypeChange(type){
+        //Clear lists with processes
+        let s:string = document.getElementById("confirmText").innerText;
+        if (confirm(s)) {
+            this.listOfProcess = [];
+            this.listOfTranProcess = [];
+            //this.analise.tipoContagem = MetodoContagem.INDICATIVA;
+            //this.listOfProcess.slice(0,this.listOfProcess.length);
+            //this.listOfTranProcess.slice(0,this.listOfTranProcess.length);
+            if (type.toString() == "INDICATIVA") {
+                this.is_disabled = true;
+                this.staticTabs.tabs[2].disabled = true;
+            } else {
+                this.is_disabled = false;
+                this.staticTabs.tabs[2].disabled = false;
+            }
+        } else {
+           let p = this.previousCountingType;
+            //alert(JSON.stringify(p));
+            this.analise.tipoContagem=null;
+            this.changeDetector.detectChanges();
+            this.analise.tipoContagem=p;
+            this.changeDetector.detectChanges();
+        }
+
     }
 
 
@@ -606,12 +648,11 @@ export class AnaliseDialogComponent implements OnInit {
     removeTran(process){
 
         let searchedIndex=-1;
-        for (var index in this.listOfTranProcess) {
-            if (this.listOfTranProcess[index].id == process.id) {
-                searchedIndex=Number(index);
 
-            }
-        }
+        searchedIndex = this.listOfTranProcess.findIndex(p=>{
+            return p.id == process.id;
+        });
+
         if (searchedIndex>=0) {
             this.listOfTranProcess.splice(searchedIndex,1);
             this.recalculateTranTotals();
@@ -628,6 +669,7 @@ export class AnaliseDialogComponent implements OnInit {
         this.totalRow.init();
         let index:any;
         for(index in this.summary){
+            this.totalRow.none+=this.summary[index].none;
             this.totalRow.low+=this.summary[index].low;
             this.totalRow.medium+=this.summary[index].medium;
             this.totalRow.high+=this.summary[index].high;
@@ -644,6 +686,9 @@ export class AnaliseDialogComponent implements OnInit {
         this.totals[LogicalFile.EIF].init();
         this.listOfProcess.forEach(process => {
             switch(process.complexity) {
+                case Complexity.NONE:
+                    this.totals[process.classification].none++;
+                    break;
                 case Complexity.LOW:
                     this.totals[process.classification].low++;
                     break;
@@ -668,6 +713,9 @@ export class AnaliseDialogComponent implements OnInit {
         this.totalsTran[OutputTypes.EQ-2].init();
         this.listOfTranProcess.forEach(process => {
             switch(process.complexity) {
+                case Complexity.NONE:
+                    this.totalsTran[process.classification-2].none++;
+                    break;
                 case Complexity.LOW:
                     this.totalsTran[process.classification-2].low++;
                     break;
@@ -754,12 +802,14 @@ class TotalRecord{
     public high:number=0;
     public total:number=0;
     public pf:number=0;
+    public none:number=0;
 
     constructor(input:number) {
         this.input=input;
     }
 
     public init(){
+        this.none=0;
         this.low=0;
         this.medium=0;
         this.high=0;
