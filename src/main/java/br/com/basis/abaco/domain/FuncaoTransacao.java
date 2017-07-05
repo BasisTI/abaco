@@ -62,6 +62,8 @@ public class FuncaoTransacao implements Serializable {
     @Column
     private String ftrStr;
 
+    @Column
+    private String sustantation;
 
     @ManyToOne
     private FatorAjuste fatorAjuste;
@@ -227,6 +229,14 @@ public class FuncaoTransacao implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSustantation() {
+        return sustantation;
+    }
+
+    public void setSustantation(String sustantation) {
+        this.sustantation = sustantation;
     }
 
     @Override

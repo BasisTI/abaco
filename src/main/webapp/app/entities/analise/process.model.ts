@@ -24,7 +24,7 @@ export class Process{
     public pf:number;
     public retStr:String;
     public detStr:String;
-
+    public sustantation:String;
 
     private INDICATIVE_ILF_FP:number=35;
     private INDICATIVE_EIF_FP:number=15;
@@ -283,6 +283,7 @@ export class Process{
         this.retStr = funcaoTransacao.ftrStr;
         this.module = funcaoTransacao.funcionalidade.modulo;
         this.name = funcaoTransacao.name;
+        this.sustantation = funcaoTransacao.sustantation;
 
         if (funcaoTransacao.tipo.toString()=="EE") {
             this.classification = OutputTypes.EI;

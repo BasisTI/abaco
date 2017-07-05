@@ -58,7 +58,8 @@
             "EI":"EE",
             "EO":"SE",
             "EQ":"CE",
-            "confirmRemove":"Warning !!! All processes will be removed. Do you want to continue ?"
+            "confirmRemove":"Warning !!! All processes will be removed. Do you want to continue ?",
+            "sustantation":"Sustantation"
         }
     }
 }

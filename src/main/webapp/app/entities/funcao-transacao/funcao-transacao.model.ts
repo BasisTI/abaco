@@ -31,7 +31,8 @@ export class FuncaoTransacao {
         public alr?: Alr,
         public detStr?: String,
         public ftrStr?: String,
-        public name?:String
+        public name?:String,
+        public sustantation?:String
     ) {
     }
 
@@ -43,6 +44,7 @@ export class FuncaoTransacao {
         this.detStr = process.detStr;
         this.ftrStr = process.retStr;
         this.name = process.name;
+        this.sustantation = process.sustantation;
 
         if (process.classification == OutputTypes.EI) {
             this.tipo = TipoFuncaoTransacao.EE;

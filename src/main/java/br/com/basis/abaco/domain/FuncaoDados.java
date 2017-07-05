@@ -69,6 +69,9 @@ public class FuncaoDados implements Serializable {
     @Column
     private String name;
 
+    @Column
+    private String sustantation;
+
     @OneToMany(mappedBy = "funcaoDados")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -260,6 +263,15 @@ public class FuncaoDados implements Serializable {
             return false;
         }
         return Objects.equals(id, funcaoDados.id);
+    }
+
+
+    public String getSustantation() {
+        return sustantation;
+    }
+
+    public void setSustantation(String sustantation) {
+        this.sustantation = sustantation;
     }
 
     @Override

@@ -62,6 +62,8 @@ export class AnaliseDialogComponent implements OnInit {
     selectedFactor: FatorAjuste;
     selectedLogicalFile: IdTitle;
     selectedOutputType: IdTitle;
+    sustantationTran:String;
+    sustantation:String;
 
     selectedTranModulo: Modulo;
     selectedTranFunc: Funcionalidade;
@@ -223,6 +225,7 @@ export class AnaliseDialogComponent implements OnInit {
                 process.detStr = funcaoDados.detStr;
                 process.retStr = funcaoDados.retStr;
                 process.name = funcaoDados.name;
+                process.sustantation = funcaoDados.sustantation;
 
                 if (funcaoDados.tipo.toString() == 'ALI') {
                     process.classification = LogicalFile.ILF;
@@ -414,6 +417,7 @@ export class AnaliseDialogComponent implements OnInit {
         newProcess.name = this.elementaryProcess;
         newProcess.retStr = this.ret;
         newProcess.detStr = this.det;
+        newProcess.sustantation = this.sustantation;
         newProcess.calculate(this.analise.tipoContagem);
         if (this.editedProcess==null) {
             this.listOfProcess.push(newProcess);
@@ -442,7 +446,7 @@ export class AnaliseDialogComponent implements OnInit {
         newProcess.func = this.selectedTranFunc;
         newProcess.classification = this.selectedOutputType.id;
         newProcess.name = this.elementaryTranProcess;
-
+        newProcess.sustantation = this.sustantationTran;
         newProcess.retStr = this.retTran;
         newProcess.detStr = this.detTran;
         newProcess.calculateTran(this.analise.tipoContagem);
@@ -620,6 +624,7 @@ export class AnaliseDialogComponent implements OnInit {
         this.selectedFunc = this.getFuncById(process.func.id);
         this.selectedLogicalFile = this.logicalFiles[process.classification];
         this.elementaryProcess = process.name;
+        this.sustantation = process.sustantation;
         this.det = process.detStr;
         this.ret = process.retStr;
         document.getElementById("buttonAdd").innerText = "Accept changes";
@@ -638,6 +643,7 @@ export class AnaliseDialogComponent implements OnInit {
         this.selectedTranFunc = this.getFuncTranById(process.func.id);
         this.selectedOutputType = this.outputTypes[process.classification-2];
         this.elementaryTranProcess = process.name;
+        this.sustantationTran = process.sustantation;
         this.detTran = process.detStr;
         this.retTran = process.retStr;
         document.getElementById("buttonAddTran").innerText = "Accept changes";

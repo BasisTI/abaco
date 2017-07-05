@@ -97,6 +97,9 @@ public class Funcionalidade implements Serializable {
         return this;
     }
 
+
+
+
     public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
         this.funcaoTransacao = funcaoTransacao;
     }

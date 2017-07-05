@@ -35,7 +35,8 @@ export class FuncaoDados {
         public alr?: Alr,
         public detStr?: String,
         public retStr?: String,
-        public name?:String
+        public name?:String,
+        public sustantation?:String
     ) {
     }
 
@@ -50,6 +51,7 @@ export class FuncaoDados {
         this.detStr = process.detStr;
         this.retStr = process.retStr;
         this.name = process.name;
+        this.sustantation = process.sustantation;
 
         if (process.classification == LogicalFile.ILF) {
             this.tipo = TipoFuncaoDados.ALI;

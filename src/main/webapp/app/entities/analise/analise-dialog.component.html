@@ -235,6 +235,23 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_sustantation" class="control-label" jhiTranslate="abacoApp.analise.sustantation">Sustantation:</label>
+
+                        <textarea style="height: 140px;" class="form-control" name="sustantation" id="field_sustantation"
+                                  [(ngModel)]="sustantation"
+                                  maxlength="4000" ></textarea>
+                        <div [hidden]="!(editForm.controls.sustantation?.dirty && editForm.controls.sustantation?.invalid)">
+                            <small class="form-text text-danger"
+                                   [hidden]="!editForm.controls.fronteiras?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 4000 }">
+                                This field cannot be longer than 4000 characters.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row" style="border-bottom-width: 1px;border-bottom-style: groove;">
                     <div class="form-group col-sm-6  required">
                         <button class="btn btn-primary" id="buttonAdd" value="" style="float:right"  [disabled]="!dadosForm.form.valid" (click)="add()">Adicionar</button>
@@ -391,6 +408,24 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_sustantationTran" class="control-label" jhiTranslate="abacoApp.analise.sustantation">Sustantation:</label>
+
+                        <textarea style="height: 140px;" class="form-control" name="sustantationTran" id="field_sustantationTran"
+                                  [(ngModel)]="sustantationTran"
+                                  maxlength="4000" ></textarea>
+                        <div [hidden]="!(editForm.controls.sustantationTran?.dirty && editForm.controls.sustantationTran?.invalid)">
+                            <small class="form-text text-danger"
+                                   [hidden]="!editForm.controls.fronteiras?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 4000 }">
+                                This field cannot be longer than 4000 characters.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="row" style="border-bottom-width: 1px;border-bottom-style: groove;">
                     <div class="form-group col-sm-6  required">
                         <button class="btn btn-primary" style="float:right"  id="buttonAddTran"  [disabled]="!tranForm.form.valid" (click)="addTran()">Adicionar</button>
