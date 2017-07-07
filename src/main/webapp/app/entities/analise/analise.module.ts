@@ -4,6 +4,8 @@ import { TabsetComponent } from 'ngx-bootstrap';
 import { AbacoSharedModule } from '../../shared';
 import { DataTableModule } from "angular2-datatable";
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { Ng2UploaderModule } from 'ng2-uploader';
+
 
 import {
     AnaliseService,
@@ -30,6 +32,7 @@ let ENTITY_STATES = [
         AbacoSharedModule,
         TabsModule.forRoot(),
         DataTableModule,
+        Ng2UploaderModule,
         RouterModule.forRoot(ENTITY_STATES, { useHash: true })
     ],
     declarations: [

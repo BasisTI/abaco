@@ -1,4 +1,8 @@
 
+<style>
+    .file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
+</style>
+
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm" >
 
     <div class="modal-header">
@@ -250,6 +254,26 @@
                             </small>
                         </div>
                     </div>
+                </div>
+
+
+                <div class="row">
+                    <input type="file"
+                           ngFileSelect
+                           [options]="options"
+                           (onUpload)="handleUpload($event)"
+                           (beforeUpload)="beforeUpload($event)"/>
+
+                     <div ngFileDrop
+                         [options]="options"
+                         (onUpload)="handleUpload($event)"
+                         [ngClass]="{'file-over': hasBaseDropZoneOver}"
+                         (onFileOver)="fileOverBase($event)"
+                         (beforeUpload)="beforeUpload($event)">
+                     </div>
+
+
+
                 </div>
 
                 <div class="row" style="border-bottom-width: 1px;border-bottom-style: groove;">
