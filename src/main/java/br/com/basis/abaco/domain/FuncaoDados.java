@@ -8,9 +8,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
+import java.util.*;
 
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 
@@ -79,6 +77,10 @@ public class FuncaoDados implements Serializable {
 
     @ManyToOne
     private Alr alr;
+
+    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<UploadedFile> files = new ArrayList<>();
+
 
     public Long getId() {
         return id;
@@ -268,6 +270,15 @@ public class FuncaoDados implements Serializable {
 
     public String getSustantation() {
         return sustantation;
+    }
+
+
+    public List<UploadedFile> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<UploadedFile> files) {
+        this.files = files;
     }
 
     public void setSustantation(String sustantation) {

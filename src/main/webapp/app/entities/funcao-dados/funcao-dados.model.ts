@@ -4,7 +4,7 @@ import { FatorAjuste } from '../fator-ajuste';
 import { Rlr } from '../rlr';
 import { Alr } from '../alr';
 import {Complexity, LogicalFile} from "../analise/enums";
-import {Process} from "../analise/process.model";
+import {Process, UploadedFile} from "../analise/process.model";
 
 export const enum TipoFuncaoDados {
     'ALI',
@@ -36,7 +36,8 @@ export class FuncaoDados {
         public detStr?: String,
         public retStr?: String,
         public name?:String,
-        public sustantation?:String
+        public sustantation?:String,
+        public files?:UploadedFile[]
     ) {
     }
 
@@ -52,7 +53,7 @@ export class FuncaoDados {
         this.retStr = process.retStr;
         this.name = process.name;
         this.sustantation = process.sustantation;
-
+        this.files = [].concat(process.files);
         if (process.classification == LogicalFile.ILF) {
             this.tipo = TipoFuncaoDados.ALI;
         } else {

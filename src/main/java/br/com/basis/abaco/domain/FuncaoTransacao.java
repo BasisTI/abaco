@@ -8,9 +8,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
+import java.util.*;
 
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 
@@ -75,6 +73,9 @@ public class FuncaoTransacao implements Serializable {
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Alr> alrs = new HashSet<>();
+
+    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<UploadedFile> files = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -252,6 +253,15 @@ public class FuncaoTransacao implements Serializable {
             return false;
         }
         return Objects.equals(id, funcaoTransacao.id);
+    }
+
+
+    public List<UploadedFile> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<UploadedFile> files) {
+        this.files = files;
     }
 
     @Override

@@ -62,9 +62,15 @@ public class AnaliseResource {
         }
         analise.getFuncaoDados().forEach(entry->{
             entry.setAnalise(analise);
+            entry.getFiles().forEach(file->{
+                file.setFuncaoDados(entry);
+            });
         });
         analise.getFuncaoTransacaos().forEach(entry->{
             entry.setAnalise(analise);
+            entry.getFiles().forEach(file->{
+                file.setFuncaoTransacao(entry);
+            });
         });
         Set<FuncaoDados> copyDados = new HashSet<>(analise.getFuncaoDados());
         Set<FuncaoTransacao> copyTransacao = new HashSet<>(analise.getFuncaoTransacaos());
@@ -104,9 +110,15 @@ public class AnaliseResource {
         }
         analise.getFuncaoDados().forEach(entry->{
             entry.setAnalise(analise);
+            entry.getFiles().forEach(file->{
+                file.setFuncaoDados(entry);
+            });
         });
         analise.getFuncaoTransacaos().forEach(entry->{
             entry.setAnalise(analise);
+            entry.getFiles().forEach(file->{
+                file.setFuncaoTransacao(entry);
+            });
         });
         Analise result = analiseRepository.save(analise);
         result.getFuncaoDados().forEach(entry->{

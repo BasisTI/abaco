@@ -1,5 +1,5 @@
 
-import {Process} from "../analise/process.model";
+import {Process, UploadedFile} from "../analise/process.model";
 const enum TipoFuncaoTransacao {
     'EE',
     'SE',
@@ -32,7 +32,8 @@ export class FuncaoTransacao {
         public detStr?: String,
         public ftrStr?: String,
         public name?:String,
-        public sustantation?:String
+        public sustantation?:String,
+        public files?:UploadedFile[]
     ) {
     }
 
@@ -45,7 +46,7 @@ export class FuncaoTransacao {
         this.ftrStr = process.retStr;
         this.name = process.name;
         this.sustantation = process.sustantation;
-
+        this.files = [].concat(process.files);
         if (process.classification == OutputTypes.EI) {
             this.tipo = TipoFuncaoTransacao.EE;
         } else if (process.classification == OutputTypes.EO) {

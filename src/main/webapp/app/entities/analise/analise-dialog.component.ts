@@ -15,7 +15,7 @@ import { FuncaoTransacao, FuncaoTransacaoService } from '../funcao-transacao';
 import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
 import { Modulo, ModuloService } from '../modulo';
 import {Complexity, LogicalFile, OutputTypes} from "./enums";
-import {Process} from "./process.model";
+import {Process, UploadedFile} from "./process.model";
 import {TabsetComponent} from "ngx-bootstrap";
 import {FatorAjuste} from "../fator-ajuste/fator-ajuste.model";
 import {Subscription} from "rxjs/Subscription";
@@ -28,6 +28,8 @@ import {Complexidade, TipoFuncaoDados} from "../funcao-dados/funcao-dados.model"
 
 })
 export class AnaliseDialogComponent implements OnInit {
+
+    private UPLOADED_FILE_MAX_SIZE:number = 15000000;
 
     analise: Analise = new Analise();
     authorities: any[];
@@ -91,7 +93,23 @@ export class AnaliseDialogComponent implements OnInit {
     editedProcess:Process=null; // Define the process that it is in editabled mode
     editedTranProcess:Process=null;
 
+    files:UploadedFile[]=new Array(); // List of uploaded files
+    filesTran:UploadedFile[]=new Array();
+    hasBaseDropZoneOverTran: boolean = false;
 
+    uploadFile: String;
+    hasBaseDropZoneOver: boolean = false;
+    options: Object = {
+        url: '/upload'
+        //filterExtensions: true,
+        //allowedExtensions: ['png', 'jpg', 'pdf', 'doc', 'docx', 'odt', 'gif']
+    };
+
+    optionsTran: Object = {
+        url: '/upload'
+        //filterExtensions: true,
+        //allowedExtensions: ['png', 'jpg', 'pdf', 'doc', 'docx', 'odt', 'gif']
+    };
 
     constructor(
        // public activeModal: NgbActiveModal,
@@ -226,6 +244,7 @@ export class AnaliseDialogComponent implements OnInit {
                 process.retStr = funcaoDados.retStr;
                 process.name = funcaoDados.name;
                 process.sustantation = funcaoDados.sustantation;
+                process.files = [].concat(funcaoDados.files);
 
                 if (funcaoDados.tipo.toString() == 'ALI') {
                     process.classification = LogicalFile.ILF;
@@ -418,6 +437,9 @@ export class AnaliseDialogComponent implements OnInit {
         newProcess.retStr = this.ret;
         newProcess.detStr = this.det;
         newProcess.sustantation = this.sustantation;
+        newProcess.files=[];
+        newProcess.files = newProcess.files.concat(this.files);
+        this.files = [];
         newProcess.calculate(this.analise.tipoContagem);
         if (this.editedProcess==null) {
             this.listOfProcess.push(newProcess);
@@ -449,6 +471,8 @@ export class AnaliseDialogComponent implements OnInit {
         newProcess.sustantation = this.sustantationTran;
         newProcess.retStr = this.retTran;
         newProcess.detStr = this.detTran;
+        newProcess.files = [].concat(this.filesTran);
+        this.filesTran = [];
         newProcess.calculateTran(this.analise.tipoContagem);
         if (this.editedTranProcess==null) {
             this.listOfTranProcess.push(newProcess);
@@ -496,6 +520,115 @@ export class AnaliseDialogComponent implements OnInit {
     cast<T>(obj, cl): T {
         obj.__proto__ = cl.prototype;
         return obj;
+    }
+
+
+    handleUpload(data): void {
+        if (data && data.response) {
+            //data = JSON.parse(data.response);
+            //this.uploadFile = data;
+            //alert(JSON.stringify(data));
+            let file:any = JSON.parse(data.response);
+            if (this.staticTabs.tabs[1].active){
+                this.files.push(file);
+            } else {
+                this.filesTran.push(file);
+            }
+
+            this.uploadFile = "";
+
+        }
+    }
+
+    fileOverBase(e:any):void {
+        this.hasBaseDropZoneOver = e;
+    }
+
+
+
+    beforeUpload(uploadingFile): void {
+        //alert(JSON.stringify(uploadingFile));
+        if (uploadingFile.size > this.UPLOADED_FILE_MAX_SIZE) {
+            uploadingFile.setAbort();
+            alert('File is too large');
+            return;
+        }
+
+        let index:number=-1;
+        if (this.staticTabs.tabs[1].active) {
+            index = this.files.findIndex(f => {
+                return f.originalName == uploadingFile.originalName;
+            });
+        } else {
+            index = this.filesTran.findIndex(f => {
+                return f.originalName == uploadingFile.originalName;
+            });
+        }
+        if (index>=0){
+            uploadingFile.setAbort();
+            alert('File already exists...');
+        }
+
+
+    }
+
+
+    handleTranUpload(data): void {
+        if (data && data.response) {
+            let file:any = JSON.parse(data.response);
+            this.filesTran.push(file);
+        }
+    }
+
+    fileTranOverBase(e:any):void {
+        this.hasBaseDropZoneOverTran = e;
+    }
+
+
+
+    beforeTranUpload(uploadingFile): void {
+        if (uploadingFile.size > this.UPLOADED_FILE_MAX_SIZE) {
+            uploadingFile.setAbort();
+            alert('File is too large');
+            return;
+        }
+
+        if (this.filesTran.find(f=>{
+                return f.originalName==uploadingFile.originalName;
+            })){
+            uploadingFile.setAbort();
+            alert('File already exists...');
+        }
+
+    }
+
+
+
+    removeFile(file) {
+        //alert(JSON.stringify(file));
+        let index:number=-1;
+        index=this.files.findIndex(f=>{
+           return f.id==file.id;
+        });
+
+        //alert('223344');
+        if (index>=0) {
+            this.files.splice(index,1);
+        }
+    }
+
+
+    removeTranFile(file) {
+
+        let index:number=-1;
+        index=this.filesTran.findIndex(f=>{
+            return f.id==file.id;
+        });
+
+
+        if (index>=0) {
+            this.filesTran.splice(index,1);
+        }
     }
 
 
@@ -554,9 +687,7 @@ export class AnaliseDialogComponent implements OnInit {
         if (confirm(s)) {
             this.listOfProcess = [];
             this.listOfTranProcess = [];
-            //this.analise.tipoContagem = MetodoContagem.INDICATIVA;
-            //this.listOfProcess.slice(0,this.listOfProcess.length);
-            //this.listOfTranProcess.slice(0,this.listOfTranProcess.length);
+
             if (type.toString() == "INDICATIVA") {
                 this.is_disabled = true;
                 this.staticTabs.tabs[2].disabled = true;
@@ -625,6 +756,10 @@ export class AnaliseDialogComponent implements OnInit {
         this.selectedLogicalFile = this.logicalFiles[process.classification];
         this.elementaryProcess = process.name;
         this.sustantation = process.sustantation;
+        this.files=[];
+        if (process.files!=null) {
+            this.files = this.files.concat(process.files);
+        }
         this.det = process.detStr;
         this.ret = process.retStr;
         document.getElementById("buttonAdd").innerText = "Accept changes";
@@ -646,6 +781,9 @@ export class AnaliseDialogComponent implements OnInit {
         this.sustantationTran = process.sustantation;
         this.detTran = process.detStr;
         this.retTran = process.retStr;
+        if (process.files!=null) {
+            this.filesTran = [].concat(process.files);
+        }
         document.getElementById("buttonAddTran").innerText = "Accept changes";
     }
 
@@ -739,6 +877,20 @@ export class AnaliseDialogComponent implements OnInit {
         this.recalculateSummary();
     }
 
+
+    public humanFileSize(size:number) {
+        var thresh = 1024;
+        if(Math.abs(size) < thresh) {
+            return size + ' B';
+        }
+        var units =  ['kB','MB','GB','TB','PB','EB','ZB','YB'];
+        var u = -1;
+        do {
+            size /= thresh;
+            ++u;
+        } while(Math.abs(size) >= thresh && u < units.length - 1);
+        return size.toFixed(1)+' '+units[u];
+    }
 
 
     registerChangeInModulos() {

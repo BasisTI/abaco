@@ -25,6 +25,8 @@ export class Process{
     public retStr:String;
     public detStr:String;
     public sustantation:String;
+    public files:UploadedFile[]=[];
+
 
     private INDICATIVE_ILF_FP:number=35;
     private INDICATIVE_EIF_FP:number=15;
@@ -284,6 +286,7 @@ export class Process{
         this.module = funcaoTransacao.funcionalidade.modulo;
         this.name = funcaoTransacao.name;
         this.sustantation = funcaoTransacao.sustantation;
+        this.files = [].concat(funcaoTransacao.files);
 
         if (funcaoTransacao.tipo.toString()=="EE") {
             this.classification = OutputTypes.EI;
@@ -296,5 +299,19 @@ export class Process{
 
         this.calculateTran(countingType);
     }
+
+}
+
+//Class that described uploaded file
+export class UploadedFile{
+    public id:number;
+    public originalName:String;
+    public filename:String;
+    public dateOf:Date;
+    public sizeOf:number;
+    public processId:number;
+    public processType:number;
+
+
 
 }

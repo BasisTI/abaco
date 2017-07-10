@@ -258,24 +258,52 @@
 
 
                 <div class="row">
-                    <input type="file"
+                    <div class="form-group col-sm-6" >
+                    <label for="fileUploader" class="control-label">Attachments:</label>
+
+
+                     <input type="file" class="form-control"
                            ngFileSelect
                            [options]="options"
                            (onUpload)="handleUpload($event)"
-                           (beforeUpload)="beforeUpload($event)"/>
-
-                     <div ngFileDrop
-                         [options]="options"
-                         (onUpload)="handleUpload($event)"
-                         [ngClass]="{'file-over': hasBaseDropZoneOver}"
-                         (onFileOver)="fileOverBase($event)"
-                         (beforeUpload)="beforeUpload($event)">
-                     </div>
+                           (beforeUpload)="beforeUpload($event)" id="fileUploader"/>
 
 
+
+
+                    </div>
 
                 </div>
 
+
+                <div class="row" [hidden]="!files.length">
+                    <div class="form-group col-sm-6" >
+                        <div class="table-responsive">
+
+                            <table id="atachments" class="table table-striped" [mfData]="files" #mf="mfDataTable">
+                                <thead>
+                                <tr>
+                                    <th style="width:45%;">File Name</th>
+                                    <th>Size</th>
+                                    <th>Date of</th>
+                                    <th>Action</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let file of files;">
+                                    <td><a href="/uploaded/{{file.filename}}" target="_blank"> {{file.originalName}} </a></td>
+                                    <td> {{humanFileSize(file.sizeOf)}} </td>
+                                    <td> {{file.dateOf  | date: 'dd/MM/yyyy HH:mm'}} </td>
+                                    <td style="text-align: center"> <a  (click)="removeFile(file)"> <i class="fa fa-trash" style="font-size:24px"></i> </a></td>
+
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                 <div class="row" style="border-bottom-width: 1px;border-bottom-style: groove;">
                     <div class="form-group col-sm-6  required">
                         <button class="btn btn-primary" id="buttonAdd" value="" style="float:right"  [disabled]="!dadosForm.form.valid" (click)="add()">Adicionar</button>
@@ -449,6 +477,51 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="form-group col-sm-6" >
+                        <label for="fileTranUploader" class="control-label">Attachments:</label>
+
+                        <form>
+                        <input type="file" class="form-control"
+                               ngFileSelect
+                               [options]="optionsTran"
+                                id="fileTranUploader"/>
+                        </form>
+
+
+                    </div>
+
+                </div>
+
+
+                <div class="row" [hidden]="!filesTran.length">
+                    <div class="form-group col-sm-6" >
+                        <div class="table-responsive">
+
+                            <table id="atachmentsTran" class="table table-striped" [mfData]="filesTran" #mf="mfDataTable">
+                                <thead>
+                                <tr>
+                                    <th style="width:45%;">File Name</th>
+                                    <th>Size</th>
+                                    <th>Date of</th>
+                                    <th>Action</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let file1 of filesTran;">
+                                    <td><a href="/uploaded/{{file1.filename}}" target="_blank"> {{file1.originalName}} </a></td>
+                                    <td> {{humanFileSize(file1.sizeOf)}} </td>
+                                    <td> {{file1.dateOf  | date: 'dd/MM/yyyy HH:mm'}} </td>
+                                    <td style="text-align: center"> <a  (click)="removeTranFile(file1)"> <i class="fa fa-trash" style="font-size:24px"></i> </a></td>
+
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row" style="border-bottom-width: 1px;border-bottom-style: groove;">
                     <div class="form-group col-sm-6  required">

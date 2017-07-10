@@ -1,5 +1,6 @@
 package br.com.basis.abaco.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -12,7 +13,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "files")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public class UploadedFile {
 
     private static final long serialVersionUID = 1L;
@@ -34,12 +35,20 @@ public class UploadedFile {
     @Column
     private Integer sizeOf;
 
-    @Column
-    private Long processId;
 
     @Column
     private Integer processType;
 
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "process_id")
+    private FuncaoDados funcaoDados;
+
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "tran_id")
+    private FuncaoTransacao funcaoTransacao;
 
     public Long getId() {
         return id;
@@ -81,13 +90,6 @@ public class UploadedFile {
         this.sizeOf = sizeOf;
     }
 
-    public Long getProcessId() {
-        return processId;
-    }
-
-    public void setProcessId(Long processId) {
-        this.processId = processId;
-    }
 
     public Integer getProcessType() {
         return processType;
@@ -95,5 +97,21 @@ public class UploadedFile {
 
     public void setProcessType(Integer processType) {
         this.processType = processType;
+    }
+
+    public FuncaoDados getFuncaoDados() {
+        return funcaoDados;
+    }
+
+    public void setFuncaoDados(FuncaoDados funcaoDados) {
+        this.funcaoDados = funcaoDados;
+    }
+
+    public FuncaoTransacao getFuncaoTransacao() {
+        return funcaoTransacao;
+    }
+
+    public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
+        this.funcaoTransacao = funcaoTransacao;
     }
 }
