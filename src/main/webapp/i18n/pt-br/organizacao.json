@@ -7,9 +7,9 @@
                 "createOrEditLabel": "Criar ou editar Organização",
                 "search": "Pesquisar por Organização"
             },
-            "created": "Um novo Organização é criado com o identificador {{ param }}",
-            "updated": "Um Organização é atualizado com o identificador {{ param }}",
-            "deleted": "Um Organização é deletado com o identificador {{ param }}",
+            "created": "Uma nova Organização é criada com o identificador {{ param }}",
+            "updated": "Uma Organização é atualizada com o identificador {{ param }}",
+            "deleted": "Uma Organização é deletada com o identificador {{ param }}",
             "delete": {
                 "question": "Tem certeza de que deseja excluir Organização {{ id }}?"
             },
@@ -39,9 +39,9 @@
             "detail": {
                 "title": "Contrato"
             },
-            "numeroContrato": "Numero Contrato",
-            "dataInicioVigencia": "Data Inicio Vigencia",
-            "dataFimVigencia": "Data Fim Vigencia",
+            "numeroContrato": "Número Contrato",
+            "dataInicioVigencia": "Data Inicio Vigência",
+            "dataFimVigencia": "Data Fim Vigência",
             "manual": "Manual"
         }
     }
