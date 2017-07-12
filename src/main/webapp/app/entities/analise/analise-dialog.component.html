@@ -261,16 +261,23 @@
                     <div class="form-group col-sm-6" >
                     <label for="fileUploader" class="control-label">Attachments:</label>
 
-
-                     <input type="file" class="form-control"
+                    <div style="width:100%">
+                     <input type="file" class="form-control" style="width:calc(100%-1px);float:left;"
                            ngFileSelect
                            [options]="options"
                            (onUpload)="handleUpload($event)"
-                           (beforeUpload)="beforeUpload($event)" id="fileUploader"/>
+                           id="fileUploader"/>
 
+                        <div ngFileDrop style="width:1px;float:left;"
+                             [options]="options"
+                             [ngClass]="{'file-over': hasBaseDropZoneOver}"
+                             (onUpload)="handleUpload($event)"
+                             (onFileOver)="fileOverBase($event)"
+                             (beforeUpload)="beforeUpload($event)"
+                             >
 
-
-
+                        </div>
+                      </div>
                     </div>
 
                 </div>
@@ -485,6 +492,7 @@
                         <input type="file" class="form-control"
                                ngFileSelect
                                [options]="optionsTran"
+
                                 id="fileTranUploader"/>
                         </form>
 

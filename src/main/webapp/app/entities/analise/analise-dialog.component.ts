@@ -93,20 +93,20 @@ export class AnaliseDialogComponent implements OnInit {
     editedProcess:Process=null; // Define the process that it is in editabled mode
     editedTranProcess:Process=null;
 
-    files:UploadedFile[]=new Array(); // List of uploaded files
-    filesTran:UploadedFile[]=new Array();
+    files:UploadedFile[]=[]; // List of uploaded files
+    filesTran:UploadedFile[]=[];
     hasBaseDropZoneOverTran: boolean = false;
-
+    allowedExtensions:String[] = ['png', 'jpg', 'pdf', 'doc', 'docx', 'odt', 'gif'];
     uploadFile: String;
     hasBaseDropZoneOver: boolean = false;
     options: Object = {
-        url: '/upload'
+        url: '/upload',
         //filterExtensions: true,
         //allowedExtensions: ['png', 'jpg', 'pdf', 'doc', 'docx', 'odt', 'gif']
     };
 
     optionsTran: Object = {
-        url: '/upload'
+        url: '/upload',
         //filterExtensions: true,
         //allowedExtensions: ['png', 'jpg', 'pdf', 'doc', 'docx', 'odt', 'gif']
     };
@@ -137,7 +137,6 @@ export class AnaliseDialogComponent implements OnInit {
         this.selectedTranFactor = null;
         this.selectedLogicalFile = null;
         this.selectedOutputType = null;
-
         this.logicalFiles = Object.keys(LogicalFile).filter(v=> v==String(Number(v))).map(k => new IdTitle(Number(k),LogicalFile[k]));
         this.outputTypes = Object.keys(OutputTypes).filter(v=> v==String(Number(v))).map(k => new IdTitle(Number(k),OutputTypes[k]));
         this.complexities = Object.keys(Complexity).filter(v=> v==String(Number(v))).map(k => Complexity[k]);
@@ -427,6 +426,10 @@ export class AnaliseDialogComponent implements OnInit {
      Add new elementary process for "de Dados" page
      */
     add(){
+        if (this.files.length>0 && (this.sustantation=="" || this.sustantation==null)){
+            alert("You have attached some files. Please fill field 'Sustantation'");
+            return;
+        }
         let newProcess = (this.editedProcess!=null)? this.editedProcess: new Process();
         if (this.editedProcess==null) newProcess.id = new Date().getTime();
         newProcess.factor = this.selectedFactor;
@@ -460,6 +463,10 @@ export class AnaliseDialogComponent implements OnInit {
      Add new elementary process for "de Transacao" page
      */
     addTran(){
+        if (this.filesTran.length>0 && (this.sustantationTran=="" || this.sustantationTran==null)){
+            alert("You have attached some files. Please fill field 'Sustantation'");
+            return;
+        }
         let newProcess = (this.editedTranProcess!=null)? this.editedTranProcess: new Process();
         if (this.editedTranProcess==null) newProcess.id = new Date().getTime();
         newProcess.id = new Date().getTime();
@@ -523,16 +530,31 @@ export class AnaliseDialogComponent implements OnInit {
     }
 
 
+
+    checkIfAlreadyUploaded(files:UploadedFile[], file:UploadedFile){
+        let result:boolean=false;
+        let index:number = -1;
+        index = files.findIndex(f=>{
+            return f.originalName==file.originalName;
+        });
+        return index>=0;
+    }
+
+
     handleUpload(data): void {
         if (data && data.response) {
             //data = JSON.parse(data.response);
             //this.uploadFile = data;
             //alert(JSON.stringify(data));
-            let file:any = JSON.parse(data.response);
+            let file:UploadedFile = this.cast<UploadedFile>(JSON.parse(data.response),UploadedFile);
             if (this.staticTabs.tabs[1].active){
-                this.files.push(file);
+                if (!this.checkIfAlreadyUploaded(this.files,file)) {
+                    this.files.push(file);
+                }
             } else {
-                this.filesTran.push(file);
+                if (!this.checkIfAlreadyUploaded(this.filesTran,file)) {
+                    this.filesTran.push(file);
+                }
             }
 
             this.uploadFile = "";
@@ -553,6 +575,17 @@ export class AnaliseDialogComponent implements OnInit {
             alert('File is too large');
             return;
         }
+
+
+        let ext:String = uploadingFile.originalName.split('.').pop();
+
+        if (!(this.allowedExtensions.find(e=>{
+           return e.toLocaleLowerCase().trim()==ext.trim();
+        }))){
+            uploadingFile.setAbort();
+            alert('This file type is not supported.');
+            return;
+        };
 
         let index:number=-1;
         if (this.staticTabs.tabs[1].active) {
