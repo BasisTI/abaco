@@ -14,7 +14,7 @@
             "threads": {
                 "title": "Threads",
                 "all": "Tudo",
-                "runnable": "Runnable",
+                "runnable": "Executável",
                 "timedwaiting": "Tempo de espera",
                 "waiting": "Aguardando",
                 "blocked": "Bloqueado",

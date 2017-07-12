@@ -3,13 +3,13 @@
         "funcaoTransacao" : {
             "home": {
                 "title": "Função transação",
-                "createLabel": "Criar novo Função transação",
+                "createLabel": "Criar nova Função transação",
                 "createOrEditLabel": "Criar ou editar Função transação",
                 "search": "Pesquisar por Função transação"
             },
-            "created": "Um novo Função transação é criado com o identificador {{ param }}",
-            "updated": "Um Função transação é atualizado com o identificador {{ param }}",
-            "deleted": "Um Função transação é deletado com o identificador {{ param }}",
+            "created": "Uma nova Função transação é criada com o identificador {{ param }}",
+            "updated": "Uma Função transação é atualizada com o identificador {{ param }}",
+            "deleted": "Uma Função transação é deletada com o identificador {{ param }}",
             "delete": {
                 "question": "Tem certeza de que deseja excluir Função transação {{ id }}?"
             },

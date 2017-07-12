@@ -2,7 +2,7 @@
     "abacoApp": {
         "esforcoFase" : {
             "home": {
-                "title": "Esforço Fases",
+                "title": "Esforço Fase",
                 "createLabel": "Criar novo Esforço Fase",
                 "createOrEditLabel": "Criar ou editar Esforço Fase",
                 "search": "Pesquisar por Esforço Fase"
