@@ -1,0 +1,64 @@
+{
+    "abacoApp": {
+        "analise" : {
+            "home": {
+                "title": "Análises",
+                "createLabel": "Criar nova Análise",
+                "createOrEditLabel": "Criar ou editar Análise",
+                "search": "Pesquisar por Análise"
+            },
+            "created": "Uma nova Análise é criada com o identificador {{ param }}",
+            "updated": "Uma Análise é atualizada com o identificador {{ param }}",
+            "deleted": "Uma Análise é deletada com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir a Análise {{ id }}?"
+            },
+            "detail": {
+                "title": "Análises"
+            },
+            "numeroOs": "Número OS",
+            "tipoContagem": "Tipo Contagem",
+            "valorAjuste": "Valor Ajuste",
+            "pfTotal": "Pf Total",
+            "escopo": "Escopo",
+            "fronteiras": "Fronteiras",
+            "documentacao": "Documentação",
+            "tipoAnalise": "Tipo Análise",
+            "propositoContagem": "Propósito Contagem",
+            "sistema": "Sistema",
+            "funcaoDados": "Função Dados",
+            "funcaoTransacao": "Função Transação",
+            "general":"Geral",
+            "funcaoDados":"Função Dados",
+            "funcaoTransacao":"Função Transação",
+            "select":"Selecionar",
+            "factorAdjustment": "Fator Ajuste",
+            "module": "Módulo",
+            "createNewModule": "Criar Novo Módulo",
+            "functionality": "Funcionalidade",
+            "createNewFunctionality": "Criar Nova Funcionalidade",
+            "classification":"Classificação",
+            "elementaryProcessName":"Nome Processo Elementar",
+            "none":"Sem",
+            "det":"DER",
+            "ret":"RLR",
+            "ftr":"FTR",
+            "summary":"Resumo",
+            "low":"Baixa",
+            "average":"Média",
+            "high":"Alta",
+            "total":"Total",
+            "pf":"PF",
+            "name":"Nome",
+            "complexity":"Complexidade",
+            "action":"Ação",
+            "ILF":"ALI",
+            "EIF":"AIF",
+            "EI":"EE",
+            "EO":"SE",
+            "EQ":"CE",
+            "confirmRemoval":"Atenção!!! Todos os processos serão removidos. Você deseja continuar?",
+            "sustention":"Sustentação"
+        }
+    }
+}
