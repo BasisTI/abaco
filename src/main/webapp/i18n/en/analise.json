@@ -59,7 +59,8 @@
             "EO":"EO",
             "EQ":"EQ",
             "confirmRemove":"Warning !!! All processes will be removed. Do you want to continue ?",
-            "sustantation":"Sustantation"
+            "sustantation":"Sustantation",
+            "organization": "Organization"
         }
     }
 }

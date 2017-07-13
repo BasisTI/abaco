@@ -21,6 +21,10 @@ import {FatorAjuste} from "../fator-ajuste/fator-ajuste.model";
 import {Subscription} from "rxjs/Subscription";
 import {FatorAjusteService} from "../fator-ajuste/fator-ajuste.service";
 import {Complexidade, TipoFuncaoDados} from "../funcao-dados/funcao-dados.model";
+import {Organizacao} from "../organizacao/organizacao.model";
+import {Contrato} from "../contrato/contrato.model";
+import {ContratoService} from "../contrato/contrato.service";
+import {OrganizacaoService} from "../organizacao/organizacao.service";
 
 @Component({
     selector: 'jhi-analise-dialog',
@@ -36,9 +40,11 @@ export class AnaliseDialogComponent implements OnInit {
     isSaving: boolean;
 
     sistemas: Sistema[];
+    organizations:Organizacao[];
+
+
 
     funcaodados: FuncaoDados[];
-
     funcaotransacaos: FuncaoTransacao[];
 
     @ViewChild('staticTabs') staticTabs: TabsetComponent;
@@ -122,8 +128,10 @@ export class AnaliseDialogComponent implements OnInit {
         private eventManager: EventManager,
         private funcionalidadeService: FuncionalidadeService,
         private moduloService: ModuloService,
-        private  fatorAjusteService:FatorAjusteService,
+        private fatorAjusteService:FatorAjusteService,
         private route: ActivatedRoute,
+        private contratoService:ContratoService,
+        private organizationService:OrganizacaoService,
         private router: Router,
         private changeDetector: ChangeDetectorRef
     ) {
@@ -180,6 +188,12 @@ export class AnaliseDialogComponent implements OnInit {
             (res: Response) => { this.factors = res.json(); }, (res: Response) => this.onError(res.json()));
         this.funcionalidadeService.query().subscribe(
             (res: Response) => { this.funcionalidades = res.json(); }, (res: Response) => this.onError(res.json()));
+
+        //this.contratoService.query().subscribe(
+        //    (res: Response) => { this.contracts = res.json(); }, (res: Response) => this.onError(res.json()));
+
+        this.organizationService.query().subscribe(
+            (res: Response) => { this.organizations = res.json(); }, (res: Response) => this.onError(res.json()));
 
         this.route.params.subscribe(params => {
             if (params['id']!=0) {
@@ -267,6 +281,13 @@ export class AnaliseDialogComponent implements OnInit {
 
         });
 
+    }
+
+
+
+    organizationSelect(event){
+       this.sistemaService.findByOrganization(this.analise.organizacao).subscribe(
+           (res: Response) => { this.sistemas = res.json(); this.analise.sistema=null; }, (res: Response) => this.onError(res.json()));
     }
 
 

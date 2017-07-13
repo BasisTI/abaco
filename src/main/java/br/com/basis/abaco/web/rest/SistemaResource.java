@@ -1,5 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.Organizacao;
 import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.Sistema;
 
@@ -63,6 +64,10 @@ public class SistemaResource {
             .body(result);
     }
 
+
+
+
+
     /**
      * PUT  /sistemas : Updates an existing sistema.
      *
@@ -85,6 +90,22 @@ public class SistemaResource {
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, sistema.getId().toString()))
             .body(result);
     }
+
+
+    /**
+     * GET  /sistemas : get all the sistemas.
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of sistemas in body
+     */
+    @PostMapping("/sistemas/organizations")
+    @Timed
+    public List<Sistema> getAllSistemasByOrganization(@Valid @RequestBody Organizacao organization) {
+        log.debug("REST request to get all Sistemas");
+        List<Sistema> sistemas = sistemaRepository.findAllByOrganizacao(organization);
+        return sistemas;
+    }
+
+
 
     /**
      * GET  /sistemas : get all the sistemas.

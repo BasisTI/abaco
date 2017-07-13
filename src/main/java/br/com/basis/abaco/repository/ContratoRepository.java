@@ -12,4 +12,6 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface ContratoRepository extends JpaRepository<Contrato,Long> {
 
+
+
 }

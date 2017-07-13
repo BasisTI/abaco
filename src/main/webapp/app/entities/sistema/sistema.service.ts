@@ -3,11 +3,13 @@ import { Http, Response, URLSearchParams, BaseRequestOptions } from '@angular/ht
 import { Observable } from 'rxjs/Rx';
 
 import { Sistema } from './sistema.model';
+import {Organizacao} from "../organizacao/organizacao.model";
 @Injectable()
 export class SistemaService {
 
     private resourceUrl = 'api/sistemas';
     private resourceSearchUrl = 'api/_search/sistemas';
+    //private resourceUrl = '/sistemas/organizations';
 
     constructor(private http: Http) { }
 
@@ -30,6 +32,13 @@ export class SistemaService {
             return res.json();
         });
     }
+
+    findByOrganization(organization:Organizacao,req?: any) {
+        let copy: Organizacao = Object.assign({}, organization);
+        //alert(JSON.stringify(copy));
+        return this.http.post(`${this.resourceUrl}/organizations`,copy);
+    }
+
 
     query(req?: any): Observable<Response> {
         let options = this.createRequestOption(req);

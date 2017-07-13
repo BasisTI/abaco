@@ -71,6 +71,13 @@ public class Analise implements Serializable {
     @ManyToOne
     private Sistema sistema;
 
+    @ManyToOne
+    private Contrato contrato;
+
+    @ManyToOne
+    private Organizacao organizacao;
+
+
     @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
@@ -265,6 +272,22 @@ public class Analise implements Serializable {
 
     public void setFuncaoTransacaos(Set<FuncaoTransacao> funcaoTransacaos) {
         this.funcaoTransacaos = funcaoTransacaos;
+    }
+
+    public Contrato getContrato() {
+        return contrato;
+    }
+
+    public void setContrato(Contrato contrato) {
+        this.contrato = contrato;
+    }
+
+    public Organizacao getOrganizacao() {
+        return organizacao;
+    }
+
+    public void setOrganizacao(Organizacao organizacao) {
+        this.organizacao = organizacao;
     }
 
     @Override

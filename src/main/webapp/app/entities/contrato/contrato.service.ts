@@ -52,6 +52,9 @@ export class ContratoService {
         ;
     }
 
+
+
+
     delete(id: number): Observable<Response> {
         return this.http.delete(`${this.resourceUrl}/${id}`);
     }

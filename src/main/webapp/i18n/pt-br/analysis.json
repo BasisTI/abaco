@@ -58,7 +58,8 @@
             "EO":"SE",
             "EQ":"CE",
             "confirmRemoval":"Atenção!!! Todos os processos serão removidos. Você deseja continuar?",
-            "sustention":"Sustentação"
+            "sustention":"Sustentação",
+            "organization": "Organization"
         }
     }
 }
