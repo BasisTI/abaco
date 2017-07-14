@@ -46,8 +46,6 @@ public class Organizacao implements Serializable {
     @Column(name = "numero_ocorrencia")
     private String numeroOcorrencia;
 
-    @ManyToOne
-    private Contrato contrato;
 
     @OneToMany(mappedBy = "organizacao")
     @JsonIgnore
@@ -114,18 +112,6 @@ public class Organizacao implements Serializable {
         this.numeroOcorrencia = numeroOcorrencia;
     }
 
-    public Contrato getContrato() {
-        return contrato;
-    }
-
-    public Organizacao contrato(Contrato contrato) {
-        this.contrato = contrato;
-        return this;
-    }
-
-    public void setContrato(Contrato contrato) {
-        this.contrato = contrato;
-    }
 
     public Set<Sistema> getSistemas() {
         return sistemas;
