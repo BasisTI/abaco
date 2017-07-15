@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Rx';
 
 import { Contrato } from './contrato.model';
 import { DateUtils } from 'ng-jhipster';
+import {Organizacao} from "../organizacao/organizacao.model";
 @Injectable()
 export class ContratoService {
 
@@ -51,6 +52,15 @@ export class ContratoService {
             .map((res: any) => this.convertResponse(res))
         ;
     }
+
+
+    findByOrganization(organization:Organizacao,req?: any) {
+        let copy: Organizacao = Object.assign({}, organization);
+        //alert(JSON.stringify(copy));
+        return this.http.post(`${this.resourceUrl}/organizations`,copy);
+    }
+
+
 
     delete(id: number): Observable<Response> {
         return this.http.delete(`${this.resourceUrl}/${id}`);

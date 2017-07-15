@@ -8,6 +8,8 @@ import { Contrato } from './contrato.model';
 import { ContratoService } from './contrato.service';
 import { ITEMS_PER_PAGE, Principal } from '../../shared';
 import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
+import {Organizacao} from "../organizacao/organizacao.model";
+import {OrganizacaoService} from "../organizacao/organizacao.service";
 
 @Component({
     selector: 'jhi-contrato',
@@ -18,6 +20,7 @@ contratoes: Contrato[];
     currentAccount: any;
     eventSubscriber: Subscription;
     currentSearch: string;
+
 
     constructor(
         private jhiLanguageService: JhiLanguageService,
@@ -41,6 +44,9 @@ contratoes: Contrato[];
                 );
             return;
        }
+
+
+
         this.contratoService.query().subscribe(
             (res: Response) => {
                 this.contratoes = res.json();

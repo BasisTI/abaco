@@ -32,6 +32,23 @@
         </div>
 
         <div class="form-group">
+            <label jhiTranslate="abacoApp.analise.organization" for="field_organ">Organization</label>
+            <select class="form-control" id="field_organ" name="organization" [(ngModel)]="analise.organizacao" (change)="organizationSelect($event.target.value)">
+                <option [ngValue]="null" selected disabled jhiTranslate="abacoApp.analise.select">Select</option>
+                <option [ngValue]="orgOption.id === analise.organizacao?.id ? analise.organizacao : orgOption" *ngFor="let orgOption of organizations;">{{orgOption.nome}}</option>
+            </select>
+        </div>
+
+
+        <div class="form-group">
+            <label jhiTranslate="abacoApp.analise.contract" for="field_contract">Contract</label>
+            <select class="form-control" id="field_contract" name="contract" [(ngModel)]="analise.contrato">
+                <option [ngValue]="null" selected disabled jhiTranslate="abacoApp.analise.select">Select</option>
+                <option [ngValue]="contract.id === analise.contrato?.id ? analise.contrato : contract" *ngFor="let contract of contracts;">{{contract.numeroContrato}}</option>
+            </select>
+        </div>
+
+        <div class="form-group">
             <label jhiTranslate="abacoApp.analise.sistema" for="field_sistema">Sistema</label>
             <select class="form-control" id="field_sistema" name="sistema" [(ngModel)]="analise.sistema" (change)="onSystemChange($event.target.value)">
                 <option [ngValue]="null" selected disabled jhiTranslate="abacoApp.analise.select">Select</option>
@@ -217,7 +234,7 @@
                                     <th style="width:15%;"></th>
                                     <th jhiTranslate="abacoApp.analise.none"> Sam </th>
                                     <th jhiTranslate="abacoApp.analise.low"> Baixa </th>
-                                    <th jhiTranslate="abacoApp.analise.media"> Média </th>
+                                    <th jhiTranslate="abacoApp.analise.average"> Média </th>
                                     <th jhiTranslate="abacoApp.analise.high"> Alta </th>
                                     <th jhiTranslate="abacoApp.analise.total"> Total </th>
                                     <th jhiTranslate="abacoApp.analise.pf"> PF </th>
@@ -259,18 +276,25 @@
 
                 <div class="row">
                     <div class="form-group col-sm-6" >
-                    <label for="fileUploader" class="control-label">Attachments:</label>
+                    <label for="fileUploader" class="control-label" jhiTranslate="abacoApp.analise.attachments">Attachments:</label>
 
-
-                     <input type="file" class="form-control"
+                    <div style="width:100%">
+                     <input type="file" class="form-control" style="width:calc(100%-1px);float:left;"
                            ngFileSelect
                            [options]="options"
                            (onUpload)="handleUpload($event)"
-                           (beforeUpload)="beforeUpload($event)" id="fileUploader"/>
+                           id="fileUploader"/>
 
+                        <div ngFileDrop style="width:1px;float:left;"
+                             [options]="options"
+                             [ngClass]="{'file-over': hasBaseDropZoneOver}"
+                             (onUpload)="handleUpload($event)"
+                             (onFileOver)="fileOverBase($event)"
+                             (beforeUpload)="beforeUpload($event)"
+                             >
 
-
-
+                        </div>
+                      </div>
                     </div>
 
                 </div>
@@ -282,11 +306,12 @@
 
                             <table id="atachments" class="table table-striped" [mfData]="files" #mf="mfDataTable">
                                 <thead>
+
                                 <tr>
-                                    <th style="width:45%;">File Name</th>
-                                    <th>Size</th>
-                                    <th>Date of</th>
-                                    <th>Action</th>
+                                    <th style="width:45%;" jhiTranslate="abacoApp.analise.filename">File Name</th>
+                                    <th jhiTranslate="abacoApp.analise.size">Size</th>
+                                    <th jhiTranslate="abacoApp.analise.dateof">Date of</th>
+                                    <th jhiTranslate="abacoApp.analise.action">Action</th>
 
                                 </tr>
                                 </thead>
@@ -324,7 +349,7 @@
                             <th jhiTranslate="abacoApp.analise.classification"> Classificado </th>
                             <th style="width:60px" jhiTranslate="abacoApp.analise.ret"> RLR </th>
                             <th style="width:60px" jhiTranslate="abacoApp.analise.det"> DER </th>
-                            <th jhiTranslate="abacoApp.analise.complexcity"> Complexidade </th>
+                            <th jhiTranslate="abacoApp.analise.complexity"> Complexidade </th>
                             <th jhiTranslate="abacoApp.analise.pf"> PF </th>
                             <th jhiTranslate="abacoApp.analise.action"> Acdo</th>
                         </tr>
@@ -439,7 +464,7 @@
                                     <th style="width:15%;"></th>
                                     <th jhiTranslate="abacoApp.analise.none"> Sam </th>
                                     <th jhiTranslate="abacoApp.analise.low"> Baixa </th>
-                                    <th jhiTranslate="abacoApp.analise.media"> Média </th>
+                                    <th jhiTranslate="abacoApp.analise.average"> Média </th>
                                     <th jhiTranslate="abacoApp.analise.high"> Alta </th>
                                     <th jhiTranslate="abacoApp.analise.total"> Total </th>
                                     <th jhiTranslate="abacoApp.analise.pf"> PF </th>
@@ -485,6 +510,7 @@
                         <input type="file" class="form-control"
                                ngFileSelect
                                [options]="optionsTran"
+
                                 id="fileTranUploader"/>
                         </form>
 
@@ -542,7 +568,7 @@
                             <th jhiTranslate="abacoApp.analise.classification"> Classificado </th>
                             <th style="width:60px" jhiTranslate="abacoApp.analise.ftr"> FTR </th>
                             <th style="width:60px" jhiTranslate="abacoApp.analise.det"> DER </th>
-                            <th jhiTranslate="abacoApp.analise.complexcity"> Complexidade </th>
+                            <th jhiTranslate="abacoApp.analise.complexity"> Complexidade </th>
                             <th jhiTranslate="abacoApp.analise.pf"> PF </th>
                             <th jhiTranslate="abacoApp.analise.action"> Acdo</th>
                         </tr>
@@ -579,7 +605,7 @@
                             <th style="width:15%;"></th>
                             <th jhiTranslate="abacoApp.analise.none"> Sem </th>
                             <th jhiTranslate="abacoApp.analise.low"> Baixa </th>
-                            <th jhiTranslate="abacoApp.analise.media"> Média </th>
+                            <th jhiTranslate="abacoApp.analise.average"> Média </th>
                             <th jhiTranslate="abacoApp.analise.high"> Alta </th>
                             <th jhiTranslate="abacoApp.analise.total"> Total </th>
                             <th jhiTranslate="abacoApp.analise.pf"> PF </th>

@@ -26,8 +26,6 @@
             "tipoAnalise": "Tipo Analise",
             "propositoContagem": "Proposito Contagem",
             "sistema": "Sistema",
-            "funcaoDados": "Funcao Dados",
-            "funcaoTransacao": "Funcao Transacao",
             "general":"General",
             "funcaoDados":"Função de Dados",
             "funcaoTransacao":"Função de Transação",
@@ -45,13 +43,13 @@
             "summary":"Summary",
             "none":"None",
             "low":"Low",
-            "media":"Media",
+            "average":"Media",
             "medium":"Medium",
             "high":"High",
             "total":"Total",
             "pf":"PF",
             "name":"Name",
-            "complexcity":"Complexcity",
+            "complexity":"Complexcity",
             "action":"Action",
             "ILF":"ILF",
             "EIF":"EIF",
@@ -59,7 +57,14 @@
             "EO":"EO",
             "EQ":"EQ",
             "confirmRemove":"Warning !!! All processes will be removed. Do you want to continue ?",
-            "sustantation":"Sustantation"
+            "sustantation":"Sustantation",
+            "organization": "Organization",
+            "contract":"Contract",
+            "attachments":"Attachments",
+            "filename":"File name",
+            "size":"Size",
+            "dateof":"Date Of"
+
         }
     }
 }

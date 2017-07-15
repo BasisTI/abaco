@@ -3,13 +3,13 @@
         "funcaoDados" : {
             "home": {
                 "title": "Função Dados",
-                "createLabel": "Criar novo Função Dados",
+                "createLabel": "Criar nova Função Dados",
                 "createOrEditLabel": "Criar ou editar Função Dados",
                 "search": "Pesquisar por Função Dados"
             },
-            "created": "Um novo Função Dados é criado com o identificador {{ param }}",
-            "updated": "Um Função Dados é atualizado com o identificador {{ param }}",
-            "deleted": "Um Função Dados é deletado com o identificador {{ param }}",
+            "created": "Uma nova Função Dados é criada com o identificador {{ param }}",
+            "updated": "Uma Função Dados é atualizada com o identificador {{ param }}",
+            "deleted": "Uma Função Dados é deletada com o identificador {{ param }}",
             "delete": {
                 "question": "Tem certeza de que deseja excluir Função Dados {{ id }}?"
             },

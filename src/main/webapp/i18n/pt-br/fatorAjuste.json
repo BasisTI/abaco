@@ -2,7 +2,7 @@
     "abacoApp": {
         "fatorAjuste" : {
             "home": {
-                "title": "Fator Ajustes",
+                "title": "Fator Ajuste",
                 "createLabel": "Criar novo Fator Ajuste",
                 "createOrEditLabel": "Criar ou editar Fator Ajuste",
                 "search": "Pesquisar por Fator Ajuste"

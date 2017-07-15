@@ -19,6 +19,8 @@ export class ContratoDialogComponent implements OnInit {
     contrato: Contrato;
     authorities: any[];
     isSaving: boolean;
+    organizations:Organizacao[];
+
 
     manuals: Manual[];
     constructor(
@@ -30,6 +32,7 @@ export class ContratoDialogComponent implements OnInit {
         private organizacaoService: OrganizacaoService,
         private eventManager: EventManager,
         private route: ActivatedRoute,
+        private organizationService:OrganizacaoService,
         private contratoPopupService: ContratoPopupService
     ) {
         //this.jhiLanguageService.setLocations(['contrato']);
@@ -40,6 +43,12 @@ export class ContratoDialogComponent implements OnInit {
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
         this.manualService.query().subscribe(
             (res: Response) => { this.manuals = res.json(); }, (res: Response) => this.onError(res.json()));
+        this.organizationService.query().subscribe(
+            (res: Response) => {
+                this.organizations = res.json();
+            },
+            (res: Response) => this.onError(res.json())
+        );
     }
     clear () {
         this.activeModal.dismiss('cancel');
@@ -68,7 +77,7 @@ export class ContratoDialogComponent implements OnInit {
       this.organizacaoService.contrato = contrato;
       this.eventManager.broadcast({ name: 'organizacaoChangeInContrato', content: 'OK'});
      }
-    
+
     private onSaveError (error) {
         this.isSaving = false;
         this.onError(error);

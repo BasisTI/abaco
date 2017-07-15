@@ -1,10 +1,10 @@
 {
     "abacoApp": {
         "Complexidade" : {
-            "null": "",
-            "BAIXA": "BAIXA",
-            "MEDIA": "MEDIA",
-            "ALTA": "ALTA"
+            "null": "nulo",
+            "LOW": "BAIXA",
+            "AVERAGE": "MÉDIA",
+            "HIGH": "ALTA"
         }
     }
 }

@@ -1,5 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.Organizacao;
 import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.Contrato;
 
@@ -31,7 +32,7 @@ public class ContratoResource {
     private final Logger log = LoggerFactory.getLogger(ContratoResource.class);
 
     private static final String ENTITY_NAME = "contrato";
-        
+
     private final ContratoRepository contratoRepository;
 
     private final ContratoSearchRepository contratoSearchRepository;
@@ -85,6 +86,22 @@ public class ContratoResource {
             .body(result);
     }
 
+
+    /**
+     * GET  /contratoes : get all the contratoes by organization.
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of contratoes in body
+     */
+    @PostMapping("/contratoes/organizations")
+    @Timed
+    public List<Contrato> getAllContratoesByOrganization(@RequestBody Organizacao organizacao) {
+        log.debug("REST request to get all Contratoes");
+        List<Contrato> contratoes = contratoRepository.findAllByOrganization(organizacao);
+        return contratoes;
+    }
+
+
+
     /**
      * GET  /contratoes : get all the contratoes.
      *
@@ -131,7 +148,7 @@ public class ContratoResource {
      * SEARCH  /_search/contratoes?query=:query : search for the contrato corresponding
      * to the query.
      *
-     * @param query the query of the contrato search 
+     * @param query the query of the contrato search
      * @return the result of the search
      */
     @GetMapping("/_search/contratoes")

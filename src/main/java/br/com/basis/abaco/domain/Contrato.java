@@ -37,6 +37,9 @@ public class Contrato implements Serializable {
     @ManyToOne
     private Manual manual;
 
+    @ManyToOne
+    private Organizacao organization;
+
     public Long getId() {
         return id;
     }
@@ -95,6 +98,15 @@ public class Contrato implements Serializable {
 
     public void setManual(Manual manual) {
         this.manual = manual;
+    }
+
+
+    public Organizacao getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organizacao organization) {
+        this.organization = organization;
     }
 
     @Override

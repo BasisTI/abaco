@@ -21,6 +21,10 @@ import {FatorAjuste} from "../fator-ajuste/fator-ajuste.model";
 import {Subscription} from "rxjs/Subscription";
 import {FatorAjusteService} from "../fator-ajuste/fator-ajuste.service";
 import {Complexidade, TipoFuncaoDados} from "../funcao-dados/funcao-dados.model";
+import {Organizacao} from "../organizacao/organizacao.model";
+import {Contrato} from "../contrato/contrato.model";
+import {ContratoService} from "../contrato/contrato.service";
+import {OrganizacaoService} from "../organizacao/organizacao.service";
 
 @Component({
     selector: 'jhi-analise-dialog',
@@ -36,13 +40,12 @@ export class AnaliseDialogComponent implements OnInit {
     isSaving: boolean;
 
     sistemas: Sistema[];
-
+    organizations:Organizacao[];
+    contracts:Contrato[];
     funcaodados: FuncaoDados[];
-
     funcaotransacaos: FuncaoTransacao[];
 
     @ViewChild('staticTabs') staticTabs: TabsetComponent;
-
 
     // Define that RET and DET are disabled/enabled
     is_disabled:boolean=false;
@@ -96,16 +99,17 @@ export class AnaliseDialogComponent implements OnInit {
     files:UploadedFile[]=[]; // List of uploaded files
     filesTran:UploadedFile[]=[];
     hasBaseDropZoneOverTran: boolean = false;
+    allowedExtensions:String[] = ['png', 'jpg', 'pdf', 'doc', 'docx', 'odt', 'gif'];
     uploadFile: String;
     hasBaseDropZoneOver: boolean = false;
     options: Object = {
-        url: '/upload'
+        url: '/upload',
         //filterExtensions: true,
         //allowedExtensions: ['png', 'jpg', 'pdf', 'doc', 'docx', 'odt', 'gif']
     };
 
     optionsTran: Object = {
-        url: '/upload'
+        url: '/upload',
         //filterExtensions: true,
         //allowedExtensions: ['png', 'jpg', 'pdf', 'doc', 'docx', 'odt', 'gif']
     };
@@ -121,8 +125,10 @@ export class AnaliseDialogComponent implements OnInit {
         private eventManager: EventManager,
         private funcionalidadeService: FuncionalidadeService,
         private moduloService: ModuloService,
-        private  fatorAjusteService:FatorAjusteService,
+        private fatorAjusteService:FatorAjusteService,
         private route: ActivatedRoute,
+        private contratoService:ContratoService,
+        private organizationService:OrganizacaoService,
         private router: Router,
         private changeDetector: ChangeDetectorRef
     ) {
@@ -136,7 +142,6 @@ export class AnaliseDialogComponent implements OnInit {
         this.selectedTranFactor = null;
         this.selectedLogicalFile = null;
         this.selectedOutputType = null;
-
         this.logicalFiles = Object.keys(LogicalFile).filter(v=> v==String(Number(v))).map(k => new IdTitle(Number(k),LogicalFile[k]));
         this.outputTypes = Object.keys(OutputTypes).filter(v=> v==String(Number(v))).map(k => new IdTitle(Number(k),OutputTypes[k]));
         this.complexities = Object.keys(Complexity).filter(v=> v==String(Number(v))).map(k => Complexity[k]);
@@ -181,6 +186,12 @@ export class AnaliseDialogComponent implements OnInit {
         this.funcionalidadeService.query().subscribe(
             (res: Response) => { this.funcionalidades = res.json(); }, (res: Response) => this.onError(res.json()));
 
+        //this.contratoService.query().subscribe(
+        //    (res: Response) => { this.contracts = res.json(); }, (res: Response) => this.onError(res.json()));
+
+        this.organizationService.query().subscribe(
+            (res: Response) => { this.organizations = res.json(); }, (res: Response) => this.onError(res.json()));
+
         this.route.params.subscribe(params => {
             if (params['id']!=0) {
                 this.load(params['id']);
@@ -211,8 +222,7 @@ export class AnaliseDialogComponent implements OnInit {
     load(id){
         this.analiseService.find(id).subscribe(analise=>{
         this.analise=analise;
-
-
+        this.organizationSelect(null);
 
         this.moduloService.query().subscribe(
             (res: Response) => { this.allModules = res.json();  this.onSystemChange(null);}, (res: Response) => this.onError(res.json()));
@@ -267,6 +277,29 @@ export class AnaliseDialogComponent implements OnInit {
 
         });
 
+    }
+
+
+
+    organizationSelect(event){
+        if (!this.analise.organizacao){
+            return;
+        }
+       this.sistemaService.findByOrganization(this.analise.organizacao).subscribe(
+           (res: Response) => {
+               this.sistemas = res.json();
+               if (event) {
+                   this.analise.sistema=null;
+               }
+           }, (res: Response) => this.onError(res.json()));
+
+       this.contratoService.findByOrganization(this.analise.organizacao).subscribe(
+           (res: Response) => {
+               this.contracts = res.json();
+               if (event) {
+                   this.analise.contrato=null;
+                }
+           }, (res: Response) => this.onError(res.json()));
     }
 
 
@@ -426,6 +459,10 @@ export class AnaliseDialogComponent implements OnInit {
      Add new elementary process for "de Dados" page
      */
     add(){
+        if (this.files.length>0 && (this.sustantation=="" || this.sustantation==null)){
+            alert("You have attached some files. Please fill field 'Sustantation'");
+            return;
+        }
         let newProcess = (this.editedProcess!=null)? this.editedProcess: new Process();
         if (this.editedProcess==null) newProcess.id = new Date().getTime();
         newProcess.factor = this.selectedFactor;
@@ -459,6 +496,10 @@ export class AnaliseDialogComponent implements OnInit {
      Add new elementary process for "de Transacao" page
      */
     addTran(){
+        if (this.filesTran.length>0 && (this.sustantationTran=="" || this.sustantationTran==null)){
+            alert("You have attached some files. Please fill field 'Sustantation'");
+            return;
+        }
         let newProcess = (this.editedTranProcess!=null)? this.editedTranProcess: new Process();
         if (this.editedTranProcess==null) newProcess.id = new Date().getTime();
         newProcess.id = new Date().getTime();
@@ -522,19 +563,34 @@ export class AnaliseDialogComponent implements OnInit {
     }
 
 
+
+    checkIfAlreadyUploaded(files:UploadedFile[], file:UploadedFile){
+        let result:boolean=false;
+        let index:number = -1;
+        index = files.findIndex(f=>{
+            return f.originalName==file.originalName;
+        });
+        return index>=0;
+    }
+
+
     handleUpload(data): void {
         if (data && data.response) {
             //data = JSON.parse(data.response);
             //this.uploadFile = data;
             //alert(JSON.stringify(data));
-            let file:UploadedFile = this.cast<UploadedFile>(JSON.parse(data.response), UploadedFile);
+            let file:UploadedFile = this.cast<UploadedFile>(JSON.parse(data.response),UploadedFile);
             if (this.staticTabs.tabs[1].active){
-                this.files.push(file);
+                if (!this.checkIfAlreadyUploaded(this.files,file)) {
+                    this.files.push(file);
+                }
             } else {
-                this.filesTran.push(file);
+                if (!this.checkIfAlreadyUploaded(this.filesTran,file)) {
+                    this.filesTran.push(file);
+                }
             }
 
-            //this.uploadFile = "";
+            this.uploadFile = "";
 
         }
     }
@@ -553,21 +609,28 @@ export class AnaliseDialogComponent implements OnInit {
             return;
         }
 
-        let index:number=-1;
-        let file:UploadedFile=null;
-        //if (this.staticTabs.tabs[1].active) {
 
-        //    this.files.forEach(f=>{
-        //        if (f.originalName=='') {
-        //            index = 1;
-        //        }
-        //    });
-       // } else {
-        //    index = this.filesTran.findIndex(f => {
-        //        return f.originalName == uploadingFile.originalName;
-        //    });
-        //}
-        if (index>0){
+        let ext:String = uploadingFile.originalName.split('.').pop();
+
+        if (!(this.allowedExtensions.find(e=>{
+           return e.toLocaleLowerCase().trim()==ext.trim();
+        }))){
+            uploadingFile.setAbort();
+            alert('This file type is not supported.');
+            return;
+        };
+
+        let index:number=-1;
+        if (this.staticTabs.tabs[1].active) {
+            index = this.files.findIndex(f => {
+                return f.originalName == uploadingFile.originalName;
+            });
+        } else {
+            index = this.filesTran.findIndex(f => {
+                return f.originalName == uploadingFile.originalName;
+            });
+        }
+        if (index>=0){
             uploadingFile.setAbort();
             alert('File already exists...');
         }
