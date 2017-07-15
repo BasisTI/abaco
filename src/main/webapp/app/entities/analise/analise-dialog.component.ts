@@ -93,10 +93,9 @@ export class AnaliseDialogComponent implements OnInit {
     editedProcess:Process=null; // Define the process that it is in editabled mode
     editedTranProcess:Process=null;
 
-    files:UploadedFile[]=new Array(); // List of uploaded files
-    filesTran:UploadedFile[]=new Array();
+    files:UploadedFile[]=[]; // List of uploaded files
+    filesTran:UploadedFile[]=[];
     hasBaseDropZoneOverTran: boolean = false;
-
     uploadFile: String;
     hasBaseDropZoneOver: boolean = false;
     options: Object = {
@@ -528,14 +527,14 @@ export class AnaliseDialogComponent implements OnInit {
             //data = JSON.parse(data.response);
             //this.uploadFile = data;
             //alert(JSON.stringify(data));
-            let file:any = JSON.parse(data.response);
+            let file:UploadedFile = this.cast<UploadedFile>(JSON.parse(data.response), UploadedFile);
             if (this.staticTabs.tabs[1].active){
                 this.files.push(file);
             } else {
                 this.filesTran.push(file);
             }
 
-            this.uploadFile = "";
+            //this.uploadFile = "";
 
         }
     }
@@ -555,16 +554,20 @@ export class AnaliseDialogComponent implements OnInit {
         }
 
         let index:number=-1;
-        if (this.staticTabs.tabs[1].active) {
-            index = this.files.findIndex(f => {
-                return f.originalName == uploadingFile.originalName;
-            });
-        } else {
-            index = this.filesTran.findIndex(f => {
-                return f.originalName == uploadingFile.originalName;
-            });
-        }
-        if (index>=0){
+        let file:UploadedFile=null;
+        //if (this.staticTabs.tabs[1].active) {
+
+        //    this.files.forEach(f=>{
+        //        if (f.originalName=='') {
+        //            index = 1;
+        //        }
+        //    });
+       // } else {
+        //    index = this.filesTran.findIndex(f => {
+        //        return f.originalName == uploadingFile.originalName;
+        //    });
+        //}
+        if (index>0){
             uploadingFile.setAbort();
             alert('File already exists...');
         }
