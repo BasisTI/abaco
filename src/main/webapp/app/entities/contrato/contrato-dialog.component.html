@@ -51,7 +51,7 @@
 
 
         <div class="form-group">
-            <label jhiTranslate="abacoApp.contrato.manual" for="field_organ">Organization</label>
+            <label jhiTranslate="abacoApp.contrato.organization" for="field_organ">Organization</label>
             <select class="form-control" id="field_organ" name="manual" [(ngModel)]="contrato.organization" >
                 <option [ngValue]="null"></option>
                 <option [ngValue]="organ.id === contrato.organization?.id ? contrato.organization : organ" *ngFor="let organ of organizations;">{{organ.nome}}</option>

@@ -19,6 +19,7 @@
             "numeroContrato": "Número Contrato",
             "dataInicioVigencia": "Data Início Vigência",
             "dataFimVigencia": "Data Fim Vigência",
+	    "organization": "Organizacao",
             "manual": "Manual"
         }
     }
