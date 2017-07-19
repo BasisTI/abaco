@@ -63,7 +63,8 @@
             "attachments":"Attachments",
             "filename":"File name",
             "size":"Size",
-            "dateof":"Date Of"
+            "dateof":"Date Of",
+            "pfTotalAdj":"Total adjusted FPs"
 
         }
     }

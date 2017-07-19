@@ -42,7 +42,7 @@
 
         <div class="form-group">
             <label jhiTranslate="abacoApp.analise.contract" for="field_contract">Contract</label>
-            <select class="form-control" id="field_contract" name="contract" [(ngModel)]="analise.contrato">
+            <select class="form-control" id="field_contract" name="contract" [(ngModel)]="analise.contrato" (ngModelChange)="onContractChange($event)">
                 <option [ngValue]="null" selected disabled jhiTranslate="abacoApp.analise.select">Select</option>
                 <option [ngValue]="contract.id === analise.contrato?.id ? analise.contrato : contract" *ngFor="let contract of contracts;">{{contract.numeroContrato}}</option>
             </select>
@@ -75,6 +75,12 @@
             <input type="text" class="form-control" name="pfTotal" id="field_pfTotal" disabled
                 [(ngModel)]="analise.pfTotal"
              />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="abacoApp.analise.pfTotalAdj" for="field_pfTotal_adj">Pf Total</label>
+            <input type="text" class="form-control" name="pfTotal" id="field_pfTotal_adj" disabled
+                   [(ngModel)]="analise.adjustPFTotal"
+            />
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="abacoApp.analise.escopo" for="field_escopo">Escopo</label>

@@ -773,6 +773,13 @@ export class AnaliseDialogComponent implements OnInit {
     }
 
 
+    onContractChange(type){
+        this.recalculateSummary();
+    }
+
+
+
+
 
     getModuleById(id:number){
          let module:Modulo = null;
@@ -886,6 +893,18 @@ export class AnaliseDialogComponent implements OnInit {
             this.totalRow.total+=this.summary[index].total;
             this.totalRow.pf+=this.summary[index].pf;
         }
+      let adjustTotal = this.totalRow.pf;
+      if (this.analise.contrato!=null && this.analise.contrato.manual!=null && this.analise.contrato.manual) {
+          if (this.analise.tipoContagem.toString()=="ESTIMADA") {
+              adjustTotal+=adjustTotal*this.analise.contrato.manual.valorVariacaoEstimada;
+          }
+          if (this.analise.tipoContagem.toString()=="INDICATIVA") {
+              adjustTotal+=adjustTotal*this.analise.contrato.manual.valorVariacaoIndicativa;
+          }
+
+          this.analise.valorAjuste = adjustTotal-this.totalRow.pf;
+      }
+      this.analise.adjustPFTotal = adjustTotal.toFixed(2).toString();
       this.analise.pfTotal = this.totalRow.pf.toFixed(2).toString();
     }
 

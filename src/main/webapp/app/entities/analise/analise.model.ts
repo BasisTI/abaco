@@ -24,6 +24,7 @@ export class Analise {
         public tipoContagem?: MetodoContagem,
         public valorAjuste?: number,
         public pfTotal?: string,
+        public adjustPFTotal?:string,
         public escopo?: string,
         public fronteiras?: string,
         public documentacao?: string,
@@ -34,6 +35,7 @@ export class Analise {
         public organizacao?:Organizacao,
         public funcaoDados?: FuncaoDados[],
         public funcaoTransacaos?: FuncaoTransacao[],
+
     ) {
     }
 }
