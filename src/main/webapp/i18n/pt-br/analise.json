@@ -55,7 +55,7 @@
             "EI":"EE",
             "EO":"SE",
             "EQ":"CE",
-            "confirmRemoval":"Atenção!!! Todos os processos serão removidos. Você deseja continuar?",
+            "confirmRemove":"Atenção!!! Todos os processos serão removidos. Você deseja continuar?",
             "sustantation":"Sustentação",
             "organization":"Organization",
             "contract":"Contrato",

@@ -48,6 +48,9 @@
             },
             "language": "Idioma"
         },
+        "titles":{
+            "confirm":"Confirm"
+        },
         "form": {
             "username": "Usuário",
             "username.placeholder": "Seu usuário",
@@ -110,7 +113,8 @@
             "edit": "Editar",
             "open": "Open",
             "save": "Salvar",
-            "view": "Visualizar"
+            "view": "Visualizar",
+            "continue": "Continue"
         },
         "detail": {
             "field": "Campo",
