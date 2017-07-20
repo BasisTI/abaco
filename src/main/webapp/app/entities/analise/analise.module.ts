@@ -5,6 +5,7 @@ import { AbacoSharedModule } from '../../shared';
 import { DataTableModule } from "angular2-datatable";
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { Ng2UploaderModule } from 'ng2-uploader';
+import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 
 import {
@@ -32,6 +33,7 @@ let ENTITY_STATES = [
         AbacoSharedModule,
         TabsModule.forRoot(),
         DataTableModule,
+        Ng2Bs3ModalModule,
         Ng2UploaderModule,
         RouterModule.forRoot(ENTITY_STATES, { useHash: true })
     ],

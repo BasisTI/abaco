@@ -46,7 +46,7 @@
             "average":"Média",
             "high":"Alta",
             "total":"Total",
-            "pf":"PF",
+            "pf":"PF - Valor líquido",
             "name":"Nome",
             "complexity":"Complexidade",
             "action":"Ação",
@@ -55,14 +55,16 @@
             "EI":"EE",
             "EO":"SE",
             "EQ":"CE",
-            "confirmRemoval":"Atenção!!! Todos os processos serão removidos. Você deseja continuar?",
+            "confirmRemove":"Atenção!!! Todos os processos serão removidos. Você deseja continuar?",
             "sustantation":"Sustentação",
             "organization":"Organization",
             "contract":"Contrato",
             "attachments":"Attachments",
             "filename":"File name",
             "size":"Size",
-            "dateof":"Date Of"
+            "dateof":"Date Of",
+            "pfTotalAdj":"Total adjusted FPs",
+            "grosspf":"PF - Valor bruto"
         }
     }
 }

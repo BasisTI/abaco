@@ -25,6 +25,7 @@ import {Organizacao} from "../organizacao/organizacao.model";
 import {Contrato} from "../contrato/contrato.model";
 import {ContratoService} from "../contrato/contrato.service";
 import {OrganizacaoService} from "../organizacao/organizacao.service";
+import {ModalComponent} from "ng2-bs3-modal/ng2-bs3-modal";
 
 @Component({
     selector: 'jhi-analise-dialog',
@@ -40,12 +41,15 @@ export class AnaliseDialogComponent implements OnInit {
     isSaving: boolean;
 
     sistemas: Sistema[];
+
     organizations:Organizacao[];
     contracts:Contrato[];
     funcaodados: FuncaoDados[];
     funcaotransacaos: FuncaoTransacao[];
 
     @ViewChild('staticTabs') staticTabs: TabsetComponent;
+
+    @ViewChild('modal') modal1: ModalComponent;
 
     // Define that RET and DET are disabled/enabled
     is_disabled:boolean=false;
@@ -246,6 +250,7 @@ export class AnaliseDialogComponent implements OnInit {
                 let process:Process = new Process();
                 process.id = funcaoDados.id;
                 process.pf = funcaoDados.pf;
+                process.grossPF = funcaoDados.grossPF;
                 process.func = funcaoDados.funcionalidade;
                 process.factor = funcaoDados.fatorAjuste;
                 process.module = funcaoDados.funcionalidade.modulo;
@@ -460,7 +465,8 @@ export class AnaliseDialogComponent implements OnInit {
      */
     add(){
         if (this.files.length>0 && (this.sustantation=="" || this.sustantation==null)){
-            alert("You have attached some files. Please fill field 'Sustantation'");
+            //alert("You have attached some files. Please fill field 'Sustantation'");
+            this.alertService.error("You have attached some files. Please fill field 'Sustantation'",null,null);
             return;
         }
         let newProcess = (this.editedProcess!=null)? this.editedProcess: new Process();
@@ -472,7 +478,7 @@ export class AnaliseDialogComponent implements OnInit {
         newProcess.name = this.elementaryProcess;
         newProcess.retStr = this.ret;
         newProcess.detStr = this.det;
-        newProcess.sustantation = this.sustantation;
+        newProcess.sustantation= this.sustantation;
         newProcess.files=[];
         newProcess.files = newProcess.files.concat(this.files);
         this.files = [];
@@ -744,8 +750,32 @@ export class AnaliseDialogComponent implements OnInit {
     }
 
 
+    onCountingTypeConfirm(){
+        this.listOfProcess = [];
+        this.listOfTranProcess = [];
+
+        if (this.analise.tipoContagem.toString() == "INDICATIVA") {
+            this.is_disabled = true;
+            this.staticTabs.tabs[2].disabled = true;
+        } else {
+            this.is_disabled = false;
+            this.staticTabs.tabs[2].disabled = false;
+        }
+    }
+
+
+
+    oncOuntingTypeDismiss(){
+        let p = this.previousCountingType;
+        //alert(JSON.stringify(p));
+        this.analise.tipoContagem=null;
+        this.changeDetector.detectChanges();
+        this.analise.tipoContagem=p;
+        this.changeDetector.detectChanges();
+    }
+
     /**
-     *  Counting tupe is changed
+     *  Counting type is changed
      */
     onCountingTypeChange(type){
         //Clear lists with processes
@@ -753,7 +783,7 @@ export class AnaliseDialogComponent implements OnInit {
         if (confirm(s)) {
             this.listOfProcess = [];
             this.listOfTranProcess = [];
-
+            this.recalculateTotals();
             if (type.toString() == "INDICATIVA") {
                 this.is_disabled = true;
                 this.staticTabs.tabs[2].disabled = true;
@@ -762,15 +792,21 @@ export class AnaliseDialogComponent implements OnInit {
                 this.staticTabs.tabs[2].disabled = false;
             }
         } else {
-           let p = this.previousCountingType;
+            let p = this.previousCountingType;
             //alert(JSON.stringify(p));
             this.analise.tipoContagem=null;
             this.changeDetector.detectChanges();
             this.analise.tipoContagem=p;
             this.changeDetector.detectChanges();
         }
-
     }
+
+
+    onContractChange(type){
+        this.recalculateSummary();
+    }
+
+
 
 
 
@@ -886,6 +922,18 @@ export class AnaliseDialogComponent implements OnInit {
             this.totalRow.total+=this.summary[index].total;
             this.totalRow.pf+=this.summary[index].pf;
         }
+      let adjustTotal = this.totalRow.pf;
+      if (this.analise.contrato!=null && this.analise.contrato.manual!=null && this.analise.contrato.manual) {
+          if (this.analise.tipoContagem.toString()=="ESTIMADA") {
+              adjustTotal+=adjustTotal*this.analise.contrato.manual.valorVariacaoEstimada;
+          }
+          if (this.analise.tipoContagem.toString()=="INDICATIVA") {
+              adjustTotal+=adjustTotal*this.analise.contrato.manual.valorVariacaoIndicativa;
+          }
+
+          this.analise.valorAjuste = adjustTotal-this.totalRow.pf;
+      }
+      this.analise.adjustPFTotal = adjustTotal.toFixed(2).toString();
       this.analise.pfTotal = this.totalRow.pf.toFixed(2).toString();
     }
 

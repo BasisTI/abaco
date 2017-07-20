@@ -47,7 +47,7 @@
             "medium":"Medium",
             "high":"High",
             "total":"Total",
-            "pf":"PF",
+            "pf":"PF - Net total",
             "name":"Name",
             "complexity":"Complexcity",
             "action":"Action",
@@ -63,7 +63,9 @@
             "attachments":"Attachments",
             "filename":"File name",
             "size":"Size",
-            "dateof":"Date Of"
+            "dateof":"Date Of",
+            "pfTotalAdj":"Total adjusted FPs",
+            "grosspf":"PF - Gross value"
 
         }
     }

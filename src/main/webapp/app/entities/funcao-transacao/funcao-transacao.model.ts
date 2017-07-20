@@ -25,6 +25,7 @@ export class FuncaoTransacao {
         public tipo?: TipoFuncaoTransacao,
         public complexidade?: Complexidade,
         public pf?: number,
+        public grossPF?:number,
         public analise?: Analise,
         public funcionalidade?: Funcionalidade,
         public fatorAjuste?: FatorAjuste,
@@ -40,6 +41,7 @@ export class FuncaoTransacao {
     public convertFromProcess(process:Process) {
         this.id = process.id;
         this.pf = process.pf;
+        this.grossPF = process.grossPF;
         this.funcionalidade = process.func;
         this.fatorAjuste = process.factor;
         this.detStr = process.detStr;

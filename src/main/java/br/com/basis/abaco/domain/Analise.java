@@ -48,6 +48,9 @@ public class Analise implements Serializable {
     @Column(name = "pf_total")
     private String pfTotal;
 
+    @Column(name = "pf_total_adjust")
+    private String adjustPFTotal;
+
     @Size(max = 4000)
     @Column(name = "escopo", length = 4000)
     private String escopo;
@@ -288,6 +291,15 @@ public class Analise implements Serializable {
 
     public void setOrganizacao(Organizacao organizacao) {
         this.organizacao = organizacao;
+    }
+
+
+    public String getAdjustPFTotal() {
+        return adjustPFTotal;
+    }
+
+    public void setAdjustPFTotal(String adjustPFTotal) {
+        this.adjustPFTotal = adjustPFTotal;
     }
 
     @Override

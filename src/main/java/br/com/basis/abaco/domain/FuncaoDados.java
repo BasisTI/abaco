@@ -41,6 +41,10 @@ public class FuncaoDados implements Serializable {
     @Column(name = "pf", precision=10, scale=2)
     private BigDecimal pf;
 
+    @Column(name = "grosspf", precision=10, scale=2)
+    private BigDecimal grossPF;
+
+
     @ManyToOne
     @JoinColumn(name = "analise_id")
     private Analise analise;
@@ -243,6 +247,13 @@ public class FuncaoDados implements Serializable {
         this.retStr = retStr;
     }
 
+    public BigDecimal getGrossPF() {
+        return grossPF;
+    }
+
+    public void setGrossPF(BigDecimal grossPF) {
+        this.grossPF = grossPF;
+    }
 
     public String getName() {
         return name;

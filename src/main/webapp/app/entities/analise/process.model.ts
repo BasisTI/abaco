@@ -22,9 +22,11 @@ export class Process{
     public det:number;
     public complexity:Complexity;
     public pf:number;
+    public grossPF:number;
     public retStr:String;
     public detStr:String;
     public sustantation:String;
+
     public files:UploadedFile[]=[];
 
 
@@ -33,6 +35,7 @@ export class Process{
 
 
     private applyFactor(){
+        this.grossPF = this.pf;
         if (this.factor==null) {
             return;
         }
@@ -81,6 +84,7 @@ export class Process{
                 this.pf = this.INDICATIVE_EIF_FP;
             }
             this.complexity = Complexity.NONE;
+            this.applyFactor();
             return;
         }
 
@@ -279,6 +283,7 @@ export class Process{
     public convertFromTransacao(funcaoTransacao:FuncaoTransacao,countingType:MetodoContagem){
         this.id = funcaoTransacao.id;
         this.pf = funcaoTransacao.pf;
+        this.grossPF = funcaoTransacao.grossPF;
         this.func = funcaoTransacao.funcionalidade;
         this.factor = funcaoTransacao.fatorAjuste;
         this.detStr = funcaoTransacao.detStr;
