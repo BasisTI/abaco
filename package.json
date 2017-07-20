@@ -26,6 +26,7 @@
     "jquery": "3.1.1",
     "jquery-mask-plugin": "^1.14.10",
     "ng-jhipster": "0.1.9",
+    "ng2-bs3-modal": "^0.10.4",
     "ng2-file-upload": "^1.2.1",
     "ng2-input-mask": "0.0.7",
     "ng2-uploader": "^2.0.0",
