@@ -922,12 +922,12 @@ export class AnaliseDialogComponent implements OnInit {
             this.totalRow.total+=this.summary[index].total;
             this.totalRow.pf+=this.summary[index].pf;
         }
-      let adjustTotal = this.totalRow.pf;
+      let adjustTotal = (this.totalRow.pf!=null)?this.totalRow.pf:0;
       if (this.analise.contrato!=null && this.analise.contrato.manual!=null && this.analise.contrato.manual) {
-          if (this.analise.tipoContagem.toString()=="ESTIMADA") {
+          if (this.analise.tipoContagem!=null && this.analise.tipoContagem.toString()=="ESTIMADA") {
               adjustTotal+=adjustTotal*this.analise.contrato.manual.valorVariacaoEstimada;
           }
-          if (this.analise.tipoContagem.toString()=="INDICATIVA") {
+          if (this.analise.tipoContagem!=null && this.analise.tipoContagem.toString()=="INDICATIVA") {
               adjustTotal+=adjustTotal*this.analise.contrato.manual.valorVariacaoIndicativa;
           }
 
