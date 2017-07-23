@@ -26,6 +26,10 @@ import {Contrato} from "../contrato/contrato.model";
 import {ContratoService} from "../contrato/contrato.service";
 import {OrganizacaoService} from "../organizacao/organizacao.service";
 import {ModalComponent} from "ng2-bs3-modal/ng2-bs3-modal";
+import 'jquery';
+import 'tether';
+import 'bootstrap';
+
 
 @Component({
     selector: 'jhi-analise-dialog',
@@ -750,10 +754,10 @@ export class AnaliseDialogComponent implements OnInit {
     }
 
 
-    onCountingTypeConfirm(){
+    onCountingTypeConfirm(fromWindow:boolean){
         this.listOfProcess = [];
         this.listOfTranProcess = [];
-
+        this.recalculateTotals();
         if (this.analise.tipoContagem.toString() == "INDICATIVA") {
             this.is_disabled = true;
             this.staticTabs.tabs[2].disabled = true;
@@ -761,6 +765,10 @@ export class AnaliseDialogComponent implements OnInit {
             this.is_disabled = false;
             this.staticTabs.tabs[2].disabled = false;
         }
+        if (fromWindow) {
+            this.modal1.close();
+        }
+        this.previousCountingType = this.analise.tipoContagem;
     }
 
 
@@ -778,27 +786,37 @@ export class AnaliseDialogComponent implements OnInit {
      *  Counting type is changed
      */
     onCountingTypeChange(type){
-        //Clear lists with processes
-        let s:string = document.getElementById("confirmText").innerText;
-        if (confirm(s)) {
-            this.listOfProcess = [];
-            this.listOfTranProcess = [];
-            this.recalculateTotals();
-            if (type.toString() == "INDICATIVA") {
-                this.is_disabled = true;
-                this.staticTabs.tabs[2].disabled = true;
-            } else {
-                this.is_disabled = false;
-                this.staticTabs.tabs[2].disabled = false;
-            }
+
+        if (this.previousCountingType==null){
+            this.onCountingTypeConfirm(false);
         } else {
-            let p = this.previousCountingType;
-            //alert(JSON.stringify(p));
-            this.analise.tipoContagem=null;
-            this.changeDetector.detectChanges();
-            this.analise.tipoContagem=p;
-            this.changeDetector.detectChanges();
+            this.modal1.open();
         }
+
+
+        //$("modalConfirm").modal("show");
+        //Clear lists with processes
+        //let s:string = document.getElementById("confirmText").innerText;
+        //if (this.previousCountingType==null || confirm(s)) {
+        //    this.listOfProcess = [];
+        //    this.listOfTranProcess = [];
+        //    this.recalculateTotals();
+        //    if (type.toString() == "INDICATIVA") {
+        //        this.is_disabled = true;
+        //        this.staticTabs.tabs[2].disabled = true;
+        //    } else {
+        //        this.is_disabled = false;
+        //        this.staticTabs.tabs[2].disabled = false;
+        //    }
+        //    this.previousCountingType = this.analise.tipoContagem;
+        //} else {
+        //    let p = this.previousCountingType;
+            //alert(JSON.stringify(p));
+        //    this.analise.tipoContagem=null;
+        //    this.changeDetector.detectChanges();
+        //    this.analise.tipoContagem=p;
+        //    this.changeDetector.detectChanges();
+        //}
     }
 
 

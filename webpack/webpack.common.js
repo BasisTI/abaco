@@ -101,7 +101,8 @@ module.exports = function (options) {
             ]),
             new webpack.ProvidePlugin({
                 $: "jquery",
-                jQuery: "jquery"
+                jQuery: "jquery",
+                "Tether": 'tether'
             }),
             new HtmlWebpackPlugin({
                 template: './src/main/webapp/index.html',

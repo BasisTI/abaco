@@ -667,16 +667,16 @@
 
     <modal #modal>
         <modal-header [show-close]="true">
-            <h4 class="modal-title">  Title</h4>
+            <h4 class="modal-title"> <span  jhiTranslate="global.titles.confirm">Title</span></h4>
         </modal-header>
         <modal-body>
-            Do you want continue ?
+            <span jhiTranslate="abacoApp.analise.confirmRemove">Do you want continue ?</span>
         </modal-body>
-        <modal-footer [show-default-buttons]="true"></modal-footer>
-        <!--<modal-footer>
+
+        <modal-footer>
             <button type="button" class="btn btn-default" data-dismiss="modal" (click)="oncOuntingTypeDismiss()" jhiTranslate="entity.action.cancel">Cancel</button>
-            <button type="button" class="btn btn-primary" (click)="onCountingTypeConfirm()" jhiTranslate="entity.action.continue">Continue</button>
-        </modal-footer> -->
+            <button type="button" class="btn btn-primary" (click)="onCountingTypeConfirm(true)" jhiTranslate="entity.action.continue">Continue</button>
+        </modal-footer>
     </modal>
 
     <span id="confirmText" style="display: none" jhiTranslate="abacoApp.analise.confirmRemove"></span>
