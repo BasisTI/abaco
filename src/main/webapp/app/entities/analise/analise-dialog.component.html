@@ -679,6 +679,21 @@
         </modal-footer>
     </modal>
 
+
+    <modal #warningUnsupportedType>
+        <modal-header [show-close]="true">
+            <h4 class="modal-title"> <span  jhiTranslate="global.titles.warning">Title</span></h4>
+        </modal-header>
+        <modal-body>
+            <span jhiTranslate="abacoApp.analise.{{modalLabel}}">This file type is not supported.</span>
+        </modal-body>
+
+        <modal-footer>
+            <button type="button" class="btn btn-default" data-dismiss="modal"  jhiTranslate="entity.action.continue">Close</button>
+        </modal-footer>
+    </modal>
+
+
     <span id="confirmText" style="display: none" jhiTranslate="abacoApp.analise.confirmRemove"></span>
 
 

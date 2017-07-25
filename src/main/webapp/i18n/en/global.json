@@ -5,6 +5,7 @@
         "menu": {
             "home": "Home",
             "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
+            "management":"Management",
             "entities": {
                 "main": "Entities",
                 "organizacao": "Organizacao",
@@ -22,6 +23,8 @@
                 "funcaoDados": "Funcao Dados",
                 "funcaoTransacao": "Funcao Transacao",
                 "alr": "Alr",
+                "validation":"Validation",
+                "team":"Team",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
@@ -49,7 +52,8 @@
             "language": "Language"
         },
         "titles":{
-            "confirm":"Confirm"
+            "confirm":"Confirm",
+            "warning":"Warning"
         },
         "form": {
             "username": "Username",

@@ -52,8 +52,8 @@ export class AnaliseDialogComponent implements OnInit {
     funcaotransacaos: FuncaoTransacao[];
 
     @ViewChild('staticTabs') staticTabs: TabsetComponent;
-
     @ViewChild('modal') modal1: ModalComponent;
+    @ViewChild('warningUnsupportedType') unsupportedTypeWarning:ModalComponent;
 
     // Define that RET and DET are disabled/enabled
     is_disabled:boolean=false;
@@ -121,6 +121,8 @@ export class AnaliseDialogComponent implements OnInit {
         //filterExtensions: true,
         //allowedExtensions: ['png', 'jpg', 'pdf', 'doc', 'docx', 'odt', 'gif']
     };
+
+    modalLabel:String;
 
     constructor(
        // public activeModal: NgbActiveModal,
@@ -507,7 +509,8 @@ export class AnaliseDialogComponent implements OnInit {
      */
     addTran(){
         if (this.filesTran.length>0 && (this.sustantationTran=="" || this.sustantationTran==null)){
-            alert("You have attached some files. Please fill field 'Sustantation'");
+            //alert("You have attached some files. Please fill field 'Sustantation'");
+            this.alertService.error("You have attached some files. Please fill field 'Sustantation'",null,null);
             return;
         }
         let newProcess = (this.editedTranProcess!=null)? this.editedTranProcess: new Process();
@@ -586,9 +589,6 @@ export class AnaliseDialogComponent implements OnInit {
 
     handleUpload(data): void {
         if (data && data.response) {
-            //data = JSON.parse(data.response);
-            //this.uploadFile = data;
-            //alert(JSON.stringify(data));
             let file:UploadedFile = this.cast<UploadedFile>(JSON.parse(data.response),UploadedFile);
             if (this.staticTabs.tabs[1].active){
                 if (!this.checkIfAlreadyUploaded(this.files,file)) {
@@ -610,12 +610,23 @@ export class AnaliseDialogComponent implements OnInit {
     }
 
 
+    /**
+     * Show modal window with lable that is defined as translatable label
+     *
+     * @param label
+     */
+    showAlert(label:String){
+        this.modalLabel = label;
+        this.unsupportedTypeWarning.open();
+    }
+
 
     beforeUpload(uploadingFile): void {
         //alert(JSON.stringify(uploadingFile));
         if (uploadingFile.size > this.UPLOADED_FILE_MAX_SIZE) {
             uploadingFile.setAbort();
             alert('File is too large');
+            this.showAlert("fileTooLarge");
             return;
         }
 
@@ -626,7 +637,7 @@ export class AnaliseDialogComponent implements OnInit {
            return e.toLocaleLowerCase().trim()==ext.trim();
         }))){
             uploadingFile.setAbort();
-            alert('This file type is not supported.');
+            this.showAlert("usupportedFileType");
             return;
         };
 
@@ -642,52 +653,21 @@ export class AnaliseDialogComponent implements OnInit {
         }
         if (index>=0){
             uploadingFile.setAbort();
-            alert('File already exists...');
+            //alert('File already exists...');
+            this.showAlert("fileAlreadyExists");
         }
 
-
-    }
-
-
-    handleTranUpload(data): void {
-        if (data && data.response) {
-            let file:any = JSON.parse(data.response);
-            this.filesTran.push(file);
-        }
-    }
-
-    fileTranOverBase(e:any):void {
-        this.hasBaseDropZoneOverTran = e;
-    }
-
-
-
-    beforeTranUpload(uploadingFile): void {
-        if (uploadingFile.size > this.UPLOADED_FILE_MAX_SIZE) {
-            uploadingFile.setAbort();
-            alert('File is too large');
-            return;
-        }
-
-        if (this.filesTran.find(f=>{
-                return f.originalName==uploadingFile.originalName;
-            })){
-            uploadingFile.setAbort();
-            alert('File already exists...');
-        }
 
     }
 
 
 
     removeFile(file) {
-        //alert(JSON.stringify(file));
         let index:number=-1;
         index=this.files.findIndex(f=>{
            return f.id==file.id;
         });
 
-        //alert('223344');
         if (index>=0) {
             this.files.splice(index,1);
         }

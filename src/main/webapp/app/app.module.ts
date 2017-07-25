@@ -8,7 +8,6 @@ import { Ng2Webstorage } from 'ng2-webstorage';
 import { AbacoSharedModule, UserRouteAccessService } from './shared';
 import { AbacoHomeModule } from './home/home.module';
 import { AbacoAdminModule } from './admin/admin.module';
-import { AbacoAnalisesModule } from './analises/analises.module';
 import { AbacoAccountModule } from './account/account.module';
 import { AbacoEntityModule } from './entities/entity.module';
 
@@ -38,8 +37,7 @@ import {
         AbacoHomeModule,
         AbacoAdminModule,
         AbacoAccountModule,
-        AbacoEntityModule,
-        AbacoAnalisesModule
+        AbacoEntityModule
     ],
     declarations: [
         JhiMainComponent,

@@ -65,7 +65,10 @@
             "size":"Size",
             "dateof":"Date Of",
             "pfTotalAdj":"Total adjusted FPs",
-            "grosspf":"PF - Gross value"
+            "grosspf":"PF - Gross value",
+            "usupportedFileType":"This file type is not supported.",
+            "fileTooLarge":"File too large",
+            "fileAlreadyExists":"File already exists"
 
         }
     }
