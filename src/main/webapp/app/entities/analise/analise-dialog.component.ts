@@ -58,6 +58,9 @@ export class AnaliseDialogComponent implements OnInit {
     // Define that RET and DET are disabled/enabled
     is_disabled:boolean=false;
 
+
+    valueFactors:FatorAjuste[]=[];
+
     // Define that RET and DET are disabled/enabled in FuncaoTransacao tab
     is_disabledTran:boolean=false;
 
@@ -223,6 +226,24 @@ export class AnaliseDialogComponent implements OnInit {
     }
 
 
+    onValueFactorChange(){
+        this.recalculateSummary();
+    }
+
+
+    /**
+     * Update list of  value's factors
+     */
+    updateValueFactorsList(){
+        if (this.analise!= null && this.analise.contrato!=null && this.analise.contrato.manual!=null){
+            this.fatorAjusteService.findByManual(this.analise.contrato.manual).subscribe(
+                (res: Response) => { this.valueFactors = res.json(); }, (res: Response) => this.onError(res.json()));
+        } else {
+            this.valueFactors=[];
+        }
+    }
+
+
     /**
      *
      * Load analise by ID
@@ -288,6 +309,8 @@ export class AnaliseDialogComponent implements OnInit {
 
         });
 
+        this.updateValueFactorsList();
+
     }
 
 
@@ -309,6 +332,9 @@ export class AnaliseDialogComponent implements OnInit {
                this.contracts = res.json();
                if (event) {
                    this.analise.contrato=null;
+                   this.updateValueFactorsList();
+
+                   this.analise.valorAjuste=0;
                 }
            }, (res: Response) => this.onError(res.json()));
     }
@@ -801,6 +827,8 @@ export class AnaliseDialogComponent implements OnInit {
 
 
     onContractChange(type){
+        this.updateValueFactorsList();
+        this.analise.valorAjuste=0;
         this.recalculateSummary();
     }
 
@@ -929,8 +957,13 @@ export class AnaliseDialogComponent implements OnInit {
               adjustTotal+=adjustTotal*this.analise.contrato.manual.valorVariacaoIndicativa;
           }
 
-          this.analise.valorAjuste = adjustTotal-this.totalRow.pf;
+
+
       }
+        //this.analise.valorAjuste = adjustTotal-this.totalRow.pf;
+        if (this.analise.valorAjuste!=null && this.analise.valorAjuste!=0) {
+            adjustTotal=adjustTotal*this.analise.valorAjuste;
+        }
       this.analise.adjustPFTotal = adjustTotal.toFixed(2).toString();
       this.analise.pfTotal = this.totalRow.pf.toFixed(2).toString();
     }

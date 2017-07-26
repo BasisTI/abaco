@@ -66,9 +66,13 @@
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="abacoApp.analise.valorAjuste" for="field_valorAjuste">Valor Ajuste</label>
-            <input type="number" class="form-control" name="valorAjuste" id="field_valorAjuste"
+            <!--<input type="number" class="form-control" name="valorAjuste" id="field_valorAjuste"
                 [(ngModel)]="analise.valorAjuste"
-             />
+             /> -->
+            <select id="field_valorAjuste"  name = "valorAjuste" class="form-control" (change)="onValueFactorChange()"  [(ngModel)]="analise.valorAjuste" >
+                <option [ngValue]="0"  selected jhiTranslate="abacoApp.analise.select">Select</option>
+                <option [ngValue]="factor.fator" *ngFor="let factor of valueFactors; trackBy: trackFactorById">{{getFactorTitle(factor)}}</option>
+            </select>
         </div>
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="abacoApp.analise.pfTotal" for="field_pfTotal">Pf Total</label>
@@ -692,9 +696,6 @@
             <button type="button" class="btn btn-default" data-dismiss="modal"  jhiTranslate="entity.action.continue">Close</button>
         </modal-footer>
     </modal>
-
-
-    <span id="confirmText" style="display: none" jhiTranslate="abacoApp.analise.confirmRemove"></span>
 
 
 </form>
