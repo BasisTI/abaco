@@ -702,10 +702,10 @@
                 <configuration>
                     <executable>true</executable>
                     <fork>true</fork>
-                    
+
                     <!-- Enable the line below to have remote debugging of your application on port 5005 -->
                     <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</jvmArguments>
-                   
+
                 </configuration>
             </plugin>
             <plugin>
@@ -940,7 +940,7 @@
             </build>
             <properties>
                 <!-- log configuration -->
-                <logback.loglevel>DEBUG</logback.loglevel>
+                <logback.loglevel>INFO</logback.loglevel>
                 <!-- default Spring profiles -->
                 <spring.profiles.active>prod${profile.swagger}${profile.no-liquibase}</spring.profiles.active>
             </properties>
@@ -986,7 +986,7 @@
                             <!--
                             Enable the line below to have remote debugging of your application on port 5005-->
                             <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</jvmArguments>
-                            
+
                         </configuration>
                     </plugin>
                     <plugin>
