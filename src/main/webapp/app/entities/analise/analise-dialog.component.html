@@ -64,6 +64,14 @@
                 <option value="ESTIMADA" jhiTranslate="abacoApp.MetodoContagem.ESTIMADA">ESTIMADA</option>
             </select>
         </div>
+
+        <div class="form-group" [hidden]="showFactorValue">
+            <label class="form-control-label" jhiTranslate="abacoApp.analise.factorValue" for="factorValue">Factor Value</label>
+            <input type="text" class="form-control" name="valorAjuste" id="factorValue" disabled
+                   [(ngModel)]="factorValue"
+            />
+        </div>
+
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="abacoApp.analise.valorAjuste" for="field_valorAjuste">Valor Ajuste</label>
             <!--<input type="number" class="form-control" name="valorAjuste" id="field_valorAjuste"
@@ -248,6 +256,7 @@
                                     <th jhiTranslate="abacoApp.analise.high"> Alta </th>
                                     <th jhiTranslate="abacoApp.analise.total"> Total </th>
                                     <th jhiTranslate="abacoApp.analise.pf"> PF </th>
+                                    <th jhiTranslate="abacoApp.analise.grosspf"> Gross PF </th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -259,6 +268,7 @@
                                     <td> {{total.high}} </td>
                                     <td> {{total.total}} </td>
                                     <td> {{total.pf}} </td>
+                                    <td> {{total.grossPF}} </td>
                                 </tr>
 
                                 </tbody>
@@ -480,6 +490,7 @@
                                     <th jhiTranslate="abacoApp.analise.high"> Alta </th>
                                     <th jhiTranslate="abacoApp.analise.total"> Total </th>
                                     <th jhiTranslate="abacoApp.analise.pf"> PF </th>
+                                    <th jhiTranslate="abacoApp.analise.grosspf"> Gross PF </th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -491,6 +502,7 @@
                                     <td> {{total1.high}} </td>
                                     <td> {{total1.total}} </td>
                                     <td> {{total1.pf}} </td>
+                                    <td> {{total1.grossPF}} </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -623,6 +635,7 @@
                             <th jhiTranslate="abacoApp.analise.high"> Alta </th>
                             <th jhiTranslate="abacoApp.analise.total"> Total </th>
                             <th jhiTranslate="abacoApp.analise.pf"> PF </th>
+                            <th jhiTranslate="abacoApp.analise.grosspf"> Gross PF </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -634,6 +647,7 @@
                             <td> {{total.high}} </td>
                             <td> {{total.total}} </td>
                             <td> {{total.pf}} </td>
+                            <td> {{total.grossPF}} </td>
                         </tr>
 
                         <tr>
@@ -644,6 +658,7 @@
                             <td> {{totalRow.high}} </td>
                             <td> {{totalRow.total}} </td>
                             <td> {{totalRow.pf.toFixed(2)}} </td>
+                            <td> {{totalRow.grossPF.toFixed(2)}} </td>
                         </tr>
 
                         </tbody>

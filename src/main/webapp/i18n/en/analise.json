@@ -68,7 +68,9 @@
             "grosspf":"PF - Gross value",
             "usupportedFileType":"This file type is not supported.",
             "fileTooLarge":"File too large",
-            "fileAlreadyExists":"File already exists"
+            "fileAlreadyExists":"File already exists",
+            "grosspf":"Gross PF Total",
+            "factorValue":"Factor"
 
         }
     }
