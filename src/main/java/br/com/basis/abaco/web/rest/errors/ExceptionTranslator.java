@@ -2,6 +2,8 @@ package br.com.basis.abaco.web.rest.errors;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
  */
 @ControllerAdvice
 public class ExceptionTranslator {
+
+    private final Logger log = LoggerFactory.getLogger(ExceptionTranslator.class);
 
     @ExceptionHandler(ConcurrencyFailureException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -72,6 +76,11 @@ public class ExceptionTranslator {
     public ResponseEntity<ErrorVM> processRuntimeException(Exception ex) {
         BodyBuilder builder;
         ErrorVM errorVM;
+        if (log.isDebugEnabled()) {
+            log.error(ex.getMessage(), ex);
+        } else {
+            log.error(ex.getMessage());
+        }
         ResponseStatus responseStatus = AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class);
         if (responseStatus != null) {
             builder = ResponseEntity.status(responseStatus.value());
