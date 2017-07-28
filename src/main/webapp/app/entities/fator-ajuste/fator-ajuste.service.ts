@@ -3,6 +3,7 @@ import { Http, Response, URLSearchParams, BaseRequestOptions } from '@angular/ht
 import { Observable } from 'rxjs/Rx';
 
 import { FatorAjuste } from './fator-ajuste.model';
+import {Manual} from "../manual/manual.model";
 @Injectable()
 export class FatorAjusteService {
 
@@ -29,6 +30,12 @@ export class FatorAjusteService {
         return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
             return res.json();
         });
+    }
+
+    findByManual(manual:Manual,req?: any) {
+        let copy: Manual = Object.assign({}, manual);
+        //alert(JSON.stringify(copy));
+        return this.http.post(`${this.resourceUrl}/manual`,copy);
     }
 
     query(req?: any): Observable<Response> {

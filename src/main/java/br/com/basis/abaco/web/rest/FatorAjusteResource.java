@@ -1,5 +1,9 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.Contrato;
+import br.com.basis.abaco.domain.Manual;
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
 import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.FatorAjuste;
 
@@ -32,10 +36,12 @@ public class FatorAjusteResource {
     private final Logger log = LoggerFactory.getLogger(FatorAjusteResource.class);
 
     private static final String ENTITY_NAME = "fatorAjuste";
-        
+
     private final FatorAjusteRepository fatorAjusteRepository;
 
     private final FatorAjusteSearchRepository fatorAjusteSearchRepository;
+
+
 
     public FatorAjusteResource(FatorAjusteRepository fatorAjusteRepository, FatorAjusteSearchRepository fatorAjusteSearchRepository) {
         this.fatorAjusteRepository = fatorAjusteRepository;
@@ -86,6 +92,22 @@ public class FatorAjusteResource {
             .body(result);
     }
 
+
+    /**
+     * POST  /fator-ajustes/manual : get all fator-adjustes by manual by organization.
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of contratoes in body
+     */
+    @PostMapping("/fator-ajustes/manual")
+    @Timed
+    public List<FatorAjuste> getAllContratoesByOrganization(@RequestBody Manual manual) {
+        log.debug("REST request to get all percentual factors by manual");
+        List<FatorAjuste> factors = this.fatorAjusteRepository.findAllByManualAndTipoAjuste(manual, TipoFatorAjuste.PERCENTUAL);
+        return factors;
+    }
+
+
+
     /**
      * GET  /fator-ajustes : get all the fatorAjustes.
      *
@@ -132,7 +154,7 @@ public class FatorAjusteResource {
      * SEARCH  /_search/fator-ajustes?query=:query : search for the fatorAjuste corresponding
      * to the query.
      *
-     * @param query the query of the fatorAjuste search 
+     * @param query the query of the fatorAjuste search
      * @return the result of the search
      */
     @GetMapping("/_search/fator-ajustes")

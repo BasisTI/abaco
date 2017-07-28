@@ -88,7 +88,7 @@ public class ContratoResource {
 
 
     /**
-     * GET  /contratoes : get all the contratoes by organization.
+     * POST  /contratoes/organizations : get all the contratoes by organization.
      *
      * @return the ResponseEntity with status 200 (OK) and the list of contratoes in body
      */
