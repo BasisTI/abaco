@@ -184,9 +184,19 @@
                         </select>
                     </div>
 
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_process" class="control-label" jhiTranslate="abacoApp.analise.elementaryProcessName">Name Processo Elementar:</label>
+                        <input id="field_process" name="process" class="form-control" [(ngModel)]="elementaryProcess" required/>
+
+                    </div>
+
                 </div>
 
+
+
+
                 <div class="row">
+
                     <div class="form-group col-sm-6  required" style="text-align:left;">
                         <label for="field_module" class="control-label" jhiTranslate="abacoApp.analise.module">Modulo:</label>
 
@@ -194,18 +204,13 @@
                             <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
                             <option [ngValue]="module" *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
                         </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6  required">
-                        <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"  [routerLink]="['/', { outlets: { popup: analise.sistema!=null?'modulo-new/'+analise.sistema?.id:'modulo-new' } }]">
+                        <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right;margin-top:10px;"  [routerLink]="['/', { outlets: { popup: analise.sistema!=null?'modulo-new/'+analise.sistema?.id:'modulo-new' } }]">
                             <span class="fa fa-plus"></span>
 
                             <span jhiTranslate="abacoApp.analise.createNewModule"> Criar novo Modulo</span>
                         </button>
                     </div>
-                </div>
-                <div class="row">
+
                     <div class="form-group col-sm-6  required" style="text-align:left;">
                         <label for="field_function" class="control-label" jhiTranslate="abacoApp.analise.functional">Functionalidade:</label>
 
@@ -213,76 +218,39 @@
                             <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
                             <option [ngValue]="f" *ngFor="let f of filteredFunc; trackBy: trackFuncById">{{f.nome}}</option>
                         </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6  required">
-                        <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"   [routerLink]="['/', { outlets: { popup: selectedModulo!=null?'funcionalidade-new/'+selectedModulo.id:'funcionalidade-new' } }]">
+
+                        <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right;margin-top: 10px;"   [routerLink]="['/', { outlets: { popup: selectedModulo!=null?'funcionalidade-new/'+selectedModulo.id:'funcionalidade-new' } }]">
                             <span class="fa fa-plus"></span>
                             <span jhiTranslate="abacoApp.analise.createNewFunctional">Criar nova Functionalidade</span></button>
                     </div>
+
+
+
+
                 </div>
 
 
 
                 <div class="row">
-                    <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_process" class="control-label" jhiTranslate="abacoApp.analise.elementaryProcessName">Name Processo Elementar:</label>
-                        <input id="field_process" name="process" class="form-control" [(ngModel)]="elementaryProcess" required/>
 
-                    </div>
-                </div>
-
-                <div class="row">
                     <div class="form-group col-sm-3" >
                         <label for="field_ret" class="control-label" jhiTranslate="abacoApp.analise.det">DER</label>
-                        <textarea id="field_ret" [disabled]="is_disabled" name="ret" class="form-control" style="height: 140px;" [(ngModel)]="det" required> </textarea>
+                        <textarea id="field_ret" [disabled]="is_disabled" name="ret" class="form-control" style="height: 155px;" [(ngModel)]="det" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-3">
                         <label for="field_det" class="control-label" jhiTranslate="abacoApp.analise.ret">RLR</label>
-                        <textarea id="field_det" [disabled]="is_disabled" name="det" class="form-control" style="height: 140px;" [(ngModel)]="ret" required> </textarea>
+                        <textarea id="field_det" [disabled]="is_disabled" name="det" class="form-control" style="height: 155px;" [(ngModel)]="ret" required> </textarea>
 
                     </div>
-                    <div class="form-group col-sm-4" style="margin-left:60px;">
-                        <div class="table-responsive">
-                            <label for="total-table1" class="control-label" jhiTranslate="abacoApp.analise.summary">Resumo</label>
-                            <table id="total-table1" class="table table-striped" [mfData]="totals" #mf="mfDataTable">
-                                <thead>
-                                <tr>
-                                    <th style="width:15%;"></th>
-                                    <th jhiTranslate="abacoApp.analise.none"> Sam </th>
-                                    <th jhiTranslate="abacoApp.analise.low"> Baixa </th>
-                                    <th jhiTranslate="abacoApp.analise.average"> Média </th>
-                                    <th jhiTranslate="abacoApp.analise.high"> Alta </th>
-                                    <th jhiTranslate="abacoApp.analise.total"> Total </th>
-                                    <th jhiTranslate="abacoApp.analise.pf"> PF </th>
-                                    <th jhiTranslate="abacoApp.analise.grosspf"> Gross PF </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr *ngFor="let total of totals;">
-                                    <td jhiTranslate="abacoApp.analise.{{logicalFiles[total.input].title}}"> {{logicalFiles[total.input].title}} </td>
-                                    <td> {{total.none}} </td>
-                                    <td> {{total.low}} </td>
-                                    <td> {{total.medium}} </td>
-                                    <td> {{total.high}} </td>
-                                    <td> {{total.total}} </td>
-                                    <td> {{total.pf}} </td>
-                                    <td> {{total.grossPF}} </td>
-                                </tr>
 
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="row">
+
+
                     <div class="form-group col-sm-6  required" style="text-align:left;">
                         <label for="field_sustantation" class="control-label" jhiTranslate="abacoApp.analise.sustantation">Sustantation:</label>
 
-                        <textarea style="height: 140px;" class="form-control" name="sustantation" id="field_sustantation"
+                        <textarea style="height: 155px;" class="form-control" name="sustantation" id="field_sustantation"
                                   [(ngModel)]="sustantation"
                                   maxlength="4000" ></textarea>
                         <div [hidden]="!(editForm.controls.sustantation?.dirty && editForm.controls.sustantation?.invalid)">
@@ -297,33 +265,27 @@
 
                 <div class="row">
                     <div class="form-group col-sm-6" >
-                    <label for="fileUploader" class="control-label" jhiTranslate="abacoApp.analise.attachments">Attachments:</label>
+                        <label for="fileUploader" class="control-label" jhiTranslate="abacoApp.analise.attachments">Attachments:</label>
 
-                    <div style="width:100%">
-                     <input type="file" class="form-control" style="width:calc(100%-1px);float:left;"
-                           ngFileSelect
-                           [options]="options"
-                           (onUpload)="handleUpload($event)"
-                           id="fileUploader"/>
+                        <div style="width:100%">
+                            <input type="file" class="form-control" style="width:calc(100%-1px);float:left;"
+                                   ngFileSelect
+                                   [options]="options"
+                                   (onUpload)="handleUpload($event)"
+                                   id="fileUploader"/>
 
-                        <div ngFileDrop style="width:1px;float:left;"
-                             [options]="options"
-                             [ngClass]="{'file-over': hasBaseDropZoneOver}"
-                             (onUpload)="handleUpload($event)"
-                             (onFileOver)="fileOverBase($event)"
-                             (beforeUpload)="beforeUpload($event)"
-                             >
+                            <div ngFileDrop style="width:1px;float:left;"
+                                 [options]="options"
+                                 [ngClass]="{'file-over': hasBaseDropZoneOver}"
+                                 (onUpload)="handleUpload($event)"
+                                 (onFileOver)="fileOverBase($event)"
+                                 (beforeUpload)="beforeUpload($event)"
+                            >
 
+                            </div>
                         </div>
-                      </div>
-                    </div>
 
-                </div>
-
-
-                <div class="row" [hidden]="!files.length">
-                    <div class="form-group col-sm-6" >
-                        <div class="table-responsive">
+                        <div class="table-responsive" [hidden]="!files.length">
 
                             <table id="atachments" class="table table-striped" [mfData]="files" #mf="mfDataTable">
                                 <thead>
@@ -349,9 +311,43 @@
                             </table>
                         </div>
                     </div>
+                    <div class="form-group col-sm-6" style="">
+                        <div class="table-responsive">
+                            <label for="total-table1" class="control-label" jhiTranslate="abacoApp.analise.summary">Resumo</label>
+                            <table id="total-table1" class="table table-striped" [mfData]="totals" #mf="mfDataTable">
+                                <thead>
+                                <tr>
+                                    <th style="width:15%;"></th>
+                                    <th jhiTranslate="abacoApp.analise.none"> Sam </th>
+                                    <th jhiTranslate="abacoApp.analise.low"> Baixa </th>
+                                    <th jhiTranslate="abacoApp.analise.average"> Média </th>
+                                    <th jhiTranslate="abacoApp.analise.high"> Alta </th>
+                                    <th jhiTranslate="abacoApp.analise.total"> Total </th>
+                                    <th jhiTranslate="abacoApp.analise.pf"> PF </th>
+                                    <th jhiTranslate="abacoApp.analise.grosspf"> Gross PF </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let total of totals;">
+                                    <td jhiTranslate="abacoApp.analise.{{logicalFiles[total.input].title}}"> {{logicalFiles[total.input].title}} </td>
+                                    <td style="text-align: right"> {{total.none}} </td>
+                                    <td style="text-align: right"> {{total.low}} </td>
+                                    <td style="text-align: right"> {{total.medium}} </td>
+                                    <td style="text-align: right"> {{total.high}} </td>
+                                    <td style="text-align: right"> {{total.total}} </td>
+                                    <td style="text-align: right"> {{total.pf}} </td>
+                                    <td style="text-align: right"> {{total.grossPF}} </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
+
+
                 <div class="row" style="border-bottom-width: 1px;border-bottom-style: groove;">
-                    <div class="form-group col-sm-6  required">
+                    <div class="form-group col-sm-12  required">
                         <button class="btn btn-primary" id="buttonAdd" value="" style="float:right"  [disabled]="!dadosForm.form.valid" (click)="add()">Adicionar</button>
                     </div>
                 </div>
