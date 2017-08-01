@@ -90,6 +90,13 @@
                             <span jhiTranslate="global.menu.entities.esforcoFase">Esforco Fase</span>
                         </a>
                     </li>
+
+                    <li uiSrefActive="active">
+                        <a class="dropdown-item" routerLink="fator-ajuste" (click)="collapseNavbar()">
+                            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
+                            <span jhiTranslate="global.menu.entities.fatorAjuste">Fator Ajuste</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
 
@@ -141,7 +148,7 @@
                         <span>
                             <i class="fa fa-th-list" aria-hidden="true"></i>
                             <span jhiTranslate="global.menu.entities.sistema">
-                                Management
+                                Sistema
                             </span>
                             <b class="caret"></b>
                         </span>
@@ -166,12 +173,7 @@
                         </a>
                     </li>
 
-                    <li uiSrefActive="active">
-                        <a class="dropdown-item" routerLink="fator-ajuste" (click)="collapseNavbar()">
-                            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.fatorAjuste">Fator Ajuste</span>
-                        </a>
-                    </li>
+
                 </ul>
             </li>
 

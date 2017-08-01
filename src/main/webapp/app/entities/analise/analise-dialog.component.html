@@ -164,13 +164,23 @@
             <form #dadosForm="ngForm" >
 
                 <div class="row" style="margin-top:30px;">
-                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                    <div class="form-group col-sm-3  required" style="text-align:left;">
 
                         <label for="field_factor" class="control-label" jhiTranslate="abacoApp.analise.factorAdjustment">Fator Ajuste:</label>
 
                         <select id="field_factor" name="factor" class="form-control" [(ngModel)]="selectedFactor" (change)="onFactorChange($event.target.value)">
                             <option [ngValue]="null"  selected jhiTranslate="abacoApp.analise.select">Select</option>
                             <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{getFactorTitle(factor)}}</option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-group col-sm-3  required" style="text-align:left;">
+                        <label for="field_class" class="control-label" jhiTranslate="abacoApp.analise.classification">Clossificado:</label>
+
+                        <select id="field_class" name="class" class="form-control" [(ngModel)]="selectedLogicalFile" required>
+                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
+                            <option [ngValue]="file" *ngFor="let file of logicalFiles;" jhiTranslate="abacoApp.analise.{{file.title}}">{{file.title}}</option>
                         </select>
                     </div>
 
@@ -213,16 +223,7 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_class" class="control-label" jhiTranslate="abacoApp.analise.classification">Clossificado:</label>
 
-                        <select id="field_class" name="class" class="form-control" [(ngModel)]="selectedLogicalFile" required>
-                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="file" *ngFor="let file of logicalFiles;" jhiTranslate="abacoApp.analise.{{file.title}}">{{file.title}}</option>
-                        </select>
-                    </div>
-                </div>
 
                 <div class="row">
                     <div class="form-group col-sm-6  required" style="text-align:left;">
