@@ -163,37 +163,6 @@
 
             <form #dadosForm="ngForm" >
 
-                <div class="row" style="margin-top:30px;">
-                    <div class="form-group col-sm-3  required" style="text-align:left;">
-
-                        <label for="field_factor" class="control-label" jhiTranslate="abacoApp.analise.factorAdjustment">Fator Ajuste:</label>
-
-                        <select id="field_factor" name="factor" class="form-control" [(ngModel)]="selectedFactor" (change)="onFactorChange($event.target.value)">
-                            <option [ngValue]="null"  selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{getFactorTitle(factor)}}</option>
-                        </select>
-
-                    </div>
-
-                    <div class="form-group col-sm-3  required" style="text-align:left;">
-                        <label for="field_class" class="control-label" jhiTranslate="abacoApp.analise.classification">Clossificado:</label>
-
-                        <select id="field_class" name="class" class="form-control" [(ngModel)]="selectedLogicalFile" required>
-                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="file" *ngFor="let file of logicalFiles;" jhiTranslate="abacoApp.analise.{{file.title}}">{{file.title}}</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_process" class="control-label" jhiTranslate="abacoApp.analise.elementaryProcessName">Name Processo Elementar:</label>
-                        <input id="field_process" name="process" class="form-control" [(ngModel)]="elementaryProcess" required/>
-
-                    </div>
-
-                </div>
-
-
-
 
                 <div class="row">
 
@@ -228,6 +197,38 @@
 
 
                 </div>
+
+
+
+                <div class="row" style="margin-top:30px;">
+                    <div class="form-group col-sm-3  required" style="text-align:left;">
+
+                        <label for="field_factor" class="control-label" jhiTranslate="abacoApp.analise.factorAdjustment">Fator Ajuste:</label>
+
+                        <select id="field_factor" name="factor" class="form-control" [(ngModel)]="selectedFactor" (change)="onFactorChange($event.target.value)">
+                            <option [ngValue]="null"  selected jhiTranslate="abacoApp.analise.select">Select</option>
+                            <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{getFactorTitle(factor)}}</option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-group col-sm-3  required" style="text-align:left;">
+                        <label for="field_class" class="control-label" jhiTranslate="abacoApp.analise.classification">Clossificado:</label>
+
+                        <select id="field_class" name="class" class="form-control" [(ngModel)]="selectedLogicalFile" required>
+                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
+                            <option [ngValue]="file" *ngFor="let file of logicalFiles;" jhiTranslate="abacoApp.analise.{{file.title}}">{{file.title}}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_process" class="control-label" jhiTranslate="abacoApp.analise.elementaryProcessName">Name Processo Elementar:</label>
+                        <input id="field_process" name="process" class="form-control" [(ngModel)]="elementaryProcess" required/>
+
+                    </div>
+
+                </div>
+
 
 
 
@@ -400,8 +401,37 @@
                Função de Transação
             </span>
             <form #tranForm="ngForm">
-                <div class="row" style="margin-top:30px;">
+
+                <div class="row">
                     <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_func_module" class="control-label" jhiTranslate="abacoApp.analise.module">Modulo:</label>
+                        <select id="field_func_module" name = "tranModule" class="form-control"  [(ngModel)]="selectedTranModulo" (change)="onModuleTranChange($event.target.value)" required>
+                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
+                            <option [ngValue]="module" *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
+                        </select>
+                        <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right;margin-top:10px;"  [routerLink]="['/', { outlets: { popup: analise.sistema!=null?'modulo-new/'+analise.sistema?.id:'modulo-new' }  }]">
+                            <span class="fa fa-plus"></span>
+                            <span jhiTranslate="abacoApp.analise.createNewModule"> Criar novo Modulo</span>
+                        </button>
+
+                    </div>
+
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_func_funcal" class="control-label" jhiTranslate="abacoApp.analise.functional">Functionalidade:</label>
+                        <select id="field_func_funcal" name = "tranFucal" class="form-control" [(ngModel)]="selectedTranFunc" required>
+                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
+                            <option [ngValue]="f" *ngFor="let f of filteredTranFunc; trackBy: trackFuncById">{{f.nome}}</option>
+                        </select>
+                        <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right;margin-top:10px;" [routerLink]="['/', { outlets: { popup: selectedTranModulo!=null?'funcionalidade-new/'+selectedTranModulo.id:'funcionalidade-new' } }]">
+                            <span class="fa fa-plus"></span>
+                            <span jhiTranslate="abacoApp.analise.createNewFunctional">Criar nova Functionalidade</span>
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="row" style="margin-top:30px;">
+                    <div class="form-group col-sm-3  required" style="text-align:left;">
 
                         <label for="field_func_factor" class="control-label" jhiTranslate="abacoApp.analise.factorAdjustment">Fotor Ajuste:</label>
                         <select id="field_func_factor"  name = "tranFactor" class="form-control" (change)="onFactorChangeTran($event.target.value)"  [(ngModel)]="selectedTranFactor" >
@@ -410,43 +440,7 @@
                         </select>
                     </div>
 
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_func_module" class="control-label" jhiTranslate="abacoApp.analise.module">Modulo:</label>
-                        <select id="field_func_module" name = "tranModule" class="form-control"  [(ngModel)]="selectedTranModulo" (change)="onModuleTranChange($event.target.value)" required>
-                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="module" *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6  required">
-                        <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right"  [routerLink]="['/', { outlets: { popup: analise.sistema!=null?'modulo-new/'+analise.sistema?.id:'modulo-new' }  }]">
-                            <span class="fa fa-plus"></span>
-                            <span jhiTranslate="abacoApp.analise.createNewModule"> Criar novo Modulo</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_func_funcal" class="control-label" jhiTranslate="abacoApp.analise.functional">Functionalidade:</label>
-                        <select id="field_func_funcal" name = "tranFucal" class="form-control" [(ngModel)]="selectedTranFunc" required>
-                            <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="f" *ngFor="let f of filteredTranFunc; trackBy: trackFuncById">{{f.nome}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6  required">
-                        <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right" [routerLink]="['/', { outlets: { popup: selectedTranModulo!=null?'funcionalidade-new/'+selectedTranModulo.id:'funcionalidade-new' } }]">
-                            <span class="fa fa-plus"></span>
-                            <span jhiTranslate="abacoApp.analise.createNewFunctional">Criar nova Functionalidade</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                    <div class="form-group col-sm-3  required" style="text-align:left;">
                         <label for="id5" class="control-label" jhiTranslate="abacoApp.analise.classification">Clossificado:</label>
 
                         <select id="id5" class="form-control" name = "tranClass" [(ngModel)]="selectedOutputType" required >
@@ -454,27 +448,92 @@
                             <option [ngValue]="file" *ngFor="let file of outputTypes;" jhiTranslate="abacoApp.analise.{{file.title}}">{{file.title}}</option>
                         </select>
                     </div>
-                </div>
-                <div class="row">
+
+
                     <div class="form-group col-sm-6  required" style="text-align:left;">
 
                         <label for="id6" class="control-label" jhiTranslate="abacoApp.analise.elementaryProcessName">Name Processo Elementar:</label>
                         <input id="id6" name = "tranName" class="form-control"  [(ngModel)]="elementaryTranProcess" required />
 
                     </div>
+
                 </div>
+
+
+
                 <div class="row">
                     <div class="form-group col-sm-3">
                         <label for="id7" class="control-label" jhiTranslate="abacoApp.analise.det">DER</label>
-                        <textarea id="id7" class="form-control"  [disabled]="is_disabledTran" name="tranDet" style="height: 140px;" [(ngModel)]="detTran" required> </textarea>
+                        <textarea id="id7" class="form-control"  [disabled]="is_disabledTran" name="tranDet" style="height: 155px;" [(ngModel)]="detTran" required> </textarea>
 
                     </div>
                     <div class="form-group col-sm-3">
                         <label for="id8" class="control-label" jhiTranslate="abacoApp.analise.ftr">FTR</label>
-                        <textarea id="id8" class="form-control"  [disabled]="is_disabledTran" name="tranRet" style="height: 140px;" [(ngModel)]="retTran" required> </textarea>
+                        <textarea id="id8" class="form-control"  [disabled]="is_disabledTran" name="tranRet" style="height: 155px;" [(ngModel)]="retTran" required> </textarea>
 
                     </div>
-                    <div class="form-group col-sm-4" style="margin-left:60px;margin-top: -60px;">
+
+                    <div class="form-group col-sm-6  required" style="text-align:left;">
+                        <label for="field_sustantationTran" class="control-label" jhiTranslate="abacoApp.analise.sustantation">Sustantation:</label>
+
+                        <textarea style="height: 155px;" class="form-control" name="sustantationTran" id="field_sustantationTran"
+                                  [(ngModel)]="sustantationTran"
+                                  maxlength="4000" ></textarea>
+                        <div [hidden]="!(editForm.controls.sustantationTran?.dirty && editForm.controls.sustantationTran?.invalid)">
+                            <small class="form-text text-danger"
+                                   [hidden]="!editForm.controls.fronteiras?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 4000 }">
+                                This field cannot be longer than 4000 characters.
+                            </small>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="row">
+
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6" >
+                        <label for="fileTranUploader" class="control-label">Attachments:</label>
+
+                        <form>
+                        <input type="file" class="form-control"
+                               ngFileSelect
+                               [options]="optionsTran"
+
+                                id="fileTranUploader"/>
+                        </form>
+
+                        <div class="table-responsive" [hidden]="!filesTran.length">
+
+                            <table id="atachmentsTran" class="table table-striped" [mfData]="filesTran" #mf="mfDataTable">
+                                <thead>
+                                <tr>
+                                    <th style="width:45%;">File Name</th>
+                                    <th>Size</th>
+                                    <th>Date of</th>
+                                    <th>Action</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let file1 of filesTran;">
+                                    <td><a href="/uploaded/{{file1.filename}}" target="_blank"> {{file1.originalName}} </a></td>
+                                    <td> {{humanFileSize(file1.sizeOf)}} </td>
+                                    <td> {{file1.dateOf  | date: 'dd/MM/yyyy HH:mm'}} </td>
+                                    <td style="text-align: center"> <a  (click)="removeTranFile(file1)"> <i class="fa fa-trash" style="font-size:24px"></i> </a></td>
+
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-sm-6" style="margin-left:0px;margin-top:0px;">
                         <div class="table-responsive">
                             <label for="table1" class="control-label" jhiTranslate="abacoApp.analise.summary">Resumo</label>
                             <table id="table1" class="table table-striped">
@@ -507,71 +566,11 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="form-group col-sm-6  required" style="text-align:left;">
-                        <label for="field_sustantationTran" class="control-label" jhiTranslate="abacoApp.analise.sustantation">Sustantation:</label>
-
-                        <textarea style="height: 140px;" class="form-control" name="sustantationTran" id="field_sustantationTran"
-                                  [(ngModel)]="sustantationTran"
-                                  maxlength="4000" ></textarea>
-                        <div [hidden]="!(editForm.controls.sustantationTran?.dirty && editForm.controls.sustantationTran?.invalid)">
-                            <small class="form-text text-danger"
-                                   [hidden]="!editForm.controls.fronteiras?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 4000 }">
-                                This field cannot be longer than 4000 characters.
-                            </small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-sm-6" >
-                        <label for="fileTranUploader" class="control-label">Attachments:</label>
-
-                        <form>
-                        <input type="file" class="form-control"
-                               ngFileSelect
-                               [options]="optionsTran"
-
-                                id="fileTranUploader"/>
-                        </form>
 
 
-                    </div>
-
-                </div>
-
-
-                <div class="row" [hidden]="!filesTran.length">
-                    <div class="form-group col-sm-6" >
-                        <div class="table-responsive">
-
-                            <table id="atachmentsTran" class="table table-striped" [mfData]="filesTran" #mf="mfDataTable">
-                                <thead>
-                                <tr>
-                                    <th style="width:45%;">File Name</th>
-                                    <th>Size</th>
-                                    <th>Date of</th>
-                                    <th>Action</th>
-
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr *ngFor="let file1 of filesTran;">
-                                    <td><a href="/uploaded/{{file1.filename}}" target="_blank"> {{file1.originalName}} </a></td>
-                                    <td> {{humanFileSize(file1.sizeOf)}} </td>
-                                    <td> {{file1.dateOf  | date: 'dd/MM/yyyy HH:mm'}} </td>
-                                    <td style="text-align: center"> <a  (click)="removeTranFile(file1)"> <i class="fa fa-trash" style="font-size:24px"></i> </a></td>
-
-                                </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="row" style="border-bottom-width: 1px;border-bottom-style: groove;">
-                    <div class="form-group col-sm-6  required">
+                    <div class="form-group col-sm-12  required">
                         <button class="btn btn-primary" style="float:right"  id="buttonAddTran"  [disabled]="!tranForm.form.valid" (click)="addTran()">Adicionar</button>
                     </div>
                 </div>
