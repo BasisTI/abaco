@@ -21,6 +21,7 @@
             "ativo": "Ativo",
             "numeroOcorrencia": "Número Ocorrência",
             "contrato": "Contrato",
+            "contracts":"Contracts",
             "sistema": "Sistema"
         },
         "contrato" : {

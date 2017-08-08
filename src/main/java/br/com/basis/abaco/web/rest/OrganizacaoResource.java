@@ -1,5 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.Contrato;
 import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.Organizacao;
 
@@ -32,7 +33,7 @@ public class OrganizacaoResource {
     private final Logger log = LoggerFactory.getLogger(OrganizacaoResource.class);
 
     private static final String ENTITY_NAME = "organizacao";
-        
+
     private final OrganizacaoRepository organizacaoRepository;
 
     private final OrganizacaoSearchRepository organizacaoSearchRepository;
@@ -41,6 +42,9 @@ public class OrganizacaoResource {
         this.organizacaoRepository = organizacaoRepository;
         this.organizacaoSearchRepository = organizacaoSearchRepository;
     }
+
+
+
 
     /**
      * POST  /organizacaos : Create a new organizacao.
@@ -58,6 +62,7 @@ public class OrganizacaoResource {
         }
         Organizacao result = organizacaoRepository.save(organizacao);
         organizacaoSearchRepository.save(result);
+
         return ResponseEntity.created(new URI("/api/organizacaos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -81,6 +86,7 @@ public class OrganizacaoResource {
         }
         Organizacao result = organizacaoRepository.save(organizacao);
         organizacaoSearchRepository.save(result);
+
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, organizacao.getId().toString()))
             .body(result);
@@ -96,6 +102,7 @@ public class OrganizacaoResource {
     public List<Organizacao> getAllOrganizacaos() {
         log.debug("REST request to get all Organizacaos");
         List<Organizacao> organizacaos = organizacaoRepository.findAll();
+
         return organizacaos;
     }
 
@@ -110,6 +117,7 @@ public class OrganizacaoResource {
     public ResponseEntity<Organizacao> getOrganizacao(@PathVariable Long id) {
         log.debug("REST request to get Organizacao : {}", id);
         Organizacao organizacao = organizacaoRepository.findOne(id);
+
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(organizacao));
     }
 
@@ -132,7 +140,7 @@ public class OrganizacaoResource {
      * SEARCH  /_search/organizacaos?query=:query : search for the organizacao corresponding
      * to the query.
      *
-     * @param query the query of the organizacao search 
+     * @param query the query of the organizacao search
      * @return the result of the search
      */
     @GetMapping("/_search/organizacaos")

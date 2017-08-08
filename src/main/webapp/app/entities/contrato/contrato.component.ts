@@ -31,7 +31,7 @@ contratoes: Contrato[];
         private principal: Principal
     ) {
         this.currentSearch = activatedRoute.snapshot.params['search'] ? activatedRoute.snapshot.params['search'] : '';
-        this.jhiLanguageService.setLocations(['contrato']);
+        this.jhiLanguageService.setLocations(['contrato','organizacao']);
     }
 
     loadAll() {

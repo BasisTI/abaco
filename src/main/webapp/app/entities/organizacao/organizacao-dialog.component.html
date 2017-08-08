@@ -66,17 +66,34 @@
         </div>
 
         <div class="form-group">
-            <label jhiTranslate="abacoApp.organizacao.contrato" for="field_contrato">Contrato</label>
-            <select class="form-control" id="field_contrato" name="contrato" [(ngModel)]="organizacao.contrato" >
-                <option [ngValue]="null"></option>
-                <option [ngValue]="contratoOption.id === organizacao.contrato?.id ? organizacao.contrato : contratoOption" *ngFor="let contratoOption of contratoes; trackBy: trackContratoById">{{contratoOption.numeroContrato}}</option>
-            </select>
-	        <button class="btn btn btn-warning float-right create-contrato" [routerLink]="['/', { outlets: { popup: ['contrato-new'] } }]">
-                <span class="fa fa-plus"></span>
-                <span class="hidden-sm-down"  jhiTranslate="abacoApp.contrato.home.createLabel">
-                 Create new Contrato
-                </span>
-	        </button>
+
+            <label class="form-control-label" jhiTranslate="abacoApp.organizacao.contracts" for="contractsTable">Contracts</label>
+            <div class="table-responsive" >
+
+                <table id="contractsTable" class="table table-striped" [mfData]="organizacao.contracts" #mf="mfDataTable">
+                    <thead>
+                    <tr>
+                        <th jhiTranslate="abacoApp.contrato.numeroContrato">Number</th>
+                        <th jhiTranslate="abacoApp.contrato.dataInicioVigencia">Data Inicio Vigencia</th>
+                        <th jhiTranslate="abacoApp.contrato.dataFimVigencia">Data Fim Vigencia</th>
+                        <th>Action</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let contract of organizacao.contracts;">
+                        <td> {{contract.numeroContrato}} </td>
+                        <td> {{contract.dataInicioVigencia}} </td>
+                        <td> {{contract.dataFimVigencia}} </td>
+                        <td style="text-align: center"> <a  (click)="removeContract(contract)"> <i class="fa fa-trash" style="font-size:24px"></i> </a></td>
+
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+
         </div>
         <br/>
     </div>

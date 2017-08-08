@@ -61,6 +61,15 @@ export class OrganizacaoDialogComponent implements OnInit {
         }
     }
 
+
+    removeContract(contract:Contrato){
+        let index:number = this.organizacao.contracts.findIndex(c=>{
+           return contract.id==c.id;
+        });
+
+        this.organizacao.contracts.splice(index,1);
+    }
+
     private onSaveSuccess (result: Organizacao) {
         this.eventManager.broadcast({ name: 'organizacaoListModification', content: 'OK'});
         this.isSaving = false;

@@ -29,7 +29,7 @@ export class OrganizacaoPopupService {
         }
     }
 
-  
+
     openParaEditar (component: Component, id: number, contrato: Contrato): NgbModalRef {
         if (this.isOpen) {
             return;
@@ -38,14 +38,14 @@ export class OrganizacaoPopupService {
 
         if (id) {
             this.organizacaoService.find(id).subscribe(organizacao => {
-                organizacao.contrato = contrato;
+               // organizacao.contrato = contrato;
                 this.organizacaoModalRef(component, organizacao);
             });
         } else {
             return this.organizacaoModalRef(component, new Organizacao());
         }
     }
-    
+
     organizacaoModalRef(component: Component, organizacao: Organizacao): NgbModalRef {
         let modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.organizacao = organizacao;

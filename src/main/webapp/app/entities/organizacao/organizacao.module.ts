@@ -2,7 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TextMaskModule } from 'angular2-text-mask';
 import { RouterModule } from '@angular/router';
-
+import { DataTableModule } from "angular2-datatable";
 import { AbacoSharedModule } from '../../shared';
 
 import {
@@ -28,6 +28,7 @@ let ENTITY_STATES = [
         AbacoSharedModule,
         RouterModule.forRoot(ENTITY_STATES, { useHash: true }),
         FormsModule,
+        DataTableModule,
         TextMaskModule
     ],
     declarations: [

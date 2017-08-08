@@ -1,6 +1,7 @@
 package br.com.basis.abaco.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -51,6 +52,10 @@ public class Organizacao implements Serializable {
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Sistema> sistemas = new HashSet<>();
+
+    @OneToMany(mappedBy = "organization",fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Set<Contrato> contracts = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -151,6 +156,14 @@ public class Organizacao implements Serializable {
             return false;
         }
         return Objects.equals(id, organizacao.id);
+    }
+
+    public Set<Contrato> getContracts() {
+        return contracts;
+    }
+
+    public void setContracts(Set<Contrato> contracts) {
+        this.contracts = contracts;
     }
 
     @Override

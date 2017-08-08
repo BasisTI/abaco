@@ -7,8 +7,9 @@ export class Organizacao {
         public cnpj?: string,
         public ativo?: boolean,
         public numeroOcorrencia?: string,
-        public contrato?: Contrato,
+        public contracts?: Contrato[],
         public sistema?: Sistema,
+
     ) {
         this.ativo = true;
     }
