@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletContext;
+import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -56,7 +57,7 @@ public class UploadController {
             }
 
             byte[] bytesFileName = (file.getOriginalFilename() + String.valueOf(System.currentTimeMillis())).getBytes("UTF-8");
-            String filename = MessageDigest.getInstance("MD5").digest(bytesFileName).toString();
+            String filename = DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(bytesFileName));
             String ext = FilenameUtils.getExtension(file.getOriginalFilename());
             filename += "." + ext;
             Path path = Paths.get(folderPath + "/" + filename);
