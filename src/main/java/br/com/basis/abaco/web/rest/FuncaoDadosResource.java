@@ -103,8 +103,12 @@ public class FuncaoDadosResource {
         log.debug("REST request to get all FuncaoDados");
         List<FuncaoDados> funcaoDados = funcaoDadosRepository.findAll();
         funcaoDados.forEach(f -> {
-            if (f.getAnalise().getFuncaoDados() != null) f.getAnalise().getFuncaoDados().clear();
-            if (f.getAnalise().getFuncaoTransacaos() != null) f.getAnalise().getFuncaoTransacaos().clear();
+            if (f.getAnalise().getFuncaoDados() != null) {
+                f.getAnalise().getFuncaoDados().clear();
+            }
+            if (f.getAnalise().getFuncaoTransacaos() != null) {
+                f.getAnalise().getFuncaoTransacaos().clear();
+            }
         });
         return funcaoDados;
     }
@@ -120,9 +124,12 @@ public class FuncaoDadosResource {
     public ResponseEntity<FuncaoDados> getFuncaoDados(@PathVariable Long id) {
         log.debug("REST request to get FuncaoDados : {}", id);
         FuncaoDados funcaoDados = funcaoDadosRepository.findOne(id);
-        if (funcaoDados.getAnalise().getFuncaoDados() != null) funcaoDados.getAnalise().getFuncaoDados().clear();
-        if (funcaoDados.getAnalise().getFuncaoTransacaos() != null)
+        if (funcaoDados.getAnalise().getFuncaoDados() != null) {
+            funcaoDados.getAnalise().getFuncaoDados().clear();
+        }
+        if (funcaoDados.getAnalise().getFuncaoTransacaos() != null) {
             funcaoDados.getAnalise().getFuncaoTransacaos().clear();
+        }
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDados));
     }
 

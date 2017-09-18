@@ -2,8 +2,11 @@ package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.repository.UploadedFilesRepository;
+import br.com.basis.abaco.web.rest.errors.UploadException;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,13 +33,15 @@ public class UploadController {
     //Save the uploaded file to this folder
     private static String UPLOADED_FOLDER = "/uploaded";
 
+    private final Logger log = LoggerFactory.getLogger(UploadController.class);
+
     @Autowired
     private ServletContext servletContext;
 
     @Autowired
     private UploadedFilesRepository filesRepository;
 
-    @PostMapping("/upload") // //new annotation since 4.3
+    @PostMapping("/upload")
     public ResponseEntity<UploadedFile> singleFileUpload(@RequestParam("file") MultipartFile file,
                                                          RedirectAttributes redirectAttributes) {
 
@@ -63,12 +68,9 @@ public class UploadController {
             uploadedFile.setFilename(filename);
             uploadedFile.setSizeOf(bytes.length);
             filesRepository.save(uploadedFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+        } catch (IOException | NoSuchAlgorithmException e) {
+            throw new UploadException("Erro ao efetuar o upload do arquivo", e);
         }
-
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(uploadedFile));
     }
 
