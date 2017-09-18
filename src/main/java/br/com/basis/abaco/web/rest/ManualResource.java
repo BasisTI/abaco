@@ -1,16 +1,23 @@
 package br.com.basis.abaco.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.Manual;
-
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -20,7 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing Manual.
@@ -32,7 +39,7 @@ public class ManualResource {
     private final Logger log = LoggerFactory.getLogger(ManualResource.class);
 
     private static final String ENTITY_NAME = "manual";
-        
+
     private final ManualRepository manualRepository;
 
     private final ManualSearchRepository manualSearchRepository;
@@ -132,7 +139,7 @@ public class ManualResource {
      * SEARCH  /_search/manuals?query=:query : search for the manual corresponding
      * to the query.
      *
-     * @param query the query of the manual search 
+     * @param query the query of the manual search
      * @return the result of the search
      */
     @GetMapping("/_search/manuals")

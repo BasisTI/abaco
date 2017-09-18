@@ -1,18 +1,25 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
-import com.codahale.metrics.annotation.Timed;
-import br.com.basis.abaco.domain.Analise;
-
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -24,7 +31,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing Analise.
@@ -60,15 +67,15 @@ public class AnaliseResource {
         if (analise.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
         }
-        analise.getFuncaoDados().forEach(entry->{
+        analise.getFuncaoDados().forEach(entry -> {
             entry.setAnalise(analise);
-            entry.getFiles().forEach(file->{
+            entry.getFiles().forEach(file -> {
                 file.setFuncaoDados(entry);
             });
         });
-        analise.getFuncaoTransacaos().forEach(entry->{
+        analise.getFuncaoTransacaos().forEach(entry -> {
             entry.setAnalise(analise);
-            entry.getFiles().forEach(file->{
+            entry.getFiles().forEach(file -> {
                 file.setFuncaoTransacao(entry);
             });
         });
@@ -80,10 +87,10 @@ public class AnaliseResource {
         result.setFuncaoDados(copyDados);
         result.setFuncaoTransacaos(copyTransacao);
         result = analiseRepository.save(result);
-        result.getFuncaoDados().forEach(entry->{
+        result.getFuncaoDados().forEach(entry -> {
             entry.setAnalise(null);
         });
-        result.getFuncaoTransacaos().forEach(entry->{
+        result.getFuncaoTransacaos().forEach(entry -> {
             entry.setAnalise(null);
         });
         analiseSearchRepository.save(result);
@@ -108,23 +115,23 @@ public class AnaliseResource {
         if (analise.getId() == null) {
             return createAnalise(analise);
         }
-        analise.getFuncaoDados().forEach(entry->{
+        analise.getFuncaoDados().forEach(entry -> {
             entry.setAnalise(analise);
-            entry.getFiles().forEach(file->{
+            entry.getFiles().forEach(file -> {
                 file.setFuncaoDados(entry);
             });
         });
-        analise.getFuncaoTransacaos().forEach(entry->{
+        analise.getFuncaoTransacaos().forEach(entry -> {
             entry.setAnalise(analise);
-            entry.getFiles().forEach(file->{
+            entry.getFiles().forEach(file -> {
                 file.setFuncaoTransacao(entry);
             });
         });
         Analise result = analiseRepository.save(analise);
-        result.getFuncaoDados().forEach(entry->{
+        result.getFuncaoDados().forEach(entry -> {
             entry.setAnalise(null);
         });
-        result.getFuncaoTransacaos().forEach(entry->{
+        result.getFuncaoTransacaos().forEach(entry -> {
             entry.setAnalise(null);
         });
         analiseSearchRepository.save(result);
@@ -143,12 +150,12 @@ public class AnaliseResource {
     public List<Analise> getAllAnalises() {
         log.debug("REST request to get all Analises");
         List<Analise> analises = analiseRepository.findAll();
-        analises.forEach(analise->{
-            analise.getFuncaoDados().forEach(entry->{
+        analises.forEach(analise -> {
+            analise.getFuncaoDados().forEach(entry -> {
                 entry.setAnalise(null);
 
             });
-            analise.getFuncaoTransacaos().forEach(entry-> {
+            analise.getFuncaoTransacaos().forEach(entry -> {
                 entry.setAnalise(null);
             });
         });
@@ -166,10 +173,10 @@ public class AnaliseResource {
     public ResponseEntity<Analise> getAnalise(@PathVariable Long id) {
         log.debug("REST request to get Analise : {}", id);
         Analise analise = analiseRepository.findOne(id);
-        analise.getFuncaoDados().forEach(entry->{
+        analise.getFuncaoDados().forEach(entry -> {
             entry.setAnalise(null);
         });
-        analise.getFuncaoTransacaos().forEach(entry-> {
+        analise.getFuncaoTransacaos().forEach(entry -> {
             entry.setAnalise(null);
         });
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));

@@ -1,16 +1,23 @@
 package br.com.basis.abaco.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.EsforcoFase;
-
 import br.com.basis.abaco.repository.EsforcoFaseRepository;
 import br.com.basis.abaco.repository.search.EsforcoFaseSearchRepository;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,7 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing EsforcoFase.
@@ -31,7 +38,7 @@ public class EsforcoFaseResource {
     private final Logger log = LoggerFactory.getLogger(EsforcoFaseResource.class);
 
     private static final String ENTITY_NAME = "esforcoFase";
-        
+
     private final EsforcoFaseRepository esforcoFaseRepository;
 
     private final EsforcoFaseSearchRepository esforcoFaseSearchRepository;
@@ -131,7 +138,7 @@ public class EsforcoFaseResource {
      * SEARCH  /_search/esforco-fases?query=:query : search for the esforcoFase corresponding
      * to the query.
      *
-     * @param query the query of the esforcoFase search 
+     * @param query the query of the esforcoFase search
      * @return the result of the search
      */
     @GetMapping("/_search/esforco-fases")

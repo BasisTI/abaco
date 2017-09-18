@@ -5,9 +5,7 @@ import br.com.basis.abaco.repository.UploadedFilesRepository;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,15 +45,15 @@ public class UploadController {
             // Get the file and save it somewhere
             byte[] bytes = file.getBytes();
             String folderPath = this.servletContext.getRealPath(UPLOADED_FOLDER);
-            File directory  = new File(folderPath);
+            File directory = new File(folderPath);
             if (!directory.exists()) {
                 directory.mkdirs();
             }
 
-            byte[] bytesFileName = (file.getOriginalFilename()+String.valueOf(System.currentTimeMillis())).getBytes("UTF-8");
+            byte[] bytesFileName = (file.getOriginalFilename() + String.valueOf(System.currentTimeMillis())).getBytes("UTF-8");
             String filename = MessageDigest.getInstance("MD5").digest(bytesFileName).toString();
             String ext = FilenameUtils.getExtension(file.getOriginalFilename());
-            filename+="."+ext;
+            filename += "." + ext;
             Path path = Paths.get(folderPath + "/" + filename);
             Files.write(path, bytes);
 

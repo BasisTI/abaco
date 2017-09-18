@@ -1,22 +1,31 @@
 package br.com.basis.abaco.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import br.com.basis.abaco.domain.enumeration.MetodoContagem;
+import br.com.basis.abaco.domain.enumeration.TipoAnalise;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
-
-import br.com.basis.abaco.domain.enumeration.MetodoContagem;
-
-import br.com.basis.abaco.domain.enumeration.TipoAnalise;
+import java.util.Set;
 
 /**
  * <Enter note text here>
@@ -42,7 +51,7 @@ public class Analise implements Serializable {
     @Column(name = "tipo_contagem")
     private MetodoContagem tipoContagem;
 
-    @Column(name = "valor_ajuste", precision=10, scale=2)
+    @Column(name = "valor_ajuste", precision = 10, scale = 2)
     private BigDecimal valorAjuste;
 
     @Column(name = "pf_total")

@@ -5,7 +5,6 @@ import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.AuthorityRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,8 +39,8 @@ public class SocialService {
     private final UserSearchRepository userSearchRepository;
 
     public SocialService(UsersConnectionRepository usersConnectionRepository, AuthorityRepository authorityRepository,
-            PasswordEncoder passwordEncoder, UserRepository userRepository,
-            MailService mailService, UserSearchRepository userSearchRepository) {
+                         PasswordEncoder passwordEncoder, UserRepository userRepository,
+                         MailService mailService, UserSearchRepository userSearchRepository) {
 
         this.usersConnectionRepository = usersConnectionRepository;
         this.authorityRepository = authorityRepository;
@@ -117,7 +116,7 @@ public class SocialService {
 
     /**
      * @return login if provider manage a login like Twitter or Github otherwise email address.
-     *         Because provider like Google or Facebook didn't provide login or login like "12099388847393"
+     * Because provider like Google or Facebook didn't provide login or login like "12099388847393"
      */
     private String getLoginDependingOnProviderId(UserProfile userProfile, String providerId) {
         switch (providerId) {

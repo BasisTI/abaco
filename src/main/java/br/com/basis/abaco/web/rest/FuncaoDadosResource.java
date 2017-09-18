@@ -1,16 +1,23 @@
 package br.com.basis.abaco.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.FuncaoDados;
-
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,7 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing FuncaoDados.
@@ -95,9 +102,9 @@ public class FuncaoDadosResource {
     public List<FuncaoDados> getAllFuncaoDados() {
         log.debug("REST request to get all FuncaoDados");
         List<FuncaoDados> funcaoDados = funcaoDadosRepository.findAll();
-        funcaoDados.forEach(f->{
-            if (f.getAnalise().getFuncaoDados()!=null) f.getAnalise().getFuncaoDados().clear();
-            if (f.getAnalise().getFuncaoTransacaos()!=null) f.getAnalise().getFuncaoTransacaos().clear();
+        funcaoDados.forEach(f -> {
+            if (f.getAnalise().getFuncaoDados() != null) f.getAnalise().getFuncaoDados().clear();
+            if (f.getAnalise().getFuncaoTransacaos() != null) f.getAnalise().getFuncaoTransacaos().clear();
         });
         return funcaoDados;
     }
@@ -113,8 +120,9 @@ public class FuncaoDadosResource {
     public ResponseEntity<FuncaoDados> getFuncaoDados(@PathVariable Long id) {
         log.debug("REST request to get FuncaoDados : {}", id);
         FuncaoDados funcaoDados = funcaoDadosRepository.findOne(id);
-        if (funcaoDados.getAnalise().getFuncaoDados()!=null) funcaoDados.getAnalise().getFuncaoDados().clear();
-        if (funcaoDados.getAnalise().getFuncaoTransacaos()!=null) funcaoDados.getAnalise().getFuncaoTransacaos().clear();
+        if (funcaoDados.getAnalise().getFuncaoDados() != null) funcaoDados.getAnalise().getFuncaoDados().clear();
+        if (funcaoDados.getAnalise().getFuncaoTransacaos() != null)
+            funcaoDados.getAnalise().getFuncaoTransacaos().clear();
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDados));
     }
 

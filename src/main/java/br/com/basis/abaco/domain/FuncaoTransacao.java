@@ -1,18 +1,33 @@
 package br.com.basis.abaco.domain;
 
+import br.com.basis.abaco.domain.enumeration.Complexidade;
+import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.*;
-
-import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
-
-import br.com.basis.abaco.domain.enumeration.Complexidade;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * A FuncaoTransacao.
@@ -38,10 +53,10 @@ public class FuncaoTransacao implements Serializable {
     @Column(name = "complexidade")
     private Complexidade complexidade;
 
-    @Column(name = "pf", precision=10, scale=2)
+    @Column(name = "pf", precision = 10, scale = 2)
     private BigDecimal pf;
 
-    @Column(name = "grosspf", precision=10, scale=2)
+    @Column(name = "grosspf", precision = 10, scale = 2)
     private BigDecimal grossPF;
 
     @ManyToOne

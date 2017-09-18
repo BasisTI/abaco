@@ -1,22 +1,19 @@
 package br.com.basis.abaco.security.social;
 
 import br.com.basis.abaco.security.jwt.TokenProvider;
-
 import io.github.jhipster.config.JHipsterProperties;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.web.SignInAdapter;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.context.request.ServletWebRequest;
+
 import javax.servlet.http.Cookie;
 
 public class CustomSignInAdapter implements SignInAdapter {
@@ -32,14 +29,14 @@ public class CustomSignInAdapter implements SignInAdapter {
 
 
     public CustomSignInAdapter(UserDetailsService userDetailsService, JHipsterProperties jHipsterProperties,
-            TokenProvider tokenProvider) {
+                               TokenProvider tokenProvider) {
         this.userDetailsService = userDetailsService;
         this.jHipsterProperties = jHipsterProperties;
         this.tokenProvider = tokenProvider;
     }
 
     @Override
-    public String signIn(String userId, Connection<?> connection, NativeWebRequest request){
+    public String signIn(String userId, Connection<?> connection, NativeWebRequest request) {
         try {
             UserDetails user = userDetailsService.loadUserByUsername(userId);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

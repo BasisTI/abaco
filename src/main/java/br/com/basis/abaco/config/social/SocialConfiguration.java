@@ -1,12 +1,10 @@
 package br.com.basis.abaco.config.social;
 
-import br.com.basis.abaco.repository.SocialUserConnectionRepository;
 import br.com.basis.abaco.repository.CustomSocialUsersConnectionRepository;
+import br.com.basis.abaco.repository.SocialUserConnectionRepository;
 import br.com.basis.abaco.security.jwt.TokenProvider;
 import br.com.basis.abaco.security.social.CustomSignInAdapter;
-
 import io.github.jhipster.config.JHipsterProperties;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +30,7 @@ import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 
 /**
  * Basic Spring Social configuration.
- *
+ * <p>
  * <p>Creates the beans necessary to manage Connections to social services and
  * link accounts from those services to internal Users.</p>
  */
@@ -47,7 +45,7 @@ public class SocialConfiguration implements SocialConfigurer {
     private final Environment environment;
 
     public SocialConfiguration(SocialUserConnectionRepository socialUserConnectionRepository,
-            Environment environment) {
+                               Environment environment) {
 
         this.socialUserConnectionRepository = socialUserConnectionRepository;
         this.environment = environment;
@@ -55,7 +53,7 @@ public class SocialConfiguration implements SocialConfigurer {
 
     @Bean
     public ConnectController connectController(ConnectionFactoryLocator connectionFactoryLocator,
-            ConnectionRepository connectionRepository) {
+                                               ConnectionRepository connectionRepository) {
 
         ConnectController controller = new ConnectController(connectionFactoryLocator, connectionRepository);
         controller.setApplicationUrl(environment.getProperty("spring.application.url"));
@@ -124,7 +122,7 @@ public class SocialConfiguration implements SocialConfigurer {
 
     @Bean
     public SignInAdapter signInAdapter(UserDetailsService userDetailsService, JHipsterProperties jHipsterProperties,
-            TokenProvider tokenProvider) {
+                                       TokenProvider tokenProvider) {
         return new CustomSignInAdapter(userDetailsService, jHipsterProperties,
             tokenProvider);
     }

@@ -1,8 +1,11 @@
 package br.com.basis.abaco.repository;
 
 import br.com.basis.abaco.domain.SocialUserConnection;
-
-import org.springframework.social.connect.*;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionFactoryLocator;
+import org.springframework.social.connect.ConnectionKey;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.connect.UsersConnectionRepository;
 
 import java.util.List;
 import java.util.Set;
@@ -27,7 +30,9 @@ public class CustomSocialUsersConnectionRepository implements UsersConnectionRep
         return socialUserConnections.stream()
             .map(SocialUserConnection::getUserId)
             .collect(Collectors.toList());
-    };
+    }
+
+    ;
 
     @Override
     public Set<String> findUserIdsConnectedTo(String providerId, Set<String> providerUserIds) {
@@ -36,7 +41,9 @@ public class CustomSocialUsersConnectionRepository implements UsersConnectionRep
         return socialUserConnections.stream()
             .map(SocialUserConnection::getUserId)
             .collect(Collectors.toSet());
-    };
+    }
+
+    ;
 
     @Override
     public ConnectionRepository createConnectionRepository(String userId) {
@@ -44,5 +51,7 @@ public class CustomSocialUsersConnectionRepository implements UsersConnectionRep
             throw new IllegalArgumentException("userId cannot be null");
         }
         return new CustomSocialConnectionRepository(userId, socialUserConnectionRepository, connectionFactoryLocator);
-    };
+    }
+
+    ;
 }

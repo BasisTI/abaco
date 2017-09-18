@@ -1,13 +1,24 @@
 package br.com.basis.abaco.repository;
 
 import br.com.basis.abaco.domain.SocialUserConnection;
-
-import org.springframework.social.connect.*;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionData;
+import org.springframework.social.connect.ConnectionFactory;
+import org.springframework.social.connect.ConnectionFactoryLocator;
+import org.springframework.social.connect.ConnectionKey;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.connect.NoSuchConnectionException;
+import org.springframework.social.connect.NotConnectedException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CustomSocialConnectionRepository implements ConnectionRepository {
@@ -118,7 +129,7 @@ public class CustomSocialConnectionRepository implements ConnectionRepository {
     public void updateConnection(Connection<?> connection) {
         SocialUserConnection socialUserConnection = socialUserConnectionRepository.findOneByUserIdAndProviderIdAndProviderUserId(userId, connection.getKey().getProviderId(), connection.getKey().getProviderUserId());
         if (socialUserConnection != null) {
-            SocialUserConnection socialUserConnectionToUdpate =  connectionToUserSocialConnection(connection, socialUserConnection.getRank());
+            SocialUserConnection socialUserConnectionToUdpate = connectionToUserSocialConnection(connection, socialUserConnection.getRank());
             socialUserConnectionToUdpate.setId(socialUserConnection.getId());
             socialUserConnectionRepository.save(socialUserConnectionToUdpate);
         }

@@ -1,7 +1,6 @@
 package br.com.basis.abaco.security;
 
 import br.com.basis.abaco.config.Constants;
-
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 

@@ -1,13 +1,12 @@
 package br.com.basis.abaco.service.dto;
 
 import br.com.basis.abaco.config.Constants;
-
 import br.com.basis.abaco.domain.Authority;
 import br.com.basis.abaco.domain.User;
-
 import org.hibernate.validator.constraints.Email;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -64,9 +63,9 @@ public class UserDTO {
     }
 
     public UserDTO(Long id, String login, String firstName, String lastName,
-        String email, boolean activated, String imageUrl, String langKey,
-        String createdBy, ZonedDateTime createdDate, String lastModifiedBy, ZonedDateTime lastModifiedDate,
-        Set<String> authorities) {
+                   String email, boolean activated, String imageUrl, String langKey,
+                   String createdBy, ZonedDateTime createdDate, String lastModifiedBy, ZonedDateTime lastModifiedDate,
+                   Set<String> authorities) {
 
         this.id = id;
         this.login = login;

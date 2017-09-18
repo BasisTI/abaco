@@ -3,7 +3,6 @@ package br.com.basis.abaco.repository;
 import br.com.basis.abaco.config.Constants;
 import br.com.basis.abaco.config.audit.AuditEventConverter;
 import br.com.basis.abaco.domain.PersistentAuditEvent;
-
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.actuate.audit.AuditEventRepository;
 import org.springframework.stereotype.Repository;
@@ -29,7 +28,7 @@ public class CustomAuditEventRepository implements AuditEventRepository {
     private final AuditEventConverter auditEventConverter;
 
     public CustomAuditEventRepository(PersistenceAuditEventRepository persistenceAuditEventRepository,
-            AuditEventConverter auditEventConverter) {
+                                      AuditEventConverter auditEventConverter) {
 
         this.persistenceAuditEventRepository = persistenceAuditEventRepository;
         this.auditEventConverter = auditEventConverter;
