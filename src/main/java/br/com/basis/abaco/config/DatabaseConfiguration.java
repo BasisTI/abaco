@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories("br.com.basis.abaco.repository")
-@EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
+@EnableJpaAuditing(auditorAwareRef = "springSecurityUserAuditorAware")
 @EnableTransactionManagement
 @EnableElasticsearchRepositories("br.com.basis.abaco.repository.search")
 public class DatabaseConfiguration {

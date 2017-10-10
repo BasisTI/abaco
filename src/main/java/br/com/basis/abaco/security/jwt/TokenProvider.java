@@ -1,5 +1,7 @@
 package br.com.basis.abaco.security.jwt;
 
+import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.security.UserDetailsCustom;
 import io.github.jhipster.config.JHipsterProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -10,6 +12,7 @@ import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +24,7 @@ import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -37,6 +41,9 @@ public class TokenProvider {
     private long tokenValidityInMillisecondsForRememberMe;
 
     private final JHipsterProperties jHipsterProperties;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public TokenProvider(JHipsterProperties jHipsterProperties) {
         this.jHipsterProperties = jHipsterProperties;
@@ -85,7 +92,9 @@ public class TokenProvider {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
-        User principal = new User(claims.getSubject(), "", authorities);
+        Optional<br.com.basis.abaco.domain.User> userFromDatabase = userRepository.findOneWithAuthoritiesByLogin(claims.getSubject().toLowerCase());
+
+        UserDetailsCustom principal = new UserDetailsCustom(claims.getSubject(), "", authorities, userFromDatabase.get());
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }

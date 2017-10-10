@@ -5,24 +5,18 @@ import br.com.basis.abaco.domain.enumeration.TipoAnalise;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -35,6 +29,7 @@ import java.util.Set;
 @Table(name = "analise")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "analise")
+@EntityListeners(AuditingEntityListener.class)
 public class Analise implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -88,6 +83,22 @@ public class Analise implements Serializable {
 
     @ManyToOne
     private Organizacao organizacao;
+
+    @CreatedDate
+    private Date created;
+
+    @LastModifiedDate
+    private Date edited;
+
+    @ManyToOne
+    @CreatedBy
+    @JoinColumn
+    private User createdBy;
+
+    @ManyToOne
+    @LastModifiedBy
+    @JoinColumn
+    private User editedBy;
 
 
     @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
@@ -324,6 +335,39 @@ public class Analise implements Serializable {
             return false;
         }
         return Objects.equals(id, analise.id);
+    }
+
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getEdited() {
+        return edited;
+    }
+
+    public void setEdited(Date edited) {
+        this.edited = edited;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public User getEditedBy() {
+        return editedBy;
+    }
+
+    public void setEditedBy(User editedBy) {
+        this.editedBy = editedBy;
     }
 
     @Override

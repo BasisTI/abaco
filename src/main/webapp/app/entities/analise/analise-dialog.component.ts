@@ -54,6 +54,9 @@ export class AnaliseDialogComponent implements OnInit {
     @ViewChild('staticTabs') staticTabs: TabsetComponent;
     @ViewChild('modal') modal1: ModalComponent;
     @ViewChild('warningUnsupportedType') unsupportedTypeWarning:ModalComponent;
+    @ViewChild('closeFormModal') closeFormModal:ModalComponent;
+
+
 
     // Define that RET and DET are disabled/enabled
     is_disabled:boolean=false;
@@ -385,24 +388,35 @@ export class AnaliseDialogComponent implements OnInit {
         });
     }
 
+    /**
+     *  Show confirm modal form for saving
+     */
+    showSaveDialog(){
+        this.closeFormModal.open();
 
-    save () {
+    }
+
+    save (closeForm:boolean) {
         this.prepareFuncaoDadosArray();
         this.prepareFuncaoTransacaoArray();
         this.isSaving = true;
         if (this.analise.id !== undefined) {
             this.analiseService.update(this.analise)
-                .subscribe((res: Analise) => this.onSaveSuccess(res), (res: Response) => this.onSaveError(res.json()));
+                .subscribe((res: Analise) => this.onSaveSuccess(res, closeForm), (res: Response) => this.onSaveError(res.json()));
         } else {
             this.analiseService.create(this.analise)
-                .subscribe((res: Analise) => this.onSaveSuccess(res), (res: Response) => this.onSaveError(res.json()));
+                .subscribe((res: Analise) => this.onSaveSuccess(res, closeForm), (res: Response) => this.onSaveError(res.json()));
         }
     }
 
-    private onSaveSuccess (result: Analise) {
+    private onSaveSuccess (result: Analise, closeForm:boolean) {
         this.eventManager.broadcast({ name: 'analiseListModification', content: 'OK'});
         this.isSaving = false;
-        this.router.navigate(['analise'])
+        if (closeForm) {
+            //this.closeFormModal.close();
+            //this.router.navigate(['analise']);
+            this.clear();
+        }
 
     }
 

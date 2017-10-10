@@ -53,7 +53,9 @@
         },
         "titles":{
             "confirm":"Confirm",
-            "warning":"Warning"
+            "warning":"Warning",
+            "yes":"Yes",
+            "no":"No"
         },
         "form": {
             "username": "Username",

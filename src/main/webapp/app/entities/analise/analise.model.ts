@@ -35,7 +35,8 @@ export class Analise {
         public organizacao?:Organizacao,
         public funcaoDados?: FuncaoDados[],
         public funcaoTransacaos?: FuncaoTransacao[],
-
+        public created?:Date,
+        public edited?:Date
     ) {
     }
 }

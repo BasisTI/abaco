@@ -56,6 +56,7 @@
             "EO":"SE",
             "EQ":"CE",
             "confirmRemove":"Atenção!!! Todos os processos serão removidos. Você deseja continuar?",
+            "confirmClose":"The analysis has been saved, do you want to continue editing?",
             "sustantation":"Sustentação",
             "organization":"Organization",
             "contract":"Contrato",
@@ -69,7 +70,9 @@
             "fileTooLarge":"File too large",
             "fileAlreadyExists":"File already exists",
             "grosspf":"Gross PF Total",
-            "factorValue":"Factor"
+            "factorValue":"Factor",
+            "created":"Created date",
+            "edited":"Edited date"
         }
     }
 }

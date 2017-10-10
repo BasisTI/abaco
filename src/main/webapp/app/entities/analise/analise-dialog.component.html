@@ -3,7 +3,7 @@
     .file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
 </style>
 
-<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm" >
+<form name="editForm" role="form" novalidate (ngSubmit)="save(true)" #editForm="ngForm" >
 
     <div class="modal-header">
         <h4 class="modal-title" id="myAnaliseLabel" jhiTranslate="abacoApp.analise.home.createOrEditLabel">Create or edit a Analise</h4>
@@ -674,7 +674,7 @@
         <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">
             <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
         </button>
-        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+        <button type="button" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary" (click)="showSaveDialog()">
             <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
         </button>
     </div>
@@ -691,6 +691,21 @@
         <modal-footer>
             <button type="button" class="btn btn-default" data-dismiss="modal" (click)="oncOuntingTypeDismiss()" jhiTranslate="entity.action.cancel">Cancel</button>
             <button type="button" class="btn btn-primary" (click)="onCountingTypeConfirm(true)" jhiTranslate="entity.action.continue">Continue</button>
+        </modal-footer>
+    </modal>
+
+
+    <modal #closeFormModal>
+        <modal-header [show-close]="true">
+            <h4 class="modal-title"> <span  jhiTranslate="global.titles.confirm">Title</span></h4>
+        </modal-header>
+        <modal-body>
+            <span jhiTranslate="abacoApp.analise.confirmClose">Do you want continue editing?</span>
+        </modal-body>
+
+        <modal-footer>
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="save(false)" jhiTranslate="global.titles.yes">Yes</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="save(true)" jhiTranslate="global.titles.no">No</button>
         </modal-footer>
     </modal>
 

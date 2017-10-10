@@ -109,6 +109,7 @@ export class ContratoPopupComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.routeSub = this.route.params.subscribe(params => {
             if ( params['id'] ) {
+
                 this.modalRef = this.contratoPopupService
                     .open(ContratoDialogComponent, params['id']);
             } else {
