@@ -75,7 +75,7 @@ export class AnaliseDialogComponent implements OnInit {
     allModules: Modulo[];
     modules: Modulo[];
     eventSubscriber: Subscription;
-     eventFuncSubscriber: Subscription;
+    eventFuncSubscriber: Subscription;
     selectedModulo: Modulo;
     selectedFunc: Funcionalidade;
     selectedFactor: FatorAjuste;
@@ -132,7 +132,7 @@ export class AnaliseDialogComponent implements OnInit {
     modalLabel:String;
 
     constructor(
-       // public activeModal: NgbActiveModal,
+        // public activeModal: NgbActiveModal,
         private jhiLanguageService: JhiLanguageService,
         private alertService: AlertService,
         private analiseService: AnaliseService,
@@ -226,7 +226,7 @@ export class AnaliseDialogComponent implements OnInit {
     clear () {
         //window.history.back();
         this.router.navigate(['analise'])
-       // this.activeModal.dismiss('cancel');
+        // this.activeModal.dismiss('cancel');
     }
 
 
@@ -276,58 +276,58 @@ export class AnaliseDialogComponent implements OnInit {
      */
     load(id){
         this.analiseService.find(id).subscribe(analise=>{
-        this.analise=analise;
-        this.organizationSelect(null);
+            this.analise=analise;
+            this.organizationSelect(null);
 
-        this.moduloService.query().subscribe(
-            (res: Response) => { this.allModules = res.json();  this.onSystemChange(null);}, (res: Response) => this.onError(res.json()));
-        this.registerChangeInModulos();
-        this.registerChangeInFunc();
+            this.moduloService.query().subscribe(
+                (res: Response) => { this.allModules = res.json();  this.onSystemChange(null);}, (res: Response) => this.onError(res.json()));
+            this.registerChangeInModulos();
+            this.registerChangeInFunc();
 
 
-        if (this.analise.funcaoTransacaos!=null) {
-            this.analise.funcaoTransacaos.forEach(f=>{
-                let process:Process = new Process();
-                process.convertFromTransacao(f, this.analise.tipoContagem);
-                this.listOfTranProcess.push(process);
-            });
-        }
-        this.recalculateTranTotals();
-
-        if (this.analise.funcaoDados!=null) {
-
-            for (var index in this.analise.funcaoDados) {
-                let funcaoDados:FuncaoDados = this.analise.funcaoDados[index] as FuncaoDados;
-                let process:Process = new Process();
-                process.id = funcaoDados.id;
-                process.pf = funcaoDados.pf;
-                process.grossPF = funcaoDados.grossPF;
-                process.func = funcaoDados.funcionalidade;
-                process.factor = funcaoDados.fatorAjuste;
-                process.module = funcaoDados.funcionalidade.modulo;
-                process.detStr = funcaoDados.detStr;
-                process.retStr = funcaoDados.retStr;
-                process.name = funcaoDados.name;
-                process.sustantation = funcaoDados.sustantation;
-                process.files = [].concat(funcaoDados.files);
-
-                if (funcaoDados.tipo.toString() == 'ALI') {
-                    process.classification = LogicalFile.ILF;
-                } else {
-                    process.classification = LogicalFile.EIF;
-                }
-                switch (funcaoDados.complexidade) {
-                    case Complexidade.SEM: process.complexity = Complexity.NONE;break;
-                    case Complexidade.BAIXA: process.complexity = Complexity.LOW; break;
-                    case Complexidade.MEDIA: process.complexity = Complexity.MEDIUM; break;
-                    case Complexidade.ALTA: process.complexity = Complexity.HIGH; break;
-                }
-
-                process.calculate(this.analise.tipoContagem);
-                this.listOfProcess.push(process);
-
+            if (this.analise.funcaoTransacaos!=null) {
+                this.analise.funcaoTransacaos.forEach(f=>{
+                    let process:Process = new Process();
+                    process.convertFromTransacao(f, this.analise.tipoContagem);
+                    this.listOfTranProcess.push(process);
+                });
             }
-            this.recalculateTotals();
+            this.recalculateTranTotals();
+
+            if (this.analise.funcaoDados!=null) {
+
+                for (var index in this.analise.funcaoDados) {
+                    let funcaoDados:FuncaoDados = this.analise.funcaoDados[index] as FuncaoDados;
+                    let process:Process = new Process();
+                    process.id = funcaoDados.id;
+                    process.pf = funcaoDados.pf;
+                    process.grossPF = funcaoDados.grossPF;
+                    process.func = funcaoDados.funcionalidade;
+                    process.factor = funcaoDados.fatorAjuste;
+                    process.module = funcaoDados.funcionalidade.modulo;
+                    process.detStr = funcaoDados.detStr;
+                    process.retStr = funcaoDados.retStr;
+                    process.name = funcaoDados.name;
+                    process.sustantation = funcaoDados.sustantation;
+                    process.files = [].concat(funcaoDados.files);
+
+                    if (funcaoDados.tipo.toString() == 'ALI') {
+                        process.classification = LogicalFile.ILF;
+                    } else {
+                        process.classification = LogicalFile.EIF;
+                    }
+                    switch (funcaoDados.complexidade) {
+                        case Complexidade.SEM: process.complexity = Complexity.NONE;break;
+                        case Complexidade.BAIXA: process.complexity = Complexity.LOW; break;
+                        case Complexidade.MEDIA: process.complexity = Complexity.MEDIUM; break;
+                        case Complexidade.ALTA: process.complexity = Complexity.HIGH; break;
+                    }
+
+                    process.calculate(this.analise.tipoContagem);
+                    this.listOfProcess.push(process);
+
+                }
+                this.recalculateTotals();
 
             }
 
@@ -343,24 +343,24 @@ export class AnaliseDialogComponent implements OnInit {
         if (!this.analise.organizacao){
             return;
         }
-       this.sistemaService.findByOrganization(this.analise.organizacao).subscribe(
-           (res: Response) => {
-               this.sistemas = res.json();
-               if (event) {
-                   this.analise.sistema=null;
-               }
-           }, (res: Response) => this.onError(res.json()));
-
-       this.contratoService.findByOrganization(this.analise.organizacao).subscribe(
-           (res: Response) => {
-               this.contracts = res.json();
-               if (event) {
-                   this.analise.contrato=null;
-                   this.updateValueFactorsList();
-                   this.updateFactorValue();
-                   this.analise.valorAjuste=0;
+        this.sistemaService.findByOrganization(this.analise.organizacao).subscribe(
+            (res: Response) => {
+                this.sistemas = res.json();
+                if (event) {
+                    this.analise.sistema=null;
                 }
-           }, (res: Response) => this.onError(res.json()));
+            }, (res: Response) => this.onError(res.json()));
+
+        this.contratoService.findByOrganization(this.analise.organizacao).subscribe(
+            (res: Response) => {
+                this.contracts = res.json();
+                if (event) {
+                    this.analise.contrato=null;
+                    this.updateValueFactorsList();
+                    this.updateFactorValue();
+                    this.analise.valorAjuste=0;
+                }
+            }, (res: Response) => this.onError(res.json()));
     }
 
 
@@ -371,7 +371,7 @@ export class AnaliseDialogComponent implements OnInit {
 
         this.analise.funcaoDados = [];
         this.listOfProcess.forEach(process => {
-        let funcaoDados:FuncaoDados = new FuncaoDados();
+            let funcaoDados:FuncaoDados = new FuncaoDados();
             funcaoDados.convertFromProcess(process);
             this.analise.funcaoDados.push(funcaoDados);
         });
@@ -625,7 +625,7 @@ export class AnaliseDialogComponent implements OnInit {
     getIndexOfProcessById(list:Process[], id:number){
         let searchedIndex=-1;
         searchedIndex = list.findIndex(process=>{
-           return process.id == id;
+            return process.id == id;
         });
         return searchedIndex;
     }
@@ -695,8 +695,8 @@ export class AnaliseDialogComponent implements OnInit {
         let ext:String = uploadingFile.originalName.split('.').pop();
 
         if (!(this.allowedExtensions.find(e=>{
-           return e.toLocaleLowerCase().trim()==ext.trim();
-        }))){
+                return e.toLocaleLowerCase().trim()==ext.trim();
+            }))){
             uploadingFile.setAbort();
             this.showAlert("usupportedFileType");
             return;
@@ -726,7 +726,7 @@ export class AnaliseDialogComponent implements OnInit {
     removeFile(file) {
         let index:number=-1;
         index=this.files.findIndex(f=>{
-           return f.id==file.id;
+            return f.id==file.id;
         });
 
         if (index>=0) {
@@ -791,7 +791,7 @@ export class AnaliseDialogComponent implements OnInit {
 
 
     savePreviousValue(){
-     this.previousCountingType = this.analise.tipoContagem;
+        this.previousCountingType = this.analise.tipoContagem;
     }
 
 
@@ -853,7 +853,7 @@ export class AnaliseDialogComponent implements OnInit {
         //    this.previousCountingType = this.analise.tipoContagem;
         //} else {
         //    let p = this.previousCountingType;
-            //alert(JSON.stringify(p));
+        //alert(JSON.stringify(p));
         //    this.analise.tipoContagem=null;
         //    this.changeDetector.detectChanges();
         //    this.analise.tipoContagem=p;
@@ -874,9 +874,9 @@ export class AnaliseDialogComponent implements OnInit {
 
 
     getModuleById(id:number){
-         let module:Modulo = null;
+        let module:Modulo = null;
         this.modules.forEach(m=>{
-           if (m.id==id) module=m;
+            if (m.id==id) module=m;
         });
         return module;
     }
@@ -987,24 +987,24 @@ export class AnaliseDialogComponent implements OnInit {
             this.totalRow.grossPF+=this.summary[index].grossPF;
 
         }
-      let adjustTotal = (this.totalRow.pf!=null)?this.totalRow.pf:0;
-      if (this.analise.contrato!=null && this.analise.contrato.manual!=null && this.analise.contrato.manual) {
-          if (this.analise.tipoContagem!=null && this.analise.tipoContagem.toString()=="ESTIMADA") {
-              adjustTotal+=adjustTotal*this.analise.contrato.manual.valorVariacaoEstimada;
-          }
-          if (this.analise.tipoContagem!=null && this.analise.tipoContagem.toString()=="INDICATIVA") {
-              adjustTotal+=adjustTotal*this.analise.contrato.manual.valorVariacaoIndicativa;
-          }
+        let adjustTotal = (this.totalRow.pf!=null)?this.totalRow.pf:0;
+        if (this.analise.contrato!=null && this.analise.contrato.manual!=null && this.analise.contrato.manual) {
+            if (this.analise.tipoContagem!=null && this.analise.tipoContagem.toString()=="ESTIMADA") {
+                adjustTotal+=adjustTotal*this.analise.contrato.manual.valorVariacaoEstimada;
+            }
+            if (this.analise.tipoContagem!=null && this.analise.tipoContagem.toString()=="INDICATIVA") {
+                adjustTotal+=adjustTotal*this.analise.contrato.manual.valorVariacaoIndicativa;
+            }
 
 
 
-      }
+        }
         //this.analise.valorAjuste = adjustTotal-this.totalRow.pf;
         if (this.analise.valorAjuste!=null && this.analise.valorAjuste!=0) {
             adjustTotal=adjustTotal*this.analise.valorAjuste;
         }
-      this.analise.adjustPFTotal = adjustTotal.toFixed(2).toString();
-      this.analise.pfTotal = this.totalRow.pf.toFixed(2).toString();
+        this.analise.adjustPFTotal = adjustTotal.toFixed(2).toString();
+        this.analise.pfTotal = this.totalRow.pf.toFixed(2).toString();
     }
 
 

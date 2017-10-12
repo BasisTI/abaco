@@ -2,9 +2,9 @@
     "abacoApp": {
         "MetodoContagem" : {
             "null": "",
-            "DETALHADA": "DETALHADA (IFPUG)",
-            "INDICATIVA": "INDICATIVA (NESMA)",
-            "ESTIMADA": "ESTIMADA (NESMA)"
+            "DETALHADA": "DETALHADA",
+            "INDICATIVA": "INDICATIVA",
+            "ESTIMADA": "ESTIMADA"
         }
     }
 }

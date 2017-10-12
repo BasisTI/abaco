@@ -25,6 +25,7 @@
                 "alr": "Alr",
                 "validation":"Validação",
                 "team":"Equipe",
+                "analise": "Analise",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

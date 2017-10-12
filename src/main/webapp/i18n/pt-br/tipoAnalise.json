@@ -1,9 +1,10 @@
 {
     "abacoApp": {
         "TipoAnalise" : {
+            "null": "",
             "DESENVOLVIMENTO": "DESENVOLVIMENTO",
             "MELHORIA": "MELHORIA",
-            "APLICACAO": "APLICAÇÃO"
+            "APLICACAO": "APLICACAO"
         }
     }
 }

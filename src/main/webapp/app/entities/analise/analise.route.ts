@@ -11,11 +11,29 @@ import { AnaliseDeletePopupComponent } from './analise-delete-dialog.component';
 
 import { Principal } from '../../shared';
 
+@Injectable()
+export class AnaliseResolvePagingParams implements Resolve<any> {
+
+  constructor(private paginationUtil: PaginationUtil) {}
+
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+      let page = route.queryParams['page'] ? route.queryParams['page'] : '1';
+      let sort = route.queryParams['sort'] ? route.queryParams['sort'] : 'id,asc';
+      return {
+          page: this.paginationUtil.parsePage(page),
+          predicate: this.paginationUtil.parsePredicate(sort),
+          ascending: this.paginationUtil.parseAscending(sort)
+    };
+  }
+}
 
 export const analiseRoute: Routes = [
   {
     path: 'analise',
     component: AnaliseComponent,
+    resolve: {
+      'pagingParams': AnaliseResolvePagingParams
+    },
     data: {
         authorities: ['ROLE_USER'],
         pageTitle: 'abacoApp.analise.home.title'
@@ -47,16 +65,16 @@ export const analisePopupRoute: Routes = [
     },
     outlet: 'popup'
   },
-  //{
-  //  path: 'analise/:id/edit',
-  //  component: AnalisePopupComponent,
-  //  data: {
-  //      authorities: ['ROLE_USER'],
-  //      pageTitle: 'abacoApp.analise.home.title'
-  //  },
-  //  outlet: 'popup'
-  //},
-  {
+    //{
+    //  path: 'analise/:id/edit',
+    //  component: AnalisePopupComponent,
+    //  data: {
+    //      authorities: ['ROLE_USER'],
+    //      pageTitle: 'abacoApp.analise.home.title'
+    //  },
+    //  outlet: 'popup'
+    //},
+    {
     path: 'analise/:id/delete',
     component: AnaliseDeletePopupComponent,
     data: {

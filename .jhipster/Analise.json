@@ -82,7 +82,7 @@
   ],
   "changelogDate": "20170307193242",
   "dto": "no",
-  "pagination": "no",
+  "pagination": "pagination",
   "service": "no",
   "javadoc": "<Enter note text here>",
   "entityTableName": "analise"

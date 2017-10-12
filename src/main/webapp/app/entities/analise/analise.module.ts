@@ -15,7 +15,7 @@ import {
     AnaliseDetailComponent,
     AnaliseDialogComponent,
     AnalisePopupComponent,
-
+    AnaliseResolvePagingParams,
     AnaliseDeletePopupComponent,
     AnaliseDeleteDialogComponent,
 
@@ -55,6 +55,7 @@ let ENTITY_STATES = [
     providers: [
         AnaliseService,
         AnalisePopupService,
+        AnaliseResolvePagingParams
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
