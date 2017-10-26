@@ -301,6 +301,12 @@ angular2-cookie@1.2.6:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/angular2-cookie/-/angular2-cookie-1.2.6.tgz#8fa845531e777adb042fe2f339c0040f6ddbf09d"
 
+angular2-datatable@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/angular2-datatable/-/angular2-datatable-0.6.0.tgz#ca008f74087f0cb87da5709ed2f2d1d061772632"
+  dependencies:
+    lodash "^4.0.0"
+
 angular2-infinite-scroll@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/angular2-infinite-scroll/-/angular2-infinite-scroll-0.3.0.tgz#817aec176e2f3b92124b63398b438932b25fe1eb"
@@ -4853,6 +4859,18 @@ ng-jhipster@0.1.9:
   dependencies:
     ng2-translate "4.2.0"
 
+ng-tether@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/ng-tether/-/ng-tether-0.1.0.tgz#96fe069930cf8fe10f6a0e59b02a4d5b4a002ebf"
+
+ng2-bs3-modal@^0.10.4:
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/ng2-bs3-modal/-/ng2-bs3-modal-0.10.4.tgz#80f350cd3f7346193c8f9324c899d58db1714581"
+
+ng2-file-upload@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/ng2-file-upload/-/ng2-file-upload-1.2.1.tgz#5563c5dfd6f43fbfbe815c206e343464a0a6a197"
+
 ng2-input-mask@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/ng2-input-mask/-/ng2-input-mask-0.0.7.tgz#d64f67e23d38778b4ca1e31a451cbe4990769d9e"
@@ -4871,6 +4889,10 @@ ng2-input-mask@0.0.7:
 ng2-translate@4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/ng2-translate/-/ng2-translate-4.2.0.tgz#83bc8feca329b5fc56a636e36073241c6280c659"
+
+ng2-uploader@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ng2-uploader/-/ng2-uploader-2.0.0.tgz#5b81140cd813552d57bf4578da57edc5261e93e7"
 
 ng2-webstorage@1.5.0:
   version "1.5.0"
@@ -7148,7 +7170,7 @@ tempfile@^1.0.0:
     os-tmpdir "^1.0.0"
     uuid "^2.0.1"
 
-tether@1.4.0, tether@^1.4.0:
+tether@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/tether/-/tether-1.4.0.tgz#0f9fa171f75bf58485d8149e94799d7ae74d1c1a"
 
