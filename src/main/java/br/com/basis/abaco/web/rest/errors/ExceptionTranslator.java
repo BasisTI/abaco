@@ -82,7 +82,7 @@ public class ExceptionTranslator {
         if (log.isDebugEnabled()) {
             log.error(ex.getMessage(), ex);
         } else {
-            log.error(ex.getMessage());
+            log.error(ex.getMessage(), ex);
         }
         ResponseStatus responseStatus = AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class);
         if (responseStatus != null) {
