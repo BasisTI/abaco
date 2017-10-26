@@ -5,7 +5,8 @@
                 "title": "Analises",
                 "createLabel": "Créer un nouveau Analise",
                 "createOrEditLabel": "Créer ou éditer un Analise",
-                "search": "Recherche pour Analise"
+                "search": "Recherche pour Analise",
+                "reports":"Reports"
             },
             "created": "Un nouveau Analise a été créé avec l'identifiant {{ param }}",
             "updated": "Le Analise avec l'identifiant {{ param }} a été mis à jour",

@@ -102,7 +102,7 @@ public class FuncaoDadosResource {
     public List<FuncaoDados> getAllFuncaoDados() {
         log.debug("REST request to get all FuncaoDados");
         List<FuncaoDados> funcaoDados = funcaoDadosRepository.findAll();
-        funcaoDados.forEach(f -> {
+        funcaoDados.stream().filter(f->f.getAnalise()!=null).forEach(f -> {
             if (f.getAnalise().getFuncaoDados() != null) {
                 f.getAnalise().getFuncaoDados().clear();
             }

@@ -5,7 +5,8 @@
                 "title": "Analises",
                 "createLabel": "Create a new Analise",
                 "createOrEditLabel": "Create or edit a Analise",
-                "search": "Search for Analise"
+                "search": "Search for Analise",
+                "reports":"Reports"
             },
             "created": "A new Analise is created with identifier {{ param }}",
             "updated": "A Analise is updated with identifier {{ param }}",
@@ -73,7 +74,10 @@
             "grosspf":"Gross PF Total",
             "factorValue":"Factor",
             "created":"Created date",
-            "edited":"Edited date"
+            "edited":"Edited date",
+            "reportType":"Report Type",
+            "simple":"Simple",
+            "detailed":"Detailed"
 
         }
     }

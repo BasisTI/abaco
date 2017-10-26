@@ -139,7 +139,7 @@ public class FuncaoTransacao implements Serializable {
     }
 
     public BigDecimal getGrossPF() {
-        return grossPF;
+        return grossPF==null?BigDecimal.ZERO:grossPF;
     }
 
     public void setGrossPF(BigDecimal grossPF) {

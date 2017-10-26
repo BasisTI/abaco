@@ -1,12 +1,14 @@
 <div>
     <h2>
         <span jhiTranslate="abacoApp.analise.home.title">Analises</span>
+
         <button class="btn btn-primary float-right create-analise" [routerLink]="['/', { outlets: { popup: ['analise-new'] } }]">
             <span class="fa fa-plus"></span>
             <span class="hidden-sm-down"  jhiTranslate="abacoApp.analise.home.createLabel">
             Create new Analise
             </span>
         </button>
+
     </h2>
     <jhi-alert></jhi-alert>
     <div class="row">
@@ -89,6 +91,14 @@
                             <span class="fa fa-remove"></span>
                             <!-- <span class="hidden-md-down" jhiTranslate="entity.action.delete">Delete</span>-->
                         </button>
+                        <button type="button"
+                                (click)="showReportForm(analise)"
+
+                                class="btn btn-toolbar btn-sm">
+                            <span class="fa fa-file-pdf-o"></span>
+                            <!-- <span class="hidden-md-down" jhiTranslate="entity.action.delete">Delete</span>-->
+                        </button>
+
                     </div>
                 </td>
             </tr>
@@ -103,4 +113,43 @@
                 <ngb-pagination [collectionSize]="totalItems" [(page)]="page" (pageChange)="loadPage(page)"></ngb-pagination>
             </div>
         </div>
+
+
+    <modal #reportModal>
+        <modal-header [show-close]="true">
+            <h4 class="modal-title"> <span  jhiTranslate="global.titles.confirm">Title</span></h4>
+        </modal-header>
+        <modal-body>
+            <div class="form-group">
+                <label jhiTranslate="abacoApp.analise.organization" for="field_organ">Organization</label>
+                <span id="field_organ">{{selectedAnalise?.organizacao?.nome}} </span>
+
+            </div>
+            <div class="form-group">
+                <label jhiTranslate="abacoApp.analise.sistema" for="field_sistema">Sistema</label>
+                <span id="field_sistema">{{selectedAnalise?.numeroOs}} </span>
+            </div>
+            <div class="form-group">
+                <label class="form-control-label" jhiTranslate="abacoApp.analise.tipoAnalise" for="field_tipoAnalise">Tipo Analise</label>
+                <span id="field_tipoAnalise">{{selectedAnalise?.tipoAnalise}} </span>
+            </div>
+            <div class="form-group">
+                <label class="form-control-label" jhiTranslate="abacoApp.analise.reportType">Report Type</label>
+                <div style="margin-left:20px">
+                    <input style="padding-top: 3px;padding-left:0px;margin-top: 3px;" type="radio" name="reportType" value="{{REPORT_SIMPLE_TYPE}}" [(ngModel)]="selectType" checked>
+                    <span jhiTranslate="abacoApp.analise.simple">Simple</span>
+                </div>
+                <div style="margin-left:20px;margin-top: 7px;">
+                    <input style="padding-top: 3px;padding-left:0px;margin-top: 3px;" type="radio" name="reportType" value="{{REPORT_DETAILED_TYPE}}" [(ngModel)]="selectType">
+                    <span jhiTranslate="abacoApp.analise.detailed">Detailed</span>
+                </div>
+            </div>
+        </modal-body>
+
+        <modal-footer>
+            <button type="button" class="btn btn-default" data-dismiss="modal" jhiTranslate="entity.action.cancel">Cancel</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onNavigate()" jhiTranslate="entity.action.continue">Continue</button>
+        </modal-footer>
+    </modal>
+
 </div>

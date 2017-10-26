@@ -91,7 +91,7 @@ export class Process{
         this.calculateRetDet();
         this.complexity = Complexity.LOW;
         if (countingType.toString()=="ESTIMADA"){ // If couting type is ESTMADA - Complexity is Medium
-            this.complexity = Complexity.MEDIUM;
+            this.complexity = Complexity.LOW;
         } else { // Calculate Complexity by REt AND DET values
 
             if (this.ret == 1) {

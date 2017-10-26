@@ -81,7 +81,7 @@ public class Analise implements Serializable {
     @ManyToOne
     private Contrato contrato;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Organizacao organizacao;
 
     @CreatedDate

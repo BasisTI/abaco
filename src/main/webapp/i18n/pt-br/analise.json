@@ -5,7 +5,8 @@
                 "title": "Análises",
                 "createLabel": "Criar nova Análise",
                 "createOrEditLabel": "Criar ou editar Análise",
-                "search": "Pesquisar por Análise"
+                "search": "Pesquisar por Análise",
+                "reports":"Reports"
             },
             "created": "Uma nova Análise é criada com o identificador {{ param }}",
             "updated": "Uma Análise é atualizada com o identificador {{ param }}",
@@ -72,7 +73,10 @@
             "grosspf":"Gross PF Total",
             "factorValue":"Factor",
             "created":"Created date",
-            "edited":"Edited date"
+            "edited":"Edited date",
+            "reportType":"Report Type",
+            "simple":"Simple",
+            "detailed":"Detailed"
         }
     }
 }
