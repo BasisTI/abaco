@@ -160,7 +160,11 @@ export class AnaliseComponent implements OnInit, OnDestroy {
 
 
     onNavigate(){
-        window.open("./report/analiseReport/simple/"+this.selectedAnalise.id,"_blank");
+        if (this.selectType==this.REPORT_SIMPLE_TYPE) {
+            window.open("./report/analiseReport/simple/" + this.selectedAnalise.id, "_blank");
+        } else {
+            window.open("./report/analiseReport/detailed/" + this.selectedAnalise.id, "_blank");
+        }
     }
 
     registerChangeInAnalises() {

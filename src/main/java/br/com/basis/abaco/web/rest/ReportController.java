@@ -3,11 +3,13 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.utils.StringUtils;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,153 @@ public class ReportController {
 
     @Autowired
     private AnaliseRepository analiseRepository;
+
+
+
+
+    public static class DetailFunctionRecord{
+
+        private String name;
+        private String module;
+        private String functionality;
+        private String adj_factor;
+        private String classification;
+        private JRBeanCollectionDataSource rlr;
+        private JRBeanCollectionDataSource der;
+        private String sustentation;
+        private JRBeanCollectionDataSource files;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getModule() {
+            return module;
+        }
+
+        public void setModule(String module) {
+            this.module = module;
+        }
+
+        public String getFunctionality() {
+            return functionality;
+        }
+
+        public void setFunctionality(String functionality) {
+            this.functionality = functionality;
+        }
+
+        public String getAdj_factor() {
+            return adj_factor;
+        }
+
+        public void setAdj_factor(String adj_factor) {
+            this.adj_factor = adj_factor;
+        }
+
+        public String getClassification() {
+            return classification;
+        }
+
+        public void setClassification(String classification) {
+            this.classification = classification;
+        }
+
+        public JRBeanCollectionDataSource getRlr() {
+            return rlr;
+        }
+
+        public void setRlr(JRBeanCollectionDataSource rlr) {
+            this.rlr = rlr;
+        }
+
+        public JRBeanCollectionDataSource getDer() {
+            return der;
+        }
+
+        public void setDer(JRBeanCollectionDataSource der) {
+            this.der = der;
+        }
+
+        public String getSustentation() {
+            return sustentation;
+        }
+
+        public void setSustentation(String sustentation) {
+            this.sustentation = sustentation;
+        }
+
+        public JRBeanCollectionDataSource getFiles() {
+            return files;
+        }
+
+        public void setFiles(JRBeanCollectionDataSource files) {
+            this.files = files;
+        }
+    }
+
+
+
+    public static class StringRecord{
+
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+
+        public StringRecord() {
+
+        }
+
+
+        public StringRecord(String value) {
+            this.value=value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+
+
+    public static class FileRecord{
+
+        private String name;
+        private String size;
+        private String format;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getSize() {
+            return size;
+        }
+
+        public void setSize(String size) {
+            this.size = size;
+        }
+
+        public String getFormat() {
+            return format;
+        }
+
+        public void setFormat(String format) {
+            this.format = format;
+        }
+    }
+
 
 
     public static class FunctionRecord{
@@ -311,9 +460,84 @@ public class ReportController {
     }
 
 
-    @GetMapping("/analiseReport/{type}/{id}")
-    public ResponseEntity<byte[]> createAnaliseReport(@PathVariable String type,
-                                                      @PathVariable long id) throws FileNotFoundException, JRException {
+
+    private List<DetailFunctionRecord> convertDataFunctions(Analise analise) {
+        List<DetailFunctionRecord> list = new ArrayList<>();
+        for(FuncaoDados f:analise.getFuncaoDados()) {
+            DetailFunctionRecord record = new DetailFunctionRecord();
+            record.setName(f.getName());
+            record.setModule((f.getFuncionalidade()==null)?"":f.getFuncionalidade().getModulo().getNome());
+            record.setAdj_factor((f.getFatorAjuste()==null)?"":f.getFatorAjuste().getNome());
+            record.setFunctionality((f.getFuncionalidade()==null)?"":f.getFuncionalidade().getNome());
+            record.setClassification((f.getComplexidade()==null)?"":f.getComplexidade().toString());
+            record.setSustentation((f.getSustantation()==null)?"":f.getSustantation());
+            List<StringRecord> relList = new ArrayList<>();
+            if (f.getRetStr()!=null && !f.getRetStr().isEmpty()){
+                for(String row:f.getRetStr().split("\n")) {
+                    relList.add(new StringRecord(row));
+                }
+            }
+            record.setRlr(new JRBeanCollectionDataSource(relList));
+            List<StringRecord> derList = new ArrayList<>();
+            if (f.getDetStr()!=null && !f.getDetStr().isEmpty()){
+                for(String row:f.getDetStr().split("\n")) {
+                    derList.add(new StringRecord(row));
+                }
+            }
+            record.setDer(new JRBeanCollectionDataSource(derList));
+
+            List<FileRecord> files = new ArrayList<>();
+            for(UploadedFile uploadedFile:f.getFiles()){
+                FileRecord file = new FileRecord();
+                file.setName(uploadedFile.getFilename());
+                file.setSize(FileUtils.byteCountToDisplaySize(uploadedFile.getSizeOf()));
+
+                files.add(file);
+            }
+
+            record.setFiles(new JRBeanCollectionDataSource(files));
+
+            list.add(record);
+        }
+
+        return list;
+    }
+
+
+
+    @GetMapping("/analiseReport/detailed/{id}")
+    public ResponseEntity<byte[]> createDetailedReport(@PathVariable long id) throws FileNotFoundException, JRException {
+        Analise analise = this.analiseRepository.findOne(id);
+        Map params = new HashMap();
+        params.put("Organization",analise.getOrganizacao()==null?"Organization":analise.getOrganizacao().getNome());
+        params.put("OS",analise.getNumeroOs());
+        params.put("System",analise.getSistema().getNome());
+        params.put("fp",analise.getPfTotal());
+        params.put("createDate",analise.getCreated());
+        params.put("updateDate",analise.getEdited());
+        List<DetailFunctionRecord> data = this.convertDataFunctions(analise);
+        JRDataSource dataSource = new JRBeanCollectionDataSource(data);
+        File jasperFile = new File(getClass().getClassLoader().getResource("reports/detailed_analise_report.jasper").getFile());
+
+
+        JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(new FileInputStream(jasperFile),params, dataSource);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
+        return response;
+
+    }
+
+
+
+
+        @GetMapping("/analiseReport/simple/{id}")
+    public ResponseEntity<byte[]> createAnaliseReport(@PathVariable long id) throws FileNotFoundException, JRException {
 
 
         Analise analise = this.analiseRepository.findOne(id);

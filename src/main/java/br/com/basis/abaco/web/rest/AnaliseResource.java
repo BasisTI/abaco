@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiParam;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -151,6 +152,7 @@ public class AnaliseResource {
     public ResponseEntity<List<Analise>> getAllAnalises(@ApiParam Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of Analises");
+
         Page<Analise> page = analiseRepository.findAll(pageable);
 
         page.forEach(analise -> {
