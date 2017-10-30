@@ -49,6 +49,15 @@ public class ReportController {
         private JRBeanCollectionDataSource der;
         private String sustentation;
         private JRBeanCollectionDataSource files;
+        private long type;
+
+        public long getType() {
+            return type;
+        }
+
+        public void setType(long type) {
+            this.type = type;
+        }
 
         public String getName() {
             return name;
@@ -128,6 +137,8 @@ public class ReportController {
     public static class StringRecord{
 
         private String value;
+        private long type;
+
 
         public String getValue() {
             return value;
@@ -139,12 +150,21 @@ public class ReportController {
         }
 
 
-        public StringRecord(String value) {
+        public StringRecord(String value, long type) {
             this.value=value;
+            this.type=type;
         }
 
         public void setValue(String value) {
             this.value = value;
+        }
+
+        public long getType() {
+            return type;
+        }
+
+        public void setType(long type) {
+            this.type = type;
         }
     }
 
@@ -471,17 +491,18 @@ public class ReportController {
             record.setFunctionality((f.getFuncionalidade()==null)?"":f.getFuncionalidade().getNome());
             record.setClassification((f.getComplexidade()==null)?"":f.getComplexidade().toString());
             record.setSustentation((f.getSustantation()==null)?"":f.getSustantation());
+            record.setType(0);
             List<StringRecord> relList = new ArrayList<>();
             if (f.getRetStr()!=null && !f.getRetStr().isEmpty()){
                 for(String row:f.getRetStr().split("\n")) {
-                    relList.add(new StringRecord(row));
+                    relList.add(new StringRecord(row,0));
                 }
             }
             record.setRlr(new JRBeanCollectionDataSource(relList));
             List<StringRecord> derList = new ArrayList<>();
             if (f.getDetStr()!=null && !f.getDetStr().isEmpty()){
                 for(String row:f.getDetStr().split("\n")) {
-                    derList.add(new StringRecord(row));
+                    derList.add(new StringRecord(row,0));
                 }
             }
             record.setDer(new JRBeanCollectionDataSource(derList));
@@ -491,7 +512,51 @@ public class ReportController {
                 FileRecord file = new FileRecord();
                 file.setName(uploadedFile.getFilename());
                 file.setSize(FileUtils.byteCountToDisplaySize(uploadedFile.getSizeOf()));
+                file.setFormat(StringUtils.getFormatFile(uploadedFile.getFilename()));
+                files.add(file);
+            }
 
+            record.setFiles(new JRBeanCollectionDataSource(files));
+
+            list.add(record);
+        }
+
+        return list;
+    }
+
+
+    private List<DetailFunctionRecord> convertTranFunctions(Analise analise) {
+        List<DetailFunctionRecord> list = new ArrayList<>();
+        for(FuncaoTransacao f:analise.getFuncaoTransacaos()) {
+            DetailFunctionRecord record = new DetailFunctionRecord();
+            record.setName(f.getName());
+            record.setModule((f.getFuncionalidade()==null)?"":f.getFuncionalidade().getModulo().getNome());
+            record.setAdj_factor((f.getFatorAjuste()==null)?"":f.getFatorAjuste().getNome());
+            record.setFunctionality((f.getFuncionalidade()==null)?"":f.getFuncionalidade().getNome());
+            record.setClassification((f.getComplexidade()==null)?"":f.getComplexidade().toString());
+            record.setSustentation((f.getSustantation()==null)?"":f.getSustantation());
+            record.setType(1);
+            List<StringRecord> relList = new ArrayList<>();
+            if (f.getFtrStr()!=null && !f.getFtrStr().isEmpty()){
+                for(String row:f.getFtrStr().split("\n")) {
+                    relList.add(new StringRecord(row,1));
+                }
+            }
+            record.setRlr(new JRBeanCollectionDataSource(relList));
+            List<StringRecord> derList = new ArrayList<>();
+            if (f.getDetStr()!=null && !f.getDetStr().isEmpty()){
+                for(String row:f.getDetStr().split("\n")) {
+                    derList.add(new StringRecord(row,1));
+                }
+            }
+            record.setDer(new JRBeanCollectionDataSource(derList));
+
+            List<FileRecord> files = new ArrayList<>();
+            for(UploadedFile uploadedFile:f.getFiles()){
+                FileRecord file = new FileRecord();
+                file.setName(uploadedFile.getFilename());
+                file.setSize(FileUtils.byteCountToDisplaySize(uploadedFile.getSizeOf()));
+                file.setFormat(StringUtils.getFormatFile(uploadedFile.getFilename()));
                 files.add(file);
             }
 
@@ -515,7 +580,9 @@ public class ReportController {
         params.put("fp",analise.getPfTotal());
         params.put("createDate",analise.getCreated());
         params.put("updateDate",analise.getEdited());
+       // params.put("SUBREPORT_DATASOURCE",new JRBeanCollectionDataSource(this.convertTranFunctions(analise)));
         List<DetailFunctionRecord> data = this.convertDataFunctions(analise);
+        data.addAll(this.convertTranFunctions(analise));
         JRDataSource dataSource = new JRBeanCollectionDataSource(data);
         File jasperFile = new File(getClass().getClassLoader().getResource("reports/detailed_analise_report.jasper").getFile());
 
