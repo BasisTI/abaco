@@ -35,7 +35,7 @@
                     <label jhiTranslate="abacoApp.analise.organization" for="field_organ">Organization</label>
                     <select class="form-control" id="field_organ" name="organization" [(ngModel)]="analise.organizacao" (change)="organizationSelect($event.target.value)">
                         <option [ngValue]="null" selected disabled jhiTranslate="abacoApp.analise.select">Select</option>
-                        <option [ngValue]="orgOption.id === analise.organizacao?.id ? analise.organizacao : orgOption" *ngFor="let orgOption of organizations;">{{orgOption.nome}}</option>
+                        <option [ngValue]="orgOption.id === analise.organizacao?.id ? analise.organizacao : orgOption" *ngFor="let orgOption of organizations | sortBy:'nome';">{{orgOption.nome}}</option>
                     </select>
                 </div>
 
@@ -44,7 +44,7 @@
                     <label jhiTranslate="abacoApp.analise.contract" for="field_contract">Contract</label>
                     <select class="form-control" id="field_contract" name="contract" [(ngModel)]="analise.contrato" (ngModelChange)="onContractChange($event)">
                         <option [ngValue]="null" selected disabled jhiTranslate="abacoApp.analise.select">Select</option>
-                        <option [ngValue]="contract.id === analise.contrato?.id ? analise.contrato : contract" *ngFor="let contract of contracts;">{{contract.numeroContrato}}</option>
+                        <option [ngValue]="contract.id === analise.contrato?.id ? analise.contrato : contract" *ngFor="let contract of contracts| sortBy:'numeroContrato';">{{contract.numeroContrato}}</option>
                     </select>
                 </div>
 
@@ -52,7 +52,7 @@
                     <label jhiTranslate="abacoApp.analise.sistema" for="field_sistema">Sistema</label>
                     <select class="form-control" id="field_sistema" name="sistema" [(ngModel)]="analise.sistema" (change)="onSystemChange($event.target.value)">
                         <option [ngValue]="null" selected disabled jhiTranslate="abacoApp.analise.select">Select</option>
-                        <option [ngValue]="sistemaOption.id === analise.sistema?.id ? analise.sistema : sistemaOption" *ngFor="let sistemaOption of sistemas; trackBy: trackSistemaById">{{sistemaOption.nome}}</option>
+                        <option [ngValue]="sistemaOption.id === analise.sistema?.id ? analise.sistema : sistemaOption" *ngFor="let sistemaOption of sistemas | sortBy:'nome'; trackBy: trackSistemaById">{{sistemaOption.nome}}</option>
                     </select>
                 </div>
 
@@ -67,7 +67,7 @@
 
                 <div class="form-group" [hidden]="showFactorValue">
                     <label class="form-control-label" jhiTranslate="abacoApp.analise.factorValue" for="factorValue">Factor Value</label>
-                    <input type="text" class="form-control" name="valorAjuste" id="factorValue" readonly
+                    <input type="text" class="form-control" name="factorValue" id="factorValue" readonly
                            [(ngModel)]="factorValue"
                     />
                 </div>
@@ -79,7 +79,7 @@
                      /> -->
                     <select id="field_valorAjuste"  name = "valorAjuste" class="form-control" (change)="onValueFactorChange()"  [(ngModel)]="analise.valorAjuste" >
                         <option [ngValue]="0"  selected jhiTranslate="abacoApp.analise.select">Select</option>
-                        <option [ngValue]="factor.id" *ngFor="let factor of valueFactors; trackBy: trackFactorById">{{getFactorTitle(factor)}}</option>
+                        <option [ngValue]="factor.id" *ngFor="let factor of valueFactors | sortBy:'nome'; trackBy: trackFactorById">{{getFactorTitle(factor)}}</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -171,7 +171,7 @@
 
                         <select id="field_module" name="module" class="form-control" [(ngModel)]="selectedModulo" (change)="onModuleChange($event.target.value)" required>
                             <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="module" *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
+                            <option [ngValue]="module" *ngFor="let module of modules | sortBy:'nome'">{{module.nome}}</option>
                         </select>
                         <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right;margin-top:10px;"  [routerLink]="['/', { outlets: { popup: analise.sistema!=null?'modulo-new/'+analise.sistema?.id:'modulo-new' } }]">
                             <span class="fa fa-plus"></span>
@@ -185,7 +185,7 @@
 
                         <select id="field_function" name="function" class="form-control" [(ngModel)]="selectedFunc" required>
                             <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="f" *ngFor="let f of filteredFunc; trackBy: trackFuncById">{{f.nome}}</option>
+                            <option [ngValue]="f" *ngFor="let f of filteredFunc | sortBy:'nome'; trackBy: trackFuncById">{{f.nome}}</option>
                         </select>
 
                         <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right;margin-top: 10px;"   [routerLink]="['/', { outlets: { popup: selectedModulo!=null?'funcionalidade-new/'+selectedModulo.id:'funcionalidade-new' } }]">
@@ -207,7 +207,7 @@
 
                         <select id="field_factor" name="factor" class="form-control" [(ngModel)]="selectedFactor" (change)="onFactorChange($event.target.value)">
                             <option [ngValue]="null"  selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{getFactorTitle(factor)}}</option>
+                            <option [ngValue]="factor" *ngFor="let factor of factors | sortBy:'nome'; trackBy: trackFactorById">{{getFactorTitle(factor)}}</option>
                         </select>
 
                     </div>
@@ -217,7 +217,7 @@
 
                         <select id="field_class" name="class" class="form-control" [(ngModel)]="selectedLogicalFile" required>
                             <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="file" *ngFor="let file of logicalFiles;" jhiTranslate="abacoApp.analise.{{file.title}}">{{file.title}}</option>
+                            <option [ngValue]="file" *ngFor="let file of logicalFiles | sortBy:'title';" jhiTranslate="abacoApp.analise.{{file.title}}">{{file.title}}</option>
                         </select>
                     </div>
 
@@ -407,7 +407,7 @@
                         <label for="field_func_module" class="control-label" jhiTranslate="abacoApp.analise.module">Modulo:</label>
                         <select id="field_func_module" name = "tranModule" class="form-control"  [(ngModel)]="selectedTranModulo" (change)="onModuleTranChange($event.target.value)" required>
                             <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="module" *ngFor="let module of modules; trackBy: trackModulleById">{{module.nome}}</option>
+                            <option [ngValue]="module" *ngFor="let module of modules| sortBy:'nome'; trackBy: trackModulleById">{{module.nome}}</option>
                         </select>
                         <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right;margin-top:10px;"  [routerLink]="['/', { outlets: { popup: analise.sistema!=null?'modulo-new/'+analise.sistema?.id:'modulo-new' }  }]">
                             <span class="fa fa-plus"></span>
@@ -420,7 +420,7 @@
                         <label for="field_func_funcal" class="control-label" jhiTranslate="abacoApp.analise.functional">Functionalidade:</label>
                         <select id="field_func_funcal" name = "tranFucal" class="form-control" [(ngModel)]="selectedTranFunc" required>
                             <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="f" *ngFor="let f of filteredTranFunc; trackBy: trackFuncById">{{f.nome}}</option>
+                            <option [ngValue]="f" *ngFor="let f of filteredTranFunc| sortBy:'nome'; trackBy: trackFuncById">{{f.nome}}</option>
                         </select>
                         <button type="button" class="btn btn-primary" value="+ Criar novo Modulo" style="float:right;margin-top:10px;" [routerLink]="['/', { outlets: { popup: selectedTranModulo!=null?'funcionalidade-new/'+selectedTranModulo.id:'funcionalidade-new' } }]">
                             <span class="fa fa-plus"></span>
@@ -436,7 +436,7 @@
                         <label for="field_func_factor" class="control-label" jhiTranslate="abacoApp.analise.factorAdjustment">Fotor Ajuste:</label>
                         <select id="field_func_factor"  name = "tranFactor" class="form-control" (change)="onFactorChangeTran($event.target.value)"  [(ngModel)]="selectedTranFactor" >
                             <option [ngValue]="null"  selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="factor" *ngFor="let factor of factors; trackBy: trackFactorById">{{getFactorTitle(factor)}}</option>
+                            <option [ngValue]="factor" *ngFor="let factor of factors | sortBy:'nome'; ">{{getFactorTitle(factor)}}</option>
                         </select>
                     </div>
 
@@ -445,7 +445,7 @@
 
                         <select id="id5" class="form-control" name = "tranClass" [(ngModel)]="selectedOutputType" required >
                             <option [ngValue]="null" disabled selected jhiTranslate="abacoApp.analise.select">Select</option>
-                            <option [ngValue]="file" *ngFor="let file of outputTypes;" jhiTranslate="abacoApp.analise.{{file.title}}">{{file.title}}</option>
+                            <option [ngValue]="file" *ngFor="let file of outputTypes | sortBy:'title';" jhiTranslate="abacoApp.analise.{{file.title}}">{{file.title}}</option>
                         </select>
                     </div>
 

@@ -22,6 +22,7 @@ import {
     analiseRoute,
     analisePopupRoute,
 } from './';
+import {SortPipe} from "./analise-dialog.component";
 
 let ENTITY_STATES = [
     ...analiseRoute,
@@ -44,6 +45,7 @@ let ENTITY_STATES = [
         AnaliseDeleteDialogComponent,
         AnalisePopupComponent,
         AnaliseDeletePopupComponent,
+        SortPipe
     ],
     entryComponents: [
         AnaliseComponent,
