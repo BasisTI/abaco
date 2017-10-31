@@ -67,7 +67,7 @@
 
                 <div class="form-group" [hidden]="showFactorValue">
                     <label class="form-control-label" jhiTranslate="abacoApp.analise.factorValue" for="factorValue">Factor Value</label>
-                    <input type="text" class="form-control" name="valorAjuste" id="factorValue" disabled
+                    <input type="text" class="form-control" name="valorAjuste" id="factorValue" readonly
                            [(ngModel)]="factorValue"
                     />
                 </div>
@@ -79,7 +79,7 @@
                      /> -->
                     <select id="field_valorAjuste"  name = "valorAjuste" class="form-control" (change)="onValueFactorChange()"  [(ngModel)]="analise.valorAjuste" >
                         <option [ngValue]="0"  selected jhiTranslate="abacoApp.analise.select">Select</option>
-                        <option [ngValue]="factor.fator" *ngFor="let factor of valueFactors; trackBy: trackFactorById">{{getFactorTitle(factor)}}</option>
+                        <option [ngValue]="factor.id" *ngFor="let factor of valueFactors; trackBy: trackFactorById">{{getFactorTitle(factor)}}</option>
                     </select>
                 </div>
                 <div class="form-group">

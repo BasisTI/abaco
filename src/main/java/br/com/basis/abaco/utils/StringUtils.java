@@ -13,7 +13,7 @@ public class StringUtils {
 
     public static final String DOC_FORMAT="DOC";
 
-    public static final String UNKNOWN_FORMAT="UNKNOWN";
+    public static final String UNKNOWN_FORMAT="OTHER";
 
     //Disable default constructor
     private StringUtils(){

@@ -193,10 +193,10 @@ export class AnaliseDialogComponent implements OnInit {
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
         this.sistemaService.query().subscribe(
             (res: Response) => { this.sistemas = res.json(); }, (res: Response) => this.onError(res.json()));
-        this.funcaoDadosService.query().subscribe(
-            (res: Response) => { this.funcaodados = res.json(); }, (res: Response) => this.onError(res.json()));
-        this.funcaoTransacaoService.query().subscribe(
-            (res: Response) => { this.funcaotransacaos = res.json(); }, (res: Response) => this.onError(res.json()));
+       // this.funcaoDadosService.query().subscribe(
+       //     (res: Response) => { this.funcaodados = res.json(); }, (res: Response) => this.onError(res.json()));
+       // this.funcaoTransacaoService.query().subscribe(
+       //     (res: Response) => { this.funcaotransacaos = res.json(); }, (res: Response) => this.onError(res.json()));
 
         this.fatorAjusteService.query().subscribe(
             (res: Response) => { this.factors = res.json(); }, (res: Response) => this.onError(res.json()));
@@ -240,6 +240,7 @@ export class AnaliseDialogComponent implements OnInit {
 
             if (this.analise.tipoContagem!=null && this.analise.tipoContagem.toString()=="ESTIMADA") {
                 this.factorValue = (this.analise.contrato.manual.valorVariacaoEstimada*100)+"%";
+
                 this.showFactorValue=false;
                 return;
             }
@@ -331,10 +332,12 @@ export class AnaliseDialogComponent implements OnInit {
 
             }
 
+            this.updateValueFactorsList();
+            this.updateFactorValue();
+
         });
 
-        this.updateValueFactorsList();
-        this.updateFactorValue();
+
     }
 
 
@@ -969,6 +972,14 @@ export class AnaliseDialogComponent implements OnInit {
     }
 
 
+
+    getFactorById(id:number){
+        let factor:FatorAjuste=null;
+        factor = this.valueFactors.find(f=> {return f.id==id});
+        return factor;
+    }
+
+
     recalculateSummary(){
         this.summary[LogicalFile.ILF] = this.totals[LogicalFile.ILF];
         this.summary[LogicalFile.EIF] = this.totals[LogicalFile.EIF];
@@ -1001,7 +1012,9 @@ export class AnaliseDialogComponent implements OnInit {
         }
         //this.analise.valorAjuste = adjustTotal-this.totalRow.pf;
         if (this.analise.valorAjuste!=null && this.analise.valorAjuste!=0) {
-            adjustTotal=adjustTotal*this.analise.valorAjuste;
+            let factor:FatorAjuste = this.getFactorsById(this.analise.valorAjuste);
+
+            adjustTotal=adjustTotal*factor.fator;//this.analise.valorAjuste;
         }
         this.analise.adjustPFTotal = adjustTotal.toFixed(2).toString();
         this.analise.pfTotal = this.totalRow.pf.toFixed(2).toString();
@@ -1030,6 +1043,7 @@ export class AnaliseDialogComponent implements OnInit {
 
             this.totals[process.classification].total++;
             this.totals[process.classification].pf+=process.pf;
+            this.totals[process.classification].grossPF+=process.grossPF;
         });
         this.recalculateSummary();
     }

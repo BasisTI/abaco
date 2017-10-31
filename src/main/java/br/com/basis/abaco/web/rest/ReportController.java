@@ -498,6 +498,11 @@ public class ReportController {
                     relList.add(new StringRecord(row,0));
                 }
             }
+
+            if (relList.size()==0) {
+                relList.add(new StringRecord("0",0));
+            }
+
             record.setRlr(new JRBeanCollectionDataSource(relList));
             List<StringRecord> derList = new ArrayList<>();
             if (f.getDetStr()!=null && !f.getDetStr().isEmpty()){
@@ -505,6 +510,10 @@ public class ReportController {
                     derList.add(new StringRecord(row,0));
                 }
             }
+            if (derList.size()==0) {
+                derList.add(new StringRecord("0",0));
+            }
+
             record.setDer(new JRBeanCollectionDataSource(derList));
 
             List<FileRecord> files = new ArrayList<>();
@@ -542,6 +551,11 @@ public class ReportController {
                     relList.add(new StringRecord(row,1));
                 }
             }
+
+            if (relList.size()==0) {
+                relList.add(new StringRecord("0",0));
+            }
+
             record.setRlr(new JRBeanCollectionDataSource(relList));
             List<StringRecord> derList = new ArrayList<>();
             if (f.getDetStr()!=null && !f.getDetStr().isEmpty()){
@@ -549,6 +563,11 @@ public class ReportController {
                     derList.add(new StringRecord(row,1));
                 }
             }
+
+            if (derList.size()==0) {
+                derList.add(new StringRecord("0",0));
+            }
+
             record.setDer(new JRBeanCollectionDataSource(derList));
 
             List<FileRecord> files = new ArrayList<>();
