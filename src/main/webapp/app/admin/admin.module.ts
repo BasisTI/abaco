@@ -1,6 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ParseLinks } from 'ng-jhipster';
+import {abacoElasticsearchReindexModule} from './elasticsearch-reindex/elasticsearch-reindex.module';
 
 import { AbacoSharedModule } from '../shared';
 
@@ -27,13 +28,17 @@ import {
     LogsService,
     UserResolvePagingParams,
     UserResolve,
-    UserModalService
+    UserModalService,
+    ElasticsearchReindexComponent,
+    ElasticsearchReindexModalComponent,
+    ElasticsearchReindexService
 } from './';
 
 
 @NgModule({
     imports: [
         AbacoSharedModule,
+        abacoElasticsearchReindexModule,
         RouterModule.forRoot(adminState, { useHash: true })
     ],
     declarations: [
@@ -50,7 +55,7 @@ import {
         JhiHealthModalComponent,
         JhiDocsComponent,
         JhiMetricsMonitoringComponent,
-        JhiMetricsMonitoringModalComponent
+        JhiMetricsMonitoringModalComponent,
     ],
     entryComponents: [
         UserMgmtDialogComponent,
@@ -66,6 +71,7 @@ import {
         LogsService,
         UserResolvePagingParams,
         UserResolve,
+        ElasticsearchReindexService,
         UserModalService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

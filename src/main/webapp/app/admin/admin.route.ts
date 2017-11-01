@@ -1,4 +1,6 @@
 import { Routes, CanActivate } from '@angular/router';
+import { elasticsearchReindexRoute } from './elasticsearch-reindex/elasticsearch-reindex.route';
+
 
 import {
     auditsRoute,
@@ -20,7 +22,8 @@ let ADMIN_ROUTES = [
     healthRoute,
     logsRoute,
     ...userMgmtRoute,
-    metricsRoute
+    metricsRoute,
+    elasticsearchReindexRoute
 ];
 
 

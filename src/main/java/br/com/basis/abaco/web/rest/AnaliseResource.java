@@ -155,15 +155,15 @@ public class AnaliseResource {
 
         Page<Analise> page = analiseRepository.findAll(pageable);
 
-        page.forEach(analise -> {
-            analise.getFuncaoDados().forEach(entry -> {
-                entry.setAnalise(null);
+        //page.forEach(analise -> {
+        //    analise.getFuncaoDados().forEach(entry -> {
+        //        entry.setAnalise(null);
 
-            });
-            analise.getFuncaoTransacaos().forEach(entry -> {
-                entry.setAnalise(null);
-            });
-        });
+        //    });
+        //    analise.getFuncaoTransacaos().forEach(entry -> {
+        //        entry.setAnalise(null);
+        //    });
+        //});
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -180,12 +180,12 @@ public class AnaliseResource {
     public ResponseEntity<Analise> getAnalise(@PathVariable Long id) {
         log.debug("REST request to get Analise : {}", id);
         Analise analise = analiseRepository.findOne(id);
-        analise.getFuncaoDados().forEach(entry -> {
-            entry.setAnalise(null);
-        });
-        analise.getFuncaoTransacaos().forEach(entry -> {
-            entry.setAnalise(null);
-        });
+        //analise.getFuncaoDados().forEach(entry -> {
+        //    entry.setAnalise(null);
+        //});
+        //analise.getFuncaoTransacaos().forEach(entry -> {
+        //    entry.setAnalise(null);
+        //});
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
     }
 

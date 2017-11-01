@@ -2,6 +2,7 @@ package br.com.basis.abaco.domain;
 
 import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -61,6 +62,7 @@ public class FuncaoTransacao implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "analise_id")
+    @JsonBackReference
     private Analise analise;
 
     @OneToMany(mappedBy = "funcaoTransacao")
