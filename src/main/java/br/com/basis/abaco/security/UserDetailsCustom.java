@@ -2,7 +2,6 @@ package br.com.basis.abaco.security;
 
 import br.com.basis.abaco.domain.User;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
