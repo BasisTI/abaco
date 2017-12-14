@@ -1,0 +1,62 @@
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule, BrowserXhr } from '@angular/http';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { DatatableModule, SharedModule, HttpService } from '@basis/angular-components';
+import { NgProgressModule, NgProgressBrowserXhr } from 'ngx-progressbar';
+import { AuthHttp } from 'angular2-jwt';
+import { ConfirmationService } from 'primeng/primeng';
+import { PRIMENG_IMPORTS } from './primeng-imports';
+import 'rxjs/add/operator/toPromise';
+
+import { AuthModule } from './auth.module';
+import { AppRoutes } from './app.routes';
+import { AppComponent } from './app.component';
+import { AppMenuComponent, AppSubMenuComponent } from './app.menu.component';
+import { AppTopBarComponent } from './app.topbar.component';
+import { AppFooterComponent } from './app.footer.component';
+import { AppRightPanelComponent } from './app.rightpanel.component';
+import { AppBreadcrumbComponent } from './app.breadcrumb.component';
+import { InlineProfileComponent } from './app.profile.component';
+import { JhiDateUtils, BreadcrumbService } from './shared';
+
+/* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
+
+@NgModule({
+  imports: [
+    BrowserModule,
+    FormsModule,
+    AppRoutes,
+    HttpModule,
+    BrowserAnimationsModule,
+    PRIMENG_IMPORTS,
+    NgProgressModule,
+    AuthModule,
+    DatatableModule.forRoot(),
+    SharedModule.forRoot(),
+    /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
+  ],
+  declarations: [
+    AppComponent,
+    AppMenuComponent,
+    AppSubMenuComponent,
+    AppTopBarComponent,
+    AppFooterComponent,
+    AppRightPanelComponent,
+    AppBreadcrumbComponent,
+    InlineProfileComponent
+  ],
+  providers: [
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    { provide: BrowserXhr, useClass: NgProgressBrowserXhr },
+    // para habilitar o JWT, descomentar a linha abaixo
+    // { provide: HttpService, useClass: HttpService, deps: [AuthHttp] },
+    JhiDateUtils,
+    BreadcrumbService,
+    ConfirmationService
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }

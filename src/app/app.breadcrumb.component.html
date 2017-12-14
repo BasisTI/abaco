@@ -1,0 +1,29 @@
+<div class="layout-breadcrumb">
+  <ul>
+    <li>
+      <a routerLink="">
+        <i class="material-icons">home</i>
+      </a>
+    </li>
+    <li>/</li>
+    <ng-template ngFor let-item let-last="last" [ngForOf]="items">
+      <li>
+        <a [routerLink]="item.routerLink" *ngIf="item.routerLink">{{item.label}}</a>
+        <ng-container *ngIf="!item.routerLink">{{item.label}}</ng-container>
+      </li>
+      <li *ngIf="!last">/</li>
+    </ng-template>
+  </ul>
+
+  <div class="layout-breadcrumb-options">
+    <a routerLink="/" title="Backup">
+      <i class="material-icons">backup</i>
+    </a>
+    <a routerLink="/" title="Bookmark">
+      <i class="material-icons">bookmark</i>
+    </a>
+    <a routerLink="/" title="Logout">
+      <i class="material-icons">power_settings_new</i>
+    </a>
+  </div>
+</div>
