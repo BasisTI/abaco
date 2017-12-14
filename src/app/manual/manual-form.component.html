@@ -1,0 +1,57 @@
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1>{{ manual.id ? 'Editar Manual' : 'Cadastrar Manual' }}</h1>
+      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <div class="ui-g">
+          <div class="ui-g-6" [hidden]="!manual.id">
+            <span class="md-inputfield">
+              <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="manual.id" readonly/>
+              <label>ID</label>
+            </span>
+          </div>          
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <input type="text" name="nome" [(ngModel)]="manual.nome" pInputText/>
+              <label>Nome</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <input type="text" name="observacao" [(ngModel)]="manual.observacao" pInputText/>
+              <label>Observacao</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <p-spinner size="30" name="valorVariacaoEstimada" [(ngModel)]="manual.valorVariacaoEstimada" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <label>Valor Variacao Estimada</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <p-spinner size="30" name="valorVariacaoIndicativa" [(ngModel)]="manual.valorVariacaoIndicativa" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <label>Valor Variacao Indicativa</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <input type="hidden" name="arquivoManual" [(ngModel)]="manual.arquivoManual"/>
+              <input type="hidden" class="form-control" name="arquivoManualContentType" id="field_arquivoManualContentType"
+                  [(ngModel)]="manual.arquivoManualContentType" />
+              <label>Arquivo Manual</label>
+            </span>
+          </div>
+        </div>
+        <div class="ui-g">
+          <div class="ui-g-2">
+            <button pButton type="button" label="Cancelar" routerLink="/manual"></button>
+          </div>
+          <div class="ui-g-2">
+            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -23,6 +23,9 @@ import { InlineProfileComponent } from './app.profile.component';
 import { JhiDateUtils, BreadcrumbService } from './shared';
 
 import { AbacoAlrModule } from './alr/alr.module';
+import { AbacoManualModule } from './manual/manual.module';
+import { AbacoFatorAjusteModule } from './fator-ajuste/fator-ajuste.module';
+import { AbacoFuncaoTransacaoModule } from './funcao-transacao/funcao-transacao.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -38,6 +41,9 @@ import { AbacoAlrModule } from './alr/alr.module';
     DatatableModule.forRoot(),
     SharedModule.forRoot(),
     AbacoAlrModule,
+    AbacoManualModule,
+    AbacoFatorAjusteModule,
+    AbacoFuncaoTransacaoModule,
     /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
   ],
   declarations: [

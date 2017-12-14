@@ -1,0 +1,56 @@
+<div class="ui-g ui-fluid" *ngIf="fatorAjuste">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1>Visualizar Fator Ajuste</h1>
+      <div class="ui-g">
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="fatorAjuste.id" readonly/>
+            <label>ID</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="nome" pInputText [ngModel]="fatorAjuste.nome" readonly/>
+            <label>Nome</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="fator" pInputText [ngModel]="fatorAjuste.fator" readonly/>
+            <label>Fator</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+              <input type="text" name="ativo" pInputText [ngModel]="fatorAjuste.ativo ? 'Sim' : (fatorAjuste.ativo != null ? 'Não' : null)" readonly/>
+            <label>Ativo</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="tipoAjuste" pInputText [ngModel]="fatorAjuste.tipoAjuste" readonly/>
+            <label>Tipo Ajuste</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="impacto" pInputText [ngModel]="fatorAjuste.impacto" readonly/>
+            <label>Impacto</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="manual" pInputText [ngModel]="fatorAjuste.manual.nome" readonly/>
+            <label>Manual</label>
+          </span>
+        </div>
+      </div>
+      <div class="ui-g">
+        <div class="ui-g-2">
+          <button pButton type="button" label="Voltar" routerLink="/fatorAjuste"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

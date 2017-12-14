@@ -1,0 +1,59 @@
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1>{{ fatorAjuste.id ? 'Editar Fator Ajuste' : 'Cadastrar Fator Ajuste' }}</h1>
+      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <div class="ui-g">
+          <div class="ui-g-6" [hidden]="!fatorAjuste.id">
+            <span class="md-inputfield">
+              <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="fatorAjuste.id" readonly/>
+              <label>ID</label>
+            </span>
+          </div>          
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <input type="text" name="nome" [(ngModel)]="fatorAjuste.nome" pInputText/>
+              <label>Nome</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <p-spinner size="30" name="fator" [(ngModel)]="fatorAjuste.fator" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <label>Fator</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+              <div class="ui-g">
+                <div class="ui-g-12 ui-md-2">
+                  <label>Ativo</label>
+              </div>
+              <div class="ui-g-12 ui-md-2">
+                <p-radioButton name="ativo" [value]="true" label="Sim" [(ngModel)]="fatorAjuste.ativo"></p-radioButton>
+              </div>
+              <div class="ui-g-12 ui-md-2">
+                <p-radioButton name="ativo" [value]="false" label="Não" [(ngModel)]="fatorAjuste.ativo"></p-radioButton>
+              </div>
+            </div>
+          </div>
+          <div class="ui-g-6">
+            <p-dropdown [options]="dropdownTipoAjuste" placeholder="TipoFatorAjuste" name="tipoAjuste" [(ngModel)]="fatorAjuste.tipoAjuste" [autoWidth]="false"></p-dropdown>
+          </div>
+          <div class="ui-g-6">
+            <p-dropdown [options]="dropdownImpacto" placeholder="ImpactoFatorAjuste" name="impacto" [(ngModel)]="fatorAjuste.impacto" [autoWidth]="false"></p-dropdown>
+          </div>
+          <div class="ui-g-6">
+            <p-dropdown [options]="manuals" optionLabel="nome" placeholder="Manual" name="manual" [(ngModel)]="fatorAjuste.manual" [autoWidth]="false" dataKey="id"></p-dropdown>
+          </div>
+        </div>
+        <div class="ui-g">
+          <div class="ui-g-2">
+            <button pButton type="button" label="Cancelar" routerLink="/fatorAjuste"></button>
+          </div>
+          <div class="ui-g-2">
+            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
