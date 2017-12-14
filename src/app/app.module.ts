@@ -28,6 +28,7 @@ import { AbacoFatorAjusteModule } from './fator-ajuste/fator-ajuste.module';
 import { AbacoFuncaoTransacaoModule } from './funcao-transacao/funcao-transacao.module';
 import { AbacoAnaliseModule} from './analise/analise.module';
 import { AbacoOrganizacaoModule } from './organizacao/organizacao.module';
+import { AbacoContratoModule } from './contrato/contrato.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -48,6 +49,7 @@ import { AbacoOrganizacaoModule } from './organizacao/organizacao.module';
     AbacoFuncaoTransacaoModule,
     AbacoAnaliseModule,
     AbacoOrganizacaoModule,
+    AbacoContratoModule,
     /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
   ],
   declarations: [

@@ -1,0 +1,46 @@
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1>{{ contrato.id ? 'Editar Contrato' : 'Cadastrar Contrato' }}</h1>
+      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <div class="ui-g">
+          <div class="ui-g-6" [hidden]="!contrato.id">
+            <span class="md-inputfield">
+              <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="contrato.id" readonly/>
+              <label>ID</label>
+            </span>
+          </div>          
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <input type="text" name="numeroContrato" [(ngModel)]="contrato.numeroContrato" pInputText/>
+              <label>Numero Contrato</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <p-calendar name="dataInicioVigencia" [(ngModel)]="contrato.dataInicioVigencia" dateFormat="dd/mm/yy"></p-calendar>
+              <label>Data Inicio Vigencia</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <p-calendar name="dataFimVigencia" [(ngModel)]="contrato.dataFimVigencia" dateFormat="dd/mm/yy"></p-calendar>
+              <label>Data Fim Vigencia</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+            <p-dropdown [options]="manuals" optionLabel="nome" placeholder="Manual" name="manual" [(ngModel)]="contrato.manual" [autoWidth]="false" dataKey="id"></p-dropdown>
+          </div>
+        </div>
+        <div class="ui-g">
+          <div class="ui-g-2">
+            <button pButton type="button" label="Cancelar" routerLink="/contrato"></button>
+          </div>
+          <div class="ui-g-2">
+            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
