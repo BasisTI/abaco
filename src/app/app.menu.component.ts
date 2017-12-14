@@ -8,20 +8,39 @@ import { AppComponent } from './app.component';
 @Component({
   selector: 'app-menu',
   template: `
-    <ul app-submenu [item]="model" root="true" class="ultima-menu ultima-main-menu clearfix" [reset]="reset" visible="true"></ul>
+  <ul app-submenu [item]="menuItems" root="true" class="ultima-menu ultima-main-menu  clearfix" [reset]="reset"></ul>
   `
 })
 export class AppMenuComponent implements OnInit {
 
   @Input() reset: boolean;
 
-  model: any[];
+  menuItems: MenuItem[];
 
   constructor(public app: AppComponent) { }
 
   ngOnInit() {
-    this.model = [
-      { label: 'Dashboard', icon: 'dashboard', routerLink: ['/'] }
+    this.menuItems = [
+      { label: 'Administração', icon: 'supervisor_account', 
+        items: [
+          { label: 'Tipo de Equipe' },
+          { label: 'Usuários'} 
+        ]  
+      },
+      { label: 'Cadastros Básicos', icon: 'description', 
+        items: [
+          { label: 'Tipo de Fase' },
+          { label: 'Manual' },
+          { label: 'Organização' },
+          { label: 'Sistema' }
+        ]
+      },
+      { label: 'Análise', icon: 'insert_chart',
+        items: [
+          { label: 'Análise' },
+          { label: 'Validação' }
+        ]
+      }
     ];
   }
 
