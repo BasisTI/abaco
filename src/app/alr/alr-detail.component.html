@@ -1,0 +1,26 @@
+<div class="ui-g ui-fluid" *ngIf="alr">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1>Visualizar Alr</h1>
+      <div class="ui-g">
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="alr.id" readonly/>
+            <label>ID</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="funcaoTransacao" pInputText [ngModel]="alr.funcaoTransacao.id" readonly/>
+            <label>Funcao Transacao</label>
+          </span>
+        </div>
+      </div>
+      <div class="ui-g">
+        <div class="ui-g-2">
+          <button pButton type="button" label="Voltar" routerLink="/alr"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
