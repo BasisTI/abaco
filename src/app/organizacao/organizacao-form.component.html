@@ -1,0 +1,59 @@
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1>{{ organizacao.id ? 'Editar Organizacao' : 'Cadastrar Organizacao' }}</h1>
+      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <div class="ui-g">
+          <div class="ui-g-6" [hidden]="!organizacao.id">
+            <span class="md-inputfield">
+              <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="organizacao.id" readonly/>
+              <label>ID</label>
+            </span>
+          </div>          
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <input type="text" name="nome" [(ngModel)]="organizacao.nome" pInputText/>
+              <label>Nome</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <input type="text" name="cnpj" [(ngModel)]="organizacao.cnpj" pInputText/>
+              <label>Cnpj</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+              <div class="ui-g">
+                <div class="ui-g-12 ui-md-2">
+                  <label>Ativo</label>
+              </div>
+              <div class="ui-g-12 ui-md-2">
+                <p-radioButton name="ativo" [value]="true" label="Sim" [(ngModel)]="organizacao.ativo"></p-radioButton>
+              </div>
+              <div class="ui-g-12 ui-md-2">
+                <p-radioButton name="ativo" [value]="false" label="Não" [(ngModel)]="organizacao.ativo"></p-radioButton>
+              </div>
+            </div>
+          </div>
+          <div class="ui-g-6">
+            <span class="md-inputfield">
+              <input type="text" name="numeroOcorrencia" [(ngModel)]="organizacao.numeroOcorrencia" pInputText/>
+              <label>Numero Ocorrencia</label>
+            </span>
+          </div>
+          <div class="ui-g-6">
+            <p-dropdown [options]="contratoes" optionLabel="numeroContrato" placeholder="Contrato" name="contrato" [(ngModel)]="organizacao.contrato" [autoWidth]="false" dataKey="id"></p-dropdown>
+          </div>
+        </div>
+        <div class="ui-g">
+          <div class="ui-g-2">
+            <button pButton type="button" label="Cancelar" routerLink="/organizacao"></button>
+          </div>
+          <div class="ui-g-2">
+            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

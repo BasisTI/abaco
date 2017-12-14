@@ -1,0 +1,50 @@
+<div class="ui-g ui-fluid" *ngIf="organizacao">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1>Visualizar Organizacao</h1>
+      <div class="ui-g">
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="organizacao.id" readonly/>
+            <label>ID</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="nome" pInputText [ngModel]="organizacao.nome" readonly/>
+            <label>Nome</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="cnpj" pInputText [ngModel]="organizacao.cnpj" readonly/>
+            <label>Cnpj</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+              <input type="text" name="ativo" pInputText [ngModel]="organizacao.ativo ? 'Sim' : (organizacao.ativo != null ? 'Não' : null)" readonly/>
+            <label>Ativo</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="numeroOcorrencia" pInputText [ngModel]="organizacao.numeroOcorrencia" readonly/>
+            <label>Numero Ocorrencia</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="contrato" pInputText [ngModel]="organizacao.contrato.numeroContrato" readonly/>
+            <label>Contrato</label>
+          </span>
+        </div>
+      </div>
+      <div class="ui-g">
+        <div class="ui-g-2">
+          <button pButton type="button" label="Voltar" routerLink="/organizacao"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
