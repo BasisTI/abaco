@@ -7,6 +7,7 @@ import { SelectItem } from 'primeng/primeng';
 import { Organizacao } from './organizacao.model';
 import { OrganizacaoService } from './organizacao.service';
 import { Contrato, ContratoService } from '../contrato';
+import { Manual, ManualService } from '../manual';
 import { ResponseWrapper } from '../shared';
 
 @Component({
@@ -14,17 +15,22 @@ import { ResponseWrapper } from '../shared';
   templateUrl: './organizacao-form.component.html'
 })
 export class OrganizacaoFormComponent implements OnInit, OnDestroy {
+  
+  private routeSub: Subscription;
 
   contratos: Contrato[];
   organizacao: Organizacao;
   isSaving: boolean;
-  private routeSub: Subscription;
+  mostrarDialogCadastroContrato: boolean = false;
+  manuais: Manual[];
+  novoContrato: Contrato = new Contrato();
   
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private organizacaoService: OrganizacaoService,
     private contratoService: ContratoService,
+    private manualService: ManualService,
   ) {}
 
   ngOnInit() {
@@ -32,12 +38,19 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     this.contratoService.query().subscribe((res: ResponseWrapper) => {
       this.contratos = res.json;
     });
+    this.manualService.query().subscribe((res: ResponseWrapper) => {
+      this.manuais = res.json;
+    });
     this.routeSub = this.route.params.subscribe(params => {
       this.organizacao = new Organizacao();
       if (params['id']) {
         this.organizacaoService.find(params['id']).subscribe(organizacao => this.organizacao = organizacao);
       }
     });
+  }
+
+  abrirDialogCadastroContrato() {
+    this.mostrarDialogCadastroContrato = true;
   }
 
   save() {
