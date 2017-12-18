@@ -1,7 +1,7 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>{{ organizacao.id ? 'Editar Organizacao' : 'Cadastrar Organizacao' }}</h1>
+      <h1>{{ organizacao.id ? 'Editar Organização' : 'Cadastrar Organização' }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
         <div class="ui-g">
           <div class="ui-g-6" [hidden]="!organizacao.id">
@@ -41,9 +41,27 @@
               <label>Numero Ocorrencia</label>
             </span>
           </div>
-          <div class="ui-g-6">
-            <p-dropdown [options]="contratoes" optionLabel="numeroContrato" placeholder="Contrato" name="contrato" [(ngModel)]="organizacao.contrato" [autoWidth]="false" dataKey="id"></p-dropdown>
+
+          <div class="ui-g">
+            <h4>Contratos</h4>
+
+            <div class="ui-g ui-md-12" style="justify-content: flex-end">
+              <div class="ui-md-3">
+                <button pButton type="button" label="Novo Contrato" routerLink="" icon="ui-icon-add"></button>
+              </div>
+            </div>
+            
+            <p-dataTable [value]="organizacao.contratos" #contratosDataTable>
+              <p-column header="Número do Contrato" field="numeroContrato"></p-column>
+              <p-column header="Ínicio Vigência" field="dataInicioVigencia"></p-column>
+              <p-column header="Final Vigência" field="dataFimVigencia"></p-column>
+              <p-column header="Manual" field="manual.nome"></p-column>
+              <p-column header="Ativo (TODO)" field="ativo"></p-column>
+            </p-dataTable>
+            
+             
           </div>
+
         </div>
         <div class="ui-g">
           <div class="ui-g-2">

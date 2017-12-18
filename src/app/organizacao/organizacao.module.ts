@@ -12,7 +12,8 @@ import {
   DropdownModule,
   RadioButtonModule,
   ConfirmDialogModule,
-  ConfirmationService
+  ConfirmationService,
+  DataTableModule
 } from 'primeng/primeng';
 
 import {
@@ -37,6 +38,7 @@ import {
     RadioButtonModule,
     InputTextModule,
     ConfirmDialogModule,
+    DataTableModule
   ],
   declarations: [
     OrganizacaoComponent,

@@ -15,11 +15,11 @@ import { ResponseWrapper } from '../shared';
 })
 export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
-  contratoes: Contrato[];
+  contratos: Contrato[];
   organizacao: Organizacao;
   isSaving: boolean;
   private routeSub: Subscription;
-
+  
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -30,7 +30,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isSaving = false;
     this.contratoService.query().subscribe((res: ResponseWrapper) => {
-      this.contratoes = res.json;
+      this.contratos = res.json;
     });
     this.routeSub = this.route.params.subscribe(params => {
       this.organizacao = new Organizacao();

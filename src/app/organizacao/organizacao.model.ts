@@ -9,7 +9,7 @@ export class Organizacao implements BaseEntity {
     public cnpj?: string,
     public ativo?: boolean,
     public numeroOcorrencia?: string,
-    public contrato?: BaseEntity,
+    public contratos?: BaseEntity[],
     public sistemas?: BaseEntity[],
   ) {}
 }
