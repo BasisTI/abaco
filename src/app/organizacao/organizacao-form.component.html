@@ -65,18 +65,18 @@
         </div>
 
         <p-dialog header="Contrato" [(visible)]="mostrarDialogCadastroContrato"
-          [contentStyle]="{'overflow':'visible'}" [width]="800" [height]="600">
+          [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
-            <div class="ui-g-6">
+            <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
                 <input type="text" name="nome" [(ngModel)]="novoContrato.numeroContrato" pInputText/>
                 <label>Número do Contrato</label>
               </span>
             </div>
-            <div class="ui-g-6">
+            <div class="ui-g-6" style="margin-bottom: 25px">
                 <p-dropdown [options]="manuais" optionLabel="manual" placeholder="Manual" name="manualDropdown" [(ngModel)]="novoContrato.manual" [autoWidth]="false" dataKey="id"></p-dropdown>
             </div>
-            <div class="ui-g-6">
+            <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
                 <p-calendar [(ngModel)]="novoContrato.dataInicioVigencia"
                   [monthNavigator]="true" [yearNavigator]="true" 
@@ -84,7 +84,7 @@
                 <label>Data de Início da Vigência</label>
               </span>
             </div>
-            <div class="ui-g-6">
+            <div class="ui-g-6" style="margin-bottom: 25px">
                 <span class="md-inputfield">
                 <p-calendar [(ngModel)]="novoContrato.dataFimVigencia"
                   [monthNavigator]="true" [yearNavigator]="true"
@@ -92,6 +92,21 @@
                 <label>Data Final da Vigência</label>
                 </span>
               </div>
+          </div>
+          <div class = "ui-g-6" style="margin-bottom: 25px">
+            <input type="checkbox" class="form-control" name="ativo" id="field_ativo"
+              [(ngModel)]="novoContrato.ativo" />
+            <label class="form-control-label" for="field_ativo">Ativo</label>
+          </div>
+
+          <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2">
+              <button pButton type="text" label="Cancelar"
+                (click)="fecharDialogCadastroContrato()"></button>
+            </div>
+            <div class="ui-g-2">
+              <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+            </div>
           </div>
         </p-dialog>
 

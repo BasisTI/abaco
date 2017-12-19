@@ -53,6 +53,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     this.mostrarDialogCadastroContrato = true;
   }
 
+  fecharDialogCadastroContrato() {
+    this.mostrarDialogCadastroContrato = false;
+    this.novoContrato = new Contrato();
+  }
+
   save() {
     this.isSaving = true;
     if (this.organizacao.id !== undefined) {

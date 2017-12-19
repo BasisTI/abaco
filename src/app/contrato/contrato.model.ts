@@ -9,5 +9,6 @@ export class Contrato implements BaseEntity {
     public dataInicioVigencia?: any,
     public dataFimVigencia?: any,
     public manual?: BaseEntity,
+    public ativo?: boolean,
   ) {}
 }
