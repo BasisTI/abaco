@@ -10,36 +10,30 @@
               <label>ID</label>
             </span>
           </div>          
-          <div class="ui-g-6">
-            <span class="md-inputfield">
+          <div class="ui-g-6" style="margin-bottom: 25px">
+            <span class="md-inputfield" >
               <input type="text" name="nome" [(ngModel)]="organizacao.nome" pInputText/>
               <label>Nome</label>
             </span>
           </div>
-          <div class="ui-g-6">
+          <div class="ui-g-6" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" name="cnpj" [(ngModel)]="organizacao.cnpj" pInputText/>
               <label>Cnpj</label>
             </span>
           </div>
-          <div class="ui-g-6">
-              <div class="ui-g">
-                <div class="ui-g-12 ui-md-2">
-                  <label>Ativo</label>
-              </div>
-              <div class="ui-g-12 ui-md-2">
-                <p-radioButton name="ativo" [value]="true" label="Sim" [(ngModel)]="organizacao.ativo"></p-radioButton>
-              </div>
-              <div class="ui-g-12 ui-md-2">
-                <p-radioButton name="ativo" [value]="false" label="Não" [(ngModel)]="organizacao.ativo"></p-radioButton>
-              </div>
-            </div>
-          </div>
-          <div class="ui-g-6">
+          
+          <div class="ui-g-6" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" name="numeroOcorrencia" [(ngModel)]="organizacao.numeroOcorrencia" pInputText/>
               <label>Numero Ocorrencia</label>
             </span>
+          </div>
+
+          <div class="ui-g-6" style="margin-bottom: 25px">
+            <input type="checkbox" class="form-control" name="ativo" 
+              id="org_ativo" [(ngModel)]="organizacao.ativo" />
+            <label class="form-control-label" for="org_ativo">Ativo</label>
           </div>
 
           <div class="ui-g">
@@ -63,7 +57,7 @@
           </div>
         </div>
 
-        <div class="ui-g">
+        <div class="ui-g" style="justify-content: center; margin-top: 25px;">
           <div class="ui-g-2">
             <button pButton type="button" label="Cancelar" routerLink="/organizacao"></button>
           </div>
