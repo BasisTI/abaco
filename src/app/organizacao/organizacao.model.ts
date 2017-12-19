@@ -12,4 +12,11 @@ export class Organizacao implements BaseEntity {
     public contratos?: BaseEntity[],
     public sistemas?: BaseEntity[],
   ) {}
+
+  addContrato(contrato: BaseEntity) {
+    if(!this.contratos)
+      this.contratos = [];
+    this.contratos.push(contrato);
+  }
+
 }

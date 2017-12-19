@@ -18,7 +18,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   
   private routeSub: Subscription;
 
-  contratos: Contrato[];
+  contratos: Contrato[] = [];
   organizacao: Organizacao;
   isSaving: boolean;
   mostrarDialogCadastroContrato: boolean = false;
@@ -35,9 +35,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isSaving = false;
-    this.contratoService.query().subscribe((res: ResponseWrapper) => {
-      this.contratos = res.json;
-    });
     this.manualService.query().subscribe((res: ResponseWrapper) => {
       this.manuais = res.json;
     });
@@ -54,8 +51,17 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   }
 
   fecharDialogCadastroContrato() {
+    this.doFecharDialogCadastroContrato();
+  }
+
+  private doFecharDialogCadastroContrato() {
     this.mostrarDialogCadastroContrato = false;
     this.novoContrato = new Contrato();
+  }
+
+  adicionarContrato() {
+    this.organizacao.addContrato(this.novoContrato);
+    this.doFecharDialogCadastroContrato();
   }
 
   save() {

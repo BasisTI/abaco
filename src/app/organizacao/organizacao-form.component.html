@@ -52,7 +52,8 @@
               </div>
             </div>
             
-            <p-dataTable [value]="organizacao.contratos" #contratosDataTable>
+            <p-dataTable [value]="organizacao.contratos"
+              [immutable]="false" #contratosDataTable>
               <p-column header="Número do Contrato" field="numeroContrato"></p-column>
               <p-column header="Ínicio Vigência" field="dataInicioVigencia"></p-column>
               <p-column header="Final Vigência" field="dataFimVigencia"></p-column>
@@ -114,7 +115,8 @@
                 (click)="fecharDialogCadastroContrato()"></button>
             </div>
             <div class="ui-g-2">
-              <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+              <button pButton type="submit" label="Salvar" 
+                (click)="adicionarContrato()"></button>
             </div>
           </div>
         </p-dialog>
