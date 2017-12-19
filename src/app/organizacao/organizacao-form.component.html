@@ -59,9 +59,16 @@
               <p-column header="Manual" field="manual.nome"></p-column>
               <p-column header="Ativo (TODO)" field="ativo"></p-column>
             </p-dataTable>
-             
           </div>
+        </div>
 
+        <div class="ui-g">
+          <div class="ui-g-2">
+            <button pButton type="button" label="Cancelar" routerLink="/organizacao"></button>
+          </div>
+          <div class="ui-g-2">
+            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+          </div>
         </div>
 
         <p-dialog header="Contrato" [(visible)]="mostrarDialogCadastroContrato"
@@ -74,11 +81,13 @@
               </span>
             </div>
             <div class="ui-g-6" style="margin-bottom: 25px">
-                <p-dropdown [options]="manuais" optionLabel="manual" placeholder="Manual" name="manualDropdown" [(ngModel)]="novoContrato.manual" [autoWidth]="false" dataKey="id"></p-dropdown>
+                <p-dropdown [options]="manuais" optionLabel="nome" placeholder="Manual"
+                  name="manualDropdown" [(ngModel)]="novoContrato.manual"
+                  [autoWidth]="false" dataKey="id"></p-dropdown>
             </div>
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <p-calendar [(ngModel)]="novoContrato.dataInicioVigencia"
+                <p-calendar [(ngModel)]="novoContrato.dataInicioVigencia" name="dataInicioVigencia"
                   [monthNavigator]="true" [yearNavigator]="true" 
                   dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
                 <label>Data de Início da Vigência</label>
@@ -87,7 +96,7 @@
             <div class="ui-g-6" style="margin-bottom: 25px">
                 <span class="md-inputfield">
                 <p-calendar [(ngModel)]="novoContrato.dataFimVigencia"
-                  [monthNavigator]="true" [yearNavigator]="true"
+                  [monthNavigator]="true" [yearNavigator]="true" name="dataFimVigencia"
                   dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
                 <label>Data Final da Vigência</label>
                 </span>
@@ -110,14 +119,6 @@
           </div>
         </p-dialog>
 
-        <div class="ui-g">
-          <div class="ui-g-2">
-            <button pButton type="button" label="Cancelar" routerLink="/organizacao"></button>
-          </div>
-          <div class="ui-g-2">
-            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
-          </div>
-        </div>
       </form>
     </div>
   </div>
