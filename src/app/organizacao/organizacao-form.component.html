@@ -68,7 +68,9 @@
             <button pButton type="button" label="Cancelar" routerLink="/organizacao"></button>
           </div>
           <div class="ui-g-2">
-            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+            <button pButton type="submit" label="Salvar" 
+              (click)="save()"
+              [disabled]="editForm.form.invalid || isSaving" ></button>
           </div>
         </div>
 
@@ -77,7 +79,7 @@
           <div class="ui-g">
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="text" name="nome" [(ngModel)]="novoContrato.numeroContrato" pInputText/>
+                <input type="text" name="numeroContrato" [(ngModel)]="novoContrato.numeroContrato" pInputText/>
                 <label>Número do Contrato</label>
               </span>
             </div>
@@ -104,7 +106,7 @@
               </div>
           </div>
           <div class = "ui-g-6" style="margin-bottom: 25px">
-            <input type="checkbox" class="form-control" name="ativo" id="field_ativo"
+            <input type="checkbox" class="form-control" name="contratoAtivo" id="field_ativo"
               [(ngModel)]="novoContrato.ativo" />
             <label class="form-control-label" for="field_ativo">Ativo</label>
           </div>
