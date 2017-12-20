@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -55,8 +56,9 @@ public class Contrato implements Serializable {
 	@JsonBackReference
 	private Organizacao organization;
 
-	@Column(name = "ativo")
-	private boolean ativo;
+	@NotNull
+	@Column(name = "ativo", nullable = false)
+	private Boolean ativo;
 
 	public Long getId() {
 		return id;
@@ -126,11 +128,11 @@ public class Contrato implements Serializable {
 		this.organization = organization;
 	}
 
-	public boolean isAtivo() {
+	public Boolean getAtivo() {
 		return ativo;
 	}
 
-	public void setAtivo(boolean ativo) {
+	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
 
