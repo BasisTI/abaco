@@ -9,14 +9,14 @@ export class Organizacao implements BaseEntity {
     public cnpj?: string,
     public ativo?: boolean,
     public numeroOcorrencia?: string,
-    public contratos?: BaseEntity[],
+    public contracts?: BaseEntity[],
     public sistemas?: BaseEntity[],
   ) {}
 
   addContrato(contrato: BaseEntity) {
-    if(!this.contratos)
-      this.contratos = [];
-    this.contratos.push(contrato);
+    if(!this.contracts)
+      this.contracts = [];
+    this.contracts.push(contrato);
   }
 
 }
