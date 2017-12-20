@@ -5,7 +5,7 @@ services:
         # volumes:
         #     - ~/volumes/jhipster/abaco/postgresql/:/var/lib/postgresql/
         environment:
-            - POSTGRES_USER=abaco
-            - POSTGRES_PASSWORD=
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=1
         ports:
             - 5432:5432

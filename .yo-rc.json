@@ -36,5 +36,8 @@
       "fr",
       "es"
     ]
+  },
+  "generator-jhipster-primeng": {
+    "frontendRoot": "/home/diego.marcilio/dev/abaco_primeng_codigo_fonte"
   }
 }
