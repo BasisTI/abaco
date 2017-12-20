@@ -41,12 +41,12 @@
 
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-md-3">
-                <button pButton type="text" label="Novo Contrato" icon="ui-icon-add"
+                <button pButton type="button" label="Novo Contrato" icon="ui-icon-add"
                   (click)="abrirDialogCadastroContrato()"></button>
               </div>
             </div>
             
-            <p-dataTable [value]="organizacao.contratos"
+            <p-dataTable [value]="organizacao.contracts"
               [immutable]="false" #contratosDataTable>
               <p-column header="Número do Contrato" field="numeroContrato"></p-column>
               <p-column header="Ínicio Vigência" field="dataInicioVigencia"></p-column>
