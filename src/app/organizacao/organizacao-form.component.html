@@ -49,10 +49,22 @@
             <p-dataTable [value]="organizacao.contracts"
               [immutable]="false" #contratosDataTable>
               <p-column header="Número do Contrato" field="numeroContrato"></p-column>
-              <p-column header="Ínicio Vigência" field="dataInicioVigencia"></p-column>
-              <p-column header="Final Vigência" field="dataFimVigencia"></p-column>
+              <p-column header="Ínicio Vigência" field="dataInicioVigencia">
+                <ng-template let-col let-dataInicioVigencia="rowData" pTemplate="body">
+                  {{ dataInicioVigencia[col.field] | date: 'dd/MM/y' }}
+                </ng-template>
+              </p-column>
+              <p-column header="Final Vigência" field="dataFimVigencia">
+                <ng-template let-col let-dataFimVigencia="rowData" pTemplate="body">
+                  {{ dataFimVigencia[col.field] | date: 'dd/MM/y' }}
+                </ng-template>
+              </p-column>
               <p-column header="Manual" field="manual.nome"></p-column>
-              <p-column header="Ativo (TODO)" field="ativo"></p-column>
+              <p-column header="Ativo" field="ativo">
+                <ng-template let-col let-ativo="rowData" pTemplate="body">
+                  {{ ativo[col.field] ? 'Sim' : 'Não' }}
+                </ng-template>
+              </p-column>
             </p-dataTable>
           </div>
         </div>
