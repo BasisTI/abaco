@@ -6,6 +6,7 @@ import { DatatableComponent, DatatableClickEvent } from '@basis/angular-componen
 import { environment } from '../../environments/environment';
 import { Organizacao } from './organizacao.model';
 import { OrganizacaoService } from './organizacao.service';
+import { ElasticQuery } from '../shared';
 
 @Component({
   selector: 'jhi-organizacao',
@@ -18,7 +19,7 @@ export class OrganizacaoComponent {
   searchUrl: string = this.organizacaoService.searchUrl;
 
   paginationParams = { contentIndex: null };
-  query = '';
+  elasticQuery: ElasticQuery = new ElasticQuery();
 
   constructor(
     private router: Router,
@@ -48,7 +49,7 @@ export class OrganizacaoComponent {
       message: 'Tem certeza que deseja excluir o registro?',
       accept: () => {
         this.organizacaoService.delete(id).subscribe(() => {
-          this.datatable.refresh(this.query);
+          this.datatable.refresh(this.elasticQuery.query);
         });
       }
     });
