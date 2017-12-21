@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
@@ -12,7 +12,7 @@ import { ElasticQuery } from '../shared';
   selector: 'jhi-organizacao',
   templateUrl: './organizacao.component.html'
 })
-export class OrganizacaoComponent {
+export class OrganizacaoComponent implements AfterViewInit {
 
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
@@ -26,6 +26,10 @@ export class OrganizacaoComponent {
     private organizacaoService: OrganizacaoService,
     private confirmationService: ConfirmationService
   ) {}
+
+  ngAfterViewInit() {
+    this.datatable.refresh(this.elasticQuery.query);
+  }
 
   datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
