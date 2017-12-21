@@ -24,6 +24,7 @@
 
         <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
           (buttonClick)="datatableClick($event)" #datatable>
+          <p-column header="Sigla" field="sigla"></p-column>
           <p-column header="Nome" field="nome"></p-column>
           <p-column header="CNPJ" field="cnpj"></p-column>
           <p-column header="Número da Ocorrência" field="numeroOcorrencia"></p-column>

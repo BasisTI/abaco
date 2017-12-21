@@ -1,36 +1,36 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>{{ organizacao.id ? 'Editar Organização' : 'Cadastrar Organização' }}</h1>
+      <h1>{{ organizacao.id ? 'Editar Organização' : 'Incluir Organização' }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
         <div class="ui-g">
-          <div class="ui-g-6" [hidden]="!organizacao.id">
-            <span class="md-inputfield">
-              <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="organizacao.id" readonly/>
-              <label>ID</label>
-            </span>
-          </div>          
-          <div class="ui-g-6" style="margin-bottom: 25px">
+          <div class="ui-g-2" style="margin-bottom: 25px">
             <span class="md-inputfield" >
-              <input type="text" name="nome" [(ngModel)]="organizacao.nome" pInputText/>
-              <label>Nome</label>
+              <input type="text" name="sigla" [(ngModel)]="organizacao.sigla" pInputText/>
+              <label>Sigla</label>
             </span>
           </div>
-          <div class="ui-g-6" style="margin-bottom: 25px">
+          <div class="ui-g-10" style="margin-bottom: 25px">
+            <span class="md-inputfield" >
+              <input type="text" name="nome" [(ngModel)]="organizacao.nome" pInputText/>
+              <label>Nome da Organização</label>
+            </span>
+          </div>
+          <div class="ui-g-5" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" name="cnpj" [(ngModel)]="organizacao.cnpj" pInputText/>
-              <label>Cnpj</label>
+              <label>CNPJ</label>
             </span>
           </div>
           
-          <div class="ui-g-6" style="margin-bottom: 25px">
+          <div class="ui-g-5" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" name="numeroOcorrencia" [(ngModel)]="organizacao.numeroOcorrencia" pInputText/>
-              <label>Numero Ocorrencia</label>
+              <label>Numero da Ocorrência</label>
             </span>
           </div>
 
-          <div class="ui-g-6" style="margin-bottom: 25px">
+          <div class="ui-g-2" style="margin-bottom: 25px">
             <input type="checkbox" class="form-control" name="ativo" 
               id="org_ativo" [(ngModel)]="organizacao.ativo" />
             <label class="form-control-label" for="org_ativo">Ativo</label>
