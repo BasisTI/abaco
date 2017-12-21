@@ -5,7 +5,8 @@
       <div class="ui-g">
         <div class="ui-g-12">
             <span class="md-inputfield">
-              <input type="text" pInputText class="ui-inputtext" #filter/>
+              <input type="text" pInputText class="ui-inputtext" #filter 
+                (keyup.enter)="datatable.refresh(filter.value)"/>
               <label>Descrição</label>  
             </span>
         </div>
@@ -23,16 +24,14 @@
 
         <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
           (buttonClick)="datatableClick($event)" #datatable>
-          <p-column header="#" field="id"></p-column>
           <p-column header="Nome" field="nome"></p-column>
-          <p-column header="Cnpj" field="cnpj"></p-column>
+          <p-column header="CNPJ" field="cnpj"></p-column>
+          <p-column header="Número da Ocorrência" field="numeroOcorrencia"></p-column>
           <p-column header="Ativo" field="ativo">
             <ng-template let-col let-ativo="rowData" pTemplate="body">
               {{ ativo[col.field] ? 'Sim' : (ativo[col.field] != null ? 'Não' : null) }}
             </ng-template>
           </p-column>
-          <p-column header="Numero Ocorrencia" field="numeroOcorrencia"></p-column>
-          <p-column header="Contrato" field="contrato.numeroContrato"></p-column>
         </basis-datatable>
       </div>
     </div>
