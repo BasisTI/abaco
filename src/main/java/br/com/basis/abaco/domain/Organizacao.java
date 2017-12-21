@@ -67,6 +67,10 @@ public class Organizacao implements Serializable {
 	@JsonManagedReference
 	private Set<Contrato> contracts = new HashSet<>();
 
+	@Size(max = 10)
+	@Column(name = "sigla")
+	private String sigla;
+
 	public Long getId() {
 		return id;
 	}
@@ -101,7 +105,7 @@ public class Organizacao implements Serializable {
 		this.cnpj = cnpj;
 	}
 
-	public Boolean isAtivo() {
+	public Boolean getAtivo() {
 		return ativo;
 	}
 
@@ -150,6 +154,19 @@ public class Organizacao implements Serializable {
 
 	public void setSistemas(Set<Sistema> sistemas) {
 		this.sistemas = sistemas;
+	}
+
+	public String getSigla() {
+		return sigla;
+	}
+
+	public Organizacao sigla(String sigla) {
+		this.sigla = sigla;
+		return this;
+	}
+
+	public void setSigla(String sigla) {
+		this.sigla = sigla;
 	}
 
 	@Override
