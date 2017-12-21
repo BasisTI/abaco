@@ -21,7 +21,7 @@
           </div>
         </div>
 
-        <basis-datatable [url]="searchUrl" 
+        <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
           (buttonClick)="datatableClick($event)" #datatable>
           <p-column header="#" field="id"></p-column>
           <p-column header="Nome" field="nome"></p-column>
@@ -35,7 +35,7 @@
           <p-column header="Contrato" field="contrato.numeroContrato"></p-column>
         </basis-datatable>
       </div>
-    </div> <!-- fim card -->
+    </div>
   </div>
 </div>
 <p-confirmDialog header="Confirmação" #dialog>

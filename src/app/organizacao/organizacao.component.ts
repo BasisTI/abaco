@@ -17,6 +17,8 @@ export class OrganizacaoComponent {
 
   searchUrl: string = this.organizacaoService.searchUrl;
 
+  paginationParams = { contentIndex: null };
+
   constructor(
     private router: Router,
     private organizacaoService: OrganizacaoService,
