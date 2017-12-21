@@ -18,6 +18,7 @@ export class OrganizacaoComponent {
   searchUrl: string = this.organizacaoService.searchUrl;
 
   paginationParams = { contentIndex: null };
+  query = '';
 
   constructor(
     private router: Router,
@@ -47,7 +48,7 @@ export class OrganizacaoComponent {
       message: 'Tem certeza que deseja excluir o registro?',
       accept: () => {
         this.organizacaoService.delete(id).subscribe(() => {
-          this.datatable.refresh(undefined);
+          this.datatable.refresh(this.query);
         });
       }
     });
