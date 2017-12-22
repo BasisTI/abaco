@@ -1,45 +1,63 @@
 <div class="ui-g ui-fluid" *ngIf="organizacao">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>Visualizar Organizacao</h1>
+      <h1>Organizacao</h1>
       <div class="ui-g">
-        <div class="ui-g-6">
-          <span class="md-inputfield">
-            <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="organizacao.id" readonly/>
-            <label>ID</label>
+        <div class="ui-g-2" style="margin-bottom: 25px">
+          <span class="md-inputfield" >
+            <input type="text" class="ui-inputtext" name="sigla" [ngModel]="organizacao.sigla" pInputText readonly/>
+            <label>Sigla</label>
           </span>
         </div>
-        <div class="ui-g-6">
-          <span class="md-inputfield">
+        <div class="ui-g-10">
+          <span class="md-inputfield" style="margin-bottom: 25px">
             <input type="text" name="nome" pInputText [ngModel]="organizacao.nome" readonly/>
             <label>Nome</label>
           </span>
         </div>
-        <div class="ui-g-6">
-          <span class="md-inputfield">
+        <div class="ui-g-5">
+          <span class="md-inputfield" style="margin-bottom: 25px">
             <input type="text" name="cnpj" pInputText [ngModel]="organizacao.cnpj" readonly/>
             <label>Cnpj</label>
           </span>
         </div>
-        <div class="ui-g-6">
-          <span class="md-inputfield">
-              <input type="text" name="ativo" pInputText [ngModel]="organizacao.ativo ? 'Sim' : (organizacao.ativo != null ? 'Não' : null)" readonly/>
-            <label>Ativo</label>
-          </span>
-        </div>
-        <div class="ui-g-6">
-          <span class="md-inputfield">
+        <div class="ui-g-5">
+          <span class="md-inputfield" style="margin-bottom: 25px">
             <input type="text" name="numeroOcorrencia" pInputText [ngModel]="organizacao.numeroOcorrencia" readonly/>
             <label>Numero Ocorrencia</label>
           </span>
         </div>
-        <div class="ui-g-6">
-          <span class="md-inputfield">
-            <input type="text" name="contrato" pInputText [ngModel]="organizacao.contrato.numeroContrato" readonly/>
-            <label>Contrato</label>
+        <div class="ui-g-2">
+          <span class="md-inputfield" style="margin-bottom: 25px">
+              <input type="text" name="ativo" pInputText [ngModel]="organizacao.ativo ? 'Sim' : 'Não' " readonly/>
+            <label>Ativo</label>
           </span>
         </div>
       </div>
+      <div class="ui-g" style="margin-bottom: 25px">
+          <h4>Contratos</h4>
+          
+          <p-dataTable [value]="organizacao.contracts"
+            [immutable]="false" #contratosDataTable>
+            <p-column header="Número do Contrato" field="numeroContrato"></p-column>
+            <p-column header="Ínicio Vigência" field="dataInicioVigencia">
+              <ng-template let-col let-dataInicioVigencia="rowData" pTemplate="body">
+                {{ dataInicioVigencia[col.field] | date: 'dd/MM/y' }}
+              </ng-template>
+            </p-column>
+            <p-column header="Final Vigência" field="dataFimVigencia">
+              <ng-template let-col let-dataFimVigencia="rowData" pTemplate="body">
+                {{ dataFimVigencia[col.field] | date: 'dd/MM/y' }}
+              </ng-template>
+            </p-column>
+            <p-column header="Manual" field="manual.nome"></p-column>
+            <p-column header="Ativo" field="ativo">
+              <ng-template let-col let-ativo="rowData" pTemplate="body">
+                {{ ativo[col.field] ? 'Sim' : 'Não' }}
+              </ng-template>
+            </p-column>
+          </p-dataTable>
+        </div>
       <div class="ui-g">
         <div class="ui-g-2">
           <button pButton type="button" label="Voltar" routerLink="/organizacao"></button>
