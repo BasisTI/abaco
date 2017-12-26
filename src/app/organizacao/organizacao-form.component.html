@@ -6,26 +6,26 @@
         <div class="ui-g">
           <div class="ui-g-2" style="margin-bottom: 25px">
             <span class="md-inputfield" >
-              <input type="text" name="sigla" [(ngModel)]="organizacao.sigla" pInputText/>
+              <input type="text" name="siglaOrganizacao" [(ngModel)]="organizacao.sigla" pInputText/>
               <label>Sigla</label>
             </span>
           </div>
           <div class="ui-g-10" style="margin-bottom: 25px">
             <span class="md-inputfield" >
-              <input type="text" name="nome" [(ngModel)]="organizacao.nome" pInputText/>
+              <input type="text" name="nomeOrganizacao" [(ngModel)]="organizacao.nome" pInputText/>
               <label>Nome da Organização</label>
             </span>
           </div>
           <div class="ui-g-5" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input type="text" name="cnpj" [(ngModel)]="organizacao.cnpj" pInputText/>
+              <input type="text" name="cnpjOrganizacao" [(ngModel)]="organizacao.cnpj" pInputText/>
               <label>CNPJ</label>
             </span>
           </div>
           
           <div class="ui-g-5" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input type="text" name="numeroOcorrencia" [(ngModel)]="organizacao.numeroOcorrencia" pInputText/>
+              <input type="text" name="numeroOcorrenciaOrganizacao" [(ngModel)]="organizacao.numeroOcorrencia" pInputText/>
               <label>Numero da Ocorrência</label>
             </span>
           </div>
@@ -96,7 +96,7 @@
             </div>
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <p-calendar [(ngModel)]="novoContrato.dataInicioVigencia" name="dataInicioVigencia"
+                <p-calendar [(ngModel)]="novoContrato.dataInicioVigencia" name="dataInicioVigenciaContrato"
                   [monthNavigator]="true" [yearNavigator]="true" 
                   dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
                 <label>Data de Início da Vigência</label>
@@ -105,14 +105,14 @@
             <div class="ui-g-6" style="margin-bottom: 25px">
                 <span class="md-inputfield">
                 <p-calendar [(ngModel)]="novoContrato.dataFimVigencia"
-                  [monthNavigator]="true" [yearNavigator]="true" name="dataFimVigencia"
+                  [monthNavigator]="true" [yearNavigator]="true" name="dataFimVigenciaContrato"
                   dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
                 <label>Data Final da Vigência</label>
                 </span>
               </div>
           </div>
           <div class = "ui-g-6" style="margin-bottom: 25px">
-            <input type="checkbox" class="form-control" name="contratoAtivo" id="field_ativo"
+            <input type="checkbox" class="form-control" name="ativoContrato" id="field_ativo"
               [(ngModel)]="novoContrato.ativo" />
             <label class="form-control-label" for="field_ativo">Ativo</label>
           </div>
