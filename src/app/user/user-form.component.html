@@ -1,0 +1,25 @@
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1>{{ user.id ? 'Editar User' : 'Cadastrar User' }}</h1>
+      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        <div class="ui-g">
+          <div class="ui-g-6" [hidden]="!user.id">
+            <span class="md-inputfield">
+              <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="user.id" readonly/>
+              <label>ID</label>
+            </span>
+          </div>          
+        </div>
+        <div class="ui-g">
+          <div class="ui-g-2">
+            <button pButton type="button" label="Cancelar" routerLink="/user"></button>
+          </div>
+          <div class="ui-g-2">
+            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -4,14 +4,14 @@
       <h1>Tipo de Equipe</h1>
       <div class="ui-g">
         <div class="ui-g-12">
-            <span class="md-inputfield">
-              <input type="text" pInputText class="ui-inputtext"
-                name="filtroTipoEquipe" 
-                [(ngModel)]="elasticQuery.value"
-                (keyup.enter)="datatable.refresh(elasticQuery.query)"
-                #filter />
-              <label>Descrição</label>
-            </span>
+          <span class="md-inputfield">
+            <input type="text" pInputText class="ui-inputtext"
+              name="filtroTipoEquipe" 
+              [(ngModel)]="elasticQuery.value"
+              (keyup.enter)="datatable.refresh(elasticQuery.query)"
+              #filter />
+            <label>Descrição</label>
+          </span>
         </div>
       </div>
       <div class="ui-g">

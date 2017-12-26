@@ -1,0 +1,46 @@
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1>Usuários</h1>
+      <div class="ui-g">
+          <div class="ui-g-12">
+            <span class="md-inputfield">
+              <input type="text" pInputText class="ui-inputtext"
+                name="filtroUser" 
+                [(ngModel)]="elasticQuery.value"
+                (keyup.enter)="datatable.refresh(elasticQuery.query)"
+                #filter />
+              <label>Descrição</label>
+            </span>
+          </div>
+          <div class="ui-g">
+            <div class="ui-g ui-md-12" style="justify-content: center">
+              <div class="ui-md-2">
+                <button pButton type="button" label="Pesquisar" icon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></button>
+              </div>
+              <div class="ui-md-3">
+                <button pButton type="button" label="Novo Usuário" routerLink="/user/new" icon="ui-icon-add"></button>
+              </div>
+            </div>
+
+        <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
+          (buttonClick)="datatableClick($event)" #datatable>
+          <p-column header="#" field="id"></p-column>
+          <p-column header="Name" field="names">
+            <ng-template let-col let-names="rowData" pTemplate="body">
+              <span *ngFor="let name of names[col.field] ; let last = last">
+                {{ name.name }}{{ last ? '' : ', ' }}
+              </span>
+            </ng-template>
+          </p-column>
+        </basis-datatable>
+      </div>
+    </div>
+  </div>
+</div>
+<p-confirmDialog header="Confirmação" #dialog>
+  <p-footer>
+    <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
+    <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

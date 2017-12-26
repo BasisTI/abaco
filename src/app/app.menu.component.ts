@@ -24,7 +24,7 @@ export class AppMenuComponent implements OnInit {
       { label: 'Administração', icon: 'supervisor_account', 
         items: [
           { label: 'Tipo de Equipe', routerLink: "tipoEquipe" },
-          { label: 'Usuários'} 
+          { label: 'Usuários', routerLink: "user"} 
         ]  
       },
       { label: 'Cadastros Básicos', icon: 'description', 
