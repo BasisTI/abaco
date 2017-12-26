@@ -121,7 +121,7 @@ public class OrganizacaoResourceIntTest {
         Organizacao testOrganizacao = organizacaoList.get(organizacaoList.size() - 1);
         assertThat(testOrganizacao.getNome()).isEqualTo(DEFAULT_NOME);
         assertThat(testOrganizacao.getCnpj()).isEqualTo(DEFAULT_CNPJ);
-        assertThat(testOrganizacao.isAtivo()).isEqualTo(DEFAULT_ATIVO);
+        assertThat(testOrganizacao.getAtivo()).isEqualTo(DEFAULT_ATIVO);
         assertThat(testOrganizacao.getNumeroOcorrencia()).isEqualTo(DEFAULT_NUMERO_OCORRENCIA);
 
         // Validate the Organizacao in Elasticsearch
@@ -236,7 +236,7 @@ public class OrganizacaoResourceIntTest {
         Organizacao testOrganizacao = organizacaoList.get(organizacaoList.size() - 1);
         assertThat(testOrganizacao.getNome()).isEqualTo(UPDATED_NOME);
         assertThat(testOrganizacao.getCnpj()).isEqualTo(UPDATED_CNPJ);
-        assertThat(testOrganizacao.isAtivo()).isEqualTo(UPDATED_ATIVO);
+        assertThat(testOrganizacao.getAtivo()).isEqualTo(UPDATED_ATIVO);
         assertThat(testOrganizacao.getNumeroOcorrencia()).isEqualTo(UPDATED_NUMERO_OCORRENCIA);
 
         // Validate the Organizacao in Elasticsearch
