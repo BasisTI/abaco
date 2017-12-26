@@ -16,24 +16,45 @@
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: center">
               <div class="ui-md-2">
-                <button pButton type="button" label="Pesquisar" icon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></button>
+                <button pButton type="button" label="Pesquisar" icon="ui-icon-search"
+                  (click)="datatable.refresh(elasticQuery.query)"></button>
               </div>
               <div class="ui-md-3">
-                <button pButton type="button" label="Novo Usuário" routerLink="/user/new" icon="ui-icon-add"></button>
+                <button pButton type="button" label="Novo Usuário" routerLink="/user/new"
+                  icon="ui-icon-add"></button>
               </div>
             </div>
-
-        <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
-          (buttonClick)="datatableClick($event)" #datatable>
-          <p-column header="#" field="id"></p-column>
-          <p-column header="Name" field="names">
-            <ng-template let-col let-names="rowData" pTemplate="body">
-              <span *ngFor="let name of names[col.field] ; let last = last">
-                {{ name.name }}{{ last ? '' : ', ' }}
-              </span>
-            </ng-template>
-          </p-column>
-        </basis-datatable>
+        <div class="ui-g-12 ui-md-12" style="padding: 0;">
+          <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
+            (buttonClick)="datatableClick($event)" #datatable>
+            <p-column header="Nome" field="nome">
+              <ng-template let-user="rowData" pTemplate="body">
+                {{ user.firstName + ' ' + user.lastName }}
+              </ng-template>
+            </p-column>
+            <p-column header="Login" field="login"></p-column>
+            <p-column header="E-mail" field="email" 
+              [style]="{'word-wrap':'break-word'}"></p-column>
+            <p-column header="Organização" field="organizacoes"
+              [style]="{'word-wrap':'break-word'}">
+              <ng-template ngFor let-org [ngForOf]="organizacoes">
+                {{ org.nome }}
+              </ng-template>
+            </p-column>
+            <p-column header="Perfil" field="authorities">
+              
+            </p-column>
+            <p-column header="Equipe" field="tipoEquipes">
+              
+            </p-column>
+            <p-column header="Ativo" field="ativo" 
+              [style]="{width:'7.5%'}">
+                <ng-template let-col let-ativo="rowData" pTemplate="body">
+                    {{ ativo[col.field] ? 'Sim' : (ativo[col.field] != null ? 'Não' : null) }}
+                  </ng-template>
+            </p-column>
+          </basis-datatable>
+        </div>
       </div>
     </div>
   </div>
