@@ -1,0 +1,26 @@
+<div class="ui-g ui-fluid" *ngIf="tipoEquipe">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1>Visualizar Tipo Equipe</h1>
+      <div class="ui-g">
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="tipoEquipe.id" readonly/>
+            <label>ID</label>
+          </span>
+        </div>
+        <div class="ui-g-6">
+          <span class="md-inputfield">
+            <input type="text" name="nome" pInputText [ngModel]="tipoEquipe.nome" readonly/>
+            <label>Nome</label>
+          </span>
+        </div>
+      </div>
+      <div class="ui-g">
+        <div class="ui-g-2">
+          <button pButton type="button" label="Voltar" routerLink="/tipoEquipe"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
