@@ -23,7 +23,7 @@ export class AppMenuComponent implements OnInit {
     this.menuItems = [
       { label: 'Administração', icon: 'supervisor_account', 
         items: [
-          { label: 'Tipo de Equipe' },
+          { label: 'Tipo de Equipe', routerLink: "tipoEquipe" },
           { label: 'Usuários'} 
         ]  
       },

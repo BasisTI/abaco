@@ -1,23 +1,32 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>Tipo Equipes</h1>
+      <h1>Tipo de Equipe</h1>
       <div class="ui-g">
-        <div class="ui-g-12 ui-md-4">
+        <div class="ui-g-12">
             <span class="md-inputfield">
-              <input type="text" pInputText class="ui-inputtext" #filter/>
-              <label>Filtro</label>
+              <input type="text" pInputText class="ui-inputtext"
+                name="filtroTipoEquipe" 
+                [(ngModel)]="elasticQuery.value"
+                (keyup.enter)="datatable.refresh(elasticQuery.query)"
+                #filter />
+              <label>Descrição</label>
             </span>
         </div>
-        <div class="ui-g-12 ui-md-2">
-          <button pButton type="button" label="Pesquisar" icon="ui-icon-search" (click)="datatable.refresh(filter.value)"></button>
+      </div>
+      <div class="ui-g">
+        <div class="ui-g ui-md-12" style="justify-content: center">
+          <div class="ui-md-2">
+            <button pButton type="button" label="Pesquisar" icon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></button>
+          </div>
+          <div class="ui-md-3">
+            <button pButton type="button" label="Novo Tipo de Equipe" routerLink="/tipoEquipe/new" icon="ui-icon-add"></button>
+          </div>
         </div>
-        <div class="ui-g-12 ui-md-2">
-          <button pButton type="button" label="Cadastrar" routerLink="/tipoEquipe/new" icon="ui-icon-add"></button>
-        </div>
-        <basis-datatable [url]="searchUrl" 
+
+        <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
           (buttonClick)="datatableClick($event)" #datatable>
-          <p-column header="#" field="id"></p-column>
+          <p-column header="Código" field="id"></p-column>
           <p-column header="Nome" field="nome"></p-column>
         </basis-datatable>
       </div>
