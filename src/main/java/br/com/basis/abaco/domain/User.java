@@ -108,7 +108,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "user_organizacao", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
-	private Set<Organizacao> organizacaoes = new HashSet<>();
+	private Set<Organizacao> organizacoes = new HashSet<>();
 
 	public Long getId() {
 		return id;
@@ -223,12 +223,12 @@ public class User extends AbstractAuditingEntity implements Serializable {
 		this.tipoEquipes = tipoEquipes;
 	}
 
-	public Set<Organizacao> getOrganizacaoes() {
-		return organizacaoes;
+	public Set<Organizacao> getOrganizacoes() {
+		return organizacoes;
 	}
 
-	public void setOrganizacaoes(Set<Organizacao> organizacaoes) {
-		this.organizacaoes = organizacaoes;
+	public void setOrganizacoes(Set<Organizacao> organizacoes) {
+		this.organizacoes = organizacoes;
 	}
 
 	@Override
