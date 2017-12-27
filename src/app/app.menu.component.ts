@@ -32,7 +32,7 @@ export class AppMenuComponent implements OnInit {
           { label: 'Tipo de Fase', routerLink: "tipoFase" },
           { label: 'Manual', routerLink: "manual" },
           { label: 'Organização', routerLink: "organizacao" },
-          { label: 'Sistema' }
+          { label: 'Sistema', routerLink: "sistema" }
         ]
       },
       { label: 'Análise', icon: 'insert_chart',
