@@ -7,6 +7,8 @@ import { environment } from '../../environments/environment';
 import { Sistema } from './sistema.model';
 import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
 
+import * as _ from 'lodash';
+
 @Injectable()
 export class SistemaService {
 
@@ -70,7 +72,8 @@ export class SistemaService {
    * Convert a Sistema to a JSON which can be sent to the server.
    */
   private convert(sistema: Sistema): Sistema {
-    const copy: Sistema = Object.assign({}, sistema);
-    return copy;
+    const copy: Sistema = _.cloneDeep(sistema);
+    return copy.toNonCircularJson();
   }
+
 }

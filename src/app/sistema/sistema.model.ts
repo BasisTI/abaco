@@ -39,4 +39,12 @@ export class Sistema implements BaseEntity {
     // FIXME
     return _.find(this.modulos, {'nome': modulo.nome });
   }
+
+  toNonCircularJson(): Sistema {
+    var ms = this.modulos;
+    var nonCircularModulos: Modulo[] = ms.map(m => m.toNonCircularJson());
+    return new Sistema(this.id, this.sigla,
+      this.nome, this.numeroOcorrencia, 
+      this.organizacao, nonCircularModulos);
+  }
 }

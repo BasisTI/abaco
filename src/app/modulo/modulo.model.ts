@@ -23,4 +23,10 @@ export class Modulo implements BaseEntity {
     else
       return this.funcionalidades;
   }
+
+  toNonCircularJson(): Modulo {
+    var fs = this.funcionalidades;
+    var nonCircularFuncionalidades: Funcionalidade[] = fs.map(f => f.toNonCircularJson());
+    return new Modulo(this.id, this.nome, undefined, nonCircularFuncionalidades);
+  }
 }
