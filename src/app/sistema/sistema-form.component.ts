@@ -8,6 +8,7 @@ import { Sistema } from './sistema.model';
 import { SistemaService } from './sistema.service';
 import { Organizacao, OrganizacaoService } from '../organizacao';
 import { Modulo, ModuloService } from '../modulo';
+import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
 import { ResponseWrapper } from '../shared';
 
 @Component({
@@ -76,14 +77,11 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   private doFecharDialogFuncionalidade() {
     this.mostrarDialogFuncionalidade = false;
-    // TODO ajustar
-    this.novaFuncionalidade = {};
+    this.novaFuncionalidade = new Funcionalidade();
   }
 
   adicionarFuncionalidade() {
-    // XXX passagem por referencia?
-    var modulo = this.novaFuncionalidade.modulo;
-    modulo.addFuncionalidade(this.novaFuncionalidade);
+    this.sistema.addFuncionalidade(this.novaFuncionalidade);
     this.doFecharDialogFuncionalidade();
   }
 

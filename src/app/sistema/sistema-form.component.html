@@ -53,21 +53,21 @@
         </div>
 
         <div class="ui-g">
-          <h4 style="margin-bottom: 0px; margin-top: 0px;">
+          <h4 style="margin-bottom: 0px;">
             Funcionalidades
           </h4>
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-md-3">
-              <button pButton type="button" label="Novo Módulo" icon="ui-icon-add"
-                (click)="abrirDialogModulo()"></button>
+              <button pButton type="button" label="Nova Funcionalidade" icon="ui-icon-add"
+                (click)="abrirDialogFuncionalidade()"></button>
             </div>
           </div>
 
           <p-dataTable [value]="sistema.funcionalidades"
             [immutable]="false" #funcionalidadesDataTable>
             <p-column header="Módulo" field="modulo.nome"></p-column>
-            <p-column header="Nome da funcionalidade" field="nome"></p-column>
+            <p-column header="Nome" field="nome"></p-column>
           </p-dataTable>
         </div>
 

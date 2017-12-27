@@ -11,9 +11,16 @@ export class Modulo implements BaseEntity {
     public funcionalidades?: Funcionalidade[],
   ) {}
 
-  addFuncionalidade(funcionalidade: BaseEntity) {
+  addFuncionalidade(funcionalidade: Funcionalidade) {
     if(!this.funcionalidades)
       this.funcionalidades = [];
     this.funcionalidades.push(funcionalidade);
+  }
+
+  safeFuncionalidades(): Funcionalidade[] {
+    if(!this.funcionalidades)
+      return [];
+    else
+      return this.funcionalidades;
   }
 }
