@@ -7,6 +7,7 @@ import { SelectItem } from 'primeng/primeng';
 import { User } from './user.model';
 import { UserService } from './user.service';
 import { TipoEquipe, TipoEquipeService } from '../tipo-equipe';
+import { Organizacao, OrganizacaoService } from '../organizacao';
 import { ResponseWrapper } from '../shared';
 
 @Component({
@@ -15,7 +16,9 @@ import { ResponseWrapper } from '../shared';
 })
 export class UserFormComponent implements OnInit, OnDestroy {
 
-  tipoequipes: TipoEquipe[];
+  tipoEquipes: TipoEquipe[];
+  organizacoes: Organizacao[];
+  authorities: string[] = ["TODO-1", "TODO-2"];
   user: User;
   isSaving: boolean;
   private routeSub: Subscription;
@@ -25,12 +28,16 @@ export class UserFormComponent implements OnInit, OnDestroy {
     private router: Router,
     private userService: UserService,
     private tipoEquipeService: TipoEquipeService,
+    private organizacaoService: OrganizacaoService,
   ) {}
 
   ngOnInit() {
     this.isSaving = false;
     this.tipoEquipeService.query().subscribe((res: ResponseWrapper) => {
-      this.tipoequipes = res.json;
+      this.tipoEquipes = res.json;
+    });
+    this.organizacaoService.query().subscribe((res: ResponseWrapper) => {
+      this.organizacoes = res.json;
     });
     this.routeSub = this.route.params.subscribe(params => {
       this.user = new User();

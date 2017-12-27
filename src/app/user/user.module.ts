@@ -12,6 +12,7 @@ import {
   DropdownModule,
   RadioButtonModule,
   ConfirmDialogModule,
+  DataTableModule,
   ConfirmationService
 } from 'primeng/primeng';
 
@@ -36,6 +37,7 @@ import {
     DropdownModule,
     RadioButtonModule,
     InputTextModule,
+    DataTableModule,
     ConfirmDialogModule,
   ],
   declarations: [

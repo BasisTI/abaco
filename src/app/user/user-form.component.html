@@ -1,17 +1,72 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>{{ user.id ? 'Editar User' : 'Cadastrar User' }}</h1>
+      <h1>{{ user.id ? 'Editar Usuário' : 'Cadastrar Usuário' }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
         <div class="ui-g">
-          <div class="ui-g-6" [hidden]="!user.id">
+          <div class="ui-g-4" style="margin-bottom: 25px">
+            <span class="md-inputfield" >
+              <input type="text" name="firstNameUser" [(ngModel)]="user.firstName" pInputText/>
+              <label>Primeiro Nome</label>
+            </span>
+          </div>
+          <div class="ui-g-4" style="margin-bottom: 25px">
+            <span class="md-inputfield" >
+              <input type="text" name="lastNameUser" [(ngModel)]="user.lastName" pInputText/>
+              <label>Último Nome</label>
+            </span>
+          </div>
+          <div class="ui-g-4" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="user.id" readonly/>
-              <label>ID</label>
+              <input type="text" name="loginUser" [(ngModel)]="user.login" pInputText/>
+              <label>Login</label>
             </span>
           </div>          
+          <div class="ui-g-12" style="margin-bottom: 25px">
+            <input type="checkbox" class="form-control" name="ativoUser" 
+            id="user_ativo" [(ngModel)]="user.ativo" />
+            <label class="form-control-label" for="user_ativo">Ativo</label>
+          </div>
+
+          <div class="ui-g-6" style="margin-bottom: 25px">
+            <p-dataTable [value]="authorities" [(selection)]="user.authorities" dataKey="id"
+              [paginator]="true" [rows]="5" [headerCheckboxToggleAllPages]="true">
+              <p-header>Perfil</p-header>
+              <p-column selectionMode="multiple"
+                [style]="{'width':'15%'}"></p-column>
+              <p-column header="Nome">
+                <ng-template let-perfil="rowData" pTemplate="body">
+                  {{ perfil }}
+                </ng-template>
+              </p-column>
+            </p-dataTable>
+          </div>
+
+          <div class="ui-g-6" style="margin-bottom: 25px">
+            <p-dataTable [value]="organizacoes" [(selection)]="user.organizacoes" dataKey="id"
+              [paginator]="true" [rows]="5" [headerCheckboxToggleAllPages]="true">
+              <p-header>Organização</p-header>
+              <p-column selectionMode="multiple"
+                [style]="{'width':'15%'}"></p-column>
+              <p-column header="Sigla" field="sigla"
+                [style]="{'width':'30%'}"></p-column>
+              <p-column header="Nome" field="nome"></p-column>
+            </p-dataTable>
+          </div>
+
+        <div class="ui-g-6" style="margin-bottom: 25px">
+          <p-dataTable [value]="tipoEquipes" [(selection)]="user.tipoEquipes" dataKey="id"
+            [paginator]="true" [rows]="5" [headerCheckboxToggleAllPages]="true">
+            <p-header>Equipe</p-header>
+            <p-column selectionMode="multiple"
+              [style]="{'width':'15%'}"></p-column>
+            <p-column header="Nome" field="nome"></p-column>
+          </p-dataTable>
         </div>
-        <div class="ui-g">
+        
+      </div>
+        
+        <div class="ui-g" style="justify-content: center; margin-top: 25px;">
           <div class="ui-g-2">
             <button pButton type="button" label="Cancelar" routerLink="/user"></button>
           </div>
@@ -19,6 +74,7 @@
             <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
           </div>
         </div>
+
       </form>
     </div>
   </div>
