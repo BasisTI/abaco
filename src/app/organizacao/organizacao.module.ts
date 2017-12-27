@@ -40,7 +40,7 @@ import {
     InputTextModule,
     ConfirmDialogModule,
     DataTableModule,
-    DialogModule
+    DialogModule,
   ],
   declarations: [
     OrganizacaoComponent,

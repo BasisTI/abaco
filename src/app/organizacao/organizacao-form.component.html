@@ -26,7 +26,7 @@
           <div class="ui-g-5" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" name="numeroOcorrenciaOrganizacao" [(ngModel)]="organizacao.numeroOcorrencia" pInputText/>
-              <label>Numero da Ocorrência</label>
+              <label>Número da Ocorrência</label>
             </span>
           </div>
 
@@ -37,7 +37,9 @@
           </div>
 
           <div class="ui-g">
-            <h4>Contratos</h4>
+              <h4 style="margin-bottom: 0px; margin-top: 0px;">
+                Contratos
+              </h4>
 
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-md-3">
@@ -90,9 +92,9 @@
               </span>
             </div>
             <div class="ui-g-6" style="margin-bottom: 25px">
-                <p-dropdown [options]="manuais" optionLabel="nome" placeholder="Manual"
-                  name="manualDropdown" [(ngModel)]="novoContrato.manual"
-                  [autoWidth]="false" dataKey="id"></p-dropdown>
+              <p-dropdown [options]="manuais" optionLabel="nome" placeholder="Manual"
+                name="manualDropdown" [(ngModel)]="novoContrato.manual"
+                [autoWidth]="false" dataKey="id"></p-dropdown>
             </div>
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
@@ -103,13 +105,13 @@
               </span>
             </div>
             <div class="ui-g-6" style="margin-bottom: 25px">
-                <span class="md-inputfield">
-                <p-calendar [(ngModel)]="novoContrato.dataFimVigencia"
-                  [monthNavigator]="true" [yearNavigator]="true" name="dataFimVigenciaContrato"
-                  dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
-                <label>Data Final da Vigência</label>
-                </span>
-              </div>
+              <span class="md-inputfield">
+              <p-calendar [(ngModel)]="novoContrato.dataFimVigencia"
+                [monthNavigator]="true" [yearNavigator]="true" name="dataFimVigenciaContrato"
+                dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
+              <label>Data Final da Vigência</label>
+              </span>
+            </div>
           </div>
           <div class = "ui-g-6" style="margin-bottom: 25px">
             <input type="checkbox" class="form-control" name="ativoContrato" id="field_ativo"
