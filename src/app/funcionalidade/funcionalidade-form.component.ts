@@ -7,7 +7,7 @@ import { SelectItem } from 'primeng/primeng';
 import { Funcionalidade } from './funcionalidade.model';
 import { FuncionalidadeService } from './funcionalidade.service';
 import { Modulo, ModuloService } from '../modulo';
-import { FuncaoDados, FuncaoDadosService } from '../funcao-dados';
+// import { FuncaoDados, FuncaoDadosService } from '../funcao-dados';
 import { FuncaoTransacao, FuncaoTransacaoService } from '../funcao-transacao';
 import { ResponseWrapper } from '../shared';
 
@@ -19,7 +19,7 @@ export class FuncionalidadeFormComponent implements OnInit, OnDestroy {
 
   modulos: Modulo[];
 
-  funcaodados: FuncaoDados[];
+  // funcaodados: FuncaoDados[];
 
   funcaotransacaos: FuncaoTransacao[];
   funcionalidade: Funcionalidade;
@@ -31,7 +31,7 @@ export class FuncionalidadeFormComponent implements OnInit, OnDestroy {
     private router: Router,
     private funcionalidadeService: FuncionalidadeService,
     private moduloService: ModuloService,
-    private funcaoDadosService: FuncaoDadosService,
+    // private funcaoDadosService: FuncaoDadosService,
     private funcaoTransacaoService: FuncaoTransacaoService,
   ) {}
 
@@ -40,9 +40,9 @@ export class FuncionalidadeFormComponent implements OnInit, OnDestroy {
     this.moduloService.query().subscribe((res: ResponseWrapper) => {
       this.modulos = res.json;
     });
-    this.funcaoDadosService.query().subscribe((res: ResponseWrapper) => {
-      this.funcaodados = res.json;
-    });
+    // this.funcaoDadosService.query().subscribe((res: ResponseWrapper) => {
+    //   this.funcaodados = res.json;
+    // });
     this.funcaoTransacaoService.query().subscribe((res: ResponseWrapper) => {
       this.funcaotransacaos = res.json;
     });
