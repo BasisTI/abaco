@@ -1,4 +1,5 @@
 import { BaseEntity } from '../shared';
+import { Funcionalidade } from '../funcionalidade';
 
 
 export class Modulo implements BaseEntity {
@@ -7,6 +8,12 @@ export class Modulo implements BaseEntity {
     public id?: number,
     public nome?: string,
     public sistema?: BaseEntity,
-    public funcionalidades?: BaseEntity[],
+    public funcionalidades?: Funcionalidade[],
   ) {}
+
+  addFuncionalidade(funcionalidade: BaseEntity) {
+    if(!this.funcionalidades)
+      this.funcionalidades = [];
+    this.funcionalidades.push(funcionalidade);
+  }
 }

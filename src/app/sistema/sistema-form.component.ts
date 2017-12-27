@@ -21,8 +21,10 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   isSaving: boolean;
 
   mostrarDialogModulo: boolean = false;
-  mostrarDialogFuncionalidade: boolean = false;
   novoModulo: Modulo = new Modulo();
+
+  mostrarDialogFuncionalidade: boolean = false;
+  novaFuncionalidade: Funcionalidade = new Funcionalidade();
 
   private routeSub: Subscription;
 
@@ -62,6 +64,27 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   adicionarModulo() {
     this.sistema.addModulo(this.novoModulo);
     this.doFecharDialogModulo();
+  }
+
+  abrirDialogFuncionalidade() {
+    this.mostrarDialogFuncionalidade = true;
+  }
+
+  fecharDialogFuncionalidade() {
+    this.doFecharDialogFuncionalidade();
+  }
+
+  private doFecharDialogFuncionalidade() {
+    this.mostrarDialogFuncionalidade = false;
+    // TODO ajustar
+    this.novaFuncionalidade = {};
+  }
+
+  adicionarFuncionalidade() {
+    // XXX passagem por referencia?
+    var modulo = this.novaFuncionalidade.modulo;
+    modulo.addFuncionalidade(this.novaFuncionalidade);
+    this.doFecharDialogFuncionalidade();
   }
 
   save() {

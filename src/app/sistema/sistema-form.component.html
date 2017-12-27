@@ -41,7 +41,7 @@
           </div>
 
           <p-dataTable [value]="sistema.modulos"
-            [immutable]="false" #contratosDataTable>
+            [immutable]="false" #modulosDataTable>
             <p-column header="Código"
               [style]="{width: '25%'}">
               <ng-template let-codigo="rowData.id" pTemplate="body">
@@ -50,7 +50,25 @@
             </p-column>
             <p-column header="Nome" field="nome"></p-column>
           </p-dataTable>
+        </div>
 
+        <div class="ui-g">
+          <h4 style="margin-bottom: 0px; margin-top: 0px;">
+            Funcionalidades
+          </h4>
+
+          <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-md-3">
+              <button pButton type="button" label="Novo Módulo" icon="ui-icon-add"
+                (click)="abrirDialogModulo()"></button>
+            </div>
+          </div>
+
+          <p-dataTable [value]="sistema.funcionalidades"
+            [immutable]="false" #funcionalidadesDataTable>
+            <p-column header="Módulo" field="modulo.nome"></p-column>
+            <p-column header="Nome da funcionalidade" field="nome"></p-column>
+          </p-dataTable>
         </div>
 
         <div class="ui-g" style="justify-content: center; margin-top: 25px;">
@@ -82,6 +100,38 @@
             <div class="ui-g-2">
               <button pButton type="button" label="Salvar" 
                 (click)="adicionarModulo()"></button>
+            </div>
+          </div>
+        </p-dialog>
+
+        <!-- Dialog funcionalidade -->
+        <p-dialog header="Funcionalidade" [(visible)]="mostrarDialogFuncionalidade"
+          [contentStyle]="{'overflow':'visible'}" [width]="800">
+          <div class="ui-g">
+            <div class="ui-g-12" style="margin-bottom: 25px">
+              <span class="md-inputfield">
+                <input type="text" name="nomeFuncionalidade" 
+                  [(ngModel)]="novaFuncionalidade.nome" pInputText />
+                <label>Nome da Funcionalidade</label>
+              </span>
+            </div>
+            <div class="ui-g-12" style="margin-bottom: 25px">
+              <p-dropdown [options]="sistema.modulos" optionLabel="nome" 
+                placeholder="Módulo" name="funcionalidadeModulo"
+                [(ngModel)]="novaFuncionalidade.modulo" [autoWidth]="false" 
+                dataKey="id">
+              </p-dropdown>
+            </div>
+          </div>
+
+          <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2">
+              <button pButton type="text" label="Cancelar"
+                (click)="fecharDialogFuncionalidade()"></button>
+            </div>
+            <div class="ui-g-2">
+              <button pButton type="button" label="Salvar" 
+                (click)="adicionarFuncionalidade()"></button>
             </div>
           </div>
         </p-dialog>
