@@ -29,7 +29,7 @@ export class AppMenuComponent implements OnInit {
       },
       { label: 'Cadastros Básicos', icon: 'description', 
         items: [
-          { label: 'Tipo de Fase' },
+          { label: 'Tipo de Fase', routerLink: "tipoFase" },
           { label: 'Manual', routerLink: "manual" },
           { label: 'Organização', routerLink: "organizacao" },
           { label: 'Sistema' }
