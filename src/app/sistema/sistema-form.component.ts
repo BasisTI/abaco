@@ -7,6 +7,7 @@ import { SelectItem } from 'primeng/primeng';
 import { Sistema } from './sistema.model';
 import { SistemaService } from './sistema.service';
 import { Organizacao, OrganizacaoService } from '../organizacao';
+import { Modulo, ModuloService } from '../modulo';
 import { ResponseWrapper } from '../shared';
 
 @Component({
@@ -21,8 +22,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   mostrarDialogModulo: boolean = false;
   mostrarDialogFuncionalidade: boolean = false;
-  // novoModulo: Modulo = new Modulo();
-  novoModulo: object = {nome : ''};
+  novoModulo: Modulo = new Modulo();
 
   private routeSub: Subscription;
 
@@ -56,11 +56,11 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   private doFecharDialogModulo() {
     this.mostrarDialogModulo = false;
-    // this.novoModulo = new Modulo();
+    this.novoModulo = new Modulo();
   }
 
   adicionarModulo() {
-    // TODO funcionalidade
+    this.sistema.addModulo(this.novoModulo);
     this.doFecharDialogModulo();
   }
 

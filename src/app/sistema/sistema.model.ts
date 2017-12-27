@@ -11,4 +11,10 @@ export class Sistema implements BaseEntity {
     public organizacao?: BaseEntity,
     public modulos?: BaseEntity[],
   ) {}
+
+  addModulo(modulo: BaseEntity) {
+    if(!this.modulos)
+      this.modulos = [];
+    this.modulos.push(modulo);
+  }
 }

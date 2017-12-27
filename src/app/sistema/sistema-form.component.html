@@ -41,10 +41,15 @@
           </div>
 
           <p-dataTable [value]="sistema.modulos"
-              [immutable]="false" #contratosDataTable>
-              <p-column header="Código" field="id"></p-column>
-              <p-column header="Nome" field="nome"></p-column>
-            </p-dataTable>
+            [immutable]="false" #contratosDataTable>
+            <p-column header="Código"
+              [style]="{width: '25%'}">
+              <ng-template let-codigo="rowData.id" pTemplate="body">
+                {{ codigo ? codigo : 'Ainda não cadastrado' }}
+              </ng-template>
+            </p-column>
+            <p-column header="Nome" field="nome"></p-column>
+          </p-dataTable>
 
         </div>
 
@@ -61,7 +66,7 @@
         <p-dialog header="Módulo" [(visible)]="mostrarDialogModulo"
           [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
-            <div class="ui-g-6" style="margin-bottom: 25px">
+            <div class="ui-g-12" style="margin-bottom: 25px">
               <span class="md-inputfield">
                 <input type="text" name="nomeModulo" [(ngModel)]="novoModulo.nome" pInputText/>
                 <label>Nome do Módulo</label>
