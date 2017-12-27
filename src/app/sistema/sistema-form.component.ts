@@ -18,6 +18,12 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   organizacaos: Organizacao[];
   sistema: Sistema;
   isSaving: boolean;
+
+  mostrarDialogModulo: boolean = false;
+  mostrarDialogFuncionalidade: boolean = false;
+  // novoModulo: Modulo = new Modulo();
+  novoModulo: object = {nome : ''};
+
   private routeSub: Subscription;
 
   constructor(
@@ -38,6 +44,24 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         this.sistemaService.find(params['id']).subscribe(sistema => this.sistema = sistema);
       }
     });
+  }
+
+  abrirDialogModulo() {
+    this.mostrarDialogModulo = true;
+  }
+
+  fecharDialogModulo() {
+    this.doFecharDialogModulo();
+  }
+
+  private doFecharDialogModulo() {
+    this.mostrarDialogModulo = false;
+    // this.novoModulo = new Modulo();
+  }
+
+  adicionarModulo() {
+    // TODO funcionalidade
+    this.doFecharDialogModulo();
   }
 
   save() {

@@ -13,7 +13,7 @@
           <button pButton type="button" label="Pesquisar" icon="ui-icon-search" (click)="datatable.refresh(filter.value)"></button>
         </div>
         <div class="ui-g-12 ui-md-2">
-          <button pButton type="button" label="Cadastrar" routerLink="/sistema/new" icon="ui-icon-add"></button>
+          <button pButton type="button" label="Novo Sistema" routerLink="/sistema/new" icon="ui-icon-add"></button>
         </div>
         <basis-datatable [url]="searchUrl" 
           (buttonClick)="datatableClick($event)" #datatable>

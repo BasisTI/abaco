@@ -3,36 +3,52 @@
     <div class="card card-w-title">
       <h1>{{ sistema.id ? 'Editar Sistema' : 'Cadastrar Sistema' }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
-        <div class="ui-g">
-          <div class="ui-g-6" [hidden]="!sistema.id">
-            <span class="md-inputfield">
-              <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="sistema.id" readonly/>
-              <label>ID</label>
-            </span>
-          </div>          
-          <div class="ui-g-6">
+        <div class="ui-g">         
+          <div class="ui-g-2" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" name="sigla" [(ngModel)]="sistema.sigla" pInputText/>
               <label>Sigla</label>
             </span>
           </div>
-          <div class="ui-g-6">
+          <div class="ui-g-10" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" name="nome" [(ngModel)]="sistema.nome" pInputText/>
-              <label>Nome</label>
+              <label>Nome do Sistema</label>
             </span>
           </div>
-          <div class="ui-g-6">
+          <div class="ui-g-4" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" name="numeroOcorrencia" [(ngModel)]="sistema.numeroOcorrencia" pInputText/>
-              <label>Numero Ocorrencia</label>
+              <label>Número da Ocorrência</label>
             </span>
           </div>
-          <div class="ui-g-6">
-            <p-dropdown [options]="organizacaos" optionLabel="id" placeholder="Organizacao" name="organizacao" [(ngModel)]="sistema.organizacao" [autoWidth]="false" dataKey="id"></p-dropdown>
+          <div class="ui-g-8" style="margin-bottom: 25px">
+            <p-dropdown [options]="organizacaos" optionLabel="nome" placeholder="Organização"
+              name="organizacao" [(ngModel)]="sistema.organizacao" [autoWidth]="false" dataKey="id"></p-dropdown>
           </div>
         </div>
+
         <div class="ui-g">
+          <h4 style="margin-bottom: 0px; margin-top: 0px;">
+            Módulos
+          </h4>
+
+          <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-md-3">
+              <button pButton type="button" label="Novo Módulo" icon="ui-icon-add"
+                (click)="abrirDialogModulo()"></button>
+            </div>
+          </div>
+
+          <p-dataTable [value]="sistema.modulos"
+              [immutable]="false" #contratosDataTable>
+              <p-column header="Código" field="id"></p-column>
+              <p-column header="Nome" field="nome"></p-column>
+            </p-dataTable>
+
+        </div>
+
+        <div class="ui-g" style="justify-content: center; margin-top: 25px;">
           <div class="ui-g-2">
             <button pButton type="button" label="Cancelar" routerLink="/sistema"></button>
           </div>
@@ -40,6 +56,31 @@
             <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
           </div>
         </div>
+
+        <!-- Dialog módulo -->
+        <p-dialog header="Módulo" [(visible)]="mostrarDialogModulo"
+          [contentStyle]="{'overflow':'visible'}" [width]="800">
+          <div class="ui-g">
+            <div class="ui-g-6" style="margin-bottom: 25px">
+              <span class="md-inputfield">
+                <input type="text" name="nomeModulo" [(ngModel)]="novoModulo.nome" pInputText/>
+                <label>Nome do Módulo</label>
+              </span>
+            </div>
+          </div>
+
+          <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2">
+              <button pButton type="text" label="Cancelar"
+                (click)="fecharDialogModulo()"></button>
+            </div>
+            <div class="ui-g-2">
+              <button pButton type="button" label="Salvar" 
+                (click)="adicionarModulo()"></button>
+            </div>
+          </div>
+        </p-dialog>
+
       </form>
     </div>
   </div>
