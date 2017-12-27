@@ -6,7 +6,7 @@ import { SelectItem } from 'primeng/primeng';
 
 import { Modulo } from './modulo.model';
 import { ModuloService } from './modulo.service';
-import { Sistema, SistemaService } from '../sistema';
+// import { Sistema, SistemaService } from '../sistema';
 import { ResponseWrapper } from '../shared';
 
 @Component({
@@ -15,7 +15,7 @@ import { ResponseWrapper } from '../shared';
 })
 export class ModuloFormComponent implements OnInit, OnDestroy {
 
-  sistemas: Sistema[];
+  // sistemas: Sistema[];
   modulo: Modulo;
   isSaving: boolean;
   private routeSub: Subscription;
@@ -24,14 +24,14 @@ export class ModuloFormComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private moduloService: ModuloService,
-    private sistemaService: SistemaService,
+    // private sistemaService: SistemaService,
   ) {}
 
   ngOnInit() {
     this.isSaving = false;
-    this.sistemaService.query().subscribe((res: ResponseWrapper) => {
-      this.sistemas = res.json;
-    });
+    // this.sistemaService.query().subscribe((res: ResponseWrapper) => {
+    //   this.sistemas = res.json;
+    // });
     this.routeSub = this.route.params.subscribe(params => {
       this.modulo = new Modulo();
       if (params['id']) {
