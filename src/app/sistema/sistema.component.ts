@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
@@ -6,22 +6,30 @@ import { DatatableComponent, DatatableClickEvent } from '@basis/angular-componen
 import { environment } from '../../environments/environment';
 import { Sistema } from './sistema.model';
 import { SistemaService } from './sistema.service';
+import { ElasticQuery } from '../shared';
 
 @Component({
   selector: 'jhi-sistema',
   templateUrl: './sistema.component.html'
 })
-export class SistemaComponent {
+export class SistemaComponent implements AfterViewInit {
 
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
   searchUrl: string = this.sistemaService.searchUrl;
+
+  paginationParams = { contentIndex: null };
+  elasticQuery: ElasticQuery = new ElasticQuery();
 
   constructor(
     private router: Router,
     private sistemaService: SistemaService,
     private confirmationService: ConfirmationService
   ) {}
+
+  ngAfterViewInit() {
+    this.datatable.refresh(this.elasticQuery.query);
+  }
 
   datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
@@ -45,7 +53,7 @@ export class SistemaComponent {
       message: 'Tem certeza que deseja excluir o registro?',
       accept: () => {
         this.sistemaService.delete(id).subscribe(() => {
-          this.datatable.refresh(undefined);
+          this.datatable.refresh(this.elasticQuery.query);
         });
       }
     });
