@@ -33,6 +33,7 @@ import { AbacoTipoEquipeModule } from './tipo-equipe/tipo-equipe.module';
 import { AbacoUserModule } from './user/user.module';
 import { AbacoTipoFaseModule } from './tipo-fase/tipo-fase.module';
 import { AbacoSistemaModule } from './sistema/sistema.module';
+import { AbacoModuloModule } from './modulo/modulo.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -58,6 +59,7 @@ import { AbacoSistemaModule } from './sistema/sistema.module';
     AbacoUserModule,
     AbacoTipoFaseModule,
     AbacoSistemaModule,
+    AbacoModuloModule,
     /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
   ],
   declarations: [
