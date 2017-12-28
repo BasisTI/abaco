@@ -12,6 +12,7 @@ export class Funcionalidade implements BaseEntity {
   ) {}
 
   static toNonCircularJson(f: Funcionalidade): Funcionalidade {
-    return new Funcionalidade(f.id, f.nome);
+    const fu = new Funcionalidade(f.id, f.nome, undefined);
+    return fu;
   }
 }

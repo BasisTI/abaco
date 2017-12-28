@@ -13,10 +13,13 @@ export class Sistema implements BaseEntity {
     public numeroOcorrencia?: string,
     public organizacao?: BaseEntity,
     public modulos?: Modulo[],
-  ) {
-    if (modulos) {
-      modulos.forEach(m => m.sistema = this);
-    }
+  ) {}
+
+  static toNonCircularJson(s: Sistema): Sistema {
+    var ms = s.modulos;
+    var nonCircularModulos = ms.map(m => Modulo.toNonCircularJson(m));
+    s.modulos = nonCircularModulos;
+    return s;
   }
 
   addModulo(modulo: Modulo) {
@@ -27,7 +30,7 @@ export class Sistema implements BaseEntity {
     this.modulos.push(modulo);
   }
 
-  get funcionalidades(): Funcionalidade[] {
+  get funcionalidades: Funcionalidade[] {
     if (!this.modulos) return [];
     let modulos: Modulo[] = this.modulos;
     var allFuncs = [];
@@ -51,11 +54,4 @@ export class Sistema implements BaseEntity {
     return _.find(this.modulos, {'nome': modulo.nome });
   }
 
-  toNonCircularJson(): Sistema {
-    var ms = this.modulos;
-    var nonCircularModulos: Modulo[] = ms.map(m => m.toNonCircularJson());
-    return new Sistema(this.id, this.sigla,
-      this.nome, this.numeroOcorrencia,
-      this.organizacao, nonCircularModulos);
-  }
 }

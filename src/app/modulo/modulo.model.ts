@@ -1,6 +1,6 @@
 import { BaseEntity } from '../shared';
+import { Sistema } from '../sistema';
 import { Funcionalidade } from '../funcionalidade';
-
 
 export class Modulo implements BaseEntity {
 
@@ -9,21 +9,19 @@ export class Modulo implements BaseEntity {
     public nome?: string,
     public sistema?: BaseEntity,
     public funcionalidades?: Funcionalidade[],
-  ) {
-    if (funcionalidades) {
-      funcionalidades.forEach(f => f.modulo = this);
-    }
+  ) {}
+
+  static toNonCircularJson(m: Modulo) {
+    var fs = m.funcionalidades;
+    var nonCircularFuncionalidades = fs.map(f => Funcionalidade.toNonCircularJson(f));
+    const mo = new Modulo(m.id, m.nome, undefined, nonCircularFuncionalidades);
+    return mo;
   }
 
   addFuncionalidade(funcionalidade: Funcionalidade) {
-    if(!this.funcionalidades)
+    if (!this.funcionalidades)
       this.funcionalidades = [];
     this.funcionalidades.push(funcionalidade);
   }
 
-  toNonCircularJson(): Modulo {
-    var fs = this.funcionalidades;
-    var nonCircularFuncionalidades: Funcionalidade[] = fs.map(f => f.toNonCircularJson());
-    return new Modulo(this.id, this.nome, undefined, nonCircularFuncionalidades);
-  }
 }

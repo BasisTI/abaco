@@ -20,6 +20,8 @@ export class SistemaService {
 
   create(sistema: Sistema): Observable<Sistema> {
     const copy = this.convert(sistema);
+    console.log('-- CREATE -- ');
+    console.log(JSON.stringify(copy, null, 4));
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
@@ -28,6 +30,8 @@ export class SistemaService {
 
   update(sistema: Sistema): Observable<Sistema> {
     const copy = this.convert(sistema);
+    console.log('-- UPDATE -- ');
+    console.log(JSON.stringify(copy, null, 4));
     return this.http.put(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
@@ -73,7 +77,8 @@ export class SistemaService {
    */
   private convert(sistema: Sistema): Sistema {
     const copy: Sistema = _.cloneDeep(sistema);
-    return copy.toNonCircularJson();
+    var converted = Sistema.toNonCircularJson(copy);
+    return converted;
   }
 
 }
