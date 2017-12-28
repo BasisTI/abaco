@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -52,7 +53,7 @@ public class Sistema implements Serializable {
 	@ManyToOne
 	private Organizacao organizacao;
 
-	@OneToMany(mappedBy = "sistema", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "sistema", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Modulo> modulos = new HashSet<>();
 
