@@ -9,19 +9,16 @@ export class Modulo implements BaseEntity {
     public nome?: string,
     public sistema?: BaseEntity,
     public funcionalidades?: Funcionalidade[],
-  ) {}
+  ) {
+    if (funcionalidades) {
+      funcionalidades.forEach(f => f.modulo = this);
+    }
+  }
 
   addFuncionalidade(funcionalidade: Funcionalidade) {
     if(!this.funcionalidades)
       this.funcionalidades = [];
     this.funcionalidades.push(funcionalidade);
-  }
-
-  safeFuncionalidades(): Funcionalidade[] {
-    if(!this.funcionalidades)
-      return [];
-    else
-      return this.funcionalidades;
   }
 
   toNonCircularJson(): Modulo {
