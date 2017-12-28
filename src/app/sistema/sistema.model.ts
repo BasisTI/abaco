@@ -32,7 +32,9 @@ export class Sistema implements BaseEntity {
     let modulos: Modulo[] = this.modulos;
     var allFuncs = [];
     modulos.forEach(function(m) {
-      m.funcionalidades.forEach(f => f.modulo = m);
+      if (m.funcionalidades) {
+        m.funcionalidades.forEach(f => f.modulo = m);
+      }
       allFuncs.push(m.funcionalidades);
     });
     var result = allFuncs.reduce((a, b) => a.concat(b), []);
