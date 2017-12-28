@@ -6,7 +6,7 @@ import { SelectItem } from 'primeng/primeng';
 
 import { Funcionalidade } from './funcionalidade.model';
 import { FuncionalidadeService } from './funcionalidade.service';
-import { Modulo, ModuloService } from '../modulo';
+// import { Modulo, ModuloService } from '../modulo';
 // import { FuncaoDados, FuncaoDadosService } from '../funcao-dados';
 import { FuncaoTransacao, FuncaoTransacaoService } from '../funcao-transacao';
 import { ResponseWrapper } from '../shared';
@@ -17,7 +17,7 @@ import { ResponseWrapper } from '../shared';
 })
 export class FuncionalidadeFormComponent implements OnInit, OnDestroy {
 
-  modulos: Modulo[];
+  // modulos: Modulo[];
 
   // funcaodados: FuncaoDados[];
 
@@ -30,16 +30,16 @@ export class FuncionalidadeFormComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private funcionalidadeService: FuncionalidadeService,
-    private moduloService: ModuloService,
+    // private moduloService: ModuloService,
     // private funcaoDadosService: FuncaoDadosService,
     private funcaoTransacaoService: FuncaoTransacaoService,
   ) {}
 
   ngOnInit() {
     this.isSaving = false;
-    this.moduloService.query().subscribe((res: ResponseWrapper) => {
-      this.modulos = res.json;
-    });
+    // this.moduloService.query().subscribe((res: ResponseWrapper) => {
+    //   this.modulos = res.json;
+    // });
     // this.funcaoDadosService.query().subscribe((res: ResponseWrapper) => {
     //   this.funcaodados = res.json;
     // });

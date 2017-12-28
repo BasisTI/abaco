@@ -11,7 +11,7 @@ export class Funcionalidade implements BaseEntity {
     public funcaoTransacao?: BaseEntity,
   ) {}
 
-  toNonCircularJson(): Funcionalidade {
-    return new Funcionalidade(this.id, this.nome);
+  static toNonCircularJson(f: Funcionalidade): Funcionalidade {
+    return new Funcionalidade(f.id, f.nome);
   }
 }
