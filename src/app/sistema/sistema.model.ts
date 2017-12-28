@@ -13,45 +13,46 @@ export class Sistema implements BaseEntity {
     public numeroOcorrencia?: string,
     public organizacao?: BaseEntity,
     public modulos?: Modulo[],
-  ) {}
+  ) { }
 
   static toNonCircularJson(s: Sistema): Sistema {
-    var ms = s.modulos;
-    var nonCircularModulos = ms.map(m => Modulo.toNonCircularJson(m));
-    s.modulos = nonCircularModulos;
-    return s;
+    const ms = s.modulos;
+    const nonCircularModulos = ms.map(m => Modulo.toNonCircularJson(m));
+    return new Sistema(s.id, s.sigla, s.nome, s.numeroOcorrencia,
+       s.organizacao, nonCircularModulos);
   }
 
   addModulo(modulo: Modulo) {
-    if(!this.modulos)
+    if (!this.modulos) {
       this.modulos = [];
+    }
     // para atualizar dropdown, o array precisa ser recriado
     this.modulos = this.modulos.slice();
     this.modulos.push(modulo);
   }
 
   get funcionalidades: Funcionalidade[] {
-    if (!this.modulos) return [];
-    let modulos: Modulo[] = this.modulos;
-    var allFuncs = [];
-    modulos.forEach(function(m) {
+    if (!this.modulos) {
+      return [];
+    }
+    const allFuncs = [];
+    this.modulos.forEach(function (m) {
       if (m.funcionalidades) {
         m.funcionalidades.forEach(f => f.modulo = m);
         allFuncs.push(m.funcionalidades);
       }
     });
-    var result = allFuncs.reduce((a, b) => a.concat(b), []);
-    return result;
+    return allFuncs.reduce((a, b) => a.concat(b), []);
   }
 
   addFuncionalidade(funcionalidade: Funcionalidade) {
-    var modulo = this.findModulo(funcionalidade.modulo);
+    const modulo = this.findModulo(funcionalidade.modulo);
     modulo.addFuncionalidade(funcionalidade);
   }
 
   private findModulo(modulo: Modulo): Modulo {
     // FIXME
-    return _.find(this.modulos, {'nome': modulo.nome });
+    return _.find(this.modulos, { 'nome': modulo.nome });
   }
 
 }

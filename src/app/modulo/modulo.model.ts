@@ -12,15 +12,15 @@ export class Modulo implements BaseEntity {
   ) {}
 
   static toNonCircularJson(m: Modulo) {
-    var fs = m.funcionalidades;
-    var nonCircularFuncionalidades = fs.map(f => Funcionalidade.toNonCircularJson(f));
-    const mo = new Modulo(m.id, m.nome, undefined, nonCircularFuncionalidades);
-    return mo;
+    const fs = m.funcionalidades;
+    const nonCircularFuncionalidades = fs.map(f => Funcionalidade.toNonCircularJson(f));
+    return new Modulo(m.id, m.nome, undefined, nonCircularFuncionalidades);
   }
 
   addFuncionalidade(funcionalidade: Funcionalidade) {
-    if (!this.funcionalidades)
+    if (!this.funcionalidades) {
       this.funcionalidades = [];
+    }
     this.funcionalidades.push(funcionalidade);
   }
 
