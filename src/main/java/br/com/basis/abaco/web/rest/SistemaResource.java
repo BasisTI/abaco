@@ -123,7 +123,8 @@ public class SistemaResource {
 		if (sistema.getId() == null) {
 			return createSistema(sistema);
 		}
-		Sistema result = sistemaRepository.save(sistema);
+		Sistema linkedSistema = linkSistemaToModuleToFunctionalities(sistema);
+		Sistema result = sistemaRepository.save(linkedSistema);
 		sistemaSearchRepository.save(result);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, sistema.getId().toString()))
 				.body(result);
