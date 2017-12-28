@@ -60,8 +60,10 @@
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-md-3">
-              <button pButton type="button" label="Nova Funcionalidade" icon="ui-icon-add"
-                (click)="abrirDialogFuncionalidade()"></button>
+              <button pButton type="button" label="Nova Funcionalidade"
+                icon="ui-icon-add" (click)="abrirDialogFuncionalidade()"
+                [disabled]="!sistema.modulos || sistema.modulos.length == 0">
+              </button>
             </div>
           </div>
 
