@@ -2,7 +2,8 @@
   <div class="ui-g-12">
     <div class="card card-w-title">
       <h1>{{ sistema.id ? 'Editar Sistema' : 'Cadastrar Sistema' }}</h1>
-      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm"
+        (keydown.enter)="$event.preventDefault()">
         <div class="ui-g">         
           <div class="ui-g-2" style="margin-bottom: 25px">
             <span class="md-inputfield">
@@ -86,7 +87,8 @@
           <div class="ui-g">
             <div class="ui-g-12" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="text" name="nomeModulo" [(ngModel)]="novoModulo.nome" pInputText/>
+                <input type="text" name="nomeModulo" [(ngModel)]="novoModulo.nome"
+                  pInputText (keydown.enter)="adicionarModulo()"/>
                 <label>Nome do Módulo</label>
               </span>
             </div>
