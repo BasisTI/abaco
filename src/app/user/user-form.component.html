@@ -29,16 +29,12 @@
           </div>
 
           <div class="ui-g-6" style="margin-bottom: 25px">
-            <p-dataTable [value]="authorities" [(selection)]="user.authorities" dataKey="id"
+            <p-dataTable [value]="authorities" [(selection)]="user.authorities" dataKey="name"
               [paginator]="true" [rows]="5" [headerCheckboxToggleAllPages]="true">
               <p-header>Perfil</p-header>
               <p-column selectionMode="multiple"
                 [style]="{'width':'15%'}"></p-column>
-              <p-column header="Nome">
-                <ng-template let-perfil="rowData" pTemplate="body">
-                  {{ perfil }}
-                </ng-template>
-              </p-column>
+              <p-column header="Nome" field="name"></p-column>
             </p-dataTable>
           </div>
 

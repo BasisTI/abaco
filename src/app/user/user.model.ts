@@ -20,7 +20,7 @@ export class User implements BaseEntity {
 
   // Não funcionando na busca pois dataTableService retorna um Object e não um User
   get nome(): string {
-    return this.firstName + " " + this.lastName;
+    return this.firstName + ' ' + this.lastName;
   }
 
 }
