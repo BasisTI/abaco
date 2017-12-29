@@ -23,17 +23,27 @@
             </span>
           </div>
           
-          <div class="ui-g-5" style="margin-bottom: 25px">
+          <div class="ui-g-7" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" name="numeroOcorrenciaOrganizacao" [(ngModel)]="organizacao.numeroOcorrencia" pInputText/>
               <label>Número da Ocorrência</label>
             </span>
           </div>
 
-          <div class="ui-g-2" style="margin-bottom: 25px">
-            <input type="checkbox" class="form-control" name="ativo" 
-              id="org_ativo" [(ngModel)]="organizacao.ativo" />
-            <label class="form-control-label" for="org_ativo">Ativo</label>
+          <div class="ui-g-12" style="margin-bottom: 25px">
+            <div class="ui-g">
+              <div class="ui-g-12 ui-md-1">
+                <label>Ativo</label>
+              </div>
+              <div class="ui-g-12 ui-md-1">
+                <p-radioButton name="org_ativo" [value]="true" label="Sim"
+                  [(ngModel)]="organizacao.ativo"></p-radioButton>
+              </div>
+              <div class="ui-g-12 ui-md-1">
+                <p-radioButton name="org_ativo" [value]="false" label="Não"
+                  [(ngModel)]="organizacao.ativo"></p-radioButton>
+              </div>
+            </div>
           </div>
 
           <div class="ui-g">
@@ -112,11 +122,21 @@
               <label>Data Final da Vigência</label>
               </span>
             </div>
-          </div>
-          <div class = "ui-g-6" style="margin-bottom: 25px">
-            <input type="checkbox" class="form-control" name="ativoContrato" id="field_ativo"
-              [(ngModel)]="novoContrato.ativo" />
-            <label class="form-control-label" for="field_ativo">Ativo</label>
+            <div class = "ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g">
+                <div class="ui-g-12 ui-md-1">
+                  <label>Ativo</label>
+                </div>
+                <div class="ui-g-12 ui-md-1">
+                  <p-radioButton name="contrato_ativo" [value]="true" label="Sim"
+                    [(ngModel)]="novoContrato.ativo"></p-radioButton>
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <p-radioButton name="contrato_ativo" [value]="false" label="Não"
+                    [(ngModel)]="novoContrato.ativo"></p-radioButton>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
