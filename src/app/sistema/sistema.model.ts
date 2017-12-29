@@ -31,7 +31,7 @@ export class Sistema implements BaseEntity {
     this.modulos.push(modulo);
   }
 
-  get funcionalidades: Funcionalidade[] {
+  get funcionalidades(): Funcionalidade[] {
     if (!this.modulos) {
       return [];
     }
