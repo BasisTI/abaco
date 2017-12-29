@@ -23,9 +23,19 @@
             </span>
           </div>          
           <div class="ui-g-12" style="margin-bottom: 25px">
-            <input type="checkbox" class="form-control" name="ativoUser" 
-            id="user_ativo" [(ngModel)]="user.ativo" />
-            <label class="form-control-label" for="user_ativo">Ativo</label>
+            <div class="ui-g">
+              <div class="ui-g-12 ui-md-1">
+                <label>Ativo</label>
+              </div>
+              <div class="ui-g-12 ui-md-1">
+                <p-radioButton name="user_ativo" [value]="true" label="Sim"
+                  [(ngModel)]="user.ativo"></p-radioButton>
+              </div>
+              <div class="ui-g-12 ui-md-1">
+                <p-radioButton name="user_ativo" [value]="false" label="Não"
+                  [(ngModel)]="user.ativo"></p-radioButton>
+              </div>
+            </div>
           </div>
 
           <div class="ui-g-6" style="margin-bottom: 25px">
