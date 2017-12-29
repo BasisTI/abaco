@@ -12,8 +12,8 @@ export class Modulo implements BaseEntity {
   ) {}
 
   static toNonCircularJson(m: Modulo) {
-    const fs = m.funcionalidades;
-    const nonCircularFuncionalidades = fs.map(f => Funcionalidade.toNonCircularJson(f));
+    const nonCircularFuncionalidades = m.funcionalidades.map(
+      f => Funcionalidade.toNonCircularJson(f));
     return new Modulo(m.id, m.nome, undefined, nonCircularFuncionalidades);
   }
 

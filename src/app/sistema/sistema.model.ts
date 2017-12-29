@@ -16,8 +16,7 @@ export class Sistema implements BaseEntity {
   ) { }
 
   static toNonCircularJson(s: Sistema): Sistema {
-    const ms = s.modulos;
-    const nonCircularModulos = ms.map(m => Modulo.toNonCircularJson(m));
+    const nonCircularModulos = s.modulos.map(m => Modulo.toNonCircularJson(m));
     return new Sistema(s.id, s.sigla, s.nome, s.numeroOcorrencia,
        s.organizacao, nonCircularModulos);
   }
