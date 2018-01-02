@@ -7,6 +7,9 @@ import { SelectItem } from 'primeng/primeng';
 import { TipoFase } from './tipo-fase.model';
 import { TipoFaseService } from './tipo-fase.service';
 
+import { Message } from 'primeng/components/common/api';
+import { MessageService } from 'primeng/components/common/messageservice';
+
 @Component({
   selector: 'jhi-tipo-fase-form',
   templateUrl: './tipo-fase-form.component.html'
@@ -20,6 +23,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private tipoFaseService: TipoFaseService,
+    private messageService: MessageService,
   ) {}
 
   ngOnInit() {
@@ -34,11 +38,15 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
 
   save() {
     this.isSaving = true;
+    const msg: Message = { severity: 'info', summary: 'Tipo Fase' };
     if (this.tipoFase.id !== undefined) {
       this.subscribeToSaveResponse(this.tipoFaseService.update(this.tipoFase));
+      msg.detail = 'Dados alterados com sucesso!';
     } else {
       this.subscribeToSaveResponse(this.tipoFaseService.create(this.tipoFase));
+      msg.detail = 'Registro incluído com sucesso!';
     }
+    this.messageService.add(msg);
   }
 
   private subscribeToSaveResponse(result: Observable<TipoFase>) {
