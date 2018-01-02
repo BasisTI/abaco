@@ -8,6 +8,7 @@ import { DatatableModule, SharedModule, HttpService } from '@basis/angular-compo
 import { NgProgressModule, NgProgressBrowserXhr } from 'ngx-progressbar';
 import { AuthHttp } from 'angular2-jwt';
 import { ConfirmationService } from 'primeng/primeng';
+import { MessageService } from 'primeng/components/common/messageservice';
 import { PRIMENG_IMPORTS } from './primeng-imports';
 import 'rxjs/add/operator/toPromise';
 
@@ -81,7 +82,8 @@ import { AbacoFuncionalidadeModule } from './funcionalidade/funcionalidade.modul
     // { provide: HttpService, useClass: HttpService, deps: [AuthHttp] },
     JhiDateUtils,
     BreadcrumbService,
-    ConfirmationService
+    ConfirmationService,
+    MessageService,
   ],
   bootstrap: [AppComponent]
 })
