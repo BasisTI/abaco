@@ -7,9 +7,7 @@ import { environment } from '../../environments/environment';
 import { TipoFase } from './tipo-fase.model';
 import { TipoFaseService } from './tipo-fase.service';
 import { ElasticQuery } from '../shared';
-
-import { Message } from 'primeng/components/common/api';
-import { MessageService } from 'primeng/components/common/messageservice';
+import { PageNotificationService } from '../shared';
 
 @Component({
   selector: 'jhi-tipo-fase',
@@ -28,7 +26,7 @@ export class TipoFaseComponent implements AfterViewInit {
     private router: Router,
     private tipoFaseService: TipoFaseService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService,
+    private pageNotificationService: PageNotificationService,
   ) {}
 
   ngAfterViewInit() {
@@ -58,7 +56,7 @@ export class TipoFaseComponent implements AfterViewInit {
       accept: () => {
         this.tipoFaseService.delete(id).subscribe(() => {
           this.datatable.refresh(this.elasticQuery.query);
-          this.messageService.add({ severity: 'info', summary: 'Tipo de Fase', detail: 'Registro excluído com sucesso!' });
+          this.pageNotificationService.addDeleteMsg();
         });
       }
     });
