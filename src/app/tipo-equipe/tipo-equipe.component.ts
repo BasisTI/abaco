@@ -8,8 +8,7 @@ import { TipoEquipe } from './tipo-equipe.model';
 import { TipoEquipeService } from './tipo-equipe.service';
 import { ElasticQuery } from '../shared';
 
-import { Message } from 'primeng/components/common/api';
-import { MessageService } from 'primeng/components/common/messageservice';
+import { PageNotificationService } from '../shared';
 
 @Component({
   selector: 'jhi-tipo-equipe',
@@ -28,7 +27,7 @@ export class TipoEquipeComponent implements AfterViewInit {
     private router: Router,
     private tipoEquipeService: TipoEquipeService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private pageNotificationService: PageNotificationService,
   ) { }
 
   ngAfterViewInit() {
@@ -58,7 +57,7 @@ export class TipoEquipeComponent implements AfterViewInit {
       accept: () => {
         this.tipoEquipeService.delete(id).subscribe(() => {
           this.datatable.refresh(this.elasticQuery.query);
-          this.messageService.add({ severity: 'info', summary: 'Tipo de Equipe', detail: 'Registro excluído com sucesso!' });
+          this.pageNotificationService.addDeleteMsg();
         });
       }
     });

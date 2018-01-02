@@ -7,8 +7,7 @@ import { SelectItem } from 'primeng/primeng';
 import { TipoEquipe } from './tipo-equipe.model';
 import { TipoEquipeService } from './tipo-equipe.service';
 
-import { Message } from 'primeng/components/common/api';
-import { MessageService } from 'primeng/components/common/messageservice';
+import { PageNotificationService } from '../shared';
 
 @Component({
   selector: 'jhi-tipo-equipe-form',
@@ -23,7 +22,7 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private tipoEquipeService: TipoEquipeService,
-    private messageService: MessageService,
+    private pageNotificationService: PageNotificationService,
   ) { }
 
   ngOnInit() {
@@ -38,16 +37,13 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
 
   save() {
     this.isSaving = true;
-    const msg: Message = { severity: 'info', summary: 'Tipo de Equipe' };
-    const teName = `${this.tipoEquipe.nome}`;
     if (this.tipoEquipe.id !== undefined) {
       this.subscribeToSaveResponse(this.tipoEquipeService.update(this.tipoEquipe));
-      msg.detail = 'Dados alterados com sucesso!';
+      this.pageNotificationService.addUpdateMsg();
     } else {
       this.subscribeToSaveResponse(this.tipoEquipeService.create(this.tipoEquipe));
-      msg.detail = 'Registro incluído com sucesso!';
+      this.pageNotificationService.addCreateMsg();
     }
-    this.messageService.add(msg);
   }
 
   private subscribeToSaveResponse(result: Observable<TipoEquipe>) {
