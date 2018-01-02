@@ -21,7 +21,7 @@ import { AppFooterComponent } from './app.footer.component';
 import { AppRightPanelComponent } from './app.rightpanel.component';
 import { AppBreadcrumbComponent } from './app.breadcrumb.component';
 import { InlineProfileComponent } from './app.profile.component';
-import { JhiDateUtils, BreadcrumbService } from './shared';
+import { JhiDateUtils, BreadcrumbService, PageNotificationService } from './shared';
 
 import { AbacoAlrModule } from './alr/alr.module';
 import { AbacoManualModule } from './manual/manual.module';
@@ -84,6 +84,7 @@ import { AbacoFuncionalidadeModule } from './funcionalidade/funcionalidade.modul
     BreadcrumbService,
     ConfirmationService,
     MessageService,
+    PageNotificationService,
   ],
   bootstrap: [AppComponent]
 })

@@ -5,3 +5,4 @@ export * from './date-util.service';
 export * from './breadcrumb.service';
 export * from './elastic-query';
 export * from './menu-items';
+export * from './page-notification.service';
