@@ -38,16 +38,14 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
 
   save() {
     this.isSaving = true;
-    const msg: Message = { severity: 'info' };
+    const msg: Message = { severity: 'info', summary: 'Tipo de Equipe' };
     const teName = `${this.tipoEquipe.nome}`;
     if (this.tipoEquipe.id !== undefined) {
       this.subscribeToSaveResponse(this.tipoEquipeService.update(this.tipoEquipe));
-      msg.summary = 'Tipo de Equipe atualizada';
-      msg.detail = `'${teName}' atualizada com sucesso.`;
+      msg.detail = 'Dados alterados com sucesso!';
     } else {
       this.subscribeToSaveResponse(this.tipoEquipeService.create(this.tipoEquipe));
-      msg.summary = 'Tipo de Equipe cadastrada';
-      msg.detail = `'${teName}' cadastrada com sucesso.`;
+      msg.detail = 'Registro incluído com sucesso!';
     }
     this.messageService.add(msg);
   }

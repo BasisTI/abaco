@@ -58,7 +58,7 @@ export class TipoEquipeComponent implements AfterViewInit {
       accept: () => {
         this.tipoEquipeService.delete(id).subscribe(() => {
           this.datatable.refresh(this.elasticQuery.query);
-          this.messageService.add({ severity: 'info', summary: 'Tipo de Equipe excluída', detail: 'Exclusão com sucesso' });
+          this.messageService.add({ severity: 'info', summary: 'Tipo de Equipe', detail: 'Registro excluído com sucesso!' });
         });
       }
     });
