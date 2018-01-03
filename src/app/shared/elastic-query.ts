@@ -1,10 +1,8 @@
 export class ElasticQuery {
 
-    static wildcard: string = '*';
+    private static readonly wildcard = '*';
 
     value: string;
-
-    private readonly _query: string;
 
     get query(): string {
         return this.value ? this.value : ElasticQuery.wildcard;
@@ -13,6 +11,5 @@ export class ElasticQuery {
     reset() {
         this.value = '';
     }
-
 
 }
