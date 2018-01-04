@@ -141,10 +141,3 @@ Desktop.ini
 ######################
 .eslintcache
 /.apt_generated/
-
-######################
-# JHipster Generator
-######################
-.yo-rc.json
-/.jhipster/modules/
-
