@@ -24,10 +24,10 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   sistema: Sistema;
   isSaving: boolean;
 
-  mostrarDialogModulo: boolean = false;
+  mostrarDialogModulo = false;
   novoModulo: Modulo = new Modulo();
 
-  mostrarDialogFuncionalidade: boolean = false;
+  mostrarDialogFuncionalidade = false;
   novaFuncionalidade: Funcionalidade = new Funcionalidade();
 
   private routeSub: Subscription;
