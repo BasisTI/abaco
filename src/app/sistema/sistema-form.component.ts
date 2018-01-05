@@ -17,6 +17,9 @@ import { ResponseWrapper } from '../shared';
 })
 export class SistemaFormComponent implements OnInit, OnDestroy {
 
+  editModuloEventName = 'editModulo';
+  deleteModuloEventName = 'deleteModulo';
+
   organizacaos: Organizacao[];
   sistema: Sistema;
   isSaving: boolean;
@@ -54,11 +57,11 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
       return;
     }
     switch (event.button) {
-      case 'edit':
+      case this.editModuloEventName:
         console.log('edit');
         console.log(event.selection);
         break;
-      case 'delete':
+      case this.deleteModuloEventName:
         console.log('delete');
         console.log(event.selection);
         break;
