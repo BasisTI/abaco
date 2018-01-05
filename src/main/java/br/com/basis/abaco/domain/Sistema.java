@@ -53,7 +53,7 @@ public class Sistema implements Serializable {
 	@ManyToOne
 	private Organizacao organizacao;
 
-	@OneToMany(mappedBy = "sistema", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "sistema", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Modulo> modulos = new HashSet<>();
 
