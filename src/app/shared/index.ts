@@ -6,3 +6,5 @@ export * from './breadcrumb.service';
 export * from './elastic-query';
 export * from './menu-items';
 export * from './page-notification.service';
+export * from './entity-to-json';
+export * from './mappable-entities';
