@@ -37,7 +37,7 @@ export class MappableEntities<T extends BaseEntity> {
         return artificialId;
     }
 
-    remove(entity: T) {
+    delete(entity: T) {
         const idKey: number = this.safeFigureId(entity);
         this.entitiesToIdKey.delete(idKey);
     }
