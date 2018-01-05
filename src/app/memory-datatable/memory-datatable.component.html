@@ -6,12 +6,12 @@
 
 <div class="ui-g-1 ui-g-nopad">
   <basis-datatable-button [tooltip]="selectedRow != null ? 'Editar' : 'Escolha um registro para editar.' "
-    class="ui-button-success" icon="edit" (click)="onClick('edit', $event)"
+    class="ui-button-success" icon="edit" (click)="onClick(editEventName, $event)"
     *ngIf="!disableEdit" [disabled]="selectedRow == null">
   </basis-datatable-button>
 
   <basis-datatable-button [tooltip]="selectedRow != null ? 'Excluir' : 'Escolha um registro para excluir.'" 
-    class="ui-button-danger" icon="delete" (click)="onClick('delete', $event)" 
+    class="ui-button-danger" icon="delete" (click)="onClick(deleteEventName, $event)" 
     *ngIf="!disableDelete" [disabled]="selectedRow == null">
   </basis-datatable-button>
 </div>

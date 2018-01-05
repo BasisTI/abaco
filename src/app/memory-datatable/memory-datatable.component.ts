@@ -22,6 +22,12 @@ export class MemoryDatatableComponent implements AfterViewInit {
   @Input()
   value: BaseEntity[];
 
+  @Input()
+  editEventName: string;
+
+  @Input()
+  deleteEventName: string;
+
   selectedRow: any;
 
   @Output()
