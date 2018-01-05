@@ -13,7 +13,7 @@ export class MappableEntities<T extends BaseEntity> {
     }
 
     push(entity: T) {
-        const idKey = this.figureId(entity);
+        const idKey: number = this.figureId(entity);
         this.entitiesToIdKey.set(idKey, entity);
     }
 
@@ -38,16 +38,26 @@ export class MappableEntities<T extends BaseEntity> {
     }
 
     remove(entity: T) {
-        const idKey = this.figureId(entity);
+        const idKey: number = this.safeFigureId(entity);
         this.entitiesToIdKey.delete(idKey);
     }
 
-    update(entity: T) {
-        this.push(entity);
+    private safeFigureId(entity: T): number {
+        return entity.id ? entity.id : entity.artificialId;
     }
 
-    entities(): IterableIterator<T> {
-        return this.entitiesToIdKey.values();
+    update(entity: T) {
+        const idKey: number = this.safeFigureId(entity);
+        this.entitiesToIdKey.set(idKey, entity);
+    }
+
+    get(entity: T) {
+        const idKey: number = this.safeFigureId(entity);
+        return this.entitiesToIdKey.get(idKey);
+    }
+
+    values(): Array<T> {
+        return Array.from(this.entitiesToIdKey.values());
     }
 
 }
