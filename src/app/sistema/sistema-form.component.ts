@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { SelectItem } from 'primeng/primeng';
+import { DatatableClickEvent } from '@basis/angular-components';
 
 import { Sistema } from './sistema.model';
 import { SistemaService } from './sistema.service';
@@ -47,6 +47,22 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         this.sistemaService.find(params['id']).subscribe(sistema => this.sistema = sistema);
       }
     });
+  }
+
+  datatableClick(event: DatatableClickEvent) {
+    if (!event.selection) {
+      return;
+    }
+    switch (event.button) {
+      case 'edit':
+        console.log('edit');
+        console.log(event.selection);
+        break;
+      case 'delete':
+        console.log('delete');
+        console.log(event.selection);
+        break;
+    }
   }
 
   abrirDialogModulo() {

@@ -42,7 +42,8 @@
           </div>
 
           <!-- Datatable modulos -->        
-          <app-memory-datatable [value]="sistema.modulos">
+          <app-memory-datatable [value]="sistema.modulos"
+            (buttonClick)="datatableClick($event)">
             <p-column header="Código"
               [style]="{width: '25%'}">
               <ng-template let-codigo="rowData.id" pTemplate="body">
