@@ -8,3 +8,4 @@ export * from './menu-items';
 export * from './page-notification.service';
 export * from './entity-to-json';
 export * from './mappable-entities';
+export * from './jsonable';
