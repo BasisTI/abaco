@@ -36,6 +36,7 @@ import { AbacoTipoFaseModule } from './tipo-fase/tipo-fase.module';
 import { AbacoSistemaModule } from './sistema/sistema.module';
 import { AbacoModuloModule } from './modulo/modulo.module';
 import { AbacoFuncionalidadeModule } from './funcionalidade/funcionalidade.module';
+import { MemoryDataTableModule } from './memory-datatable/memory-datatable.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -63,6 +64,7 @@ import { AbacoFuncionalidadeModule } from './funcionalidade/funcionalidade.modul
     AbacoSistemaModule,
     AbacoModuloModule,
     AbacoFuncionalidadeModule,
+    MemoryDataTableModule
     /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
   ],
   declarations: [
@@ -73,7 +75,7 @@ import { AbacoFuncionalidadeModule } from './funcionalidade/funcionalidade.modul
     AppFooterComponent,
     AppRightPanelComponent,
     AppBreadcrumbComponent,
-    InlineProfileComponent
+    InlineProfileComponent,
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },

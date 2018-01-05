@@ -41,8 +41,8 @@
             </div>
           </div>
 
-          <p-dataTable [value]="sistema.modulos"
-            [immutable]="false" #modulosDataTable>
+          <!-- Datatable modulos -->        
+          <app-memory-datatable [value]="sistema.modulos">
             <p-column header="Código"
               [style]="{width: '25%'}">
               <ng-template let-codigo="rowData.id" pTemplate="body">
@@ -50,7 +50,8 @@
               </ng-template>
             </p-column>
             <p-column header="Nome" field="nome"></p-column>
-          </p-dataTable>
+          </app-memory-datatable>
+
         </div>
 
         <div class="ui-g">

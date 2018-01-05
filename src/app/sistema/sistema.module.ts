@@ -4,6 +4,8 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatatableModule } from '@basis/angular-components';
+import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
+
 import {
   ButtonModule,
   InputTextModule,
@@ -41,11 +43,12 @@ import {
     ConfirmDialogModule,
     DataTableModule,
     DialogModule,
+    MemoryDataTableModule
   ],
   declarations: [
     SistemaComponent,
     SistemaDetailComponent,
-    SistemaFormComponent
+    SistemaFormComponent,
   ],
   providers: [
     SistemaService,
