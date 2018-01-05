@@ -26,8 +26,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   mostrarDialogModulo = false;
   novoModulo: Modulo = new Modulo();
-  currentModuloPreEdit: Modulo;
-  currentModulo: Modulo = new Modulo();
+  moduloEmEdicao: Modulo = new Modulo();
 
   mostrarDialogEditarModulo = false;
 
@@ -62,7 +61,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
     switch (event.button) {
       case this.editModuloEventName:
-        this.currentModulo = event.selection;
+        this.moduloEmEdicao = this.copiaObjeto(event.selection);
         this.abrirDialogEditarModulo();
         break;
       case this.deleteModuloEventName:
@@ -73,22 +72,21 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   }
 
   abrirDialogEditarModulo() {
-    this.currentModuloPreEdit = Object.assign({}, this.currentModulo);
     this.mostrarDialogEditarModulo = true;
   }
 
+  // TODO extrair para um modulo utils
+  private copiaObjeto<T>(obj: T): T {
+    return Object.assign({}, obj);
+  }
+
   fecharDialogEditarModulo() {
-    // BINDING direto no objeto em memória
-    // avaliar se é melhor o currentModulo ser uma cópia
-    // // acho que facilita o cancelamento dos popups
-    // // ai salvar updata o selecionado com a cópia
-    // // facilita o cancelamento mas dificulta salvar
-    this.sistema.updateModulo(this.currentModuloPreEdit);
     this.mostrarDialogEditarModulo = false;
   }
 
   editarModulo() {
-    this.sistema.updateModulo(this.currentModulo);
+    // update funciona pois a cópia possui o mesmo artificialId
+    this.sistema.updateModulo(this.moduloEmEdicao);
     this.mostrarDialogEditarModulo = false;
   }
 

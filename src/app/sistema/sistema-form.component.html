@@ -114,12 +114,11 @@
 
         <!-- Dialog Editar módulo -->
         <p-dialog header="Editar Módulo" [(visible)]="mostrarDialogEditarModulo"
-          [closeOnEscape]="false" [closable]="false" [modal]="true"
           [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
             <div class="ui-g-12" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="text" name="nomeModulo" [(ngModel)]="currentModulo.nome"
+                <input type="text" name="nomeModulo" [(ngModel)]="moduloEmEdicao.nome"
                   pInputText (keydown.enter)="editarModulo()"/>
                 <label>Nome do Módulo</label>
               </span>
