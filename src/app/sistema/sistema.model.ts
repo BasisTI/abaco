@@ -67,4 +67,9 @@ export class Sistema implements BaseEntity {
     modulo.addFuncionalidade(funcionalidade);
   }
 
+  updateModulo(modulo: Modulo) {
+    this.mappableModulos.update(modulo);
+    this.modulos = this.mappableModulos.values();
+  }
+
 }

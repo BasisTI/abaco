@@ -112,6 +112,32 @@
           </div>
         </p-dialog>
 
+        <!-- Dialog Editar módulo -->
+        <p-dialog header="Editar Módulo" [(visible)]="mostrarDialogEditarModulo"
+          [closeOnEscape]="false" [closable]="false" [modal]="true"
+          [contentStyle]="{'overflow':'visible'}" [width]="800">
+          <div class="ui-g">
+            <div class="ui-g-12" style="margin-bottom: 25px">
+              <span class="md-inputfield">
+                <input type="text" name="nomeModulo" [(ngModel)]="currentModulo.nome"
+                  pInputText (keydown.enter)="editarModulo()"/>
+                <label>Nome do Módulo</label>
+              </span>
+            </div>
+          </div>
+
+          <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2">
+              <button pButton type="button" label="Cancelar"
+                (click)="fecharDialogEditarModulo()"></button>
+            </div>
+            <div class="ui-g-2">
+              <button pButton type="button" label="Salvar" 
+                (click)="editarModulo()"></button>
+            </div>
+          </div>
+        </p-dialog>
+
         <!-- Dialog funcionalidade -->
         <p-dialog header="Funcionalidade" [(visible)]="mostrarDialogFuncionalidade"
           [contentStyle]="{'overflow':'visible'}" [width]="800">

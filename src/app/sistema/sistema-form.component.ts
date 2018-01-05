@@ -26,6 +26,10 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   mostrarDialogModulo = false;
   novoModulo: Modulo = new Modulo();
+  currentModuloPreEdit: Modulo;
+  currentModulo: Modulo = new Modulo();
+
+  mostrarDialogEditarModulo = false;
 
   mostrarDialogFuncionalidade = false;
   novaFuncionalidade: Funcionalidade = new Funcionalidade();
@@ -37,7 +41,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     private router: Router,
     private sistemaService: SistemaService,
     private organizacaoService: OrganizacaoService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isSaving = false;
@@ -58,14 +62,34 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
     switch (event.button) {
       case this.editModuloEventName:
-        console.log('edit');
-        console.log(event.selection);
+        this.currentModulo = event.selection;
+        this.abrirDialogEditarModulo();
         break;
       case this.deleteModuloEventName:
         console.log('delete');
         console.log(event.selection);
         break;
     }
+  }
+
+  abrirDialogEditarModulo() {
+    this.currentModuloPreEdit = Object.assign({}, this.currentModulo);
+    this.mostrarDialogEditarModulo = true;
+  }
+
+  fecharDialogEditarModulo() {
+    // BINDING direto no objeto em memória
+    // avaliar se é melhor o currentModulo ser uma cópia
+    // // acho que facilita o cancelamento dos popups
+    // // ai salvar updata o selecionado com a cópia
+    // // facilita o cancelamento mas dificulta salvar
+    this.sistema.updateModulo(this.currentModuloPreEdit);
+    this.mostrarDialogEditarModulo = false;
+  }
+
+  editarModulo() {
+    this.sistema.updateModulo(this.currentModulo);
+    this.mostrarDialogEditarModulo = false;
   }
 
   abrirDialogModulo() {
