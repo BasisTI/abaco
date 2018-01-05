@@ -44,14 +44,22 @@ export class Sistema implements BaseEntity {
     if (!this.modulos) {
       return [];
     }
-    const allFuncs = [];
-    this.modulos.forEach(function (m) {
-      if (m.funcionalidades) {
-        m.funcionalidades.forEach(f => f.modulo = m);
-        allFuncs.push(m.funcionalidades);
-      }
-    });
+    const allFuncs = this.getAllFuncionalidadesAsArrayOfArrays();
     return allFuncs.reduce((a, b) => a.concat(b), []);
+  }
+
+  private getAllFuncionalidadesAsArrayOfArrays(): Array<Array<Funcionalidade>> {
+    const allFuncs = [];
+    this.modulos.forEach(m => allFuncs.push(this.retrieveFuncionalidadesFromModulo(m)));
+    return allFuncs;
+  }
+
+  private retrieveFuncionalidadesFromModulo(modulo: Modulo): Funcionalidade[] {
+    if (modulo.funcionalidades) {
+      modulo.funcionalidades.forEach(f => f.modulo = modulo);
+      return modulo.funcionalidades;
+    }
+    return [];
   }
 
   addFuncionalidade(funcionalidade: Funcionalidade) {
