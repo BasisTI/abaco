@@ -1,3 +1,4 @@
+import { ConfirmationService } from 'primeng/primeng';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
@@ -40,6 +41,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     private router: Router,
     private sistemaService: SistemaService,
     private organizacaoService: OrganizacaoService,
+    private confirmationService: ConfirmationService,
   ) { }
 
   ngOnInit() {
@@ -65,8 +67,8 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         this.abrirDialogEditarModulo();
         break;
       case this.deleteModuloEventName:
-        console.log('delete');
-        console.log(event.selection);
+        this.moduloEmEdicao = this.copiaObjeto(event.selection);
+        this.confirmDelete();
         break;
     }
   }
@@ -87,7 +89,19 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   editarModulo() {
     // update funciona pois a cópia possui o mesmo artificialId
     this.sistema.updateModulo(this.moduloEmEdicao);
+    this.moduloEmEdicao = new Modulo();
     this.mostrarDialogEditarModulo = false;
+  }
+
+  confirmDelete() {
+    this.confirmationService.confirm({
+      message: `Tem certeza que deseja excluir o módulo '${this.moduloEmEdicao.nome}'
+        e todas as suas funcionalidades?`,
+      accept: () => {
+        this.sistema.deleteModulo(this.moduloEmEdicao);
+        this.moduloEmEdicao = new Modulo();
+      }
+    });
   }
 
   abrirDialogModulo() {

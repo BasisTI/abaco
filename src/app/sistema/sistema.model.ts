@@ -72,4 +72,9 @@ export class Sistema implements BaseEntity {
     this.modulos = this.mappableModulos.values();
   }
 
+  deleteModulo(modulo: Modulo) {
+    this.mappableModulos.delete(modulo);
+    this.modulos = this.mappableModulos.values();
+  }
+
 }
