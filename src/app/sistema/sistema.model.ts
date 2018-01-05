@@ -1,10 +1,10 @@
-import { BaseEntity } from '../shared';
+import { BaseEntity, MappableEntities } from '../shared';
 import { Modulo } from '../modulo';
 import { Funcionalidade } from '../funcionalidade';
 
-import * as _ from 'lodash';
-
 export class Sistema implements BaseEntity {
+
+  private mappableModulos: MappableEntities<Modulo>;
 
   constructor(
     public id?: number,
@@ -13,21 +13,31 @@ export class Sistema implements BaseEntity {
     public numeroOcorrencia?: string,
     public organizacao?: BaseEntity,
     public modulos?: Modulo[],
-  ) { }
+  ) {
+    if (modulos) {
+      this.mappableModulos = new MappableEntities<Modulo>(modulos);
+    } else {
+      this.mappableModulos = new MappableEntities<Modulo>();
+    }
+  }
+
+  static fromJSON(json: any): Sistema {
+    const modulos = json.modulos.map(m => Modulo.fromJSON(m));
+    const newSistema = new Sistema(json.id, json.sigla,
+      json.nome, json.numeroOcorrencia, json.organizacao,
+      modulos);
+    return newSistema;
+  }
 
   static toNonCircularJson(s: Sistema): Sistema {
     const nonCircularModulos = s.modulos.map(m => Modulo.toNonCircularJson(m));
     return new Sistema(s.id, s.sigla, s.nome, s.numeroOcorrencia,
-       s.organizacao, nonCircularModulos);
+      s.organizacao, nonCircularModulos);
   }
 
   addModulo(modulo: Modulo) {
-    if (!this.modulos) {
-      this.modulos = [];
-    }
-    // para atualizar dropdown, o array precisa ser recriado
-    this.modulos = this.modulos.slice();
-    this.modulos.push(modulo);
+    this.mappableModulos.push(modulo);
+    this.modulos = this.mappableModulos.values();
   }
 
   get funcionalidades(): Funcionalidade[] {
@@ -45,13 +55,8 @@ export class Sistema implements BaseEntity {
   }
 
   addFuncionalidade(funcionalidade: Funcionalidade) {
-    const modulo = this.findModulo(funcionalidade.modulo);
+    const modulo: Modulo = this.mappableModulos.get(funcionalidade.modulo);
     modulo.addFuncionalidade(funcionalidade);
-  }
-
-  private findModulo(modulo: Modulo): Modulo {
-    // FIXME
-    return _.find(this.modulos, { 'nome': modulo.nome });
   }
 
 }
