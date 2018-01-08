@@ -15,7 +15,7 @@ import { ResponseWrapper } from '../shared';
   templateUrl: './organizacao-form.component.html'
 })
 export class OrganizacaoFormComponent implements OnInit, OnDestroy {
-  
+
   private routeSub: Subscription;
 
   contratos: Contrato[] = [];
@@ -24,7 +24,8 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   mostrarDialogCadastroContrato: boolean = false;
   manuais: Manual[];
   novoContrato: Contrato = new Contrato();
-  
+  logo: File;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -69,7 +70,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     if (this.organizacao.id !== undefined) {
       this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
     } else {
-      this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
+      this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao, this.logo));
     }
   }
 
@@ -84,5 +85,9 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.routeSub.unsubscribe();
+  }
+
+  fileUpload(event: any) {
+    this.logo = event.target.files[0];
   }
 }

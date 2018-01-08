@@ -37,6 +37,7 @@ import { AbacoSistemaModule } from './sistema/sistema.module';
 import { AbacoModuloModule } from './modulo/modulo.module';
 import { AbacoFuncionalidadeModule } from './funcionalidade/funcionalidade.module';
 import { MemoryDataTableModule } from './memory-datatable/memory-datatable.module';
+import { UploadService } from './upload/upload.service';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -87,6 +88,7 @@ import { MemoryDataTableModule } from './memory-datatable/memory-datatable.modul
     ConfirmationService,
     MessageService,
     PageNotificationService,
+    UploadService
   ],
   bootstrap: [AppComponent]
 })

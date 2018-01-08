@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 
 import { Organizacao } from './organizacao.model';
 import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class OrganizacaoService {
@@ -16,14 +17,22 @@ export class OrganizacaoService {
 
   searchUrl = environment.apiUrl + '/_search' + this.resourceName;
 
-  constructor(private http: HttpService) {}
+  constructor(
+    private http: HttpService,
+    private uploadService: UploadService
+  ) {}
 
-  create(organizacao: Organizacao): Observable<Organizacao> {
+  create(organizacao: Organizacao, logoOrganizacao: File): Observable<any> {
     const copy = this.convertToJSON(organizacao);
-    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertFromJSON(jsonResponse);
+    return this.uploadService.uploadFile(logoOrganizacao).map(response => {
+      organizacao.logoid = response["id"];
+
+      this.http.post(this.resourceUrl, copy).map((res: Response) => {
+        const jsonResponse = res.json();
+        return this.convertFromJSON(jsonResponse);
+      });
     });
+
   }
 
   update(organizacao: Organizacao): Observable<Organizacao> {
