@@ -82,24 +82,38 @@ export class Sistema implements BaseEntity {
   // mas perderíamos a estrutura OO atual
   updateFuncionalidade(funcionalidade: Funcionalidade, oldFuncionalidade: Funcionalidade) {
     if (oldFuncionalidade.modulo !== funcionalidade.modulo) {
-      const oldModulo = this.mappableModulos.get(oldFuncionalidade.modulo);
-      oldModulo.deleteFuncionalidade(oldFuncionalidade);
-
-      funcionalidade.id = undefined;
-      funcionalidade.artificialId = undefined;
-      this.addFuncionalidade(funcionalidade);
+      this.updateFuncionalidadeWithDifferentModulo(funcionalidade, oldFuncionalidade);
     } else {
-      const modulo: Modulo = this.mappableModulos.get(funcionalidade.modulo);
-      modulo.updateFuncionalidade(funcionalidade);
+      this.doUpdateFuncionalidadeWithSameModule(funcionalidade);
     }
 
     this.modulos = this.mappableModulos.values();
   }
 
+  private updateFuncionalidadeWithDifferentModulo(func: Funcionalidade, oldFunc: Funcionalidade) {
+    this.doDeleteFuncionalidade(oldFunc.modulo);
+    this.addFuncionalidadeAsNew(func);
+  }
+
+  private addFuncionalidadeAsNew(func: Funcionalidade) {
+    func.id = undefined;
+    func.artificialId = undefined;
+    this.addFuncionalidade(func);
+  }
+
+  private doUpdateFuncionalidadeWithSameModule(func: Funcionalidade) {
+    const modulo: Modulo = this.mappableModulos.get(func.modulo);
+    modulo.updateFuncionalidade(func);
+  }
+
   deleteFuncionalidade(funcionalidade: Funcionalidade) {
+    this.doDeleteFuncionalidade(funcionalidade);
+    this.modulos = this.mappableModulos.values();
+  }
+
+  private doDeleteFuncionalidade(funcionalidade: Funcionalidade) {
     const modulo: Modulo = this.mappableModulos.get(funcionalidade.modulo);
     modulo.deleteFuncionalidade(funcionalidade);
-    this.modulos = this.mappableModulos.values();
   }
 
 }
