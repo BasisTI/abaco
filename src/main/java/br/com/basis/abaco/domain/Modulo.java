@@ -48,7 +48,7 @@ public class Modulo implements Serializable {
 	@JsonIgnore
 	private Sistema sistema;
 
-	@OneToMany(mappedBy = "modulo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "modulo", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Funcionalidade> funcionalidades = new HashSet<>();
 
