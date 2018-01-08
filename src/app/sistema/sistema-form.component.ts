@@ -35,6 +35,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   mostrarDialogFuncionalidade = false;
   mostrarDialogEditarFuncionalidade = false;
   novaFuncionalidade: Funcionalidade = new Funcionalidade();
+  oldFuncionalidade: Funcionalidade;
   funcionalidadeEmEdicao: Funcionalidade = new Funcionalidade();
 
   private routeSub: Subscription;
@@ -74,6 +75,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         this.confirmDeleteModulo();
         break;
       case this.editFuncionalidadeEventName:
+        this.oldFuncionalidade = event.selection.clone();
         this.funcionalidadeEmEdicao = event.selection.clone();
         this.abrirDialogEditarFuncionalidade();
         break;
@@ -156,7 +158,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   editarFuncionalidade() {
     // update funciona pois a cópia possui o mesmo artificialId
-    this.sistema.updateFuncionalidade(this.funcionalidadeEmEdicao);
+    this.sistema.updateFuncionalidade(this.funcionalidadeEmEdicao, this.oldFuncionalidade);
     this.fecharDialogEditarFuncionalidade();
   }
 
