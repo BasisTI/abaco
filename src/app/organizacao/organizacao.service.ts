@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs/Rx';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 
@@ -22,8 +22,9 @@ export class OrganizacaoService {
     private uploadService: UploadService
   ) {}
 
-  create(organizacao: Organizacao, logoOrganizacao: File): Observable<any> {
+  create(organizacao: Organizacao, logoOrganizacao: File) {
     const copy = this.convertToJSON(organizacao);
+
     return this.uploadService.uploadFile(logoOrganizacao).map(response => {
       organizacao.logoid = response["id"];
 

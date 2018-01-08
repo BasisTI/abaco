@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, BrowserXhr } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
@@ -38,14 +39,15 @@ import { AbacoModuloModule } from './modulo/modulo.module';
 import { AbacoFuncionalidadeModule } from './funcionalidade/funcionalidade.module';
 import { MemoryDataTableModule } from './memory-datatable/memory-datatable.module';
 import { UploadService } from './upload/upload.service';
+import {FileUploadModule} from 'primeng/primeng';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
   imports: [
     BrowserModule,
     FormsModule,
-    AppRoutes,
     HttpModule,
+    AppRoutes,
     BrowserAnimationsModule,
     PRIMENG_IMPORTS,
     NgProgressModule,
@@ -65,7 +67,9 @@ import { UploadService } from './upload/upload.service';
     AbacoSistemaModule,
     AbacoModuloModule,
     AbacoFuncionalidadeModule,
-    MemoryDataTableModule
+    MemoryDataTableModule,
+    FileUploadModule,
+    HttpClientModule
     /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
   ],
   declarations: [

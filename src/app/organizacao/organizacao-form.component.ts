@@ -72,9 +72,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     } else {
       this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao, this.logo));
     }
+
+
   }
 
-  private subscribeToSaveResponse(result: Observable<Organizacao>) {
+  private subscribeToSaveResponse(result: Observable<any>) {
     result.subscribe((res: Organizacao) => {
       this.isSaving = false;
       this.router.navigate(['/organizacao']);
