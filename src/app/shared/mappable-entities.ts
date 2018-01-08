@@ -1,5 +1,10 @@
 import { BaseEntity } from './base-entity';
 
+// TODO write tests considering edge cases
+// one such case is adding a BaseEntity with an ID that is already indexed
+// FIXME might add a BaseEntity with and ID already generated
+// FIXME might generate and ID that is already indexed
+// working with negative IDs might work. databases don't use negative IDs
 export class MappableEntities<T extends BaseEntity> {
 
     private generatedArtificialId = 0;
@@ -30,6 +35,7 @@ export class MappableEntities<T extends BaseEntity> {
         }
         return entity.artificialId;
     }
+
 
     private generateAndIncrementArtificialId(): number {
         const artificialId = this.generatedArtificialId;
