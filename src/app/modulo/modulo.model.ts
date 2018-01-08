@@ -37,4 +37,14 @@ export class Modulo implements BaseEntity {
     this.funcionalidades = this.mappableFuncionalidades.values();
   }
 
+  updateFuncionalidade(funcionalidade: Funcionalidade) {
+    this.mappableFuncionalidades.update(funcionalidade);
+    this.funcionalidades = this.mappableFuncionalidades.values();
+  }
+
+  deleteFuncionalidade(funcionalidade: Funcionalidade) {
+    this.mappableFuncionalidades.delete(funcionalidade);
+    this.funcionalidades = this.mappableFuncionalidades.values();
+  }
+
 }

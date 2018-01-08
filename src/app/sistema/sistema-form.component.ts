@@ -18,21 +18,24 @@ import { ResponseWrapper } from '../shared';
 })
 export class SistemaFormComponent implements OnInit, OnDestroy {
 
-  editModuloEventName = 'editModulo';
-  deleteModuloEventName = 'deleteModulo';
+  readonly editModuloEventName = 'editModulo';
+  readonly deleteModuloEventName = 'deleteModulo';
+  readonly editFuncionalidadeEventName = 'editFuncionalidade';
+  readonly deleteFuncionalidadeEventName = 'deleteFuncionalidade';
 
   organizacaos: Organizacao[];
   sistema: Sistema;
   isSaving: boolean;
 
   mostrarDialogModulo = false;
+  mostrarDialogEditarModulo = false;
   novoModulo: Modulo = new Modulo();
   moduloEmEdicao: Modulo = new Modulo();
 
-  mostrarDialogEditarModulo = false;
-
   mostrarDialogFuncionalidade = false;
+  mostrarDialogEditarFuncionalidade = false;
   novaFuncionalidade: Funcionalidade = new Funcionalidade();
+  funcionalidadeEmEdicao: Funcionalidade = new Funcionalidade();
 
   private routeSub: Subscription;
 
@@ -68,13 +71,16 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         break;
       case this.deleteModuloEventName:
         this.moduloEmEdicao = this.copiaObjeto(event.selection);
-        this.confirmDelete();
+        this.confirmDeleteModulo();
         break;
+      case this.editFuncionalidadeEventName:
+        this.funcionalidadeEmEdicao = this.copiaObjeto(event.selection);
+        this.abrirDialogEditarFuncionalidade();
+        break;
+      case this.deleteFuncionalidadeEventName:
+        this.funcionalidadeEmEdicao = this.copiaObjeto(event.selection);
+        this.confirmDeleteFuncionalidade();
     }
-  }
-
-  abrirDialogEditarModulo() {
-    this.mostrarDialogEditarModulo = true;
   }
 
   // TODO extrair para um modulo utils
@@ -82,18 +88,22 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     return Object.assign({}, obj);
   }
 
+  abrirDialogEditarModulo() {
+    this.mostrarDialogEditarModulo = true;
+  }
+
   fecharDialogEditarModulo() {
+    this.moduloEmEdicao = new Modulo();
     this.mostrarDialogEditarModulo = false;
   }
 
   editarModulo() {
     // update funciona pois a cópia possui o mesmo artificialId
     this.sistema.updateModulo(this.moduloEmEdicao);
-    this.moduloEmEdicao = new Modulo();
-    this.mostrarDialogEditarModulo = false;
+    this.fecharDialogEditarModulo();
   }
 
-  confirmDelete() {
+  confirmDeleteModulo() {
     this.confirmationService.confirm({
       message: `Tem certeza que deseja excluir o módulo '${this.moduloEmEdicao.nome}'
         e todas as suas funcionalidades?`,
@@ -138,6 +148,32 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   adicionarFuncionalidade() {
     this.sistema.addFuncionalidade(this.novaFuncionalidade);
     this.doFecharDialogFuncionalidade();
+  }
+
+  abrirDialogEditarFuncionalidade() {
+    this.mostrarDialogEditarFuncionalidade = true;
+  }
+
+  fecharDialogEditarFuncionalidade() {
+    this.funcionalidadeEmEdicao = new Modulo();
+    this.mostrarDialogEditarFuncionalidade = false;
+  }
+
+  editarFuncionalidade() {
+    // update funciona pois a cópia possui o mesmo artificialId
+    this.sistema.updateFuncionalidade(this.funcionalidadeEmEdicao);
+    this.fecharDialogEditarFuncionalidade();
+  }
+
+  confirmDeleteFuncionalidade() {
+    this.confirmationService.confirm({
+      message: `Tem certeza que deseja excluir a funcionalidade '${this.funcionalidadeEmEdicao.nome}'
+        do módulo '${this.funcionalidadeEmEdicao.modulo.nome}'?`,
+      accept: () => {
+        this.sistema.deleteFuncionalidade(this.funcionalidadeEmEdicao);
+        this.moduloEmEdicao = new Modulo();
+      }
+    });
   }
 
   save() {
