@@ -29,6 +29,7 @@
           </div>
         </div>
 
+        <!-- Módulos -->
         <div class="ui-g">
           <h4 style="margin-bottom: 0px; margin-top: 0px;">
             Módulos
@@ -57,6 +58,7 @@
 
         </div>
 
+        <!-- Funcionalidades -->
         <div class="ui-g">
           <h4 style="margin-bottom: 0px;">
             Funcionalidades
@@ -71,11 +73,14 @@
             </div>
           </div>
 
-          <p-dataTable [value]="sistema.funcionalidades"
-            [immutable]="false" #funcionalidadesDataTable>
+          <!-- Datatable Funcionalidades -->        
+          <app-memory-datatable [value]="sistema.funcionalidades"
+            [editEventName]="editFuncionalidadeEventName"
+            [deleteEventName]="deleteFuncionalidadeEventName"
+            (buttonClick)="datatableClick($event)">
             <p-column header="Módulo" field="modulo.nome"></p-column>
             <p-column header="Nome" field="nome"></p-column>
-          </p-dataTable>
+          </app-memory-datatable>
         </div>
 
         <!-- Botões salvar e cancelar do fim da página -->
@@ -174,6 +179,38 @@
             <div class="ui-g-2">
               <button pButton type="button" label="Salvar" 
                 (click)="adicionarFuncionalidade()"></button>
+            </div>
+          </div>
+        </p-dialog>
+
+        <!-- Dialog editar funcionalidade -->
+        <p-dialog header="Funcionalidade" [(visible)]="mostrarDialogEditarFuncionalidade"
+          [contentStyle]="{'overflow':'visible'}" [width]="800">
+          <div class="ui-g">
+            <div class="ui-g-12" style="margin-bottom: 25px">
+              <span class="md-inputfield">
+                <input type="text" name="nomeFuncionalidade" 
+                  [(ngModel)]="funcionalidadeEmEdicao.nome" pInputText />
+                <label>Nome da Funcionalidade</label>
+              </span>
+            </div>
+            <div class="ui-g-12" style="margin-bottom: 25px">
+              <p-dropdown [options]="sistema.modulos" optionLabel="nome" 
+                placeholder="Módulo" name="funcionalidadeModulo"
+                [(ngModel)]="funcionalidadeEmEdicao.modulo" [autoWidth]="false" 
+                dataKey="id">
+              </p-dropdown>
+            </div>
+          </div>
+
+          <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2">
+              <button pButton type="button" label="Cancelar"
+                (click)="fecharDialogEditarFuncionalidade()"></button>
+            </div>
+            <div class="ui-g-2">
+              <button pButton type="button" label="Salvar" 
+                (click)="editarFuncionalidade()"></button>
             </div>
           </div>
         </p-dialog>
