@@ -84,10 +84,15 @@ export class Sistema implements BaseEntity {
     if (oldFuncionalidade.modulo !== funcionalidade.modulo) {
       const oldModulo = this.mappableModulos.get(oldFuncionalidade.modulo);
       oldModulo.deleteFuncionalidade(oldFuncionalidade);
+
+      funcionalidade.id = undefined;
+      funcionalidade.artificialId = undefined;
+      this.addFuncionalidade(funcionalidade);
+    } else {
+      const modulo: Modulo = this.mappableModulos.get(funcionalidade.modulo);
+      modulo.updateFuncionalidade(funcionalidade);
     }
 
-    const modulo: Modulo = this.mappableModulos.get(funcionalidade.modulo);
-    modulo.updateFuncionalidade(funcionalidade);
     this.modulos = this.mappableModulos.values();
   }
 
