@@ -1,7 +1,7 @@
-import { BaseEntity, MappableEntities } from '../shared';
+import { BaseEntity, MappableEntities, JSONable } from '../shared';
 import { Contrato } from '../contrato';
 
-export class Organizacao implements BaseEntity {
+export class Organizacao implements BaseEntity, JSONable<Organizacao> {
 
   private mappableContracts: MappableEntities<Contrato>;
 
@@ -13,6 +13,8 @@ export class Organizacao implements BaseEntity {
     public ativo?: boolean,
     public numeroOcorrencia?: string,
     public contracts?: Contrato[],
+    // FIXME BaseEntity, para evitar dependencias circulares
+    // parece que reestruturação de pastas evita isso
     public sistemas?: BaseEntity[],
   ) {
     if (contracts) {
@@ -21,6 +23,18 @@ export class Organizacao implements BaseEntity {
       this.contracts = [];
       this.mappableContracts = new MappableEntities<Contrato>();
     }
+  }
+
+  toJSONState(): Organizacao {
+    const copy: Organizacao = Object.assign({}, this);
+    return copy;
+  }
+
+  copyFromJSON(json: any) {
+    const contratos: Contrato[] = json.contracts.map(c => new Contrato().copyFromJSON(c));
+    const newOrganizacao = new Organizacao(json.id, json.sigla, json.nome,
+      json.cnpj, json.ativo, json.numeroOcorrencia, contratos, json.sistemas);
+    return newOrganizacao;
   }
 
   addContrato(contrato: Contrato) {
