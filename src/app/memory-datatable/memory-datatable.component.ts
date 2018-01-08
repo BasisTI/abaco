@@ -23,10 +23,10 @@ export class MemoryDatatableComponent implements AfterViewInit {
   value: BaseEntity[];
 
   @Input()
-  editEventName: string;
+  editEventName = 'edit';
 
   @Input()
-  deleteEventName: string;
+  deleteEventName = 'delete';
 
   selectedRow: any;
 
