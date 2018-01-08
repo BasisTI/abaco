@@ -58,8 +58,8 @@
               </div>
             </div>
             
-            <p-dataTable [value]="organizacao.contracts"
-              [immutable]="false" #contratosDataTable>
+            <app-memory-datatable [value]="organizacao.contracts"
+              (buttonClick)="datatableClick($event)">
               <p-column header="Número do Contrato" field="numeroContrato"></p-column>
               <p-column header="Ínicio Vigência" field="dataInicioVigencia">
                 <ng-template let-col let-dataInicioVigencia="rowData" pTemplate="body">
@@ -77,7 +77,7 @@
                   {{ ativo[col.field] ? 'Sim' : 'Não' }}
                 </ng-template>
               </p-column>
-            </p-dataTable>
+            </app-memory-datatable>
           </div>
         </div>
 
@@ -92,6 +92,7 @@
           </div>
         </div>
 
+        <!-- Dialog Cadastro Contrato -->
         <p-dialog header="Contrato" [(visible)]="mostrarDialogCadastroContrato"
           [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
@@ -147,6 +148,66 @@
             <div class="ui-g-2">
               <button pButton type="button" label="Salvar" 
                 (click)="adicionarContrato()"></button>
+            </div>
+          </div>
+        </p-dialog>
+
+        <!-- Dialog edição contrato -->
+        <p-dialog header="Contrato" [(visible)]="mostrarDialogEdicaoContrato"
+          [contentStyle]="{'overflow':'visible'}" [width]="800">
+          <div class="ui-g">
+            <div class="ui-g-6" style="margin-bottom: 25px">
+              <span class="md-inputfield">
+                <input type="text" name="numeroContrato" [(ngModel)]="contratoEmEdicao.numeroContrato" pInputText/>
+                <label>Número do Contrato</label>
+              </span>
+            </div>
+            <div class="ui-g-6" style="margin-bottom: 25px">
+              <p-dropdown [options]="manuais" optionLabel="nome" placeholder="Manual"
+                name="manualDropdown" [(ngModel)]="contratoEmEdicao.manual"
+                [autoWidth]="false" dataKey="id"></p-dropdown>
+            </div>
+            <div class="ui-g-6" style="margin-bottom: 25px">
+              <span class="md-inputfield">
+                <p-calendar [(ngModel)]="contratoEmEdicao.dataInicioVigencia" name="dataInicioVigenciaContrato"
+                  [monthNavigator]="true" [yearNavigator]="true" 
+                  dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
+                <label>Data de Início da Vigência</label>
+              </span>
+            </div>
+            <div class="ui-g-6" style="margin-bottom: 25px">
+              <span class="md-inputfield">
+              <p-calendar [(ngModel)]="contratoEmEdicao.dataFimVigencia"
+                [monthNavigator]="true" [yearNavigator]="true" name="dataFimVigenciaContrato"
+                dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
+              <label>Data Final da Vigência</label>
+              </span>
+            </div>
+            <div class = "ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g">
+                <div class="ui-g-12 ui-md-1">
+                  <label>Ativo</label>
+                </div>
+                <div class="ui-g-12 ui-md-1">
+                  <p-radioButton name="contrato_ativo" [value]="true" label="Sim"
+                    [(ngModel)]="contratoEmEdicao.ativo"></p-radioButton>
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <p-radioButton name="contrato_ativo" [value]="false" label="Não"
+                    [(ngModel)]="contratoEmEdicao.ativo"></p-radioButton>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2">
+              <button pButton type="text" label="Cancelar"
+                (click)="fecharDialogEditarContrato()"></button>
+            </div>
+            <div class="ui-g-2">
+              <button pButton type="button" label="Salvar" 
+                (click)="editarContrato()"></button>
             </div>
           </div>
         </p-dialog>

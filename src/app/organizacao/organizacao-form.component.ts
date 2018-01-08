@@ -9,29 +9,36 @@ import { OrganizacaoService } from './organizacao.service';
 import { Contrato, ContratoService } from '../contrato';
 import { Manual, ManualService } from '../manual';
 import { ResponseWrapper } from '../shared';
+import { ConfirmationService } from 'primeng/components/common/confirmationservice';
+import { DatatableClickEvent } from '@basis/angular-components';
 
 @Component({
   selector: 'jhi-organizacao-form',
   templateUrl: './organizacao-form.component.html'
 })
 export class OrganizacaoFormComponent implements OnInit, OnDestroy {
-  
+
   private routeSub: Subscription;
 
   contratos: Contrato[] = [];
   organizacao: Organizacao;
   isSaving: boolean;
-  mostrarDialogCadastroContrato: boolean = false;
   manuais: Manual[];
+
+  mostrarDialogCadastroContrato = false;
+  mostrarDialogEdicaoContrato = false;
+
   novoContrato: Contrato = new Contrato();
-  
+  contratoEmEdicao: Contrato = new Contrato();
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private organizacaoService: OrganizacaoService,
     private contratoService: ContratoService,
     private manualService: ManualService,
-  ) {}
+    private confirmationService: ConfirmationService
+  ) { }
 
   ngOnInit() {
     this.isSaving = false;
@@ -62,6 +69,46 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   adicionarContrato() {
     this.organizacao.addContrato(this.novoContrato);
     this.doFecharDialogCadastroContrato();
+  }
+
+  datatableClick(event: DatatableClickEvent) {
+    if (!event.selection) {
+      return;
+    }
+    switch (event.button) {
+      case 'edit':
+        this.contratoEmEdicao = event.selection.clone();
+        this.abrirDialogEditarContrato();
+        break;
+      case 'delete':
+        this.contratoEmEdicao = event.selection.clone();
+        this.confirmDeleteContrato();
+    }
+  }
+
+  abrirDialogEditarContrato() {
+    this.mostrarDialogEdicaoContrato = true;
+  }
+
+  fecharDialogEditarContrato() {
+    this.contratoEmEdicao = new Contrato();
+    this.mostrarDialogEdicaoContrato = true;
+  }
+
+  editarContrato() {
+    this.organizacao.updateContrato(this.contratoEmEdicao);
+    this.mostrarDialogEdicaoContrato = false;
+  }
+
+  confirmDeleteContrato() {
+    this.confirmationService.confirm({
+      message: `Tem certeza que deseja excluir o contrato '${this.contratoEmEdicao.numeroContrato}'
+        e todas as suas funcionalidades?`,
+      accept: () => {
+        this.organizacao.deleteContrato(this.contratoEmEdicao);
+        this.contratoEmEdicao = new Contrato();
+      }
+    });
   }
 
   save() {
