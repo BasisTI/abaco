@@ -66,26 +66,21 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
     switch (event.button) {
       case this.editModuloEventName:
-        this.moduloEmEdicao = this.copiaObjeto(event.selection);
+        this.moduloEmEdicao = event.selection.clone();
         this.abrirDialogEditarModulo();
         break;
       case this.deleteModuloEventName:
-        this.moduloEmEdicao = this.copiaObjeto(event.selection);
+        this.moduloEmEdicao = event.selection.clone();
         this.confirmDeleteModulo();
         break;
       case this.editFuncionalidadeEventName:
-        this.funcionalidadeEmEdicao = this.copiaObjeto(event.selection);
+        this.funcionalidadeEmEdicao = event.selection.clone();
         this.abrirDialogEditarFuncionalidade();
         break;
       case this.deleteFuncionalidadeEventName:
-        this.funcionalidadeEmEdicao = this.copiaObjeto(event.selection);
+        this.funcionalidadeEmEdicao = event.selection.clone();
         this.confirmDeleteFuncionalidade();
     }
-  }
-
-  // TODO extrair para um modulo utils
-  private copiaObjeto<T>(obj: T): T {
-    return Object.assign({}, obj);
   }
 
   abrirDialogEditarModulo() {

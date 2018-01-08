@@ -11,7 +11,7 @@ export class Funcionalidade implements BaseEntity {
     public funcaoDados?: BaseEntity,
     public funcaoTransacao?: BaseEntity,
     public artificialId?: number,
-  ) {}
+  ) { }
 
   static fromJSON(json: any) {
     return new Funcionalidade(json.id, json.nome, json.modulo,
@@ -20,5 +20,12 @@ export class Funcionalidade implements BaseEntity {
 
   static toNonCircularJson(f: Funcionalidade): Funcionalidade {
     return new Funcionalidade(f.id, f.nome, undefined);
+  }
+
+  // XXX extrair interface?
+  clone(): Funcionalidade {
+    // shallow copy
+    return new Funcionalidade(this.id, this.nome, this.modulo,
+      this.funcaoDados, this.funcaoTransacao, this.artificialId);
   }
 }
