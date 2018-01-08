@@ -17,6 +17,7 @@ export class Modulo implements BaseEntity {
       funcionalidades.forEach(f => f.modulo = this);
       this.mappableFuncionalidades = new MappableEntities<Funcionalidade>(funcionalidades);
     } else {
+      this.funcionalidades = [];
       this.mappableFuncionalidades = new MappableEntities<Funcionalidade>();
     }
   }
