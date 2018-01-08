@@ -1,11 +1,9 @@
 package br.com.basis.abaco.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import io.swagger.annotations.ApiModel;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,10 +18,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import io.swagger.annotations.ApiModel;
 
 /**
  * <Enter note text here>
@@ -71,6 +74,9 @@ public class Organizacao implements Serializable {
 	@Column(name = "sigla")
 	private String sigla;
 
+	@Column(name="logo_id")
+	private int logoId;
+	
 	public Long getId() {
 		return id;
 	}
@@ -190,6 +196,14 @@ public class Organizacao implements Serializable {
 
 	public void setContracts(Set<Contrato> contracts) {
 		this.contracts = contracts;
+	}
+
+	public int getLogoId() {
+		return logoId;
+	}
+
+	public void setLogoId(int logoId) {
+		this.logoId = logoId;
 	}
 
 	@Override

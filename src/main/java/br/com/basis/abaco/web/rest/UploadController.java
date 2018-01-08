@@ -79,5 +79,15 @@ public class UploadController {
     public String uploadStatus() {
         return "uploadStatus";
     }
+    
+    @GetMapping("/getFile")
+    public ResponseEntity<UploadedFile> getUploadedFile(@RequestParam Long id) {
+		
+    	UploadedFile uploadedFile = filesRepository.findOne(id);
+    	
+    	System.out.println(uploadedFile.toString());
+    	return ResponseEntity.ok(uploadedFile);
+    	
+    }
 
 }
