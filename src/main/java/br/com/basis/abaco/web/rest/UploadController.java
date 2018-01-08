@@ -87,7 +87,7 @@ public class UploadController {
 		
     	UploadedFile uploadedFile = filesRepository.findOne(id);
     	
-    	System.out.println(uploadedFile.toString());
+ 
     	return ResponseEntity.ok(uploadedFile);
     	
     }
