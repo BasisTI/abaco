@@ -9,7 +9,7 @@ export class MappableEntities<T extends BaseEntity> {
 
     private generatedArtificialId = 0;
 
-    private entitiesToIdKey: Map<number, T> = new Map<number, T>();
+    private entitiesByIdKey: Map<number, T> = new Map<number, T>();
 
     constructor(private entitiesArr?: Array<T>) {
         if (entitiesArr) {
@@ -19,7 +19,7 @@ export class MappableEntities<T extends BaseEntity> {
 
     push(entity: T) {
         const idKey: number = this.figureId(entity);
-        this.entitiesToIdKey.set(idKey, entity);
+        this.entitiesByIdKey.set(idKey, entity);
     }
 
     private figureId(entity: T): number {
@@ -36,7 +36,6 @@ export class MappableEntities<T extends BaseEntity> {
         return entity.artificialId;
     }
 
-
     private generateAndIncrementArtificialId(): number {
         const artificialId = this.generatedArtificialId;
         this.generatedArtificialId += 1;
@@ -45,7 +44,7 @@ export class MappableEntities<T extends BaseEntity> {
 
     delete(entity: T) {
         const idKey: number = this.safeFigureId(entity);
-        this.entitiesToIdKey.delete(idKey);
+        this.entitiesByIdKey.delete(idKey);
     }
 
     private safeFigureId(entity: T): number {
@@ -54,16 +53,16 @@ export class MappableEntities<T extends BaseEntity> {
 
     update(entity: T) {
         const idKey: number = this.safeFigureId(entity);
-        this.entitiesToIdKey.set(idKey, entity);
+        this.entitiesByIdKey.set(idKey, entity);
     }
 
-    get(entity: T) {
+    get(entity: T): T {
         const idKey: number = this.safeFigureId(entity);
-        return this.entitiesToIdKey.get(idKey);
+        return this.entitiesByIdKey.get(idKey);
     }
 
     values(): Array<T> {
-        return Array.from(this.entitiesToIdKey.values());
+        return Array.from(this.entitiesByIdKey.values());
     }
 
 }
