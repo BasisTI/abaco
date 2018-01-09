@@ -11,7 +11,7 @@ export class MappableEntities<T extends BaseEntity> {
 
     private entitiesByIdKey: Map<number, T> = new Map<number, T>();
 
-    constructor(private entitiesArr?: Array<T>) {
+    constructor(entitiesArr?: Array<T>) {
         if (entitiesArr) {
             entitiesArr.forEach(e => this.push(e));
         }
@@ -19,6 +19,9 @@ export class MappableEntities<T extends BaseEntity> {
 
     push(entity: T) {
         const idKey: number = this.figureId(entity);
+        if (this.entitiesByIdKey.has(idKey)) {
+            throw new RangeError(`id or artificialId '${idKey}' already exists. Not pushing the entity to avoid inconsistent state.`);
+        }
         this.entitiesByIdKey.set(idKey, entity);
     }
 
