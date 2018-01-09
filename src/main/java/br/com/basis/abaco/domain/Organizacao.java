@@ -63,7 +63,7 @@ public class Organizacao implements Serializable {
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Sistema> sistemas = new HashSet<>();
 
-	@OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@JsonManagedReference
 	private Set<Contrato> contracts = new HashSet<>();
 
