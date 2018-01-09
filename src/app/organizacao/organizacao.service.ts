@@ -27,8 +27,7 @@ export class OrganizacaoService {
 
     return this.uploadService.uploadFile(logoOrganizacao).map(response => {
       console.log(response);
-      copy.logo_id = JSON.parse(response["_body"]).id;
-      alert(copy.logo_id);
+      copy.logoId = JSON.parse(response["_body"]).id;
 
       return this.http.post(this.resourceUrl, copy).map((res: Response) => {
         const jsonResponse = res.json();
