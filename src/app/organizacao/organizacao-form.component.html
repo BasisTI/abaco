@@ -187,15 +187,19 @@
               <div class="ui-g">
                 <div class="ui-g-12 ui-md-1">
                   <label>Ativo</label>
-                </div>
-                <div class="ui-g-12 ui-md-1">
+                </div>  
+
+                <p-checkbox name="contrato_ativo" binary="true"
+                  [(ngModel)]="contratoEmEdicao.ativo"></p-checkbox>
+                <!-- BUG no Primeng com radiobutton dentro de dialog -->
+                <!-- <div class="ui-g-12 ui-md-1">
                   <p-radioButton name="contrato_ativo" [value]="true" label="Sim"
                     [(ngModel)]="contratoEmEdicao.ativo"></p-radioButton>
                 </div>
                 <div class="ui-g-12 ui-md-2">
                   <p-radioButton name="contrato_ativo" [value]="false" label="Não"
                     [(ngModel)]="contratoEmEdicao.ativo"></p-radioButton>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>

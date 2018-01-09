@@ -15,7 +15,8 @@ import {
   ConfirmDialogModule,
   ConfirmationService,
   DataTableModule,
-  DialogModule
+  DialogModule,
+  CheckboxModule
 } from 'primeng/primeng';
 
 import {
@@ -42,7 +43,8 @@ import {
     ConfirmDialogModule,
     DataTableModule,
     DialogModule,
-    MemoryDataTableModule
+    MemoryDataTableModule,
+    CheckboxModule
   ],
   declarations: [
     OrganizacaoComponent,
