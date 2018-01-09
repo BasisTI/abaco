@@ -1,6 +1,5 @@
 import { BaseEntity, JSONable } from '../shared';
 
-
 export class Contrato implements BaseEntity, JSONable<Contrato> {
 
   // TODO avaliar se consegue funcionar sem artificialId
@@ -8,8 +7,8 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
   constructor(
     public id?: number,
     public numeroContrato?: string,
-    public dataInicioVigencia?: any,
-    public dataFimVigencia?: any,
+    public dataInicioVigencia?: Date,
+    public dataFimVigencia?: Date,
     public manual?: BaseEntity,
     public ativo?: boolean,
   ) { }
@@ -20,9 +19,9 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
   }
 
   copyFromJSON(json: any) {
-    // TODO converter modulo?
-    return new Contrato(json.id, json.numeroContrato, json.dataInicioVigencia,
-      json.dataFimVigencia, json.manual, json.ativo);
+    // TODO converter manual?
+    return new Contrato(json.id, json.numeroContrato, new Date(json.dataInicioVigencia),
+      new Date(json.dataFimVigencia), json.manual, json.ativo);
   }
 
   // TODO extrair modulo? entrar pro jsonable?

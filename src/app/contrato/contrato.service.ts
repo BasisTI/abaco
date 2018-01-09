@@ -62,12 +62,7 @@ export class ContratoService {
    * Convert a returned JSON object to Contrato.
    */
   private convertItemFromServer(json: any): Contrato {
-    const entity: Contrato = Object.assign(new Contrato(), json);
-    entity.dataInicioVigencia = this.dateUtils
-      .convertLocalDateFromServer(json.dataInicioVigencia);
-    entity.dataFimVigencia = this.dateUtils
-      .convertLocalDateFromServer(json.dataFimVigencia);
-    return entity;
+    return new Contrato().copyFromJSON(json);
   }
 
   /**
@@ -75,10 +70,6 @@ export class ContratoService {
    */
   private convert(contrato: Contrato): Contrato {
     const copy: Contrato = Object.assign({}, contrato);
-    copy.dataInicioVigencia = this.dateUtils
-      .convertLocalDateToServer(contrato.dataInicioVigencia);
-    copy.dataFimVigencia = this.dateUtils
-      .convertLocalDateToServer(contrato.dataFimVigencia);
     return copy;
   }
 }
