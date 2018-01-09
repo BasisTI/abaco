@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpClient } from '@angular/common/http';
-// import { HttpService } from '@basis/angular-components';
+import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 
 @Injectable()
 export class UploadService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpService) { }
 
   resourceName = '/upload'
   resourceUrl = environment.apiUrl + this.resourceName ;
@@ -16,16 +16,22 @@ export class UploadService {
       'Content-Type': 'multipart/form-data',
     }
 
-    let formdata: FormData = new FormData();
+    let body = new FormData();
 
-    formdata.append('file', file);
+    body.append('file', file)
 
-    const req = new HttpRequest('POST', '/post', formdata, {
-      reportProgress: true,
-      responseType: 'text'
+    return this.http.post(this.resourceUrl, body).map(response => {
+      return response;
     });
-
-    return this.http.request(req);
+    // return this.http.request(this.resourceUrl, {
+    //   headers: headers,
+    //   method: 'POST',
+    //   body: body
+    // }).map(response => {
+    //   return response;
+    // }, error => {
+    //   console.log(error);
+    // });
   }
 
 }
