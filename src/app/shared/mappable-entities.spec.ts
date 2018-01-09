@@ -43,7 +43,7 @@ fdescribe('MappableEntities', () => {
         doExpectToContain(arr, values);
     }
 
-    describe('Push scenarios', () => {
+    describe('push()', () => {
         let entity;
 
         beforeEach(() => entity = entityWithNoIds);
@@ -91,8 +91,7 @@ fdescribe('MappableEntities', () => {
                 }).toThrowError(RangeError);
 
                 const values = mappableEntities.values();
-                expect(values.length).toEqual(1);
-                expect(values).toContain(entity);
+                expectToContainExactly(values, entity);
                 expect(values).not.toContain(eWithSameId);
             });
 
