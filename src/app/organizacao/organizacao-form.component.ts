@@ -92,12 +92,12 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
   fecharDialogEditarContrato() {
     this.contratoEmEdicao = new Contrato();
-    this.mostrarDialogEdicaoContrato = true;
+    this.mostrarDialogEdicaoContrato = false;
   }
 
   editarContrato() {
     this.organizacao.updateContrato(this.contratoEmEdicao);
-    this.mostrarDialogEdicaoContrato = false;
+    this.fecharDialogEditarContrato();
   }
 
   confirmDeleteContrato() {
