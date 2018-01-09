@@ -85,6 +85,10 @@ export class MappableEntities<T extends BaseEntity> {
 
     get(entity: T): T {
         const idKey: number = this.safeFigureId(entity);
+        if (!this.entitiesByIdKey.has(idKey)) {
+            throw new Error('No entity was indexed with the corresponding id or artificialId.');
+        }
+
         return this.entitiesByIdKey.get(idKey);
     }
 

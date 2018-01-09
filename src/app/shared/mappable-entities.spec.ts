@@ -112,4 +112,30 @@ fdescribe('MappableEntities', () => {
         });
     });
 
+    describe('get()', () => {
+
+        it('should return the correct BaseEntity that was indexed by id', () => {
+            entityWithNoIds.id = 123;
+            pushEntityAndExpectToGetIt(entityWithNoIds);
+        });
+
+        function pushEntityAndExpectToGetIt(entity) {
+            mappableEntities.push(entity);
+            const gottenEntity = mappableEntities.get(entity);
+            expect(gottenEntity).toEqual(entity);
+        }
+
+        it('should return the correct BaseEntity that was indexed by artificialId', () => {
+            entityWithNoIds.artificialId = 5;
+            pushEntityAndExpectToGetIt(entityWithNoIds);
+        });
+
+        it('should throw error if the BaseEntity is not indexed', () => {
+            expect(() => {
+                mappableEntities.get(entityWithNoIds);
+            }).toThrowError(Error);
+        });
+
+    });
+
 });
