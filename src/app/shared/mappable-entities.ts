@@ -61,7 +61,7 @@ export class MappableEntities<T extends BaseEntity> {
         this.currentArtificialId -= 1;
     }
 
-    protected nextGeneratedId(): number {
+    nextGeneratedId(): number {
         return this.currentArtificialId;
     }
 

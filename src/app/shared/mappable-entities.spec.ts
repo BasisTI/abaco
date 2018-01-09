@@ -5,7 +5,6 @@ import * as _ from 'lodash';
 
 fdescribe('MappableEntities', () => {
 
-    // tslint:disable-next-line:prefer-const
     let mappableEntities: MappableEntities<BaseEntity>;
     let entityWithNoIds;
 
