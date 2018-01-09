@@ -44,9 +44,21 @@ export class MappableEntities<T extends BaseEntity> {
     }
 
     private generateAndIncrementArtificialId(): number {
-        const artificialId = this.currentArtificialId;
-        this.currentArtificialId -= 1;
+        const artificialId = this.generateCurrentArtificialId();
+        this.incrementArtificialId();
         return artificialId;
+    }
+
+    private generateCurrentArtificialId(): number {
+        while (this.entitiesByIdKey.has(this.currentArtificialId)) {
+            this.incrementArtificialId();
+        }
+        return this.currentArtificialId;
+    }
+
+
+    private incrementArtificialId() {
+        this.currentArtificialId -= 1;
     }
 
     protected nextGeneratedId(): number {
