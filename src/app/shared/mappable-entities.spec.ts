@@ -46,6 +46,12 @@ fdescribe('MappableEntities', () => {
             expect(entity.artificialId).toBeUndefined();
         });
 
+        it('should not generate an artificialId to a BaseEntity with id 0', () => {
+            const e = { name: 'entity', id: 0, artificialId: undefined };
+            this.mappableEntities.push(e);
+            expect(e.artificialId).toBeUndefined();
+        });
+
         it('should not change the id of a BaseEntity with and id', () => {
             const id = 123;
             const entity = { name: 'entity', id: id, artificialId: undefined };
@@ -71,6 +77,24 @@ fdescribe('MappableEntities', () => {
                 expect(values).toContain(e);
                 expect(values).not.toContain(eWithSameId);
             });
+
+        it(`should not generate an Id that already exists as a key`, () => {
+            const nextId: number = this.mappableEntities.nextGeneratedId();
+
+            const e = { name: 'entity', id: nextId, artificialId: undefined };
+            this.mappableEntities.push(e);
+
+            const e2 = { name: 'entity2', id: undefined, artificialId: undefined };
+            this.mappableEntities.push(e2);
+
+            expect(e2.artificialId).not.toEqual(nextId);
+            expect(e2.artificialId).not.toBeUndefined();
+
+            const values = this.mappableEntities.values();
+            expect(values.length).toEqual(2);
+            expect(values).toContain(e);
+            expect(values).toContain(e2);
+        });
     });
 
 });

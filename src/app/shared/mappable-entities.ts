@@ -7,7 +7,7 @@ import { BaseEntity } from './base-entity';
 // working with negative IDs might work. databases don't use negative IDs
 export class MappableEntities<T extends BaseEntity> {
 
-    private generatedArtificialId = 0;
+    private currentArtificialId = -1;
 
     private entitiesByIdKey: Map<number, T> = new Map<number, T>();
 
@@ -23,7 +23,11 @@ export class MappableEntities<T extends BaseEntity> {
     }
 
     private figureId(entity: T): number {
-        return entity.id ? entity.id : this.figureArtificialId(entity);
+        const numberId: number = entity.id;
+        if (numberId || numberId === 0) {
+            return numberId;
+        }
+        return this.figureArtificialId(entity);
     }
 
     /** Modifies entity if there is no artificialId */
@@ -37,9 +41,13 @@ export class MappableEntities<T extends BaseEntity> {
     }
 
     private generateAndIncrementArtificialId(): number {
-        const artificialId = this.generatedArtificialId;
-        this.generatedArtificialId += 1;
+        const artificialId = this.currentArtificialId;
+        this.currentArtificialId -= 1;
         return artificialId;
+    }
+
+    protected nextGeneratedId(): number {
+        return this.currentArtificialId;
     }
 
     delete(entity: T) {
@@ -48,7 +56,11 @@ export class MappableEntities<T extends BaseEntity> {
     }
 
     private safeFigureId(entity: T): number {
-        return entity.id ? entity.id : entity.artificialId;
+        const numberId: number = entity.id;
+        if (numberId || numberId === 0) {
+            return numberId;
+        }
+        return entity.artificialId;
     }
 
     update(entity: T) {
