@@ -171,4 +171,20 @@ fdescribe('MappableEntities', () => {
 
     });
 
+    describe('update()', () => {
+        it('should throw an error if the Base Entity is not indexed', () => {
+            expect(() => {
+                mappableEntities.update(entityWithNoIds);
+            }).toThrowError(Error);
+        });
+    });
+
+    describe('delete()', () => {
+        it('should throw an error if the Base Entity is not indexed', () => {
+            expect(() => {
+                mappableEntities.delete(entityWithNoIds);
+            }).toThrowError(Error);
+        });
+    });
+
 });

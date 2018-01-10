@@ -62,7 +62,15 @@ export class MappableEntities<T extends BaseEntity> {
 
     delete(entity: T) {
         const idKey: number = this.safeFigureId(entity);
+        this.throwErrorIfTheIdIsNotIndexed(idKey);
+
         this.entitiesByIdKey.delete(idKey);
+    }
+
+    private throwErrorIfTheIdIsNotIndexed(idKey: number) {
+        if (!this.entitiesByIdKey.has(idKey)) {
+            throw new Error('No entity was indexed with the corresponding id or artificialId.');
+        }
     }
 
     private safeFigureId(entity: T): number {
@@ -75,14 +83,14 @@ export class MappableEntities<T extends BaseEntity> {
 
     update(entity: T) {
         const idKey: number = this.safeFigureId(entity);
+        this.throwErrorIfTheIdIsNotIndexed(idKey);
+
         this.entitiesByIdKey.set(idKey, entity);
     }
 
     get(entity: T): T {
         const idKey: number = this.safeFigureId(entity);
-        if (!this.entitiesByIdKey.has(idKey)) {
-            throw new Error('No entity was indexed with the corresponding id or artificialId.');
-        }
+        this.throwErrorIfTheIdIsNotIndexed(idKey);
 
         return this.entitiesByIdKey.get(idKey);
     }
