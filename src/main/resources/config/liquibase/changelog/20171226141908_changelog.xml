@@ -11,6 +11,9 @@
          <column name="id" type="BIGINT">
             <constraints nullable="false"/>
          </column>
+         <column name="tipo_equipe_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
       </createTable>
    </changeSet>
    <changeSet author="diego.marcilio (generated)" id="1514297956982-2">

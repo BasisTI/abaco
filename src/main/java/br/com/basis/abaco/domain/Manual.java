@@ -59,14 +59,9 @@ public class Manual implements Serializable {
     @Column(name = "valor_variacao_indicativa", precision = 10, scale = 2, nullable = false)
     private BigDecimal valorVariacaoIndicativa;
 
-    @Size(max = 20000000)
-    @Lob
-    @Column(name = "arquivo_manual")
-    private byte[] arquivoManual;
-
-    @Column(name = "arquivo_manual_content_type")
-    private String arquivoManualContentType;
-
+    @Column(name="arquivo_manual_id")
+    private int arquivoManualId;
+    
     @OneToMany(mappedBy = "manual")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -132,33 +127,15 @@ public class Manual implements Serializable {
         this.valorVariacaoIndicativa = valorVariacaoIndicativa;
     }
 
-    public byte[] getArquivoManual() {
-        return arquivoManual;
-    }
+    public int getArquivoManualId() {
+		return arquivoManualId;
+	}
 
-    public Manual arquivoManual(byte[] arquivoManual) {
-        this.arquivoManual = arquivoManual;
-        return this;
-    }
+	public void setArquivoManualId(int arquivoManualId) {
+		this.arquivoManualId = arquivoManualId;
+	}
 
-    public void setArquivoManual(byte[] arquivoManual) {
-        this.arquivoManual = arquivoManual;
-    }
-
-    public String getArquivoManualContentType() {
-        return arquivoManualContentType;
-    }
-
-    public Manual arquivoManualContentType(String arquivoManualContentType) {
-        this.arquivoManualContentType = arquivoManualContentType;
-        return this;
-    }
-
-    public void setArquivoManualContentType(String arquivoManualContentType) {
-        this.arquivoManualContentType = arquivoManualContentType;
-    }
-
-    public Set<EsforcoFase> getEsforcoFases() {
+	public Set<EsforcoFase> getEsforcoFases() {
         return esforcoFases;
     }
 
@@ -211,8 +188,6 @@ public class Manual implements Serializable {
             ", observacao='" + observacao + "'" +
             ", valorVariacaoEstimada='" + valorVariacaoEstimada + "'" +
             ", valorVariacaoIndicativa='" + valorVariacaoIndicativa + "'" +
-            ", arquivoManual='" + arquivoManual + "'" +
-            ", arquivoManualContentType='" + arquivoManualContentType + "'" +
             '}';
     }
 }

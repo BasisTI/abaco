@@ -14,14 +14,6 @@
       </createTable>
    </changeSet>
    <changeSet author="diego.marcilio (generated)" id="1514314452003-2">
-      <createTable tableName="user_tipo_equipe">
-         <column name="user_id" type="BIGINT">
-            <constraints nullable="false"/>
-         </column>
-         <column name="tipo_equipe_id" type="BIGINT">
-            <constraints nullable="false"/>
-         </column>
-      </createTable>
    </changeSet>
    <changeSet author="diego.marcilio (generated)" id="1514314452003-3">
       <addPrimaryKey columnNames="user_id, organizacao_id" tableName="user_organizacao"/>
