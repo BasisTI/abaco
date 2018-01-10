@@ -3,14 +3,22 @@ import { MappableEntities } from './mappable-entities';
 
 import * as _ from 'lodash';
 
+class TestBaseEntity implements BaseEntity {
+    constructor(
+        public id?: number,
+        public name?: string,
+        public artificialId?: number,
+    ) { }
+}
+
 fdescribe('MappableEntities', () => {
 
-    let mappableEntities: MappableEntities<BaseEntity>;
+    let mappableEntities: MappableEntities<TestBaseEntity>;
     let entityWithNoIds;
 
     // push() is impure (modifies the argument). reinstantiating entityWithNoIds before each test case
     beforeEach(() => {
-        mappableEntities = new MappableEntities<BaseEntity>();
+        mappableEntities = new MappableEntities<TestBaseEntity>();
         entityWithNoIds = { name: 'entity', id: undefined, artificialId: undefined };
     });
 
@@ -143,6 +151,8 @@ fdescribe('MappableEntities', () => {
             });
         });
 
+        // TODO test if get() does not change the values, same length, same content
+
         function expectNotToChangeAfterAGet(entity) {
             const entityBeforeGet = _.clone(entity);
             const gottenEntity = mappableEntities.get(entity);
@@ -172,15 +182,69 @@ fdescribe('MappableEntities', () => {
     });
 
     describe('update()', () => {
-        it('should throw an error if the Base Entity is not indexed', () => {
+        it('should throw an error if the BaseEntity is not indexed', () => {
             expect(() => {
                 mappableEntities.update(entityWithNoIds);
             }).toThrowError(Error);
         });
+
+        it(`should update a BaseEntity if its reference changes, without calling update()
+            [ EXPECTED BEHAVIOR - the class does not work with immutability ]`, () => {
+                const entityWithId = _.clone(entityWithNoIds);
+                entityWithId.id = 123;
+                mappableEntities.push(entityWithId);
+
+                entityWithId.name = 'updated';
+                const gotten = mappableEntities.get(entityWithId);
+
+                expect(gotten.name).toEqual(entityWithId.name);
+            });
+
+        it('should not update old object reference when updating', () => {
+            const entityWithId = _.clone(entityWithNoIds);
+            entityWithId.id = 123;
+            mappableEntities.push(entityWithId);
+
+            const clone = _.clone(entityWithId);
+            clone.name = 'updated';
+
+            mappableEntities.update(clone);
+            const gotten = mappableEntities.get(clone);
+
+            expect(gotten).not.toEqual(entityWithNoIds);
+        });
+
+        it('should update the indexed value when value with the same id is given', () => {
+            const entityWithId = _.clone(entityWithNoIds);
+            entityWithId.id = 123;
+            mappableEntities.push(entityWithId);
+
+            const clone = _.clone(entityWithId);
+            clone.name = 'updated';
+
+            mappableEntities.update(clone);
+            const gotten = mappableEntities.get(clone);
+
+            expect(gotten).toEqual(clone);
+        });
+
+        it('should update the indexed value when value with the same artificialId is given', () => {
+            const entityWithId = _.clone(entityWithNoIds);
+            entityWithId.artificialId = 10;
+            mappableEntities.push(entityWithId);
+
+            const clone = _.clone(entityWithId);
+            clone.name = 'updated';
+
+            mappableEntities.update(clone);
+            const gotten = mappableEntities.get(clone);
+
+            expect(gotten).toEqual(clone);
+        });
     });
 
     describe('delete()', () => {
-        it('should throw an error if the Base Entity is not indexed', () => {
+        it('should throw an error if the BaseEntity is not indexed', () => {
             expect(() => {
                 mappableEntities.delete(entityWithNoIds);
             }).toThrowError(Error);
