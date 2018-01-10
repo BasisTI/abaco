@@ -147,13 +147,21 @@ fdescribe('MappableEntities', () => {
             });
 
             it('should not change the entity', () => {
-                expectNotToChangeAfterAGet(entityWithId);
+                expectEntityNotToChangeAfterAGet(entityWithId);
+            });
+
+            it('should not change the indexed values', () => {
+                expectValuesNotToChangeAfterAGet(entityWithId);
             });
         });
 
-        // TODO test if get() does not change the values, same length, same content
+        function expectValuesNotToChangeAfterAGet(entity) {
+            const valuesBeforeGet = _.cloneDeep(mappableEntities.values());
+            const gottenEntity = mappableEntities.get(entity);
+            expect(valuesBeforeGet).toEqual(mappableEntities.values());
+        }
 
-        function expectNotToChangeAfterAGet(entity) {
+        function expectEntityNotToChangeAfterAGet(entity) {
             const entityBeforeGet = _.clone(entity);
             const gottenEntity = mappableEntities.get(entity);
             expect(gottenEntity).toEqual(entityBeforeGet);
@@ -174,7 +182,11 @@ fdescribe('MappableEntities', () => {
             });
 
             it('should not change the entity', () => {
-                expectNotToChangeAfterAGet(entityWithArtificialId);
+                expectEntityNotToChangeAfterAGet(entityWithArtificialId);
+            });
+
+            it('should not change the indexed values', () => {
+                expectValuesNotToChangeAfterAGet(entityWithArtificialId);
             });
 
         });
