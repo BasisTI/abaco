@@ -96,14 +96,18 @@ fdescribe('MappableEntities', () => {
             });
 
         it(`should not generate an Id that already exists as a key`, () => {
+            // Given that an entity 'entity1' is added with an ID that was going to be generated next
             const nextId: number = mappableEntities.nextGeneratedId();
 
             entity.id = nextId;
             mappableEntities.push(entity);
 
+            // When an entity 'entity2' is added
             const e2 = { name: 'entity2', id: undefined, artificialId: undefined };
             mappableEntities.push(e2);
 
+            // Then the id of 'entity2' should not be the same as 'entity1'
+            // And both entities should be in values()
             expect(e2.artificialId).not.toEqual(nextId);
             expect(e2.artificialId).not.toBeUndefined();
 
