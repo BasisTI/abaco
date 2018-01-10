@@ -268,6 +268,28 @@ fdescribe('MappableEntities', () => {
                 mappableEntities.delete(entityWithNoIds);
             }).toThrowError(Error);
         });
+
+        it('should delete the ID indexed value', () => {
+            const entityWithId = createEntityWithOnlyId();
+            pushEntityAndDeleteIt(entityWithId);
+            expectEntityToNotBeInValues(entityWithId);
+        });
+
+        function pushEntityAndDeleteIt(entity) {
+            mappableEntities.push(entity);
+            mappableEntities.delete(entity);
+        }
+
+        function expectEntityToNotBeInValues(entity) {
+            const values = mappableEntities.values();
+            expect(values).not.toContain(entity);
+        }
+
+        it('should delete the artificialId indexed value', () => {
+            const entityWithArtificialId = createEntityWithOnlyArtificialId();
+            pushEntityAndDeleteIt(entityWithArtificialId);
+            expectEntityToNotBeInValues(entityWithArtificialId);
+        });
     });
 
 });
