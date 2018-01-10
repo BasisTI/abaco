@@ -136,8 +136,7 @@ fdescribe('MappableEntities', () => {
 
             let entityWithId;
             beforeEach(() => {
-                entityWithId = entityWithNoIds;
-                entityWithId.id = 123;
+                entityWithId = createEntityWithOnlyId();
                 mappableEntities.push(entityWithId);
             });
 
@@ -171,8 +170,7 @@ fdescribe('MappableEntities', () => {
 
             let entityWithArtificialId;
             beforeEach(() => {
-                entityWithArtificialId = entityWithNoIds;
-                entityWithArtificialId.artificialId = 10;
+                entityWithArtificialId = createEntityWithOnlyArtificialId();
                 mappableEntities.push(entityWithArtificialId);
             });
 
@@ -193,6 +191,18 @@ fdescribe('MappableEntities', () => {
 
     });
 
+    function createEntityWithOnlyId(): TestBaseEntity {
+        const e = _.clone(entityWithNoIds);
+        e.id = 123;
+        return e;
+    }
+
+    function createEntityWithOnlyArtificialId(): TestBaseEntity {
+        const e = _.clone(entityWithNoIds);
+        e.artificialId = 10;
+        return e;
+    }
+
     describe('updating', () => {
         it('should throw an error if the BaseEntity is not indexed', () => {
             expect(() => {
@@ -202,8 +212,7 @@ fdescribe('MappableEntities', () => {
 
         it(`should update a BaseEntity if its reference changes, without calling update()
             [ EXPECTED BEHAVIOR - the class does not work with immutability ]`, () => {
-                const entityWithId = _.clone(entityWithNoIds);
-                entityWithId.id = 123;
+                const entityWithId = createEntityWithOnlyId();
                 mappableEntities.push(entityWithId);
 
                 entityWithId.name = 'updated';
@@ -215,8 +224,7 @@ fdescribe('MappableEntities', () => {
         describe('update()', () => {
 
             it('should not update old object reference when updating', () => {
-                const entityWithId = _.clone(entityWithNoIds);
-                entityWithId.id = 123;
+                const entityWithId = createEntityWithOnlyId();
                 mappableEntities.push(entityWithId);
 
                 const clone = createAndUpdateClone(entityWithId);
@@ -233,8 +241,7 @@ fdescribe('MappableEntities', () => {
             }
 
             it('should update the indexed value when value with the same id is given', () => {
-                const entityWithId = _.clone(entityWithNoIds);
-                entityWithId.id = 123;
+                const entityWithId = createEntityWithOnlyId();
                 mappableEntities.push(entityWithId);
 
                 const clone = createAndUpdateClone(entityWithId);
@@ -244,8 +251,7 @@ fdescribe('MappableEntities', () => {
             });
 
             it('should update the indexed value when value with the same artificialId is given', () => {
-                const entityWithArtificialId = _.clone(entityWithNoIds);
-                entityWithArtificialId.artificialId = 10;
+                const entityWithArtificialId = createEntityWithOnlyArtificialId();
                 mappableEntities.push(entityWithArtificialId);
 
                 const clone = createAndUpdateClone(entityWithArtificialId);
