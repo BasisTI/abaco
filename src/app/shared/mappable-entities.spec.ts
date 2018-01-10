@@ -114,26 +114,55 @@ fdescribe('MappableEntities', () => {
 
     describe('get()', () => {
 
-        it('should return the correct BaseEntity that was indexed by id', () => {
-            entityWithNoIds.id = 123;
-            pushEntityAndExpectToGetIt(entityWithNoIds);
-        });
-
-        function pushEntityAndExpectToGetIt(entity) {
-            mappableEntities.push(entity);
-            const gottenEntity = mappableEntities.get(entity);
-            expect(gottenEntity).toEqual(entity);
-        }
-
-        it('should return the correct BaseEntity that was indexed by artificialId', () => {
-            entityWithNoIds.artificialId = 5;
-            pushEntityAndExpectToGetIt(entityWithNoIds);
-        });
-
         it('should throw error if the BaseEntity is not indexed', () => {
             expect(() => {
                 mappableEntities.get(entityWithNoIds);
             }).toThrowError(Error);
+        });
+
+        describe('indexed by id', () => {
+
+            let entityWithId;
+            beforeEach(() => {
+                entityWithId = entityWithNoIds;
+                entityWithId.id = 123;
+                mappableEntities.push(entityWithId);
+            });
+
+            it('should return BaseEntity with the same id', () => {
+                const gottenEntity = mappableEntities.get(entityWithId);
+                expect(gottenEntity.id).toEqual(entityWithId.id);
+            });
+
+            it('should not change the entity', () => {
+                expectNotToChangeAfterAGet(entityWithId);
+            });
+        });
+
+        function expectNotToChangeAfterAGet(entity) {
+            const entityBeforeGet = _.clone(entity);
+            const gottenEntity = mappableEntities.get(entity);
+            expect(gottenEntity).toEqual(entityBeforeGet);
+        }
+
+        describe('indexed by artificialId', () => {
+
+            let entityWithArtificialId;
+            beforeEach(() => {
+                entityWithArtificialId = entityWithNoIds;
+                entityWithArtificialId.artificialId = 10;
+                mappableEntities.push(entityWithArtificialId);
+            });
+
+            it('should return BaseEntity with the same artificialId', () => {
+                const gottenEntity = mappableEntities.get(entityWithArtificialId);
+                expect(gottenEntity.artificialId).toEqual(entityWithArtificialId.artificialId);
+            });
+
+            it('should not change the entity', () => {
+                expectNotToChangeAfterAGet(entityWithArtificialId);
+            });
+
         });
 
     });
