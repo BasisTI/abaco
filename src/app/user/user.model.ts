@@ -1,7 +1,7 @@
 import { BaseEntity } from '../shared';
+import { AbstractUser } from '@basis/angular-components';
 
-
-export class User implements BaseEntity {
+export class User extends AbstractUser implements BaseEntity {
 
   constructor(
     public id?: number,
@@ -15,12 +15,22 @@ export class User implements BaseEntity {
     public authorities?: string[],
     public organizacoes?: BaseEntity[],
     public ativo?: boolean,
-  ) {}
+  ) {
+    super();
+  }
 
 
   // Não funcionando na busca pois dataTableService retorna um Object e não um User
   get nome(): string {
     return this.firstName + ' ' + this.lastName;
+  }
+
+  get roles(): string[] {
+    return this.authorities;
+  }
+
+  set roles(roles: string[]) {
+    this.authorities = roles;
   }
 
 }

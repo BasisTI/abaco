@@ -4,13 +4,21 @@ import { HttpModule, BrowserXhr } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-import { DatatableModule, SharedModule, HttpService } from '@basis/angular-components';
 import { NgProgressModule, NgProgressBrowserXhr } from 'ngx-progressbar';
 import { AuthHttp } from 'angular2-jwt';
 import { ConfirmationService } from 'primeng/primeng';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { PRIMENG_IMPORTS } from './primeng-imports';
 import 'rxjs/add/operator/toPromise';
+
+import {
+  DatatableModule,
+  SharedModule,
+  HttpService,
+  SecurityModule,
+  AuthService
+} from '@basis/angular-components';
+import { authServiceFactory } from './auth-service-factory';
 
 import { AuthModule } from './auth.module';
 import { AppRoutes } from './app.routes';
@@ -27,7 +35,7 @@ import { AbacoAlrModule } from './alr/alr.module';
 import { AbacoManualModule } from './manual/manual.module';
 import { AbacoFatorAjusteModule } from './fator-ajuste/fator-ajuste.module';
 import { AbacoFuncaoTransacaoModule } from './funcao-transacao/funcao-transacao.module';
-import { AbacoAnaliseModule} from './analise/analise.module';
+import { AbacoAnaliseModule } from './analise/analise.module';
 import { AbacoOrganizacaoModule } from './organizacao/organizacao.module';
 import { AbacoContratoModule } from './contrato/contrato.module';
 import { AbacoTipoEquipeModule } from './tipo-equipe/tipo-equipe.module';
@@ -64,7 +72,8 @@ import { MemoryDataTableModule } from './memory-datatable/memory-datatable.modul
     AbacoSistemaModule,
     AbacoModuloModule,
     AbacoFuncionalidadeModule,
-    MemoryDataTableModule
+    MemoryDataTableModule,
+    SecurityModule.forRoot()
     /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
   ],
   declarations: [
@@ -87,6 +96,7 @@ import { MemoryDataTableModule } from './memory-datatable/memory-datatable.modul
     ConfirmationService,
     MessageService,
     PageNotificationService,
+    { provide: AuthService, deps: [HttpService], useFactory: authServiceFactory }
   ],
   bootstrap: [AppComponent]
 })
