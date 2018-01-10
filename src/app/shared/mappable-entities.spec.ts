@@ -11,7 +11,7 @@ class TestBaseEntity implements BaseEntity {
     ) { }
 }
 
-fdescribe('MappableEntities', () => {
+describe('MappableEntities', () => {
 
     let mappableEntities: MappableEntities<TestBaseEntity>;
     let entityWithNoIds;
