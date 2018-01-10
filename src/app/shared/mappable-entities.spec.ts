@@ -193,7 +193,7 @@ fdescribe('MappableEntities', () => {
 
     });
 
-    describe('update()', () => {
+    describe('updating', () => {
         it('should throw an error if the BaseEntity is not indexed', () => {
             expect(() => {
                 mappableEntities.update(entityWithNoIds);
@@ -212,46 +212,47 @@ fdescribe('MappableEntities', () => {
                 expect(gotten.name).toEqual(entityWithId.name);
             });
 
-        it('should not update old object reference when updating', () => {
-            const entityWithId = _.clone(entityWithNoIds);
-            entityWithId.id = 123;
-            mappableEntities.push(entityWithId);
+        describe('update()', () => {
 
-            const clone = _.clone(entityWithId);
-            clone.name = 'updated';
+            it('should not update old object reference when updating', () => {
+                const entityWithId = _.clone(entityWithNoIds);
+                entityWithId.id = 123;
+                mappableEntities.push(entityWithId);
 
-            mappableEntities.update(clone);
-            const gotten = mappableEntities.get(clone);
+                const clone = createAndUpdateClone(entityWithId);
+                const gotten = mappableEntities.get(clone);
 
-            expect(gotten).not.toEqual(entityWithNoIds);
-        });
+                expect(gotten).not.toEqual(entityWithNoIds);
+            });
 
-        it('should update the indexed value when value with the same id is given', () => {
-            const entityWithId = _.clone(entityWithNoIds);
-            entityWithId.id = 123;
-            mappableEntities.push(entityWithId);
+            function createAndUpdateClone(entity): TestBaseEntity {
+                const clone = _.clone(entity);
+                clone.name = 'updated';
+                mappableEntities.update(clone);
+                return clone;
+            }
 
-            const clone = _.clone(entityWithId);
-            clone.name = 'updated';
+            it('should update the indexed value when value with the same id is given', () => {
+                const entityWithId = _.clone(entityWithNoIds);
+                entityWithId.id = 123;
+                mappableEntities.push(entityWithId);
 
-            mappableEntities.update(clone);
-            const gotten = mappableEntities.get(clone);
+                const clone = createAndUpdateClone(entityWithId);
+                const gotten = mappableEntities.get(clone);
 
-            expect(gotten).toEqual(clone);
-        });
+                expect(gotten).toEqual(clone);
+            });
 
-        it('should update the indexed value when value with the same artificialId is given', () => {
-            const entityWithId = _.clone(entityWithNoIds);
-            entityWithId.artificialId = 10;
-            mappableEntities.push(entityWithId);
+            it('should update the indexed value when value with the same artificialId is given', () => {
+                const entityWithArtificialId = _.clone(entityWithNoIds);
+                entityWithArtificialId.artificialId = 10;
+                mappableEntities.push(entityWithArtificialId);
 
-            const clone = _.clone(entityWithId);
-            clone.name = 'updated';
+                const clone = createAndUpdateClone(entityWithArtificialId);
+                const gotten = mappableEntities.get(clone);
 
-            mappableEntities.update(clone);
-            const gotten = mappableEntities.get(clone);
-
-            expect(gotten).toEqual(clone);
+                expect(gotten).toEqual(clone);
+            });
         });
     });
 
