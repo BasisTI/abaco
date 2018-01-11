@@ -15,7 +15,8 @@ import {
   RadioButtonModule,
   DialogModule,
   ConfirmDialogModule,
-  ConfirmationService
+  ConfirmationService,
+  SliderModule
 } from 'primeng/primeng';
 
 import {
@@ -43,7 +44,8 @@ import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
     InputTextModule,
     DialogModule,
     ConfirmDialogModule,
-    MemoryDataTableModule
+    MemoryDataTableModule,
+    SliderModule
   ],
   declarations: [
     ManualComponent,

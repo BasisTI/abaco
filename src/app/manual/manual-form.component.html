@@ -70,10 +70,30 @@
         </div>
 
         <!-- Dialog Registro Esforco Fase -->
-        <p-dialog header="Esforço Fase" [(visible)]="showDialogFaseEffort"
+        <p-dialog header="Esforço por Fase" [(visible)]="showDialogFaseEffort"
         [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
-            <div class="ui-g-6" style="margin-bottom: 25px">
+            <div class="ui-g-12" style="margin-bottom: 25px">
+              <label>Tipo de Fase</label>
+            </div>
+          </div>
+          <div class="ui-g">
+            <div class="ui-g-6">
+              <p-dropdown [options]="tipoFases" [(ngModel)]="tipoFases" name="tipoFases" optionLabel="nome"></p-dropdown>
+            </div>
+          </div>
+          <div class="ui-g">
+            <div class="ui-g-2">
+              <p-slider [(ngModel)]="percentual" name="percentual" [min]="0" [max]="100" orientation="vertical"></p-slider>
+            </div>
+            <div class="ui-g-2">
+              {{ percentual }} %
+            </div>
+          </div>
+          <div class="ui-g">
+            <div class="ui-g-2" style="justify-content: flex-end">
+              <button pButton type="button" label="Salvar" icon="ui-icon-add"
+                ></button>
             </div>
           </div>
         </p-dialog>

@@ -9,6 +9,8 @@ import { ManualService } from './manual.service';
 import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
 import { ResponseWrapper } from '../shared';
 import { EsforcoFase } from '../esforco-fase/esforco-fase.model';
+import { TipoFaseService } from '../tipo-fase/tipo-fase.service';
+import { TipoFase } from '../tipo-fase/tipo-fase.model';
 
 @Component({
   selector: 'jhi-manual-form',
@@ -21,12 +23,15 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   arquivoManual: File;
   esforcoFases: Array<EsforcoFase>;
   showDialogFaseEffort: boolean = false;
+  tipoFases: Array<TipoFase> = [];
+  percentual: number;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private manualService: ManualService,
-    private esforcoFaseService: EsforcoFaseService
+    private esforcoFaseService: EsforcoFaseService,
+    private tipoFaseService: TipoFaseService
   ) {}
 
   ngOnInit() {
@@ -40,6 +45,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     this.esforcoFaseService.query().subscribe((response: ResponseWrapper) => {
       this.esforcoFases = response.json;
+    });
+
+    this.tipoFaseService.query().subscribe((response: ResponseWrapper) => {
+      this.tipoFases = response.json;
     });
 
   }
