@@ -9,8 +9,7 @@ export class Manual implements BaseEntity {
     public observacao?: string,
     public valorVariacaoEstimada?: number,
     public valorVariacaoIndicativa?: number,
-    public arquivoManualContentType?: string,
-    public arquivoManual?: any,
+    public arquivoManualId?: number,
     public esforcoFases?: BaseEntity[],
   ) {}
 }

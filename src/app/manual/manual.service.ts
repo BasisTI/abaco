@@ -3,6 +3,7 @@ import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
+import { UploadService } from '../upload/upload.service';
 
 import { Manual } from './manual.model';
 import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
@@ -14,13 +15,22 @@ export class ManualService {
 
   searchUrl = environment.apiUrl + '/_search/manuals';
 
-  constructor(private http: HttpService) {}
+  constructor(
+    private http: HttpService,
+    private uploadService: UploadService
+  ) {}
 
-  create(manual: Manual): Observable<Manual> {
+  create(manual: Manual, arquivoManual: File): Observable<any> {
     const copy = this.convert(manual);
-    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
+
+    return this.uploadService.uploadFile(arquivoManual).map(response => {
+      copy.arquivoManualId = JSON.parse(response["_body"]).id;
+      alert(JSON.stringify(copy));
+
+      this.http.post(this.resourceUrl, copy).map((res: Response) => {
+        const jsonResponse = res.json();
+        return this.convertItemFromServer(jsonResponse);
+      });
     });
   }
 

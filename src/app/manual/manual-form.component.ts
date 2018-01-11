@@ -15,6 +15,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   manual: Manual;
   isSaving: boolean;
   private routeSub: Subscription;
+  arquivoManual: File;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,6 +31,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.manualService.find(params['id']).subscribe(manual => this.manual = manual);
       }
     });
+
+    this.manual.esforcoFases = [{},{},{}]
   }
 
   save() {
@@ -37,7 +40,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     if (this.manual.id !== undefined) {
       this.subscribeToSaveResponse(this.manualService.update(this.manual));
     } else {
-      this.subscribeToSaveResponse(this.manualService.create(this.manual));
+      this.subscribeToSaveResponse(this.manualService.create(this.manual, this.arquivoManual));
     }
   }
 
@@ -52,5 +55,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.routeSub.unsubscribe();
+  }
+
+  uploadFile(event) {
+    this.arquivoManual = event.target.files[0];
   }
 }

@@ -10,6 +10,7 @@ export class Organizacao implements BaseEntity, JSONable<Organizacao> {
     public sigla?: string,
     public nome?: string,
     public cnpj?: string,
+    public logoId?: number,
     public ativo?: boolean,
     public numeroOcorrencia?: string,
     public contracts?: Contrato[],

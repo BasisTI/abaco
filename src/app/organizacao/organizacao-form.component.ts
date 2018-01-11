@@ -27,8 +27,8 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
   mostrarDialogCadastroContrato = false;
   mostrarDialogEdicaoContrato = false;
-
   novoContrato: Contrato = new Contrato();
+  logo: File;
   contratoEmEdicao: Contrato = new Contrato();
 
   constructor(
@@ -116,11 +116,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     if (this.organizacao.id !== undefined) {
       this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
     } else {
-      this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
+      this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao, this.logo));
     }
   }
 
-  private subscribeToSaveResponse(result: Observable<Organizacao>) {
+  private subscribeToSaveResponse(result: Observable<any>) {
     result.subscribe((res: Organizacao) => {
       this.isSaving = false;
       this.router.navigate(['/organizacao']);
@@ -131,5 +131,9 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.routeSub.unsubscribe();
+  }
+
+  fileUpload(event: any) {
+    this.logo = event.target.files[0];
   }
 }
