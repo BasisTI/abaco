@@ -16,7 +16,8 @@ import {
   SharedModule,
   HttpService,
   SecurityModule,
-  AuthService
+  AuthService,
+  AUTH_CONFIG
 } from '@basis/angular-components';
 import { authServiceFactory } from './auth-service-factory';
 
@@ -46,6 +47,7 @@ import { AbacoModuloModule } from './modulo/modulo.module';
 import { AbacoFuncionalidadeModule } from './funcionalidade/funcionalidade.module';
 import { MemoryDataTableModule } from './memory-datatable/memory-datatable.module';
 import { LoginModule } from './login/login.module';
+import { environment } from '../environments/environment';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -98,7 +100,8 @@ import { LoginModule } from './login/login.module';
     ConfirmationService,
     MessageService,
     PageNotificationService,
-    { provide: AuthService, deps: [HttpService], useFactory: authServiceFactory }
+    { provide: AUTH_CONFIG, useValue: environment.auth },
+    { provide: AuthService, deps: [HttpService, AUTH_CONFIG], useFactory: authServiceFactory }
   ],
   bootstrap: [AppComponent]
 })
