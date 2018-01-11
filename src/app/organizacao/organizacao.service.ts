@@ -5,7 +5,7 @@ import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 
 import { Organizacao } from './organizacao.model';
-import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
+import { ResponseWrapper, createRequestOption, JhiDateUtils, JSONable } from '../shared';
 import { UploadService } from '../upload/upload.service';
 
 @Injectable()
@@ -72,8 +72,8 @@ export class OrganizacaoService {
   }
 
   private convertFromJSON(json: any): Organizacao {
-    const entity: Organizacao = Object.assign(new Organizacao(), json);
-    return entity;
+    const entity: JSONable<Organizacao> = new Organizacao();
+    return entity.copyFromJSON(json);
   }
 
   private convertToJSON(organizacao: Organizacao): Organizacao {

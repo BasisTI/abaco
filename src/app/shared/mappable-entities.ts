@@ -1,17 +1,13 @@
 import { BaseEntity } from './base-entity';
 
-// TODO write tests considering edge cases
-// one such case is adding a BaseEntity with an ID that is already indexed
-// FIXME might add a BaseEntity with and ID already generated
-// FIXME might generate and ID that is already indexed
-// working with negative IDs might work. databases don't use negative IDs
+// XXX If we expect a class that implements Cloneable, it's possible to implement a Immutable version
 export class MappableEntities<T extends BaseEntity> {
 
-    private generatedArtificialId = 0;
+    private currentArtificialId = -1;
 
-    private entitiesToIdKey: Map<number, T> = new Map<number, T>();
+    private entitiesByIdKey: Map<number, T> = new Map<number, T>();
 
-    constructor(private entitiesArr?: Array<T>) {
+    constructor(entitiesArr?: Array<T>) {
         if (entitiesArr) {
             entitiesArr.forEach(e => this.push(e));
         }
@@ -19,11 +15,18 @@ export class MappableEntities<T extends BaseEntity> {
 
     push(entity: T) {
         const idKey: number = this.figureId(entity);
-        this.entitiesToIdKey.set(idKey, entity);
+        if (this.entitiesByIdKey.has(idKey)) {
+            throw new RangeError(`id or artificialId '${idKey}' already exists. Not pushing the entity to avoid inconsistent state.`);
+        }
+        this.entitiesByIdKey.set(idKey, entity);
     }
 
     private figureId(entity: T): number {
-        return entity.id ? entity.id : this.figureArtificialId(entity);
+        const numberId: number = entity.id;
+        if (numberId || numberId === 0) {
+            return numberId;
+        }
+        return this.figureArtificialId(entity);
     }
 
     /** Modifies entity if there is no artificialId */
@@ -36,34 +39,65 @@ export class MappableEntities<T extends BaseEntity> {
         return entity.artificialId;
     }
 
-
     private generateAndIncrementArtificialId(): number {
-        const artificialId = this.generatedArtificialId;
-        this.generatedArtificialId += 1;
+        const artificialId = this.generateCurrentArtificialId();
+        this.incrementArtificialId();
         return artificialId;
+    }
+
+    private generateCurrentArtificialId(): number {
+        while (this.entitiesByIdKey.has(this.currentArtificialId)) {
+            this.incrementArtificialId();
+        }
+        return this.currentArtificialId;
+    }
+
+
+    private incrementArtificialId() {
+        this.currentArtificialId -= 1;
+    }
+
+    nextGeneratedId(): number {
+        return this.currentArtificialId;
     }
 
     delete(entity: T) {
         const idKey: number = this.safeFigureId(entity);
-        this.entitiesToIdKey.delete(idKey);
+        this.throwErrorIfTheIdIsNotIndexed(idKey);
+
+        this.entitiesByIdKey.delete(idKey);
+    }
+
+    private throwErrorIfTheIdIsNotIndexed(idKey: number) {
+        if (!this.entitiesByIdKey.has(idKey)) {
+            throw new Error('No entity was indexed with the corresponding id or artificialId.');
+        }
     }
 
     private safeFigureId(entity: T): number {
-        return entity.id ? entity.id : entity.artificialId;
+        const numberId: number = entity.id;
+        if (numberId || numberId === 0) {
+            return numberId;
+        }
+        return entity.artificialId;
     }
 
     update(entity: T) {
         const idKey: number = this.safeFigureId(entity);
-        this.entitiesToIdKey.set(idKey, entity);
+        this.throwErrorIfTheIdIsNotIndexed(idKey);
+
+        this.entitiesByIdKey.set(idKey, entity);
     }
 
-    get(entity: T) {
+    get(entity: T): T {
         const idKey: number = this.safeFigureId(entity);
-        return this.entitiesToIdKey.get(idKey);
+        this.throwErrorIfTheIdIsNotIndexed(idKey);
+
+        return this.entitiesByIdKey.get(idKey);
     }
 
     values(): Array<T> {
-        return Array.from(this.entitiesToIdKey.values());
+        return Array.from(this.entitiesByIdKey.values());
     }
 
 }

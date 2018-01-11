@@ -77,4 +77,43 @@ export class Sistema implements BaseEntity {
     this.modulos = this.mappableModulos.values();
   }
 
+  // XXX analisar pool único de funcionalidades vs estrutura OO
+  // com um pool único de funcionalidades, o update funcionaria trivialmente
+  // mas perderíamos a estrutura OO atual
+  updateFuncionalidade(funcionalidade: Funcionalidade, oldFuncionalidade: Funcionalidade) {
+    if (oldFuncionalidade.modulo !== funcionalidade.modulo) {
+      this.updateFuncionalidadeWithDifferentModulo(funcionalidade, oldFuncionalidade);
+    } else {
+      this.doUpdateFuncionalidadeWithSameModule(funcionalidade);
+    }
+
+    this.modulos = this.mappableModulos.values();
+  }
+
+  private updateFuncionalidadeWithDifferentModulo(func: Funcionalidade, oldFunc: Funcionalidade) {
+    this.doDeleteFuncionalidade(oldFunc.modulo);
+    this.addFuncionalidadeAsNew(func);
+  }
+
+  private addFuncionalidadeAsNew(func: Funcionalidade) {
+    func.id = undefined;
+    func.artificialId = undefined;
+    this.addFuncionalidade(func);
+  }
+
+  private doUpdateFuncionalidadeWithSameModule(func: Funcionalidade) {
+    const modulo: Modulo = this.mappableModulos.get(func.modulo);
+    modulo.updateFuncionalidade(func);
+  }
+
+  deleteFuncionalidade(funcionalidade: Funcionalidade) {
+    this.doDeleteFuncionalidade(funcionalidade);
+    this.modulos = this.mappableModulos.values();
+  }
+
+  private doDeleteFuncionalidade(funcionalidade: Funcionalidade) {
+    const modulo: Modulo = this.mappableModulos.get(funcionalidade.modulo);
+    modulo.deleteFuncionalidade(funcionalidade);
+  }
+
 }

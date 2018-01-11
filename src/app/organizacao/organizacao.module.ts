@@ -4,6 +4,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatatableModule } from '@basis/angular-components';
+import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
 import {
   ButtonModule,
   InputTextModule,
@@ -14,7 +15,8 @@ import {
   ConfirmDialogModule,
   ConfirmationService,
   DataTableModule,
-  DialogModule
+  DialogModule,
+  CheckboxModule
 } from 'primeng/primeng';
 
 import {
@@ -41,6 +43,8 @@ import {
     ConfirmDialogModule,
     DataTableModule,
     DialogModule,
+    MemoryDataTableModule,
+    CheckboxModule
   ],
   declarations: [
     OrganizacaoComponent,

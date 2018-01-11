@@ -45,6 +45,15 @@
           </div>
         </div>
         <div class="ui-g">
+          <div class="ui-g-12">
+            <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
+              (buttonClick)="datatableClick($event)" #datatable>
+              <p-column header="Tipo de fase" field="id"></p-column>
+              <p-column header="Percentual (%)" field="nome"></p-column>
+            </basis-datatable>
+          </div>
+        </div>
+        <div class="ui-g">
           <div class="ui-g-2">
             <button pButton type="button" label="Cancelar" routerLink="/manual"></button>
           </div>

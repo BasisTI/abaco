@@ -31,6 +31,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.manualService.find(params['id']).subscribe(manual => this.manual = manual);
       }
     });
+
+    this.manual.esforcoFases = [{},{},{}]
   }
 
   save() {
