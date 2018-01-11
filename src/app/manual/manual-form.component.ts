@@ -32,7 +32,14 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.manual.esforcoFases = [{},{},{}]
+    this.manual.esforcoFases = [
+      {
+      },
+      {
+      },
+      {  
+      }
+    ]
   }
 
   save() {
