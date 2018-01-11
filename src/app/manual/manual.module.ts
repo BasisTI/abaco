@@ -4,6 +4,8 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatatableModule } from '@basis/angular-components';
+import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
+
 import {
   ButtonModule,
   InputTextModule,
@@ -11,6 +13,7 @@ import {
   CalendarModule,
   DropdownModule,
   RadioButtonModule,
+  DialogModule,
   ConfirmDialogModule,
   ConfirmationService
 } from 'primeng/primeng';
@@ -22,6 +25,8 @@ import {
   ManualFormComponent,
   manualRoute
 } from './';
+
+import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
 
 @NgModule({
   imports: [
@@ -36,7 +41,9 @@ import {
     DropdownModule,
     RadioButtonModule,
     InputTextModule,
+    DialogModule,
     ConfirmDialogModule,
+    MemoryDataTableModule
   ],
   declarations: [
     ManualComponent,
@@ -45,7 +52,8 @@ import {
   ],
   providers: [
     ManualService,
-    ConfirmationService
+    ConfirmationService,
+    EsforcoFaseService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

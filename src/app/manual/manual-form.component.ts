@@ -6,6 +6,9 @@ import { SelectItem } from 'primeng/primeng';
 
 import { Manual } from './manual.model';
 import { ManualService } from './manual.service';
+import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
+import { ResponseWrapper } from '../shared';
+import { EsforcoFase } from '../esforco-fase/esforco-fase.model';
 
 @Component({
   selector: 'jhi-manual-form',
@@ -16,11 +19,14 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   isSaving: boolean;
   private routeSub: Subscription;
   arquivoManual: File;
+  esforcoFases: Array<EsforcoFase>;
+  showDialogFaseEffort: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private manualService: ManualService,
+    private esforcoFaseService: EsforcoFaseService
   ) {}
 
   ngOnInit() {
@@ -32,14 +38,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.manual.esforcoFases = [
-      {
-      },
-      {
-      },
-      {  
-      }
-    ]
+    this.esforcoFaseService.query().subscribe((response: ResponseWrapper) => {
+      this.esforcoFases = response.json;
+    });
+
   }
 
   save() {
@@ -67,4 +69,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   uploadFile(event) {
     this.arquivoManual = event.target.files[0];
   }
+
+  openDialogFaseEffort() {
+    this.showDialogFaseEffort = true;
+  }
+
+
 }

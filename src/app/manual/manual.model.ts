@@ -1,5 +1,5 @@
 import { BaseEntity } from '../shared';
-
+import { EsforcoFase } from '../esforco-fase/index';
 
 export class Manual implements BaseEntity {
 
@@ -10,6 +10,6 @@ export class Manual implements BaseEntity {
     public valorVariacaoEstimada?: number,
     public valorVariacaoIndicativa?: number,
     public arquivoManualId?: number,
-    public esforcoFases?: BaseEntity[],
+    public esforcoFases?: EsforcoFase[],
   ) {}
 }

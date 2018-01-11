@@ -38,19 +38,26 @@
             <label>Arquivo Manual</label>
             <span class="md-inputfield">
               <input type="file" (change)="uploadFile($event)" name="arquivoManual" value="">
-              <input type="hidden" name="arquivoManual" [(ngModel)]="manual.arquivoManual"/>
-              <input type="hidden" class="form-control" name="arquivoManualContentType" id="field_arquivoManualContentType"
-                  [(ngModel)]="manual.arquivoManualContentType" />
             </span>
           </div>
         </div>
         <div class="ui-g">
+          <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-md-3">
+              <button pButton type="button" label="Novo Esforco Fase" icon="ui-icon-add"
+                (click)="openDialogFaseEffort()"></button>
+            </div>
+          </div>
+        </div>
+        <div class="ui-g">
           <div class="ui-g-12">
-            <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
-              (buttonClick)="datatableClick($event)" #datatable>
-              <p-column header="Tipo de fase" field="id"></p-column>
-              <p-column header="Percentual (%)" field="nome"></p-column>
-            </basis-datatable>
+            <app-memory-datatable [value]="esforcoFases"
+              (buttonClick)="datatableClick($event)">
+              <p-column header="Tipo de fase" field="tipoFase">
+              </p-column>
+              <p-column header="Percentual (%)" field="percentual">
+              </p-column>
+            </app-memory-datatable>
           </div>
         </div>
         <div class="ui-g">
@@ -61,6 +68,15 @@
             <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
           </div>
         </div>
+
+        <!-- Dialog Registro Esforco Fase -->
+        <p-dialog header="Esforço Fase" [(visible)]="showDialogFaseEffort"
+        [contentStyle]="{'overflow':'visible'}" [width]="800">
+          <div class="ui-g">
+            <div class="ui-g-6" style="margin-bottom: 25px">
+            </div>
+          </div>
+        </p-dialog>
       </form>
     </div>
   </div>
