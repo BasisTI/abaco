@@ -11,6 +11,7 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
     public dataFimVigencia?: Date,
     public manual?: BaseEntity,
     public ativo?: boolean,
+    public artificialId?: number,
   ) { }
 
   toJSONState(): Contrato {
@@ -27,6 +28,6 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
   // TODO extrair modulo? entrar pro jsonable?
   clone(): Contrato {
     return new Contrato(this.id, this.numeroContrato, this.dataInicioVigencia,
-      this.dataFimVigencia, this.manual, this.ativo);
+      this.dataFimVigencia, this.manual, this.ativo, this.artificialId);
   }
 }
