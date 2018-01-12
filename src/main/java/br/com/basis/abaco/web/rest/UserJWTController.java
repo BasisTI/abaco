@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 
 import br.com.basis.abaco.security.AuthenticationConstants;
+import br.com.basis.abaco.security.BasisUserDetails;
 import br.com.basis.abaco.security.CookieUtil;
+import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.security.jwt.JWTConfigurer;
 import br.com.basis.abaco.security.jwt.TokenProvider;
 import br.com.basis.abaco.web.rest.vm.LoginVM;
@@ -42,6 +45,8 @@ public class UserJWTController {
 	private final AuthenticationManager authenticationManager;
 
 	private CookieUtil cookieUtil;
+
+	private UserDetailsService userDetailsService;
 
 	public UserJWTController(TokenProvider tokenProvider, AuthenticationManager authenticationManager,
 			CookieUtil cookieUtil) {
@@ -77,10 +82,14 @@ public class UserJWTController {
 
 	@GetMapping("/user/details")
 	@Timed
-	public ResponseEntity<UserDetails> getUserDetails(
-			@CookieValue(AuthenticationConstants.TOKEN_NAME) String token) throws URISyntaxException {
-		Authentication auth = tokenProvider.getAuthentication(token);
-		
+	public ResponseEntity<BasisUserDetails> getUserDetails(
+			@CookieValue(name = AuthenticationConstants.TOKEN_NAME, defaultValue = "notFound") String token)
+			throws URISyntaxException {
+		if (!token.equals("notFound")) {
+			BasisUserDetails userDetails = new BasisUserDetails(SecurityUtils.getCurrentUserRoles());
+			return ResponseEntity.ok(userDetails);
+		}
+
 		return null;
 	}
 }
