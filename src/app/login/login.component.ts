@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LoginService } from './login.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs/Rx';
+import { AuthService } from '@basis/angular-components';
+import { User } from '../user';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private loginService: LoginService,
+    private authService: AuthService<User>
   ) { }
 
   ngOnInit() {
@@ -27,8 +30,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    this.loginService.login(this.username, this.password).subscribe(user => {
-
+    this.loginService.login(this.username, this.password).subscribe(() => {
+      
     });
   }
 

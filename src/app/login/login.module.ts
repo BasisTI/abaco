@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpService, SecurityModule, AuthService } from '@basis/angular-components';
 import {
     ButtonModule,
     InputTextModule,
@@ -31,13 +32,15 @@ import { LoginComponent, loginRoute, LoginService } from './';
         RadioButtonModule,
         InputTextModule,
         ConfirmDialogModule,
-        PasswordModule
+        PasswordModule,
+        SecurityModule.forRoot()
     ],
     declarations: [
         LoginComponent
     ],
     providers: [
-        LoginService
+        LoginService,
+        AuthService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -3,6 +3,7 @@ export class MenuItems {
 
     static all: MenuItem[] =
     [
+        { label: 'Login', routerLink: 'login' },
         { label: 'Administração', icon: 'supervisor_account',
           items: [
             { label: 'Tipo de Equipe', routerLink: 'tipoEquipe' },

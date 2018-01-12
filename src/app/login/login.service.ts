@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
+import { RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
@@ -11,7 +11,7 @@ export class LoginService {
 
     constructor(private http: HttpService) { }
 
-    login(username: string, password: string): Observable<object> {
+    login(username: string, password: string): Observable<any> {
         const credential = { username: username, password: password };
         return this.http.post(this.resourceUrl, credential).map(
             (res: Response) => {
