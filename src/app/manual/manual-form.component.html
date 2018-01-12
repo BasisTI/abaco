@@ -53,7 +53,10 @@
           <div class="ui-g-12">
             <app-memory-datatable [value]="manual.esforcoFases"
               (buttonClick)="datatableClick($event)">
-              <p-column header="Tipo de fase" field="tipoFases.nome">
+              <p-column header="Tipo de fase" field="tipoFase">
+                <ng-template let-col let-tipoFase="rowData" pTemplate="body">
+                  {{ tipoFase[col.field] | json }}
+                </ng-template>
               </p-column>
               <p-column header="Percentual (%)" field="percentual">
               </p-column>
@@ -75,7 +78,7 @@
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Tipo de Fase</label>
-              <p-dropdown [options]="tipoFases" [(ngModel)]="newPhaseEffort.tipoFases" placeholder="Tipo de Fase" name="tipoFases" optionLabel="nome"></p-dropdown>
+              <p-dropdown [options]="tipoFases" [(ngModel)]="newPhaseEffort.tipoFase" placeholder="Tipo de Fase" name="tipoFase" optionLabel="nome"></p-dropdown>
             </div>
           </div>
           <div class="ui-g">

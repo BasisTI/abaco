@@ -13,10 +13,10 @@ import {
   CalendarModule,
   DropdownModule,
   RadioButtonModule,
+  DataTableModule,
   DialogModule,
   ConfirmDialogModule,
   ConfirmationService,
-  SliderModule
 } from 'primeng/primeng';
 
 import {
@@ -36,6 +36,7 @@ import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
     FormsModule,
     RouterModule.forRoot(manualRoute, { useHash: true }),
     DatatableModule,
+    DataTableModule,
     ButtonModule,
     SpinnerModule,
     CalendarModule,
@@ -45,7 +46,6 @@ import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
     DialogModule,
     ConfirmDialogModule,
     MemoryDataTableModule,
-    SliderModule
   ],
   declarations: [
     ManualComponent,

@@ -11,6 +11,8 @@ import { ResponseWrapper } from '../shared';
 import { EsforcoFase } from '../esforco-fase/esforco-fase.model';
 import { TipoFaseService } from '../tipo-fase/tipo-fase.service';
 import { TipoFase } from '../tipo-fase/tipo-fase.model';
+import { DatatableClickEvent } from '@basis/angular-components';
+import { ConfirmationService } from 'primeng/components/common/confirmationservice';
 
 @Component({
   selector: 'jhi-manual-form',
@@ -26,13 +28,15 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   tipoFases: Array<TipoFase> = [];
   percentual: number;
   newPhaseEffort: EsforcoFase = new EsforcoFase();
+  editedPhaseEffort: EsforcoFase = new EsforcoFase();
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private manualService: ManualService,
     private esforcoFaseService: EsforcoFaseService,
-    private tipoFaseService: TipoFaseService
+    private tipoFaseService: TipoFaseService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit() {
@@ -78,6 +82,28 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   uploadFile(event) {
     this.arquivoManual = event.target.files[0];
+  }
+
+  datatableClick(event: DatatableClickEvent) {
+    if (!event.selection) {
+      return;
+    }
+    switch (event.button) {
+      case 'edit':
+        this.editedPhaseEffort = event.selection.clone();
+        this.openDialogPhaseEffort();
+        break;
+      case 'delete':
+      console.log(event.selection);
+      debugger;
+        this.editedPhaseEffort = event.selection.clone();
+        this.confirmDeletePhaseEffort();
+    }
+  }
+
+  confirmDeletePhaseEffort() {
+    this.manual.deleteEsforcoFase(this.editedPhaseEffort);
+    this.editedPhaseEffort = new EsforcoFase();
   }
 
   openDialogPhaseEffort() {
