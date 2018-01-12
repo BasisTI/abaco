@@ -4,13 +4,17 @@
       <h1>{{ organizacao.id ? 'Editar Organização' : 'Incluir Organização' }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
         <div class="ui-g">
+          <div class="ui-g-12" style="margin-bottom: 25px">
+            <label>Logo da Organização</label>
+            <input type="file" (change)="fileUpload($event)" name="logoOrganizacao" pInputText/>
+          </div>
           <div class="ui-g-2" style="margin-bottom: 25px">
             <span class="md-inputfield" >
               <input type="text" name="siglaOrganizacao" [(ngModel)]="organizacao.sigla" pInputText/>
               <label>Sigla</label>
             </span>
           </div>
-          <div class="ui-g-10" style="margin-bottom: 25px">
+          <div class="ui-g-6" style="margin-bottom: 25px">
             <span class="md-inputfield" >
               <input type="text" name="nomeOrganizacao" [(ngModel)]="organizacao.nome" pInputText/>
               <label>Nome da Organização</label>
@@ -22,7 +26,7 @@
               <label>CNPJ</label>
             </span>
           </div>
-          
+
           <div class="ui-g-7" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" name="numeroOcorrenciaOrganizacao" [(ngModel)]="organizacao.numeroOcorrencia" pInputText/>
@@ -57,7 +61,7 @@
                   (click)="abrirDialogCadastroContrato()"></button>
               </div>
             </div>
-            
+
             <app-memory-datatable [value]="organizacao.contracts"
               (buttonClick)="datatableClick($event)">
               <p-column header="Número do Contrato" field="numeroContrato"></p-column>
@@ -86,14 +90,14 @@
             <button pButton type="button" label="Cancelar" routerLink="/organizacao"></button>
           </div>
           <div class="ui-g-2">
-            <button pButton type="submit" label="Salvar" 
+            <button pButton type="submit" label="Salvar"
               (click)="save()"
               [disabled]="editForm.form.invalid || isSaving" ></button>
           </div>
         </div>
 
         <!-- Dialog Cadastro Contrato -->
-        <p-dialog header="Contrato" [(visible)]="mostrarDialogCadastroContrato"
+        <p-dialog [header]="Contrato" [(visible)]="mostrarDialogCadastroContrato"
           [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
             <div class="ui-g-6" style="margin-bottom: 25px">
@@ -110,7 +114,7 @@
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
                 <p-calendar [(ngModel)]="novoContrato.dataInicioVigencia" name="dataInicioVigenciaContrato"
-                  [monthNavigator]="true" [yearNavigator]="true" 
+                  [monthNavigator]="true" [yearNavigator]="true"
                   dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
                 <label>Data de Início da Vigência</label>
               </span>
@@ -146,7 +150,7 @@
                 (click)="fecharDialogCadastroContrato()"></button>
             </div>
             <div class="ui-g-2">
-              <button pButton type="button" label="Salvar" 
+              <button pButton type="button" label="Salvar"
                 (click)="adicionarContrato()"></button>
             </div>
           </div>
@@ -170,7 +174,7 @@
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
                 <p-calendar [(ngModel)]="contratoEmEdicao.dataInicioVigencia" name="dataInicioVigenciaContrato"
-                  [monthNavigator]="true" [yearNavigator]="true" 
+                  [monthNavigator]="true" [yearNavigator]="true"
                   dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
                 <label>Data de Início da Vigência</label>
               </span>
@@ -187,7 +191,7 @@
               <div class="ui-g">
                 <div class="ui-g-12 ui-md-1">
                   <label>Ativo</label>
-                </div>  
+                </div>
 
                 <p-checkbox name="contrato_ativo" binary="true"
                   [(ngModel)]="contratoEmEdicao.ativo"></p-checkbox>
@@ -210,7 +214,7 @@
                 (click)="fecharDialogEditarContrato()"></button>
             </div>
             <div class="ui-g-2">
-              <button pButton type="button" label="Salvar" 
+              <button pButton type="button" label="Salvar"
                 (click)="editarContrato()"></button>
             </div>
           </div>
