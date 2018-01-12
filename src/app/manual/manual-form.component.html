@@ -45,15 +45,15 @@
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-md-3">
               <button pButton type="button" label="Novo Esforco Fase" icon="ui-icon-add"
-                (click)="openDialogFaseEffort()"></button>
+                (click)="openDialogPhaseEffort()"></button>
             </div>
           </div>
         </div>
         <div class="ui-g">
           <div class="ui-g-12">
-            <app-memory-datatable [value]="esforcoFases"
+            <app-memory-datatable [value]="manual.esforcoFases"
               (buttonClick)="datatableClick($event)">
-              <p-column header="Tipo de fase" field="tipoFase">
+              <p-column header="Tipo de fase" field="tipoFases.nome">
               </p-column>
               <p-column header="Percentual (%)" field="percentual">
               </p-column>
@@ -70,30 +70,28 @@
         </div>
 
         <!-- Dialog Registro Esforco Fase -->
-        <p-dialog header="Esforço por Fase" [(visible)]="showDialogFaseEffort"
+        <p-dialog header="Esforço por Fase" [(visible)]="showDialogPhaseEffort"
         [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
-            <div class="ui-g-12" style="margin-bottom: 25px">
+            <div class="ui-g-12">
               <label>Tipo de Fase</label>
+              <p-dropdown [options]="tipoFases" [(ngModel)]="newPhaseEffort.tipoFases" placeholder="Tipo de Fase" name="tipoFases" optionLabel="nome"></p-dropdown>
             </div>
           </div>
           <div class="ui-g">
-            <div class="ui-g-6">
-              <p-dropdown [options]="tipoFases" [(ngModel)]="tipoFases" name="tipoFases" optionLabel="nome"></p-dropdown>
+            <div class="ui-g-12">
+              <label>Esforço (%)</label>
+              <p-spinner size="30" name="percentual" [(ngModel)]="newPhaseEffort.percentual" decimalSeparator="" thousandSeparator=""></p-spinner>
             </div>
           </div>
           <div class="ui-g">
-            <div class="ui-g-2">
-              <p-slider [(ngModel)]="percentual" name="percentual" [min]="0" [max]="100" orientation="vertical"></p-slider>
-            </div>
-            <div class="ui-g-2">
-              {{ percentual }} %
-            </div>
-          </div>
-          <div class="ui-g">
-            <div class="ui-g-2" style="justify-content: flex-end">
-              <button pButton type="button" label="Salvar" icon="ui-icon-add"
-                ></button>
+            <div class="ui-g ui-md-12" style="justify-content: flex-end">
+              <div class="ui-md-3">
+                <button pButton type="button" label="Cancelar"></button>
+              </div>
+              <div class="ui-md-3">
+                <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="addPhaseEffort()"></button>
+              </div>
             </div>
           </div>
         </p-dialog>

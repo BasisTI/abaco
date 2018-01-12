@@ -22,9 +22,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   private routeSub: Subscription;
   arquivoManual: File;
   esforcoFases: Array<EsforcoFase>;
-  showDialogFaseEffort: boolean = false;
+  showDialogPhaseEffort: boolean = false;
   tipoFases: Array<TipoFase> = [];
   percentual: number;
+  newPhaseEffort: EsforcoFase = new EsforcoFase();
 
   constructor(
     private route: ActivatedRoute,
@@ -44,7 +45,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     });
 
     this.esforcoFaseService.query().subscribe((response: ResponseWrapper) => {
-      this.esforcoFases = response.json;
+      this.manual.esforcoFases = response.json;
     });
 
     this.tipoFaseService.query().subscribe((response: ResponseWrapper) => {
@@ -79,9 +80,22 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.arquivoManual = event.target.files[0];
   }
 
-  openDialogFaseEffort() {
-    this.showDialogFaseEffort = true;
+  openDialogPhaseEffort() {
+    this.showDialogPhaseEffort = true;
   }
+
+  private closeDialogPhaseEffort() {
+    this.newPhaseEffort = new EsforcoFase();
+    this.showDialogPhaseEffort = false;
+  }
+
+  addPhaseEffort() {
+    this.manual.addEsforcoFases(this.newPhaseEffort);
+    alert(JSON.stringify(this.newPhaseEffort));
+    this.closeDialogPhaseEffort();
+  }
+
+
 
 
 }
