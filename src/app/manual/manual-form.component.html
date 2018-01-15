@@ -87,6 +87,9 @@
               <p-column header="Tipo Ajuste" field="tipoAjuste">
               </p-column>
               <p-column header="Ativo" field="ativo">
+                <ng-template let-col let-ativo="rowData" pTemplate="body">
+                  {{ ativo[col.field] | activeBoolean }}
+                </ng-template>
               </p-column>
             </app-memory-datatable>
           </div>

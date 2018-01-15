@@ -28,6 +28,7 @@ import {
 } from './';
 
 import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
+import { ActiveBooleanPipe } from '../shared/active-boolean.pipe';
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
   declarations: [
     ManualComponent,
     ManualDetailComponent,
-    ManualFormComponent
+    ManualFormComponent,
+    ActiveBooleanPipe
   ],
   providers: [
     ManualService,
