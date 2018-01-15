@@ -8,8 +8,8 @@ export const environment = {
   apiUrl: '/api',
   auth: {
     detailsUrl: '/api/user/details',
-    loginUrl: '/api/login',
-    logoutUrl: '/api/logout',
+    loginUrl: '/#/login',
+    logoutUrl: '/',
     userStorage: localStorage,
     userStorageIndex: 'user'
   }
