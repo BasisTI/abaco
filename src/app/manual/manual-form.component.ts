@@ -28,11 +28,13 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   showDialogPhaseEffort: boolean = false;
   showDialogEditPhaseEffort: boolean = false;
   showDialogCreateAdjustFactor: boolean = false;
+  showDialogEditAdjustFactor: boolean = false;
   tipoFases: Array<TipoFase> = [];
   percentual: number;
   newPhaseEffort: EsforcoFase = new EsforcoFase();
   editedPhaseEffort: EsforcoFase = new EsforcoFase();
   newAdjustFactor: FatorAjuste = new FatorAjuste();
+  editedAdjustFactor: FatorAjuste = new FatorAjuste();
 
   constructor(
     private route: ActivatedRoute,
@@ -104,9 +106,30 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  adjustFactorDatatableClick(event: DatatableClickEvent) {
+    if (!event.selection) {
+      return;
+    }
+    switch (event.button) {
+      case 'edit':
+        this.editedAdjustFactor = event.selection.clone();
+        this.openDialogEditAdjustFactor();
+        break;
+      case 'delete':
+      console.log(event.selection);
+        this.editedAdjustFactor = event.selection.clone();
+        this.confirmDeleteAdjustFactor();
+    }
+  }
+
   confirmDeletePhaseEffort() {
     this.manual.deleteEsforcoFase(this.editedPhaseEffort);
     this.editedPhaseEffort = new EsforcoFase();
+  }
+
+  confirmDeleteAdjustFactor() {
+    this.manual.deleteFatoresAjuste(this.editedAdjustFactor);
+    this.editedAdjustFactor = new FatorAjuste();
   }
 
   openDialogPhaseEffort() {
@@ -122,6 +145,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.closeDialogEditPhaseEffort();
   }
 
+  editAdjustFactor() {
+    this.manual.updateFatoresAjuste(this.editedAdjustFactor);
+    this.closeDialogEditAdjustFactor();
+  }
   private closeDialogPhaseEffort() {
     this.newPhaseEffort = new EsforcoFase();
     this.showDialogPhaseEffort = false;
@@ -154,6 +181,14 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   closeDialogCreateAdjustFactor() {
     this.showDialogCreateAdjustFactor = false;
     this.newAdjustFactor = new FatorAjuste();
+  }
+
+  openDialogEditAdjustFactor() {
+    this.showDialogEditAdjustFactor = true;
+  }
+
+  closeDialogEditAdjustFactor() {
+      this.showDialogEditAdjustFactor = false;
   }
 
   addAdjustFactor() {
