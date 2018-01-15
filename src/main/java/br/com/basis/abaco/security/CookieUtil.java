@@ -9,13 +9,13 @@ import org.springframework.web.util.WebUtils;
 
 @Component
 // FIXME (diego.marcilio) Funcionando somente para desenvolvimento
-// rever AuthenticationConstants setDomain(), setHttpOnly(), setSecure() 
+// rever AuthenticationConstants e setDomain(), setHttpOnly(), setSecure() 
 public class CookieUtil {
 
 	public void create(HttpServletResponse httpServletResponse, String value, Boolean secure, Integer maxAge) {
 		Cookie cookie = new Cookie(AuthenticationConstants.TOKEN_NAME, value);
 		cookie.setSecure(secure);
-		cookie.setHttpOnly(false);
+		cookie.setHttpOnly(AuthenticationConstants.DEFAULT_HTTP_ONLY);
 		cookie.setMaxAge(maxAge);
 		// cookie.setDomain(DOMAIN);
 		cookie.setPath("/");
@@ -30,7 +30,7 @@ public class CookieUtil {
 	public void clear(HttpServletResponse httpServletResponse) {
 		Cookie cookieJWT = new Cookie(AuthenticationConstants.TOKEN_NAME, null);
 		cookieJWT.setPath("/");
-		cookieJWT.setHttpOnly(false);
+		cookieJWT.setHttpOnly(AuthenticationConstants.DEFAULT_HTTP_ONLY);
 		cookieJWT.setMaxAge(0);
 		// cookieJWT.setDomain(DOMAIN);
 		httpServletResponse.addCookie(cookieJWT);
