@@ -32,8 +32,16 @@ export class LoginComponent implements OnInit, OnDestroy {
   login() {
     this.loginService.login(this.username, this.password).subscribe(() => {
       this.authService.loginSuccess();
-      this.router.navigate(['/']);
+      // FIXME workaround para o caso de a resposta da requisição para user details
+      // não ter chegado ainda. Sugerir alteração no componente
+      this.sleepFor(1000);
+      window.location.href = '/';
     });
+  }
+
+  private sleepFor(sleepDuration) {
+    const now = new Date().getTime();
+    while (new Date().getTime() < now + sleepDuration) { /* do nothing */ }
   }
 
 }

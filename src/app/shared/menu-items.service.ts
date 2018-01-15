@@ -13,7 +13,7 @@ export class MenuItemsService {
       { label: 'Login', routerLink: 'login' },
       {
         label: 'Administração', icon: 'supervisor_account',
-        visible: this.authService.hasRole('ROLE_ADMIN'),
+        visible: this.isLoggedAdmin(),
         items: [
           { label: 'Tipo de Equipe', routerLink: 'tipoEquipe' },
           { label: 'Usuários', routerLink: 'user' }
@@ -21,6 +21,7 @@ export class MenuItemsService {
       },
       {
         label: 'Cadastros Básicos', icon: 'description',
+        visible: this.authService.isAuthenticated(),
         items: [
           { label: 'Tipo de Fase', routerLink: 'tipoFase' },
           { label: 'Manual', routerLink: 'manual' },
@@ -30,12 +31,17 @@ export class MenuItemsService {
       },
       {
         label: 'Análise', icon: 'insert_chart',
+        visible: this.authService.isAuthenticated(),
         items: [
           { label: 'Análise' },
           { label: 'Validação' }
         ]
       }
     ];
+  }
+
+  private isLoggedAdmin(): boolean {
+    return this.authService.isAuthenticated && this.authService.hasRole('ROLE_ADMIN');
   }
 
 }
