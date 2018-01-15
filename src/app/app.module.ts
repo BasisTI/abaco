@@ -52,6 +52,7 @@ import {FileUploadModule} from 'primeng/primeng';
 import { LoginModule } from './login/login.module';
 import { environment } from '../environments/environment';
 import { MenuItemsService } from './shared/menu-items.service';
+import { AdminGuard } from './admin.guard';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -108,6 +109,7 @@ import { MenuItemsService } from './shared/menu-items.service';
     PageNotificationService,
     UploadService,
     MenuItemsService,
+    AdminGuard,
     { provide: AUTH_CONFIG, useValue: environment.auth },
     { provide: AuthService, deps: [HttpService, AUTH_CONFIG], useFactory: authServiceFactory }
 
