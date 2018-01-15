@@ -3,7 +3,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/primeng';
-import { MenuItems } from './shared/menu-items';
+import { MenuItemsService } from './shared/menu-items.service';
 import { AppComponent } from './app.component';
 
 @Component({
@@ -18,10 +18,11 @@ export class AppMenuComponent implements OnInit {
 
   menuItems: MenuItem[];
 
-  constructor(public app: AppComponent) { }
+  constructor(public app: AppComponent,
+    private menuItemsService: MenuItemsService) { }
 
   ngOnInit() {
-    this.menuItems = MenuItems.all;
+    this.menuItems = this.menuItemsService.all;
   }
 
   changeTheme(theme) {
@@ -98,7 +99,7 @@ export class AppSubMenuComponent {
 
   constructor(public app: AppComponent) { }
 
-  itemClick(event: Event, item: MenuItem, index: number)  {
+  itemClick(event: Event, item: MenuItem, index: number) {
     if (this.root) {
       this.app.menuHoverActive = !this.app.menuHoverActive;
     }
@@ -152,7 +153,7 @@ export class AppSubMenuComponent {
   set reset(val: boolean) {
     this._reset = val;
 
-    if (this._reset && (this.app.isHorizontal() ||  this.app.isSlim())) {
+    if (this._reset && (this.app.isHorizontal() || this.app.isSlim())) {
       this.activeIndex = null;
     }
   }

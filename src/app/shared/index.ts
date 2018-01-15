@@ -4,7 +4,7 @@ export * from './base-entity';
 export * from './date-util.service';
 export * from './breadcrumb.service';
 export * from './elastic-query';
-export * from './menu-items';
+export * from './menu-items.service';
 export * from './page-notification.service';
 export * from './entity-to-json';
 export * from './mappable-entities';
