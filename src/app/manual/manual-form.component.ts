@@ -95,7 +95,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         break;
       case 'delete':
       console.log(event.selection);
-      debugger;
         this.editedPhaseEffort = event.selection.clone();
         this.confirmDeletePhaseEffort();
     }

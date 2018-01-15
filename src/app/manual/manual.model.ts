@@ -13,6 +13,7 @@ export class Manual implements BaseEntity {
     public valorVariacaoIndicativa?: number,
     public arquivoManualId?: number,
     public esforcoFases?: any[],
+    public artificialId?: number,
   ) {
     if (esforcoFases) {
       this.mappableContracts = new MappableEntities<EsforcoFase>(esforcoFases);
