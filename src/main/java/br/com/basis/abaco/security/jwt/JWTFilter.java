@@ -67,20 +67,19 @@ public class JWTFilter extends GenericFilterBean {
 	}
 
 	private String doResolveToken(HttpServletRequest request) {
-		if (requestHasAuthenticationCookie(request))
-			return resolveByCookie(request);
+		Cookie cookie = WebUtils.getCookie(request, AuthenticationConstants.TOKEN_NAME);
+		if (requestHasAuthenticationCookie(cookie))
+			return resolveTokenByCookie(cookie);
 		else
 			return resolveTokenByHeader(request);
 	}
 
-	private boolean requestHasAuthenticationCookie(HttpServletRequest request) {
-		Cookie cookie = WebUtils.getCookie(request, AuthenticationConstants.TOKEN_NAME);
+	private boolean requestHasAuthenticationCookie(Cookie cookie) {
 		return cookie != null;
 	}
 
-	private String resolveByCookie(HttpServletRequest request) {
-		Cookie cookie = WebUtils.getCookie(request, AuthenticationConstants.TOKEN_NAME);
-		return cookie != null ? cookie.getValue() : null;
+	private String resolveTokenByCookie(Cookie cookie) {
+		return cookie.getValue();
 	}
 
 	private String resolveTokenByHeader(HttpServletRequest request) {
