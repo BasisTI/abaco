@@ -13,6 +13,7 @@ import { TipoFaseService } from '../tipo-fase/tipo-fase.service';
 import { TipoFase } from '../tipo-fase/tipo-fase.model';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/components/common/confirmationservice';
+import { FatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 
 @Component({
   selector: 'jhi-manual-form',
@@ -26,10 +27,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   esforcoFases: Array<EsforcoFase>;
   showDialogPhaseEffort: boolean = false;
   showDialogEditPhaseEffort: boolean = false;
+  showDialogCreateAdjustFactor: boolean = false;
   tipoFases: Array<TipoFase> = [];
   percentual: number;
   newPhaseEffort: EsforcoFase = new EsforcoFase();
   editedPhaseEffort: EsforcoFase = new EsforcoFase();
+  newAdjustFactor: FatorAjuste = new FatorAjuste();
 
   constructor(
     private route: ActivatedRoute,
@@ -144,6 +147,18 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     return total;
   }
 
+  openDialogCreateAdjustFactor() {
+    this.showDialogCreateAdjustFactor = true;
+  }
 
+  closeDialogCreateAdjustFactor() {
+    this.showDialogCreateAdjustFactor = false;
+    this.newAdjustFactor = new FatorAjuste();
+  }
 
+  addAdjustFactor() {
+    this.newAdjustFactor.ativo = true;
+    this.manual.addFatoresAjuste(this.newAdjustFactor);
+    this.closeDialogCreateAdjustFactor();
+  }
 }

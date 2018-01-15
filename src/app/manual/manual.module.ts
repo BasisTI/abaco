@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatatableModule } from '@basis/angular-components';
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
-
 import {
   ButtonModule,
   InputTextModule,
@@ -17,6 +16,7 @@ import {
   DialogModule,
   ConfirmDialogModule,
   ConfirmationService,
+  InputTextareaModule
 } from 'primeng/primeng';
 
 import {

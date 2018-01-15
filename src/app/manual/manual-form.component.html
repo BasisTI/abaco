@@ -63,7 +63,32 @@
         </div>
         <div class="ui-g">
           <div class="ui-g-4 ui-g-offset-6">
-            Total: {{ getPhaseEffortTotalPercentual() }}
+            Total: {{ getPhaseEffortTotalPercentual() }} %
+          </div>
+        </div>
+        <div class="ui-g">
+          <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-md-3">
+              <button pButton type="button" label="Novo Fator de Ajuste" icon="ui-icon-add"
+                (click)="openDialogCreateAdjustFactor()"></button>
+            </div>
+          </div>
+        </div>
+        <div class="ui-g">
+          <div class="ui-g-12">
+            <app-memory-datatable [value]="manual.fatoresAjuste"
+              (buttonClick)="datatableClick($event)">
+              <p-column header="Codigo" field="codigo">
+              </p-column>
+              <p-column header="Nome" field="nome">
+              </p-column>
+              <p-column header="Fator" field="fator">
+              </p-column>
+              <p-column header="Tipo Ajuste" field="tipoAjuste">
+              </p-column>
+              <p-column header="Ativo" field="ativo">
+              </p-column>
+            </app-memory-datatable>
           </div>
         </div>
         <div class="ui-g">
@@ -102,6 +127,7 @@
           </div>
         </p-dialog>
 
+        <!-- Dialog Edit  Esforco Fase -->
         <p-dialog header="Esforço por Fase" [(visible)]="showDialogEditPhaseEffort"
         [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
@@ -123,6 +149,56 @@
               </div>
               <div class="ui-md-3">
                 <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="editPhaseEffort()"></button>
+              </div>
+            </div>
+          </div>
+        </p-dialog>
+
+        <!-- Dialog Novo Fator Ajuste -->
+        <p-dialog header="Fator de Ajuste" [(visible)]="showDialogCreateAdjustFactor"
+        [contentStyle]="{'overflow':'visible'}" [width]="800">
+          <div class="ui-g">
+            <div class="ui-g-9">
+              <label>Nome</label>
+              <input type="text" name="nome" [(ngModel)]="newAdjustFactor.nome" pInputText />
+            </div>
+            <div class="ui-g-3">
+              <label>Fator</label>
+              <p-spinner size="30" name="fator" [(ngModel)]="newAdjustFactor.fator" [step]="0.1"></p-spinner>
+            </div>
+          </div>
+          <div class="ui-g">
+            <div class="ui-g-12">
+              <label>Descrição</label>
+            </div>
+          </div>
+          <div class="ui-g">
+            <div class="ui-g-12">
+              <textarea [rows]="5" [cols]="90" pInputTextarea name="descricao" [(ngModel)]="newAdjustFactor.descricao"></textarea>
+            </div>
+          </div>
+          <div class="ui-g">
+            <div class="ui-g-4">
+              <label>Codigo</label>
+              <input type="text" name="codigo" [(ngModel)]="newAdjustFactor.codigo" pInputText />
+            </div>
+            <div class="ui-g-5">
+              <label>Origem</label>
+              <input type="text" name="origem" [(ngModel)]="newAdjustFactor.origem" pInputText />
+            </div>
+            <div class="ui-g-3">
+              <label>Tipo Ajuste</label><br>
+              <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="newAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
+              <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton>
+            </div>
+          </div>
+          <div class="ui-g">
+            <div class="ui-g ui-md-12" style="justify-content: flex-end">
+              <div class="ui-md-3">
+                <button pButton type="button" label="Cancelar"></button>
+              </div>
+              <div class="ui-md-3">
+                <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="addAdjustFactor()"></button>
               </div>
             </div>
           </div>
