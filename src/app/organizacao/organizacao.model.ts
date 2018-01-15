@@ -13,7 +13,7 @@ export class Organizacao implements BaseEntity, JSONable<Organizacao> {
     public logoId?: number,
     public ativo?: boolean,
     public numeroOcorrencia?: string,
-    public contracts?: any[],
+    public contracts?: Contrato[],
     // FIXME BaseEntity, para evitar dependencias circulares
     // parece que reestruturação de pastas evita isso
     public sistemas?: BaseEntity[],
@@ -32,9 +32,9 @@ export class Organizacao implements BaseEntity, JSONable<Organizacao> {
   }
 
   copyFromJSON(json: any) {
-    const contratos = json.contracts.map(c => new Contrato().copyFromJSON(c));
+    const contratos: Contrato[] = json.contracts.map(c => new Contrato().copyFromJSON(c));
     const newOrganizacao = new Organizacao(json.id, json.sigla, json.nome,
-      json.cnpj, json.ativo, json.numeroOcorrencia, contratos, json.sistemas);
+      json.cnpj, json.ativo, json.numeroOcorrencia, json.logoId, contratos, json.sistemas);
     return newOrganizacao;
   }
 
