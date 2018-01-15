@@ -40,13 +40,13 @@ export class TipoEquipeComponent implements AfterViewInit {
     }
     switch (event.button) {
       case 'edit':
-        this.router.navigate(['/tipoEquipe', event.selection.id, 'edit']);
+        this.router.navigate(['/admin/tipoEquipe', event.selection.id, 'edit']);
         break;
       case 'delete':
         this.confirmDelete(event.selection.id);
         break;
       case 'view':
-        this.router.navigate(['/tipoEquipe', event.selection.id]);
+        this.router.navigate(['/admin/tipoEquipe', event.selection.id]);
         break;
     }
   }

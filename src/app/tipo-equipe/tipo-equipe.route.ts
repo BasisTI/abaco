@@ -4,22 +4,27 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@a
 import { TipoEquipeComponent } from './tipo-equipe.component';
 import { TipoEquipeDetailComponent } from './tipo-equipe-detail.component';
 import { TipoEquipeFormComponent } from './tipo-equipe-form.component';
+import { AuthGuard } from '@basis/angular-components';
 
 export const tipoEquipeRoute: Routes = [
   {
-    path: 'tipoEquipe',
-    component: TipoEquipeComponent
+    path: 'admin/tipoEquipe',
+    component: TipoEquipeComponent,
+    canActivate: [AuthGuard]
   },
   {
-    path: 'tipoEquipe/new',
-    component: TipoEquipeFormComponent
+    path: 'admin/tipoEquipe/new',
+    component: TipoEquipeFormComponent,
+    canActivate: [AuthGuard]
   },
   {
-    path: 'tipoEquipe/:id/edit',
-    component: TipoEquipeFormComponent
+    path: 'admin/tipoEquipe/:id/edit',
+    component: TipoEquipeFormComponent,
+    canActivate: [AuthGuard]
   },
   {
-    path: 'tipoEquipe/:id',
-    component: TipoEquipeDetailComponent
+    path: 'admin/tipoEquipe/:id',
+    component: TipoEquipeDetailComponent,
+    canActivate: [AuthGuard]
   },
 ];

@@ -15,7 +15,7 @@ export class MenuItemsService {
         label: 'Administração', icon: 'supervisor_account',
         visible: this.isLoggedAdmin(),
         items: [
-          { label: 'Tipo de Equipe', routerLink: 'tipoEquipe' },
+          { label: 'Tipo de Equipe', routerLink: 'admin/tipoEquipe' },
           { label: 'Usuários', routerLink: 'user' }
         ]
       },
