@@ -2,6 +2,7 @@ import { MenuItem } from 'primeng/primeng';
 import { Injectable } from '@angular/core';
 import { AuthService } from '@basis/angular-components';
 import { User } from '../user';
+import { ADMIN_ROLE } from './index';
 
 @Injectable()
 export class MenuItemsService {
@@ -41,7 +42,7 @@ export class MenuItemsService {
   }
 
   private isLoggedAdmin(): boolean {
-    return this.authService.isAuthenticated && this.authService.hasRole('ROLE_ADMIN');
+    return this.authService.isAuthenticated && this.authService.hasRole(ADMIN_ROLE);
   }
 
 }
