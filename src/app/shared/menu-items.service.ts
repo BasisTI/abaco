@@ -16,7 +16,7 @@ export class MenuItemsService {
         visible: this.isLoggedAdmin(),
         items: [
           { label: 'Tipo de Equipe', routerLink: 'admin/tipoEquipe' },
-          { label: 'Usuários', routerLink: 'user' }
+          { label: 'Usuários', routerLink: 'admin/user' }
         ]
       },
       {

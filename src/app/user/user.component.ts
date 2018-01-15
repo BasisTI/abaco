@@ -38,13 +38,13 @@ export class UserComponent implements AfterViewInit {
     }
     switch (event.button) {
       case 'edit':
-        this.router.navigate(['/user', event.selection.id, 'edit']);
+        this.router.navigate(['/admin/user', event.selection.id, 'edit']);
         break;
       case 'delete':
         this.confirmDelete(event.selection.id);
         break;
       case 'view':
-        this.router.navigate(['/user', event.selection.id]);
+        this.router.navigate(['/admin/user', event.selection.id]);
         break;
     }
   }
