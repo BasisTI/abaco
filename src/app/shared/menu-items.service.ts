@@ -2,7 +2,7 @@ import { MenuItem } from 'primeng/primeng';
 import { Injectable } from '@angular/core';
 import { AuthService } from '@basis/angular-components';
 import { User } from '../user';
-import { ADMIN_ROLE } from './index';
+import { ADMIN_ROLE } from './constants';
 
 @Injectable()
 export class MenuItemsService {

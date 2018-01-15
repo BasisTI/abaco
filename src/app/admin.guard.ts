@@ -3,7 +3,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angul
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from '@basis/angular-components';
 import { User } from './user';
-import { ADMIN_ROLE } from './shared/index';
+import { ADMIN_ROLE } from './shared/constants';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
