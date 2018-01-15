@@ -60,6 +60,7 @@ public class UserJWTController {
 
 	@PostMapping("/authenticate")
 	@Timed
+	@SuppressWarnings("rawtypes")
 	public ResponseEntity authorize(@Valid @RequestBody LoginVM loginVM, HttpServletResponse response) {
 
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -80,6 +81,13 @@ public class UserJWTController {
 			return new ResponseEntity<>(Collections.singletonMap("AuthenticationException", ae.getLocalizedMessage()),
 					HttpStatus.UNAUTHORIZED);
 		}
+	}
+
+	@GetMapping("/logout")
+	@Timed
+	public ResponseEntity<Void> logout(HttpServletResponse response) {
+		cookieUtil.clear(response);
+		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/user/details")
