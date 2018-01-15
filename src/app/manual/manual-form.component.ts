@@ -25,6 +25,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   arquivoManual: File;
   esforcoFases: Array<EsforcoFase>;
   showDialogPhaseEffort: boolean = false;
+  showDialogEditPhaseEffort: boolean = false;
   tipoFases: Array<TipoFase> = [];
   percentual: number;
   newPhaseEffort: EsforcoFase = new EsforcoFase();
@@ -91,7 +92,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     switch (event.button) {
       case 'edit':
         this.editedPhaseEffort = event.selection.clone();
-        this.openDialogPhaseEffort();
+        this.openDialogEditPhaseEffort();
         break;
       case 'delete':
       console.log(event.selection);
@@ -109,9 +110,23 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.showDialogPhaseEffort = true;
   }
 
+  openDialogEditPhaseEffort() {
+      this.showDialogEditPhaseEffort = true;
+  }
+
+  editPhaseEffort() {
+    this.manual.updateEsforcoFases(this.editedPhaseEffort);
+    this.closeDialogEditPhaseEffort();
+  }
+
   private closeDialogPhaseEffort() {
     this.newPhaseEffort = new EsforcoFase();
     this.showDialogPhaseEffort = false;
+  }
+
+  private closeDialogEditPhaseEffort() {
+    this.editedPhaseEffort = new EsforcoFase();
+    this.showDialogEditPhaseEffort = false;
   }
 
   addPhaseEffort() {

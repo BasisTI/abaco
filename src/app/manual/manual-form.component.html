@@ -53,10 +53,8 @@
           <div class="ui-g-12">
             <app-memory-datatable [value]="manual.esforcoFases"
               (buttonClick)="datatableClick($event)">
-              <p-column header="Tipo de fase" field="tipoFase">
-                <ng-template let-col let-tipoFase="rowData" pTemplate="body">
-                  {{ tipoFase[col.field] | json }}
-                </ng-template>
+              <p-column header="Tipo de fase" field="tipoFase.nome">
+
               </p-column>
               <p-column header="Percentual (%)" field="percentual">
               </p-column>
@@ -94,6 +92,32 @@
               </div>
               <div class="ui-md-3">
                 <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="addPhaseEffort()"></button>
+              </div>
+            </div>
+          </div>
+        </p-dialog>
+
+        <p-dialog header="Esforço por Fase" [(visible)]="showDialogEditPhaseEffort"
+        [contentStyle]="{'overflow':'visible'}" [width]="800">
+          <div class="ui-g">
+            <div class="ui-g-12">
+              <label>Tipo de Fase</label>
+              <p-dropdown [options]="tipoFases" [(ngModel)]="editedPhaseEffort.tipoFase" placeholder="Tipo de Fase" name="tipoFase" optionLabel="nome"></p-dropdown>
+            </div>
+          </div>
+          <div class="ui-g">
+            <div class="ui-g-12">
+              <label>Esforço (%)</label>
+              <p-spinner size="30" name="percentual" [(ngModel)]="editedPhaseEffort.percentual" decimalSeparator="" thousandSeparator=""></p-spinner>
+            </div>
+          </div>
+          <div class="ui-g">
+            <div class="ui-g ui-md-12" style="justify-content: flex-end">
+              <div class="ui-md-3">
+                <button pButton type="button" label="Cancelar"></button>
+              </div>
+              <div class="ui-md-3">
+                <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="editPhaseEffort()"></button>
               </div>
             </div>
           </div>
