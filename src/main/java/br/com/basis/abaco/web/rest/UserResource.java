@@ -187,6 +187,7 @@ public class UserResource {
 	 */
 	@GetMapping("/users")
 	@Timed
+	@Secured(AuthoritiesConstants.ADMIN)
 	public ResponseEntity<List<UserDTO>> getAllUsers(@ApiParam Pageable pageable) throws URISyntaxException {
 		final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
@@ -203,6 +204,7 @@ public class UserResource {
 	 */
 	@GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
 	@Timed
+	@Secured(AuthoritiesConstants.ADMIN)
 	public ResponseEntity<UserDTO> getUser(@PathVariable String login) {
 		log.debug("REST request to get User : {}", login);
 		return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(UserDTO::new));
@@ -210,6 +212,7 @@ public class UserResource {
 
 	@GetMapping("/users/authorities")
 	@Timed
+	@Secured(AuthoritiesConstants.ADMIN)
 	public ResponseEntity<List<String>> getAllAuthorities() throws URISyntaxException {
 		final List<String> authorities = getAllAuthoritiesAsStrings();
 		return ResponseEntity.ok(authorities);
@@ -245,6 +248,7 @@ public class UserResource {
 	 */
 	@GetMapping("/_search/users")
 	@Timed
+	@Secured(AuthoritiesConstants.ADMIN)
 	public List<User> search(@RequestParam String query, Pageable pageable) {
 		return StreamSupport.stream(userSearchRepository.search(queryStringQuery(query)).spliterator(), false)
 				.collect(Collectors.toList());
