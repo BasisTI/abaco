@@ -160,12 +160,13 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.manual.updateFatoresAjuste(this.editedAdjustFactor);
     this.closeDialogEditAdjustFactor();
   }
-  private closeDialogPhaseEffort() {
+
+  closeDialogPhaseEffort() {
     this.newPhaseEffort = new EsforcoFase();
     this.showDialogPhaseEffort = false;
   }
 
-  private closeDialogEditPhaseEffort() {
+  closeDialogEditPhaseEffort() {
     this.editedPhaseEffort = new EsforcoFase();
     this.showDialogEditPhaseEffort = false;
   }
@@ -200,6 +201,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   closeDialogEditAdjustFactor() {
       this.showDialogEditAdjustFactor = false;
+      this.editedAdjustFactor = new FatorAjuste();
   }
 
   addAdjustFactor() {
