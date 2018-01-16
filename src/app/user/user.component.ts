@@ -41,7 +41,7 @@ export class UserComponent implements AfterViewInit {
         this.router.navigate(['/admin/user', event.selection.id, 'edit']);
         break;
       case 'delete':
-        this.confirmDelete(event.selection.id);
+        this.confirmDelete(event.selection);
         break;
       case 'view':
         this.router.navigate(['/admin/user', event.selection.id]);
@@ -49,11 +49,11 @@ export class UserComponent implements AfterViewInit {
     }
   }
 
-  confirmDelete(id: any) {
+  confirmDelete(user: User) {
     this.confirmationService.confirm({
       message: 'Tem certeza que deseja excluir o registro?',
       accept: () => {
-        this.userService.delete(id).subscribe(() => {
+        this.userService.delete(user).subscribe(() => {
           this.datatable.refresh(this.elasticQuery.query);
         });
       }

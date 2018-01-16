@@ -47,8 +47,8 @@ export class UserService {
       .map((res: Response) => this.convertResponse(res));
   }
 
-  delete(id: number): Observable<Response> {
-    return this.http.delete(`${this.resourceUrl}/${id}`);
+  delete(user: User): Observable<Response> {
+    return this.http.delete(`${this.resourceUrl}/${user.login}`);
   }
 
   authorities(): Observable<String[]> {
