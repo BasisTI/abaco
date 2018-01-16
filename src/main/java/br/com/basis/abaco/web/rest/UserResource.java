@@ -210,10 +210,13 @@ public class UserResource {
 
 	@GetMapping("/users/authorities")
 	@Timed
-	public ResponseEntity<List<Authority>> getAllAuthorities(@ApiParam Pageable pageable) throws URISyntaxException {
-		final Page<Authority> page = authorityRepository.findAll(pageable);
-		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users/authorities");
-		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	public ResponseEntity<List<String>> getAllAuthorities() throws URISyntaxException {
+		final List<String> authorities = getAllAuthoritiesAsStrings();
+		return ResponseEntity.ok(authorities);
+	}
+
+	private List<String> getAllAuthoritiesAsStrings() {
+		return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
 	}
 
 	/**
