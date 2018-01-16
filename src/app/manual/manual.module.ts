@@ -16,7 +16,8 @@ import {
   DialogModule,
   ConfirmDialogModule,
   ConfirmationService,
-  InputTextareaModule
+  InputTextareaModule,
+  SelectButtonModule
 } from 'primeng/primeng';
 
 import {

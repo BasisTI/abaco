@@ -35,6 +35,17 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   editedPhaseEffort: EsforcoFase = new EsforcoFase();
   newAdjustFactor: FatorAjuste = new FatorAjuste();
   editedAdjustFactor: FatorAjuste = new FatorAjuste();
+  adjustTypes: Array<any> = [
+    {
+      label: 'Percentual',
+      value: 'Percentual',
+    },
+    {
+      label: 'Unitário',
+      value: 'Unitário',
+    }
+  ]
+
 
   constructor(
     private route: ActivatedRoute,
