@@ -45,7 +45,10 @@
     <include file="classpath:config/liquibase/changelog/20171010130657_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20171220143354_changelog.xml" relativeToChangelogFile="false"/>	
     <include file="classpath:config/liquibase/changelog/20171221165751_changelog.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20171226141908_changelog.xml" relativeToChangelogFile="false"/>	
     <include file="classpath:config/liquibase/changelog/20171226185404_changelog.xml" relativeToChangelogFile="false"/>	
-    <include file="classpath:config/liquibase/changelog/20171226185832_changelog.xml" relativeToChangelogFile="false"/>		
+    <!-- <include file="classpath:config/liquibase/changelog/20171226185832_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20171226185832_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180116115546_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/201801081127_added_column_entity_Organizacao.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/201801101343_add_column_Manual.xml" relativeToChangelogFile="false"/> -->
 </databaseChangeLog>
