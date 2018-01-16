@@ -5,5 +5,12 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080/api'
+  apiUrl: '/api',
+  auth: {
+    detailsUrl: '/api/user/details',
+    loginUrl: '/#/login',
+    logoutUrl: '/',
+    userStorage: localStorage,
+    userStorageIndex: 'user'
+  }
 };

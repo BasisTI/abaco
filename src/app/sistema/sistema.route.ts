@@ -5,21 +5,27 @@ import { SistemaComponent } from './sistema.component';
 import { SistemaDetailComponent } from './sistema-detail.component';
 import { SistemaFormComponent } from './sistema-form.component';
 
+import { AuthGuard } from '@basis/angular-components';
+
 export const sistemaRoute: Routes = [
   {
     path: 'sistema',
-    component: SistemaComponent
+    component: SistemaComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'sistema/new',
-    component: SistemaFormComponent
+    component: SistemaFormComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'sistema/:id/edit',
-    component: SistemaFormComponent
+    component: SistemaFormComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'sistema/:id',
-    component: SistemaDetailComponent
+    component: SistemaDetailComponent,
+    canActivate: [AuthGuard]
   },
 ];
