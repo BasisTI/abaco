@@ -24,7 +24,6 @@
 
     <include file="config/liquibase/changelog/20171226112345_added_entity_TipoEquipe.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171227105647_added_entity_TipoFase.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/201801081127_added_column_entity_Organizacao.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="classpath:config/liquibase/changelog/20170307193237_added_entity_constraints_Organizacao.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170307193239_added_entity_constraints_Sistema.xml" relativeToChangelogFile="false"/>
@@ -45,10 +44,7 @@
     <include file="classpath:config/liquibase/changelog/20171010130657_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20171220143354_changelog.xml" relativeToChangelogFile="false"/>	
     <include file="classpath:config/liquibase/changelog/20171221165751_changelog.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20171226185404_changelog.xml" relativeToChangelogFile="false"/>	
-    <!-- <include file="classpath:config/liquibase/changelog/20171226185832_changelog.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20171226185832_changelog.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20180116115546_changelog.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/201801081127_added_column_entity_Organizacao.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/201801101343_add_column_Manual.xml" relativeToChangelogFile="false"/> -->
+    <include file="classpath:config/liquibase/changelog/20171226185404_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180108112700_added_column_entity_Organizacao.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180110134300_add_column_Manual.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
