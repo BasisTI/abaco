@@ -4,50 +4,48 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193237_added_entity_Organizacao.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193238_added_entity_Manual.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193239_added_entity_Sistema.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193240_added_entity_Modulo.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193241_added_entity_Funcionalidade.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193242_added_entity_Analise.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193243_added_entity_FatorAjuste.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193244_added_entity_Rlr.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193245_added_entity_Der.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193246_added_entity_EsforcoFase.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193247_added_entity_Fase.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193248_added_entity_Contrato.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193249_added_entity_FuncaoDados.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193250_added_entity_FuncaoTransacao.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193251_added_entity_Alr.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193237_added_entity_Organizacao.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193238_added_entity_Manual.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193239_added_entity_Sistema.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193240_added_entity_Modulo.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193241_added_entity_Funcionalidade.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193242_added_entity_Analise.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193243_added_entity_FatorAjuste.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193244_added_entity_Rlr.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193245_added_entity_Der.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193246_added_entity_EsforcoFase.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193247_added_entity_Fase.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193248_added_entity_Contrato.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193249_added_entity_FuncaoDados.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193250_added_entity_FuncaoTransacao.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193251_added_entity_Alr.xml" relativeToChangelogFile="false"/>
 
 
     <include file="config/liquibase/changelog/20171226112345_added_entity_TipoEquipe.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171227105647_added_entity_TipoFase.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/201801081127_added_column_entity_Organizacao.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
-    <include file="config/liquibase/changelog/20170307193237_added_entity_constraints_Organizacao.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193239_added_entity_constraints_Sistema.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193240_added_entity_constraints_Modulo.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193241_added_entity_constraints_Funcionalidade.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193242_added_entity_constraints_Analise.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193243_added_entity_constraints_FatorAjuste.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193244_added_entity_constraints_Rlr.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193245_added_entity_constraints_Der.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193246_added_entity_constraints_EsforcoFase.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193248_added_entity_constraints_Contrato.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193249_added_entity_constraints_FuncaoDados.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193250_added_entity_constraints_FuncaoTransacao.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170307193251_added_entity_constraints_Alr.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193237_added_entity_constraints_Organizacao.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193239_added_entity_constraints_Sistema.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193240_added_entity_constraints_Modulo.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193241_added_entity_constraints_Funcionalidade.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193242_added_entity_constraints_Analise.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193243_added_entity_constraints_FatorAjuste.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193244_added_entity_constraints_Rlr.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193245_added_entity_constraints_Der.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193246_added_entity_constraints_EsforcoFase.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193248_added_entity_constraints_Contrato.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193249_added_entity_constraints_FuncaoDados.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193250_added_entity_constraints_FuncaoTransacao.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170307193251_added_entity_constraints_Alr.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
-    <include file="config/liquibase/changelog/20170726130657_changelog.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170728130657_changelog.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20171010130657_changelog.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20171220143354_changelog.xml" relativeToChangelogFile="false"/>	
-    <include file="config/liquibase/changelog/20171221165751_changelog.xml" relativeToChangelogFile="false"/>
-   	<include file="config/liquibase/changelog/20171226185832_changelog.xml" relativeToChangelogFile="false"/>
-   	<include file="config/liquibase/changelog/20171226141908_changelog.xml" relativeToChangelogFile="false"/>
-   	<include file="config/liquibase/changelog/20171226185404_changelog.xml" relativeToChangelogFile="false"/>
-   	
-   	<include file="config/liquibase/changelog/201801081127_added_column_entity_Organizacao.xml" relativeToChangelogFile="false"/>
-   	<include file="config/liquibase/changelog/201801101343_add_column_Manual.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170726130657_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170728130657_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20171010130657_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20171220143354_changelog.xml" relativeToChangelogFile="false"/>	
+    <include file="classpath:config/liquibase/changelog/20171221165751_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20171226141908_changelog.xml" relativeToChangelogFile="false"/>	
+    <include file="classpath:config/liquibase/changelog/20171226185404_changelog.xml" relativeToChangelogFile="false"/>	
+    <include file="classpath:config/liquibase/changelog/20171226185832_changelog.xml" relativeToChangelogFile="false"/>		
 </databaseChangeLog>
