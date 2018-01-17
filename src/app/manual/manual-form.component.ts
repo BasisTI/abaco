@@ -13,7 +13,7 @@ import { TipoFaseService } from '../tipo-fase/tipo-fase.service';
 import { TipoFase } from '../tipo-fase/tipo-fase.model';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/components/common/confirmationservice';
-import { FatorAjuste } from '../fator-ajuste/fator-ajuste.model';
+import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 
 @Component({
   selector: 'jhi-manual-form',
@@ -38,12 +38,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   adjustTypes: Array<any> = [
     {
       label: 'Percentual',
-      value: 'Percentual',
+      value: 'PERCENTUAL',
     },
     {
       label: 'Unitário',
-      value: 'Unitário',
-    }
+      value: 'UNITARIO',
+    },
   ]
 
 
