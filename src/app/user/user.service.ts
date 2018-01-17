@@ -5,6 +5,7 @@ import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 
 import { User } from './user.model';
+import { Authority } from './authority.model';
 import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
 
 @Injectable()
@@ -51,10 +52,12 @@ export class UserService {
     return this.http.delete(`${this.resourceUrl}/${user.login}`);
   }
 
-  authorities(): Observable<String[]> {
+  authorities(): Observable<Authority[]> {
     return this.http.get(`${this.authoritiesUrl}`)
       .map(res => {
-        return res.json();
+        return res.json().map(item => {
+          return new Authority(item.name);
+      });
     });
   }
 

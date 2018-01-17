@@ -44,11 +44,7 @@
               <p-header>Perfil</p-header>
               <p-column selectionMode="multiple"
                 [style]="{'width':'15%'}"></p-column>
-              <p-column header="Nome">
-                <ng-template let-authority="rowData" pTemplate="body">
-                  <span>{{ authority }}</span>
-                </ng-template>
-              </p-column>
+              <p-column header="Nome" field="name"></p-column>
             </p-dataTable>
           </div>
 
