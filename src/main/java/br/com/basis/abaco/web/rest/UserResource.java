@@ -112,7 +112,7 @@ public class UserResource {
 	 * mail with an activation link. The user needs to be activated on creation.
 	 * </p>
 	 *
-	 * @param managedUserVM
+	 * @param user
 	 *            the user to create
 	 * @return the ResponseEntity with status 201 (Created) and with body the new
 	 *         user, or with status 400 (Bad Request) if the login or email is
@@ -123,20 +123,22 @@ public class UserResource {
 	@PostMapping("/users")
 	@Timed
 	@Secured(AuthoritiesConstants.ADMIN)
-	public ResponseEntity createUser(@RequestBody ManagedUserVM managedUserVM) throws URISyntaxException {
-		log.debug("REST request to save User : {}", managedUserVM);
+	public ResponseEntity createUser(@RequestBody User user) throws URISyntaxException {
+		log.debug("REST request to save User : {}", user);
 
 		// Lowercase the user login before comparing with database
-		if (userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase()).isPresent()) {
+		if (userRepository.findOneByLogin(user.getLogin().toLowerCase()).isPresent()) {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "userexists", "Login already in use"))
 					.body(null);
-		} else if (userRepository.findOneByEmail(managedUserVM.getEmail()).isPresent()) {
+		} else if (userRepository.findOneByEmail(user.getEmail()).isPresent()) {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "emailexists", "Email already in use"))
 					.body(null);
 		} else {
-			User newUser = userService.createUser(managedUserVM);
+			User newUser = userRepository.save(user);
+	        userSearchRepository.save(user);
+	        log.debug("Created Information for User: {}", user);
 			mailService.sendCreationEmail(newUser);
 			return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
 					.headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin())).body(newUser);
