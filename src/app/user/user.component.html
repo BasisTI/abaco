@@ -47,7 +47,7 @@
             <p-column header="Equipe" field="tipoEquipes">
               
             </p-column>
-            <p-column header="Ativo" field="ativo" 
+            <p-column header="Ativo" field="activated" 
               [style]="{width:'7.5%'}">
                 <ng-template let-col let-ativo="rowData" pTemplate="body">
                     {{ ativo[col.field] ? 'Sim' : (ativo[col.field] != null ? 'Não' : null) }}

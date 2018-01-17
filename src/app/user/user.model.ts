@@ -14,8 +14,7 @@ export class User implements BaseEntity, BasisUser {
     public imageUrl?: string,
     public tipoEquipes?: BaseEntity[],
     public authorities?: string[],
-    public organizacoes?: BaseEntity[],
-    public ativo?: boolean,
+    public organizacoes?: BaseEntity[]
   ) { }
 
 
