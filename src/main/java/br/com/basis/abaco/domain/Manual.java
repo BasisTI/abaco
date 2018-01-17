@@ -1,16 +1,18 @@
 package br.com.basis.abaco.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -18,11 +20,12 @@ import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * A Manual.
@@ -61,12 +64,13 @@ public class Manual implements Serializable {
 
     @Column(name="arquivo_manual_id")
     private int arquivoManualId;
-    
-    @OneToMany(mappedBy = "manual")
-    @JsonIgnore
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
+    @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<EsforcoFase> esforcoFases = new HashSet<>();
 
+    @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
+    
     public Long getId() {
         return id;
     }
@@ -160,7 +164,15 @@ public class Manual implements Serializable {
         this.esforcoFases = esforcoFases;
     }
 
-    @Override
+    public Set<FatorAjuste> getFatoresAjuste() {
+		return fatoresAjuste;
+	}
+
+	public void setFatoresAjuste(Set<FatorAjuste> fatoresAjuste) {
+		this.fatoresAjuste = fatoresAjuste;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -188,6 +200,7 @@ public class Manual implements Serializable {
             ", observacao='" + observacao + "'" +
             ", valorVariacaoEstimada='" + valorVariacaoEstimada + "'" +
             ", valorVariacaoIndicativa='" + valorVariacaoIndicativa + "'" +
+            ", arquivoManualId='" + arquivoManualId + "'" +
             '}';
     }
 }
