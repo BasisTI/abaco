@@ -1,5 +1,21 @@
 package br.com.basis.abaco.service;
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.List;
+
+import org.elasticsearch.indices.IndexAlreadyExistsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.codahale.metrics.annotation.Timed;
+
 import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Contrato;
@@ -15,6 +31,8 @@ import br.com.basis.abaco.domain.Modulo;
 import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.domain.TipoEquipe;
+import br.com.basis.abaco.domain.TipoFase;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.AlrRepository;
 import br.com.basis.abaco.repository.AnaliseRepository;
@@ -31,6 +49,8 @@ import br.com.basis.abaco.repository.ModuloRepository;
 import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.RlrRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
+import br.com.basis.abaco.repository.TipoEquipeRepository;
+import br.com.basis.abaco.repository.TipoFaseRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AlrSearchRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
@@ -47,21 +67,9 @@ import br.com.basis.abaco.repository.search.ModuloSearchRepository;
 import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
 import br.com.basis.abaco.repository.search.RlrSearchRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
+import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
+import br.com.basis.abaco.repository.search.TipoFaseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
-import com.codahale.metrics.annotation.Timed;
-import org.elasticsearch.indices.IndexAlreadyExistsException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.List;
 
 @Service
 public class ElasticsearchIndexService {
@@ -132,7 +140,14 @@ public class ElasticsearchIndexService {
 
     private final UserSearchRepository userSearchRepository;
 
+    private final TipoEquipeRepository tipoEquipeRepository;
+    private final TipoEquipeSearchRepository tipoEquipeSearchRepository;
+    
+    private final TipoFaseRepository tipoFaseRepository;
+    private final TipoFaseSearchRepository tipoFaseSearchRepository;
+
     private final ElasticsearchTemplate elasticsearchTemplate;
+    
 
     public ElasticsearchIndexService(
         UserRepository userRepository,
@@ -167,6 +182,10 @@ public class ElasticsearchIndexService {
         RlrSearchRepository rlrSearchRepository,
         SistemaRepository sistemaRepository,
         SistemaSearchRepository sistemaSearchRepository,
+        TipoEquipeRepository tipoEquipeRepository,
+        TipoEquipeSearchRepository tipoEquipeSearchRepository,
+        TipoFaseRepository tipoFaseRepository,
+        TipoFaseSearchRepository tipoFaseSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate) {
         this.userRepository = userRepository;
         this.userSearchRepository = userSearchRepository;
@@ -200,6 +219,10 @@ public class ElasticsearchIndexService {
         this.rlrSearchRepository = rlrSearchRepository;
         this.sistemaRepository = sistemaRepository;
         this.sistemaSearchRepository = sistemaSearchRepository;
+        this.tipoEquipeRepository = tipoEquipeRepository;
+        this.tipoEquipeSearchRepository = tipoEquipeSearchRepository;
+        this.tipoFaseRepository = tipoFaseRepository;
+        this.tipoFaseSearchRepository = tipoFaseSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
@@ -222,7 +245,9 @@ public class ElasticsearchIndexService {
         reindexForClass(Rlr.class, rlrRepository, rlrSearchRepository);
         reindexForClass(Sistema.class, sistemaRepository, sistemaSearchRepository);
         reindexForClass(User.class, userRepository, userSearchRepository);
-
+        reindexForClass(TipoEquipe.class, tipoEquipeRepository, tipoEquipeSearchRepository);
+        reindexForClass(TipoFase.class, tipoFaseRepository, tipoFaseSearchRepository);
+        
         log.info("Elasticsearch: Successfully performed reindexing");
     }
 

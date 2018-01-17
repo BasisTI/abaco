@@ -1,6 +1,10 @@
 package br.com.basis.abaco.security;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +35,15 @@ public final class SecurityUtils {
             }
         }
         return userName;
+    }
+    
+    public static Collection<? extends GrantedAuthority> getCurrentUserRoles() {
+    	SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        if(authentication != null) {
+        	return authentication.getAuthorities();
+        }
+        return Collections.emptyList();
     }
 
     /**
