@@ -49,7 +49,7 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
   private subscribeToSaveResponse(result: Observable<TipoEquipe>) {
     result.subscribe((res: TipoEquipe) => {
       this.isSaving = false;
-      this.router.navigate(['/tipoEquipe']);
+      this.router.navigate(['/admin/tipoEquipe']);
     }, (res: Response) => {
       this.isSaving = false;
     });

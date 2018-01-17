@@ -63,7 +63,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
   private subscribeToSaveResponse(result: Observable<User>) {
     result.subscribe((res: User) => {
       this.isSaving = false;
-      this.router.navigate(['/user']);
+      this.router.navigate(['/admin/user']);
     }, (res: Response) => {
       this.isSaving = false;
     });
