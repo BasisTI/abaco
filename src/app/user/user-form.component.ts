@@ -9,7 +9,6 @@ import { UserService } from './user.service';
 import { TipoEquipe, TipoEquipeService } from '../tipo-equipe';
 import { Organizacao, OrganizacaoService } from '../organizacao';
 import { ResponseWrapper } from '../shared';
-import { Authority } from './authority.model';
 
 @Component({
   selector: 'jhi-user-form',
@@ -19,7 +18,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
   tipoEquipes: TipoEquipe[];
   organizacoes: Organizacao[];
-  authorities: Authority[];
+  authorities: String[];
   user: User;
   isSaving: boolean;
   private routeSub: Subscription;
@@ -40,7 +39,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
     this.organizacaoService.query().subscribe((res: ResponseWrapper) => {
       this.organizacoes = res.json;
     });
-    this.userService.authorities().subscribe((res: Authority[]) => {
+    this.userService.authorities().subscribe((res: String[]) => {
       this.authorities = res;
     });
     this.routeSub = this.route.params.subscribe(params => {

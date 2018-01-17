@@ -26,9 +26,8 @@ export class AppBreadcrumbComponent implements OnDestroy {
   }
 
   logout() {
-    this.loginService.logout().subscribe(() => {
-      this.authService.logout();
-    });
+    this.loginService.logout();
+    this.authService.logout();
   }
 
   ngOnDestroy() {

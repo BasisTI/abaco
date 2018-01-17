@@ -44,7 +44,11 @@
               <p-header>Perfil</p-header>
               <p-column selectionMode="multiple"
                 [style]="{'width':'15%'}"></p-column>
-              <p-column header="Nome" field="name"></p-column>
+              <p-column header="Nome">
+                <ng-template let-authority="rowData" pTemplate="body">
+                  <span>{{ authority }}</span>
+                </ng-template>
+              </p-column>
             </p-dataTable>
           </div>
 
@@ -74,7 +78,7 @@
         
         <div class="ui-g" style="justify-content: center; margin-top: 25px;">
           <div class="ui-g-2">
-            <button pButton type="button" label="Cancelar" routerLink="/user"></button>
+            <button pButton type="button" label="Cancelar" routerLink="/admin/user"></button>
           </div>
           <div class="ui-g-2">
             <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
