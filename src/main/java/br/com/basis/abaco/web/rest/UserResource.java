@@ -205,12 +205,12 @@ public class UserResource {
 	 * @return the ResponseEntity with status 200 (OK) and with body the "login"
 	 *         user, or with status 404 (Not Found)
 	 */
-	@GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
+	@GetMapping("/users/{id}")
 	@Timed
 	@Secured(AuthoritiesConstants.ADMIN)
-	public ResponseEntity<UserDTO> getUser(@PathVariable String login) {
-		log.debug("REST request to get User : {}", login);
-		return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(UserDTO::new));
+	public User getUser(@PathVariable Long id) {
+		log.debug("REST request to get User : {}", id);
+		return userService.getUserWithAuthorities(id);
 	}
 
 	@GetMapping("/users/authorities")
