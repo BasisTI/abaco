@@ -14,6 +14,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   username: string;
   password: string;
 
+  authenticated = false;
+
   private routeSub: Subscription;
 
   constructor(
@@ -24,6 +26,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.authenticated = this.authService.isAuthenticated();
   }
 
   ngOnDestroy() {
