@@ -42,6 +42,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
+  authenticatedUserFullName(): string {
+    const storageUser = this.authService.getUser();
+    return storageUser.firstName + ' ' + storageUser.lastName;
+  }
+
   private sleepFor(sleepDuration) {
     const now = new Date().getTime();
     while (new Date().getTime() < now + sleepDuration) { /* do nothing */ }

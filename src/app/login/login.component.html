@@ -23,5 +23,12 @@
         </div>
       </form>
     </div>
+
+    <div class="card login-panel" *ngIf="authenticated"
+      style="margin: 0px auto 0 auto; min-height: 50px;">
+      <h1>Usuário Autenticado</h1>
+      <span> {{ authenticatedUserFullName() }} </span>
+    </div>
+
   </div>
 </div>
