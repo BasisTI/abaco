@@ -157,6 +157,17 @@ public class UserService {
 		userCopy.setResetDate(ZonedDateTime.now());
 		return userCopy;
 	}
+	
+	public User generateUpdatableUser(User userToBeUpdated) {
+		User userPreUpdate = userRepository.findOne(userToBeUpdated.getId());
+		User updatableUser = shallowCopyUser(userToBeUpdated);
+		if(updatableUser.getPassword() == null)
+			updatableUser.setPassword(userPreUpdate.getPassword());
+		if(updatableUser.getLangKey() == null)
+			updatableUser.setLangKey(userPreUpdate.getLangKey());
+		
+		return updatableUser;
+	}
 
 	private User shallowCopyUser(User user) {
 		User copy = new User();

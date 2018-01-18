@@ -1,21 +1,14 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.config.Constants;
-import br.com.basis.abaco.domain.Authority;
-import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.repository.AuthorityRepository;
-import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.search.UserSearchRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
-import br.com.basis.abaco.service.MailService;
-import br.com.basis.abaco.service.UserService;
-import br.com.basis.abaco.service.dto.UserDTO;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.abaco.web.rest.vm.ManagedUserVM;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
-import io.swagger.annotations.ApiParam;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -34,14 +27,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.config.Constants;
+import br.com.basis.abaco.domain.Authority;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.repository.AuthorityRepository;
+import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.search.UserSearchRepository;
+import br.com.basis.abaco.security.AuthoritiesConstants;
+import br.com.basis.abaco.service.MailService;
+import br.com.basis.abaco.service.UserService;
+import br.com.basis.abaco.service.dto.UserDTO;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing users.
@@ -159,24 +160,28 @@ public class UserResource {
 	@PutMapping("/users")
 	@Timed
 	@Secured(AuthoritiesConstants.ADMIN)
-	public ResponseEntity<UserDTO> updateUser(@RequestBody ManagedUserVM managedUserVM) {
-		log.debug("REST request to update User : {}", managedUserVM);
-		Optional<User> existingUser = userRepository.findOneByEmail(managedUserVM.getEmail());
-		if (existingUser.isPresent() && (!existingUser.get().getId().equals(managedUserVM.getId()))) {
+	public ResponseEntity<User> updateUser(@RequestBody User user) {
+		log.debug("REST request to update User : {}", user);
+		Optional<User> existingUser = userRepository.findOneByEmail(user.getEmail());
+		if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "emailexists", "E-mail already in use"))
 					.body(null);
 		}
-		existingUser = userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase());
-		if (existingUser.isPresent() && (!existingUser.get().getId().equals(managedUserVM.getId()))) {
+		existingUser = userRepository.findOneByLogin(user.getLogin().toLowerCase());
+		if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "userexists", "Login already in use"))
 					.body(null);
 		}
-		Optional<UserDTO> updatedUser = userService.updateUser(managedUserVM);
+		User updatableUser = userService.generateUpdatableUser(user);
+		User updatedUser = userRepository.save(updatableUser);
+		userSearchRepository.save(updatedUser);
+		log.debug("Changed Information for User: {}", user);
 
-		return ResponseUtil.wrapOrNotFound(updatedUser,
-				HeaderUtil.createAlert("userManagement.updated", managedUserVM.getLogin()));
+		return ResponseEntity.ok()
+				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString()))
+				.body(updatedUser);
 	}
 
 	/**
