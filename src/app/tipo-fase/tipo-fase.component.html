@@ -6,7 +6,7 @@
           <div class="ui-g-12">
               <span class="md-inputfield">
                 <input type="text" pInputText class="ui-inputtext"
-                  name="filtroTipoFase" 
+                  name="filtroTipoFase"
                   [(ngModel)]="elasticQuery.value"
                   (keyup.enter)="datatable.refresh(elasticQuery.query)"
                   #filter />
@@ -17,10 +17,12 @@
       <div class="ui-g">
         <div class="ui-g ui-md-12" style="justify-content: center">
           <div class="ui-md-2">
-            <button pButton type="button" label="Pesquisar" icon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></button>
+            <app-green-button buttonLabel="Pesquisar" buttonIcon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></app-green-button>
+            <!-- <button pButton type="button" label="Pesquisar" icon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></button> -->
           </div>
           <div class="ui-md-3">
-            <button pButton type="button" label="Novo Tipo de Fase" routerLink="/tipoFase/new" icon="ui-icon-add"></button>
+            <app-blue-button buttonLabel="Novo Tipo de Fase" routerLink="/tipoFase/new" buttonIcon="ui-icon-add"></app-blue-button>
+            <!-- <button pButton type="button" label="Novo Tipo de Fase" routerLink="/tipoFase/new" icon="ui-icon-add"></button> -->
           </div>
         </div>
 

@@ -144,6 +144,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   openDialogPhaseEffort() {
+    this.newPhaseEffort = new EsforcoFase();
     this.showDialogPhaseEffort = true;
   }
 
@@ -178,9 +179,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   getPhaseEffortTotalPercentual() {
     let total = 0;
-
     this.manual.esforcoFases.forEach(each => {
-        total = total + each.percentual;
+      (each.percentual !== undefined) ? (total = total + each.percentual) : (total = total)
     });
 
     return total;

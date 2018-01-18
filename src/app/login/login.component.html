@@ -1,6 +1,6 @@
 <div class="ui-g ui-fluid" style="justify-content: center;">
   <div class="ui-g-6">
-    <div class="card card-w-title login-panel"
+    <div class="card card-w-title login-panel" *ngIf="!authenticated"
       style="margin: 0px auto 0 auto; min-height: 400px;">
       <form name="loginForm" role="form" (ngSubmit)="login()">
         <h1>Login</h1>
@@ -23,5 +23,12 @@
         </div>
       </form>
     </div>
+
+    <div class="card login-panel" *ngIf="authenticated"
+      style="margin: 0px auto 0 auto; min-height: 50px;">
+      <h1>Usuário Autenticado</h1>
+      <span> {{ authenticatedUserFullName() }} </span>
+    </div>
+
   </div>
 </div>

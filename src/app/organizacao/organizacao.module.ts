@@ -49,7 +49,7 @@ import {
   declarations: [
     OrganizacaoComponent,
     OrganizacaoDetailComponent,
-    OrganizacaoFormComponent
+    OrganizacaoFormComponent,
   ],
   providers: [
     OrganizacaoService,

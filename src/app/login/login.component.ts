@@ -14,6 +14,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   username: string;
   password: string;
 
+  authenticated = false;
+
   private routeSub: Subscription;
 
   constructor(
@@ -24,6 +26,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.authenticated = this.authService.isAuthenticated();
   }
 
   ngOnDestroy() {
@@ -37,6 +40,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.sleepFor(1000);
       window.location.href = '/';
     });
+  }
+
+  authenticatedUserFullName(): string {
+    const storageUser = this.authService.getUser();
+    return storageUser.firstName + ' ' + storageUser.lastName;
   }
 
   private sleepFor(sleepDuration) {

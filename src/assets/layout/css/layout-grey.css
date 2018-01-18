@@ -630,8 +630,8 @@
       display: inline-block;
       vertical-align: middle;
       width: 200px;
-      height: 30px;
-      background: url("../images/logo.png") top left no-repeat; }
+      height: 50px;
+      background: url("../images/basis.png") top left no-repeat; }
     .landing-wrapper #header .header-top #menu {
       float: right;
       list-style: none;
@@ -899,7 +899,7 @@
       padding: 0; } }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .landing-wrapper .header .header-top .logo {
-    background: url("../images/logo2x.png") top left no-repeat;
+    background: url("../images/basis.png") top left no-repeat;
     background-size: 200px 30px; } }
 html {
   height: 100%; }
@@ -941,15 +941,15 @@ body {
     display: inline-block;
     vertical-align: middle;
     width: 200px;
-    height: 30px;
-    background: url("../images/logo2x.png") top left no-repeat;
-    background-size: 200px 30px; }
+    height: 60px;
+    background: url("../images/basis.png") top left no-repeat;
+    margin-left: 25px;
+    background-size: 200px 60px; }
   .layout-container .topbar .topbar-left {
     box-sizing: border-box;
-    padding: 20px;
     height: 75px;
     width: 250px;
-    background-color: #424242;
+    background-color: #DCDCDC;
     float: left;
     box-shadow: 3px 0 6px rgba(0, 0, 0, 0.3);
     -webkit-box-shadow: 3px 0 6px rgba(0, 0, 0, 0.3);
