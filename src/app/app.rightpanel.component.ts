@@ -6,7 +6,6 @@ declare var jQuery: any;
   selector: 'app-rightpanel',
   template: `
     <div class="layout-rightpanel" [ngClass]="{'layout-rightpanel-active': app.rightPanelActive}" (click)="app.onRightPanelClick()">
-      
     </div>
   `
 })
@@ -19,14 +18,10 @@ export class AppRightPanelComponent implements AfterViewInit, OnDestroy {
   constructor(public app: AppComponent) { }
 
   ngAfterViewInit() {
-    this.rightPanelMenuScroller = <HTMLDivElement>this.rightPanelMenuScrollerViewChild.nativeElement;
 
-    setTimeout(() => {
-      jQuery(this.rightPanelMenuScroller).nanoScroller({ flash: true });
-    }, 10);
   }
 
   ngOnDestroy() {
-    jQuery(this.rightPanelMenuScroller).nanoScroller({ flash: true });
+
   }
 }
