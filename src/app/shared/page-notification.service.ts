@@ -14,23 +14,23 @@ export class PageNotificationService {
     private readonly deleteMsg = 'Registro excluído com sucesso!';
 
     addCreateMsg(title?: string) {
-        this.addInfoMsg(this.createMsg, title);
+        this.addInfoMsg('success', this.createMsg, title);
     }
 
-    private addInfoMsg(msg: string, title?: string) {
+    private addInfoMsg(severity: string, msg: string, title?: string) {
         this.messageService.add({
-            severity: 'info',
+            severity: severity,
             summary: title,
             detail: msg
         });
     }
 
     addUpdateMsg(title?: string) {
-        this.addInfoMsg(this.updateMsg, title);
+        this.addInfoMsg('success', this.updateMsg, title);
     }
 
     addDeleteMsg(title?: string) {
-        this.addInfoMsg(this.deleteMsg, title);
+        this.addInfoMsg('success', this.deleteMsg, title);
     }
 
 }
