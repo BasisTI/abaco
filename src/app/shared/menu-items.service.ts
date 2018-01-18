@@ -11,7 +11,6 @@ export class MenuItemsService {
 
   get all(): MenuItem[] {
     return [
-      { label: 'Login', routerLink: 'login' },
       {
         label: 'Administração', icon: 'supervisor_account',
         visible: this.isLoggedAdmin(),
