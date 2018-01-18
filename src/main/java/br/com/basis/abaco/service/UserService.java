@@ -143,6 +143,42 @@ public class UserService {
 	}
 
 	/**
+	 * Copies (shallow) an User and then: 1 - Set language key if not present 2 -
+	 * Set a generated password 3 - Set a generated resetKey
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public User prepareUserToBeSaved(User user) {
+		User userCopy = shallowCopyUser(user);
+		String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+		userCopy.setPassword(encryptedPassword);
+		userCopy.setResetKey(RandomUtil.generateResetKey());
+		userCopy.setResetDate(ZonedDateTime.now());
+		return userCopy;
+	}
+
+	private User shallowCopyUser(User user) {
+		User copy = new User();
+		copy.setId(user.getId());
+		copy.setLogin(user.getLogin());
+		copy.setPassword(user.getPassword());
+		copy.setFirstName(user.getFirstName());
+		copy.setLastName(user.getLastName());
+		copy.setEmail(user.getEmail());
+		copy.setActivated(user.getActivated());
+		copy.setLangKey(user.getLangKey());
+		copy.setImageUrl(user.getImageUrl());
+		copy.setActivationKey(user.getActivationKey());
+		copy.setResetKey(user.getResetKey());
+		copy.setResetDate(user.getResetDate());
+		copy.setAuthorities(user.getAuthorities());
+		copy.setTipoEquipes(user.getTipoEquipes());
+		copy.setOrganizacoes(user.getOrganizacoes());
+		return copy;
+	}
+
+	/**
 	 * Update basic information (first name, last name, email, language) for the
 	 * current user.
 	 */

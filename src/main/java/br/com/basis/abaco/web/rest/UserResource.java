@@ -136,9 +136,10 @@ public class UserResource {
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "emailexists", "Email already in use"))
 					.body(null);
 		} else {
-			User newUser = userRepository.save(user);
-	        userSearchRepository.save(user);
-	        log.debug("Created Information for User: {}", user);
+			User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
+			User newUser = userRepository.save(userReadyToBeSaved);
+			userSearchRepository.save(newUser);
+			log.debug("Created Information for User: {}", user);
 			mailService.sendCreationEmail(newUser);
 			return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
 					.headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin())).body(newUser);
