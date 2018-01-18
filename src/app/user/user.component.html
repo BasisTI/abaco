@@ -35,7 +35,7 @@
             <p-column header="Login" field="login"></p-column>
             <p-column header="E-mail" field="email" 
               [style]="{'word-wrap':'break-word'}"></p-column>
-            <p-column header="Organização" field="organizacoes"
+            <p-column header="Organização"
               [style]="{'word-wrap':'break-word', 'width': '17.5%'}">
               <ng-template let-col let-row="rowData" pTemplate="body">
                 <li *ngFor="let org of row.organizacoes">
@@ -43,8 +43,12 @@
                 </li>
               </ng-template>
             </p-column>
-            <p-column header="Perfil" field="authorities">
-              
+            <p-column header="Perfil">
+              <ng-template let-col let-row="rowData" pTemplate="body">
+                <li *ngFor="let perfil of row.authorities">
+                  {{ perfil.name }}
+                </li>
+              </ng-template>
             </p-column>
             <p-column header="Equipe" field="tipoEquipes">
               
