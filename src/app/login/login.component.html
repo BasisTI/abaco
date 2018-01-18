@@ -1,26 +1,24 @@
-<div class="ui-g ui-fluid">
-  <div class="ui-g-12">
-    <div class="card card-w-title">
+<div class="ui-g ui-fluid" style="justify-content: center;">
+  <div class="ui-g-6">
+    <div class="card card-w-title login-panel">
       <form name="loginForm" role="form" (ngSubmit)="login()">
         <h1>Login</h1>
         <div class="ui-g" style="justify-content: center;">
-          <div class="ui-g-4" style="margin-bottom: 25px;">
+          <div class="ui-g-12" style="margin-bottom: 25px;">
             <span class="md-inputfield">
               <input type="text" name="username" [(ngModel)]="username" pInputText />
               <label>Usuário</label>
             </span>
           </div>
-          <div class="ui-g-4" style="margin-bottom: 25px;">
+          <div class="ui-g-12" style="margin-bottom: 25px;">
             <span class="md-inputfield">
               <input pPassword type="password" name="password" [(ngModel)]="password" [feedback]="false" />
               <label>Senha</label>
             </span>
           </div>
         </div>
-        <div class="ui-g ui-md-12" style="justify-content: center">
-          <div class="ui-g-2">
+        <div class="ui-g-12" style="justify-content: center">
             <button pButton type="submit" label="Login"></button>
-          </div>
         </div>
       </form>
     </div>
