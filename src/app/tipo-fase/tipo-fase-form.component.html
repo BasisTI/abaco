@@ -9,14 +9,16 @@
               <input type="text" name="nomeTipoFase" [(ngModel)]="tipoFase.nome" pInputText/>
               <label>Nome</label>
             </span>
-          </div>         
+          </div>
         </div>
         <div class="ui-g ui-md-12" style="justify-content: center">
           <div class="ui-g-2">
-            <button pButton type="button" label="Cancelar" routerLink="/tipoFase"></button>
+            <app-white-button buttonLabel="Cancelar" routerLink="/tipoFase"></app-white-button>
+            <!-- <button pButton type="button" label="Cancelar" routerLink="/tipoFase"></button> -->
           </div>
           <div class="ui-g-2">
-            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+            <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+            <!-- <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button> -->
           </div>
         </div>
       </form>
