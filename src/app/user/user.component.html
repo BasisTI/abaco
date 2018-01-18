@@ -50,8 +50,12 @@
                 </li>
               </ng-template>
             </p-column>
-            <p-column header="Equipe" field="tipoEquipes">
-              
+            <p-column header="Equipe">
+              <ng-template let-col let-row="rowData" pTemplate="body">
+                <li *ngFor="let equipe of row.tipoEquipes">
+                  {{ equipe.nome }}
+                </li>
+              </ng-template>
             </p-column>
             <p-column header="Ativo" field="activated" 
               [style]="{width:'5.5%'}">
