@@ -109,7 +109,7 @@
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Tipo de Fase</label>
-              <p-dropdown [options]="tipoFases" [(ngModel)]="newPhaseEffort.tipoFase" placeholder="Tipo de Fase" name="tipoFase" optionLabel="nome"></p-dropdown>
+              <p-dropdown autofocus="true" [options]="tipoFases" [(ngModel)]="newPhaseEffort.tipoFase" placeholder="Tipo de Fase" name="tipoFase" optionLabel="nome"></p-dropdown>
             </div>
           </div>
           <div class="ui-g">
@@ -121,7 +121,7 @@
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-md-3">
-                <button pButton type="button" label="Cancelar"></button>
+                <button pButton type="button" label="Cancelar" (click)="closeDialogPhaseEffort()"></button>
               </div>
               <div class="ui-md-3">
                 <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="addPhaseEffort()"></button>
@@ -136,19 +136,19 @@
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Tipo de Fase</label>
-              <p-dropdown [options]="tipoFases" [(ngModel)]="editedPhaseEffort.tipoFase" placeholder="Tipo de Fase" name="tipoFase" optionLabel="nome"></p-dropdown>
+              <p-dropdown [options]="tipoFases" [(ngModel)]="editedPhaseEffort.tipoFase" placeholder="Tipo de Fase" name="tipoFase" [autoWidth]="false"></p-dropdown>
             </div>
           </div>
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Esforço (%)</label>
-              <p-spinner size="30" name="percentual" [(ngModel)]="editedPhaseEffort.percentual" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <p-spinner name="percentual" [(ngModel)]="editedPhaseEffort.percentual" decimalSeparator="" thousandSeparator=""></p-spinner>
             </div>
           </div>
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-md-3">
-                <button pButton type="button" label="Cancelar"></button>
+                <button pButton type="button" (click)="closeDialogPhaseEffort()" label="Cancelar"></button>
               </div>
               <div class="ui-md-3">
                 <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="editPhaseEffort()"></button>
@@ -199,7 +199,7 @@
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-md-3">
-                <button pButton type="button" label="Cancelar"></button>
+                <button pButton type="button" label="Cancelar" (click)="closeDialogCreateAdjustFactor()"></button>
               </div>
               <div class="ui-md-3">
                 <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="addAdjustFactor()"></button>
@@ -242,7 +242,7 @@
             </div>
             <div class="ui-g-3">
               <label>Tipo Ajuste</label><br>
-              <p-dropdown #dd [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true"></p-dropdown>
+              <p-dropdown [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true"></p-dropdown>
               <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="editedAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
               <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
             </div>
@@ -250,7 +250,7 @@
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-md-3">
-                <button pButton type="button" label="Cancelar"></button>
+                <button pButton type="button" label="Cancelar" (click)="closeDialogEditAdjustFactor()"></button>
               </div>
               <div class="ui-md-3">
                 <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="editAdjustFactor()"></button>
