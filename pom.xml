@@ -92,6 +92,7 @@
         <sonar.sources>${project.basedir}/src/main/</sonar.sources>
         <sonar.surefire.reportsPath>${project.testresult.directory}/surefire-reports</sonar.surefire.reportsPath>
         <sonar.tests>${project.basedir}/src/test/</sonar.tests>
+        <sonar.language>java</sonar.language>
 
         <sortpom-maven-plugin.version>2.5.0</sortpom-maven-plugin.version>
         <!-- Spring properties -->
