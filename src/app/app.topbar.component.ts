@@ -24,22 +24,21 @@ import { AuthService } from '@basis/angular-components';
                 <ul class="topbar-items animated fadeInDown" [ngClass]="{'topbar-items-visible': app.topbarMenuActive}">
                     <li #login [ngClass]="{'active-top-menu':app.activeTopbarItem === login}">
 
-                        <a href="#" (click)="app.onTopbarItemClick($event,login)">
+                        <a href="#" (click)="app.onTopbarItemClick($event,login)"
+                          title="Entrar/Sair">
                             <i class="topbar-icon material-icons">power_settings_new</i>
                             <span class="topbar-item-name">Login/Logout</span>
                         </a>
 
                         <ul class="ultima-menu animated fadeInDown">
                             <li role="menuitem">
-                                <a href="#">
-                                    <i class="material-icons">palette</i>
-                                    <span>Change Theme</span>
+                                <a routerLink="/login">
+                                    <span>Entrar</span>
                                 </a>
                             </li>
                             <li role="menuitem">
-                                <a href="#">
-                                    <i class="material-icons">favorite_border</i>
-                                    <span>Favorites</span>
+                                <a href="#" (click)="logout()">
+                                    <span>Sair</span>
                                 </a>
                             </li>
                         </ul>
