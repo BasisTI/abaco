@@ -6,8 +6,8 @@ import { AppComponent } from './app.component';
   template: `
     <div class="footer">
         <div class="card clearfix">
-          <span class="footer-text-left">BASIS Tecnologia</span>
-          <span class="footer-text-right"><span class="ui-icon ui-icon-copyright"></span>  <span>All Rights Reserved</span></span>
+          <span class="footer-text-left">Basis Tecnologia S.A.</span>
+          <span class="footer-text-right"><span class="ui-icon ui-icon-copyright"></span>  <span>Todos os direitos reservados</span></span>
         </div>
     </div>
   `
