@@ -24,6 +24,7 @@ import {
   UserFormComponent,
   userRoute
 } from './';
+import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import {
     InputTextModule,
     DataTableModule,
     ConfirmDialogModule,
+    AbacoButtonsModule,
     MultiSelectModule
   ],
   declarations: [

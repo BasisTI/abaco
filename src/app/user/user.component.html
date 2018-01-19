@@ -6,7 +6,7 @@
           <div class="ui-g-12">
             <span class="md-inputfield">
               <input type="text" pInputText class="ui-inputtext"
-                name="filtroUser" 
+                name="filtroUser"
                 [(ngModel)]="elasticQuery.value"
                 (keyup.enter)="datatable.refresh(elasticQuery.query)"
                 #filter />
@@ -16,12 +16,12 @@
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: center">
               <div class="ui-md-2">
-                <button pButton type="button" label="Pesquisar" icon="ui-icon-search"
-                  (click)="datatable.refresh(elasticQuery.query)"></button>
+                <app-blue-button buttonLabel="Pesquisar" buttonIcon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></app-blue-button>
+                <!-- <button pButton type="button" label="Pesquisar" icon="ui-icon-search"
+                  (click)="datatable.refresh(elasticQuery.query)"></button> -->
               </div>
               <div class="ui-md-3">
-                <button pButton type="button" label="Novo Usuário" routerLink="/admin/user/new"
-                  icon="ui-icon-add"></button>
+                <app-green-button buttonLabel="Novo Usuário" routerLink="/admin/user/new" buttonIcon="ui-icon-add"></app-green-button>
               </div>
             </div>
         <div class="ui-g-12 ui-md-12" style="padding: 0;">
@@ -33,7 +33,7 @@
               </ng-template>
             </p-column>
             <p-column header="Login" field="login"></p-column>
-            <p-column header="E-mail" field="email" 
+            <p-column header="E-mail" field="email"
               [style]="{'word-wrap':'break-word'}"></p-column>
             <p-column header="Organização"
               [style]="{'word-wrap':'break-word', 'width': '17.5%'}">
@@ -57,7 +57,7 @@
                 </li>
               </ng-template>
             </p-column>
-            <p-column header="Ativo" field="activated" 
+            <p-column header="Ativo" field="activated"
               [style]="{width:'5.5%'}">
                 <ng-template let-col let-ativo="rowData" pTemplate="body">
                     {{ ativo[col.field] ? 'Sim' : (ativo[col.field] != null ? 'Não' : null) }}

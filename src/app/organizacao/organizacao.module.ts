@@ -27,6 +27,8 @@ import {
   organizacaoRoute
 } from './';
 
+import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -44,12 +46,13 @@ import {
     DataTableModule,
     DialogModule,
     MemoryDataTableModule,
-    CheckboxModule
+    CheckboxModule,
+    AbacoButtonsModule
   ],
   declarations: [
     OrganizacaoComponent,
     OrganizacaoDetailComponent,
-    OrganizacaoFormComponent
+    OrganizacaoFormComponent,
   ],
   providers: [
     OrganizacaoService,

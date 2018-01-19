@@ -37,15 +37,16 @@
           <div class="ui-g-6" style="margin-bottom: 25px">
             <label>Arquivo Manual</label>
             <span class="md-inputfield">
-              <input type="file" (change)="uploadFile($event)" name="arquivoManual" value="">
+              <input type="file" (change)="uploadFile($event)" name="arquivoManual" value="" required>
             </span>
           </div>
         </div>
         <div class="ui-g">
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-md-3">
-              <button pButton type="button" label="Novo Esforco Fase" icon="ui-icon-add"
-                (click)="openDialogPhaseEffort()"></button>
+              <app-green-button buttonLabel="Novo Esforco Fase" buttonIcon="ui-icon-add" (click)="openDialogPhaseEffort()"></app-green-button>
+              <!-- <button pButton type="button" label="Novo Esforco Fase" icon="ui-icon-add"
+                (click)="openDialogPhaseEffort()"></button> -->
             </div>
           </div>
         </div>
@@ -69,8 +70,9 @@
         <div class="ui-g">
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-md-3">
-              <button pButton type="button" label="Novo Fator de Ajuste" icon="ui-icon-add"
-                (click)="openDialogCreateAdjustFactor()"></button>
+              <app-green-button buttonLabel="Novo Fator de Ajuste" buttonIcon="ui-icon-add" (click)="openDialogCreateAdjustFactor()"></app-green-button>
+              <!-- <button pButton type="button" label="Novo Fator de Ajuste" icon="ui-icon-add"
+                (click)="openDialogCreateAdjustFactor()"></button> -->
             </div>
           </div>
         </div>
@@ -96,10 +98,12 @@
         </div>
         <div class="ui-g">
           <div class="ui-g-2">
-            <button pButton type="button" label="Cancelar" routerLink="/manual"></button>
+            <app-white-button buttonLabel="Cancelar" routerLink="/manual"></app-white-button>
+            <!-- <button pButton type="button" label="Cancelar" routerLink="/manual"></button> -->
           </div>
           <div class="ui-g-2">
-            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+            <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+            <!-- <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button> -->
           </div>
         </div>
 
@@ -121,10 +125,12 @@
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-md-3">
-                <button pButton type="button" label="Cancelar" (click)="closeDialogPhaseEffort()"></button>
+                <app-white-button buttonLabel="Cancelar" (click)="closeDialogPhaseEffort()" ></app-white-button>
+                <!-- <button pButton type="button" label="Cancelar" (click)="closeDialogPhaseEffort()"></button> -->
               </div>
               <div class="ui-md-3">
-                <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="addPhaseEffort()"></button>
+                <app-green-button buttonLabel="Salvar" buttonIcon="ui-icon-add" (click)="addPhaseEffort()"></app-green-button>
+                <!-- <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="addPhaseEffort()"></button> -->
               </div>
             </div>
           </div>
@@ -148,10 +154,12 @@
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-md-3">
-                <button pButton type="button" (click)="closeDialogPhaseEffort()" label="Cancelar"></button>
+                <app-white-button buttonLabel="Cancelar" (click)="closeDialogEditPhaseEffort()"></app-white-button>
+                <!-- <button pButton type="button" (click)="closeDialogEditPhaseEffort()" label="Cancelar"></button> -->
               </div>
               <div class="ui-md-3">
-                <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="editPhaseEffort()"></button>
+                <app-green-button buttonLabel="Salvar" buttonIcon="ui-icon-add" (click)="editPhaseEffort()"></app-green-button>
+                <!-- <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="editPhaseEffort()"></button> -->
               </div>
             </div>
           </div>
@@ -199,10 +207,12 @@
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-md-3">
-                <button pButton type="button" label="Cancelar" (click)="closeDialogCreateAdjustFactor()"></button>
+                <app-white-button buttonLabel="Cancelar" (click)="closeDialogCreateAdjustFactor()"></app-white-button>
+                <!-- <button pButton type="button" label="Cancelar" (click)="closeDialogCreateAdjustFactor()"></button> -->
               </div>
               <div class="ui-md-3">
-                <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="addAdjustFactor()"></button>
+                <app-green-button buttonLabel="Salvar" buttonIcon="ui-icon-add" (click)="addAdjustFactor()"></app-green-button>
+                <!-- <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="addAdjustFactor()"></button> -->
               </div>
             </div>
           </div>
@@ -250,10 +260,12 @@
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-md-3">
-                <button pButton type="button" label="Cancelar" (click)="closeDialogEditAdjustFactor()"></button>
+                <app-white-button buttonLabel="Cancelar" (click)="closeDialogEditAdjustFactor()"></app-white-button>
+                <!-- <button pButton type="button" label="Cancelar" (click)="closeDialogEditAdjustFactor()"></button> -->
               </div>
               <div class="ui-md-3">
-                <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="editAdjustFactor()"></button>
+                <app-green-button buttonLabel="Salvar" buttonIcon="ui-icon-add" (click)="editAdjustFactor()"></app-green-button>
+                <!-- <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="editAdjustFactor()"></button> -->
               </div>
             </div>
           </div>

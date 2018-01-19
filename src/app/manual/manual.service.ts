@@ -25,7 +25,6 @@ export class ManualService {
 
     return this.uploadService.uploadFile(arquivoManual).map(response => {
       copy.arquivoManualId = JSON.parse(response["_body"]).id;
-      alert(JSON.stringify(copy));
 
       this.http.post(this.resourceUrl, copy).map((res: Response) => {
         const jsonResponse = res.json();

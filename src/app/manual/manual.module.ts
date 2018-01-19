@@ -30,6 +30,7 @@ import {
 
 import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
 import { ActiveBooleanPipe } from '../shared/active-boolean.pipe';
+import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
 
 @NgModule({
   imports: [
@@ -48,12 +49,13 @@ import { ActiveBooleanPipe } from '../shared/active-boolean.pipe';
     DialogModule,
     ConfirmDialogModule,
     MemoryDataTableModule,
+    AbacoButtonsModule
   ],
   declarations: [
     ManualComponent,
     ManualDetailComponent,
     ManualFormComponent,
-    ActiveBooleanPipe
+    ActiveBooleanPipe,
   ],
   providers: [
     ManualService,

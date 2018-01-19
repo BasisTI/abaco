@@ -53,6 +53,7 @@ import { LoginModule } from './login/login.module';
 import { environment } from '../environments/environment';
 import { MenuItemsService } from './shared/menu-items.service';
 import { AdminGuard } from './admin.guard';
+
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({

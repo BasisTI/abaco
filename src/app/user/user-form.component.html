@@ -80,15 +80,17 @@
             selectedItemsLabel="{0} equipes selecionadas">
           </p-multiSelect>
         </div>
-        
+
       </div>
-        
+
         <div class="ui-g" style="justify-content: center; margin-top: 25px;">
           <div class="ui-g-2">
-            <button pButton type="button" label="Cancelar" routerLink="/admin/user"></button>
+            <app-white-button buttonLabel="Cancelar" routerLink="/admin/user"></app-white-button>
+            <!-- <button pButton type="button" label="Cancelar" routerLink="/admin/user"></button> -->
           </div>
           <div class="ui-g-2">
-            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+            <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+            <!-- <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button> -->
           </div>
         </div>
 

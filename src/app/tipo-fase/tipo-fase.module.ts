@@ -23,6 +23,8 @@ import {
   tipoFaseRoute
 } from './';
 
+import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -37,6 +39,7 @@ import {
     RadioButtonModule,
     InputTextModule,
     ConfirmDialogModule,
+    AbacoButtonsModule
   ],
   declarations: [
     TipoFaseComponent,
