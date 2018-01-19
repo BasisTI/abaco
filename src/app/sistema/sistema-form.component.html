@@ -4,7 +4,7 @@
       <h1>{{ sistema.id ? 'Editar Sistema' : 'Cadastrar Sistema' }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm"
         (keydown.enter)="$event.preventDefault()">
-        <div class="ui-g">         
+        <div class="ui-g">
           <div class="ui-g-2" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" name="siglaSistema" [(ngModel)]="sistema.sigla" pInputText/>
@@ -37,12 +37,13 @@
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-md-3">
-              <button pButton type="button" label="Novo Módulo" icon="ui-icon-add"
-                (click)="abrirDialogModulo()"></button>
+              <app-green-button buttonLabel="Novo Módulo" buttonIcon="ui-icon-add" (click)="abrirDialogModulo()"></app-green-button>
+              <!-- <button pButton type="button" label="Novo Módulo" icon="ui-icon-add"
+                (click)="abrirDialogModulo()"></button> -->
             </div>
           </div>
 
-          <!-- Datatable modulos -->        
+          <!-- Datatable modulos -->
           <app-memory-datatable [value]="sistema.modulos"
             [editEventName]="editModuloEventName"
             [deleteEventName]="deleteModuloEventName"
@@ -66,14 +67,15 @@
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-md-3">
-              <button pButton type="button" label="Nova Funcionalidade"
+              <app-green-button buttonLabel="Nova Funcionalidade" buttonIcon="ui-icon-add" (click)="abrirDialogFuncionalidade()" [disabled]="!sistema.modulos || sistema.modulos.length == 0"></app-green-button>
+              <!-- <button pButton type="button" label="Nova Funcionalidade"
                 icon="ui-icon-add" (click)="abrirDialogFuncionalidade()"
                 [disabled]="!sistema.modulos || sistema.modulos.length == 0">
-              </button>
+              </button> -->
             </div>
           </div>
 
-          <!-- Datatable Funcionalidades -->        
+          <!-- Datatable Funcionalidades -->
           <app-memory-datatable [value]="sistema.funcionalidades"
             [editEventName]="editFuncionalidadeEventName"
             [deleteEventName]="deleteFuncionalidadeEventName"
@@ -86,10 +88,12 @@
         <!-- Botões salvar e cancelar do fim da página -->
         <div class="ui-g" style="justify-content: center; margin-top: 25px;">
           <div class="ui-g-2">
-            <button pButton type="button" label="Cancelar" routerLink="/sistema"></button>
+            <app-white-button buttonLabel="Cancelar" routerLink="/sistema"></app-white-button>
+            <!-- <button pButton type="button" label="Cancelar" routerLink="/sistema"></button> -->
           </div>
           <div class="ui-g-2">
-            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+            <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+            <!-- <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button> -->
           </div>
         </div>
 
@@ -108,12 +112,14 @@
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2">
-              <button pButton type="button" label="Cancelar"
-                (click)="fecharDialogModulo()"></button>
+              <app-white-button buttonLabel="Cancelar" (click)="fecharDialogModulo()"></app-white-button>
+              <!-- <button pButton type="button" label="Cancelar"
+                (click)="fecharDialogModulo()"></button> -->
             </div>
             <div class="ui-g-2">
-              <button pButton type="button" label="Salvar" 
-                (click)="adicionarModulo()"></button>
+              <app-green-button buttonLabel="Salvar" (click)="adicionarModulo()"></app-green-button>
+              <!-- <button pButton type="button" label="Salvar"
+                (click)="adicionarModulo()"></button> -->
             </div>
           </div>
         </p-dialog>
@@ -133,12 +139,14 @@
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2">
-              <button pButton type="button" label="Cancelar"
-                (click)="fecharDialogEditarModulo()"></button>
+              <app-white-button buttonLabel="Cancelar" (click)="fecharDialogEditarModulo()"></app-white-button>
+              <!-- <button pButton type="button" label="Cancelar"
+                (click)="fecharDialogEditarModulo()"></button> -->
             </div>
             <div class="ui-g-2">
-              <button pButton type="button" label="Salvar" 
-                (click)="editarModulo()"></button>
+              <app-green-button buttonLabel="Salvar" (click)="editarModulo()"></app-green-button>
+              <!-- <button pButton type="button" label="Salvar"
+                (click)="editarModulo()"></button> -->
             </div>
           </div>
         </p-dialog>
@@ -157,15 +165,15 @@
           <div class="ui-g">
             <div class="ui-g-12" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="text" name="nomeFuncionalidade" 
+                <input type="text" name="nomeFuncionalidade"
                   [(ngModel)]="novaFuncionalidade.nome" pInputText />
                 <label>Nome da Funcionalidade</label>
               </span>
             </div>
             <div class="ui-g-12" style="margin-bottom: 25px">
-              <p-dropdown [options]="sistema.modulos" optionLabel="nome" 
+              <p-dropdown [options]="sistema.modulos" optionLabel="nome"
                 placeholder="Módulo" name="funcionalidadeModulo"
-                [(ngModel)]="novaFuncionalidade.modulo" [autoWidth]="false" 
+                [(ngModel)]="novaFuncionalidade.modulo" [autoWidth]="false"
                 dataKey="id">
               </p-dropdown>
             </div>
@@ -173,12 +181,14 @@
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2">
-              <button pButton type="button" label="Cancelar"
-                (click)="fecharDialogFuncionalidade()"></button>
+              <app-white-button buttonLabel="Cancelar" (click)="fecharDialogFuncionalidade()"></app-white-button>
+              <!-- <button pButton type="button" label="Cancelar"
+                (click)="fecharDialogFuncionalidade()"></button> -->
             </div>
             <div class="ui-g-2">
-              <button pButton type="button" label="Salvar" 
-                (click)="adicionarFuncionalidade()"></button>
+              <app-green-button buttonLabel="Salvar" (click)="adicionarFuncionalidade()"></app-green-button>
+              <!-- <button pButton type="button" label="Salvar"
+                (click)="adicionarFuncionalidade()"></button> -->
             </div>
           </div>
         </p-dialog>
@@ -189,15 +199,15 @@
           <div class="ui-g">
             <div class="ui-g-12" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="text" name="nomeFuncionalidade" 
+                <input type="text" name="nomeFuncionalidade"
                   [(ngModel)]="funcionalidadeEmEdicao.nome" pInputText />
                 <label>Nome da Funcionalidade</label>
               </span>
             </div>
             <div class="ui-g-12" style="margin-bottom: 25px">
-              <p-dropdown [options]="sistema.modulos" optionLabel="nome" 
+              <p-dropdown [options]="sistema.modulos" optionLabel="nome"
                 placeholder="Módulo" name="funcionalidadeModulo"
-                [(ngModel)]="funcionalidadeEmEdicao.modulo" [autoWidth]="false" 
+                [(ngModel)]="funcionalidadeEmEdicao.modulo" [autoWidth]="false"
                 dataKey="id">
               </p-dropdown>
             </div>
@@ -205,12 +215,14 @@
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2">
-              <button pButton type="button" label="Cancelar"
-                (click)="fecharDialogEditarFuncionalidade()"></button>
+              <app-white-button buttonLabel="Cancelar" (click)="fecharDialogEditarFuncionalidade()"></app-white-button>
+              <!-- <button pButton type="button" label="Cancelar"
+                (click)="fecharDialogEditarFuncionalidade()"></button> -->
             </div>
             <div class="ui-g-2">
-              <button pButton type="button" label="Salvar" 
-                (click)="editarFuncionalidade()"></button>
+              <app-green-button buttonLabel="Salvar" (click)="editarFuncionalidade()"></app-green-button>
+              <!-- <button pButton type="button" label="Salvar"
+                (click)="editarFuncionalidade()"></button> -->
             </div>
           </div>
         </p-dialog>

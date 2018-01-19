@@ -57,8 +57,9 @@
 
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-md-3">
-                <button pButton type="button" label="Novo Contrato" icon="ui-icon-add"
-                  (click)="abrirDialogCadastroContrato()"></button>
+                <app-green-button buttonLabel="Novo Contrato" buttonIcon="ui-icon-add" (click)="abrirDialogCadastroContrato()"></app-green-button>
+                <!-- <button pButton type="button" label="Novo Contrato" icon="ui-icon-add"
+                  (click)="abrirDialogCadastroContrato()"></button> -->
               </div>
             </div>
 
@@ -87,12 +88,12 @@
 
         <div class="ui-g" style="justify-content: center; margin-top: 25px;">
           <div class="ui-g-2">
-            <button pButton type="button" label="Cancelar" routerLink="/organizacao"></button>
+            <app-white-button buttonLabel="Cancelar" routerLink="/organizacao"></app-white-button>
+            <!-- <button pButton type="button" label="Cancelar" routerLink="/organizacao"></button> -->
           </div>
           <div class="ui-g-2">
-            <button pButton type="submit" label="Salvar"
-              (click)="save()"
-              [disabled]="editForm.form.invalid || isSaving" ></button>
+            <app-submit-button buttonLabel="Salvar" (click)="save()" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+            <!-- <button pButton type="submit" label="Salvar" (click)="save()" [disabled]="editForm.form.invalid || isSaving" ></button> -->
           </div>
         </div>
 
@@ -146,12 +147,14 @@
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2">
-              <button pButton type="button" label="Cancelar"
-                (click)="fecharDialogCadastroContrato()"></button>
+              <app-white-button buttonLabel="Cancelar" (click)="fecharDialogCadastroContrato()"></app-white-button>
+              <!-- <button pButton type="button" label="Cancelar"
+                (click)="fecharDialogCadastroContrato()"></button> -->
             </div>
             <div class="ui-g-2">
-              <button pButton type="button" label="Salvar"
-                (click)="adicionarContrato()"></button>
+              <app-green-button buttonLabel="Salvar" (click)="adicionarContrato()"></app-green-button>
+              <!-- <button pButton type="button" label="Salvar"
+                (click)="adicionarContrato()"></button> -->
             </div>
           </div>
         </p-dialog>
@@ -210,12 +213,14 @@
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2">
-              <button pButton type="button" label="Cancelar"
-                (click)="fecharDialogEditarContrato()"></button>
+              <app-white-button buttonLabel="Cancelar" (click)="fecharDialogEditarContrato()"></app-white-button>
+              <!-- <button pButton type="button" label="Cancelar"
+                (click)="fecharDialogEditarContrato()"></button> -->
             </div>
             <div class="ui-g-2">
-              <button pButton type="button" label="Salvar"
-                (click)="editarContrato()"></button>
+              <app-green-button buttonLabel="Salvar" (click)="editarContrato()"></app-green-button>
+              <!-- <button pButton type="button" label="Salvar"
+                (click)="editarContrato()"></button> -->
             </div>
           </div>
         </p-dialog>

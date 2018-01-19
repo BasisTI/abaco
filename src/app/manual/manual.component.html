@@ -13,11 +13,11 @@
         </div>
         <div class="ui-g ui-md-12" style="justify-content: center">
           <div class="ui-md-2">
-            <app-green-button buttonLabel="Pesquisar" buttonIcon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></app-green-button>
+            <app-blue-button buttonLabel="Pesquisar" buttonIcon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></app-blue-button>
             <!-- <button pButton type="button" label="Pesquisar" icon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></button> -->
           </div>
           <div class="ui-md-3">
-            <app-blue-button buttonLabel="Novo Manual" buttonIcon="ui-icon-add" routerLink="/manual/new"></app-blue-button>
+            <app-green-button buttonLabel="Novo Manual" buttonIcon="ui-icon-add" routerLink="/manual/new"></app-green-button>
             <!-- <button pButton type="button" label="Novo Manual" routerLink="/manual/new" icon="ui-icon-add"></button> -->
           </div>
         </div>
@@ -38,7 +38,7 @@
   <p-footer>
     <app-white-button buttonLabel="Não" buttonIcon="fa-close" (click)="dialog.reject()"></app-white-button>
     <!-- <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button> -->
-    <app-blue-button buttonLabel="Sim" buttonIcon="fa-close" (click)="dialog.accept()"></app-blue-button>
+    <app-green-button buttonLabel="Sim" buttonIcon="fa-close" (click)="dialog.accept()"></app-green-button>
     <!-- <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button> -->
   </p-footer>
 </p-confirmDialog>
