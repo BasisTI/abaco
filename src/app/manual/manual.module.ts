@@ -17,7 +17,8 @@ import {
   ConfirmDialogModule,
   ConfirmationService,
   InputTextareaModule,
-  SelectButtonModule
+  SelectButtonModule,
+  FileUploadModule
 } from 'primeng/primeng';
 
 import {
@@ -46,6 +47,7 @@ import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
     DropdownModule,
     RadioButtonModule,
     InputTextModule,
+    FileUploadModule,
     DialogModule,
     ConfirmDialogModule,
     MemoryDataTableModule,

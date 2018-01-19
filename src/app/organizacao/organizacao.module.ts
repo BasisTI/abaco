@@ -16,7 +16,8 @@ import {
   ConfirmationService,
   DataTableModule,
   DialogModule,
-  CheckboxModule
+  CheckboxModule,
+  FileUploadModule,
 } from 'primeng/primeng';
 
 import {
@@ -47,6 +48,7 @@ import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
     DialogModule,
     MemoryDataTableModule,
     CheckboxModule,
+    FileUploadModule,
     AbacoButtonsModule
   ],
   declarations: [
