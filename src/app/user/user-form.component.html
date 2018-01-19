@@ -45,22 +45,30 @@
           </div>
 
           <div class="ui-g-6" style="margin-bottom: 25px">
-            <p-dataTable [value]="authorities" [(selection)]="user.authorities" dataKey="name"
+            <!-- <p-dataTable [value]="authorities" [(selection)]="user.authorities" dataKey="name"
               [paginator]="true" [rows]="5" [headerCheckboxToggleAllPages]="true">
               <p-header>Perfil</p-header>
               <p-column selectionMode="multiple"
                 [style]="{'width':'15%'}"></p-column>
               <p-column header="Nome" field="name"></p-column>
-            </p-dataTable>
-            <!-- <h3 class="first">Perfil</h3>
-            <p-multiSelect name="authoritiesMultiselect" [options]="authorities"
+            </p-dataTable> -->
+
+            <!-- <p-multiSelect name="authoritiesMultiselect" [options]="authorities"
               [(ngModel)]="user.authorities" maxSelectedLabels=5
               defaultLabel="Selecione ao menos um"
               dataKey="name">
-                <ng-template let-item pTemplate="item">
-                  {{ item.name }}
-                </ng-template>
+              <ng-template let-item pTemplate="item">
+                {{ item.name }}
+              </ng-template>
             </p-multiSelect> -->
+            
+            <h3 class="first">Perfil</h3>
+            <p-multiSelect name="authoritiesMultiselect"
+              defaultLabel="Seleciona ao menos um"
+              [options]="authoritiesSelectItems"
+              [(ngModel)]="selectedAuthorities"
+              selectedItemsLabel="{0} perfis selecionados"></p-multiSelect>
+
           </div>
 
           <div class="ui-g-6" style="margin-bottom: 25px">

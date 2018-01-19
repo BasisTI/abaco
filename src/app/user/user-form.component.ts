@@ -11,6 +11,8 @@ import { Organizacao, OrganizacaoService } from '../organizacao';
 import { ResponseWrapper } from '../shared';
 import { Authority } from './authority.model';
 
+import * as _ from 'lodash';
+
 @Component({
   selector: 'jhi-user-form',
   templateUrl: './user-form.component.html'
@@ -20,6 +22,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
   tipoEquipes: TipoEquipe[];
   organizacoes: Organizacao[];
   authorities: Authority[];
+  authoritiesSelectItems: SelectItem[] = [];
+  selectedAuthorities: SelectItem[] = [];
   user: User;
   isSaving: boolean;
   private routeSub: Subscription;
@@ -30,7 +34,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private tipoEquipeService: TipoEquipeService,
     private organizacaoService: OrganizacaoService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isSaving = false;
@@ -42,13 +46,35 @@ export class UserFormComponent implements OnInit, OnDestroy {
     });
     this.userService.authorities().subscribe((res: Authority[]) => {
       this.authorities = res;
+      this.populateAuthoritiesSelectItems(this.authorities);
     });
     this.routeSub = this.route.params.subscribe(params => {
       this.user = new User();
       if (params['id']) {
-        this.userService.find(params['id']).subscribe(user => this.user = user);
+        this.userService.find(params['id']).subscribe(user => {
+          this.user = user;
+          this.populateSelectedAuthorities(user.authorities);
+        });
       }
     });
+  }
+
+  private populateAuthoritiesSelectItems(authorities: Authority[]) {
+    authorities.forEach((authority, index) => {
+      const authoritySelectItem = {
+        label: authority.name,
+        value: { id: index }
+      };
+      this.authoritiesSelectItems.push(authoritySelectItem);
+    });
+  }
+
+  private populateSelectedAuthorities(userAuthorities: Authority[]) {
+    const userAuthoritiesNames = userAuthorities.map(a => a.name);
+    this.selectedAuthorities = _.filter(this.authoritiesSelectItems, authSelectItem => {
+      return userAuthoritiesNames.includes(authSelectItem.label);
+    });
+    console.log(this.selectedAuthorities);
   }
 
   save() {
