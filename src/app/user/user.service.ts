@@ -17,7 +17,7 @@ export class UserService {
 
   searchUrl = environment.apiUrl + '/_search/users';
 
-  constructor(private http: HttpService) {}
+  constructor(private http: HttpService) { }
 
   create(user: User): Observable<User> {
     const copy = this.convert(user);
@@ -57,8 +57,8 @@ export class UserService {
       .map(res => {
         return res.json().map(item => {
           return new Authority(item.name);
+        });
       });
-    });
   }
 
   private convertResponse(res: Response): ResponseWrapper {
@@ -75,7 +75,17 @@ export class UserService {
    */
   private convertItemFromServer(json: any): User {
     const entity: User = Object.assign(new User(), json);
+    entity.authorities = this.generateAuthorities(json);
     return entity;
+  }
+
+  // TODO User implements JSONable
+  private generateAuthorities(json: any) {
+    let authorities: Authority[] = [];
+    if (json.authorities) {
+      authorities = json.authorities.map(a => new Authority(a.name));
+    }
+    return authorities;
   }
 
   /**
