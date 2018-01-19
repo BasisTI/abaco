@@ -22,8 +22,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
   tipoEquipes: TipoEquipe[];
   organizacoes: Organizacao[];
   authorities: Authority[];
-  authoritiesSelectItems: SelectItem[] = [];
-  selectedAuthorities: SelectItem[] = [];
   user: User;
   isSaving: boolean;
   private routeSub: Subscription;
@@ -46,35 +44,38 @@ export class UserFormComponent implements OnInit, OnDestroy {
     });
     this.userService.authorities().subscribe((res: Authority[]) => {
       this.authorities = res;
-      this.populateAuthoritiesSelectItems(this.authorities);
+      this.populateAuthoritiesArtificialIds();
     });
     this.routeSub = this.route.params.subscribe(params => {
       this.user = new User();
       if (params['id']) {
         this.userService.find(params['id']).subscribe(user => {
           this.user = user;
-          this.populateSelectedAuthorities(user.authorities);
+          this.populateUserAuthoritiesWithArtificialId();
         });
       }
     });
   }
 
-  private populateAuthoritiesSelectItems(authorities: Authority[]) {
-    authorities.forEach((authority, index) => {
-      const authoritySelectItem = {
-        label: authority.name,
-        value: { id: index }
-      };
-      this.authoritiesSelectItems.push(authoritySelectItem);
+  // FIXME parte da solução rápida e ruim, porém dinâmica
+  // Horrível para muitas permissões
+  private populateAuthoritiesArtificialIds() {
+    this.authorities.forEach((authority, index) => {
+      authority.artificialId = index;
     });
   }
 
-  private populateSelectedAuthorities(userAuthorities: Authority[]) {
-    const userAuthoritiesNames = userAuthorities.map(a => a.name);
-    this.selectedAuthorities = _.filter(this.authoritiesSelectItems, authSelectItem => {
-      return userAuthoritiesNames.includes(authSelectItem.label);
+  // FIXME Solução rápida e ruim. O(n^2) no pior caso
+  // Funciona para qualquer autoridade que vier no banco
+  // // Em oposição a uma solução mais simples porém hardcoded.
+  private populateUserAuthoritiesWithArtificialId() {
+    this.user.authorities.forEach(authority => {
+      this.authorities.forEach(userAuthority => {
+        if (authority.name === userAuthority.name) {
+          userAuthority.artificialId = authority.artificialId;
+        }
+      });
     });
-    console.log(this.selectedAuthorities);
   }
 
   save() {
