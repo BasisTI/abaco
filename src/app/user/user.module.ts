@@ -13,7 +13,8 @@ import {
   RadioButtonModule,
   ConfirmDialogModule,
   DataTableModule,
-  ConfirmationService
+  ConfirmationService,
+  MultiSelectModule
 } from 'primeng/primeng';
 
 import {
@@ -40,7 +41,8 @@ import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
     InputTextModule,
     DataTableModule,
     ConfirmDialogModule,
-    AbacoButtonsModule
+    AbacoButtonsModule,
+    MultiSelectModule
   ],
   declarations: [
     UserComponent,

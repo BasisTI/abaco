@@ -11,6 +11,8 @@ import { Organizacao, OrganizacaoService } from '../organizacao';
 import { ResponseWrapper } from '../shared';
 import { Authority } from './authority.model';
 
+import * as _ from 'lodash';
+
 @Component({
   selector: 'jhi-user-form',
   templateUrl: './user-form.component.html'
@@ -30,7 +32,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private tipoEquipeService: TipoEquipeService,
     private organizacaoService: OrganizacaoService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isSaving = false;
@@ -42,12 +44,37 @@ export class UserFormComponent implements OnInit, OnDestroy {
     });
     this.userService.authorities().subscribe((res: Authority[]) => {
       this.authorities = res;
+      this.populateAuthoritiesArtificialIds();
     });
     this.routeSub = this.route.params.subscribe(params => {
       this.user = new User();
       if (params['id']) {
-        this.userService.find(params['id']).subscribe(user => this.user = user);
+        this.userService.find(params['id']).subscribe(user => {
+          this.user = user;
+          this.populateUserAuthoritiesWithArtificialId();
+        });
       }
+    });
+  }
+
+  // FIXME parte da solução rápida e ruim, porém dinâmica
+  // Horrível para muitas permissões
+  private populateAuthoritiesArtificialIds() {
+    this.authorities.forEach((authority, index) => {
+      authority.artificialId = index;
+    });
+  }
+
+  // FIXME Solução rápida e ruim. O(n^2) no pior caso
+  // Funciona para qualquer autoridade que vier no banco
+  // // Em oposição a uma solução mais simples porém hardcoded.
+  private populateUserAuthoritiesWithArtificialId() {
+    this.user.authorities.forEach(authority => {
+      this.authorities.forEach(userAuthority => {
+        if (authority.name === userAuthority.name) {
+          userAuthority.artificialId = authority.artificialId;
+        }
+      });
     });
   }
 

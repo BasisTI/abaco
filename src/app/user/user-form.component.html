@@ -45,35 +45,33 @@
           </div>
 
           <div class="ui-g-6" style="margin-bottom: 25px">
-            <p-dataTable [value]="authorities" [(selection)]="user.authorities" dataKey="name"
-              [paginator]="true" [rows]="5" [headerCheckboxToggleAllPages]="true">
-              <p-header>Perfil</p-header>
-              <p-column selectionMode="multiple"
-                [style]="{'width':'15%'}"></p-column>
-              <p-column header="Nome" field="name"></p-column>
-            </p-dataTable>
+            <h3 class="first">Perfil</h3>
+            <p-multiSelect name="authoritiesMultiselect2"
+              defaultLabel="Selecione ao menos um perfil"
+              [options]="authorities"
+              [(ngModel)]="user.authorities"
+              dataKey="artificialId"
+              optionLabel="name"
+              selectedItemsLabel="{0} perfis selecionados"></p-multiSelect>
+
           </div>
 
           <div class="ui-g-6" style="margin-bottom: 25px">
-            <p-dataTable [value]="organizacoes" [(selection)]="user.organizacoes" dataKey="id"
-              [paginator]="true" [rows]="5" [headerCheckboxToggleAllPages]="true">
-              <p-header>Organização</p-header>
-              <p-column selectionMode="multiple"
-                [style]="{'width':'15%'}"></p-column>
-              <p-column header="Sigla" field="sigla"
-                [style]="{'width':'30%'}"></p-column>
-              <p-column header="Nome" field="nome"></p-column>
-            </p-dataTable>
+            <h3 class="first">Organização</h3>
+            <p-multiSelect name="organizacoesMultiSelect" [options]="organizacoes"
+              [(ngModel)]="user.organizacoes" dataKey="id"
+              defaultLabel="Selecione ao menos uma organização" optionLabel="nome"
+              selectedItemsLabel="{0} organizações selecionadas">
+            </p-multiSelect>
           </div>
 
         <div class="ui-g-6" style="margin-bottom: 25px">
-          <p-dataTable [value]="tipoEquipes" [(selection)]="user.tipoEquipes" dataKey="id"
-            [paginator]="true" [rows]="5" [headerCheckboxToggleAllPages]="true">
-            <p-header>Equipe</p-header>
-            <p-column selectionMode="multiple"
-              [style]="{'width':'15%'}"></p-column>
-            <p-column header="Nome" field="nome"></p-column>
-          </p-dataTable>
+          <h3 class="first">Equipe</h3>
+          <p-multiSelect name="equipesMultiSelect" [options]="tipoEquipes"
+            [(ngModel)]="user.tipoEquipes" dataKey="id"
+            defaultLabel="Selecione ao menos uma equipe" optionLabel="nome"
+            selectedItemsLabel="{0} equipes selecionadas">
+          </p-multiSelect>
         </div>
 
       </div>

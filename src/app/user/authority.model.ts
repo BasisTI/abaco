@@ -1,6 +1,7 @@
 export class Authority {
     constructor(
-        public name?: String,
-    ) {}
+        public name?: string,
+        public artificialId?: number,
+    ) { }
 
 }
