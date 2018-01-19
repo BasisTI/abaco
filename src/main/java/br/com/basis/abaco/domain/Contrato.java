@@ -57,7 +57,7 @@ public class Contrato implements Serializable {
 	private Organizacao organization;
 
 	@NotNull
-	@Column(name = "ativo", nullable = false)
+	@Column(name = "ativo", nullable = true)
 	private Boolean ativo;
 
 	public Long getId() {
