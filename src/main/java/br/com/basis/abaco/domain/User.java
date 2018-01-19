@@ -11,6 +11,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -101,11 +102,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
 	@BatchSize(size = 20)
 	private Set<Authority> authorities = new HashSet<>();
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_tipo_equipe", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "tipo_equipe_id", referencedColumnName = "id"))
 	private Set<TipoEquipe> tipoEquipes = new HashSet<>();
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_organizacao", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
 	private Set<Organizacao> organizacoes = new HashSet<>();
 

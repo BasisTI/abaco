@@ -1,21 +1,14 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.config.Constants;
-import br.com.basis.abaco.domain.Authority;
-import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.repository.AuthorityRepository;
-import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.search.UserSearchRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
-import br.com.basis.abaco.service.MailService;
-import br.com.basis.abaco.service.UserService;
-import br.com.basis.abaco.service.dto.UserDTO;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.abaco.web.rest.vm.ManagedUserVM;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
-import io.swagger.annotations.ApiParam;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -34,14 +27,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.config.Constants;
+import br.com.basis.abaco.domain.Authority;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.repository.AuthorityRepository;
+import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.search.UserSearchRepository;
+import br.com.basis.abaco.security.AuthoritiesConstants;
+import br.com.basis.abaco.service.MailService;
+import br.com.basis.abaco.service.UserService;
+import br.com.basis.abaco.service.dto.UserDTO;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing users.
@@ -112,7 +113,7 @@ public class UserResource {
 	 * mail with an activation link. The user needs to be activated on creation.
 	 * </p>
 	 *
-	 * @param managedUserVM
+	 * @param user
 	 *            the user to create
 	 * @return the ResponseEntity with status 201 (Created) and with body the new
 	 *         user, or with status 400 (Bad Request) if the login or email is
@@ -123,20 +124,23 @@ public class UserResource {
 	@PostMapping("/users")
 	@Timed
 	@Secured(AuthoritiesConstants.ADMIN)
-	public ResponseEntity createUser(@RequestBody ManagedUserVM managedUserVM) throws URISyntaxException {
-		log.debug("REST request to save User : {}", managedUserVM);
+	public ResponseEntity createUser(@RequestBody User user) throws URISyntaxException {
+		log.debug("REST request to save User : {}", user);
 
 		// Lowercase the user login before comparing with database
-		if (userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase()).isPresent()) {
+		if (userRepository.findOneByLogin(user.getLogin().toLowerCase()).isPresent()) {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "userexists", "Login already in use"))
 					.body(null);
-		} else if (userRepository.findOneByEmail(managedUserVM.getEmail()).isPresent()) {
+		} else if (userRepository.findOneByEmail(user.getEmail()).isPresent()) {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "emailexists", "Email already in use"))
 					.body(null);
 		} else {
-			User newUser = userService.createUser(managedUserVM);
+			User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
+			User newUser = userRepository.save(userReadyToBeSaved);
+			userSearchRepository.save(newUser);
+			log.debug("Created Information for User: {}", user);
 			mailService.sendCreationEmail(newUser);
 			return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
 					.headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin())).body(newUser);
@@ -156,24 +160,28 @@ public class UserResource {
 	@PutMapping("/users")
 	@Timed
 	@Secured(AuthoritiesConstants.ADMIN)
-	public ResponseEntity<UserDTO> updateUser(@RequestBody ManagedUserVM managedUserVM) {
-		log.debug("REST request to update User : {}", managedUserVM);
-		Optional<User> existingUser = userRepository.findOneByEmail(managedUserVM.getEmail());
-		if (existingUser.isPresent() && (!existingUser.get().getId().equals(managedUserVM.getId()))) {
+	public ResponseEntity<User> updateUser(@RequestBody User user) {
+		log.debug("REST request to update User : {}", user);
+		Optional<User> existingUser = userRepository.findOneByEmail(user.getEmail());
+		if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "emailexists", "E-mail already in use"))
 					.body(null);
 		}
-		existingUser = userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase());
-		if (existingUser.isPresent() && (!existingUser.get().getId().equals(managedUserVM.getId()))) {
+		existingUser = userRepository.findOneByLogin(user.getLogin().toLowerCase());
+		if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "userexists", "Login already in use"))
 					.body(null);
 		}
-		Optional<UserDTO> updatedUser = userService.updateUser(managedUserVM);
+		User updatableUser = userService.generateUpdatableUser(user);
+		User updatedUser = userRepository.save(updatableUser);
+		userSearchRepository.save(updatedUser);
+		log.debug("Changed Information for User: {}", user);
 
-		return ResponseUtil.wrapOrNotFound(updatedUser,
-				HeaderUtil.createAlert("userManagement.updated", managedUserVM.getLogin()));
+		return ResponseEntity.ok()
+				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString()))
+				.body(updatedUser);
 	}
 
 	/**
@@ -202,24 +210,21 @@ public class UserResource {
 	 * @return the ResponseEntity with status 200 (OK) and with body the "login"
 	 *         user, or with status 404 (Not Found)
 	 */
-	@GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
+	@GetMapping("/users/{id}")
 	@Timed
 	@Secured(AuthoritiesConstants.ADMIN)
-	public ResponseEntity<UserDTO> getUser(@PathVariable String login) {
-		log.debug("REST request to get User : {}", login);
-		return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(UserDTO::new));
+	public User getUser(@PathVariable Long id) {
+		log.debug("REST request to get User : {}", id);
+		return userService.getUserWithAuthorities(id);
 	}
 
 	@GetMapping("/users/authorities")
 	@Timed
 	@Secured(AuthoritiesConstants.ADMIN)
-	public ResponseEntity<List<String>> getAllAuthorities() throws URISyntaxException {
-		final List<String> authorities = getAllAuthoritiesAsStrings();
-		return ResponseEntity.ok(authorities);
-	}
-
-	private List<String> getAllAuthoritiesAsStrings() {
-		return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+	public ResponseEntity<List<Authority>> getAllAuthorities(@ApiParam Pageable pageable) throws URISyntaxException {
+		final Page<Authority> page = authorityRepository.findAll(pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users/authorities");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 
 	/**
