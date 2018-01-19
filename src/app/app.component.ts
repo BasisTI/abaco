@@ -1,4 +1,13 @@
-import { Component, AfterViewInit, ElementRef, Renderer, ViewChild, OnDestroy } from '@angular/core';
+import { 
+  Component, 
+  AfterViewInit, 
+  ElementRef, 
+  Renderer, 
+  ViewChild, 
+  OnDestroy 
+} from '@angular/core';
+
+import { Message } from 'primeng/components/common/api';
 
 enum MenuOrientation {
   STATIC,
@@ -51,6 +60,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   resetMenu: boolean;
 
   menuHoverActive: boolean;
+
+  msgs: Message[] = [];
 
   @ViewChild('layoutContainer') layourContainerViewChild: ElementRef;
 
