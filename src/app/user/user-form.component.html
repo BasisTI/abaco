@@ -69,6 +69,14 @@
               [(ngModel)]="selectedAuthorities"
               selectedItemsLabel="{0} perfis selecionados"></p-multiSelect>
 
+            <p-multiSelect name="authoritiesMultiselect2"
+              defaultLabel="Seleciona ao menos um"
+              [options]="authorities"
+              [(ngModel)]="user.authorities"
+              dataKey="artificialId"
+              optionLabel="name"
+              selectedItemsLabel="{0} perfis selecionados"></p-multiSelect>
+
           </div>
 
           <div class="ui-g-6" style="margin-bottom: 25px">
