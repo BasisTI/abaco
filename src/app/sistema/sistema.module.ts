@@ -27,6 +27,8 @@ import {
   sistemaRoute
 } from './';
 
+import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -43,7 +45,8 @@ import {
     ConfirmDialogModule,
     DataTableModule,
     DialogModule,
-    MemoryDataTableModule
+    MemoryDataTableModule,
+    AbacoButtonsModule
   ],
   declarations: [
     SistemaComponent,
