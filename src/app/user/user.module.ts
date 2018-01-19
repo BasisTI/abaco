@@ -13,7 +13,8 @@ import {
   RadioButtonModule,
   ConfirmDialogModule,
   DataTableModule,
-  ConfirmationService
+  ConfirmationService,
+  MultiSelectModule
 } from 'primeng/primeng';
 
 import {
@@ -39,6 +40,7 @@ import {
     InputTextModule,
     DataTableModule,
     ConfirmDialogModule,
+    MultiSelectModule
   ],
   declarations: [
     UserComponent,

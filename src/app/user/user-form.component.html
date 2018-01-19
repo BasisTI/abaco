@@ -52,18 +52,24 @@
                 [style]="{'width':'15%'}"></p-column>
               <p-column header="Nome" field="name"></p-column>
             </p-dataTable>
+            <!-- <h3 class="first">Perfil</h3>
+            <p-multiSelect name="authoritiesMultiselect" [options]="authorities"
+              [(ngModel)]="user.authorities" maxSelectedLabels=5
+              defaultLabel="Selecione ao menos um"
+              dataKey="name">
+                <ng-template let-item pTemplate="item">
+                  {{ item.name }}
+                </ng-template>
+            </p-multiSelect> -->
           </div>
 
           <div class="ui-g-6" style="margin-bottom: 25px">
-            <p-dataTable [value]="organizacoes" [(selection)]="user.organizacoes" dataKey="id"
-              [paginator]="true" [rows]="5" [headerCheckboxToggleAllPages]="true">
-              <p-header>Organização</p-header>
-              <p-column selectionMode="multiple"
-                [style]="{'width':'15%'}"></p-column>
-              <p-column header="Sigla" field="sigla"
-                [style]="{'width':'30%'}"></p-column>
-              <p-column header="Nome" field="nome"></p-column>
-            </p-dataTable>
+            <h3 class="first">Organização</h3>
+            <p-multiSelect name="org" [options]="organizacoes"
+              [(ngModel)]="user.organizacoes"
+              defaultLabel="Seleciona ao menos uma" optionLabel="nome"
+              dataKey="id">
+            </p-multiSelect>
           </div>
 
         <div class="ui-g-6" style="margin-bottom: 25px">
