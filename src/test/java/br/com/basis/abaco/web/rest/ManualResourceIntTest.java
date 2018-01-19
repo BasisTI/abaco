@@ -102,9 +102,9 @@ public class ManualResourceIntTest {
                 .nome(DEFAULT_NOME)
                 .observacao(DEFAULT_OBSERVACAO)
                 .valorVariacaoEstimada(DEFAULT_VALOR_VARIACAO_ESTIMADA)
-                .valorVariacaoIndicativa(DEFAULT_VALOR_VARIACAO_INDICATIVA)
-                .arquivoManual(DEFAULT_ARQUIVO_MANUAL)
-                .arquivoManualContentType(DEFAULT_ARQUIVO_MANUAL_CONTENT_TYPE);
+                .valorVariacaoIndicativa(DEFAULT_VALOR_VARIACAO_INDICATIVA);
+//                .arquivoManual(DEFAULT_ARQUIVO_MANUAL)
+//                .arquivoManualContentType(DEFAULT_ARQUIVO_MANUAL_CONTENT_TYPE);
         return manual;
     }
 
@@ -134,8 +134,8 @@ public class ManualResourceIntTest {
         assertThat(testManual.getObservacao()).isEqualTo(DEFAULT_OBSERVACAO);
         assertThat(testManual.getValorVariacaoEstimada()).isEqualTo(DEFAULT_VALOR_VARIACAO_ESTIMADA);
         assertThat(testManual.getValorVariacaoIndicativa()).isEqualTo(DEFAULT_VALOR_VARIACAO_INDICATIVA);
-        assertThat(testManual.getArquivoManual()).isEqualTo(DEFAULT_ARQUIVO_MANUAL);
-        assertThat(testManual.getArquivoManualContentType()).isEqualTo(DEFAULT_ARQUIVO_MANUAL_CONTENT_TYPE);
+//        assertThat(testManual.getArquivoManual()).isEqualTo(DEFAULT_ARQUIVO_MANUAL);
+//        assertThat(testManual.getArquivoManualContentType()).isEqualTo(DEFAULT_ARQUIVO_MANUAL_CONTENT_TYPE);
 
         // Validate the Manual in Elasticsearch
         Manual manualEs = manualSearchRepository.findOne(testManual.getId());
@@ -258,9 +258,9 @@ public class ManualResourceIntTest {
                 .nome(UPDATED_NOME)
                 .observacao(UPDATED_OBSERVACAO)
                 .valorVariacaoEstimada(UPDATED_VALOR_VARIACAO_ESTIMADA)
-                .valorVariacaoIndicativa(UPDATED_VALOR_VARIACAO_INDICATIVA)
-                .arquivoManual(UPDATED_ARQUIVO_MANUAL)
-                .arquivoManualContentType(UPDATED_ARQUIVO_MANUAL_CONTENT_TYPE);
+                .valorVariacaoIndicativa(UPDATED_VALOR_VARIACAO_INDICATIVA);
+//                .arquivoManual(UPDATED_ARQUIVO_MANUAL)
+//                .arquivoManualContentType(UPDATED_ARQUIVO_MANUAL_CONTENT_TYPE);
 
         restManualMockMvc.perform(put("/api/manuals")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -275,8 +275,8 @@ public class ManualResourceIntTest {
         assertThat(testManual.getObservacao()).isEqualTo(UPDATED_OBSERVACAO);
         assertThat(testManual.getValorVariacaoEstimada()).isEqualTo(UPDATED_VALOR_VARIACAO_ESTIMADA);
         assertThat(testManual.getValorVariacaoIndicativa()).isEqualTo(UPDATED_VALOR_VARIACAO_INDICATIVA);
-        assertThat(testManual.getArquivoManual()).isEqualTo(UPDATED_ARQUIVO_MANUAL);
-        assertThat(testManual.getArquivoManualContentType()).isEqualTo(UPDATED_ARQUIVO_MANUAL_CONTENT_TYPE);
+//        assertThat(testManual.getArquivoManual()).isEqualTo(UPDATED_ARQUIVO_MANUAL);
+//        assertThat(testManual.getArquivoManualContentType()).isEqualTo(UPDATED_ARQUIVO_MANUAL_CONTENT_TYPE);
 
         // Validate the Manual in Elasticsearch
         Manual manualEs = manualSearchRepository.findOne(testManual.getId());
