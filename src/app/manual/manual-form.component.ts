@@ -77,6 +77,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   save() {
     this.isSaving = true;
+    this.manual.valorVariacaoEstimada = this.manual.valorVariacaoEstimada/100;
+    this.manual.valorVariacaoIndicativa = this.manual.valorVariacaoIndicativa/100;
+    
     if (this.manual.id !== undefined) {
       this.subscribeToSaveResponse(this.manualService.update(this.manual));
     } else {

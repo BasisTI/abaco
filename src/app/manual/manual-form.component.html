@@ -10,6 +10,50 @@
               <label>ID</label>
             </span>
           </div>
+        </div>
+        <div class="ui-g">
+          <div class="ui-g-6" style="margin-bottom: 25px">
+            <span class="md-inputfield">
+              <input type="text" name="nome" [(ngModel)]="manual.nome" pInputText/>
+              <label>Nome</label>
+            </span>
+          </div>
+          <div class="ui-g-3" style="margin-bottom: 25px">
+            <span class="md-inputfield">
+              <p-spinner size="30" name="valorVariacaoEstimada" [(ngModel)]="manual.valorVariacaoEstimada" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <label>Valor Variacao Estimada (%)</label>
+            </span>
+          </div>
+          <div class="ui-g-3" style="margin-bottom: 25px">
+            <span class="md-inputfield">
+              <p-spinner size="30" name="valorVariacaoIndicativa" [(ngModel)]="manual.valorVariacaoIndicativa" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <label>Valor Variacao Indicativa (%)</label>
+            </span>
+          </div>
+        </div>
+        <div class="ui-g">
+          <div class="ui-g-12" style="margin-bottom: 25px">
+            <span class="md-inputfield">
+              <textarea [rows]="5" [cols]="180" pInputTextarea name="descricao" [(ngModel)]="manual.observacao"></textarea>
+              <label>Observacao</label>
+            </span>
+          </div>
+        </div>
+        <div class="ui-g">
+          <div class="ui-g-12" style="margin-bottom: 25px">
+            <label>Arquivo Manual</label>
+            <span class="md-inputfield">
+              <input type="file" (change)="uploadFile($event)" name="arquivoManual" value="" required>
+            </span>
+          </div>
+        </div>
+        <!-- <div class="ui-g">
+          <div class="ui-g-6" [hidden]="!manual.id" style="margin-bottom: 25px">
+            <span class="md-inputfield">
+              <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="manual.id" readonly/>
+              <label>ID</label>
+            </span>
+          </div>
           <div class="ui-g-6" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" name="nome" [(ngModel)]="manual.nome" pInputText/>
@@ -18,20 +62,14 @@
           </div>
           <div class="ui-g-6" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input type="text" name="observacao" [(ngModel)]="manual.observacao" pInputText/>
-              <label>Observacao</label>
+              <p-spinner size="30" name="valorVariacaoEstimada" [(ngModel)]="manual.valorVariacaoEstimada" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <label>Valor Variacao Estimada (%)</label>
             </span>
           </div>
           <div class="ui-g-6" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <p-spinner size="30" name="valorVariacaoEstimada" [(ngModel)]="manual.valorVariacaoEstimada" decimalSeparator="" thousandSeparator=""></p-spinner>
-              <label>Valor Variacao Estimada</label>
-            </span>
-          </div>
-          <div class="ui-g-6" style="margin-bottom: 25px">
-            <span class="md-inputfield">
-              <p-spinner size="30" name="valorVariacaoIndicativa" [(ngModel)]="manual.valorVariacaoIndicativa" decimalSeparator="" thousandSeparator=""></p-spinner>
-              <label>Valor Variacao Indicativa</label>
+              <p-spinner size="30" name="valorVariacaoIndicativa" [(ngModel)]="manual.valorVariacaoIndicativa" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <label>Valor Variacao Indicativa (%)</label>
             </span>
           </div>
           <div class="ui-g-6" style="margin-bottom: 25px">
@@ -40,7 +78,13 @@
               <input type="file" (change)="uploadFile($event)" name="arquivoManual" value="" required>
             </span>
           </div>
-        </div>
+          <div class="ui-g-6" style="margin-bottom: 25px">
+            <span class="md-inputfield">
+              <textarea [rows]="5" [cols]="90" pInputTextarea name="descricao" [(ngModel)]="manual.observacao"></textarea>
+              <label>Observacao</label>
+            </span>
+          </div>
+        </div> -->
         <div class="ui-g">
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-md-3">
@@ -119,7 +163,7 @@
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Esforço (%)</label>
-              <p-spinner size="30" name="percentual" [(ngModel)]="newPhaseEffort.percentual" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <p-spinner size="30" name="percentual" [(ngModel)]="newPhaseEffort.percentual" decimalSeparator="" min="0" max="100" thousandSeparator=""></p-spinner>
             </div>
           </div>
           <div class="ui-g">
