@@ -1,5 +1,6 @@
 import { BaseEntity } from '../shared';
 import { User as BasisUser } from '@basis/angular-components';
+import { Authority } from './authority.model';
 
 
 export class User implements BaseEntity, BasisUser {
@@ -13,7 +14,7 @@ export class User implements BaseEntity, BasisUser {
     public activated?: boolean,
     public imageUrl?: string,
     public tipoEquipes?: BaseEntity[],
-    public authorities?: string[],
+    public authorities?: Authority[],
     public organizacoes?: BaseEntity[]
   ) { }
 
@@ -24,11 +25,11 @@ export class User implements BaseEntity, BasisUser {
   }
 
   get roles(): string[] {
-    return this.authorities;
+    return this.authorities.map(a => a.name);
   }
 
   set roles(roles: string[]) {
-    this.authorities = roles;
+    this.authorities = roles.map(r => new Authority(r));
   }
 
 }
