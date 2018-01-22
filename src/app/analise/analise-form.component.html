@@ -12,12 +12,12 @@
                 </span>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
-                  <p-dropdown [options]="organizacoes" optionLabel="nome"
-                    [(ngModel)]="analise.organizacao" [autoWidth]="false"
-                    placeholder="Organização" name="organizacao"
-                    (onChange)="organizacaoSelected($event.value)"
-                    dataKey="id">
-                  </p-dropdown>
+                <p-dropdown [options]="organizacoes" optionLabel="nome"
+                  [(ngModel)]="analise.organizacao" [autoWidth]="false"
+                  placeholder="Organização" name="organizacao"
+                  (onChange)="organizacaoSelected($event.value)"
+                  dataKey="id">
+                </p-dropdown>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <p-dropdown [options]="contratos" optionLabel="numeroContrato" 
@@ -33,6 +33,20 @@
                   placeholder="{{ sistemaDropdownPlaceholder() }}"
                   name="sistema" [autoWidth]="false"
                   dataKey="id">
+                </p-dropdown>
+              </div>
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <p-dropdown [options]="metodosContagem"
+                  [(ngModel)]="analise.tipoContagem"  
+                  placeholder="Tipo de Contagem"
+                  name="tipoContagem" [autoWidth]="false">
+                </p-dropdown>
+              </div>
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <p-dropdown [options]="tiposAnalise"
+                  [(ngModel)]="analise.tipoAnalise"  
+                  placeholder="Tipo de Análise"
+                  name="analise" [autoWidth]="false">
                 </p-dropdown>
               </div>
             </div>

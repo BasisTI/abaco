@@ -9,6 +9,7 @@ import { ResponseWrapper } from '../shared';
 import { Organizacao, OrganizacaoService } from '../organizacao';
 import { Contrato, ContratoService } from '../contrato';
 import { Sistema, SistemaService } from '../sistema';
+import { SelectItem } from 'primeng/primeng';
 
 @Component({
   selector: 'jhi-analise-form',
@@ -22,6 +23,18 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   organizacoes: Organizacao[];
   contratos: Contrato[];
   sistemas: Sistema[];
+
+  metodosContagem: SelectItem[] = [
+    { label: 'DETALHADA', value: 'DETALHADA' },
+    { label: 'INDICATIVA', value: 'INDICATIVA' },
+    { label: 'ESTIMADA', value: 'ESTIMADA' }
+  ];
+
+  tiposAnalise: SelectItem[] = [
+    { label: 'DESENVOLVIMENTO', value: 'DESENVOLVIMENTO' },
+    { label: 'MELHORIA', value: 'MELHORIA' },
+    { label: 'APLICACAO', value: 'APLICACAO' }
+  ];
 
   private routeSub: Subscription;
 
