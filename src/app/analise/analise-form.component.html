@@ -1,14 +1,44 @@
 <p-tabView>
-    <p-tabPanel header="Geral">
+  <p-tabPanel header="Geral">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <div class="card card-w-title">
+          <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <div class="ui-g" >
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <span class="md-inputfield">
+                  <input type="text" name="numeroOS" [(ngModel)]="analise.numeroOs" pInputText/>
+                  <label>Número OS</label>
+                </span>
+              </div>
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                  <p-dropdown [options]="organizacoes" optionLabel="nome"
+                    placeholder="Organização" name="organizacao"
+                    [(ngModel)]="analise.organizacao" [autoWidth]="false"
+                    (onChange)="organizacaoSelected($event.value)"
+                    dataKey="id">
+                  </p-dropdown>
+              </div>
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <p-dropdown [options]="contratos" optionLabel="numeroContrato" 
+                  placeholder="Contrato" name="contrato"
+                  [(ngModel)]="analise.contrato" [autoWidth]="false" 
+                  dataKey="id">
+                </p-dropdown>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="Função Dados">
 
-    </p-tabPanel>
-    <p-tabPanel header="Função Dados">
+  </p-tabPanel>
+  <p-tabPanel header="Função Transação">
 
-    </p-tabPanel>
-    <p-tabPanel header="Função Transação">
+  </p-tabPanel>
+  <p-tabPanel header="Resumo">
 
-    </p-tabPanel>
-    <p-tabPanel header="Resumo">
-
-    </p-tabPanel>
+  </p-tabPanel>
 </p-tabView>
