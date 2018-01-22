@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -31,6 +32,7 @@ import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.Modulo;
 import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
@@ -51,9 +53,13 @@ public class SistemaResource {
 
 	private final SistemaSearchRepository sistemaSearchRepository;
 
-	public SistemaResource(SistemaRepository sistemaRepository, SistemaSearchRepository sistemaSearchRepository) {
+	private final OrganizacaoRepository organizacaoRepository;
+
+	public SistemaResource(SistemaRepository sistemaRepository, SistemaSearchRepository sistemaSearchRepository,
+			OrganizacaoRepository organizacaoRepository) {
 		this.sistemaRepository = sistemaRepository;
 		this.sistemaSearchRepository = sistemaSearchRepository;
+		this.organizacaoRepository = organizacaoRepository;
 	}
 
 	/**
@@ -142,6 +148,14 @@ public class SistemaResource {
 		log.debug("REST request to get all Sistemas");
 		List<Sistema> sistemas = sistemaRepository.findAllByOrganizacao(organization);
 		return sistemas;
+	}
+
+	@GetMapping("/sistemas/organizacao/{idOrganizacao}")
+	@Timed
+	@Transactional
+	public Set<Sistema> getAllSistemasByOrganizacaoId(@PathVariable Long idOrganizacao) {
+		Organizacao organizacao = organizacaoRepository.findOne(idOrganizacao);
+		return organizacao.getSistemas();
 	}
 
 	/**
