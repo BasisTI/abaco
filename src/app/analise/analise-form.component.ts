@@ -69,19 +69,27 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   contratoDropdownPlaceholder() {
-    if (this.contratos && this.contratos.length > 0) {
+    if (this.shouldEnableContratoDropdown()) {
       return 'Contrato';
     } else {
       return 'Contrato - Selecione uma Organização para carregar os Contratos';
     }
   }
 
+  shouldEnableContratoDropdown() {
+    return this.contratos && this.contratos.length > 0;
+  }
+
   sistemaDropdownPlaceholder() {
-    if (this.sistemas && this.sistemas.length > 0) {
+    if (this.shouldEnableSistemaDropdown()) {
       return 'Sistema';
     } else {
       return 'Sistema - Selecione uma Organização para carregar os Sistemas';
     }
+  }
+
+  shouldEnableSistemaDropdown() {
+    return this.sistemas && this.sistemas.length > 0;
   }
 
   ngOnDestroy() {

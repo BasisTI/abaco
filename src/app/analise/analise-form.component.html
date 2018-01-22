@@ -22,14 +22,16 @@
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <p-dropdown [options]="contratos" optionLabel="numeroContrato" 
                   [(ngModel)]="analise.contrato" 
+                  disabled="{{ !shouldEnableContratoDropdown() }}" 
                   placeholder="{{ contratoDropdownPlaceholder() }}"
-                  name="contrato" [autoWidth]="false" 
+                  name="contrato" [autoWidth]="false"
                   dataKey="id">
                 </p-dropdown>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <p-dropdown [options]="sistemas" optionLabel="nome" 
                   [(ngModel)]="analise.sistema"  
+                  disabled="{{ !shouldEnableSistemaDropdown() }}"
                   placeholder="{{ sistemaDropdownPlaceholder() }}"
                   name="sistema" [autoWidth]="false"
                   dataKey="id">
