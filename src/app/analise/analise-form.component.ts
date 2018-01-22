@@ -8,6 +8,7 @@ import { AnaliseService } from './analise.service';
 import { ResponseWrapper } from '../shared';
 import { Organizacao, OrganizacaoService } from '../organizacao';
 import { Contrato, ContratoService } from '../contrato';
+import { Sistema, SistemaService } from '../sistema';
 
 @Component({
   selector: 'jhi-analise-form',
@@ -20,6 +21,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   organizacoes: Organizacao[];
   contratos: Contrato[];
+  sistemas: Sistema[];
 
   private routeSub: Subscription;
 
@@ -28,6 +30,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     private analiseService: AnaliseService,
     private organizacaoService: OrganizacaoService,
     private contratoService: ContratoService,
+    private sistemaService: SistemaService,
   ) { }
 
   ngOnInit() {
@@ -47,6 +50,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   organizacaoSelected(org: Organizacao) {
     this.contratos = org.contracts;
+    this.sistemaService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
+      this.sistemas = res.json;
+    });
   }
 
   ngOnDestroy() {

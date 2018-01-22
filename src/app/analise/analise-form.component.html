@@ -26,6 +26,13 @@
                   dataKey="id">
                 </p-dropdown>
               </div>
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <p-dropdown [options]="sistemas" optionLabel="nome" 
+                  placeholder="Sistema" name="sistema"
+                  [(ngModel)]="analise.sistema" [autoWidth]="false" 
+                  dataKey="id">
+                </p-dropdown>
+              </div>
             </div>
           </form>
         </div>
