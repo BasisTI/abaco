@@ -13,6 +13,8 @@ export class PageNotificationService {
 
     private readonly deleteMsg = 'Registro excluído com sucesso!';
 
+    private readonly errorMsg = 'Erro!';
+
     addCreateMsg(title?: string) {
         this.addInfoMsg('success', this.createMsg, title);
     }
@@ -31,6 +33,24 @@ export class PageNotificationService {
 
     addDeleteMsg(title?: string) {
         this.addInfoMsg('success', this.deleteMsg, title);
+    }
+
+    addErrorMsg(message?: string) {
+      this.addInfoMsg('error', message, this.errorMsg);
+    }
+
+    getInvalidFields(invalidFields: Array<any>) {
+      let invalidFieldNamesString = '';
+
+      invalidFields.forEach(each => {
+        if(each === invalidFields[invalidFields.length-1]) {
+          invalidFieldNamesString = invalidFieldNamesString + each.field;
+        } else {
+          invalidFieldNamesString = invalidFieldNamesString + ', ';
+        }
+      });
+
+      return invalidFieldNamesString;
     }
 
 }

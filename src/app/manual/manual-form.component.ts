@@ -14,6 +14,7 @@ import { TipoFase } from '../tipo-fase/tipo-fase.model';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/components/common/confirmationservice';
 import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
+import { PageNotificationService } from '../shared/page-notification.service';
 
 @Component({
   selector: 'jhi-manual-form',
@@ -53,7 +54,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     private manualService: ManualService,
     private esforcoFaseService: EsforcoFaseService,
     private tipoFaseService: TipoFaseService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private pageNotificationService: PageNotificationService
   ) {}
 
   ngOnInit() {
@@ -83,7 +85,11 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     if (this.manual.id !== undefined) {
       this.subscribeToSaveResponse(this.manualService.update(this.manual));
     } else {
-      this.subscribeToSaveResponse(this.manualService.create(this.manual, this.arquivoManual));
+      if(this.arquivoManual !== undefined) {
+        this.subscribeToSaveResponse(this.manualService.create(this.manual, this.arquivoManual));
+      } else {
+        this.pageNotificationService.addErrorMsg('Campo Arquivo Manual está inválido!');
+      }
     }
   }
 
@@ -91,8 +97,17 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     result.subscribe((res: Manual) => {
       this.isSaving = false;
       this.router.navigate(['/manual']);
-    }, (res: Response) => {
+      this.pageNotificationService.addCreateMsg();
+    }, (error: Response) => {
       this.isSaving = false;
+      switch(error.status) {
+        case 400: {
+          let invalidFieldNamesString = "";
+          const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
+          invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
+          this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+        }
+      }
     });
   }
 
