@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -64,7 +66,7 @@ public class TipoFaseResource {
 	 */
 	@PostMapping("/tipo-fases")
 	@Timed
-	public ResponseEntity<TipoFase> createTipoFase(@RequestBody TipoFase tipoFase) throws URISyntaxException {
+	public ResponseEntity<TipoFase> createTipoFase(@Valid @RequestBody TipoFase tipoFase) throws URISyntaxException {
 		log.debug("REST request to save TipoFase : {}", tipoFase);
 		if (tipoFase.getId() != null) {
 			return ResponseEntity.badRequest().headers(
