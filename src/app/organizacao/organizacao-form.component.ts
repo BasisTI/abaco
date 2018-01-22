@@ -11,6 +11,7 @@ import { Manual, ManualService } from '../manual';
 import { ResponseWrapper } from '../shared';
 import { ConfirmationService } from 'primeng/components/common/confirmationservice';
 import { DatatableClickEvent } from '@basis/angular-components';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'jhi-organizacao-form',
@@ -24,6 +25,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   organizacao: Organizacao;
   isSaving: boolean;
   manuais: Manual[];
+  uploadUrl = environment.apiUrl + '/upload'
 
   mostrarDialogCadastroContrato = false;
   mostrarDialogEdicaoContrato = false;
@@ -134,6 +136,9 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   }
 
   fileUpload(event: any) {
-    this.logo = event.target.files[0];
+    this.logo = event.files[0];
+    console.log(this.logo);
+    // this.logo = event.target.files[0];
+
   }
 }
