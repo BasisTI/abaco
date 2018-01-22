@@ -59,6 +59,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   authenticatedUserFullName(): string {
     const storageUser = this.authService.getUser();
+    if (!storageUser) {
+      return;
+    }
     return storageUser.firstName + ' ' + storageUser.lastName;
   }
 
