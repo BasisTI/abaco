@@ -1,8 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Response } from '@angular/http';
 import { LoginService } from './login.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { AuthService } from '@basis/angular-components';
+import { AuthService, HttpService } from '@basis/angular-components';
+import { environment } from '../../environments/environment';
 import { User } from '../user';
 
 @Component({
@@ -22,7 +24,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private loginService: LoginService,
-    private authService: AuthService<User>
+    private authService: AuthService<User>,
+    private http: HttpService,
+    private zone: NgZone
   ) { }
 
   ngOnInit() {
@@ -34,16 +38,30 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   login() {
     this.loginService.login(this.username, this.password).subscribe(() => {
-      this.authService.loginSuccess();
-      // FIXME workaround para o caso de a resposta da requisição para user details
-      // não ter chegado ainda. Sugerir alteração no componente
-      this.sleepFor(1000);
-      window.location.href = '/';
+      // this.authService.loginSuccess();
+
+      // FIXME Bypassando o componente para funcionar com o firefox
+      this.getUserDetails().subscribe(response => {
+        const storageKey = environment.auth.userStorageIndex;
+        environment.auth.userStorage[`${storageKey}`] = JSON.stringify(response);
+        this.zone.runOutsideAngular(() => {
+          location.reload();
+        });
+      });
+    });
+  }
+
+  protected getUserDetails(): Observable<any> {
+    return this.http.get(`${environment.auth.detailsUrl}`).map((response: Response) => {
+      return response.json();
     });
   }
 
   authenticatedUserFullName(): string {
     const storageUser = this.authService.getUser();
+    if (!storageUser) {
+      return;
+    }
     return storageUser.firstName + ' ' + storageUser.lastName;
   }
 
