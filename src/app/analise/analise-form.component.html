@@ -13,23 +13,25 @@
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
                   <p-dropdown [options]="organizacoes" optionLabel="nome"
-                    placeholder="Organização" name="organizacao"
                     [(ngModel)]="analise.organizacao" [autoWidth]="false"
+                    placeholder="Organização" name="organizacao"
                     (onChange)="organizacaoSelected($event.value)"
                     dataKey="id">
                   </p-dropdown>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <p-dropdown [options]="contratos" optionLabel="numeroContrato" 
-                  placeholder="Contrato" name="contrato"
-                  [(ngModel)]="analise.contrato" [autoWidth]="false" 
+                  [(ngModel)]="analise.contrato" 
+                  placeholder="{{ contratoDropdownPlaceholder() }}"
+                  name="contrato" [autoWidth]="false" 
                   dataKey="id">
                 </p-dropdown>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <p-dropdown [options]="sistemas" optionLabel="nome" 
-                  placeholder="Sistema" name="sistema"
-                  [(ngModel)]="analise.sistema" [autoWidth]="false" 
+                  [(ngModel)]="analise.sistema"  
+                  placeholder="{{ sistemaDropdownPlaceholder() }}"
+                  name="sistema" [autoWidth]="false"
                   dataKey="id">
                 </p-dropdown>
               </div>

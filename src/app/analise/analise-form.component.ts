@@ -55,6 +55,22 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  contratoDropdownPlaceholder() {
+    if (this.contratos && this.contratos.length > 0) {
+      return 'Contrato';
+    } else {
+      return 'Contrato - Selecione uma Organização para carregar os Contratos';
+    }
+  }
+
+  sistemaDropdownPlaceholder() {
+    if (this.sistemas && this.sistemas.length > 0) {
+      return 'Sistema';
+    } else {
+      return 'Sistema - Selecione uma Organização para carregar os Sistemas';
+    }
+  }
+
   ngOnDestroy() {
     this.routeSub.unsubscribe();
   }
