@@ -17,7 +17,8 @@ import {
   ConfirmDialogModule,
   DataTableModule,
   ConfirmationService,
-  TabViewModule
+  TabViewModule,
+  InputTextareaModule
 } from 'primeng/primeng';
 
 import {
@@ -44,7 +45,8 @@ import {
     DataTableModule,
     ConfirmDialogModule,
     AbacoButtonsModule,
-    TabViewModule
+    TabViewModule,
+    InputTextareaModule
   ],
   declarations: [
     AnaliseComponent,

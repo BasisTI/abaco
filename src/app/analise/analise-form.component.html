@@ -44,12 +44,48 @@
                   name="tipoContagem" [autoWidth]="false">
                 </p-dropdown>
               </div>
+
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <span class="md-inputfield">
+                  <textarea [rows]="3" [cols]="180" pInputTextarea name="escopo" 
+                    [(ngModel)]="analise.escopo">
+                  </textarea>
+                  <label>Escopo</label>
+                </span>
+              </div>
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <span class="md-inputfield">
+                  <textarea [rows]="3" [cols]="180" pInputTextarea name="fronteiras" 
+                    [(ngModel)]="analise.fronteiras">
+                  </textarea>
+                  <label>Fronteiras</label>
+                </span>
+              </div>
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <span class="md-inputfield">
+                  <textarea [rows]="3" [cols]="180" pInputTextarea name="documentacao" 
+                    [(ngModel)]="analise.documentacao">
+                  </textarea>
+                  <label>Documentação</label>
+                </span>
+              </div>
+
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <p-dropdown [options]="tiposAnalise"
                   [(ngModel)]="analise.tipoAnalise"  
                   placeholder="Tipo de Análise"
                   name="analise" [autoWidth]="false">
                 </p-dropdown>
+              </div>
+
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <span class="md-inputfield">
+                  <textarea [rows]="3" [cols]="180" pInputTextarea
+                    name="propositoContagem" 
+                    [(ngModel)]="analise.propositoContagem">
+                  </textarea>
+                  <label>Propósito da Contagem</label>
+                </span>
               </div>
             </div>
           </form>
