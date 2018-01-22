@@ -79,7 +79,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.isSaving = true;
     this.manual.valorVariacaoEstimada = this.manual.valorVariacaoEstimada/100;
     this.manual.valorVariacaoIndicativa = this.manual.valorVariacaoIndicativa/100;
-    
+
     if (this.manual.id !== undefined) {
       this.subscribeToSaveResponse(this.manualService.update(this.manual));
     } else {
@@ -101,7 +101,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   uploadFile(event) {
-    this.arquivoManual = event.target.files[0];
+    this.arquivoManual = event.files[0];
   }
 
   datatableClick(event: DatatableClickEvent) {

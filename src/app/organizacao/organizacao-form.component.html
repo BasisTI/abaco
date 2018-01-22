@@ -6,7 +6,7 @@
         <div class="ui-g">
           <div class="ui-g-12" style="margin-bottom: 25px">
             <label>Logo da Organização</label>
-            <p-fileUpload chooseLabel="Selecionar arquivo" [showUploadButton]="false" [showCancelButton]="false" name="logoOrganizacao" (change)="fileUpload($event)">
+            <p-fileUpload chooseLabel="Selecionar arquivo" (onSelect)="fileUpload($event)" accept="image/*" [showUploadButton]="false" [showCancelButton]="false">
             </p-fileUpload>
             <!-- <input type="file" (change)="fileUpload($event)" name="logoOrganizacao" pInputText/> -->
           </div>
@@ -94,7 +94,7 @@
             <!-- <button pButton type="button" label="Cancelar" routerLink="/organizacao"></button> -->
           </div>
           <div class="ui-g-2">
-            <app-submit-button buttonLabel="Salvar" (click)="save()" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+            <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
             <!-- <button pButton type="submit" label="Salvar" (click)="save()" [disabled]="editForm.form.invalid || isSaving" ></button> -->
           </div>
         </div>
