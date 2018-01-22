@@ -44,6 +44,7 @@ import {
     DataTableModule,
     ConfirmDialogModule,
     AbacoButtonsModule,
+    TabViewModule
   ],
   declarations: [
     AnaliseComponent,
