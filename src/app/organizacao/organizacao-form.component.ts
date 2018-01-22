@@ -118,6 +118,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     if (this.organizacao.id !== undefined) {
       this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
     } else {
+      console.log('Feito uma chamada!')
       this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao, this.logo));
     }
   }
