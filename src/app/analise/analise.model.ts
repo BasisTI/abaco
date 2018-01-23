@@ -28,5 +28,6 @@ export class Analise implements BaseEntity {
     public funcaoDados?: BaseEntity[],
     public funcaoTransacaos?: BaseEntity[],
     public organizacao?: BaseEntity,
+    public contrato?: BaseEntity[]
   ) {}
 }
