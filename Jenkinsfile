@@ -1,6 +1,6 @@
 #!groovy
 
-@Library('basis-pipeline-library@master') _
+@Library('basis-pipeline-library@BASIS-24357') _
 
 pipelineBuildFrontendJavascript {
     agentLabel = 'docker-engine'
