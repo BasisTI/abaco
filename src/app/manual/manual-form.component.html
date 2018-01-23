@@ -32,10 +32,14 @@
           </div>
         </div>
         <div class="ui-g">
+          <div class="ui-g-12">
+            <label>Observacao</label>
+          </div>
+        </div>
+        <div class="ui-g">
           <div class="ui-g-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <textarea [rows]="5" [cols]="180" pInputTextarea name="descricao" [(ngModel)]="manual.observacao"></textarea>
-              <label>Observacao</label>
             </span>
           </div>
         </div>
@@ -49,44 +53,6 @@
             </span>
           </div>
         </div>
-        <!-- <div class="ui-g">
-          <div class="ui-g-6" [hidden]="!manual.id" style="margin-bottom: 25px">
-            <span class="md-inputfield">
-              <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="manual.id" readonly/>
-              <label>ID</label>
-            </span>
-          </div>
-          <div class="ui-g-6" style="margin-bottom: 25px">
-            <span class="md-inputfield">
-              <input type="text" name="nome" [(ngModel)]="manual.nome" pInputText/>
-              <label>Nome</label>
-            </span>
-          </div>
-          <div class="ui-g-6" style="margin-bottom: 25px">
-            <span class="md-inputfield">
-              <p-spinner size="30" name="valorVariacaoEstimada" [(ngModel)]="manual.valorVariacaoEstimada" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
-              <label>Valor Variacao Estimada (%)</label>
-            </span>
-          </div>
-          <div class="ui-g-6" style="margin-bottom: 25px">
-            <span class="md-inputfield">
-              <p-spinner size="30" name="valorVariacaoIndicativa" [(ngModel)]="manual.valorVariacaoIndicativa" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
-              <label>Valor Variacao Indicativa (%)</label>
-            </span>
-          </div>
-          <div class="ui-g-6" style="margin-bottom: 25px">
-            <label>Arquivo Manual</label>
-            <span class="md-inputfield">
-              <input type="file" (change)="uploadFile($event)" name="arquivoManual" value="" required>
-            </span>
-          </div>
-          <div class="ui-g-6" style="margin-bottom: 25px">
-            <span class="md-inputfield">
-              <textarea [rows]="5" [cols]="90" pInputTextarea name="descricao" [(ngModel)]="manual.observacao"></textarea>
-              <label>Observacao</label>
-            </span>
-          </div>
-        </div> -->
         <div class="ui-g">
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-md-3">
@@ -100,10 +66,10 @@
           <div class="ui-g-12">
             <app-memory-datatable [value]="manual.esforcoFases"
               (buttonClick)="datatableClick($event)">
-              <p-column header="Tipo de fase" field="tipoFase.nome">
+              <p-column header="Tipo de fase" field="fase.nome">
 
               </p-column>
-              <p-column header="Percentual (%)" field="percentual">
+              <p-column header="Percentual (%)" field="esforco">
               </p-column>
             </app-memory-datatable>
           </div>
@@ -159,13 +125,13 @@
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Tipo de Fase</label>
-              <p-dropdown autofocus="true" [options]="tipoFases" [(ngModel)]="newPhaseEffort.tipoFase" placeholder="Tipo de Fase" name="tipoFase" optionLabel="nome"></p-dropdown>
+              <p-dropdown autofocus="true" [options]="tipoFases" [(ngModel)]="newPhaseEffort.fase" placeholder="Tipo de Fase" name="fase" optionLabel="nome"></p-dropdown>
             </div>
           </div>
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Esforço (%)</label>
-              <p-spinner size="30" name="percentual" [(ngModel)]="newPhaseEffort.percentual" decimalSeparator="" min="0" max="100" thousandSeparator=""></p-spinner>
+              <p-spinner size="30" name="esforco" [(ngModel)]="newPhaseEffort.esforco" decimalSeparator="" min="0" max="100" thousandSeparator=""></p-spinner>
             </div>
           </div>
           <div class="ui-g">
@@ -188,13 +154,13 @@
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Tipo de Fase</label>
-              <p-dropdown [options]="tipoFases" [(ngModel)]="editedPhaseEffort.tipoFase" placeholder="Tipo de Fase" name="tipoFase" [autoWidth]="false"></p-dropdown>
+              <p-dropdown [options]="tipoFases" [(ngModel)]="editedPhaseEffort.fase" placeholder="Tipo de Fase" name="fase" [autoWidth]="false"></p-dropdown>
             </div>
           </div>
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Esforço (%)</label>
-              <p-spinner name="percentual" [(ngModel)]="editedPhaseEffort.percentual" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <p-spinner name="esforco" [(ngModel)]="editedPhaseEffort.esforco" decimalSeparator="" thousandSeparator=""></p-spinner>
             </div>
           </div>
           <div class="ui-g">

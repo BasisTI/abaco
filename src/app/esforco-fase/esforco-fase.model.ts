@@ -4,8 +4,8 @@ import { TipoFase } from '../tipo-fase';
 export class EsforcoFase implements BaseEntity, JSONable<EsforcoFase>{
   constructor(
     public id?: number,
-    public tipoFase?: TipoFase,
-    public percentual?: number,
+    public fase?: TipoFase,
+    public esforco?: number,
     public artificialId?: number,
     // FIXME BaseEntity, para evitar dependencias circulares
     // parece que reestruturação de pastas evita isso
@@ -24,6 +24,6 @@ export class EsforcoFase implements BaseEntity, JSONable<EsforcoFase>{
   }
 
   clone(): EsforcoFase {
-    return new EsforcoFase(this.id, this.tipoFase, this.percentual, this.artificialId);
+    return new EsforcoFase(this.id, this.fase, this.esforco, this.artificialId);
   }
 }
