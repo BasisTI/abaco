@@ -12,6 +12,7 @@ import { ResponseWrapper } from '../shared';
 import { ConfirmationService } from 'primeng/components/common/confirmationservice';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
+import { PageNotificationService } from '../shared/page-notification.service';
 
 @Component({
   selector: 'jhi-organizacao-form',
@@ -32,6 +33,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   novoContrato: Contrato = new Contrato();
   logo: File;
   contratoEmEdicao: Contrato = new Contrato();
+  cnpjMask = [/\d/, /\d/, '.' , /\d/, /\d/,/\d/, '.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-', /\d/, /\d/]
 
   constructor(
     private route: ActivatedRoute,
@@ -39,7 +41,8 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     private organizacaoService: OrganizacaoService,
     private contratoService: ContratoService,
     private manualService: ManualService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private pageNotificationService: PageNotificationService
   ) { }
 
   ngOnInit() {
@@ -118,8 +121,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     if (this.organizacao.id !== undefined) {
       this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
     } else {
-      console.log('Feito uma chamada!')
-      this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao, this.logo));
+      if(this.logo !== undefined) {
+        this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao, this.logo));
+      } else {
+        this.pageNotificationService.addErrorMsg('Campo Logo está inválido!');
+      }
     }
   }
 
@@ -127,8 +133,18 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     result.subscribe((res: Organizacao) => {
       this.isSaving = false;
       this.router.navigate(['/organizacao']);
-    }, (res: Response) => {
+      this.pageNotificationService.addCreateMsg();
+    }, (error: Response) => {
       this.isSaving = false;
+
+      switch(error.status) {
+        case 400: {
+          let invalidFieldNamesString = "";
+          const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
+          invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
+          this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+        }
+      }
     });
   }
 

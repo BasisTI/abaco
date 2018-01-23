@@ -24,7 +24,7 @@
           </div>
           <div class="ui-g-5" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input type="text" name="cnpjOrganizacao" [(ngModel)]="organizacao.cnpj" pInputText/>
+              <input type="text" [textMask]="{mask: cnpjMask}" name="cnpjOrganizacao" [(ngModel)]="organizacao.cnpj" pInputText/>
               <label>CNPJ</label>
             </span>
           </div>

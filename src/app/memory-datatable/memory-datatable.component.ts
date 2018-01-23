@@ -30,6 +30,12 @@ export class MemoryDatatableComponent implements AfterViewInit {
 
   selectedRow: any;
 
+  @Input()
+  disableEdit: boolean;
+
+  @Input()
+  disableDelete: boolean;
+
   @Output()
   buttonClick: EventEmitter<DatatableClickEvent> = new EventEmitter<DatatableClickEvent>();
 

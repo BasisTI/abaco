@@ -11,6 +11,7 @@ import { Organizacao, OrganizacaoService } from '../organizacao';
 import { Modulo, ModuloService } from '../modulo';
 import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
 import { ResponseWrapper } from '../shared';
+import { PageNotificationService } from '../shared/page-notification.service';
 
 @Component({
   selector: 'jhi-sistema-form',
@@ -46,6 +47,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     private sistemaService: SistemaService,
     private organizacaoService: OrganizacaoService,
     private confirmationService: ConfirmationService,
+    private pageNotificationService: PageNotificationService
   ) { }
 
   ngOnInit() {
@@ -186,8 +188,17 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     result.subscribe((res: Sistema) => {
       this.isSaving = false;
       this.router.navigate(['/sistema']);
-    }, (res: Response) => {
+    }, (error: Response) => {
       this.isSaving = false;
+
+      switch(error.status) {
+        case 404: {
+          let invalidFieldNamesString = "";
+          const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
+          invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
+          this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+        }
+      }
     });
   }
 
