@@ -42,7 +42,6 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
       this.pageNotificationService.addUpdateMsg();
     } else {
       this.subscribeToSaveResponse(this.tipoFaseService.create(this.tipoFase));
-      this.pageNotificationService.addCreateMsg();
     }
   }
 
@@ -50,8 +49,19 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
     result.subscribe((res: TipoFase) => {
       this.isSaving = false;
       this.router.navigate(['/tipoFase']);
-    }, (res: Response) => {
+      this.pageNotificationService.addCreateMsg();
+    }, (error: Response) => {
       this.isSaving = false;
+
+      switch(error.status) {
+        case 400: {
+          const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
+
+          let invalidFieldsString = this.pageNotificationService.getInvalidFields(fieldErrors);
+
+          this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldsString);
+        }
+      }
     });
   }
 

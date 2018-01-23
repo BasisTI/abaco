@@ -9,9 +9,9 @@
               <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="funcaoTransacao.id" readonly/>
               <label>ID</label>
             </span>
-          </div>          
+          </div>
           <div class="ui-g-6">
-            <p-dropdown [options]="dropdownTipo" placeholder="TipoFuncaoTransacao" name="tipo" [(ngModel)]="funcaoTransacao.tipo" [autoWidth]="false"></p-dropdown>
+            <p-dropdown [options]="dropdownTipoFuncaoTransacao" placeholder="TipoFuncaoTransacao" name="tipo" [(ngModel)]="funcaoTransacao.tipo" [autoWidth]="false"></p-dropdown>
           </div>
           <div class="ui-g-6">
             <p-dropdown [options]="dropdownComplexidade" placeholder="Complexidade" name="complexidade" [(ngModel)]="funcaoTransacao.complexidade" [autoWidth]="false"></p-dropdown>

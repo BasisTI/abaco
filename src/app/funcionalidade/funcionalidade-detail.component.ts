@@ -12,6 +12,7 @@ import { FuncionalidadeService } from './funcionalidade.service';
 export class FuncionalidadeDetailComponent implements OnInit, OnDestroy {
 
   funcionalidade: Funcionalidade;
+  modulos: Array<any>;
   private subscription: Subscription;
 
   constructor(

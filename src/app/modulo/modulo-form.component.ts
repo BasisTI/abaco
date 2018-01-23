@@ -19,6 +19,7 @@ export class ModuloFormComponent implements OnInit, OnDestroy {
   modulo: Modulo;
   isSaving: boolean;
   private routeSub: Subscription;
+  sistemas: Array<any>;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,9 +30,11 @@ export class ModuloFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isSaving = false;
+
     // this.sistemaService.query().subscribe((res: ResponseWrapper) => {
     //   this.sistemas = res.json;
     // });
+
     this.routeSub = this.route.params.subscribe(params => {
       this.modulo = new Modulo();
       if (params['id']) {

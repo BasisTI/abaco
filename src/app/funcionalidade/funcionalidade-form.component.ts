@@ -23,6 +23,8 @@ export class FuncionalidadeFormComponent implements OnInit, OnDestroy {
 
   funcaotransacaos: FuncaoTransacao[];
   funcionalidade: Funcionalidade;
+  modulos: Array<any>;
+  funcaodados: Array<any>;
   isSaving: boolean;
   private routeSub: Subscription;
 

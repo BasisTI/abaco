@@ -42,7 +42,6 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
       this.pageNotificationService.addUpdateMsg();
     } else {
       this.subscribeToSaveResponse(this.tipoEquipeService.create(this.tipoEquipe));
-      this.pageNotificationService.addCreateMsg();
     }
   }
 
@@ -50,8 +49,17 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     result.subscribe((res: TipoEquipe) => {
       this.isSaving = false;
       this.router.navigate(['/admin/tipoEquipe']);
-    }, (res: Response) => {
+      this.pageNotificationService.addCreateMsg();
+    }, (error: Response) => {
       this.isSaving = false;
+      switch(error.status) {
+        case 400: {
+          let invalidFieldNamesString = "";
+          const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
+          invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
+          this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+        }
+      }
     });
   }
 
