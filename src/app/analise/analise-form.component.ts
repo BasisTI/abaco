@@ -96,4 +96,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     this.routeSub.unsubscribe();
   }
 
+  save() {
+    
+  }
+
 }
