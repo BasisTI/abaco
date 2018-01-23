@@ -6,6 +6,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -58,6 +60,7 @@ public class FatorAjuste implements Serializable {
     private ImpactoFatorAjuste impacto;
 
     @ManyToOne
+    @JsonBackReference
     private Manual manual;
 
     public Long getId() {

@@ -25,6 +25,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 /**
  * A Manual.
  */
@@ -64,9 +66,11 @@ public class Manual implements Serializable {
     private int arquivoManualId;
 
     @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonManagedReference
     private Set<EsforcoFase> esforcoFases = new HashSet<>();
 
     @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonManagedReference
     private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
     
     public Long getId() {

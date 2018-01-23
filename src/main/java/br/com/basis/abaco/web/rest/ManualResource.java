@@ -1,11 +1,17 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Manual;
-import br.com.basis.abaco.repository.ManualRepository;
-import br.com.basis.abaco.repository.search.ManualSearchRepository;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +25,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.Manual;
+import br.com.basis.abaco.repository.ManualRepository;
+import br.com.basis.abaco.repository.search.ManualSearchRepository;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing Manual.
@@ -63,11 +67,42 @@ public class ManualResource {
         if (manual.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new manual cannot already have an ID")).body(null);
         }
-        Manual result = manualRepository.save(manual);
+        Manual linkedManual = linkManualToPhaseEffortsAndAdjustFactors(manual);
+        Manual result = manualRepository.save(linkedManual);
         manualSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/manuals/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+    
+    private Manual linkManualToPhaseEffortsAndAdjustFactors(Manual manual) {
+    	
+    	
+    	manual.getEsforcoFases().forEach(phaseEffort -> {
+    		phaseEffort.setManual(manual);
+    	});
+    	
+    	manual.getFatoresAjuste().forEach(adjustFactor -> {
+    		adjustFactor.setManual(manual);
+    	});
+    	
+    	return manual;
+    }
+    
+    private Manual copyManual(Manual manual) {
+    	Manual copyOfManual = new Manual();
+  
+    	copyOfManual.setId(manual.getId());
+    	copyOfManual.setNome(manual.getNome());
+    	copyOfManual.setValorVariacaoEstimada(manual.getValorVariacaoEstimada());
+    	copyOfManual.setValorVariacaoIndicativa(manual.getValorVariacaoIndicativa());
+    	copyOfManual.setObservacao(manual.getObservacao());
+    	copyOfManual.setFatoresAjuste(new HashSet<>(manual.getFatoresAjuste()));
+    	copyOfManual.setEsforcoFases(new HashSet<>(manual.getEsforcoFases()));
+    	copyOfManual.setArquivoManualId(manual.getArquivoManualId());
+    	
+    	
+    	return copyOfManual;
     }
 
     /**

@@ -4,6 +4,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,10 +38,11 @@ public class EsforcoFase implements Serializable {
     private BigDecimal esforco;
 
     @ManyToOne
+    @JsonBackReference
     private Manual manual;
 
     @ManyToOne
-    private Fase fase;
+    private TipoFase fase;
 
     public Long getId() {
         return id;
@@ -75,17 +78,17 @@ public class EsforcoFase implements Serializable {
         this.manual = manual;
     }
 
-    public Fase getFase() {
-        return fase;
-    }
+    public TipoFase getFase() {
+		return fase;
+	}
 
-    public EsforcoFase fase(Fase fase) {
+	public void setFase(TipoFase fase) {
+		this.fase = fase;
+	}
+
+	public EsforcoFase fase(TipoFase fase) {
         this.fase = fase;
         return this;
-    }
-
-    public void setFase(Fase fase) {
-        this.fase = fase;
     }
 
     @Override
