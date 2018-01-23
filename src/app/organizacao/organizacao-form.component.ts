@@ -33,6 +33,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   novoContrato: Contrato = new Contrato();
   logo: File;
   contratoEmEdicao: Contrato = new Contrato();
+  cnpjMask = [/\d/, /\d/, '.' , /\d/, /\d/,/\d/, '.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-', /\d/, /\d/]
 
   constructor(
     private route: ActivatedRoute,

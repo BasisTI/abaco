@@ -29,6 +29,7 @@ import {
 } from './';
 
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
+import { TextMaskModule } from 'angular2-text-mask';
 
 @NgModule({
   imports: [
@@ -49,7 +50,8 @@ import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
     MemoryDataTableModule,
     CheckboxModule,
     FileUploadModule,
-    AbacoButtonsModule
+    AbacoButtonsModule,
+    TextMaskModule
   ],
   declarations: [
     OrganizacaoComponent,
