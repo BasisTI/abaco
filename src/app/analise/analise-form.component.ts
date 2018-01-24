@@ -13,6 +13,7 @@ import { SelectItem } from 'primeng/primeng';
 
 import * as _ from 'lodash';
 import { EsforcoFase } from '../esforco-fase/index';
+import { FatorAjuste } from '../fator-ajuste/index';
 
 @Component({
   selector: 'jhi-analise-form',
@@ -30,6 +31,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   esforcoFases: EsforcoFase[] = [];
 
   metodosContagem: SelectItem[] = [];
+
+  fatoresAjuste: FatorAjuste[] = [];
 
   tiposAnalise: SelectItem[] = [
     { label: 'DESENVOLVIMENTO', value: 'DESENVOLVIMENTO' },
@@ -90,6 +93,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
       { value: 'INDICATIVA', label: 'INDICATIVA - ' + (manual.valorVariacaoIndicativa * 100) + '%' },
       { value: 'ESTIMADA', label: 'ESTIMADA - ' + + (manual.valorVariacaoEstimada * 100) + '%' }
     ];
+
+    this.fatoresAjuste = _.cloneDeep(manual.fatoresAjuste);
   }
 
   totalEsforcoFases() {
@@ -122,6 +127,19 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   shouldEnableTipoDeContagemDropdown() {
+    // XXX mudar para um boolean do controller 'contratoSelecionado' ?
+    return !_.isUndefined(this.analise.contrato);
+  }
+
+  fatoresAjusteDrodownPlaceholder() {
+    if (this.shouldEnableTipoDeContagemDropdown()) {
+      return 'Valor de Ajuste';
+    } else {
+      return 'Valor de Ajuste - Selecione um Contrato para carregar os Valores de Ajuste';
+    }
+  }
+
+  shouldEnableFatoresAjusteDropdown() {
     // XXX mudar para um boolean do controller 'contratoSelecionado' ?
     return !_.isUndefined(this.analise.contrato);
   }

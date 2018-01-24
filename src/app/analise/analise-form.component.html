@@ -56,6 +56,16 @@
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <p-dropdown [options]="fatoresAjuste"
+                  [(ngModel)]="analise.valorAjuste"
+                  disabled="{{ !shouldEnableFatoresAjusteDropdown() }}"
+                  placeholder="{{ fatoresAjusteDrodownPlaceholder() }}"
+                  optionLabel="nome"
+                  name="valorAjuste" [autoWidth]="false">
+                </p-dropdown>
+              </div>
+
+              <div class="ui-g-12" style="margin-bottom: 25px">
                 <p-dataTable
                   [value]="esforcoFases" [(selection)]="analise.esforcoFases" dataKey="id"
                   [headerCheckboxToggleAllPages]="true"
