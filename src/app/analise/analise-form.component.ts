@@ -14,6 +14,7 @@ import { SelectItem } from 'primeng/primeng';
 import * as _ from 'lodash';
 import { EsforcoFase } from '../esforco-fase/index';
 import { FatorAjuste } from '../fator-ajuste/index';
+import { Manual } from '../manual/index';
 
 @Component({
   selector: 'jhi-analise-form',
@@ -83,18 +84,33 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   contratoSelected(contrato: Contrato) {
     const manual = contrato.manual;
+    this.carregarEsforcoFases(manual);
+    this.carregarMetodosContagem(manual);
+    this.fatoresAjuste = _.cloneDeep(manual.fatoresAjuste);
+  }
 
+  private carregarEsforcoFases(manual: Manual) {
     this.esforcoFases = _.cloneDeep(manual.esforcoFases);
     // Leandro pediu para trazer todos selecionados
     this.analise.esforcoFases = _.cloneDeep(manual.esforcoFases);
+  }
 
+  private carregarMetodosContagem(manual: Manual) {
     this.metodosContagem = [
       { value: 'DETALHADA', label: 'DETALHADA' },
-      { value: 'INDICATIVA', label: 'INDICATIVA - ' + (manual.valorVariacaoIndicativa * 100) + '%' },
-      { value: 'ESTIMADA', label: 'ESTIMADA - ' + + (manual.valorVariacaoEstimada * 100) + '%' }
+      {
+        value: 'INDICATIVA',
+        label: this.getLabelValorVariacao('INDICATIVA', manual.valorVariacaoIndicativa)
+      },
+      {
+        value: 'ESTIMADA',
+        label: this.getLabelValorVariacao('ESTIMADA', manual.valorVariacaoEstimada)
+      }
     ];
+  }
 
-    this.fatoresAjuste = _.cloneDeep(manual.fatoresAjuste);
+  private getLabelValorVariacao(label: string, valorVariacao: number): string {
+    return label + ' - ' + (valorVariacao * 100) + '%';
   }
 
   totalEsforcoFases() {
