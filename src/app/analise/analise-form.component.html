@@ -56,14 +56,15 @@
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
-                <p-dropdown [options]="fatoresAjuste"
+                <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
                   [(ngModel)]="analise.valorAjuste"
                   disabled="{{ !shouldEnableFatoresAjusteDropdown() }}"
                   placeholder="{{ fatoresAjusteDrodownPlaceholder() }}"
-                  optionLabel="nome"
                   name="valorAjuste" [autoWidth]="false">
                 </p-dropdown>
               </div>
+
+              {{ showFatoresAjuste() }}
 
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <p-dataTable

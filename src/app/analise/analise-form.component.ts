@@ -144,6 +144,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     return !_.isUndefined(this.analise.contrato);
   }
 
+  showFatoresAjuste() {
+    return JSON.stringify(this.fatoresAjuste);
+  }
+
   ngOnDestroy() {
     this.routeSub.unsubscribe();
   }

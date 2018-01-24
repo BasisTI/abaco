@@ -28,6 +28,7 @@ import {
   AnaliseFormComponent,
   analiseRoute
 } from './';
+import { FatorAjusteToSelectItemPipe } from '../shared/index';
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import {
   declarations: [
     AnaliseComponent,
     AnaliseDetailComponent,
-    AnaliseFormComponent
+    AnaliseFormComponent,
+    FatorAjusteToSelectItemPipe
   ],
   providers: [
     AnaliseService,
