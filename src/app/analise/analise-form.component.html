@@ -47,17 +47,35 @@
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <p-dropdown [options]="tiposAnalise"
+                  [(ngModel)]="analise.tipoAnalise"  
+                  placeholder="Tipo de Análise"
+                  name="analise" [autoWidth]="false">
+                </p-dropdown>
+              </div>
+
+              <div class="ui-g-12" style="margin-bottom: 25px">
                 <p-dataTable
                   [value]="esforcoFases" [(selection)]="analise.esforcoFases" dataKey="id"
                   [headerCheckboxToggleAllPages]="true"
-                  emptyMessage="Selecione um Contrato para escolher Esforço Fases">
-                  <p-header>Esforço Fase</p-header>
+                  emptyMessage="Selecione um Contrato para escolher Fases">
+                  <p-header>Fases</p-header>
                   <p-column selectionMode="multiple"
                     [style]="{'width':'15%'}"></p-column>
                   <p-column header="Nome" field="fase.nome"></p-column>
                   <p-column header="Esforço" field="esforco"></p-column>
                   <p-footer *ngIf="analise.contrato">Total: {{ totalEsforcoFases() }}%</p-footer>
                 </p-dataTable>
+              </div>
+
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <span class="md-inputfield">
+                  <textarea [rows]="3" [cols]="180" pInputTextarea
+                    name="propositoContagem" 
+                    [(ngModel)]="analise.propositoContagem">
+                  </textarea>
+                  <label>Propósito da Contagem</label>
+                </span>
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
@@ -73,7 +91,7 @@
                   <textarea [rows]="3" [cols]="180" pInputTextarea name="fronteiras" 
                     [(ngModel)]="analise.fronteiras">
                   </textarea>
-                  <label>Fronteiras</label>
+                  <label>Fronteira</label>
                 </span>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
@@ -82,24 +100,6 @@
                     [(ngModel)]="analise.documentacao">
                   </textarea>
                   <label>Documentação</label>
-                </span>
-              </div>
-
-              <div class="ui-g-12" style="margin-bottom: 25px">
-                <p-dropdown [options]="tiposAnalise"
-                  [(ngModel)]="analise.tipoAnalise"  
-                  placeholder="Tipo de Análise"
-                  name="analise" [autoWidth]="false">
-                </p-dropdown>
-              </div>
-
-              <div class="ui-g-12" style="margin-bottom: 25px">
-                <span class="md-inputfield">
-                  <textarea [rows]="3" [cols]="180" pInputTextarea
-                    name="propositoContagem" 
-                    [(ngModel)]="analise.propositoContagem">
-                  </textarea>
-                  <label>Propósito da Contagem</label>
                 </span>
               </div>
             </div>
