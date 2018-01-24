@@ -108,6 +108,19 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     return this.sistemas && this.sistemas.length > 0;
   }
 
+  tipoDeContagemDropdownPlaceholder() {
+    if (this.shouldEnableTipoDeContagemDropdown()) {
+      return 'Tipo de Contagem';
+    } else {
+      return 'Tipo de Contagem - Selecione um Contrato para carregar os Tipos de Contagem';
+    }
+  }
+
+  shouldEnableTipoDeContagemDropdown() {
+    // XXX mudar para um boolean do controller 'contratoSelecionado' ?
+    return !_.isUndefined(this.analise.contrato);
+  }
+
   ngOnDestroy() {
     this.routeSub.unsubscribe();
   }

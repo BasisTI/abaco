@@ -41,7 +41,8 @@
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <p-dropdown [options]="metodosContagem"
                   [(ngModel)]="analise.tipoContagem"  
-                  placeholder="Tipo de Contagem"
+                  disabled="{{ shouldEnableTipoDeContagemDropdown() }}"
+                  placeholder="{{ tipoDeContagemDropdownPlaceholder() }}"
                   name="tipoContagem" [autoWidth]="false">
                 </p-dropdown>
               </div>
