@@ -1,13 +1,12 @@
-import { BaseEntity, JSONable } from '../shared'
+import { BaseEntity, JSONable } from '../shared';
 import { TipoFase } from '../tipo-fase';
 
-export class EsforcoFase implements BaseEntity, JSONable<EsforcoFase>{
+export class EsforcoFase implements BaseEntity, JSONable<EsforcoFase> {
   constructor(
     public id?: number,
     public fase?: TipoFase,
     public esforco?: number,
     public artificialId?: number,
-    public esforco?: number,
   ) {
 
   }
