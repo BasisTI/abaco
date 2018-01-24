@@ -41,7 +41,7 @@
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <p-dropdown [options]="metodosContagem"
                   [(ngModel)]="analise.tipoContagem"  
-                  disabled="{{ !shouldEnableTipoDeContagemDropdown() }}"
+                  disabled="{{ !isContratoSelected() }}"
                   placeholder="{{ tipoDeContagemDropdownPlaceholder() }}"
                   name="tipoContagem" [autoWidth]="false">
                 </p-dropdown>
@@ -58,7 +58,7 @@
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
                   [(ngModel)]="analise.valorAjuste"
-                  disabled="{{ !shouldEnableFatoresAjusteDropdown() }}"
+                  disabled="{{ !isContratoSelected() }}"
                   placeholder="{{ fatoresAjusteDrodownPlaceholder() }}"
                   name="valorAjuste" [autoWidth]="false">
                 </p-dropdown>

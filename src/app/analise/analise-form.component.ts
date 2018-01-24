@@ -119,29 +119,23 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   tipoDeContagemDropdownPlaceholder() {
-    if (this.shouldEnableTipoDeContagemDropdown()) {
+    if (this.isContratoSelected()) {
       return 'Tipo de Contagem';
     } else {
       return 'Tipo de Contagem - Selecione um Contrato para carregar os Tipos de Contagem';
     }
   }
 
-  shouldEnableTipoDeContagemDropdown() {
-    // XXX mudar para um boolean do controller 'contratoSelecionado' ?
+  isContratoSelected(): boolean {
     return !_.isUndefined(this.analise.contrato);
   }
 
   fatoresAjusteDrodownPlaceholder() {
-    if (this.shouldEnableTipoDeContagemDropdown()) {
+    if (this.isContratoSelected()) {
       return 'Valor de Ajuste';
     } else {
       return 'Valor de Ajuste - Selecione um Contrato para carregar os Valores de Ajuste';
     }
-  }
-
-  shouldEnableFatoresAjusteDropdown() {
-    // XXX mudar para um boolean do controller 'contratoSelecionado' ?
-    return !_.isUndefined(this.analise.contrato);
   }
 
   ngOnDestroy() {
