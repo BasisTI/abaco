@@ -10,6 +10,7 @@ import { TipoEquipe, TipoEquipeService } from '../tipo-equipe';
 import { Organizacao, OrganizacaoService } from '../organizacao';
 import { ResponseWrapper } from '../shared';
 import { Authority } from './authority.model';
+import { PageNotificationService } from '../shared/page-notification.service';
 
 import * as _ from 'lodash';
 
@@ -32,6 +33,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private tipoEquipeService: TipoEquipeService,
     private organizacaoService: OrganizacaoService,
+    private pageNotificationService: PageNotificationService
   ) { }
 
   ngOnInit() {
@@ -91,8 +93,18 @@ export class UserFormComponent implements OnInit, OnDestroy {
     result.subscribe((res: User) => {
       this.isSaving = false;
       this.router.navigate(['/admin/user']);
-    }, (res: Response) => {
+      this.pageNotificationService.addCreateMsg();
+    }, (error: Response) => {
       this.isSaving = false;
+
+      switch(error.status) {
+        case 400: {
+          let invalidFieldNamesString = "";
+          const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
+          invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
+          this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+        }
+      }
     });
   }
 

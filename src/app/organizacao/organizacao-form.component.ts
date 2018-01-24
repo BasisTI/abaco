@@ -34,6 +34,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   logo: File;
   contratoEmEdicao: Contrato = new Contrato();
   cnpjMask = [/\d/, /\d/, '.' , /\d/, /\d/,/\d/, '.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-', /\d/, /\d/]
+  invalidFields: Array<string> = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -122,11 +123,41 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
     } else {
       if(this.logo !== undefined) {
-        this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao, this.logo));
+        if(this.checkRequiredFields()) {
+          this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao, this.logo));
+        } else {
+          this.pageNotificationService.addErrorMsg('Campos Inválidos:' + this.getInvalidFieldsString());
+        }
       } else {
         this.pageNotificationService.addErrorMsg('Campo Logo está inválido!');
       }
     }
+  }
+
+  private checkRequiredFields(): boolean {
+      let isFieldsValid = false;
+
+      if ( this.organizacao.nome === undefined || this.organizacao.nome === '' || this.organizacao.nome === null) (this.invalidFields.push('Nome'));
+      if ( this.organizacao.cnpj === undefined || this.organizacao.cnpj === '' || this.organizacao.cnpj === null) (this.invalidFields.push('CNPJ'));
+      if ( this.organizacao.numeroOcorrencia === undefined || this.organizacao.numeroOcorrencia === '' || this.organizacao.numeroOcorrencia === null) (this.invalidFields.push('Numero Ocorrencia'));
+      if ( this.organizacao.ativo === undefined) (this.invalidFields.push('Ativo'));
+
+      isFieldsValid = (this.invalidFields.length === 0);
+
+      return isFieldsValid;
+  }
+
+  private getInvalidFieldsString(): string {
+    let invalidFieldsString = "";
+    this.invalidFields.forEach(invalidField => {
+      if(invalidField === this.invalidFields[this.invalidFields.length-1]) {
+        invalidFieldsString = invalidFieldsString + invalidField;
+      } else {
+        invalidFieldsString = invalidFieldsString + invalidField + ', ';
+      }
+    });
+
+    return invalidFieldsString;
   }
 
   private subscribeToSaveResponse(result: Observable<any>) {

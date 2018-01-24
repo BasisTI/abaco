@@ -46,7 +46,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       value: 'UNITARIO',
     },
   ]
-
+  invalidFields: Array<string> = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -75,6 +75,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       this.tipoFases = response.json;
     });
 
+    console.log(this.manual);
   }
 
   save() {
@@ -82,15 +83,45 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.manual.valorVariacaoEstimada = this.manual.valorVariacaoEstimada/100;
     this.manual.valorVariacaoIndicativa = this.manual.valorVariacaoIndicativa/100;
 
+    console.log(this.manual);
     if (this.manual.id !== undefined) {
       this.subscribeToSaveResponse(this.manualService.update(this.manual));
     } else {
       if(this.arquivoManual !== undefined) {
-        this.subscribeToSaveResponse(this.manualService.create(this.manual, this.arquivoManual));
+        if(this.checkRequiredFields()) {
+          this.subscribeToSaveResponse(this.manualService.create(this.manual, this.arquivoManual));
+        } else {
+          this.pageNotificationService.addErrorMsg('Campos inválidos: ' + this.getInvalidFieldsString());
+          this.invalidFields = [];
+        }
       } else {
         this.pageNotificationService.addErrorMsg('Campo Arquivo Manual está inválido!');
       }
     }
+  }
+
+  private checkRequiredFields(): boolean {
+      let isFieldsValid = false;
+      console.log(this.manual);
+      if ( isNaN(this.manual.valorVariacaoEstimada)) (this.invalidFields.push('Valor Variação Estimada'));
+      if ( isNaN(this.manual.valorVariacaoIndicativa)) (this.invalidFields.push('Valor Variação Inidicativa'));
+
+      isFieldsValid = (this.invalidFields.length === 0);
+
+      return isFieldsValid;
+  }
+
+  private getInvalidFieldsString(): string {
+    let invalidFieldsString = "";
+    this.invalidFields.forEach(invalidField => {
+      if(invalidField === this.invalidFields[this.invalidFields.length-1]) {
+        invalidFieldsString = invalidFieldsString + invalidField;
+      } else {
+        invalidFieldsString = invalidFieldsString + invalidField + ', ';
+      }
+    });
+
+    return invalidFieldsString;
   }
 
   private subscribeToSaveResponse(result: Observable<Manual>) {
@@ -198,7 +229,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   getPhaseEffortTotalPercentual() {
     let total = 0;
     this.manual.esforcoFases.forEach(each => {
-      (each.percentual !== undefined) ? (total = total + each.percentual) : (total = total)
+      (each.esforco !== undefined) ? (total = total + each.esforco) : (total = total)
     });
 
     return total;
