@@ -125,7 +125,7 @@
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Tipo de Fase</label>
-              <p-dropdown autofocus="true" [options]="tipoFases" [(ngModel)]="newPhaseEffort.fase" placeholder="Tipo de Fase" name="fase" optionLabel="nome"></p-dropdown>
+              <p-dropdown autofocus="true" [options]="tipoFases" [(ngModel)]="newPhaseEffort.fase" placeholder="Tipo de Fase" [autoWidth]="false" name="fase" optionLabel="nome"></p-dropdown>
             </div>
           </div>
           <div class="ui-g">
@@ -211,7 +211,7 @@
             </div>
             <div class="ui-g-3">
               <label>Tipo Ajuste</label><br>
-              <p-dropdown #dd [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true"></p-dropdown>
+              <p-dropdown #dd [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"></p-dropdown>
               <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="newAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
               <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
             </div>
@@ -264,7 +264,7 @@
             </div>
             <div class="ui-g-3">
               <label>Tipo Ajuste</label><br>
-              <p-dropdown [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true"></p-dropdown>
+              <p-dropdown [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"></p-dropdown>
               <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="editedAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
               <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
             </div>
