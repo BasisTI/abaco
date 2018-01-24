@@ -1,4 +1,5 @@
 import { BaseEntity, JSONable } from '../shared';
+import { Manual } from '../manual';
 
 export class Contrato implements BaseEntity, JSONable<Contrato> {
 
@@ -9,7 +10,7 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
     public numeroContrato?: string,
     public dataInicioVigencia?: Date,
     public dataFimVigencia?: Date,
-    public manual?: BaseEntity,
+    public manual?: Manual,
     public ativo?: boolean,
     public artificialId?: number,
   ) { }

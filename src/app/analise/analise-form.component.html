@@ -24,6 +24,7 @@
                   [(ngModel)]="analise.contrato" 
                   disabled="{{ !shouldEnableContratoDropdown() }}" 
                   placeholder="{{ contratoDropdownPlaceholder() }}"
+                  (onChange)="contratoSelected($event.value)"
                   name="contrato" [autoWidth]="false"
                   dataKey="id">
                 </p-dropdown>
@@ -43,6 +44,19 @@
                   placeholder="Tipo de Contagem"
                   name="tipoContagem" [autoWidth]="false">
                 </p-dropdown>
+              </div>
+
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <p-dataTable
+                  [value]="esforcoFases" [(selection)]="analise.esforcoFases" dataKey="id"
+                  [headerCheckboxToggleAllPages]="true"
+                  emptyMessage="Selecione um Contrato para escolher Esforço Fases">
+                  <p-header>Esforço Fase</p-header>
+                  <p-column selectionMode="multiple"
+                    [style]="{'width':'15%'}"></p-column>
+                  <p-column header="Nome" field="fase.nome"></p-column>
+                  <p-column header="Esforço" field="esforco"></p-column>
+                </p-dataTable>
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">

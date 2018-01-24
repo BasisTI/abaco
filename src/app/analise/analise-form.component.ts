@@ -5,11 +5,13 @@ import { Observable, Subscription } from 'rxjs/Rx';
 
 import { Analise } from './analise.model';
 import { AnaliseService } from './analise.service';
-import { ResponseWrapper } from '../shared';
+import { ResponseWrapper, BaseEntity } from '../shared';
 import { Organizacao, OrganizacaoService } from '../organizacao';
 import { Contrato, ContratoService } from '../contrato';
 import { Sistema, SistemaService } from '../sistema';
 import { SelectItem } from 'primeng/primeng';
+
+import * as _ from 'lodash';
 
 @Component({
   selector: 'jhi-analise-form',
@@ -23,6 +25,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   organizacoes: Organizacao[];
   contratos: Contrato[];
   sistemas: Sistema[];
+
+  // TODO verificar esse any
+  esforcoFases: BaseEntity[] = [];
 
   metodosContagem: SelectItem[] = [
     { label: 'DETALHADA', value: 'DETALHADA' },
@@ -53,6 +58,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     });
     this.routeSub = this.route.params.subscribe(params => {
       this.analise = new Analise();
+      this.analise.esforcoFases = [];
       if (params['id']) {
         this.analiseService.find(params['id']).subscribe(analise => {
           this.analise = analise;
@@ -74,6 +80,15 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     } else {
       return 'Contrato - Selecione uma Organização para carregar os Contratos';
     }
+  }
+
+  contratoSelected(contrato: Contrato) {
+    this.esforcoFases = _.cloneDeep(contrato.manual.esforcoFases);
+    console.log(this.esforcoFases);
+  }
+
+  showEsforcoFases() {
+    return JSON.stringify(this.analise.esforcoFases);
   }
 
   shouldEnableContratoDropdown() {
