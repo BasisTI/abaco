@@ -29,11 +29,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   esforcoFases: EsforcoFase[] = [];
 
-  metodosContagem: SelectItem[] = [
-    { label: 'DETALHADA', value: 'DETALHADA' },
-    { label: 'INDICATIVA', value: 'INDICATIVA' },
-    { label: 'ESTIMADA', value: 'ESTIMADA' }
-  ];
+  metodosContagem: SelectItem[] = [];
 
   tiposAnalise: SelectItem[] = [
     { label: 'DESENVOLVIMENTO', value: 'DESENVOLVIMENTO' },
@@ -83,8 +79,15 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   contratoSelected(contrato: Contrato) {
-    this.esforcoFases = _.cloneDeep(contrato.manual.esforcoFases);
-    console.log(this.esforcoFases);
+    const manual = contrato.manual;
+
+    this.esforcoFases = _.cloneDeep(manual.esforcoFases);
+
+    this.metodosContagem = [
+      { value: 'DETALHADA', label: 'DETALHADA' },
+      { value: 'INDICATIVA', label: 'INDICATIVA - ' + (manual.valorVariacaoIndicativa * 100) + '%' },
+      { value: 'ESTIMADA', label: 'ESTIMADA - ' + + (manual.valorVariacaoEstimada * 100) + '%' }
+    ];
   }
 
   totalEsforcoFases() {
