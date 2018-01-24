@@ -82,6 +82,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     const manual = contrato.manual;
 
     this.esforcoFases = _.cloneDeep(manual.esforcoFases);
+    // Leandro pediu para trazer todos selecionados
+    this.analise.esforcoFases = _.cloneDeep(manual.esforcoFases);
 
     this.metodosContagem = [
       { value: 'DETALHADA', label: 'DETALHADA' },
