@@ -12,6 +12,7 @@ import { Sistema, SistemaService } from '../sistema';
 import { SelectItem } from 'primeng/primeng';
 
 import * as _ from 'lodash';
+import { EsforcoFase } from '../esforco-fase/index';
 
 @Component({
   selector: 'jhi-analise-form',
@@ -26,8 +27,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   contratos: Contrato[];
   sistemas: Sistema[];
 
-  // TODO verificar esse any
-  esforcoFases: BaseEntity[] = [];
+  esforcoFases: EsforcoFase[] = [];
 
   metodosContagem: SelectItem[] = [
     { label: 'DETALHADA', value: 'DETALHADA' },
@@ -87,8 +87,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     console.log(this.esforcoFases);
   }
 
-  showEsforcoFases() {
-    return JSON.stringify(this.analise.esforcoFases);
+  totalEsforcoFases() {
+    const initialValue = 0;
+    return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforco, initialValue);
   }
 
   shouldEnableContratoDropdown() {
@@ -112,7 +113,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    
+
   }
 
 }

@@ -7,14 +7,12 @@ export class EsforcoFase implements BaseEntity, JSONable<EsforcoFase>{
     public tipoFase?: TipoFase,
     public percentual?: number,
     public artificialId?: number,
-    // FIXME BaseEntity, para evitar dependencias circulares
-    // parece que reestruturação de pastas evita isso
+    public esforco?: number,
   ) {
 
   }
 
   copyFromJSON(json: any) {
-    // TODO converter manual?
     return new EsforcoFase(json.tipoFase, json.percentual);
   }
 
@@ -23,6 +21,7 @@ export class EsforcoFase implements BaseEntity, JSONable<EsforcoFase>{
     return copy;
   }
 
+  // FIXME reavaliar. atributos estão errados
   clone(): EsforcoFase {
     return new EsforcoFase(this.id, this.tipoFase, this.percentual, this.artificialId);
   }

@@ -1,5 +1,6 @@
 import { BaseEntity } from '../shared';
 import { Contrato } from '../contrato';
+import { EsforcoFase } from '../esforco-fase/index';
 
 export const enum MetodoContagem {
   'DETALHADA',
@@ -30,6 +31,6 @@ export class Analise implements BaseEntity {
     public funcaoTransacaos?: BaseEntity[],
     public organizacao?: BaseEntity,
     public contrato?: Contrato,
-    public esforcoFases?: BaseEntity[]
+    public esforcoFases?: EsforcoFase[]
   ) {}
 }
