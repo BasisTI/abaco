@@ -10,9 +10,9 @@ import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
 @Injectable()
 export class TipoFaseService {
 
-  resourceUrl = environment.apiUrl + '/tipo-fases';
+  resourceUrl = environment.apiUrl + '/fases';
 
-  searchUrl = environment.apiUrl + '/_search/tipo-fases';
+  searchUrl = environment.apiUrl + '/_search/fases';
 
   constructor(private http: HttpService) {}
 

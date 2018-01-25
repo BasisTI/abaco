@@ -67,15 +67,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.esforcoFaseService.query().subscribe((response: ResponseWrapper) => {
-      this.manual.esforcoFases = response.json;
-    });
-
     this.tipoFaseService.query().subscribe((response: ResponseWrapper) => {
       this.tipoFases = response.json;
     });
-
-    console.log(this.manual);
   }
 
   save() {
@@ -154,9 +148,11 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     if (!event.selection) {
       return;
     }
+    console.log(event.selection);
     switch (event.button) {
       case 'edit':
-        this.editedPhaseEffort = event.selection.clone();
+        Object.assign(this.editedPhaseEffort, event.selection);
+        // this.editedPhaseEffort = event.selection.clone();
         this.openDialogEditPhaseEffort();
         break;
       case 'delete':

@@ -14,8 +14,8 @@ export class Manual implements BaseEntity {
     public valorVariacaoEstimada?: number,
     public valorVariacaoIndicativa?: number,
     public arquivoManualId?: number,
-    public fatoresAjuste?: any[],
-    public esforcoFases?: any[],
+    public fatoresAjuste?: FatorAjuste[],
+    public esforcoFases?: EsforcoFase[],
     public artificialId?: number,
   ) {
     if (esforcoFases) {
