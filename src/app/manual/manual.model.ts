@@ -1,8 +1,8 @@
-import { BaseEntity, MappableEntities } from '../shared';
+import { BaseEntity, MappableEntities, JSONable } from '../shared';
 import { EsforcoFase } from '../esforco-fase/index';
 import { FatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 
-export class Manual implements BaseEntity {
+export class Manual implements BaseEntity, JSONable<Manual> {
 
   private mappablePhaseEfforts: MappableEntities<EsforcoFase>;
   private mappableAdjustFactors: MappableEntities<FatorAjuste>;
@@ -25,13 +25,26 @@ export class Manual implements BaseEntity {
       this.mappablePhaseEfforts = new MappableEntities<EsforcoFase>();
     }
 
-    if(fatoresAjuste) {
+    if (fatoresAjuste) {
       this.mappableAdjustFactors = new MappableEntities<FatorAjuste>(fatoresAjuste);
     } else {
       this.mappableAdjustFactors = new MappableEntities<FatorAjuste>();
     }
   }
 
+  toJSONState(): Manual {
+    const copy: Manual = Object.assign({}, this);
+    return copy;
+  }
+
+  copyFromJSON(json: any) {
+    const fatoresAjuste: FatorAjuste[] = json.fatoresAjuste
+      .map(faJSON => new FatorAjuste().copyFromJSON(faJSON));
+    const esforcoFases: EsforcoFase[] = json.esforcoFases
+      .map(efJSON => new EsforcoFase().copyFromJSON(efJSON));
+    return new Manual(json.id, json.nome, json.observacao, json.valorVariacaoEstimada,
+      json.valorVariacaoIndicativa, json.arquivoManualId, fatoresAjuste, esforcoFases);
+  }
 
   addEsforcoFases(esforcoFase: EsforcoFase) {
     this.mappablePhaseEfforts.push(esforcoFase);
