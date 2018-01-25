@@ -14,6 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -35,6 +38,8 @@ public class EsforcoFase implements Serializable {
     private Long id;
 
     @Column(name = "esforco", precision = 10, scale = 2)
+    @DecimalMin(value = "0")
+    @DecimalMax(value = "1")
     private BigDecimal esforco;
 
     @ManyToOne
