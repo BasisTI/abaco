@@ -286,6 +286,15 @@
             </div>
           </div>
         </p-dialog>
+
+        <p-confirmDialog header="Confirmação" #dialog>
+          <p-footer>
+            <app-white-button buttonLabel="Não" buttonIcon="fa-close" (click)="dialog.reject()"></app-white-button>
+            <!-- <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button> -->
+            <app-green-button buttonLabel="Sim" buttonIcon="fa-close" (click)="dialog.accept()"></app-green-button>
+            <!-- <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button> -->
+          </p-footer>
+        </p-confirmDialog>
       </form>
     </div>
   </div>
