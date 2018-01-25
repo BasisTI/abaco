@@ -183,13 +183,21 @@
         <p-dialog header="Fator de Ajuste" [(visible)]="showDialogCreateAdjustFactor"
         [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
-            <div class="ui-g-9">
+            <div class="ui-g-6">
               <label>Nome</label>
               <input type="text" name="nomeFatorAjuste" [(ngModel)]="newAdjustFactor.nome" pInputText />
             </div>
             <div class="ui-g-3">
               <label>Fator</label>
               <p-spinner size="30" name="fator" [(ngModel)]="newAdjustFactor.fator" min="0" max="100"></p-spinner>
+            </div>
+            <div class="ui-g-3">
+              <label>Tipo Ajuste</label><br>
+              <p-dropdown #dd [options]="adjustTypes" name="tipoAjuste"
+               [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"
+               placeholder="Tipo Ajuste"></p-dropdown>
+              <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="newAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
+              <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
             </div>
           </div>
           <div class="ui-g">
@@ -211,14 +219,6 @@
               <label>Origem</label>
               <input type="text" name="origem" [(ngModel)]="newAdjustFactor.origem" pInputText />
             </div>
-            <div class="ui-g-3">
-              <label>Tipo Ajuste</label><br>
-              <p-dropdown #dd [options]="adjustTypes" name="tipoAjuste"
-               [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"
-               placeholder="Tipo Ajuste"></p-dropdown>
-              <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="newAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
-              <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
-            </div>
           </div>
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
@@ -238,13 +238,19 @@
         <p-dialog header="Fator de Ajuste" [(visible)]="showDialogEditAdjustFactor"
         [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
-            <div class="ui-g-9">
+            <div class="ui-g-6">
               <label>Nome</label>
               <input type="text" name="nomeEdicaoFatorAjuste" [(ngModel)]="editedAdjustFactor.nome" pInputText />
             </div>
             <div class="ui-g-3">
               <label>Fator (%)</label>
               <p-spinner size="30" name="fator" [(ngModel)]="editedAdjustFactor.fator" min="0" max="100"></p-spinner>
+            </div>
+            <div class="ui-g-3">
+              <label>Tipo Ajuste</label><br>
+              <p-dropdown [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"></p-dropdown>
+              <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="editedAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
+              <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
             </div>
           </div>
           <div class="ui-g">
@@ -265,12 +271,6 @@
             <div class="ui-g-5">
               <label>Origem</label>
               <input type="text" name="origem" [(ngModel)]="editedAdjustFactor.origem" pInputText />
-            </div>
-            <div class="ui-g-3">
-              <label>Tipo Ajuste</label><br>
-              <p-dropdown [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"></p-dropdown>
-              <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="editedAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
-              <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
             </div>
           </div>
           <div class="ui-g">
