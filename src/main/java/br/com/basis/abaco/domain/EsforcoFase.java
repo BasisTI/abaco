@@ -42,7 +42,7 @@ public class EsforcoFase implements Serializable {
     private Manual manual;
 
     @ManyToOne
-    private TipoFase fase;
+    private Fase fase;
 
     public Long getId() {
         return id;
