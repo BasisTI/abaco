@@ -154,7 +154,9 @@
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Tipo de Fase</label>
-              <p-dropdown [options]="tipoFases" [(ngModel)]="editedPhaseEffort.fase" placeholder="Tipo de Fase" name="fase" [autoWidth]="false"></p-dropdown>
+              <p-dropdown [options]="tipoFases" [(ngModel)]="editedPhaseEffort.fase"
+                optionLabel="nome"
+                placeholder="Tipo de Fase" name="fase" dataKey="id" [autoWidth]="false"></p-dropdown>
             </div>
           </div>
           <div class="ui-g">
