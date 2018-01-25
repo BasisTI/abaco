@@ -33,7 +33,7 @@ export class MenuItemsService {
         label: 'Análise', icon: 'insert_chart',
         visible: this.authService.isAuthenticated(),
         items: [
-          { label: 'Análise' },
+          { label: 'Análise', routerLink: 'analise' },
           { label: 'Validação' }
         ]
       }

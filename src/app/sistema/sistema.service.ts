@@ -12,6 +12,8 @@ export class SistemaService {
 
   resourceUrl = environment.apiUrl + '/sistemas';
 
+  findByOrganizacaoUrl = this.resourceUrl + '/organizacao';
+
   searchUrl = environment.apiUrl + '/_search/sistemas';
 
   constructor(private http: HttpService) {}
@@ -37,6 +39,12 @@ export class SistemaService {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
     });
+  }
+
+  findAllByOrganizacaoId(orgId: number): Observable<ResponseWrapper> {
+    const url = `${this.findByOrganizacaoUrl}/${orgId}`;
+    return this.http.get(url)
+      .map((res: Response) => this.convertResponse(res));
   }
 
   query(req?: any): Observable<ResponseWrapper> {
