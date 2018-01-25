@@ -199,6 +199,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   editPhaseEffort() {
+    this.editedPhaseEffort.esforco/100;
     this.manual.updateEsforcoFases(this.editedPhaseEffort);
     this.closeDialogEditPhaseEffort();
   }
@@ -219,6 +220,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   addPhaseEffort() {
+    this.newPhaseEffort.esforco = this.newPhaseEffort.esforco;
     this.manual.addEsforcoFases(this.newPhaseEffort);
     this.closeDialogPhaseEffort();
   }

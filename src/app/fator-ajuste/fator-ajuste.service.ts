@@ -18,6 +18,7 @@ export class FatorAjusteService {
 
   create(fatorAjuste: FatorAjuste): Observable<FatorAjuste> {
     const copy = this.convert(fatorAjuste);
+    copy.fator = copy.fator/100;
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
@@ -26,6 +27,7 @@ export class FatorAjusteService {
 
   update(fatorAjuste: FatorAjuste): Observable<FatorAjuste> {
     const copy = this.convert(fatorAjuste);
+    copy.fator = copy.fator/100;
     return this.http.put(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);

@@ -162,7 +162,7 @@
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Esforço (%)</label>
-              <p-spinner name="esforco" [(ngModel)]="editedPhaseEffort.esforco" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <p-spinner name="esforco" [(ngModel)]="editedPhaseEffort.esforco" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
             </div>
           </div>
           <div class="ui-g">
@@ -189,7 +189,7 @@
             </div>
             <div class="ui-g-3">
               <label>Fator</label>
-              <p-spinner size="30" name="fator" [(ngModel)]="newAdjustFactor.fator" [step]="0.1"></p-spinner>
+              <p-spinner size="30" name="fator" [(ngModel)]="newAdjustFactor.fator" min="0" max="100"></p-spinner>
             </div>
           </div>
           <div class="ui-g">
@@ -243,8 +243,8 @@
               <input type="text" name="nomeEdicaoFatorAjuste" [(ngModel)]="editedAdjustFactor.nome" pInputText />
             </div>
             <div class="ui-g-3">
-              <label>Fator</label>
-              <p-spinner size="30" name="fator" [(ngModel)]="editedAdjustFactor.fator" [step]="0.1"></p-spinner>
+              <label>Fator (%)</label>
+              <p-spinner size="30" name="fator" [(ngModel)]="editedAdjustFactor.fator" min="0" max="100"></p-spinner>
             </div>
           </div>
           <div class="ui-g">
