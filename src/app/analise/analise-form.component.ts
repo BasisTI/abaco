@@ -22,6 +22,8 @@ import { Manual } from '../manual/index';
 })
 export class AnaliseFormComponent implements OnInit, OnDestroy {
 
+  isEdicao: boolean;
+
   isSaving: boolean;
   analise: Analise;
 
@@ -58,8 +60,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     });
     this.routeSub = this.route.params.subscribe(params => {
       this.analise = new Analise();
+      this.isEdicao = false;
       this.analise.esforcoFases = [];
       if (params['id']) {
+        this.isEdicao = true;
         this.analiseService.find(params['id']).subscribe(analise => {
           this.analise = analise;
         });
