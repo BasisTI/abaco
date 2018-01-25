@@ -25,7 +25,8 @@ export class ManualComponent implements AfterViewInit {
     private router: Router,
     private manualService: ManualService,
     private confirmationService: ConfirmationService
-  ) {}
+  ) {
+  }
 
   ngAfterViewInit() {
     this.datatable.refresh(this.elasticQuery.query);
