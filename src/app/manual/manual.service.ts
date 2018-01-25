@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 import { UploadService } from '../upload/upload.service';
 
 import { Manual } from './manual.model';
-import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
+import { ResponseWrapper, createRequestOption, JhiDateUtils, JSONable } from '../shared';
 
 @Injectable()
 export class ManualService {
@@ -71,8 +71,8 @@ export class ManualService {
    * Convert a returned JSON object to Manual.
    */
   private convertItemFromServer(json: any): Manual {
-    const entity: Manual = Object.assign(new Manual(), json);
-    return entity;
+    const entity: JSONable<Manual> = new Manual();
+    return entity.copyFromJSON(json);
   }
 
   /**
