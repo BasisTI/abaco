@@ -63,7 +63,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.routeSub = this.route.params.subscribe(params => {
       this.manual = new Manual();
       if (params['id']) {
-        this.manualService.find(params['id']).subscribe(manual => this.manual = manual);
+        this.manualService.find(params['id']).subscribe(manual => {
+          this.manual = manual;
+        });
       }
     });
 
@@ -151,8 +153,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     console.log(event.selection);
     switch (event.button) {
       case 'edit':
-        Object.assign(this.editedPhaseEffort, event.selection);
-        // this.editedPhaseEffort = event.selection.clone();
+        this.editedPhaseEffort = event.selection.clone();
         this.openDialogEditPhaseEffort();
         break;
       case 'delete':
