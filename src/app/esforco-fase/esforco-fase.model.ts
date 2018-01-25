@@ -12,7 +12,7 @@ export class EsforcoFase implements BaseEntity, JSONable<EsforcoFase> {
   }
 
   copyFromJSON(json: any) {
-    return new EsforcoFase(json.tipoFase, json.percentual);
+    return new EsforcoFase(json.id, new TipoFase(json.fase.id, json.fase.nome), json.esforco);
   }
 
   toJSONState(): EsforcoFase {
@@ -20,7 +20,6 @@ export class EsforcoFase implements BaseEntity, JSONable<EsforcoFase> {
     return copy;
   }
 
-  // FIXME reavaliar. atributos estão errados
   clone(): EsforcoFase {
     return new EsforcoFase(this.id, this.fase, this.esforco, this.artificialId);
   }
