@@ -28,8 +28,8 @@ import {
   AnaliseFormComponent,
   analiseRoute
 } from './';
-import { FatorAjusteToSelectItemPipe } from '../shared/index';
 import { AbacoFuncaoDadosModule } from '../funcao-dados/funcao-dados.module';
+import { AbacoSharedModule } from '../shared/abaco-shared.module';
 
 @NgModule({
   imports: [
@@ -49,13 +49,13 @@ import { AbacoFuncaoDadosModule } from '../funcao-dados/funcao-dados.module';
     AbacoButtonsModule,
     TabViewModule,
     InputTextareaModule,
-    AbacoFuncaoDadosModule
+    AbacoFuncaoDadosModule,
+    AbacoSharedModule
   ],
   declarations: [
     AnaliseComponent,
     AnaliseDetailComponent,
-    AnaliseFormComponent,
-    FatorAjusteToSelectItemPipe
+    AnaliseFormComponent
   ],
   providers: [
     AnaliseService,

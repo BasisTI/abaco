@@ -19,6 +19,7 @@ import {
     TabViewModule,
     InputTextareaModule
   } from 'primeng/primeng';
+import { AbacoSharedModule } from '../shared/abaco-shared.module';
 
 @NgModule({
   imports: [
@@ -35,7 +36,8 @@ import {
     ConfirmDialogModule,
     AbacoButtonsModule,
     TabViewModule,
-    InputTextareaModule
+    InputTextareaModule,
+    AbacoSharedModule
   ],
   declarations: [
     FuncaoDadosFormComponent
