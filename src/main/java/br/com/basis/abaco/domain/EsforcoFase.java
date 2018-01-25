@@ -78,15 +78,15 @@ public class EsforcoFase implements Serializable {
         this.manual = manual;
     }
 
-    public TipoFase getFase() {
+	public Fase getFase() {
 		return fase;
 	}
 
-	public void setFase(TipoFase fase) {
+	public void setFase(Fase fase) {
 		this.fase = fase;
 	}
 
-	public EsforcoFase fase(TipoFase fase) {
+	public EsforcoFase fase(Fase fase) {
         this.fase = fase;
         return this;
     }
