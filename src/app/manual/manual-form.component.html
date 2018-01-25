@@ -213,7 +213,9 @@
             </div>
             <div class="ui-g-3">
               <label>Tipo Ajuste</label><br>
-              <p-dropdown #dd [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"></p-dropdown>
+              <p-dropdown #dd [options]="adjustTypes" name="tipoAjuste"
+               [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"
+               placeholder="Tipo Ajuste"></p-dropdown>
               <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="newAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
               <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
             </div>
