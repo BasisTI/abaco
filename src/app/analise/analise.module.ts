@@ -29,6 +29,7 @@ import {
   analiseRoute
 } from './';
 import { FatorAjusteToSelectItemPipe } from '../shared/index';
+import { AbacoFuncaoDadosModule } from '../funcao-dados/funcao-dados.module';
 
 @NgModule({
   imports: [
@@ -47,7 +48,8 @@ import { FatorAjusteToSelectItemPipe } from '../shared/index';
     ConfirmDialogModule,
     AbacoButtonsModule,
     TabViewModule,
-    InputTextareaModule
+    InputTextareaModule,
+    AbacoFuncaoDadosModule
   ],
   declarations: [
     AnaliseComponent,

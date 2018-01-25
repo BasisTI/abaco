@@ -1,27 +1,27 @@
 import { BaseEntity } from '../shared';
 
-export const enum TipoFuncaoTransacao {
-  'EE',
-  'SE',
-  'CE'
+const enum TipoFuncaoDados {
+  'ALI',
+  'AIE'
 }
 
-export const enum Complexidade {
+const enum Complexidade {
   'BAIXA',
   'MEDIA',
   'ALTA'
 }
 
-export class FuncaoTransacao implements BaseEntity {
+export class FuncaoDados implements BaseEntity {
 
   constructor(
     public id?: number,
-    public tipo?: TipoFuncaoTransacao,
+    public tipo?: TipoFuncaoDados,
     public complexidade?: Complexidade,
     public pf?: number,
     public analise?: BaseEntity,
     public funcionalidades?: BaseEntity[],
     public fatorAjuste?: BaseEntity,
-    public alrs?: BaseEntity[],
-  ) {}
+    public alr?: BaseEntity,
+    public name?: string,
+  ) { }
 }
