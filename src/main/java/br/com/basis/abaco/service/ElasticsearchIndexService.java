@@ -32,7 +32,6 @@ import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.domain.TipoEquipe;
-import br.com.basis.abaco.domain.TipoFase;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.AlrRepository;
 import br.com.basis.abaco.repository.AnaliseRepository;
@@ -50,7 +49,6 @@ import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.RlrRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
-import br.com.basis.abaco.repository.TipoFaseRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AlrSearchRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
@@ -68,7 +66,6 @@ import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
 import br.com.basis.abaco.repository.search.RlrSearchRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
-import br.com.basis.abaco.repository.search.TipoFaseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 
 @Service
@@ -142,9 +139,6 @@ public class ElasticsearchIndexService {
 
     private final TipoEquipeRepository tipoEquipeRepository;
     private final TipoEquipeSearchRepository tipoEquipeSearchRepository;
-    
-    private final TipoFaseRepository tipoFaseRepository;
-    private final TipoFaseSearchRepository tipoFaseSearchRepository;
 
     private final ElasticsearchTemplate elasticsearchTemplate;
     
@@ -184,8 +178,6 @@ public class ElasticsearchIndexService {
         SistemaSearchRepository sistemaSearchRepository,
         TipoEquipeRepository tipoEquipeRepository,
         TipoEquipeSearchRepository tipoEquipeSearchRepository,
-        TipoFaseRepository tipoFaseRepository,
-        TipoFaseSearchRepository tipoFaseSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate) {
         this.userRepository = userRepository;
         this.userSearchRepository = userSearchRepository;
@@ -221,8 +213,6 @@ public class ElasticsearchIndexService {
         this.sistemaSearchRepository = sistemaSearchRepository;
         this.tipoEquipeRepository = tipoEquipeRepository;
         this.tipoEquipeSearchRepository = tipoEquipeSearchRepository;
-        this.tipoFaseRepository = tipoFaseRepository;
-        this.tipoFaseSearchRepository = tipoFaseSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
@@ -246,7 +236,6 @@ public class ElasticsearchIndexService {
         reindexForClass(Sistema.class, sistemaRepository, sistemaSearchRepository);
         reindexForClass(User.class, userRepository, userSearchRepository);
         reindexForClass(TipoEquipe.class, tipoEquipeRepository, tipoEquipeSearchRepository);
-        reindexForClass(TipoFase.class, tipoFaseRepository, tipoFaseSearchRepository);
         
         log.info("Elasticsearch: Successfully performed reindexing");
     }
