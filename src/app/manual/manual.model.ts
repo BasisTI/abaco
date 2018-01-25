@@ -73,6 +73,6 @@ export class Manual implements BaseEntity, JSONable<Manual> {
 
   deleteFatoresAjuste(fatorAjuste: FatorAjuste) {
     this.mappableAdjustFactors.delete(fatorAjuste);
-    this.fatoresAjuste = this.mappablePhaseEfforts.values();
+    this.fatoresAjuste = this.mappableAdjustFactors.values();
   }
 }
