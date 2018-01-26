@@ -2,6 +2,15 @@
   <div class="ui-g-12">
     <div class="card card-w-title">
       <div class="ui-g" >
+
+        <div class="ui-g-12" style="margin-bottom: 25px">
+          <div class="ui-g-6">
+            <p-dropdown [options]="modulos" [ngModel]="moduloSelecionado"
+              optionLabel="nome"
+              placeholder="Modulo" name="modulo" [autoWidth]="false"></p-dropdown>
+          </div>
+        </div>
+
         <div class="ui-g-12" style="margin-bottom: 25px">
           <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
             [(ngModel)]="currentFuncaoDados.fatorAjuste"

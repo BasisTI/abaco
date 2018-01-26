@@ -1,11 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { AnaliseSharedDataService } from '../shared';
 import { FuncaoDados } from './funcao-dados.model';
 import { Analise } from '../analise';
 import { Manual } from '../manual';
 import { FatorAjuste } from '../fator-ajuste';
-import { AnaliseSharedDataService } from '../shared';
+import { Modulo } from '../modulo';
+import { Funcionalidade } from '../funcionalidade';
 
 import * as _ from 'lodash';
+import { Sistema } from '../sistema/index';
 
 @Component({
   selector: 'app-analise-funcao-dados',
@@ -13,16 +16,33 @@ import * as _ from 'lodash';
 })
 export class FuncaoDadosFormComponent implements OnInit {
 
+  funcoesDados: FuncaoDados[];
+  currentFuncaoDados: FuncaoDados;
+
+  moduloSelecionado: Modulo;
+  funcionalidadeSelecionada: Funcionalidade;
+
+  mostrarDialogModulo = false;
+  novoModulo: Modulo = new Modulo();
+
+  mostrarDialogFuncionalidade = false;
+  novaFuncionalidade: Funcionalidade = new Funcionalidade();
+
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService
   ) { }
 
-  funcoesDados: FuncaoDados[];
-  currentFuncaoDados: FuncaoDados;
-
   ngOnInit() {
     this.funcoesDados = [];
     this.currentFuncaoDados = new FuncaoDados();
+  }
+
+  get analise(): Analise {
+    return this.analiseSharedDataService.analise;
+  }
+
+  set analise(analise: Analise) {
+    this.analiseSharedDataService.analise = analise;
   }
 
   private get manual() {
@@ -39,13 +59,34 @@ export class FuncaoDadosFormComponent implements OnInit {
     return [];
   }
 
-  get analise(): Analise {
-    return this.analiseSharedDataService.analise;
+  get sistema(): Sistema {
+    return this.analise.sistema;
   }
 
-  set analise(analise: Analise) {
-    this.analiseSharedDataService.analise = analise;
+  get modulos() {
+    console.log(this.sistema);
+    if (this.sistema) {
+      return this.sistema.modulos;
+    }
   }
 
+  abrirDialogModulo() {
+    this.mostrarDialogModulo = true;
+    // XXX problema em dar new toda hora?
+    this.novoModulo = new Modulo();
+  }
+
+  fecharDialogModulo() {
+    this.mostrarDialogModulo = false;
+  }
+
+  abrirDialogFuncionalidade() {
+    this.mostrarDialogFuncionalidade = true;
+    this.novaFuncionalidade = new Funcionalidade();
+  }
+
+  fecharDialogFuncionalidade() {
+    this.mostrarDialogFuncionalidade = false;
+  }
 
 }
