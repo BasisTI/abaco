@@ -10,7 +10,7 @@ pipelineBuildFrontendJavascript {
     buildScriptPath = 'docker/nginx/build.sh'
     dockerContext = 'docker/nginx'
     frontendImageName = 'abaco/abaco-ui'
-    frontendImageTag = 'desenvolvimento-basis-24357'
+    frontendImageTag = frontendImageTag 
     doDeploy = doDeploy
     rancherInfo = [
         configName: rancherConfigName, 
