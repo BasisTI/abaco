@@ -16,27 +16,17 @@ export class FatorAjusteToSelectItemPipe implements PipeTransform {
     });
   }
 
-  private generateLabel(fatorAjuste: FatorAjuste) {
-    if (fatorAjuste.tipoAjuste === 'PERCENTUAL') {
-      return this.generateLabelPercentual(fatorAjuste);
-    } else if (fatorAjuste.tipoAjuste === 'UNITARIO') {
-      return this.generateLabelUnitario(fatorAjuste);
+  private generateLabel(fa: FatorAjuste): string {
+    const fatorSuffix = this.generateFatorSuffix(fa);
+    return `${fa.codigo} (${fa.origem}) - ${fa.nome} - ${fa.fator}${fatorSuffix}`;
+  }
+
+  private generateFatorSuffix(fa: FatorAjuste): string {
+    if (fa.tipoAjuste === 'PERCENTUAL') {
+      return '%';
+    } else if (fa.tipoAjuste === 'UNITARIO') {
+      return ' PF';
     }
-    return fatorAjuste.nome;
-  }
-
-  private generateLabelPercentual(fa: FatorAjuste) {
-    const cod = fa.codigo;
-    const orig = fa.origem;
-    const label = `${fa.codigo} (${fa.origem}) - ${fa.nome} - ${fa.fator}%`;
-    return label;
-  }
-
-  private generateLabelUnitario(fa: FatorAjuste) {
-    const cod = fa.codigo;
-    const orig = fa.origem;
-    const label = `${fa.codigo} (${fa.origem}) - ${fa.nome} - ${fa.fator} PF`;
-    return label;
   }
 
 }
