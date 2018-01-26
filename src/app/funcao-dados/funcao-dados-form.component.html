@@ -1,7 +1,17 @@
-<div class="ui-g-12" style="margin-bottom: 25px">
-  <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
-    [(ngModel)]="currentFuncaoDados.fatorAjuste"
-    placeholder="Fator Ajuste"
-    name="fatorAjuste" [autoWidth]="false">
-  </p-dropdown>
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <div class="ui-g" >
+        <div class="ui-g-12" style="margin-bottom: 25px">
+          <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
+            [(ngModel)]="currentFuncaoDados.fatorAjuste"
+            placeholder="Fator Ajuste"
+            name="fatorAjuste" [autoWidth]="false">
+          </p-dropdown>
+        </div>
+
+        
+      </div>      
+    </div>
+  </div>
 </div>
