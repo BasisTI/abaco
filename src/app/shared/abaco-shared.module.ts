@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 
-import { FatorAjusteToSelectItemPipe } from './index';
+import { FatorAjusteToSelectItemPipe, AnaliseSharedDataService } from './index';
 
 @NgModule({
     declarations: [
         FatorAjusteToSelectItemPipe
+    ],
+    providers: [
+        AnaliseSharedDataService
     ],
     exports: [
         FatorAjusteToSelectItemPipe
