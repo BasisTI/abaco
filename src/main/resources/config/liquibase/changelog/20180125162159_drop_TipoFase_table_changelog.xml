@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="diego.marcilio (generated)" id="1516897327122-1">
+      <dropTable tableName="tipo_fase"/>
+   </changeSet>
+   <changeSet author="diego.marcilio (generated)" id="1516897327122-2">
+      <dropNotNullConstraint columnDataType="boolean" columnName="ativo" tableName="contrato"/>
+      <dropDefaultValue columnDataType="boolean" columnName="ativo" tableName="contrato"/>
+   </changeSet>
+</databaseChangeLog>
