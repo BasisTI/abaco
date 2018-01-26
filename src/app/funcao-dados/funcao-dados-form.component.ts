@@ -97,6 +97,7 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   adicionarModulo() {
     this.sistema.addModulo(this.novoModulo);
+    this.moduloSelecionado = this.novoModulo;
     this.fecharDialogModulo();
   }
 
