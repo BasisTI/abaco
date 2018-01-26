@@ -54,7 +54,7 @@ export class ManualComponent implements AfterViewInit {
       message: 'Tem certeza que deseja excluir o registro?',
       accept: () => {
         this.manualService.delete(id).subscribe(() => {
-          this.datatable.refresh(undefined);
+          this.datatable.refresh(this.elasticQuery.query);
         });
       }
     });
