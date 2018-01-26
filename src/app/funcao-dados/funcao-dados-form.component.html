@@ -7,7 +7,14 @@
           <div class="ui-g-6">
             <p-dropdown [options]="modulos" [ngModel]="moduloSelecionado"
               optionLabel="nome"
+              (onChange)="moduloSelected($event.value)"
               placeholder="Modulo" name="modulo" [autoWidth]="false"></p-dropdown>
+          </div>
+
+          <div class="ui-g-6">
+            <p-dropdown [options]="funcionalidades" [ngModel]="funcionalidadeSelecionada"
+              optionLabel="nome"
+              placeholder="Funcionalidade" name="funcionalidade" [autoWidth]="false"></p-dropdown>
           </div>
         </div>
 

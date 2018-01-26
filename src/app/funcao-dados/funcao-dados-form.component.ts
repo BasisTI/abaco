@@ -19,14 +19,14 @@ export class FuncaoDadosFormComponent implements OnInit {
   funcoesDados: FuncaoDados[];
   currentFuncaoDados: FuncaoDados;
 
-  moduloSelecionado: Modulo;
-  funcionalidadeSelecionada: Funcionalidade;
-
   mostrarDialogModulo = false;
   novoModulo: Modulo = new Modulo();
+  moduloSelecionado: Modulo;
 
+  funcionalidades: Funcionalidade[];
   mostrarDialogFuncionalidade = false;
   novaFuncionalidade: Funcionalidade = new Funcionalidade();
+  funcionalidadeSelecionada: Funcionalidade;
 
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService
@@ -64,7 +64,6 @@ export class FuncaoDadosFormComponent implements OnInit {
   }
 
   get modulos() {
-    console.log(this.sistema);
     if (this.sistema) {
       return this.sistema.modulos;
     }
@@ -87,6 +86,10 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   fecharDialogFuncionalidade() {
     this.mostrarDialogFuncionalidade = false;
+  }
+
+  moduloSelected(modulo: Modulo) {
+    this.funcionalidades = modulo.funcionalidades;
   }
 
 }
