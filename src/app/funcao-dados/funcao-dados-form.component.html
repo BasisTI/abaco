@@ -8,7 +8,9 @@
             <p-dropdown [options]="modulos" [ngModel]="moduloSelecionado"
               optionLabel="nome"
               (onChange)="moduloSelected($event.value)"
-              placeholder="Modulo" name="modulo" [autoWidth]="false"></p-dropdown>
+              placeholder="{{ moduloDropdownPlaceholder() }}"
+              disabled="{{ !isSistemaSelected() }}"
+              name="modulo" [autoWidth]="false"></p-dropdown>
           </div>
 
           <div class="ui-g-6">

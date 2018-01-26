@@ -69,6 +69,18 @@ export class FuncaoDadosFormComponent implements OnInit {
     }
   }
 
+  isSistemaSelected(): boolean {
+    return !_.isUndefined(this.sistema);
+  }
+
+  moduloDropdownPlaceholder(): string {
+    if (this.isSistemaSelected()) {
+      return 'Modulo';
+    } else {
+      return `Selecione um Sistema na aba 'Geral' para carregar os Módulos`;
+    }
+  }
+
   abrirDialogModulo() {
     this.mostrarDialogModulo = true;
     // XXX problema em dar new toda hora?
