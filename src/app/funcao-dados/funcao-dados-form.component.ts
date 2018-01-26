@@ -3,6 +3,7 @@ import { FuncaoDados } from './funcao-dados.model';
 import { Analise } from '../analise';
 import { Manual } from '../manual';
 import { FatorAjuste } from '../fator-ajuste';
+import { AnaliseSharedDataService } from '../shared';
 
 
 @Component({
@@ -11,8 +12,9 @@ import { FatorAjuste } from '../fator-ajuste';
 })
 export class FuncaoDadosFormComponent implements OnInit {
 
-  @Input()
-  analise: Analise;
+  constructor(
+    private analiseSharedDataService: AnaliseSharedDataService
+  ) { }
 
   fatoresAjuste: FatorAjuste[];
 
@@ -20,11 +22,16 @@ export class FuncaoDadosFormComponent implements OnInit {
   private manual: Manual;
 
   ngOnInit() {
-    this.manual = this.analise.contrato.manual;
-    this.fatoresAjuste = this.manual.fatoresAjuste;
+    
   }
 
+  get analise(): Analise {
+    return this.analiseSharedDataService.analise;
+  }
 
+  set analise(analise: Analise) {
+    this.analiseSharedDataService.analise = analise;
+  }
 
 
 }

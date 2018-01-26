@@ -5,7 +5,7 @@ import { Observable, Subscription } from 'rxjs/Rx';
 
 import { Analise } from './analise.model';
 import { AnaliseService } from './analise.service';
-import { ResponseWrapper, BaseEntity } from '../shared';
+import { ResponseWrapper, BaseEntity, AnaliseSharedDataService } from '../shared';
 import { Organizacao, OrganizacaoService } from '../organizacao';
 import { Contrato, ContratoService } from '../contrato';
 import { Sistema, SistemaService } from '../sistema';
@@ -25,7 +25,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   isEdicao: boolean;
 
   isSaving: boolean;
-  analise: Analise;
 
   organizacoes: Organizacao[];
   contratos: Contrato[];
@@ -51,6 +50,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     private organizacaoService: OrganizacaoService,
     private contratoService: ContratoService,
     private sistemaService: SistemaService,
+    private analiseSharedDataService: AnaliseSharedDataService,
   ) { }
 
   ngOnInit() {
@@ -69,6 +69,14 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  get analise(): Analise {
+    return this.analiseSharedDataService.analise;
+  }
+
+  set analise(analise: Analise) {
+    this.analiseSharedDataService.analise = analise;
   }
 
   organizacaoSelected(org: Organizacao) {
