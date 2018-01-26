@@ -5,8 +5,8 @@
 pipelineBuildFrontendJavascript {
     agentLabel = 'docker-engine'
     gitRepositoryInfo = [
-        url = 'ssh://git@gogs-ssh.basis.com.br:10022/Basis/abaco_primeng_codigo_fonte.git',
-        branch = 'master'
+        url: 'ssh://git@gogs-ssh.basis.com.br:10022/Basis/abaco_primeng_codigo_fonte.git',
+        branch: 'master'
     ]
     dockerRegistry = 'basis-registry.basis.com.br'
     builderImageName = 'basis-registry.basis.com.br/basis/builder-image'
