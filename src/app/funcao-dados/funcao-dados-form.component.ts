@@ -91,6 +91,18 @@ export class FuncaoDadosFormComponent implements OnInit {
     this.mostrarDialogModulo = false;
   }
 
+  isModuloSelected(): boolean {
+    return !_.isUndefined(this.moduloSelecionado);
+  }
+
+  funcionalidadeDropdownPlaceholder() {
+    if (this.isModuloSelected()) {
+      return 'Funcionalidade';
+    } else {
+      return 'Selecione um Módulo para carregar as Funcionalidades';
+    }
+  }
+
   abrirDialogFuncionalidade() {
     this.mostrarDialogFuncionalidade = true;
     this.novaFuncionalidade = new Funcionalidade();

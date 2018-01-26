@@ -5,7 +5,7 @@
 
         <div class="ui-g-12" style="margin-bottom: 25px">
           <div class="ui-g-6">
-            <p-dropdown [options]="modulos" [ngModel]="moduloSelecionado"
+            <p-dropdown [options]="modulos" [(ngModel)]="moduloSelecionado"
               optionLabel="nome"
               (onChange)="moduloSelected($event.value)"
               placeholder="{{ moduloDropdownPlaceholder() }}"
@@ -14,9 +14,11 @@
           </div>
 
           <div class="ui-g-6">
-            <p-dropdown [options]="funcionalidades" [ngModel]="funcionalidadeSelecionada"
+            <p-dropdown [options]="funcionalidades" [(ngModel)]="funcionalidadeSelecionada"
               optionLabel="nome"
-              placeholder="Funcionalidade" name="funcionalidade" [autoWidth]="false"></p-dropdown>
+              placeholder="{{ funcionalidadeDropdownPlaceholder() }}"
+              disabled="{{ !isModuloSelected() }}"
+              name="funcionalidade" [autoWidth]="false"></p-dropdown>
           </div>
         </div>
 
