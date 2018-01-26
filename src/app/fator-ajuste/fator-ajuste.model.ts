@@ -21,6 +21,8 @@ export class FatorAjuste implements BaseEntity {
     public ativo?: boolean,
     public descricao?: string,
     public codigo?: string,
+    // XXX Evitando uso de Enum. muito ruim para comparar o valor
+    // provavelmente precisa também de fazer o cast do JSON para o enum
     public tipoAjuste?: string,
     public impacto?: string,
     public manual?: BaseEntity,
