@@ -67,7 +67,6 @@
             <app-memory-datatable [value]="manual.esforcoFases"
               (buttonClick)="datatableClick($event)">
               <p-column header="Tipo de fase" field="fase.nome">
-
               </p-column>
               <p-column header="Percentual (%)" field="esforco">
               </p-column>
@@ -188,8 +187,11 @@
               <input type="text" name="nomeFatorAjuste" [(ngModel)]="newAdjustFactor.nome" pInputText />
             </div>
             <div class="ui-g-3">
-              <label>Fator</label>
-              <p-spinner size="30" name="fator" [(ngModel)]="newAdjustFactor.fator" min="0" max="100"></p-spinner>
+              <label *ngIf="newAdjustFactor.tipoAjuste === 'PERCENTUAL'">Fator (%)</label>
+              <label *ngIf="newAdjustFactor.tipoAjuste === 'UNITARIO'">Fator (PF)</label>
+              <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Fator</label>
+              <p-spinner size="30" *ngIf="newAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="newAdjustFactor.fator"></p-spinner>
+              <p-spinner size="30" *ngIf="newAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="newAdjustFactor.fator"></p-spinner>
             </div>
             <div class="ui-g-3">
               <label>Tipo Ajuste</label><br>
@@ -243,8 +245,11 @@
               <input type="text" name="nomeEdicaoFatorAjuste" [(ngModel)]="editedAdjustFactor.nome" pInputText />
             </div>
             <div class="ui-g-3">
-              <label>Fator (%)</label>
-              <p-spinner size="30" name="fator" [(ngModel)]="editedAdjustFactor.fator" min="0" max="100"></p-spinner>
+              <label *ngIf="editedAdjustFactor.tipoAjuste === 'PERCENTUAL'">Fator (%)</label>
+              <label *ngIf="editedAdjustFactor.tipoAjuste === 'UNITARIO'">Fator (PF)</label>
+              <label *ngIf="editedAdjustFactor.tipoAjuste === undefined">Fator</label>
+              <p-spinner size="30" *ngIf="editedAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="editedAdjustFactor.fator"></p-spinner>
+              <p-spinner size="30" *ngIf="editedAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="editedAdjustFactor.fator"></p-spinner>
             </div>
             <div class="ui-g-3">
               <label>Tipo Ajuste</label><br>

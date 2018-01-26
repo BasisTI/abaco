@@ -175,6 +175,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     switch (event.button) {
       case 'edit':
         this.editedAdjustFactor = event.selection.clone();
+        (this.editedAdjustFactor.fator > 0 && this.editedAdjustFactor.fator < 1) ?
+          (this.editedAdjustFactor.fator = this.editedAdjustFactor.fator * 100) : (this.editedAdjustFactor = this.editedAdjustFactor);
         this.openDialogEditAdjustFactor();
         break;
       case 'delete':
