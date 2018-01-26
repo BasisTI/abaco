@@ -13,6 +13,7 @@ import { ConfirmationService } from 'primeng/components/common/confirmationservi
 import { DatatableClickEvent } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 import { PageNotificationService } from '../shared/page-notification.service';
+import { UploadService } from '../upload/upload.service';
 
 @Component({
   selector: 'jhi-organizacao-form',
@@ -43,7 +44,8 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     private contratoService: ContratoService,
     private manualService: ManualService,
     private confirmationService: ConfirmationService,
-    private pageNotificationService: PageNotificationService
+    private pageNotificationService: PageNotificationService,
+    private uploadService: UploadService
   ) { }
 
   ngOnInit() {
@@ -124,7 +126,10 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     } else {
       if(this.logo !== undefined) {
         if(this.checkRequiredFields()) {
-          this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao, this.logo));
+          this.uploadService.uploadFile(this.logo).subscribe(response => {
+            this.organizacao.logoId = JSON.parse(response["_body"]).id;
+            this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
+          })
         } else {
           this.pageNotificationService.addErrorMsg('Campos Inválidos:' + this.getInvalidFieldsString());
         }

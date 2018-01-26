@@ -15,6 +15,7 @@ import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/components/common/confirmationservice';
 import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 import { PageNotificationService } from '../shared/page-notification.service';
+import { UploadService } from '../upload/upload.service';
 
 @Component({
   selector: 'jhi-manual-form',
@@ -55,7 +56,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     private esforcoFaseService: EsforcoFaseService,
     private tipoFaseService: TipoFaseService,
     private confirmationService: ConfirmationService,
-    private pageNotificationService: PageNotificationService
+    private pageNotificationService: PageNotificationService,
+    private uploadService: UploadService
   ) {}
 
   ngOnInit() {
@@ -85,7 +87,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     } else {
       if(this.arquivoManual !== undefined) {
         if(this.checkRequiredFields()) {
-          this.subscribeToSaveResponse(this.manualService.create(this.manual, this.arquivoManual));
+          this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
+            this.manual.arquivoManualId = JSON.parse(response["_body"]).id;
+            this.subscribeToSaveResponse(this.manualService.create(this.manual));
+          });
         } else {
           this.pageNotificationService.addErrorMsg('Campos inválidos: ' + this.getInvalidFieldsString());
           this.invalidFields = [];
