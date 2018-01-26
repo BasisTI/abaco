@@ -2,6 +2,13 @@
 
 @Library('basis-pipeline-library@BASIS-24357') _
 
+def doDeploy = env.doDeploy
+def frontendImageTag = env.frontendImageTag
+def rancherConfigName = env.rancherConfigName
+def rancherEnvironment = env.rancherEnvironment
+def rancherStack = env.rancherStack
+def rancherService = env.rancherService
+
 pipelineBuildFrontendJavascript {
     agentLabel = 'docker-engine'
     dockerRegistry = 'basis-registry.basis.com.br'
