@@ -5,6 +5,7 @@ import { Manual } from '../manual';
 import { FatorAjuste } from '../fator-ajuste';
 import { AnaliseSharedDataService } from '../shared';
 
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-analise-funcao-dados',
@@ -16,13 +17,26 @@ export class FuncaoDadosFormComponent implements OnInit {
     private analiseSharedDataService: AnaliseSharedDataService
   ) { }
 
-  fatoresAjuste: FatorAjuste[];
-
-  funcaoDados: FuncaoDados = new FuncaoDados();
-  private manual: Manual;
+  funcoesDados: FuncaoDados[];
+  currentFuncaoDados: FuncaoDados;
 
   ngOnInit() {
-    
+    this.funcoesDados = [];
+    this.currentFuncaoDados = new FuncaoDados();
+  }
+
+  private get manual() {
+    if (this.analiseSharedDataService.analise.contrato) {
+      return this.analiseSharedDataService.analise.contrato.manual;
+    }
+    return undefined;
+  }
+
+  get fatoresAjuste(): FatorAjuste[] {
+    if (this.manual) {
+      return _.cloneDeep(this.manual.fatoresAjuste);
+    }
+    return [];
   }
 
   get analise(): Analise {
