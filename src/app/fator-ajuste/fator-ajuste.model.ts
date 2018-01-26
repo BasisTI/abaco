@@ -21,8 +21,8 @@ export class FatorAjuste implements BaseEntity {
     public ativo?: boolean,
     public descricao?: string,
     public codigo?: string,
-    public tipoAjuste?: TipoFatorAjuste,
-    public impacto?: ImpactoFatorAjuste,
+    public tipoAjuste?: string,
+    public impacto?: string,
     public manual?: BaseEntity,
     public origem?: string,
     public artificialId?: number
