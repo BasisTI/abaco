@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="felipe (generated)" id="1516909214612-1">
+      <addColumn tableName="fator_ajuste">
+         <column name="codigo" type="varchar(255)"/>
+      </addColumn>
+   </changeSet>
+   <changeSet author="felipe (generated)" id="1516909214612-2">
+      <addColumn tableName="fator_ajuste">
+         <column name="descricao" type="varchar(255)"/>
+      </addColumn>
+   </changeSet>
+   <changeSet author="felipe (generated)" id="1516909214612-3">
+      <addColumn tableName="fator_ajuste">
+         <column name="origem" type="varchar(255)"/>
+      </addColumn>
+   </changeSet>
+   <changeSet author="felipe (generated)" id="1516909214612-4">
+      <dropNotNullConstraint columnDataType="boolean" columnName="ativo" tableName="contrato"/>
+      <dropDefaultValue columnDataType="boolean" columnName="ativo" tableName="contrato"/>
+   </changeSet>
+</databaseChangeLog>

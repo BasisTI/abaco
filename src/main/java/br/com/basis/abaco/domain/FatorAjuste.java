@@ -62,6 +62,15 @@ public class FatorAjuste implements Serializable {
     @ManyToOne
     @JsonBackReference
     private Manual manual;
+    
+    @Column(name="descricao")
+    private String descricao;
+    
+    @Column(name="codigo")
+    private String codigo;
+    
+    @Column(name="origem")
+    private String origem;
 
     public Long getId() {
         return id;
@@ -149,7 +158,35 @@ public class FatorAjuste implements Serializable {
         this.manual = manual;
     }
 
-    @Override
+    public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public String getOrigem() {
+		return origem;
+	}
+
+	public void setOrigem(String origem) {
+		this.origem = origem;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
