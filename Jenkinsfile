@@ -15,7 +15,7 @@ pipelineBuildFrontendJavascript {
     frontendImageTag = 'desenvolvimento-basis-24357'
     doDeploy = true
     rancherInfo = [
-        url: 'rancher.basis.com.br',
+        configName: 'basis',
         environment: 'Basis-TST',
         stack: 'abaco',
         service: 'abaco-ui'
