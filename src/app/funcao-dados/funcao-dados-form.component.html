@@ -11,6 +11,10 @@
               placeholder="{{ moduloDropdownPlaceholder() }}"
               disabled="{{ !isSistemaSelected() }}"
               name="modulo" [autoWidth]="false"></p-dropdown>
+
+              <app-green-button buttonLabel="Novo Módulo"
+                buttonIcon="ui-icon-add"
+                (click)="abrirDialogModulo()"></app-green-button>
           </div>
 
           <div class="ui-g-6">
@@ -30,6 +34,32 @@
           </p-dropdown>
         </div>
 
+        <!-- Dialog módulo -->
+        <p-dialog header="Módulo" [(visible)]="mostrarDialogModulo"
+          [contentStyle]="{'overflow':'visible'}" [width]="800">
+          <div class="ui-g">
+            <div class="ui-g-12" style="margin-bottom: 25px">
+              <span class="md-inputfield">
+                <input type="text" name="nomeModulo" [(ngModel)]="novoModulo.nome"
+                  pInputText (keydown.enter)="adicionarModulo()"/>
+                <label>Nome do Módulo</label>
+              </span>
+            </div>
+          </div>
+        
+          <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2">
+              <app-white-button buttonLabel="Cancelar" (click)="fecharDialogModulo()"></app-white-button>
+              <!-- <button pButton type="button" label="Cancelar"
+                (click)="fecharDialogModulo()"></button> -->
+            </div>
+            <div class="ui-g-2">
+              <app-green-button buttonLabel="Salvar" (click)="adicionarModulo()"></app-green-button>
+              <!-- <button pButton type="button" label="Salvar"
+                (click)="adicionarModulo()"></button> -->
+            </div>
+          </div>
+        </p-dialog>
         
       </div>      
     </div>

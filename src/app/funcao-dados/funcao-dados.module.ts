@@ -17,7 +17,8 @@ import {
     DataTableModule,
     ConfirmationService,
     TabViewModule,
-    InputTextareaModule
+    InputTextareaModule,
+    DialogModule
   } from 'primeng/primeng';
 import { AbacoSharedModule } from '../shared/abaco-shared.module';
 
@@ -37,7 +38,8 @@ import { AbacoSharedModule } from '../shared/abaco-shared.module';
     AbacoButtonsModule,
     TabViewModule,
     InputTextareaModule,
-    AbacoSharedModule
+    AbacoSharedModule,
+    DialogModule
   ],
   declarations: [
     FuncaoDadosFormComponent

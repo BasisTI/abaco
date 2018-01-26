@@ -95,6 +95,11 @@ export class FuncaoDadosFormComponent implements OnInit {
     return !_.isUndefined(this.moduloSelecionado);
   }
 
+  adicionarModulo() {
+    this.sistema.addModulo(this.novoModulo);
+    this.fecharDialogModulo();
+  }
+
   funcionalidadeDropdownPlaceholder() {
     if (this.isModuloSelected()) {
       return 'Funcionalidade';
