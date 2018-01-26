@@ -23,6 +23,10 @@
               placeholder="{{ funcionalidadeDropdownPlaceholder() }}"
               disabled="{{ !isModuloSelected() }}"
               name="funcionalidade" [autoWidth]="false"></p-dropdown>
+
+              <app-green-button buttonLabel="Nova Funcionalidade"
+                buttonIcon="ui-icon-add"
+                (click)="abrirDialogFuncionalidade()"></app-green-button>
           </div>
         </div>
 
@@ -57,6 +61,34 @@
               <app-green-button buttonLabel="Salvar" (click)="adicionarModulo()"></app-green-button>
               <!-- <button pButton type="button" label="Salvar"
                 (click)="adicionarModulo()"></button> -->
+            </div>
+          </div>
+        </p-dialog>
+
+        <!-- Dialog funcionalidade -->
+        <p-dialog header="Funcionalidade" [(visible)]="mostrarDialogFuncionalidade"
+          [contentStyle]="{'overflow':'visible'}" [width]="800">
+          <div class="ui-g">
+            <div class="ui-g-12" style="margin-bottom: 25px">
+              <span class="md-inputfield">
+                <input type="text" name="nomeFuncionalidade"
+                  [(ngModel)]="novaFuncionalidade.nome" pInputText />
+                <label>Nome da Funcionalidade</label>
+              </span>
+            </div>
+            <span>Módulo: {{ moduloSelecionado }}</span>
+          </div>
+
+          <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2">
+              <app-white-button buttonLabel="Cancelar" (click)="fecharDialogFuncionalidade()"></app-white-button>
+              <!-- <button pButton type="button" label="Cancelar"
+                (click)="fecharDialogFuncionalidade()"></button> -->
+            </div>
+            <div class="ui-g-2">
+              <app-green-button buttonLabel="Salvar" (click)="adicionarFuncionalidade()"></app-green-button>
+              <!-- <button pButton type="button" label="Salvar"
+                (click)="adicionarFuncionalidade()"></button> -->
             </div>
           </div>
         </p-dialog>

@@ -95,6 +95,10 @@ export class FuncaoDadosFormComponent implements OnInit {
     return !_.isUndefined(this.moduloSelecionado);
   }
 
+  moduloSelected(modulo: Modulo) {
+    this.funcionalidades = modulo.funcionalidades;
+  }
+
   adicionarModulo() {
     this.sistema.addModulo(this.novoModulo);
     this.moduloSelecionado = this.novoModulo;
@@ -118,8 +122,13 @@ export class FuncaoDadosFormComponent implements OnInit {
     this.mostrarDialogFuncionalidade = false;
   }
 
-  moduloSelected(modulo: Modulo) {
-    this.funcionalidades = modulo.funcionalidades;
+  adicionarFuncionalidade() {
+    this.moduloSelecionado.addFuncionalidade(this.novaFuncionalidade);
+    this.funcionalidadeSelecionada = this.novaFuncionalidade;
+    // XXX avaliar opcoes. atualizando dropdown na pagina
+    this.funcionalidades = this.moduloSelecionado.funcionalidades;
+    this.fecharDialogFuncionalidade();
   }
+
 
 }
