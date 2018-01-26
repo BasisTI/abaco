@@ -157,7 +157,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.openDialogEditPhaseEffort();
         break;
       case 'delete':
-      console.log(event.selection);
+        console.log(event.selection);
         this.editedPhaseEffort = event.selection.clone();
         this.confirmDeletePhaseEffort();
     }
@@ -173,20 +173,30 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.openDialogEditAdjustFactor();
         break;
       case 'delete':
-      console.log(event.selection);
+        console.log(event.selection)
         this.editedAdjustFactor = event.selection.clone();
         this.confirmDeleteAdjustFactor();
     }
   }
 
   confirmDeletePhaseEffort() {
-    this.manual.deleteEsforcoFase(this.editedPhaseEffort);
-    this.editedPhaseEffort = new EsforcoFase();
+    this.confirmationService.confirm({
+      message: 'Tem certeza que deseja excluir o Esforço por fase ' + this.editedPhaseEffort.fase.nome + '?',
+      accept: () => {
+        this.manual.deleteEsforcoFase(this.editedPhaseEffort);
+        this.editedPhaseEffort = new EsforcoFase();
+      }
+    });
   }
 
   confirmDeleteAdjustFactor() {
-    this.manual.deleteFatoresAjuste(this.editedAdjustFactor);
-    this.editedAdjustFactor = new FatorAjuste();
+    this.confirmationService.confirm({
+      message: 'Tem certeza que deseja excluir o Fator de Ajuste ' + this.editedAdjustFactor.nome + '?',
+      accept: () => {
+        this.manual.deleteFatoresAjuste(this.editedAdjustFactor);
+        this.editedAdjustFactor = new FatorAjuste();
+      }
+    });
   }
 
   openDialogPhaseEffort() {
@@ -199,6 +209,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   editPhaseEffort() {
+    this.editedPhaseEffort.esforco/100;
     this.manual.updateEsforcoFases(this.editedPhaseEffort);
     this.closeDialogEditPhaseEffort();
   }
@@ -219,6 +230,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   addPhaseEffort() {
+    this.newPhaseEffort.esforco = this.newPhaseEffort.esforco;
     this.manual.addEsforcoFases(this.newPhaseEffort);
     this.closeDialogPhaseEffort();
   }
