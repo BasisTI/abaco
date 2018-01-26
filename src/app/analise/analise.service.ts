@@ -1,36 +1,76 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, URLSearchParams, BaseRequestOptions } from '@angular/http';
+import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
+import { HttpService } from '@basis/angular-components';
+import { environment } from '../../environments/environment';
 
+import { Analise } from './analise.model';
 import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
 
 @Injectable()
 export class AnaliseService {
 
-  private resourceUrl = 'api/analises';
+  resourceUrl = environment.apiUrl + '/analises';
 
-  constructor(private http: Http) { }
+  searchUrl = environment.apiUrl + '/_search/analises';
 
-  query(req?: any): Observable<Response> {
-    let options = this.createRequestOption(req);
-    return this.http.get(this.resourceUrl, options)
-    ;
+  constructor(private http: HttpService) {}
+
+  create(analise: Analise): Observable<Analise> {
+    const copy = this.convert(analise);
+    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
+    });
   }
 
-  private createRequestOption(req?: any): BaseRequestOptions {
-    let options: BaseRequestOptions = new BaseRequestOptions();
-    if (req) {
-        let params: URLSearchParams = new URLSearchParams();
-        params.set('page', req.page);
-        params.set('size', req.size);
-        if (req.sort) {
-            params.paramsMap.set('sort', req.sort);
-        }
-        params.set('query', req.query);
+  update(analise: Analise): Observable<Analise> {
+    const copy = this.convert(analise);
+    return this.http.put(this.resourceUrl, copy).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
+    });
+  }
 
-        options.search = params;
+  find(id: number): Observable<Analise> {
+    return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
+    });
+  }
+
+  query(req?: any): Observable<ResponseWrapper> {
+    const options = createRequestOption(req);
+    return this.http.get(this.resourceUrl, options)
+      .map((res: Response) => this.convertResponse(res));
+  }
+
+  delete(id: number): Observable<Response> {
+    return this.http.delete(`${this.resourceUrl}/${id}`);
+  }
+
+  private convertResponse(res: Response): ResponseWrapper {
+    const jsonResponse = res.json();
+    const result = [];
+    for (let i = 0; i < jsonResponse.length; i++) {
+      result.push(this.convertItemFromServer(jsonResponse[i]));
     }
-    return options;
-}
+    return new ResponseWrapper(res.headers, result, res.status);
+  }
 
+  /**
+   * Convert a returned JSON object to Analise.
+   */
+  private convertItemFromServer(json: any): Analise {
+    const entity: Analise = Object.assign(new Analise(), json);
+    return entity;
+  }
+
+  /**
+   * Convert a Analise to a JSON which can be sent to the server.
+   */
+  private convert(analise: Analise): Analise {
+    const copy: Analise = Object.assign({}, analise);
+    return copy;
+  }
 }

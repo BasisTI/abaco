@@ -6,7 +6,9 @@ import { environment } from '../../environments/environment';
 import { UploadService } from '../upload/upload.service';
 
 import { Manual } from './manual.model';
-import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
+import { ResponseWrapper, createRequestOption, JhiDateUtils, JSONable } from '../shared';
+import { EsforcoFase } from '../esforco-fase/esforco-fase.model';
+import { FatorAjuste } from '../fator-ajuste/fator-ajuste.model'
 
 @Injectable()
 export class ManualService {
@@ -20,21 +22,41 @@ export class ManualService {
     private uploadService: UploadService
   ) {}
 
-  create(manual: Manual, arquivoManual: File): Observable<any> {
+  private parsePhaseEffortDecimalValues(esforcoFases: Array<EsforcoFase>): Array<EsforcoFase> {
+    esforcoFases.forEach(each => {
+      each.esforco = each.esforco / 100;
+    });
+
+    return esforcoFases;
+  }
+
+  private parseAdjustFactorDecimalValues(adjustFactors: Array<FatorAjuste>): Array<FatorAjuste> {
+    adjustFactors.forEach(each => {
+      each.fator = each.fator / 100;
+    });
+
+    return adjustFactors;
+  }
+
+  create(manual: Manual): Observable<any> {
     const copy = this.convert(manual);
 
-    return this.uploadService.uploadFile(arquivoManual).map(response => {
-      copy.arquivoManualId = JSON.parse(response["_body"]).id;
+    copy.esforcoFases = this.parsePhaseEffortDecimalValues(copy.esforcoFases);
+    copy.fatoresAjuste = this.parseAdjustFactorDecimalValues(copy.fatoresAjuste);
 
-      this.http.post(this.resourceUrl, copy).map((res: Response) => {
-        const jsonResponse = res.json();
-        return this.convertItemFromServer(jsonResponse);
-      });
+    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
     });
+    // return this.uploadService.uploadFile(arquivoManual).map(response => {
+    //   copy.arquivoManualId = JSON.parse(response["_body"]).id;
+    // });
   }
 
   update(manual: Manual): Observable<Manual> {
     const copy = this.convert(manual);
+    copy.esforcoFases = this.parsePhaseEffortDecimalValues(copy.esforcoFases);
+    copy.fatoresAjuste = this.parseAdjustFactorDecimalValues(copy.fatoresAjuste);
     return this.http.put(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
@@ -71,8 +93,8 @@ export class ManualService {
    * Convert a returned JSON object to Manual.
    */
   private convertItemFromServer(json: any): Manual {
-    const entity: Manual = Object.assign(new Manual(), json);
-    return entity;
+    const entity: JSONable<Manual> = new Manual();
+    return entity.copyFromJSON(json);
   }
 
   /**

@@ -15,6 +15,7 @@ import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/components/common/confirmationservice';
 import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 import { PageNotificationService } from '../shared/page-notification.service';
+import { UploadService } from '../upload/upload.service';
 
 @Component({
   selector: 'jhi-manual-form',
@@ -46,7 +47,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       value: 'UNITARIO',
     },
   ]
-
+  invalidFields: Array<string> = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -55,7 +56,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     private esforcoFaseService: EsforcoFaseService,
     private tipoFaseService: TipoFaseService,
     private confirmationService: ConfirmationService,
-    private pageNotificationService: PageNotificationService
+    private pageNotificationService: PageNotificationService,
+    private uploadService: UploadService
   ) {}
 
   ngOnInit() {
@@ -63,18 +65,15 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.routeSub = this.route.params.subscribe(params => {
       this.manual = new Manual();
       if (params['id']) {
-        this.manualService.find(params['id']).subscribe(manual => this.manual = manual);
+        this.manualService.find(params['id']).subscribe(manual => {
+          this.manual = manual;
+        });
       }
-    });
-
-    this.esforcoFaseService.query().subscribe((response: ResponseWrapper) => {
-      this.manual.esforcoFases = response.json;
     });
 
     this.tipoFaseService.query().subscribe((response: ResponseWrapper) => {
       this.tipoFases = response.json;
     });
-
   }
 
   save() {
@@ -82,15 +81,48 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.manual.valorVariacaoEstimada = this.manual.valorVariacaoEstimada/100;
     this.manual.valorVariacaoIndicativa = this.manual.valorVariacaoIndicativa/100;
 
+    console.log(this.manual);
     if (this.manual.id !== undefined) {
       this.subscribeToSaveResponse(this.manualService.update(this.manual));
     } else {
       if(this.arquivoManual !== undefined) {
-        this.subscribeToSaveResponse(this.manualService.create(this.manual, this.arquivoManual));
+        if(this.checkRequiredFields()) {
+          this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
+            this.manual.arquivoManualId = JSON.parse(response["_body"]).id;
+            this.subscribeToSaveResponse(this.manualService.create(this.manual));
+          });
+        } else {
+          this.pageNotificationService.addErrorMsg('Campos inválidos: ' + this.getInvalidFieldsString());
+          this.invalidFields = [];
+        }
       } else {
         this.pageNotificationService.addErrorMsg('Campo Arquivo Manual está inválido!');
       }
     }
+  }
+
+  private checkRequiredFields(): boolean {
+      let isFieldsValid = false;
+      console.log(this.manual);
+      if ( isNaN(this.manual.valorVariacaoEstimada)) (this.invalidFields.push('Valor Variação Estimada'));
+      if ( isNaN(this.manual.valorVariacaoIndicativa)) (this.invalidFields.push('Valor Variação Inidicativa'));
+
+      isFieldsValid = (this.invalidFields.length === 0);
+
+      return isFieldsValid;
+  }
+
+  private getInvalidFieldsString(): string {
+    let invalidFieldsString = "";
+    this.invalidFields.forEach(invalidField => {
+      if(invalidField === this.invalidFields[this.invalidFields.length-1]) {
+        invalidFieldsString = invalidFieldsString + invalidField;
+      } else {
+        invalidFieldsString = invalidFieldsString + invalidField + ', ';
+      }
+    });
+
+    return invalidFieldsString;
   }
 
   private subscribeToSaveResponse(result: Observable<Manual>) {
@@ -123,13 +155,14 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     if (!event.selection) {
       return;
     }
+    console.log(event.selection);
     switch (event.button) {
       case 'edit':
         this.editedPhaseEffort = event.selection.clone();
         this.openDialogEditPhaseEffort();
         break;
       case 'delete':
-      console.log(event.selection);
+        console.log(event.selection);
         this.editedPhaseEffort = event.selection.clone();
         this.confirmDeletePhaseEffort();
     }
@@ -145,20 +178,30 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.openDialogEditAdjustFactor();
         break;
       case 'delete':
-      console.log(event.selection);
+        console.log(event.selection)
         this.editedAdjustFactor = event.selection.clone();
         this.confirmDeleteAdjustFactor();
     }
   }
 
   confirmDeletePhaseEffort() {
-    this.manual.deleteEsforcoFase(this.editedPhaseEffort);
-    this.editedPhaseEffort = new EsforcoFase();
+    this.confirmationService.confirm({
+      message: 'Tem certeza que deseja excluir o Esforço por fase ' + this.editedPhaseEffort.fase.nome + '?',
+      accept: () => {
+        this.manual.deleteEsforcoFase(this.editedPhaseEffort);
+        this.editedPhaseEffort = new EsforcoFase();
+      }
+    });
   }
 
   confirmDeleteAdjustFactor() {
-    this.manual.deleteFatoresAjuste(this.editedAdjustFactor);
-    this.editedAdjustFactor = new FatorAjuste();
+    this.confirmationService.confirm({
+      message: 'Tem certeza que deseja excluir o Fator de Ajuste ' + this.editedAdjustFactor.nome + '?',
+      accept: () => {
+        this.manual.deleteFatoresAjuste(this.editedAdjustFactor);
+        this.editedAdjustFactor = new FatorAjuste();
+      }
+    });
   }
 
   openDialogPhaseEffort() {
@@ -171,6 +214,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   editPhaseEffort() {
+    this.editedPhaseEffort.esforco/100;
     this.manual.updateEsforcoFases(this.editedPhaseEffort);
     this.closeDialogEditPhaseEffort();
   }
@@ -191,6 +235,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   addPhaseEffort() {
+    this.newPhaseEffort.esforco = this.newPhaseEffort.esforco;
     this.manual.addEsforcoFases(this.newPhaseEffort);
     this.closeDialogPhaseEffort();
   }
@@ -198,7 +243,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   getPhaseEffortTotalPercentual() {
     let total = 0;
     this.manual.esforcoFases.forEach(each => {
-      (each.percentual !== undefined) ? (total = total + each.percentual) : (total = total)
+      (each.esforco !== undefined) ? (total = total + each.esforco) : (total = total)
     });
 
     return total;

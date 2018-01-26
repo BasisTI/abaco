@@ -25,8 +25,16 @@
           (buttonClick)="datatableClick($event)" #datatable>
           <p-column header="Código" field="id"></p-column>
           <p-column header="Nome" field="nome"></p-column>
-          <p-column header="Estimada (%)" field="valorVariacaoEstimada"></p-column>
-          <p-column header="Indicativa (%)" field="valorVariacaoIndicativa"></p-column>
+          <p-column header="Estimada (%)" field="valorVariacaoEstimada">
+            <ng-template let-col let-valorVariacaoEstimada="rowData" pTemplate="body">
+              {{ valorVariacaoEstimada[col.field]* 100 }}
+            </ng-template>
+          </p-column>
+          <p-column header="Indicativa (%)" field="valorVariacaoIndicativa">
+            <ng-template pTemplate="body" let-col let-valorVariacaoIndicativa="rowData">
+              {{ valorVariacaoIndicativa[col.field]* 100 }}
+            </ng-template>
+          </p-column>
           <p-column header="Observação" field="observacao"
             [style]="{'width': '40%'}"></p-column>
         </basis-datatable>

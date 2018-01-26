@@ -6,7 +6,7 @@ import { SelectItem } from 'primeng/primeng';
 
 import { FuncaoTransacao } from './funcao-transacao.model';
 import { FuncaoTransacaoService } from './funcao-transacao.service';
-import { Analise, AnaliseService } from '../analise';
+// import { Analise, AnaliseService } from '../analise';
 import { FatorAjuste, FatorAjusteService } from '../fator-ajuste';
 import { ResponseWrapper } from '../shared';
 
@@ -28,7 +28,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     { label: 'ALTA', value: 'ALTA' }
   ];
 
-  analises: Analise[];
+  // analises: Analise[];
 
   fatorajustes: FatorAjuste[];
   funcaoTransacao: FuncaoTransacao;
@@ -39,15 +39,15 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private funcaoTransacaoService: FuncaoTransacaoService,
-    private analiseService: AnaliseService,
+    // private analiseService: AnaliseService,
     private fatorAjusteService: FatorAjusteService,
   ) {}
 
   ngOnInit() {
     this.isSaving = false;
-    this.analiseService.query().subscribe((res: ResponseWrapper) => {
-      this.analises = res.json;
-    });
+    // this.analiseService.query().subscribe((res: ResponseWrapper) => {
+    //   this.analises = res.json;
+    // });
     this.fatorAjusteService.query().subscribe((res: ResponseWrapper) => {
       this.fatorajustes = res.json;
     });
