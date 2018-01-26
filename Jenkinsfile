@@ -11,11 +11,12 @@ pipelineBuildFrontendJavascript {
     dockerContext = 'docker/nginx'
     frontendImageName = 'abaco/abaco-ui'
     frontendImageTag = 'desenvolvimento-basis-24357'
+    doDeploy = env.doDeploy
     rancherInfo = [
-        configName: 'basis',
-        environment: 'Basis-TST',
-        stack: 'abaco',
-        service: 'abaco-ui'
+        configName: env.rancherConfigName, 
+        environment: env.rancherEnvironment,
+        stack: env.rancherStack,
+        service: env.rancherService 
     ]
     rocketChannel = ''
     recipientList = ''
