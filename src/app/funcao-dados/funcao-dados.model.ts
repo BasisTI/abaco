@@ -1,4 +1,5 @@
 import { BaseEntity } from '../shared';
+import { Funcionalidade } from '../funcionalidade/index';
 
 const enum TipoFuncaoDados {
   'ALI',
@@ -20,6 +21,7 @@ export class FuncaoDados implements BaseEntity {
     public pf?: number,
     public analise?: BaseEntity,
     public funcionalidades?: BaseEntity[],
+    public funcionalidade?: Funcionalidade,
     public fatorAjuste?: BaseEntity,
     public alr?: BaseEntity,
     public name?: string,
