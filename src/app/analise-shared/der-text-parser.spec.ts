@@ -3,18 +3,17 @@ import * as _ from 'lodash';
 
 fdescribe('DerTextParser', () => {
 
+  let result: ParseResult;
+
   describe('entrada númerica', () => {
 
     const entrada = '10';
-    let result: ParseResult;
 
     beforeEach(() => {
       result = DerTextParser.parse(entrada);
     });
 
-    it(`deve retornar um ParseResult com tipo 'NUMERO'`, () => {
-      expect(result.tipo).toEqual(ParseResult.NUMERO_TIPO);
-    });
+    expectResultToBe(ParseResult.NUMERO_TIPO);
 
     it(`'numero' deve ser um number`, () => {
       expect(result.numero).toEqual(jasmine.any(Number));
@@ -29,14 +28,11 @@ fdescribe('DerTextParser', () => {
   describe('entrada textual', () => {
 
     describe('1 linha', () => {
-      let result: ParseResult;
       const entrada = 'uma única linha';
 
       beforeEach(() => result = DerTextParser.parse(entrada));
 
-      it(`deve retornar um ParseResult com tipo 'TEXTO'`, () => {
-        expect(result.tipo).toEqual(ParseResult.TEXTO_TIPO);
-      });
+      expectResultToBe(ParseResult.TEXTO_TIPO);
 
       it(`deve retornar 'textos' com tamanho 1`, () => {
         expect(result.textos.length).toEqual(1);
@@ -49,7 +45,6 @@ fdescribe('DerTextParser', () => {
     });
 
     describe('3 linhas', () => {
-      let result: ParseResult;
       const entrada = `linha 1
       linha 2
       linha 3`;
@@ -58,9 +53,7 @@ fdescribe('DerTextParser', () => {
         result = DerTextParser.parse(entrada);
       });
 
-      it(`deve retornar um ParseResult com tipo 'TEXTO'`, () => {
-        expect(result.tipo).toEqual(ParseResult.TEXTO_TIPO);
-      });
+      expectResultToBe(ParseResult.TEXTO_TIPO);
 
       it('deve quebrar cada linha em um valor', () => {
         expect(result.textos.length).toEqual(3);
@@ -73,7 +66,14 @@ fdescribe('DerTextParser', () => {
 
   });
 
+  function expectResultToBe(tipo: string) {
+    it(`deve retornar um ParseResult com tipo '${tipo}'`, () => {
+      expect(result.tipo).toEqual(tipo);
+    });
+  }
+
 });
+
 
 function expectToContainExactly(arr, ...values) {
   expect(arr.length).toEqual(values.length);
@@ -84,4 +84,5 @@ function doExpectToContain(arr, values) {
   for (const value of values) {
     expect(arr).toContain(value);
   }
+
 }
