@@ -122,6 +122,7 @@ export class FuncaoDadosFormComponent implements OnInit {
   // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
   private selecionarModuloRecemCriado(moduloCriado: Modulo) {
     this.moduloSelecionado = _.find(this.sistema.modulos, { 'id': moduloCriado.id });
+    this.moduloSelected(this.moduloSelecionado);
   }
 
   funcionalidadeDropdownPlaceholder() {
