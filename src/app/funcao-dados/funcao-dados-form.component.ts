@@ -6,7 +6,7 @@ import { Manual } from '../manual';
 import { FatorAjuste } from '../fator-ajuste';
 import { Sistema, SistemaService } from '../sistema/index';
 import { Modulo, ModuloService } from '../modulo';
-import { Funcionalidade } from '../funcionalidade';
+import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
 
 import * as _ from 'lodash';
 
@@ -31,7 +31,8 @@ export class FuncaoDadosFormComponent implements OnInit {
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
     private moduloService: ModuloService,
-    private sistemaService: SistemaService
+    private sistemaService: SistemaService,
+    private funcionalidadeService: FuncionalidadeService
   ) { }
 
   ngOnInit() {
@@ -141,11 +142,24 @@ export class FuncaoDadosFormComponent implements OnInit {
   }
 
   adicionarFuncionalidade() {
-    this.moduloSelecionado.addFuncionalidade(this.novaFuncionalidade);
-    this.funcionalidadeSelecionada = this.novaFuncionalidade;
-    // XXX avaliar opcoes. atualizando dropdown na pagina
-    this.funcionalidades = this.moduloSelecionado.funcionalidades;
+    const moduloId = this.moduloSelecionado.id;
+    const sistemaId = this.sistema.id;
+    // TODO inserir um spinner
+    this.funcionalidadeService.create(this.novaFuncionalidade, moduloId)
+      .subscribe((funcionalidadeCriada: Funcionalidade) => {
+        this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
+          this.recarregarSistema(sistemaRecarregado);
+          this.selecionarModuloRecemCriado(this.moduloSelecionado);
+          this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
+        });
+      });
+
     this.fecharDialogFuncionalidade();
+  }
+
+  private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade) {
+    this.funcionalidadeSelecionada = _.find(this.moduloSelecionado.funcionalidades,
+      { 'id': funcionalidadeCriada.id });
   }
 
 }
