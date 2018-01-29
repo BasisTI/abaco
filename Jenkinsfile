@@ -4,7 +4,7 @@
 
 def frontendImageTag = frontendImageTag
 
-def doDeploy = doDeploy.toBoolean()
+def doDeploy = doDeploy
 def rancherConfigName = rancherConfigName
 def rancherEnvironment = rancherEnvironment
 def rancherStack = rancherStack
