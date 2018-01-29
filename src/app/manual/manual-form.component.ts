@@ -19,7 +19,7 @@ import { UploadService } from '../upload/upload.service';
 
 @Component({
   selector: 'jhi-manual-form',
-  templateUrl: './manual-form.component.html'
+  templateUrl: './manual-form.component.html',
 })
 export class ManualFormComponent implements OnInit, OnDestroy {
   manual: Manual;
