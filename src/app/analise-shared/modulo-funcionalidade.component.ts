@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { AnaliseSharedDataService } from '../shared';
 import { Analise } from '../analise';
 import { Manual } from '../manual';
@@ -14,6 +14,12 @@ import * as _ from 'lodash';
   templateUrl: './modulo-funcionalidade.component.html'
 })
 export class ModuloFuncionalidadeComponent implements OnInit {
+
+  @Output()
+  moduloSelectedEvent = new EventEmitter<Modulo>();
+
+  @Output()
+  funcionalidadeSelectedEvent = new EventEmitter<Funcionalidade>();
 
   mostrarDialogModulo = false;
   novoModulo: Modulo = new Modulo();
@@ -73,7 +79,7 @@ export class ModuloFuncionalidadeComponent implements OnInit {
 
   moduloSelected(modulo: Modulo) {
     this.funcionalidades = modulo.funcionalidades;
-    // EMITIR EVENTO
+    this.moduloSelectedEvent.emit(modulo);
   }
 
   adicionarModulo() {
@@ -133,7 +139,7 @@ export class ModuloFuncionalidadeComponent implements OnInit {
   }
 
   funcionalidadeSelected(funcionalidade: Funcionalidade) {
-    // emitir evento
+    this.funcionalidadeSelectedEvent.emit(funcionalidade);
   }
 
   private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade) {
