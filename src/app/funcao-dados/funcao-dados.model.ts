@@ -16,6 +16,7 @@ export class FuncaoDados implements BaseEntity {
 
   constructor(
     public id?: number,
+    public artificialId?: number,
     public tipo?: TipoFuncaoDados,
     public complexidade?: Complexidade,
     public pf?: number,
@@ -26,4 +27,10 @@ export class FuncaoDados implements BaseEntity {
     public alr?: BaseEntity,
     public name?: string,
   ) { }
+
+  clone(): FuncaoDados {
+    return new FuncaoDados(this.id, this.artificialId, this.tipo, this.complexidade,
+      this.pf, this.analise, this.funcionalidades, this.funcionalidade,
+      this.fatorAjuste, this.alr, this.name);
+  }
 }

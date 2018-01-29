@@ -26,11 +26,11 @@ export class FuncaoDadosFormComponent implements OnInit {
     this.currentFuncaoDados = new FuncaoDados();
   }
 
-  get analise(): Analise {
+  private get analise(): Analise {
     return this.analiseSharedDataService.analise;
   }
 
-  set analise(analise: Analise) {
+  private set analise(analise: Analise) {
     this.analiseSharedDataService.analise = analise;
   }
 
@@ -49,12 +49,17 @@ export class FuncaoDadosFormComponent implements OnInit {
   }
 
   moduloSelected(modulo: Modulo) {
-    console.log('modulo selecionado');
-    console.log(JSON.stringify(modulo.nome));
+
   }
 
   funcionalidadeSelected(funcionalidade: Funcionalidade) {
-    console.log('funcionalidade selecionada');
-    console.log(JSON.stringify(funcionalidade.nome));
+    this.currentFuncaoDados.funcionalidade = funcionalidade;
+  }
+
+  adicionar() {
+    this.analise.addFuncaoDados(this.currentFuncaoDados);
+    // Mantendo o mesmo conteudo a pedido do Leandro
+    this.currentFuncaoDados = this.currentFuncaoDados.clone();
+    this.currentFuncaoDados.artificialId = undefined;
   }
 }
