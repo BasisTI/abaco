@@ -186,6 +186,14 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  isPercentualEnum(value: TipoFatorAjuste) {
+
+    return (value !== undefined) ? (value.toString() === 'PERCENTUAL') : (false);
+  }
+
+  isUnitaryEnum(value: TipoFatorAjuste) {
+    return (value !== undefined) ? (value.toString() === 'UNITARIO') : (false);
+  }
   confirmDeletePhaseEffort() {
     this.confirmationService.confirm({
       message: 'Tem certeza que deseja excluir o Esforço por fase ' + this.editedPhaseEffort.fase.nome + '?',
