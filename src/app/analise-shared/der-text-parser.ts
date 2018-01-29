@@ -23,6 +23,8 @@ export class DerTextParser {
   static parse(entrada: string): ParseResult {
     if (this.isNumerico(entrada)) {
       return this.gerarResultadoNumerico(entrada);
+    } else {
+      return this.gerarResultadoTextual(entrada);
     }
   }
 
@@ -33,5 +35,12 @@ export class DerTextParser {
   private static gerarResultadoNumerico(entrada: string): ParseResult {
     return new ParseResult(ParseResult.NUMERO_TIPO,
       _.toNumber(entrada));
+  }
+
+  private static gerarResultadoTextual(entrada: string): ParseResult {
+    const textos: string[] = [];
+
+    return new ParseResult(ParseResult.TEXTO_TIPO,
+      undefined, textos);
   }
 }
