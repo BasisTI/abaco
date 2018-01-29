@@ -13,7 +13,7 @@ describe('DerTextParser', () => {
       result = DerTextParser.parse(entrada);
     });
 
-    expectResultToBe(ParseResult.NUMERO_TIPO);
+    expectResultTipoToBe(ParseResult.NUMERO_TIPO);
 
     it(`'numero' deve ser um number`, () => {
       expect(result.numero).toEqual(jasmine.any(Number));
@@ -32,7 +32,7 @@ describe('DerTextParser', () => {
 
       beforeEach(() => result = DerTextParser.parse(entrada));
 
-      expectResultToBe(ParseResult.TEXTO_TIPO);
+      expectResultTipoToBe(ParseResult.TEXTO_TIPO);
 
       it(`deve retornar 'textos' com tamanho 0`, () => {
         expect(result.textos.length).toEqual(0);
@@ -44,7 +44,7 @@ describe('DerTextParser', () => {
 
       beforeEach(() => result = DerTextParser.parse(entrada));
 
-      expectResultToBe(ParseResult.TEXTO_TIPO);
+      expectResultTipoToBe(ParseResult.TEXTO_TIPO);
 
       it(`deve retornar 'textos' com tamanho 1`, () => {
         expect(result.textos.length).toEqual(1);
@@ -65,7 +65,7 @@ describe('DerTextParser', () => {
         result = DerTextParser.parse(entrada);
       });
 
-      expectResultToBe(ParseResult.TEXTO_TIPO);
+      expectResultTipoToBe(ParseResult.TEXTO_TIPO);
 
       it('deve quebrar cada linha em um valor', () => {
         expect(result.textos.length).toEqual(3);
@@ -78,7 +78,7 @@ describe('DerTextParser', () => {
 
   });
 
-  function expectResultToBe(tipo: string) {
+  function expectResultTipoToBe(tipo: string) {
     it(`deve retornar um ParseResult com tipo '${tipo}'`, () => {
       expect(result.tipo).toEqual(tipo);
     });
