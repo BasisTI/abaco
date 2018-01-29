@@ -11,152 +11,152 @@ import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
 import * as _ from 'lodash';
 
 @Component({
-    selector: 'app-analise-modulo-funcionalidade',
-    templateUrl: './modulo-funcionalidade.component.html'
+  selector: 'app-analise-modulo-funcionalidade',
+  templateUrl: './modulo-funcionalidade.component.html'
 })
 export class ModuloFuncionalidadeComponent implements OnInit {
 
-    mostrarDialogModulo = false;
-    novoModulo: Modulo = new Modulo();
-    moduloSelecionado: Modulo;
+  mostrarDialogModulo = false;
+  novoModulo: Modulo = new Modulo();
+  moduloSelecionado: Modulo;
 
-    funcionalidades: Funcionalidade[];
-    mostrarDialogFuncionalidade = false;
-    novaFuncionalidade: Funcionalidade = new Funcionalidade();
-    funcionalidadeSelecionada: Funcionalidade;
+  funcionalidades: Funcionalidade[];
+  mostrarDialogFuncionalidade = false;
+  novaFuncionalidade: Funcionalidade = new Funcionalidade();
+  funcionalidadeSelecionada: Funcionalidade;
 
-    constructor(
-        private analiseSharedDataService: AnaliseSharedDataService,
-        private moduloService: ModuloService,
-        private sistemaService: SistemaService,
-        private funcionalidadeService: FuncionalidadeService
-    ) { }
+  constructor(
+    private analiseSharedDataService: AnaliseSharedDataService,
+    private moduloService: ModuloService,
+    private sistemaService: SistemaService,
+    private funcionalidadeService: FuncionalidadeService
+  ) { }
 
-    ngOnInit() {
+  ngOnInit() {
 
+  }
+
+  get analise(): Analise {
+    return this.analiseSharedDataService.analise;
+  }
+
+  set analise(analise: Analise) {
+    this.analiseSharedDataService.analise = analise;
+  }
+
+  private get manual() {
+    if (this.analiseSharedDataService.analise.contrato) {
+      return this.analiseSharedDataService.analise.contrato.manual;
     }
+    return undefined;
+  }
 
-    get analise(): Analise {
-        return this.analiseSharedDataService.analise;
+  get fatoresAjuste(): FatorAjuste[] {
+    if (this.manual) {
+      return _.cloneDeep(this.manual.fatoresAjuste);
     }
+    return [];
+  }
 
-    set analise(analise: Analise) {
-        this.analiseSharedDataService.analise = analise;
+  get sistema(): Sistema {
+    return this.analise.sistema;
+  }
+
+  get modulos() {
+    if (this.sistema) {
+      return this.sistema.modulos;
     }
+  }
 
-    private get manual() {
-        if (this.analiseSharedDataService.analise.contrato) {
-            return this.analiseSharedDataService.analise.contrato.manual;
-        }
-        return undefined;
+  isSistemaSelected(): boolean {
+    return !_.isUndefined(this.sistema);
+  }
+
+  moduloDropdownPlaceholder(): string {
+    if (this.isSistemaSelected()) {
+      return 'Modulo';
+    } else {
+      return `Selecione um Sistema na aba 'Geral' para carregar os Módulos`;
     }
+  }
 
-    get fatoresAjuste(): FatorAjuste[] {
-        if (this.manual) {
-            return _.cloneDeep(this.manual.fatoresAjuste);
-        }
-        return [];
+  abrirDialogModulo() {
+    this.mostrarDialogModulo = true;
+    // XXX problema em dar new toda hora?
+    this.novoModulo = new Modulo();
+  }
+
+  fecharDialogModulo() {
+    this.mostrarDialogModulo = false;
+  }
+
+  isModuloSelected(): boolean {
+    return !_.isUndefined(this.moduloSelecionado);
+  }
+
+  moduloSelected(modulo: Modulo) {
+    this.funcionalidades = modulo.funcionalidades;
+  }
+
+  adicionarModulo() {
+    const sistemaId = this.sistema.id;
+    // TODO inserir um spinner, talvez bloquear a UI
+    this.moduloService.create(this.novoModulo, sistemaId).subscribe((moduloCriado: Modulo) => {
+      this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
+        this.recarregarSistema(sistemaRecarregado);
+        this.selecionarModuloRecemCriado(moduloCriado);
+      });
+    });
+
+    this.fecharDialogModulo();
+  }
+
+  private recarregarSistema(sistemaRecarregado: Sistema) {
+    this.analise.sistema = sistemaRecarregado;
+  }
+
+  // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
+  private selecionarModuloRecemCriado(moduloCriado: Modulo) {
+    this.moduloSelecionado = _.find(this.sistema.modulos, { 'id': moduloCriado.id });
+    this.moduloSelected(this.moduloSelecionado);
+  }
+
+  funcionalidadeDropdownPlaceholder() {
+    if (this.isModuloSelected()) {
+      return 'Funcionalidade';
+    } else {
+      return 'Selecione um Módulo para carregar as Funcionalidades';
     }
+  }
 
-    get sistema(): Sistema {
-        return this.analise.sistema;
-    }
+  abrirDialogFuncionalidade() {
+    this.mostrarDialogFuncionalidade = true;
+    this.novaFuncionalidade = new Funcionalidade();
+  }
 
-    get modulos() {
-        if (this.sistema) {
-            return this.sistema.modulos;
-        }
-    }
+  fecharDialogFuncionalidade() {
+    this.mostrarDialogFuncionalidade = false;
+  }
 
-    isSistemaSelected(): boolean {
-        return !_.isUndefined(this.sistema);
-    }
-
-    moduloDropdownPlaceholder(): string {
-        if (this.isSistemaSelected()) {
-            return 'Modulo';
-        } else {
-            return `Selecione um Sistema na aba 'Geral' para carregar os Módulos`;
-        }
-    }
-
-    abrirDialogModulo() {
-        this.mostrarDialogModulo = true;
-        // XXX problema em dar new toda hora?
-        this.novoModulo = new Modulo();
-    }
-
-    fecharDialogModulo() {
-        this.mostrarDialogModulo = false;
-    }
-
-    isModuloSelected(): boolean {
-        return !_.isUndefined(this.moduloSelecionado);
-    }
-
-    moduloSelected(modulo: Modulo) {
-        this.funcionalidades = modulo.funcionalidades;
-    }
-
-    adicionarModulo() {
-        const sistemaId = this.sistema.id;
-        // TODO inserir um spinner, talvez bloquear a UI
-        this.moduloService.create(this.novoModulo, sistemaId).subscribe((moduloCriado: Modulo) => {
-            this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
-                this.recarregarSistema(sistemaRecarregado);
-                this.selecionarModuloRecemCriado(moduloCriado);
-            });
+  adicionarFuncionalidade() {
+    const moduloId = this.moduloSelecionado.id;
+    const sistemaId = this.sistema.id;
+    // TODO inserir um spinner
+    this.funcionalidadeService.create(this.novaFuncionalidade, moduloId)
+      .subscribe((funcionalidadeCriada: Funcionalidade) => {
+        this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
+          this.recarregarSistema(sistemaRecarregado);
+          this.selecionarModuloRecemCriado(this.moduloSelecionado);
+          this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
         });
+      });
 
-        this.fecharDialogModulo();
-    }
+    this.fecharDialogFuncionalidade();
+  }
 
-    private recarregarSistema(sistemaRecarregado: Sistema) {
-        this.analise.sistema = sistemaRecarregado;
-    }
-
-    // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
-    private selecionarModuloRecemCriado(moduloCriado: Modulo) {
-        this.moduloSelecionado = _.find(this.sistema.modulos, { 'id': moduloCriado.id });
-        this.moduloSelected(this.moduloSelecionado);
-    }
-
-    funcionalidadeDropdownPlaceholder() {
-        if (this.isModuloSelected()) {
-            return 'Funcionalidade';
-        } else {
-            return 'Selecione um Módulo para carregar as Funcionalidades';
-        }
-    }
-
-    abrirDialogFuncionalidade() {
-        this.mostrarDialogFuncionalidade = true;
-        this.novaFuncionalidade = new Funcionalidade();
-    }
-
-    fecharDialogFuncionalidade() {
-        this.mostrarDialogFuncionalidade = false;
-    }
-
-    adicionarFuncionalidade() {
-        const moduloId = this.moduloSelecionado.id;
-        const sistemaId = this.sistema.id;
-        // TODO inserir um spinner
-        this.funcionalidadeService.create(this.novaFuncionalidade, moduloId)
-            .subscribe((funcionalidadeCriada: Funcionalidade) => {
-                this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
-                    this.recarregarSistema(sistemaRecarregado);
-                    this.selecionarModuloRecemCriado(this.moduloSelecionado);
-                    this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
-                });
-            });
-
-        this.fecharDialogFuncionalidade();
-    }
-
-    private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade) {
-        this.funcionalidadeSelecionada = _.find(this.moduloSelecionado.funcionalidades,
-            { 'id': funcionalidadeCriada.id });
-    }
+  private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade) {
+    this.funcionalidadeSelecionada = _.find(this.moduloSelecionado.funcionalidades,
+      { 'id': funcionalidadeCriada.id });
+  }
 
 }
