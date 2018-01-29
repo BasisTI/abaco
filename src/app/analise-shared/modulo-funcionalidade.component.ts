@@ -35,30 +35,8 @@ export class ModuloFuncionalidadeComponent implements OnInit {
 
   }
 
-  get analise(): Analise {
-    return this.analiseSharedDataService.analise;
-  }
-
-  set analise(analise: Analise) {
-    this.analiseSharedDataService.analise = analise;
-  }
-
-  private get manual() {
-    if (this.analiseSharedDataService.analise.contrato) {
-      return this.analiseSharedDataService.analise.contrato.manual;
-    }
-    return undefined;
-  }
-
-  get fatoresAjuste(): FatorAjuste[] {
-    if (this.manual) {
-      return _.cloneDeep(this.manual.fatoresAjuste);
-    }
-    return [];
-  }
-
-  get sistema(): Sistema {
-    return this.analise.sistema;
+  private get sistema(): Sistema {
+    return this.analiseSharedDataService.analise.sistema;
   }
 
   get modulos() {
@@ -103,7 +81,7 @@ export class ModuloFuncionalidadeComponent implements OnInit {
     this.moduloService.create(this.novoModulo, sistemaId).subscribe((moduloCriado: Modulo) => {
       this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
         this.recarregarSistema(sistemaRecarregado);
-        this.selecionarModuloRecemCriado(moduloCriado);
+        this.selecionarModulo(moduloCriado.id);
       });
     });
 
@@ -111,12 +89,12 @@ export class ModuloFuncionalidadeComponent implements OnInit {
   }
 
   private recarregarSistema(sistemaRecarregado: Sistema) {
-    this.analise.sistema = sistemaRecarregado;
+    this.analiseSharedDataService.analise.sistema = sistemaRecarregado;
   }
 
   // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
-  private selecionarModuloRecemCriado(moduloCriado: Modulo) {
-    this.moduloSelecionado = _.find(this.sistema.modulos, { 'id': moduloCriado.id });
+  private selecionarModulo(moduloId: number) {
+    this.moduloSelecionado = _.find(this.sistema.modulos, { 'id': moduloId });
     this.moduloSelected(this.moduloSelecionado);
   }
 
@@ -145,7 +123,7 @@ export class ModuloFuncionalidadeComponent implements OnInit {
       .subscribe((funcionalidadeCriada: Funcionalidade) => {
         this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
           this.recarregarSistema(sistemaRecarregado);
-          this.selecionarModuloRecemCriado(this.moduloSelecionado);
+          this.selecionarModulo(moduloId);
           this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
         });
       });
