@@ -38,8 +38,8 @@ export class DerTextParser {
   }
 
   private static gerarResultadoTextual(entrada: string): ParseResult {
-    const textos: string[] = [];
-
+    const textosPreTrim: string[] = entrada.split(/\r\n|\r|\n/g);
+    const textos: string[] = textosPreTrim.map(t => _.trim(t));
     return new ParseResult(ParseResult.TEXTO_TIPO,
       undefined, textos);
   }
