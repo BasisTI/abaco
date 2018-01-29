@@ -41,6 +41,18 @@ export class FuncaoDadosFormComponent implements OnInit {
     return undefined;
   }
 
+  isContratoSelected(): boolean {
+    return this.analiseSharedDataService.isContratoSelected();
+  }
+
+  fatoresAjusteDropdownPlaceholder() {
+    if (this.isContratoSelected()) {
+      return 'Valor de Ajuste';
+    } else {
+      return `Valor de Ajuste - Selecione um Contrato na aba 'Geral' para carregar os Valores de Ajuste`;
+    }
+  }
+
   get fatoresAjuste(): FatorAjuste[] {
     if (this.manual) {
       return _.cloneDeep(this.manual.fatoresAjuste);

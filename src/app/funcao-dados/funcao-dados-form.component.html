@@ -10,7 +10,9 @@
       <div class="ui-g">
         <div class="ui-g-12" style="margin-bottom: 25px">
           <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
-            [(ngModel)]="currentFuncaoDados.fatorAjuste" placeholder="Fator Ajuste"
+            [(ngModel)]="currentFuncaoDados.fatorAjuste" 
+            disabled="{{ !isContratoSelected() }}"
+            placeholder="{{ fatoresAjusteDropdownPlaceholder() }}"
             name="fatorAjuste" [autoWidth]="false">
           </p-dropdown>
         </div>
