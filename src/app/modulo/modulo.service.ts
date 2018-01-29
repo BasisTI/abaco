@@ -14,14 +14,22 @@ export class ModuloService {
 
   searchUrl = environment.apiUrl + '/_search/modulos';
 
-  constructor(private http: HttpService) {}
+  constructor(private http: HttpService) { }
 
-  create(modulo: Modulo): Observable<Modulo> {
+  create(modulo: Modulo, sistemaId?: number): Observable<Modulo> {
     const copy = this.convert(modulo);
-    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
+    const moduloToBeCreated = this.linkToSistema(copy, sistemaId);
+    return this.http.post(this.resourceUrl, moduloToBeCreated).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
     });
+  }
+
+  private linkToSistema(modulo: Modulo, sistemaId: number) {
+    if (sistemaId) {
+      modulo.sistema = { id: sistemaId };
+    }
+    return modulo;
   }
 
   update(modulo: Modulo): Observable<Modulo> {
@@ -62,15 +70,13 @@ export class ModuloService {
    * Convert a returned JSON object to Modulo.
    */
   private convertItemFromServer(json: any): Modulo {
-    const entity: Modulo = Object.assign(new Modulo(), json);
-    return entity;
+    return Modulo.fromJSON(json);
   }
 
   /**
    * Convert a Modulo to a JSON which can be sent to the server.
    */
   private convert(modulo: Modulo): Modulo {
-    const copy: Modulo = Object.assign({}, modulo);
-    return copy;
+    return Modulo.toNonCircularJson(modulo);
   }
 }

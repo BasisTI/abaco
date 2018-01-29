@@ -4,11 +4,11 @@ import { FuncaoDados } from './funcao-dados.model';
 import { Analise } from '../analise';
 import { Manual } from '../manual';
 import { FatorAjuste } from '../fator-ajuste';
-import { Modulo } from '../modulo';
+import { Sistema, SistemaService } from '../sistema/index';
+import { Modulo, ModuloService } from '../modulo';
 import { Funcionalidade } from '../funcionalidade';
 
 import * as _ from 'lodash';
-import { Sistema } from '../sistema/index';
 
 @Component({
   selector: 'app-analise-funcao-dados',
@@ -29,7 +29,9 @@ export class FuncaoDadosFormComponent implements OnInit {
   funcionalidadeSelecionada: Funcionalidade;
 
   constructor(
-    private analiseSharedDataService: AnaliseSharedDataService
+    private analiseSharedDataService: AnaliseSharedDataService,
+    private moduloService: ModuloService,
+    private sistemaService: SistemaService
   ) { }
 
   ngOnInit() {
@@ -100,9 +102,27 @@ export class FuncaoDadosFormComponent implements OnInit {
   }
 
   adicionarModulo() {
-    this.sistema.addModulo(this.novoModulo);
-    this.moduloSelecionado = this.novoModulo;
+    const sistemaId = this.sistema.id;
+    // TODO inserir um spinner, talvez bloquear a UI
+    this.moduloService.create(this.novoModulo, sistemaId).subscribe((moduloCriado: Modulo) => {
+      this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
+        this.recarregarSistema(sistemaRecarregado);
+        this.selecionarModuloRecemCriado(moduloCriado);
+      });
+    });
+
     this.fecharDialogModulo();
+  }
+
+  private recarregarSistema(sistemaRecarregado: Sistema) {
+    this.analise.sistema = sistemaRecarregado;
+  }
+
+  private selecionarModuloRecemCriado(moduloCriado: Modulo) {
+    const idModuloSelecionar = moduloCriado.id;
+    const modulos = this.sistema.modulos;
+    const moduloSelecionar = _.find(modulos, { 'id': idModuloSelecionar });
+    this.moduloSelecionado = moduloSelecionar;
   }
 
   funcionalidadeDropdownPlaceholder() {
@@ -129,6 +149,5 @@ export class FuncaoDadosFormComponent implements OnInit {
     this.funcionalidades = this.moduloSelecionado.funcionalidades;
     this.fecharDialogFuncionalidade();
   }
-
 
 }
