@@ -26,11 +26,12 @@ export class FuncaoDados implements BaseEntity {
     public fatorAjuste?: BaseEntity,
     public alr?: BaseEntity,
     public name?: string,
+    public sustantation?: string,
   ) { }
 
   clone(): FuncaoDados {
     return new FuncaoDados(this.id, this.artificialId, this.tipo, this.complexidade,
       this.pf, this.analise, this.funcionalidades, this.funcionalidade,
-      this.fatorAjuste, this.alr, this.name);
+      this.fatorAjuste, this.alr, this.name, this.sustantation);
   }
 }
