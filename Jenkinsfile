@@ -10,10 +10,10 @@ def rancherEnvironment = rancherEnvironment
 def rancherStack = rancherStack
 def rancherService = rancherService
 
-echo('frontendImageTag: ' + frontendImageTag)
-echo('doDeploy: ' + doDeploy)
-
 pipelineBuildFrontendJavascript {
+    echo('frontendImageTag: ' + frontendImageTag)
+    echo('doDeploy: ' + doDeploy)
+
     agentLabel = 'docker-engine'
     dockerRegistry = 'basis-registry.basis.com.br'
     builderImageName = 'basis-registry.basis.com.br/basis/builder-image'
