@@ -2,12 +2,13 @@
 
 @Library('basis-pipeline-library@BASIS-24357') _
 
-def doDeploy = env.doDeploy
-def frontendImageTag = env.frontendImageTag
-def rancherConfigName = env.rancherConfigName
-def rancherEnvironment = env.rancherEnvironment
-def rancherStack = env.rancherStack
-def rancherService = env.rancherService
+def frontendImageTag = frontendImageTag
+
+def doDeploy = doDeploy
+def rancherConfigName = rancherConfigName
+def rancherEnvironment = rancherEnvironment
+def rancherStack = rancherStack
+def rancherService = rancherService
 
 pipelineBuildFrontendJavascript {
     agentLabel = 'docker-engine'
@@ -17,15 +18,16 @@ pipelineBuildFrontendJavascript {
     buildScriptPath = 'docker/nginx/build.sh'
     dockerContext = 'docker/nginx'
     frontendImageName = 'abaco/abaco-ui'
-    frontendImageTag = frontendImageTag 
+    frontendImageTag = frontendImageTag
     doDeploy = doDeploy
     rancherInfo = [
-        configName: rancherConfigName, 
+        configName: rancherConfigName,
         environment: rancherEnvironment,
         stack: rancherStack,
-        service: rancherService 
+        service: rancherService
     ]
     rocketChannel = ''
     recipientList = ''
     sendSuccessNotification = false
 }
+
