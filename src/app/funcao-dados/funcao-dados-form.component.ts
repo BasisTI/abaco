@@ -7,6 +7,7 @@ import { FatorAjuste } from '../fator-ajuste';
 import * as _ from 'lodash';
 import { Modulo } from '../modulo/index';
 import { Funcionalidade } from '../funcionalidade/index';
+import { SelectItem } from 'primeng/primeng';
 
 @Component({
   selector: 'app-analise-funcao-dados',
@@ -16,6 +17,11 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   funcoesDados: FuncaoDados[];
   currentFuncaoDados: FuncaoDados;
+
+  classificacoes: SelectItem[] = [
+    { label: 'ALI', value: 'ALIE' },
+    { label: 'AIE', value: 'AIE' }
+  ];
 
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,

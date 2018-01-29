@@ -17,7 +17,7 @@ export class FuncaoDados implements BaseEntity {
   constructor(
     public id?: number,
     public artificialId?: number,
-    public tipo?: TipoFuncaoDados,
+    public tipo?: string,
     public complexidade?: Complexidade,
     public pf?: number,
     public analise?: BaseEntity,
