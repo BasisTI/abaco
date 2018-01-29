@@ -21,11 +21,21 @@ export class ParseResult {
 export class DerTextParser {
 
   static parse(entrada: string): ParseResult {
-    if (this.isNumerico(entrada)) {
+    if (this.isEmptyString(entrada)) {
+      return this.gerarResultadoTextualVazio();
+    } else if (this.isNumerico(entrada)) {
       return this.gerarResultadoNumerico(entrada);
     } else {
       return this.gerarResultadoTextual(entrada);
     }
+  }
+
+  private static isEmptyString(entrada: string) {
+    return (!entrada || 0 === entrada.length);
+  }
+
+  private static gerarResultadoTextualVazio() {
+    return new ParseResult(ParseResult.TEXTO_TIPO, undefined, []);
   }
 
   private static isNumerico(entrada): boolean {

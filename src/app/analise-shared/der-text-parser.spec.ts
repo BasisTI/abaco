@@ -1,7 +1,7 @@
 import { ParseResult, DerTextParser } from './der-text-parser';
 import * as _ from 'lodash';
 
-fdescribe('DerTextParser', () => {
+describe('DerTextParser', () => {
 
   let result: ParseResult;
 
@@ -26,6 +26,18 @@ fdescribe('DerTextParser', () => {
   });
 
   describe('entrada textual', () => {
+
+    describe('1 linha em branco', () => {
+      const entrada = '';
+
+      beforeEach(() => result = DerTextParser.parse(entrada));
+
+      expectResultToBe(ParseResult.TEXTO_TIPO);
+
+      it(`deve retornar 'textos' com tamanho 0`, () => {
+        expect(result.textos.length).toEqual(0);
+      });
+    });
 
     describe('1 linha', () => {
       const entrada = 'uma única linha';
