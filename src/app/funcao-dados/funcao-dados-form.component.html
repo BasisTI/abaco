@@ -2,7 +2,10 @@
   <div class="ui-g-12">
     <div class="card card-w-title">
       
-      <app-analise-modulo-funcionalidade></app-analise-modulo-funcionalidade>
+      <app-analise-modulo-funcionalidade
+        (moduloSelectedEvent)="moduloSelected($event)"
+        (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
+      </app-analise-modulo-funcionalidade>
       
       <div class="ui-g">
         <div class="ui-g-12" style="margin-bottom: 25px">
