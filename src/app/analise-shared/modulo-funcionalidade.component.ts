@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AnaliseSharedDataService } from '../shared';
-import { FuncaoDados } from './funcao-dados.model';
 import { Analise } from '../analise';
 import { Manual } from '../manual';
 import { FatorAjuste } from '../fator-ajuste';
