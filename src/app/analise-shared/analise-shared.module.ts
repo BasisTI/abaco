@@ -1,0 +1,52 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpModule } from '@angular/http';
+import { FormsModule } from '@angular/forms';
+
+import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
+
+import {
+    ButtonModule,
+    InputTextModule,
+    SpinnerModule,
+    CalendarModule,
+    DropdownModule,
+    RadioButtonModule,
+    ConfirmDialogModule,
+    DataTableModule,
+    ConfirmationService,
+    TabViewModule,
+    InputTextareaModule,
+    DialogModule
+} from 'primeng/primeng';
+
+import { AbacoSharedModule } from '../shared/abaco-shared.module';
+import { ModuloFuncionalidadeComponent } from './modulo-funcionalidade.component';
+
+@NgModule({
+    imports: [
+        CommonModule,
+        HttpModule,
+        FormsModule,
+        ButtonModule,
+        SpinnerModule,
+        CalendarModule,
+        DropdownModule,
+        RadioButtonModule,
+        InputTextModule,
+        DataTableModule,
+        ConfirmDialogModule,
+        AbacoButtonsModule,
+        TabViewModule,
+        InputTextareaModule,
+        AbacoSharedModule,
+        DialogModule
+    ],
+    declarations: [
+        ModuloFuncionalidadeComponent
+    ],
+    exports: [
+        ModuloFuncionalidadeComponent
+    ]
+})
+export class AbacoAnaliseSharedModule { }
