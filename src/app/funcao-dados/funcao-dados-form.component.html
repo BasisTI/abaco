@@ -1,99 +1,18 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <div class="ui-g" >
-
-        <div class="ui-g-12" style="margin-bottom: 25px">
-          <div class="ui-g-6">
-            <p-dropdown [options]="modulos" [(ngModel)]="moduloSelecionado"
-              optionLabel="nome"
-              (onChange)="moduloSelected($event.value)"
-              placeholder="{{ moduloDropdownPlaceholder() }}"
-              disabled="{{ !isSistemaSelected() }}"
-              name="modulo" [autoWidth]="false"></p-dropdown>
-
-              <app-green-button buttonLabel="Novo Módulo"
-                buttonIcon="ui-icon-add"
-                (click)="abrirDialogModulo()"></app-green-button>
-          </div>
-
-          <div class="ui-g-6">
-            <p-dropdown [options]="funcionalidades" [(ngModel)]="funcionalidadeSelecionada"
-              optionLabel="nome"
-              placeholder="{{ funcionalidadeDropdownPlaceholder() }}"
-              disabled="{{ !isModuloSelected() }}"
-              name="funcionalidade" [autoWidth]="false"></p-dropdown>
-
-              <app-green-button buttonLabel="Nova Funcionalidade"
-                buttonIcon="ui-icon-add"
-                (click)="abrirDialogFuncionalidade()"></app-green-button>
-          </div>
-        </div>
-
+      
+      <app-analise-modulo-funcionalidade></app-analise-modulo-funcionalidade>
+      
+      <div class="ui-g">
         <div class="ui-g-12" style="margin-bottom: 25px">
           <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
-            [(ngModel)]="currentFuncaoDados.fatorAjuste"
-            placeholder="Fator Ajuste"
+            [(ngModel)]="currentFuncaoDados.fatorAjuste" placeholder="Fator Ajuste"
             name="fatorAjuste" [autoWidth]="false">
           </p-dropdown>
         </div>
 
-        <!-- Dialog módulo -->
-        <p-dialog header="Módulo" [(visible)]="mostrarDialogModulo"
-          [contentStyle]="{'overflow':'visible'}" [width]="800">
-          <div class="ui-g">
-            <div class="ui-g-12" style="margin-bottom: 25px">
-              <span class="md-inputfield">
-                <input type="text" name="nomeModulo" [(ngModel)]="novoModulo.nome"
-                  pInputText (keydown.enter)="adicionarModulo()"/>
-                <label>Nome do Módulo</label>
-              </span>
-            </div>
-          </div>
-        
-          <div class="ui-g ui-md-12" style="justify-content: flex-end">
-            <div class="ui-g-2">
-              <app-white-button buttonLabel="Cancelar" (click)="fecharDialogModulo()"></app-white-button>
-              <!-- <button pButton type="button" label="Cancelar"
-                (click)="fecharDialogModulo()"></button> -->
-            </div>
-            <div class="ui-g-2">
-              <app-green-button buttonLabel="Salvar" (click)="adicionarModulo()"></app-green-button>
-              <!-- <button pButton type="button" label="Salvar"
-                (click)="adicionarModulo()"></button> -->
-            </div>
-          </div>
-        </p-dialog>
-
-        <!-- Dialog funcionalidade -->
-        <p-dialog header="Funcionalidade" [(visible)]="mostrarDialogFuncionalidade"
-          [contentStyle]="{'overflow':'visible'}" [width]="800">
-          <div class="ui-g">
-            <div class="ui-g-12" style="margin-bottom: 25px">
-              <span class="md-inputfield">
-                <input type="text" name="nomeFuncionalidade"
-                  [(ngModel)]="novaFuncionalidade.nome" pInputText />
-                <label>Nome da Funcionalidade</label>
-              </span>
-            </div>
-            <span>Módulo: {{ moduloSelecionado }}</span>
-          </div>
-
-          <div class="ui-g ui-md-12" style="justify-content: flex-end">
-            <div class="ui-g-2">
-              <app-white-button buttonLabel="Cancelar" (click)="fecharDialogFuncionalidade()"></app-white-button>
-              <!-- <button pButton type="button" label="Cancelar"
-                (click)="fecharDialogFuncionalidade()"></button> -->
-            </div>
-            <div class="ui-g-2">
-              <app-green-button buttonLabel="Salvar" (click)="adicionarFuncionalidade()"></app-green-button>
-              <!-- <button pButton type="button" label="Salvar"
-                (click)="adicionarFuncionalidade()"></button> -->
-            </div>
-          </div>
-        </p-dialog>
-        
-      </div>      
+      </div>
     </div>
   </div>
 </div>
