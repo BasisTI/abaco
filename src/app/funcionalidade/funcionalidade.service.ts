@@ -5,7 +5,7 @@ import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 
 import { Funcionalidade } from './funcionalidade.model';
-import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
+import { ResponseWrapper, createRequestOption, JhiDateUtils, BaseEntity } from '../shared';
 import { Modulo } from '../modulo/index';
 
 @Injectable()
@@ -28,9 +28,8 @@ export class FuncionalidadeService {
 
   private linkToModulo(funcionalidade: Funcionalidade, moduloId: number) {
     if (moduloId && !funcionalidade.modulo) {
-      const modulo = new Modulo();
-      modulo.id = moduloId;
-      funcionalidade.modulo = modulo;
+      const modulo: BaseEntity = { id: moduloId };
+      funcionalidade.modulo = modulo as Modulo;
     }
     return funcionalidade;
   }
