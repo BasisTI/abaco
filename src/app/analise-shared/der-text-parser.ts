@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 export class ParseResult {
 
   static readonly NUMERO_TIPO = 'NUMERO';
@@ -18,8 +20,18 @@ export class ParseResult {
 
 export class DerTextParser {
 
-
   static parse(entrada: string): ParseResult {
-    return undefined;
+    if (this.isNumerico(entrada)) {
+      return this.gerarResultadoNumerico(entrada);
+    }
+  }
+
+  private static isNumerico(entrada): boolean {
+    return !isNaN(entrada);
+  }
+
+  private static gerarResultadoNumerico(entrada: string): ParseResult {
+    return new ParseResult(ParseResult.NUMERO_TIPO,
+      _.toNumber(entrada));
   }
 }
