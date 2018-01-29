@@ -1,7 +1,7 @@
 import { ParseResult, DerTextParser } from './der-text-parser';
 import * as _ from 'lodash';
 
-fdescribe('DerTextParser', () => {
+describe('DerTextParser', () => {
 
   describe('entrada númerica', () => {
 
