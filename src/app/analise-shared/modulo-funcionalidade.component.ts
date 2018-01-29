@@ -73,6 +73,7 @@ export class ModuloFuncionalidadeComponent implements OnInit {
 
   moduloSelected(modulo: Modulo) {
     this.funcionalidades = modulo.funcionalidades;
+    // EMITIR EVENTO
   }
 
   adicionarModulo() {
@@ -131,9 +132,14 @@ export class ModuloFuncionalidadeComponent implements OnInit {
     this.fecharDialogFuncionalidade();
   }
 
+  funcionalidadeSelected(funcionalidade: Funcionalidade) {
+    // emitir evento
+  }
+
   private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade) {
     this.funcionalidadeSelecionada = _.find(this.moduloSelecionado.funcionalidades,
       { 'id': funcionalidadeCriada.id });
+    this.funcionalidadeSelected(this.funcionalidadeSelecionada);
   }
 
 }
