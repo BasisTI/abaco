@@ -57,7 +57,9 @@ export class DerTextParser {
 
   private static gerarResultadoTextual(entrada: string): ParseResult {
     const textosPreTrim: string[] = entrada.split(/\r\n|\r|\n/g);
-    const textos: string[] = textosPreTrim.map(t => _.trim(t));
+    const textos: string[] = textosPreTrim
+      .filter(t => !DerTextParser.isEmptyString(t))
+      .map(t => _.trim(t));
     return new ParseResult(ParseResult.TEXTO_TIPO,
       undefined, textos);
   }
