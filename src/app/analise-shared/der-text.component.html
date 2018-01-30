@@ -1,16 +1,13 @@
-<span class="md-inputfield">
+<h2>{{ label }}</h2>
 
-  <textarea pInputTextarea
-    [(ngModel)]="text"
-    (keyup.enter)="textChanged()"
-    (change)="textChanged()"
-    [rows]="6" [cols]="180"
-    name="{{ label }}">
-  </textarea>
+<textarea pInputTextarea
+  [(ngModel)]="text"
+  (keyup.enter)="textChanged()"
+  (change)="textChanged()"
+  [rows]="6" [cols]="180"
+  name="{{ label }}">
+</textarea>
 
-  <label>{{ label }}</label>
-
-</span>
 <span>
 Total: {{ showTotal() }}
 </span>
