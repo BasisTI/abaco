@@ -1,13 +1,24 @@
 <h2>{{ label }}</h2>
 
-<textarea pInputTextarea
-  [(ngModel)]="text"
-  (keyup.enter)="textChanged()"
-  (change)="textChanged()"
-  [rows]="6" [cols]="180"
-  name="{{ label }}">
-</textarea>
+<div class="ui-g">
+  <div class="ui-g-12">
+    <textarea pInputTextarea
+      [(ngModel)]="text"
+      (keyup.enter)="textChanged()"
+      (change)="textChanged()"
+      [rows]="6" [cols]="180"
+      name="{{ label }}">
+    </textarea>
+  </div>
 
-<span>
-Total: {{ showTotal() }}
-</span>
+  <div class="ui-g-12">
+    <span>
+      Total: {{ showTotal() }}
+    </span>
+  </div>
+  <div class="ui-g-12" *ngIf="deveMostrarDuplicatas()">
+    <span >
+      Valores duplicados: {{ parseResult.duplicatasFormatadas() }}
+    </span>
+  </div>
+</div>

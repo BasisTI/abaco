@@ -32,6 +32,13 @@ export class DerTextComponent {
 
   showTotal(): string {
     const parseResult = this.parseResult;
-    return parseResult ? parseResult.showTotal() : '0';
+    return parseResult ? parseResult.mostraTotal() : '0';
+  }
+
+  deveMostrarDuplicatas(): boolean {
+    if (!this.parseResult) {
+      return false;
+    }
+    return this.parseResult.temDuplicatas();
   }
 }
