@@ -67,9 +67,21 @@
       <hr>
 
       <p-dataTable [value]="funcoesDados">
-          <p-column field="fatorAjuste" header="Fator Ajuste"></p-column>
-          <p-column field="funcionalidade.modulo" header="Módulo"></p-column>
-          <p-column field="funcionalidade" header="Funcionalidade"></p-column>
+          <p-column header="Fator Ajuste">
+            <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
+              {{ fatorAjuste.nome }}
+            </ng-template>
+          </p-column>
+          <p-column header="Módulo">
+            <ng-template let-modulo="rowData.funcionalidade.modulo" pTemplate="body">
+              {{ modulo.nome }}
+            </ng-template>
+          </p-column>
+          <p-column header="Funcionalidade">
+            <ng-template let-funcionalidade="rowData.funcionalidade" pTemplate="body">
+              {{ funcionalidade.nome }}
+            </ng-template>
+          </p-column>
           <p-column field="name" header="Nome"></p-column>
           <p-column field="tipo" header="Classificação"></p-column>
           <p-column field="rlr" header="RLR"></p-column>
