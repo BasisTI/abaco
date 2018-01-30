@@ -18,7 +18,7 @@ export class FuncaoDadosFormComponent implements OnInit {
   currentFuncaoDados: FuncaoDados;
 
   classificacoes: SelectItem[] = [
-    { label: 'ALI', value: 'ALIE' },
+    { label: 'ALI', value: 'ALI' },
     { label: 'AIE', value: 'AIE' }
   ];
 
