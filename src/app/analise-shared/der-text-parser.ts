@@ -33,6 +33,9 @@ export class ParseResult {
   }
 
   temDuplicatas(): boolean {
+    if (this.tipo === ParseResult.NUMERO_TIPO) {
+      return false;
+    }
     return this.duplicateResult.temDuplicatas();
   }
 

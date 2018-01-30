@@ -106,6 +106,16 @@ describe('DerTextParser', () => {
 
   });
 
+  describe('duplicatas', () => {
+
+    it('deve retornar false para entrada númerica', () => {
+      const entrada = '10';
+      result = DerTextParser.parse(entrada);
+      expect(result.temDuplicatas()).toBeFalsy();
+    });
+
+  });
+
   function expectResultTipoToBe(tipo: string) {
     it(`deve retornar um ParseResult com tipo '${tipo}'`, () => {
       expect(result.tipo).toEqual(tipo);
