@@ -22,7 +22,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * A Modulo.
@@ -45,11 +46,12 @@ public class Modulo implements Serializable {
 	private String nome;
 
 	@ManyToOne
-	@JsonIgnore
+	@JsonBackReference
 	private Sistema sistema;
 
 	@OneToMany(mappedBy = "modulo", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	@JsonManagedReference
 	private Set<Funcionalidade> funcionalidades = new HashSet<>();
 
 	public Long getId() {

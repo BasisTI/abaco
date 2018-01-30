@@ -23,6 +23,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 /**
  * A Sistema.
  */
@@ -55,6 +57,7 @@ public class Sistema implements Serializable {
 
 	@OneToMany(mappedBy = "sistema", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	@JsonManagedReference
 	private Set<Modulo> modulos = new HashSet<>();
 
 	public Long getId() {
