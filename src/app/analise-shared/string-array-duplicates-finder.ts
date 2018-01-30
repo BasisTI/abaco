@@ -1,8 +1,8 @@
 export class DuplicatesResult {
 
-  readonly duplicados: String[];
+  readonly duplicados: Set<string>;
 
-  constructor(duplicados: String[]) {
+  constructor(duplicados: Set<string>) {
     this.duplicados = duplicados;
   }
 
@@ -10,15 +10,32 @@ export class DuplicatesResult {
     if (!this.duplicados) {
       return false;
     }
-    return this.duplicados.length > 0;
+    return this.duplicados.size > 0;
+  }
+
+  count(): number {
+    return this.duplicados.size;
+  }
+
+  length(): number {
+    return this.count();
   }
 
 }
 
 export class StringArrayDuplicatesFinder {
 
-  static find(valores: String[]): DuplicatesResult {
-    
+  static find(valores: string[]): DuplicatesResult {
+    const valoresSet: Set<string> = new Set<string>();
+    const duplicados: Set<string> = new Set<string>();
+    valores.forEach(val => {
+      if (!valoresSet.has(val)) {
+        valoresSet.add(val);
+      } else {
+        duplicados.add(val);
+      }
+    });
+    return new DuplicatesResult(duplicados);
   }
 
 }
