@@ -64,6 +64,18 @@
         </div>
       </div>
 
+      <hr>
+
+      <p-dataTable [value]="funcoesDados">
+          <p-column field="fatorAjuste" header="Fator Ajuste"></p-column>
+          <p-column field="funcionalidade.modulo" header="Módulo"></p-column>
+          <p-column field="funcionalidade" header="Funcionalidade"></p-column>
+          <p-column field="name" header="Nome"></p-column>
+          <p-column field="tipo" header="Classificação"></p-column>
+          <p-column field="rlr" header="RLR"></p-column>
+          <p-column field="der" header="DER"></p-column>
+      </p-dataTable>
+
     </div>
   </div>
 </div>

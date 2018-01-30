@@ -15,7 +15,6 @@ import { SelectItem } from 'primeng/primeng';
 })
 export class FuncaoDadosFormComponent implements OnInit {
 
-  funcoesDados: FuncaoDados[];
   currentFuncaoDados: FuncaoDados;
 
   classificacoes: SelectItem[] = [
@@ -28,8 +27,14 @@ export class FuncaoDadosFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.funcoesDados = [];
     this.currentFuncaoDados = new FuncaoDados();
+  }
+
+  get funcoesDados(): FuncaoDados[] {
+    if (!this.analise.funcaoDados) {
+      return [];
+    }
+    return this.analise.funcaoDados;
   }
 
   private get analise(): Analise {
