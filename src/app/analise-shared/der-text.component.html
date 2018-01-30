@@ -4,6 +4,8 @@
   <div class="ui-g-12">
     <textarea pInputTextarea
       [(ngModel)]="text"
+      style="white-space: nowrap; overflow: auto;"
+      [autoResize]="false"
       (keyup.enter)="textChanged()"
       (keyup.backspace)="textChanged()"
       (keyup.delete)="textChanged()"
