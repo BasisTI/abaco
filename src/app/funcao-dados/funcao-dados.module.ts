@@ -7,19 +7,22 @@ import { FuncaoDadosFormComponent } from './funcao-dados-form.component';
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
 
 import {
-    ButtonModule,
-    InputTextModule,
-    SpinnerModule,
-    CalendarModule,
-    DropdownModule,
-    RadioButtonModule,
-    ConfirmDialogModule,
-    DataTableModule,
-    ConfirmationService,
-    TabViewModule,
-    InputTextareaModule
-  } from 'primeng/primeng';
+  ButtonModule,
+  InputTextModule,
+  SpinnerModule,
+  CalendarModule,
+  DropdownModule,
+  RadioButtonModule,
+  ConfirmDialogModule,
+  DataTableModule,
+  ConfirmationService,
+  TabViewModule,
+  InputTextareaModule,
+  DialogModule
+} from 'primeng/primeng';
+
 import { AbacoSharedModule } from '../shared/abaco-shared.module';
+import { AbacoAnaliseSharedModule } from '../analise-shared/analise-shared.module';
 
 @NgModule({
   imports: [
@@ -37,7 +40,9 @@ import { AbacoSharedModule } from '../shared/abaco-shared.module';
     AbacoButtonsModule,
     TabViewModule,
     InputTextareaModule,
-    AbacoSharedModule
+    AbacoSharedModule,
+    DialogModule,
+    AbacoAnaliseSharedModule
   ],
   declarations: [
     FuncaoDadosFormComponent

@@ -1,17 +1,69 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <div class="ui-g" >
-        <div class="ui-g-12" style="margin-bottom: 25px">
+      
+      <app-analise-modulo-funcionalidade
+        (moduloSelectedEvent)="moduloSelected($event)"
+        (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
+      </app-analise-modulo-funcionalidade>
+      
+      <div class="ui-g">
+        <div class="ui-g-9" style="margin-bottom: 25px">
           <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
-            [(ngModel)]="currentFuncaoDados.fatorAjuste"
-            placeholder="Fator Ajuste"
+            [(ngModel)]="currentFuncaoDados.fatorAjuste" 
+            disabled="{{ !isContratoSelected() }}"
+            placeholder="{{ fatoresAjusteDropdownPlaceholder() }}"
             name="fatorAjuste" [autoWidth]="false">
           </p-dropdown>
         </div>
 
-        
-      </div>      
+        <div class="ui-g-3" style="margin-bottom: 25px">
+          <p-dropdown [options]="classificacoes"
+            [(ngModel)]="currentFuncaoDados.tipo"
+            placeholder="Classificação"
+            name="classificacao" [autoWidth]="false">
+          </p-dropdown>
+        </div>
+
+        <div class="ui-g-12" style="margin-bottom: 25px">
+          <span class="md-inputfield">
+            <input type="text" name="nomeFuncaoDados" [(ngModel)]="currentFuncaoDados.name" pInputText/>
+            <label>Nome</label>
+          </span>
+        </div>
+      </div>
+
+      <div class="ui-g-6" style="margin-bottom: 25px">
+        <app-analise-der-text 
+          value=""
+          label="DER">
+        </app-analise-der-text>
+      </div>
+
+      <div class="ui-g-6" style="margin-bottom: 25px">
+        <app-analise-der-text 
+          value=""
+          label="RLR">
+        </app-analise-der-text>
+      </div>
+
+      <div class="ui-g-12" style="margin-bottom: 25px">
+        <span class="md-inputfield">
+          <textarea [rows]="6" [cols]="180" pInputTextarea name="funcaoDadosSustentacao" 
+            [(ngModel)]="currentFuncaoDados.sustantation">
+          </textarea>
+          <label>Fundamentação</label>
+        </span>
+      </div>
+
+      <div class="ui-g ui-md-12" style="justify-content: flex-end">
+        <div class="ui-md-3">
+          <app-green-button buttonLabel="Adicionar"
+            buttonIcon="ui-icon-add" (click)="adicionar()">
+          </app-green-button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

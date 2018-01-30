@@ -155,10 +155,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   isContratoSelected(): boolean {
-    return !_.isUndefined(this.analise.contrato);
+    return this.analiseSharedDataService.isContratoSelected();
   }
 
-  fatoresAjusteDrodownPlaceholder() {
+  fatoresAjusteDropdownPlaceholder() {
     if (this.isContratoSelected()) {
       return 'Valor de Ajuste';
     } else {

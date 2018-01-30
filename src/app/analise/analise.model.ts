@@ -1,6 +1,8 @@
-import { BaseEntity } from '../shared';
+import { BaseEntity, MappableEntities } from '../shared';
 import { Contrato } from '../contrato';
 import { EsforcoFase } from '../esforco-fase/index';
+import { Sistema } from '../sistema/index';
+import { FuncaoDados } from '../funcao-dados/index';
 
 export const enum MetodoContagem {
   'DETALHADA',
@@ -15,6 +17,8 @@ export const enum TipoAnalise {
 
 export class Analise implements BaseEntity {
 
+  private mappableFuncaoDados: MappableEntities<FuncaoDados>;
+
   constructor(
     public id?: number,
     public numeroOs?: string,
@@ -26,11 +30,22 @@ export class Analise implements BaseEntity {
     public documentacao?: string,
     public tipoAnalise?: TipoAnalise,
     public propositoContagem?: string,
-    public sistema?: BaseEntity,
-    public funcaoDados?: BaseEntity[],
+    public sistema?: Sistema,
+    public funcaoDados?: FuncaoDados[],
     public funcaoTransacaos?: BaseEntity[],
     public organizacao?: BaseEntity,
     public contrato?: Contrato,
     public esforcoFases?: EsforcoFase[]
-  ) {}
+  ) {
+    if (funcaoDados) {
+      this.mappableFuncaoDados = new MappableEntities<FuncaoDados>(funcaoDados);
+    } else {
+      this.mappableFuncaoDados = new MappableEntities<FuncaoDados>();
+    }
+   }
+
+  public addFuncaoDados(funcaoDados: FuncaoDados) {
+    this.mappableFuncaoDados.push(funcaoDados);
+    this.funcaoDados = this.mappableFuncaoDados.values();
+  }
 }
