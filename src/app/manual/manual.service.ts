@@ -38,19 +38,19 @@ export class ManualService {
     return adjustFactors;
   }
 
-  create(manual: Manual, arquivoManual: File): Observable<any> {
+  create(manual: Manual): Observable<any> {
     const copy = this.convert(manual);
 
-    return this.uploadService.uploadFile(arquivoManual).map(response => {
-      copy.arquivoManualId = JSON.parse(response["_body"]).id;
-      copy.esforcoFases = this.parsePhaseEffortDecimalValues(copy.esforcoFases);
-      copy.fatoresAjuste = this.parseAdjustFactorDecimalValues(copy.fatoresAjuste);
+    copy.esforcoFases = this.parsePhaseEffortDecimalValues(copy.esforcoFases);
+    copy.fatoresAjuste = this.parseAdjustFactorDecimalValues(copy.fatoresAjuste);
 
-      this.http.post(this.resourceUrl, copy).map((res: Response) => {
-        const jsonResponse = res.json();
-        return this.convertItemFromServer(jsonResponse);
-      });
+    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
     });
+    // return this.uploadService.uploadFile(arquivoManual).map(response => {
+    //   copy.arquivoManualId = JSON.parse(response["_body"]).id;
+    // });
   }
 
   update(manual: Manual): Observable<Manual> {

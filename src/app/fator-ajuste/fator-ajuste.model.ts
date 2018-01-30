@@ -37,7 +37,7 @@ export class FatorAjuste implements BaseEntity {
 
   copyFromJSON(json: any) {
     // TODO converter manual?
-    return new FatorAjuste(json.id, json.nome, json.fator*100, json.ativo, json.descricao, json.codigo, json.tipoAjuste, json.impacto, json.manual, json.origem ,json.artificialId);
+    return new FatorAjuste(json.id, json.nome, json.fator, json.ativo, json.descricao, json.codigo, json.tipoAjuste, json.impacto, json.manual, json.origem ,json.artificialId);
   }
 
   // TODO extrair modulo? entrar pro jsonable?

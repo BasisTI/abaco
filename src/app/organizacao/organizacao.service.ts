@@ -22,19 +22,13 @@ export class OrganizacaoService {
     private uploadService: UploadService
   ) {}
 
-  create(organizacao: Organizacao, logoOrganizacao: File): Observable<any> {
+  create(organizacao: Organizacao): Observable<any> {
     const copy = this.convertToJSON(organizacao);
 
-    return this.uploadService.uploadFile(logoOrganizacao).map(response => {
-      console.log(response);
-      copy.logoId = JSON.parse(response["_body"]).id;
-
-      return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-        const jsonResponse = res.json();
-        return this.convertFromJSON(jsonResponse);
-      });
+    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertFromJSON(jsonResponse);
     });
-
   }
 
   update(organizacao: Organizacao): Observable<Organizacao> {

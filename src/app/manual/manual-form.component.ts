@@ -15,10 +15,11 @@ import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/components/common/confirmationservice';
 import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 import { PageNotificationService } from '../shared/page-notification.service';
+import { UploadService } from '../upload/upload.service';
 
 @Component({
   selector: 'jhi-manual-form',
-  templateUrl: './manual-form.component.html'
+  templateUrl: './manual-form.component.html',
 })
 export class ManualFormComponent implements OnInit, OnDestroy {
   manual: Manual;
@@ -55,7 +56,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     private esforcoFaseService: EsforcoFaseService,
     private tipoFaseService: TipoFaseService,
     private confirmationService: ConfirmationService,
-    private pageNotificationService: PageNotificationService
+    private pageNotificationService: PageNotificationService,
+    private uploadService: UploadService
   ) {}
 
   ngOnInit() {
@@ -85,7 +87,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     } else {
       if(this.arquivoManual !== undefined) {
         if(this.checkRequiredFields()) {
-          this.subscribeToSaveResponse(this.manualService.create(this.manual, this.arquivoManual));
+          this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
+            this.manual.arquivoManualId = JSON.parse(response["_body"]).id;
+            this.subscribeToSaveResponse(this.manualService.create(this.manual));
+          });
         } else {
           this.pageNotificationService.addErrorMsg('Campos inválidos: ' + this.getInvalidFieldsString());
           this.invalidFields = [];
@@ -170,6 +175,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     switch (event.button) {
       case 'edit':
         this.editedAdjustFactor = event.selection.clone();
+        (this.editedAdjustFactor.fator > 0 && this.editedAdjustFactor.fator < 1) ?
+          (this.editedAdjustFactor.fator = this.editedAdjustFactor.fator * 100) : (this.editedAdjustFactor = this.editedAdjustFactor);
         this.openDialogEditAdjustFactor();
         break;
       case 'delete':
@@ -179,6 +186,14 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  isPercentualEnum(value: TipoFatorAjuste) {
+
+    return (value !== undefined) ? (value.toString() === 'PERCENTUAL') : (false);
+  }
+
+  isUnitaryEnum(value: TipoFatorAjuste) {
+    return (value !== undefined) ? (value.toString() === 'UNITARIO') : (false);
+  }
   confirmDeletePhaseEffort() {
     this.confirmationService.confirm({
       message: 'Tem certeza que deseja excluir o Esforço por fase ' + this.editedPhaseEffort.fase.nome + '?',

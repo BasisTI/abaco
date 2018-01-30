@@ -51,7 +51,7 @@ import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
     DialogModule,
     ConfirmDialogModule,
     MemoryDataTableModule,
-    AbacoButtonsModule
+    AbacoButtonsModule,
   ],
   declarations: [
     ManualComponent,
