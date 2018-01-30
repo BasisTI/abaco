@@ -24,12 +24,16 @@ export class ParseResult {
     }
   }
 
-  mostraTotal(): string {
+  total(): number {
     if (this.isTipoNumerico()) {
-      return this.numero.toString();
+      return Number(this.numero);
     } else {
-      return this.textos.length.toString();
+      return this.textos.length;
     }
+  }
+
+  mostraTotal(): string {
+    return this.total().toString();
   }
 
   private isTipoNumerico(): boolean {

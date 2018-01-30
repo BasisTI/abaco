@@ -1,5 +1,6 @@
 import { BaseEntity } from '../shared';
 import { Funcionalidade } from '../funcionalidade/index';
+import { DerTextParser } from '../analise-shared/der-text-parser';
 
 const enum TipoFuncaoDados {
   'ALI',
@@ -27,11 +28,29 @@ export class FuncaoDados implements BaseEntity {
     public alr?: BaseEntity,
     public name?: string,
     public sustantation?: string,
+    public der?: string,
+    public rlr?: string
   ) { }
+
+  // XXX eficiente obter vários ParseResult em lugares diferentes?
+  derValue(): number {
+    if (!this.der) {
+      return 0;
+    }
+    return DerTextParser.parse(this.der).total();
+  }
+
+  rlrValue(): number {
+    if (!this.rlr) {
+      return 0;
+    }
+    return DerTextParser.parse(this.rlr).total();
+  }
 
   clone(): FuncaoDados {
     return new FuncaoDados(this.id, this.artificialId, this.tipo, this.complexidade,
       this.pf, this.analise, this.funcionalidades, this.funcionalidade,
-      this.fatorAjuste, this.alr, this.name, this.sustantation);
+      this.fatorAjuste, this.alr, this.name, this.sustantation, this.der, this.rlr);
   }
+
 }

@@ -7,6 +7,7 @@
         (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
       </app-analise-modulo-funcionalidade>
       
+      <!-- BUGADO , ta requerendo dois clicks -->
       <div class="ui-g">
         <div class="ui-g-9" style="margin-bottom: 25px">
           <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
@@ -84,8 +85,16 @@
           </p-column>
           <p-column field="name" header="Nome"></p-column>
           <p-column field="tipo" header="Classificação"></p-column>
-          <p-column field="rlr" header="RLR"></p-column>
-          <p-column field="der" header="DER"></p-column>
+          <p-column header="RLR">
+            <ng-template let-funcaoDados="rowData" pTemplate="body">
+              {{ funcaoDados.rlrValue() }}
+            </ng-template>
+          </p-column>
+          <p-column field="der" header="DER">
+            <ng-template let-funcaoDados="rowData" pTemplate="body">
+              {{ funcaoDados.derValue() }}
+            </ng-template>
+          </p-column>
         </p-dataTable>
       </div>
 
