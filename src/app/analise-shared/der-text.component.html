@@ -5,6 +5,8 @@
     <textarea pInputTextarea
       [(ngModel)]="text"
       (keyup.enter)="textChanged()"
+      (keyup.backspace)="textChanged()"
+      (keyup.delete)="textChanged()"
       (change)="textChanged()"
       [rows]="6" [cols]="180"
       name="{{ label }}">
