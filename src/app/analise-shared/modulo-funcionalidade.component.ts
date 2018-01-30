@@ -64,9 +64,11 @@ export class ModuloFuncionalidadeComponent implements OnInit {
   }
 
   abrirDialogModulo() {
-    this.mostrarDialogModulo = true;
-    // XXX problema em dar new toda hora?
-    this.novoModulo = new Modulo();
+    if (this.isSistemaSelected()) {
+      this.mostrarDialogModulo = true;
+      // XXX problema em dar new toda hora?
+      this.novoModulo = new Modulo();
+    }
   }
 
   fecharDialogModulo() {
@@ -114,8 +116,10 @@ export class ModuloFuncionalidadeComponent implements OnInit {
   }
 
   abrirDialogFuncionalidade() {
-    this.mostrarDialogFuncionalidade = true;
-    this.novaFuncionalidade = new Funcionalidade();
+    if (this.isModuloSelected()) {
+      this.mostrarDialogFuncionalidade = true;
+      this.novaFuncionalidade = new Funcionalidade();
+    }
   }
 
   fecharDialogFuncionalidade() {

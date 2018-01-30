@@ -9,7 +9,10 @@
         name="modulo" [autoWidth]="false">
       </p-dropdown>
 
-      <app-green-button buttonLabel="Novo Módulo" buttonIcon="ui-icon-add" (click)="abrirDialogModulo()"></app-green-button>
+      <app-green-button buttonLabel="Novo Módulo" buttonIcon="ui-icon-add"
+        (click)="abrirDialogModulo()"
+        [isDisabled]="!isSistemaSelected()">
+      </app-green-button>
     </div>
 
     <div class="ui-g-6">
@@ -20,7 +23,10 @@
         name="funcionalidade" [autoWidth]="false">
       </p-dropdown>
 
-      <app-green-button buttonLabel="Nova Funcionalidade" buttonIcon="ui-icon-add" (click)="abrirDialogFuncionalidade()"></app-green-button>
+      <app-green-button buttonLabel="Nova Funcionalidade" buttonIcon="ui-icon-add"
+        (click)="abrirDialogFuncionalidade()"
+        [isDisabled]="!isModuloSelected()">
+      </app-green-button>
     </div>
   </div>
 
