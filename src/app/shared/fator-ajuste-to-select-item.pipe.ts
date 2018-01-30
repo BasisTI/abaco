@@ -17,8 +17,27 @@ export class FatorAjusteToSelectItemPipe implements PipeTransform {
   }
 
   private generateLabel(fa: FatorAjuste): string {
+    const prefix = this.generatePrefix(fa);
     const fatorSuffix = this.generateFatorSuffix(fa);
-    return `${fa.codigo} (${fa.origem}) - ${fa.nome} - ${fa.fator}${fatorSuffix}`;
+    return `${prefix} ${fa.nome} - ${fa.fator}${fatorSuffix}`;
+  }
+
+  private generatePrefix(fa: FatorAjuste): string {
+    let prefix = '';
+    if (fa.codigo) {
+      prefix = prefix.concat(`${fa.codigo} `);
+    }
+    if (fa.origem) {
+      prefix = prefix.concat(`(${fa.origem}) `);
+    }
+    if (!this.isEmptyString(prefix)) {
+      prefix = prefix.concat('- ');
+    }
+    return prefix;
+  }
+
+  private isEmptyString(s: string) {
+    return (!s || 0 === s.length);
   }
 
   private generateFatorSuffix(fa: FatorAjuste): string {
