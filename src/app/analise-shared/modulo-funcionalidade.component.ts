@@ -57,14 +57,22 @@ export class ModuloFuncionalidadeComponent implements OnInit {
 
   moduloDropdownPlaceholder(): string {
     if (this.isSistemaSelected()) {
-      if (this.sistema.modulos && this.sistema.modulos.length > 0) {
-        return 'Selecione um Módulo';
-      } else {
-        return 'Nenhum Módulo cadastrado';
-      }
+      return this.moduloDropdownPlaceholderComSistemaSelecionado();
     } else {
       return `Selecione um Sistema na aba 'Geral' para carregar os Módulos`;
     }
+  }
+
+  private moduloDropdownPlaceholderComSistemaSelecionado(): string {
+    if (this.sistemaTemModulos()) {
+      return 'Selecione um Módulo';
+    } else {
+      return 'Nenhum Módulo cadastrado';
+    }
+  }
+
+  private sistemaTemModulos(): boolean {
+    return this.sistema.modulos && this.sistema.modulos.length > 0;
   }
 
   abrirDialogModulo() {
@@ -113,14 +121,22 @@ export class ModuloFuncionalidadeComponent implements OnInit {
 
   funcionalidadeDropdownPlaceholder() {
     if (this.isModuloSelected()) {
-      if (this.moduloSelecionado.funcionalidades && this.moduloSelecionado.funcionalidades.length > 0) {
-        return 'Selecione uma Funcionalidade';
-      } else {
-        return 'Nenhuma Funcionalidade cadastrada';
-      }
+      return this.funcionalidadeDropdownPlaceHolderComModuloSelecionado();
     } else {
       return 'Selecione um Módulo para carregar as Funcionalidades';
     }
+  }
+
+  private funcionalidadeDropdownPlaceHolderComModuloSelecionado(): string {
+    if (this.moduloSelecionadoTemFuncionalidade()) {
+      return 'Selecione uma Funcionalidade';
+    } else {
+      return 'Nenhuma Funcionalidade cadastrada';
+    }
+  }
+
+  private moduloSelecionadoTemFuncionalidade(): boolean {
+    return this.moduloSelecionado.funcionalidades && this.moduloSelecionado.funcionalidades.length > 0;
   }
 
   abrirDialogFuncionalidade() {
