@@ -5,7 +5,8 @@
       <!-- filtro/pesquisa? -->
       <p-dropdown [options]="modulos" [(ngModel)]="moduloSelecionado" optionLabel="nome"
        (onChange)="moduloSelected($event.value)"
-        placeholder="{{ moduloDropdownPlaceholder() }}" disabled="{{ !isSistemaSelected() }}"
+        [placeholder]="moduloDropdownPlaceholder()"
+        [disabled]="!isSistemaSelected()"
         name="modulo" [autoWidth]="false">
       </p-dropdown>
 
@@ -19,7 +20,8 @@
       <!-- filtro/pesquisa? -->
       <p-dropdown [options]="funcionalidades" [(ngModel)]="funcionalidadeSelecionada" optionLabel="nome" 
         (onChange)="funcionalidadeSelected($event.value)"
-        placeholder="{{ funcionalidadeDropdownPlaceholder() }}" disabled="{{ !isModuloSelected() }}" 
+        [placeholder]="funcionalidadeDropdownPlaceholder()"
+        [disabled]="!isModuloSelected()" 
         name="funcionalidade" [autoWidth]="false">
       </p-dropdown>
 
