@@ -8,8 +8,10 @@ export class UploadService {
 
   constructor(private http: HttpService) { }
 
-  resourceName = '/upload'
-  resourceUrl = environment.apiUrl + this.resourceName ;
+  resources = {
+    upload: environment.apiUrl + '/upload',
+    getFile: environment.apiUrl + '/getFile'
+  }
 
   uploadFile(file: File) {
     const headers: any = {
@@ -20,18 +22,20 @@ export class UploadService {
 
     body.append('file', file)
 
-    return this.http.post(this.resourceUrl, body).map(response => {
+    return this.http.post(this.resources.upload, body).map(response => {
       return response;
     });
-    // return this.http.request(this.resourceUrl, {
-    //   headers: headers,
-    //   method: 'POST',
-    //   body: body
-    // }).map(response => {
-    //   return response;
-    // }, error => {
-    //   console.log(error);
-    // });
+  }
+
+  getFile(id: number) {
+    return this.http.get(this.resources.getFile, {
+      params: {
+        id: id
+      }
+    }).map(response => {
+      console.log(response);
+      return response;
+    })
   }
 
 }
