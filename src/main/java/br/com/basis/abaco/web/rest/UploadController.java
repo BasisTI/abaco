@@ -63,6 +63,7 @@ public class UploadController {
             String ext = FilenameUtils.getExtension(file.getOriginalFilename());
             filename += "." + ext;
             Path path = Paths.get(folderPath + "/" + filename);
+            System.out.println(path);
             Files.write(path, bytes);
 
 
@@ -83,12 +84,15 @@ public class UploadController {
     }
     
     @GetMapping("/getFile")
-    public ResponseEntity<UploadedFile> getUploadedFile(@RequestParam Long id) {
+    public byte[] getUploadedFile(@RequestParam Long id) throws IOException {
 		
     	UploadedFile uploadedFile = filesRepository.findOne(id);
     	
- 
-    	return ResponseEntity.ok(uploadedFile);
+    	String folderPath = this.servletContext.getRealPath(UPLOADED_FOLDER);
+    	Path path = Paths.get(folderPath + '/' + uploadedFile.getFilename());
+    	byte[] data = Files.readAllBytes(path);
+    			
+    	return data;
     	
     }
 
