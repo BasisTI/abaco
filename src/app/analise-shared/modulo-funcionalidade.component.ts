@@ -57,7 +57,11 @@ export class ModuloFuncionalidadeComponent implements OnInit {
 
   moduloDropdownPlaceholder(): string {
     if (this.isSistemaSelected()) {
-      return 'Modulo';
+      if (this.sistema.modulos && this.sistema.modulos.length > 0) {
+        return 'Selecione um Módulo';
+      } else {
+        return 'Nenhum Módulo cadastrado';
+      }
     } else {
       return `Selecione um Sistema na aba 'Geral' para carregar os Módulos`;
     }
@@ -109,7 +113,11 @@ export class ModuloFuncionalidadeComponent implements OnInit {
 
   funcionalidadeDropdownPlaceholder() {
     if (this.isModuloSelected()) {
-      return 'Funcionalidade';
+      if (this.moduloSelecionado.funcionalidades && this.moduloSelecionado.funcionalidades.length > 0) {
+        return 'Selecione uma Funcionalidade';
+      } else {
+        return 'Nenhuma Funcionalidade cadastrada';
+      }
     } else {
       return 'Selecione um Módulo para carregar as Funcionalidades';
     }
