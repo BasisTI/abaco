@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 export class DuplicatesResult {
 
   readonly duplicados: Set<string>;
@@ -19,6 +21,10 @@ export class DuplicatesResult {
 
   length(): number {
     return this.count();
+  }
+
+  duplicatasFormatadas(): string {
+    return _.join(Array.from(this.duplicados), ', ');
   }
 
 }

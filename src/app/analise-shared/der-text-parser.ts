@@ -1,3 +1,5 @@
+import { DuplicatesResult, StringArrayDuplicatesFinder } from './string-array-duplicates-finder';
+
 import * as _ from 'lodash';
 
 export class ParseResult {
@@ -11,18 +13,31 @@ export class ParseResult {
 
   readonly textos: string[];
 
+  private duplicateResult: DuplicatesResult;
+
   constructor(tipo: string, numero?: number, textos?: string[]) {
     this.tipo = tipo;
     this.numero = numero;
     this.textos = textos;
+    if (tipo === ParseResult.TEXTO_TIPO) {
+      this.duplicateResult = StringArrayDuplicatesFinder.find(textos);
+    }
   }
 
-  showTotal(): string {
+  mostraTotal(): string {
     if (this.numero) {
       return this.numero.toString();
     } else {
       return this.textos.length.toString();
     }
+  }
+
+  temDuplicatas(): boolean {
+    return this.duplicateResult.temDuplicatas();
+  }
+
+  duplicatasFormatadas(): string {
+    return this.duplicateResult.duplicatasFormatadas();
   }
 }
 
