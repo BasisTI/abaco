@@ -64,9 +64,9 @@
         </div>
       </div>
 
-      <hr>
-
-      <p-dataTable [value]="funcoesDados">
+      <div *ngIf="funcoesDados.length > 0">
+        <hr>
+        <p-dataTable [value]="funcoesDados">
           <p-column header="Fator Ajuste">
             <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
               {{ fatorAjuste.nome }}
@@ -86,7 +86,8 @@
           <p-column field="tipo" header="Classificação"></p-column>
           <p-column field="rlr" header="RLR"></p-column>
           <p-column field="der" header="DER"></p-column>
-      </p-dataTable>
+        </p-dataTable>
+      </div>
 
     </div>
   </div>
