@@ -1,7 +1,7 @@
 import { ParseResult, DerTextParser } from './der-text-parser';
 import * as _ from 'lodash';
 
-describe('DerTextParser', () => {
+fdescribe('DerTextParser', () => {
 
   let result: ParseResult;
 
@@ -36,6 +36,34 @@ describe('DerTextParser', () => {
 
       it(`deve retornar 'textos' com tamanho 0`, () => {
         expect(result.textos.length).toEqual(0);
+      });
+    });
+
+    describe('linhas em branco', () => {
+      describe('no final', () => {
+        const entrada = 'a\nb\nc\nd\ne\n';
+
+        beforeEach(() => result = DerTextParser.parse(entrada));
+
+        expectResultTipoToBe(ParseResult.TEXTO_TIPO);
+
+        it(`deve remover linha em branco`, () => {
+          expect(result.textos.length).toEqual(5);
+          expect(result.textos).not.toContain('');
+        });
+      });
+
+      describe('em diversas posições', () => {
+        const entrada = '\na\nb\nc\n\nd\n\n\ne';
+
+        beforeEach(() => result = DerTextParser.parse(entrada));
+
+        expectResultTipoToBe(ParseResult.TEXTO_TIPO);
+
+        it(`deve remover linhas em branco`, () => {
+          expect(result.textos.length).toEqual(5);
+          expect(result.textos).not.toContain('');
+        });
       });
     });
 
