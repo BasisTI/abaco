@@ -16,6 +16,14 @@ export class ParseResult {
     this.numero = numero;
     this.textos = textos;
   }
+
+  showTotal(): string {
+    if (this.numero) {
+      return this.numero.toString();
+    } else {
+      return this.textos.length.toString();
+    }
+  }
 }
 
 export class DerTextParser {
