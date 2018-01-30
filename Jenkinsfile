@@ -11,7 +11,6 @@ def rancherStack = rancherStack
 def rancherService = rancherService
 
 pipelineBuildFrontendJavascript {
-    println 'doDeploy: ' + doDeploy
     agentLabel = 'docker-engine'
     dockerRegistry = 'basis-registry.basis.com.br'
     builderImageName = 'basis-registry.basis.com.br/basis/builder-image'
