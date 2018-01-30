@@ -7,6 +7,14 @@ describe('DerTextParser', () => {
 
   describe('entrada númerica', () => {
 
+    describe('0', () => {
+      it('ParseResult mostraTotal() deve retornar 0', () => {
+        result = DerTextParser.parse('0');
+        expect(result.mostraTotal()).toEqual('0');
+      });
+
+    });
+
     const entrada = '10';
 
     beforeEach(() => {

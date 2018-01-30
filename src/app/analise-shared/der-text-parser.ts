@@ -25,15 +25,19 @@ export class ParseResult {
   }
 
   mostraTotal(): string {
-    if (this.numero) {
+    if (this.isTipoNumerico()) {
       return this.numero.toString();
     } else {
       return this.textos.length.toString();
     }
   }
 
+  private isTipoNumerico(): boolean {
+    return this.tipo === ParseResult.NUMERO_TIPO;
+  }
+
   temDuplicatas(): boolean {
-    if (this.tipo === ParseResult.NUMERO_TIPO) {
+    if (this.isTipoNumerico()) {
       return false;
     }
     return this.duplicateResult.temDuplicatas();
