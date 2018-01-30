@@ -131,8 +131,14 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     this.doFecharDialogModulo();
   }
 
+  deveDesabilitarBotaoNovaFuncionalidade(): boolean {
+    return !this.sistema.modulos || this.sistema.modulos.length === 0;
+  }
+
   abrirDialogFuncionalidade() {
-    this.mostrarDialogFuncionalidade = true;
+    if (!this.deveDesabilitarBotaoNovaFuncionalidade()) {
+      this.mostrarDialogFuncionalidade = true;
+    }
   }
 
   fecharDialogFuncionalidade() {
@@ -191,7 +197,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }, (error: Response) => {
       this.isSaving = false;
 
-      switch(error.status) {
+      switch (error.status) {
         case 404: {
           let invalidFieldNamesString = "";
           const fieldErrors = JSON.parse(error["_body"]).fieldErrors;

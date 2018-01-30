@@ -67,11 +67,10 @@
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-md-3">
-              <app-green-button buttonLabel="Nova Funcionalidade" buttonIcon="ui-icon-add" (click)="abrirDialogFuncionalidade()" [disabled]="!sistema.modulos || sistema.modulos.length == 0"></app-green-button>
-              <!-- <button pButton type="button" label="Nova Funcionalidade"
-                icon="ui-icon-add" (click)="abrirDialogFuncionalidade()"
-                [disabled]="!sistema.modulos || sistema.modulos.length == 0">
-              </button> -->
+              <app-green-button buttonLabel="Nova Funcionalidade"
+                buttonIcon="ui-icon-add" (click)="abrirDialogFuncionalidade()"
+               [isDisabled]="deveDesabilitarBotaoNovaFuncionalidade()">
+              </app-green-button>
             </div>
           </div>
 
