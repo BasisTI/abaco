@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AnaliseSharedDataService } from '../shared';
 import { FuncaoDados } from './funcao-dados.model';
-import { Analise } from '../analise';
+import { Analise, ResumoFuncaoDados } from '../analise';
 import { FatorAjuste } from '../fator-ajuste';
 
 import * as _ from 'lodash';
@@ -17,6 +17,7 @@ import { Calculadora } from '../analise-shared/calculadora';
 export class FuncaoDadosFormComponent implements OnInit {
 
   currentFuncaoDados: FuncaoDados;
+  resumo: ResumoFuncaoDados;
 
   fatoresAjuste: FatorAjuste[] = [];
 
@@ -84,8 +85,14 @@ export class FuncaoDadosFormComponent implements OnInit {
     const funcaoDadosCalculada = Calculadora.calcular(this.analise.tipoContagem,
       this.currentFuncaoDados);
     this.analise.addFuncaoDados(funcaoDadosCalculada);
+    this.resumo = this.analise.generateResumoFuncaoDados();
+
     // Mantendo o mesmo conteudo a pedido do Leandro
     this.currentFuncaoDados = this.currentFuncaoDados.clone();
     this.currentFuncaoDados.artificialId = undefined;
+  }
+
+  resumoFuncaoDatosStringified(): string {
+    return JSON.stringify(this.resumo);
   }
 }

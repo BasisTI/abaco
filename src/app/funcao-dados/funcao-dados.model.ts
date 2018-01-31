@@ -9,11 +9,11 @@ const enum TipoFuncaoDados {
   'AIE'
 }
 
-export const enum Complexidade {
-  'SEM',
-  'BAIXA',
-  'MEDIA',
-  'ALTA'
+export enum Complexidade {
+  'SEM' = 'SEM',
+  'BAIXA' = 'BAIXA',
+  'MEDIA' = 'MEDIA',
+  'ALTA'= 'ALTA',
 }
 
 export class FuncaoDados implements BaseEntity {
