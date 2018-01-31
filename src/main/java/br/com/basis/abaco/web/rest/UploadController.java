@@ -1,24 +1,5 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.UploadedFile;
-import br.com.basis.abaco.repository.UploadedFilesRepository;
-import br.com.basis.abaco.web.rest.errors.UploadException;
-import io.github.jhipster.web.util.ResponseUtil;
-import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.servlet.ServletContext;
-import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,10 +10,36 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Optional;
 
+import javax.servlet.ServletContext;
+import javax.xml.bind.DatatypeConverter;
+
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.google.common.net.HttpHeaders;
+
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.repository.UploadedFilesRepository;
+import br.com.basis.abaco.web.rest.errors.UploadException;
+import io.github.jhipster.web.util.ResponseUtil;
+
 @RestController
 @RequestMapping("/api")
 public class UploadController {
-
+	
+	
     //Save the uploaded file to this folder
     private static String UPLOADED_FOLDER = "/uploaded";
 
@@ -84,16 +91,25 @@ public class UploadController {
     }
     
     @GetMapping("/getFile")
-    public byte[] getUploadedFile(@RequestParam Long id) throws IOException {
+    public ResponseEntity<Resource> getUploadedFile(@RequestParam Long id) throws IOException {
 		
     	UploadedFile uploadedFile = filesRepository.findOne(id);
     	
     	String folderPath = this.servletContext.getRealPath(UPLOADED_FOLDER);
-    	Path path = Paths.get(folderPath + '/' + uploadedFile.getFilename());
-    	byte[] data = Files.readAllBytes(path);
-    			
-    	return data;
     	
+    	Resource file = new FileSystemResource(folderPath + "/" + uploadedFile.getFilename());
+//    	Path path = Paths.get(folderPath + '/' + uploadedFile.getFilename());
+//    	byte[] data = Files.readAllBytes(path);
+    			
+    	return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    	
+    }
+    
+    @GetMapping("/getFile/info")
+    public UploadedFile getFileInfo(@RequestParam Long id) {
+    	UploadedFile uploadedFile = filesRepository.findOne(id);
+    	
+    	return uploadedFile;
     }
 
 }
