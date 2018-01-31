@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
@@ -14,6 +14,7 @@ import { DatatableClickEvent } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 import { PageNotificationService } from '../shared/page-notification.service';
 import { UploadService } from '../upload/upload.service';
+import {FileUpload} from 'primeng/primeng';
 
 @Component({
   selector: 'jhi-organizacao-form',
@@ -38,6 +39,8 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   invalidFields: Array<string> = [];
   imageUrl: any;
 
+  @ViewChild('fileInput') fileInput: FileUpload;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -59,7 +62,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       if (params['id']) {
         this.organizacaoService.find(params['id']).subscribe(organizacao => {
           this.organizacao = organizacao
-          console.log(this.organizacao);
+          this.getFile();
         });
       }
     });
@@ -211,25 +214,25 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
   getFile() {
     this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
-      let arrayBuffer = response.arrayBuffer();
-      let blob = new Blob([arrayBuffer]);
 
-      this.logo = new File([blob], 'teste');
+      let fileInfo;
+      this.uploadService.getFileInfo(this.organizacao.logoId).subscribe(response => {
+        fileInfo = response;
+        console.log(fileInfo);
+        this.logo = new File([response["_body"]], fileInfo["originalName"]);
+        this.fileInput.files.push(this.logo);
+      });
 
-      this.createImageFromBlob(blob);
     });
   }
 
-  createImageFromBlob(blob: Blob) {
-    let reader = new FileReader();
+  private createImageFromBlob(blob: Blob) {
+    let reader: FileReader = new FileReader();
 
-    reader.addEventListener("load", () => {
-          this.imageUrl = reader.result;
-       }, false);
+    reader.readAsArrayBuffer(blob);
 
-       if (blob) {
-          reader.readAsDataURL(blob);
-       }
+    this.logo = reader.result;
+    console.log(this.logo);
   }
 
   getFileInfo() {

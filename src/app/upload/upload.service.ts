@@ -34,7 +34,6 @@ export class UploadService {
         id: id
       }
     }).map(response => {
-      console.log(response);
       return response;
     })
   }
