@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 import { Modulo } from '../modulo/index';
 import { Funcionalidade } from '../funcionalidade/index';
 import { SelectItem } from 'primeng/primeng';
+import { Calculadora } from '../analise-shared/calculadora';
 
 @Component({
   selector: 'app-analise-funcao-dados',
@@ -80,7 +81,9 @@ export class FuncaoDadosFormComponent implements OnInit {
   }
 
   adicionar() {
-    this.analise.addFuncaoDados(this.currentFuncaoDados);
+    const funcaoDadosCalculada = Calculadora.calcular(this.analise.tipoContagem,
+      this.currentFuncaoDados);
+    this.analise.addFuncaoDados(funcaoDadosCalculada);
     // Mantendo o mesmo conteudo a pedido do Leandro
     this.currentFuncaoDados = this.currentFuncaoDados.clone();
     this.currentFuncaoDados.artificialId = undefined;

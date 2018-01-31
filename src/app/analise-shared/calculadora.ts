@@ -1,4 +1,4 @@
-import { FuncaoDados, Complexidade } from '../funcao-dados/index';
+import { FuncaoDados, Complexidade } from '../funcao-dados/funcao-dados.model';
 import { MetodoContagem } from '../analise/index';
 
 export class Calculadora {
@@ -12,27 +12,27 @@ export class Calculadora {
   private static fatorPF: number;
 
   // TODO extrair uma interface implementada por FuncaoDados e FuncaoTransacao
-  public static calcular(metodoContagem: MetodoContagem, funcaoDados: FuncaoDados) {
+  public static calcular(metodoContagem: MetodoContagem, funcaoDados: FuncaoDados): FuncaoDados {
     this.inicializaVariaveis(metodoContagem, funcaoDados);
     this.calcularDeAcordoComMetodoContagem();
     this.aplicarFator();
-
+    return this.funcaoDadosCalculada;
   }
 
   private static inicializaVariaveis(metodoContagem: MetodoContagem, funcaoDados: FuncaoDados) {
-    this.funcaoDadosCalculada = new FuncaoDados();
+    this.funcaoDadosCalculada = funcaoDados.clone();
     this.funcaoDados = funcaoDados;
     this.metodoContagem = metodoContagem;
   }
 
   private static calcularDeAcordoComMetodoContagem() {
-    switch (this.metodoContagem) {
-      case MetodoContagem.INDICATIVA: {
+    switch (this.metodoContagem.toString()) {
+      case 'INDICATIVA': {
         this.calcularIndicativa();
         break;
       }
-      case MetodoContagem.ESTIMADA:
-      case MetodoContagem.DETALHADA:
+      case 'ESTIMADA':
+      case 'DETALHADA':
         this.calcularNaoIndicativa();
     }
   }

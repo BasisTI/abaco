@@ -65,9 +65,11 @@
         </div>
       </div>
 
+      <!-- Tabela com as funções dados adicionadas  -->
       <div *ngIf="funcoesDados.length > 0">
         <hr>
-        <p-dataTable [value]="funcoesDados">
+        <p-dataTable [value]="funcoesDados" [responsive]="true"
+          [scrollable]="true">
           <p-column header="Fator Ajuste">
             <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
               {{ fatorAjuste.nome }}
@@ -95,7 +97,16 @@
               {{ funcaoDados.derValue() }}
             </ng-template>
           </p-column>
+          <p-column field="complexidade" header="complexidade"></p-column>
+          <p-column field="grossPf" header="PF Bruto"></p-column>
+          <p-column field="pf" header="PF Líquido"> </p-column>
         </p-dataTable>
+      </div>
+
+      <!-- Resumo -->
+      <div *ngIf="funcoesDados.length > 0">
+        <hr>
+        <h2>Resumo</h2>
       </div>
 
     </div>
