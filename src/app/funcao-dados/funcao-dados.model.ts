@@ -34,7 +34,15 @@ export class FuncaoDados implements BaseEntity {
     public der?: string,
     public rlr?: string,
     public grossPf?: number,
-  ) { }
+  ) {
+    if (!pf) {
+      this.pf = 0;
+    }
+    if (!grossPf) {
+      this.grossPf = 0;
+    }
+  }
+
 
   // XXX eficiente obter vários ParseResult em lugares diferentes?
   derValue(): number {
