@@ -2,7 +2,8 @@ import {
   Component,
   Input,
   Output,
-  EventEmitter
+  EventEmitter,
+  OnChanges
 } from '@angular/core';
 
 import { ParseResult, DerTextParser } from './der-text-parser';
@@ -14,11 +15,13 @@ import { ParseResult, DerTextParser } from './der-text-parser';
 export class DerTextComponent {
 
   @Input()
-  // analisar esse value
-  value: any;
+  value: string;
 
   @Input()
   label: string;
+
+  @Output()
+  valueChange: EventEmitter<string> = new EventEmitter<string>();
 
   parseResult: ParseResult;
 
@@ -27,6 +30,7 @@ export class DerTextComponent {
   constructor() { }
 
   textChanged() {
+    this.valueChange.emit(this.text);
     this.parseResult = DerTextParser.parse(this.text);
   }
 
