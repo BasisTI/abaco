@@ -7,13 +7,12 @@
         (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
       </app-analise-modulo-funcionalidade>
       
-      <!-- BUGADO , ta requerendo dois clicks -->
       <div class="ui-g">
         <div class="ui-g-9" style="margin-bottom: 25px">
           <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
             [(ngModel)]="currentFuncaoDados.fatorAjuste" 
-            disabled="{{ !isContratoSelected() }}"
-            placeholder="{{ fatoresAjusteDropdownPlaceholder() }}"
+            [disabled]="!isContratoSelected()"
+            [placeholder]="fatoresAjusteDropdownPlaceholder()"
             name="fatorAjuste" [autoWidth]="false">
           </p-dropdown>
         </div>

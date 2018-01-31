@@ -17,6 +17,8 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   currentFuncaoDados: FuncaoDados;
 
+  fatoresAjuste: FatorAjuste[] = [];
+
   classificacoes: SelectItem[] = [
     { label: 'ALI', value: 'ALI' },
     { label: 'AIE', value: 'AIE' }
@@ -53,7 +55,13 @@ export class FuncaoDadosFormComponent implements OnInit {
   }
 
   isContratoSelected(): boolean {
-    return this.analiseSharedDataService.isContratoSelected();
+    // FIXME p-dropdown requer 2 clicks quando o [options] chama um método get()
+    const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
+    if (isContratoSelected && this.fatoresAjuste.length === 0) {
+      this.fatoresAjuste = this.manual.fatoresAjuste;
+    }
+
+    return isContratoSelected;
   }
 
   fatoresAjusteDropdownPlaceholder() {
@@ -64,15 +72,7 @@ export class FuncaoDadosFormComponent implements OnInit {
     }
   }
 
-  get fatoresAjuste(): FatorAjuste[] {
-    if (this.manual) {
-      return _.cloneDeep(this.manual.fatoresAjuste);
-    }
-    return [];
-  }
-
   moduloSelected(modulo: Modulo) {
-
   }
 
   funcionalidadeSelected(funcionalidade: Funcionalidade) {
