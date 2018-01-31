@@ -59,7 +59,8 @@ export class Calculadora {
   }
 
   private static definirComplexidade() {
-    if (this.funcaoDados.tipo === 'UNITÁRIO') {
+    // FIXME é isso aqui mesmo? funcao de dados sempre vai ter fatorAjuste?
+    if (this.funcaoDados.fatorAjuste.tipoAjuste === 'UNITÁRIO') {
       this.funcaoDadosCalculada.complexidade = Complexidade.SEM;
     } else {
       this.definirComplexidadePercentual();
@@ -67,7 +68,7 @@ export class Calculadora {
   }
 
   private static definirComplexidadePercentual() {
-    let complexidade = this.funcaoDadosCalculada.complexidade;
+    let complexidade: Complexidade;
     const der = this.funcaoDados.derValue();
     const rlr = this.funcaoDados.rlrValue();
     if (der === 1) {
@@ -91,6 +92,8 @@ export class Calculadora {
         complexidade = Complexidade.ALTA;
       }
     }
+
+    this.funcaoDadosCalculada.complexidade = complexidade;
   }
 
   private static calcularPfsDeAcordoComGrupoDeDadosLogicos() {
