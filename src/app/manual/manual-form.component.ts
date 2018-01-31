@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
@@ -16,6 +16,7 @@ import { ConfirmationService } from 'primeng/components/common/confirmationservi
 import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 import { PageNotificationService } from '../shared/page-notification.service';
 import { UploadService } from '../upload/upload.service';
+import { FileUpload } from 'primeng/primeng';
 
 @Component({
   selector: 'jhi-manual-form',
@@ -49,6 +50,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   ]
   invalidFields: Array<string> = [];
 
+  @ViewChild('fileInput') fileInput: FileUpload;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -67,6 +70,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       if (params['id']) {
         this.manualService.find(params['id']).subscribe(manual => {
           this.manual = manual;
+          this.getFile();
         });
       }
     });
@@ -83,7 +87,15 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     console.log(this.manual);
     if (this.manual.id !== undefined) {
-      this.subscribeToSaveResponse(this.manualService.update(this.manual));
+      this.manualService.find(this.manual.id).subscribe(response => {
+        if(this.arquivoManual !== undefined) {
+          this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
+            this.manual.arquivoManualId = JSON.parse(response["_body"]).id;
+            this.subscribeToSaveResponse(this.manualService.update(this.manual));
+          })
+        }
+      })
+
     } else {
       if(this.arquivoManual !== undefined) {
         if(this.checkRequiredFields()) {
@@ -281,5 +293,23 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.newAdjustFactor.ativo = true;
     this.manual.addFatoresAjuste(this.newAdjustFactor);
     this.closeDialogCreateAdjustFactor();
+  }
+
+  getFile() {
+    this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
+
+      let fileInfo;
+      this.uploadService.getFileInfo(this.manual.arquivoManualId).subscribe(response => {
+        fileInfo = response;
+
+        this.fileInput.files.push(new File([response["_body"]], fileInfo["originalName"]));
+      });
+    });
+  }
+
+  getFileInfo() {
+    return this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
+      return response;
+    })
   }
 }

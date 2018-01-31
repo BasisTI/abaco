@@ -218,7 +218,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
         this.fileInput.files.push(new File([response["_body"]], fileInfo["originalName"]));
       });
-
     });
   }
 
