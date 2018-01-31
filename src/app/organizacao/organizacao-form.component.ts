@@ -207,9 +207,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
   fileUpload(event: any) {
     this.logo = event.files[0];
-    console.log(this.logo);
-    // this.logo = event.target.files[0];
-
   }
 
   getFile() {
@@ -218,21 +215,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       let fileInfo;
       this.uploadService.getFileInfo(this.organizacao.logoId).subscribe(response => {
         fileInfo = response;
-        console.log(fileInfo);
-        this.logo = new File([response["_body"]], fileInfo["originalName"]);
-        this.fileInput.files.push(this.logo);
+
+        this.fileInput.files.push(new File([response["_body"]], fileInfo["originalName"]));
       });
 
     });
-  }
-
-  private createImageFromBlob(blob: Blob) {
-    let reader: FileReader = new FileReader();
-
-    reader.readAsArrayBuffer(blob);
-
-    this.logo = reader.result;
-    console.log(this.logo);
   }
 
   getFileInfo() {
