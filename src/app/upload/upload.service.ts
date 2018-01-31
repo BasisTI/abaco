@@ -10,7 +10,8 @@ export class UploadService {
 
   resources = {
     upload: environment.apiUrl + '/upload',
-    getFile: environment.apiUrl + '/getFile'
+    getFile: environment.apiUrl + '/getFile',
+    getFileInfo: environment.apiUrl + '/getFile/info'
   }
 
   uploadFile(file: File) {
@@ -35,6 +36,16 @@ export class UploadService {
     }).map(response => {
       console.log(response);
       return response;
+    })
+  }
+
+  getFileInfo(id: number) {
+    return this.http.get(this.resources.getFileInfo, {
+      params: {
+        id: id
+      }
+    }).map(response => {
+      return response.json();
     })
   }
 
