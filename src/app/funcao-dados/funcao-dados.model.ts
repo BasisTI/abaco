@@ -3,13 +3,14 @@ import { Funcionalidade } from '../funcionalidade/index';
 import { DerTextParser } from '../analise-shared/der-text-parser';
 import { FatorAjuste } from '../fator-ajuste/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
+import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';
 
 export enum TipoFuncaoDados {
   'ALI' = 'ALI',
   'AIE' = 'AIE'
 }
 
-export class FuncaoDados implements BaseEntity {
+export class FuncaoDados implements BaseEntity, FuncaoResumivel {
 
   constructor(
     public id?: number,
@@ -36,6 +37,13 @@ export class FuncaoDados implements BaseEntity {
     }
   }
 
+  static tipos(): string[] {
+    return Object.keys(TipoFuncaoDados).map(k => TipoFuncaoDados[k as any]);
+  }
+
+  tipoAsString(): string {
+    return this.tipo.toString();
+  }
 
   // XXX eficiente obter vários ParseResult em lugares diferentes?
   derValue(): number {

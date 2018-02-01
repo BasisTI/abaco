@@ -3,6 +3,7 @@ import { FatorAjuste } from '../fator-ajuste/index';
 import { Funcionalidade } from '../funcionalidade/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
 import { DerTextParser } from '../analise-shared/der-text-parser';
+import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';
 
 export enum TipoFuncaoTransacao {
   'EE' = 'EE', // entrada externa
@@ -10,7 +11,7 @@ export enum TipoFuncaoTransacao {
   'CE' = 'CE' // consulta externa
 }
 
-export class FuncaoTransacao implements BaseEntity {
+export class FuncaoTransacao implements BaseEntity, FuncaoResumivel {
 
   constructor(
     public id?: number,
@@ -35,6 +36,14 @@ export class FuncaoTransacao implements BaseEntity {
     if (!grossPf) {
       this.grossPf = 0;
     }
+  }
+
+  static tipos(): string[] {
+    return Object.keys(TipoFuncaoTransacao).map(k => TipoFuncaoTransacao[k as any]);
+  }
+
+  tipoAsString(): string {
+    return this.tipo.toString();
   }
 
   derValue(): number {
