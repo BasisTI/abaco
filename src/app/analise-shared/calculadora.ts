@@ -1,5 +1,6 @@
 import { FuncaoDados, Complexidade } from '../funcao-dados/funcao-dados.model';
 import { MetodoContagem } from '../analise/index';
+import { TipoFatorAjuste } from '../fator-ajuste/index';
 
 export class Calculadora {
 
@@ -60,7 +61,7 @@ export class Calculadora {
 
   private static definirComplexidade() {
     // FIXME é isso aqui mesmo? funcao de dados sempre vai ter fatorAjuste?
-    if (this.funcaoDados.fatorAjuste.tipoAjuste === 'UNITÁRIO') {
+    if (this.funcaoDados.fatorAjuste.tipoAjuste === TipoFatorAjuste.UNITARIO) {
       this.funcaoDadosCalculada.complexidade = Complexidade.SEM;
     } else {
       this.definirComplexidadePercentual();

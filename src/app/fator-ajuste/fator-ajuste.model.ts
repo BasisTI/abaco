@@ -1,15 +1,15 @@
 import { BaseEntity } from '../shared';
 
-export const enum TipoFatorAjuste {
-  'PERCENTUAL',
-  'UNITARIO'
+export enum TipoFatorAjuste {
+  'PERCENTUAL' = 'PERCENTUAL',
+  'UNITARIO' = 'UNITARIO'
 }
-export const enum ImpactoFatorAjuste {
-  'INCLUSAO',
-  'ALTERACAO',
-  'EXCLUSAO',
-  'CONVERSAO',
-  'ITENS_NAO_MENSURAVEIS'
+export enum ImpactoFatorAjuste {
+  'INCLUSAO' = 'INCLUSAO',
+  'ALTERACAO' = 'ALTERACAO',
+  'EXCLUSAO' = 'EXCLUSAO',
+  'CONVERSAO' = 'CONVERSAO',
+  'ITENS_NAO_MENSURAVEIS' = 'ITENS_NAK_MENSURAVEIS'
 }
 
 export class FatorAjuste implements BaseEntity {
@@ -23,8 +23,8 @@ export class FatorAjuste implements BaseEntity {
     public codigo?: string,
     // XXX Evitando uso de Enum. muito ruim para comparar o valor
     // provavelmente precisa também de fazer o cast do JSON para o enum
-    public tipoAjuste?: string,
-    public impacto?: string,
+    public tipoAjuste?: TipoFatorAjuste,
+    public impacto?: ImpactoFatorAjuste,
     public manual?: BaseEntity,
     public origem?: string,
     public artificialId?: number
