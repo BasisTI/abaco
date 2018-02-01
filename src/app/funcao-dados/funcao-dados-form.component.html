@@ -67,81 +67,85 @@
       </div>
 
       <!-- Tabela com as funções dados adicionadas  -->
-      <div *ngIf="funcoesDados.length > 0">
+      <div class="ui-g" *ngIf="funcoesDados.length > 0">
         <hr>
-        <app-memory-datatable [value]="funcoesDados"
-          (buttonClick)="datatableClick($event)"
-          [responsive]="true" scrollable="true" scrollWidth="100%">
-          <p-column header="Fator Ajuste" [style]="{'width': '200px'}">
-            <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
-              {{ fatorAjuste.nome }}
-            </ng-template>
-          </p-column>
-          <p-column header="Módulo" [style]="{'width': '200px'}">
-            <ng-template let-modulo="rowData.funcionalidade.modulo" pTemplate="body">
-              {{ modulo.nome }}
-            </ng-template>
-          </p-column>
-          <p-column header="Funcionalidade" [style]="{'width': '200px'}">
-            <ng-template let-funcionalidade="rowData.funcionalidade" pTemplate="body">
-              {{ funcionalidade.nome }}
-            </ng-template>
-          </p-column>
-          <p-column field="name" header="Nome" [style]="{'width': '200px'}"></p-column>
-          <p-column field="tipo" header="Classificação" [style]="{'width': '200px'}"></p-column>
-          <p-column header="RLR" [style]="{'width': '200px'}">
-            <ng-template let-funcaoDados="rowData" pTemplate="body">
-              {{ funcaoDados.rlrValue() }}
-            </ng-template>
-          </p-column>
-          <p-column field="der" header="DER" [style]="{'width': '200px'}">
-            <ng-template let-funcaoDados="rowData" pTemplate="body">
-              {{ funcaoDados.derValue() }}
-            </ng-template>
-          </p-column>
-          <p-column field="complexidade" header="Complexidade" [style]="{'width': '200px'}"></p-column>
-          <p-column header="PF Bruto" [style]="{'width': '200px'}">
-            <ng-template let-grossPf="rowData.grossPf" pTemplate="body">
-              {{ grossPf | number }}
-            </ng-template>
-          </p-column>
-          <p-column header="PF Líquido" [style]="{'width': '200px'}">
-            <ng-template let-pf="rowData.pf" pTemplate="body">
-              {{ pf | number }}
-            </ng-template>
-          </p-column>
-        </app-memory-datatable>
+        <div class="ui-g-12">
+          <app-memory-datatable [value]="funcoesDados"
+            (buttonClick)="datatableClick($event)"
+            [responsive]="true" scrollable="true" scrollWidth="100%">
+            <p-column header="Fator Ajuste" [style]="{'width': '200px'}">
+              <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
+                {{ fatorAjuste.nome }}
+              </ng-template>
+            </p-column>
+            <p-column header="Módulo" [style]="{'width': '200px'}">
+              <ng-template let-modulo="rowData.funcionalidade.modulo" pTemplate="body">
+                {{ modulo.nome }}
+              </ng-template>
+            </p-column>
+            <p-column header="Funcionalidade" [style]="{'width': '200px'}">
+              <ng-template let-funcionalidade="rowData.funcionalidade" pTemplate="body">
+                {{ funcionalidade.nome }}
+              </ng-template>
+            </p-column>
+            <p-column field="name" header="Nome" [style]="{'width': '200px'}"></p-column>
+            <p-column field="tipo" header="Classificação" [style]="{'width': '200px'}"></p-column>
+            <p-column header="RLR" [style]="{'width': '200px'}">
+              <ng-template let-funcaoDados="rowData" pTemplate="body">
+                {{ funcaoDados.rlrValue() }}
+              </ng-template>
+            </p-column>
+            <p-column field="der" header="DER" [style]="{'width': '200px'}">
+              <ng-template let-funcaoDados="rowData" pTemplate="body">
+                {{ funcaoDados.derValue() }}
+              </ng-template>
+            </p-column>
+            <p-column field="complexidade" header="Complexidade" [style]="{'width': '200px'}"></p-column>
+            <p-column header="PF Bruto" [style]="{'width': '200px'}">
+              <ng-template let-grossPf="rowData.grossPf" pTemplate="body">
+                {{ grossPf | number }}
+              </ng-template>
+            </p-column>
+            <p-column header="PF Líquido" [style]="{'width': '200px'}">
+              <ng-template let-pf="rowData.pf" pTemplate="body">
+                {{ pf | number }}
+              </ng-template>
+            </p-column>
+          </app-memory-datatable>
+        </div>
       </div>
 
       <!-- Resumo -->
-      <div *ngIf="funcoesDados.length > 0">
+      <div class="ui-g" *ngIf="funcoesDados.length > 0">
         <hr>
-        <h2>Resumo</h2>
-        <p-dataTable [value]="resumo.all" [responsive]="true"
+        <div class="ui-g-12">
+          <h2>Resumo</h2>
+          <p-dataTable [value]="resumo.all" [responsive]="true"
           scrollable="true" scrollWidth="100%">
-          <p-column field="tipo"></p-column>
-          <div *ngFor="let complexidade of complexidades">
-            <p-column [header]="complexidade">
-              <ng-template let-resumoGrupoLogico="rowData" pTemplate="body">
-                {{ resumoGrupoLogico.totalPorComplexidade(complexidade) }}
+            <p-column field="tipo"></p-column>
+            <div *ngFor="let complexidade of complexidades">
+              <p-column [header]="complexidade">
+                <ng-template let-resumoGrupoLogico="rowData" pTemplate="body">
+                  {{ resumoGrupoLogico.totalPorComplexidade(complexidade) }}
+                </ng-template>
+              </p-column> 
+            </div>
+            <p-column header="Total" field="quantidadeTotal"></p-column>
+            <p-column header="PF - Total Bruto">
+              <ng-template let-totalGrossPf="rowData.totalGrossPf" pTemplate="body">
+                {{ totalGrossPf | number }}
               </ng-template>
-            </p-column> 
-          </div>
-          <p-column header="Total" field="quantidadeTotal"></p-column>
-          <p-column header="PF - Total Bruto">
-            <ng-template let-totalGrossPf="rowData.totalGrossPf" pTemplate="body">
-              {{ totalGrossPf | number }}
-            </ng-template>
-          </p-column>
-          <p-column header="PF - Total Líquido">
-            <ng-template let-totalPf="rowData.totalPf" pTemplate="body">
-              {{ totalPf | number }}
-            </ng-template>
-          </p-column>
-        </p-dataTable>
+            </p-column>
+            <p-column header="PF - Total Líquido">
+              <ng-template let-totalPf="rowData.totalPf" pTemplate="body">
+                {{ totalPf | number }}
+              </ng-template>
+            </p-column>
+          </p-dataTable>
+        </div>
       </div>
-
-       <!-- Dialog confirmação deleção -->
+      
+      <!-- Dialog confirmação deleção -->
        <p-confirmDialog header="Confirmação" #dialog>
           <p-footer>
             <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
