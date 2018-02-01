@@ -9,6 +9,7 @@ import { Modulo } from '../modulo/index';
 import { Funcionalidade } from '../funcionalidade/index';
 import { SelectItem } from 'primeng/primeng';
 import { Calculadora } from '../analise-shared/calculadora';
+import { DatatableClickEvent } from '@basis/angular-components';
 
 @Component({
   selector: 'app-analise-funcao-dados',
@@ -109,6 +110,21 @@ export class FuncaoDadosFormComponent implements OnInit {
     // Mantendo o mesmo conteudo a pedido do Leandro
     this.currentFuncaoDados = this.currentFuncaoDados.clone();
     this.currentFuncaoDados.artificialId = undefined;
+  }
+
+  datatableClick(event: DatatableClickEvent) {
+    if (!event.selection) {
+      return;
+    }
+    const funcaoDadosSelecionada: FuncaoDados = event.selection;
+    switch (event.button) {
+      case 'edit':
+        console.log('edit');
+        break;
+      case 'delete':
+        console.log('delete');
+
+    }
   }
 
 }

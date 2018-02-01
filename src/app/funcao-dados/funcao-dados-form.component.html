@@ -69,8 +69,9 @@
       <!-- Tabela com as funções dados adicionadas  -->
       <div *ngIf="funcoesDados.length > 0">
         <hr>
-        <p-dataTable [value]="funcoesDados" [responsive]="true"
-          scrollable="true" scrollWidth="100%">
+        <app-memory-datatable [value]="funcoesDados"
+          (buttonClick)="datatableClick($event)"
+          [responsive]="true" scrollable="true" scrollWidth="100%">
           <p-column header="Fator Ajuste" [style]="{'width': '200px'}">
             <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
               {{ fatorAjuste.nome }}
@@ -109,7 +110,7 @@
               {{ pf | number }}
             </ng-template>
           </p-column>
-        </p-dataTable>
+        </app-memory-datatable>
       </div>
 
       <!-- Resumo -->
@@ -124,7 +125,7 @@
               <ng-template let-resumoGrupoLogico="rowData" pTemplate="body">
                 {{ resumoGrupoLogico.totalPorComplexidade(complexidade) }}
               </ng-template>
-            </p-column>
+            </p-column> 
           </div>
           <p-column header="Total" field="quantidadeTotal"></p-column>
           <p-column header="PF - Total Bruto">
