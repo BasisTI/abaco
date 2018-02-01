@@ -42,15 +42,15 @@ export class Calculadora {
     this.funcaoDadosCalculada.der = '0';
     this.funcaoDadosCalculada.rlr = '0';
     this.funcaoDadosCalculada.complexidade = Complexidade.SEM;
-    this.defineFatorPFIndicativaDeAcordoComGrupoDadosLogicos();
+    this.definePFIndicativaDeAcordoComGrupoDadosLogicos();
   }
 
-  private static defineFatorPFIndicativaDeAcordoComGrupoDadosLogicos() {
+  private static definePFIndicativaDeAcordoComGrupoDadosLogicos() {
     // TODO extrair constantes
     if (this.funcaoDados.tipo === 'ALI') {
-      this.fatorPF = 35;
+      this.funcaoDadosCalculada.pf = 35;
     } else { // AIE
-      this.fatorPF = 15;
+      this.funcaoDadosCalculada.pf = 15;
     }
   }
 
@@ -99,48 +99,49 @@ export class Calculadora {
 
   private static calcularPfsDeAcordoComGrupoDeDadosLogicos() {
     if (this.funcaoDados.tipo === 'ALI') {
-      this.calcularFatorPFDeAcordoComComplexidadeALI();
+      this.calcularPFDeAcordoComComplexidadeALI();
     } else { // AIE
-      this.calcularFatorPFDeAcordoComComplexidadeAIE();
+      this.calcularPFDeAcordoComComplexidadeAIE();
     }
   }
 
-  private static calcularFatorPFDeAcordoComComplexidadeALI() {
+  private static calcularPFDeAcordoComComplexidadeALI() {
     switch (this.funcaoDadosCalculada.complexidade) {
       case Complexidade.BAIXA: {
-        this.fatorPF = 7;
+        this.funcaoDadosCalculada.pf = 7;
         break;
       }
       case Complexidade.MEDIA: {
-        this.fatorPF = 10;
+        this.funcaoDadosCalculada.pf = 10;
         break;
       }
       case Complexidade.ALTA: {
-        this.fatorPF = 15;
+        this.funcaoDadosCalculada.pf = 15;
         break;
       }
-      default: this.fatorPF = 7;
+      default: this.funcaoDadosCalculada.pf = 7;
     }
   }
 
-  private static calcularFatorPFDeAcordoComComplexidadeAIE() {
+  private static calcularPFDeAcordoComComplexidadeAIE() {
     switch (this.funcaoDadosCalculada.complexidade) {
       case Complexidade.BAIXA: {
-        this.fatorPF = 5;
+        this.funcaoDadosCalculada.pf = 5;
         break;
       }
       case Complexidade.MEDIA: {
-        this.fatorPF = 7;
+        this.funcaoDadosCalculada.pf = 7;
         break;
       }
       case Complexidade.ALTA: {
-        this.fatorPF = 10;
+        this.funcaoDadosCalculada.pf = 10;
         break;
       }
-      default: this.fatorPF = 5;
+      default: this.funcaoDadosCalculada.pf = 5;
     }
   }
 
+  // FIXME aplicar fator que vem da aba geral também
   private static aplicarFator() {
     this.funcaoDadosCalculada.grossPf = this.funcaoDados.pf;
     let valorAplicado = 0;
@@ -150,8 +151,6 @@ export class Calculadora {
     } else { // UNITÁRIO
       // XXX unitário aplica somente o fator???
       valorAplicado = this.fatorPF;
-      // alterando do codigo original. coloquei em definirComplexidade()
-      // this.funcaoDadosCalculada.complexidade = Complexidade.SEM;
     }
     this.funcaoDadosCalculada.pf = valorAplicado;
   }
