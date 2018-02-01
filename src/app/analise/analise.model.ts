@@ -2,7 +2,7 @@ import { BaseEntity, MappableEntities } from '../shared';
 import { Contrato } from '../contrato';
 import { EsforcoFase } from '../esforco-fase/index';
 import { Sistema } from '../sistema/index';
-import { FuncaoDados, Complexidade } from '../funcao-dados/index';
+import { FuncaoDados, Complexidade, TipoFuncaoDados } from '../funcao-dados/index';
 
 export const enum MetodoContagem {
   'DETALHADA',
@@ -35,7 +35,7 @@ export class Analise implements BaseEntity {
     public funcaoTransacaos?: BaseEntity[],
     public organizacao?: BaseEntity,
     public contrato?: Contrato,
-    public esforcoFases?: EsforcoFase[]
+    public esforcoFases?: EsforcoFase[],
   ) {
     if (funcaoDados) {
       this.mappableFuncaoDados = new MappableEntities<FuncaoDados>(funcaoDados);
@@ -49,7 +49,7 @@ export class Analise implements BaseEntity {
     this.funcaoDados = this.mappableFuncaoDados.values();
   }
 
-  public generateResumoFuncaoDados(): ResumoFuncaoDados {
+  public resumoFuncaoDados(): ResumoFuncaoDados {
     const resumo: ResumoFuncaoDados = new ResumoFuncaoDados();
     this.funcaoDados.forEach(f => {
       resumo.ocorrencia(f);
@@ -61,33 +61,43 @@ export class Analise implements BaseEntity {
 
 export class ResumoFuncaoDados {
 
-  private _resumoALI: ResumoGrupoLogico = new ResumoGrupoLogico();
+  private tipoGrupoLogicoToResumo: Map<string, ResumoGrupoLogico>;
 
-  private _resumoAIE: ResumoGrupoLogico = new ResumoGrupoLogico();
-
-  private _totalAmbosGrupos = 0;
+  constructor() {
+    for (const enumMember in TipoFuncaoDados) {
+      if (parseInt(enumMember, 10) >= 0) {
+        const tipo: string = TipoFuncaoDados[enumMember];
+        const resumo: ResumoGrupoLogico = new ResumoGrupoLogico(tipo);
+        this.tipoGrupoLogicoToResumo.set(tipo, resumo);
+      }
+    }
+  }
 
   ocorrencia(funcaoDados: FuncaoDados) {
-    if (funcaoDados.tipo === 'AIE') {
-      this._resumoAIE.complexidadeOcorrida(funcaoDados.complexidade);
-      this._resumoAIE.incrementaPfs(funcaoDados.pf, funcaoDados.grossPf);
-    } else {
-      this._resumoALI.complexidadeOcorrida(funcaoDados.complexidade);
-      this._resumoALI.incrementaPfs(funcaoDados.pf, funcaoDados.grossPf);
-    }
-    this._totalAmbosGrupos += 1;
+    const tipoGrupoLogico = funcaoDados.tipo;
+    const resumo = this.tipoGrupoLogicoToResumo.get(tipoGrupoLogico);
+    resumo.incrementaTotais(funcaoDados);
+  }
+
+  get all() {
+    return this.tipoGrupoLogicoToResumo.values();
   }
 }
 
 export class ResumoGrupoLogico {
 
+  tipo: string;
+
   private complexidadeToTotal: Map<string, number>;
+
+  private _quantidadeTotal = 0;
 
   private _totalPf = 0;
 
   private _totalGrossPf = 0;
 
-  constructor() {
+  constructor(tipo: string) {
+    this.tipo = tipo;
     this.complexidadeToTotal = new Map<string, number>();
     this.inicializaOcorrenciasComoZeroParaComplexidades();
   }
@@ -100,13 +110,19 @@ export class ResumoGrupoLogico {
     }
   }
 
-  complexidadeOcorrida(complexidade: Complexidade) {
+  incrementaTotais(funcaoDados: FuncaoDados) {
+    this.incrementaPorComplexidade(funcaoDados.complexidade);
+    this.incrementaPfs(funcaoDados.pf, funcaoDados.grossPf);
+    this._quantidadeTotal += 1;
+  }
+
+  private incrementaPorComplexidade(complexidade: Complexidade) {
     const complexidadeStr = complexidade;
     const totalDaComplexidade = this.complexidadeToTotal.get(complexidadeStr);
     this.complexidadeToTotal.set(complexidadeStr, totalDaComplexidade + 1);
   }
 
-  incrementaPfs(pf: number, grossPf: number) {
+  private incrementaPfs(pf: number, grossPf: number) {
     this._totalPf += pf;
     this._totalGrossPf += grossPf;
   }
@@ -117,6 +133,10 @@ export class ResumoGrupoLogico {
 
   get totalGrossPf() {
     return this._totalGrossPf;
+  }
+
+  get quantidadeTotal(): number {
+    return this._quantidadeTotal;
   }
 
   totalPorComplexidade(complexidade: Complexidade): number {
