@@ -35,6 +35,11 @@ export class PageNotificationService {
         this.addInfoMsg('success', this.deleteMsg, title);
     }
 
+    addDeleteMsgWithName(name: string, title?: string) {
+        const msg = `Registro '${name}' excluído com sucesso!`;
+        this.addInfoMsg('success', msg, title);
+    }
+
     addErrorMsg(message?: string) {
       this.addInfoMsg('error', message, this.errorMsg);
     }
