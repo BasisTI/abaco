@@ -45,9 +45,17 @@ export class Analise implements BaseEntity {
       this.mappableFuncaoDados = new MappableEntities<FuncaoDados>();
     }
   }
+  
+  public get resumoFuncaoDados(): ResumoFuncaoDados {
+    return this._resumoFuncaoDados;
+  }
 
   public addFuncaoDados(funcaoDados: FuncaoDados) {
     this.mappableFuncaoDados.push(funcaoDados);
+    this.atualizarFuncoesDados();
+  }
+
+  private atualizarFuncoesDados() {
     this.funcaoDados = this.mappableFuncaoDados.values();
     this.generateResumoFuncaoDados();
   }
@@ -62,8 +70,14 @@ export class Analise implements BaseEntity {
     this._resumoFuncaoDados = resumo;
   }
 
-  public get resumoFuncaoDados(): ResumoFuncaoDados {
-    return this._resumoFuncaoDados;
+  updateFuncaoDados(funcaoDados: FuncaoDados) {
+    this.mappableFuncaoDados.update(funcaoDados);
+    this.atualizarFuncoesDados();
+  }
+
+  deleteFuncaoDados(funcaoDados: FuncaoDados) {
+    this.mappableFuncaoDados.delete(funcaoDados);
+    this.atualizarFuncoesDados();
   }
 
 }

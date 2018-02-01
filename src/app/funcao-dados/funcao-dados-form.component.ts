@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AnaliseSharedDataService } from '../shared';
+import { AnaliseSharedDataService, PageNotificationService } from '../shared';
 import { FuncaoDados, Complexidade } from './funcao-dados.model';
 import { Analise, ResumoFuncaoDados } from '../analise';
 import { FatorAjuste } from '../fator-ajuste';
@@ -10,6 +10,7 @@ import { Funcionalidade } from '../funcionalidade/index';
 import { SelectItem } from 'primeng/primeng';
 import { Calculadora } from '../analise-shared/calculadora';
 import { DatatableClickEvent } from '@basis/angular-components';
+import { ConfirmationService } from 'primeng/primeng';
 
 @Component({
   selector: 'app-analise-funcao-dados',
@@ -18,6 +19,7 @@ import { DatatableClickEvent } from '@basis/angular-components';
 export class FuncaoDadosFormComponent implements OnInit {
 
   currentFuncaoDados: FuncaoDados;
+  funcaoDadosEmEdicao: FuncaoDados;
   resumo: ResumoFuncaoDados;
 
   fatoresAjuste: FatorAjuste[] = [];
@@ -32,6 +34,8 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
+    private confirmationService: ConfirmationService,
+    private pageNotificationService: PageNotificationService
   ) { }
 
   ngOnInit() {
@@ -116,15 +120,27 @@ export class FuncaoDadosFormComponent implements OnInit {
     if (!event.selection) {
       return;
     }
+
     const funcaoDadosSelecionada: FuncaoDados = event.selection;
     switch (event.button) {
       case 'edit':
         console.log('edit');
         break;
       case 'delete':
-        console.log('delete');
-
+        this.funcaoDadosEmEdicao = funcaoDadosSelecionada;
+        this.confirmDelete();
     }
+  }
+
+  confirmDelete() {
+    const name: string = this.funcaoDadosEmEdicao.name;
+    this.confirmationService.confirm({
+      message: `Tem certeza que deseja excluir a Função de Dados '${name}'?`,
+      accept: () => {
+        this.analise.deleteFuncaoDados(this.funcaoDadosEmEdicao);
+        this.pageNotificationService.addDeleteMsgWithName(name);
+      }
+    });
   }
 
 }
