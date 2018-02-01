@@ -98,8 +98,16 @@
             </ng-template>
           </p-column>
           <p-column field="complexidade" header="Complexidade" [style]="{'width': '200px'}"></p-column>
-          <p-column field="grossPf" header="PF Bruto" [style]="{'width': '200px'}"></p-column>
-          <p-column field="pf" header="PF Líquido" [style]="{'width': '200px'}"> </p-column>
+          <p-column header="PF Bruto" [style]="{'width': '200px'}">
+            <ng-template let-grossPf="rowData.grossPf" pTemplate="body">
+              {{ grossPf | number }}
+            </ng-template>
+          </p-column>
+          <p-column header="PF Líquido" [style]="{'width': '200px'}">
+            <ng-template let-pf="rowData.pf" pTemplate="body">
+              {{ pf | number }}
+            </ng-template>
+          </p-column>
         </p-dataTable>
       </div>
 
@@ -118,8 +126,16 @@
             </p-column>
           </div>
           <p-column header="Total" field="quantidadeTotal"></p-column>
-          <p-column header="PF - Total Líquido" field="totalPf"></p-column>
-          <p-column header="PF - Total Bruto" field="totalGrossPf"></p-column>
+          <p-column header="PF - Total Bruto">
+            <ng-template let-totalGrossPf="rowData.totalGrossPf" pTemplate="body">
+              {{ totalGrossPf | number }}
+            </ng-template>
+          </p-column>
+          <p-column header="PF - Total Líquido">
+            <ng-template let-totalPf="rowData.totalPf" pTemplate="body">
+              {{ totalPf | number }}
+            </ng-template>
+          </p-column>
         </p-dataTable>
       </div>
 
