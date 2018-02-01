@@ -1,7 +1,7 @@
 import { Complexidade } from '../analise-shared/complexidade-enum';
 import { MetodoContagem } from '../analise/index';
 import { TipoFatorAjuste } from '../fator-ajuste/index';
-import { FuncaoTransacao, TipoFuncaoTransacao } from '../funcao-transacao/index';
+import { FuncaoTransacao, TipoFuncaoTransacao } from '../funcao-transacao/funcao-transacao.model';
 
 export class CalculadoraTransacao {
 
