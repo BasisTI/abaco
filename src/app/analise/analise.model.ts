@@ -48,6 +48,11 @@ export class Analise implements BaseEntity {
     } else {
       this.mappableFuncaoDados = new MappableEntities<FuncaoDados>();
     }
+    if (funcaoTransacaos) {
+      this.mappableFuncaoTransacaos = new MappableEntities<FuncaoTransacao>(funcaoTransacaos);
+    } else {
+      this.mappableFuncaoTransacaos = new MappableEntities<FuncaoTransacao>();
+    }
   }
 
   public get resumoFuncaoDados(): ResumoFuncaoDados {
