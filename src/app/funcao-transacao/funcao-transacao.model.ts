@@ -1,17 +1,12 @@
 import { BaseEntity } from '../shared';
 import { FatorAjuste } from '../fator-ajuste/index';
 import { Funcionalidade } from '../funcionalidade/index';
+import { Complexidade } from '../analise-shared/complexidade-enum';
 
 export const enum TipoFuncaoTransacao {
   'EE',
   'SE',
   'CE'
-}
-
-export const enum Complexidade {
-  'BAIXA',
-  'MEDIA',
-  'ALTA'
 }
 
 export class FuncaoTransacao implements BaseEntity {

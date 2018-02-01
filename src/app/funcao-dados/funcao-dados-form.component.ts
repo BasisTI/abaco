@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AnaliseSharedDataService, PageNotificationService } from '../shared';
-import { FuncaoDados, Complexidade } from './funcao-dados.model';
+import { FuncaoDados } from './funcao-dados.model';
+import { Complexidade } from '../analise-shared/complexidade-enum';
 import { Analise, ResumoFuncaoDados } from '../analise';
 import { FatorAjuste } from '../fator-ajuste';
 

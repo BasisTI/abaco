@@ -2,7 +2,8 @@ import { BaseEntity, MappableEntities } from '../shared';
 import { Contrato } from '../contrato';
 import { EsforcoFase } from '../esforco-fase/index';
 import { Sistema } from '../sistema/index';
-import { FuncaoDados, Complexidade, TipoFuncaoDados } from '../funcao-dados/index';
+import { FuncaoDados, TipoFuncaoDados } from '../funcao-dados/index';
+import { Complexidade } from '../analise-shared/complexidade-enum';
 
 export const enum MetodoContagem {
   'DETALHADA',
