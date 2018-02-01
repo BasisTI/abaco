@@ -21,6 +21,8 @@ export class Analise implements BaseEntity {
 
   private mappableFuncaoDados: MappableEntities<FuncaoDados>;
 
+  private mappableFuncaoTransacaos: MappableEntities<FuncaoTransacao>;
+
   private _resumoFuncaoDados: ResumoFuncaoDados;
 
   constructor(
@@ -81,6 +83,24 @@ export class Analise implements BaseEntity {
     this.mappableFuncaoDados.delete(funcaoDados);
     this.atualizarFuncoesDados();
   }
+
+  addFuncaoTransacao(funcaoTransacao: FuncaoTransacao) {
+    this.mappableFuncaoTransacaos.push(funcaoTransacao);
+  }
+
+  private atualizarFuncoesTransacoes() {
+    this.funcaoTransacaos = this.mappableFuncaoTransacaos.values();
+    // TODO gerar resumo
+  }
+
+  updateFuncaoTransacao(funcaoTransacao: FuncaoTransacao) {
+    this.mappableFuncaoTransacaos.update(funcaoTransacao);
+  }
+
+  deleteFuncaoTransacao(funcaoTransacao: FuncaoTransacao) {
+    this.mappableFuncaoTransacaos.delete(funcaoTransacao);
+  }
+
 
 }
 
