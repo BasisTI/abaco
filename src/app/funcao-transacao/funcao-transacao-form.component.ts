@@ -12,7 +12,6 @@ import { SelectItem } from 'primeng/primeng';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
 import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
-import { Complexidade } from '../analise-shared/complexidade-enum';
 
 @Component({
   selector: 'app-analise-funcao-transacao',
@@ -28,8 +27,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
   classificacoes: SelectItem[] = [];
 
-  complexidades: string[];
-
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
     private confirmationService: ConfirmationService,
@@ -43,7 +40,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     classificacoes.forEach(c => {
       this.classificacoes.push({ label: c, value: c});
     });
-    this.complexidades = Object.keys(Complexidade).map(k => Complexidade[k as any]);
   }
 
   get funcoesTransacoes(): FuncaoTransacao[] {

@@ -117,29 +117,8 @@
       <div class="ui-g" *ngIf="funcoesTransacoes.length > 0">
         <hr>
         <div class="ui-g-12">
-          <h2>Resumo</h2>
-          <p-dataTable [value]="resumo.all" [responsive]="true"
-          scrollable="true" scrollWidth="100%">
-            <p-column field="tipo"></p-column>
-            <div *ngFor="let complexidade of complexidades">
-              <p-column [header]="complexidade">
-                <ng-template let-resumoGrupoLogico="rowData" pTemplate="body">
-                  {{ resumoGrupoLogico.totalPorComplexidade(complexidade) }}
-                </ng-template>
-              </p-column> 
-            </div>
-            <p-column header="Total" field="quantidadeTotal"></p-column>
-            <p-column header="PF - Total Bruto">
-              <ng-template let-totalGrossPf="rowData.totalGrossPf" pTemplate="body">
-                {{ totalGrossPf | number }}
-              </ng-template>
-            </p-column>
-            <p-column header="PF - Total Líquido">
-              <ng-template let-totalPf="rowData.totalPf" pTemplate="body">
-                {{ totalPf | number }}
-              </ng-template>
-            </p-column>
-          </p-dataTable>
+          <app-analise-funcao-resumo-table [resumoFuncoes]="resumo">
+          </app-analise-funcao-resumo-table>
         </div>
       </div>
 
