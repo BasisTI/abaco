@@ -145,7 +145,7 @@ export class Calculadora {
   private static aplicarFator() {
     this.funcaoDadosCalculada.grossPf = this.funcaoDadosCalculada.pf;
     let valorAplicado = 0;
-    if (this.funcaoDados.tipo === 'PERCENTUAL') {
+    if (this.funcaoDados.fatorAjuste.tipoAjuste === 'PERCENTUAL') {
       // XXX de repente um método de FuncaoDados/Transacao?
       valorAplicado = this.funcaoDadosCalculada.pf * this.funcaoDados.fatorAjuste.fator;
     } else { // UNITÁRIO
