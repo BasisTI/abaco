@@ -5,4 +5,5 @@ export * from './complexidade-enum';
 export * from './calculadora';
 export * from './calculadora-transacao';
 export * from './resumo-funcoes';
+export * from './funcao-resumo-table.component';
 
