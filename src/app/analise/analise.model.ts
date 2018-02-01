@@ -45,7 +45,7 @@ export class Analise implements BaseEntity {
       this.mappableFuncaoDados = new MappableEntities<FuncaoDados>();
     }
   }
-  
+
   public get resumoFuncaoDados(): ResumoFuncaoDados {
     return this._resumoFuncaoDados;
   }
@@ -98,7 +98,7 @@ export class ResumoFuncaoDados {
       .map(k => TipoFuncaoDados[k as any]);
     tipoFuncoesDados.forEach(tipo => {
       const resumo: ResumoGrupoLogico = new ResumoGrupoLogico(tipo);
-        this.tipoGrupoLogicoToResumo.set(tipo, resumo);
+      this.tipoGrupoLogicoToResumo.set(tipo, resumo);
     });
   }
 
