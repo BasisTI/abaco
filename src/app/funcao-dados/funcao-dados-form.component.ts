@@ -112,6 +112,7 @@ export class FuncaoDadosFormComponent implements OnInit {
     const funcaoDadosCalculada = Calculadora.calcular(this.analise.tipoContagem, this.currentFuncaoDados);
     this.analise.addFuncaoDados(funcaoDadosCalculada);
     this.resumo = this.analise.resumoFuncaoDados;
+    this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
     // Mantendo o mesmo conteudo a pedido do Leandro
     this.currentFuncaoDados = this.currentFuncaoDados.clone();
     this.currentFuncaoDados.artificialId = undefined;
