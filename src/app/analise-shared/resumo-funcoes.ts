@@ -35,6 +35,10 @@ export class ResumoFuncoes {
     resumo.incrementaTotais(funcao);
   }
 
+  get all(): ResumoGrupoLogico[] {
+    return Array.from(this.tipoGrupoLogicoToResumo.values());
+  }
+
 }
 
 export class ResumoGrupoLogico {
