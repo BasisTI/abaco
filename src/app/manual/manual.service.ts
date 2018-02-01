@@ -32,7 +32,9 @@ export class ManualService {
 
   private parseAdjustFactorDecimalValues(adjustFactors: Array<FatorAjuste>): Array<FatorAjuste> {
     adjustFactors.forEach(each => {
-      each.fator = each.fator / 100;
+      if(each.tipoAjuste.toString() === 'PERCENTUAL') {
+        each.fator = each.fator / 100;
+      } 
     });
 
     return adjustFactors;
