@@ -7,6 +7,7 @@ import { FatorAjuste } from '../fator-ajuste';
 import * as _ from 'lodash';
 import { Modulo } from '../modulo/index';
 import { Funcionalidade } from '../funcionalidade/index';
+import { CalculadoraTransacao } from '../analise-shared/calculadora-transacao';
 import { SelectItem } from 'primeng/primeng';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
@@ -93,6 +94,23 @@ export class FuncaoTransacaoFormComponent implements OnInit {
   deveHabilitarBotaoAdicionar(): boolean {
     // TODO complementar com outras validacoes
     return this.isFuncionalidadeSelected();
+  }
+
+  adicionar() {
+    if (this.deveHabilitarBotaoAdicionar()) {
+      this.doAdicionar();
+    }
+  }
+
+  private doAdicionar() {
+    const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.tipoContagem, this.currentFuncaoTransacao);
+    this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
+    // TODO
+    // this.resumo = this.analise.resumoFuncaoTransacao.
+    this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
+
+    this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
+    this.currentFuncaoTransacao.artificialId = undefined;
   }
 
 }

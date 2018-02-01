@@ -65,6 +65,54 @@
         </div>
       </div>
 
+      <div class="ui-g" *ngIf="funcoesTransacoes.length > 0">
+        <hr>
+        <div class="ui-g-12">
+          <app-memory-datatable [value]="funcoesTransacoes"
+            (buttonClick)="datatableClick($event)"
+            [responsive]="true" scrollable="true" scrollWidth="100%">
+            <p-column header="Fator Ajuste" [style]="{'width': '200px'}">
+              <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
+                {{ fatorAjuste.nome }}
+              </ng-template>
+            </p-column>
+            <p-column header="Módulo" [style]="{'width': '200px'}">
+              <ng-template let-modulo="rowData.funcionalidade.modulo" pTemplate="body">
+                {{ modulo.nome }}
+              </ng-template>
+            </p-column>
+            <p-column header="Funcionalidade" [style]="{'width': '200px'}">
+              <ng-template let-funcionalidade="rowData.funcionalidade" pTemplate="body">
+                {{ funcionalidade.nome }}
+              </ng-template>
+            </p-column>
+            <p-column field="name" header="Nome" [style]="{'width': '200px'}"></p-column>
+            <p-column field="tipo" header="Classificação" [style]="{'width': '200px'}"></p-column>
+            <p-column header="FTR" [style]="{'width': '200px'}">
+              <ng-template let-funcaoDados="rowData" pTemplate="body">
+                {{ funcaoDados.ftrValue() }}
+              </ng-template>
+            </p-column>
+            <p-column field="der" header="DER" [style]="{'width': '200px'}">
+              <ng-template let-funcaoDados="rowData" pTemplate="body">
+                {{ funcaoDados.derValue() }}
+              </ng-template>
+            </p-column>
+            <p-column field="complexidade" header="Complexidade" [style]="{'width': '200px'}"></p-column>
+            <p-column header="PF Bruto" [style]="{'width': '200px'}">
+              <ng-template let-grossPf="rowData.grossPf" pTemplate="body">
+                {{ grossPf | number }}
+              </ng-template>
+            </p-column>
+            <p-column header="PF Líquido" [style]="{'width': '200px'}">
+              <ng-template let-pf="rowData.pf" pTemplate="body">
+                {{ pf | number }}
+              </ng-template>
+            </p-column>
+          </app-memory-datatable>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
