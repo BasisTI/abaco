@@ -143,14 +143,15 @@ export class Calculadora {
 
   // FIXME aplicar fator que vem da aba geral também
   private static aplicarFator() {
-    this.funcaoDadosCalculada.grossPf = this.funcaoDados.pf;
+    this.funcaoDadosCalculada.grossPf = this.funcaoDadosCalculada.pf;
     let valorAplicado = 0;
     if (this.funcaoDados.tipo === 'PERCENTUAL') {
       // XXX de repente um método de FuncaoDados/Transacao?
-      valorAplicado = this.funcaoDados.pf * this.funcaoDados.fatorAjuste.fator;
+      valorAplicado = this.funcaoDadosCalculada.pf * this.funcaoDados.fatorAjuste.fator;
     } else { // UNITÁRIO
-      // XXX unitário aplica somente o fator???
-      valorAplicado = this.fatorPF;
+      // XXX unitário aplica somente o fator??? codigo original ta assim
+      // valorAplicado = this.fatorPF;
+      valorAplicado = this.funcaoDadosCalculada.pf * this.fatorPF;
     }
     this.funcaoDadosCalculada.pf = valorAplicado;
   }
