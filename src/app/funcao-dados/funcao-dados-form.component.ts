@@ -21,6 +21,7 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   fatoresAjuste: FatorAjuste[] = [];
 
+  // FIXME considerar o enum
   classificacoes: SelectItem[] = [
     { label: 'ALI', value: 'ALI' },
     { label: 'AIE', value: 'AIE' }

@@ -4,9 +4,9 @@ import { DerTextParser } from '../analise-shared/der-text-parser';
 import { MetodoContagem } from '../analise/index';
 import { FatorAjuste } from '../fator-ajuste/index';
 
-const enum TipoFuncaoDados {
-  'ALI',
-  'AIE'
+export enum TipoFuncaoDados {
+  'ALI' = 'ALI',
+  'AIE' = 'AIE'
 }
 
 export enum Complexidade {
