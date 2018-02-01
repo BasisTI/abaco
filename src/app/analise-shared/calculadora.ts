@@ -145,13 +145,12 @@ export class Calculadora {
   private static aplicarFator() {
     this.funcaoDadosCalculada.grossPf = this.funcaoDadosCalculada.pf;
     let valorAplicado = 0;
+    const fator = this.funcaoDados.fatorAjuste.fator;
     if (this.funcaoDados.fatorAjuste.tipoAjuste === 'PERCENTUAL') {
       // XXX de repente um método de FuncaoDados/Transacao?
-      valorAplicado = this.funcaoDadosCalculada.pf * this.funcaoDados.fatorAjuste.fator;
+      valorAplicado = this.funcaoDadosCalculada.pf * fator;
     } else { // UNITÁRIO
-      // XXX unitário aplica somente o fator??? codigo original ta assim
-      // valorAplicado = this.fatorPF;
-      valorAplicado = this.funcaoDadosCalculada.pf * this.fatorPF;
+      valorAplicado = fator;
     }
     this.funcaoDadosCalculada.pf = valorAplicado;
   }
