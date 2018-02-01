@@ -2,11 +2,12 @@ import { BaseEntity } from '../shared';
 import { FatorAjuste } from '../fator-ajuste/index';
 import { Funcionalidade } from '../funcionalidade/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
+import { DerTextParser } from '../analise-shared/der-text-parser';
 
-export const enum TipoFuncaoTransacao {
-  'EE',
-  'SE',
-  'CE'
+export enum TipoFuncaoTransacao {
+  'EE' = 'EE', // entrada externa
+  'SE' = 'SE', // saida externa
+  'CE' = 'CE' // consulta externa
 }
 
 export class FuncaoTransacao implements BaseEntity {
@@ -34,5 +35,26 @@ export class FuncaoTransacao implements BaseEntity {
     if (!grossPf) {
       this.grossPf = 0;
     }
+  }
+
+  derValue(): number {
+    if (!this.der) {
+      return 0;
+    }
+    return DerTextParser.parse(this.der).total();
+  }
+
+  ftrValue(): number {
+    if (!this.ftr) {
+      return 0;
+    }
+    return DerTextParser.parse(this.ftr).total();
+  }
+
+  clone(): FuncaoTransacao {
+    return new FuncaoTransacao(this.id, this.artificialId, this.tipo,
+      this.complexidade, this.pf, this.analise, this.funcionalidades,
+      this.funcionalidade, this.fatorAjuste, this.alrs,
+      this.name, this.sustantation, this.der, this.ftr, this.grossPf);
   }
 }
