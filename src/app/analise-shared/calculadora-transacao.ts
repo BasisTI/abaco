@@ -3,7 +3,7 @@ import { MetodoContagem } from '../analise/index';
 import { TipoFatorAjuste } from '../fator-ajuste/index';
 import { FuncaoTransacao, TipoFuncaoTransacao } from '../funcao-transacao/index';
 
-export class Calculadora {
+export class CalculadoraTransacao {
 
   private static funcaoTransacao: FuncaoTransacao;
   private static metodoContagem: MetodoContagem;
