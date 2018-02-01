@@ -13,7 +13,7 @@ import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
 
 @Component({
-  selector: 'app-analise-funcao-dados',
+  selector: 'app-analise-funcao-transacao',
   templateUrl: './funcao-transacao-form.component.html'
 })
 export class FuncaoTransacaoFormComponent implements OnInit {

@@ -30,6 +30,7 @@ import {
 } from './';
 import { AbacoFuncaoDadosModule } from '../funcao-dados/funcao-dados.module';
 import { AbacoSharedModule } from '../shared/abaco-shared.module';
+import { AbacoFuncaoTransacaoModule } from '../funcao-transacao/funcao-transacao.module';
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import { AbacoSharedModule } from '../shared/abaco-shared.module';
     TabViewModule,
     InputTextareaModule,
     AbacoFuncaoDadosModule,
-    AbacoSharedModule
+    AbacoSharedModule,
+    AbacoFuncaoTransacaoModule
   ],
   declarations: [
     AnaliseComponent,
