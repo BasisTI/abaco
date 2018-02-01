@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AnaliseSharedDataService, PageNotificationService } from '../shared';
 import { FuncaoDados } from './funcao-dados.model';
 import { Complexidade } from '../analise-shared/complexidade-enum';
-import { Analise, ResumoFuncaoDados } from '../analise';
+import { Analise } from '../analise';
 import { FatorAjuste } from '../fator-ajuste';
 
 import * as _ from 'lodash';
@@ -12,6 +12,7 @@ import { SelectItem } from 'primeng/primeng';
 import { Calculadora } from '../analise-shared/calculadora';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
+import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 
 @Component({
   selector: 'app-analise-funcao-dados',
@@ -21,7 +22,7 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   currentFuncaoDados: FuncaoDados;
   funcaoDadosEmEdicao: FuncaoDados;
-  resumo: ResumoFuncaoDados;
+  resumo: ResumoFuncoes;
 
   fatoresAjuste: FatorAjuste[] = [];
 
