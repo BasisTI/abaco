@@ -2,8 +2,9 @@ import { BaseEntity, MappableEntities } from '../shared';
 import { Contrato } from '../contrato';
 import { EsforcoFase } from '../esforco-fase/index';
 import { Sistema } from '../sistema/index';
-import { FuncaoDados, TipoFuncaoDados } from '../funcao-dados/index';
+import { FuncaoDados, TipoFuncaoDados, FuncaoDadosFormComponent } from '../funcao-dados/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
+import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { FuncaoTransacao } from '../funcao-transacao/index';
 
 export const enum MetodoContagem {
@@ -23,7 +24,9 @@ export class Analise implements BaseEntity {
 
   private mappableFuncaoTransacaos: MappableEntities<FuncaoTransacao>;
 
-  private _resumoFuncaoDados: ResumoFuncaoDados;
+  private _resumoFuncaoDados: ResumoFuncoes;
+
+  private _resumoFuncaoTransacao: ResumoFuncoes;
 
   constructor(
     public id?: number,
@@ -55,8 +58,12 @@ export class Analise implements BaseEntity {
     }
   }
 
-  public get resumoFuncaoDados(): ResumoFuncaoDados {
+  public get resumoFuncaoDados(): ResumoFuncoes {
     return this._resumoFuncaoDados;
+  }
+
+  public get resumoFuncaoTransacoes(): ResumoFuncoes {
+    return this._resumoFuncaoTransacao;
   }
 
   public addFuncaoDados(funcaoDados: FuncaoDados) {
@@ -72,7 +79,7 @@ export class Analise implements BaseEntity {
   // potencial para ficar bem eficiente
   // inserção/alteração/deleção pode ser feita por elemento
   private generateResumoFuncaoDados() {
-    const resumo: ResumoFuncaoDados = new ResumoFuncaoDados();
+    const resumo: ResumoFuncoes = new ResumoFuncoes(FuncaoDados.tipos());
     this.funcaoDados.forEach(f => {
       resumo.somaFuncao(f);
     });
@@ -91,115 +98,30 @@ export class Analise implements BaseEntity {
 
   addFuncaoTransacao(funcaoTransacao: FuncaoTransacao) {
     this.mappableFuncaoTransacaos.push(funcaoTransacao);
-    this.atualizarFuncoesTransacoes();
+    this.atualizarFuncoesTransacao();
   }
 
-  private atualizarFuncoesTransacoes() {
+  private atualizarFuncoesTransacao() {
     this.funcaoTransacaos = this.mappableFuncaoTransacaos.values();
-    // TODO gerar resumo
+    this.generateResumoFuncoesTransacao();
+  }
+
+  private generateResumoFuncoesTransacao() {
+    const resumo: ResumoFuncoes = new ResumoFuncoes(FuncaoTransacao.tipos());
+    this.funcaoTransacaos.forEach(f => {
+      resumo.somaFuncao(f);
+    });
+    this._resumoFuncaoTransacao = resumo;
   }
 
   updateFuncaoTransacao(funcaoTransacao: FuncaoTransacao) {
     this.mappableFuncaoTransacaos.update(funcaoTransacao);
-    this.atualizarFuncoesTransacoes();
+    this.atualizarFuncoesTransacao();
   }
 
   deleteFuncaoTransacao(funcaoTransacao: FuncaoTransacao) {
     this.mappableFuncaoTransacaos.delete(funcaoTransacao);
-    this.atualizarFuncoesTransacoes();
-  }
-
-
-}
-
-
-export class ResumoFuncaoDados {
-
-  private tipoGrupoLogicoToResumo: Map<string, ResumoGrupoLogico>;
-
-  constructor() {
-    this.tipoGrupoLogicoToResumo = new Map<string, ResumoGrupoLogico>();
-    this.criaResumoPorGrupoLogico();
-  }
-
-  private criaResumoPorGrupoLogico() {
-    // TODO extrair metodo
-    const tipoFuncoesDados: string[] = Object.keys(TipoFuncaoDados)
-      .map(k => TipoFuncaoDados[k as any]);
-    tipoFuncoesDados.forEach(tipo => {
-      const resumo: ResumoGrupoLogico = new ResumoGrupoLogico(tipo);
-      this.tipoGrupoLogicoToResumo.set(tipo, resumo);
-    });
-  }
-
-  somaFuncao(funcaoDados: FuncaoDados) {
-    const tipoGrupoLogico = funcaoDados.tipo;
-    const resumo = this.tipoGrupoLogicoToResumo.get(tipoGrupoLogico);
-    resumo.incrementaTotais(funcaoDados);
-  }
-
-  get all(): ResumoGrupoLogico[] {
-    return Array.from(this.tipoGrupoLogicoToResumo.values());
-  }
-
-}
-
-export class ResumoGrupoLogico {
-
-  tipo: string;
-
-  private complexidadeToTotal: Map<string, number>;
-
-  private _quantidadeTotal = 0;
-
-  private _totalPf = 0;
-
-  private _totalGrossPf = 0;
-
-  constructor(tipo: string) {
-    this.tipo = tipo;
-    this.complexidadeToTotal = new Map<string, number>();
-    this.inicializaOcorrenciasComoZeroParaComplexidades();
-  }
-
-  private inicializaOcorrenciasComoZeroParaComplexidades() {
-    // TODO extrair metodo
-    const complexidades: string[] = Object.keys(Complexidade)
-      .map(k => Complexidade[k as any]);
-    complexidades.forEach(c => this.complexidadeToTotal.set(c, 0));
-  }
-
-  incrementaTotais(funcaoDados: FuncaoDados) {
-    this.incrementaPorComplexidade(funcaoDados.complexidade);
-    this.incrementaPfs(funcaoDados.pf, funcaoDados.grossPf);
-    this._quantidadeTotal += 1;
-  }
-
-  private incrementaPorComplexidade(complexidade: Complexidade) {
-    const complexidadeStr = complexidade;
-    const totalDaComplexidade = this.complexidadeToTotal.get(complexidadeStr);
-    this.complexidadeToTotal.set(complexidadeStr, totalDaComplexidade + 1);
-  }
-
-  private incrementaPfs(pf: number, grossPf: number) {
-    this._totalPf += pf;
-    this._totalGrossPf += grossPf;
-  }
-
-  get totalPf() {
-    return this._totalPf;
-  }
-
-  get totalGrossPf() {
-    return this._totalGrossPf;
-  }
-
-  get quantidadeTotal(): number {
-    return this._quantidadeTotal;
-  }
-
-  totalPorComplexidade(complexidade: Complexidade): number {
-    return this.complexidadeToTotal.get(complexidade.toString());
+    this.atualizarFuncoesTransacao();
   }
 
 }
