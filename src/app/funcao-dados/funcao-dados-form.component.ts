@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AnaliseSharedDataService, PageNotificationService } from '../shared';
 import { FuncaoDados } from './funcao-dados.model';
-import { Complexidade } from '../analise-shared/complexidade-enum';
 import { Analise } from '../analise';
 import { FatorAjuste } from '../fator-ajuste';
 
@@ -32,8 +31,6 @@ export class FuncaoDadosFormComponent implements OnInit {
     { label: 'AIE', value: 'AIE' }
   ];
 
-  complexidades: string[];
-
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
     private confirmationService: ConfirmationService,
@@ -42,9 +39,6 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   ngOnInit() {
     this.currentFuncaoDados = new FuncaoDados();
-    // TODO extrair para um utils. reutilizar em analise.model
-    // talvez cada enum implementa metodo estatico
-    this.complexidades = Object.keys(Complexidade).map(k => Complexidade[k as any]);
   }
 
   get funcoesDados(): FuncaoDados[] {
