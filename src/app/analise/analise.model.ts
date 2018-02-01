@@ -19,6 +19,8 @@ export class Analise implements BaseEntity {
 
   private mappableFuncaoDados: MappableEntities<FuncaoDados>;
 
+  private _resumoFuncaoDados: ResumoFuncaoDados;
+
   constructor(
     public id?: number,
     public numeroOs?: string,
@@ -47,15 +49,23 @@ export class Analise implements BaseEntity {
   public addFuncaoDados(funcaoDados: FuncaoDados) {
     this.mappableFuncaoDados.push(funcaoDados);
     this.funcaoDados = this.mappableFuncaoDados.values();
+    this.generateResumoFuncaoDados();
   }
 
-  public resumoFuncaoDados(): ResumoFuncaoDados {
+  // potencial para ficar bem eficiente
+  // inserção/alteração/deleção pode ser feita por elemento
+  private generateResumoFuncaoDados() {
     const resumo: ResumoFuncaoDados = new ResumoFuncaoDados();
-    this.funcaoDados.forEach(f => {
-      resumo.ocorrencia(f);
-    });
-    return resumo;
+     this.funcaoDados.forEach(f => {
+       resumo.somaFuncao(f);
+     });
+     this._resumoFuncaoDados = resumo;
   }
+
+  public get resumoFuncaoDados(): ResumoFuncaoDados {
+    return this._resumoFuncaoDados;
+  }
+
 }
 
 
@@ -73,15 +83,16 @@ export class ResumoFuncaoDados {
     }
   }
 
-  ocorrencia(funcaoDados: FuncaoDados) {
+  somaFuncao(funcaoDados: FuncaoDados) {
     const tipoGrupoLogico = funcaoDados.tipo;
     const resumo = this.tipoGrupoLogicoToResumo.get(tipoGrupoLogico);
     resumo.incrementaTotais(funcaoDados);
   }
 
-  get all() {
-    return this.tipoGrupoLogicoToResumo.values();
+  get all(): ResumoGrupoLogico[] {
+    return Array.from(this.tipoGrupoLogicoToResumo.values());
   }
+
 }
 
 export class ResumoGrupoLogico {
