@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AnaliseSharedDataService, PageNotificationService } from '../shared';
 import { FuncaoTransacao, TipoFuncaoTransacao } from './funcao-transacao.model';
-import { Analise, ResumoFuncaoDados } from '../analise';
+import { Analise } from '../analise';
 import { FatorAjuste } from '../fator-ajuste';
 
 import * as _ from 'lodash';
@@ -11,6 +11,8 @@ import { CalculadoraTransacao } from '../analise-shared/calculadora-transacao';
 import { SelectItem } from 'primeng/primeng';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
+import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
+import { Complexidade } from '../analise-shared/complexidade-enum';
 
 @Component({
   selector: 'app-analise-funcao-transacao',
@@ -20,10 +22,13 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
   currentFuncaoTransacao: FuncaoTransacao;
   funcaoTransacaoEmEdicao: FuncaoTransacao;
+  resumo: ResumoFuncoes;
 
   fatoresAjuste: FatorAjuste[] = [];
 
   classificacoes: SelectItem[] = [];
+
+  complexidades: string[];
 
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
@@ -38,6 +43,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     classificacoes.forEach(c => {
       this.classificacoes.push({ label: c, value: c});
     });
+    this.complexidades = Object.keys(Complexidade).map(k => Complexidade[k as any]);
   }
 
   get funcoesTransacoes(): FuncaoTransacao[] {
@@ -105,8 +111,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
   private doAdicionar() {
     const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.tipoContagem, this.currentFuncaoTransacao);
     this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
-    // TODO
-    // this.resumo = this.analise.resumoFuncaoTransacao.
+    this.resumo = this.analise.resumoFuncaoTransacoes;
     this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
 
     this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
