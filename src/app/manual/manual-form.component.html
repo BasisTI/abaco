@@ -47,7 +47,7 @@
           <div class="ui-g-12" style="margin-bottom: 25px">
             <label>Arquivo Manual</label>
             <span class="md-inputfield">
-              <p-fileUpload id="abaco_file_upload" chooseLabel="Selecionar arquivo" [showUploadButton]="false" [showCancelButton]="false" name="arquivoManual" (onSelect)="uploadFile($event)" accept=".pdf,.odt,.doc,.docx">
+              <p-fileUpload #fileInput chooseLabel="Selecionar arquivo" [showUploadButton]="false" [showCancelButton]="false" name="arquivoManual" (onSelect)="uploadFile($event)" accept=".pdf,.odt,.doc,.docx">
               </p-fileUpload>
               <!-- <input type="file" (change)="uploadFile($event)" name="arquivoManual" value="" required> -->
             </span>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
@@ -14,6 +14,7 @@ import { DatatableClickEvent } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 import { PageNotificationService } from '../shared/page-notification.service';
 import { UploadService } from '../upload/upload.service';
+import {FileUpload} from 'primeng/primeng';
 
 @Component({
   selector: 'jhi-organizacao-form',
@@ -36,6 +37,9 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   contratoEmEdicao: Contrato = new Contrato();
   cnpjMask = [/\d/, /\d/, '.' , /\d/, /\d/,/\d/, '.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-', /\d/, /\d/]
   invalidFields: Array<string> = [];
+  imageUrl: any;
+
+  @ViewChild('fileInput') fileInput: FileUpload;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,7 +60,10 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     this.routeSub = this.route.params.subscribe(params => {
       this.organizacao = new Organizacao();
       if (params['id']) {
-        this.organizacaoService.find(params['id']).subscribe(organizacao => this.organizacao = organizacao);
+        this.organizacaoService.find(params['id']).subscribe(organizacao => {
+          this.organizacao = organizacao
+          this.getFile();
+        });
       }
     });
   }
@@ -122,7 +129,17 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   save() {
     this.isSaving = true;
     if (this.organizacao.id !== undefined) {
-      this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
+      this.organizacaoService.find(this.organizacao.id).subscribe(response => {
+
+        if(this.logo !== undefined) {
+          this.uploadService.uploadFile(this.logo).subscribe(response => {
+            this.organizacao.logoId = JSON.parse(response["_body"]).id;
+            this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
+          })
+        } else {
+            this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
+        }
+      })
     } else {
       if(this.logo !== undefined) {
         if(this.checkRequiredFields()) {
@@ -190,8 +207,24 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
   fileUpload(event: any) {
     this.logo = event.files[0];
-    console.log(this.logo);
-    // this.logo = event.target.files[0];
+  }
 
+  getFile() {
+    this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
+
+      let fileInfo;
+      this.uploadService.getFileInfo(this.organizacao.logoId).subscribe(response => {
+        fileInfo = response;
+
+        this.fileInput.files.push(new File([response["_body"]], fileInfo["originalName"]));
+      });
+    });
+  }
+
+  getFileInfo() {
+    return this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
+      console.log(response)
+      return response;
+    })
   }
 }
