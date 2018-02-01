@@ -107,7 +107,17 @@
       <div *ngIf="funcoesDados.length > 0">
         <hr>
         <h2>Resumo</h2>
-        {{ resumoFuncaoDatosStringified() }}
+        <p-dataTable [value]="resumo.all" [responsive]="true"
+          scrollable="true" scrollWidth="100%">
+          <p-column field="tipo"></p-column>
+          <div *ngFor="let complexidade of complexidades">
+            <p-column [header]="complexidade">
+              <ng-template let-resumoGrupoLogico="rowData" pTemplate="body">
+                {{ resumoGrupoLogico.totalPorComplexidade(complexidade) }}
+              </ng-template>
+            </p-column>
+          </div>
+        </p-dataTable>
       </div>
 
     </div>

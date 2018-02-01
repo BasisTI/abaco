@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AnaliseSharedDataService } from '../shared';
-import { FuncaoDados } from './funcao-dados.model';
+import { FuncaoDados, Complexidade } from './funcao-dados.model';
 import { Analise, ResumoFuncaoDados } from '../analise';
 import { FatorAjuste } from '../fator-ajuste';
 
@@ -27,12 +27,17 @@ export class FuncaoDadosFormComponent implements OnInit {
     { label: 'AIE', value: 'AIE' }
   ];
 
+  complexidades: string[];
+
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
   ) { }
 
   ngOnInit() {
     this.currentFuncaoDados = new FuncaoDados();
+    // TODO extrair para um utils. reutilizar em analise.model
+    // talvez cada enum implementa metodo estatico
+    this.complexidades = Object.keys(Complexidade).map(k => Complexidade[k as any]);
   }
 
   get funcoesDados(): FuncaoDados[] {
@@ -83,17 +88,13 @@ export class FuncaoDadosFormComponent implements OnInit {
   }
 
   adicionar() {
-    const funcaoDadosCalculada = Calculadora.calcular(this.analise.tipoContagem,
-      this.currentFuncaoDados);
+    const funcaoDadosCalculada = Calculadora.calcular(this.analise.tipoContagem, this.currentFuncaoDados);
     this.analise.addFuncaoDados(funcaoDadosCalculada);
-    this.resumo = this.analise.generateResumoFuncaoDados();
-
+    this.resumo = this.analise.resumoFuncaoDados;
+    console.log(this.resumo);
     // Mantendo o mesmo conteudo a pedido do Leandro
     this.currentFuncaoDados = this.currentFuncaoDados.clone();
     this.currentFuncaoDados.artificialId = undefined;
   }
 
-  resumoFuncaoDatosStringified(): string {
-    return JSON.stringify(this.resumo);
-  }
 }
