@@ -9,6 +9,7 @@ export enum TipoFuncaoDados {
   'AIE' = 'AIE'
 }
 
+// TODO extrair e reutilizar aqui, FuncaoTransacao, calculadora
 export enum Complexidade {
   'SEM' = 'SEM',
   'BAIXA' = 'BAIXA',
