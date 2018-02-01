@@ -27,6 +27,11 @@ export class PageNotificationService {
         });
     }
 
+    addCreateMsgWithName(name: string, title?: string) {
+        const msg = `Registro '${name}' incluído com sucesso!`;
+        this.addInfoMsg('success', msg, title);
+    }
+
     addUpdateMsg(title?: string) {
         this.addInfoMsg('success', this.updateMsg, title);
     }
