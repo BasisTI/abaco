@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AnaliseSharedDataService, PageNotificationService } from '../shared';
-import { FuncaoTransacao } from './funcao-transacao.model';
+import { FuncaoTransacao, TipoFuncaoTransacao } from './funcao-transacao.model';
 import { Analise, ResumoFuncaoDados } from '../analise';
 import { FatorAjuste } from '../fator-ajuste';
 
@@ -8,7 +8,6 @@ import * as _ from 'lodash';
 import { Modulo } from '../modulo/index';
 import { Funcionalidade } from '../funcionalidade/index';
 import { SelectItem } from 'primeng/primeng';
-import { Calculadora } from '../analise-shared/calculadora';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
 
@@ -23,6 +22,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
   fatoresAjuste: FatorAjuste[] = [];
 
+  classificacoes: SelectItem[] = [];
+
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
     private confirmationService: ConfirmationService,
@@ -31,6 +32,11 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
   ngOnInit() {
     this.currentFuncaoTransacao = new FuncaoTransacao();
+    const classificacoes = Object.keys(TipoFuncaoTransacao).map(k => TipoFuncaoTransacao[k as any]);
+    // TODO pipe generico?
+    classificacoes.forEach(c => {
+      this.classificacoes.push({ label: c, value: c});
+    });
   }
 
   get funcoesTransacoes(): FuncaoTransacao[] {
