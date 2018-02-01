@@ -4,6 +4,7 @@ import { EsforcoFase } from '../esforco-fase/index';
 import { Sistema } from '../sistema/index';
 import { FuncaoDados, TipoFuncaoDados } from '../funcao-dados/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
+import { FuncaoTransacao } from '../funcao-transacao/index';
 
 export const enum MetodoContagem {
   'DETALHADA',
@@ -35,7 +36,7 @@ export class Analise implements BaseEntity {
     public propositoContagem?: string,
     public sistema?: Sistema,
     public funcaoDados?: FuncaoDados[],
-    public funcaoTransacaos?: BaseEntity[],
+    public funcaoTransacaos?: FuncaoTransacao[],
     public organizacao?: BaseEntity,
     public contrato?: Contrato,
     public esforcoFases?: EsforcoFase[],
