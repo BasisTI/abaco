@@ -4,6 +4,10 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatatableModule } from '@basis/angular-components';
+import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
+import { AbacoSharedModule } from '../shared/abaco-shared.module';
+import { AbacoAnaliseSharedModule } from '../analise-shared/analise-shared.module';
+import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
 import {
   ButtonModule,
   InputTextModule,
@@ -12,40 +16,44 @@ import {
   DropdownModule,
   RadioButtonModule,
   ConfirmDialogModule,
-  ConfirmationService
+  DataTableModule,
+  ConfirmationService,
+  TabViewModule,
+  InputTextareaModule,
+  DialogModule
 } from 'primeng/primeng';
 
 import {
-  FuncaoTransacaoService,
-  FuncaoTransacaoComponent,
-  FuncaoTransacaoDetailComponent,
   FuncaoTransacaoFormComponent,
-  funcaoTransacaoRoute
 } from './';
+
 
 @NgModule({
   imports: [
     CommonModule,
     HttpModule,
     FormsModule,
-    RouterModule.forRoot(funcaoTransacaoRoute, { useHash: true }),
-    DatatableModule,
     ButtonModule,
     SpinnerModule,
     CalendarModule,
     DropdownModule,
     RadioButtonModule,
     InputTextModule,
+    DataTableModule,
     ConfirmDialogModule,
+    AbacoButtonsModule,
+    TabViewModule,
+    InputTextareaModule,
+    AbacoSharedModule,
+    DialogModule,
+    AbacoAnaliseSharedModule,
+    MemoryDataTableModule
   ],
   declarations: [
-    FuncaoTransacaoComponent,
-    FuncaoTransacaoDetailComponent,
     FuncaoTransacaoFormComponent
   ],
-  providers: [
-    FuncaoTransacaoService,
-    ConfirmationService
+  exports: [
+    FuncaoTransacaoFormComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
