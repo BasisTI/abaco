@@ -56,10 +56,10 @@ export class Analise implements BaseEntity {
   // inserção/alteração/deleção pode ser feita por elemento
   private generateResumoFuncaoDados() {
     const resumo: ResumoFuncaoDados = new ResumoFuncaoDados();
-     this.funcaoDados.forEach(f => {
-       resumo.somaFuncao(f);
-     });
-     this._resumoFuncaoDados = resumo;
+    this.funcaoDados.forEach(f => {
+      resumo.somaFuncao(f);
+    });
+    this._resumoFuncaoDados = resumo;
   }
 
   public get resumoFuncaoDados(): ResumoFuncaoDados {
@@ -74,13 +74,18 @@ export class ResumoFuncaoDados {
   private tipoGrupoLogicoToResumo: Map<string, ResumoGrupoLogico>;
 
   constructor() {
-    for (const enumMember in TipoFuncaoDados) {
-      if (parseInt(enumMember, 10) >= 0) {
-        const tipo: string = TipoFuncaoDados[enumMember];
-        const resumo: ResumoGrupoLogico = new ResumoGrupoLogico(tipo);
+    this.tipoGrupoLogicoToResumo = new Map<string, ResumoGrupoLogico>();
+    this.criaResumoPorGrupoLogico();
+  }
+
+  private criaResumoPorGrupoLogico() {
+    // TODO extrair metodo
+    const tipoFuncoesDados: string[] = Object.keys(TipoFuncaoDados)
+      .map(k => TipoFuncaoDados[k as any]);
+    tipoFuncoesDados.forEach(tipo => {
+      const resumo: ResumoGrupoLogico = new ResumoGrupoLogico(tipo);
         this.tipoGrupoLogicoToResumo.set(tipo, resumo);
-      }
-    }
+    });
   }
 
   somaFuncao(funcaoDados: FuncaoDados) {
@@ -114,11 +119,10 @@ export class ResumoGrupoLogico {
   }
 
   private inicializaOcorrenciasComoZeroParaComplexidades() {
-    for (const enumMember in Complexidade) {
-      if (parseInt(enumMember, 10) >= 0) {
-        this.complexidadeToTotal.set(Complexidade[enumMember], 0);
-      }
-    }
+    // TODO extrair metodo
+    const complexidades: string[] = Object.keys(Complexidade)
+      .map(k => Complexidade[k as any]);
+    complexidades.forEach(c => this.complexidadeToTotal.set(c, 0));
   }
 
   incrementaTotais(funcaoDados: FuncaoDados) {
