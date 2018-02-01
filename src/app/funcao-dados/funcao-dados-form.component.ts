@@ -87,7 +87,22 @@ export class FuncaoDadosFormComponent implements OnInit {
     this.currentFuncaoDados.funcionalidade = funcionalidade;
   }
 
+  isFuncionalidadeSelected(): boolean {
+    return !_.isUndefined(this.currentFuncaoDados.funcionalidade);
+  }
+
+  deveHabilitarBotaoAdicionar(): boolean {
+    // TODO complementar com outras validacoes
+    return this.isFuncionalidadeSelected();
+  }
+
   adicionar() {
+    if (this.deveHabilitarBotaoAdicionar()) {
+      this.doAdicionar();
+    }
+  }
+
+  private doAdicionar() {
     const funcaoDadosCalculada = Calculadora.calcular(this.analise.tipoContagem, this.currentFuncaoDados);
     this.analise.addFuncaoDados(funcaoDadosCalculada);
     this.resumo = this.analise.resumoFuncaoDados;
