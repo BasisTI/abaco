@@ -91,6 +91,7 @@ export class Analise implements BaseEntity {
 
   addFuncaoTransacao(funcaoTransacao: FuncaoTransacao) {
     this.mappableFuncaoTransacaos.push(funcaoTransacao);
+    this.atualizarFuncoesTransacoes();
   }
 
   private atualizarFuncoesTransacoes() {
@@ -100,10 +101,12 @@ export class Analise implements BaseEntity {
 
   updateFuncaoTransacao(funcaoTransacao: FuncaoTransacao) {
     this.mappableFuncaoTransacaos.update(funcaoTransacao);
+    this.atualizarFuncoesTransacoes();
   }
 
   deleteFuncaoTransacao(funcaoTransacao: FuncaoTransacao) {
     this.mappableFuncaoTransacaos.delete(funcaoTransacao);
+    this.atualizarFuncoesTransacoes();
   }
 
 
