@@ -1,7 +1,7 @@
 <h2>Resumo</h2>
-<p-dataTable [value]="resumoFuncoes.all"
+<p-dataTable [value]="resumosGrupoLogico"
   [responsive]="true" scrollable="true" scrollWidth="100%">
-  <p-column field="tipo"></p-column>
+  <p-column field="label"></p-column>
   <div *ngFor="let complexidade of complexidades">
     <p-column [header]="complexidade">
       <ng-template let-resumoGrupoLogico="rowData" pTemplate="body">
