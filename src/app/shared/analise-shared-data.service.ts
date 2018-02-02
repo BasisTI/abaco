@@ -8,6 +8,8 @@ export class AnaliseSharedDataService {
 
   analise: Analise;
 
+  analiseCarregada = false;
+
   isContratoSelected(): boolean {
     return !_.isUndefined(this.analise.contrato);
   }
