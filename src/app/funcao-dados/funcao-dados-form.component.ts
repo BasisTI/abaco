@@ -94,6 +94,7 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   deveHabilitarBotaoAdicionar(): boolean {
     // TODO complementar com outras validacoes
+    // TODO verificar se tem tipoContagem selecionado
     return this.isFuncionalidadeSelected();
   }
 
