@@ -26,7 +26,8 @@ import {
   AnaliseComponent,
   AnaliseDetailComponent,
   AnaliseFormComponent,
-  analiseRoute
+  analiseRoute,
+  AnaliseResumoComponent
 } from './';
 import { AbacoFuncaoDadosModule } from '../funcao-dados/funcao-dados.module';
 import { AbacoSharedModule } from '../shared/abaco-shared.module';
@@ -57,7 +58,8 @@ import { AbacoFuncaoTransacaoModule } from '../funcao-transacao/funcao-transacao
   declarations: [
     AnaliseComponent,
     AnaliseDetailComponent,
-    AnaliseFormComponent
+    AnaliseFormComponent,
+    AnaliseResumoComponent
   ],
   providers: [
     AnaliseService,
