@@ -4,7 +4,7 @@ import { EsforcoFase } from '../esforco-fase/index';
 import { Sistema } from '../sistema/index';
 import { FuncaoDados, TipoFuncaoDados, FuncaoDadosFormComponent } from '../funcao-dados/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
-import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
+import { ResumoTotal, ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { FuncaoTransacao } from '../funcao-transacao/index';
 
 export const enum MetodoContagem {
@@ -28,6 +28,8 @@ export class Analise implements BaseEntity {
 
   private _resumoFuncaoTransacao: ResumoFuncoes;
 
+  private _resumoTotal: ResumoTotal;
+
   constructor(
     public id?: number,
     public numeroOs?: string,
@@ -46,6 +48,11 @@ export class Analise implements BaseEntity {
     public contrato?: Contrato,
     public esforcoFases?: EsforcoFase[],
   ) {
+    this.inicializaMappables(funcaoDados, funcaoTransacaos);
+    this.inicializaResumos();
+  }
+
+  private inicializaMappables(funcaoDados: FuncaoDados[], funcaoTransacaos) {
     if (funcaoDados) {
       this.mappableFuncaoDados = new MappableEntities<FuncaoDados>(funcaoDados);
     } else {
@@ -56,6 +63,21 @@ export class Analise implements BaseEntity {
     } else {
       this.mappableFuncaoTransacaos = new MappableEntities<FuncaoTransacao>();
     }
+  }
+
+  // FIXME quando for edicao?
+  private inicializaResumos() {
+    this._resumoFuncaoDados = new ResumoFuncoes(FuncaoDados.tipos());
+    this._resumoFuncaoTransacao = new ResumoFuncoes(FuncaoTransacao.tipos());
+    this.generateResumoTotal();
+  }
+
+  private generateResumoTotal() {
+    this._resumoTotal = new ResumoTotal(this._resumoFuncaoDados, this._resumoFuncaoTransacao);
+  }
+
+  public get resumoTotal(): ResumoTotal {
+    return this._resumoTotal;
   }
 
   public get resumoFuncaoDados(): ResumoFuncoes {
@@ -74,6 +96,7 @@ export class Analise implements BaseEntity {
   private atualizarFuncoesDados() {
     this.funcaoDados = this.mappableFuncaoDados.values();
     this.generateResumoFuncaoDados();
+    this.generateResumoTotal();
   }
 
   // potencial para ficar bem eficiente
@@ -104,6 +127,7 @@ export class Analise implements BaseEntity {
   private atualizarFuncoesTransacao() {
     this.funcaoTransacaos = this.mappableFuncaoTransacaos.values();
     this.generateResumoFuncoesTransacao();
+    this.generateResumoTotal();
   }
 
   private generateResumoFuncoesTransacao() {
