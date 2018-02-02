@@ -1,5 +1,5 @@
 import { Complexidade } from './complexidade-enum';
-import { AnaliseSharedUtils } from './index';
+import { AnaliseSharedUtils } from './analise-shared-utils';
 
 export interface FuncaoResumivel {
 
