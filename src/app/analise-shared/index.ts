@@ -6,4 +6,5 @@ export * from './calculadora';
 export * from './calculadora-transacao';
 export * from './resumo-funcoes';
 export * from './funcao-resumo-table.component';
+export * from './analise-shared-utils';
 
