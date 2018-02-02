@@ -9,15 +9,19 @@
       </ng-template>
     </p-column>
   </div>
-  <p-column header="Total" field="quantidadeTotal"></p-column>
+  <p-column header="Total">
+    <ng-template let-linhaResumo="rowData" pTemplate="body">
+      {{ linhaResumo.getQuantidadeTotal() }}
+    </ng-template>
+  </p-column>
   <p-column header="PF - Total Bruto">
-    <ng-template let-totalGrossPf="rowData.totalGrossPf" pTemplate="body">
-      {{ totalGrossPf | number }}
+    <ng-template let-linhaResumo="rowData" pTemplate="body">
+      {{ linhaResumo.getTotalGrossPf() | number }}
     </ng-template>
   </p-column>
   <p-column header="PF - Total Líquido">
-    <ng-template let-totalPf="rowData.totalPf" pTemplate="body">
-      {{ totalPf | number }}
+    <ng-template let-linhaResumo="rowData" pTemplate="body">
+      {{ linhaResumo.getTotalPf() | number }}
     </ng-template>
   </p-column>
 </p-dataTable>
