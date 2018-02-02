@@ -22,7 +22,7 @@ export class ResumoTotal {
   constructor(...resumoFuncoes: ResumoFuncoes[]) {
     this._resumoFuncoes = resumoFuncoes;
     this.adicionaTodosResumosGrupoLogicoDeCadaResumoFuncoes();
-    // this._linhasResumo.push(this.geraLinhaTotal());
+    this._linhasResumo.push(new UltimaLinhaTotal(this._linhasResumo));
   }
 
   private adicionaTodosResumosGrupoLogicoDeCadaResumoFuncoes() {
@@ -31,30 +31,8 @@ export class ResumoTotal {
     });
   }
 
-  private geraLinhaTotal(): LinhaResumo {
-   return null;
-  }
-
   get all(): LinhaResumo[] {
     return this._linhasResumo;
-  }
-
-}
-
-class FuncaoResumivelDTO implements FuncaoResumivel {
-
-  readonly complexidade: Complexidade;
-  readonly pf: number;
-  readonly grossPf: number;
-
-  constructor(complexidade: Complexidade, pf: number, grossPf: number) {
-    this.complexidade = complexidade;
-    this.pf = pf;
-    this.grossPf = grossPf;
-  }
-
-  tipoAsString() {
-    return this.complexidade.toString();
   }
 
 }
@@ -161,7 +139,9 @@ export class ResumoGrupoLogico implements LinhaResumo {
 
 class UltimaLinhaTotal implements LinhaResumo {
 
-  readonly label;
+  readonly label = 'Total';
+
+  private readonly _linhasResumo: LinhaResumo[];
 
   private complexidadeToTotal: Map<string, number>;
 
@@ -170,6 +150,38 @@ class UltimaLinhaTotal implements LinhaResumo {
   private _totalPf = 0;
 
   private _totalGrossPf = 0;
+
+  constructor(linhasResumo: LinhaResumo[]) {
+    this._linhasResumo = linhasResumo;
+    this.inicializaMapa();
+    this.somaTudo();
+  }
+
+  private inicializaMapa() {
+    this.complexidadeToTotal = new Map<string, number>();
+    const complexidades: string[] = AnaliseSharedUtils.complexidades;
+    complexidades.forEach(c => this.complexidadeToTotal.set(c, 0));
+  }
+
+  private somaTudo() {
+    const complexidades: string[] = AnaliseSharedUtils.complexidades;
+    this._linhasResumo.forEach(linhaResumo => {
+      complexidades.forEach(complexidade => {
+        const complexidadeEnum: Complexidade = Complexidade[complexidade];
+        const totalDaComplexidade = linhaResumo.totalPorComplexidade(complexidadeEnum);
+        this.incrementaPorComplexidade(complexidadeEnum, totalDaComplexidade);
+      });
+      this._totalPf += linhaResumo.getTotalPf();
+      this._totalGrossPf += linhaResumo.getTotalGrossPf();
+      this._quantidadeTotal += linhaResumo.getQuantidadeTotal();
+    });
+  }
+
+  private incrementaPorComplexidade(complexidade: Complexidade, valor: number) {
+    const complexidadeStr = complexidade;
+    const totalDaComplexidade = this.complexidadeToTotal.get(complexidadeStr);
+    this.complexidadeToTotal.set(complexidadeStr, totalDaComplexidade + valor);
+  }
 
   getTotalPf(): number {
     return this._totalPf;
