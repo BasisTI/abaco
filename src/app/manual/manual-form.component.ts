@@ -17,6 +17,7 @@ import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model
 import { PageNotificationService } from '../shared/page-notification.service';
 import { UploadService } from '../upload/upload.service';
 import { FileUpload } from 'primeng/primeng';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'jhi-manual-form',
@@ -60,8 +61,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     private tipoFaseService: TipoFaseService,
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
-    private uploadService: UploadService
-  ) {}
+    private uploadService: UploadService,
+    private translate: TranslateService
+  ) {
+    translate.setDefaultLang('pt');
+    translate.use(sessionStorage.getItem('language'));
+  }
 
   ngOnInit() {
     this.isSaving = false;

@@ -3,6 +3,7 @@ import { AppComponent } from './app.component';
 import { LoginService } from './login';
 import { User } from './user';
 import { AuthService } from '@basis/angular-components';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-topbar',
@@ -39,6 +40,30 @@ import { AuthService } from '@basis/angular-components';
                         </ul>
 
                     </li>
+                    <li #language [ngClass]="{'active-top-menu':app.activeTopbarItem === language}">
+                        <a (click)="app.onTopbarItemClick($event,language)"
+                          title="Idioma">
+                            <i class="topbar-icon material-icons">language</i>
+                            <span class="topbar-item-name">Idioma</span>
+                        </a>
+                        <ul class="ultima-menu animated fadeInDown">
+                            <li role="menuitem">
+                                <a name="es" (click)="setLanguage($event.target)">
+                                    <span>Espanhol</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a name="en" (click)="setLanguage($event.target)">
+                                    <span>Inglês</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a name="pt" (click)="setLanguage($event.target)">
+                                    <span>Português</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -49,10 +74,15 @@ export class AppTopBarComponent {
         public app: AppComponent,
         private loginService: LoginService,
         private authService: AuthService<User>,
+        private router: Router
     ) { }
 
     logout() {
         this.loginService.logout();
         this.authService.logout();
+    }
+
+    setLanguage(element) {
+      sessionStorage.setItem("language", element.name);
     }
 }
