@@ -26,12 +26,13 @@ import {
   AnaliseComponent,
   AnaliseDetailComponent,
   AnaliseFormComponent,
-  analiseRoute,
-  AnaliseResumoComponent
+  analiseRoute
 } from './';
+
 import { AbacoFuncaoDadosModule } from '../funcao-dados/funcao-dados.module';
 import { AbacoSharedModule } from '../shared/abaco-shared.module';
 import { AbacoFuncaoTransacaoModule } from '../funcao-transacao/funcao-transacao.module';
+import { AbacoAnaliseResumoModule } from './resumo/analise-resumo.module';
 
 @NgModule({
   imports: [
@@ -53,13 +54,13 @@ import { AbacoFuncaoTransacaoModule } from '../funcao-transacao/funcao-transacao
     InputTextareaModule,
     AbacoFuncaoDadosModule,
     AbacoSharedModule,
-    AbacoFuncaoTransacaoModule
+    AbacoFuncaoTransacaoModule,
+    AbacoAnaliseResumoModule
   ],
   declarations: [
     AnaliseComponent,
     AnaliseDetailComponent,
     AnaliseFormComponent,
-    AnaliseResumoComponent
   ],
   providers: [
     AnaliseService,
