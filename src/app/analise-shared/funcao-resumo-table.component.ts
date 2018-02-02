@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { Complexidade } from './complexidade-enum';
+import { AnaliseSharedUtils } from './index';
 
 @Component({
     selector: 'app-analise-funcao-resumo-table',
@@ -14,7 +15,7 @@ export class FuncaoResumoTableComponent implements OnInit {
   complexidades: string[];
 
   ngOnInit() {
-    this.complexidades = Object.keys(Complexidade).map(k => Complexidade[k as any]);
+    this.complexidades = AnaliseSharedUtils.complexidades;
   }
 
 }
