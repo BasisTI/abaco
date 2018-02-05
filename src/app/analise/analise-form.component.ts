@@ -68,6 +68,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
           this.analise = analise;
         });
       }
+      this.analiseSharedDataService.analiseCarregada = true;
     });
   }
 

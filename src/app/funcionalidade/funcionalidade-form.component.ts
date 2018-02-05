@@ -8,7 +8,7 @@ import { Funcionalidade } from './funcionalidade.model';
 import { FuncionalidadeService } from './funcionalidade.service';
 // import { Modulo, ModuloService } from '../modulo';
 // import { FuncaoDados, FuncaoDadosService } from '../funcao-dados';
-import { FuncaoTransacao, FuncaoTransacaoService } from '../funcao-transacao';
+import { FuncaoTransacao } from '../funcao-transacao';
 import { ResponseWrapper } from '../shared';
 
 @Component({
@@ -34,7 +34,7 @@ export class FuncionalidadeFormComponent implements OnInit, OnDestroy {
     private funcionalidadeService: FuncionalidadeService,
     // private moduloService: ModuloService,
     // private funcaoDadosService: FuncaoDadosService,
-    private funcaoTransacaoService: FuncaoTransacaoService,
+    // private funcaoTransacaoService: FuncaoTransacaoService,
   ) {}
 
   ngOnInit() {
@@ -45,9 +45,9 @@ export class FuncionalidadeFormComponent implements OnInit, OnDestroy {
     // this.funcaoDadosService.query().subscribe((res: ResponseWrapper) => {
     //   this.funcaodados = res.json;
     // });
-    this.funcaoTransacaoService.query().subscribe((res: ResponseWrapper) => {
-      this.funcaotransacaos = res.json;
-    });
+    // this.funcaoTransacaoService.query().subscribe((res: ResponseWrapper) => {
+    //   this.funcaotransacaos = res.json;
+    // });
     this.routeSub = this.route.params.subscribe(params => {
       this.funcionalidade = new Funcionalidade();
       if (params['id']) {

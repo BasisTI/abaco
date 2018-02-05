@@ -1,13 +1,8 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DatatableModule } from '@basis/angular-components';
-import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
-import { AbacoSharedModule } from '../shared/abaco-shared.module';
-import { AbacoAnaliseSharedModule } from '../analise-shared/analise-shared.module';
-import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
+
 import {
   ButtonModule,
   InputTextModule,
@@ -23,10 +18,10 @@ import {
   DialogModule
 } from 'primeng/primeng';
 
-import {
-  FuncaoTransacaoFormComponent,
-} from './';
+import { AbacoSharedModule } from '../../shared/abaco-shared.module';
+import { AbacoAnaliseSharedModule } from '../../analise-shared/analise-shared.module';
 
+import { AnaliseResumoComponent } from './analise-resumo.component';
 
 @NgModule({
   imports: [
@@ -41,20 +36,17 @@ import {
     InputTextModule,
     DataTableModule,
     ConfirmDialogModule,
-    AbacoButtonsModule,
     TabViewModule,
     InputTextareaModule,
     AbacoSharedModule,
     DialogModule,
     AbacoAnaliseSharedModule,
-    MemoryDataTableModule
   ],
   declarations: [
-    FuncaoTransacaoFormComponent
+    AnaliseResumoComponent
   ],
   exports: [
-    FuncaoTransacaoFormComponent
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    AnaliseResumoComponent
+  ]
 })
-export class AbacoFuncaoTransacaoModule {}
+export class AbacoAnaliseResumoModule { }

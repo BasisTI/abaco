@@ -23,6 +23,7 @@ import {
 import { AbacoSharedModule } from '../shared/abaco-shared.module';
 import { ModuloFuncionalidadeComponent } from './modulo-funcionalidade.component';
 import { DerTextComponent } from './der-text-component';
+import { FuncaoResumoTableComponent } from './funcao-resumo-table.component';
 
 @NgModule({
     imports: [
@@ -45,11 +46,13 @@ import { DerTextComponent } from './der-text-component';
     ],
     declarations: [
         ModuloFuncionalidadeComponent,
-        DerTextComponent
+        DerTextComponent,
+        FuncaoResumoTableComponent
     ],
     exports: [
         ModuloFuncionalidadeComponent,
-        DerTextComponent
+        DerTextComponent,
+        FuncaoResumoTableComponent
     ]
 })
 export class AbacoAnaliseSharedModule { }

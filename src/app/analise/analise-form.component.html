@@ -5,7 +5,7 @@
         <div class="card card-w-title">
           <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
             <div class="ui-g" >
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-12" style="margin-bottom: 25px; margin-top: 25px">
                 <span class="md-inputfield">
                   <input type="text" name="numeroOS" [(ngModel)]="analise.numeroOs" pInputText/>
                   <label>Número OS</label>
@@ -122,9 +122,9 @@
     <app-analise-funcao-dados></app-analise-funcao-dados>
   </p-tabPanel>
   <p-tabPanel header="Função Transação">
-
+    <app-analise-funcao-transacao></app-analise-funcao-transacao>
   </p-tabPanel>
   <p-tabPanel header="Resumo">
-
+    <app-analise-resumo></app-analise-resumo>
   </p-tabPanel>
 </p-tabView>

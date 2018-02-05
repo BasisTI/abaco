@@ -33,7 +33,6 @@ import { AppBreadcrumbComponent } from './app.breadcrumb.component';
 import { InlineProfileComponent } from './app.profile.component';
 import { JhiDateUtils, BreadcrumbService, PageNotificationService } from './shared';
 
-import { AbacoAlrModule } from './alr/alr.module';
 import { AbacoManualModule } from './manual/manual.module';
 import { AbacoFatorAjusteModule } from './fator-ajuste/fator-ajuste.module';
 import { AbacoFuncaoTransacaoModule } from './funcao-transacao/funcao-transacao.module';
@@ -69,7 +68,6 @@ import { AdminGuard } from './admin.guard';
     AuthModule,
     DatatableModule.forRoot(),
     SharedModule.forRoot(),
-    AbacoAlrModule,
     AbacoManualModule,
     AbacoFatorAjusteModule,
     AbacoFuncaoTransacaoModule,

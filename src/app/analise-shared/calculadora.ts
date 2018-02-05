@@ -1,4 +1,5 @@
-import { FuncaoDados, Complexidade } from '../funcao-dados/funcao-dados.model';
+import { FuncaoDados } from '../funcao-dados/funcao-dados.model';
+import { Complexidade } from '../analise-shared/complexidade-enum';
 import { MetodoContagem } from '../analise/index';
 import { TipoFatorAjuste } from '../fator-ajuste/index';
 

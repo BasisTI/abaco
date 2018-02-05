@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AnaliseSharedDataService, PageNotificationService } from '../shared';
-import { FuncaoDados, Complexidade } from './funcao-dados.model';
-import { Analise, ResumoFuncaoDados } from '../analise';
+import { FuncaoDados } from './funcao-dados.model';
+import { Analise } from '../analise';
 import { FatorAjuste } from '../fator-ajuste';
 
 import * as _ from 'lodash';
@@ -11,6 +11,7 @@ import { SelectItem } from 'primeng/primeng';
 import { Calculadora } from '../analise-shared/calculadora';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
+import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 
 @Component({
   selector: 'app-analise-funcao-dados',
@@ -20,7 +21,7 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   currentFuncaoDados: FuncaoDados;
   funcaoDadosEmEdicao: FuncaoDados;
-  resumo: ResumoFuncaoDados;
+  resumo: ResumoFuncoes;
 
   fatoresAjuste: FatorAjuste[] = [];
 
@@ -30,8 +31,6 @@ export class FuncaoDadosFormComponent implements OnInit {
     { label: 'AIE', value: 'AIE' }
   ];
 
-  complexidades: string[];
-
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
     private confirmationService: ConfirmationService,
@@ -40,9 +39,6 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   ngOnInit() {
     this.currentFuncaoDados = new FuncaoDados();
-    // TODO extrair para um utils. reutilizar em analise.model
-    // talvez cada enum implementa metodo estatico
-    this.complexidades = Object.keys(Complexidade).map(k => Complexidade[k as any]);
   }
 
   get funcoesDados(): FuncaoDados[] {
@@ -98,6 +94,7 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   deveHabilitarBotaoAdicionar(): boolean {
     // TODO complementar com outras validacoes
+    // TODO verificar se tem tipoContagem selecionado
     return this.isFuncionalidadeSelected();
   }
 
@@ -111,6 +108,7 @@ export class FuncaoDadosFormComponent implements OnInit {
     const funcaoDadosCalculada = Calculadora.calcular(this.analise.tipoContagem, this.currentFuncaoDados);
     this.analise.addFuncaoDados(funcaoDadosCalculada);
     this.resumo = this.analise.resumoFuncaoDados;
+    this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
     // Mantendo o mesmo conteudo a pedido do Leandro
     this.currentFuncaoDados = this.currentFuncaoDados.clone();
     this.currentFuncaoDados.artificialId = undefined;

@@ -1,28 +1,21 @@
 import { BaseEntity } from '../shared';
 import { Funcionalidade } from '../funcionalidade/index';
 import { DerTextParser } from '../analise-shared/der-text-parser';
-import { MetodoContagem } from '../analise/index';
 import { FatorAjuste } from '../fator-ajuste/index';
+import { Complexidade } from '../analise-shared/complexidade-enum';
+import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';
 
 export enum TipoFuncaoDados {
   'ALI' = 'ALI',
   'AIE' = 'AIE'
 }
 
-// TODO extrair e reutilizar aqui, FuncaoTransacao, calculadora
-export enum Complexidade {
-  'SEM' = 'SEM',
-  'BAIXA' = 'BAIXA',
-  'MEDIA' = 'MEDIA',
-  'ALTA'= 'ALTA',
-}
-
-export class FuncaoDados implements BaseEntity {
+export class FuncaoDados implements BaseEntity, FuncaoResumivel {
 
   constructor(
     public id?: number,
     public artificialId?: number,
-    public tipo?: string,
+    public tipo?: TipoFuncaoDados,
     public complexidade?: Complexidade,
     public pf?: number,
     public analise?: BaseEntity,
@@ -44,6 +37,13 @@ export class FuncaoDados implements BaseEntity {
     }
   }
 
+  static tipos(): string[] {
+    return Object.keys(TipoFuncaoDados).map(k => TipoFuncaoDados[k as any]);
+  }
+
+  tipoAsString(): string {
+    return this.tipo.toString();
+  }
 
   // XXX eficiente obter vários ParseResult em lugares diferentes?
   derValue(): number {
