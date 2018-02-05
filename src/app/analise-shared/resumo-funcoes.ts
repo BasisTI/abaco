@@ -62,13 +62,13 @@ export class ResumoFuncoes {
     resumo.incrementaTotais(funcao);
   }
 
-  get all(): ResumoGrupoLogico[] {
+  get all(): LinhaResumo[] {
     return Array.from(this.tipoGrupoLogicoToResumo.values());
   }
 
 }
 
-interface LinhaResumo {
+export interface LinhaResumo {
 
   readonly label;
 
@@ -79,6 +79,7 @@ interface LinhaResumo {
 
 }
 
+// TODO ResumoGrupoLogico / UltimaLinhaTotal podem herdar de uma classe abstrata comum
 export class ResumoGrupoLogico implements LinhaResumo {
 
   readonly label: string;

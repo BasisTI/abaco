@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ResumoGrupoLogico } from '../analise-shared/resumo-funcoes';
+import { LinhaResumo } from '../analise-shared/resumo-funcoes';
 import { Complexidade } from './complexidade-enum';
 import { AnaliseSharedUtils } from './analise-shared-utils';
 
@@ -10,7 +10,7 @@ import { AnaliseSharedUtils } from './analise-shared-utils';
 export class FuncaoResumoTableComponent implements OnInit {
 
   @Input()
-  resumosGrupoLogico: ResumoGrupoLogico[];
+  linhasResumo: LinhaResumo[];
 
   complexidades: string[];
 
