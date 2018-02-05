@@ -98,8 +98,6 @@ public class UploadController {
     	String folderPath = this.servletContext.getRealPath(UPLOADED_FOLDER);
     	
     	Resource file = new FileSystemResource(folderPath + "/" + uploadedFile.getFilename());
-//    	Path path = Paths.get(folderPath + '/' + uploadedFile.getFilename());
-//    	byte[] data = Files.readAllBytes(path);
     			
     	return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     	
