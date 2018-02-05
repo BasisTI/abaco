@@ -145,7 +145,7 @@ export class CalculadoraTransacao {
 
   // FIXME aplicar fator que vem da aba geral também
   private static aplicarFator() {
-    this.funcaoTransacaoCalculada.grossPf = this.funcaoTransacaoCalculada.pf;
+    this.funcaoTransacaoCalculada.grossPF = this.funcaoTransacaoCalculada.pf;
     let valorAplicado = 0;
     const fator = this.funcaoTransacao.fatorAjuste.fator;
     if (this.funcaoTransacao.fatorAjuste.tipoAjuste === 'PERCENTUAL') {

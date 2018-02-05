@@ -5,7 +5,7 @@ export interface FuncaoResumivel {
 
   complexidade?: Complexidade;
   pf?: number;
-  grossPf?: number;
+  grossPF?: number;
 
   tipoAsString(): string;
 
@@ -73,7 +73,7 @@ export interface LinhaResumo {
   readonly label;
 
   getTotalPf(): number;
-  getTotalGrossPf(): number;
+  getTotalGrossPF(): number;
   getQuantidadeTotal(): number;
   totalPorComplexidade(complexidade: Complexidade): number;
 
@@ -90,7 +90,7 @@ export class ResumoGrupoLogico implements LinhaResumo {
 
   private _totalPf = 0;
 
-  private _totalGrossPf = 0;
+  private _totalGrossPF = 0;
 
   constructor(label: string) {
     this.label = label;
@@ -105,7 +105,7 @@ export class ResumoGrupoLogico implements LinhaResumo {
 
   incrementaTotais(funcao: FuncaoResumivel) {
     this.incrementaPorComplexidade(funcao.complexidade);
-    this.incrementaPfs(funcao.pf, funcao.grossPf);
+    this.incrementaPfs(funcao.pf, funcao.grossPF);
     this._quantidadeTotal += 1;
   }
 
@@ -115,17 +115,17 @@ export class ResumoGrupoLogico implements LinhaResumo {
     this.complexidadeToTotal.set(complexidadeStr, totalDaComplexidade + 1);
   }
 
-  private incrementaPfs(pf: number, grossPf: number) {
+  private incrementaPfs(pf: number, grossPF: number) {
     this._totalPf += pf;
-    this._totalGrossPf += grossPf;
+    this._totalGrossPF += grossPF;
   }
 
   getTotalPf(): number {
     return this._totalPf;
   }
 
-  getTotalGrossPf(): number {
-    return this._totalGrossPf;
+  getTotalGrossPF(): number {
+    return this._totalGrossPF;
   }
 
   getQuantidadeTotal(): number {
@@ -150,7 +150,7 @@ class UltimaLinhaTotal implements LinhaResumo {
 
   private _totalPf = 0;
 
-  private _totalGrossPf = 0;
+  private _totalGrossPF = 0;
 
   constructor(linhasResumo: LinhaResumo[]) {
     this._linhasResumo = linhasResumo;
@@ -173,7 +173,7 @@ class UltimaLinhaTotal implements LinhaResumo {
         this.incrementaPorComplexidade(complexidadeEnum, totalDaComplexidade);
       });
       this._totalPf += linhaResumo.getTotalPf();
-      this._totalGrossPf += linhaResumo.getTotalGrossPf();
+      this._totalGrossPF += linhaResumo.getTotalGrossPF();
       this._quantidadeTotal += linhaResumo.getQuantidadeTotal();
     });
   }
@@ -188,8 +188,8 @@ class UltimaLinhaTotal implements LinhaResumo {
     return this._totalPf;
   }
 
-  getTotalGrossPf(): number {
-    return this._totalGrossPf;
+  getTotalGrossPF(): number {
+    return this._totalGrossPF;
   }
 
   getQuantidadeTotal(): number {

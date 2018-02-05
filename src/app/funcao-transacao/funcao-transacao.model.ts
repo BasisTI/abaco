@@ -28,15 +28,15 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel, JSONable<Fu
     public sustantation?: string,
     public der?: string,
     public ftr?: string,
-    public grossPf?: number,
+    public grossPF?: number,
     public derValues?: string[],
     public ftrValues?: string[],
   ) {
     if (!pf) {
       this.pf = 0;
     }
-    if (!grossPf) {
-      this.grossPf = 0;
+    if (!grossPF) {
+      this.grossPF = 0;
     }
   }
 
@@ -83,6 +83,6 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel, JSONable<Fu
     return new FuncaoTransacao(this.id, this.artificialId, this.tipo,
       this.complexidade, this.pf, this.analise, this.funcionalidades,
       this.funcionalidade, this.fatorAjuste, this.alrs,
-      this.name, this.sustantation, this.der, this.ftr, this.grossPf);
+      this.name, this.sustantation, this.der, this.ftr, this.grossPF);
   }
 }

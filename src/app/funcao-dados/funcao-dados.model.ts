@@ -27,15 +27,15 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel, JSONable<Funcao
     public sustantation?: string,
     public der?: string,
     public rlr?: string,
-    public grossPf?: number,
+    public grossPF?: number,
     public derValues?: string[],
     public rlrValues?: string[],
   ) {
     if (!pf) {
       this.pf = 0;
     }
-    if (!grossPf) {
-      this.grossPf = 0;
+    if (!grossPF) {
+      this.grossPF = 0;
     }
   }
 
@@ -83,7 +83,7 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel, JSONable<Funcao
     return new FuncaoDados(this.id, this.artificialId, this.tipo, this.complexidade,
       this.pf, this.analise, this.funcionalidades, this.funcionalidade,
       this.fatorAjuste, this.alr, this.name, this.sustantation, this.der, this.rlr,
-      this.grossPf);
+      this.grossPF);
   }
 
 }

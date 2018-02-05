@@ -144,7 +144,7 @@ export class Calculadora {
 
   // FIXME aplicar fator que vem da aba geral também
   private static aplicarFator() {
-    this.funcaoDadosCalculada.grossPf = this.funcaoDadosCalculada.pf;
+    this.funcaoDadosCalculada.grossPF = this.funcaoDadosCalculada.pf;
     let valorAplicado = 0;
     const fator = this.funcaoDados.fatorAjuste.fator;
     if (this.funcaoDados.fatorAjuste.tipoAjuste === 'PERCENTUAL') {
