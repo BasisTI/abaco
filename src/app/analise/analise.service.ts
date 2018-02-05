@@ -63,8 +63,7 @@ export class AnaliseService {
    * Convert a returned JSON object to Analise.
    */
   private convertItemFromServer(json: any): Analise {
-    const entity: Analise = Object.assign(new Analise(), json);
-    return entity;
+    return new Analise().copyFromJSON(json);
   }
 
   /**
