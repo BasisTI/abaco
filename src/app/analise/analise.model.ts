@@ -7,6 +7,8 @@ import { Complexidade } from '../analise-shared/complexidade-enum';
 import { ResumoTotal, ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { FuncaoTransacao } from '../funcao-transacao/index';
 import { FatorAjuste } from '../fator-ajuste';
+import { ModuloDaFuncionalidadeFinder } from './modulo-finder';
+import { Modulo } from '../modulo';
 
 export const enum MetodoContagem {
   'DETALHADA',
@@ -116,12 +118,35 @@ export class Analise implements BaseEntity, JSONable<Analise> {
   }
 
   copyFromJSON(json: any): Analise {
-    // TODO converter esforco fases
     const entity: Analise = Object.assign(new Analise(), json);
+
+    const sistema = Sistema.fromJSON(json.sistema);
+    entity.sistema = sistema;
+
+    this.populaModuloDasFuncionalidades(entity);
 
     console.log('analise recebida...');
     console.log(JSON.stringify(json, null, 4));
     return entity;
+  }
+
+  private populaModuloDasFuncionalidades(analise: Analise) {
+    const sistema = analise.sistema;
+    // TODO tem que chamar from JSON de funcaoDados/funcaoTransacao
+    // // que por sua vez vai instanciar, dentre outros, funcionalidade como Funcionalidade
+    if (analise.funcaoDados) {
+      analise.funcaoDados.forEach(fd => {
+         const modulo = ModuloDaFuncionalidadeFinder.find(sistema, fd.funcionalidade.id);
+         fd.funcionalidade.modulo = Modulo.toNonCircularJson(modulo);
+      });
+    }
+
+    if (analise.funcaoTransacaos) {
+      analise.funcaoTransacaos.forEach(ft => {
+         const modulo = ModuloDaFuncionalidadeFinder.find(sistema, ft.funcionalidade.id);
+         ft.funcionalidade.modulo = Modulo.toNonCircularJson(modulo);
+      });
+    }
   }
 
   public get resumoTotal(): ResumoTotal {
