@@ -62,14 +62,14 @@ public class FatorAjuste implements Serializable {
     @ManyToOne
     @JsonBackReference
     private Manual manual;
-    
-    @Column(name="descricao")
+
+    @Column(name = "descricao")
     private String descricao;
-    
-    @Column(name="codigo")
+
+    @Column(name = "codigo")
     private String codigo;
-    
-    @Column(name="origem")
+
+    @Column(name = "origem")
     private String origem;
 
     public Long getId() {
@@ -159,34 +159,34 @@ public class FatorAjuste implements Serializable {
     }
 
     public String getDescricao() {
-		return descricao;
-	}
+        return descricao;
+    }
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-	public String getCodigo() {
-		return codigo;
-	}
+    public String getCodigo() {
+        return codigo;
+    }
 
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
 
-	public String getOrigem() {
-		return origem;
-	}
+    public String getOrigem() {
+        return origem;
+    }
 
-	public void setOrigem(String origem) {
-		this.origem = origem;
-	}
+    public void setOrigem(String origem) {
+        this.origem = origem;
+    }
 
-	public Boolean getAtivo() {
-		return ativo;
-	}
+    public Boolean getAtivo() {
+        return ativo;
+    }
 
-	@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -208,13 +208,7 @@ public class FatorAjuste implements Serializable {
 
     @Override
     public String toString() {
-        return "FatorAjuste{" +
-            "id=" + id +
-            ", nome='" + nome + "'" +
-            ", fator='" + fator + "'" +
-            ", ativo='" + ativo + "'" +
-            ", tipoAjuste='" + tipoAjuste + "'" +
-            ", impacto='" + impacto + "'" +
-            '}';
+        return "FatorAjuste{" + "id=" + id + ", nome='" + nome + "'" + ", fator='" + fator + "'" + ", ativo='" + ativo
+                + "'" + ", tipoAjuste='" + tipoAjuste + "'" + ", impacto='" + impacto + "'" + '}';
     }
 }
