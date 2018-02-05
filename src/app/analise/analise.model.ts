@@ -6,6 +6,7 @@ import { FuncaoDados, TipoFuncaoDados, FuncaoDadosFormComponent } from '../funca
 import { Complexidade } from '../analise-shared/complexidade-enum';
 import { ResumoTotal, ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { FuncaoTransacao } from '../funcao-transacao/index';
+import { FatorAjuste } from '../fator-ajuste';
 
 export const enum MetodoContagem {
   'DETALHADA',
@@ -34,6 +35,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     public id?: number,
     public numeroOs?: string,
     public tipoContagem?: MetodoContagem,
+    public fatorAjuste?: FatorAjuste,
     public valorAjuste?: number,
     public pfTotal?: string,
     public escopo?: string,
@@ -73,6 +75,8 @@ export class Analise implements BaseEntity, JSONable<Analise> {
   }
 
   private generateResumoTotal() {
+    // TODO setar pfTotal
+    // TODO criar e setar adjustPFTotal
     this._resumoTotal = new ResumoTotal(this._resumoFuncaoDados, this._resumoFuncaoTransacao);
   }
 
@@ -95,12 +99,23 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     copy._resumoFuncaoTransacao = undefined;
     copy._resumoTotal = undefined;
 
+    if (copy.fatorAjuste) {
+      copy.valorAjuste = copy.fatorAjuste.fator;
+    }
+
+    console.log('analise sendo enviada...');
+    console.log(JSON.stringify(copy, null, 4));
+
     return copy;
   }
 
   copyFromJSON(json: any): Analise {
-    // TODO
-    return undefined;
+    // TODO converter esforco fases
+    const entity: Analise = Object.assign(new Analise(), json);
+
+    console.log('analise recebida...');
+    console.log(JSON.stringify(json, null, 4));
+    return entity;
   }
 
   public get resumoTotal(): ResumoTotal {
