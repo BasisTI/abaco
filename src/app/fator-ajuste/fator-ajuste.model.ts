@@ -21,14 +21,12 @@ export class FatorAjuste implements BaseEntity {
     public ativo?: boolean,
     public descricao?: string,
     public codigo?: string,
-    // XXX Evitando uso de Enum. muito ruim para comparar o valor
-    // provavelmente precisa também de fazer o cast do JSON para o enum
     public tipoAjuste?: TipoFatorAjuste,
     public impacto?: ImpactoFatorAjuste,
     public manual?: BaseEntity,
     public origem?: string,
     public artificialId?: number
-  ) {}
+  ) { }
 
   toJSONState(): FatorAjuste {
     const copy: FatorAjuste = Object.assign({}, this);
@@ -37,12 +35,31 @@ export class FatorAjuste implements BaseEntity {
 
   copyFromJSON(json: any) {
     // TODO converter manual?
-    return new FatorAjuste(json.id, json.nome, json.fator, json.ativo, json.descricao, json.codigo, json.tipoAjuste, json.impacto, json.manual, json.origem ,json.artificialId);
+    return new FatorAjuste(json.id, json.nome, json.fator, json.ativo,
+      json.descricao, json.codigo, json.tipoAjuste, json.impacto, json.manual,
+      json.origem, json.artificialId);
   }
 
   // TODO extrair modulo? entrar pro jsonable?
   clone(): FatorAjuste {
-    return new FatorAjuste(this.id, this.nome, this.fator, this.ativo, this.descricao, this.codigo, this.tipoAjuste, this.impacto, this.manual, this.origem, this.artificialId);
+    return new FatorAjuste(this.id, this.nome, this.fator, this.ativo,
+      this.descricao, this.codigo, this.tipoAjuste, this.impacto, this.manual,
+      this.origem, this.artificialId);
+  }
+
+  fatorVisualizavel(): number {
+    if (this.isPercentual()) {
+      return this.fator * 100;
+    }
+    return this.fator;
+  }
+
+  isPercentual(): boolean {
+    return this.tipoAjuste === TipoFatorAjuste.PERCENTUAL;
+  }
+
+  isUnitario(): boolean {
+    return this.tipoAjuste === TipoFatorAjuste.UNITARIO;
   }
 
 

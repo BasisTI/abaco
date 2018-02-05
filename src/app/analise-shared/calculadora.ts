@@ -62,7 +62,7 @@ export class Calculadora {
 
   private static definirComplexidade() {
     // FIXME é isso aqui mesmo? funcao de dados sempre vai ter fatorAjuste?
-    if (this.funcaoDados.fatorAjuste.tipoAjuste === TipoFatorAjuste.UNITARIO) {
+    if (this.funcaoDados.fatorAjuste.isUnitario()) {
       this.funcaoDadosCalculada.complexidade = Complexidade.SEM;
     } else {
       this.definirComplexidadePercentual();
@@ -147,7 +147,7 @@ export class Calculadora {
     this.funcaoDadosCalculada.grossPF = this.funcaoDadosCalculada.pf;
     let valorAplicado = 0;
     const fator = this.funcaoDados.fatorAjuste.fator;
-    if (this.funcaoDados.fatorAjuste.tipoAjuste === 'PERCENTUAL') {
+    if (this.funcaoDados.fatorAjuste.isPercentual()) {
       // XXX de repente um método de FuncaoDados/Transacao?
       valorAplicado = this.funcaoDadosCalculada.pf * fator;
     } else { // UNITÁRIO

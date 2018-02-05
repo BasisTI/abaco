@@ -148,7 +148,7 @@ export class CalculadoraTransacao {
     this.funcaoTransacaoCalculada.grossPF = this.funcaoTransacaoCalculada.pf;
     let valorAplicado = 0;
     const fator = this.funcaoTransacao.fatorAjuste.fator;
-    if (this.funcaoTransacao.fatorAjuste.tipoAjuste === 'PERCENTUAL') {
+    if (this.funcaoTransacao.fatorAjuste.isPercentual()) {
       // XXX de repente um método de FuncaoDados/Transacao?
       valorAplicado = this.funcaoTransacaoCalculada.pf * fator;
     } else { // UNITÁRIO

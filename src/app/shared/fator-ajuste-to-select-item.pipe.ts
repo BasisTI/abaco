@@ -19,7 +19,7 @@ export class FatorAjusteToSelectItemPipe implements PipeTransform {
   private generateLabel(fa: FatorAjuste): string {
     const prefix = this.generatePrefix(fa);
     const fatorSuffix = this.generateFatorSuffix(fa);
-    return `${prefix} ${fa.nome} - ${fa.fator}${fatorSuffix}`;
+    return `${prefix} ${fa.nome} - ${fa.fatorVisualizavel()}${fatorSuffix}`;
   }
 
   private generatePrefix(fa: FatorAjuste): string {
@@ -41,9 +41,9 @@ export class FatorAjusteToSelectItemPipe implements PipeTransform {
   }
 
   private generateFatorSuffix(fa: FatorAjuste): string {
-    if (fa.tipoAjuste === 'PERCENTUAL') {
+    if (fa.isPercentual()) {
       return '%';
-    } else if (fa.tipoAjuste === 'UNITARIO') {
+    } else if (fa.isUnitario()) {
       return ' PF';
     }
   }
