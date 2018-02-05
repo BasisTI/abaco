@@ -103,6 +103,12 @@ export class Analise implements BaseEntity, JSONable<Analise> {
       copy.valorAjuste = copy.fatorAjuste.fator;
     }
 
+    console.log(copy.esforcoFases);
+
+    if (copy.esforcoFases) {
+      copy.esforcoFases = copy.esforcoFases.map(ef => ef.toJSONState());
+    }
+
     console.log('analise sendo enviada...');
     console.log(JSON.stringify(copy, null, 4));
 
