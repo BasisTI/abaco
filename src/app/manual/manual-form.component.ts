@@ -93,6 +93,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.manual.arquivoManualId = JSON.parse(response["_body"]).id;
             this.subscribeToSaveResponse(this.manualService.update(this.manual));
           })
+        } else {
+          this.subscribeToSaveResponse(this.manualService.update(this.manual));
         }
       })
 
@@ -143,6 +145,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       this.router.navigate(['/manual']);
       this.pageNotificationService.addCreateMsg();
     }, (error: Response) => {
+      alert(error);
       this.isSaving = false;
       switch(error.status) {
         case 400: {
