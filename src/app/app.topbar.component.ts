@@ -84,5 +84,6 @@ export class AppTopBarComponent {
 
     setLanguage(element) {
       sessionStorage.setItem("language", element.name);
+      location.reload();
     }
 }
