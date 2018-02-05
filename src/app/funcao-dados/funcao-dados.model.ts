@@ -12,6 +12,9 @@ export enum TipoFuncaoDados {
 
 export class FuncaoDados implements BaseEntity, FuncaoResumivel, JSONable<FuncaoDados> {
 
+  detStr: string;
+  retStr: string;
+
   constructor(
     public id?: number,
     public artificialId?: number,
@@ -48,6 +51,9 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel, JSONable<Funcao
     copy.derValues = DerTextParser.parse(this.der).textos;
     copy.rlrValues = DerTextParser.parse(this.rlr).textos;
 
+    copy.detStr = copy.der;
+    copy.retStr = copy.rlr;
+
     copy.funcionalidade = Funcionalidade.toNonCircularJson(copy.funcionalidade);
     // TODO converter funcionalidades
 
@@ -55,7 +61,7 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel, JSONable<Funcao
   }
 
   copyFromJSON(json: any): FuncaoDados {
-    // TODO
+    // TODO converter os detStr e retStr
     return undefined;
   }
 
