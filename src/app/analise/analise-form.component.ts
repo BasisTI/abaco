@@ -123,7 +123,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   private getLabelValorVariacao(label: string, valorVariacao: number): string {
-    return label + ' - ' + (valorVariacao * 100) + '%';
+    return label + ' - ' + valorVariacao + '%';
   }
 
   totalEsforcoFases() {
