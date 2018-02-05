@@ -1,4 +1,4 @@
-import { BaseEntity } from '../shared';
+import { BaseEntity, JSONable } from '../shared';
 import { FatorAjuste } from '../fator-ajuste/index';
 import { Funcionalidade } from '../funcionalidade/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
@@ -11,7 +11,7 @@ export enum TipoFuncaoTransacao {
   'CE' = 'CE' // consulta externa
 }
 
-export class FuncaoTransacao implements BaseEntity, FuncaoResumivel {
+export class FuncaoTransacao implements BaseEntity, FuncaoResumivel, JSONable<FuncaoTransacao> {
 
   constructor(
     public id?: number,
@@ -29,6 +29,8 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel {
     public der?: string,
     public ftr?: string,
     public grossPf?: number,
+    public derValues?: string[],
+    public ftrValues?: string[],
   ) {
     if (!pf) {
       this.pf = 0;
@@ -40,6 +42,19 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel {
 
   static tipos(): string[] {
     return Object.keys(TipoFuncaoTransacao).map(k => TipoFuncaoTransacao[k as any]);
+  }
+
+  toJSONState(): FuncaoTransacao {
+    const copy: FuncaoTransacao = Object.assign({}, this);
+    // XXX "compartilhar" DerTextParser? (derValue())
+    copy.derValues = DerTextParser.parse(this.der).textos;
+    copy.ftrValues = DerTextParser.parse(this.ftr).textos;
+    return copy;
+  }
+
+  copyFromJSON(json: any): FuncaoTransacao {
+    // TODO
+    return undefined;
   }
 
   tipoAsString(): string {

@@ -1,4 +1,4 @@
-import { BaseEntity } from '../shared';
+import { BaseEntity, JSONable } from '../shared';
 import { Funcionalidade } from '../funcionalidade/index';
 import { DerTextParser } from '../analise-shared/der-text-parser';
 import { FatorAjuste } from '../fator-ajuste/index';
@@ -10,7 +10,7 @@ export enum TipoFuncaoDados {
   'AIE' = 'AIE'
 }
 
-export class FuncaoDados implements BaseEntity, FuncaoResumivel {
+export class FuncaoDados implements BaseEntity, FuncaoResumivel, JSONable<FuncaoDados> {
 
   constructor(
     public id?: number,
@@ -28,6 +28,8 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel {
     public der?: string,
     public rlr?: string,
     public grossPf?: number,
+    public derValues?: string[],
+    public rlrValues?: string[],
   ) {
     if (!pf) {
       this.pf = 0;
@@ -41,11 +43,24 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel {
     return Object.keys(TipoFuncaoDados).map(k => TipoFuncaoDados[k as any]);
   }
 
+  toJSONState(): FuncaoDados {
+    const copy: FuncaoDados = Object.assign({}, this);
+    copy.derValues = DerTextParser.parse(this.der).textos;
+    copy.rlrValues = DerTextParser.parse(this.rlr).textos;
+    return copy;
+  }
+
+  copyFromJSON(json: any): FuncaoDados {
+    // TODO
+    return undefined;
+  }
+
   tipoAsString(): string {
     return this.tipo.toString();
   }
 
   // XXX eficiente obter vários ParseResult em lugares diferentes?
+  // refletir possiveis mudanças em FuncaoTransacao
   derValue(): number {
     if (!this.der) {
       return 0;
