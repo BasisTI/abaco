@@ -49,4 +49,5 @@
     <include file="classpath:config/liquibase/changelog/20180110134300_add_column_Manual.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180125194004_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180125162159_drop_TipoFase_table_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180205171615_add_FatorAjuste_to_Analise.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

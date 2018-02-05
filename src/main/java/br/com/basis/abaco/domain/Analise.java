@@ -105,21 +105,22 @@ public class Analise implements Serializable {
     @LastModifiedDate
     private Date edited;
 
-    //FIXME @CreatedBy e @LastModifiedBy de Analise não seguem o padrão dado em User
+    // FIXME @CreatedBy e @LastModifiedBy de Analise não seguem o padrão dado em
+    // User
     // atualmente se um funciona, o outro não
     // O de User espera uma string com o login do usuário
     // Analise espera o User completo
-    // Comentando por enquanto para nao gastar muito tempo e evitar alteracoes no banco
+    // Comentando por enquanto para nao gastar muito tempo e evitar alteracoes no
+    // banco
     @ManyToOne
-//    @CreatedBy
+    // @CreatedBy
     @JoinColumn
     private User createdBy;
 
     @ManyToOne
-//    @LastModifiedBy
+    // @LastModifiedBy
     @JoinColumn
     private User editedBy;
-
 
     @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -130,6 +131,9 @@ public class Analise implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonManagedReference
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
+
+    @ManyToOne
+    private FatorAjuste fatorAjuste;
 
     public Long getId() {
         return id;
@@ -335,7 +339,6 @@ public class Analise implements Serializable {
         this.organizacao = organizacao;
     }
 
-
     public String getAdjustPFTotal() {
         return adjustPFTotal;
     }
@@ -358,7 +361,6 @@ public class Analise implements Serializable {
         }
         return Objects.equals(id, analise.id);
     }
-
 
     public Date getCreated() {
         return created;
@@ -392,6 +394,14 @@ public class Analise implements Serializable {
         this.editedBy = editedBy;
     }
 
+    public FatorAjuste getFatorAjuste() {
+        return fatorAjuste;
+    }
+
+    public void setFatorAjuste(FatorAjuste fatorAjuste) {
+        this.fatorAjuste = fatorAjuste;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
@@ -399,6 +409,7 @@ public class Analise implements Serializable {
 
     @Override
     public String toString() {
+        // // @formatter:off
         return "Analise{" +
             "id=" + id +
             ", numeroOs='" + numeroOs + "'" +
@@ -411,5 +422,6 @@ public class Analise implements Serializable {
             ", tipoAnalise='" + tipoAnalise + "'" +
             ", propositoContagem='" + propositoContagem + "'" +
             '}';
+        // @formatter:on
     }
 }
