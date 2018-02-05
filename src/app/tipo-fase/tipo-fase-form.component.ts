@@ -41,10 +41,28 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
       this.subscribeToSaveResponse(this.tipoFaseService.update(this.tipoFase));
       this.pageNotificationService.addUpdateMsg();
     } else {
-      this.subscribeToSaveResponse(this.tipoFaseService.create(this.tipoFase));
+        this.tipoFaseService.query().subscribe(response => {
+        let allPhases = response
+
+        if(!this.checkIfPhaseAlreadyExist(allPhases.json)) {
+          this.subscribeToSaveResponse(this.tipoFaseService.create(this.tipoFase));
+        } else {
+          this.pageNotificationService.addErrorMsg('A fase criada já existe');
+        }
+      });
+
     }
   }
 
+  private checkIfPhaseAlreadyExist(registeredPhases: Array<TipoFase>): boolean {
+    let isAlreadyRegistered: boolean = false;
+    registeredPhases.forEach(each => {
+        if(each.nome.toUpperCase() === this.tipoFase.nome.toUpperCase()) {
+          isAlreadyRegistered = true;
+        }
+    });
+    return isAlreadyRegistered;
+  }
   private subscribeToSaveResponse(result: Observable<TipoFase>) {
     result.subscribe((res: TipoFase) => {
       this.isSaving = false;
