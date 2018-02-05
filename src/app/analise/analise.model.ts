@@ -1,4 +1,4 @@
-import { BaseEntity, MappableEntities } from '../shared';
+import { BaseEntity, MappableEntities, JSONable } from '../shared';
 import { Contrato } from '../contrato';
 import { EsforcoFase } from '../esforco-fase/index';
 import { Sistema } from '../sistema/index';
@@ -18,7 +18,7 @@ export const enum TipoAnalise {
   'APLICACAO'
 }
 
-export class Analise implements BaseEntity {
+export class Analise implements BaseEntity, JSONable<Analise> {
 
   private mappableFuncaoDados: MappableEntities<FuncaoDados>;
 
@@ -74,6 +74,19 @@ export class Analise implements BaseEntity {
 
   private generateResumoTotal() {
     this._resumoTotal = new ResumoTotal(this._resumoFuncaoDados, this._resumoFuncaoTransacao);
+  }
+
+  toJSONState(): Analise {
+    // TODO clone() ?
+    const copy: Analise = Object.assign({}, this);
+    copy.funcaoDados = copy.funcaoDados.map(fd => fd.toJSONState());
+    copy.funcaoTransacaos = copy.funcaoTransacaos.map(fd => fd.toJSONState());
+    return copy;
+  }
+
+  copyFromJSON(json: any): Analise {
+    // TODO
+    return undefined;
   }
 
   public get resumoTotal(): ResumoTotal {
