@@ -7,7 +7,7 @@ export class User implements BaseEntity, BasisUser {
 
   constructor(
     public id?: number,
-    public login?: number,
+    public login?: string,
     public firstName?: string,
     public lastName?: string,
     public email?: string,
