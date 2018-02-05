@@ -12,7 +12,7 @@ export class FatorAjusteToSelectItemPipe implements PipeTransform {
 
     return fatoresAjuste.map(fa => {
       const label = this.generateLabel(fa);
-      return { label: label, value: fa };
+      return { label: label, value: fa.fator };
     });
   }
 
