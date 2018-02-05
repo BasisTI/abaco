@@ -105,13 +105,18 @@ public class Analise implements Serializable {
     @LastModifiedDate
     private Date edited;
 
+    //FIXME @CreatedBy e @LastModifiedBy de Analise não seguem o padrão dado em User
+    // atualmente se um funciona, o outro não
+    // O de User espera uma string com o login do usuário
+    // Analise espera o User completo
+    // Comentando por enquanto para nao gastar muito tempo e evitar alteracoes no banco
     @ManyToOne
-    @CreatedBy
+//    @CreatedBy
     @JoinColumn
     private User createdBy;
 
     @ManyToOne
-    @LastModifiedBy
+//    @LastModifiedBy
     @JoinColumn
     private User editedBy;
 
