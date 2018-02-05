@@ -49,6 +49,10 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel, JSONable<Fu
     // XXX "compartilhar" DerTextParser? (derValue())
     copy.derValues = DerTextParser.parse(this.der).textos;
     copy.ftrValues = DerTextParser.parse(this.ftr).textos;
+
+    copy.funcionalidade = Funcionalidade.toNonCircularJson(copy.funcionalidade);
+    // TODO converter funcionalidades
+
     return copy;
   }
 

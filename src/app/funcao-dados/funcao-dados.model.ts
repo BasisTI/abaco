@@ -47,6 +47,10 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel, JSONable<Funcao
     const copy: FuncaoDados = Object.assign({}, this);
     copy.derValues = DerTextParser.parse(this.der).textos;
     copy.rlrValues = DerTextParser.parse(this.rlr).textos;
+
+    copy.funcionalidade = Funcionalidade.toNonCircularJson(copy.funcionalidade);
+    // TODO converter funcionalidades
+
     return copy;
   }
 

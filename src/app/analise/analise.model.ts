@@ -79,8 +79,22 @@ export class Analise implements BaseEntity, JSONable<Analise> {
   toJSONState(): Analise {
     // TODO clone() ?
     const copy: Analise = Object.assign({}, this);
-    copy.funcaoDados = copy.funcaoDados.map(fd => fd.toJSONState());
-    copy.funcaoTransacaos = copy.funcaoTransacaos.map(fd => fd.toJSONState());
+    // TODO inicializar para evitar if?
+    if (copy.funcaoDados) {
+      copy.funcaoDados = copy.funcaoDados.map(fd => fd.toJSONState());
+    }
+    if (copy.funcaoTransacaos) {
+      copy.funcaoTransacaos = copy.funcaoTransacaos.map(fd => fd.toJSONState());
+    }
+    copy.sistema = Sistema.toNonCircularJson(copy.sistema);
+
+    // um clone talvez resolva, mas o clone deve manter os mappables?
+    copy.mappableFuncaoDados = undefined;
+    copy.mappableFuncaoTransacaos = undefined;
+    copy._resumoFuncaoDados = undefined;
+    copy._resumoFuncaoTransacao = undefined;
+    copy._resumoTotal = undefined;
+
     return copy;
   }
 
