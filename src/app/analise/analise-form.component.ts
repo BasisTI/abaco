@@ -34,6 +34,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   metodosContagem: SelectItem[] = [];
 
+  // TODO oferecer a opção 'Nenhum', com value vazio
+  // campo opcional, caso o usuário escolha um sem querer, dever conseguir "abortar"
+  // talvez tenha que ser no pipe
   fatoresAjuste: FatorAjuste[] = [];
 
   tiposAnalise: SelectItem[] = [
