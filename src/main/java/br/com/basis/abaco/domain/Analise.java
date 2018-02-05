@@ -1,17 +1,11 @@
 package br.com.basis.abaco.domain;
 
-import br.com.basis.abaco.domain.enumeration.MetodoContagem;
-import br.com.basis.abaco.domain.enumeration.TipoAnalise;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import io.swagger.annotations.ApiModel;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,17 +18,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import br.com.basis.abaco.domain.enumeration.MetodoContagem;
+import br.com.basis.abaco.domain.enumeration.TipoAnalise;
+import io.swagger.annotations.ApiModel;
 
 /**
  * <Enter note text here>
@@ -134,6 +136,9 @@ public class Analise implements Serializable {
 
     @ManyToOne
     private FatorAjuste fatorAjuste;
+
+    @ManyToMany
+    private Set<EsforcoFase> esforcoFases;
 
     public Long getId() {
         return id;
@@ -400,6 +405,14 @@ public class Analise implements Serializable {
 
     public void setFatorAjuste(FatorAjuste fatorAjuste) {
         this.fatorAjuste = fatorAjuste;
+    }
+
+    public Set<EsforcoFase> getEsforcoFases() {
+        return esforcoFases;
+    }
+
+    public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {
+        this.esforcoFases = esforcoFases;
     }
 
     @Override
