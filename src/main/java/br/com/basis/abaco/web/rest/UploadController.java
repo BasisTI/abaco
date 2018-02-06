@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.io.FilenameUtils;
@@ -55,6 +56,7 @@ public class UploadController {
 
     @PostMapping("/upload")
     public ResponseEntity<UploadedFile> singleFileUpload(@RequestParam("file") MultipartFile file,
+            HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
 
         UploadedFile uploadedFile = new UploadedFile();
@@ -62,8 +64,11 @@ public class UploadController {
             // Get the file and save it somewhere
             byte[] bytes = file.getBytes();
             
-            String folderPath = Paths.get(context.getRealPath(UPLOADED_FOLDER)).toAbsolutePath().toString();
-            File directory = new File(folderPath);
+            String classPathString = this.getClass().getClassLoader().getResource("").toString();
+            Path classPath = Paths.get(classPathString).toAbsolutePath();
+            String folderPathString = classPath.toString();
+            
+            File directory = new File(folderPathString);
             if (!directory.exists()) {
                 directory.mkdirs();
             }
@@ -73,7 +78,7 @@ public class UploadController {
             String filename = DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(bytesFileName));
             String ext = FilenameUtils.getExtension(file.getOriginalFilename());
             filename += "." + ext;
-            Path path = Paths.get(folderPath + "/" + filename);
+            Path path = Paths.get(folderPathString + "/" + filename);
             System.out.println(path);
             Files.write(path, bytes);
 
