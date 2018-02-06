@@ -111,6 +111,7 @@ class FuncaoDadosCopyFromJSON {
     this.converteValoresTriviais();
     this.converteBaseEntities();
     this.converteFuncionalidade();
+    this.converteFatorAjuste();
     this.converteTextos();
     return this._funcaoDados;
   }
@@ -134,6 +135,10 @@ class FuncaoDadosCopyFromJSON {
 
   private converteFuncionalidade() {
     this._funcaoDados.funcionalidade = Funcionalidade.fromJSON(this._json.funcionalidade);
+  }
+
+  private converteFatorAjuste() {
+    this._funcaoDados.fatorAjuste = new FatorAjuste().copyFromJSON(this._json.fatorAjuste);
   }
 
   // TODO conferir

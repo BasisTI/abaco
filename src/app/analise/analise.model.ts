@@ -120,6 +120,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     return copy;
   }
 
+  // FIXME precisa recalcular o resumo total pelo visto
   copyFromJSON(json: any): Analise {
     return new AnaliseCopyFromJSON(json).copy();
   }
@@ -207,6 +208,9 @@ class AnaliseCopyFromJSON {
   constructor(json: any) {
     this._json = json;
     this._analiseConverted = new Analise();
+
+    console.log('analise recebida...');
+    console.log(JSON.stringify(json, null, 4));
   }
 
   public copy(): Analise {
