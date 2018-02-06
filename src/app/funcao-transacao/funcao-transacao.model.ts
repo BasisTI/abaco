@@ -63,8 +63,7 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
   }
 
   copyFromJSON(json: any): FuncaoTransacao {
-    // TODO converter os detStr e ftrStr
-    return undefined;
+    return new FuncaoTransacaoCopyFromJSON(json).copy();
   }
 
   tipoAsString(): string {
@@ -91,4 +90,56 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
       this.funcionalidade, this.fatorAjuste, this.alrs,
       this.name, this.sustantation, this.der, this.ftr, this.grossPF);
   }
+}
+
+// TODO bem duplicado com FuncaoDados
+class FuncaoTransacaoCopyFromJSON {
+
+  private _json: any;
+
+  private _funcaoTransacao; FuncaoDados;
+
+  constructor(json: any) {
+    this._json = json;
+    this._funcaoTransacao = new FuncaoTransacao();
+  }
+
+  public copy(): FuncaoTransacao {
+    this.converteValoresTriviais();
+    this.converteBaseEntities();
+    this.converteFuncionalidade();
+    this.converteFatorAjuste();
+    this.converteTextos();
+    return this._funcaoTransacao;
+  }
+
+  private converteValoresTriviais() {
+    this._funcaoTransacao.id = this._json.id;
+    this._funcaoTransacao.tipo = this._json.tipo;
+    this._funcaoTransacao.complexidade = this._json.complexidade;
+    this._funcaoTransacao.pf = this._json.pf;
+    this._funcaoTransacao.name = this._json.name;
+    this._funcaoTransacao.sustantation = this._json.sustantation;
+    this._funcaoTransacao.grossPF = this._json.grossPF;
+  }
+
+  private converteBaseEntities() {
+    this._funcaoTransacao.analise = this._json.analise;
+    this._funcaoTransacao.funcionalidades = this._json.funcionalidades;
+    this._funcaoTransacao.alrs = this._json.alrs;
+  }
+
+  private converteFuncionalidade() {
+    this._funcaoTransacao.funcionalidade = Funcionalidade.fromJSON(this._json.funcionalidade);
+  }
+
+  private converteFatorAjuste() {
+    this._funcaoTransacao.fatorAjuste = new FatorAjuste().copyFromJSON(this._json.fatorAjuste);
+  }
+
+  private converteTextos() {
+    this._funcaoTransacao.der = this._json.detStr;
+    this._funcaoTransacao.ftr = this._json.ftrStr;
+  }
+
 }
