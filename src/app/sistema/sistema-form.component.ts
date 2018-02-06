@@ -177,11 +177,29 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   save() {
     this.isSaving = true;
-    if (this.sistema.id !== undefined) {
-      this.subscribeToSaveResponse(this.sistemaService.update(this.sistema));
-    } else {
-      this.subscribeToSaveResponse(this.sistemaService.create(this.sistema));
-    }
+    (this.sistema.modulos === undefined) ? (this.sistema.modulos = []) : (this.sistema);
+    let sistemas: Array<Sistema>;
+    this.sistemaService.query().subscribe(response => {
+      sistemas = response.json;
+
+      if(this.sistema.id !== undefined) {
+        (!this.checkDuplicity(sistemas)) ? (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
+      } else {
+        (!this.checkDuplicity(sistemas)) ? (this.subscribeToSaveResponse(this.sistemaService.create(this.sistema))) : (this);
+      }
+    });
+  }
+
+  private checkDuplicity(sistemas: Array<Sistema>) {
+    let isAlreadyRegistered: boolean = false;
+
+    sistemas.forEach(each => {
+      if(each.nome === this.sistema.nome) {
+        isAlreadyRegistered = true;
+        this.pageNotificationService.addErrorMsg('O sistema ' + each.nome + ' já está cadastrado!');
+      }
+    });
+    return isAlreadyRegistered;
   }
 
   private subscribeToSaveResponse(result: Observable<Sistema>) {
