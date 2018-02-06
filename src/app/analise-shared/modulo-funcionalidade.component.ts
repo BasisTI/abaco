@@ -82,6 +82,12 @@ export class ModuloFuncionalidadeComponent implements OnInit {
     }
   }
 
+  moduloName() {
+    if (this.isModuloSelected()) {
+      return this.moduloSelecionado.nome;
+    }
+  }
+
   isSistemaSelected(): boolean {
     return !_.isUndefined(this.sistema);
   }
