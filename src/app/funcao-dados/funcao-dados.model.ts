@@ -4,13 +4,15 @@ import { DerTextParser } from '../analise-shared/der-text-parser';
 import { FatorAjuste } from '../fator-ajuste/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
 import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';
+import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 
 export enum TipoFuncaoDados {
   'ALI' = 'ALI',
   'AIE' = 'AIE'
 }
 
-export class FuncaoDados implements BaseEntity, FuncaoResumivel, JSONable<FuncaoDados> {
+export class FuncaoDados implements BaseEntity, FuncaoResumivel,
+ FuncaoAnalise, JSONable<FuncaoDados> {
 
   detStr: string;
   retStr: string;

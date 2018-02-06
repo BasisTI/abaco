@@ -4,6 +4,7 @@ import { Funcionalidade } from '../funcionalidade/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
 import { DerTextParser } from '../analise-shared/der-text-parser';
 import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';
+import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 
 export enum TipoFuncaoTransacao {
   'EE' = 'EE', // entrada externa
@@ -11,7 +12,8 @@ export enum TipoFuncaoTransacao {
   'CE' = 'CE' // consulta externa
 }
 
-export class FuncaoTransacao implements BaseEntity, FuncaoResumivel, JSONable<FuncaoTransacao> {
+export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
+  FuncaoAnalise, JSONable<FuncaoTransacao> {
 
   detStr: string;
   ftrStr: string;
