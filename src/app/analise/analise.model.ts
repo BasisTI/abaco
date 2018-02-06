@@ -124,10 +124,14 @@ export class Analise implements BaseEntity, JSONable<Analise> {
   copyFromJSON(json: any): Analise {
     const analiseCopiada: Analise =  new AnaliseCopyFromJSON(json).copy();
     analiseCopiada.inicializaMappables(analiseCopiada.funcaoDados, analiseCopiada.funcaoTransacaos);
-    analiseCopiada.generateResumoFuncoesDados();
-    analiseCopiada.generateResumoFuncoesTransacao();
-    analiseCopiada.generateResumoTotal();
+    analiseCopiada.generateAllResumos();
     return analiseCopiada;
+  }
+
+  private generateAllResumos() {
+    this.generateResumoFuncoesDados();
+    this.generateResumoFuncoesTransacao();
+    this.generateResumoTotal();
   }
 
   public get resumoTotal(): ResumoTotal {
