@@ -1,16 +1,18 @@
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 
-import { ButtonModule } from 'primeng/primeng';
+import { ButtonModule, TooltipModule } from 'primeng/primeng';
 import { AnaliseBotaoSalvarComponent } from './analise-botao-salvar-component';
 import { AbacoSharedModule } from '../../shared/abaco-shared.module';
-import { AbacoButtonsModule } from '../../abaco-buttons/abaco-buttons.module';
 
 @NgModule({
   imports: [
+    CommonModule,
+    BrowserModule,
     ButtonModule,
+    TooltipModule,
     AbacoSharedModule,
-    AbacoButtonsModule,
   ],
   declarations: [
     AnaliseBotaoSalvarComponent

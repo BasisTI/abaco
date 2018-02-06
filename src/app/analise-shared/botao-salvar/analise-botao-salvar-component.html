@@ -1,1 +1,20 @@
-<app-green-button buttonLabel="Salvar" (click)="salvar()"></app-green-button>
+<div *ngIf="habilitarBotaoSalvar()">
+  <button pButton type="button"
+    class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+    label="Salvar"
+    (click)="salvar()">
+  </button>
+</div>
+
+<div *ngIf="!habilitarBotaoSalvar()"
+  [pTooltip]="motivosDesabilitar()"
+  tooltipPosition="top">
+  
+  <button pButton type="button"
+    class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+    label="Salvar"
+    [disabled]="true">
+  </button>
+</div>
+  
+
