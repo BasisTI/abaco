@@ -124,7 +124,6 @@ class FuncaoDadosCopyFromJSON {
     this._funcaoDados.name = this._json.name;
     this._funcaoDados.sustantation = this._json.sustantation;
     this._funcaoDados.grossPF = this._json.grossPF;
-    this._funcaoDados.id = this._json.id;
   }
 
   private converteBaseEntities() {
@@ -141,7 +140,6 @@ class FuncaoDadosCopyFromJSON {
     this._funcaoDados.fatorAjuste = new FatorAjuste().copyFromJSON(this._json.fatorAjuste);
   }
 
-  // TODO conferir
   private converteTextos() {
     this._funcaoDados.der = this._json.detStr;
     this._funcaoDados.rlr = this._json.retStr;
