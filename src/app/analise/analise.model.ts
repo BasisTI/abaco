@@ -120,9 +120,14 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     return copy;
   }
 
-  // FIXME precisa recalcular o resumo total pelo visto
+  // como AnaliseCopyFromJSON chama new() no inicio do processo, construtor não roda como deveria
   copyFromJSON(json: any): Analise {
-    return new AnaliseCopyFromJSON(json).copy();
+    const analiseCopiada: Analise =  new AnaliseCopyFromJSON(json).copy();
+    analiseCopiada.inicializaMappables(analiseCopiada.funcaoDados, analiseCopiada.funcaoTransacaos);
+    analiseCopiada.generateResumoFuncoesDados();
+    analiseCopiada.generateResumoFuncoesTransacao();
+    analiseCopiada.generateResumoTotal();
+    return analiseCopiada;
   }
 
   public get resumoTotal(): ResumoTotal {
@@ -144,13 +149,13 @@ export class Analise implements BaseEntity, JSONable<Analise> {
 
   private atualizarFuncoesDados() {
     this.funcaoDados = this.mappableFuncaoDados.values();
-    this.generateResumoFuncaoDados();
+    this.generateResumoFuncoesDados();
     this.generateResumoTotal();
   }
 
   // potencial para ficar bem eficiente
   // inserção/alteração/deleção pode ser feita por elemento
-  private generateResumoFuncaoDados() {
+  private generateResumoFuncoesDados() {
     const resumo: ResumoFuncoes = new ResumoFuncoes(FuncaoDados.tipos());
     this.funcaoDados.forEach(f => {
       resumo.somaFuncao(f);
