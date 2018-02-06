@@ -19,7 +19,6 @@ import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 })
 export class FuncaoDadosFormComponent implements OnInit {
 
-  currentFuncaoDados: FuncaoDados;
   funcaoDadosEmEdicao: FuncaoDados;
   resumo: ResumoFuncoes;
 
@@ -39,6 +38,14 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   ngOnInit() {
     this.currentFuncaoDados = new FuncaoDados();
+  }
+
+  get currentFuncaoDados(): FuncaoDados {
+    return this.analiseSharedDataService.currentFuncaoDados;
+  }
+
+  set currentFuncaoDados(currentFuncaoDados: FuncaoDados) {
+    this.analiseSharedDataService.currentFuncaoDados = currentFuncaoDados;
   }
 
   get funcoesDados(): FuncaoDados[] {

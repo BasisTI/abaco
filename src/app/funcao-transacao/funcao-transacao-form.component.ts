@@ -19,7 +19,6 @@ import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 })
 export class FuncaoTransacaoFormComponent implements OnInit {
 
-  currentFuncaoTransacao: FuncaoTransacao;
   funcaoTransacaoEmEdicao: FuncaoTransacao;
   resumo: ResumoFuncoes;
 
@@ -40,6 +39,14 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     classificacoes.forEach(c => {
       this.classificacoes.push({ label: c, value: c});
     });
+  }
+
+  get currentFuncaoTransacao(): FuncaoTransacao {
+    return this.analiseSharedDataService.currentFuncaoTransacao;
+  }
+
+  set currentFuncaoTransacao(currentFuncaoTransacao: FuncaoTransacao) {
+    this.analiseSharedDataService.currentFuncaoTransacao = currentFuncaoTransacao;
   }
 
   get funcoesTransacoes(): FuncaoTransacao[] {
