@@ -24,6 +24,7 @@ import {
 import { AbacoSharedModule } from '../shared/abaco-shared.module';
 import { AbacoAnaliseSharedModule } from '../analise-shared/analise-shared.module';
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
+import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.modu
     AbacoSharedModule,
     DialogModule,
     AbacoAnaliseSharedModule,
-    MemoryDataTableModule
+    MemoryDataTableModule,
+    AbacoAnaliseBotaoSalvarModule,
   ],
   declarations: [
     FuncaoDadosFormComponent

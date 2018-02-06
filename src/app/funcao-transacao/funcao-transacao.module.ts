@@ -26,6 +26,7 @@ import {
 import {
   FuncaoTransacaoFormComponent,
 } from './';
+import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import {
     AbacoSharedModule,
     DialogModule,
     AbacoAnaliseSharedModule,
-    MemoryDataTableModule
+    MemoryDataTableModule,
+    AbacoAnaliseBotaoSalvarModule,
   ],
   declarations: [
     FuncaoTransacaoFormComponent
