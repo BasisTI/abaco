@@ -102,8 +102,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
   deveHabilitarBotaoAdicionar(): boolean {
     // TODO complementar com outras validacoes
-    // TODO verificar se tem tipoContagem selecionado
-    return this.isFuncionalidadeSelected();
+    return this.isFuncionalidadeSelected() && !_.isUndefined(this.analise.tipoContagem);
   }
 
   adicionar() {
