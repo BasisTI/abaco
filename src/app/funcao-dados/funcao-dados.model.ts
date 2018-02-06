@@ -53,18 +53,18 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
     copy.derValues = DerTextParser.parse(this.der).textos;
     copy.rlrValues = DerTextParser.parse(this.rlr).textos;
 
+
+    // FIXME der e rlr estao com valores 0, nao estao sendo setados corretamente
     copy.detStr = copy.der;
     copy.retStr = copy.rlr;
 
     copy.funcionalidade = Funcionalidade.toNonCircularJson(copy.funcionalidade);
-    // TODO converter funcionalidades
 
     return copy;
   }
 
   copyFromJSON(json: any): FuncaoDados {
-    // TODO converter os detStr e retStr
-    return undefined;
+    return new FuncaoDadosCopyFromJSON(json).copy();
   }
 
   tipoAsString(): string {
@@ -95,3 +95,52 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
   }
 
 }
+
+class FuncaoDadosCopyFromJSON {
+
+  private _json: any;
+
+  private _funcaoDados; FuncaoDados;
+
+  constructor(json: any) {
+    this._json = json;
+    this._funcaoDados = new FuncaoDados();
+  }
+
+  public copy(): FuncaoDados {
+    this.converteValoresTriviais();
+    this.converteBaseEntities();
+    this.converteFuncionalidade();
+    this.converteTextos();
+    return this._funcaoDados;
+  }
+
+  private converteValoresTriviais() {
+    this._funcaoDados.id = this._json.id;
+    this._funcaoDados.tipo = this._json.tipo;
+    this._funcaoDados.complexidade = this._json.complexidade;
+    this._funcaoDados.pf = this._json.pf;
+    this._funcaoDados.name = this._json.name;
+    this._funcaoDados.sustantation = this._json.sustantation;
+    this._funcaoDados.grossPF = this._json.grossPF;
+    this._funcaoDados.id = this._json.id;
+  }
+
+  private converteBaseEntities() {
+    this._funcaoDados.analise = this._json.analise;
+    this._funcaoDados.funcionalidades = this._json.funcionalidades;
+    this._funcaoDados.alr = this._json.alr;
+  }
+
+  private converteFuncionalidade() {
+    this._funcaoDados.funcionalidade = Funcionalidade.fromJSON(this._json.funcionalidade);
+  }
+
+  // TODO conferir
+  private converteTextos() {
+    this._funcaoDados.der = this._json.detStr;
+    this._funcaoDados.rlr = this._json.retStr;
+  }
+
+}
+
