@@ -103,7 +103,9 @@ public class UploadController {
 
         UploadedFile uploadedFile = filesRepository.findOne(id);
 
-        String folderPath = this.servletContext.getRealPath(UPLOADED_FOLDER);
+        String classPathString = this.getClass().getClassLoader().getResource("").toString();
+        Path classPath = Paths.get(classPathString).toAbsolutePath();
+        String folderPath = classPath.toString();
 
         Resource file = new FileSystemResource(folderPath + "/" + uploadedFile.getFilename());
 
