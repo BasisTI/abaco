@@ -25,23 +25,22 @@ export class AnaliseBotaoSalvarComponent {
   }
 
   checarSeDeveHabilitarBotaoEConstruirMotivos(): boolean {
-    let deveHabilitar = true;
     this.motivosBotaoDesabilitado.clear();
-    if (this.nenhumaFuncaoAdicionada()) {
-      this.motivosBotaoDesabilitado.add('Cadastre ao menos uma Função de Dados ou Função Transação');
-      deveHabilitar = false;
+    // TODO complementar. hoje é só uma prova de conceito
+    if (_.isEmpty(this.analise.numeroOs)) {
+      this.motivosBotaoDesabilitado.add('- Informe um Número OS');
     }
-    return deveHabilitar;
+    if (this.nenhumaFuncaoAdicionada()) {
+      this.motivosBotaoDesabilitado.add('- Cadastre ao menos uma Função de Dados ou Função Transação');
+    }
+    return _.isEmpty(this.motivosBotaoDesabilitado);
   }
 
   private nenhumaFuncaoAdicionada() {
     const analise: Analise = this.analise;
-    return this.isArrayEmpty(analise.funcaoDados) && this.isArrayEmpty(analise.funcaoTransacaos);
+    return _.isEmpty(analise.funcaoDados) && _.isEmpty(analise.funcaoTransacaos);
   }
 
-  private isArrayEmpty(array: Array<any>) {
-    return _.isUndefined(array) || array.length === 0;
-  }
 
   motivosDesabilitar(): string {
     return _.join(Array.from(this.motivosBotaoDesabilitado), '\n');
