@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AnaliseSharedDataService } from '../shared';
 import { Analise } from '../analise';
 import { Manual } from '../manual';
@@ -6,6 +6,7 @@ import { FatorAjuste } from '../fator-ajuste';
 import { Sistema, SistemaService } from '../sistema/index';
 import { Modulo, ModuloService } from '../modulo';
 import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
+import { Subscription } from 'rxjs/Subscription';
 
 import * as _ from 'lodash';
 
@@ -15,11 +16,16 @@ import * as _ from 'lodash';
 })
 export class ModuloFuncionalidadeComponent implements OnInit {
 
+  @Input()
+  isFuncaoDados: boolean;
+
   @Output()
   moduloSelectedEvent = new EventEmitter<Modulo>();
 
   @Output()
   funcionalidadeSelectedEvent = new EventEmitter<Funcionalidade>();
+
+  subscriptionAnaliseSalva: Subscription;
 
   mostrarDialogModulo = false;
   novoModulo: Modulo = new Modulo();
@@ -38,7 +44,32 @@ export class ModuloFuncionalidadeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (_.isUndefined(this.isFuncaoDados)) {
+      throw new Error('input isFuncaoDados é obrigatório.');
+    }
 
+    this.subscriptionAnaliseSalva = this.analiseSharedDataService.getSaveSubject().subscribe(() => {
+      this.selectModuloOnAnaliseSalva();
+    });
+  }
+
+  private selectModuloOnAnaliseSalva() {
+    const moduloASelecionar = this.getModuloASelecionarDeAcordoComTipoFuncaoDoComponente();
+    if (moduloASelecionar) {
+      this.selecionarModulo(moduloASelecionar.id);
+    }
+  }
+
+  private getModuloASelecionarDeAcordoComTipoFuncaoDoComponente(): Modulo {
+    if (this.isFuncaoDados) {
+      if (this.analiseSharedDataService.currentFuncaoDados.funcionalidade) {
+        return this.analiseSharedDataService.currentFuncaoDados.funcionalidade.modulo;
+      }
+    } else {
+      if (this.analiseSharedDataService.currentFuncaoTransacao.funcionalidade) {
+        return this.analiseSharedDataService.currentFuncaoTransacao.funcionalidade.modulo;
+      }
+    }
   }
 
   private get sistema(): Sistema {
