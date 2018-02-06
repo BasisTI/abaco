@@ -5,7 +5,7 @@
 //def frontendImageTag = frontendImageTag
 def frontendImageTag = 'basis-24357'
 //def doDeploy = doDeploy
-def doDeploy = true
+def doDeploy = 'true'
 def rancherConfigName = rancherConfigName
 def rancherEnvironment = rancherEnvironment
 def rancherStack = rancherStack
@@ -20,7 +20,7 @@ pipelineBuildFrontendJavascript {
     dockerContext = 'docker/nginx'
     frontendImageName = 'abaco/abaco-ui'
     frontendImageTag = 'basis-24357' //frontendImageTag
-    doDeploy = true //doDeploy
+    doDeploy = 'true' //doDeploy
     rancherInfo = [
         configName: rancherConfigName,
         environment: rancherEnvironment,
