@@ -61,7 +61,8 @@ public class UploadController {
         try {
             // Get the file and save it somewhere
             byte[] bytes = file.getBytes();
-            String folderPath = context.getRealPath(UPLOADED_FOLDER);
+//            String folderPath = context.getRealPath(UPLOADED_FOLDER);
+            String folderPath = Paths.get(context.getRealPath(UPLOADED_FOLDER)).toAbsolutePath().toString();
             File directory = new File(folderPath);
             if (!directory.exists()) {
                 directory.mkdirs();
