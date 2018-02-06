@@ -13,6 +13,7 @@ export class ModuloDaFuncionalidadeFinder {
     let moduloEncontrado: Modulo;
     sistema.modulos.forEach(mod => {
       const funcionalidadeEncontrada: Funcionalidade = _.find(mod.funcionalidades, { 'id': funcionalidadeId });
+      // TODO nao continuar iterando quando encontrar
       if (funcionalidadeEncontrada) {
         moduloEncontrado = Modulo.fromJSON(funcionalidadeEncontrada.modulo);
       }
