@@ -9,6 +9,8 @@ import { FuncaoTransacao } from '../funcao-transacao/index';
 import { FatorAjuste } from '../fator-ajuste';
 import { ModuloDaFuncionalidadeFinder } from './modulo-finder';
 import { Modulo } from '../modulo';
+import { FuncaoAnalise } from '../analise-shared/funcao-analise';
+import { Organizacao } from '../organizacao';
 
 export const enum MetodoContagem {
   'DETALHADA',
@@ -48,7 +50,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     public sistema?: Sistema,
     public funcaoDados?: FuncaoDados[],
     public funcaoTransacaos?: FuncaoTransacao[],
-    public organizacao?: BaseEntity,
+    public organizacao?: Organizacao,
     public contrato?: Contrato,
     public esforcoFases?: EsforcoFase[],
   ) {
@@ -82,6 +84,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     this._resumoTotal = new ResumoTotal(this._resumoFuncaoDados, this._resumoFuncaoTransacao);
   }
 
+  // TODO extrair classe
   toJSONState(): Analise {
     // TODO clone() ?
     const copy: Analise = Object.assign({}, this);
@@ -118,35 +121,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
   }
 
   copyFromJSON(json: any): Analise {
-    const entity: Analise = Object.assign(new Analise(), json);
-
-    const sistema = Sistema.fromJSON(json.sistema);
-    entity.sistema = sistema;
-
-    this.populaModuloDasFuncionalidades(entity);
-
-    console.log('analise recebida...');
-    console.log(JSON.stringify(json, null, 4));
-    return entity;
-  }
-
-  private populaModuloDasFuncionalidades(analise: Analise) {
-    const sistema = analise.sistema;
-    // TODO tem que chamar from JSON de funcaoDados/funcaoTransacao
-    // // que por sua vez vai instanciar, dentre outros, funcionalidade como Funcionalidade
-    if (analise.funcaoDados) {
-      analise.funcaoDados.forEach(fd => {
-         const modulo = ModuloDaFuncionalidadeFinder.find(sistema, fd.funcionalidade.id);
-         fd.funcionalidade.modulo = Modulo.toNonCircularJson(modulo);
-      });
-    }
-
-    if (analise.funcaoTransacaos) {
-      analise.funcaoTransacaos.forEach(ft => {
-         const modulo = ModuloDaFuncionalidadeFinder.find(sistema, ft.funcionalidade.id);
-         ft.funcionalidade.modulo = Modulo.toNonCircularJson(modulo);
-      });
-    }
+    return new AnaliseCopyFromJSON(json).copy();
   }
 
   public get resumoTotal(): ResumoTotal {
@@ -219,6 +194,88 @@ export class Analise implements BaseEntity, JSONable<Analise> {
   deleteFuncaoTransacao(funcaoTransacao: FuncaoTransacao) {
     this.mappableFuncaoTransacaos.delete(funcaoTransacao);
     this.atualizarFuncoesTransacao();
+  }
+
+}
+
+class AnaliseCopyFromJSON {
+
+  private _json: any;
+
+  private _analiseConverted: Analise;
+
+  constructor(json: any) {
+    this._json = json;
+    this._analiseConverted = new Analise();
+  }
+
+  public copy(): Analise {
+    this.converteValoresTriviais();
+    this.converteSistema();
+    this.converteFuncoes();
+    this.converteOrganizacao();
+    this.converteContrato();
+    this.converteEsforcoFases();
+    return this._analiseConverted;
+  }
+
+  private converteSistema() {
+    const sistema = Sistema.fromJSON(this._json.sistema);
+    this._analiseConverted.sistema = sistema;
+  }
+
+  private converteValoresTriviais() {
+    this._analiseConverted.id = this._json.id;
+    this._analiseConverted.numeroOs = this._json.numeroOs;
+    this._analiseConverted.tipoContagem = this._json.tipoContagem;
+    this._analiseConverted.fatorAjuste = this._json.fatorAjuste;
+    this._analiseConverted.valorAjuste = this._json.valorAjuste;
+    this._analiseConverted.pfTotal = this._json.pfTotal;
+    this._analiseConverted.escopo = this._json.escopo;
+    this._analiseConverted.fronteiras = this._json.fronteiras;
+    this._analiseConverted.documentacao = this._json.documentacao;
+    this._analiseConverted.tipoAnalise = this._json.tipoAnalise;
+    this._analiseConverted.propositoContagem = this._json.propositoContagem;
+  }
+
+  private converteFuncoes() {
+    const sistema = this._analiseConverted.sistema;
+    this.inicializaFuncoesFromJSON();
+    this.populaModuloDasFuncionalidadesDasFuncoes(this._analiseConverted.funcaoDados, sistema);
+    this.populaModuloDasFuncionalidadesDasFuncoes(this._analiseConverted.funcaoTransacaos, sistema);
+  }
+
+  private inicializaFuncoesFromJSON() {
+    if (this._json.funcaoDados) {
+      this._analiseConverted.funcaoDados = this._json.funcaoDados
+        .map(fJSON => new FuncaoDados().copyFromJSON(fJSON));
+    }
+    if (this._json.funcaoTransacaos) {
+      this._analiseConverted.funcaoTransacaos = this._json.funcaoTransacaos
+        .map(fJSON => new FuncaoTransacao().copyFromJSON(fJSON));
+    }
+  }
+
+  private populaModuloDasFuncionalidadesDasFuncoes(funcoes: FuncaoAnalise[], sistema: Sistema) {
+    if (funcoes) {
+      funcoes.forEach(f => {
+        const modulo = ModuloDaFuncionalidadeFinder.find(sistema, f.funcionalidade.id);
+        f.funcionalidade.modulo = modulo;
+      });
+    }
+  }
+
+  private converteOrganizacao() {
+    this._analiseConverted.organizacao = new Organizacao().copyFromJSON(this._json.organizacao);
+  }
+
+  private converteContrato() {
+    this._analiseConverted.contrato = new Contrato().copyFromJSON(this._json.contrato);
+  }
+
+  private converteEsforcoFases() {
+    this._analiseConverted.esforcoFases = this._json.esforcoFases
+      .map(efJSON => new EsforcoFase().copyFromJSON(efJSON));
   }
 
 }
