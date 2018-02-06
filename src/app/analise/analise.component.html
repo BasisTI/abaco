@@ -24,7 +24,10 @@
           </div>
         </div>
 
-        <basis-datatable [url]="searchUrl" (buttonClick)="datatableClick($event)" #datatable>
+        <basis-datatable [url]="searchUrl" (buttonClick)="datatableClick($event)"
+          [disableView]="true"
+          #datatable>
+          <p-column header="ID" field="id"></p-column>
           <p-column header="Número OS" field="numeroOs"></p-column>
           <p-column header="Sistema" field="sistema.nome"></p-column>
         </basis-datatable>
