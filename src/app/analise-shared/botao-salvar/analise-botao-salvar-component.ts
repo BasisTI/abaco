@@ -24,6 +24,12 @@ export class AnaliseBotaoSalvarComponent {
   }
 
   salvar() {
+    this.doSalvar();
+    this.analiseSharedDataService.analiseSalva();
+  }
+
+  // Sendo feito aqui, e não no AnaliseSharedDataService, para evitar problema com dependencias circulares
+  private doSalvar() {
     // TODO extrair 'isEdit' boolean para sharedservice
     if (this.analise.id !== undefined) {
       this.editar();
