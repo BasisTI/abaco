@@ -1,16 +1,15 @@
-import { Component, Input, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 
 import { Analise, AnaliseService } from '../../analise';
 import { ResponseWrapper, AnaliseSharedDataService } from '../../shared';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import * as _ from 'lodash';
-import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-analise-botao-salvar',
-  templateUrl: './analise-botao-salvar-component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './analise-botao-salvar-component.html'
 })
 export class AnaliseBotaoSalvarComponent implements OnDestroy {
 
@@ -21,13 +20,16 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   constructor(
     private analiseService: AnaliseService,
     private analiseSharedDataService: AnaliseSharedDataService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
-  habilitarBotaoSalvar() {
-    return this.checarSeDeveHabilitarBotaoEConstruirMotivos();
+  habilitarBotaoSalvar(): boolean {
+    const habilitar: boolean = this.checarSeDeveHabilitarBotaoEConstruirMotivos();
+    this.changeDetectorRef.markForCheck();
+    return habilitar;
   }
 
-  checarSeDeveHabilitarBotaoEConstruirMotivos(): boolean {
+  private checarSeDeveHabilitarBotaoEConstruirMotivos(): boolean {
     this.motivosBotaoDesabilitado.clear();
     // TODO complementar. hoje é só uma prova de conceito
     if (_.isEmpty(this.analise.numeroOs)) {
@@ -91,6 +93,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
+    this.changeDetectorRef.detach();
     if (this.saveSubscription) {
       this.saveSubscription.unsubscribe();
     }
