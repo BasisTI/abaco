@@ -2,12 +2,12 @@
 
 @Library('basis-pipeline-library@BASIS-24357') _
 
-def propFrontendImageTag = frontendImageTag
-def propDoDeploy = doDeploy
-def rancherConfigName = rancherConfigName
-def rancherEnvironment = rancherEnvironment
-def rancherStack = rancherStack
-def rancherService = rancherService
+def _frontendImageTag = frontendImageTag
+def _doDeploy = doDeploy
+def _rancherConfigName = rancherConfigName
+def _rancherEnvironment = rancherEnvironment
+def _rancherStack = rancherStack
+def _rancherService = rancherService
 
 pipelineBuildFrontendJavascript {
     agentLabel = 'docker-engine'
@@ -17,13 +17,13 @@ pipelineBuildFrontendJavascript {
     buildScriptPath = 'docker/nginx/build.sh'
     dockerContext = 'docker/nginx'
     frontendImageName = 'abaco/abaco-ui'
-    frontendImageTag = propFrontendImageTag
-    doDeploy = propDoDeploy
+    frontendImageTag = _frontendImageTag
+    doDeploy = _doDeploy
     rancherInfo = [
-        configName: rancherConfigName,
-        environment: rancherEnvironment,
-        stack: rancherStack,
-        service: rancherService
+        configName: _rancherConfigName,
+        environment: _rancherEnvironment,
+        stack: _rancherStack,
+        service: _rancherService
     ]
     rocketChannel = ''
     recipientList = ''
