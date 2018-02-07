@@ -34,7 +34,6 @@ export class Manual implements BaseEntity, JSONable<Manual> {
 
   toJSONState(): Manual {
     const copy: Manual = Object.assign({}, this);
-    copy.fatoresAjuste = copy.fatoresAjuste.map(fa => fa.toJSONState());
     return copy;
   }
 
