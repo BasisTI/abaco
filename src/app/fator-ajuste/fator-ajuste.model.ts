@@ -1,4 +1,5 @@
 import { BaseEntity } from '../shared';
+import { IntToFloatParser } from '../shared/int-to-float-parser';
 
 export enum TipoFatorAjuste {
   'PERCENTUAL' = 'PERCENTUAL',
@@ -17,7 +18,8 @@ export class FatorAjuste implements BaseEntity {
   constructor(
     public id?: number,
     public nome?: string,
-    public fator?: number,
+    // FIXME soluciona no back. tipo deve ser 'number'
+    public fator?: any,
     public ativo?: boolean,
     public descricao?: string,
     public codigo?: string,
@@ -30,6 +32,7 @@ export class FatorAjuste implements BaseEntity {
 
   toJSONState(): FatorAjuste {
     const copy: FatorAjuste = Object.assign({}, this);
+    copy.fator = IntToFloatParser.parse(this.fator);
     return copy;
   }
 
