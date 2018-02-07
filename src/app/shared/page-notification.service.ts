@@ -7,6 +7,11 @@ export class PageNotificationService {
 
     constructor(private messageService: MessageService) { }
 
+    private readonly successSeverity = 'success';
+    private readonly infoSeverity = 'info';
+    private readonly warnSeverity = 'warn';
+    private readonly errorSeverity = 'error';
+
     private readonly createMsg = 'Registro incluído com sucesso!';
 
     private readonly updateMsg = 'Dados alterados com sucesso!';
@@ -16,10 +21,10 @@ export class PageNotificationService {
     private readonly errorMsg = 'Erro!';
 
     addCreateMsg(title?: string) {
-        this.addInfoMsg('success', this.createMsg, title);
+        this.addMsg(this.successSeverity, this.createMsg, title);
     }
 
-    private addInfoMsg(severity: string, msg: string, title?: string) {
+    private addMsg(severity: string, msg: string, title?: string) {
         this.messageService.add({
             severity: severity,
             summary: title,
@@ -29,24 +34,32 @@ export class PageNotificationService {
 
     addCreateMsgWithName(name: string, title?: string) {
         const msg = `Registro '${name}' incluído com sucesso!`;
-        this.addInfoMsg('success', msg, title);
+        this.addMsg(this.successSeverity, msg, title);
+    }
+
+    addSuccessMsg(msg: string, title?: string) {
+        this.addMsg(this.successSeverity, msg, title);
+    }
+
+    addInfoMsg(msg: string, title?: string) {
+        this.addMsg(this.infoSeverity, msg, title);
     }
 
     addUpdateMsg(title?: string) {
-        this.addInfoMsg('success', this.updateMsg, title);
+        this.addMsg(this.successSeverity, this.updateMsg, title);
     }
 
     addDeleteMsg(title?: string) {
-        this.addInfoMsg('success', this.deleteMsg, title);
+        this.addMsg(this.successSeverity, this.deleteMsg, title);
     }
 
     addDeleteMsgWithName(name: string, title?: string) {
         const msg = `Registro '${name}' excluído com sucesso!`;
-        this.addInfoMsg('success', msg, title);
+        this.addMsg(this.successSeverity, msg, title);
     }
 
     addErrorMsg(message?: string) {
-      this.addInfoMsg('error', message, this.errorMsg);
+      this.addMsg(this.errorSeverity, message, this.errorMsg);
     }
 
     getInvalidFields(invalidFields: Array<any>) {
