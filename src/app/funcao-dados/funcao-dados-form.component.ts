@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { AnaliseSharedDataService, PageNotificationService } from '../shared';
 import { FuncaoDados } from './funcao-dados.model';
 import { Analise } from '../analise';
@@ -13,12 +13,13 @@ import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
 import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { AfterViewInit, AfterContentInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-analise-funcao-dados',
   templateUrl: './funcao-dados-form.component.html'
 })
-export class FuncaoDadosFormComponent implements OnInit {
+export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   funcaoDadosEmEdicao: FuncaoDados;
   resumo: ResumoFuncoes;
@@ -31,6 +32,8 @@ export class FuncaoDadosFormComponent implements OnInit {
     { label: 'AIE', value: 'AIE' }
   ];
 
+  private analiseCarregadaSubscription: Subscription;
+
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
     private confirmationService: ConfirmationService,
@@ -41,7 +44,7 @@ export class FuncaoDadosFormComponent implements OnInit {
   ngOnInit() {
     this.currentFuncaoDados = new FuncaoDados();
 
-    this.analiseSharedDataService.getLoadSubject().subscribe(() => {
+    this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
       this.resumo = this.analise.resumoFuncaoDados;
     });
   }
@@ -156,6 +159,11 @@ export class FuncaoDadosFormComponent implements OnInit {
         this.pageNotificationService.addDeleteMsgWithName(name);
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.changeDetectorRef.detach();
+    this.analiseCarregadaSubscription.unsubscribe();
   }
 
 }

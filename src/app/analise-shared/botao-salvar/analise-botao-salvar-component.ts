@@ -1,19 +1,22 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 
 import { Analise, AnaliseService } from '../../analise';
 import { ResponseWrapper, AnaliseSharedDataService } from '../../shared';
 import { Observable } from 'rxjs/Observable';
 
 import * as _ from 'lodash';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-analise-botao-salvar',
   templateUrl: './analise-botao-salvar-component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AnaliseBotaoSalvarComponent {
+export class AnaliseBotaoSalvarComponent implements OnDestroy {
 
   motivosBotaoDesabilitado: Set<string> = new Set<string>();
+
+  private saveSubscription: Subscription;
 
   constructor(
     private analiseService: AnaliseService,
@@ -81,10 +84,16 @@ export class AnaliseBotaoSalvarComponent {
   }
 
   private subscribeToSaveResponse(result: Observable<any>) {
-    result.subscribe((res: Analise) => {
+    this.saveSubscription =  result.subscribe((res: Analise) => {
       this.analise = res;
       // TODO mensagem de confirmação
     });
+  }
+
+  ngOnDestroy() {
+    if (this.saveSubscription) {
+      this.saveSubscription.unsubscribe();
+    }
   }
 
 }
