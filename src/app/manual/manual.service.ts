@@ -24,6 +24,8 @@ export class ManualService {
 
   create(manual: Manual): Observable<any> {
     const copy = this.convert(manual);
+    console.log('manual sendo enviado...');
+    console.log(JSON.stringify(copy, null, 4));
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);

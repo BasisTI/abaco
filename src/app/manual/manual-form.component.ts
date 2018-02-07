@@ -87,8 +87,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   save() {
     this.isSaving = true;
-    this.manual.valorVariacaoEstimada = this.manual.valorVariacaoEstimada/100;
-    this.manual.valorVariacaoIndicativa = this.manual.valorVariacaoIndicativa/100;
+    this.manual.valorVariacaoEstimada = this.manual.valorVariacaoEstimada;
+    this.manual.valorVariacaoIndicativa = this.manual.valorVariacaoIndicativa;
 
     console.log(this.manual);
     if (this.manual.id !== undefined) {
@@ -244,7 +244,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   editPhaseEffort() {
-    this.editedPhaseEffort.esforco/100;
     this.manual.updateEsforcoFases(this.editedPhaseEffort);
     this.closeDialogEditPhaseEffort();
   }
@@ -273,7 +272,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   getPhaseEffortTotalPercentual() {
     let total = 0;
     this.manual.esforcoFases.forEach(each => {
-      (each.esforco !== undefined) ? (total = total + each.esforco) : (total = total)
+      (each.esforco !== undefined) ? (total = total + each.esforcoFormatado) : (total = total);
     });
 
     return total;

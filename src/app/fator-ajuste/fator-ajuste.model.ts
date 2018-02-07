@@ -47,7 +47,25 @@ export class FatorAjuste implements BaseEntity {
       this.origem, this.artificialId);
   }
 
+  get fatorFormatado(): number {
+    return this.fatorVisualizavel();
+  }
+
+  set fatorFormatado(fator: number) {
+    if (this.isPercentual()) {
+      this.fator = fator / 100;
+    } else {
+      this.fator = fator;
+    }
+  }
+
   fatorVisualizavel(): number {
+    if (this.fator) {
+      return this.calculaFatorVisualizavel();
+    }
+  }
+
+  private calculaFatorVisualizavel(): number {
     if (this.isPercentual()) {
       return this.fator * 100;
     }

@@ -67,7 +67,7 @@
             <app-memory-datatable [value]="manual.esforcoFases" (buttonClick)="datatableClick($event)">
               <p-column header="Tipo de fase" field="fase.nome">
               </p-column>
-              <p-column header="Percentual (%)" field="esforco">
+              <p-column header="Percentual (%)" field="esforcoFormatado">
               </p-column>
             </app-memory-datatable>
           </div>
@@ -93,7 +93,7 @@
               </p-column>
               <p-column header="Nome" field="nome">
               </p-column>
-              <p-column header="Fator" field="fator">
+              <p-column header="Fator" field="fatorFormatado">
               </p-column>
               <p-column header="Tipo Ajuste" field="tipoAjuste">
               </p-column>
@@ -127,7 +127,7 @@
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Esforço (%)</label>
-              <p-spinner size="30" name="esforco" [(ngModel)]="newPhaseEffort.esforco" decimalSeparator="" min="0" max="100" thousandSeparator=""></p-spinner>
+              <p-spinner size="30" name="esforco" [(ngModel)]="newPhaseEffort.esforcoFormatado" decimalSeparator="" min="0" max="100" thousandSeparator=""></p-spinner>
             </div>
           </div>
           <div class="ui-g">
@@ -155,7 +155,7 @@
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Esforço (%)</label>
-              <p-spinner name="esforco" [(ngModel)]="editedPhaseEffort.esforco" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <p-spinner name="esforco" [(ngModel)]="editedPhaseEffort.esforcoFormatado" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
             </div>
           </div>
           <div class="ui-g">
@@ -189,8 +189,8 @@
               <label *ngIf="isPercentualEnum(newAdjustFactor.tipoAjuste)">Fator (%)</label>
               <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)">Fator (PF)</label>
               <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Fator</label>
-              <p-spinner size="30" *ngIf="newAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="newAdjustFactor.fator"></p-spinner>
-              <p-spinner size="30" *ngIf="newAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="newAdjustFactor.fator"></p-spinner>
+              <p-spinner size="30" *ngIf="newAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="newAdjustFactor.fatorFormatado"></p-spinner>
+              <p-spinner size="30" *ngIf="newAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="newAdjustFactor.fatorFormatado"></p-spinner>
             </div>
           </div>
           <div class="ui-g">
@@ -244,8 +244,8 @@
               <label *ngIf="isPercentualEnum(editedAdjustFactor.tipoAjuste)">Fator (%)</label>
               <label *ngIf="isUnitaryEnum(editedAdjustFactor.tipoAjuste)">Fator (PF)</label>
               <label *ngIf="editedAdjustFactor.tipoAjuste === undefined">Fator</label>
-              <p-spinner size="30" *ngIf="editedAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="editedAdjustFactor.fator"></p-spinner>
-              <p-spinner size="30" *ngIf="editedAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="editedAdjustFactor.fator"></p-spinner>
+              <p-spinner size="30" *ngIf="editedAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="editedAdjustFactor.fatorFormatado"></p-spinner>
+              <p-spinner size="30" *ngIf="editedAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="editedAdjustFactor.fatorFormatado"></p-spinner>
             </div>
           </div>
           <div class="ui-g">
