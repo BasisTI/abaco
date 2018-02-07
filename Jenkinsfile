@@ -2,10 +2,8 @@
 
 @Library('basis-pipeline-library@BASIS-24357') _
 
-//def frontendImageTag = frontendImageTag
-def frontendImageTag = 'basis-24357'
-//def doDeploy = doDeploy
-def doDeploy = 'true'
+def propFrontendImageTag = frontendImageTag
+def propDoDeploy = doDeploy
 def rancherConfigName = rancherConfigName
 def rancherEnvironment = rancherEnvironment
 def rancherStack = rancherStack
@@ -19,8 +17,8 @@ pipelineBuildFrontendJavascript {
     buildScriptPath = 'docker/nginx/build.sh'
     dockerContext = 'docker/nginx'
     frontendImageName = 'abaco/abaco-ui'
-    frontendImageTag = 'basis-24357' //frontendImageTag
-    doDeploy = 'true' //doDeploy
+    frontendImageTag = propFrontendImageTag
+    doDeploy = propDoDeploy
     rancherInfo = [
         configName: rancherConfigName,
         environment: rancherEnvironment,
