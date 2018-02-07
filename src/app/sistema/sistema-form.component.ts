@@ -106,7 +106,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     this.confirmationService.confirm({
       message: `Tem certeza que deseja excluir o módulo '${this.moduloEmEdicao.nome}' ?`,
       accept: () => {
-        if(this.sistema.funcionalidades.length === 0) {
+        if(this.moduleCanBeDeleted()) {
           this.sistema.deleteModulo(this.moduloEmEdicao);
           this.moduloEmEdicao = new Modulo();
         } else {
@@ -114,6 +114,18 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  private moduleCanBeDeleted() {
+    let isDeletationValid = true;
+
+    this.sistema.funcionalidades.forEach(each => {
+      if(each.modulo.nome === this.moduloEmEdicao.nome) {
+        isDeletationValid = false;
+      }
+    });
+
+    return isDeletationValid;
   }
 
   abrirDialogModulo() {
