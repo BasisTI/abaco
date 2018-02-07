@@ -14,7 +14,7 @@ pipelineBuildFrontendJavascript {
 
     builderImageInfo = [
         registry: 'basis-registry.basis.com.br',
-        name: 'basis/builder-image' //'basis-registry.basis.com.br/basis/builder-image',
+        name: 'basis/builder-image',
         tag: 'node-8.9.3',
     ]
 
