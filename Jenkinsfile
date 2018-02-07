@@ -11,22 +11,34 @@ def _rancherService = rancherService
 
 pipelineBuildFrontendJavascript {
     agentLabel = 'docker-engine'
-    dockerRegistry = 'basis-registry.basis.com.br'
-    builderImageName = 'basis-registry.basis.com.br/basis/builder-image'
-    builderImageTag = 'node-8.9.3'
-    buildScriptPath = 'docker/nginx/build.sh'
-    dockerContext = 'docker/nginx'
-    frontendImageName = 'abaco/abaco-ui'
-    frontendImageTag = _frontendImageTag
+
+    builderImageInfo = [
+        registry: 'basis-registry.basis.com.br',
+        name: 'basis/builder-image' //'basis-registry.basis.com.br/basis/builder-image',
+        tag: 'node-8.9.3',
+    ]
+
+    appImageInfo = [
+        registry: 'basis-registry.basis.com.br',
+        dockerContext: 'docker/nginx',
+        buildScriptPath = 'docker/nginx/build.sh',
+        name: 'abaco/abaco-ui',
+        tag: _frontendImageTag 
+    ]
+
     doDeploy = _doDeploy
+
     rancherInfo = [
         configName: _rancherConfigName,
         environment: _rancherEnvironment,
         stack: _rancherStack,
         service: _rancherService
     ]
-    rocketChannel = ''
-    recipientList = ''
-    sendSuccessNotification = false
+
+    notificationInfo = [
+        rocketChannel = '',
+        recipientList = '',
+        sendSuccessNotification = false
+    ]
 }
 
