@@ -39,7 +39,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterContentInit {
 
   ngOnInit() {
     this.currentFuncaoDados = new FuncaoDados();
-    this.resumo = this.analise.resumoFuncaoDados;
+
+    this.analiseSharedDataService.getLoadSubject().subscribe(() => {
+      this.resumo = this.analise.resumoFuncaoDados;
+    });
   }
 
   get currentFuncaoDados(): FuncaoDados {

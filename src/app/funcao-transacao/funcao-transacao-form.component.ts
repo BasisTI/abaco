@@ -34,6 +34,15 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
   ngOnInit() {
     this.currentFuncaoTransacao = new FuncaoTransacao();
+
+    this.analiseSharedDataService.getLoadSubject().subscribe(() => {
+      this.resumo = this.analise.resumoFuncaoDados;
+    });
+
+    this.initClassificacoes();
+  }
+
+  private initClassificacoes() {
     const classificacoes = Object.keys(TipoFuncaoTransacao).map(k => TipoFuncaoTransacao[k as any]);
     // TODO pipe generico?
     classificacoes.forEach(c => {
