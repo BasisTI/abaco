@@ -183,9 +183,9 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
       sistemas = response.json;
 
       if(this.sistema.id !== undefined) {
-        (!this.checkDuplicity(sistemas)) ? (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
+        (!this.checkDuplicity(sistemas) && this.checkSystemInitials() && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
       } else {
-        (!this.checkDuplicity(sistemas)) ? (this.subscribeToSaveResponse(this.sistemaService.create(this.sistema))) : (this);
+        (!this.checkDuplicity(sistemas) && this.checkSystemInitials() && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.create(this.sistema))) : (this);
       }
     });
   }
@@ -200,6 +200,27 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
       }
     });
     return isAlreadyRegistered;
+  }
+
+  private checkSystemInitials() {
+      let exceedsMaximumValue = false;
+      if(this.sistema.sigla.length >= 20) {
+          exceedsMaximumValue = true;
+          this.pageNotificationService.addErrorMsg('O campo sigla excede o número de caracteres.');
+      }
+
+      return exceedsMaximumValue;
+  }
+
+  checkSystemName() {
+    let isValid = true;
+
+    if(this.sistema.nome.length >= 255) {
+      isValid = false;
+      this.pageNotificationService.addErrorMsg('O campo Nome excede o número de caracteres.');
+    }
+
+    return isValid;
   }
 
   private subscribeToSaveResponse(result: Observable<Sistema>) {
