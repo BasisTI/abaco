@@ -30,6 +30,9 @@ export class AnaliseBotaoSalvarComponent {
     if (_.isEmpty(this.analise.numeroOs)) {
       this.motivosBotaoDesabilitado.add('- Informe um Número OS');
     }
+    if (_.isEmpty(this.analise.tipoContagem)) {
+      this.motivosBotaoDesabilitado.add('- Selecione um Tipo de Contagem');
+    }
     if (this.nenhumaFuncaoAdicionada()) {
       this.motivosBotaoDesabilitado.add('- Cadastre ao menos uma Função de Dados ou Função Transação');
     }
