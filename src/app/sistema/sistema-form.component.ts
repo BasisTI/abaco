@@ -104,11 +104,14 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   confirmDeleteModulo() {
     this.confirmationService.confirm({
-      message: `Tem certeza que deseja excluir o módulo '${this.moduloEmEdicao.nome}'
-        e todas as suas funcionalidades?`,
+      message: `Tem certeza que deseja excluir o módulo '${this.moduloEmEdicao.nome}' ?`,
       accept: () => {
-        this.sistema.deleteModulo(this.moduloEmEdicao);
-        this.moduloEmEdicao = new Modulo();
+        if(this.sistema.funcionalidades.length === 0) {
+          this.sistema.deleteModulo(this.moduloEmEdicao);
+          this.moduloEmEdicao = new Modulo();
+        } else {
+          this.pageNotificationService.addErrorMsg('O módulo ' + this.moduloEmEdicao.nome + ' não pode ser excluído porque existem funcionalidades atribuídas.');
+        }
       }
     });
   }
