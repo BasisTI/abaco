@@ -30,7 +30,7 @@ public class Fase implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Column(name = "nome")
+    @Column(name = "nome", unique=true)
     private String nome;
 
     public Long getId() {

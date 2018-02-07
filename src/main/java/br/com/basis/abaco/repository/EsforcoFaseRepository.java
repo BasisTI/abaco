@@ -13,5 +13,5 @@ import br.com.basis.abaco.domain.Manual;
 @SuppressWarnings("unused")
 public interface EsforcoFaseRepository extends JpaRepository<EsforcoFase, Long> {
 
-	public List<EsforcoFase> findAllByManual(Manual manual);
+    public List<EsforcoFase> findAllByManual(Manual manual);
 }
