@@ -1,6 +1,6 @@
 #!groovy
 
-@Library('basis-pipeline-library@BASIS-24357') _
+@Library('basis-pipeline-library@master') _
 
 def _frontendImageTag = frontendImageTag
 def _doDeploy = doDeploy
@@ -36,7 +36,7 @@ pipelineBuildFrontendJavascript {
     ]
 
     notificationInfo = [
-        rocketChannel: '',
+        rocketChannel: '#abaco',
         recipientList: '',
         sendSuccessNotification: false
     ]
