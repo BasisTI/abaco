@@ -21,7 +21,7 @@ pipelineBuildFrontendJavascript {
     appImageInfo = [
         registry: 'basis-registry.basis.com.br',
         dockerContext: 'docker/nginx',
-        buildScriptPath = 'docker/nginx/build.sh',
+        buildScriptPath: 'docker/nginx/build.sh',
         name: 'abaco/abaco-ui',
         tag: _frontendImageTag 
     ]
@@ -36,9 +36,9 @@ pipelineBuildFrontendJavascript {
     ]
 
     notificationInfo = [
-        rocketChannel = '',
-        recipientList = '',
-        sendSuccessNotification = false
+        rocketChannel: '',
+        recipientList: '',
+        sendSuccessNotification: false
     ]
 }
 
