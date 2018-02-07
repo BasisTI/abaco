@@ -1,7 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 
 import { Analise, AnaliseService } from '../../analise';
-import { ResponseWrapper, AnaliseSharedDataService } from '../../shared';
+import { ResponseWrapper, AnaliseSharedDataService, PageNotificationService } from '../../shared';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -20,6 +20,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   constructor(
     private analiseService: AnaliseService,
     private analiseSharedDataService: AnaliseSharedDataService,
+    private pageNotificationService: PageNotificationService,
     private changeDetectorRef: ChangeDetectorRef
   ) { }
 
@@ -88,7 +89,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   private subscribeToSaveResponse(result: Observable<any>) {
     this.saveSubscription =  result.subscribe((res: Analise) => {
       this.analise = res;
-      // TODO mensagem de confirmação
+      this.pageNotificationService.addSuccessMsg('Análise salva com sucesso');
     });
   }
 
