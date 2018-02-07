@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ResumoFuncoes, ResumoTotal } from '../../analise-shared/resumo-funcoes';
 import { Complexidade } from '../../analise-shared/complexidade-enum';
 import { AnaliseSharedUtils } from '../../analise-shared/analise-shared-utils';
@@ -19,6 +19,7 @@ export class AnaliseResumoComponent implements OnInit {
 
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
+    private changeDectetorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -26,6 +27,7 @@ export class AnaliseResumoComponent implements OnInit {
     this.analiseSharedDataService.getLoadSubject().subscribe(() => {
       this.analiseCarregada = true;
       this.resumoTotal = this.analiseSharedDataService.analise.resumoTotal;
+      this.changeDectetorRef.detectChanges();
     });
   }
 
