@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { AnaliseSharedDataService, PageNotificationService } from '../shared';
 import { FuncaoTransacao, TipoFuncaoTransacao } from './funcao-transacao.model';
 import { Analise } from '../analise';
@@ -29,17 +29,23 @@ export class FuncaoTransacaoFormComponent implements OnInit {
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
     private confirmationService: ConfirmationService,
-    private pageNotificationService: PageNotificationService
+    private pageNotificationService: PageNotificationService,
+    private changeDetectorRef: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
     this.currentFuncaoTransacao = new FuncaoTransacao();
 
     this.analiseSharedDataService.getLoadSubject().subscribe(() => {
-      this.resumo = this.analise.resumoFuncaoDados;
+      this.atualizaResumo();
     });
 
     this.initClassificacoes();
+  }
+
+  private atualizaResumo() {
+    this.resumo = this.analise.resumoFuncaoTransacoes;
+    this.changeDetectorRef.detectChanges();
   }
 
   private initClassificacoes() {
@@ -123,7 +129,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
   private doAdicionar() {
     const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.tipoContagem, this.currentFuncaoTransacao);
     this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
-    this.resumo = this.analise.resumoFuncaoTransacoes;
+    this.atualizaResumo();
     this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
 
     this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
