@@ -32,7 +32,14 @@ import {
 import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
 import { ActiveBooleanPipe } from '../shared/active-boolean.pipe';
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
+import {HttpClientModule, HttpClient} from '@angular/common/http';
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 @NgModule({
   imports: [
     CommonModule,
@@ -51,7 +58,14 @@ import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
     DialogModule,
     ConfirmDialogModule,
     MemoryDataTableModule,
-    AbacoButtonsModule
+    AbacoButtonsModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    })
   ],
   declarations: [
     ManualComponent,

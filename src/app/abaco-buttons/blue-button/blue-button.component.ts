@@ -12,9 +12,13 @@ export class BlueButtonComponent implements OnInit {
   @Input()
   public buttonIcon: string;
 
+  @Input()
+  public isDisabled: boolean;
+
   constructor() { }
 
   ngOnInit() {
+    (this.isDisabled === undefined) ? (this.isDisabled = false) : (this.isDisabled = this.isDisabled);
   }
 
 }

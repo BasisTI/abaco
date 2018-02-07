@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
@@ -16,10 +16,12 @@ import { ConfirmationService } from 'primeng/components/common/confirmationservi
 import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 import { PageNotificationService } from '../shared/page-notification.service';
 import { UploadService } from '../upload/upload.service';
+import { FileUpload } from 'primeng/primeng';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'jhi-manual-form',
-  templateUrl: './manual-form.component.html'
+  templateUrl: './manual-form.component.html',
 })
 export class ManualFormComponent implements OnInit, OnDestroy {
   manual: Manual;
@@ -49,6 +51,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   ]
   invalidFields: Array<string> = [];
 
+  @ViewChild('fileInput') fileInput: FileUpload;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -57,8 +61,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     private tipoFaseService: TipoFaseService,
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
-    private uploadService: UploadService
-  ) {}
+    private uploadService: UploadService,
+    private translate: TranslateService
+  ) {
+    translate.setDefaultLang('pt');
+    translate.use(sessionStorage.getItem('language'));
+  }
 
   ngOnInit() {
     this.isSaving = false;
@@ -67,6 +75,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       if (params['id']) {
         this.manualService.find(params['id']).subscribe(manual => {
           this.manual = manual;
+          this.getFile();
         });
       }
     });
@@ -81,9 +90,18 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.manual.valorVariacaoEstimada = this.manual.valorVariacaoEstimada/100;
     this.manual.valorVariacaoIndicativa = this.manual.valorVariacaoIndicativa/100;
 
-    console.log(this.manual);
     if (this.manual.id !== undefined) {
-      this.subscribeToSaveResponse(this.manualService.update(this.manual));
+      this.manualService.find(this.manual.id).subscribe(response => {
+        if(this.arquivoManual !== undefined) {
+          this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
+            this.manual.arquivoManualId = JSON.parse(response["_body"]).id;
+            this.subscribeToSaveResponse(this.manualService.update(this.manual));
+          })
+        } else {
+          this.subscribeToSaveResponse(this.manualService.update(this.manual));
+        }
+      })
+
     } else {
       if(this.arquivoManual !== undefined) {
         if(this.checkRequiredFields()) {
@@ -103,7 +121,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   private checkRequiredFields(): boolean {
       let isFieldsValid = false;
-      console.log(this.manual);
+
       if ( isNaN(this.manual.valorVariacaoEstimada)) (this.invalidFields.push('Valor Variação Estimada'));
       if ( isNaN(this.manual.valorVariacaoIndicativa)) (this.invalidFields.push('Valor Variação Inidicativa'));
 
@@ -114,6 +132,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   private getInvalidFieldsString(): string {
     let invalidFieldsString = "";
+
     this.invalidFields.forEach(invalidField => {
       if(invalidField === this.invalidFields[this.invalidFields.length-1]) {
         invalidFieldsString = invalidFieldsString + invalidField;
@@ -131,6 +150,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       this.router.navigate(['/manual']);
       this.pageNotificationService.addCreateMsg();
     }, (error: Response) => {
+      alert(error);
       this.isSaving = false;
       switch(error.status) {
         case 400: {
@@ -175,15 +195,25 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     switch (event.button) {
       case 'edit':
         this.editedAdjustFactor = event.selection.clone();
+        (this.editedAdjustFactor.fator > 0 && this.editedAdjustFactor.fator < 1) ?
+          (this.editedAdjustFactor.fator = this.editedAdjustFactor.fator * 100) : (this.editedAdjustFactor = this.editedAdjustFactor);
         this.openDialogEditAdjustFactor();
         break;
       case 'delete':
-        console.log(event.selection)
+        console.log(event.selection);
         this.editedAdjustFactor = event.selection.clone();
         this.confirmDeleteAdjustFactor();
     }
   }
 
+  isPercentualEnum(value: TipoFatorAjuste) {
+
+    return (value !== undefined) ? (value.toString() === 'PERCENTUAL') : (false);
+  }
+
+  isUnitaryEnum(value: TipoFatorAjuste) {
+    return (value !== undefined) ? (value.toString() === 'UNITARIO') : (false);
+  }
   confirmDeletePhaseEffort() {
     this.confirmationService.confirm({
       message: 'Tem certeza que deseja excluir o Esforço por fase ' + this.editedPhaseEffort.fase.nome + '?',
@@ -271,5 +301,23 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.newAdjustFactor.ativo = true;
     this.manual.addFatoresAjuste(this.newAdjustFactor);
     this.closeDialogCreateAdjustFactor();
+  }
+
+  getFile() {
+    this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
+
+      let fileInfo;
+      this.uploadService.getFileInfo(this.manual.arquivoManualId).subscribe(response => {
+        fileInfo = response;
+
+        this.fileInput.files.push(new File([response["_body"]], fileInfo["originalName"]));
+      });
+    });
+  }
+
+  getFileInfo() {
+    return this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
+      return response;
+    })
   }
 }

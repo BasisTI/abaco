@@ -11,9 +11,16 @@ export class WhiteButtonComponent implements OnInit {
   public buttonLabel: string;
   @Input()
   public buttonIcon: string;
+
+  @Input()
+  public isDisabled: boolean;
+
   constructor() { }
 
   ngOnInit() {
+    if(this.isDisabled === undefined) {
+      this.isDisabled = false;
+    }
   }
 
 }

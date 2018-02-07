@@ -6,6 +6,7 @@ import { Observable, Subscription } from 'rxjs/Rx';
 import { AuthService, HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 import { User } from '../user';
+import { PageNotificationService } from '../shared/page-notification.service';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +27,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private loginService: LoginService,
     private authService: AuthService<User>,
     private http: HttpService,
-    private zone: NgZone
+    private zone: NgZone,
+    private pageNotificationService: PageNotificationService
   ) { }
 
   ngOnInit() {
@@ -48,6 +50,13 @@ export class LoginComponent implements OnInit, OnDestroy {
           location.reload();
         });
       });
+    }, error => {
+      console.log(error.status);
+      switch(error.status) {
+        case 401: {
+          this.pageNotificationService.addErrorMsg('Usuário ou senha inválidos!');
+        } break;
+      }
     });
   }
 

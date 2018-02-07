@@ -23,7 +23,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
     private router: Router,
     private tipoFaseService: TipoFaseService,
     private pageNotificationService: PageNotificationService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isSaving = false;
@@ -37,12 +37,49 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
 
   save() {
     this.isSaving = true;
-    if (this.tipoFase.id !== undefined) {
+    if (this.tipoFase.id !== undefined && this.checkPhaseNameIsValid()) {
       this.subscribeToSaveResponse(this.tipoFaseService.update(this.tipoFase));
       this.pageNotificationService.addUpdateMsg();
     } else {
-      this.subscribeToSaveResponse(this.tipoFaseService.create(this.tipoFase));
+      this.tipoFaseService.query().subscribe(response => {
+        let allPhases = response
+        if (this.checkPhaseNameIsValid()) {
+          if (!this.checkIfPhaseAlreadyExist(allPhases.json)) {
+            this.subscribeToSaveResponse(this.tipoFaseService.create(this.tipoFase));
+          } else {
+            this.pageNotificationService.addErrorMsg('A fase criada já existe!');
+          }
+        }
+      });
+
     }
+  }
+
+  private checkIfPhaseAlreadyExist(registeredPhases: Array<TipoFase>): boolean {
+    let isAlreadyRegistered: boolean = false;
+    registeredPhases.forEach(each => {
+      if (each.nome.toUpperCase() === this.tipoFase.nome.toUpperCase()) {
+        isAlreadyRegistered = true;
+      }
+    });
+    return isAlreadyRegistered;
+  }
+
+  private checkPhaseNameIsValid(): boolean {
+    let isNameValid: boolean = false;
+
+    if (this.tipoFase.nome !== null && this.tipoFase.nome !== undefined && this.tipoFase.nome !== "") {
+      isNameValid = true;
+      console.log(this.tipoFase.nome.length);
+      if (this.tipoFase.nome.length > 254) {
+        this.pageNotificationService.addErrorMsg('O nome da fase excede o máximo de caracteres!');
+        isNameValid = false;
+      }
+    } else {
+      this.pageNotificationService.addErrorMsg('O campo nome da fase é obrigatório!');
+    }
+
+    return isNameValid;
   }
 
   private subscribeToSaveResponse(result: Observable<TipoFase>) {
@@ -53,7 +90,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
     }, (error: Response) => {
       this.isSaving = false;
 
-      switch(error.status) {
+      switch (error.status) {
         case 400: {
           const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
 

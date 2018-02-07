@@ -1,10 +1,10 @@
-import { 
-  Component, 
-  AfterViewInit, 
-  ElementRef, 
-  Renderer, 
-  ViewChild, 
-  OnDestroy 
+import {
+  Component,
+  AfterViewInit,
+  ElementRef,
+  Renderer,
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 
 import { Message } from 'primeng/components/common/api';
