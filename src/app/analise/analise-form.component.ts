@@ -88,6 +88,27 @@ export class AnaliseFormComponent implements OnInit, AfterViewChecked, OnDestroy
     // TODO organizacao.copyFromJSON() convertendo sistemas => não precisa da requisicao
     this.organizacaoSelected(analiseCarregada.organizacao);
     this.contratoSelected(analiseCarregada.contrato);
+    this.carregaFatorAjusteNaEdicao();
+  }
+
+  organizacaoSelected(org: Organizacao) {
+    this.contratos = org.contracts;
+    this.sistemaService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
+      this.sistemas = res.json;
+    });
+  }
+
+  contratoSelected(contrato: Contrato) {
+    const manual = contrato.manual;
+    this.carregarEsforcoFases(manual);
+    this.carregarMetodosContagem(manual);
+    this.fatoresAjuste = _.cloneDeep(manual.fatoresAjuste);
+  }
+
+  private carregaFatorAjusteNaEdicao() {
+    if (this.analise.fatorAjuste) {
+      this.analise.fatorAjuste = _.find(this.fatoresAjuste, { 'id': this.analise.fatorAjuste.id });
+    }
   }
 
   get analise(): Analise {
@@ -98,13 +119,6 @@ export class AnaliseFormComponent implements OnInit, AfterViewChecked, OnDestroy
     this.analiseSharedDataService.analise = analise;
   }
 
-  organizacaoSelected(org: Organizacao) {
-    this.contratos = org.contracts;
-    this.sistemaService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
-      this.sistemas = res.json;
-    });
-  }
-
   contratoDropdownPlaceholder() {
     if (this.shouldEnableContratoDropdown()) {
       return 'Contrato';
@@ -113,12 +127,6 @@ export class AnaliseFormComponent implements OnInit, AfterViewChecked, OnDestroy
     }
   }
 
-  contratoSelected(contrato: Contrato) {
-    const manual = contrato.manual;
-    this.carregarEsforcoFases(manual);
-    this.carregarMetodosContagem(manual);
-    this.fatoresAjuste = _.cloneDeep(manual.fatoresAjuste);
-  }
 
   private carregarEsforcoFases(manual: Manual) {
     this.esforcoFases = _.cloneDeep(manual.esforcoFases);
