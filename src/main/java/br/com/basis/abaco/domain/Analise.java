@@ -137,7 +137,7 @@ public class Analise implements Serializable {
     @ManyToOne
     private FatorAjuste fatorAjuste;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<EsforcoFase> esforcoFases;
 
     public Long getId() {
