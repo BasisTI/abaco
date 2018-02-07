@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
@@ -20,7 +20,7 @@ import { Manual } from '../manual/index';
   selector: 'jhi-analise-form',
   templateUrl: './analise-form.component.html'
 })
-export class AnaliseFormComponent implements OnInit, OnDestroy {
+export class AnaliseFormComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   isEdicao: boolean;
 
@@ -63,16 +63,24 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     });
     this.routeSub = this.route.params.subscribe(params => {
       this.analise = new Analise();
-      this.isEdicao = false;
-      this.analise.esforcoFases = [];
       if (params['id']) {
         this.isEdicao = true;
         this.analiseService.find(params['id']).subscribe(analise => {
           this.analise = analise;
         });
+      } else {
+        this.isEdicao = false;
+        this.analise.esforcoFases = [];
       }
-      this.analiseSharedDataService.analiseCarregada = true;
     });
+  }
+
+  // FIXME workaround pra funcionar rapido
+  // idealmente analiseSharedDataService subscribe na rota
+  // mas tem que garantir que todos os componentes subscrevem ao loadSubject antes
+  // // acho que esse é a maior dificuldade
+  ngAfterViewChecked() {
+    this.analiseSharedDataService.analiseCarregada();
   }
 
   get analise(): Analise {
@@ -116,11 +124,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
       { value: 'DETALHADA', label: 'DETALHADA' },
       {
         value: 'INDICATIVA',
-        label: this.getLabelValorVariacao('INDICATIVA', manual.valorVariacaoIndicativa)
+        label: this.getLabelValorVariacao('INDICATIVA', manual.valorVariacaoIndicativaFormatado)
       },
       {
         value: 'ESTIMADA',
-        label: this.getLabelValorVariacao('ESTIMADA', manual.valorVariacaoEstimada)
+        label: this.getLabelValorVariacao('ESTIMADA', manual.valorVariacaoEstimadaFormatado)
       }
     ];
   }

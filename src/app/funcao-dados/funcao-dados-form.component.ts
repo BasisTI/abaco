@@ -12,12 +12,13 @@ import { Calculadora } from '../analise-shared/calculadora';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
 import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
+import { AfterViewInit, AfterContentInit } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   selector: 'app-analise-funcao-dados',
   templateUrl: './funcao-dados-form.component.html'
 })
-export class FuncaoDadosFormComponent implements OnInit {
+export class FuncaoDadosFormComponent implements OnInit, AfterContentInit {
 
   funcaoDadosEmEdicao: FuncaoDados;
   resumo: ResumoFuncoes;
@@ -38,6 +39,7 @@ export class FuncaoDadosFormComponent implements OnInit {
 
   ngOnInit() {
     this.currentFuncaoDados = new FuncaoDados();
+    this.resumo = this.analise.resumoFuncaoDados;
   }
 
   get currentFuncaoDados(): FuncaoDados {

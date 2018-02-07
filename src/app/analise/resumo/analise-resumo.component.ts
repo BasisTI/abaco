@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ApplicationRef } from '@angular/core';
 import { ResumoFuncoes, ResumoTotal } from '../../analise-shared/resumo-funcoes';
 import { Complexidade } from '../../analise-shared/complexidade-enum';
 import { AnaliseSharedUtils } from '../../analise-shared/analise-shared-utils';
@@ -11,21 +11,24 @@ import { Analise } from '../analise.model';
 })
 export class AnaliseResumoComponent implements OnInit {
 
+  analiseCarregada = false;
+
   resumoTotal: ResumoTotal;
 
   complexidades: string[];
 
   constructor(
-    private analiseSharedDataService: AnaliseSharedDataService
+    private analiseSharedDataService: AnaliseSharedDataService,
+    private appRef: ApplicationRef
   ) { }
 
   ngOnInit() {
     this.complexidades = AnaliseSharedUtils.complexidades;
-    this.resumoTotal = this.analiseSharedDataService.analise.resumoTotal;
-  }
-
-  get analiseCarregada(): boolean {
-    return this.analiseSharedDataService.analiseCarregada;
+    this.analiseSharedDataService.getLoadSubject().subscribe(() => {
+      this.analiseCarregada = true;
+      this.resumoTotal = this.analiseSharedDataService.analise.resumoTotal;
+      this.appRef.tick();
+    });
   }
 
   get analise(): Analise {

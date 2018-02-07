@@ -11,13 +11,12 @@ import { FuncaoTransacao } from '../funcao-transacao/index';
 export class AnaliseSharedDataService {
 
   private saveSubject = new Subject<any>();
+  private loadSubject = new Subject<any>();
 
   analise: Analise;
 
   currentFuncaoDados: FuncaoDados;
   currentFuncaoTransacao: FuncaoTransacao;
-
-  analiseCarregada = false;
 
   isContratoSelected(): boolean {
     return !_.isUndefined(this.analise.contrato);
@@ -29,6 +28,14 @@ export class AnaliseSharedDataService {
 
   getSaveSubject(): Observable<any> {
     return this.saveSubject.asObservable();
+  }
+
+  analiseCarregada() {
+    this.loadSubject.next();
+  }
+
+  getLoadSubject(): Observable<any> {
+    return this.loadSubject.asObservable();
   }
 
 }
