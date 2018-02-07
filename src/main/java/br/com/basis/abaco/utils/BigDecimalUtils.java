@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 public class BigDecimalUtils {
 
+    // WORKAROUND para o bug do elasticsearch
+    // https://github.com/elastic/elasticsearch/issues/15961#issuecomment-171631059
     public static BigDecimal toAtLeastOneFixedPoint(BigDecimal value) {
         if (isIntegerValue(value)) {
             return value.setScale(1);

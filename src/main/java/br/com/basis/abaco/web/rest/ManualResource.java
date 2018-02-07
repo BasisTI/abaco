@@ -30,6 +30,7 @@ import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.Manual;
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
+import br.com.basis.abaco.utils.BigDecimalUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 
@@ -83,10 +84,12 @@ public class ManualResource {
     private Manual linkManualToPhaseEffortsAndAdjustFactors(Manual manual) {
 
         manual.getEsforcoFases().forEach(phaseEffort -> {
+            phaseEffort.setEsforco(BigDecimalUtils.toAtLeastOneFixedPoint(phaseEffort.getEsforco()));
             phaseEffort.setManual(manual);
         });
 
         manual.getFatoresAjuste().forEach(adjustFactor -> {
+            adjustFactor.setFator(BigDecimalUtils.toAtLeastOneFixedPoint(adjustFactor.getFator()));
             adjustFactor.setManual(manual);
         });
 
