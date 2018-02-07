@@ -66,7 +66,7 @@ export class AnaliseFormComponent implements OnInit, AfterViewChecked, OnDestroy
       if (params['id']) {
         this.isEdicao = true;
         this.analiseService.find(params['id']).subscribe(analise => {
-          this.analise = analise;
+          this.inicializaValoresAposCarregamento(analise);
         });
       } else {
         this.isEdicao = false;
@@ -81,6 +81,13 @@ export class AnaliseFormComponent implements OnInit, AfterViewChecked, OnDestroy
   // // acho que esse é a maior dificuldade
   ngAfterViewChecked() {
     this.analiseSharedDataService.analiseCarregada();
+  }
+
+  private inicializaValoresAposCarregamento(analiseCarregada: Analise) {
+    this.analise = analiseCarregada;
+    // TODO organizacao.copyFromJSON() convertendo sistemas => não precisa da requisicao
+    this.organizacaoSelected(analiseCarregada.organizacao);
+    this.contratoSelected(analiseCarregada.contrato);
   }
 
   get analise(): Analise {
