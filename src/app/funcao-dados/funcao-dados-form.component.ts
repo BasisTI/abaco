@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { AnaliseSharedDataService, PageNotificationService } from '../shared';
 import { FuncaoDados } from './funcao-dados.model';
 import { Analise } from '../analise';
@@ -18,7 +18,7 @@ import { AfterViewInit, AfterContentInit } from '@angular/core/src/metadata/life
   selector: 'app-analise-funcao-dados',
   templateUrl: './funcao-dados-form.component.html'
 })
-export class FuncaoDadosFormComponent implements OnInit, AfterContentInit {
+export class FuncaoDadosFormComponent implements OnInit {
 
   funcaoDadosEmEdicao: FuncaoDados;
   resumo: ResumoFuncoes;
@@ -34,7 +34,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterContentInit {
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
     private confirmationService: ConfirmationService,
-    private pageNotificationService: PageNotificationService
+    private pageNotificationService: PageNotificationService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -43,6 +44,11 @@ export class FuncaoDadosFormComponent implements OnInit, AfterContentInit {
     this.analiseSharedDataService.getLoadSubject().subscribe(() => {
       this.resumo = this.analise.resumoFuncaoDados;
     });
+  }
+
+  private atualizaResumo() {
+    this.resumo = this.analise.resumoFuncaoDados;
+    this.changeDetectorRef.detectChanges();
   }
 
   get currentFuncaoDados(): FuncaoDados {
@@ -118,7 +124,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterContentInit {
   private doAdicionar() {
     const funcaoDadosCalculada = Calculadora.calcular(this.analise.tipoContagem, this.currentFuncaoDados);
     this.analise.addFuncaoDados(funcaoDadosCalculada);
-    this.resumo = this.analise.resumoFuncaoDados;
+    this.atualizaResumo();
     this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
     // Mantendo o mesmo conteudo a pedido do Leandro
     this.currentFuncaoDados = this.currentFuncaoDados.clone();
