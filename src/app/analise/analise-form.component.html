@@ -73,7 +73,7 @@
                   <p-column selectionMode="multiple"
                     [style]="{'width':'15%'}"></p-column>
                   <p-column header="Nome" field="fase.nome"></p-column>
-                  <p-column header="Esforço %" field="esforco"></p-column>
+                  <p-column header="Esforço %" field="esforcoFormatado"></p-column>
                   <p-footer *ngIf="analise.contrato">Total: {{ totalEsforcoFases() }}%</p-footer>
                 </p-dataTable>
               </div>

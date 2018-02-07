@@ -146,7 +146,7 @@ export class AnaliseFormComponent implements OnInit, AfterViewChecked, OnDestroy
 
   totalEsforcoFases() {
     const initialValue = 0;
-    return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforco, initialValue);
+    return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforcoFormatado, initialValue);
   }
 
   shouldEnableContratoDropdown() {
