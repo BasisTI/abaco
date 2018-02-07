@@ -23,19 +23,23 @@ export class ManualService {
   ) {}
 
   private parsePhaseEffortDecimalValues(esforcoFases: Array<EsforcoFase>): Array<EsforcoFase> {
-    esforcoFases.forEach(each => {
-      each.esforco = each.esforco / 100;
-    });
+    if(esforcoFases !== undefined) {
+      esforcoFases.forEach(each => {
+        each.esforco = each.esforco / 100;
+      });
+    }
 
     return esforcoFases;
   }
 
   private parseAdjustFactorDecimalValues(adjustFactors: Array<FatorAjuste>): Array<FatorAjuste> {
-    adjustFactors.forEach(each => {
-      if(each.tipoAjuste.toString() === 'PERCENTUAL') {
-        each.fator = each.fator / 100;
-      } 
-    });
+    if(adjustFactors !== undefined) {
+      adjustFactors.forEach(each => {
+        if(each.tipoAjuste.toString() === 'PERCENTUAL') {
+          each.fator = each.fator / 100;
+        }
+      });
+    }
 
     return adjustFactors;
   }
