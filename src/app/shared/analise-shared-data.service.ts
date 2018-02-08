@@ -14,6 +14,7 @@ export class AnaliseSharedDataService {
   private loadSubject = new Subject<any>();
   private sistemaSelectedSubject = new Subject<any>();
   private funcaoAnaliseCarregadaSubject = new Subject<any>();
+  private funcaoAnaliseDescarregadaSubject = new Subject<any>();
 
   isEdit = false;
 
@@ -59,5 +60,14 @@ export class AnaliseSharedDataService {
   getFuncaoAnaliseCarregadaSubject() {
     return this.funcaoAnaliseCarregadaSubject.asObservable();
   }
+
+  funcaoAnaliseDescarregada() {
+    this.funcaoAnaliseDescarregadaSubject.next();
+  }
+
+  getFuncaoAnaliseDescarregadaSubject() {
+    return this.funcaoAnaliseDescarregadaSubject.asObservable();
+  }
+
 
 }
