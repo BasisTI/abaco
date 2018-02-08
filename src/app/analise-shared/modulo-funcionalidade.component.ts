@@ -244,6 +244,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
   private recarregarSistema(sistemaRecarregado: Sistema) {
     this.analiseSharedDataService.analise.sistema = sistemaRecarregado;
+    this.modulos = this.sistema.modulos;
   }
 
   funcionalidadeDropdownPlaceholder() {
