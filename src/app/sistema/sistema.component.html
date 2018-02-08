@@ -23,12 +23,12 @@
             <!-- <button pButton type="button" label="Novo Sistema" routerLink="/sistema/new" icon="ui-icon-add"></button> -->
           </div>
         </div>
-        <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
+        <basis-datatable [url]="searchUrl"
           (buttonClick)="datatableClick($event)" #datatable>
-          <p-column header="Sigla" field="sigla"></p-column>
-          <p-column header="Nome" field="nome"></p-column>
-          <p-column header="Número da Ocorrência" field="numeroOcorrencia"></p-column>
-          <p-column header="Organização" field="organizacao.nome"></p-column>
+          <p-column header="Sigla" field="sigla" [sortable]="true"></p-column>
+          <p-column header="Nome" field="nome" [sortable]="true"></p-column>
+          <p-column header="Número da Ocorrência" field="numeroOcorrencia" [sortable]="true"></p-column>
+          <p-column header="Organização" field="organizacao.nome" [sortable]="true"></p-column>
         </basis-datatable>
       </div>
     </div>

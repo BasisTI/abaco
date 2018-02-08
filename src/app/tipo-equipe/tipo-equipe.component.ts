@@ -58,6 +58,10 @@ export class TipoEquipeComponent implements AfterViewInit {
         this.tipoEquipeService.delete(id).subscribe(() => {
           this.datatable.refresh(this.elasticQuery.query);
           this.pageNotificationService.addDeleteMsg();
+        }, error => {
+          if(error.status === 500) {
+            this.pageNotificationService.addErrorMsg('O registro não pode ser deletado pois possui Usuários associados a ele.');
+          }
         });
       }
     });

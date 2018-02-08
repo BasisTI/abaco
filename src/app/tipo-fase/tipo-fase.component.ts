@@ -57,6 +57,10 @@ export class TipoFaseComponent implements AfterViewInit {
         this.tipoFaseService.delete(id).subscribe(() => {
           this.datatable.refresh(this.elasticQuery.query);
           this.pageNotificationService.addDeleteMsg();
+        }, error => {
+          if(error.status === 500) {
+            this.pageNotificationService.addErrorMsg(`A fase não pode ser deletada pois existem Manuais associados a ela.`)
+          }
         });
       }
     });

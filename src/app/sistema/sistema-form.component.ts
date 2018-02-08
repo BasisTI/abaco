@@ -104,13 +104,28 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   confirmDeleteModulo() {
     this.confirmationService.confirm({
-      message: `Tem certeza que deseja excluir o módulo '${this.moduloEmEdicao.nome}'
-        e todas as suas funcionalidades?`,
+      message: `Tem certeza que deseja excluir o módulo '${this.moduloEmEdicao.nome}' ?`,
       accept: () => {
-        this.sistema.deleteModulo(this.moduloEmEdicao);
-        this.moduloEmEdicao = new Modulo();
+        if(this.moduleCanBeDeleted()) {
+          this.sistema.deleteModulo(this.moduloEmEdicao);
+          this.moduloEmEdicao = new Modulo();
+        } else {
+          this.pageNotificationService.addErrorMsg('O módulo ' + this.moduloEmEdicao.nome + ' não pode ser excluído porque existem funcionalidades atribuídas.');
+        }
       }
     });
+  }
+
+  private moduleCanBeDeleted() {
+    let isDeletationValid = true;
+
+    this.sistema.funcionalidades.forEach(each => {
+      if(each.modulo.nome === this.moduloEmEdicao.nome) {
+        isDeletationValid = false;
+      }
+    });
+
+    return isDeletationValid;
   }
 
   abrirDialogModulo() {
@@ -189,9 +204,9 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
       sistemas = response.json;
 
       if(this.sistema.id !== undefined) {
-        (!this.checkDuplicity(sistemas)) ? (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
+        (!this.checkDuplicity(sistemas) && !this.checkSystemInitials() && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
       } else {
-        (!this.checkDuplicity(sistemas)) ? (this.subscribeToSaveResponse(this.sistemaService.create(this.sistema))) : (this);
+        (!this.checkDuplicity(sistemas) && !this.checkSystemInitials() && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.create(this.sistema))) : (this);
       }
     });
   }
@@ -206,6 +221,27 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
       }
     });
     return isAlreadyRegistered;
+  }
+
+  private checkSystemInitials() {
+      let exceedsMaximumValue = false;
+      if(this.sistema.sigla.length >= 20) {
+          exceedsMaximumValue = true;
+          this.pageNotificationService.addErrorMsg('O campo sigla excede o número de caracteres.');
+      }
+
+      return exceedsMaximumValue;
+  }
+
+  private checkSystemName() {
+    let isValid = true;
+
+    if(this.sistema.nome.length >= 255) {
+      isValid = false;
+      this.pageNotificationService.addErrorMsg('O campo Nome excede o número de caracteres.');
+    }
+
+    return isValid;
   }
 
   private subscribeToSaveResponse(result: Observable<Sistema>) {

@@ -28,8 +28,8 @@
 
         <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
           (buttonClick)="datatableClick($event)" #datatable>
-          <p-column header="Código" field="id"></p-column>
-          <p-column header="Nome" field="nome"></p-column>
+          <p-column header="Código" field="id" [sortable]="true"></p-column>
+          <p-column header="Nome" field="nome" [sortable]="true"></p-column>
         </basis-datatable>
 
       </div>

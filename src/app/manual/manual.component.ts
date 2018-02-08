@@ -18,7 +18,7 @@ export class ManualComponent implements AfterViewInit {
 
   searchUrl: string = this.manualService.searchUrl;
 
-  paginationParams = { contentIndex: null };
+  paginationParams = {contentIndex: null};
   elasticQuery: ElasticQuery = new ElasticQuery();
 
   constructor(
@@ -29,7 +29,7 @@ export class ManualComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.datatable.refresh(this.elasticQuery.query);
+    // this.datatable.refresh(this.elasticQuery.query);
   }
 
   datatableClick(event: DatatableClickEvent) {

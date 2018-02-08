@@ -90,7 +90,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.manual.valorVariacaoEstimada = this.manual.valorVariacaoEstimada;
     this.manual.valorVariacaoIndicativa = this.manual.valorVariacaoIndicativa;
 
-    console.log(this.manual);
     if (this.manual.id !== undefined) {
       this.manualService.find(this.manual.id).subscribe(response => {
         if(this.arquivoManual !== undefined) {
@@ -122,7 +121,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   private checkRequiredFields(): boolean {
       let isFieldsValid = false;
-      console.log(this.manual);
+
       if ( isNaN(this.manual.valorVariacaoEstimada)) (this.invalidFields.push('Valor Variação Estimada'));
       if ( isNaN(this.manual.valorVariacaoIndicativa)) (this.invalidFields.push('Valor Variação Inidicativa'));
 
@@ -133,6 +132,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   private getInvalidFieldsString(): string {
     let invalidFieldsString = "";
+
     this.invalidFields.forEach(invalidField => {
       if(invalidField === this.invalidFields[this.invalidFields.length-1]) {
         invalidFieldsString = invalidFieldsString + invalidField;
@@ -200,7 +200,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.openDialogEditAdjustFactor();
         break;
       case 'delete':
-        console.log(event.selection)
+        console.log(event.selection);
         this.editedAdjustFactor = event.selection.clone();
         this.confirmDeleteAdjustFactor();
     }

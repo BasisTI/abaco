@@ -38,10 +38,34 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
   save() {
     this.isSaving = true;
     if (this.tipoEquipe.id !== undefined) {
-      this.subscribeToSaveResponse(this.tipoEquipeService.update(this.tipoEquipe));
-      this.pageNotificationService.addUpdateMsg();
+      if(this.checkRequiredFields() && this.checkFieldsMaxLength()) {
+        this.subscribeToSaveResponse(this.tipoEquipeService.update(this.tipoEquipe));
+      }
     } else {
-      this.subscribeToSaveResponse(this.tipoEquipeService.create(this.tipoEquipe));
+      if(this.checkRequiredFields() && this.checkFieldsMaxLength()) {
+        this.subscribeToSaveResponse(this.tipoEquipeService.create(this.tipoEquipe));
+      }
+    }
+  }
+
+  private checkRequiredFields(): boolean {
+    let isValid = false;
+    if(this.tipoEquipe.nome !== undefined && this.tipoEquipe.nome !== null && this.tipoEquipe.nome !== '' && this.tipoEquipe.nome !== ' ') {
+      isValid = true;
+    } else {
+      this.pageNotificationService.addErrorMsg('O campo nome é obrigatório!');
+    }
+
+    return isValid;
+  }
+
+  private checkFieldsMaxLength() {
+    let isValid = false;
+
+    if(this.tipoEquipe.nome.length < 255) {
+      isValid = true;
+    } else {
+      this.pageNotificationService.addErrorMsg('O campo nome excede o número de caracteres permitidos.');
     }
   }
 
