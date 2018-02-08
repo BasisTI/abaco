@@ -84,7 +84,7 @@
           <app-memory-datatable [value]="funcoesTransacoes"
             (buttonClick)="datatableClick($event)"
             [responsive]="true" scrollable="true" scrollWidth="100%">
-            <p-column header="Fator Ajuste" [style]="{'width': '200px'}">
+            <p-column header="Fator de Ajuste" [style]="{'width': '200px'}">
               <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
                 {{ fatorAjuste.nome }}
               </ng-template>

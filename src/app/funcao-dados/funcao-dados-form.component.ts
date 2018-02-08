@@ -106,9 +106,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   fatoresAjusteDropdownPlaceholder() {
     if (this.isContratoSelected()) {
-      return 'Selecione um Valor de Ajuste';
+      return 'Selecione um Fator de Ajuste';
     } else {
-      return `Selecione um Contrato na aba 'Geral' para carregar os Valores de Ajuste`;
+      return `Selecione um Contrato na aba 'Geral' para carregar os Fatores de Ajuste`;
     }
   }
 
