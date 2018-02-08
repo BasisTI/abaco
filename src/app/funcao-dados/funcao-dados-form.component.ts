@@ -45,7 +45,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     this.currentFuncaoDados = new FuncaoDados();
 
     this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
-      this.resumo = this.analise.resumoFuncaoDados;
+      this.atualizaResumo();
     });
   }
 
