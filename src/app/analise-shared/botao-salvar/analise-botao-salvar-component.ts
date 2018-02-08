@@ -41,7 +41,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
       this.motivosBotaoDesabilitado.add('- Selecione um Tipo de Contagem');
     }
     if (this.nenhumaFuncaoAdicionada()) {
-      this.motivosBotaoDesabilitado.add('- Cadastre ao menos uma Função de Dados ou Função Transação');
+      this.motivosBotaoDesabilitado.add('- Adicione ao menos uma Função de Dados ou Função Transação');
     }
     return _.isEmpty(this.motivosBotaoDesabilitado);
   }
