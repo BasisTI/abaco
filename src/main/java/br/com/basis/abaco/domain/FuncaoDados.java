@@ -64,7 +64,6 @@ public class FuncaoDados implements Serializable {
     @Column(name = "grosspf", precision = 10, scale = 2)
     private BigDecimal grossPF;
 
-
     @ManyToOne
     @JoinColumn(name = "analise_id")
     @JsonBackReference
@@ -85,7 +84,6 @@ public class FuncaoDados implements Serializable {
     @Column
     private String retStr;
 
-
     @ManyToOne
     private FatorAjuste fatorAjuste;
 
@@ -105,10 +103,10 @@ public class FuncaoDados implements Serializable {
 
     @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
-    
+
     @Transient
     private Set<String> derValues;
-    
+
     @Transient
     private Set<String> rlrValues;
 
@@ -248,7 +246,6 @@ public class FuncaoDados implements Serializable {
         this.alr = alr;
     }
 
-
     public Funcionalidade getFuncionalidade() {
         return funcionalidade;
     }
@@ -304,11 +301,9 @@ public class FuncaoDados implements Serializable {
         return Objects.equals(id, funcaoDados.id);
     }
 
-
     public String getSustantation() {
         return sustantation;
     }
-
 
     public List<UploadedFile> getFiles() {
         return files;
@@ -329,29 +324,24 @@ public class FuncaoDados implements Serializable {
 
     @Override
     public String toString() {
-        return "FuncaoDados{" +
-            "id=" + id +
-            ", tipo='" + tipo + "'" +
-            ", complexidade='" + complexidade + "'" +
-            ", pf='" + pf + "'" +
-            '}';
+        return "FuncaoDados{" + "id=" + id + ", tipo='" + tipo + "'" + ", complexidade='" + complexidade + "'"
+                + ", pf='" + pf + "'" + '}';
     }
 
-	public Set<String> getDerValues() {
-		return derValues;
-	}
+    public Set<String> getDerValues() {
+        return derValues;
+    }
 
-	public void setDerValues(Set<String> derValues) {
-		this.derValues = derValues;
-	}
+    public void setDerValues(Set<String> derValues) {
+        this.derValues = derValues;
+    }
 
-	public Set<String> getRlrValues() {
-		return rlrValues;
-	}
+    public Set<String> getRlrValues() {
+        return rlrValues;
+    }
 
-	public void setRlrValues(Set<String> rlrValues) {
-		this.rlrValues = rlrValues;
-	}
-    
-    
+    public void setRlrValues(Set<String> rlrValues) {
+        this.rlrValues = rlrValues;
+    }
+
 }

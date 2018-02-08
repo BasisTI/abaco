@@ -100,10 +100,10 @@ public class FuncaoTransacao implements Serializable {
 
     @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
-    
+
     @Transient
     private Set<String> derValues;
-    
+
     @Transient
     private Set<String> ftrValues;
 
@@ -151,7 +151,7 @@ public class FuncaoTransacao implements Serializable {
     }
 
     public BigDecimal getGrossPF() {
-        return grossPF==null?BigDecimal.ZERO:grossPF;
+        return grossPF == null ? BigDecimal.ZERO : grossPF;
     }
 
     public void setGrossPF(BigDecimal grossPF) {
@@ -293,7 +293,6 @@ public class FuncaoTransacao implements Serializable {
         return Objects.equals(id, funcaoTransacao.id);
     }
 
-
     public List<UploadedFile> getFiles() {
         return files;
     }
@@ -309,28 +308,24 @@ public class FuncaoTransacao implements Serializable {
 
     @Override
     public String toString() {
-        return "FuncaoTransacao{" +
-            "id=" + id +
-            ", tipo='" + tipo + "'" +
-            ", complexidade='" + complexidade + "'" +
-            ", pf='" + pf + "'" +
-            '}';
+        return "FuncaoTransacao{" + "id=" + id + ", tipo='" + tipo + "'" + ", complexidade='" + complexidade + "'"
+                + ", pf='" + pf + "'" + '}';
     }
 
-	public Set<String> getDerValues() {
-		return derValues;
-	}
+    public Set<String> getDerValues() {
+        return derValues;
+    }
 
-	public void setDerValues(Set<String> derValues) {
-		this.derValues = derValues;
-	}
+    public void setDerValues(Set<String> derValues) {
+        this.derValues = derValues;
+    }
 
-	public Set<String> getFtrValues() {
-		return ftrValues;
-	}
+    public Set<String> getFtrValues() {
+        return ftrValues;
+    }
 
-	public void setFtrValues(Set<String> ftrValues) {
-		this.ftrValues = ftrValues;
-	}
-    
+    public void setFtrValues(Set<String> ftrValues) {
+        this.ftrValues = ftrValues;
+    }
+
 }
