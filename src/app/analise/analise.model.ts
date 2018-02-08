@@ -54,6 +54,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     public organizacao?: Organizacao,
     public contrato?: Contrato,
     public esforcoFases?: EsforcoFase[],
+    public observacoes?: string
   ) {
     this.inicializaMappables(funcaoDados, funcaoTransacaos);
     this.inicializaResumos();
@@ -248,6 +249,7 @@ class AnaliseCopyFromJSON {
     this._analiseConverted.documentacao = this._json.documentacao;
     this._analiseConverted.tipoAnalise = this._json.tipoAnalise;
     this._analiseConverted.propositoContagem = this._json.propositoContagem;
+    this._analiseConverted.observacoes = this._json.observacoes;
   }
 
   private converteFuncoes() {
