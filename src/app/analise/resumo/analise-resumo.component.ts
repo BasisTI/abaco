@@ -12,8 +12,6 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class AnaliseResumoComponent implements OnInit, OnDestroy {
 
-  analiseCarregada = false;
-
   resumoTotal: ResumoTotal;
 
   complexidades: string[];
@@ -28,7 +26,6 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.complexidades = AnaliseSharedUtils.complexidades;
     this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
-      this.analiseCarregada = true;
       this.resumoTotal = this.analiseSharedDataService.analise.resumoTotal;
       this.changeDetectorRef.detectChanges();
     });
