@@ -208,18 +208,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   private carregarValoresNaPaginaParaEdicao(funcaoSelecionada: FuncaoTransacao) {
     this.analiseSharedDataService.funcaoAnaliseCarregada();
     this.carregarFatorDeAjusteNaEdicao(funcaoSelecionada);
-    this.carregarDerRlr(funcaoSelecionada);
   }
 
-  // TODO mudar em todas as abas para Fator De Ajuste (assim que tá no manual)
   private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
     this.fatoresAjuste = this.manual.fatoresAjuste;
     funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, { 'id': funcaoSelecionada.fatorAjuste.id });
-  }
-
-  private carregarDerRlr(funcaoDadosSelecionada: FuncaoTransacao) {
-    // TODO investigar quando der e rlr estao sendo salvos no banco
-    // acho que quando a complexidade é 'SEM' os valores são zerados
   }
 
   cancelarEdicao() {
