@@ -63,7 +63,7 @@
 
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <label>Fator de Ajuste</label>
-                <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
+                <p-dropdown [options]="fatoresAjuste"
                   [(ngModel)]="analise.fatorAjuste"
                   disabled="{{ !isContratoSelected() }}"
                   placeholder="{{ fatoresAjusteDropdownPlaceholder() }}"

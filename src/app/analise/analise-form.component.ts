@@ -15,6 +15,7 @@ import * as _ from 'lodash';
 import { EsforcoFase } from '../esforco-fase/index';
 import { FatorAjuste } from '../fator-ajuste/index';
 import { Manual } from '../manual/index';
+import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
 
 @Component({
   selector: 'jhi-analise-form',
@@ -34,10 +35,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   metodosContagem: SelectItem[] = [];
 
-  // TODO oferecer a opção 'Nenhum', com value vazio
-  // campo opcional, caso o usuário escolha um sem querer, dever conseguir "abortar"
-  // talvez tenha que ser no pipe
-  fatoresAjuste: FatorAjuste[] = [];
+  fatoresAjuste: SelectItem[] = [];
+  private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
 
   tiposAnalise: SelectItem[] = [
     { label: 'DESENVOLVIMENTO', value: 'DESENVOLVIMENTO' },
@@ -92,10 +91,20 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   contratoSelected(contrato: Contrato) {
-    const manual = contrato.manual;
+    const manual: Manual = contrato.manual;
     this.carregarEsforcoFases(manual);
     this.carregarMetodosContagem(manual);
-    this.fatoresAjuste = _.cloneDeep(manual.fatoresAjuste);
+    this.inicializaFatoresAjuste(manual);
+  }
+
+  private inicializaFatoresAjuste(manual: Manual) {
+    const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+    this.fatoresAjuste =
+      faS.map(fa => {
+        const label = FatorAjusteLabelGenerator.generate(fa);
+        return { label: label, value: fa };
+      });
+    this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
   }
 
   sistemaSelected() {
@@ -103,8 +112,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   private carregaFatorAjusteNaEdicao() {
-    if (this.analise.fatorAjuste) {
-      this.analise.fatorAjuste = _.find(this.fatoresAjuste, { 'id': this.analise.fatorAjuste.id });
+    const fatorAjuste: FatorAjuste = this.analise.fatorAjuste;
+    if (fatorAjuste) {
+      const fatorAjusteSelectItem: SelectItem
+        = _.find(this.fatoresAjuste, { value: { id : fatorAjuste.id }});
+      this.analise.fatorAjuste = fatorAjusteSelectItem.value;
     }
   }
 
