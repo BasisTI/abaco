@@ -140,6 +140,10 @@ public class Analise implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<EsforcoFase> esforcoFases;
 
+    @Size(max = 4000)
+    @Column(name = "observacoes", length = 4000)
+    private String observacoes;
+
     public Long getId() {
         return id;
     }
@@ -413,6 +417,14 @@ public class Analise implements Serializable {
 
     public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {
         this.esforcoFases = esforcoFases;
+    }
+
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
     }
 
     @Override
