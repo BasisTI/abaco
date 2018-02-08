@@ -20,6 +20,8 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
+  isEdit: boolean;
+
   funcaoTransacaoEmEdicao: FuncaoTransacao;
   resumo: ResumoFuncoes;
 
@@ -38,12 +40,14 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentFuncaoTransacao = new FuncaoTransacao();
+    this.subscribeToAnaliseCarregada();
+    this.initClassificacoes();
+  }
 
+  private subscribeToAnaliseCarregada() {
     this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
       this.atualizaResumo();
     });
-
-    this.initClassificacoes();
   }
 
   private atualizaResumo() {
@@ -57,6 +61,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     classificacoes.forEach(c => {
       this.classificacoes.push({ label: c, value: c});
     });
+  }
+
+  get header(): string {
+    return !this.isEdit ? 'Adicionar Função de Transação' : 'Alterar Função de Transação';
   }
 
   get currentFuncaoTransacao(): FuncaoTransacao {
@@ -123,20 +131,114 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     return this.isFuncionalidadeSelected() && !_.isUndefined(this.analise.tipoContagem);
   }
 
+  get labelBotaoAdicionar() {
+    return !this.isEdit ? 'Adicionar' : 'Alterar';
+  }
+
   adicionar() {
     if (this.deveHabilitarBotaoAdicionar()) {
+      this.adicionarOuSalvar();
+    }
+  }
+
+  private adicionarOuSalvar() {
+    if (this.isEdit) {
+      this.doEditar();
+    } else {
       this.doAdicionar();
     }
+    this.isEdit = false;
+  }
+
+  private doEditar() {
+    const funcaoDadosCalculada = CalculadoraTransacao.calcular(this.analise.tipoContagem, this.currentFuncaoTransacao);
+    // TODO temporal coupling
+    this.analise.updateFuncaoTransacao(funcaoDadosCalculada);
+    this.atualizaResumo();
+    this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
+    this.resetarEstadoPosSalvar();
+  }
+
+  private resetarEstadoPosSalvar() {
+    // Mantendo o mesmo conteudo a pedido do Leandro
+    this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
+
+    // TODO inappropriate intimacy DEMAIS
+    this.currentFuncaoTransacao.artificialId = undefined;
+    this.currentFuncaoTransacao.id = undefined;
   }
 
   private doAdicionar() {
     const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.tipoContagem, this.currentFuncaoTransacao);
+    // TODO temporal coupling entre 1-add() e 2-atualizaResumo(). 2 tem que ser chamado depois
     this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
     this.atualizaResumo();
     this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
+    this.resetarEstadoPosSalvar();
+  }
 
-    this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
-    this.currentFuncaoTransacao.artificialId = undefined;
+  datatableClick(event: DatatableClickEvent) {
+    if (!event.selection) {
+      return;
+    }
+
+    const funcaoSelecionada: FuncaoTransacao = event.selection.clone();
+    switch (event.button) {
+      case 'edit':
+        this.isEdit = true;
+        this.prepararParaEdicao(funcaoSelecionada);
+        break;
+      case 'delete':
+        this.funcaoTransacaoEmEdicao = funcaoSelecionada;
+        this.confirmDelete();
+    }
+  }
+
+  private prepararParaEdicao(funcaoSelecionada: FuncaoTransacao) {
+    this.analiseSharedDataService.currentFuncaoTransacao = funcaoSelecionada;
+    this.scrollParaInicioDaAba();
+    this.carregarValoresNaPaginaParaEdicao(funcaoSelecionada);
+    this.pageNotificationService.addInfoMsg(`Alterando Função de Transação '${funcaoSelecionada.name}'`);
+  }
+
+  private scrollParaInicioDaAba() {
+    window.scrollTo(0, 60);
+  }
+
+  private carregarValoresNaPaginaParaEdicao(funcaoSelecionada: FuncaoTransacao) {
+    this.analiseSharedDataService.funcaoAnaliseCarregada();
+    this.carregarFatorDeAjusteNaEdicao(funcaoSelecionada);
+    this.carregarDerRlr(funcaoSelecionada);
+  }
+
+  // TODO mudar em todas as abas para Fator De Ajuste (assim que tá no manual)
+  private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
+    this.fatoresAjuste = this.manual.fatoresAjuste;
+    funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, { 'id': funcaoSelecionada.fatorAjuste.id });
+  }
+
+  private carregarDerRlr(funcaoDadosSelecionada: FuncaoTransacao) {
+    // TODO investigar quando der e rlr estao sendo salvos no banco
+    // acho que quando a complexidade é 'SEM' os valores são zerados
+  }
+
+  cancelarEdicao() {
+    this.analiseSharedDataService.funcaoAnaliseDescarregada();
+    this.isEdit = false;
+    this.currentFuncaoTransacao = new FuncaoTransacao();
+    this.pageNotificationService.addInfoMsg('Alteração de Função de Transação cancelada');
+    this.scrollParaInicioDaAba();
+  }
+
+  confirmDelete() {
+    const name: string = this.funcaoTransacaoEmEdicao.name;
+    this.confirmationService.confirm({
+      message: `Tem certeza que deseja excluir a Função de Transação '${name}'?`,
+      accept: () => {
+        this.analise.deleteFuncaoTransacao(this.funcaoTransacaoEmEdicao);
+        this.pageNotificationService.addDeleteMsgWithName(name);
+      }
+    });
   }
 
   ngOnDestroy() {

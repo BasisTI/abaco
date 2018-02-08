@@ -3,12 +3,14 @@
     <div class="card card-w-title">
       
       <div style="margin-top: 25px">
-        <app-analise-modulo-funcionalidade
-          [isFuncaoDados]="false"
-          (moduloSelectedEvent)="moduloSelected($event)"
-          (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
-        </app-analise-modulo-funcionalidade>
+        <h2>{{ header }} </h2>
       </div>
+
+      <app-analise-modulo-funcionalidade
+        [isFuncaoDados]="false"
+        (moduloSelectedEvent)="moduloSelected($event)"
+        (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
+      </app-analise-modulo-funcionalidade>
 
       <div class="ui-g">
         <div class="ui-g-9" style="margin-bottom: 25px">
@@ -63,8 +65,11 @@
         <div class="ui-md-3">
           <app-analise-botao-salvar></app-analise-botao-salvar>
         </div>
+        <div class="ui-md-3" *ngIf="isEdit">
+          <app-white-button buttonLabel="Cancelar Alteração" (click)="cancelarEdicao()"></app-white-button>
+        </div>
         <div class="ui-md-3">
-          <app-green-button buttonLabel="Adicionar"
+          <app-green-button [buttonLabel]="labelBotaoAdicionar"
             [isDisabled]="!deveHabilitarBotaoAdicionar()"
             buttonIcon="ui-icon-add" (click)="adicionar()">
           </app-green-button>
