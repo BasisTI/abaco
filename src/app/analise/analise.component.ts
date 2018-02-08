@@ -36,18 +36,18 @@ export class AnaliseComponent {
         this.router.navigate(['/analise', event.selection.id, 'edit']);
         break;
       case 'delete':
-        this.confirmDelete(event.selection.id);
+        this.confirmDelete(event.selection);
         break;
     }
   }
 
-  confirmDelete(id: any) {
+  confirmDelete(analise: Analise) {
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja excluir o registro?',
+      message: `Tem certeza que deseja excluir a Análise com Número OS '${analise.numeroOs}'?`,
       accept: () => {
-        this.analiseService.delete(id).subscribe(() => {
+        this.analiseService.delete(analise.id).subscribe(() => {
           this.datatable.refresh(this.elasticQuery.query);
-          this.pageNotificationService.addDeleteMsg();
+          this.pageNotificationService.addDeleteMsgWithName(analise.numeroOs);
         });
       }
     });
