@@ -4,11 +4,8 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import javax.validation.Valid;
 
@@ -31,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 
-import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Manual;
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
@@ -99,22 +95,7 @@ public class ManualResource {
 
         return manual;
     }
-
-    private Manual copyManual(Manual manual) {
-        Manual copyOfManual = new Manual();
-
-        copyOfManual.setId(manual.getId());
-        copyOfManual.setNome(manual.getNome());
-        copyOfManual.setValorVariacaoEstimada(manual.getValorVariacaoEstimada());
-        copyOfManual.setValorVariacaoIndicativa(manual.getValorVariacaoIndicativa());
-        copyOfManual.setObservacao(manual.getObservacao());
-        copyOfManual.setFatoresAjuste(new HashSet<>(manual.getFatoresAjuste()));
-        copyOfManual.setEsforcoFases(new HashSet<>(manual.getEsforcoFases()));
-        copyOfManual.setArquivoManualId(manual.getArquivoManualId());
-
-        return copyOfManual;
-    }
-
+    
     /**
      * PUT /manuals : Updates an existing manual.
      *
