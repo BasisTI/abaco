@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
@@ -20,7 +20,7 @@ import { Manual } from '../manual/index';
   selector: 'jhi-analise-form',
   templateUrl: './analise-form.component.html'
 })
-export class AnaliseFormComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   isEdicao: boolean;
 
@@ -67,20 +67,13 @@ export class AnaliseFormComponent implements OnInit, AfterViewChecked, OnDestroy
         this.isEdicao = true;
         this.analiseService.find(params['id']).subscribe(analise => {
           this.inicializaValoresAposCarregamento(analise);
+          this.analiseSharedDataService.analiseCarregada();
         });
       } else {
         this.isEdicao = false;
         this.analise.esforcoFases = [];
       }
     });
-  }
-
-  // FIXME workaround pra funcionar rapido
-  // idealmente analiseSharedDataService subscribe na rota
-  // mas tem que garantir que todos os componentes subscrevem ao loadSubject antes
-  // // acho que esse é a maior dificuldade
-  ngAfterViewChecked() {
-    this.analiseSharedDataService.analiseCarregada();
   }
 
   private inicializaValoresAposCarregamento(analiseCarregada: Analise) {
