@@ -148,7 +148,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   private doEditar() {
-
+    const funcaoDadosCalculada = Calculadora.calcular(this.analise.tipoContagem, this.currentFuncaoDados);
+    // TODO temporal coupling
+    this.analise.updateFuncaoDados(funcaoDadosCalculada);
+    this.atualizaResumo();
+    this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
     this.resetarEstadoPosSalvar();
   }
 
