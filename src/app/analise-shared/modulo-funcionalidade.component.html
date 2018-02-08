@@ -3,6 +3,7 @@
   <div class="ui-g-12" style="margin-bottom: 25px">
     <div class="ui-g-6">
       <!-- filtro/pesquisa? -->
+      <label>Módulo</label>
       <p-dropdown [options]="modulos" [(ngModel)]="moduloSelecionado" optionLabel="nome"
        (onChange)="moduloSelected($event.value)"
         [placeholder]="moduloDropdownPlaceholder()"
@@ -18,6 +19,7 @@
 
     <div class="ui-g-6">
       <!-- filtro/pesquisa? -->
+      <label>Funcionalidade</label>
       <p-dropdown [options]="funcionalidades" [(ngModel)]="funcionalidadeSelecionada" optionLabel="nome" 
         (onChange)="funcionalidadeSelected($event.value)"
         [placeholder]="funcionalidadeDropdownPlaceholder()"
