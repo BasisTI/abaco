@@ -1,7 +1,6 @@
 package br.com.basis.abaco.domain;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -15,13 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -29,10 +23,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 
 /**
@@ -42,57 +34,21 @@ import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 @Table(name = "funcao_dados")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "funcaodados")
-public class FuncaoDados implements Serializable {
+public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo")
     private TipoFuncaoDados tipo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "complexidade")
-    private Complexidade complexidade;
-
-    @Column(name = "pf", precision = 10, scale = 2)
-    private BigDecimal pf;
-
-    @Column(name = "grosspf", precision = 10, scale = 2)
-    private BigDecimal grossPF;
-
-    @ManyToOne
-    @JoinColumn(name = "analise_id")
-    @JsonBackReference
-    private Analise analise;
-
     @OneToMany(mappedBy = "funcaoDados")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Funcionalidade> funcionalidades = new HashSet<>();
-
-    @ManyToOne
-    @JoinColumn(name = "funcionalidade_id")
-    private Funcionalidade funcionalidade;
-
-    @Column
-    private String detStr;
-
+    
     @Column
     private String retStr;
-
-    @ManyToOne
-    private FatorAjuste fatorAjuste;
-
-    @Column
-    private String name;
-
-    @Column
-    private String sustantation;
 
     @OneToMany(mappedBy = "funcaoDados")
     @JsonIgnore
@@ -111,14 +67,6 @@ public class FuncaoDados implements Serializable {
     @Transient
     private Set<String> rlrValues;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public TipoFuncaoDados getTipo() {
         return tipo;
     }
@@ -130,45 +78,6 @@ public class FuncaoDados implements Serializable {
 
     public void setTipo(TipoFuncaoDados tipo) {
         this.tipo = tipo;
-    }
-
-    public Complexidade getComplexidade() {
-        return complexidade;
-    }
-
-    public FuncaoDados complexidade(Complexidade complexidade) {
-        this.complexidade = complexidade;
-        return this;
-    }
-
-    public void setComplexidade(Complexidade complexidade) {
-        this.complexidade = complexidade;
-    }
-
-    public BigDecimal getPf() {
-        return pf;
-    }
-
-    public FuncaoDados pf(BigDecimal pf) {
-        this.pf = pf;
-        return this;
-    }
-
-    public void setPf(BigDecimal pf) {
-        this.pf = pf;
-    }
-
-    public Analise getAnalise() {
-        return analise;
-    }
-
-    public FuncaoDados analise(Analise analise) {
-        this.analise = analise;
-        return this;
-    }
-
-    public void setAnalise(Analise analise) {
-        this.analise = analise;
     }
 
     public Set<Funcionalidade> getFuncionalidades() {
@@ -194,19 +103,6 @@ public class FuncaoDados implements Serializable {
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
         this.funcionalidades = funcionalidades;
-    }
-
-    public FatorAjuste getFatorAjuste() {
-        return fatorAjuste;
-    }
-
-    public FuncaoDados fatorAjuste(FatorAjuste fatorAjuste) {
-        this.fatorAjuste = fatorAjuste;
-        return this;
-    }
-
-    public void setFatorAjuste(FatorAjuste fatorAjuste) {
-        this.fatorAjuste = fatorAjuste;
     }
 
     public Set<Rlr> getRlrs() {
@@ -247,44 +143,12 @@ public class FuncaoDados implements Serializable {
         this.alr = alr;
     }
 
-    public Funcionalidade getFuncionalidade() {
-        return funcionalidade;
-    }
-
-    public void setFuncionalidade(Funcionalidade funcionalidade) {
-        this.funcionalidade = funcionalidade;
-    }
-
-    public String getDetStr() {
-        return detStr;
-    }
-
-    public void setDetStr(String detStr) {
-        this.detStr = detStr;
-    }
-
     public String getRetStr() {
         return retStr;
     }
 
     public void setRetStr(String retStr) {
         this.retStr = retStr;
-    }
-
-    public BigDecimal getGrossPF() {
-        return grossPF;
-    }
-
-    public void setGrossPF(BigDecimal grossPF) {
-        this.grossPF = grossPF;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
@@ -296,14 +160,10 @@ public class FuncaoDados implements Serializable {
             return false;
         }
         FuncaoDados funcaoDados = (FuncaoDados) o;
-        if (funcaoDados.id == null || id == null) {
+        if (funcaoDados.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, funcaoDados.id);
-    }
-
-    public String getSustantation() {
-        return sustantation;
+        return Objects.equals(getId(), funcaoDados.getId());
     }
 
     public List<UploadedFile> getFiles() {
@@ -314,19 +174,15 @@ public class FuncaoDados implements Serializable {
         this.files = files;
     }
 
-    public void setSustantation(String sustantation) {
-        this.sustantation = sustantation;
-    }
-
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
-        return "FuncaoDados{" + "id=" + id + ", tipo='" + tipo + "'" + ", complexidade='" + complexidade + "'"
-                + ", pf='" + pf + "'" + '}';
+        return "FuncaoDados{" + "id=" + getId() + ", tipo='" + tipo + "'" + ", complexidade='" + getComplexidade() + "'"
+                + ", pf='" + getPf() + "'" + '}';
     }
 
     public Set<String> getDerValues() {
