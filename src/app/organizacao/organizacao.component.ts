@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { Organizacao } from './organizacao.model';
 import { OrganizacaoService } from './organizacao.service';
 import { ElasticQuery } from '../shared';
+import { PageNotificationService } from '../shared/page-notification.service';
 
 @Component({
   selector: 'jhi-organizacao',
@@ -24,7 +25,8 @@ export class OrganizacaoComponent implements AfterViewInit {
   constructor(
     private router: Router,
     private organizacaoService: OrganizacaoService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private pageNotificationService: PageNotificationService
   ) {}
 
   ngAfterViewInit() {
@@ -54,6 +56,10 @@ export class OrganizacaoComponent implements AfterViewInit {
       accept: () => {
         this.organizacaoService.delete(id).subscribe(() => {
           this.datatable.refresh(this.elasticQuery.query);
+        }, error => {
+          if(error.status === 500) {
+            this.pageNotificationService.addErrorMsg('A organização não pode ser deletada pois existe contrato associado a ela.');
+          }
         });
       }
     });

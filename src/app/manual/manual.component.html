@@ -21,22 +21,22 @@
             <!-- <button pButton type="button" label="Novo Manual" routerLink="/manual/new" icon="ui-icon-add"></button> -->
           </div>
         </div>
-        <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
+        <basis-datatable [url]="searchUrl"
           (buttonClick)="datatableClick($event)" #datatable>
-          <p-column header="Código" field="id"></p-column>
-          <p-column header="Nome" field="nome"></p-column>
-          <p-column header="Estimada (%)" field="valorVariacaoEstimada">
+          <p-column header="Código" field="id" [sortable]="true"></p-column>
+          <p-column header="Nome" field="nome" [sortable]="true"></p-column>
+          <p-column header="Estimada (%)" field="valorVariacaoEstimada" [sortable]="true">
             <ng-template let-col let-valorVariacaoEstimada="rowData" pTemplate="body">
               {{ valorVariacaoEstimada[col.field]* 100 }}
             </ng-template>
           </p-column>
-          <p-column header="Indicativa (%)" field="valorVariacaoIndicativa">
+          <p-column header="Indicativa (%)" field="valorVariacaoIndicativa" [sortable]="true">
             <ng-template pTemplate="body" let-col let-valorVariacaoIndicativa="rowData">
               {{ valorVariacaoIndicativa[col.field]* 100 }}
             </ng-template>
           </p-column>
           <p-column header="Observação" field="observacao"
-            [style]="{'width': '40%'}"></p-column>
+            [style]="{'width': '40%'}" [sortable]="true"></p-column>
         </basis-datatable>
       </div>
     </div>

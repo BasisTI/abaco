@@ -25,13 +25,13 @@
           </div>
         </div>
 
-        <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
+        <basis-datatable [url]="searchUrl"
           (buttonClick)="datatableClick($event)" #datatable>
-          <p-column header="Sigla" field="sigla"></p-column>
-          <p-column header="Nome" field="nome"></p-column>
-          <p-column header="CNPJ" field="cnpj"></p-column>
-          <p-column header="Número da Ocorrência" field="numeroOcorrencia"></p-column>
-          <p-column header="Ativo" field="ativo">
+          <p-column header="Sigla" field="sigla" [sortable]="true"></p-column>
+          <p-column header="Nome" field="nome" [sortable]="true"></p-column>
+          <p-column header="CNPJ" field="cnpj" [sortable]="true"></p-column>
+          <p-column header="Número da Ocorrência" field="numeroOcorrencia" [sortable]="true"></p-column>
+          <p-column header="Ativo" field="ativo" [sortable]="true">
             <ng-template let-col let-ativo="rowData" pTemplate="body">
               {{ ativo[col.field] ? 'Sim' : (ativo[col.field] != null ? 'Não' : null) }}
             </ng-template>
