@@ -46,6 +46,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isEdit = false;
     this.currentFuncaoDados = new FuncaoDados();
+    this.subscribeToAnaliseCarregada();
+  }
+
+  private subscribeToAnaliseCarregada() {
     this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
       this.atualizaResumo();
     });
@@ -130,8 +134,21 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   adicionar() {
     if (this.deveHabilitarBotaoAdicionar()) {
+      this.adicionarOuSalvar();
+    }
+  }
+
+  private adicionarOuSalvar() {
+    if (this.isEdit) {
+      this.doEditar();
+    } else {
       this.doAdicionar();
     }
+  }
+
+  private doEditar() {
+
+    this.resetarEstadoPosEdicao();
   }
 
   private doAdicionar() {
@@ -153,6 +170,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     switch (event.button) {
       case 'edit':
         this.isEdit = true;
+        console.log(funcaoDadosSelecionada);
         this.prepararParaEdicao(funcaoDadosSelecionada);
         break;
       case 'delete':
@@ -163,19 +181,46 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
     this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
-    window.scrollTo(0, 60);
+    this.scrollParaInicioDaAba();
+    this.carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada);
     this.pageNotificationService.addInfoMsg(`Alterando Função de Dados '${funcaoDadosSelecionada.name}'`);
-    // alterar header (criar)
-    // alterar botao adicionar para 'alterar'
-    // // setar um booleano isEdit como false. 
-    // // // true quando clica em edit
-    // // // false quando clica em atualizar
-    // // // false quando clica em cancelar edicao (criar botão)
-    // // // // seta currentFuncao para new()
+  }
+
+  private scrollParaInicioDaAba() {
+    window.scrollTo(0, 60);
+  }
+
+  private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
+    this.carregarModuloFuncionalidade(funcaoDadosSelecionada);
+    // FIXME primeira edicao nao traz fator de ajuste
+    // testar comentar carregarModuloFuncionalidade(), acho que funciona
+    this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
+    this.carregarDerRlr(funcaoDadosSelecionada);
+  }
+
+  private carregarModuloFuncionalidade(funcaoDadosSelecionada: FuncaoDados) {
+    this.analiseSharedDataService.funcaoAnaliseCarregada();
+  }
+
+  // TODO mudar em todas as abas para Fator De Ajuste (assim que tá no manual)
+  private carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada: FuncaoDados) {
+    this.fatoresAjuste = this.manual.fatoresAjuste;
+    funcaoDadosSelecionada.fatorAjuste = _.find(this.fatoresAjuste, { 'id': funcaoDadosSelecionada.fatorAjuste.id });
+  }
+
+  private carregarDerRlr(funcaoDadosSelecionada: FuncaoDados) {
+    // TODO investigar quando der e rlr estao sendo salvos no banco
+    // acho que quando a complexidade é 'SEM' os valores são zerados
   }
 
   cancelarEdicao() {
-    
+    this.resetarEstadoPosEdicao();
+    this.scrollParaInicioDaAba();
+  }
+
+  private resetarEstadoPosEdicao() {
+    this.isEdit = false;
+    this.currentFuncaoDados = new FuncaoDados();
   }
 
   confirmDelete() {
