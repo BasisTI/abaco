@@ -1,4 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component, OnInit, Input, Output,
+  EventEmitter, ChangeDetectorRef, OnDestroy
+} from '@angular/core';
 import { AnaliseSharedDataService } from '../shared';
 import { Analise } from '../analise';
 import { Manual } from '../manual';
@@ -14,7 +17,7 @@ import * as _ from 'lodash';
   selector: 'app-analise-modulo-funcionalidade',
   templateUrl: './modulo-funcionalidade.component.html'
 })
-export class ModuloFuncionalidadeComponent implements OnInit {
+export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
   @Input()
   isFuncaoDados: boolean;
@@ -25,8 +28,11 @@ export class ModuloFuncionalidadeComponent implements OnInit {
   @Output()
   funcionalidadeSelectedEvent = new EventEmitter<Funcionalidade>();
 
-  subscriptionAnaliseSalva: Subscription;
+  private subscriptionSistemaSelecionado: Subscription;
+  private subscriptionAnaliseSalva: Subscription;
+  private subscriptionAnaliseCarregada: Subscription;
 
+  modulos: Modulo[];
   mostrarDialogModulo = false;
   novoModulo: Modulo = new Modulo();
   moduloSelecionado: Modulo;
@@ -40,7 +46,8 @@ export class ModuloFuncionalidadeComponent implements OnInit {
     private analiseSharedDataService: AnaliseSharedDataService,
     private moduloService: ModuloService,
     private sistemaService: SistemaService,
-    private funcionalidadeService: FuncionalidadeService
+    private funcionalidadeService: FuncionalidadeService,
+    private changeDetectorRef: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
@@ -48,8 +55,36 @@ export class ModuloFuncionalidadeComponent implements OnInit {
       throw new Error('input isFuncaoDados é obrigatório.');
     }
 
+    this.subscribeSistemaSelecionado();
+    this.subscribeAnaliseCarregada();
+    this.subscribeAnaliseSalva();
+  }
+
+  private subscribeSistemaSelecionado() {
+    this.subscriptionSistemaSelecionado =
+      this.analiseSharedDataService.getSistemaSelecionadoSubject().subscribe(() => {
+        this.carregarModulosQuandoTiverSistemaDisponivel();
+      });
+  }
+
+  private carregarModulosQuandoTiverSistemaDisponivel() {
+    this.modulos = this.sistema.modulos;
+    this.changeDetectorRef.detectChanges();
+  }
+
+  private subscribeAnaliseCarregada() {
+    this.subscriptionAnaliseCarregada = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
+      if (this.sistema) {
+        this.carregarModulosQuandoTiverSistemaDisponivel();
+      }
+    });
+  }
+
+  private subscribeAnaliseSalva() {
     this.subscriptionAnaliseSalva = this.analiseSharedDataService.getSaveSubject().subscribe(() => {
+      this.modulos = this.sistema.modulos.slice();
       this.selectModuloOnAnaliseSalva();
+      this.changeDetectorRef.detectChanges();
     });
   }
 
@@ -72,14 +107,14 @@ export class ModuloFuncionalidadeComponent implements OnInit {
     }
   }
 
-  private get sistema(): Sistema {
-    return this.analiseSharedDataService.analise.sistema;
+  // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
+  private selecionarModulo(moduloId: number) {
+    this.moduloSelecionado = _.find(this.modulos, { 'id': moduloId });
+    this.moduloSelected(this.moduloSelecionado);
   }
 
-  get modulos() {
-    if (this.sistema) {
-      return this.sistema.modulos;
-    }
+  private get sistema(): Sistema {
+    return this.analiseSharedDataService.analise.sistema;
   }
 
   moduloName() {
@@ -153,12 +188,6 @@ export class ModuloFuncionalidadeComponent implements OnInit {
     this.analiseSharedDataService.analise.sistema = sistemaRecarregado;
   }
 
-  // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
-  private selecionarModulo(moduloId: number) {
-    this.moduloSelecionado = _.find(this.sistema.modulos, { 'id': moduloId });
-    this.moduloSelected(this.moduloSelecionado);
-  }
-
   funcionalidadeDropdownPlaceholder() {
     if (this.isModuloSelected()) {
       return this.funcionalidadeDropdownPlaceHolderComModuloSelecionado();
@@ -214,6 +243,13 @@ export class ModuloFuncionalidadeComponent implements OnInit {
     this.funcionalidadeSelecionada = _.find(this.moduloSelecionado.funcionalidades,
       { 'id': funcionalidadeCriada.id });
     this.funcionalidadeSelected(this.funcionalidadeSelecionada);
+  }
+
+  ngOnDestroy() {
+    this.subscriptionSistemaSelecionado.unsubscribe();
+    this.subscriptionAnaliseCarregada.unsubscribe();
+    this.subscriptionAnaliseSalva.unsubscribe();
+    this.changeDetectorRef.detach();
   }
 
 }
