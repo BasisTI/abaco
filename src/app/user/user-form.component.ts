@@ -93,35 +93,24 @@ export class UserFormComponent implements OnInit, OnDestroy {
     let isValid = false;
 
     if(this.user.firstName !== undefined && this.user.firstName !== null && this.user.firstName !== '') {
-      if(this.user.firstName.length < 250) {
-        isValid = true;
-      } else {
-        this.pageNotificationService.addErrorMsg('O campo primeiro nome excede o máximo de caracteres!');
-      }
-    } else {
-      this.pageNotificationService.addErrorMsg('O campo primeiro nome é obrigatório');
+      isValid = true;
     }
 
     if(this.user.lastName !== undefined && this.user.lastName !== null && this.user.lastName !== '') {
-      if(this.user.lastName.length < 250) {
-        isValid = true;
-      } else {
-        this.pageNotificationService.addErrorMsg('O campo último nome excede o máximo de caracteres!');
-      }
-    } else {
-        this.pageNotificationService.addErrorMsg('O campo último nome é obrigatório')
+      isValid = true
     }
 
     if(this.user.login !== undefined && this.user.login !== null && this.user.login !== '') {
-      if(this.user.login.length < 99) {
-        isValid = true;
-      } else {
-        this.pageNotificationService.addErrorMsg('O campo login excede o máximo de caracteres!');
-      }
-    } else {
-        this.pageNotificationService.addErrorMsg('O campo login é obrigatório')
+      isValid = true;
     }
 
+    if(!isValid) {
+      this.pageNotificationService.addErrorMsg('Favor informar os campos obrigatórios!');
+      console.log(document.getElementById('firstName'));
+      document.getElementById('firstName').setAttribute('style', 'border-color: red;');
+      document.getElementById('lastName').setAttribute('style', 'border-color: red;');
+      document.getElementById('login').setAttribute('style', 'border-color: red;');
+    }
     return isValid;
   }
   private subscribeToSaveResponse(result: Observable<User>) {
