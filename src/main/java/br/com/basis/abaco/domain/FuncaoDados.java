@@ -62,9 +62,6 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     private List<UploadedFile> files = new ArrayList<>();
 
     @Transient
-    private Set<String> derValues;
-
-    @Transient
     private Set<String> rlrValues;
 
     public TipoFuncaoDados getTipo() {
@@ -172,25 +169,6 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public void setFiles(List<UploadedFile> files) {
         this.files = files;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
-    }
-
-    @Override
-    public String toString() {
-        return "FuncaoDados{" + "id=" + getId() + ", tipo='" + tipo + "'" + ", complexidade='" + getComplexidade() + "'"
-                + ", pf='" + getPf() + "'" + '}';
-    }
-
-    public Set<String> getDerValues() {
-        return Collections.unmodifiableSet(derValues);
-    }
-
-    public void setDerValues(Set<String> derValues) {
-        this.derValues = new HashSet<String>(derValues);
     }
 
     public Set<String> getRlrValues() {

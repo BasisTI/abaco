@@ -1,6 +1,10 @@
 package br.com.basis.abaco.domain;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
@@ -12,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -24,7 +29,7 @@ public abstract class FuncaoAnalise {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "complexidade")
     private Complexidade complexidade;
@@ -39,23 +44,26 @@ public abstract class FuncaoAnalise {
     @JoinColumn(name = "analise_id")
     @JsonBackReference
     private Analise analise;
-    
+
     @ManyToOne
     @JoinColumn(name = "funcionalidade_id")
     private Funcionalidade funcionalidade;
-    
+
     @Column
     private String detStr;
-    
+
     @ManyToOne
     private FatorAjuste fatorAjuste;
-    
+
     @Column
     private String name;
-    
+
     @Column
     private String sustantation;
-    
+
+    @Transient
+    private Set<String> derValues;
+
     public Long getId() {
         return id;
     }
@@ -64,7 +72,6 @@ public abstract class FuncaoAnalise {
         this.id = id;
     }
 
-    
     public Complexidade getComplexidade() {
         return complexidade;
     }
@@ -88,7 +95,7 @@ public abstract class FuncaoAnalise {
     public void setAnalise(Analise analise) {
         this.analise = analise;
     }
-    
+
     public FatorAjuste getFatorAjuste() {
         return fatorAjuste;
     }
@@ -96,7 +103,6 @@ public abstract class FuncaoAnalise {
     public void setFatorAjuste(FatorAjuste fatorAjuste) {
         this.fatorAjuste = fatorAjuste;
     }
-
 
     public Funcionalidade getFuncionalidade() {
         return funcionalidade;
@@ -114,7 +120,6 @@ public abstract class FuncaoAnalise {
         this.detStr = detStr;
     }
 
-
     public BigDecimal getGrossPF() {
         return grossPF;
     }
@@ -130,14 +135,25 @@ public abstract class FuncaoAnalise {
     public void setName(String name) {
         this.name = name;
     }
-    
 
     public String getSustantation() {
         return sustantation;
     }
 
-
     public void setSustantation(String sustantation) {
         this.sustantation = sustantation;
+    }
+
+    public Set<String> getDerValues() {
+        return Collections.unmodifiableSet(derValues);
+    }
+
+    public void setDerValues(Set<String> derValues) {
+        this.derValues = new HashSet<String>(derValues);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
     }
 }
