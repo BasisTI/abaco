@@ -3,6 +3,7 @@ package br.com.basis.abaco.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -329,19 +330,19 @@ public class FuncaoDados implements Serializable {
     }
 
     public Set<String> getDerValues() {
-        return derValues;
+        return Collections.unmodifiableSet(derValues);
     }
 
     public void setDerValues(Set<String> derValues) {
-        this.derValues = derValues;
+        this.derValues = new HashSet<String>(derValues);
     }
 
     public Set<String> getRlrValues() {
-        return rlrValues;
+        return Collections.unmodifiableSet(rlrValues);
     }
 
     public void setRlrValues(Set<String> rlrValues) {
-        this.rlrValues = rlrValues;
+        this.rlrValues = new HashSet<String>(rlrValues);
     }
 
 }

@@ -3,6 +3,7 @@ package br.com.basis.abaco.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -311,21 +312,21 @@ public class FuncaoTransacao implements Serializable {
         return "FuncaoTransacao{" + "id=" + id + ", tipo='" + tipo + "'" + ", complexidade='" + complexidade + "'"
                 + ", pf='" + pf + "'" + '}';
     }
-
+    
     public Set<String> getDerValues() {
-        return derValues;
+        return Collections.unmodifiableSet(derValues);
     }
 
     public void setDerValues(Set<String> derValues) {
-        this.derValues = derValues;
+        this.derValues = new HashSet<String>(derValues);
     }
 
     public Set<String> getFtrValues() {
-        return ftrValues;
+        return Collections.unmodifiableSet(ftrValues);
     }
 
     public void setFtrValues(Set<String> ftrValues) {
-        this.ftrValues = ftrValues;
+        this.ftrValues = new HashSet<String>(ftrValues);
     }
 
 }

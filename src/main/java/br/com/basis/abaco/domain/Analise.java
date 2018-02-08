@@ -2,6 +2,7 @@ package br.com.basis.abaco.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
@@ -412,11 +413,11 @@ public class Analise implements Serializable {
     }
 
     public Set<EsforcoFase> getEsforcoFases() {
-        return esforcoFases;
+        return Collections.unmodifiableSet(esforcoFases);
     }
 
     public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {
-        this.esforcoFases = esforcoFases;
+        this.esforcoFases = new HashSet<EsforcoFase>(esforcoFases);
     }
 
     public String getObservacoes() {
