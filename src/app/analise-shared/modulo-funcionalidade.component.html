@@ -2,38 +2,45 @@
 
   <div class="ui-g-12" style="margin-bottom: 25px">
     <div class="ui-g-6">
-      <!-- filtro/pesquisa? -->
-      <label>Módulo</label>
-      <p-dropdown [options]="modulos" [(ngModel)]="moduloSelecionado" optionLabel="nome"
-       (onChange)="moduloSelected($event.value)"
-        [placeholder]="moduloDropdownPlaceholder()"
-        [disabled]="!isSistemaSelected()"
-        name="modulo" [autoWidth]="false">
-      </p-dropdown>
+      <div class="ui-g-12">
+        <!-- filtro/pesquisa? -->
+        <label>Módulo</label>
+        <p-dropdown [options]="modulos" [(ngModel)]="moduloSelecionado" optionLabel="nome"
+        (onChange)="moduloSelected($event.value)"
+          [placeholder]="moduloDropdownPlaceholder()"
+          [disabled]="!isSistemaSelected()"
+          name="modulo" [autoWidth]="false">
+        </p-dropdown>
+      </div>
 
-      <app-green-button buttonLabel="Novo Módulo" buttonIcon="ui-icon-add"
-        (click)="abrirDialogModulo()"
-        [isDisabled]="!isSistemaSelected()">
-      </app-green-button>
+      <div class="ui-g ui-md-12" style="justify-content: flex-end">
+        <app-green-button buttonIcon="ui-icon-add"
+          (click)="abrirDialogModulo()"
+          [isDisabled]="!isSistemaSelected()">
+        </app-green-button>
+      </div>
     </div>
 
     <div class="ui-g-6">
-      <!-- filtro/pesquisa? -->
-      <label>Funcionalidade</label>
-      <p-dropdown [options]="funcionalidades" [(ngModel)]="funcionalidadeSelecionada" optionLabel="nome" 
-        (onChange)="funcionalidadeSelected($event.value)"
-        [placeholder]="funcionalidadeDropdownPlaceholder()"
-        [disabled]="!isModuloSelected()" 
-        name="funcionalidade" [autoWidth]="false">
-      </p-dropdown>
+      <div class="ui-g-12">
+        <!-- filtro/pesquisa? -->
+        <label>Funcionalidade</label>
+        <p-dropdown [options]="funcionalidades" [(ngModel)]="funcionalidadeSelecionada" optionLabel="nome" 
+          (onChange)="funcionalidadeSelected($event.value)"
+          [placeholder]="funcionalidadeDropdownPlaceholder()"
+          [disabled]="!isModuloSelected()" 
+          name="funcionalidade" [autoWidth]="false">
+        </p-dropdown>
+      </div>
 
-      <app-green-button buttonLabel="Nova Funcionalidade" buttonIcon="ui-icon-add"
-        (click)="abrirDialogFuncionalidade()"
-        [isDisabled]="!isModuloSelected()">
-      </app-green-button>
+      <div class="ui-g ui-md-12" style="justify-content: flex-end">
+        <app-green-button buttonIcon="ui-icon-add"
+          (click)="abrirDialogFuncionalidade()"
+          [isDisabled]="!isModuloSelected()">
+        </app-green-button>
+      </div>
     </div>
   </div>
-
 
   <!-- Dialog módulo -->
   <p-dialog header="Módulo" [(visible)]="mostrarDialogModulo" [contentStyle]="{'overflow':'visible'}" [width]="800">
