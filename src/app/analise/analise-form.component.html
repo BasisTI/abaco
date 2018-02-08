@@ -12,14 +12,16 @@
                 </span>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Organização</label>
                 <p-dropdown [options]="organizacoes" optionLabel="nome"
                   [(ngModel)]="analise.organizacao" [autoWidth]="false"
-                  placeholder="Organização" name="organizacao"
+                  placeholder="Selecione uma Organização" name="organizacao"
                   (onChange)="organizacaoSelected($event.value)"
                   dataKey="id">
                 </p-dropdown>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Contrato</label>
                 <p-dropdown [options]="contratos" optionLabel="numeroContrato" 
                   [(ngModel)]="analise.contrato" 
                   disabled="{{ !shouldEnableContratoDropdown() }}" 
@@ -30,6 +32,7 @@
                 </p-dropdown>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Sistema</label>
                 <p-dropdown [options]="sistemas" optionLabel="nome" 
                   [(ngModel)]="analise.sistema"  
                   disabled="{{ !shouldEnableSistemaDropdown() }}"
@@ -40,6 +43,7 @@
                 </p-dropdown>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Tipo de Contagem</label>
                 <p-dropdown [options]="metodosContagem"
                   [(ngModel)]="analise.tipoContagem"  
                   disabled="{{ !isContratoSelected() }}"
@@ -49,14 +53,16 @@
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Tipo de Análise</label>
                 <p-dropdown [options]="tiposAnalise"
                   [(ngModel)]="analise.tipoAnalise"  
-                  placeholder="Tipo de Análise"
+                  placeholder="Selecione um Tipo de Análise"
                   name="analise" [autoWidth]="false">
                 </p-dropdown>
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Fator de Ajuste</label>
                 <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
                   [(ngModel)]="analise.fatorAjuste"
                   disabled="{{ !isContratoSelected() }}"

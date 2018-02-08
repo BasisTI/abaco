@@ -118,9 +118,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   contratoDropdownPlaceholder() {
     if (this.shouldEnableContratoDropdown()) {
-      return 'Contrato';
+      return 'Selecione um Contrato';
     } else {
-      return 'Contrato - Selecione uma Organização para carregar os Contratos';
+      return 'Selecione uma Organização para carregar os Contratos';
     }
   }
 
@@ -160,9 +160,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   sistemaDropdownPlaceholder() {
     if (this.shouldEnableSistemaDropdown()) {
-      return 'Sistema';
+      return 'Selecione um Sistema';
     } else {
-      return 'Sistema - Selecione uma Organização para carregar os Sistemas';
+      return 'Selecione uma Organização para carregar os Sistemas';
     }
   }
 
@@ -172,9 +172,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   tipoDeContagemDropdownPlaceholder() {
     if (this.isContratoSelected()) {
-      return 'Tipo de Contagem';
+      return 'Selecione um Tipo de Contagem';
     } else {
-      return 'Tipo de Contagem - Selecione um Contrato para carregar os Tipos de Contagem';
+      return 'Selecione um Contrato para carregar os Tipos de Contagem';
     }
   }
 
@@ -184,9 +184,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   fatoresAjusteDropdownPlaceholder() {
     if (this.isContratoSelected()) {
-      return 'Valor de Ajuste';
+      return 'Selecione um Valor de Ajuste';
     } else {
-      return 'Valor de Ajuste - Selecione um Contrato para carregar os Valores de Ajuste';
+      return 'Selecione um Contrato para carregar os Valores de Ajuste';
     }
   }
 
