@@ -40,9 +40,6 @@ import io.github.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api")
 public class UploadController {
 
-    // Save the uploaded file to this folder
-    private static String UPLOADED_FOLDER = "/uploaded";
-
     private final Logger log = LoggerFactory.getLogger(UploadController.class);
 
     @Autowired
