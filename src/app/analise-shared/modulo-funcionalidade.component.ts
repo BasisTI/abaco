@@ -131,8 +131,19 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
       });
   }
 
-  // TODO avaliar duplicacoes e refatorar
   private carregarTudoOnFuncaoAnaliseCarregada() {
+    if (this.isCurrentFuncaoAnaliseDefined()) {
+      this.doCarregarTudoOnFuncaoAnaliseCarregada();
+    }
+  }
+
+  private isCurrentFuncaoAnaliseDefined(): boolean {
+    // TODO inappropriate intimacy. Pode ir pra interface FuncaoAnalise
+    return !_.isUndefined(this.currentFuncaoAnalise.id) || !_.isUndefined(this.currentFuncaoAnalise.artificialId);
+  }
+
+  // TODO avaliar duplicacoes e refatorar
+  private doCarregarTudoOnFuncaoAnaliseCarregada() {
     const currentFuncionalidade: Funcionalidade = this.currentFuncaoAnalise.funcionalidade;
     const currentModulo: Modulo = currentFuncionalidade.modulo;
 

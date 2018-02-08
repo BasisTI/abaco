@@ -198,8 +198,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
     this.carregarModuloFuncionalidade(funcaoDadosSelecionada);
-    // FIXME primeira edicao nao traz fator de ajuste
-    // testar comentar carregarModuloFuncionalidade(), acho que funciona
     this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
     this.carregarDerRlr(funcaoDadosSelecionada);
   }
