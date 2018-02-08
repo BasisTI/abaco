@@ -159,7 +159,7 @@ public class ContratoResource {
      */
     @GetMapping("/_search/contratoes")
     @Timed
-    public List<Contrato> searchContratoes(@RequestParam String query) {
+    public List<Contrato> searchContratoes(@RequestParam(defaultValue = "*") String query) {
         log.debug("REST request to search Contratoes for query {}", query);
         return StreamSupport
             .stream(contratoSearchRepository.search(queryStringQuery(query)).spliterator(), false)

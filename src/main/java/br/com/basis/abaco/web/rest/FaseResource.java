@@ -143,7 +143,7 @@ public class FaseResource {
      */
     @GetMapping("/_search/fases")
     @Timed
-    public List<Fase> searchFases(@RequestParam String query) {
+    public List<Fase> searchFases(@RequestParam(defaultValue = "*") String query) {
         log.debug("REST request to search Fases for query {}", query);
         return StreamSupport
             .stream(faseSearchRepository.search(queryStringQuery(query)).spliterator(), false)

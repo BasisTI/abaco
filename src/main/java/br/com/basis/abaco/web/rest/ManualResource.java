@@ -189,7 +189,8 @@ public class ManualResource {
      */
     @GetMapping("/_search/manuals")
     @Timed
-    public List<Manual> searchManuals(@RequestParam String query) {
+    public List<Manual> searchManuals(@RequestParam(defaultValue = "*") String query) {
+        query = "*";
         log.debug("REST request to search Manuals for query {}", query);
         return StreamSupport.stream(manualSearchRepository.search(queryStringQuery(query)).spliterator(), false)
                 .collect(Collectors.toList());

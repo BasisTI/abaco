@@ -166,7 +166,7 @@ public class EsforcoFaseResource {
      */
     @GetMapping("/_search/esforco-fases")
     @Timed
-    public List<EsforcoFase> searchEsforcoFases(@RequestParam String query) {
+    public List<EsforcoFase> searchEsforcoFases(@RequestParam(defaultValue = "*") String query) {
         log.debug("REST request to search EsforcoFases for query {}", query);
         return StreamSupport.stream(esforcoFaseSearchRepository.search(queryStringQuery(query)).spliterator(), false)
                 .collect(Collectors.toList());

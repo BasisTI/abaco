@@ -144,7 +144,7 @@ public class DerResource {
      */
     @GetMapping("/_search/ders")
     @Timed
-    public List<Der> searchDers(@RequestParam String query) {
+    public List<Der> searchDers(@RequestParam(defaultValue = "*") String query) {
         log.debug("REST request to search Ders for query {}", query);
         return StreamSupport
             .stream(derSearchRepository.search(queryStringQuery(query)).spliterator(), false)

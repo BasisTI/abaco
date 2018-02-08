@@ -157,7 +157,7 @@ public class FuncaoTransacaoResource {
      */
     @GetMapping("/_search/funcao-transacaos")
     @Timed
-    public List<FuncaoTransacao> searchFuncaoTransacaos(@RequestParam String query) {
+    public List<FuncaoTransacao> searchFuncaoTransacaos(@RequestParam(defaultValue = "*") String query) {
         log.debug("REST request to search FuncaoTransacaos for query {}", query);
         return StreamSupport
             .stream(funcaoTransacaoSearchRepository.search(queryStringQuery(query)).spliterator(), false)

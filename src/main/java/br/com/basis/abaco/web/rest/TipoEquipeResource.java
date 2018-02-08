@@ -166,7 +166,7 @@ public class TipoEquipeResource {
 	 */
 	@GetMapping("/_search/tipo-equipes")
 	@Timed
-	public List<TipoEquipe> searchTipoEquipes(@RequestParam String query, Pageable pageable) {
+	public List<TipoEquipe> searchTipoEquipes(@RequestParam(defaultValue = "*") String query, Pageable pageable) {
 		log.debug("REST request to search for a page of TipoEquipes for query {}", query);
 		return StreamSupport
 	            .stream(tipoEquipeSearchRepository.search(queryStringQuery(query)).spliterator(), false)

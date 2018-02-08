@@ -143,7 +143,7 @@ public class AlrResource {
      */
     @GetMapping("/_search/alrs")
     @Timed
-    public List<Alr> searchAlrs(@RequestParam String query) {
+    public List<Alr> searchAlrs(@RequestParam(defaultValue = "*") String query) {
         log.debug("REST request to search Alrs for query {}", query);
         return StreamSupport
             .stream(alrSearchRepository.search(queryStringQuery(query)).spliterator(), false)

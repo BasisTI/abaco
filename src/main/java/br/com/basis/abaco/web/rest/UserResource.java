@@ -254,7 +254,7 @@ public class UserResource {
 	@GetMapping("/_search/users")
 	@Timed
 	@Secured(AuthoritiesConstants.ADMIN)
-	public List<User> search(@RequestParam String query, Pageable pageable) {
+	public List<User> search(@RequestParam(defaultValue = "*") String query, Pageable pageable) {
 		return StreamSupport.stream(userSearchRepository.search(queryStringQuery(query)).spliterator(), false)
 				.collect(Collectors.toList());
 	}

@@ -144,7 +144,7 @@ public class ModuloResource {
      */
     @GetMapping("/_search/modulos")
     @Timed
-    public List<Modulo> searchModulos(@RequestParam String query) {
+    public List<Modulo> searchModulos(@RequestParam(defaultValue = "*") String query) {
         log.debug("REST request to search Modulos for query {}", query);
         return StreamSupport
             .stream(moduloSearchRepository.search(queryStringQuery(query)).spliterator(), false)

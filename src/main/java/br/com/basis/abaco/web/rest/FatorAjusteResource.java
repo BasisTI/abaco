@@ -162,7 +162,7 @@ public class FatorAjusteResource {
      */
     @GetMapping("/_search/fator-ajustes")
     @Timed
-    public List<FatorAjuste> searchFatorAjustes(@RequestParam String query) {
+    public List<FatorAjuste> searchFatorAjustes(@RequestParam(defaultValue = "*") String query) {
         log.debug("REST request to search FatorAjustes for query {}", query);
         return StreamSupport
             .stream(fatorAjusteSearchRepository.search(queryStringQuery(query)).spliterator(), false)

@@ -214,7 +214,7 @@ public class SistemaResource {
 	 */
 	@GetMapping("/_search/sistemas")
 	@Timed
-	public List<Sistema> searchSistemas(@RequestParam String query) {
+	public List<Sistema> searchSistemas(@RequestParam(defaultValue = "*") String query) {
 		log.debug("REST request to search Sistemas for query {}", query);
 		return StreamSupport.stream(sistemaSearchRepository.search(queryStringQuery(query)).spliterator(), false)
 				.collect(Collectors.toList());

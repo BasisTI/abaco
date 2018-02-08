@@ -144,7 +144,7 @@ public class FuncionalidadeResource {
      */
     @GetMapping("/_search/funcionalidades")
     @Timed
-    public List<Funcionalidade> searchFuncionalidades(@RequestParam String query) {
+    public List<Funcionalidade> searchFuncionalidades(@RequestParam(defaultValue = "*") String query) {
         log.debug("REST request to search Funcionalidades for query {}", query);
         return StreamSupport
             .stream(funcionalidadeSearchRepository.search(queryStringQuery(query)).spliterator(), false)

@@ -149,7 +149,7 @@ public class OrganizacaoResource {
      */
     @GetMapping("/_search/organizacaos")
     @Timed
-    public List<Organizacao> searchOrganizacaos(@RequestParam String query) {
+    public List<Organizacao> searchOrganizacaos(@RequestParam(defaultValue = "*") String query) {
         log.debug("REST request to search Organizacaos for query {}", query);
         return StreamSupport
             .stream(organizacaoSearchRepository.search(queryStringQuery(query)).spliterator(), false)
