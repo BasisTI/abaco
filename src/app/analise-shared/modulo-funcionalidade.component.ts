@@ -163,9 +163,6 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     return !_.isUndefined(this.moduloSelecionado);
   }
 
-  // FIXME modulo e funcionalidade selecionados, sistema da aba geral mudou
-  // funcionalidade deve ser deselecionada
-  // provavelmente um observer de sistema alterado no AnaliseSharedDataService
   moduloSelected(modulo: Modulo) {
     this.funcionalidades = modulo.funcionalidades;
     this.moduloSelectedEvent.emit(modulo);
