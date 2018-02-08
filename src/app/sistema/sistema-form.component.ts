@@ -198,9 +198,9 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
       sistemas = response.json;
 
       if(this.sistema.id !== undefined) {
-        (!this.checkDuplicity(sistemas) && this.checkSystemInitials() && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
+        (!this.checkDuplicity(sistemas) && !this.checkSystemInitials() && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
       } else {
-        (!this.checkDuplicity(sistemas) && this.checkSystemInitials() && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.create(this.sistema))) : (this);
+        (!this.checkDuplicity(sistemas) && !this.checkSystemInitials() && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.create(this.sistema))) : (this);
       }
     });
   }
@@ -227,7 +227,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
       return exceedsMaximumValue;
   }
 
-  checkSystemName() {
+  private checkSystemName() {
     let isValid = true;
 
     if(this.sistema.nome.length >= 255) {

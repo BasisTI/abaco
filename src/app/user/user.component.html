@@ -25,32 +25,32 @@
               </div>
             </div>
         <div class="ui-g-12 ui-md-12" style="padding: 0;">
-          <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
+          <basis-datatable [url]="searchUrl"
             (buttonClick)="datatableClick($event)" #datatable>
-            <p-column header="Nome" field="nome" [style]="{width:'15%'}">
+            <p-column header="Nome" field="nome" [style]="{width:'15%'}" [sortable]="true">
               <ng-template let-user="rowData" pTemplate="body">
                 {{ user.firstName + ' ' + user.lastName }}
               </ng-template>
             </p-column>
-            <p-column header="Login" field="login"></p-column>
+            <p-column header="Login" field="login" [sortable]="true"></p-column>
             <p-column header="E-mail" field="email"
-              [style]="{'word-wrap':'break-word'}"></p-column>
+              [style]="{'word-wrap':'break-word'}" [sortable]="true"></p-column>
             <p-column header="Organização"
-              [style]="{'word-wrap':'break-word', 'width': '17.5%'}">
+              [style]="{'word-wrap':'break-word', 'width': '17.5%'}" [sortable]="true">
               <ng-template let-col let-row="rowData" pTemplate="body">
                 <li *ngFor="let org of row.organizacoes">
                   {{ org.nome }}
                 </li>
               </ng-template>
             </p-column>
-            <p-column header="Perfil">
+            <p-column header="Perfil" [sortable]="true">
               <ng-template let-col let-row="rowData" pTemplate="body">
                 <li *ngFor="let perfil of row.authorities">
                   {{ perfil.name }}
                 </li>
               </ng-template>
             </p-column>
-            <p-column header="Equipe">
+            <p-column header="Equipe" [sortable]="true">
               <ng-template let-col let-row="rowData" pTemplate="body">
                 <li *ngFor="let equipe of row.tipoEquipes">
                   {{ equipe.nome }}
@@ -58,7 +58,7 @@
               </ng-template>
             </p-column>
             <p-column header="Ativo" field="activated"
-              [style]="{width:'5.5%'}">
+              [style]="{width:'5.5%'}" [sortable]="true">
                 <ng-template let-col let-ativo="rowData" pTemplate="body">
                     {{ ativo[col.field] ? 'Sim' : (ativo[col.field] != null ? 'Não' : null) }}
                   </ng-template>
