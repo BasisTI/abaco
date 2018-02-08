@@ -89,10 +89,10 @@ public class FuncaoTransacaoResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static FuncaoTransacao createEntity(EntityManager em) {
-        FuncaoTransacao funcaoTransacao = new FuncaoTransacao()
-                .tipo(DEFAULT_TIPO)
-                .complexidade(DEFAULT_COMPLEXIDADE)
-                .pf(DEFAULT_PF);
+        FuncaoTransacao funcaoTransacao = new FuncaoTransacao();
+        funcaoTransacao.setTipo(DEFAULT_TIPO);
+        funcaoTransacao.setComplexidade(DEFAULT_COMPLEXIDADE);
+        funcaoTransacao.setPf(DEFAULT_PF);
         return funcaoTransacao;
     }
 
@@ -197,10 +197,9 @@ public class FuncaoTransacaoResourceIntTest {
 
         // Update the funcaoTransacao
         FuncaoTransacao updatedFuncaoTransacao = funcaoTransacaoRepository.findOne(funcaoTransacao.getId());
-        updatedFuncaoTransacao
-                .tipo(UPDATED_TIPO)
-                .complexidade(UPDATED_COMPLEXIDADE)
-                .pf(UPDATED_PF);
+        updatedFuncaoTransacao.setTipo(UPDATED_TIPO);
+        updatedFuncaoTransacao.setComplexidade(UPDATED_COMPLEXIDADE);
+        updatedFuncaoTransacao.setPf(UPDATED_PF);
 
         restFuncaoTransacaoMockMvc.perform(put("/api/funcao-transacaos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)

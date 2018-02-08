@@ -89,10 +89,10 @@ public class FuncaoDadosResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static FuncaoDados createEntity(EntityManager em) {
-        FuncaoDados funcaoDados = new FuncaoDados()
-                .tipo(DEFAULT_TIPO)
-                .complexidade(DEFAULT_COMPLEXIDADE)
-                .pf(DEFAULT_PF);
+        FuncaoDados funcaoDados = new FuncaoDados();
+        funcaoDados.setTipo(DEFAULT_TIPO);
+        funcaoDados.setComplexidade(DEFAULT_COMPLEXIDADE);
+        funcaoDados.setPf(DEFAULT_PF);
         return funcaoDados;
     }
 
@@ -197,10 +197,9 @@ public class FuncaoDadosResourceIntTest {
 
         // Update the funcaoDados
         FuncaoDados updatedFuncaoDados = funcaoDadosRepository.findOne(funcaoDados.getId());
-        updatedFuncaoDados
-                .tipo(UPDATED_TIPO)
-                .complexidade(UPDATED_COMPLEXIDADE)
-                .pf(UPDATED_PF);
+        updatedFuncaoDados.setTipo(UPDATED_TIPO);
+        updatedFuncaoDados.setComplexidade(UPDATED_COMPLEXIDADE);
+        updatedFuncaoDados.setPf(UPDATED_PF);
 
         restFuncaoDadosMockMvc.perform(put("/api/funcao-dados")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
