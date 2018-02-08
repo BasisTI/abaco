@@ -11,6 +11,10 @@ import java.util.stream.StreamSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +33,9 @@ import br.com.basis.abaco.domain.Manual;
 import br.com.basis.abaco.repository.EsforcoFaseRepository;
 import br.com.basis.abaco.repository.search.EsforcoFaseSearchRepository;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing EsforcoFase.
@@ -163,13 +169,16 @@ public class EsforcoFaseResource {
      * @param query
      *            the query of the esforcoFase search
      * @return the result of the search
+     * @throws URISyntaxException 
      */
     @GetMapping("/_search/esforco-fases")
     @Timed
-    public List<EsforcoFase> searchEsforcoFases(@RequestParam(defaultValue = "*") String query) {
+    public ResponseEntity<List<EsforcoFase>> searchEsforcoFases(@RequestParam(defaultValue = "*") String query, @ApiParam Pageable pageable) throws URISyntaxException {
         log.debug("REST request to search EsforcoFases for query {}", query);
-        return StreamSupport.stream(esforcoFaseSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-                .collect(Collectors.toList());
+        
+        Page<EsforcoFase> page = esforcoFaseSearchRepository.search(queryStringQuery(query), pageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/esforco-fases");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
 }

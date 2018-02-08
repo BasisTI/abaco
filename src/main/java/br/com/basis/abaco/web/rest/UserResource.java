@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 
 import br.com.basis.abaco.config.Constants;
+import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Authority;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.AuthorityRepository;
@@ -250,12 +251,14 @@ public class UserResource {
 	 * @param query
 	 *            the query to search
 	 * @return the result of the search
+	 * @throws URISyntaxException 
 	 */
 	@GetMapping("/_search/users")
 	@Timed
 	@Secured(AuthoritiesConstants.ADMIN)
-	public List<User> search(@RequestParam(defaultValue = "*") String query, Pageable pageable) {
-		return StreamSupport.stream(userSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-				.collect(Collectors.toList());
+	public ResponseEntity<List<User>> search(@RequestParam(defaultValue = "*") String query, Pageable pageable) throws URISyntaxException {
+	    Page<User> page = userSearchRepository.search(queryStringQuery(query), pageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/users");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 }

@@ -13,7 +13,10 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,10 +30,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 
+import br.com.basis.abaco.domain.Manual;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 
 /**
@@ -163,14 +168,17 @@ public class TipoEquipeResource {
 	 * @param pageable
 	 *            the pagination information
 	 * @return the result of the search
+	 * @throws URISyntaxException 
 	 */
 	@GetMapping("/_search/tipo-equipes")
 	@Timed
-	public List<TipoEquipe> searchTipoEquipes(@RequestParam(defaultValue = "*") String query, Pageable pageable) {
+	
+	public ResponseEntity<List<TipoEquipe>> searchTipoEquipes(@RequestParam(defaultValue = "*") String query, Pageable pageable) throws URISyntaxException {
 		log.debug("REST request to search for a page of TipoEquipes for query {}", query);
-		return StreamSupport
-	            .stream(tipoEquipeSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-	            .collect(Collectors.toList());
+		
+		Page<TipoEquipe> page = tipoEquipeSearchRepository.search(queryStringQuery(query), pageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/tipo-equipes");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 
 }

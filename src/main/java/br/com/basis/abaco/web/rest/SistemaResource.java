@@ -8,14 +8,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +38,9 @@ import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing Sistema.
@@ -211,13 +215,15 @@ public class SistemaResource {
 	 * @param query
 	 *            the query of the sistema search
 	 * @return the result of the search
+	 * @throws URISyntaxException 
 	 */
 	@GetMapping("/_search/sistemas")
 	@Timed
-	public List<Sistema> searchSistemas(@RequestParam(defaultValue = "*") String query) {
+	public ResponseEntity<List<Sistema>> searchSistemas(@RequestParam(defaultValue = "*") String query, @ApiParam Pageable pageable) throws URISyntaxException {
 		log.debug("REST request to search Sistemas for query {}", query);
-		return StreamSupport.stream(sistemaSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-				.collect(Collectors.toList());
+		Page<Sistema> page = sistemaSearchRepository.search(queryStringQuery(query), pageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/sistemas");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 
 }
