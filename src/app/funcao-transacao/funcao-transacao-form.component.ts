@@ -226,7 +226,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     this.analiseSharedDataService.funcaoAnaliseDescarregada();
     this.isEdit = false;
     this.currentFuncaoTransacao = new FuncaoTransacao();
-    this.pageNotificationService.addInfoMsg('Alteração de Função de Transação cancelada');
+    this.pageNotificationService.addInfoMsg('Cancelada a Alteração de Função de Transação');
     this.scrollParaInicioDaAba();
   }
 
