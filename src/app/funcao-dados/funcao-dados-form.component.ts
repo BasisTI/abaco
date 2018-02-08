@@ -159,7 +159,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   private resetarEstadoPosSalvar() {
     // Mantendo o mesmo conteudo a pedido do Leandro
     this.currentFuncaoDados = this.currentFuncaoDados.clone();
+
+    // TODO inappropriate intimacy DEMAIS
     this.currentFuncaoDados.artificialId = undefined;
+    this.currentFuncaoDados.id = undefined;
   }
 
   private doAdicionar() {
@@ -200,13 +203,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
-    this.carregarModuloFuncionalidade(funcaoDadosSelecionada);
+    this.analiseSharedDataService.funcaoAnaliseCarregada();
     this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
     this.carregarDerRlr(funcaoDadosSelecionada);
-  }
-
-  private carregarModuloFuncionalidade(funcaoDadosSelecionada: FuncaoDados) {
-    this.analiseSharedDataService.funcaoAnaliseCarregada();
   }
 
   // TODO mudar em todas as abas para Fator De Ajuste (assim que tá no manual)
