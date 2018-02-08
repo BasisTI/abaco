@@ -69,22 +69,12 @@ public abstract class FuncaoAnalise {
         return complexidade;
     }
 
-    public FuncaoAnalise complexidade(Complexidade complexidade) {
-        this.complexidade = complexidade;
-        return this;
-    }
-
     public void setComplexidade(Complexidade complexidade) {
         this.complexidade = complexidade;
     }
 
     public BigDecimal getPf() {
         return pf;
-    }
-
-    public FuncaoAnalise pf(BigDecimal pf) {
-        this.pf = pf;
-        return this;
     }
 
     public void setPf(BigDecimal pf) {
@@ -95,22 +85,12 @@ public abstract class FuncaoAnalise {
         return analise;
     }
 
-    public FuncaoAnalise analise(Analise analise) {
-        this.analise = analise;
-        return this;
-    }
-
     public void setAnalise(Analise analise) {
         this.analise = analise;
     }
     
     public FatorAjuste getFatorAjuste() {
         return fatorAjuste;
-    }
-
-    public FuncaoAnalise fatorAjuste(FatorAjuste fatorAjuste) {
-        this.fatorAjuste = fatorAjuste;
-        return this;
     }
 
     public void setFatorAjuste(FatorAjuste fatorAjuste) {
