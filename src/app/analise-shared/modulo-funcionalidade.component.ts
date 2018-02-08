@@ -32,6 +32,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
   private subscriptionAnaliseSalva: Subscription;
   private subscriptionAnaliseCarregada: Subscription;
   private subscriptionFuncaoAnaliseCarregada: Subscription;
+  private subscriptionFuncaoAnaliseDescarregada: Subscription;
 
   modulos: Modulo[];
   mostrarDialogModulo = false;
@@ -60,6 +61,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     this.subscribeAnaliseCarregada();
     this.subscribeAnaliseSalva();
     this.subscribeFuncaoAnaliseCarregada();
+    this.subscribeFuncaoAnaliseDescarregada();
   }
 
   private subscribeSistemaSelecionado() {
@@ -140,6 +142,18 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     this.funcionalidades = currentModulo.funcionalidades;
     this.funcionalidadeSelecionada = _.find(this.funcionalidades, { 'id': currentFuncionalidade.id });
     this.funcionalidadeSelected(this.funcionalidadeSelecionada);
+  }
+
+  private subscribeFuncaoAnaliseDescarregada() {
+    this.subscriptionFuncaoAnaliseDescarregada =
+      this.analiseSharedDataService.getFuncaoAnaliseDescarregadaSubject().subscribe(() => {
+        this.limpaSelecoes();
+      });
+  }
+
+  private limpaSelecoes() {
+    this.moduloSelecionado = new Modulo();
+    this.funcionalidadeSelecionada = new Funcionalidade();
   }
 
   moduloName() {

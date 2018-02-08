@@ -220,6 +220,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   cancelarEdicao() {
+    this.analiseSharedDataService.funcaoAnaliseDescarregada();
     this.isEdit = false;
     this.currentFuncaoDados = new FuncaoDados();
     this.scrollParaInicioDaAba();
