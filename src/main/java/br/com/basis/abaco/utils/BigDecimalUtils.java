@@ -3,6 +3,10 @@ package br.com.basis.abaco.utils;
 import java.math.BigDecimal;
 
 public class BigDecimalUtils {
+    
+    private BigDecimalUtils() {
+        
+    }
 
     // WORKAROUND para o bug do elasticsearch
     // https://github.com/elastic/elasticsearch/issues/15961#issuecomment-171631059
