@@ -2,7 +2,7 @@ import {
   Component, OnInit, Input, Output,
   EventEmitter, ChangeDetectorRef, OnDestroy
 } from '@angular/core';
-import { AnaliseSharedDataService } from '../shared';
+import { AnaliseSharedDataService, PageNotificationService } from '../shared';
 import { Analise } from '../analise';
 import { Manual } from '../manual';
 import { FatorAjuste } from '../fator-ajuste';
@@ -17,6 +17,10 @@ import * as _ from 'lodash';
   selector: 'app-analise-modulo-funcionalidade',
   templateUrl: './modulo-funcionalidade.component.html'
 })
+
+// TODO muito complexo. REFATORAR
+// talvez quebrar num componente filho só para funcionalidade
+// que observa um output daqui de modulo selecionado
 export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
   @Input()
@@ -52,6 +56,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     private sistemaService: SistemaService,
     private funcionalidadeService: FuncionalidadeService,
     private changeDetectorRef: ChangeDetectorRef,
+    private pageNotificationService: PageNotificationService,
   ) { }
 
   ngOnInit() {
@@ -236,6 +241,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
       this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
         this.recarregarSistema(sistemaRecarregado);
         this.selecionarModulo(moduloCriado.id);
+        this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, sistemaRecarregado.nome);
       });
     });
 
@@ -245,6 +251,11 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
   private recarregarSistema(sistemaRecarregado: Sistema) {
     this.analiseSharedDataService.analise.sistema = sistemaRecarregado;
     this.modulos = this.sistema.modulos;
+  }
+
+  private criarMensagemDeSucessoDaCriacaoDoModulo(nomeModulo: string, nomeSistema: string) {
+    this.pageNotificationService
+      .addSuccessMsg(`Módulo '${nomeModulo}' criado para o Sistema '${nomeSistema}'`);
   }
 
   funcionalidadeDropdownPlaceholder() {
@@ -288,6 +299,8 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
           this.recarregarSistema(sistemaRecarregado);
           this.selecionarModulo(moduloId);
           this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
+          this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome,
+            this.moduloSelecionado.nome, sistemaRecarregado.nome);
         });
       });
 
@@ -302,6 +315,11 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     this.funcionalidadeSelecionada = _.find(this.moduloSelecionado.funcionalidades,
       { 'id': funcionalidadeCriada.id });
     this.funcionalidadeSelected(this.funcionalidadeSelecionada);
+  }
+
+  private criarMensagemDeSucessoDaCriacaoDaFuncionalidade(nomeFunc: string, nomeModulo: string, nomeSistema: string) {
+    this.pageNotificationService
+      .addSuccessMsg(`Funcionalidade '${nomeFunc}' criada no Módulo '${nomeModulo}' do Sistema '${nomeSistema}'`);
   }
 
   ngOnDestroy() {
