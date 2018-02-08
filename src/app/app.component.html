@@ -22,7 +22,7 @@
     <div class="layout-main">
       <!-- <app-breadcrumb></app-breadcrumb> -->
       <div class="layout-content">
-        <p-growl [value]="msgs"></p-growl>
+        <p-growl [value]="msgs" [life]="4500"></p-growl>
         <router-outlet></router-outlet>
         <app-footer></app-footer>
       </div>

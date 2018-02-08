@@ -14,6 +14,7 @@ export class AnaliseService {
 
   searchUrl = environment.apiUrl + '/_search/analises';
 
+
   constructor(private http: HttpService) {}
 
   create(analise: Analise): Observable<Analise> {
@@ -62,15 +63,13 @@ export class AnaliseService {
    * Convert a returned JSON object to Analise.
    */
   private convertItemFromServer(json: any): Analise {
-    const entity: Analise = Object.assign(new Analise(), json);
-    return entity;
+    return new Analise().copyFromJSON(json);
   }
 
   /**
    * Convert a Analise to a JSON which can be sent to the server.
    */
   private convert(analise: Analise): Analise {
-    const copy: Analise = Object.assign({}, analise);
-    return copy;
+    return analise.toJSONState();
   }
 }

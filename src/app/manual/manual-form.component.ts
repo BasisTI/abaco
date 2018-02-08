@@ -87,8 +87,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   save() {
     this.isSaving = true;
-    this.manual.valorVariacaoEstimada = this.manual.valorVariacaoEstimada/100;
-    this.manual.valorVariacaoIndicativa = this.manual.valorVariacaoIndicativa/100;
+    this.manual.valorVariacaoEstimada = this.manual.valorVariacaoEstimada;
+    this.manual.valorVariacaoIndicativa = this.manual.valorVariacaoIndicativa;
 
     if (this.manual.id !== undefined) {
       this.manualService.find(this.manual.id).subscribe(response => {
@@ -196,7 +196,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       case 'edit':
         this.editedAdjustFactor = event.selection.clone();
         (this.editedAdjustFactor.fator > 0 && this.editedAdjustFactor.fator < 1) ?
-          (this.editedAdjustFactor.fator = this.editedAdjustFactor.fator * 100) : (this.editedAdjustFactor = this.editedAdjustFactor);
+          (this.editedAdjustFactor.fator = this.editedAdjustFactor.fator) : (this.editedAdjustFactor = this.editedAdjustFactor);
         this.openDialogEditAdjustFactor();
         break;
       case 'delete':
@@ -244,7 +244,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   editPhaseEffort() {
-    this.editedPhaseEffort.esforco/100;
     this.manual.updateEsforcoFases(this.editedPhaseEffort);
     this.closeDialogEditPhaseEffort();
   }
@@ -273,7 +272,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   getPhaseEffortTotalPercentual() {
     let total = 0;
     this.manual.esforcoFases.forEach(each => {
-      (each.esforco !== undefined) ? (total = total + each.esforco) : (total = total)
+      (each.esforco !== undefined) ? (total = total + each.esforcoFormatado) : (total = total);
     });
 
     return total;

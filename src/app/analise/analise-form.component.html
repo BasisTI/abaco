@@ -5,21 +5,23 @@
         <div class="card card-w-title">
           <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
             <div class="ui-g" >
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-12" style="margin-bottom: 25px; margin-top: 25px">
                 <span class="md-inputfield">
                   <input type="text" name="numeroOS" [(ngModel)]="analise.numeroOs" pInputText/>
                   <label>Número OS</label>
                 </span>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Organização</label>
                 <p-dropdown [options]="organizacoes" optionLabel="nome"
                   [(ngModel)]="analise.organizacao" [autoWidth]="false"
-                  placeholder="Organização" name="organizacao"
+                  placeholder="Selecione uma Organização" name="organizacao"
                   (onChange)="organizacaoSelected($event.value)"
                   dataKey="id">
                 </p-dropdown>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Contrato</label>
                 <p-dropdown [options]="contratos" optionLabel="numeroContrato" 
                   [(ngModel)]="analise.contrato" 
                   disabled="{{ !shouldEnableContratoDropdown() }}" 
@@ -30,15 +32,18 @@
                 </p-dropdown>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Sistema</label>
                 <p-dropdown [options]="sistemas" optionLabel="nome" 
                   [(ngModel)]="analise.sistema"  
                   disabled="{{ !shouldEnableSistemaDropdown() }}"
                   placeholder="{{ sistemaDropdownPlaceholder() }}"
+                  (onChange)="sistemaSelected()"
                   name="sistema" [autoWidth]="false"
                   dataKey="id">
                 </p-dropdown>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Tipo de Contagem</label>
                 <p-dropdown [options]="metodosContagem"
                   [(ngModel)]="analise.tipoContagem"  
                   disabled="{{ !isContratoSelected() }}"
@@ -48,19 +53,21 @@
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Tipo de Análise</label>
                 <p-dropdown [options]="tiposAnalise"
                   [(ngModel)]="analise.tipoAnalise"  
-                  placeholder="Tipo de Análise"
+                  placeholder="Selecione um Tipo de Análise"
                   name="analise" [autoWidth]="false">
                 </p-dropdown>
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
-                <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
-                  [(ngModel)]="analise.valorAjuste"
+                <label>Fator de Ajuste</label>
+                <p-dropdown [options]="fatoresAjuste"
+                  [(ngModel)]="analise.fatorAjuste"
                   disabled="{{ !isContratoSelected() }}"
-                  placeholder="{{ fatoresAjusteDrodownPlaceholder() }}"
-                  name="valorAjuste" [autoWidth]="false">
+                  placeholder="{{ fatoresAjusteDropdownPlaceholder() }}"
+                  name="fatorAjuste" [autoWidth]="false">
                 </p-dropdown>
               </div>
 
@@ -73,44 +80,60 @@
                   <p-column selectionMode="multiple"
                     [style]="{'width':'15%'}"></p-column>
                   <p-column header="Nome" field="fase.nome"></p-column>
-                  <p-column header="Esforço" field="esforco"></p-column>
+                  <p-column header="Esforço %" field="esforcoFormatado"></p-column>
                   <p-footer *ngIf="analise.contrato">Total: {{ totalEsforcoFases() }}%</p-footer>
                 </p-dataTable>
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Propósito da Contagem</label>
                 <span class="md-inputfield">
                   <textarea [rows]="3" [cols]="180" pInputTextarea
                     name="propositoContagem" 
                     [(ngModel)]="analise.propositoContagem">
                   </textarea>
-                  <label>Propósito da Contagem</label>
                 </span>
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Escopo</label>
                 <span class="md-inputfield">
                   <textarea [rows]="3" [cols]="180" pInputTextarea name="escopo" 
                     [(ngModel)]="analise.escopo">
                   </textarea>
-                  <label>Escopo</label>
                 </span>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Fronteira</label>
                 <span class="md-inputfield">
                   <textarea [rows]="3" [cols]="180" pInputTextarea name="fronteiras" 
                     [(ngModel)]="analise.fronteiras">
                   </textarea>
-                  <label>Fronteira</label>
                 </span>
               </div>
               <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Documentação</label>
                 <span class="md-inputfield">
                   <textarea [rows]="3" [cols]="180" pInputTextarea name="documentacao" 
                     [(ngModel)]="analise.documentacao">
                   </textarea>
-                  <label>Documentação</label>
                 </span>
+              </div>
+
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Observações</label>
+                <span class="md-inputfield">
+                  <textarea [rows]="3" [cols]="180" pInputTextarea name="observacoes" 
+                    [(ngModel)]="analise.observacoes">
+                  </textarea>
+                </span>
+              </div>
+
+              
+              <div class="ui-g ui-md-12" style="justify-content: flex-end">
+                <div class="ui-md-3">
+                  <app-analise-botao-salvar></app-analise-botao-salvar>
+                </div>
               </div>
             </div>
           </form>
@@ -118,13 +141,13 @@
       </div>
     </div>
   </p-tabPanel>
-  <p-tabPanel header="Função Dados">
-
+  <p-tabPanel header="Funções de Dados">
+    <app-analise-funcao-dados></app-analise-funcao-dados>
   </p-tabPanel>
-  <p-tabPanel header="Função Transação">
-
+  <p-tabPanel header="Funções de Transação">
+    <app-analise-funcao-transacao></app-analise-funcao-transacao>
   </p-tabPanel>
   <p-tabPanel header="Resumo">
-
+    <app-analise-resumo></app-analise-resumo>
   </p-tabPanel>
 </p-tabView>

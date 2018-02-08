@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { SelectItem } from 'primeng/primeng';
-import { FatorAjuste } from '../fator-ajuste';
+import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste';
+import { FatorAjusteLabelGenerator } from './fator-ajuste-label-generator';
 
 @Pipe({ name: 'fatorAjusteToSelectItem' })
 export class FatorAjusteToSelectItemPipe implements PipeTransform {
@@ -11,9 +12,8 @@ export class FatorAjusteToSelectItemPipe implements PipeTransform {
     }
 
     return fatoresAjuste.map(fa => {
-      const label = `${fa.nome} - ${fa.tipoAjuste} - ${fa.fator}`;
+      const label = FatorAjusteLabelGenerator.generate(fa);
       return { label: label, value: fa };
     });
   }
-
 }

@@ -5,7 +5,7 @@ import { Observable, Subscription } from 'rxjs/Rx';
 
 import { Analise } from './analise.model';
 import { AnaliseService } from './analise.service';
-import { ResponseWrapper, BaseEntity } from '../shared';
+import { ResponseWrapper, BaseEntity, AnaliseSharedDataService } from '../shared';
 import { Organizacao, OrganizacaoService } from '../organizacao';
 import { Contrato, ContratoService } from '../contrato';
 import { Sistema, SistemaService } from '../sistema';
@@ -15,6 +15,7 @@ import * as _ from 'lodash';
 import { EsforcoFase } from '../esforco-fase/index';
 import { FatorAjuste } from '../fator-ajuste/index';
 import { Manual } from '../manual/index';
+import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
 
 @Component({
   selector: 'jhi-analise-form',
@@ -22,8 +23,9 @@ import { Manual } from '../manual/index';
 })
 export class AnaliseFormComponent implements OnInit, OnDestroy {
 
+  isEdicao: boolean;
+
   isSaving: boolean;
-  analise: Analise;
 
   organizacoes: Organizacao[];
   contratos: Contrato[];
@@ -33,7 +35,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   metodosContagem: SelectItem[] = [];
 
-  fatoresAjuste: FatorAjuste[] = [];
+  fatoresAjuste: SelectItem[] = [];
+  private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
 
   tiposAnalise: SelectItem[] = [
     { label: 'DESENVOLVIMENTO', value: 'DESENVOLVIMENTO' },
@@ -49,6 +52,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     private organizacaoService: OrganizacaoService,
     private contratoService: ContratoService,
     private sistemaService: SistemaService,
+    private analiseSharedDataService: AnaliseSharedDataService,
   ) { }
 
   ngOnInit() {
@@ -58,13 +62,25 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     });
     this.routeSub = this.route.params.subscribe(params => {
       this.analise = new Analise();
-      this.analise.esforcoFases = [];
       if (params['id']) {
+        this.isEdicao = true;
         this.analiseService.find(params['id']).subscribe(analise => {
-          this.analise = analise;
+          this.inicializaValoresAposCarregamento(analise);
+          this.analiseSharedDataService.analiseCarregada();
         });
+      } else {
+        this.isEdicao = false;
+        this.analise.esforcoFases = [];
       }
     });
+  }
+
+  private inicializaValoresAposCarregamento(analiseCarregada: Analise) {
+    this.analise = analiseCarregada;
+    // TODO organizacao.copyFromJSON() convertendo sistemas => não precisa da requisicao
+    this.organizacaoSelected(analiseCarregada.organizacao);
+    this.contratoSelected(analiseCarregada.contrato);
+    this.carregaFatorAjusteNaEdicao();
   }
 
   organizacaoSelected(org: Organizacao) {
@@ -74,20 +90,52 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  contratoDropdownPlaceholder() {
-    if (this.shouldEnableContratoDropdown()) {
-      return 'Contrato';
-    } else {
-      return 'Contrato - Selecione uma Organização para carregar os Contratos';
+  contratoSelected(contrato: Contrato) {
+    const manual: Manual = contrato.manual;
+    this.carregarEsforcoFases(manual);
+    this.carregarMetodosContagem(manual);
+    this.inicializaFatoresAjuste(manual);
+  }
+
+  private inicializaFatoresAjuste(manual: Manual) {
+    const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+    this.fatoresAjuste =
+      faS.map(fa => {
+        const label = FatorAjusteLabelGenerator.generate(fa);
+        return { label: label, value: fa };
+      });
+    this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+  }
+
+  sistemaSelected() {
+    this.analiseSharedDataService.sistemaSelecionado();
+  }
+
+  private carregaFatorAjusteNaEdicao() {
+    const fatorAjuste: FatorAjuste = this.analise.fatorAjuste;
+    if (fatorAjuste) {
+      const fatorAjusteSelectItem: SelectItem
+        = _.find(this.fatoresAjuste, { value: { id : fatorAjuste.id }});
+      this.analise.fatorAjuste = fatorAjusteSelectItem.value;
     }
   }
 
-  contratoSelected(contrato: Contrato) {
-    const manual = contrato.manual;
-    this.carregarEsforcoFases(manual);
-    this.carregarMetodosContagem(manual);
-    this.fatoresAjuste = _.cloneDeep(manual.fatoresAjuste);
+  get analise(): Analise {
+    return this.analiseSharedDataService.analise;
   }
+
+  set analise(analise: Analise) {
+    this.analiseSharedDataService.analise = analise;
+  }
+
+  contratoDropdownPlaceholder() {
+    if (this.shouldEnableContratoDropdown()) {
+      return 'Selecione um Contrato';
+    } else {
+      return 'Selecione uma Organização para carregar os Contratos';
+    }
+  }
+
 
   private carregarEsforcoFases(manual: Manual) {
     this.esforcoFases = _.cloneDeep(manual.esforcoFases);
@@ -100,22 +148,22 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
       { value: 'DETALHADA', label: 'DETALHADA' },
       {
         value: 'INDICATIVA',
-        label: this.getLabelValorVariacao('INDICATIVA', manual.valorVariacaoIndicativa)
+        label: this.getLabelValorVariacao('INDICATIVA', manual.valorVariacaoIndicativaFormatado)
       },
       {
         value: 'ESTIMADA',
-        label: this.getLabelValorVariacao('ESTIMADA', manual.valorVariacaoEstimada)
+        label: this.getLabelValorVariacao('ESTIMADA', manual.valorVariacaoEstimadaFormatado)
       }
     ];
   }
 
   private getLabelValorVariacao(label: string, valorVariacao: number): string {
-    return label + ' - ' + (valorVariacao * 100) + '%';
+    return label + ' - ' + valorVariacao + '%';
   }
 
   totalEsforcoFases() {
     const initialValue = 0;
-    return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforco, initialValue);
+    return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforcoFormatado, initialValue);
   }
 
   shouldEnableContratoDropdown() {
@@ -124,9 +172,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   sistemaDropdownPlaceholder() {
     if (this.shouldEnableSistemaDropdown()) {
-      return 'Sistema';
+      return 'Selecione um Sistema';
     } else {
-      return 'Sistema - Selecione uma Organização para carregar os Sistemas';
+      return 'Selecione uma Organização para carregar os Sistemas';
     }
   }
 
@@ -136,21 +184,21 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   tipoDeContagemDropdownPlaceholder() {
     if (this.isContratoSelected()) {
-      return 'Tipo de Contagem';
+      return 'Selecione um Tipo de Contagem';
     } else {
-      return 'Tipo de Contagem - Selecione um Contrato para carregar os Tipos de Contagem';
+      return 'Selecione um Contrato para carregar os Tipos de Contagem';
     }
   }
 
   isContratoSelected(): boolean {
-    return !_.isUndefined(this.analise.contrato);
+    return this.analiseSharedDataService.isContratoSelected();
   }
 
-  fatoresAjusteDrodownPlaceholder() {
+  fatoresAjusteDropdownPlaceholder() {
     if (this.isContratoSelected()) {
-      return 'Valor de Ajuste';
+      return 'Selecione um Fator de Ajuste';
     } else {
-      return 'Valor de Ajuste - Selecione um Contrato para carregar os Valores de Ajuste';
+      return 'Selecione um Contrato para carregar os Fatores de Ajuste';
     }
   }
 

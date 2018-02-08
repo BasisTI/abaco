@@ -5,7 +5,8 @@ import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 
 import { Funcionalidade } from './funcionalidade.model';
-import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
+import { ResponseWrapper, createRequestOption, JhiDateUtils, BaseEntity } from '../shared';
+import { Modulo } from '../modulo/index';
 
 @Injectable()
 export class FuncionalidadeService {
@@ -16,12 +17,21 @@ export class FuncionalidadeService {
 
   constructor(private http: HttpService) {}
 
-  create(funcionalidade: Funcionalidade): Observable<Funcionalidade> {
+  create(funcionalidade: Funcionalidade, moduloId?: number): Observable<Funcionalidade> {
     const copy = this.convert(funcionalidade);
-    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
+    const funcionalidadeToBeCreated = this.linkToModulo(copy, moduloId);
+    return this.http.post(this.resourceUrl, funcionalidadeToBeCreated).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
     });
+  }
+
+  private linkToModulo(funcionalidade: Funcionalidade, moduloId: number) {
+    if (moduloId && !funcionalidade.modulo) {
+      const modulo: BaseEntity = { id: moduloId };
+      funcionalidade.modulo = modulo as Modulo;
+    }
+    return funcionalidade;
   }
 
   update(funcionalidade: Funcionalidade): Observable<Funcionalidade> {

@@ -22,47 +22,16 @@ export class ManualService {
     private uploadService: UploadService
   ) {}
 
-  private parsePhaseEffortDecimalValues(esforcoFases: Array<EsforcoFase>): Array<EsforcoFase> {
-    if(esforcoFases !== undefined) {
-      esforcoFases.forEach(each => {
-        each.esforco = each.esforco / 100;
-      });
-    }
-
-    return esforcoFases;
-  }
-
-  private parseAdjustFactorDecimalValues(adjustFactors: Array<FatorAjuste>): Array<FatorAjuste> {
-    if(adjustFactors !== undefined) {
-      adjustFactors.forEach(each => {
-        if(each.tipoAjuste.toString() === 'PERCENTUAL') {
-          each.fator = each.fator / 100;
-        }
-      });
-    }
-
-    return adjustFactors;
-  }
-
   create(manual: Manual): Observable<any> {
     const copy = this.convert(manual);
-
-    copy.esforcoFases = this.parsePhaseEffortDecimalValues(copy.esforcoFases);
-    copy.fatoresAjuste = this.parseAdjustFactorDecimalValues(copy.fatoresAjuste);
-
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
     });
-    // return this.uploadService.uploadFile(arquivoManual).map(response => {
-    //   copy.arquivoManualId = JSON.parse(response["_body"]).id;
-    // });
   }
 
   update(manual: Manual): Observable<Manual> {
     const copy = this.convert(manual);
-    copy.esforcoFases = this.parsePhaseEffortDecimalValues(copy.esforcoFases);
-    copy.fatoresAjuste = this.parseAdjustFactorDecimalValues(copy.fatoresAjuste);
     return this.http.put(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
@@ -107,7 +76,7 @@ export class ManualService {
    * Convert a Manual to a JSON which can be sent to the server.
    */
   private convert(manual: Manual): Manual {
-    const copy: Manual = Object.assign({}, manual);
+    const copy: Manual = manual.toJSONState();
     return copy;
   }
 }

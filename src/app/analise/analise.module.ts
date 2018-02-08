@@ -28,7 +28,12 @@ import {
   AnaliseFormComponent,
   analiseRoute
 } from './';
-import { FatorAjusteToSelectItemPipe } from '../shared/index';
+
+import { AbacoFuncaoDadosModule } from '../funcao-dados/funcao-dados.module';
+import { AbacoSharedModule } from '../shared/abaco-shared.module';
+import { AbacoFuncaoTransacaoModule } from '../funcao-transacao/funcao-transacao.module';
+import { AbacoAnaliseResumoModule } from './resumo/analise-resumo.module';
+import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
 
 @NgModule({
   imports: [
@@ -47,13 +52,17 @@ import { FatorAjusteToSelectItemPipe } from '../shared/index';
     ConfirmDialogModule,
     AbacoButtonsModule,
     TabViewModule,
-    InputTextareaModule
+    InputTextareaModule,
+    AbacoFuncaoDadosModule,
+    AbacoSharedModule,
+    AbacoFuncaoTransacaoModule,
+    AbacoAnaliseResumoModule,
+    AbacoAnaliseBotaoSalvarModule,
   ],
   declarations: [
     AnaliseComponent,
     AnaliseDetailComponent,
     AnaliseFormComponent,
-    FatorAjusteToSelectItemPipe
   ],
   providers: [
     AnaliseService,

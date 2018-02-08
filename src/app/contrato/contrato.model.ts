@@ -3,8 +3,6 @@ import { Manual } from '../manual';
 
 export class Contrato implements BaseEntity, JSONable<Contrato> {
 
-  // TODO avaliar se consegue funcionar sem artificialId
-
   constructor(
     public id?: number,
     public numeroContrato?: string,
@@ -21,9 +19,9 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
   }
 
   copyFromJSON(json: any) {
-    // TODO converter manual?
+    const manual = new Manual().copyFromJSON(json.manual);
     return new Contrato(json.id, json.numeroContrato, new Date(json.dataInicioVigencia),
-      new Date(json.dataFimVigencia), json.manual, json.ativo);
+      new Date(json.dataFimVigencia), manual, json.ativo);
   }
 
   // TODO extrair modulo? entrar pro jsonable?

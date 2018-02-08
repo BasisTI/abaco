@@ -33,7 +33,6 @@ import { AppBreadcrumbComponent } from './app.breadcrumb.component';
 import { InlineProfileComponent } from './app.profile.component';
 import { JhiDateUtils, BreadcrumbService, PageNotificationService } from './shared';
 
-import { AbacoAlrModule } from './alr/alr.module';
 import { AbacoManualModule } from './manual/manual.module';
 import { AbacoFatorAjusteModule } from './fator-ajuste/fator-ajuste.module';
 import { AbacoFuncaoTransacaoModule } from './funcao-transacao/funcao-transacao.module';
@@ -46,9 +45,10 @@ import { AbacoTipoFaseModule } from './tipo-fase/tipo-fase.module';
 import { AbacoSistemaModule } from './sistema/sistema.module';
 import { AbacoModuloModule } from './modulo/modulo.module';
 import { AbacoFuncionalidadeModule } from './funcionalidade/funcionalidade.module';
+import { AbacoFuncaoDadosModule } from './funcao-dados/funcao-dados.module';
 import { MemoryDataTableModule } from './memory-datatable/memory-datatable.module';
 import { UploadService } from './upload/upload.service';
-import {FileUploadModule} from 'primeng/primeng';
+import { FileUploadModule } from 'primeng/primeng';
 import { LoginModule } from './login/login.module';
 import { environment } from '../environments/environment';
 import { MenuItemsService } from './shared/menu-items.service';
@@ -75,7 +75,6 @@ export function createTranslateLoader(http: HttpClient) {
     AuthModule,
     DatatableModule.forRoot(),
     SharedModule.forRoot(),
-    AbacoAlrModule,
     AbacoManualModule,
     AbacoFatorAjusteModule,
     AbacoFuncaoTransacaoModule,
@@ -88,6 +87,7 @@ export function createTranslateLoader(http: HttpClient) {
     AbacoSistemaModule,
     AbacoModuloModule,
     AbacoFuncionalidadeModule,
+    AbacoFuncaoDadosModule,
     MemoryDataTableModule,
     FileUploadModule,
     HttpClientModule,

@@ -36,6 +36,15 @@ export class MemoryDatatableComponent implements AfterViewInit {
   @Input()
   disableDelete: boolean;
 
+  @Input()
+  responsive = false;
+
+  @Input()
+  scrollable = false;
+
+  @Input()
+  scrollWidth = '';
+
   @Output()
   buttonClick: EventEmitter<DatatableClickEvent> = new EventEmitter<DatatableClickEvent>();
 
