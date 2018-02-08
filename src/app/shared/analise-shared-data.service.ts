@@ -12,6 +12,7 @@ export class AnaliseSharedDataService {
 
   private saveSubject = new Subject<any>();
   private loadSubject = new Subject<any>();
+  private sistemaSelectedSubject = new Subject<any>();
 
   analise: Analise;
 
@@ -36,6 +37,14 @@ export class AnaliseSharedDataService {
 
   getLoadSubject(): Observable<any> {
     return this.loadSubject.asObservable();
+  }
+
+  sistemaSelecionado() {
+    this.sistemaSelectedSubject.next();
+  }
+
+  getSistemaSelecionadoSubject(): Observable<any> {
+    return this.sistemaSelectedSubject.asObservable();
   }
 
 }

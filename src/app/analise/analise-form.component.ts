@@ -98,6 +98,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     this.fatoresAjuste = _.cloneDeep(manual.fatoresAjuste);
   }
 
+  sistemaSelected() {
+    this.analiseSharedDataService.sistemaSelecionado();
+  }
+
   private carregaFatorAjusteNaEdicao() {
     if (this.analise.fatorAjuste) {
       this.analise.fatorAjuste = _.find(this.fatoresAjuste, { 'id': this.analise.fatorAjuste.id });
