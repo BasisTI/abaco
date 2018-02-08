@@ -2,7 +2,7 @@ package br.com.basis.abaco.utils;
 
 import java.math.BigDecimal;
 
-public class BigDecimalUtils {
+public final class BigDecimalUtils {
     
     private BigDecimalUtils() {
         
