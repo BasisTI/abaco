@@ -219,7 +219,9 @@ public class AnaliseResource {
      */
     @GetMapping("/_search/analises")
     @Timed
-    public ResponseEntity<List<Analise>> searchAnalises(@RequestParam String query, @ApiParam Pageable pageable)
+    // TODO todos os endpoint elastic poderiam ter o defaultValue
+    // impacta na paginacao do frontend
+    public ResponseEntity<List<Analise>> searchAnalises(@RequestParam(defaultValue = "*") String query, @ApiParam Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to search for a page of Analises for query {}", query);
         Page<Analise> page = analiseSearchRepository.search(queryStringQuery(query), pageable);

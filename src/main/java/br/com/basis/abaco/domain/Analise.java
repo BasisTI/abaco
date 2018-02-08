@@ -1,17 +1,11 @@
 package br.com.basis.abaco.domain;
 
-import br.com.basis.abaco.domain.enumeration.MetodoContagem;
-import br.com.basis.abaco.domain.enumeration.TipoAnalise;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import io.swagger.annotations.ApiModel;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,17 +18,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import br.com.basis.abaco.domain.enumeration.MetodoContagem;
+import br.com.basis.abaco.domain.enumeration.TipoAnalise;
+import io.swagger.annotations.ApiModel;
 
 /**
  * <Enter note text here>
@@ -105,16 +107,22 @@ public class Analise implements Serializable {
     @LastModifiedDate
     private Date edited;
 
+    // FIXME @CreatedBy e @LastModifiedBy de Analise não seguem o padrão dado em
+    // User
+    // atualmente se um funciona, o outro não
+    // O de User espera uma string com o login do usuário
+    // Analise espera o User completo
+    // Comentando por enquanto para nao gastar muito tempo e evitar alteracoes no
+    // banco
     @ManyToOne
-    @CreatedBy
+    // @CreatedBy
     @JoinColumn
     private User createdBy;
 
     @ManyToOne
-    @LastModifiedBy
+    // @LastModifiedBy
     @JoinColumn
     private User editedBy;
-
 
     @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -125,6 +133,16 @@ public class Analise implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonManagedReference
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
+
+    @ManyToOne
+    private FatorAjuste fatorAjuste;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<EsforcoFase> esforcoFases;
+
+    @Size(max = 4000)
+    @Column(name = "observacoes", length = 4000)
+    private String observacoes;
 
     public Long getId() {
         return id;
@@ -330,7 +348,6 @@ public class Analise implements Serializable {
         this.organizacao = organizacao;
     }
 
-
     public String getAdjustPFTotal() {
         return adjustPFTotal;
     }
@@ -353,7 +370,6 @@ public class Analise implements Serializable {
         }
         return Objects.equals(id, analise.id);
     }
-
 
     public Date getCreated() {
         return created;
@@ -387,6 +403,30 @@ public class Analise implements Serializable {
         this.editedBy = editedBy;
     }
 
+    public FatorAjuste getFatorAjuste() {
+        return fatorAjuste;
+    }
+
+    public void setFatorAjuste(FatorAjuste fatorAjuste) {
+        this.fatorAjuste = fatorAjuste;
+    }
+
+    public Set<EsforcoFase> getEsforcoFases() {
+        return esforcoFases;
+    }
+
+    public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {
+        this.esforcoFases = esforcoFases;
+    }
+
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
@@ -394,6 +434,7 @@ public class Analise implements Serializable {
 
     @Override
     public String toString() {
+        // // @formatter:off
         return "Analise{" +
             "id=" + id +
             ", numeroOs='" + numeroOs + "'" +
@@ -406,5 +447,6 @@ public class Analise implements Serializable {
             ", tipoAnalise='" + tipoAnalise + "'" +
             ", propositoContagem='" + propositoContagem + "'" +
             '}';
+        // @formatter:on
     }
 }

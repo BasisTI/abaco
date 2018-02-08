@@ -1,12 +1,12 @@
 package br.com.basis.abaco.domain;
 
-import br.com.basis.abaco.domain.enumeration.Complexidade;
-import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,13 +22,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import br.com.basis.abaco.domain.enumeration.Complexidade;
+import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 
 /**
  * A FuncaoTransacao.
@@ -96,6 +100,12 @@ public class FuncaoTransacao implements Serializable {
 
     @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
+    
+    @Transient
+    private Set<String> derValues;
+    
+    @Transient
+    private Set<String> ftrValues;
 
     public Long getId() {
         return id;
@@ -306,4 +316,21 @@ public class FuncaoTransacao implements Serializable {
             ", pf='" + pf + "'" +
             '}';
     }
+
+	public Set<String> getDerValues() {
+		return derValues;
+	}
+
+	public void setDerValues(Set<String> derValues) {
+		this.derValues = derValues;
+	}
+
+	public Set<String> getFtrValues() {
+		return ftrValues;
+	}
+
+	public void setFtrValues(Set<String> ftrValues) {
+		this.ftrValues = ftrValues;
+	}
+    
 }

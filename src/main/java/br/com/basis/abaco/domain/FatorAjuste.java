@@ -1,12 +1,8 @@
 package br.com.basis.abaco.domain;
 
-import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
-import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,9 +15,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Objects;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
+import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
 
 /**
  * A FatorAjuste.
@@ -45,6 +48,7 @@ public class FatorAjuste implements Serializable {
 
     @NotNull
     @Column(name = "fator", precision = 10, scale = 2, nullable = false)
+    @JsonDeserialize(using = BigDecimalSerializer.class)
     private BigDecimal fator;
 
     @NotNull

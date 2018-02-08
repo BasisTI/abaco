@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="diego.marcilio (generated)" id="1517854067111-1">
+      <createTable tableName="analise_esforco_fases">
+         <column name="analise_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="esforco_fases_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="diego.marcilio (generated)" id="1517854067111-2">
+      <addPrimaryKey columnNames="analise_id, esforco_fases_id"
+                     tableName="analise_esforco_fases"/>
+   </changeSet>
+   <changeSet author="diego.marcilio (generated)" id="1517854067111-3">
+      <addForeignKeyConstraint baseColumnNames="analise_id"
+                               baseTableName="analise_esforco_fases"
+                               constraintName="FK53g42229mml5detlnudnatppr"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="analise"/>
+   </changeSet>
+   <changeSet author="diego.marcilio (generated)" id="1517854067111-4">
+      <addForeignKeyConstraint baseColumnNames="esforco_fases_id"
+                               baseTableName="analise_esforco_fases"
+                               constraintName="FKeixd86qmwh9pbyl7ugncm1dap"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="esforco_fase"/>
+   </changeSet>
+</databaseChangeLog>
