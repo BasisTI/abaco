@@ -144,21 +144,27 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     } else {
       this.doAdicionar();
     }
+    this.isEdit = false;
   }
 
   private doEditar() {
 
-    this.resetarEstadoPosEdicao();
+    this.resetarEstadoPosSalvar();
+  }
+
+  private resetarEstadoPosSalvar() {
+    // Mantendo o mesmo conteudo a pedido do Leandro
+    this.currentFuncaoDados = this.currentFuncaoDados.clone();
+    this.currentFuncaoDados.artificialId = undefined;
   }
 
   private doAdicionar() {
     const funcaoDadosCalculada = Calculadora.calcular(this.analise.tipoContagem, this.currentFuncaoDados);
+    // TODO temporal coupling entre 1-add() e 2-atualizaResumo(). 2 tem que ser chamado depois
     this.analise.addFuncaoDados(funcaoDadosCalculada);
     this.atualizaResumo();
     this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
-    // Mantendo o mesmo conteudo a pedido do Leandro
-    this.currentFuncaoDados = this.currentFuncaoDados.clone();
-    this.currentFuncaoDados.artificialId = undefined;
+    this.resetarEstadoPosSalvar();
   }
 
   datatableClick(event: DatatableClickEvent) {
@@ -214,13 +220,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   cancelarEdicao() {
-    this.resetarEstadoPosEdicao();
-    this.scrollParaInicioDaAba();
-  }
-
-  private resetarEstadoPosEdicao() {
     this.isEdit = false;
     this.currentFuncaoDados = new FuncaoDados();
+    this.scrollParaInicioDaAba();
   }
 
   confirmDelete() {
