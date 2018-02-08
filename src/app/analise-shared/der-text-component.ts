@@ -3,7 +3,8 @@ import {
   Input,
   Output,
   EventEmitter,
-  OnChanges
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 
 import { ParseResult, DerTextParser } from './der-text-parser';
@@ -12,7 +13,7 @@ import { ParseResult, DerTextParser } from './der-text-parser';
   selector: 'app-analise-der-text',
   templateUrl: './der-text.component.html'
 })
-export class DerTextComponent {
+export class DerTextComponent implements OnChanges {
 
   @Input()
   value: string;
@@ -28,6 +29,11 @@ export class DerTextComponent {
   text: string;
 
   constructor() { }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.text = changes.value.currentValue;
+    this.textChanged();
+  }
 
   textChanged() {
     this.valueChange.emit(this.text);
