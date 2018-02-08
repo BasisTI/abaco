@@ -180,7 +180,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     switch (event.button) {
       case 'edit':
         this.isEdit = true;
-        console.log(funcaoDadosSelecionada);
         this.prepararParaEdicao(funcaoDadosSelecionada);
         break;
       case 'delete':
