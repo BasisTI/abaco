@@ -61,7 +61,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   get header(): string {
-    return !this.isEdit ? 'Adicionar Função de Dados' : `Alterar Função de Dados '${this.currentFuncaoDados.name}'`;
+    return !this.isEdit ? 'Adicionar Função de Dados' : 'Alterar Função de Dados';
   }
 
   get currentFuncaoDados(): FuncaoDados {
