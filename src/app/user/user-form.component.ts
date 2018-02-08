@@ -91,39 +91,44 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
   private isUsernamesValid(): boolean {
     let isValid = false;
+    this.returnInputToNormalStyle();
+    let isFirstNameValid = false;
+    let isLastNameValid = false;
+    let isLoginValid = false;
 
     if(this.user.firstName !== undefined && this.user.firstName !== null && this.user.firstName !== '') {
-      if(this.user.firstName.length < 250) {
-        isValid = true;
-      } else {
-        this.pageNotificationService.addErrorMsg('O campo primeiro nome excede o máximo de caracteres!');
-      }
+      isFirstNameValid = true;
     } else {
-      this.pageNotificationService.addErrorMsg('O campo primeiro nome é obrigatório');
+      document.getElementById('firstName').setAttribute('style', 'border-color: red;');
     }
 
     if(this.user.lastName !== undefined && this.user.lastName !== null && this.user.lastName !== '') {
-      if(this.user.lastName.length < 250) {
-        isValid = true;
-      } else {
-        this.pageNotificationService.addErrorMsg('O campo último nome excede o máximo de caracteres!');
-      }
+      isLastNameValid = true;
     } else {
-        this.pageNotificationService.addErrorMsg('O campo último nome é obrigatório')
+      document.getElementById('lastName').setAttribute('style', 'border-color: red;');
     }
 
     if(this.user.login !== undefined && this.user.login !== null && this.user.login !== '') {
-      if(this.user.login.length < 99) {
-        isValid = true;
-      } else {
-        this.pageNotificationService.addErrorMsg('O campo login excede o máximo de caracteres!');
-      }
+      isLoginValid = true;
     } else {
-        this.pageNotificationService.addErrorMsg('O campo login é obrigatório')
+      document.getElementById('login').setAttribute('style', 'border-color: red;');
+    }
+
+    if(isFirstNameValid && isLastNameValid && isLoginValid) {
+      isValid = true;
+    } else {
+      this.pageNotificationService.addErrorMsg('Favor informar os campos obrigatórios!');
     }
 
     return isValid;
   }
+
+  private returnInputToNormalStyle() {
+      document.getElementById('firstName').setAttribute('style', 'border-color: #bdbdbd;');
+      document.getElementById('lastName').setAttribute('style', 'border-color: #bdbdbd;');
+      document.getElementById('login').setAttribute('style', 'border-color: #bdbdbd;');
+  }
+
   private subscribeToSaveResponse(result: Observable<User>) {
     result.subscribe((res: User) => {
       this.isSaving = false;
