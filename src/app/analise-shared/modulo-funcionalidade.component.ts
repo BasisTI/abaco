@@ -34,6 +34,8 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
   private subscriptionFuncaoAnaliseCarregada: Subscription;
   private subscriptionFuncaoAnaliseDescarregada: Subscription;
 
+  private oldModuloSelectedId = -1;
+
   modulos: Modulo[];
   mostrarDialogModulo = false;
   novoModulo: Modulo = new Modulo();
@@ -163,8 +165,9 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
   }
 
   private limpaSelecoes() {
-    this.moduloSelecionado = new Modulo();
-    this.funcionalidadeSelecionada = new Funcionalidade();
+    // TODO undefined? new?
+    this.moduloSelecionado = undefined;
+    this.funcionalidadeSelecionada = undefined;
   }
 
   moduloName() {
@@ -214,8 +217,16 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
   }
 
   moduloSelected(modulo: Modulo) {
+    this.deselecionaFuncionalidadeSeModuloSelecionadoForDiferente();
     this.funcionalidades = modulo.funcionalidades;
     this.moduloSelectedEvent.emit(modulo);
+    this.oldModuloSelectedId = modulo.id;
+  }
+
+  private deselecionaFuncionalidadeSeModuloSelecionadoForDiferente() {
+    if (this.moduloSelecionado.id !== this.oldModuloSelectedId) {
+      this.funcionalidadeSelecionada = undefined;
+    }
   }
 
   adicionarModulo() {
