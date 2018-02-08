@@ -1,13 +1,18 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Fase;
-import br.com.basis.abaco.repository.FaseRepository;
-import br.com.basis.abaco.repository.search.FaseSearchRepository;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,14 +24,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.Fase;
+import br.com.basis.abaco.repository.FaseRepository;
+import br.com.basis.abaco.repository.search.FaseSearchRepository;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing Fase.
@@ -140,14 +146,15 @@ public class FaseResource {
      *
      * @param query the query of the fase search
      * @return the result of the search
+     * @throws URISyntaxException 
      */
     @GetMapping("/_search/fases")
     @Timed
-    public List<Fase> searchFases(@RequestParam(defaultValue = "*") String query) {
+    public ResponseEntity<List<Fase>> searchFases(@RequestParam(defaultValue = "*") String query, @ApiParam Pageable pageable) throws URISyntaxException {
         log.debug("REST request to search Fases for query {}", query);
-        return StreamSupport
-            .stream(faseSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-            .collect(Collectors.toList());
+        Page<Fase> page = faseSearchRepository.search(queryStringQuery(query), pageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/fases");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
 
