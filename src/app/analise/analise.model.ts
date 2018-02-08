@@ -42,6 +42,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     public fatorAjuste?: FatorAjuste,
     public valorAjuste?: number,
     public pfTotal?: string,
+    public adjustPFTotal?: string,
     public escopo?: string,
     public fronteiras?: string,
     public documentacao?: string,
@@ -71,7 +72,6 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     }
   }
 
-  // FIXME quando for edicao?
   private inicializaResumos() {
     this._resumoFuncaoDados = new ResumoFuncoes(FuncaoDados.tipos());
     this._resumoFuncaoTransacao = new ResumoFuncoes(FuncaoTransacao.tipos());
@@ -79,9 +79,9 @@ export class Analise implements BaseEntity, JSONable<Analise> {
   }
 
   private generateResumoTotal() {
-    // TODO setar pfTotal
-    // TODO criar e setar adjustPFTotal
     this._resumoTotal = new ResumoTotal(this._resumoFuncaoDados, this._resumoFuncaoTransacao);
+    this.pfTotal = this._resumoTotal.getTotalPf().toString();
+    this.adjustPFTotal = this._resumoTotal.getTotalGrossPf().toString();
   }
 
   // TODO extrair classe
@@ -216,8 +216,8 @@ class AnaliseCopyFromJSON {
     this._json = json;
     this._analiseConverted = new Analise();
 
-    console.log('analise recebida...');
-    console.log(JSON.stringify(json, null, 4));
+    // console.log('analise recebida...');
+    // console.log(JSON.stringify(json, null, 4));
   }
 
   public copy(): Analise {
@@ -242,6 +242,7 @@ class AnaliseCopyFromJSON {
     this._analiseConverted.fatorAjuste = this._json.fatorAjuste;
     this._analiseConverted.valorAjuste = this._json.valorAjuste;
     this._analiseConverted.pfTotal = this._json.pfTotal;
+    this._analiseConverted.adjustPFTotal = this._json.adjustPFTotal;
     this._analiseConverted.escopo = this._json.escopo;
     this._analiseConverted.fronteiras = this._json.fronteiras;
     this._analiseConverted.documentacao = this._json.documentacao;

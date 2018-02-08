@@ -17,12 +17,15 @@ export class ResumoTotal {
 
   private readonly _resumoFuncoes: ResumoFuncoes[];
 
+  private readonly _ultimaLinhaTotal: UltimaLinhaTotal;
+
   private readonly _complexidades: string[] = AnaliseSharedUtils.complexidades;
 
   constructor(...resumoFuncoes: ResumoFuncoes[]) {
     this._resumoFuncoes = resumoFuncoes;
     this.adicionaTodosResumosGrupoLogicoDeCadaResumoFuncoes();
-    this._linhasResumo.push(new UltimaLinhaTotal(this._linhasResumo));
+    this._ultimaLinhaTotal = new UltimaLinhaTotal(this._linhasResumo);
+    this._linhasResumo.push(this._ultimaLinhaTotal);
   }
 
   private adicionaTodosResumosGrupoLogicoDeCadaResumoFuncoes() {
@@ -33,6 +36,14 @@ export class ResumoTotal {
 
   get all(): LinhaResumo[] {
     return this._linhasResumo;
+  }
+
+  getTotalPf(): number {
+    return this._ultimaLinhaTotal.getTotalPf();
+  }
+
+  getTotalGrossPf(): number {
+    return this._ultimaLinhaTotal.getTotalGrossPF();
   }
 
 }
