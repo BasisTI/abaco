@@ -31,6 +31,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
   private subscriptionSistemaSelecionado: Subscription;
   private subscriptionAnaliseSalva: Subscription;
   private subscriptionAnaliseCarregada: Subscription;
+  private subscriptionFuncaoAnaliseCarregada: Subscription;
 
   modulos: Modulo[];
   mostrarDialogModulo = false;
@@ -58,6 +59,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     this.subscribeSistemaSelecionado();
     this.subscribeAnaliseCarregada();
     this.subscribeAnaliseSalva();
+    this.subscribeFuncaoAnaliseCarregada();
   }
 
   private subscribeSistemaSelecionado() {
@@ -70,6 +72,10 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
   private carregarModulosQuandoTiverSistemaDisponivel() {
     this.modulos = this.sistema.modulos;
     this.changeDetectorRef.detectChanges();
+  }
+
+  private get sistema(): Sistema {
+    return this.analiseSharedDataService.analise.sistema;
   }
 
   private subscribeAnaliseCarregada() {
@@ -96,14 +102,17 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
   }
 
   private getModuloASelecionarDeAcordoComTipoFuncaoDoComponente(): Modulo {
+    if (this.currentFuncaoAnalise.funcionalidade) {
+      return this.currentFuncaoAnalise.funcionalidade.modulo;
+    }
+  }
+
+  // TODO pode retornar interface FuncaoAnalise. mas precisa ser complementada
+  private get currentFuncaoAnalise() {
     if (this.isFuncaoDados) {
-      if (this.analiseSharedDataService.currentFuncaoDados.funcionalidade) {
-        return this.analiseSharedDataService.currentFuncaoDados.funcionalidade.modulo;
-      }
+      return this.analiseSharedDataService.currentFuncaoDados;
     } else {
-      if (this.analiseSharedDataService.currentFuncaoTransacao.funcionalidade) {
-        return this.analiseSharedDataService.currentFuncaoTransacao.funcionalidade.modulo;
-      }
+      return this.analiseSharedDataService.currentFuncaoTransacao;
     }
   }
 
@@ -113,8 +122,24 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     this.moduloSelected(this.moduloSelecionado);
   }
 
-  private get sistema(): Sistema {
-    return this.analiseSharedDataService.analise.sistema;
+  private subscribeFuncaoAnaliseCarregada() {
+    this.subscriptionFuncaoAnaliseCarregada =
+      this.analiseSharedDataService.getFuncaoAnaliseCarregadaSubject().subscribe(() => {
+        this.carregarTudoOnFuncaoAnaliseCarregada();
+      });
+  }
+
+  // TODO avaliar duplicacoes e refatorar
+  private carregarTudoOnFuncaoAnaliseCarregada() {
+    const currentFuncionalidade: Funcionalidade = this.currentFuncaoAnalise.funcionalidade;
+    const currentModulo: Modulo = currentFuncionalidade.modulo;
+
+    this.modulos = this.sistema.modulos;
+    this.selecionarModulo(currentModulo.id);
+
+    this.funcionalidades = currentModulo.funcionalidades;
+    this.funcionalidadeSelecionada = _.find(this.funcionalidades, { 'id': currentFuncionalidade.id });
+    this.funcionalidadeSelected(this.funcionalidadeSelecionada);
   }
 
   moduloName() {
@@ -246,6 +271,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     this.subscriptionSistemaSelecionado.unsubscribe();
     this.subscriptionAnaliseCarregada.unsubscribe();
     this.subscriptionAnaliseSalva.unsubscribe();
+    this.subscriptionFuncaoAnaliseCarregada.unsubscribe();
     this.changeDetectorRef.detach();
   }
 
