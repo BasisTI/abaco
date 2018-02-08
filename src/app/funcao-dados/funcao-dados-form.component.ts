@@ -21,6 +21,8 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
+  isEdit: boolean;
+
   funcaoDadosEmEdicao: FuncaoDados;
   resumo: ResumoFuncoes;
 
@@ -42,8 +44,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.isEdit = false;
     this.currentFuncaoDados = new FuncaoDados();
-
     this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
       this.atualizaResumo();
     });
@@ -52,6 +54,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   private atualizaResumo() {
     this.resumo = this.analise.resumoFuncaoDados;
     this.changeDetectorRef.detectChanges();
+  }
+
+  get header(): string {
+    return !this.isEdit ? 'Adicionar Função de Dados' : `Alterar Função de Dados '${this.currentFuncaoDados.name}'`;
   }
 
   get currentFuncaoDados(): FuncaoDados {
@@ -118,6 +124,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     return this.isFuncionalidadeSelected() && !_.isUndefined(this.analise.tipoContagem);
   }
 
+  get labelBotaoAdicionar() {
+    return !this.isEdit ? 'Adicionar' : 'Alterar';
+  }
+
   adicionar() {
     if (this.deveHabilitarBotaoAdicionar()) {
       this.doAdicionar();
@@ -139,15 +149,33 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const funcaoDadosSelecionada: FuncaoDados = event.selection;
+    const funcaoDadosSelecionada: FuncaoDados = event.selection.clone();
     switch (event.button) {
       case 'edit':
-        console.log('edit');
+        this.isEdit = true;
+        this.prepararParaEdicao(funcaoDadosSelecionada);
         break;
       case 'delete':
         this.funcaoDadosEmEdicao = funcaoDadosSelecionada;
         this.confirmDelete();
     }
+  }
+
+  private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
+    this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
+    window.scrollTo(0, 60);
+    this.pageNotificationService.addInfoMsg(`Alterando Função de Dados '${funcaoDadosSelecionada.name}'`);
+    // alterar header (criar)
+    // alterar botao adicionar para 'alterar'
+    // // setar um booleano isEdit como false. 
+    // // // true quando clica em edit
+    // // // false quando clica em atualizar
+    // // // false quando clica em cancelar edicao (criar botão)
+    // // // // seta currentFuncao para new()
+  }
+
+  cancelarEdicao() {
+    
   }
 
   confirmDelete() {
