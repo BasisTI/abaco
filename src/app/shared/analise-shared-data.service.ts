@@ -13,6 +13,7 @@ export class AnaliseSharedDataService {
   private saveSubject = new Subject<any>();
   private loadSubject = new Subject<any>();
   private sistemaSelectedSubject = new Subject<any>();
+  private funcaoAnaliseCarregadaSubject = new Subject<any>();
 
   isEdit = false;
 
@@ -49,6 +50,14 @@ export class AnaliseSharedDataService {
 
   getSistemaSelecionadoSubject(): Observable<any> {
     return this.sistemaSelectedSubject.asObservable();
+  }
+
+  funcaoAnaliseCarregada() {
+    this.funcaoAnaliseCarregadaSubject.next();
+  }
+
+  getFuncaoAnaliseCarregadaSubject() {
+    return this.funcaoAnaliseCarregadaSubject.asObservable();
   }
 
 }
