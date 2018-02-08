@@ -52,9 +52,6 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
     const copy: FuncaoDados = Object.assign({}, this);
     copy.derValues = DerTextParser.parse(this.der).textos;
     copy.rlrValues = DerTextParser.parse(this.rlr).textos;
-
-
-    // FIXME der e rlr estao com valores 0, nao estao sendo setados corretamente
     copy.detStr = copy.der;
     copy.retStr = copy.rlr;
 

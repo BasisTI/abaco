@@ -113,9 +113,6 @@ export class Analise implements BaseEntity, JSONable<Analise> {
       copy.esforcoFases = copy.esforcoFases.map(ef => ef.toJSONState());
     }
 
-    console.log('analise sendo enviada...');
-    console.log(JSON.stringify(copy, null, 4));
-
     return copy;
   }
 
@@ -216,9 +213,6 @@ class AnaliseCopyFromJSON {
   constructor(json: any) {
     this._json = json;
     this._analiseConverted = new Analise();
-
-    // console.log('analise recebida...');
-    // console.log(JSON.stringify(json, null, 4));
   }
 
   public copy(): Analise {
