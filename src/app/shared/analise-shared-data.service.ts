@@ -14,6 +14,8 @@ export class AnaliseSharedDataService {
   private loadSubject = new Subject<any>();
   private sistemaSelectedSubject = new Subject<any>();
 
+  isEdit = false;
+
   analise: Analise;
 
   currentFuncaoDados: FuncaoDados;
@@ -24,6 +26,7 @@ export class AnaliseSharedDataService {
   }
 
   analiseSalva() {
+    this.isEdit = true;
     this.saveSubject.next();
   }
 
@@ -32,6 +35,7 @@ export class AnaliseSharedDataService {
   }
 
   analiseCarregada() {
+    this.isEdit = true;
     this.loadSubject.next();
   }
 

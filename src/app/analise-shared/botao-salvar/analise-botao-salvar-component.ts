@@ -16,6 +16,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   motivosBotaoDesabilitado: Set<string> = new Set<string>();
 
   private saveSubscription: Subscription;
+  private updateSubscription: Subscription;
 
   constructor(
     private analiseService: AnaliseService,
@@ -70,8 +71,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
 
   // Sendo feito aqui, e não no AnaliseSharedDataService, para evitar problema com dependencias circulares
   private doSalvar() {
-    // TODO extrair 'isEdit' boolean para sharedservice
-    if (this.analise.id !== undefined) {
+    if (this.analiseSharedDataService.isEdit) {
       this.editar();
     } else {
       this.cadastrar();
@@ -79,7 +79,14 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   }
 
   private editar() {
+    this.subscribeToUpdateResponse(this.analiseService.update(this.analise));
+  }
 
+  private subscribeToUpdateResponse(result: Observable<any>) {
+    this.updateSubscription = result.subscribe((res: Analise) => {
+      this.analise = res;
+      this.pageNotificationService.addSuccessMsg('Análise atualizada com sucesso');
+    });
   }
 
   private cadastrar() {
@@ -87,7 +94,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   }
 
   private subscribeToSaveResponse(result: Observable<any>) {
-    this.saveSubscription =  result.subscribe((res: Analise) => {
+    this.saveSubscription = result.subscribe((res: Analise) => {
       this.analise = res;
       this.pageNotificationService.addSuccessMsg('Análise salva com sucesso');
     });
@@ -95,8 +102,13 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.changeDetectorRef.detach();
-    if (this.saveSubscription) {
-      this.saveSubscription.unsubscribe();
+    this.unsubsribeIfSubscriptionExist(this.saveSubscription);
+    this.unsubsribeIfSubscriptionExist(this.updateSubscription);
+  }
+
+  private unsubsribeIfSubscriptionExist(subscription: Subscription) {
+    if (subscription) {
+      subscription.unsubscribe();
     }
   }
 
