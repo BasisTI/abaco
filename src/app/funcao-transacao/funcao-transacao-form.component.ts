@@ -59,7 +59,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     const classificacoes = Object.keys(TipoFuncaoTransacao).map(k => TipoFuncaoTransacao[k as any]);
     // TODO pipe generico?
     classificacoes.forEach(c => {
-      this.classificacoes.push({ label: c, value: c});
+      this.classificacoes.push({ label: c, value: c });
     });
   }
 
@@ -109,9 +109,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
   fatoresAjusteDropdownPlaceholder() {
     if (this.isContratoSelected()) {
-      return 'Valor de Ajuste';
+      return 'Selecione um Valor de Ajuste';
     } else {
-      return `Valor de Ajuste - Selecione um Contrato na aba 'Geral' para carregar os Valores de Ajuste`;
+      return `Selecione um Contrato na aba 'Geral' para carregar os Valores de Ajuste`;
     }
   }
 

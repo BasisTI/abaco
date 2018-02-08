@@ -14,6 +14,7 @@
       
       <div class="ui-g">
         <div class="ui-g-9" style="margin-bottom: 25px">
+          <label>Fator de Ajuste</label>
           <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
             [(ngModel)]="currentFuncaoDados.fatorAjuste" 
             [disabled]="!isContratoSelected()"
@@ -22,9 +23,10 @@
           </p-dropdown>
         </div>
         <div class="ui-g-3" style="margin-bottom: 25px">
+          <label>Classificação</label>
           <p-dropdown [options]="classificacoes"
             [(ngModel)]="currentFuncaoDados.tipo"
-            placeholder="Classificação"
+            placeholder="Selecione uma Classificação"
             name="classificacao" [autoWidth]="false">
           </p-dropdown>
         </div>
@@ -53,11 +55,11 @@
       </div>
 
       <div class="ui-g-12" style="margin-bottom: 25px">
+        <label>Fundamentação</label>
         <span class="md-inputfield">
           <textarea [rows]="6" [cols]="180" pInputTextarea name="funcaoDadosSustentacao" 
             [(ngModel)]="currentFuncaoDados.sustantation">
           </textarea>
-          <label>Fundamentação</label>
         </span>
       </div>
 
