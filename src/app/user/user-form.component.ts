@@ -91,28 +91,44 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
   private isUsernamesValid(): boolean {
     let isValid = false;
+    this.returnInputToNormalStyle();
+    let isFirstNameValid = false;
+    let isLastNameValid = false;
+    let isLoginValid = false;
 
     if(this.user.firstName !== undefined && this.user.firstName !== null && this.user.firstName !== '') {
-      isValid = true;
+      isFirstNameValid = true;
+    } else {
+      document.getElementById('firstName').setAttribute('style', 'border-color: red;');
     }
 
     if(this.user.lastName !== undefined && this.user.lastName !== null && this.user.lastName !== '') {
-      isValid = true
+      isLastNameValid = true;
+    } else {
+      document.getElementById('lastName').setAttribute('style', 'border-color: red;');
     }
 
     if(this.user.login !== undefined && this.user.login !== null && this.user.login !== '') {
-      isValid = true;
-    }
-
-    if(!isValid) {
-      this.pageNotificationService.addErrorMsg('Favor informar os campos obrigatórios!');
-      console.log(document.getElementById('firstName'));
-      document.getElementById('firstName').setAttribute('style', 'border-color: red;');
-      document.getElementById('lastName').setAttribute('style', 'border-color: red;');
+      isLoginValid = true;
+    } else {
       document.getElementById('login').setAttribute('style', 'border-color: red;');
     }
+
+    if(isFirstNameValid && isLastNameValid && isLoginValid) {
+      isValid = true;
+    } else {
+      this.pageNotificationService.addErrorMsg('Favor informar os campos obrigatórios!');
+    }
+
     return isValid;
   }
+
+  private returnInputToNormalStyle() {
+      document.getElementById('firstName').setAttribute('style', 'border-color: #bdbdbd;');
+      document.getElementById('lastName').setAttribute('style', 'border-color: #bdbdbd;');
+      document.getElementById('login').setAttribute('style', 'border-color: #bdbdbd;');
+  }
+
   private subscribeToSaveResponse(result: Observable<User>) {
     result.subscribe((res: User) => {
       this.isSaving = false;
