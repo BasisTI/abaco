@@ -7,13 +7,13 @@
         <div class="ui-g">
           <div class="ui-g-2" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input type="text" name="siglaSistema" [(ngModel)]="sistema.sigla" pInputText/>
+              <input id="sigla_sistema" type="text" name="siglaSistema" [(ngModel)]="sistema.sigla" maxlength="20" pInputText/>
               <label>Sigla</label>
             </span>
           </div>
           <div class="ui-g-10" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input type="text" name="nomeSistema" [(ngModel)]="sistema.nome" pInputText/>
+              <input id="nome_sistema" type="text" name="nomeSistema" [(ngModel)]="sistema.nome" maxlength="254" pInputText/>
               <label>Nome do Sistema</label>
             </span>
           </div>

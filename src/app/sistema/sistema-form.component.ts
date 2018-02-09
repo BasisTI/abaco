@@ -204,9 +204,9 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
       sistemas = response.json;
 
       if(this.sistema.id !== undefined) {
-        (!this.checkDuplicity(sistemas) && !this.checkSystemInitials() && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
+        (this.checkRequiredFields() && !this.checkDuplicity(sistemas) && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
       } else {
-        (!this.checkDuplicity(sistemas) && !this.checkSystemInitials() && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.create(this.sistema))) : (this);
+        (this.checkRequiredFields() && !this.checkDuplicity(sistemas) && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.create(this.sistema))) : (this);
       }
     });
   }
@@ -225,23 +225,70 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   private checkSystemInitials() {
       let exceedsMaximumValue = false;
-      if(this.sistema.sigla.length >= 20) {
+
+      if(this.checkIfIsEmpty(this.sistema.sigla)) {
+        if(this.sistema.sigla.length >= 20) {
           exceedsMaximumValue = true;
           this.pageNotificationService.addErrorMsg('O campo sigla excede o número de caracteres.');
+        }
       }
 
       return exceedsMaximumValue;
   }
 
+  private checkIfIsEmpty(field: string) {
+    let isEmpty = false;
+
+    if(field === undefined || field === null || field === "") {
+        isEmpty = true;
+    }
+
+    return isEmpty;
+  }
+
   private checkSystemName() {
     let isValid = true;
 
-    if(this.sistema.nome.length >= 255) {
-      isValid = false;
-      this.pageNotificationService.addErrorMsg('O campo Nome excede o número de caracteres.');
+    if(this.checkIfIsEmpty(this.sistema.nome)) {
+      if(this.sistema.nome.length >= 255) {
+        isValid = false;
+        this.pageNotificationService.addErrorMsg('O campo Nome excede o número de caracteres.');
+      }
     }
 
     return isValid;
+  }
+
+  private checkRequiredFields() {
+    let isNameValid = false;
+    let isInitialsValid = false;
+    let isRequiredFieldsValid = false;
+
+    this.resetFocusFields();
+    (!this.checkIfIsEmpty(this.sistema.nome)) ? (isNameValid = true) : (document.getElementById('nome_sistema').setAttribute('style','border-color: red'));
+    (!this.checkIfIsEmpty(this.sistema.sigla)) ? (isInitialsValid = true) : (document.getElementById('sigla_sistema').setAttribute('style','border-color: red'));
+
+    (isNameValid && isInitialsValid) ? (isRequiredFieldsValid = true) : (isRequiredFieldsValid = false);
+
+    (!isRequiredFieldsValid) ? (this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios!')) : (this);
+
+    console.log(isNameValid);
+    console.log(isInitialsValid);
+
+    console.log(isRequiredFieldsValid);
+    return isRequiredFieldsValid;
+  }
+
+  private resetFocusFields() {
+    document.getElementById('nome_sistema').setAttribute('style', 'border-color: #bdbdbd');
+    document.getElementById('sigla_sistema').setAttribute('style', 'border-color: #bdbdbd');
+  }
+
+  private notifyRequiredFields() {
+      this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios.');
+
+      document.getElementById('sigla_sistema').setAttribute('style','border-color: red');
+
   }
 
   private subscribeToSaveResponse(result: Observable<Sistema>) {
