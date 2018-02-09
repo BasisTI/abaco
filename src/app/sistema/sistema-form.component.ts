@@ -247,6 +247,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   private subscribeToSaveResponse(result: Observable<Sistema>) {
     result.subscribe((res: Sistema) => {
       this.isSaving = false;
+      this.pageNotificationService.addCreateMsg('Sistema cadastrado com sucesso!')
       this.router.navigate(['/sistema']);
     }, (error: Response) => {
       this.isSaving = false;
@@ -257,6 +258,9 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
           const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
           invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
           this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+        };
+        default: {
+          this.pageNotificationService.addErrorMsg('Ocorreu um erro no sistema!');
         }
       }
     });
