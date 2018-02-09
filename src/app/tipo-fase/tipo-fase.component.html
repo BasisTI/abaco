@@ -26,7 +26,7 @@
           </div>
         </div>
 
-        <basis-datatable [url]="searchUrl" [paginationParameters]="paginationParams"
+        <basis-datatable [url]="searchUrl"
           (buttonClick)="datatableClick($event)" #datatable>
           <p-column header="Código" field="id" [sortable]="true"></p-column>
           <p-column header="Nome" field="nome" [sortable]="true"></p-column>

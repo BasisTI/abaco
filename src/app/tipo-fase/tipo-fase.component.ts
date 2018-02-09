@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
@@ -13,13 +13,12 @@ import { PageNotificationService } from '../shared';
   selector: 'jhi-tipo-fase',
   templateUrl: './tipo-fase.component.html'
 })
-export class TipoFaseComponent implements AfterViewInit {
+export class TipoFaseComponent {
 
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
   searchUrl: string = this.tipoFaseService.searchUrl;
 
-  paginationParams = { contentIndex: null };
   elasticQuery: ElasticQuery = new ElasticQuery();
 
   constructor(
@@ -28,10 +27,6 @@ export class TipoFaseComponent implements AfterViewInit {
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
   ) {}
-
-  ngAfterViewInit() {
-    this.datatable.refresh(this.elasticQuery.query);
-  }
 
   datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
