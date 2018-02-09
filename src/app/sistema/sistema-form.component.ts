@@ -215,7 +215,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     let isAlreadyRegistered: boolean = false;
 
     sistemas.forEach(each => {
-      if(each.nome === this.sistema.nome) {
+      if(each.nome === this.sistema.nome && each.organizacao.id === this.sistema.organizacao.id && each.id !== this.sistema.id) {
         isAlreadyRegistered = true;
         this.pageNotificationService.addErrorMsg('O sistema ' + each.nome + ' já está cadastrado!');
       }
