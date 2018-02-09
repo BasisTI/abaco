@@ -35,9 +35,42 @@
         </div>
         <div class="ui-g-6">
           <span class="md-inputfield">
-            <input type="text" name="arquivoManual" pInputText [ngModel]="manual.arquivoManual" readonly/>
+            <input type="text" name="arquivoManual" pInputText [ngModel]="fileName" readonly/>
             <label>Arquivo Manual</label>
           </span>
+        </div>
+      </div>
+
+      <div class="ui-g">
+        <h1>Esforços por Fase</h1>
+        <div class="ui-g-12">
+          <app-memory-datatable [value]="manual.esforcoFases" (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true" disableDelete="true">
+            <p-column header="Tipo de fase" field="fase.nome">
+            </p-column>
+            <p-column header="Percentual (%)" field="esforcoFormatado">
+            </p-column>
+          </app-memory-datatable>
+        </div>
+      </div>
+
+      <div class="ui-g">
+        <div class="ui-g-12">
+          <h1>Fatores de Ajuste</h1>
+          <app-memory-datatable [value]="manual.fatoresAjuste" (buttonClick)="adjustFactorDatatableClick($event)" disableEdit="true" disableView="true" disableDelete="true">
+            <p-column header="Codigo" field="codigo">
+            </p-column>
+            <p-column header="Nome" field="nome">
+            </p-column>
+            <p-column header="Fator" field="fatorFormatado">
+            </p-column>
+            <p-column header="Tipo Ajuste" field="tipoAjuste">
+            </p-column>
+            <p-column header="Ativo" field="ativo">
+              <ng-template let-col let-ativo="rowData" pTemplate="body">
+                {{ ativo[col.field] | activeBoolean }}
+              </ng-template>
+            </p-column>
+          </app-memory-datatable>
         </div>
       </div>
       <div class="ui-g">
