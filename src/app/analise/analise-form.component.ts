@@ -115,7 +115,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     const fatorAjuste: FatorAjuste = this.analise.fatorAjuste;
     if (fatorAjuste) {
       const fatorAjusteSelectItem: SelectItem
-        = _.find(this.fatoresAjuste, { value: { id : fatorAjuste.id }});
+        = _.find(this.fatoresAjuste, { value: { id: fatorAjuste.id } });
       this.analise.fatorAjuste = fatorAjusteSelectItem.value;
     }
   }
@@ -129,13 +129,20 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   contratoDropdownPlaceholder() {
-    if (this.shouldEnableContratoDropdown()) {
-      return 'Selecione um Contrato';
+    if (this.contratos) {
+      if (this.contratos.length > 0) {
+        return 'Selecione um Contrato';
+      } else {
+        return 'Organização não possui nenhum Contrato cadastrado';
+      }
     } else {
       return 'Selecione uma Organização para carregar os Contratos';
     }
   }
 
+  shouldEnableContratoDropdown() {
+    return this.contratos && this.contratos.length > 0;
+  }
 
   private carregarEsforcoFases(manual: Manual) {
     this.esforcoFases = _.cloneDeep(manual.esforcoFases);
@@ -166,13 +173,13 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforcoFormatado, initialValue);
   }
 
-  shouldEnableContratoDropdown() {
-    return this.contratos && this.contratos.length > 0;
-  }
-
   sistemaDropdownPlaceholder() {
-    if (this.shouldEnableSistemaDropdown()) {
-      return 'Selecione um Sistema';
+    if (this.sistemas) {
+      if (this.sistemas.length > 0) {
+        return 'Selecione um Sistema';
+      } else {
+        return 'Organização não possui nenhum Sistema cadastrado';
+      }
     } else {
       return 'Selecione uma Organização para carregar os Sistemas';
     }
