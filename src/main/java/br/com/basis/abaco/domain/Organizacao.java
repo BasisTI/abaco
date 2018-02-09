@@ -61,7 +61,7 @@ public class Organizacao implements Serializable {
 	@Column(name = "numero_ocorrencia")
 	private String numeroOcorrencia;
 
-	@OneToMany(mappedBy = "organizacao")
+	@OneToMany(mappedBy = "organizacao", fetch = FetchType.EAGER)
 	@JsonIgnore
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Sistema> sistemas = new HashSet<>();
