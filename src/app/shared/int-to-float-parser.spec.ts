@@ -1,6 +1,6 @@
 import { IntToFloatParser } from './int-to-float-parser';
 
-fdescribe ('IntToFloatParser', () => {
+describe ('IntToFloatParser', () => {
 
   describe('given an integer', () => {
     it('should return the number as string with .0 at the end', () => {
