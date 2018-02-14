@@ -166,4 +166,10 @@ public class OrganizacaoResource {
     }
 
 
+    @GetMapping("/organizacaos/active")
+    public List<Organizacao> getAllOrganizationsActive() {
+      List<Organizacao> activeOrganizations = this.organizacaoRepository.findByAtivoTrue();
+      
+      return activeOrganizations;
+    }
 }
