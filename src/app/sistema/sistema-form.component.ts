@@ -24,7 +24,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   readonly editFuncionalidadeEventName = 'editFuncionalidade';
   readonly deleteFuncionalidadeEventName = 'deleteFuncionalidade';
 
-  organizacaos: Organizacao[];
+  organizacaos: any[];
   sistema: Sistema;
   isSaving: boolean;
 
@@ -52,8 +52,8 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isSaving = false;
-    this.organizacaoService.query().subscribe((res: ResponseWrapper) => {
-      this.organizacaos = res.json;
+    this.organizacaoService.findActiveOrganizations().subscribe(response => {
+      this.organizacaos = response;
     });
     this.routeSub = this.route.params.subscribe(params => {
       this.sistema = new Sistema();

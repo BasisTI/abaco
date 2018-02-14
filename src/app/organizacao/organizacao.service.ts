@@ -17,6 +17,8 @@ export class OrganizacaoService {
 
   searchUrl = environment.apiUrl + '/_search' + this.resourceName;
 
+  findActive = environment.apiUrl + this.resourceName + '/active'
+
   constructor(
     private http: HttpService,
     private uploadService: UploadService
@@ -54,6 +56,12 @@ export class OrganizacaoService {
 
   delete(id: number): Observable<Response> {
     return this.http.delete(`${this.resourceUrl}/${id}`);
+  }
+
+  findActiveOrganizations() {
+    return this.http.get(this.findActive).map((response: Response) => {
+      return response.json();
+    })
   }
 
   private convertResponseToResponseWrapper(res: Response): ResponseWrapper {
