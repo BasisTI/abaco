@@ -18,7 +18,8 @@ import {
   ConfirmationService,
   TabViewModule,
   InputTextareaModule,
-  DialogModule
+  DialogModule,
+  MultiSelectModule
 } from 'primeng/primeng';
 
 import { AbacoSharedModule } from '../shared/abaco-shared.module';
@@ -48,7 +49,8 @@ import { AbacoEllipsisTooltipModule } from '../shared/ellipsis-tooltip/ellipsis-
     AbacoAnaliseSharedModule,
     MemoryDataTableModule,
     AbacoAnaliseBotaoSalvarModule,
-    AbacoEllipsisTooltipModule
+    AbacoEllipsisTooltipModule,
+    MultiSelectModule
   ],
   declarations: [
     FuncaoDadosFormComponent

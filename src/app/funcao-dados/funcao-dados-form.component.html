@@ -81,6 +81,14 @@
       <!-- Tabela com as funções dados adicionadas  -->
       <div class="ui-g" *ngIf="funcoesDados.length > 0">
         <hr>
+
+        <div class="ui-g-12">
+          <label>Colunas:</label>
+          <p-multiSelect [options]="colunasOptions" [(ngModel)]="colunasAMostrar"
+            dataKey="index"
+            [maxSelectedLabels]="10"></p-multiSelect>
+        </div>
+
         <div class="ui-g-12">
           <app-memory-datatable [value]="funcoesDados"
             (buttonClick)="datatableClick($event)"
