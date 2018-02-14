@@ -26,6 +26,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class ManualFormComponent implements OnInit, OnDestroy {
   manual: Manual;
   isSaving: boolean;
+  loading: boolean;
   private routeSub: Subscription;
   arquivoManual: File;
   esforcoFases: Array<EsforcoFase>;
@@ -303,6 +304,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   getFile() {
+    this.loading = true;
     this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
 
       let fileInfo;
@@ -310,6 +312,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         fileInfo = response;
 
         this.fileInput.files.push(new File([response["_body"]], fileInfo["originalName"]));
+        this.loading = false;
       });
     });
   }

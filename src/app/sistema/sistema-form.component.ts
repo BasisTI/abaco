@@ -262,13 +262,21 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   private checkRequiredFields() {
     let isNameValid = false;
     let isInitialsValid = false;
+    let isOrganizationValid = false;
     let isRequiredFieldsValid = false;
 
     this.resetFocusFields();
     (!this.checkIfIsEmpty(this.sistema.nome)) ? (isNameValid = true) : (document.getElementById('nome_sistema').setAttribute('style','border-color: red'));
     (!this.checkIfIsEmpty(this.sistema.sigla)) ? (isInitialsValid = true) : (document.getElementById('sigla_sistema').setAttribute('style','border-color: red'));
 
-    (isNameValid && isInitialsValid) ? (isRequiredFieldsValid = true) : (isRequiredFieldsValid = false);
+    if(this.sistema.organizacao !== undefined) {
+      isOrganizationValid = true;
+    } else {
+      document.getElementById('organizacao_sistema').setAttribute('style','border-bottom: solid; border-bottom-color: red;');
+    }
+    // (this.sistema.organizacao !== undefined) ? (isOrganizationValid = true) : (document.getElementById('organizacao_sistema').setAttribute('style','border-bottom: solid') && document.getElementById('organizacao_sistema').setAttribute('style','border-bottom-color: red'));
+    console.log(this.sistema.organizacao);
+    (isNameValid && isInitialsValid && isOrganizationValid) ? (isRequiredFieldsValid = true) : (isRequiredFieldsValid = false);
 
     (!isRequiredFieldsValid) ? (this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios!')) : (this);
 
@@ -282,12 +290,14 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   private resetFocusFields() {
     document.getElementById('nome_sistema').setAttribute('style', 'border-color: #bdbdbd');
     document.getElementById('sigla_sistema').setAttribute('style', 'border-color: #bdbdbd');
+    document.getElementById('organizacao_sistema').setAttribute('style','border-bottom: none')
   }
 
   private notifyRequiredFields() {
       this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios.');
 
       document.getElementById('sigla_sistema').setAttribute('style','border-color: red');
+
 
   }
 
