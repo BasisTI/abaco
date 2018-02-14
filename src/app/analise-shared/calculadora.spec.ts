@@ -5,17 +5,21 @@ import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/index';
 import { Manual } from '../manual/index';
 
 const fatorAjusteUnitario: FatorAjuste = criaFatorAjusteUnitario();
-
-const manual: Manual = criaManual();
-
-function criaManual(): Manual {
-  return undefined;
-}
+const fatorAjustePercentual: FatorAjuste = criaFatorAjustePercentual();
 
 function criaFatorAjusteUnitario(): FatorAjuste {
-  const fa: FatorAjuste = new FatorAjuste(undefined, 'unitario',
-    2.0, true, 'unitario', 'codU', TipoFatorAjuste.UNITARIO,
-    undefined, manual, undefined);
+  const fa: FatorAjuste = new FatorAjuste();
+  fa.nome = 'unitario';
+  fa.fator = 2.0;
+  fa.tipoAjuste = TipoFatorAjuste.UNITARIO;
+  return fa;
+}
+
+function criaFatorAjustePercentual(): FatorAjuste {
+  const fa: FatorAjuste = new FatorAjuste();
+  fa.nome = 'percentual';
+  fa.fator = 0.5;
+  fa.tipoAjuste = TipoFatorAjuste.PERCENTUAL;
   return fa;
 }
 
@@ -48,8 +52,11 @@ fdescribe('Calculadora', () => {
     describe('ALI', () => {
 
       describe('Fator de Ajuste Unitário 2 PF', () => {
-        fatorAjuste = criaFatorAjusteUnitario();
-        funcaoDadosEntrada.fatorAjuste = fatorAjuste;
+
+        beforeAll(() => {
+          fatorAjuste = fatorAjusteUnitario;
+          funcaoDadosEntrada.fatorAjuste = fatorAjuste;
+        });
 
         beforeEach(() => {
           funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
@@ -71,6 +78,36 @@ fdescribe('Calculadora', () => {
           // fator de ajuste unitario, pf é o valor do fator
           expect(funcaoDadosCalculada.pf).toEqual(fatorAjuste.fator);
         });
+      });
+
+      describe('Fator de Ajuste PERCENTUAL 50%', () => {
+
+        beforeAll(() => {
+          fatorAjuste = fatorAjustePercentual;
+          funcaoDadosEntrada.fatorAjuste = fatorAjuste;
+        });
+
+        beforeEach(() => {
+          funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
+        });
+
+        it('deve "zerar" DER', () => {
+          expect(funcaoDadosCalculada.der).toEqual('0');
+        });
+
+        it('deve "zerar" RLR', () => {
+          expect(funcaoDadosCalculada.rlr).toEqual('0');
+        });
+
+        it('deve ter PF bruto 35', () => {
+          expect(funcaoDadosCalculada.grossPF).toEqual(35);
+        });
+
+        it ('deve ter PF líquido de acordo com fator', () => {
+          const valorLiquido: number = fatorAjuste.fator * funcaoDadosCalculada.grossPF;
+          expect(funcaoDadosCalculada.pf).toEqual(valorLiquido);
+        });
+
       });
     });
   });
