@@ -16,12 +16,12 @@ pipelineBuildFrontendJavascript {
         registry: 'basis-registry.basis.com.br',
         name: 'basis/builder-image',
         tag: 'node-8.9.3',
+        buildScriptPath: 'docker/nginx/build.sh'
     ]
 
     appImageInfo = [
         registry: 'basis-registry.basis.com.br',
         dockerContext: 'docker/nginx',
-        buildScriptPath: 'docker/nginx/build.sh',
         name: 'abaco/abaco-ui',
         tag: _frontendImageTag 
     ]

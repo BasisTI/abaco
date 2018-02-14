@@ -81,48 +81,69 @@
       <!-- Tabela com as funções dados adicionadas  -->
       <div class="ui-g" *ngIf="funcoesDados.length > 0">
         <hr>
+
+        <div class="ui-g-12">
+          <label>Colunas:</label>
+          <p-multiSelect 
+            [options]="colunasOptions" 
+            [ngModel]="colunasAMostrar"
+            (ngModelChange)="ordenarColunas($event)"
+            dataKey="index" 
+            [maxSelectedLabels]="10"></p-multiSelect>
+        </div>
+
         <div class="ui-g-12">
           <app-memory-datatable [value]="funcoesDados"
             (buttonClick)="datatableClick($event)"
             [responsive]="true" scrollable="true" scrollWidth="100%">
-            <p-column header="Fator de Ajuste" [style]="{'width': '200px'}">
-              <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
-                <app-ellipsis-tooltip [value]="formataFatorAjuste(fatorAjuste)"></app-ellipsis-tooltip>
+            <div *ngFor="let col of colunasAMostrar">
+
+              <div *ngIf="col.field; else template_column">
+                <p-column [field]="col.field" [header]="col.header" 
+                  [style]="{'width': '200px'}">
+                </p-column>
+              </div>
+
+              <ng-template #template_column>
+                <p-column [header]="col.header" [style]="{'width': '200px'}">
+                  <ng-template *ngIf="col.header === 'Fator de Ajuste'"
+                    let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
+                    <app-ellipsis-tooltip
+                      [value]="formataFatorAjuste(fatorAjuste)"></app-ellipsis-tooltip>
+                  </ng-template>
+                  <ng-template *ngIf="col.header === 'Módulo'"
+                    let-modulo="rowData.funcionalidade.modulo" pTemplate="body">
+                    <app-ellipsis-tooltip
+                      [value]="modulo.nome"></app-ellipsis-tooltip>
+                  </ng-template>
+                  <ng-template *ngIf="col.header === 'Funcionalidade'"
+                    let-funcionalidade="rowData.funcionalidade" pTemplate="body">
+                    <app-ellipsis-tooltip
+                      [value]="funcionalidade.nome"></app-ellipsis-tooltip>
+                  </ng-template>
+                  <ng-template *ngIf="col.header === 'DER'"
+                    let-funcaoDados="rowData" pTemplate="body">
+                    <app-ellipsis-tooltip
+                      [value]="funcaoDados.derValue()"></app-ellipsis-tooltip>
+                  </ng-template>
+                  <ng-template *ngIf="col.header === 'RLR'"
+                    let-funcaoDados="rowData" pTemplate="body">
+                    <app-ellipsis-tooltip
+                      [value]="funcaoDados.rlrValue()"></app-ellipsis-tooltip>
+                  </ng-template>
+                  <ng-template *ngIf="col.header === 'PF Bruto'"
+                    let-grossPF="rowData.grossPF" pTemplate="body">
+                    {{ grossPF | number }}
+                  </ng-template>
+                  <ng-template *ngIf="col.header === 'PF Líquido'"
+                    let-pf="rowData.pf" pTemplate="body">
+                    {{ pf | number }}
+                  </ng-template>
+
+                </p-column>
               </ng-template>
-            </p-column>
-            <p-column header="Módulo" [style]="{'width': '200px'}">
-              <ng-template let-modulo="rowData.funcionalidade.modulo" pTemplate="body">
-                {{ modulo.nome }}
-              </ng-template>
-            </p-column>
-            <p-column header="Funcionalidade" [style]="{'width': '200px'}">
-              <ng-template let-funcionalidade="rowData.funcionalidade" pTemplate="body">
-                {{ funcionalidade.nome }}
-              </ng-template>
-            </p-column>
-            <p-column field="name" header="Nome" [style]="{'width': '200px'}"></p-column>
-            <p-column field="tipo" header="Classificação" [style]="{'width': '200px'}"></p-column>
-            <p-column header="RLR" [style]="{'width': '200px'}">
-              <ng-template let-funcaoDados="rowData" pTemplate="body">
-                {{ funcaoDados.rlrValue() }}
-              </ng-template>
-            </p-column>
-            <p-column field="der" header="DER" [style]="{'width': '200px'}">
-              <ng-template let-funcaoDados="rowData" pTemplate="body">
-                {{ funcaoDados.derValue() }}
-              </ng-template>
-            </p-column>
-            <p-column field="complexidade" header="Complexidade" [style]="{'width': '200px'}"></p-column>
-            <p-column header="PF Bruto" [style]="{'width': '200px'}">
-              <ng-template let-grossPF="rowData.grossPF" pTemplate="body">
-                {{ grossPF | number }}
-              </ng-template>
-            </p-column>
-            <p-column header="PF Líquido" [style]="{'width': '200px'}">
-              <ng-template let-pf="rowData.pf" pTemplate="body">
-                {{ pf | number }}
-              </ng-template>
-            </p-column>
+
+            </div>
           </app-memory-datatable>
         </div>
       </div>

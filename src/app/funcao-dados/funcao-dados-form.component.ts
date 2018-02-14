@@ -30,6 +30,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   fatoresAjuste: FatorAjuste[] = [];
 
+  colunasOptions: SelectItem[];
+  colunasAMostrar = [];
+
   // FIXME considerar o enum
   classificacoes: SelectItem[] = [
     { label: 'ALI', value: 'ALI' },
@@ -43,12 +46,34 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
     private changeDetectorRef: ChangeDetectorRef
-  ) { }
+  ) {
+    const colunas = [
+      { header: 'Fator de Ajuste' },
+      { header: 'Módulo' },
+      { header: 'Funcionalidade' },
+      { header: 'Nome', field: 'name' },
+      { header: 'Classificação', field: 'tipo' },
+      { header: 'DER' },
+      { header: 'RLR' },
+      { header: 'Complexidade', field: 'complexidade' },
+      { header: 'PF Bruto' },
+      { header: 'PF Líquido' }
+    ];
+
+    this.colunasOptions = colunas.map((col, index) => {
+      col['index'] = index;
+      return {
+        label: col.header,
+        value: col,
+      };
+    });
+  }
 
   ngOnInit() {
     this.isEdit = false;
     this.currentFuncaoDados = new FuncaoDados();
     this.subscribeToAnaliseCarregada();
+    this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
   }
 
   private subscribeToAnaliseCarregada() {
@@ -235,6 +260,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   formataFatorAjuste(fatorAjuste: FatorAjuste): string {
     return FatorAjusteLabelGenerator.generate(fatorAjuste);
+  }
+
+  ordenarColunas(colunasAMostrarModificada: SelectItem[]) {
+    this.colunasAMostrar = colunasAMostrarModificada;
+    this.colunasAMostrar = _.sortBy(this.colunasAMostrar, col => col.index);
   }
 
   ngOnDestroy() {
