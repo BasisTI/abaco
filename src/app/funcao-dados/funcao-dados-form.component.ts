@@ -15,6 +15,8 @@ import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { AfterViewInit, AfterContentInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Subscription } from 'rxjs/Subscription';
 
+import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
+
 @Component({
   selector: 'app-analise-funcao-dados',
   templateUrl: './funcao-dados-form.component.html'
@@ -229,6 +231,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.pageNotificationService.addDeleteMsgWithName(name);
       }
     });
+  }
+
+  formataFatorAjuste(fatorAjuste: FatorAjuste): string {
+    return FatorAjusteLabelGenerator.generate(fatorAjuste);
   }
 
   ngOnDestroy() {

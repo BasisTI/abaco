@@ -87,7 +87,7 @@
             [responsive]="true" scrollable="true" scrollWidth="100%">
             <p-column header="Fator de Ajuste" [style]="{'width': '200px'}">
               <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
-                {{ fatorAjuste.nome }}
+                <app-ellipsis-tooltip [value]="formataFatorAjuste(fatorAjuste)"></app-ellipsis-tooltip>
               </ng-template>
             </p-column>
             <p-column header="Módulo" [style]="{'width': '200px'}">
