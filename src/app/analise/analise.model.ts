@@ -12,10 +12,10 @@ import { Modulo } from '../modulo';
 import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 import { Organizacao } from '../organizacao';
 
-export const enum MetodoContagem {
-  'DETALHADA',
-  'INDICATIVA',
-  'ESTIMADA'
+export enum MetodoContagem {
+  'DETALHADA' = 'DETALHADA',
+  'INDICATIVA' = 'INDICATIVA',
+  'ESTIMADA' = 'ESTIMADA'
 }
 export const enum TipoAnalise {
   'DESENVOLVIMENTO',
