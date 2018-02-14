@@ -84,8 +84,11 @@
 
         <div class="ui-g-12">
           <label>Colunas:</label>
-          <p-multiSelect [options]="colunasOptions" [(ngModel)]="colunasAMostrar"
-            dataKey="index"
+          <p-multiSelect 
+            [options]="colunasOptions" 
+            [ngModel]="colunasAMostrar"
+            (ngModelChange)="ordenarColunas($event)"
+            dataKey="index" 
             [maxSelectedLabels]="10"></p-multiSelect>
         </div>
 

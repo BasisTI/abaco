@@ -31,7 +31,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   fatoresAjuste: FatorAjuste[] = [];
 
   colunasOptions: SelectItem[];
-  colunasAMostrar: SelectItem[] = [];
+  colunasAMostrar = [];
 
   // FIXME considerar o enum
   classificacoes: SelectItem[] = [
@@ -260,6 +260,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   formataFatorAjuste(fatorAjuste: FatorAjuste): string {
     return FatorAjusteLabelGenerator.generate(fatorAjuste);
+  }
+
+  ordenarColunas(colunasAMostrarModificada: SelectItem[]) {
+    this.colunasAMostrar = colunasAMostrarModificada;
+    this.colunasAMostrar = _.sortBy(this.colunasAMostrar, col => col.index);
   }
 
   ngOnDestroy() {
