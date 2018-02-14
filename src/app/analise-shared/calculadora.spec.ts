@@ -51,23 +51,23 @@ fdescribe('Calculadora', () => {
         fatorAjuste = criaFatorAjusteUnitario();
         funcaoDadosEntrada.fatorAjuste = fatorAjuste;
 
-        it('deve "zerar" DER', () => {
+        beforeEach(() => {
           funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
+        });
+
+        it('deve "zerar" DER', () => {
           expect(funcaoDadosCalculada.der).toEqual('0');
         });
 
         it('deve "zerar" RLR', () => {
-          funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
           expect(funcaoDadosCalculada.rlr).toEqual('0');
         });
 
         it('deve ter PF bruto 35', () => {
-          funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
           expect(funcaoDadosCalculada.grossPF).toEqual(35);
         });
 
         it ('deve ter PF líquido de acordo com fator', () => {
-          funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
           // fator de ajuste unitario, pf é o valor do fator
           expect(funcaoDadosCalculada.pf).toEqual(fatorAjuste.fator);
         });
