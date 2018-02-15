@@ -141,9 +141,9 @@ fdescribe('Complexidade Funcional de Função de Transação', () => {
 
       describe('DER - para valores maiores que 19', () => {
 
-        const derValues: number[] = [19];
+        const derValues: number[] = [20];
         for (let i = 0; i < 4; i++) {
-          derValues.push(randomIntFromInterval(19, 150));
+          derValues.push(randomIntFromInterval(20, 150));
         }
         const dersFormatados: string = _.join(derValues.sort(numberArraySort), ', ');
 
