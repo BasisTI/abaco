@@ -37,17 +37,33 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
 
   save() {
     this.isSaving = true;
-    if (this.tipoEquipe.id !== undefined) {
-      if(this.checkRequiredFields() && this.checkFieldsMaxLength()) {
-        this.subscribeToSaveResponse(this.tipoEquipeService.update(this.tipoEquipe));
-      }
-    } else {
-      if(this.checkRequiredFields() && this.checkFieldsMaxLength()) {
-        this.subscribeToSaveResponse(this.tipoEquipeService.create(this.tipoEquipe));
-      }
-    }
+    let teamTypesRegistered: Array<TipoEquipe>;
+    this.tipoEquipeService.query().subscribe(response => {
+        teamTypesRegistered = response.json;
+        if (this.tipoEquipe.id !== undefined) {
+          if(this.checkRequiredFields() && this.checkFieldsMaxLength() && !this.checkDuplicity(teamTypesRegistered)) {
+            this.subscribeToSaveResponse(this.tipoEquipeService.update(this.tipoEquipe));
+          }
+        } else {
+          if(this.checkRequiredFields() && this.checkFieldsMaxLength() && !this.checkDuplicity(teamTypesRegistered)) {
+            this.subscribeToSaveResponse(this.tipoEquipeService.create(this.tipoEquipe));
+          }
+        }
+    });
   }
 
+  private checkDuplicity(teamTypes: Array<TipoEquipe>) {
+    let isAlreadyRegistered: boolean = false;
+
+    teamTypes.forEach(each => {
+      if(this.tipoEquipe.nome === each.nome && this.tipoEquipe.id !== each.id) {
+        isAlreadyRegistered = true;
+        this.pageNotificationService.addErrorMsg('Já existe registro de Tipo de Equipe com esse nome!');
+      }
+    });
+
+    return isAlreadyRegistered;
+  }
   private checkRequiredFields(): boolean {
     let isValid = false;
     if(this.tipoEquipe.nome !== undefined && this.tipoEquipe.nome !== null && this.tipoEquipe.nome !== '' && this.tipoEquipe.nome !== ' ') {
