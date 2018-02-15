@@ -67,16 +67,57 @@ fdescribe('Calculadora', () => {
         deveTerPfLiquido(17.5);
         deveTerComplexidade(Complexidade.SEM);
       });
+    });
 
-      function deveZerarDEReRLR() {
-        it('deve "zerar" DER', () => {
-          expect(funcaoDadosCalculada.der).toEqual('0');
+    function deveZerarDEReRLR() {
+      it('deve "zerar" DER', () => {
+        expect(funcaoDadosCalculada.der).toEqual('0');
+      });
+
+      it('deve "zerar" RLR', () => {
+        expect(funcaoDadosCalculada.rlr).toEqual('0');
+      });
+    }
+
+    describe('AIE', () => {
+
+      beforeAll(() => {
+        funcaoDadosEntrada = criaFuncaoDadosAIE();
+      });
+
+      describe('Fator de Ajuste Unitário 2 PF', () => {
+
+        beforeAll(() => {
+          fatorAjuste = fatorAjusteUnitario;
+          funcaoDadosEntrada.fatorAjuste = fatorAjuste;
         });
 
-        it('deve "zerar" RLR', () => {
-          expect(funcaoDadosCalculada.rlr).toEqual('0');
+        beforeEach(() => {
+          funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
         });
-      }
+
+        deveZerarDEReRLR();
+        deveTerPFBruto(15);
+        deveTerPfLiquido(2);
+        deveTerComplexidade(Complexidade.SEM);
+      });
+
+      describe('Fator de Ajuste PERCENTUAL 50%', () => {
+
+        beforeAll(() => {
+          fatorAjuste = fatorAjustePercentual;
+          funcaoDadosEntrada.fatorAjuste = fatorAjuste;
+        });
+
+        beforeEach(() => {
+          funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
+        });
+
+        deveZerarDEReRLR();
+        deveTerPFBruto(15);
+        deveTerPfLiquido(7.5);
+        deveTerComplexidade(Complexidade.SEM);
+      });
     });
 
   });
@@ -118,9 +159,17 @@ function criaFatorAjustePercentual(): FatorAjuste {
 }
 
 function criaFuncaoDadosALI(): FuncaoDados {
+  return criaFuncaoDados(TipoFuncaoDados.ALI);
+}
+
+function criaFuncaoDados(tipo): FuncaoDados {
   const func = new FuncaoDados();
-  func.tipo = TipoFuncaoDados.ALI;
+  func.tipo = tipo;
   func.der = '5';
   func.rlr = '5';
   return func;
+}
+
+function criaFuncaoDadosAIE(): FuncaoDados {
+  return criaFuncaoDados(TipoFuncaoDados.AIE);
 }
