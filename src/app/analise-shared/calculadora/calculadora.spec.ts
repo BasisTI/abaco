@@ -80,9 +80,10 @@ fdescribe('Calculadora', () => {
 
       beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosALI());
 
+      // FATOR de ajuste unitário sempre vai ter Complexidade 'SEM'
       const unitarioSpecHelper = new CalculadoraSpecHelper()
         .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(ALI_ESTIMADA_PF_BRUTO)
-        .setPfLiquido(2).setComplexidade(Complexidade.BAIXA);
+        .setPfLiquido(2).setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper);
 
       const percentualSpecHelper = new CalculadoraSpecHelper()
@@ -99,9 +100,10 @@ fdescribe('Calculadora', () => {
 
       beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosAIE());
 
+      // FATOR de ajuste unitário sempre vai ter Complexidade 'SEM'
       const unitarioSpecHelper = new CalculadoraSpecHelper()
         .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(AIE_ESTIMADA_PF_BRUTO)
-        .setPfLiquido(2).setComplexidade(Complexidade.BAIXA);
+        .setPfLiquido(2).setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper);
 
       const percentualSpecHelper = new CalculadoraSpecHelper()
