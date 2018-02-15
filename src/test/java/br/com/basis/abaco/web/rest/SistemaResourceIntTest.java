@@ -222,6 +222,12 @@ public class SistemaResourceIntTest {
 					// TODO Auto-generated method stub
 					
 				}
+
+                @Override
+                public List<Organizacao> findByAtivoTrue() {
+                    // TODO Auto-generated method stub
+                    return null;
+                }
 			});
         this.restSistemaMockMvc = MockMvcBuilders.standaloneSetup(sistemaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
