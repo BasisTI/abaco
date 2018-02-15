@@ -71,7 +71,6 @@ fdescribe('Calculadora', () => {
         .setComplexidade(Complexidade.SEM);
       testesEmComum(percentualSpecHelper, deveZerarDEReRLR);
     });
-
   });
 
   describe('Método Contagem ESTIMADA', () => {
@@ -80,9 +79,9 @@ fdescribe('Calculadora', () => {
 
     describe('ALI', () => {
 
-      const ALI_ESTIMADA_PF_BRUTO = 7;
-
       beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosALI());
+
+      const ALI_ESTIMADA_PF_BRUTO = 7;
 
       // FATOR de ajuste unitário sempre vai ter Complexidade 'SEM'
       const unitarioSpecHelper = new CalculadoraSpecHelper()
@@ -101,9 +100,9 @@ fdescribe('Calculadora', () => {
 
     describe('AIE', () => {
 
-      const AIE_ESTIMADA_PF_BRUTO = 5;
-
       beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosAIE());
+
+      const AIE_ESTIMADA_PF_BRUTO = 5;
 
       // FATOR de ajuste unitário sempre vai ter Complexidade 'SEM'
       const unitarioSpecHelper = new CalculadoraSpecHelper()
@@ -119,7 +118,34 @@ fdescribe('Calculadora', () => {
       testesEmComum(percentualSpecHelper);
 
     });
+  });
 
+  describe('Método Contagem DETALHADA', () => {
+
+    beforeAll(() => metodoContagem = 'DETALHADA' as MetodoContagem);
+
+    describe('ALI', () => {
+
+      beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosALI());
+
+      describe('DER < 20', () => {
+
+        describe('RLR igual a 1', () => {
+
+        });
+
+        describe('RLR maior ou igual a 2, menor ou igual a 5', () => {
+
+        });
+
+        describe('RLR maior que 5', () => {
+
+        });
+
+      });
+
+
+    });
 
   });
 
