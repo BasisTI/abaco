@@ -64,12 +64,19 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
 
     return isAlreadyRegistered;
   }
+
+  private resetMarkFields() {
+    document.getElementById('nome_tipo_equipe').setAttribute('style','border-color: #bdbdbd');
+  }
+
   private checkRequiredFields(): boolean {
     let isValid = false;
+    this.resetMarkFields();
     if(this.tipoEquipe.nome !== undefined && this.tipoEquipe.nome !== null && this.tipoEquipe.nome !== '' && this.tipoEquipe.nome !== ' ') {
       isValid = true;
     } else {
-      this.pageNotificationService.addErrorMsg('O campo nome é obrigatório!');
+      this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
+      document.getElementById('nome_tipo_equipe').setAttribute('style','border-color: red');
     }
 
     return isValid;
