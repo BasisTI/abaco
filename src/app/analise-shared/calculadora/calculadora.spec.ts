@@ -87,29 +87,19 @@ fdescribe('Calculadora', () => {
         funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
       });
 
-      deveTerPFBruto(specHelper.pfBruto);
-      deveTerPfLiquido(specHelper.pfLiquido);
-      deveTerComplexidade(specHelper.complexidade);
+      it(`deve ter PF bruto ${specHelper.pfBruto}`, () => {
+        expect(funcaoDadosCalculada.grossPF).toEqual(specHelper.pfBruto);
+      });
+
+      it(`deve ter PF líquido ${specHelper.pfLiquido}`, () => {
+        expect(funcaoDadosCalculada.pf).toEqual(specHelper.pfLiquido);
+      });
+
+      it(`deve ter Complexidade ${specHelper.complexidade}`, () => {
+        expect(funcaoDadosCalculada.complexidade).toEqual(specHelper.complexidade);
+      });
 
       fns.forEach(fn => fn());
-    });
-  }
-
-  function deveTerPFBruto(valor: number) {
-    it(`deve ter PF bruto ${valor}`, () => {
-      expect(funcaoDadosCalculada.grossPF).toEqual(valor);
-    });
-  }
-
-  function deveTerPfLiquido(valor: number) {
-    it(`deve ter PF líquido ${valor}`, () => {
-      expect(funcaoDadosCalculada.pf).toEqual(valor);
-    });
-  }
-
-  function deveTerComplexidade(compl: Complexidade) {
-    it(`deve ter Complexidade ${compl}`, () => {
-      expect(funcaoDadosCalculada.complexidade).toEqual(compl);
     });
   }
 
