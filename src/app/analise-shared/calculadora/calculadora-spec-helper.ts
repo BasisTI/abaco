@@ -4,37 +4,57 @@ import { FatorAjusteLabelGenerator } from '../../shared/fator-ajuste-label-gener
 
 export class CalculadoraSpecHelper {
 
-  fatorAjuste: FatorAjuste;
-  pfBruto: number;
-  complexidade: Complexidade;
+  private _fatorAjuste: FatorAjuste;
+  private _pfBruto: number;
+  private _pfLiquido: number;
+  private _complexidade: Complexidade;
 
   constructor() { }
 
   setFatorAjuste(fa: FatorAjuste): CalculadoraSpecHelper {
-    this.fatorAjuste = fa;
+    this._fatorAjuste = fa;
     return this;
+  }
+
+  get fatorAjuste(): FatorAjuste {
+    return this._fatorAjuste;
   }
 
   setPfBruto(pfB: number): CalculadoraSpecHelper {
-    this.pfBruto = pfB;
+    this._pfBruto = pfB;
     return this;
+  }
+
+  get pfBruto(): number {
+    return this._pfBruto;
   }
 
   setComplexidade(c: Complexidade): CalculadoraSpecHelper {
-    this.complexidade = c;
+    this._complexidade = c;
     return this;
   }
 
+  get complexidade(): Complexidade {
+    return this._complexidade;
+  }
+
   get fatorAjusteLabel(): string {
-    return FatorAjusteLabelGenerator.generate(this.fatorAjuste);
+    return FatorAjusteLabelGenerator.generate(this._fatorAjuste);
   }
 
   calculaPfLiquido(): number {
-    const fatorAjuste: FatorAjuste = this.fatorAjuste;
+    if (!this._pfLiquido) {
+      this._pfLiquido = this.doCalculaPfLiquido();
+    }
+    return this._pfLiquido;
+  }
+
+  private doCalculaPfLiquido(): number {
+    const fatorAjuste: FatorAjuste = this._fatorAjuste;
     if (fatorAjuste.isUnitario()) {
       return fatorAjuste.fator;
     } else {
-      return this.pfBruto * fatorAjuste.fator;
+      return this._pfBruto * fatorAjuste.fator;
     }
   }
 
