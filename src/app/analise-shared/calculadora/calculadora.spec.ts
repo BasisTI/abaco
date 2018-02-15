@@ -1,9 +1,10 @@
-import { Calculadora } from './calculadora';
-import { FuncaoDados, TipoFuncaoDados } from '../funcao-dados/funcao-dados.model';
-import { MetodoContagem } from '../analise/index';
-import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/index';
-import { Manual } from '../manual/index';
-import { Complexidade } from './complexidade-enum';
+import { Calculadora } from '../calculadora';
+import { FuncaoDados, TipoFuncaoDados } from '../../funcao-dados/funcao-dados.model';
+import { MetodoContagem } from '../../analise/index';
+import { FatorAjuste, TipoFatorAjuste } from '../../fator-ajuste/index';
+import { Manual } from '../../manual/index';
+import { Complexidade } from '../complexidade-enum';
+import { CalculadoraSpecHelper } from './calculadora-spec-helper';
 
 const fatorAjusteUnitario: FatorAjuste = criaFatorAjusteUnitario();
 const fatorAjustePercentual: FatorAjuste = criaFatorAjustePercentual();
@@ -33,40 +34,14 @@ fdescribe('Calculadora', () => {
         funcaoDadosEntrada = criaFuncaoDadosALI();
       });
 
-      describe('Fator de Ajuste Unitário 2 PF', () => {
+      const unitarioSpecHelper = new CalculadoraSpecHelper(
+        fatorAjusteUnitario, 35, 2, Complexidade.SEM);
+      testesEmComum(unitarioSpecHelper, deveZerarDEReRLR);
 
-        beforeAll(() => {
-          fatorAjuste = fatorAjusteUnitario;
-          funcaoDadosEntrada.fatorAjuste = fatorAjuste;
-        });
+      const percentualSpecHelper = new CalculadoraSpecHelper(
+        fatorAjustePercentual, 35, 17.5, Complexidade.SEM);
+      testesEmComum(percentualSpecHelper, deveZerarDEReRLR);
 
-        beforeEach(() => {
-          funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
-        });
-
-        deveZerarDEReRLR();
-        deveTerPFBruto(35);
-        // pq fatorAjuste aqui é undefined???
-        deveTerPfLiquido(2);
-        deveTerComplexidade(Complexidade.SEM);
-      });
-
-      describe('Fator de Ajuste PERCENTUAL 50%', () => {
-
-        beforeAll(() => {
-          fatorAjuste = fatorAjustePercentual;
-          funcaoDadosEntrada.fatorAjuste = fatorAjuste;
-        });
-
-        beforeEach(() => {
-          funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
-        });
-
-        deveZerarDEReRLR();
-        deveTerPFBruto(35);
-        deveTerPfLiquido(17.5);
-        deveTerComplexidade(Complexidade.SEM);
-      });
     });
 
     function deveZerarDEReRLR() {
@@ -85,42 +60,39 @@ fdescribe('Calculadora', () => {
         funcaoDadosEntrada = criaFuncaoDadosAIE();
       });
 
-      describe('Fator de Ajuste Unitário 2 PF', () => {
+      const unitarioSpecHelper = new CalculadoraSpecHelper(
+        fatorAjusteUnitario, 15, 2, Complexidade.SEM);
+      testesEmComum(unitarioSpecHelper, deveZerarDEReRLR);
 
-        beforeAll(() => {
-          fatorAjuste = fatorAjusteUnitario;
-          funcaoDadosEntrada.fatorAjuste = fatorAjuste;
-        });
-
-        beforeEach(() => {
-          funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
-        });
-
-        deveZerarDEReRLR();
-        deveTerPFBruto(15);
-        deveTerPfLiquido(2);
-        deveTerComplexidade(Complexidade.SEM);
-      });
-
-      describe('Fator de Ajuste PERCENTUAL 50%', () => {
-
-        beforeAll(() => {
-          fatorAjuste = fatorAjustePercentual;
-          funcaoDadosEntrada.fatorAjuste = fatorAjuste;
-        });
-
-        beforeEach(() => {
-          funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
-        });
-
-        deveZerarDEReRLR();
-        deveTerPFBruto(15);
-        deveTerPfLiquido(7.5);
-        deveTerComplexidade(Complexidade.SEM);
-      });
+      const percentualSpecHelper = new CalculadoraSpecHelper(
+        fatorAjustePercentual, 15, 7.5, Complexidade.SEM);
+      testesEmComum(percentualSpecHelper, deveZerarDEReRLR);
     });
 
   });
+
+  function testesEmComum(specHelper: CalculadoraSpecHelper, ...fns: Function[]) {
+    describe(`Fator de Ajuste ${specHelper.fatorAjusteLabel}`, () => {
+
+      beforeAll(() => {
+        fatorAjuste = specHelper.fatorAjuste;
+        funcaoDadosEntrada.fatorAjuste = fatorAjuste;
+      });
+
+      beforeEach(() => {
+        funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
+      });
+
+      // teste pra ver se funfa
+      afterEach(() => fatorAjuste = specHelper.fatorAjuste);
+
+      deveTerPFBruto(specHelper.pfBruto);
+      deveTerPfLiquido(specHelper.pfLiquido);
+      deveTerComplexidade(specHelper.complexidade);
+
+      fns.forEach(fn => fn());
+    });
+  }
 
   function deveTerPFBruto(valor: number) {
     it(`deve ter PF bruto ${valor}`, () => {
