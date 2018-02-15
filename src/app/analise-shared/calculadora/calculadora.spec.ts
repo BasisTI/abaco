@@ -76,15 +76,39 @@ fdescribe('Calculadora', () => {
 
     describe('ALI', () => {
 
+      const ALI_ESTIMADA_PF_BRUTO = 7;
+
       beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosALI());
 
+      const unitarioSpecHelper = new CalculadoraSpecHelper()
+        .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(ALI_ESTIMADA_PF_BRUTO)
+        .setPfLiquido(2).setComplexidade(Complexidade.BAIXA);
+      testesEmComum(unitarioSpecHelper);
 
+      const percentualSpecHelper = new CalculadoraSpecHelper()
+        .setFatorAjuste(fatorAjustePercentual50).setPfBruto(ALI_ESTIMADA_PF_BRUTO)
+        .setPfLiquido(ALI_ESTIMADA_PF_BRUTO * 0.5)
+        .setComplexidade(Complexidade.BAIXA);
+      testesEmComum(percentualSpecHelper);
 
     });
 
     describe('AIE', () => {
 
+      const AIE_ESTIMADA_PF_BRUTO = 5;
+
       beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosAIE());
+
+      const unitarioSpecHelper = new CalculadoraSpecHelper()
+        .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(AIE_ESTIMADA_PF_BRUTO)
+        .setPfLiquido(2).setComplexidade(Complexidade.BAIXA);
+      testesEmComum(unitarioSpecHelper);
+
+      const percentualSpecHelper = new CalculadoraSpecHelper()
+        .setFatorAjuste(fatorAjustePercentual50).setPfBruto(AIE_ESTIMADA_PF_BRUTO)
+        .setPfLiquido(AIE_ESTIMADA_PF_BRUTO * 0.5)
+        .setComplexidade(Complexidade.BAIXA);
+      testesEmComum(percentualSpecHelper);
 
     });
 
