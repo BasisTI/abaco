@@ -66,6 +66,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
   private checkPhaseNameIsValid(): boolean {
     let isNameValid: boolean = false;
 
+    document.getElementById('nome_fase').setAttribute('style', 'border-color: #bdbdbd');
     if (this.tipoFase.nome !== null && this.tipoFase.nome !== undefined && this.tipoFase.nome !== "") {
       isNameValid = true;
       console.log(this.tipoFase.nome.length);
@@ -74,7 +75,8 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
         isNameValid = false;
       }
     } else {
-      this.pageNotificationService.addErrorMsg('O campo nome da fase é obrigatório!');
+      this.pageNotificationService.addErrorMsg('Favor, informar os campos obrigatórios!');
+      document.getElementById('nome_fase').setAttribute('style', 'border-color: red');
     }
 
     return isNameValid;
