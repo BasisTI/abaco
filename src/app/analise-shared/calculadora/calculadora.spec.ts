@@ -32,13 +32,15 @@ fdescribe('Calculadora', () => {
       beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosALI());
 
       const unitarioSpecHelper = new CalculadoraSpecHelper()
-        .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(35)
-        .setPfLiquido(2).setComplexidade(Complexidade.SEM);
+        .setFatorAjuste(fatorAjusteUnitario2PF)
+        .setPfBruto(35)
+        .setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper, deveZerarDEReRLR);
 
       const percentualSpecHelper = new CalculadoraSpecHelper()
-        .setFatorAjuste(fatorAjustePercentual50).setPfBruto(35)
-        .setPfLiquido(17.5).setComplexidade(Complexidade.SEM);
+        .setFatorAjuste(fatorAjustePercentual50)
+        .setPfBruto(35)
+        .setComplexidade(Complexidade.SEM);
       testesEmComum(percentualSpecHelper, deveZerarDEReRLR);
 
     });
@@ -58,13 +60,15 @@ fdescribe('Calculadora', () => {
       beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosAIE());
 
       const unitarioSpecHelper = new CalculadoraSpecHelper()
-        .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(15)
-        .setPfLiquido(2).setComplexidade(Complexidade.SEM);
+        .setFatorAjuste(fatorAjusteUnitario2PF)
+        .setPfBruto(15)
+        .setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper, deveZerarDEReRLR);
 
       const percentualSpecHelper = new CalculadoraSpecHelper()
-        .setFatorAjuste(fatorAjustePercentual50).setPfBruto(15)
-        .setPfLiquido(7.5).setComplexidade(Complexidade.SEM);
+        .setFatorAjuste(fatorAjustePercentual50)
+        .setPfBruto(15)
+        .setComplexidade(Complexidade.SEM);
       testesEmComum(percentualSpecHelper, deveZerarDEReRLR);
     });
 
@@ -82,13 +86,14 @@ fdescribe('Calculadora', () => {
 
       // FATOR de ajuste unitário sempre vai ter Complexidade 'SEM'
       const unitarioSpecHelper = new CalculadoraSpecHelper()
-        .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(ALI_ESTIMADA_PF_BRUTO)
-        .setPfLiquido(2).setComplexidade(Complexidade.SEM);
+        .setFatorAjuste(fatorAjusteUnitario2PF)
+        .setPfBruto(ALI_ESTIMADA_PF_BRUTO)
+        .setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper);
 
       const percentualSpecHelper = new CalculadoraSpecHelper()
-        .setFatorAjuste(fatorAjustePercentual50).setPfBruto(ALI_ESTIMADA_PF_BRUTO)
-        .setPfLiquido(ALI_ESTIMADA_PF_BRUTO * 0.5)
+        .setFatorAjuste(fatorAjustePercentual50)
+        .setPfBruto(ALI_ESTIMADA_PF_BRUTO)
         .setComplexidade(Complexidade.BAIXA);
       testesEmComum(percentualSpecHelper);
 
@@ -102,13 +107,14 @@ fdescribe('Calculadora', () => {
 
       // FATOR de ajuste unitário sempre vai ter Complexidade 'SEM'
       const unitarioSpecHelper = new CalculadoraSpecHelper()
-        .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(AIE_ESTIMADA_PF_BRUTO)
-        .setPfLiquido(2).setComplexidade(Complexidade.SEM);
+        .setFatorAjuste(fatorAjusteUnitario2PF)
+        .setPfBruto(AIE_ESTIMADA_PF_BRUTO)
+        .setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper);
 
       const percentualSpecHelper = new CalculadoraSpecHelper()
-        .setFatorAjuste(fatorAjustePercentual50).setPfBruto(AIE_ESTIMADA_PF_BRUTO)
-        .setPfLiquido(AIE_ESTIMADA_PF_BRUTO * 0.5)
+        .setFatorAjuste(fatorAjustePercentual50)
+        .setPfBruto(AIE_ESTIMADA_PF_BRUTO)
         .setComplexidade(Complexidade.BAIXA);
       testesEmComum(percentualSpecHelper);
 
@@ -133,8 +139,8 @@ fdescribe('Calculadora', () => {
         expect(funcaoDadosCalculada.grossPF).toEqual(specHelper.pfBruto);
       });
 
-      it(`deve ter PF líquido ${specHelper.pfLiquido}`, () => {
-        expect(funcaoDadosCalculada.pf).toEqual(specHelper.pfLiquido);
+      it(`deve ter PF líquido ${specHelper.calculaPfLiquido()}`, () => {
+        expect(funcaoDadosCalculada.pf).toEqual(specHelper.calculaPfLiquido());
       });
 
       it(`deve ter Complexidade ${specHelper.complexidade}`, () => {

@@ -6,7 +6,6 @@ export class CalculadoraSpecHelper {
 
   fatorAjuste: FatorAjuste;
   pfBruto: number;
-  pfLiquido: number;
   complexidade: Complexidade;
 
   constructor() { }
@@ -21,11 +20,6 @@ export class CalculadoraSpecHelper {
     return this;
   }
 
-  setPfLiquido(pfL: number): CalculadoraSpecHelper {
-    this.pfLiquido = pfL;
-    return this;
-  }
-
   setComplexidade(c: Complexidade): CalculadoraSpecHelper {
     this.complexidade = c;
     return this;
@@ -33,6 +27,15 @@ export class CalculadoraSpecHelper {
 
   get fatorAjusteLabel(): string {
     return FatorAjusteLabelGenerator.generate(this.fatorAjuste);
+  }
+
+  calculaPfLiquido(): number {
+    const fatorAjuste: FatorAjuste = this.fatorAjuste;
+    if (fatorAjuste.isUnitario()) {
+      return fatorAjuste.fator;
+    } else {
+      return this.pfBruto * fatorAjuste.fator;
+    }
   }
 
 }
