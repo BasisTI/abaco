@@ -41,8 +41,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
     this.tipoEquipeService.query().subscribe((res: ResponseWrapper) => {
       this.tipoEquipes = res.json;
     });
-    this.organizacaoService.query().subscribe((res: ResponseWrapper) => {
-      this.organizacoes = res.json;
+    this.organizacaoService.findActiveOrganizations().subscribe((res) => {
+      this.organizacoes = res;
     });
     this.userService.authorities().subscribe((res: Authority[]) => {
       this.authorities = res;
@@ -139,10 +139,22 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
       switch(error.status) {
         case 400: {
-          let invalidFieldNamesString = "";
-          const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
-          invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-          this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+          const EXISTING_USER = 'error.userexists';
+          const EXISTING_MAIL =  'error.emailexists'
+          console.log(error.headers.toJSON());
+          if(error.headers.toJSON()["x-abacoapp-error"][0] === EXISTING_USER) {
+            this.pageNotificationService.addErrorMsg('Login já existente.');
+            document.getElementById('login').setAttribute('style', 'border-color: red;');
+          } else {
+            if(error.headers.toJSON()["x-abacoapp-error"][0] === EXISTING_MAIL) {
+              this.pageNotificationService.addErrorMsg('Email ja existente.');
+              document.getElementById('email').setAttribute('style', 'border-color: red;');
+            }
+            let invalidFieldNamesString = "";
+            const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
+            invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
+            this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+          }
         }
       }
     });
