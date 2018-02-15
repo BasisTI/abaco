@@ -34,12 +34,14 @@ fdescribe('Calculadora', () => {
         funcaoDadosEntrada = criaFuncaoDadosALI();
       });
 
-      const unitarioSpecHelper = new CalculadoraSpecHelper(
-        fatorAjusteUnitario, 35, 2, Complexidade.SEM);
+      const unitarioSpecHelper = new CalculadoraSpecHelper()
+        .setFatorAjuste(fatorAjusteUnitario).setPfBruto(35)
+        .setPfLiquido(2).setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper, deveZerarDEReRLR);
 
-      const percentualSpecHelper = new CalculadoraSpecHelper(
-        fatorAjustePercentual, 35, 17.5, Complexidade.SEM);
+      const percentualSpecHelper = new CalculadoraSpecHelper()
+      .setFatorAjuste(fatorAjustePercentual).setPfBruto(35)
+      .setPfLiquido(17.5).setComplexidade(Complexidade.SEM);
       testesEmComum(percentualSpecHelper, deveZerarDEReRLR);
 
     });
@@ -60,12 +62,14 @@ fdescribe('Calculadora', () => {
         funcaoDadosEntrada = criaFuncaoDadosAIE();
       });
 
-      const unitarioSpecHelper = new CalculadoraSpecHelper(
-        fatorAjusteUnitario, 15, 2, Complexidade.SEM);
+      const unitarioSpecHelper = new CalculadoraSpecHelper()
+      .setFatorAjuste(fatorAjusteUnitario).setPfBruto(15)
+      .setPfLiquido(2).setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper, deveZerarDEReRLR);
 
-      const percentualSpecHelper = new CalculadoraSpecHelper(
-        fatorAjustePercentual, 15, 7.5, Complexidade.SEM);
+      const percentualSpecHelper = new CalculadoraSpecHelper()
+      .setFatorAjuste(fatorAjustePercentual).setPfBruto(15)
+      .setPfLiquido(7.5).setComplexidade(Complexidade.SEM);
       testesEmComum(percentualSpecHelper, deveZerarDEReRLR);
     });
 
@@ -82,9 +86,6 @@ fdescribe('Calculadora', () => {
       beforeEach(() => {
         funcaoDadosCalculada = Calculadora.calcular(metodoContagem, funcaoDadosEntrada);
       });
-
-      // teste pra ver se funfa
-      afterEach(() => fatorAjuste = specHelper.fatorAjuste);
 
       deveTerPFBruto(specHelper.pfBruto);
       deveTerPfLiquido(specHelper.pfLiquido);

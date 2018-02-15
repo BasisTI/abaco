@@ -4,12 +4,32 @@ import { FatorAjusteLabelGenerator } from '../../shared/fator-ajuste-label-gener
 
 export class CalculadoraSpecHelper {
 
-  constructor(
-    public fatorAjuste: FatorAjuste,
-    public pfBruto: number,
-    public pfLiquido: number,
-    public complexidade: Complexidade
-  ) { }
+  fatorAjuste: FatorAjuste;
+  pfBruto: number;
+  pfLiquido: number;
+  complexidade: Complexidade;
+
+  constructor() { }
+
+  setFatorAjuste(fa: FatorAjuste): CalculadoraSpecHelper {
+    this.fatorAjuste = fa;
+    return this;
+  }
+
+  setPfBruto(pfB: number): CalculadoraSpecHelper {
+    this.pfBruto = pfB;
+    return this;
+  }
+
+  setPfLiquido(pfL: number): CalculadoraSpecHelper {
+    this.pfLiquido = pfL;
+    return this;
+  }
+
+  setComplexidade(c: Complexidade): CalculadoraSpecHelper {
+    this.complexidade = c;
+    return this;
+  }
 
   get fatorAjusteLabel(): string {
     return FatorAjusteLabelGenerator.generate(this.fatorAjuste);
