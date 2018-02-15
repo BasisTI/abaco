@@ -89,7 +89,6 @@ fdescribe('Complexidade Funcional de Função de Transação', () => {
         }
       });
       ftrValues.sort(numberArraySort);
-      console.log(ftrValues);
 
       ftrValues.forEach(ftrValue => {
         it(`complexidade deve ser ${complexidade3} para FTR ${ftrValue}`, () => {
