@@ -27,7 +27,7 @@ public class TipoEquipe implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "nome", nullable = false)
+    @Column(name = "nome", nullable = false, unique = true)
     private String nome;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
