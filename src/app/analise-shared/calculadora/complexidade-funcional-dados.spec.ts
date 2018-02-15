@@ -1,6 +1,8 @@
 import { ComplexidadeFuncionalDados } from './complexidade-funcional-dados';
 import { Complexidade } from '../complexidade-enum';
 
+import * as _ from 'lodash';
+
 fdescribe('Complexidade Funcional de função de Dados', () => {
 
   let complexidadeRetornada: Complexidade;
@@ -17,6 +19,37 @@ fdescribe('Complexidade Funcional de função de Dados', () => {
       Complexidade.BAIXA,
       Complexidade.MEDIA
     );
+  });
+
+  describe('DER - para todos valores maior ou igual a 20 e menor ou igual a 50', () => {
+
+    const derValues: number[] = [];
+    for (let i = 20; i <= 50; i++) {
+      derValues.push(i);
+    }
+
+    testesEmComum(derValues,
+      Complexidade.BAIXA,
+      Complexidade.MEDIA,
+      Complexidade.ALTA);
+
+  });
+
+  describe('DER - para valores maiores que 50', () => {
+
+    const derValues: number[] = [51];
+    for (let i = 0; i < 4; i ++) {
+      derValues.push(randomIntFromInterval(52, 300));
+    }
+    const dersFormatados: string = _.join(derValues.sort(numberArraySort), ', ');
+
+    describe(`valores ${dersFormatados}`, () => {
+      testesEmComum(derValues,
+        Complexidade.MEDIA,
+        Complexidade.ALTA,
+        Complexidade.ALTA);
+    });
+
   });
 
   function testesEmComum(ders: number[],
@@ -57,7 +90,7 @@ fdescribe('Complexidade Funcional de função de Dados', () => {
       for (let i = 0; i < 5; i++) {
         rlrValues.push(randomIntFromInterval(6, 300));
       }
-      rlrValues.sort((a, b) => a - b);
+      rlrValues.sort(numberArraySort);
 
       rlrValues.forEach(rlrValue => {
         it(`complexidade deve ser ${complexidade3} para RLR ${rlrValue}`, () => {
@@ -75,4 +108,8 @@ fdescribe('Complexidade Funcional de função de Dados', () => {
 
 function randomIntFromInterval(min, max): number {
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function numberArraySort(a, b) {
+  return a - b;
 }
