@@ -5,9 +5,10 @@ import { FatorAjuste, TipoFatorAjuste } from '../../fator-ajuste/index';
 import { Manual } from '../../manual/index';
 import { Complexidade } from '../complexidade-enum';
 import { CalculadoraSpecHelper } from './calculadora-spec-helper';
+import { CalculadoraTestData } from './calculadora-test-data';
 
-const fatorAjusteUnitario: FatorAjuste = criaFatorAjusteUnitario();
-const fatorAjustePercentual: FatorAjuste = criaFatorAjustePercentual();
+const fatorAjusteUnitario: FatorAjuste = CalculadoraTestData.criaFatorAjusteUnitario();
+const fatorAjustePercentual: FatorAjuste = CalculadoraTestData.criaFatorAjustePercentual();
 
 fdescribe('Calculadora', () => {
 
@@ -31,7 +32,7 @@ fdescribe('Calculadora', () => {
     describe('ALI', () => {
 
       beforeAll(() => {
-        funcaoDadosEntrada = criaFuncaoDadosALI();
+        funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosALI();
       });
 
       const unitarioSpecHelper = new CalculadoraSpecHelper()
@@ -59,7 +60,7 @@ fdescribe('Calculadora', () => {
     describe('AIE', () => {
 
       beforeAll(() => {
-        funcaoDadosEntrada = criaFuncaoDadosAIE();
+        funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosAIE();
       });
 
       const unitarioSpecHelper = new CalculadoraSpecHelper()
@@ -104,35 +105,3 @@ fdescribe('Calculadora', () => {
   }
 
 });
-
-function criaFatorAjusteUnitario(): FatorAjuste {
-  const fa: FatorAjuste = new FatorAjuste();
-  fa.nome = 'unitario';
-  fa.fator = 2.0;
-  fa.tipoAjuste = TipoFatorAjuste.UNITARIO;
-  return fa;
-}
-
-function criaFatorAjustePercentual(): FatorAjuste {
-  const fa: FatorAjuste = new FatorAjuste();
-  fa.nome = 'percentual';
-  fa.fator = 0.5;
-  fa.tipoAjuste = TipoFatorAjuste.PERCENTUAL;
-  return fa;
-}
-
-function criaFuncaoDadosALI(): FuncaoDados {
-  return criaFuncaoDados(TipoFuncaoDados.ALI);
-}
-
-function criaFuncaoDados(tipo): FuncaoDados {
-  const func = new FuncaoDados();
-  func.tipo = tipo;
-  func.der = '5';
-  func.rlr = '5';
-  return func;
-}
-
-function criaFuncaoDadosAIE(): FuncaoDados {
-  return criaFuncaoDados(TipoFuncaoDados.AIE);
-}
