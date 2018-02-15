@@ -53,4 +53,5 @@
     <include file="classpath:config/liquibase/changelog/20180205171615_add_FatorAjuste_to_Analise.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180205180739_ManyToMany_Analise_EsforcoFase.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180208152454_add_column_observacoes_to_Analise.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180215180754_changelog.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
