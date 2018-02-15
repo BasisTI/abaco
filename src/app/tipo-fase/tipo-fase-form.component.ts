@@ -36,30 +36,28 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    this.isSaving = true;
-    if (this.tipoFase.id !== undefined && this.checkPhaseNameIsValid()) {
-      this.subscribeToSaveResponse(this.tipoFaseService.update(this.tipoFase));
-      this.pageNotificationService.addUpdateMsg();
-    } else {
-      this.tipoFaseService.query().subscribe(response => {
-        let allPhases = response
-        if (this.checkPhaseNameIsValid()) {
-          if (!this.checkIfPhaseAlreadyExist(allPhases.json)) {
-            this.subscribeToSaveResponse(this.tipoFaseService.create(this.tipoFase));
+    this.tipoFaseService.query().subscribe(response => {
+      let allPhases = response;
+
+      if(this.checkPhaseNameIsValid()) {
+        if(!this.checkIfPhaseAlreadyExist(allPhases.json)) {
+          this.isSaving = true;
+          if(this.tipoFase.id !== undefined) {
+            this.subscribeToSaveResponse(this.tipoFaseService.update(this.tipoFase));
           } else {
-            this.pageNotificationService.addErrorMsg('A fase criada já existe!');
+            this.subscribeToSaveResponse(this.tipoFaseService.create(this.tipoFase));
           }
         }
-      });
-
-    }
+      }
+    });
   }
 
   private checkIfPhaseAlreadyExist(registeredPhases: Array<TipoFase>): boolean {
     let isAlreadyRegistered: boolean = false;
     registeredPhases.forEach(each => {
-      if (each.nome.toUpperCase() === this.tipoFase.nome.toUpperCase()) {
+      if (each.nome.toUpperCase() === this.tipoFase.nome.toUpperCase() && each.id !== this.tipoFase.id) {
         isAlreadyRegistered = true;
+        this.pageNotificationService.addErrorMsg('Já existe uma fase com este nome!');
       }
     });
     return isAlreadyRegistered;
