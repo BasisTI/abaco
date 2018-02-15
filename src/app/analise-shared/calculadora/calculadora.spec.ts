@@ -37,8 +37,8 @@ fdescribe('Calculadora', () => {
       testesEmComum(unitarioSpecHelper, deveZerarDEReRLR);
 
       const percentualSpecHelper = new CalculadoraSpecHelper()
-      .setFatorAjuste(fatorAjustePercentual50).setPfBruto(35)
-      .setPfLiquido(17.5).setComplexidade(Complexidade.SEM);
+        .setFatorAjuste(fatorAjustePercentual50).setPfBruto(35)
+        .setPfLiquido(17.5).setComplexidade(Complexidade.SEM);
       testesEmComum(percentualSpecHelper, deveZerarDEReRLR);
 
     });
@@ -58,13 +58,13 @@ fdescribe('Calculadora', () => {
       beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosAIE());
 
       const unitarioSpecHelper = new CalculadoraSpecHelper()
-      .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(15)
-      .setPfLiquido(2).setComplexidade(Complexidade.SEM);
+        .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(15)
+        .setPfLiquido(2).setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper, deveZerarDEReRLR);
 
       const percentualSpecHelper = new CalculadoraSpecHelper()
-      .setFatorAjuste(fatorAjustePercentual50).setPfBruto(15)
-      .setPfLiquido(7.5).setComplexidade(Complexidade.SEM);
+        .setFatorAjuste(fatorAjustePercentual50).setPfBruto(15)
+        .setPfLiquido(7.5).setComplexidade(Complexidade.SEM);
       testesEmComum(percentualSpecHelper, deveZerarDEReRLR);
     });
 
