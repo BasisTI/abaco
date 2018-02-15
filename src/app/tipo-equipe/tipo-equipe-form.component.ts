@@ -67,6 +67,8 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     } else {
       this.pageNotificationService.addErrorMsg('O campo nome excede o número de caracteres permitidos.');
     }
+
+    return isValid;
   }
 
   private subscribeToSaveResponse(result: Observable<TipoEquipe>) {
