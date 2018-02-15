@@ -10,7 +10,7 @@ fdescribe('Complexidade Funcional de função de Dados', () => {
   describe('DER menor que 20', () => {
 
     derValues = [];
-    for (let i = 1; i <= 20; i++) {
+    for (let i = 1; i < 20; i++) {
       derValues.push(i);
     }
 
