@@ -7,8 +7,8 @@ import { Complexidade } from '../complexidade-enum';
 import { CalculadoraSpecHelper } from './calculadora-spec-helper';
 import { CalculadoraTestData } from './calculadora-test-data';
 
-const fatorAjusteUnitario: FatorAjuste = CalculadoraTestData.criaFatorAjusteUnitario();
-const fatorAjustePercentual: FatorAjuste = CalculadoraTestData.criaFatorAjustePercentual();
+const fatorAjusteUnitario2PF: FatorAjuste = CalculadoraTestData.criaFatorAjusteUnitario2PF();
+const fatorAjustePercentual50: FatorAjuste = CalculadoraTestData.criaFatorAjustePercentual50();
 
 fdescribe('Calculadora', () => {
 
@@ -36,12 +36,12 @@ fdescribe('Calculadora', () => {
       });
 
       const unitarioSpecHelper = new CalculadoraSpecHelper()
-        .setFatorAjuste(fatorAjusteUnitario).setPfBruto(35)
+        .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(35)
         .setPfLiquido(2).setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper, deveZerarDEReRLR);
 
       const percentualSpecHelper = new CalculadoraSpecHelper()
-      .setFatorAjuste(fatorAjustePercentual).setPfBruto(35)
+      .setFatorAjuste(fatorAjustePercentual50).setPfBruto(35)
       .setPfLiquido(17.5).setComplexidade(Complexidade.SEM);
       testesEmComum(percentualSpecHelper, deveZerarDEReRLR);
 
@@ -64,12 +64,12 @@ fdescribe('Calculadora', () => {
       });
 
       const unitarioSpecHelper = new CalculadoraSpecHelper()
-      .setFatorAjuste(fatorAjusteUnitario).setPfBruto(15)
+      .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(15)
       .setPfLiquido(2).setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper, deveZerarDEReRLR);
 
       const percentualSpecHelper = new CalculadoraSpecHelper()
-      .setFatorAjuste(fatorAjustePercentual).setPfBruto(15)
+      .setFatorAjuste(fatorAjustePercentual50).setPfBruto(15)
       .setPfLiquido(7.5).setComplexidade(Complexidade.SEM);
       testesEmComum(percentualSpecHelper, deveZerarDEReRLR);
     });

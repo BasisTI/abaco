@@ -3,7 +3,7 @@ import { FuncaoDados, TipoFuncaoDados } from '../../funcao-dados/funcao-dados.mo
 
 export class CalculadoraTestData {
 
-  static criaFatorAjusteUnitario(): FatorAjuste {
+  static criaFatorAjusteUnitario2PF(): FatorAjuste {
     const fa: FatorAjuste = new FatorAjuste();
     fa.nome = 'unitario';
     fa.fator = 2.0;
@@ -11,7 +11,7 @@ export class CalculadoraTestData {
     return fa;
   }
 
-  static criaFatorAjustePercentual(): FatorAjuste {
+  static criaFatorAjustePercentual50(): FatorAjuste {
     const fa: FatorAjuste = new FatorAjuste();
     fa.nome = 'percentual';
     fa.fator = 0.5;
