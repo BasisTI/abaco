@@ -3,6 +3,7 @@ import { FuncaoDados, TipoFuncaoDados } from '../funcao-dados/funcao-dados.model
 import { MetodoContagem } from '../analise/index';
 import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/index';
 import { Manual } from '../manual/index';
+import { Complexidade } from './complexidade-enum';
 
 const fatorAjusteUnitario: FatorAjuste = criaFatorAjusteUnitario();
 const fatorAjustePercentual: FatorAjuste = criaFatorAjustePercentual();
@@ -47,6 +48,7 @@ fdescribe('Calculadora', () => {
         deveTerPFBruto(35);
         // pq fatorAjuste aqui é undefined???
         deveTerPfLiquido(2);
+        deveTerComplexidade(Complexidade.SEM);
       });
 
       describe('Fator de Ajuste PERCENTUAL 50%', () => {
@@ -63,6 +65,7 @@ fdescribe('Calculadora', () => {
         deveZerarDEReRLR();
         deveTerPFBruto(35);
         deveTerPfLiquido(17.5);
+        deveTerComplexidade(Complexidade.SEM);
       });
 
       function deveZerarDEReRLR() {
@@ -87,6 +90,12 @@ fdescribe('Calculadora', () => {
   function deveTerPfLiquido(valor: number) {
     it(`deve ter PF líquido ${valor}`, () => {
       expect(funcaoDadosCalculada.pf).toEqual(valor);
+    });
+  }
+
+  function deveTerComplexidade(compl: Complexidade) {
+    it(`deve ter Complexidade ${compl}`, () => {
+      expect(funcaoDadosCalculada.complexidade).toEqual(compl);
     });
   }
 
