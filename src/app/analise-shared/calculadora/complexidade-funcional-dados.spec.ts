@@ -3,11 +3,11 @@ import { Complexidade } from '../complexidade-enum';
 
 import * as _ from 'lodash';
 
-fdescribe('Complexidade Funcional de função de Dados', () => {
+fdescribe('Complexidade Funcional de Função de Dados', () => {
 
   let complexidadeRetornada: Complexidade;
 
-  describe('DER - para todos valores menor que 20', () => {
+  describe('DER - para todo valor menor que 20', () => {
 
     const derValues: number[] = [];
     for (let i = 1; i < 20; i++) {
@@ -21,7 +21,7 @@ fdescribe('Complexidade Funcional de função de Dados', () => {
     );
   });
 
-  describe('DER - para todos valores maior ou igual a 20 e menor ou igual a 50', () => {
+  describe('DER - para todo valor maior ou igual a 20 e menor ou igual a 50', () => {
 
     const derValues: number[] = [];
     for (let i = 20; i <= 50; i++) {
@@ -65,7 +65,7 @@ fdescribe('Complexidade Funcional de função de Dados', () => {
       });
     });
 
-    describe('RLR maior igual a 2 ou menor igual a 5', () => {
+    describe('RLR para todo valor maior igual a 2 ou menor igual a 5', () => {
 
       const rlrValues = [];
       beforeAll(() => {
