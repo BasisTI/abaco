@@ -25,15 +25,11 @@ fdescribe('Calculadora', () => {
 
   describe('Método Contagem INDICATIVA', () => {
 
-    beforeAll(() => {
-      metodoContagem = 'INDICATIVA' as MetodoContagem;
-    });
+    beforeAll(() => metodoContagem = 'INDICATIVA' as MetodoContagem);
 
     describe('ALI', () => {
 
-      beforeAll(() => {
-        funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosALI();
-      });
+      beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosALI());
 
       const unitarioSpecHelper = new CalculadoraSpecHelper()
         .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(35)
@@ -59,9 +55,7 @@ fdescribe('Calculadora', () => {
 
     describe('AIE', () => {
 
-      beforeAll(() => {
-        funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosAIE();
-      });
+      beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosAIE());
 
       const unitarioSpecHelper = new CalculadoraSpecHelper()
       .setFatorAjuste(fatorAjusteUnitario2PF).setPfBruto(15)
@@ -73,6 +67,27 @@ fdescribe('Calculadora', () => {
       .setPfLiquido(7.5).setComplexidade(Complexidade.SEM);
       testesEmComum(percentualSpecHelper, deveZerarDEReRLR);
     });
+
+  });
+
+  describe('Método Contagem ESTIMADA', () => {
+
+    beforeAll(() => metodoContagem = 'ESTIMADA' as MetodoContagem);
+
+    describe('ALI', () => {
+
+      beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosALI());
+
+
+
+    });
+
+    describe('AIE', () => {
+
+      beforeAll(() => funcaoDadosEntrada = CalculadoraTestData.criaFuncaoDadosAIE());
+
+    });
+
 
   });
 
