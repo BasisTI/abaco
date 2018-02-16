@@ -63,7 +63,7 @@ export class CalculadoraTransacao {
         break;
       }
       case Complexidade.ALTA: {
-        this.funcaoTransacaoCalculada.pf = 5;
+        this.funcaoTransacaoCalculada.pf = 6;
         break;
       }
       default: this.funcaoTransacaoCalculada.pf = 3;
