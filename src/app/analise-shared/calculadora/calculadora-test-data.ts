@@ -124,4 +124,61 @@ export class CalculadoraTestData {
       der > 50 && ((rlr >= 2 && rlr <= 5) || (rlr > 5));
   }
 
+  static criaAIEsComplexidadeBaixa(): FuncaoDados[] {
+    const aiesBaixa: FuncaoDados[] = [];
+    const valoresDer: number[] = _.range(1, 51);
+    const valoresRlr: number[] = _.range(1, 6);
+    const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
+
+    valoresDer.forEach(der => {
+      valoresRlr.forEach(rlr => {
+        if (this.valoresDentroDeComplexidadeBaixaDados(der, rlr)) {
+          const aieBaixa = this.criaFuncaoDadosComValores(TipoFuncaoDados.AIE, der, rlr);
+          aieBaixa.fatorAjuste = fatorAjustePercentual;
+          aiesBaixa.push(aieBaixa);
+        }
+      });
+    });
+
+    return aiesBaixa;
+  }
+
+  static criaAIEsComplexidadeMedia(): FuncaoDados[] {
+    const aiesMedia: FuncaoDados[] = [];
+    const valoresDer: number[] = _.range(1, this.MAX_DER_DADOS);
+    const valoresRlr: number[] = _.range(1, this.MAX_TR);
+
+    const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
+    valoresDer.forEach(der => {
+      valoresRlr.forEach(rlr => {
+        if (this.valoresDentroDeComplexidadeMediaDados(der, rlr)) {
+          const aieMedia = this.criaFuncaoDadosComValores(TipoFuncaoDados.AIE, der, rlr);
+          aieMedia.fatorAjuste = fatorAjustePercentual;
+          aiesMedia.push(aieMedia);
+        }
+      });
+    });
+
+    return aiesMedia;
+  }
+
+  static criaAIEsComplexidadeAlta(): FuncaoDados[] {
+    const aiesAlta: FuncaoDados[] = [];
+    const valoresDer: number[] = _.range(20, this.MAX_DER_DADOS);
+    const valoresRlr: number[] = _.range(2, this.MAX_TR);
+
+    const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
+    valoresDer.forEach(der => {
+      valoresRlr.forEach(rlr => {
+        if (this.valoresDentroDeComplexidadeAltaDados(der, rlr)) {
+          const aieAlta = this.criaFuncaoDadosComValores(TipoFuncaoDados.AIE, der, rlr);
+          aieAlta.fatorAjuste = fatorAjustePercentual;
+          aiesAlta.push(aieAlta);
+        }
+      });
+    });
+
+    return aiesAlta;
+  }
+
 }

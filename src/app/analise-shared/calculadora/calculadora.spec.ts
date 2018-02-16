@@ -123,7 +123,6 @@ fdescribe('Calculadora de Função de Dados', () => {
     beforeAll(() => metodoContagem = 'DETALHADA' as MetodoContagem);
 
     describe('ALI', () => {
-
       describe('Complexidade BAIXA', () => {
         const ALI_BAIXA_PF_BRUTO = 7;
         it(`todos os casos devem ter PF Bruto '${ALI_BAIXA_PF_BRUTO}'`, () => {
@@ -152,14 +151,46 @@ fdescribe('Calculadora de Função de Dados', () => {
           CalculadoraTestData.criaALIsComplexidadeAlta().forEach(aliAlta => {
             const funcaoCalculada: FuncaoDados =
               Calculadora.calcular(metodoContagem, aliAlta);
-              if (funcaoCalculada.grossPF !== ALI_ALTA_PF_BRUTO) {
-                console.log(funcaoCalculada.derValue(), funcaoCalculada.rlrValue());
-              }
             expect(funcaoCalculada.grossPF).toEqual(ALI_ALTA_PF_BRUTO);
           });
         });
       });
+    });
 
+    describe('AIE', () => {
+
+      describe('Complexidade BAIXA', () => {
+        const AIE_BAIXA_PF_BRUTO = 5;
+        it(`todos os casos devem ter PF Bruto '${AIE_BAIXA_PF_BRUTO}'`, () => {
+          CalculadoraTestData.criaAIEsComplexidadeBaixa().forEach(aliBaixa => {
+            const funcaoCalculada: FuncaoDados =
+              Calculadora.calcular(metodoContagem, aliBaixa);
+            expect(funcaoCalculada.grossPF).toEqual(AIE_BAIXA_PF_BRUTO);
+          });
+        });
+      });
+
+      describe('Complexidade MEDIA', () => {
+        const AIE_MEDIA_PF_BRUTO = 7;
+        it(`todos os casos devem ter PF Bruto '${AIE_MEDIA_PF_BRUTO}'`, () => {
+          CalculadoraTestData.criaAIEsComplexidadeMedia().forEach(aliMedia => {
+            const funcaoCalculada: FuncaoDados =
+              Calculadora.calcular(metodoContagem, aliMedia);
+            expect(funcaoCalculada.grossPF).toEqual(AIE_MEDIA_PF_BRUTO);
+          });
+        });
+      });
+
+      describe('Complexidade ALTA', () => {
+        const AIE_ALTA_PF_BRUTO = 10;
+        it(`todos os casos devem ter PF Bruto '${AIE_ALTA_PF_BRUTO}'`, () => {
+          CalculadoraTestData.criaAIEsComplexidadeAlta().forEach(aliAlta => {
+            const funcaoCalculada: FuncaoDados =
+              Calculadora.calcular(metodoContagem, aliAlta);
+            expect(funcaoCalculada.grossPF).toEqual(AIE_ALTA_PF_BRUTO);
+          });
+        });
+      });
     });
 
   });
