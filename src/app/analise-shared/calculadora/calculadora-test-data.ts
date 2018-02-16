@@ -51,11 +51,15 @@ export class CalculadoraTestData {
 
   // TODO criaXXsComplexidadeXXX() provavelmente logica em comum com testes de complexidadeFuncional
   static criaALIsComplexidadeBaixa(): FuncaoDados[] {
+    return this.criaFuncaoDadosComplexidadeBaixa(TipoFuncaoDados.ALI);
+  }
+
+  private static criaFuncaoDadosComplexidadeBaixa(tipo: TipoFuncaoDados): FuncaoDados[] {
     const valoresDer: number[] = _.range(1, 51);
     const valoresRlr: number[] = _.range(1, 6);
 
     return this.criaFuncaoDadosComFatorAjustePercentualDentroDosIntervalos(
-      TipoFuncaoDados.ALI, this.valoresDentroDeComplexidadeBaixaDados,
+      tipo, this.valoresDentroDeComplexidadeBaixaDados,
       valoresDer, valoresRlr
     );
   }
@@ -85,11 +89,15 @@ export class CalculadoraTestData {
   }
 
   static criaALIsComplexidadeMedia(): FuncaoDados[] {
+    return this.criaFuncaoDadosComplexidadeMedia(TipoFuncaoDados.ALI);
+  }
+
+  private static criaFuncaoDadosComplexidadeMedia(tipo: TipoFuncaoDados): FuncaoDados[] {
     const valoresDer: number[] = _.range(1, this.MAX_DER_DADOS);
     const valoresRlr: number[] = _.range(1, this.MAX_TR);
 
     return this.criaFuncaoDadosComFatorAjustePercentualDentroDosIntervalos(
-      TipoFuncaoDados.ALI, this.valoresDentroDeComplexidadeMediaDados,
+      tipo, this.valoresDentroDeComplexidadeMediaDados,
       valoresDer, valoresRlr
     );
   }
@@ -101,11 +109,15 @@ export class CalculadoraTestData {
   }
 
   static criaALIsComplexidadeAlta(): FuncaoDados[] {
+    return this.criaFuncaoDadosComplexidadeAlta(TipoFuncaoDados.ALI);
+  }
+
+  private static criaFuncaoDadosComplexidadeAlta(tipo: TipoFuncaoDados): FuncaoDados[] {
     const valoresDer: number[] = _.range(20, this.MAX_DER_DADOS);
     const valoresRlr: number[] = _.range(2, this.MAX_TR);
 
     return this.criaFuncaoDadosComFatorAjustePercentualDentroDosIntervalos(
-      TipoFuncaoDados.ALI, this.valoresDentroDeComplexidadeAltaDados,
+      tipo, this.valoresDentroDeComplexidadeAltaDados,
       valoresDer, valoresRlr
     );
   }
@@ -118,33 +130,15 @@ export class CalculadoraTestData {
   }
 
   static criaAIEsComplexidadeBaixa(): FuncaoDados[] {
-    const valoresDer: number[] = _.range(1, 51);
-    const valoresRlr: number[] = _.range(1, 6);
-
-    return this.criaFuncaoDadosComFatorAjustePercentualDentroDosIntervalos(
-      TipoFuncaoDados.AIE, this.valoresDentroDeComplexidadeBaixaDados,
-      valoresDer, valoresRlr
-    );
+    return this.criaFuncaoDadosComplexidadeBaixa(TipoFuncaoDados.AIE);
   }
 
   static criaAIEsComplexidadeMedia(): FuncaoDados[] {
-    const valoresDer: number[] = _.range(1, this.MAX_DER_DADOS);
-    const valoresRlr: number[] = _.range(1, this.MAX_TR);
-
-    return this.criaFuncaoDadosComFatorAjustePercentualDentroDosIntervalos(
-      TipoFuncaoDados.AIE, this.valoresDentroDeComplexidadeMediaDados,
-      valoresDer, valoresRlr
-    );
+    return this.criaFuncaoDadosComplexidadeMedia(TipoFuncaoDados.AIE);
   }
 
   static criaAIEsComplexidadeAlta(): FuncaoDados[] {
-    const valoresDer: number[] = _.range(20, this.MAX_DER_DADOS);
-    const valoresRlr: number[] = _.range(2, this.MAX_TR);
-
-    return this.criaFuncaoDadosComFatorAjustePercentualDentroDosIntervalos(
-      TipoFuncaoDados.AIE, this.valoresDentroDeComplexidadeAltaDados,
-      valoresDer, valoresRlr
-    );
+    return this.criaFuncaoDadosComplexidadeAlta(TipoFuncaoDados.AIE);
   }
 
 }
