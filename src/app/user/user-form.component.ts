@@ -128,6 +128,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
       document.getElementById('firstName').setAttribute('style', 'border-color: #bdbdbd;');
       document.getElementById('lastName').setAttribute('style', 'border-color: #bdbdbd;');
       document.getElementById('login').setAttribute('style', 'border-color: #bdbdbd;');
+      document.getElementById('email').setAttribute('style', 'border-color: #bdbdbd;');
   }
 
   private subscribeToSaveResponse(result: Observable<User>) {
@@ -145,15 +146,15 @@ export class UserFormComponent implements OnInit, OnDestroy {
           const EXISTING_FULLNAME = 'error.fullnameexists';
 
           if(error.headers.toJSON()["x-abacoapp-error"][0] === EXISTING_USER) {
-            this.pageNotificationService.addErrorMsg('Login já existente.');
+            this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
             document.getElementById('login').setAttribute('style', 'border-color: red;');
           } else {
             if(error.headers.toJSON()["x-abacoapp-error"][0] === EXISTING_MAIL) {
-              this.pageNotificationService.addErrorMsg('Email ja existente.');
+              this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
               document.getElementById('email').setAttribute('style', 'border-color: red;');
             } else {
               if(error.headers.toJSON()["x-abacoapp-error"][0] === EXISTING_FULLNAME) {
-                this.pageNotificationService.addErrorMsg('Primeiro e Segundo nomes já existentes');
+                this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
                 document.getElementById('firstName').setAttribute('style', 'border-color: red;');
                 document.getElementById('lastName').setAttribute('style', 'border-color: red;');
               }
