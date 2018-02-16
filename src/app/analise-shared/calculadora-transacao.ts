@@ -2,6 +2,7 @@ import { Complexidade } from '../analise-shared/complexidade-enum';
 import { MetodoContagem } from '../analise/index';
 import { TipoFatorAjuste } from '../fator-ajuste/index';
 import { FuncaoTransacao, TipoFuncaoTransacao } from '../funcao-transacao/funcao-transacao.model';
+import { ComplexidadeFuncionalTransacao } from './calculadora/complexidade-funcional-transacao';
 
 export class CalculadoraTransacao {
 
@@ -34,68 +35,12 @@ export class CalculadoraTransacao {
       this.funcaoTransacaoCalculada.complexidade = Complexidade.MEDIA;
     } else {
       const tipo = this.funcaoTransacao.tipo;
-      if (tipo === TipoFuncaoTransacao.SE || tipo === TipoFuncaoTransacao.CE) {
-        this.definirComplexidadeNaoEE();
-      } else {
-        this.definirComplexidadeEE();
-      }
+      this.funcaoTransacaoCalculada.complexidade =
+        ComplexidadeFuncionalTransacao.calcular(
+          this.funcaoTransacao.tipo,
+          funcaoTransacao.derValue(), funcaoTransacao.ftrValue()
+        );
     }
-  }
-
-  private static definirComplexidadeNaoEE() {
-    let complexidade: Complexidade;
-    const ftr = this.funcaoTransacao.ftrValue();
-    const der = this.funcaoTransacao.derValue();
-    if (ftr === 0 || ftr === 1) {
-      if (der <= 15) {
-        complexidade = Complexidade.BAIXA;
-      } else {
-        complexidade = Complexidade.MEDIA;
-      }
-    } else if (ftr === 2) {
-      if (der <= 4) {
-        complexidade = Complexidade.BAIXA;
-      } else if (der >= 5 && der <= 15) {
-        complexidade = Complexidade.MEDIA;
-      } else if (der >= 16) {
-        complexidade = Complexidade.ALTA;
-      }
-    } else if (ftr >= 3) {
-      if (der <= 4) {
-        complexidade = Complexidade.MEDIA;
-      } else if (der >= 5) {
-        complexidade = Complexidade.ALTA;
-      }
-    }
-    this.funcaoTransacaoCalculada.complexidade = complexidade;
-  }
-
-  private static definirComplexidadeEE() {
-    let complexidade: Complexidade;
-    const ftr = this.funcaoTransacao.ftrValue();
-    const der = this.funcaoTransacao.derValue();
-    if (ftr === 0 || ftr === 1) {
-      if (der <= 19) {
-        complexidade = Complexidade.BAIXA;
-      } else {
-        complexidade = Complexidade.MEDIA;
-      }
-    } else if (ftr === 2 || ftr === 3) {
-      if (der <= 5) {
-        complexidade = Complexidade.BAIXA;
-      } else if (der >= 6 && der <= 19) {
-        complexidade = Complexidade.MEDIA;
-      } else if (der >= 20) {
-        complexidade = Complexidade.ALTA;
-      }
-    } else if (ftr >= 4) {
-      if (der <= 5) {
-        complexidade = Complexidade.MEDIA;
-      } else if (der >= 6) {
-        complexidade = Complexidade.ALTA;
-      }
-    }
-    this.funcaoTransacaoCalculada.complexidade = complexidade;
   }
 
   private static calcularPfsDeAcordoComGrupoDeDadosLogicos() {
