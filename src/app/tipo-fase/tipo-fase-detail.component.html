@@ -4,16 +4,10 @@
       <h1>Visualizar Tipo Fase</h1>
       <div class="ui-g">
         <div class="ui-g-6">
-          <span class="md-inputfield">
-            <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="tipoFase.id" readonly/>
-            <label>ID</label>
-          </span>
+          <label>ID: {{ tipoFase.id }}</label>
         </div>
         <div class="ui-g-6">
-          <span class="md-inputfield">
-            <input type="text" name="nome" pInputText [ngModel]="tipoFase.nome" readonly/>
-            <label>Nome</label>
-          </span>
+          <label>Nome: {{ tipoFase.nome }}</label>
         </div>
       </div>
       <div class="ui-g">

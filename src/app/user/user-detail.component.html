@@ -4,39 +4,19 @@
       <h1>Visualizar Usuário</h1>
       <div class="ui-g">
           <div class="ui-g-4" style="margin-bottom: 25px">
-            <span class="md-inputfield" >
-              <input type="text" name="firstNameUser" [ngModel]="user.firstName" pInputText
-                readonly />
-              <label>Primeiro Nome</label>
-            </span>
+            <label>Primeiro Nome: {{ user.firstName }}</label>
           </div>
           <div class="ui-g-4" style="margin-bottom: 25px">
-            <span class="md-inputfield" >
-              <input type="text" name="lastNameUser" [ngModel]="user.lastName" pInputText 
-                readonly />
-              <label>Último Nome</label>
-            </span>
+            <label>Último Nome: {{ user.lastName }}</label>
           </div>
           <div class="ui-g-4" style="margin-bottom: 25px">
-            <span class="md-inputfield">
-              <input type="text" name="loginUser" [ngModel]="user.login" pInputText 
-                readonly />
-              <label>Login</label>
-            </span>
+            <label>Login: {{ user.login }}</label>
           </div>
           <div class="ui-g-4" style="margin-bottom: 25px">
-            <span class="md-inputfield">
-              <input type="text" name="email" [ngModel]="user.email" pInputText 
-                readonly />
-              <label>Email</label>
-            </span>
+            <label>Email: {{ user.email }}</label>
           </div>
           <div class="ui-g-4">
-            <span class="md-inputfield" style="margin-bottom: 25px">
-                <input type="text" name="ativo" pInputText
-                  [ngModel]="user.ativo ? 'Sim' : 'Não' " readonly/>
-              <label>Ativo</label>
-            </span>
+            <label>Ativo: {{ user.activated ? 'Sim' : 'Não' }}</label>
           </div>
           <div class="ui-g-4"></div>
 

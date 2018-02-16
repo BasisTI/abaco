@@ -37,23 +37,46 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
 
   save() {
     this.isSaving = true;
-    if (this.tipoEquipe.id !== undefined) {
-      if(this.checkRequiredFields() && this.checkFieldsMaxLength()) {
-        this.subscribeToSaveResponse(this.tipoEquipeService.update(this.tipoEquipe));
+    let teamTypesRegistered: Array<TipoEquipe>;
+    this.tipoEquipeService.query().subscribe(response => {
+        teamTypesRegistered = response.json;
+        if (this.tipoEquipe.id !== undefined) {
+          if(this.checkRequiredFields() && this.checkFieldsMaxLength() && !this.checkDuplicity(teamTypesRegistered)) {
+            this.subscribeToSaveResponse(this.tipoEquipeService.update(this.tipoEquipe));
+          }
+        } else {
+          if(this.checkRequiredFields() && this.checkFieldsMaxLength() && !this.checkDuplicity(teamTypesRegistered)) {
+            this.subscribeToSaveResponse(this.tipoEquipeService.create(this.tipoEquipe));
+          }
+        }
+    });
+  }
+
+  private checkDuplicity(teamTypes: Array<TipoEquipe>) {
+    let isAlreadyRegistered: boolean = false;
+
+    teamTypes.forEach(each => {
+      if(this.tipoEquipe.nome === each.nome && this.tipoEquipe.id !== each.id) {
+        isAlreadyRegistered = true;
+        this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
       }
-    } else {
-      if(this.checkRequiredFields() && this.checkFieldsMaxLength()) {
-        this.subscribeToSaveResponse(this.tipoEquipeService.create(this.tipoEquipe));
-      }
-    }
+    });
+
+    return isAlreadyRegistered;
+  }
+
+  private resetMarkFields() {
+    document.getElementById('nome_tipo_equipe').setAttribute('style','border-color: #bdbdbd');
   }
 
   private checkRequiredFields(): boolean {
     let isValid = false;
+    this.resetMarkFields();
     if(this.tipoEquipe.nome !== undefined && this.tipoEquipe.nome !== null && this.tipoEquipe.nome !== '' && this.tipoEquipe.nome !== ' ') {
       isValid = true;
     } else {
-      this.pageNotificationService.addErrorMsg('O campo nome é obrigatório!');
+      this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
+      document.getElementById('nome_tipo_equipe').setAttribute('style','border-color: red');
     }
 
     return isValid;
@@ -67,13 +90,16 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     } else {
       this.pageNotificationService.addErrorMsg('O campo nome excede o número de caracteres permitidos.');
     }
+
+    return isValid;
   }
 
   private subscribeToSaveResponse(result: Observable<TipoEquipe>) {
     result.subscribe((res: TipoEquipe) => {
       this.isSaving = false;
       this.router.navigate(['/admin/tipoEquipe']);
-      this.pageNotificationService.addCreateMsg();
+      (this.tipoEquipe.id === null) ? (this.pageNotificationService.addCreateMsg()) : (this.pageNotificationService.addUpdateMsg()) 
+
     }, (error: Response) => {
       this.isSaving = false;
       switch(error.status) {

@@ -6,13 +6,13 @@
         <div class="ui-g">
           <div class="ui-g-4" style="margin-bottom: 25px">
             <span class="md-inputfield" >
-              <input id="firstName" type="text" name="firstNameUser" maxlength="254" [(ngModel)]="user.firstName" pInputText required/>
+              <input id="firstName" type="text" name="firstNameUser" maxlength="50" [(ngModel)]="user.firstName" pInputText required/>
               <label>Primeiro Nome</label>
             </span>
           </div>
           <div class="ui-g-4" style="margin-bottom: 25px">
             <span class="md-inputfield" >
-              <input id="lastName" type="text" name="lastNameUser" maxlength="254" [(ngModel)]="user.lastName" pInputText required/>
+              <input id="lastName" type="text" name="lastNameUser" maxlength="50" [(ngModel)]="user.lastName" pInputText required/>
               <label>Último Nome</label>
             </span>
           </div>
@@ -24,7 +24,7 @@
           </div>
           <div class="ui-g-4" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input type="text" name="email" [(ngModel)]="user.email" pInputText/>
+              <input id="email" type="text" name="email" [(ngModel)]="user.email" pInputText/>
               <label>Email</label>
             </span>
           </div>

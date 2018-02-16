@@ -41,8 +41,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
     this.tipoEquipeService.query().subscribe((res: ResponseWrapper) => {
       this.tipoEquipes = res.json;
     });
-    this.organizacaoService.query().subscribe((res: ResponseWrapper) => {
-      this.organizacoes = res.json;
+    this.organizacaoService.findActiveOrganizations().subscribe((res) => {
+      this.organizacoes = res;
     });
     this.userService.authorities().subscribe((res: Authority[]) => {
       this.authorities = res;
@@ -50,6 +50,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
     });
     this.routeSub = this.route.params.subscribe(params => {
       this.user = new User();
+      this.user.activated = true;
       if (params['id']) {
         this.userService.find(params['id']).subscribe(user => {
           this.user = user;
@@ -127,6 +128,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
       document.getElementById('firstName').setAttribute('style', 'border-color: #bdbdbd;');
       document.getElementById('lastName').setAttribute('style', 'border-color: #bdbdbd;');
       document.getElementById('login').setAttribute('style', 'border-color: #bdbdbd;');
+      document.getElementById('email').setAttribute('style', 'border-color: #bdbdbd;');
   }
 
   private subscribeToSaveResponse(result: Observable<User>) {
@@ -139,10 +141,29 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
       switch(error.status) {
         case 400: {
-          let invalidFieldNamesString = "";
-          const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
-          invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-          this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+          const EXISTING_USER = 'error.userexists';
+          const EXISTING_MAIL =  'error.emailexists';
+          const EXISTING_FULLNAME = 'error.fullnameexists';
+
+          if(error.headers.toJSON()["x-abacoapp-error"][0] === EXISTING_USER) {
+            this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
+            document.getElementById('login').setAttribute('style', 'border-color: red;');
+          } else {
+            if(error.headers.toJSON()["x-abacoapp-error"][0] === EXISTING_MAIL) {
+              this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
+              document.getElementById('email').setAttribute('style', 'border-color: red;');
+            } else {
+              if(error.headers.toJSON()["x-abacoapp-error"][0] === EXISTING_FULLNAME) {
+                this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
+                document.getElementById('firstName').setAttribute('style', 'border-color: red;');
+                document.getElementById('lastName').setAttribute('style', 'border-color: red;');
+              }
+            }
+            let invalidFieldNamesString = "";
+            const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
+            invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
+            this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+          }
         }
       }
     });
