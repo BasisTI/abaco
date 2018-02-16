@@ -148,10 +148,13 @@ fdescribe('Calculadora de Função de Dados', () => {
 
       describe('Complexidade ALTA', () => {
         const ALI_ALTA_PF_BRUTO = 15;
-        xit(`todos os casos devem ter PF Bruto '${ALI_ALTA_PF_BRUTO}'`, () => {
+        it(`todos os casos devem ter PF Bruto '${ALI_ALTA_PF_BRUTO}'`, () => {
           CalculadoraTestData.criaALIsComplexidadeAlta().forEach(aliAlta => {
             const funcaoCalculada: FuncaoDados =
               Calculadora.calcular(metodoContagem, aliAlta);
+              if (funcaoCalculada.grossPF !== ALI_ALTA_PF_BRUTO) {
+                console.log(funcaoCalculada.derValue(), funcaoCalculada.rlrValue());
+              }
             expect(funcaoCalculada.grossPF).toEqual(ALI_ALTA_PF_BRUTO);
           });
         });

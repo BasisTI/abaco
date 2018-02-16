@@ -5,8 +5,8 @@ import * as _ from 'lodash';
 
 export class CalculadoraTestData {
 
-  private static readonly MAX_DER_DADOS = 200;
-  private static readonly MAX_TR = 20;
+  private static readonly MAX_DER_DADOS = 201;
+  private static readonly MAX_TR = 21;
 
   static criaFatorAjusteUnitario2PF(): FatorAjuste {
     const fa: FatorAjuste = new FatorAjuste();
@@ -99,7 +99,29 @@ export class CalculadoraTestData {
   }
 
   static criaALIsComplexidadeAlta(): FuncaoDados[] {
+    const alisAlta: FuncaoDados[] = [];
+    const valoresDer: number[] = _.range(20, this.MAX_DER_DADOS);
+    const valoresRlr: number[] = _.range(2, this.MAX_TR);
 
+    const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
+    valoresDer.forEach(der => {
+      valoresRlr.forEach(rlr => {
+        if (this.valoresDentroDeComplexidadeAltaDados(der, rlr)) {
+          const aliAlta = this.criaFuncaoDadosComValores(TipoFuncaoDados.ALI, der, rlr);
+          aliAlta.fatorAjuste = fatorAjustePercentual;
+          alisAlta.push(aliAlta);
+        }
+      });
+    });
+
+    return alisAlta;
+  }
+
+  private static valoresDentroDeComplexidadeAltaDados(der: number, rlr: number): boolean {
+    return ((der >= 20 && der <= 50) && rlr > 5) ||
+      // TODO avaliar se quebra para somente rlr >= 2
+      // decisão não tão imediata se decidir reutilizar 'linhas' e 'colunas'
+      der > 50 && ((rlr >= 2 && rlr <= 5) || (rlr > 5));
   }
 
 }
