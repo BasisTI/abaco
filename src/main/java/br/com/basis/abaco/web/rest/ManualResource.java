@@ -200,6 +200,9 @@ public class ManualResource {
             } break;
             case "desc": {
                 sortOrder = Sort.Direction.DESC;
+            }break;
+            default: {
+                // Do nothing
             }
         }
         
