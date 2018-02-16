@@ -2,10 +2,12 @@ import { FatorAjuste } from '../../fator-ajuste/index';
 import { Complexidade } from '../complexidade-enum';
 import { FatorAjusteLabelGenerator } from '../../shared/fator-ajuste-label-generator';
 import { FuncaoDados } from '../../funcao-dados';
+import { FuncaoTransacao } from '../../funcao-transacao';
 
 export class CalculadoraSpecHelper {
 
   private _funcaoDadosEntrada: FuncaoDados;
+  private _funcaoTransacaoEntrada: FuncaoTransacao;
   private _fatorAjuste: FatorAjuste;
   private _pfBruto: number;
   private _pfLiquido: number;
@@ -14,7 +16,11 @@ export class CalculadoraSpecHelper {
   constructor() { }
 
   setFuncaoDadosEntrada(funcao: FuncaoDados): CalculadoraSpecHelper {
-    this._funcaoDadosEntrada = funcao;
+    if (this._funcaoTransacaoEntrada) {
+      throw Error('função de transação já adicionada');
+    }
+
+      this._funcaoDadosEntrada = funcao;
     return this;
   }
 
@@ -22,17 +28,39 @@ export class CalculadoraSpecHelper {
     return this._funcaoDadosEntrada;
   }
 
-  setFatorAjuste(fa: FatorAjuste): CalculadoraSpecHelper {
-    if (!this._funcaoDadosEntrada) {
-      throw Error('use o setFuncaoEntrada() antes');
-    } else {
-      this._funcaoDadosEntrada.fatorAjuste = fa;
+  setFuncaoTransacaoEntrada(funcao: FuncaoTransacao): CalculadoraSpecHelper {
+    if (this._funcaoDadosEntrada) {
+      throw Error('função de dados já adicionada');
     }
 
-    
+    this._funcaoTransacaoEntrada = funcao;
+    return this;
+  }
 
+  get funcaoTransacaoEntrada(): FuncaoTransacao {
+    return this._funcaoTransacaoEntrada;
+  }
+
+  setFatorAjuste(fa: FatorAjuste): CalculadoraSpecHelper {
+    this.checaSeTemFuncaoESetaFatorAjusteNelaSeExistir(fa);
     this._fatorAjuste = fa;
     return this;
+  }
+
+  private checaSeTemFuncaoESetaFatorAjusteNelaSeExistir(fa: FatorAjuste) {
+    let temFuncao = false;
+    if (this._funcaoDadosEntrada) {
+      this._funcaoDadosEntrada.fatorAjuste = fa;
+      temFuncao = true;
+    }
+    if (this._funcaoTransacaoEntrada) {
+      this._funcaoTransacaoEntrada.fatorAjuste = fa;
+      temFuncao = true;
+    }
+
+    if (!temFuncao) {
+      throw Error('use o setFuncaoDadosEntrada() ou setFuncaoTransacaoEntrada() antes');
+    }
   }
 
   get fatorAjuste(): FatorAjuste {
@@ -58,8 +86,22 @@ export class CalculadoraSpecHelper {
   }
 
   get descricaoDaFuncao(): string {
+    if (this._funcaoTransacaoEntrada) {
+      return this.geraDescricaoTransacao();
+    } else if (this._funcaoDadosEntrada) {
+      return this.geraDescricaoDados();
+    }
+  }
+
+  private geraDescricaoDados(): string {
     const der = `DER: '${this._funcaoDadosEntrada.derValue()}'`;
     const rlr = `RLR: '${this._funcaoDadosEntrada.rlrValue()}'`;
+    return `Função com ${der}, ${rlr}`;
+  }
+
+  private geraDescricaoTransacao(): string {
+    const der = `DER: '${this._funcaoTransacaoEntrada.derValue()}'`;
+    const rlr = `FTR: '${this._funcaoTransacaoEntrada.ftrValue()}'`;
     return `Função com ${der}, ${rlr}`;
   }
 
