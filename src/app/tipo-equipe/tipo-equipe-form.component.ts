@@ -58,7 +58,7 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     teamTypes.forEach(each => {
       if(this.tipoEquipe.nome === each.nome && this.tipoEquipe.id !== each.id) {
         isAlreadyRegistered = true;
-        this.pageNotificationService.addErrorMsg('Já existe registro de Tipo de Equipe com esse nome!');
+        this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
       }
     });
 
