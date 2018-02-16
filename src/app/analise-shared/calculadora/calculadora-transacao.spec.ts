@@ -22,13 +22,15 @@ fdescribe('Calculadora de Função de Transação', () => {
 
     beforeAll(() => metodoContagem = 'ESTIMADA' as MetodoContagem);
 
+    const ESTIMADA_PF_BRUTO_FATOR_AJUSTE_UNITARIO = 0;
+
     describe('EE', () => {
       const EE_ESTIMADA_PF_BRUTO = 4;
 
       const unitarioSpecHelper = new CalculadoraSpecHelper()
         .setFuncaoTransacaoEntrada(CalculadoraTestData.criaFuncaoTransacaoEE())
         .setFatorAjuste(fatorAjusteUnitario2PF)
-        .setPfBruto(EE_ESTIMADA_PF_BRUTO)
+        .setPfBruto(ESTIMADA_PF_BRUTO_FATOR_AJUSTE_UNITARIO)
         .setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper);
 
@@ -46,7 +48,7 @@ fdescribe('Calculadora de Função de Transação', () => {
       const unitarioSpecHelper = new CalculadoraSpecHelper()
         .setFuncaoTransacaoEntrada(CalculadoraTestData.criaFuncaoTransacaoSE())
         .setFatorAjuste(fatorAjusteUnitario2PF)
-        .setPfBruto(SE_ESTIMADA_PF_BRUTO)
+        .setPfBruto(ESTIMADA_PF_BRUTO_FATOR_AJUSTE_UNITARIO)
         .setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper);
 
@@ -64,7 +66,7 @@ fdescribe('Calculadora de Função de Transação', () => {
       const unitarioSpecHelper = new CalculadoraSpecHelper()
         .setFuncaoTransacaoEntrada(CalculadoraTestData.criaFuncaoTransacaoCE())
         .setFatorAjuste(fatorAjusteUnitario2PF)
-        .setPfBruto(CE_ESTIMADA_PF_BRUTO)
+        .setPfBruto(ESTIMADA_PF_BRUTO_FATOR_AJUSTE_UNITARIO)
         .setComplexidade(Complexidade.SEM);
       testesEmComum(unitarioSpecHelper);
 

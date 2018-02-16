@@ -30,17 +30,27 @@ export class CalculadoraTransacao {
   }
 
   private static definirComplexidade() {
-    const funcaoTransacao = this.funcaoTransacao;
+    if (this.funcaoTransacao.fatorAjuste.isUnitario()) {
+      this.funcaoTransacaoCalculada.complexidade = Complexidade.SEM;
+    } else {
+      this.definirComplexidadePercentual();
+    }
+  }
+
+  private static definirComplexidadePercentual() {
     if (this.metodoContagem === MetodoContagem.ESTIMADA) {
       this.funcaoTransacaoCalculada.complexidade = Complexidade.MEDIA;
     } else {
-      const tipo = this.funcaoTransacao.tipo;
-      this.funcaoTransacaoCalculada.complexidade =
-        ComplexidadeFuncionalTransacao.calcular(
-          this.funcaoTransacao.tipo,
-          funcaoTransacao.derValue(), funcaoTransacao.ftrValue()
-        );
+      this.definirComplexidadePercentualDetalhada();
     }
+  }
+
+  private static definirComplexidadePercentualDetalhada() {
+    const tipo = this.funcaoTransacao.tipo;
+    const funcaoTransacao = this.funcaoTransacao;
+    this.funcaoTransacaoCalculada.complexidade = ComplexidadeFuncionalTransacao.calcular(
+      this.funcaoTransacao.tipo, funcaoTransacao.derValue(), funcaoTransacao.ftrValue()
+    );
   }
 
   private static calcularPfsDeAcordoComGrupoDeDadosLogicos() {
@@ -66,6 +76,10 @@ export class CalculadoraTransacao {
         this.funcaoTransacaoCalculada.pf = 6;
         break;
       }
+      case Complexidade.SEM: {
+        this.funcaoTransacaoCalculada.pf = 0;
+        break;
+      }
       default: this.funcaoTransacaoCalculada.pf = 3;
     }
   }
@@ -82,6 +96,10 @@ export class CalculadoraTransacao {
       }
       case Complexidade.ALTA: {
         this.funcaoTransacaoCalculada.pf = 7;
+        break;
+      }
+      case Complexidade.SEM: {
+        this.funcaoTransacaoCalculada.pf = 0;
         break;
       }
       default: this.funcaoTransacaoCalculada.pf = 4;
