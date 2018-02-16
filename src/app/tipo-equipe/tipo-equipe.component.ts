@@ -60,7 +60,7 @@ export class TipoEquipeComponent implements AfterViewInit {
           this.pageNotificationService.addDeleteMsg();
         }, error => {
           if(error.status === 500) {
-            this.pageNotificationService.addErrorMsg('O registro não pode ser deletado pois possui Usuários associados a ele.');
+            this.pageNotificationService.addErrorMsg('Não é possivel excluir o registro selecionado!');
           }
         });
       }
