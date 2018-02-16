@@ -9,7 +9,7 @@ import { CalculadoraTestData } from './calculadora-test-data';
 const fatorAjusteUnitario2PF: FatorAjuste = CalculadoraTestData.criaFatorAjusteUnitario2PF();
 const fatorAjustePercentual50: FatorAjuste = CalculadoraTestData.criaFatorAjustePercentual50();
 
-fdescribe('Calculadora de Função de Dados', () => {
+describe('Calculadora de Função de Dados', () => {
 
   let metodoContagem: MetodoContagem;
   let funcaoDadosCalculada: FuncaoDados;

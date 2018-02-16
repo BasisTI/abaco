@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import { TipoFuncaoTransacao } from '../../funcao-transacao/funcao-transacao.model';
 import { NOTIMP } from 'dns';
 
-fdescribe('Complexidade Funcional de Função de Transação', () => {
+describe('Complexidade Funcional de Função de Transação', () => {
 
   let complexidadeRetornada: Complexidade;
 
