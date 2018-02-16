@@ -78,6 +78,50 @@ fdescribe('Calculadora de Função de Transação', () => {
 
   });
 
+  describe('Método contagem DETALHADA', () => {
+
+    beforeAll(() => metodoContagem = 'DETALHADA' as MetodoContagem);
+
+    describe('EE', () => {
+      describe('Complexidade BAIXA', () => {
+        const EE_BAIXA_PF_BRUTO = 3;
+        it(`todos os casos devem ter PF Bruto ${EE_BAIXA_PF_BRUTO}`, () => {
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaEEsComplexidadeBaixa(),
+            EE_BAIXA_PF_BRUTO);
+        });
+      });
+
+      describe('Complexidade MEDIA', () => {
+        const EE_MEDIA_PF_BRUTO = 4;
+        it(`todos os casos devem ter PF Bruto ${EE_MEDIA_PF_BRUTO}`, () => {
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaEEsComplexidadeMedia(),
+            EE_MEDIA_PF_BRUTO);
+        });
+      });
+
+      describe('Complexidade BAIXA', () => {
+        const EE_ALTA_PF_BRUTO = 6;
+        it(`todos os casos devem ter PF Bruto ${EE_ALTA_PF_BRUTO}`, () => {
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaEEsComplexidadeAlta(),
+            EE_ALTA_PF_BRUTO);
+        });
+      });
+
+    });
+
+    function verificaPfBrutoDetalhada(funcoes: FuncaoTransacao[], pfBrutoEsperado: number) {
+      funcoes.forEach(funcao => {
+        const funcCalculada: FuncaoTransacao =
+          CalculadoraTransacao.calcular(metodoContagem, funcao);
+        expect(funcCalculada.grossPF).toEqual(pfBrutoEsperado);
+      });
+    }
+
+  });
+
   // TODO DUPLICADO com calculadora de funcao dados
   function testesEmComum(specHelper: CalculadoraSpecHelper, ...fns: Function[]) {
     describe(`Fator de Ajuste ${specHelper.fatorAjusteLabel}`, () => {

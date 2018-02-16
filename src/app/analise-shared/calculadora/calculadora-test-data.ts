@@ -7,6 +7,7 @@ import { FuncaoTransacao, TipoFuncaoTransacao } from '../../funcao-transacao';
 export class CalculadoraTestData {
 
   private static readonly MAX_DER_DADOS = 201;
+  private static readonly MAX_DER_TRANSACAO = 101;
   private static readonly MAX_TR = 21;
 
   static criaFatorAjusteUnitario2PF(): FatorAjuste {
@@ -160,6 +161,69 @@ export class CalculadoraTestData {
 
   static criaAIEsComplexidadeAlta(): FuncaoDados[] {
     return this.criaFuncaoDadosComplexidadeAlta(TipoFuncaoDados.AIE);
+  }
+
+  static criaEEsComplexidadeBaixa(): FuncaoTransacao[] {
+    const valoresDer: number[] = _.range(0, 16);
+    const valoresFtr: number[] = _.range(0, 3);
+
+    return this.criaFuncaoTransacaoComFatorAjustePercentualDentroDosIntervalos(
+      TipoFuncaoTransacao.EE, this.valoresDentroDeComplexidadeBaixaEE,
+      valoresDer, valoresFtr);
+  }
+
+  private static criaFuncaoTransacaoComFatorAjustePercentualDentroDosIntervalos(
+    tipo: TipoFuncaoTransacao, funcaoDentroDoIntervalo: (der: number, rlr: number) => boolean,
+    valoresDer: number[], valoresFtr: number[]): FuncaoTransacao[] {
+
+    const funcoesTransacao: FuncaoTransacao[] = [];
+    const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
+
+    valoresDer.forEach(der => {
+      valoresFtr.forEach(ftr => {
+        if (funcaoDentroDoIntervalo(der, ftr)) {
+          const funcao = this.criaFuncaoTransacao(tipo, der, ftr);
+          funcao.fatorAjuste = fatorAjustePercentual;
+          funcoesTransacao.push(funcao);
+        }
+      });
+    });
+
+    return funcoesTransacao;
+  }
+
+  private static valoresDentroDeComplexidadeBaixaEE(der: number, ftr: number) {
+    return der < 5 && (ftr < 2 || ftr === 2) ||
+      (der >= 5 && der <= 15) && ftr < 2;
+  }
+
+  static criaEEsComplexidadeMedia(): FuncaoTransacao[] {
+    const valoresDer: number[] = _.range(0, this.MAX_DER_TRANSACAO);
+    const valoresFtr: number[] = _.range(0, this.MAX_TR);
+
+    return this.criaFuncaoTransacaoComFatorAjustePercentualDentroDosIntervalos(
+      TipoFuncaoTransacao.EE, this.valoresDentroDeComplexidadeMediaEE,
+      valoresDer, valoresFtr);
+  }
+
+  private static valoresDentroDeComplexidadeMediaEE(der: number, ftr: number) {
+    return der < 5 && ftr > 2 ||
+      (der >= 5 && der <= 15) && ftr === 2 ||
+      der > 15 && ftr < 2;
+  }
+
+  static criaEEsComplexidadeAlta(): FuncaoTransacao[] {
+    const valoresDer: number[] = _.range(5, this.MAX_DER_TRANSACAO);
+    const valoresFtr: number[] = _.range(2, this.MAX_TR);
+
+    return this.criaFuncaoTransacaoComFatorAjustePercentualDentroDosIntervalos(
+      TipoFuncaoTransacao.EE, this.valoresDentroDeComplexidadeAltaEE,
+      valoresDer, valoresFtr);
+  }
+
+  private static valoresDentroDeComplexidadeAltaEE(der: number, ftr: number) {
+    return (der >= 5 && der <= 15) && ftr > 2 ||
+      der > 15 && (ftr === 2 || ftr > 2);
   }
 
 }
