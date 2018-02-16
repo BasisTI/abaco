@@ -137,7 +137,7 @@ fdescribe('Calculadora de Função de Dados', () => {
 
       describe('Complexidade MEDIA', () => {
         const ALI_MEDIA_PF_BRUTO = 10;
-        xit(`todos os casos devem ter PF Bruto '${ALI_MEDIA_PF_BRUTO}'`, () => {
+        it(`todos os casos devem ter PF Bruto '${ALI_MEDIA_PF_BRUTO}'`, () => {
           CalculadoraTestData.criaALIsComplexidadeMedia().forEach(aliMedia => {
             const funcaoCalculada: FuncaoDados =
               Calculadora.calcular(metodoContagem, aliMedia);

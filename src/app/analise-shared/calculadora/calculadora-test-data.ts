@@ -5,6 +5,9 @@ import * as _ from 'lodash';
 
 export class CalculadoraTestData {
 
+  private static readonly MAX_DER_DADOS = 200;
+  private static readonly MAX_TR = 20;
+
   static criaFatorAjusteUnitario2PF(): FatorAjuste {
     const fa: FatorAjuste = new FatorAjuste();
     fa.nome = 'unitario';
@@ -52,24 +55,47 @@ export class CalculadoraTestData {
     const valoresDer: number[] = _.range(1, 51);
     const valoresRlr: number[] = _.range(1, 6);
     const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
+
     valoresDer.forEach(der => {
       valoresRlr.forEach(rlr => {
-        if (this.valoresDentroDeComplexidadeBaixa(der, rlr)) {
+        if (this.valoresDentroDeComplexidadeBaixaDados(der, rlr)) {
           const aliBaixa = this.criaFuncaoDadosComValores(TipoFuncaoDados.ALI, der, rlr);
           aliBaixa.fatorAjuste = fatorAjustePercentual;
           alisBaixa.push(aliBaixa);
         }
       });
     });
+
     return alisBaixa;
   }
 
-  private static valoresDentroDeComplexidadeBaixa(der: number, rlr: number) {
+  private static valoresDentroDeComplexidadeBaixaDados(der: number, rlr: number) {
     return der < 20 || (der > 20 && rlr === 1);
   }
 
   static criaALIsComplexidadeMedia(): FuncaoDados[] {
+    const alisMedia: FuncaoDados[] = [];
+    const valoresDer: number[] = _.range(1, this.MAX_DER_DADOS);
+    const valoresRlr: number[] = _.range(1, this.MAX_TR);
 
+    const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
+    valoresDer.forEach(der => {
+      valoresRlr.forEach(rlr => {
+        if (this.valoresDentroDeComplexidadeMediaDados(der, rlr)) {
+          const aliMedia = this.criaFuncaoDadosComValores(TipoFuncaoDados.ALI, der, rlr);
+          aliMedia.fatorAjuste = fatorAjustePercentual;
+          alisMedia.push(aliMedia);
+        }
+      });
+    });
+
+    return alisMedia;
+  }
+
+  private static valoresDentroDeComplexidadeMediaDados(der: number, rlr: number): boolean {
+    return (der < 20 && rlr > 5) ||
+      ((der > 20 && der <= 50) && (rlr >= 2 && rlr <= 5)) ||
+      (der > 50 && rlr === 1);
   }
 
   static criaALIsComplexidadeAlta(): FuncaoDados[] {
