@@ -2,6 +2,7 @@ import { FatorAjuste, TipoFatorAjuste } from '../../fator-ajuste/index';
 import { FuncaoDados, TipoFuncaoDados } from '../../funcao-dados/funcao-dados.model';
 
 import * as _ from 'lodash';
+import { FuncaoTransacao, TipoFuncaoTransacao } from '../../funcao-transacao';
 
 export class CalculadoraTestData {
 
@@ -47,6 +48,18 @@ export class CalculadoraTestData {
 
   static criaFuncaoDadosAIE(): FuncaoDados {
     return this.criaFuncaoDados(TipoFuncaoDados.AIE);
+  }
+
+  static criaFuncaoTransacaoEE(): FuncaoTransacao {
+    return this.criaFuncaoTransacao(TipoFuncaoTransacao.EE, 5, 5);
+  }
+
+  static criaFuncaoTransacao(tipo: TipoFuncaoTransacao, der: number, ftr: number): FuncaoTransacao {
+    const func = new FuncaoTransacao();
+    func.tipo = tipo;
+    func.der = der.toString();
+    func.ftr = ftr.toString();
+    return func;
   }
 
   // TODO criaXXsComplexidadeXXX() provavelmente logica em comum com testes de complexidadeFuncional
