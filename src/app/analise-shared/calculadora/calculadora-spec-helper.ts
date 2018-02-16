@@ -5,7 +5,7 @@ import { FuncaoDados } from '../../funcao-dados';
 
 export class CalculadoraSpecHelper {
 
-  private _funcaoEntrada: FuncaoDados;
+  private _funcaoDadosEntrada: FuncaoDados;
   private _fatorAjuste: FatorAjuste;
   private _pfBruto: number;
   private _pfLiquido: number;
@@ -13,21 +13,25 @@ export class CalculadoraSpecHelper {
 
   constructor() { }
 
-  setFuncaoEntrada(funcao: FuncaoDados): CalculadoraSpecHelper {
-    this._funcaoEntrada = funcao;
+  setFuncaoDadosEntrada(funcao: FuncaoDados): CalculadoraSpecHelper {
+    this._funcaoDadosEntrada = funcao;
     return this;
   }
 
-  get funcaoEntrada(): FuncaoDados {
-    return this._funcaoEntrada;
+  get funcaoDadosEntrada(): FuncaoDados {
+    return this._funcaoDadosEntrada;
   }
 
   setFatorAjuste(fa: FatorAjuste): CalculadoraSpecHelper {
-    if (!this._funcaoEntrada) {
+    if (!this._funcaoDadosEntrada) {
       throw Error('use o setFuncaoEntrada() antes');
+    } else {
+      this._funcaoDadosEntrada.fatorAjuste = fa;
     }
+
+    
+
     this._fatorAjuste = fa;
-    this._funcaoEntrada.fatorAjuste = fa;
     return this;
   }
 
@@ -54,8 +58,8 @@ export class CalculadoraSpecHelper {
   }
 
   get descricaoDaFuncao(): string {
-    const der = `DER: '${this._funcaoEntrada.derValue()}'`;
-    const rlr = `RLR: '${this._funcaoEntrada.rlrValue()}'`;
+    const der = `DER: '${this._funcaoDadosEntrada.derValue()}'`;
+    const rlr = `RLR: '${this._funcaoDadosEntrada.rlrValue()}'`;
     return `Função com ${der}, ${rlr}`;
   }
 
