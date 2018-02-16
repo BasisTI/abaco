@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Rx';
 
 import { TipoEquipe } from './tipo-equipe.model';
 import { TipoEquipeService } from './tipo-equipe.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'jhi-tipo-equipe-detail',
@@ -16,7 +17,8 @@ export class TipoEquipeDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private tipoEquipeService: TipoEquipeService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -33,5 +35,9 @@ export class TipoEquipeDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  public return() {
+    this.router.navigate(['/admin/tipoEquipe']);
   }
 }
