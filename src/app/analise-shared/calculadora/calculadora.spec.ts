@@ -124,22 +124,38 @@ fdescribe('Calculadora de Função de Dados', () => {
 
     describe('ALI', () => {
 
-      describe('DER < 20', () => {
-
-        describe('RLR igual a 1', () => {
-
+      describe('Complexidade BAIXA', () => {
+        const ALI_BAIXA_PF_BRUTO = 7;
+        it(`todos os casos devem ter PF Bruto '${ALI_BAIXA_PF_BRUTO}'`, () => {
+          CalculadoraTestData.criaALIsComplexidadeBaixa().forEach(aliBaixa => {
+            const funcaoCalculada: FuncaoDados =
+              Calculadora.calcular(metodoContagem, aliBaixa);
+            expect(funcaoCalculada.grossPF).toEqual(ALI_BAIXA_PF_BRUTO);
+          });
         });
-
-        describe('RLR maior ou igual a 2, menor ou igual a 5', () => {
-
-        });
-
-        describe('RLR maior que 5', () => {
-
-        });
-
       });
 
+      describe('Complexidade MEDIA', () => {
+        const ALI_MEDIA_PF_BRUTO = 10;
+        xit(`todos os casos devem ter PF Bruto '${ALI_MEDIA_PF_BRUTO}'`, () => {
+          CalculadoraTestData.criaALIsComplexidadeMedia().forEach(aliMedia => {
+            const funcaoCalculada: FuncaoDados =
+              Calculadora.calcular(metodoContagem, aliMedia);
+            expect(funcaoCalculada.grossPF).toEqual(ALI_MEDIA_PF_BRUTO);
+          });
+        });
+      });
+
+      describe('Complexidade ALTA', () => {
+        const ALI_ALTA_PF_BRUTO = 15;
+        xit(`todos os casos devem ter PF Bruto '${ALI_ALTA_PF_BRUTO}'`, () => {
+          CalculadoraTestData.criaALIsComplexidadeAlta().forEach(aliAlta => {
+            const funcaoCalculada: FuncaoDados =
+              Calculadora.calcular(metodoContagem, aliAlta);
+            expect(funcaoCalculada.grossPF).toEqual(ALI_ALTA_PF_BRUTO);
+          });
+        });
+      });
 
     });
 
