@@ -12,7 +12,9 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -178,12 +180,30 @@ public class ManualResource {
      */
     @GetMapping("/_search/manuals")
     @Timed
-    public ResponseEntity<List<Manual>> searchManuals(@RequestParam(defaultValue = "*") String query, @ApiParam Pageable pageable) throws URISyntaxException {
-        query = "*";
+    public ResponseEntity<List<Manual>> searchManuals(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         log.debug("REST request to search Manuals for query {}", query);
-        Page<Manual> page = manualSearchRepository.search(queryStringQuery(query), pageable);
+        Sort.Direction sortOrder = this.getSortDirection(order);
+        
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+        Page<Manual> page = manualSearchRepository.search(queryStringQuery(query), newPageable);
+        
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/manuals");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+    
+    private Sort.Direction getSortDirection(String order) {
+        Sort.Direction sortOrder = null;
+        
+        switch(order) {
+            case "asc": {
+                sortOrder = Sort.Direction.ASC;
+            } break;
+            case "desc": {
+                sortOrder = Sort.Direction.DESC;
+            }
+        }
+        
+        return sortOrder;
     }
 
 }
