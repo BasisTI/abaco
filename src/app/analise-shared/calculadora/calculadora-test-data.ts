@@ -226,4 +226,62 @@ export class CalculadoraTestData {
       der > 15 && (ftr === 2 || ftr > 2);
   }
 
+  static criaSEsComplexidadeBaixa(): FuncaoTransacao[] {
+    return this.criaFuncoesTransacaoSEouCEComComplexidadeBaixa(TipoFuncaoTransacao.SE);
+  }
+
+  private static criaFuncoesTransacaoSEouCEComComplexidadeBaixa(tipo: TipoFuncaoTransacao): FuncaoTransacao[] {
+    const valoresDer: number[] = _.range(0, 20);
+    const valoresFtr: number[] = _.range(0, 4);
+
+    return this.criaFuncaoTransacaoComFatorAjustePercentualDentroDosIntervalos(
+      tipo, this.valoresDentroDeComplexidadeBaixaSEouCE,
+      valoresDer, valoresFtr
+    );
+  }
+
+  private static valoresDentroDeComplexidadeBaixaSEouCE(der: number, ftr: number): boolean {
+    return der < 6 && (ftr < 2 || (ftr === 2 || ftr === 3)) ||
+      (der >= 6 && der <= 19) && ftr < 2;
+  }
+
+  static criaSEsComplexidadeMedia(): FuncaoTransacao[] {
+    return this.criaFuncoesTransacaoSEouCEComComplexidadeMedia(TipoFuncaoTransacao.SE);
+  }
+
+  private static criaFuncoesTransacaoSEouCEComComplexidadeMedia(tipo: TipoFuncaoTransacao): FuncaoTransacao[] {
+    const valoresDer: number[] = _.range(0, this.MAX_DER_TRANSACAO);
+    const valoresFtr: number[] = _.range(0, this.MAX_TR);
+
+    return this.criaFuncaoTransacaoComFatorAjustePercentualDentroDosIntervalos(
+      tipo, this.valoresDentroDeComplexidadeMediaSEouCE,
+      valoresDer, valoresFtr
+    );
+  }
+
+  private static valoresDentroDeComplexidadeMediaSEouCE(der: number, ftr: number): boolean {
+    return der < 6 && ftr > 3 ||
+      (der >= 6 && der <= 19) && (ftr === 2 || ftr === 3) ||
+      der > 19 && ftr < 2;
+  }
+
+  static criaSEsComplexidadeAlta(): FuncaoTransacao[] {
+    return this.criaFuncoesTransacaoSEouCEComComplexidadeAlta(TipoFuncaoTransacao.SE);
+  }
+
+  private static criaFuncoesTransacaoSEouCEComComplexidadeAlta(tipo: TipoFuncaoTransacao): FuncaoTransacao[] {
+    const valoresDer: number[] = _.range(6, this.MAX_DER_TRANSACAO);
+    const valoresFtr: number[] = _.range(4, this.MAX_TR);
+
+    return this.criaFuncaoTransacaoComFatorAjustePercentualDentroDosIntervalos(
+      tipo, this.valoresDentroDeComplexidadeAltaSEouCE,
+      valoresDer, valoresFtr
+    );
+  }
+
+  private static valoresDentroDeComplexidadeAltaSEouCE(der: number, ftr: number): boolean {
+    return (der >= 6 && der <= 19) && ftr > 3 ||
+      der > 19 && (ftr === 2 || ftr === 3) || ftr > 3;
+  }
+
 }

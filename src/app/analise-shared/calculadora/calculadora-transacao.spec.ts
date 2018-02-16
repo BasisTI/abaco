@@ -112,6 +112,35 @@ fdescribe('Calculadora de Função de Transação', () => {
 
     });
 
+    describe('SE', () => {
+      describe('Complexidade BAIXA', () => {
+        const SE_BAIXA_PF_BRUTO = 4;
+        it(`todos os casos devem ter PF Bruto ${SE_BAIXA_PF_BRUTO}`, () => {
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaSEsComplexidadeBaixa(),
+            SE_BAIXA_PF_BRUTO);
+        });
+      });
+
+      describe('Complexidade MEDIA', () => {
+        const SE_MEDIA_PF_BRUTO = 5;
+        it(`todos os casos devem ter PF Bruto ${SE_MEDIA_PF_BRUTO}`, () => {
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaSEsComplexidadeMedia(),
+            SE_MEDIA_PF_BRUTO);
+        });
+      });
+
+      describe('Complexidade BAIXA', () => {
+        const SE_ALTA_PF_BRUTO = 7;
+        it(`todos os casos devem ter PF Bruto ${SE_ALTA_PF_BRUTO}`, () => {
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaSEsComplexidadeAlta(),
+            SE_ALTA_PF_BRUTO);
+        });
+      });
+    });
+
     function verificaPfBrutoDetalhada(funcoes: FuncaoTransacao[], pfBrutoEsperado: number) {
       funcoes.forEach(funcao => {
         const funcCalculada: FuncaoTransacao =
