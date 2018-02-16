@@ -50,6 +50,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
     });
     this.routeSub = this.route.params.subscribe(params => {
       this.user = new User();
+      this.user.activated = true;
       if (params['id']) {
         this.userService.find(params['id']).subscribe(user => {
           this.user = user;
