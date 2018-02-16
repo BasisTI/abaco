@@ -51,22 +51,33 @@ export class CalculadoraTestData {
 
   // TODO criaXXsComplexidadeXXX() provavelmente logica em comum com testes de complexidadeFuncional
   static criaALIsComplexidadeBaixa(): FuncaoDados[] {
-    const alisBaixa: FuncaoDados[] = [];
     const valoresDer: number[] = _.range(1, 51);
     const valoresRlr: number[] = _.range(1, 6);
+
+    return this.criaFuncaoDadosComFatorAjustePercentualDentroDosIntervalos(
+      TipoFuncaoDados.ALI, this.valoresDentroDeComplexidadeBaixaDados,
+      valoresDer, valoresRlr
+    );
+  }
+
+  private static criaFuncaoDadosComFatorAjustePercentualDentroDosIntervalos(
+    tipo: TipoFuncaoDados, funcaoDentroDoIntervalo: (der: number, rlr: number) => boolean,
+    valoresDer: number[], valoresRlr: number[]): FuncaoDados[] {
+
+    const funcoesDados: FuncaoDados[] = [];
     const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
 
     valoresDer.forEach(der => {
       valoresRlr.forEach(rlr => {
-        if (this.valoresDentroDeComplexidadeBaixaDados(der, rlr)) {
-          const aliBaixa = this.criaFuncaoDadosComValores(TipoFuncaoDados.ALI, der, rlr);
-          aliBaixa.fatorAjuste = fatorAjustePercentual;
-          alisBaixa.push(aliBaixa);
+        if (funcaoDentroDoIntervalo(der, rlr)) {
+          const funcao = this.criaFuncaoDadosComValores(tipo, der, rlr);
+          funcao.fatorAjuste = fatorAjustePercentual;
+          funcoesDados.push(funcao);
         }
       });
     });
 
-    return alisBaixa;
+    return funcoesDados;
   }
 
   private static valoresDentroDeComplexidadeBaixaDados(der: number, rlr: number) {
@@ -74,22 +85,13 @@ export class CalculadoraTestData {
   }
 
   static criaALIsComplexidadeMedia(): FuncaoDados[] {
-    const alisMedia: FuncaoDados[] = [];
     const valoresDer: number[] = _.range(1, this.MAX_DER_DADOS);
     const valoresRlr: number[] = _.range(1, this.MAX_TR);
 
-    const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
-    valoresDer.forEach(der => {
-      valoresRlr.forEach(rlr => {
-        if (this.valoresDentroDeComplexidadeMediaDados(der, rlr)) {
-          const aliMedia = this.criaFuncaoDadosComValores(TipoFuncaoDados.ALI, der, rlr);
-          aliMedia.fatorAjuste = fatorAjustePercentual;
-          alisMedia.push(aliMedia);
-        }
-      });
-    });
-
-    return alisMedia;
+    return this.criaFuncaoDadosComFatorAjustePercentualDentroDosIntervalos(
+      TipoFuncaoDados.ALI, this.valoresDentroDeComplexidadeMediaDados,
+      valoresDer, valoresRlr
+    );
   }
 
   private static valoresDentroDeComplexidadeMediaDados(der: number, rlr: number): boolean {
@@ -99,22 +101,13 @@ export class CalculadoraTestData {
   }
 
   static criaALIsComplexidadeAlta(): FuncaoDados[] {
-    const alisAlta: FuncaoDados[] = [];
     const valoresDer: number[] = _.range(20, this.MAX_DER_DADOS);
     const valoresRlr: number[] = _.range(2, this.MAX_TR);
 
-    const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
-    valoresDer.forEach(der => {
-      valoresRlr.forEach(rlr => {
-        if (this.valoresDentroDeComplexidadeAltaDados(der, rlr)) {
-          const aliAlta = this.criaFuncaoDadosComValores(TipoFuncaoDados.ALI, der, rlr);
-          aliAlta.fatorAjuste = fatorAjustePercentual;
-          alisAlta.push(aliAlta);
-        }
-      });
-    });
-
-    return alisAlta;
+    return this.criaFuncaoDadosComFatorAjustePercentualDentroDosIntervalos(
+      TipoFuncaoDados.ALI, this.valoresDentroDeComplexidadeAltaDados,
+      valoresDer, valoresRlr
+    );
   }
 
   private static valoresDentroDeComplexidadeAltaDados(der: number, rlr: number): boolean {
@@ -125,60 +118,33 @@ export class CalculadoraTestData {
   }
 
   static criaAIEsComplexidadeBaixa(): FuncaoDados[] {
-    const aiesBaixa: FuncaoDados[] = [];
     const valoresDer: number[] = _.range(1, 51);
     const valoresRlr: number[] = _.range(1, 6);
-    const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
 
-    valoresDer.forEach(der => {
-      valoresRlr.forEach(rlr => {
-        if (this.valoresDentroDeComplexidadeBaixaDados(der, rlr)) {
-          const aieBaixa = this.criaFuncaoDadosComValores(TipoFuncaoDados.AIE, der, rlr);
-          aieBaixa.fatorAjuste = fatorAjustePercentual;
-          aiesBaixa.push(aieBaixa);
-        }
-      });
-    });
-
-    return aiesBaixa;
+    return this.criaFuncaoDadosComFatorAjustePercentualDentroDosIntervalos(
+      TipoFuncaoDados.AIE, this.valoresDentroDeComplexidadeBaixaDados,
+      valoresDer, valoresRlr
+    );
   }
 
   static criaAIEsComplexidadeMedia(): FuncaoDados[] {
-    const aiesMedia: FuncaoDados[] = [];
     const valoresDer: number[] = _.range(1, this.MAX_DER_DADOS);
     const valoresRlr: number[] = _.range(1, this.MAX_TR);
 
-    const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
-    valoresDer.forEach(der => {
-      valoresRlr.forEach(rlr => {
-        if (this.valoresDentroDeComplexidadeMediaDados(der, rlr)) {
-          const aieMedia = this.criaFuncaoDadosComValores(TipoFuncaoDados.AIE, der, rlr);
-          aieMedia.fatorAjuste = fatorAjustePercentual;
-          aiesMedia.push(aieMedia);
-        }
-      });
-    });
-
-    return aiesMedia;
+    return this.criaFuncaoDadosComFatorAjustePercentualDentroDosIntervalos(
+      TipoFuncaoDados.AIE, this.valoresDentroDeComplexidadeMediaDados,
+      valoresDer, valoresRlr
+    );
   }
 
   static criaAIEsComplexidadeAlta(): FuncaoDados[] {
-    const aiesAlta: FuncaoDados[] = [];
     const valoresDer: number[] = _.range(20, this.MAX_DER_DADOS);
     const valoresRlr: number[] = _.range(2, this.MAX_TR);
 
-    const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
-    valoresDer.forEach(der => {
-      valoresRlr.forEach(rlr => {
-        if (this.valoresDentroDeComplexidadeAltaDados(der, rlr)) {
-          const aieAlta = this.criaFuncaoDadosComValores(TipoFuncaoDados.AIE, der, rlr);
-          aieAlta.fatorAjuste = fatorAjustePercentual;
-          aiesAlta.push(aieAlta);
-        }
-      });
-    });
-
-    return aiesAlta;
+    return this.criaFuncaoDadosComFatorAjustePercentualDentroDosIntervalos(
+      TipoFuncaoDados.AIE, this.valoresDentroDeComplexidadeAltaDados,
+      valoresDer, valoresRlr
+    );
   }
 
 }
