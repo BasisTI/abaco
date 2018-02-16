@@ -2,6 +2,7 @@ import { FuncaoDados } from '../funcao-dados/funcao-dados.model';
 import { Complexidade } from '../analise-shared/complexidade-enum';
 import { MetodoContagem } from '../analise/index';
 import { TipoFatorAjuste } from '../fator-ajuste/index';
+import { ComplexidadeFuncionalDados } from './calculadora/complexidade-funcional-dados';
 
 export class Calculadora {
 
@@ -70,32 +71,8 @@ export class Calculadora {
   }
 
   private static definirComplexidadePercentual() {
-    let complexidade: Complexidade;
-    const der = this.funcaoDados.derValue();
-    const rlr = this.funcaoDados.rlrValue();
-    if (der === 1) {
-      if (rlr) {
-        complexidade = Complexidade.BAIXA;
-      } else {
-        complexidade = Complexidade.MEDIA;
-      }
-    } else if (der >= 2 && der <= 5) {
-      if (rlr <= 19) {
-        complexidade = Complexidade.BAIXA;
-      } else if (rlr >= 20 && rlr <= 50) {
-        complexidade = Complexidade.MEDIA;
-      } else if (rlr >= 51) {
-        complexidade = Complexidade.ALTA;
-      }
-    } else if (der >= 6) {
-      if (rlr <= 19) {
-        complexidade = Complexidade.MEDIA;
-      } else if (rlr >= 20) {
-        complexidade = Complexidade.ALTA;
-      }
-    }
-
-    this.funcaoDadosCalculada.complexidade = complexidade;
+    this.funcaoDadosCalculada.complexidade =
+      ComplexidadeFuncionalDados.calcular(this.funcaoDados.derValue(), this.funcaoDados.rlrValue());
   }
 
   private static calcularPfsDeAcordoComGrupoDeDadosLogicos() {
