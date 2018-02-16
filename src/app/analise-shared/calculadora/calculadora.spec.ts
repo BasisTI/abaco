@@ -126,33 +126,27 @@ fdescribe('Calculadora de Função de Dados', () => {
       describe('Complexidade BAIXA', () => {
         const ALI_BAIXA_PF_BRUTO = 7;
         it(`todos os casos devem ter PF Bruto '${ALI_BAIXA_PF_BRUTO}'`, () => {
-          CalculadoraTestData.criaALIsComplexidadeBaixa().forEach(aliBaixa => {
-            const funcaoCalculada: FuncaoDados =
-              Calculadora.calcular(metodoContagem, aliBaixa);
-            expect(funcaoCalculada.grossPF).toEqual(ALI_BAIXA_PF_BRUTO);
-          });
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaALIsComplexidadeBaixa(),
+            ALI_BAIXA_PF_BRUTO);
         });
       });
 
       describe('Complexidade MEDIA', () => {
         const ALI_MEDIA_PF_BRUTO = 10;
         it(`todos os casos devem ter PF Bruto '${ALI_MEDIA_PF_BRUTO}'`, () => {
-          CalculadoraTestData.criaALIsComplexidadeMedia().forEach(aliMedia => {
-            const funcaoCalculada: FuncaoDados =
-              Calculadora.calcular(metodoContagem, aliMedia);
-            expect(funcaoCalculada.grossPF).toEqual(ALI_MEDIA_PF_BRUTO);
-          });
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaALIsComplexidadeMedia(),
+            ALI_MEDIA_PF_BRUTO);
         });
       });
 
       describe('Complexidade ALTA', () => {
         const ALI_ALTA_PF_BRUTO = 15;
         it(`todos os casos devem ter PF Bruto '${ALI_ALTA_PF_BRUTO}'`, () => {
-          CalculadoraTestData.criaALIsComplexidadeAlta().forEach(aliAlta => {
-            const funcaoCalculada: FuncaoDados =
-              Calculadora.calcular(metodoContagem, aliAlta);
-            expect(funcaoCalculada.grossPF).toEqual(ALI_ALTA_PF_BRUTO);
-          });
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaALIsComplexidadeAlta(),
+            ALI_ALTA_PF_BRUTO);
         });
       });
     });
@@ -162,36 +156,38 @@ fdescribe('Calculadora de Função de Dados', () => {
       describe('Complexidade BAIXA', () => {
         const AIE_BAIXA_PF_BRUTO = 5;
         it(`todos os casos devem ter PF Bruto '${AIE_BAIXA_PF_BRUTO}'`, () => {
-          CalculadoraTestData.criaAIEsComplexidadeBaixa().forEach(aliBaixa => {
-            const funcaoCalculada: FuncaoDados =
-              Calculadora.calcular(metodoContagem, aliBaixa);
-            expect(funcaoCalculada.grossPF).toEqual(AIE_BAIXA_PF_BRUTO);
-          });
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaAIEsComplexidadeBaixa(),
+            AIE_BAIXA_PF_BRUTO);
         });
       });
 
       describe('Complexidade MEDIA', () => {
         const AIE_MEDIA_PF_BRUTO = 7;
         it(`todos os casos devem ter PF Bruto '${AIE_MEDIA_PF_BRUTO}'`, () => {
-          CalculadoraTestData.criaAIEsComplexidadeMedia().forEach(aliMedia => {
-            const funcaoCalculada: FuncaoDados =
-              Calculadora.calcular(metodoContagem, aliMedia);
-            expect(funcaoCalculada.grossPF).toEqual(AIE_MEDIA_PF_BRUTO);
-          });
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaAIEsComplexidadeMedia(),
+            AIE_MEDIA_PF_BRUTO);
         });
       });
 
       describe('Complexidade ALTA', () => {
         const AIE_ALTA_PF_BRUTO = 10;
         it(`todos os casos devem ter PF Bruto '${AIE_ALTA_PF_BRUTO}'`, () => {
-          CalculadoraTestData.criaAIEsComplexidadeAlta().forEach(aliAlta => {
-            const funcaoCalculada: FuncaoDados =
-              Calculadora.calcular(metodoContagem, aliAlta);
-            expect(funcaoCalculada.grossPF).toEqual(AIE_ALTA_PF_BRUTO);
-          });
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaAIEsComplexidadeAlta(),
+            AIE_ALTA_PF_BRUTO);
         });
       });
     });
+
+    function verificaPfBrutoDetalhada(funcoes: FuncaoDados[], pfBrutoEsperado: number) {
+      funcoes.forEach(funcao => {
+        const funcaoCalculada: FuncaoDados =
+          Calculadora.calcular(metodoContagem, funcao);
+        expect(funcaoCalculada.grossPF).toEqual(pfBrutoEsperado);
+      });
+    }
 
   });
 
