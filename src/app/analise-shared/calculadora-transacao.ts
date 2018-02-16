@@ -2,6 +2,7 @@ import { Complexidade } from '../analise-shared/complexidade-enum';
 import { MetodoContagem } from '../analise/index';
 import { TipoFatorAjuste } from '../fator-ajuste/index';
 import { FuncaoTransacao, TipoFuncaoTransacao } from '../funcao-transacao/funcao-transacao.model';
+import { ComplexidadeFuncionalTransacao } from './calculadora/complexidade-funcional-transacao';
 
 export class CalculadoraTransacao {
 
@@ -29,73 +30,27 @@ export class CalculadoraTransacao {
   }
 
   private static definirComplexidade() {
-    const funcaoTransacao = this.funcaoTransacao;
+    if (this.funcaoTransacao.fatorAjuste.isUnitario()) {
+      this.funcaoTransacaoCalculada.complexidade = Complexidade.SEM;
+    } else {
+      this.definirComplexidadePercentual();
+    }
+  }
+
+  private static definirComplexidadePercentual() {
     if (this.metodoContagem === MetodoContagem.ESTIMADA) {
       this.funcaoTransacaoCalculada.complexidade = Complexidade.MEDIA;
     } else {
-      const tipo = this.funcaoTransacao.tipo;
-      if (tipo === TipoFuncaoTransacao.SE || tipo === TipoFuncaoTransacao.CE) {
-        this.definirComplexidadeNaoEE();
-      } else {
-        this.definirComplexidadeEE();
-      }
+      this.definirComplexidadePercentualDetalhada();
     }
   }
 
-  private static definirComplexidadeNaoEE() {
-    let complexidade: Complexidade;
-    const ftr = this.funcaoTransacao.ftrValue();
-    const der = this.funcaoTransacao.derValue();
-    if (ftr === 0 || ftr === 1) {
-      if (der <= 15) {
-        complexidade = Complexidade.BAIXA;
-      } else {
-        complexidade = Complexidade.MEDIA;
-      }
-    } else if (ftr === 2) {
-      if (der <= 4) {
-        complexidade = Complexidade.BAIXA;
-      } else if (der >= 5 && der <= 15) {
-        complexidade = Complexidade.MEDIA;
-      } else if (der >= 16) {
-        complexidade = Complexidade.ALTA;
-      }
-    } else if (ftr >= 3) {
-      if (der <= 4) {
-        complexidade = Complexidade.MEDIA;
-      } else if (der >= 5) {
-        complexidade = Complexidade.ALTA;
-      }
-    }
-    this.funcaoTransacaoCalculada.complexidade = complexidade;
-  }
-
-  private static definirComplexidadeEE() {
-    let complexidade: Complexidade;
-    const ftr = this.funcaoTransacao.ftrValue();
-    const der = this.funcaoTransacao.derValue();
-    if (ftr === 0 || ftr === 1) {
-      if (der <= 19) {
-        complexidade = Complexidade.BAIXA;
-      } else {
-        complexidade = Complexidade.MEDIA;
-      }
-    } else if (ftr === 2 || ftr === 3) {
-      if (der <= 5) {
-        complexidade = Complexidade.BAIXA;
-      } else if (der >= 6 && der <= 19) {
-        complexidade = Complexidade.MEDIA;
-      } else if (der >= 20) {
-        complexidade = Complexidade.ALTA;
-      }
-    } else if (ftr >= 4) {
-      if (der <= 5) {
-        complexidade = Complexidade.MEDIA;
-      } else if (der >= 6) {
-        complexidade = Complexidade.ALTA;
-      }
-    }
-    this.funcaoTransacaoCalculada.complexidade = complexidade;
+  private static definirComplexidadePercentualDetalhada() {
+    const tipo = this.funcaoTransacao.tipo;
+    const funcaoTransacao = this.funcaoTransacao;
+    this.funcaoTransacaoCalculada.complexidade = ComplexidadeFuncionalTransacao.calcular(
+      this.funcaoTransacao.tipo, funcaoTransacao.derValue(), funcaoTransacao.ftrValue()
+    );
   }
 
   private static calcularPfsDeAcordoComGrupoDeDadosLogicos() {
@@ -118,7 +73,11 @@ export class CalculadoraTransacao {
         break;
       }
       case Complexidade.ALTA: {
-        this.funcaoTransacaoCalculada.pf = 5;
+        this.funcaoTransacaoCalculada.pf = 6;
+        break;
+      }
+      case Complexidade.SEM: {
+        this.funcaoTransacaoCalculada.pf = 0;
         break;
       }
       default: this.funcaoTransacaoCalculada.pf = 3;
@@ -137,6 +96,10 @@ export class CalculadoraTransacao {
       }
       case Complexidade.ALTA: {
         this.funcaoTransacaoCalculada.pf = 7;
+        break;
+      }
+      case Complexidade.SEM: {
+        this.funcaoTransacaoCalculada.pf = 0;
         break;
       }
       default: this.funcaoTransacaoCalculada.pf = 4;

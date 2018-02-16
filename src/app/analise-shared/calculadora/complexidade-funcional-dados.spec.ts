@@ -3,7 +3,7 @@ import { Complexidade } from '../complexidade-enum';
 
 import * as _ from 'lodash';
 
-fdescribe('Complexidade Funcional de Função de Dados', () => {
+describe('Complexidade Funcional de Função de Dados', () => {
 
   let complexidadeRetornada: Complexidade;
 
