@@ -284,4 +284,17 @@ export class CalculadoraTestData {
       der > 19 && (ftr === 2 || ftr === 3) || ftr > 3;
   }
 
+  static criaCEsComplexidadeBaixa(): FuncaoTransacao[] {
+    return this.criaFuncoesTransacaoSEouCEComComplexidadeBaixa(TipoFuncaoTransacao.CE);
+  }
+
+  static criaCEsComplexidadeMedia(): FuncaoTransacao[] {
+    return this.criaFuncoesTransacaoSEouCEComComplexidadeMedia(TipoFuncaoTransacao.CE);
+  }
+
+  static criaCEsComplexidadeAlta(): FuncaoTransacao[] {
+    return this.criaFuncoesTransacaoSEouCEComComplexidadeAlta(TipoFuncaoTransacao.CE);
+  }
+
+
 }

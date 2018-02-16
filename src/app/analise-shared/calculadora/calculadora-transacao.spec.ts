@@ -131,12 +131,41 @@ fdescribe('Calculadora de Função de Transação', () => {
         });
       });
 
-      describe('Complexidade BAIXA', () => {
+      describe('Complexidade ALTA', () => {
         const SE_ALTA_PF_BRUTO = 7;
         it(`todos os casos devem ter PF Bruto ${SE_ALTA_PF_BRUTO}`, () => {
           verificaPfBrutoDetalhada(
             CalculadoraTestData.criaSEsComplexidadeAlta(),
             SE_ALTA_PF_BRUTO);
+        });
+      });
+    });
+
+    describe('CE', () => {
+      describe('Complexidade BAIXA', () => {
+        const CE_BAIXA_PF_BRUTO = 3;
+        it(`todos os casos devem ter PF Bruto ${CE_BAIXA_PF_BRUTO}`, () => {
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaCEsComplexidadeBaixa(),
+            CE_BAIXA_PF_BRUTO);
+        });
+      });
+
+      describe('Complexidade MEDIA', () => {
+        const CE_MEDIA_PF_BRUTO = 4;
+        it(`todos os casos devem ter PF Bruto ${CE_MEDIA_PF_BRUTO}`, () => {
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaCEsComplexidadeMedia(),
+            CE_MEDIA_PF_BRUTO);
+        });
+      });
+
+      describe('Complexidade ALTA', () => {
+        const CE_ALTA_PF_BRUTO = 6;
+        it(`todos os casos devem ter PF Bruto ${CE_ALTA_PF_BRUTO}`, () => {
+          verificaPfBrutoDetalhada(
+            CalculadoraTestData.criaCEsComplexidadeAlta(),
+            CE_ALTA_PF_BRUTO);
         });
       });
     });
