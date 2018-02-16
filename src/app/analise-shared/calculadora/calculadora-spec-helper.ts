@@ -1,9 +1,11 @@
 import { FatorAjuste } from '../../fator-ajuste/index';
 import { Complexidade } from '../complexidade-enum';
 import { FatorAjusteLabelGenerator } from '../../shared/fator-ajuste-label-generator';
+import { FuncaoDados } from '../../funcao-dados';
 
 export class CalculadoraSpecHelper {
 
+  private _funcaoEntrada: FuncaoDados;
   private _fatorAjuste: FatorAjuste;
   private _pfBruto: number;
   private _pfLiquido: number;
@@ -11,8 +13,21 @@ export class CalculadoraSpecHelper {
 
   constructor() { }
 
+  setFuncaoEntrada(funcao: FuncaoDados): CalculadoraSpecHelper {
+    this._funcaoEntrada = funcao;
+    return this;
+  }
+
+  get funcaoEntrada(): FuncaoDados {
+    return this._funcaoEntrada;
+  }
+
   setFatorAjuste(fa: FatorAjuste): CalculadoraSpecHelper {
+    if (!this._funcaoEntrada) {
+      throw Error('use o setFuncaoEntrada() antes');
+    }
     this._fatorAjuste = fa;
+    this._funcaoEntrada.fatorAjuste = fa;
     return this;
   }
 
@@ -36,6 +51,12 @@ export class CalculadoraSpecHelper {
 
   get complexidade(): Complexidade {
     return this._complexidade;
+  }
+
+  get descricaoDaFuncao(): string {
+    const der = `DER: '${this._funcaoEntrada.derValue()}'`;
+    const rlr = `RLR: '${this._funcaoEntrada.rlrValue()}'`;
+    return `Função com ${der}, ${rlr}`;
   }
 
   get fatorAjusteLabel(): string {
