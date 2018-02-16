@@ -57,7 +57,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
     registeredPhases.forEach(each => {
       if (each.nome.toUpperCase() === this.tipoFase.nome.toUpperCase() && each.id !== this.tipoFase.id) {
         isAlreadyRegistered = true;
-        this.pageNotificationService.addErrorMsg('Já existe uma fase com este nome!');
+        this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
       }
     });
     return isAlreadyRegistered;
@@ -86,7 +86,8 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
     result.subscribe((res: TipoFase) => {
       this.isSaving = false;
       this.router.navigate(['/tipoFase']);
-      this.pageNotificationService.addCreateMsg();
+      (this.tipoFase.id === undefined) ? (this.pageNotificationService.addCreateMsg()) : (this.pageNotificationService.addUpdateMsg());
+
     }, (error: Response) => {
       this.isSaving = false;
 

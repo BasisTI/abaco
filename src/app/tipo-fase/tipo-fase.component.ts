@@ -54,7 +54,7 @@ export class TipoFaseComponent {
           this.pageNotificationService.addDeleteMsg();
         }, error => {
           if(error.status === 500) {
-            this.pageNotificationService.addErrorMsg(`A fase não pode ser deletada pois existem Manuais associados a ela.`)
+            this.pageNotificationService.addErrorMsg(`Não é possivel excluir o registro selecionado!`);
           }
         });
       }
