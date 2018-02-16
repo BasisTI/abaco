@@ -1,8 +1,7 @@
 import { Calculadora } from '../calculadora';
 import { FuncaoDados, TipoFuncaoDados } from '../../funcao-dados/funcao-dados.model';
 import { MetodoContagem } from '../../analise/index';
-import { FatorAjuste, TipoFatorAjuste } from '../../fator-ajuste/index';
-import { Manual } from '../../manual/index';
+import { FatorAjuste } from '../../fator-ajuste/index';
 import { Complexidade } from '../complexidade-enum';
 import { CalculadoraSpecHelper } from './calculadora-spec-helper';
 import { CalculadoraTestData } from './calculadora-test-data';
