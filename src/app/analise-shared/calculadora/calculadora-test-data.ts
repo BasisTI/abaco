@@ -62,6 +62,14 @@ export class CalculadoraTestData {
     return func;
   }
 
+  static criaFuncaoTransacaoSE(): FuncaoTransacao {
+    return this.criaFuncaoTransacao(TipoFuncaoTransacao.SE, 5, 5);
+  }
+
+  static criaFuncaoTransacaoCE(): FuncaoTransacao {
+    return this.criaFuncaoTransacao(TipoFuncaoTransacao.CE, 5, 5);
+  }
+
   // TODO criaXXsComplexidadeXXX() provavelmente logica em comum com testes de complexidadeFuncional
   static criaALIsComplexidadeBaixa(): FuncaoDados[] {
     return this.criaFuncaoDadosComplexidadeBaixa(TipoFuncaoDados.ALI);

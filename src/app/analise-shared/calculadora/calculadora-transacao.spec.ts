@@ -38,7 +38,42 @@ fdescribe('Calculadora de Função de Transação', () => {
         .setPfBruto(EE_ESTIMADA_PF_BRUTO)
         .setComplexidade(Complexidade.MEDIA);
       testesEmComum(percentualSpecHelper);
+    });
 
+    describe('SE', () => {
+      const SE_ESTIMADA_PF_BRUTO = 5;
+
+      const unitarioSpecHelper = new CalculadoraSpecHelper()
+        .setFuncaoTransacaoEntrada(CalculadoraTestData.criaFuncaoTransacaoSE())
+        .setFatorAjuste(fatorAjusteUnitario2PF)
+        .setPfBruto(SE_ESTIMADA_PF_BRUTO)
+        .setComplexidade(Complexidade.SEM);
+      testesEmComum(unitarioSpecHelper);
+
+      const percentualSpecHelper = new CalculadoraSpecHelper()
+        .setFuncaoTransacaoEntrada(CalculadoraTestData.criaFuncaoTransacaoSE())
+        .setFatorAjuste(fatorAjustePercentual50)
+        .setPfBruto(SE_ESTIMADA_PF_BRUTO)
+        .setComplexidade(Complexidade.MEDIA);
+      testesEmComum(percentualSpecHelper);
+    });
+
+    describe('CE', () => {
+      const CE_ESTIMADA_PF_BRUTO = 4;
+
+      const unitarioSpecHelper = new CalculadoraSpecHelper()
+        .setFuncaoTransacaoEntrada(CalculadoraTestData.criaFuncaoTransacaoCE())
+        .setFatorAjuste(fatorAjusteUnitario2PF)
+        .setPfBruto(CE_ESTIMADA_PF_BRUTO)
+        .setComplexidade(Complexidade.SEM);
+      testesEmComum(unitarioSpecHelper);
+
+      const percentualSpecHelper = new CalculadoraSpecHelper()
+        .setFuncaoTransacaoEntrada(CalculadoraTestData.criaFuncaoTransacaoCE())
+        .setFatorAjuste(fatorAjustePercentual50)
+        .setPfBruto(CE_ESTIMADA_PF_BRUTO)
+        .setComplexidade(Complexidade.MEDIA);
+      testesEmComum(percentualSpecHelper);
     });
 
   });
