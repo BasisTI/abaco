@@ -12,7 +12,9 @@ import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,7 @@ import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.service.MailService;
 import br.com.basis.abaco.service.UserService;
 import br.com.basis.abaco.service.dto.UserDTO;
+import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -132,11 +135,15 @@ public class UserResource {
 		if (userRepository.findOneByLogin(user.getLogin().toLowerCase()).isPresent()) {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "userexists", "Login already in use"))
-					.body(null);
+					.body("{ error: Usuário já existe }");
 		} else if (userRepository.findOneByEmail(user.getEmail()).isPresent()) {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "emailexists", "Email already in use"))
 					.body(null);
+		} else if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
+		    return ResponseEntity.badRequest()
+		            .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use"))
+		            .body(null);
 		} else {
 			User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
 			User newUser = userRepository.save(userReadyToBeSaved);
@@ -174,15 +181,21 @@ public class UserResource {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "userexists", "Login already in use"))
 					.body(null);
-		}
-		User updatableUser = userService.generateUpdatableUser(user);
-		User updatedUser = userRepository.save(updatableUser);
-		userSearchRepository.save(updatedUser);
-		log.debug("Changed Information for User: {}", user);
+		} else if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
+            return ResponseEntity.badRequest()
+                    .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use"))
+                    .body(null);
+        } else {
+		      User updatableUser = userService.generateUpdatableUser(user);
+		        User updatedUser = userRepository.save(updatableUser);
+		        userSearchRepository.save(updatedUser);
+		        log.debug("Changed Information for User: {}", user);
 
-		return ResponseEntity.ok()
-				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString()))
-				.body(updatedUser);
+		        return ResponseEntity.ok()
+		                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString()))
+		                .body(updatedUser);
+		}
+
 	}
 
 	/**
@@ -256,8 +269,11 @@ public class UserResource {
 	@GetMapping("/_search/users")
 	@Timed
 	@Secured(AuthoritiesConstants.ADMIN)
-	public ResponseEntity<List<User>> search(@RequestParam(defaultValue = "*") String query, Pageable pageable) throws URISyntaxException {
-	    Page<User> page = userSearchRepository.search(queryStringQuery(query), pageable);
+	public ResponseEntity<List<User>> search(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+	    Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+	    
+	    Page<User> page = userSearchRepository.search(queryStringQuery(query), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/users");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
