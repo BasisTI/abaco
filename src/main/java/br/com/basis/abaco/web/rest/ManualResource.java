@@ -33,6 +33,7 @@ import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.Manual;
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
+import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -182,7 +183,7 @@ public class ManualResource {
     @Timed
     public ResponseEntity<List<Manual>> searchManuals(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         log.debug("REST request to search Manuals for query {}", query);
-        Sort.Direction sortOrder = this.getSortDirection(order);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
         Page<Manual> page = manualSearchRepository.search(queryStringQuery(query), newPageable);
@@ -191,22 +192,6 @@ public class ManualResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
     
-    private Sort.Direction getSortDirection(String order) {
-        Sort.Direction sortOrder = null;
-        
-        switch(order) {
-            case "asc": {
-                sortOrder = Sort.Direction.ASC;
-            } break;
-            case "desc": {
-                sortOrder = Sort.Direction.DESC;
-            }break;
-            default: {
-                // Do nothing
-            }
-        }
-        
-        return sortOrder;
-    }
+    
 
 }
