@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Rx';
 
 import { Organizacao } from './organizacao.model';
 import { OrganizacaoService } from './organizacao.service';
+import { UploadService } from '../upload/upload.service';
 
 @Component({
   selector: 'jhi-organizacao-detail',
@@ -13,10 +14,12 @@ export class OrganizacaoDetailComponent implements OnInit, OnDestroy {
 
   organizacao: Organizacao;
   private subscription: Subscription;
+  public logo: Blob;
 
   constructor(
     private organizacaoService: OrganizacaoService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private uploadService: UploadService
   ) {}
 
   ngOnInit() {
@@ -28,6 +31,9 @@ export class OrganizacaoDetailComponent implements OnInit, OnDestroy {
   load(id) {
     this.organizacaoService.find(id).subscribe((organizacao) => {
       this.organizacao = organizacao;
+      this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
+        
+      })
     });
   }
 

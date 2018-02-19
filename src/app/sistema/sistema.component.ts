@@ -7,6 +7,8 @@ import { environment } from '../../environments/environment';
 import { Sistema } from './sistema.model';
 import { SistemaService } from './sistema.service';
 import { ElasticQuery } from '../shared';
+import { Organizacao } from '../organizacao/organizacao.model';
+import { OrganizacaoService } from '../organizacao/organizacao.service';
 
 @Component({
   selector: 'jhi-sistema',
@@ -20,12 +22,29 @@ export class SistemaComponent implements AfterViewInit {
 
   paginationParams = { contentIndex: null };
   elasticQuery: ElasticQuery = new ElasticQuery();
+  organizations: Array<Organizacao>;
+  searchParams: any = {
+    sigla: undefined,
+    nomeSistema: undefined,
+    organizacao: {
+      nome: undefined
+    }
+  };
 
   constructor(
     private router: Router,
     private sistemaService: SistemaService,
-    private confirmationService: ConfirmationService
-  ) {}
+    private confirmationService: ConfirmationService,
+    private organizacaoService: OrganizacaoService
+  ) {
+    let emptyOrganization = new Organizacao();
+
+    emptyOrganization.nome = '';
+    this.organizacaoService.query().subscribe(response => {
+      this.organizations = response.json;
+      this.organizations.unshift(emptyOrganization);
+    });
+  }
 
   ngAfterViewInit() {
     this.datatable.refresh(this.elasticQuery.query);
@@ -57,5 +76,28 @@ export class SistemaComponent implements AfterViewInit {
         });
       }
     });
+  }
+
+  private checkUndefinedParams() {
+    (this.searchParams.sigla === '') ? (this.searchParams.sigla = undefined) : (this);
+    (this.searchParams.nomeSistema === '') ? (this.searchParams.nomeSistema = undefined) : (this);
+    (this.searchParams.organizacao.nome === '') ? (this.searchParams.organizacao.nome = undefined) : (this);
+  }
+
+  performSearch() {
+    this.checkUndefinedParams();
+    this.elasticQuery.value = this.createElasticQuery();
+    this.datatable.refresh(this.elasticQuery.query)
+  }
+
+  private createElasticQuery(): string {
+    let elasticQuery = '';
+
+    (this.searchParams.sigla !== undefined) ? (elasticQuery = elasticQuery + this.searchParams.sigla) : (this);
+    console.log(this.searchParams);
+    (this.searchParams.nomeSistema !== undefined) ? ((this.searchParams.sigla !== undefined) ? (elasticQuery = elasticQuery  + "+" + this.searchParams.nomeSistema) : (elasticQuery = this.searchParams.nomeSistema)) : (this);
+    (this.searchParams.organizacao.nome !== undefined) ? ( (this.searchParams.sigla !== undefined || this.searchParams.nomeSistema !== undefined) ? (elasticQuery = elasticQuery + "+" + this.searchParams.organizacao.nome) : (elasticQuery = this.searchParams.organizacao.nome) ) : (this);
+
+    return elasticQuery;
   }
 }

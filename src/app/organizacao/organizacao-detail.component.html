@@ -3,6 +3,11 @@
     <div class="card card-w-title">
       <h1>Organizacao</h1>
       <div class="ui-g">
+        <div class="ui-g-4">
+          <img src="logo" alt="">
+        </div>
+      </div>
+      <div class="ui-g">
         <div class="ui-g-2" style="margin-bottom: 25px">
           <span class="md-inputfield" >
             <input type="text" class="ui-inputtext" name="sigla" [ngModel]="organizacao.sigla" pInputText readonly/>
@@ -36,7 +41,7 @@
       </div>
       <div class="ui-g" style="margin-bottom: 25px">
           <h4>Contratos</h4>
-          
+
           <p-dataTable [value]="organizacao.contracts"
             [immutable]="false" #contratosDataTable>
             <p-column header="Número do Contrato" field="numeroContrato"></p-column>

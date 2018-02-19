@@ -3,19 +3,35 @@
     <div class="card card-w-title">
       <h1>Sistemas</h1>
       <div class="ui-g">
-        <div class="ui-g-12">
+        <div class="ui-g-2">
           <span class="md-inputfield">
-            <input type="text" pInputText class="ui-inputtext" [(ngModel)]="elasticQuery.value"
+            <input type="text" pInputText class="ui-inputtext" [(ngModel)]="searchParams.sigla"
               (keyup.enter)="datatable.refresh(elasticQuery.query)"
               #filter />
-            <label>Descrição</label>
+            <label>Sigla</label>
+          </span>
+        </div>
+        <div class="ui-g-4">
+          <span class="md-inputfield">
+            <input type="text" pInputText class="ui-inputtext" [(ngModel)]="searchParams.nomeSistema"
+              (keyup.enter)="datatable.refresh(elasticQuery.query)"
+              #filter />
+            <label>Nome do Sistema</label>
+          </span>
+        </div>
+        <div class="ui-g-4">
+          <span class="md-inputfield">
+            <!-- <input type="text" pInputText class="ui-inputtext" [(ngModel)]="elasticQuery.value"
+              (keyup.enter)="datatable.refresh(elasticQuery.query)"
+              #filter /> -->
+              <p-dropdown [options]="organizations" [(ngModel)]="searchParams.organizacao" dataKey="nome" optionLabel="nome" [autoWidth]="false" placeholder="Organização"></p-dropdown>
           </span>
         </div>
       </div>
       <div class="ui-g">
         <div class="ui-g ui-md-12" style="justify-content: center">
           <div class="ui-md-2">
-            <app-blue-button buttonLabel="Pesquisar" buttonIcon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></app-blue-button>
+            <app-blue-button buttonLabel="Pesquisar" buttonIcon="ui-icon-search" (click)="performSearch()"></app-blue-button>
             <!-- <button pButton type="button" label="Pesquisar" icon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></button> -->
           </div>
           <div class="ui-md-3">
