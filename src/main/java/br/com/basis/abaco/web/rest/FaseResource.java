@@ -10,7 +10,9 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +31,10 @@ import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.Fase;
 import br.com.basis.abaco.repository.FaseRepository;
 import br.com.basis.abaco.repository.search.FaseSearchRepository;
+import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing Fase.
@@ -150,9 +152,12 @@ public class FaseResource {
      */
     @GetMapping("/_search/fases")
     @Timed
-    public ResponseEntity<List<Fase>> searchFases(@RequestParam(defaultValue = "*") String query, @ApiParam Pageable pageable) throws URISyntaxException {
+    public ResponseEntity<List<Fase>> searchFases(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         log.debug("REST request to search Fases for query {}", query);
-        Page<Fase> page = faseSearchRepository.search(queryStringQuery(query), pageable);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+        
+        Page<Fase> page = faseSearchRepository.search(queryStringQuery(query), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/fases");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
