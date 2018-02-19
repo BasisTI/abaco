@@ -133,7 +133,7 @@ public class UserResource {
 
 		// Lowercase the user login before comparing with database
 		if (userRepository.findOneByLogin(user.getLogin().toLowerCase()).isPresent()) {
-			return   this.createBadRequest("errorexists","Login already in use");
+			return   this.createBadRequest("userexists","Login already in use");
 		} else if (userRepository.findOneByEmail(user.getEmail()).isPresent()) {
 			return this.createBadRequest("emailexists","Email already in use");
 		} else if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
