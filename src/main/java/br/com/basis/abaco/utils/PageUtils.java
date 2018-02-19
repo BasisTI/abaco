@@ -4,6 +4,10 @@ import org.springframework.data.domain.Sort;
 
 public abstract class PageUtils {
     
+    private PageUtils() {
+        
+    }
+    
     public static  Sort.Direction getSortDirection(String order) {
         Sort.Direction sortOrder = null;
         
