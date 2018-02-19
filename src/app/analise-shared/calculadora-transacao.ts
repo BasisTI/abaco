@@ -3,6 +3,7 @@ import { MetodoContagem } from '../analise/index';
 import { TipoFatorAjuste } from '../fator-ajuste/index';
 import { FuncaoTransacao, TipoFuncaoTransacao } from '../funcao-transacao/funcao-transacao.model';
 import { ComplexidadeFuncionalTransacao } from './calculadora/complexidade-funcional-transacao';
+import { PFPorTiposComplexidades } from './calculadora/pf-por-tipos-complexidades';
 
 export class CalculadoraTransacao {
 
@@ -56,56 +57,9 @@ export class CalculadoraTransacao {
   }
 
   private static calcularPfsDeAcordoComGrupoDeDadosLogicos() {
-    const tipo = this.funcaoTransacao.tipo;
-    if (tipo === TipoFuncaoTransacao.EE || tipo === TipoFuncaoTransacao.CE) {
-      this.calcularPFDeAcordoComComplexidadeEEeCE();
-    } else { // TipoFuncaoTransacao.SE
-      this.calcularPFDeAcordoComComplexidadeSE();
-    }
-  }
-
-  private static calcularPFDeAcordoComComplexidadeEEeCE() {
-    switch (this.funcaoTransacaoCalculada.complexidade) {
-      case Complexidade.BAIXA: {
-        this.funcaoTransacaoCalculada.pf = 3;
-        break;
-      }
-      case Complexidade.MEDIA: {
-        this.funcaoTransacaoCalculada.pf = 4;
-        break;
-      }
-      case Complexidade.ALTA: {
-        this.funcaoTransacaoCalculada.pf = 6;
-        break;
-      }
-      case Complexidade.SEM: {
-        this.funcaoTransacaoCalculada.pf = 0;
-        break;
-      }
-      default: this.funcaoTransacaoCalculada.pf = 3;
-    }
-  }
-
-  private static calcularPFDeAcordoComComplexidadeSE() {
-    switch (this.funcaoTransacaoCalculada.complexidade) {
-      case Complexidade.BAIXA: {
-        this.funcaoTransacaoCalculada.pf = 4;
-        break;
-      }
-      case Complexidade.MEDIA: {
-        this.funcaoTransacaoCalculada.pf = 5;
-        break;
-      }
-      case Complexidade.ALTA: {
-        this.funcaoTransacaoCalculada.pf = 7;
-        break;
-      }
-      case Complexidade.SEM: {
-        this.funcaoTransacaoCalculada.pf = 0;
-        break;
-      }
-      default: this.funcaoTransacaoCalculada.pf = 4;
-    }
+    this.funcaoTransacaoCalculada.pf = PFPorTiposComplexidades.getPorTipoEComplexidade(
+      this.funcaoTransacao.tipo, this.funcaoTransacaoCalculada.complexidade
+    );
   }
 
   // FIXME aplicar fator que vem da aba geral também
