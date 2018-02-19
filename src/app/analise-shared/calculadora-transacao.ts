@@ -46,11 +46,13 @@ export class CalculadoraTransacao {
   }
 
   private static definirComplexidadePercentualDetalhada() {
-    const tipo = this.funcaoTransacao.tipo;
     const funcaoTransacao = this.funcaoTransacao;
-    this.funcaoTransacaoCalculada.complexidade = ComplexidadeFuncionalTransacao.calcular(
-      this.funcaoTransacao.tipo, funcaoTransacao.derValue(), funcaoTransacao.ftrValue()
-    );
+    this.funcaoTransacaoCalculada.complexidade =
+      ComplexidadeFuncionalTransacao.calcular(
+        this.funcaoTransacao.tipo,
+        funcaoTransacao.derValue(),
+        funcaoTransacao.ftrValue()
+      );
   }
 
   private static calcularPfsDeAcordoComGrupoDeDadosLogicos() {
