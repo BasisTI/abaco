@@ -3,6 +3,7 @@ import { Complexidade } from '../analise-shared/complexidade-enum';
 import { MetodoContagem } from '../analise/index';
 import { TipoFatorAjuste } from '../fator-ajuste/index';
 import { ComplexidadeFuncionalDados } from './calculadora/complexidade-funcional-dados';
+import { PFPorTiposComplexidades } from './calculadora/pf-por-tipos-complexidades';
 
 export class Calculadora {
 
@@ -76,47 +77,9 @@ export class Calculadora {
   }
 
   private static calcularPfsDeAcordoComGrupoDeDadosLogicos() {
-    if (this.funcaoDados.tipo === 'ALI') {
-      this.calcularPFDeAcordoComComplexidadeALI();
-    } else { // AIE
-      this.calcularPFDeAcordoComComplexidadeAIE();
-    }
-  }
-
-  private static calcularPFDeAcordoComComplexidadeALI() {
-    switch (this.funcaoDadosCalculada.complexidade) {
-      case Complexidade.BAIXA: {
-        this.funcaoDadosCalculada.pf = 7;
-        break;
-      }
-      case Complexidade.MEDIA: {
-        this.funcaoDadosCalculada.pf = 10;
-        break;
-      }
-      case Complexidade.ALTA: {
-        this.funcaoDadosCalculada.pf = 15;
-        break;
-      }
-      default: this.funcaoDadosCalculada.pf = 7;
-    }
-  }
-
-  private static calcularPFDeAcordoComComplexidadeAIE() {
-    switch (this.funcaoDadosCalculada.complexidade) {
-      case Complexidade.BAIXA: {
-        this.funcaoDadosCalculada.pf = 5;
-        break;
-      }
-      case Complexidade.MEDIA: {
-        this.funcaoDadosCalculada.pf = 7;
-        break;
-      }
-      case Complexidade.ALTA: {
-        this.funcaoDadosCalculada.pf = 10;
-        break;
-      }
-      default: this.funcaoDadosCalculada.pf = 5;
-    }
+    this.funcaoDadosCalculada.pf = PFPorTiposComplexidades.getPorTipoEComplexidade(
+      this.funcaoDados.tipo, this.funcaoDadosCalculada.complexidade
+    );
   }
 
   // FIXME aplicar fator que vem da aba geral também
