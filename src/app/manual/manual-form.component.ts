@@ -247,15 +247,23 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   editPhaseEffort() {
-    this.manual.updateEsforcoFases(this.editedPhaseEffort);
-    this.pageNotificationService.addUpdateMsg();
-    this.closeDialogEditPhaseEffort();
+    if(this.checkPhaseEffortRequiredFields(this.editedPhaseEffort)) {
+      this.manual.updateEsforcoFases(this.editedPhaseEffort);
+      this.pageNotificationService.addUpdateMsg();
+      this.closeDialogEditPhaseEffort();
+    } else {
+      this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios!');
+    }
   }
 
   editAdjustFactor() {
-    this.manual.updateFatoresAjuste(this.editedAdjustFactor);
-    this.pageNotificationService.addUpdateMsg();
-    this.closeDialogEditAdjustFactor();
+    if(this.checkAdjustFactorRequiredFields(this.editedAdjustFactor)) {
+      this.manual.updateFatoresAjuste(this.editedAdjustFactor);
+      this.pageNotificationService.addUpdateMsg();
+      this.closeDialogEditAdjustFactor();
+    } else {
+
+    }
   }
 
   closeDialogPhaseEffort() {
@@ -270,7 +278,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   addPhaseEffort() {
     this.newPhaseEffort.esforco = this.newPhaseEffort.esforco;
-    if(this.checkPhaseEffortRequiredFields()) {
+    if(this.checkPhaseEffortRequiredFields(this.newPhaseEffort)) {
       this.manual.addEsforcoFases(this.newPhaseEffort);
       this.pageNotificationService.addCreateMsg();
       this.closeDialogPhaseEffort();
@@ -284,35 +292,34 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     document.getElementById('nome_fase').setAttribute('style', 'border-bottom: solid; border-bottom-color: #bdbdbd;');
   }
 
-  private checkPhaseEffortRequiredFields() : boolean{
+  private checkPhaseEffortRequiredFields(phaseEffort: EsforcoFase) : boolean{
     let isPhaseNameValid: boolean = false;
     let isPhaseEffortValid: boolean = false;
     let isEffortValid: boolean = false;
 
     this.resetMarkedFieldsPhaseEffort();
-    (this.newPhaseEffort.fase !== undefined) ? (isPhaseNameValid = true) : (isPhaseNameValid = false);
+    (phaseEffort.fase !== undefined) ? (isPhaseNameValid = true) : (isPhaseNameValid = false);
 
-    if(this.newPhaseEffort.fase !== undefined)  {
+    if(phaseEffort.fase !== undefined)  {
       isPhaseNameValid = true;
     } else {
       isPhaseNameValid = false;
       document.getElementById('nome_fase').setAttribute('style', 'border-bottom: solid; border-bottom-color: red;');
+      document.getElementById('nome_fase_edit').setAttribute('style', 'border-bottom: solid; border-bottom-color: red;');
     }
 
-    if(this.newPhaseEffort.esforco !== undefined) {
+    if(phaseEffort.esforco !== undefined && phaseEffort.esforco !== 0) {
       isEffortValid = true;
     } else {
       isEffortValid = false;
       document.getElementById('esforco').setAttribute('style', 'border-bottom: solid; border-bottom-color: red;');
+      document.getElementById('esforco_edit').setAttribute('style', 'border-bottom: solid; border-bottom-color: red;');
+      console.log(phaseEffort.esforco);
     }
 
     (isPhaseNameValid && isEffortValid) ? (isPhaseEffortValid = true) : (isPhaseEffortValid = false)
 
     return isPhaseEffortValid;
-  }
-
-  private alertInvalidPhase() {
-
   }
 
   getPhaseEffortTotalPercentual() {
@@ -374,7 +381,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   private checkRequiredField(field: any) {
     let isValid: boolean = false;
 
-    (field !== undefined) ? (isValid = true) : (isValid = false);
+    (field !== undefined && field !== '' && field !== null) ? (isValid = true) : (isValid = false);
 
     return isValid;
   }

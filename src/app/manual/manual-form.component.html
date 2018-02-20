@@ -149,13 +149,13 @@
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Tipo de Fase*</label>
-              <p-dropdown id="nome_fase" [options]="tipoFases" [(ngModel)]="editedPhaseEffort.fase" optionLabel="nome" placeholder="Tipo de Fase" name="fase" dataKey="id" [autoWidth]="false"></p-dropdown>
+              <p-dropdown id="nome_fase_edit" [options]="tipoFases" [(ngModel)]="editedPhaseEffort.fase" optionLabel="nome" placeholder="Tipo de Fase" name="fase" dataKey="id" [autoWidth]="false"></p-dropdown>
             </div>
           </div>
           <div class="ui-g">
             <div class="ui-g-12">
               <label>Esforço (%)*</label>
-              <p-spinner id="esforco" name="esforco" [(ngModel)]="editedPhaseEffort.esforcoFormatado" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <p-spinner id="esforco_edit" name="esforco" [(ngModel)]="editedPhaseEffort.esforcoFormatado" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
             </div>
           </div>
           <div class="ui-g">
@@ -232,11 +232,11 @@
           <div class="ui-g">
             <div class="ui-g-6">
               <label>Nome*</label>
-              <input type="text" name="nomeEdicaoFatorAjuste" [(ngModel)]="editedAdjustFactor.nome" pInputText />
+              <input id="nome_fator_ajuste" type="text" name="nomeEdicaoFatorAjuste" [(ngModel)]="editedAdjustFactor.nome" pInputText />
             </div>
             <div class="ui-g-3">
               <label>Tipo Ajuste*</label><br>
-              <p-dropdown [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"></p-dropdown>
+              <p-dropdown id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"></p-dropdown>
               <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="editedAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
               <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
             </div>
@@ -244,8 +244,8 @@
               <label *ngIf="isPercentualEnum(editedAdjustFactor.tipoAjuste)">Fator (%)*</label>
               <label *ngIf="isUnitaryEnum(editedAdjustFactor.tipoAjuste)">Fator (PF)*</label>
               <label *ngIf="editedAdjustFactor.tipoAjuste === undefined">Fator*</label>
-              <p-spinner size="30" *ngIf="editedAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="editedAdjustFactor.fatorFormatado"></p-spinner>
-              <p-spinner size="30" *ngIf="editedAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="editedAdjustFactor.fatorFormatado"></p-spinner>
+              <p-spinner id="valor_fator" size="30" *ngIf="editedAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="editedAdjustFactor.fatorFormatado"></p-spinner>
+              <p-spinner id="valor_fator" size="30" *ngIf="editedAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="editedAdjustFactor.fatorFormatado"></p-spinner>
             </div>
           </div>
           <div class="ui-g">
@@ -261,11 +261,11 @@
           <div class="ui-g">
             <div class="ui-g-4">
               <label>Codigo*</label>
-              <input type="text" name="codigo" [(ngModel)]="editedAdjustFactor.codigo" pInputText />
+              <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="editedAdjustFactor.codigo" pInputText />
             </div>
             <div class="ui-g-5">
               <label>Origem*</label>
-              <input type="text" name="origem" [(ngModel)]="editedAdjustFactor.origem" pInputText />
+              <input id="origem_fator" type="text" name="origem" [(ngModel)]="editedAdjustFactor.origem" pInputText />
             </div>
           </div>
           <div class="ui-g">
