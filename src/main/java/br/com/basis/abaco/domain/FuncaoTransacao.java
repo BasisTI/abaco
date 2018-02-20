@@ -48,7 +48,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     @Column
     private String ftrStr;
-    
+
     @OneToMany(mappedBy = "funcaoTransacao")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -59,6 +59,9 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     @Transient
     private Set<String> ftrValues;
+
+    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Der> ders = new HashSet<>();
 
     public TipoFuncaoTransacao getTipo() {
         return tipo;
@@ -129,6 +132,14 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     public void setFtrStr(String ftrStr) {
         this.ftrStr = ftrStr;
+    }
+
+    public Set<Der> getDers() {
+        return ders;
+    }
+
+    public void setDers(Set<Der> ders) {
+        this.ders = ders;
     }
 
     @Override

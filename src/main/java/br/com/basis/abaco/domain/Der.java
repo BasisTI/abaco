@@ -39,6 +39,12 @@ public class Der implements Serializable {
     @ManyToOne
     private Rlr rlr;
 
+    @ManyToOne
+    private FuncaoDados funcaoDados;
+
+    @ManyToOne
+    private FuncaoTransacao funcaoTransacao;
+
     public Long getId() {
         return id;
     }
@@ -73,6 +79,22 @@ public class Der implements Serializable {
         this.rlr = rlr;
     }
 
+    public FuncaoDados getFuncaoDados() {
+        return funcaoDados;
+    }
+
+    public void setFuncaoDados(FuncaoDados funcaoDados) {
+        this.funcaoDados = funcaoDados;
+    }
+
+    public FuncaoTransacao getFuncaoTransacao() {
+        return funcaoTransacao;
+    }
+
+    public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
+        this.funcaoTransacao = funcaoTransacao;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -95,9 +117,6 @@ public class Der implements Serializable {
 
     @Override
     public String toString() {
-        return "Der{" +
-            "id=" + id +
-            ", nome='" + nome + "'" +
-            '}';
+        return "Der{" + "id=" + id + ", nome='" + nome + "'" + '}';
     }
 }
