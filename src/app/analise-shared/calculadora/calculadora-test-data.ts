@@ -242,8 +242,8 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeBaixaSEouCE(der: number, ftr: number): boolean {
-    return der < 6 && (ftr < 2 || (ftr === 2 || ftr === 3)) ||
-      (der >= 6 && der <= 19) && ftr < 2;
+    return CFTrans.isPrimeiraColunaSEeCE(der) && (CFTrans.isPrimeiraLinhaSEeCE(ftr) || CFTrans.isSegundaLinhaSEeCE(ftr)) ||
+      CFTrans.isSegundaColunaSEeCE(der) && CFTrans.isPrimeiraLinhaSEeCE(ftr);
   }
 
   static criaSEsComplexidadeMedia(): FuncaoTransacao[] {
@@ -261,9 +261,9 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeMediaSEouCE(der: number, ftr: number): boolean {
-    return der < 6 && ftr > 3 ||
-      (der >= 6 && der <= 19) && (ftr === 2 || ftr === 3) ||
-      der > 19 && ftr < 2;
+    return CFTrans.isPrimeiraColunaSEeCE(der) && CFTrans.isTerceiraLinhaSEeCE(ftr) ||
+      CFTrans.isSegundaColunaSEeCE(der) && CFTrans.isSegundaLinhaSEeCE(ftr) ||
+      CFTrans.isTerceiraColunaSEeCE(der) && CFTrans.isPrimeiraLinhaSEeCE(ftr);
   }
 
   static criaSEsComplexidadeAlta(): FuncaoTransacao[] {
@@ -281,8 +281,8 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeAltaSEouCE(der: number, ftr: number): boolean {
-    return (der >= 6 && der <= 19) && ftr > 3 ||
-      der > 19 && (ftr === 2 || ftr === 3) || ftr > 3;
+    return CFTrans.isSegundaColunaSEeCE(der) && CFTrans.isTerceiraLinhaSEeCE(ftr) ||
+      CFTrans.isTerceiraColunaSEeCE(der) && (CFTrans.isSegundaLinhaSEeCE(ftr) || CFTrans.isTerceiraLinhaSEeCE(ftr));
   }
 
   static criaCEsComplexidadeBaixa(): FuncaoTransacao[] {
