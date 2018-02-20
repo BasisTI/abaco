@@ -4,6 +4,7 @@ import { MetodoContagem } from '../analise/index';
 import { TipoFatorAjuste } from '../fator-ajuste/index';
 import { ComplexidadeFuncionalDados } from './calculadora/complexidade-funcional-dados';
 import { PFPorTiposComplexidades } from './calculadora/pf-por-tipos-complexidades';
+import { CalculadoraFator } from './calculadora/calculadora-fator';
 
 export class Calculadora {
 
@@ -85,15 +86,9 @@ export class Calculadora {
   // FIXME aplicar fator que vem da aba geral também
   private static aplicarFator() {
     this.funcaoDadosCalculada.grossPF = this.funcaoDadosCalculada.pf;
-    let valorAplicado = 0;
-    const fator = this.funcaoDados.fatorAjuste.fator;
-    if (this.funcaoDados.fatorAjuste.isPercentual()) {
-      // XXX de repente um método de FuncaoDados/Transacao?
-      valorAplicado = this.funcaoDadosCalculada.pf * fator;
-    } else { // UNITÁRIO
-      valorAplicado = fator;
-    }
-    this.funcaoDadosCalculada.pf = valorAplicado;
+    this.funcaoDadosCalculada.pf = CalculadoraFator.aplicarFator(
+      this.funcaoDadosCalculada.pf, this.funcaoDados.fatorAjuste
+    );
   }
 
 }
