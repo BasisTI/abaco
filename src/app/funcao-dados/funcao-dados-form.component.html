@@ -42,7 +42,7 @@
       <div class="ui-g-6" style="margin-bottom: 25px">
         <app-analise-der-text 
           [(value)]="currentFuncaoDados.der"
-          label="DER">
+          label="DER (TD)">
         </app-analise-der-text>
       </div>
 
@@ -50,7 +50,7 @@
       <div class="ui-g-6" style="margin-bottom: 25px">
         <app-analise-der-text 
           [(value)]="currentFuncaoDados.rlr"
-          label="RLR">
+          label="RLR (TR)">
         </app-analise-der-text>
       </div>
 
@@ -121,12 +121,12 @@
                     <app-ellipsis-tooltip
                       [value]="funcionalidade.nome"></app-ellipsis-tooltip>
                   </ng-template>
-                  <ng-template *ngIf="col.header === 'DER'"
+                  <ng-template *ngIf="col.header === 'DER (TD)'"
                     let-funcaoDados="rowData" pTemplate="body">
                     <app-ellipsis-tooltip
                       [value]="funcaoDados.derValue()"></app-ellipsis-tooltip>
                   </ng-template>
-                  <ng-template *ngIf="col.header === 'RLR'"
+                  <ng-template *ngIf="col.header === 'RLR (TR)'"
                     let-funcaoDados="rowData" pTemplate="body">
                     <app-ellipsis-tooltip
                       [value]="funcaoDados.rlrValue()"></app-ellipsis-tooltip>
