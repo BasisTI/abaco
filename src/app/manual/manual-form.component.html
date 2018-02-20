@@ -120,14 +120,14 @@
         <p-dialog header="Esforço por Fase" [(visible)]="showDialogPhaseEffort" [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
             <div class="ui-g-12">
-              <label>Tipo de Fase</label>
-              <p-dropdown autofocus="true" [options]="tipoFases" [(ngModel)]="newPhaseEffort.fase" placeholder="Tipo de Fase" [autoWidth]="false" name="fase" optionLabel="nome"></p-dropdown>
+              <label>Tipo de Fase*</label>
+              <p-dropdown id="nome_fase" autofocus="true" [options]="tipoFases" [(ngModel)]="newPhaseEffort.fase" placeholder="Tipo de Fase" [autoWidth]="false" name="fase" optionLabel="nome"></p-dropdown>
             </div>
           </div>
           <div class="ui-g">
             <div class="ui-g-12">
-              <label>Esforço (%)</label>
-              <p-spinner size="30" name="esforco" [(ngModel)]="newPhaseEffort.esforcoFormatado" decimalSeparator="" min="0" max="100" thousandSeparator=""></p-spinner>
+              <label>Esforço (%)*</label>
+              <p-spinner id="esforco" size="30" name="esforco" [(ngModel)]="newPhaseEffort.esforcoFormatado" decimalSeparator="" min="0" max="100" thousandSeparator=""></p-spinner>
             </div>
           </div>
           <div class="ui-g">
@@ -148,14 +148,14 @@
         <p-dialog header="Esforço por Fase" [(visible)]="showDialogEditPhaseEffort" [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
             <div class="ui-g-12">
-              <label>Tipo de Fase</label>
-              <p-dropdown [options]="tipoFases" [(ngModel)]="editedPhaseEffort.fase" optionLabel="nome" placeholder="Tipo de Fase" name="fase" dataKey="id" [autoWidth]="false"></p-dropdown>
+              <label>Tipo de Fase*</label>
+              <p-dropdown id="nome_fase_edit" [options]="tipoFases" [(ngModel)]="editedPhaseEffort.fase" optionLabel="nome" placeholder="Tipo de Fase" name="fase" dataKey="id" [autoWidth]="false"></p-dropdown>
             </div>
           </div>
           <div class="ui-g">
             <div class="ui-g-12">
-              <label>Esforço (%)</label>
-              <p-spinner name="esforco" [(ngModel)]="editedPhaseEffort.esforcoFormatado" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <label>Esforço (%)*</label>
+              <p-spinner id="esforco_edit" name="esforco" [(ngModel)]="editedPhaseEffort.esforcoFormatado" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
             </div>
           </div>
           <div class="ui-g">
@@ -176,21 +176,21 @@
         <p-dialog header="Fator de Ajuste" [(visible)]="showDialogCreateAdjustFactor" [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
             <div class="ui-g-6">
-              <label>Nome</label>
-              <input type="text" name="nomeFatorAjuste" [(ngModel)]="newAdjustFactor.nome" pInputText />
+              <label>Nome*</label>
+              <input id="nome_fator_ajuste" type="text" name="nomeFatorAjuste" [(ngModel)]="newAdjustFactor.nome" pInputText />
             </div>
             <div class="ui-g-3">
-              <label>Tipo Ajuste</label><br>
-              <p-dropdown #dd [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false" placeholder="Tipo Ajuste"></p-dropdown>
+              <label>Tipo Ajuste*</label><br>
+              <p-dropdown #dd id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false" placeholder="Tipo Ajuste"></p-dropdown>
               <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="newAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
               <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
             </div>
             <div class="ui-g-3">
-              <label *ngIf="isPercentualEnum(newAdjustFactor.tipoAjuste)">Fator (%)</label>
-              <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)">Fator (PF)</label>
-              <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Fator</label>
-              <p-spinner size="30" *ngIf="newAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="newAdjustFactor.fatorFormatado"></p-spinner>
-              <p-spinner size="30" *ngIf="newAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="newAdjustFactor.fatorFormatado"></p-spinner>
+              <label *ngIf="isPercentualEnum(newAdjustFactor.tipoAjuste)">Fator (%)*</label>
+              <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)">Fator (PF)*</label>
+              <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Fator*</label>
+              <p-spinner id="valor_fator" size="30" *ngIf="newAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="newAdjustFactor.fatorFormatado"></p-spinner>
+              <p-spinner id="valor_fator" size="30" *ngIf="newAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="newAdjustFactor.fatorFormatado"></p-spinner>
             </div>
           </div>
           <div class="ui-g">
@@ -205,12 +205,12 @@
           </div>
           <div class="ui-g">
             <div class="ui-g-4">
-              <label>Codigo</label>
-              <input type="text" name="codigo" [(ngModel)]="newAdjustFactor.codigo" pInputText />
+              <label>Codigo*</label>
+              <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="newAdjustFactor.codigo" pInputText />
             </div>
             <div class="ui-g-5">
-              <label>Origem</label>
-              <input type="text" name="origem" [(ngModel)]="newAdjustFactor.origem" pInputText />
+              <label>Origem*</label>
+              <input id="origem_fator" type="text" name="origem" [(ngModel)]="newAdjustFactor.origem" pInputText />
             </div>
           </div>
           <div class="ui-g">
@@ -231,21 +231,21 @@
         <p-dialog header="Fator de Ajuste" [(visible)]="showDialogEditAdjustFactor" [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
             <div class="ui-g-6">
-              <label>Nome</label>
-              <input type="text" name="nomeEdicaoFatorAjuste" [(ngModel)]="editedAdjustFactor.nome" pInputText />
+              <label>Nome*</label>
+              <input id="nome_fator_ajuste" type="text" name="nomeEdicaoFatorAjuste" [(ngModel)]="editedAdjustFactor.nome" pInputText />
             </div>
             <div class="ui-g-3">
-              <label>Tipo Ajuste</label><br>
-              <p-dropdown [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"></p-dropdown>
+              <label>Tipo Ajuste*</label><br>
+              <p-dropdown id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"></p-dropdown>
               <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="editedAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
               <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
             </div>
             <div class="ui-g-3">
-              <label *ngIf="isPercentualEnum(editedAdjustFactor.tipoAjuste)">Fator (%)</label>
-              <label *ngIf="isUnitaryEnum(editedAdjustFactor.tipoAjuste)">Fator (PF)</label>
-              <label *ngIf="editedAdjustFactor.tipoAjuste === undefined">Fator</label>
-              <p-spinner size="30" *ngIf="editedAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="editedAdjustFactor.fatorFormatado"></p-spinner>
-              <p-spinner size="30" *ngIf="editedAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="editedAdjustFactor.fatorFormatado"></p-spinner>
+              <label *ngIf="isPercentualEnum(editedAdjustFactor.tipoAjuste)">Fator (%)*</label>
+              <label *ngIf="isUnitaryEnum(editedAdjustFactor.tipoAjuste)">Fator (PF)*</label>
+              <label *ngIf="editedAdjustFactor.tipoAjuste === undefined">Fator*</label>
+              <p-spinner id="valor_fator" size="30" *ngIf="editedAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="editedAdjustFactor.fatorFormatado"></p-spinner>
+              <p-spinner id="valor_fator" size="30" *ngIf="editedAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="editedAdjustFactor.fatorFormatado"></p-spinner>
             </div>
           </div>
           <div class="ui-g">
@@ -260,12 +260,12 @@
           </div>
           <div class="ui-g">
             <div class="ui-g-4">
-              <label>Codigo</label>
-              <input type="text" name="codigo" [(ngModel)]="editedAdjustFactor.codigo" pInputText />
+              <label>Codigo*</label>
+              <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="editedAdjustFactor.codigo" pInputText />
             </div>
             <div class="ui-g-5">
-              <label>Origem</label>
-              <input type="text" name="origem" [(ngModel)]="editedAdjustFactor.origem" pInputText />
+              <label>Origem*</label>
+              <input id="origem_fator" type="text" name="origem" [(ngModel)]="editedAdjustFactor.origem" pInputText />
             </div>
           </div>
           <div class="ui-g">
