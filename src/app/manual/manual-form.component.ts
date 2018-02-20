@@ -270,9 +270,49 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   addPhaseEffort() {
     this.newPhaseEffort.esforco = this.newPhaseEffort.esforco;
-    this.manual.addEsforcoFases(this.newPhaseEffort);
-    this.pageNotificationService.addCreateMsg();
-    this.closeDialogPhaseEffort();
+    if(this.checkPhaseEffortRequiredFields()) {
+      this.manual.addEsforcoFases(this.newPhaseEffort);
+      this.pageNotificationService.addCreateMsg();
+      this.closeDialogPhaseEffort();
+    } else {
+      this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios!');
+    }
+  }
+
+  private resetMarkedFieldsPhaseEffort() {
+    document.getElementById('esforco').setAttribute('style', 'border-bottom: solid; border-bottom-color: #bdbdbd;');
+    document.getElementById('nome_fase').setAttribute('style', 'border-bottom: solid; border-bottom-color: #bdbdbd;');
+  }
+
+  private checkPhaseEffortRequiredFields() : boolean{
+    let isPhaseNameValid: boolean = false;
+    let isPhaseEffortValid: boolean = false;
+    let isEffortValid: boolean = false;
+
+    this.resetMarkedFieldsPhaseEffort();
+    (this.newPhaseEffort.fase !== undefined) ? (isPhaseNameValid = true) : (isPhaseNameValid = false);
+
+    if(this.newPhaseEffort.fase !== undefined)  {
+      isPhaseNameValid = true;
+    } else {
+      isPhaseNameValid = false;
+      document.getElementById('nome_fase').setAttribute('style', 'border-bottom: solid; border-bottom-color: red;');
+    }
+
+    if(this.newPhaseEffort.esforco !== undefined) {
+      isEffortValid = true;
+    } else {
+      isEffortValid = false;
+      document.getElementById('esforco').setAttribute('style', 'border-bottom: solid; border-bottom-color: red;');
+    }
+
+    (isPhaseNameValid && isEffortValid) ? (isPhaseEffortValid = true) : (isPhaseEffortValid = false)
+
+    return isPhaseEffortValid;
+  }
+
+  private alertInvalidPhase() {
+
   }
 
   getPhaseEffortTotalPercentual() {
@@ -304,11 +344,56 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   addAdjustFactor() {
     this.newAdjustFactor.ativo = true;
-    this.manual.addFatoresAjuste(this.newAdjustFactor);
-    this.pageNotificationService.addCreateMsg('Registro incluído com sucesso!');
-    this.closeDialogCreateAdjustFactor();
+    if(this.checkAdjustFactorRequiredFields(this.newAdjustFactor)) {
+      this.manual.addFatoresAjuste(this.newAdjustFactor);
+      this.pageNotificationService.addCreateMsg('Registro incluído com sucesso!');
+      this.closeDialogCreateAdjustFactor();
+    } else {
+      this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios!');
+    }
   }
 
+  private checkAdjustFactorRequiredFields(adjustFactor: FatorAjuste): boolean {
+    let isNameValid: boolean = false;
+    let isAdjustTypeValid: boolean = false;
+    let isFactorValid: boolean = false;
+    let isCodeValid: boolean = false;
+    let isOriginValid: boolean = false;
+
+    this.resetMarkedFieldsAdjustFactor();
+    isNameValid = this.checkRequiredField(adjustFactor.nome);
+    isAdjustTypeValid = this.checkRequiredField(adjustFactor.tipoAjuste);
+    isFactorValid = this.checkRequiredField(adjustFactor.fator);
+    isCodeValid = this.checkRequiredField(adjustFactor.codigo);
+    isOriginValid = this.checkRequiredField(adjustFactor.origem);
+
+    this.markFieldsAdjustFactor(isNameValid, isAdjustTypeValid, isFactorValid, isCodeValid, isOriginValid);
+    return (isNameValid && isAdjustTypeValid && isFactorValid && isCodeValid && isOriginValid);
+  }
+
+  private checkRequiredField(field: any) {
+    let isValid: boolean = false;
+
+    (field !== undefined) ? (isValid = true) : (isValid = false);
+
+    return isValid;
+  }
+
+  private markFieldsAdjustFactor(isNameValid: boolean, isAdjustTypeValid: boolean, isFactorValid: boolean, isCodeValid: boolean, isOriginValid: boolean) {
+      (!isNameValid) ? (document.getElementById('nome_fator_ajuste').setAttribute('style', 'border-color: red;')) : (this);
+      (!isAdjustTypeValid) ? (document.getElementById('tipo_ajuste').setAttribute('style', 'border-bottom: solid; border-bottom-color: red;')) : (this);
+      (!isFactorValid) ? (document.getElementById('valor_fator').setAttribute('style', 'border-bottom: solid; border-bottom-color: red;')) : (this);
+      (!isCodeValid) ? (document.getElementById('codigo_fator').setAttribute('style', 'border-color: red;')) : (this);
+      (!isOriginValid) ? (document.getElementById('origem_fator').setAttribute('style', 'border-color: red;')) : (this);
+  }
+
+  private resetMarkedFieldsAdjustFactor() {
+    document.getElementById('nome_fator_ajuste').setAttribute('style', 'border-color: #bdbdbd;');
+    document.getElementById('tipo_ajuste').setAttribute('style', 'border-bottom: solid; border-bottom-color: #bdbdbd;');
+    document.getElementById('valor_fator').setAttribute('style', 'border-color: #bdbdbd;');
+    document.getElementById('codigo_fator').setAttribute('style', 'border-color: #bdbdbd;');
+    document.getElementById('origem_fator').setAttribute('style', 'border-color: #bdbdbd;');
+  }
   getFile() {
     this.loading = true;
     this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
