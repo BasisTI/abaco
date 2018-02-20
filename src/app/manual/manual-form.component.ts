@@ -220,6 +220,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       message: 'Tem certeza que deseja excluir o Esforço por fase ' + this.editedPhaseEffort.fase.nome + '?',
       accept: () => {
         this.manual.deleteEsforcoFase(this.editedPhaseEffort);
+        this.pageNotificationService.addDeleteMsg();
         this.editedPhaseEffort = new EsforcoFase();
       }
     });
@@ -230,6 +231,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       message: 'Tem certeza que deseja excluir o Fator de Ajuste ' + this.editedAdjustFactor.nome + '?',
       accept: () => {
         this.manual.deleteFatoresAjuste(this.editedAdjustFactor);
+        this.pageNotificationService.addDeleteMsg();
         this.editedAdjustFactor = new FatorAjuste();
       }
     });
@@ -246,11 +248,13 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   editPhaseEffort() {
     this.manual.updateEsforcoFases(this.editedPhaseEffort);
+    this.pageNotificationService.addUpdateMsg();
     this.closeDialogEditPhaseEffort();
   }
 
   editAdjustFactor() {
     this.manual.updateFatoresAjuste(this.editedAdjustFactor);
+    this.pageNotificationService.addUpdateMsg();
     this.closeDialogEditAdjustFactor();
   }
 
@@ -267,6 +271,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   addPhaseEffort() {
     this.newPhaseEffort.esforco = this.newPhaseEffort.esforco;
     this.manual.addEsforcoFases(this.newPhaseEffort);
+    this.pageNotificationService.addCreateMsg();
     this.closeDialogPhaseEffort();
   }
 
@@ -300,6 +305,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   addAdjustFactor() {
     this.newAdjustFactor.ativo = true;
     this.manual.addFatoresAjuste(this.newAdjustFactor);
+    this.pageNotificationService.addCreateMsg('Registro incluído com sucesso!');
     this.closeDialogCreateAdjustFactor();
   }
 
