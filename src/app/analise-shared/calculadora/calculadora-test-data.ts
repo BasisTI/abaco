@@ -3,6 +3,7 @@ import { FuncaoDados, TipoFuncaoDados } from '../../funcao-dados/funcao-dados.mo
 
 import * as _ from 'lodash';
 import { FuncaoTransacao, TipoFuncaoTransacao } from '../../funcao-transacao';
+import { ComplexidadeFuncionalDados as CFDados } from './complexidade-funcional-dados';
 
 export class CalculadoraTestData {
 
@@ -107,7 +108,8 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeBaixaDados(der: number, rlr: number) {
-    return der < 20 || (der > 20 && rlr === 1);
+    return CFDados.isPrimeiraColuna(der) && (CFDados.isPrimeiraLinha(rlr) || CFDados.isSegundaLinha(rlr)) ||
+      CFDados.isSegundaColuna(der) && CFDados.isPrimeiraLinha(der);
   }
 
   static criaALIsComplexidadeMedia(): FuncaoDados[] {
@@ -125,9 +127,9 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeMediaDados(der: number, rlr: number): boolean {
-    return (der < 20 && rlr > 5) ||
-      ((der > 20 && der <= 50) && (rlr >= 2 && rlr <= 5)) ||
-      (der > 50 && rlr === 1);
+    return CFDados.isPrimeiraColuna(der) && CFDados.isTerceiraLinha(rlr) ||
+      CFDados.isSegundaColuna(der) && CFDados.isSegundaLinha(rlr) ||
+      CFDados.isTerceiraColuna(der) && CFDados.isPrimeiraLinha(rlr);
   }
 
   static criaALIsComplexidadeAlta(): FuncaoDados[] {
@@ -145,10 +147,8 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeAltaDados(der: number, rlr: number): boolean {
-    return ((der >= 20 && der <= 50) && rlr > 5) ||
-      // TODO avaliar se quebra para somente rlr >= 2
-      // decisão não tão imediata se decidir reutilizar 'linhas' e 'colunas'
-      der > 50 && ((rlr >= 2 && rlr <= 5) || (rlr > 5));
+    return CFDados.isSegundaColuna(der) && CFDados.isTerceiraLinha(rlr) ||
+      CFDados.isTerceiraColuna(der) && (CFDados.isSegundaLinha(rlr) || CFDados.isTerceiraLinha(rlr));
   }
 
   static criaAIEsComplexidadeBaixa(): FuncaoDados[] {
