@@ -63,16 +63,28 @@ export class ComplexidadeFuncionalTransacao {
   }
 
   private static calculaSEeCE(derValor: number, ftrValor: number) {
-    if (derValor < 6) {
+    if (this.isPrimeiraColunaSEeCE(derValor)) {
       return this.calcularSEeCEPorIntervaloFTR(ftrValor,
         Complexidade.BAIXA, Complexidade.BAIXA, Complexidade.MEDIA);
-    } else if (derValor >= 6 && derValor <= 19) {
+    } else if (this.isSegundaColunaSEeCE(derValor)) {
       return this.calcularSEeCEPorIntervaloFTR(ftrValor,
         Complexidade.BAIXA, Complexidade.MEDIA, Complexidade.ALTA);
-    } else if (derValor > 19) {
+    } else if (this.isTerceiraColunaSEeCE(derValor)) {
       return this.calcularSEeCEPorIntervaloFTR(ftrValor,
         Complexidade.MEDIA, Complexidade.ALTA, Complexidade.ALTA);
     }
+  }
+
+  static isPrimeiraColunaSEeCE(der: number): boolean {
+    return der < 6;
+  }
+
+  static isSegundaColunaSEeCE(der: number): boolean {
+    return der >= 6 && der <= 19;
+  }
+
+  static isTerceiraColunaSEeCE(der: number): boolean {
+    return der > 19;
   }
 
   private static calcularSEeCEPorIntervaloFTR(ftrValor: number,
@@ -86,4 +98,17 @@ export class ComplexidadeFuncionalTransacao {
       return c3;
     }
   }
+
+  static isPrimeiraLinhaSEeCE(ftr: number): boolean {
+    return ftr < 2;
+  }
+
+  static isSegundaLinhaSEeCE(ftr: number): boolean {
+    return ftr === 2 || ftr === 3;
+  }
+
+  static isTerceiraLinhaSEeCE(ftr: number): boolean {
+    return ftr > 3;
+  }
+
 }
