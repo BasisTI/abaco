@@ -14,28 +14,52 @@ export class ComplexidadeFuncionalTransacao {
   }
 
   private static calculaEE(derValor: number, ftrValor: number) {
-    if (derValor < 5) {
+    if (this.isPrimeiraColunaEE(derValor)) {
       return this.calcularEEPorIntervaloFTR(ftrValor,
         Complexidade.BAIXA, Complexidade.BAIXA, Complexidade.MEDIA);
-    } else if (derValor >= 5 && derValor <= 15) {
+    } else if (this.isSegundaColunaEE(derValor)) {
       return this.calcularEEPorIntervaloFTR(ftrValor,
         Complexidade.BAIXA, Complexidade.MEDIA, Complexidade.ALTA);
-    } else if (derValor > 15) {
+    } else if (this.isTerceiraColunaEE(derValor)) {
       return this.calcularEEPorIntervaloFTR(ftrValor,
         Complexidade.MEDIA, Complexidade.ALTA, Complexidade.ALTA);
     }
   }
 
+  static isPrimeiraColunaEE(der: number): boolean {
+    return der < 5;
+  }
+
+  static isSegundaColunaEE(der: number): boolean {
+    return der >= 5 && der <= 15;
+  }
+
+  static isTerceiraColunaEE(der: number): boolean {
+    return der > 15;
+  }
+
   private static calcularEEPorIntervaloFTR(ftrValor: number,
     c1: Complexidade, c2: Complexidade, c3: Complexidade) {
 
-    if (ftrValor < 2) {
+    if (this.isPrimeiraLinhaEE(ftrValor)) {
       return c1;
-    } else if (ftrValor === 2) {
+    } else if (this.isSegundaLinhaEE(ftrValor)) {
       return c2;
-    } else if (ftrValor > 2) {
+    } else if (this.isTerceiraLinhaEE(ftrValor)) {
       return c3;
     }
+  }
+
+  static isPrimeiraLinhaEE(ftr: number): boolean {
+    return ftr < 2;
+  }
+
+  static isSegundaLinhaEE(ftr: number): boolean {
+    return ftr === 2;
+  }
+
+  static isTerceiraLinhaEE(ftr: number): boolean {
+    return ftr > 2;
   }
 
   private static calculaSEeCE(derValor: number, ftrValor: number) {
