@@ -53,8 +53,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
       { header: 'Funcionalidade' },
       { header: 'Nome', field: 'name' },
       { header: 'Classificação', field: 'tipo' },
-      { header: 'DER' },
-      { header: 'RLR' },
+      { header: 'DER (TD)' },
+      { header: 'RLR (TR)' },
       { header: 'Complexidade', field: 'complexidade' },
       { header: 'PF Bruto' },
       { header: 'PF Líquido' }

@@ -43,14 +43,14 @@
       <div class="ui-g-6" style="margin-bottom: 25px">
         <app-analise-der-text 
           [(value)]="currentFuncaoTransacao.der"
-          label="DER">
+          label="DER (TD)">
         </app-analise-der-text>
       </div>
 
       <div class="ui-g-6" style="margin-bottom: 25px">
         <app-analise-der-text 
           [(value)]="currentFuncaoTransacao.ftr"
-          label="FTR">
+          label="FTR (AR)">
         </app-analise-der-text>
       </div>
 
@@ -101,14 +101,14 @@
             </p-column>
             <p-column field="name" header="Nome" [style]="{'width': '200px'}"></p-column>
             <p-column field="tipo" header="Classificação" [style]="{'width': '200px'}"></p-column>
-            <p-column header="FTR" [style]="{'width': '200px'}">
-              <ng-template let-funcaoDados="rowData" pTemplate="body">
-                {{ funcaoDados.ftrValue() }}
-              </ng-template>
-            </p-column>
-            <p-column field="der" header="DER" [style]="{'width': '200px'}">
+            <p-column field="der" header="DER (TD)" [style]="{'width': '200px'}">
               <ng-template let-funcaoDados="rowData" pTemplate="body">
                 {{ funcaoDados.derValue() }}
+              </ng-template>
+            </p-column>
+            <p-column header="FTR (AR)" [style]="{'width': '200px'}">
+              <ng-template let-funcaoDados="rowData" pTemplate="body">
+                {{ funcaoDados.ftrValue() }}
               </ng-template>
             </p-column>
             <p-column field="complexidade" header="Complexidade" [style]="{'width': '200px'}"></p-column>
