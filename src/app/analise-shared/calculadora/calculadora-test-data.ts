@@ -4,6 +4,7 @@ import { FuncaoDados, TipoFuncaoDados } from '../../funcao-dados/funcao-dados.mo
 import * as _ from 'lodash';
 import { FuncaoTransacao, TipoFuncaoTransacao } from '../../funcao-transacao';
 import { ComplexidadeFuncionalDados as CFDados } from './complexidade-funcional-dados';
+import { ComplexidadeFuncionalTransacao as CFTrans } from './complexidade-funcional-transacao';
 
 export class CalculadoraTestData {
 
@@ -193,8 +194,8 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeBaixaEE(der: number, ftr: number) {
-    return der < 5 && (ftr < 2 || ftr === 2) ||
-      (der >= 5 && der <= 15) && ftr < 2;
+    return CFTrans.isPrimeiraColunaEE(der) && (CFTrans.isPrimeiraLinhaEE(ftr) || CFTrans.isSegundaLinhaEE(ftr)) ||
+      CFTrans.isSegundaColunaEE(der) && CFTrans.isPrimeiraLinhaEE(ftr);
   }
 
   static criaEEsComplexidadeMedia(): FuncaoTransacao[] {
@@ -207,9 +208,9 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeMediaEE(der: number, ftr: number) {
-    return der < 5 && ftr > 2 ||
-      (der >= 5 && der <= 15) && ftr === 2 ||
-      der > 15 && ftr < 2;
+    return CFTrans.isPrimeiraColunaEE(der) && CFTrans.isTerceiraLinhaEE(ftr) ||
+      CFTrans.isSegundaColunaEE(der) && CFTrans.isSegundaLinhaEE(ftr) ||
+      CFTrans.isTerceiraColunaEE(der) && CFTrans.isPrimeiraLinhaEE(ftr);
   }
 
   static criaEEsComplexidadeAlta(): FuncaoTransacao[] {
@@ -222,8 +223,8 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeAltaEE(der: number, ftr: number) {
-    return (der >= 5 && der <= 15) && ftr > 2 ||
-      der > 15 && (ftr === 2 || ftr > 2);
+    return CFTrans.isSegundaColunaEE(der) && CFTrans.isTerceiraLinhaEE(ftr) ||
+      CFTrans.isTerceiraColunaEE(der) && (CFTrans.isSegundaLinhaEE(ftr) || CFTrans.isTerceiraLinhaEE(ftr));
   }
 
   static criaSEsComplexidadeBaixa(): FuncaoTransacao[] {
