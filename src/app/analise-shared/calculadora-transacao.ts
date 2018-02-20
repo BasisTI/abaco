@@ -4,6 +4,7 @@ import { TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 import { FuncaoTransacao, TipoFuncaoTransacao } from '../funcao-transacao/funcao-transacao.model';
 import { ComplexidadeFuncionalTransacao } from './calculadora/complexidade-funcional-transacao';
 import { PFPorTiposComplexidades } from './calculadora/pf-por-tipos-complexidades';
+import { CalculadoraFator } from './calculadora/calculadora-fator';
 
 export class CalculadoraTransacao {
 
@@ -65,15 +66,9 @@ export class CalculadoraTransacao {
   // FIXME aplicar fator que vem da aba geral também
   private static aplicarFator() {
     this.funcaoTransacaoCalculada.grossPF = this.funcaoTransacaoCalculada.pf;
-    let valorAplicado = 0;
-    const fator = this.funcaoTransacao.fatorAjuste.fator;
-    if (this.funcaoTransacao.fatorAjuste.isPercentual()) {
-      // XXX de repente um método de FuncaoDados/Transacao?
-      valorAplicado = this.funcaoTransacaoCalculada.pf * fator;
-    } else { // UNITÁRIO
-      valorAplicado = fator;
-    }
-    this.funcaoTransacaoCalculada.pf = valorAplicado;
+    this.funcaoTransacaoCalculada.pf = CalculadoraFator.aplicarFator(
+      this.funcaoTransacaoCalculada.pf, this.funcaoTransacao.fatorAjuste
+    );
   }
 
 }
