@@ -103,7 +103,7 @@ describe('Calculadora de Função de Transação', () => {
         });
       });
 
-      describe('Complexidade BAIXA', () => {
+      describe('Complexidade ALTA', () => {
         const EE_ALTA_PF_BRUTO = 6;
         it(`todos os casos devem ter PF Bruto ${EE_ALTA_PF_BRUTO}`, () => {
           verificaPfBrutoDetalhada(
