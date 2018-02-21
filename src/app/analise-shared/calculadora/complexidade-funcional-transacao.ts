@@ -1,5 +1,6 @@
 import { TipoFuncaoTransacao } from '../../funcao-transacao/funcao-transacao.model';
 import { Complexidade } from '../complexidade-enum';
+import { ComplexidadeFuncionalEE, ComplexidadeFuncionalSEeCE } from './complexidade-funcional';
 
 export class ComplexidadeFuncionalTransacao {
 
@@ -7,22 +8,9 @@ export class ComplexidadeFuncionalTransacao {
     derValor: number, ftrValor: number): Complexidade {
 
     if (tipo === TipoFuncaoTransacao.EE) {
-      return this.calculaEE(derValor, ftrValor);
+      return new ComplexidadeFuncionalEE(derValor, ftrValor).calcular();
     } else {
-      return this.calculaSEeCE(derValor, ftrValor);
-    }
-  }
-
-  private static calculaEE(derValor: number, ftrValor: number) {
-    if (this.isPrimeiraColunaEE(derValor)) {
-      return this.calcularEEPorIntervaloFTR(ftrValor,
-        Complexidade.BAIXA, Complexidade.BAIXA, Complexidade.MEDIA);
-    } else if (this.isSegundaColunaEE(derValor)) {
-      return this.calcularEEPorIntervaloFTR(ftrValor,
-        Complexidade.BAIXA, Complexidade.MEDIA, Complexidade.ALTA);
-    } else if (this.isTerceiraColunaEE(derValor)) {
-      return this.calcularEEPorIntervaloFTR(ftrValor,
-        Complexidade.MEDIA, Complexidade.ALTA, Complexidade.ALTA);
+      return new ComplexidadeFuncionalSEeCE(derValor, ftrValor).calcular();
     }
   }
 
@@ -38,18 +26,6 @@ export class ComplexidadeFuncionalTransacao {
     return der > 15;
   }
 
-  private static calcularEEPorIntervaloFTR(ftrValor: number,
-    c1: Complexidade, c2: Complexidade, c3: Complexidade) {
-
-    if (this.isPrimeiraLinhaEE(ftrValor)) {
-      return c1;
-    } else if (this.isSegundaLinhaEE(ftrValor)) {
-      return c2;
-    } else if (this.isTerceiraLinhaEE(ftrValor)) {
-      return c3;
-    }
-  }
-
   static isPrimeiraLinhaEE(ftr: number): boolean {
     return ftr < 2;
   }
@@ -62,19 +38,6 @@ export class ComplexidadeFuncionalTransacao {
     return ftr > 2;
   }
 
-  private static calculaSEeCE(derValor: number, ftrValor: number) {
-    if (this.isPrimeiraColunaSEeCE(derValor)) {
-      return this.calcularSEeCEPorIntervaloFTR(ftrValor,
-        Complexidade.BAIXA, Complexidade.BAIXA, Complexidade.MEDIA);
-    } else if (this.isSegundaColunaSEeCE(derValor)) {
-      return this.calcularSEeCEPorIntervaloFTR(ftrValor,
-        Complexidade.BAIXA, Complexidade.MEDIA, Complexidade.ALTA);
-    } else if (this.isTerceiraColunaSEeCE(derValor)) {
-      return this.calcularSEeCEPorIntervaloFTR(ftrValor,
-        Complexidade.MEDIA, Complexidade.ALTA, Complexidade.ALTA);
-    }
-  }
-
   static isPrimeiraColunaSEeCE(der: number): boolean {
     return der < 6;
   }
@@ -85,18 +48,6 @@ export class ComplexidadeFuncionalTransacao {
 
   static isTerceiraColunaSEeCE(der: number): boolean {
     return der > 19;
-  }
-
-  private static calcularSEeCEPorIntervaloFTR(ftrValor: number,
-    c1: Complexidade, c2: Complexidade, c3: Complexidade) {
-
-    if (ftrValor < 2) {
-      return c1;
-    } else if (ftrValor === 2 || ftrValor === 3) {
-      return c2;
-    } else if (ftrValor > 3) {
-      return c3;
-    }
   }
 
   static isPrimeiraLinhaSEeCE(ftr: number): boolean {
