@@ -179,12 +179,12 @@ public class UserResource {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "userexists", "Login already in use"))
 					.body(null);
-		} else if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
+		} else if (!userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId().equals(user.getId())) {
             return ResponseEntity.badRequest()
                     .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use"))
                     .body(null);
         } else {
-		      User updatableUser = userService.generateUpdatableUser(user);
+		        User updatableUser = userService.generateUpdatableUser(user);
 		        User updatedUser = userRepository.save(updatableUser);
 		        userSearchRepository.save(updatedUser);
 		        log.debug("Changed Information for User: {}", user);
