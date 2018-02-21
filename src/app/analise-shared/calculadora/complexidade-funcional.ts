@@ -46,7 +46,7 @@ export abstract class ComplexidadeFuncional {
 
 }
 
-export class ComplexidadeFuncionalDados extends ComplexidadeFuncional {
+export class ComplexidadeFuncionalALIeAIE extends ComplexidadeFuncional {
 
   isPrimeiraColuna(): boolean {
     return this.der < 20;

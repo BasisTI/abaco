@@ -1,18 +1,10 @@
 import { Complexidade } from '../complexidade-enum';
+import { ComplexidadeFuncionalALIeAIE } from './complexidade-funcional';
 
 export class ComplexidadeFuncionalDados {
 
   static calcular(derValor: number, rlrValor: number): Complexidade {
-    if (this.isPrimeiraColuna(derValor)) {
-      return this.calcularPorIntervaloRLR(rlrValor,
-        Complexidade.BAIXA, Complexidade.BAIXA, Complexidade.MEDIA);
-    } else if (this.isSegundaColuna(derValor)) {
-      return this.calcularPorIntervaloRLR(rlrValor,
-        Complexidade.BAIXA, Complexidade.MEDIA, Complexidade.ALTA);
-    } else if (this.isTerceiraColuna(derValor)) {
-      return this.calcularPorIntervaloRLR(rlrValor,
-        Complexidade.MEDIA, Complexidade.ALTA, Complexidade.ALTA);
-    }
+    return new ComplexidadeFuncionalALIeAIE(derValor, rlrValor).calcular();
   }
 
   static isPrimeiraColuna(der: number): boolean {
@@ -25,17 +17,6 @@ export class ComplexidadeFuncionalDados {
 
   static isTerceiraColuna(der: number): boolean {
     return der > 50;
-  }
-
-  private static calcularPorIntervaloRLR(rlrValor: number, complexidade1: Complexidade,
-    complexidade2: Complexidade, complexidade3: Complexidade) {
-    if (this.isPrimeiraLinha(rlrValor)) {
-      return complexidade1;
-    } else if (this.isSegundaLinha(rlrValor)) {
-      return complexidade2;
-    } else if (this.isTerceiraLinha(rlrValor)) {
-      return complexidade3;
-    }
   }
 
   static isPrimeiraLinha(rlr: number) {
