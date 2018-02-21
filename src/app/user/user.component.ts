@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
@@ -8,12 +8,18 @@ import { User } from './user.model';
 import { UserService } from './user.service';
 import { ElasticQuery } from '../shared';
 import { AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { Organizacao } from '../organizacao/organizacao.model';
+import { OrganizacaoService } from '../organizacao/organizacao.service';
+import { Authority } from './authority.model';
+import { TipoEquipe } from '../tipo-equipe/tipo-equipe.model';
+import { TipoEquipeService } from '../tipo-equipe/tipo-equipe.service';
+import { StringConcatService } from '../shared/string-concat.service';
 
 @Component({
   selector: 'jhi-user',
   templateUrl: './user.component.html'
 })
-export class UserComponent implements AfterViewInit {
+export class UserComponent implements AfterViewInit, OnInit {
 
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
@@ -21,12 +27,49 @@ export class UserComponent implements AfterViewInit {
 
   paginationParams = { contentIndex: null };
   elasticQuery: ElasticQuery = new ElasticQuery();
+  searchParams: any = {
+    fullName: undefined,
+    login: undefined,
+    email: undefined,
+    organization: undefined,
+    profile: undefined,
+    team: undefined
+  }
+
+  organizations: Array<Organizacao>;
+  authorities: Array<Authority>;
+  teams: Array<TipoEquipe>;
 
   constructor(
     private router: Router,
     private userService: UserService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private organizacaoService: OrganizacaoService,
+    private tipoEquipeService: TipoEquipeService,
+    private stringConcatService: StringConcatService
   ) {}
+
+  ngOnInit() {
+      this.organizacaoService.query().subscribe(response => {
+        this.organizations = response.json;
+        let emptyOrg = new Organizacao();
+        emptyOrg.nome = '';
+        this.organizations.unshift(emptyOrg);
+      });
+
+      this.userService.authorities().subscribe(response => {
+        this.authorities = response;
+        let emptyProfile = new Authority();
+        this.authorities.unshift(emptyProfile);
+      });
+
+      this.tipoEquipeService.query().subscribe(response => {
+        this.teams = response.json;
+        let emptyTeam = new TipoEquipe();
+        emptyTeam.nome = '';
+        this.teams.unshift(emptyTeam);
+      });
+  }
 
   ngAfterViewInit() {
     this.datatable.refresh(this.elasticQuery.query);
@@ -59,4 +102,34 @@ export class UserComponent implements AfterViewInit {
       }
     });
   }
+
+  private checkUndefinedParams() {
+    (this.searchParams.fullName === '') ? (this.searchParams.fullName = undefined) : (this);
+    (this.searchParams.login === '') ? (this.searchParams.login = undefined) : (this);
+    (this.searchParams.email === '') ? (this.searchParams.email = undefined) : (this);
+    (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome === '') ? (this.searchParams.organization.nome = undefined) : (console.log('Caiu no false'))) : (this);
+    (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name === '') ? (this.searchParams.profile.nome = undefined) : (this)) : (this);
+    (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)) : (this);
+  }
+
+  private createStringParamsArray(): Array<string> {
+    let arrayParams: Array<string> = [];
+
+    (this.searchParams.fullName !== undefined) ? (arrayParams.push(this.searchParams.fullName)) : (this);
+    (this.searchParams.login !== undefined) ? (arrayParams.push(this.searchParams.login)) : (this);
+    (this.searchParams.email !== undefined) ? (arrayParams.push(this.searchParams.email)) : (this);
+    (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome !== undefined) ? (arrayParams.push(this.searchParams.organization.nome)) : (this)) : (this);
+    (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name !== undefined) ? (arrayParams.push(this.searchParams.profile.name)) : (this)) : (this);
+    (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (arrayParams.push(this.searchParams.team.nome)) : (this)) : (this);
+
+
+    return arrayParams;
+  }
+
+  performSearch() {
+    this.checkUndefinedParams();
+    this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
+    this.datatable.refresh(this.elasticQuery.query);
+  }
+
 }

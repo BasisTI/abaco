@@ -26,6 +26,8 @@ import {
 } from './';
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
 
+import { StringConcatService } from '../shared/string-concat.service';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -51,7 +53,8 @@ import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
   ],
   providers: [
     UserService,
-    ConfirmationService
+    ConfirmationService,
+    StringConcatService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
