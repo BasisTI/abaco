@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import { FuncaoTransacao, TipoFuncaoTransacao } from '../../funcao-transacao';
 import { ComplexidadeFuncionalDados as CFDados } from './complexidade-funcional-dados';
 import { ComplexidadeFuncionalTransacao as CFTrans } from './complexidade-funcional-transacao';
+import { ComplexidadeFuncionalEE, ComplexidadeFuncionalSEeCE, ComplexidadeFuncionalALIeAIE } from './complexidade-funcional';
 
 export class CalculadoraTestData {
 
@@ -109,8 +110,7 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeBaixaDados(der: number, rlr: number) {
-    return CFDados.isPrimeiraColuna(der) && (CFDados.isPrimeiraLinha(rlr) || CFDados.isSegundaLinha(rlr)) ||
-      CFDados.isSegundaColuna(der) && CFDados.isPrimeiraLinha(der);
+    return new ComplexidadeFuncionalALIeAIE(der, rlr).isBaixaComplexidade();
   }
 
   static criaALIsComplexidadeMedia(): FuncaoDados[] {
@@ -128,9 +128,7 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeMediaDados(der: number, rlr: number): boolean {
-    return CFDados.isPrimeiraColuna(der) && CFDados.isTerceiraLinha(rlr) ||
-      CFDados.isSegundaColuna(der) && CFDados.isSegundaLinha(rlr) ||
-      CFDados.isTerceiraColuna(der) && CFDados.isPrimeiraLinha(rlr);
+    return new ComplexidadeFuncionalALIeAIE(der, rlr).isMediaComplexidade();
   }
 
   static criaALIsComplexidadeAlta(): FuncaoDados[] {
@@ -148,8 +146,7 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeAltaDados(der: number, rlr: number): boolean {
-    return CFDados.isSegundaColuna(der) && CFDados.isTerceiraLinha(rlr) ||
-      CFDados.isTerceiraColuna(der) && (CFDados.isSegundaLinha(rlr) || CFDados.isTerceiraLinha(rlr));
+    return new ComplexidadeFuncionalALIeAIE(der, rlr).isAltaComplexidade();
   }
 
   static criaAIEsComplexidadeBaixa(): FuncaoDados[] {
@@ -194,8 +191,7 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeBaixaEE(der: number, ftr: number) {
-    return CFTrans.isPrimeiraColunaEE(der) && (CFTrans.isPrimeiraLinhaEE(ftr) || CFTrans.isSegundaLinhaEE(ftr)) ||
-      CFTrans.isSegundaColunaEE(der) && CFTrans.isPrimeiraLinhaEE(ftr);
+    return new ComplexidadeFuncionalEE(der, ftr).isBaixaComplexidade();
   }
 
   static criaEEsComplexidadeMedia(): FuncaoTransacao[] {
@@ -208,9 +204,7 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeMediaEE(der: number, ftr: number) {
-    return CFTrans.isPrimeiraColunaEE(der) && CFTrans.isTerceiraLinhaEE(ftr) ||
-      CFTrans.isSegundaColunaEE(der) && CFTrans.isSegundaLinhaEE(ftr) ||
-      CFTrans.isTerceiraColunaEE(der) && CFTrans.isPrimeiraLinhaEE(ftr);
+    return new ComplexidadeFuncionalEE(der, ftr).isMediaComplexidade();
   }
 
   static criaEEsComplexidadeAlta(): FuncaoTransacao[] {
@@ -223,8 +217,7 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeAltaEE(der: number, ftr: number) {
-    return CFTrans.isSegundaColunaEE(der) && CFTrans.isTerceiraLinhaEE(ftr) ||
-      CFTrans.isTerceiraColunaEE(der) && (CFTrans.isSegundaLinhaEE(ftr) || CFTrans.isTerceiraLinhaEE(ftr));
+    return new ComplexidadeFuncionalEE(der, ftr).isAltaComplexidade();
   }
 
   static criaSEsComplexidadeBaixa(): FuncaoTransacao[] {
@@ -242,8 +235,7 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeBaixaSEouCE(der: number, ftr: number): boolean {
-    return CFTrans.isPrimeiraColunaSEeCE(der) && (CFTrans.isPrimeiraLinhaSEeCE(ftr) || CFTrans.isSegundaLinhaSEeCE(ftr)) ||
-      CFTrans.isSegundaColunaSEeCE(der) && CFTrans.isPrimeiraLinhaSEeCE(ftr);
+    return new ComplexidadeFuncionalSEeCE(der, ftr).isBaixaComplexidade();
   }
 
   static criaSEsComplexidadeMedia(): FuncaoTransacao[] {
@@ -261,9 +253,7 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeMediaSEouCE(der: number, ftr: number): boolean {
-    return CFTrans.isPrimeiraColunaSEeCE(der) && CFTrans.isTerceiraLinhaSEeCE(ftr) ||
-      CFTrans.isSegundaColunaSEeCE(der) && CFTrans.isSegundaLinhaSEeCE(ftr) ||
-      CFTrans.isTerceiraColunaSEeCE(der) && CFTrans.isPrimeiraLinhaSEeCE(ftr);
+    return new ComplexidadeFuncionalSEeCE(der, ftr).isMediaComplexidade();
   }
 
   static criaSEsComplexidadeAlta(): FuncaoTransacao[] {
@@ -281,8 +271,7 @@ export class CalculadoraTestData {
   }
 
   private static valoresDentroDeComplexidadeAltaSEouCE(der: number, ftr: number): boolean {
-    return CFTrans.isSegundaColunaSEeCE(der) && CFTrans.isTerceiraLinhaSEeCE(ftr) ||
-      CFTrans.isTerceiraColunaSEeCE(der) && (CFTrans.isSegundaLinhaSEeCE(ftr) || CFTrans.isTerceiraLinhaSEeCE(ftr));
+   return new ComplexidadeFuncionalSEeCE(der, ftr).isAltaComplexidade();
   }
 
   static criaCEsComplexidadeBaixa(): FuncaoTransacao[] {
