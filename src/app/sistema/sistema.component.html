@@ -6,7 +6,7 @@
         <div class="ui-g-2">
           <span class="md-inputfield">
             <input type="text" pInputText class="ui-inputtext" [(ngModel)]="searchParams.sigla"
-              (keyup.enter)="datatable.refresh(elasticQuery.query)"
+              (keyup.enter)="performSearch()"
               #filter />
             <label>Sigla</label>
           </span>

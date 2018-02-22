@@ -9,6 +9,7 @@ import { SistemaService } from './sistema.service';
 import { ElasticQuery } from '../shared';
 import { Organizacao } from '../organizacao/organizacao.model';
 import { OrganizacaoService } from '../organizacao/organizacao.service';
+import { StringConcatService } from '../shared/string-concat.service';
 
 @Component({
   selector: 'jhi-sistema',
@@ -35,7 +36,8 @@ export class SistemaComponent implements AfterViewInit {
     private router: Router,
     private sistemaService: SistemaService,
     private confirmationService: ConfirmationService,
-    private organizacaoService: OrganizacaoService
+    private organizacaoService: OrganizacaoService,
+    private stringConcatService: StringConcatService
   ) {
     let emptyOrganization = new Organizacao();
 
@@ -86,18 +88,18 @@ export class SistemaComponent implements AfterViewInit {
 
   performSearch() {
     this.checkUndefinedParams();
-    this.elasticQuery.value = this.createElasticQuery();
+    this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
     this.datatable.refresh(this.elasticQuery.query)
   }
 
-  private createElasticQuery(): string {
-    let elasticQuery = '';
+  private createStringParamsArray(): Array<string> {
+    let stringParamsArray: Array<string> = [];
 
-    (this.searchParams.sigla !== undefined) ? (elasticQuery = elasticQuery + this.searchParams.sigla) : (this);
-    console.log(this.searchParams);
-    (this.searchParams.nomeSistema !== undefined) ? ((this.searchParams.sigla !== undefined) ? (elasticQuery = elasticQuery  + "+" + this.searchParams.nomeSistema) : (elasticQuery = this.searchParams.nomeSistema)) : (this);
-    (this.searchParams.organizacao.nome !== undefined) ? ( (this.searchParams.sigla !== undefined || this.searchParams.nomeSistema !== undefined) ? (elasticQuery = elasticQuery + "+" + this.searchParams.organizacao.nome) : (elasticQuery = this.searchParams.organizacao.nome) ) : (this);
+    (this.searchParams.sigla !== undefined) ? (stringParamsArray.push(this.searchParams.sigla)) : (this);
+    (this.searchParams.nomeSistema !== undefined) ? (stringParamsArray.push(this.searchParams.nomeSistema)) : (this);
+    (this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push(this.searchParams.organizacao.nome)) : (this);
 
-    return elasticQuery;
+    return stringParamsArray;
   }
+
 }
