@@ -133,17 +133,11 @@ public class UserResource {
 
 		// Lowercase the user login before comparing with database
 		if (userRepository.findOneByLogin(user.getLogin().toLowerCase()).isPresent()) {
-			return ResponseEntity.badRequest()
-					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "userexists", "Login already in use"))
-					.body("{ error: Usuário já existe }");
+			return   this.createBadRequest("userexists","Login already in use");
 		} else if (userRepository.findOneByEmail(user.getEmail()).isPresent()) {
-			return ResponseEntity.badRequest()
-					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "emailexists", "Email already in use"))
-					.body(null);
+			return this.createBadRequest("emailexists","Email already in use");
 		} else if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
-		    return ResponseEntity.badRequest()
-		            .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use"))
-		            .body(null);
+		    return this.createBadRequest("fullnameexists", "Full Name already in use");
 		} else {
 			User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
 			User newUser = userRepository.save(userReadyToBeSaved);
@@ -153,6 +147,10 @@ public class UserResource {
 			return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
 					.headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin())).body(newUser);
 		}
+	}
+	
+	private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
+	    return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage)).body(null);
 	}
 
 	/**
@@ -181,12 +179,12 @@ public class UserResource {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "userexists", "Login already in use"))
 					.body(null);
-		} else if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
+		} else if (!userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId().equals(user.getId())) {
             return ResponseEntity.badRequest()
                     .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use"))
                     .body(null);
         } else {
-		      User updatableUser = userService.generateUpdatableUser(user);
+		        User updatableUser = userService.generateUpdatableUser(user);
 		        User updatedUser = userRepository.save(updatableUser);
 		        userSearchRepository.save(updatedUser);
 		        log.debug("Changed Information for User: {}", user);
