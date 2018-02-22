@@ -9,34 +9,19 @@
       </div>
       <div class="ui-g">
         <div class="ui-g-2" style="margin-bottom: 25px">
-          <span class="md-inputfield" >
-            <input type="text" class="ui-inputtext" name="sigla" [ngModel]="organizacao.sigla" pInputText readonly/>
-            <label>Sigla</label>
-          </span>
+          <label>Sigla: {{ organizacao.sigla }}</label>
         </div>
         <div class="ui-g-10">
-          <span class="md-inputfield" style="margin-bottom: 25px">
-            <input type="text" name="nome" pInputText [ngModel]="organizacao.nome" readonly/>
-            <label>Nome</label>
-          </span>
+          <label>Nome: {{ organizacao.nome }}</label>
         </div>
         <div class="ui-g-5">
-          <span class="md-inputfield" style="margin-bottom: 25px">
-            <input type="text" name="cnpj" pInputText [ngModel]="organizacao.cnpj" readonly/>
-            <label>Cnpj</label>
-          </span>
+          <label>Cnpj: {{ organizacao.cnpj }}</label>
         </div>
         <div class="ui-g-5">
-          <span class="md-inputfield" style="margin-bottom: 25px">
-            <input type="text" name="numeroOcorrencia" pInputText [ngModel]="organizacao.numeroOcorrencia" readonly/>
-            <label>Numero Ocorrencia</label>
-          </span>
+          <label>Numero Ocorrencia: {{ organizacao.numeroOcorrencia }}</label>
         </div>
         <div class="ui-g-2">
-          <span class="md-inputfield" style="margin-bottom: 25px">
-              <input type="text" name="ativo" pInputText [ngModel]="organizacao.ativo ? 'Sim' : 'Não' " readonly/>
-            <label>Ativo</label>
-          </span>
+          <label>Ativo: {{ organizacao.ativo ? 'Sim' : 'Não' }}</label>
         </div>
       </div>
       <div class="ui-g" style="margin-bottom: 25px">

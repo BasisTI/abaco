@@ -4,28 +4,16 @@
       <h1>Visualizar Sistema</h1>
       <div class="ui-g">
         <div class="ui-g-2" style="margin-bottom: 25px">
-          <span class="md-inputfield">
-            <input type="text" name="sigla" pInputText [ngModel]="sistema.sigla" readonly/>
-            <label>Sigla</label>
-          </span>
+          <label>Sigla: {{ sistema.sigla }}</label>
         </div>
         <div class="ui-g-10" style="margin-bottom: 25px">
-          <span class="md-inputfield">
-            <input type="text" name="nome" pInputText [ngModel]="sistema.nome" readonly/>
-            <label>Nome do Sistema</label>
-          </span>
+          <label>Nome do Sistema: {{ sistema.nome }}</label>
         </div>
         <div class="ui-g-4" style="margin-bottom: 25px">
-          <span class="md-inputfield">
-            <input type="text" name="numeroOcorrencia" pInputText [ngModel]="sistema.numeroOcorrencia" readonly/>
-            <label>Número da Ocorrência</label>
-          </span>
+          <label>Número da Ocorrência: {{ sistema.numeroOcorrencia }}</label>
         </div>
         <div class="ui-g-8" style="margin-bottom: 25px">
-          <span class="md-inputfield">
-            <input type="text" name="organizacao" pInputText [ngModel]="sistema.organizacao.nome" readonly/>
-            <label>Organização</label>
-          </span>
+          <label>Organização: {{ sistema.organizacao.nome }}</label>
         </div>
       </div>
 
