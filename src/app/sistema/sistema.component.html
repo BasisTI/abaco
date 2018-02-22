@@ -14,7 +14,7 @@
         <div class="ui-g-4">
           <span class="md-inputfield">
             <input type="text" pInputText class="ui-inputtext" [(ngModel)]="searchParams.nomeSistema"
-              (keyup.enter)="datatable.refresh(elasticQuery.query)"
+              (keyup.enter)="performSearch()"
               #filter />
             <label>Nome do Sistema</label>
           </span>
