@@ -27,6 +27,7 @@ import { AbacoAnaliseSharedModule } from '../analise-shared/analise-shared.modul
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
 import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
 import { AbacoEllipsisTooltipModule } from '../shared/ellipsis-tooltip/ellipsis-tooltip.module';
+import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.module';
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import { AbacoEllipsisTooltipModule } from '../shared/ellipsis-tooltip/ellipsis-
     MemoryDataTableModule,
     AbacoAnaliseBotaoSalvarModule,
     AbacoEllipsisTooltipModule,
-    MultiSelectModule
+    MultiSelectModule,
+    AbacoDerChipsModule,
   ],
   declarations: [
     FuncaoDadosFormComponent

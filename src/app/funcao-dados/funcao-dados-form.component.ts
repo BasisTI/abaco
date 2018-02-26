@@ -16,6 +16,8 @@ import { AfterViewInit, AfterContentInit } from '@angular/core/src/metadata/life
 import { Subscription } from 'rxjs/Subscription';
 
 import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
+import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
+import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
 
 @Component({
   selector: 'app-analise-funcao-dados',
@@ -26,6 +28,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   isEdit: boolean;
 
   funcaoDadosEmEdicao: FuncaoDados;
+  dersChips: DerChipItem[];
+  rlrsChips: DerChipItem[];
+
   resumo: ResumoFuncoes;
 
   fatoresAjuste: FatorAjuste[] = [];
@@ -232,11 +237,17 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
     this.analiseSharedDataService.funcaoAnaliseCarregada();
     this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
+    this.carregarDerERlr(funcaoDadosSelecionada);
   }
 
-  private carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada: FuncaoDados) {
+  private carregarFatorDeAjusteNaEdicao(fd: FuncaoDados) {
     this.fatoresAjuste = this.manual.fatoresAjuste;
-    funcaoDadosSelecionada.fatorAjuste = _.find(this.fatoresAjuste, { 'id': funcaoDadosSelecionada.fatorAjuste.id });
+    fd.fatorAjuste = _.find(this.fatoresAjuste, { 'id': fd.fatorAjuste.id });
+  }
+
+  private carregarDerERlr(fd: FuncaoDados) {
+    this.dersChips = DerChipConverter.converter(fd.derValues);
+    this.rlrsChips = DerChipConverter.converter(fd.rlrValues);
   }
 
   cancelarEdicao() {
