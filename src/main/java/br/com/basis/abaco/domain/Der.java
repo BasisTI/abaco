@@ -36,6 +36,8 @@ public class Der implements Serializable {
     @Column(name = "nome", nullable = false)
     private String nome;
 
+    private Integer valor;
+
     @ManyToOne
     private Rlr rlr;
 
@@ -93,6 +95,14 @@ public class Der implements Serializable {
 
     public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
         this.funcaoTransacao = funcaoTransacao;
+    }
+
+    public Integer getValor() {
+        return valor;
+    }
+
+    public void setValor(Integer valor) {
+        this.valor = valor;
     }
 
     @Override
