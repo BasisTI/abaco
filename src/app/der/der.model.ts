@@ -13,11 +13,11 @@ export class Der implements BaseEntity, JSONable<Der> {
   ) { }
 
   toJSONState(): Der {
-    return this;
+    return Object.assign({}, this);
   }
 
   copyFromJSON(json: any): Der {
-    return Object.assign({}, this);
+    return Object.assign(new Der(), json);
   }
 
 }
