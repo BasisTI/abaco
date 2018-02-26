@@ -41,7 +41,7 @@ public abstract class FuncaoAnalise {
     private BigDecimal grossPF;
 
     @ManyToOne
-    @JoinColumn(name = "analise_id", updatable = false, insertable = false)
+    @JoinColumn(name = "analise_id")
     @JsonBackReference
     private Analise analise;
 
