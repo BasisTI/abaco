@@ -176,7 +176,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   private desconverterChips() {
-    
+    this.currentFuncaoDados.ders = DerChipConverter.desconverterEmDers(this.dersChips);
   }
 
   private doAdicionarOuSalvar() {
