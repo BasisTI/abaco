@@ -36,7 +36,7 @@ export class DerChipConverter {
   }
 
   static valor(ders: Der[]): number {
-    if (ders.length === 1) {
+    if (ders.length === 1 && ders[0].valor) {
       return ders[0].valor;
     } else {
       return ders.length;
