@@ -27,7 +27,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   isEdit: boolean;
 
-  funcaoDadosEmEdicao: FuncaoDados;
   dersChips: DerChipItem[];
   rlrsChips: DerChipItem[];
 
@@ -171,12 +170,21 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   private adicionarOuSalvar() {
+    this.desconverterChips();
+    this.doAdicionarOuSalvar();
+    this.isEdit = false;
+  }
+
+  private desconverterChips() {
+    
+  }
+
+  private doAdicionarOuSalvar() {
     if (this.isEdit) {
       this.doEditar();
     } else {
       this.doAdicionar();
     }
-    this.isEdit = false;
   }
 
   private doEditar() {
@@ -218,8 +226,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.prepararParaEdicao(funcaoDadosSelecionada);
         break;
       case 'delete':
-        this.funcaoDadosEmEdicao = funcaoDadosSelecionada;
-        this.confirmDelete();
+        this.confirmDelete(funcaoDadosSelecionada);
     }
   }
 
@@ -246,6 +253,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   private carregarDerERlr(fd: FuncaoDados) {
+    // TODO Quando chegar do banco com DERs e RLRs ja salvas?
+    // -- situacao para analises novas e editadas
+    
+    // SITUACAO para analises legadas
     this.dersChips = DerChipConverter.converter(fd.derValues);
     this.rlrsChips = DerChipConverter.converter(fd.rlrValues);
   }
@@ -258,12 +269,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     this.scrollParaInicioDaAba();
   }
 
-  confirmDelete() {
-    const name: string = this.funcaoDadosEmEdicao.name;
+  confirmDelete(funcaoDadosSelecionada: FuncaoDados) {
+    const name: string = funcaoDadosSelecionada.name;
     this.confirmationService.confirm({
       message: `Tem certeza que deseja excluir a Função de Dados '${name}'?`,
       accept: () => {
-        this.analise.deleteFuncaoDados(this.funcaoDadosEmEdicao);
+        this.analise.deleteFuncaoDados(funcaoDadosSelecionada);
         this.pageNotificationService.addDeleteMsgWithName(name);
       }
     });
