@@ -24,6 +24,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 
@@ -64,6 +65,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @Transient
     private Set<String> rlrValues;
 
+    @JsonManagedReference(value="funcaoDados")
     @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Der> ders = new HashSet<>();
 

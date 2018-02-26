@@ -1,8 +1,7 @@
 package br.com.basis.abaco.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
+import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,9 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.util.Objects;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * A Der.
@@ -40,9 +42,11 @@ public class Der implements Serializable {
     @ManyToOne
     private Rlr rlr;
 
+    @JsonBackReference(value="funcaoDados")
     @ManyToOne
     private FuncaoDados funcaoDados;
 
+    @JsonBackReference(value="funcaoTransacao")
     @ManyToOne
     private FuncaoTransacao funcaoTransacao;
 
