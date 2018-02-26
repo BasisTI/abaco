@@ -1,15 +1,14 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.FuncaoTransacao;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
-import io.swagger.annotations.ApiParam;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -27,15 +26,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing Analise.
@@ -71,6 +70,16 @@ public class AnaliseResource {
         if (analise.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
         }
+        linkFuncoesToAnalise(analise);
+        Analise result = analiseRepository.save(analise);
+        unlinkAnaliseFromFuncoes(result);
+        analiseSearchRepository.save(result);
+        return ResponseEntity.created(new URI("/api/analises/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    private void linkFuncoesToAnalise(Analise analise) {
         analise.getFuncaoDados().forEach(entry -> {
             entry.setAnalise(analise);
             entry.getFiles().forEach(file -> {
@@ -83,24 +92,15 @@ public class AnaliseResource {
                 file.setFuncaoTransacao(entry);
             });
         });
-        Set<FuncaoDados> copyDados = new HashSet<>(analise.getFuncaoDados());
-        Set<FuncaoTransacao> copyTransacao = new HashSet<>(analise.getFuncaoTransacaos());
-        analise.setFuncaoDados(null);
-        analise.setFuncaoTransacaos(null);
-        Analise result = analiseRepository.save(analise);
-        result.setFuncaoDados(copyDados);
-        result.setFuncaoTransacaos(copyTransacao);
-        result = analiseRepository.save(result);
+    }
+    
+    private void unlinkAnaliseFromFuncoes(Analise result) {
         result.getFuncaoDados().forEach(entry -> {
             entry.setAnalise(null);
         });
         result.getFuncaoTransacaos().forEach(entry -> {
             entry.setAnalise(null);
         });
-        analiseSearchRepository.save(result);
-        return ResponseEntity.created(new URI("/api/analises/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
     }
 
     /**
@@ -119,25 +119,9 @@ public class AnaliseResource {
         if (analise.getId() == null) {
             return createAnalise(analise);
         }
-        analise.getFuncaoDados().forEach(entry -> {
-            entry.setAnalise(analise);
-            entry.getFiles().forEach(file -> {
-                file.setFuncaoDados(entry);
-            });
-        });
-        analise.getFuncaoTransacaos().forEach(entry -> {
-            entry.setAnalise(analise);
-            entry.getFiles().forEach(file -> {
-                file.setFuncaoTransacao(entry);
-            });
-        });
+        linkFuncoesToAnalise(analise);
         Analise result = analiseRepository.save(analise);
-        result.getFuncaoDados().forEach(entry -> {
-            entry.setAnalise(null);
-        });
-        result.getFuncaoTransacaos().forEach(entry -> {
-            entry.setAnalise(null);
-        });
+        unlinkAnaliseFromFuncoes(result);
         analiseSearchRepository.save(result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
