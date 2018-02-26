@@ -12,7 +12,7 @@ export enum TipoFuncaoDados {
 }
 
 export class FuncaoDados implements BaseEntity, FuncaoResumivel,
- FuncaoAnalise, JSONable<FuncaoDados> {
+  FuncaoAnalise, JSONable<FuncaoDados> {
 
   detStr: string;
   retStr: string;
@@ -48,6 +48,10 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
     return Object.keys(TipoFuncaoDados).map(k => TipoFuncaoDados[k as any]);
   }
 
+  tipoAsString(): string {
+    return this.tipo.toString();
+  }
+
   toJSONState(): FuncaoDados {
     const copy: FuncaoDados = Object.assign({}, this);
     copy.derValues = DerTextParser.parse(this.der).textos;
@@ -62,10 +66,6 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
 
   copyFromJSON(json: any): FuncaoDados {
     return new FuncaoDadosCopyFromJSON(json).copy();
-  }
-
-  tipoAsString(): string {
-    return this.tipo.toString();
   }
 
   // XXX eficiente obter vários ParseResult em lugares diferentes?
@@ -88,7 +88,7 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
     return new FuncaoDados(this.id, this.artificialId, this.tipo, this.complexidade,
       this.pf, this.analise, this.funcionalidades, this.funcionalidade,
       this.fatorAjuste, this.alr, this.name, this.sustantation, this.der, this.rlr,
-      this.grossPF);
+      this.grossPF, this.derValues, this.rlrValues);
   }
 
 }
@@ -137,9 +137,13 @@ class FuncaoDadosCopyFromJSON {
     this._funcaoDados.fatorAjuste = new FatorAjuste().copyFromJSON(this._json.fatorAjuste);
   }
 
+  // TODO como converter quando vier DER / RLR entidade persistida no banco?
   private converteTextos() {
     this._funcaoDados.der = this._json.detStr;
     this._funcaoDados.rlr = this._json.retStr;
+
+    this._funcaoDados.derValues = DerTextParser.parse(this._json.detStr).textos;
+    this._funcaoDados.rlrValues = DerTextParser.parse(this._json.retStr).textos;
   }
 
 }
