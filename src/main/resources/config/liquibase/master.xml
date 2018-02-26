@@ -55,4 +55,5 @@
     <include file="classpath:config/liquibase/changelog/20180208152454_add_column_observacoes_to_Analise.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180215180754_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180220175152_add_Funcoes_DER_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180226142005_add_valor_DER_changelog.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
