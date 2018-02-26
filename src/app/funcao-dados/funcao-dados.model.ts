@@ -6,6 +6,7 @@ import { Complexidade } from '../analise-shared/complexidade-enum';
 import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';
 import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 import { Der } from '../der/der.model';
+import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
 
 export enum TipoFuncaoDados {
   'ALI' = 'ALI',
@@ -76,7 +77,7 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
   // refletir possiveis mudanças em FuncaoTransacao
   derValue(): number {
     if (this.ders) {
-      return this.ders.length;
+      return DerChipConverter.valor(this.ders);
     } else if (!this.der) {
       return 0;
     }

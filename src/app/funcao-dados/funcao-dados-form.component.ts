@@ -196,6 +196,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     this.resetarEstadoPosSalvar();
   }
 
+  // TODO tem que resetar os ids das DERs/RLRs que foram salvas no banco?
+  // antes nao precisava pois tudo era persistido no banco como uma string (nao rastreava)
   private resetarEstadoPosSalvar() {
     // Mantendo o mesmo conteudo a pedido do Leandro
     this.currentFuncaoDados = this.currentFuncaoDados.clone();

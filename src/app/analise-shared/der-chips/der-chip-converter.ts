@@ -35,4 +35,12 @@ export class DerChipConverter {
     });
   }
 
+  static valor(ders: Der[]): number {
+    if (ders.length === 1) {
+      return ders[0].valor;
+    } else {
+      return ders.length;
+    }
+  }
+
 }
