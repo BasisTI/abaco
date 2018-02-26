@@ -1,6 +1,8 @@
 <p-chips 
   [(ngModel)]="values"
   field="text"
+  addOnTab="true"
+  addOnBlur="true"
   (onAdd)="onAddValue($event.value)"
   (onRemove)="onRemove($event.value)">
 </p-chips>
