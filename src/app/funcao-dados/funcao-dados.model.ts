@@ -5,6 +5,7 @@ import { FatorAjuste } from '../fator-ajuste/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
 import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';
 import { FuncaoAnalise } from '../analise-shared/funcao-analise';
+import { Der } from '../der/der.model';
 
 export enum TipoFuncaoDados {
   'ALI' = 'ALI',
@@ -35,6 +36,7 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
     public grossPF?: number,
     public derValues?: string[],
     public rlrValues?: string[],
+    public ders?: Der[],
   ) {
     if (!pf) {
       this.pf = 0;
@@ -61,6 +63,8 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
 
     copy.funcionalidade = Funcionalidade.toNonCircularJson(copy.funcionalidade);
 
+    copy.ders = this.ders.map(der => der.toJSONState());
+
     return copy;
   }
 
@@ -71,7 +75,9 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
   // XXX eficiente obter vários ParseResult em lugares diferentes?
   // refletir possiveis mudanças em FuncaoTransacao
   derValue(): number {
-    if (!this.der) {
+    if (this.ders) {
+      return this.ders.length;
+    } else if (!this.der) {
       return 0;
     }
     return DerTextParser.parse(this.der).total();
@@ -88,7 +94,7 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
     return new FuncaoDados(this.id, this.artificialId, this.tipo, this.complexidade,
       this.pf, this.analise, this.funcionalidades, this.funcionalidade,
       this.fatorAjuste, this.alr, this.name, this.sustantation, this.der, this.rlr,
-      this.grossPF, this.derValues, this.rlrValues);
+      this.grossPF, this.derValues, this.rlrValues, this.ders);
   }
 
 }
@@ -110,6 +116,7 @@ class FuncaoDadosCopyFromJSON {
     this.converteFuncionalidade();
     this.converteFatorAjuste();
     this.converteTextos();
+    this.converteDers();
     return this._funcaoDados;
   }
 
@@ -144,6 +151,12 @@ class FuncaoDadosCopyFromJSON {
 
     this._funcaoDados.derValues = DerTextParser.parse(this._json.detStr).textos;
     this._funcaoDados.rlrValues = DerTextParser.parse(this._json.retStr).textos;
+  }
+
+  private converteDers() {
+    this._funcaoDados.ders = this._json.ders.map(
+      der => new Der().copyFromJSON(der)
+    );
   }
 
 }
