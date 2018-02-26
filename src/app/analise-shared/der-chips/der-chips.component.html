@@ -1,4 +1,6 @@
-<p-chips [(ngModel)]="values"
+<p-chips 
+  [(ngModel)]="values"
   field="text"
-  (onAdd)="onAddValue($event.value)">
+  (onAdd)="onAddValue($event.value)"
+  (onRemove)="onRemove($event.value)">
 </p-chips>

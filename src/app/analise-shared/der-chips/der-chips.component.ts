@@ -17,8 +17,8 @@ export class DerChipsComponent implements OnChanges {
   @Input()
   values: DerChipItem[];
 
-  @Input()
-  label: string;
+  @Output()
+  valuesChange: EventEmitter<DerChipItem[]> = new EventEmitter<DerChipItem[]>();
 
   ngOnChanges(changes: SimpleChanges) {
     // TODO precisa?
@@ -28,6 +28,11 @@ export class DerChipsComponent implements OnChanges {
     // removendo o adicionado pelo primeng no keydown de enter
     this.values.pop();
     this.values.push(new DerChipItem(undefined, value));
+    this.valuesChange.emit(this.values);
+  }
+
+  onRemove(value: string) {
+    this.valuesChange.emit(this.values);
   }
 
 }
