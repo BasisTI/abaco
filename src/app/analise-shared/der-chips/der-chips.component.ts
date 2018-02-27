@@ -37,7 +37,15 @@ export class DerChipsComponent implements OnChanges {
   }
 
   showTotal(): string {
-    return 'Total: ' + DerChipConverter.valor(this.values);
+    let total = 0;
+    if (this.values) {
+      if (this.values.length === 1 && !isNaN(this.values[0].text as any)) {
+        total = Number(this.values[0].text);
+      } else {
+        total = this.values.length;
+      }
+    }
+    return 'Total: ' + total;
   }
 
 }

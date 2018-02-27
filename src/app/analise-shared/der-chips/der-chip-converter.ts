@@ -43,11 +43,13 @@ export class DerChipConverter {
   }
 
   // TODO pode ser um outro tipo não any?
-  static valor(items: any[]): number {
-    if (items.length === 1 && items[0].valor) {
-      return items[0].valor;
+  static valor(ders: Der[]): number {
+    if (!ders) {
+      return 0;
+    } else if (ders.length === 1 && ders[0].valor) {
+      return ders[0].valor;
     } else {
-      return items.length;
+      return ders.length;
     }
   }
 
