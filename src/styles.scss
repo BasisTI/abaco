@@ -6,3 +6,11 @@ body .ui-messages.ui-messages-error {
 body .ui-messages.ui-messages-success {
   display: none !important;
 }
+
+#chips .ui-chips-input-token {
+  width: 100%;
+}
+
+#chips .ui-chips-input-token input {
+  width: 100%;
+}
