@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { DerChipItem } from './der-chip-item';
 import { DerChipConverter } from './der-chip-converter';
+import { DuplicatesResult, StringArrayDuplicatesFinder } from '..';
 
 @Component({
   selector: 'app-analise-der-chips',
@@ -21,6 +22,8 @@ export class DerChipsComponent implements OnChanges {
   @Output()
   valuesChange: EventEmitter<DerChipItem[]> = new EventEmitter<DerChipItem[]>();
 
+  duplicatesResult: DuplicatesResult;
+
   ngOnChanges(changes: SimpleChanges) {
     // TODO precisa?
   }
@@ -29,10 +32,17 @@ export class DerChipsComponent implements OnChanges {
     // removendo o adicionado pelo primeng no keydown de enter
     this.values.pop();
     this.values.push(new DerChipItem(undefined, value));
+    this.recalculaDuplicatas();
     this.valuesChange.emit(this.values);
   }
 
+  private recalculaDuplicatas() {
+    const valores: string[] = this.values.map(chipItem => chipItem.text);
+    this.duplicatesResult = StringArrayDuplicatesFinder.find(valores);
+  }
+
   onRemove(value: string) {
+    this.recalculaDuplicatas();
     this.valuesChange.emit(this.values);
   }
 
@@ -46,6 +56,13 @@ export class DerChipsComponent implements OnChanges {
       }
     }
     return 'Total: ' + total;
+  }
+
+  deveMostrarDuplicatas(): boolean {
+    if (!this.duplicatesResult) {
+      return false;
+    }
+    return this.duplicatesResult.temDuplicatas();
   }
 
 }

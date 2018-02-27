@@ -15,5 +15,10 @@
       {{ showTotal() }}
     </span>
   </div>
+  <div class="ui-g-12" *ngIf="deveMostrarDuplicatas()">
+    <span >
+      Valores duplicados: {{ duplicatesResult.duplicatasFormatadas() }}
+    </span>
+  </div>
 
 </div>
