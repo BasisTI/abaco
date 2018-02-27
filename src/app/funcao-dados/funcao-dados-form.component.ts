@@ -257,9 +257,13 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   private carregarDerERlr(fd: FuncaoDados) {
     // TODO Quando chegar do banco com DERs e RLRs ja salvas?
     // -- situacao para analises novas e editadas
-    
-    // SITUACAO para analises legadas
-    this.dersChips = DerChipConverter.converter(fd.derValues);
+    if (fd.ders) {
+      this.dersChips = DerChipConverter.converterDers(fd.ders);
+    } else { // SITUACAO para analises legadas
+      this.dersChips = DerChipConverter.converter(fd.derValues);
+    }
+
+    // TODO rlr depois
     this.rlrsChips = DerChipConverter.converter(fd.rlrValues);
   }
 

@@ -7,6 +7,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { DerChipItem } from './der-chip-item';
+import { DerChipConverter } from './der-chip-converter';
 
 @Component({
   selector: 'app-analise-der-chips',
@@ -15,7 +16,7 @@ import { DerChipItem } from './der-chip-item';
 export class DerChipsComponent implements OnChanges {
 
   @Input()
-  values: DerChipItem[];
+  values: DerChipItem[] = [];
 
   @Output()
   valuesChange: EventEmitter<DerChipItem[]> = new EventEmitter<DerChipItem[]>();
@@ -33,6 +34,10 @@ export class DerChipsComponent implements OnChanges {
 
   onRemove(value: string) {
     this.valuesChange.emit(this.values);
+  }
+
+  showTotal(): string {
+    return 'Total: ' + DerChipConverter.valor(this.values);
   }
 
 }

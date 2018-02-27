@@ -1,8 +1,18 @@
-<p-chips 
-  [(ngModel)]="values"
-  field="text"
-  addOnTab="true"
-  addOnBlur="true"
-  (onAdd)="onAddValue($event.value)"
-  (onRemove)="onRemove($event.value)">
-</p-chips>
+<div class="ui-g">
+  <div class="ui-g-12">
+    <p-chips 
+      [(ngModel)]="values"
+      field="text"
+      addOnTab="true"
+      addOnBlur="true"
+      (onAdd)="onAddValue($event.value)"
+      (onRemove)="onRemove($event.value)">
+    </p-chips>
+  </div>
+
+  <div class="ui-g-12">
+    <span>
+    </span>
+  </div>
+
+</div>

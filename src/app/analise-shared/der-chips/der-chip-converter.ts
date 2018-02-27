@@ -3,7 +3,6 @@ import { Der } from '../../der/der.model';
 
 export class DerChipConverter {
 
-
   static desconverterEmDers(chips: DerChipItem[]): Der[] {
     const ders: Der[] = [];
     chips.forEach(chipItem => {
@@ -22,6 +21,14 @@ export class DerChipConverter {
   }
 
 
+  static converterDers(ders: Der[]): DerChipItem[] {
+    return ders.map(der => new DerChipItem(der.id, this.retrieveTextFromDER(der)));
+  }
+
+  private static retrieveTextFromDER(der: Der): string {
+    return der.valor ? der.valor.toString() : der.nome;
+  }
+
   // TODO quando for somente o número?
   static converter(valores: string[]): DerChipItem[] {
     if (valores) {
@@ -35,11 +42,12 @@ export class DerChipConverter {
     });
   }
 
-  static valor(ders: Der[]): number {
-    if (ders.length === 1 && ders[0].valor) {
-      return ders[0].valor;
+  // TODO pode ser um outro tipo não any?
+  static valor(items: any[]): number {
+    if (items.length === 1 && items[0].valor) {
+      return items[0].valor;
     } else {
-      return ders.length;
+      return items.length;
     }
   }
 
