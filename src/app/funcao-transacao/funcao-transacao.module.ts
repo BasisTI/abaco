@@ -27,7 +27,7 @@ import {
   FuncaoTransacaoFormComponent,
 } from './';
 import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
-import { AbacoDerTextModule } from '../analise-shared/der-text/der-text.module';
+import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.module';
 
 @NgModule({
   imports: [
@@ -50,7 +50,7 @@ import { AbacoDerTextModule } from '../analise-shared/der-text/der-text.module';
     AbacoAnaliseSharedModule,
     MemoryDataTableModule,
     AbacoAnaliseBotaoSalvarModule,
-    AbacoDerTextModule
+    AbacoDerChipsModule
   ],
   declarations: [
     FuncaoTransacaoFormComponent
