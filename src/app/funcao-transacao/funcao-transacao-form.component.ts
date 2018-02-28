@@ -181,6 +181,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     // TODO inappropriate intimacy DEMAIS
     this.currentFuncaoTransacao.artificialId = undefined;
     this.currentFuncaoTransacao.id = undefined;
+
+    // clonando mas forçando novos a serem persistidos
+    this.dersChips.forEach(c => c.id = undefined);
+    this.alrsChips.forEach(c => c.id = undefined);
   }
 
   private doAdicionar() {

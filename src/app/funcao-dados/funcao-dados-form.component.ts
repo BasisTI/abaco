@@ -207,6 +207,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     // TODO inappropriate intimacy DEMAIS
     this.currentFuncaoDados.artificialId = undefined;
     this.currentFuncaoDados.id = undefined;
+
+    // clonando mas forçando novos a serem persistidos
+    this.dersChips.forEach(c => c.id = undefined);
+    this.rlrsChips.forEach(c => c.id = undefined);
   }
 
   private doAdicionar() {
