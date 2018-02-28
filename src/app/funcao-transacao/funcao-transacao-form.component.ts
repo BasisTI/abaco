@@ -13,6 +13,9 @@ import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
 import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { Subscription } from 'rxjs/Subscription';
+import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
+import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
+import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
 
 @Component({
   selector: 'app-analise-funcao-transacao',
@@ -21,6 +24,9 @@ import { Subscription } from 'rxjs/Subscription';
 export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
   isEdit: boolean;
+
+  dersChips: DerChipItem[];
+  alrsChips: DerChipItem[];
 
   funcaoTransacaoEmEdicao: FuncaoTransacao;
   resumo: ResumoFuncoes;
@@ -213,6 +219,20 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
     this.fatoresAjuste = this.manual.fatoresAjuste;
     funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, { 'id': funcaoSelecionada.fatorAjuste.id });
+  }
+
+  private carregarDerERlr(ft: FuncaoTransacao) {
+    this.dersChips = this.carregarReferenciavel(ft.ders, ft.derValues);
+    this.alrsChips = this.carregarReferenciavel(ft.alrs, ft.ftrValues);
+  }
+
+  private carregarReferenciavel(referenciaveis: AnaliseReferenciavel[],
+    strValues: string[]): DerChipItem[] {
+    if (referenciaveis) { // situacao para analises novas e editadas
+      return DerChipConverter.converterReferenciaveis(referenciaveis);
+    } else { // SITUACAO para analises legadas
+      return DerChipConverter.converter(strValues);
+    }
   }
 
   cancelarEdicao() {
