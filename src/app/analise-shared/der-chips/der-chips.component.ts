@@ -34,6 +34,10 @@ export class DerChipsComponent implements OnChanges {
   mostrarDialogAddMultiplos = false;
   addMultiplosTexto = '';
 
+  mostrarDialogEdicao = false;
+  textoEdicao = '';
+  indexChipEmEdicao: number;
+
   ngOnChanges(changes: SimpleChanges) {
     // TODO precisa?
   }
@@ -93,6 +97,27 @@ export class DerChipsComponent implements OnChanges {
   fecharDialogAddMultiplos() {
     this.mostrarDialogAddMultiplos = false;
     this.addMultiplosTexto = '';
+  }
+
+  doubleClickChip(chipClicado: DerChipItem) {
+    this.indexChipEmEdicao = this.values.indexOf(chipClicado);
+    this.textoEdicao = this.cloneString(chipClicado.text);
+    this.mostrarDialogEdicao = true;
+  }
+
+  private cloneString(str: string): string {
+    return (' ' + str).slice(1);
+  }
+
+  editarChip() {
+    const chipEmEdicao: DerChipItem = this.values[this.indexChipEmEdicao];
+    chipEmEdicao.text = this.textoEdicao;
+    this.fecharDialogEdicao();
+  }
+
+  fecharDialogEdicao() {
+    this.textoEdicao = '';
+    this.mostrarDialogEdicao = false;
   }
 
 }

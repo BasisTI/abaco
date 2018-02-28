@@ -3,11 +3,18 @@
     <p-chips 
       id="chips"
       [(ngModel)]="values"
-      field="text"
       addOnTab="true"
       addOnBlur="true"
       (onAdd)="onAddValue($event.value)"
       (onRemove)="onRemove($event.value)">
+
+      <ng-template let-item pTemplate="item">
+        <span class="ui-chips-token-label ng-star-inserted"
+          (dblclick)="doubleClickChip(item)">
+          {{ item.text }}
+        </span>
+      </ng-template>
+
     </p-chips>
   </div>
 
@@ -54,4 +61,34 @@
       </div>
     </div>
   </div>
+</p-dialog>
+
+<p-dialog header="Editar" [(visible)]="mostrarDialogEdicao"
+  [contentStyle]="{'overflow': 'visible'}" [width]="800">
+
+  <div class="ui-g">
+
+    <textarea pInputTextarea
+      [(ngModel)]="textoEdicao"
+      style="white-space: nowrap; overflow: auto;"
+      [rows]="1" [cols]="180">
+    </textarea>
+    
+    <div class="ui-g ui-md-12" style="justify-content: flex-end">
+      <div class="ui-g-2">
+        <button pButton type="button"
+          class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+          label="Cancelar" (click)="fecharDialogEdicao()">
+        </button>
+      </div>
+      <div class="ui-g-2">
+        <button pButton type="button"
+          class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+          label="Editar" (click)="editarChip()">
+        </button>
+      </div>
+    </div>
+
+  </div>
+
 </p-dialog>
