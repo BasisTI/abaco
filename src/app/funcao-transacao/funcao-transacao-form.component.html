@@ -39,19 +39,15 @@
           </span>
         </div>
       </div>
-  
-      <div class="ui-g-6" style="margin-bottom: 25px">
-        <app-analise-der-text 
-          [(value)]="currentFuncaoTransacao.der"
-          label="DER (TD)">
-        </app-analise-der-text>
+
+      <div class="ui-g-12" style="margin-bottom: 25px">
+        <h2>DER (TD)</h2>
+        <app-analise-der-chips [(values)]="dersChips"></app-analise-der-chips>
       </div>
 
-      <div class="ui-g-6" style="margin-bottom: 25px">
-        <app-analise-der-text 
-          [(value)]="currentFuncaoTransacao.ftr"
-          label="FTR (AR)">
-        </app-analise-der-text>
+      <div class="ui-g-12" style="margin-bottom: 25px">
+        <h2>FTR (AR)</h2>
+        <app-analise-der-chips [(values)]="alrsChips"></app-analise-der-chips>
       </div>
 
       <div class="ui-g-12" style="margin-bottom: 25px">

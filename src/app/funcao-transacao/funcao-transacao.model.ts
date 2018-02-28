@@ -108,7 +108,7 @@ class FuncaoTransacaoCopyFromJSON {
 
   private _json: any;
 
-  private _funcaoTransacao; FuncaoDados;
+  private _funcaoTransacao; FuncaoTransacao;
 
   constructor(json: any) {
     this._json = json;
@@ -153,6 +153,9 @@ class FuncaoTransacaoCopyFromJSON {
   private converteTextos() {
     this._funcaoTransacao.der = this._json.detStr;
     this._funcaoTransacao.ftr = this._json.ftrStr;
+
+    this._funcaoTransacao.derValues = this.converteTexto(this._json.detStr);
+    this._funcaoTransacao.ftrValues = this.converteTexto(this._json.ftrStr);
   }
 
   private converteTexto(texto: any): string[] {
@@ -171,8 +174,12 @@ class FuncaoTransacaoCopyFromJSON {
   }
 
   private converteAlrs() {
-    this._funcaoTransacao.rlrs = this._json.rlrs.map(
-      rlr => new Alr().copyFromJSON(rlr)
+    // XXX esquisito. rlrs vem vazio quando não tem, alrs não
+    if (!this._json.alrs) {
+      return;
+    }
+    this._funcaoTransacao.alrs = this._json.alrs.map(
+      alr => new Alr().copyFromJSON(alr)
     );
   }
 }

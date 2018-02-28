@@ -147,12 +147,22 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   }
 
   private adicionarOuSalvar() {
+    this.desconverterChips();
+    this.doAdicionarOuSalvar();
+    this.isEdit = false;
+  }
+
+  private desconverterChips() {
+    this.currentFuncaoTransacao.ders = DerChipConverter.desconverterEmDers(this.dersChips);
+    this.currentFuncaoTransacao.alrs = DerChipConverter.desconverterEmRlrs(this.alrsChips);
+  }
+
+  private doAdicionarOuSalvar() {
     if (this.isEdit) {
       this.doEditar();
     } else {
       this.doAdicionar();
     }
-    this.isEdit = false;
   }
 
   private doEditar() {
@@ -212,6 +222,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   private carregarValoresNaPaginaParaEdicao(funcaoSelecionada: FuncaoTransacao) {
     this.analiseSharedDataService.funcaoAnaliseCarregada();
     this.carregarFatorDeAjusteNaEdicao(funcaoSelecionada);
+    this.carregarDerEAlr(funcaoSelecionada);
   }
 
   private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
@@ -219,14 +230,14 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, { 'id': funcaoSelecionada.fatorAjuste.id });
   }
 
-  private carregarDerERlr(ft: FuncaoTransacao) {
+  private carregarDerEAlr(ft: FuncaoTransacao) {
     this.dersChips = this.carregarReferenciavel(ft.ders, ft.derValues);
     this.alrsChips = this.carregarReferenciavel(ft.alrs, ft.ftrValues);
   }
 
   private carregarReferenciavel(referenciaveis: AnaliseReferenciavel[],
     strValues: string[]): DerChipItem[] {
-    if (referenciaveis) { // situacao para analises novas e editadas
+    if (referenciaveis && referenciaveis.length > 0) { // situacao para analises novas e editadas
       return DerChipConverter.converterReferenciaveis(referenciaveis);
     } else { // SITUACAO para analises legadas
       return DerChipConverter.converter(strValues);
