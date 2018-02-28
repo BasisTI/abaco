@@ -263,7 +263,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   private carregarReferenciavel(referenciaveis: AnaliseReferenciavel[],
     strValues: string[]): DerChipItem[] {
-    if (referenciaveis) { // situacao para analises novas e editadas
+    if (referenciaveis && referenciaveis.length > 0) { // situacao para analises novas e editadas
       return DerChipConverter.converterReferenciaveis(referenciaveis);
     } else { // SITUACAO para analises legadas
       return DerChipConverter.converter(strValues);

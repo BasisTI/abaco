@@ -1,6 +1,6 @@
 import { BaseEntity, JSONable } from '../shared';
 import { Funcionalidade } from '../funcionalidade/index';
-import { DerTextParser } from '../analise-shared/der-text/der-text-parser';
+import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
 import { FatorAjuste } from '../fator-ajuste/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
 import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';
@@ -79,7 +79,7 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
   // XXX eficiente obter vários ParseResult em lugares diferentes?
   // refletir possiveis mudanças em FuncaoTransacao
   derValue(): number {
-    if (this.ders) {
+    if (this.ders && this.ders.length > 0) {
       return DerChipConverter.valor(this.ders);
     } else if (!this.der) {
       return 0;
@@ -88,7 +88,7 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
   }
 
   rlrValue(): number {
-    if (this.rlrs) {
+    if (this.rlrs && this.rlrs.length > 0) {
       return DerChipConverter.valor(this.rlrs);
     } else if (!this.rlr) {
       return 0;
@@ -156,8 +156,18 @@ class FuncaoDadosCopyFromJSON {
     this._funcaoDados.der = this._json.detStr;
     this._funcaoDados.rlr = this._json.retStr;
 
-    this._funcaoDados.derValues = DerTextParser.parse(this._json.detStr).textos;
-    this._funcaoDados.rlrValues = DerTextParser.parse(this._json.retStr).textos;
+    this._funcaoDados.derValues = this.converteTexto(this._json.detStr);
+    this._funcaoDados.rlrValues = this.converteTexto(this._json.retStr);
+  }
+
+  private converteTexto(texto: any): string[] {
+    const parseResult: ParseResult = DerTextParser.parse(texto);
+    // TODO acho que essa logica esta sendo feita em mais de um lugar
+    if (parseResult.isTipoNumerico()) {
+      return [parseResult.numero.toString()];
+    } else {
+      return parseResult.textos;
+    }
   }
 
   private converteDers() {

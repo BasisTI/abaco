@@ -36,7 +36,7 @@ export class ParseResult {
     return this.total().toString();
   }
 
-  private isTipoNumerico(): boolean {
+  isTipoNumerico(): boolean {
     return this.tipo === ParseResult.NUMERO_TIPO;
   }
 
