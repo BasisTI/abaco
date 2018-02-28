@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
 import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
 import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
+import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
 
 @Component({
   selector: 'app-analise-funcao-dados',
@@ -177,6 +178,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   private desconverterChips() {
     this.currentFuncaoDados.ders = DerChipConverter.desconverterEmDers(this.dersChips);
+    this.currentFuncaoDados.rlrs = DerChipConverter.desconverterEmRlrs(this.rlrsChips);
   }
 
   private doAdicionarOuSalvar() {
@@ -255,16 +257,17 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   private carregarDerERlr(fd: FuncaoDados) {
-    // TODO Quando chegar do banco com DERs e RLRs ja salvas?
-    // -- situacao para analises novas e editadas
-    if (fd.ders) {
-      this.dersChips = DerChipConverter.converterDers(fd.ders);
-    } else { // SITUACAO para analises legadas
-      this.dersChips = DerChipConverter.converter(fd.derValues);
-    }
+    this.dersChips = this.carregarReferenciavel(fd.ders, fd.derValues);
+    this.rlrsChips = this.carregarReferenciavel(fd.rlrs, fd.rlrValues);
+  }
 
-    // TODO rlr depois
-    this.rlrsChips = DerChipConverter.converter(fd.rlrValues);
+  private carregarReferenciavel(referenciaveis: AnaliseReferenciavel[],
+    strValues: string[]): DerChipItem[] {
+    if (referenciaveis) { // situacao para analises novas e editadas
+      return DerChipConverter.converterReferenciaveis(referenciaveis);
+    } else { // SITUACAO para analises legadas
+      return DerChipConverter.converter(strValues);
+    }
   }
 
   cancelarEdicao() {
