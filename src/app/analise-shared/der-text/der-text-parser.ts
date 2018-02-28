@@ -1,4 +1,4 @@
-import { DuplicatesResult, StringArrayDuplicatesFinder } from './string-array-duplicates-finder';
+import { DuplicatesResult, StringArrayDuplicatesFinder } from '.././string-array-duplicates-finder';
 
 import * as _ from 'lodash';
 
