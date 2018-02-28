@@ -41,13 +41,15 @@ public class Rlr implements Serializable {
     @Column(name = "nome", nullable = false)
     private String nome;
 
+    private Integer valor;
+
     @OneToMany(mappedBy = "rlr")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Der> ders = new HashSet<>();
 
     @ManyToOne
-    @JsonBackReference(value="funcaoDados")
+    @JsonBackReference(value = "funcaoDados")
     private FuncaoDados funcaoDados;
 
     public Long getId() {
@@ -109,6 +111,14 @@ public class Rlr implements Serializable {
         this.funcaoDados = funcaoDados;
     }
 
+    public Integer getValor() {
+        return valor;
+    }
+
+    public void setValor(Integer valor) {
+        this.valor = valor;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -131,9 +141,6 @@ public class Rlr implements Serializable {
 
     @Override
     public String toString() {
-        return "Rlr{" +
-            "id=" + id +
-            ", nome='" + nome + "'" +
-            '}';
+        return "Rlr{" + "id=" + id + ", nome='" + nome + "'" + '}';
     }
 }
