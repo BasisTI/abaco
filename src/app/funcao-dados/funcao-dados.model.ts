@@ -1,6 +1,6 @@
 import { BaseEntity, JSONable } from '../shared';
 import { Funcionalidade } from '../funcionalidade/index';
-import { DerTextParser } from '../analise-shared/der-text-parser';
+import { DerTextParser } from '../analise-shared/der-text/der-text-parser';
 import { FatorAjuste } from '../fator-ajuste/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
 import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';

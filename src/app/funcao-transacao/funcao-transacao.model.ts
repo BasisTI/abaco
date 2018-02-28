@@ -2,7 +2,7 @@ import { BaseEntity, JSONable } from '../shared';
 import { FatorAjuste } from '../fator-ajuste/index';
 import { Funcionalidade } from '../funcionalidade/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
-import { DerTextParser } from '../analise-shared/der-text-parser';
+import { DerTextParser } from '../analise-shared/der-text/der-text-parser';
 import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';
 import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 

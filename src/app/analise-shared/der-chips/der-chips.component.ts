@@ -6,9 +6,10 @@ import {
   OnChanges,
   SimpleChanges
 } from '@angular/core';
+
 import { DerChipItem } from './der-chip-item';
 import { DerChipConverter } from './der-chip-converter';
-import { DuplicatesResult, StringArrayDuplicatesFinder } from '..';
+import { DuplicatesResult, StringArrayDuplicatesFinder } from '../string-array-duplicates-finder';
 
 @Component({
   selector: 'app-analise-der-chips',
