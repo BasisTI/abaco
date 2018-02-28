@@ -54,7 +54,6 @@ import { AbacoDerTextModule } from '../analise-shared/der-text/der-text.module';
     AbacoEllipsisTooltipModule,
     MultiSelectModule,
     AbacoDerChipsModule,
-    AbacoDerTextModule
   ],
   declarations: [
     FuncaoDadosFormComponent
