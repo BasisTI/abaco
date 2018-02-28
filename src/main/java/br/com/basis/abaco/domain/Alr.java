@@ -1,5 +1,6 @@
 package br.com.basis.abaco.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -34,6 +35,7 @@ public class Alr implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
+    @JsonBackReference(value="funcaoTransacao")
     @ManyToOne
     private FuncaoTransacao funcaoTransacao;
 
