@@ -1,32 +1,43 @@
 import { DerChipItem } from './der-chip-item';
 import { Der } from '../../der/der.model';
+import { AnaliseReferenciavel } from '../analise-referenciavel';
+import { Rlr } from '../../rlr/rlr.model';
 
 export class DerChipConverter {
 
   static desconverterEmDers(chips: DerChipItem[]): Der[] {
-    const ders: Der[] = [];
+    return this.desconverter(chips, Der);
+  }
+
+  static desconverterEmRlrs(chips: DerChipItem[]): Rlr[] {
+    return this.desconverter(chips, Rlr);
+  }
+
+  private static desconverter<T extends AnaliseReferenciavel>(
+    chips: DerChipItem[], type: { new(): T; }): T[] {
+
+    const referenciavel: T[] = [];
     chips.forEach(chipItem => {
-      const der = new Der();
-      der.id = chipItem.id;
+      const ref = new type();
+      ref.id = chipItem.id;
 
       if (!isNaN(chipItem.text as any)) {
-        der.valor = Number(chipItem.text);
+        ref.valor = Number(chipItem.text);
       } else {
-        der.nome = chipItem.text;
+        ref.nome = chipItem.text;
       }
 
-      ders.push(der);
+      referenciavel.push(ref);
     });
-    return ders;
+    return referenciavel;
   }
 
-
-  static converterDers(ders: Der[]): DerChipItem[] {
-    return ders.map(der => new DerChipItem(der.id, this.retrieveTextFromDER(der)));
+  static converterReferenciaveis(refs: AnaliseReferenciavel[]) {
+    return refs.map(ref => new DerChipItem(ref.id, this.retrieveTextFromDER(ref)));
   }
 
-  private static retrieveTextFromDER(der: Der): string {
-    return der.valor ? der.valor.toString() : der.nome;
+  private static retrieveTextFromDER(ref: AnaliseReferenciavel): string {
+    return ref.valor ? ref.valor.toString() : ref.nome;
   }
 
   // TODO quando for somente o número?
@@ -43,13 +54,13 @@ export class DerChipConverter {
   }
 
   // TODO pode ser um outro tipo não any?
-  static valor(ders: Der[]): number {
-    if (!ders) {
+  static valor(refs: AnaliseReferenciavel[]): number {
+    if (!refs) {
       return 0;
-    } else if (ders.length === 1 && ders[0].valor) {
-      return ders[0].valor;
+    } else if (refs.length === 1 && refs[0].valor) {
+      return refs[0].valor;
     } else {
-      return ders.length;
+      return refs.length;
     }
   }
 
