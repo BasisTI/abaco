@@ -273,9 +273,15 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   cancelarEdicao() {
     this.analiseSharedDataService.funcaoAnaliseDescarregada();
     this.isEdit = false;
-    this.currentFuncaoDados = new FuncaoDados();
+    this.limparDadosDaTelaNaEdicaoCancelada();
     this.pageNotificationService.addInfoMsg('Cancelada a Alteração de Função de Dados');
     this.scrollParaInicioDaAba();
+  }
+
+  private limparDadosDaTelaNaEdicaoCancelada() {
+    this.currentFuncaoDados = new FuncaoDados();
+    this.dersChips = [];
+    this.rlrsChips = [];
   }
 
   confirmDelete(funcaoDadosSelecionada: FuncaoDados) {
