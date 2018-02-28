@@ -166,11 +166,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   }
 
   private doEditar() {
-    const funcaoDadosCalculada = CalculadoraTransacao.calcular(this.analise.tipoContagem, this.currentFuncaoTransacao);
+    const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.tipoContagem, this.currentFuncaoTransacao);
     // TODO temporal coupling
-    this.analise.updateFuncaoTransacao(funcaoDadosCalculada);
+    this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
     this.atualizaResumo();
-    this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
+    this.pageNotificationService.addSuccessMsg(`Função de Transação '${funcaoTransacaoCalculada.name}' alterada com sucesso`);
     this.resetarEstadoPosSalvar();
   }
 
