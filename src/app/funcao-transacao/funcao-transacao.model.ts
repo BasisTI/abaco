@@ -2,9 +2,12 @@ import { BaseEntity, JSONable } from '../shared';
 import { FatorAjuste } from '../fator-ajuste/index';
 import { Funcionalidade } from '../funcionalidade/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
-import { DerTextParser } from '../analise-shared/der-text/der-text-parser';
+import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
 import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';
 import { FuncaoAnalise } from '../analise-shared/funcao-analise';
+import { Der } from '../der/der.model';
+import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
+import { Alr } from '../alr/alr.model';
 
 export enum TipoFuncaoTransacao {
   'EE' = 'EE', // entrada externa
@@ -28,7 +31,7 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
     public funcionalidades?: BaseEntity[],
     public funcionalidade?: Funcionalidade,
     public fatorAjuste?: FatorAjuste,
-    public alrs?: BaseEntity[],
+    public alrs?: Alr[],
     public name?: string,
     public sustantation?: string,
     public der?: string,
@@ -36,6 +39,7 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
     public grossPF?: number,
     public derValues?: string[],
     public ftrValues?: string[],
+    public ders?: Der[],
   ) {
     if (!pf) {
       this.pf = 0;
@@ -51,13 +55,15 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
 
   toJSONState(): FuncaoTransacao {
     const copy: FuncaoTransacao = Object.assign({}, this);
-    // XXX "compartilhar" DerTextParser? (derValue())
     copy.derValues = DerTextParser.parse(this.der).textos;
     copy.ftrValues = DerTextParser.parse(this.ftr).textos;
     copy.detStr = copy.der;
     copy.ftrStr = copy.ftr;
+
     copy.funcionalidade = Funcionalidade.toNonCircularJson(copy.funcionalidade);
-    // TODO converter funcionalidades
+
+    copy.ders = this.ders.map(der => der.toJSONState());
+    copy.alrs = this.alrs.map(alr => alr.toJSONState());
 
     return copy;
   }
@@ -71,14 +77,18 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
   }
 
   derValue(): number {
-    if (!this.der) {
+    if (this.ders && this.ders.length > 0) {
+      return DerChipConverter.valor(this.ders);
+    } else if (!this.der) {
       return 0;
     }
     return DerTextParser.parse(this.der).total();
   }
 
   ftrValue(): number {
-    if (!this.ftr) {
+    if (this.alrs && this.alrs.length > 0) {
+      return DerChipConverter.valor(this.alrs);
+    } else if (!this.ftr) {
       return 0;
     }
     return DerTextParser.parse(this.ftr).total();
@@ -88,7 +98,8 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
     return new FuncaoTransacao(this.id, this.artificialId, this.tipo,
       this.complexidade, this.pf, this.analise, this.funcionalidades,
       this.funcionalidade, this.fatorAjuste, this.alrs,
-      this.name, this.sustantation, this.der, this.ftr, this.grossPF);
+      this.name, this.sustantation, this.der, this.ftr, this.grossPF,
+      this.derValues, this.ftrValues, this.ders);
   }
 }
 
@@ -110,6 +121,8 @@ class FuncaoTransacaoCopyFromJSON {
     this.converteFuncionalidade();
     this.converteFatorAjuste();
     this.converteTextos();
+    this.converteDers();
+    this.converteAlrs();
     return this._funcaoTransacao;
   }
 
@@ -142,4 +155,24 @@ class FuncaoTransacaoCopyFromJSON {
     this._funcaoTransacao.ftr = this._json.ftrStr;
   }
 
+  private converteTexto(texto: any): string[] {
+    const parseResult: ParseResult = DerTextParser.parse(texto);
+    if (parseResult.isTipoNumerico()) {
+      return [parseResult.numero.toString()];
+    } else {
+      return parseResult.textos;
+    }
+  }
+
+  private converteDers() {
+    this._funcaoTransacao.ders = this._json.ders.map(
+      der => new Der().copyFromJSON(der)
+    );
+  }
+
+  private converteAlrs() {
+    this._funcaoTransacao.rlrs = this._json.rlrs.map(
+      rlr => new Alr().copyFromJSON(rlr)
+    );
+  }
 }
