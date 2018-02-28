@@ -1,5 +1,5 @@
 <div class="ui-g">
-  <div class="ui-g-12 ui-fluid">
+  <div class="ui-g-10">
     <p-chips 
       id="chips"
       [(ngModel)]="values"
@@ -9,6 +9,14 @@
       (onAdd)="onAddValue($event.value)"
       (onRemove)="onRemove($event.value)">
     </p-chips>
+  </div>
+
+  <div class="ui-g-2">
+    <button pButton type="button"
+      class="blue-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+      label="Adicionar múltiplos"
+      (click)="abrirDialogAddMultiplos()">
+    </button>
   </div>
 
   <div class="ui-g-12">
@@ -23,3 +31,27 @@
   </div>
 
 </div>
+
+<p-dialog header="Adicionar múltiplos" [(visible)]="mostrarDialogAddMultiplos"
+  [contentStyle]="{'overflow': 'visible'}" [width]="800">
+  <div class="ui-g">
+    <div class="ui-g-12" style="margin-bottom: 25px">
+      <app-analise-der-text [(value)]="addMultiplosTexto"></app-analise-der-text>
+    </div>
+
+    <div class="ui-g ui-md-12" style="justify-content: flex-end">
+      <div class="ui-g-2">
+        <button pButton type="button"
+          class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+          label="Cancelar" (click)="fecharDialogAddMultiplos()">
+        </button>
+      </div>
+      <div class="ui-g-2">
+        <button pButton type="button"
+          class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+          label="Adicionar" (click)="adicionarMultiplos()">
+        </button>
+      </div>
+    </div>
+  </div>
+</p-dialog>

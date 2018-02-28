@@ -9,7 +9,13 @@ import {
 
 import { DerChipItem } from './der-chip-item';
 import { DerChipConverter } from './der-chip-converter';
-import { DuplicatesResult, StringArrayDuplicatesFinder } from '../string-array-duplicates-finder';
+
+import { DerTextParser, ParseResult } from '../der-text/der-text-parser';
+
+import {
+  DuplicatesResult,
+  StringArrayDuplicatesFinder
+} from '../string-array-duplicates-finder';
 
 @Component({
   selector: 'app-analise-der-chips',
@@ -24,6 +30,9 @@ export class DerChipsComponent implements OnChanges {
   valuesChange: EventEmitter<DerChipItem[]> = new EventEmitter<DerChipItem[]>();
 
   duplicatesResult: DuplicatesResult;
+
+  mostrarDialogAddMultiplos = false;
+  addMultiplosTexto = '';
 
   ngOnChanges(changes: SimpleChanges) {
     // TODO precisa?
@@ -64,6 +73,26 @@ export class DerChipsComponent implements OnChanges {
       return false;
     }
     return this.duplicatesResult.temDuplicatas();
+  }
+
+  abrirDialogAddMultiplos() {
+    this.mostrarDialogAddMultiplos = true;
+  }
+
+  adicionarMultiplos() {
+    this.values = this.values.concat(this.converteMultiplos());
+    this.recalculaDuplicatas();
+    this.fecharDialogAddMultiplos();
+  }
+
+  private converteMultiplos(): DerChipItem[] {
+    const parseResult: ParseResult = DerTextParser.parse(this.addMultiplosTexto);
+    return parseResult.textos.map(txt => new DerChipItem(undefined, txt));
+  }
+
+  fecharDialogAddMultiplos() {
+    this.mostrarDialogAddMultiplos = false;
+    this.addMultiplosTexto = '';
   }
 
 }

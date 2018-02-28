@@ -2,9 +2,10 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 
-import { ButtonModule, ChipsModule } from 'primeng/primeng';
+import { ButtonModule, ChipsModule, DialogModule } from 'primeng/primeng';
 import { DerChipsComponent } from './der-chips.component';
 import { FormsModule } from '@angular/forms';
+import { AbacoDerTextModule } from '../der-text/der-text.module';
 
 @NgModule({
   imports: [
@@ -12,7 +13,9 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     BrowserModule,
     ButtonModule,
-    ChipsModule
+    ChipsModule,
+    AbacoDerTextModule,
+    DialogModule
   ],
   declarations: [
     DerChipsComponent
