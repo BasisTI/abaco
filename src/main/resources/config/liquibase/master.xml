@@ -58,5 +58,6 @@
     <include file="classpath:config/liquibase/changelog/20180226142005_add_valor_DER_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180226162227_drop_DER_nome_notNullConstraint_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180228180911_add_valor_RLR_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180228201305_ADD_nome_valor_ALR_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180228200633_drop_RLR_nome_notNullConstraint_changelog.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
