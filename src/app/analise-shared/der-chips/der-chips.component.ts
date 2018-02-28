@@ -91,7 +91,11 @@ export class DerChipsComponent implements OnChanges {
 
   private converteMultiplos(): DerChipItem[] {
     const parseResult: ParseResult = DerTextParser.parse(this.addMultiplosTexto);
-    return parseResult.textos.map(txt => new DerChipItem(undefined, txt));
+    if (parseResult.textos) {
+      return parseResult.textos.map(txt => new DerChipItem(undefined, txt));
+    } else {
+      return [new DerChipItem(undefined, parseResult.numero.toString())];
+    }
   }
 
   fecharDialogAddMultiplos() {
