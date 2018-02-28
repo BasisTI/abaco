@@ -6,6 +6,7 @@ import { Complexidade } from '../analise-shared/complexidade-enum';
 import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';
 import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 import { Der } from '../der/der.model';
+import { Rlr } from '../rlr/rlr.model';
 import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
 
 export enum TipoFuncaoDados {
@@ -38,6 +39,7 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
     public derValues?: string[],
     public rlrValues?: string[],
     public ders?: Der[],
+    public rlrs?: Rlr[]
   ) {
     if (!pf) {
       this.pf = 0;
@@ -65,6 +67,7 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
     copy.funcionalidade = Funcionalidade.toNonCircularJson(copy.funcionalidade);
 
     copy.ders = this.ders.map(der => der.toJSONState());
+    copy.rlrs = this.rlrs.map(rlr => rlr.toJSONState());
 
     return copy;
   }
@@ -95,7 +98,7 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
     return new FuncaoDados(this.id, this.artificialId, this.tipo, this.complexidade,
       this.pf, this.analise, this.funcionalidades, this.funcionalidade,
       this.fatorAjuste, this.alr, this.name, this.sustantation, this.der, this.rlr,
-      this.grossPF, this.derValues, this.rlrValues, this.ders);
+      this.grossPF, this.derValues, this.rlrValues, this.ders, this.rlrs);
   }
 
 }
@@ -118,6 +121,7 @@ class FuncaoDadosCopyFromJSON {
     this.converteFatorAjuste();
     this.converteTextos();
     this.converteDers();
+    this.converteRlrs();
     return this._funcaoDados;
   }
 
@@ -157,6 +161,12 @@ class FuncaoDadosCopyFromJSON {
   private converteDers() {
     this._funcaoDados.ders = this._json.ders.map(
       der => new Der().copyFromJSON(der)
+    );
+  }
+
+  private converteRlrs() {
+    this._funcaoDados.rlrs = this._json.rlrs.map(
+      rlr => new Rlr().copyFromJSON(rlr)
     );
   }
 
