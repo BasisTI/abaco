@@ -28,7 +28,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   dersChips: DerChipItem[];
   alrsChips: DerChipItem[];
 
-  funcaoTransacaoEmEdicao: FuncaoTransacao;
   resumo: ResumoFuncoes;
 
   fatoresAjuste: FatorAjuste[] = [];
@@ -195,8 +194,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.prepararParaEdicao(funcaoSelecionada);
         break;
       case 'delete':
-        this.funcaoTransacaoEmEdicao = funcaoSelecionada;
-        this.confirmDelete();
+        this.confirmDelete(funcaoSelecionada);
     }
   }
 
@@ -243,12 +241,12 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     this.scrollParaInicioDaAba();
   }
 
-  confirmDelete() {
-    const name: string = this.funcaoTransacaoEmEdicao.name;
+  confirmDelete(funcaoSelecionada: FuncaoTransacao) {
+    const name: string = funcaoSelecionada.name;
     this.confirmationService.confirm({
       message: `Tem certeza que deseja excluir a Função de Transação '${name}'?`,
       accept: () => {
-        this.analise.deleteFuncaoTransacao(this.funcaoTransacaoEmEdicao);
+        this.analise.deleteFuncaoTransacao(funcaoSelecionada);
         this.pageNotificationService.addDeleteMsgWithName(name);
       }
     });
