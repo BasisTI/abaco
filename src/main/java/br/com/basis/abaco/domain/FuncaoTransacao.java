@@ -51,7 +51,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     private String ftrStr;
 
     @JsonManagedReference(value="funcaoTransacao")
-    @OneToMany(mappedBy = "funcaoTransacao")
+    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Alr> alrs = new HashSet<>();
 

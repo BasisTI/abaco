@@ -94,6 +94,7 @@ public class AnaliseResource {
             funcaoDados.setAnalise(analise);
             funcaoDados.getFiles().forEach(file -> file.setFuncaoDados(funcaoDados));
             funcaoDados.getDers().forEach(der -> der.setFuncaoDados(funcaoDados));
+            funcaoDados.getRlrs().forEach(rlr -> rlr.setFuncaoDados(funcaoDados));
         });
     }
 
@@ -102,6 +103,7 @@ public class AnaliseResource {
             funcaoTransacao.setAnalise(analise);
             funcaoTransacao.getFiles().forEach(file -> file.setFuncaoTransacao(funcaoTransacao));
             funcaoTransacao.getDers().forEach(der -> der.setFuncaoTransacao(funcaoTransacao));
+            funcaoTransacao.getAlrs().forEach(alr -> alr.setFuncaoTransacao(funcaoTransacao));
         });
     }
 
