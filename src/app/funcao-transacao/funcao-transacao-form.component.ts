@@ -154,7 +154,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
   private desconverterChips() {
     this.currentFuncaoTransacao.ders = DerChipConverter.desconverterEmDers(this.dersChips);
-    this.currentFuncaoTransacao.alrs = DerChipConverter.desconverterEmRlrs(this.alrsChips);
+    this.currentFuncaoTransacao.alrs = DerChipConverter.desconverterEmAlrs(this.alrsChips);
   }
 
   private doAdicionarOuSalvar() {

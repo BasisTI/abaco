@@ -2,6 +2,7 @@ import { DerChipItem } from './der-chip-item';
 import { Der } from '../../der/der.model';
 import { AnaliseReferenciavel } from '../analise-referenciavel';
 import { Rlr } from '../../rlr/rlr.model';
+import { Alr } from '../../alr/alr.model';
 
 export class DerChipConverter {
 
@@ -13,6 +14,10 @@ export class DerChipConverter {
     return this.desconverter(chips, Rlr);
   }
 
+  static desconverterEmAlrs(chips: DerChipItem[]): Alr[] {
+    return this.desconverter(chips, Alr);
+  }
+
   private static desconverter<T extends AnaliseReferenciavel>(
     chips: DerChipItem[], type: { new(): T; }): T[] {
 
@@ -21,6 +26,9 @@ export class DerChipConverter {
       const ref = new type();
       ref.id = chipItem.id;
 
+      // FIXME mais logica embolada
+      // se length > 0 salvar como texto, ao inves de valor?
+      // repensar a logica toda de nome/valor
       if (!isNaN(chipItem.text as any)) {
         ref.valor = Number(chipItem.text);
       } else {

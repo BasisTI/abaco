@@ -176,10 +176,11 @@ class FuncaoTransacaoCopyFromJSON {
   private converteAlrs() {
     // XXX esquisito. rlrs vem vazio quando não tem, alrs não
     if (!this._json.alrs) {
-      return;
+      this._funcaoTransacao.alrs = [];
+    } else {
+      this._funcaoTransacao.alrs = this._json.alrs.map(
+        alr => new Alr().copyFromJSON(alr)
+      );
     }
-    this._funcaoTransacao.alrs = this._json.alrs.map(
-      alr => new Alr().copyFromJSON(alr)
-    );
   }
 }
