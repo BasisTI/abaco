@@ -88,7 +88,9 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
   }
 
   rlrValue(): number {
-    if (!this.rlr) {
+    if (this.rlrs) {
+      return DerChipConverter.valor(this.rlrs);
+    } else if (!this.rlr) {
       return 0;
     }
     return DerTextParser.parse(this.rlr).total();
