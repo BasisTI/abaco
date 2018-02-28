@@ -14,3 +14,9 @@ body .ui-messages.ui-messages-success {
 #chips .ui-chips-input-token input {
   width: 100%;
 }
+
+span.ui-chips-token-label.ng-star-inserted {
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+}
