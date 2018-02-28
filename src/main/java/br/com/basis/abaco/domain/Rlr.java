@@ -1,5 +1,6 @@
 package br.com.basis.abaco.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -46,6 +47,7 @@ public class Rlr implements Serializable {
     private Set<Der> ders = new HashSet<>();
 
     @ManyToOne
+    @JsonBackReference(value="funcaoDados")
     private FuncaoDados funcaoDados;
 
     public Long getId() {

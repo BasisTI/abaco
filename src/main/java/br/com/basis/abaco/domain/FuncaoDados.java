@@ -51,8 +51,8 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @Column
     private String retStr;
 
+    @JsonManagedReference(value="funcaoDados")
     @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Rlr> rlrs = new HashSet<>();
 
