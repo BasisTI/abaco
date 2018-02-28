@@ -37,8 +37,7 @@ public class Rlr implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotNull
-    @Column(name = "nome", nullable = false)
+    @Column(name = "nome")
     private String nome;
 
     private Integer valor;
