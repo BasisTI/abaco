@@ -6,6 +6,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,7 +36,12 @@ public class Alr implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @JsonBackReference(value="funcaoTransacao")
+    @Column(name = "nome")
+    private String nome;
+
+    private Integer valor;
+
+    @JsonBackReference(value = "funcaoTransacao")
     @ManyToOne
     private FuncaoTransacao funcaoTransacao;
 
@@ -90,6 +96,22 @@ public class Alr implements Serializable {
         this.funcaoDados = funcaoDados;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Integer getValor() {
+        return valor;
+    }
+
+    public void setValor(Integer valor) {
+        this.valor = valor;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -112,8 +134,6 @@ public class Alr implements Serializable {
 
     @Override
     public String toString() {
-        return "Alr{" +
-            "id=" + id +
-            '}';
+        return "Alr{" + "id=" + id + '}';
     }
 }
