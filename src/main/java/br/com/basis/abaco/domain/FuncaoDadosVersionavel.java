@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -14,8 +15,8 @@ import javax.persistence.UniqueConstraint;
 public class FuncaoDadosVersionavel extends FuncaoAnaliseVersionavel implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
-    @OneToMany(mappedBy = "funcaoDadosVersionavel")
+
+    @OneToMany(mappedBy = "funcaoDadosVersionavel", fetch = FetchType.EAGER)
     private Set<FuncaoDados> funcoesDados = new HashSet<>();
 
     public Set<FuncaoDados> getFuncoesDados() {

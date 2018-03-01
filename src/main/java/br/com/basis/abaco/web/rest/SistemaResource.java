@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 
-import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import br.com.basis.abaco.domain.Modulo;
 import br.com.basis.abaco.domain.Organizacao;
@@ -207,7 +206,7 @@ public class SistemaResource {
     }
 
     @GetMapping("/sistemas/{id}/funcao-dados")
-    public List<FuncaoDadosVersionavel> getFuncoesDeDadosVersionaveisBySistema(@PathVariable Long id) {
+    public Set<FuncaoDadosVersionavel> getFuncoesDeDadosVersionaveisBySistema(@PathVariable Long id) {
         return funcaoDadosVersionavelRepository.findAllBySistemaId(id);
     }
 

@@ -1,7 +1,7 @@
 package br.com.basis.abaco.repository;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,6 +11,6 @@ public interface FuncaoDadosVersionavelRepository extends JpaRepository<FuncaoDa
 
     Optional<FuncaoDadosVersionavel> findOneByNomeIgnoreCaseAndSistemaId(String nome, Long sistemaId);
 
-    List<FuncaoDadosVersionavel> findAllBySistemaId(Long sistemaId);
+    Set<FuncaoDadosVersionavel> findAllBySistemaId(Long sistemaId);
 
 }
