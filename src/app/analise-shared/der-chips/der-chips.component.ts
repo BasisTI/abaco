@@ -33,6 +33,9 @@ export class DerChipsComponent implements OnChanges {
   @Output()
   valuesChange: EventEmitter<DerChipItem[]> = new EventEmitter<DerChipItem[]>();
 
+  @Output()
+  dersReferenciadosEvent: EventEmitter<Der[]> = new EventEmitter<Der[]>();
+
   duplicatesResult: DuplicatesResult;
 
   mostrarDialogAddMultiplos = false;
@@ -129,7 +132,7 @@ export class DerChipsComponent implements OnChanges {
   }
 
   dersReferenciados(ders: Der[]) {
-    console.log(ders);
+    this.dersReferenciadosEvent.emit(ders);
   }
 
 }

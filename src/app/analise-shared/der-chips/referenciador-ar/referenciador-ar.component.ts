@@ -80,7 +80,6 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
   }
 
   relacionar() {
-    console.log(this.dersReferenciados);
     this.dersReferenciadosEvent.emit(this.dersReferenciados);
     this.fecharDialog();
   }

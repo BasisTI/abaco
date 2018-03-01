@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
 import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
 import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
+import { Der } from '../der/der.model';
 
 @Component({
   selector: 'app-analise-funcao-transacao',
@@ -246,6 +247,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     } else { // SITUACAO para analises legadas
       return DerChipConverter.converter(strValues);
     }
+  }
+
+  dersReferenciados(ders: Der[]) {
+    console.log(ders);
   }
 
   cancelarEdicao() {

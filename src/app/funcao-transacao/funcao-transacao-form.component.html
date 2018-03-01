@@ -49,7 +49,8 @@
         <h2>FTR (AR)</h2>
         <app-analise-der-chips 
           [(values)]="alrsChips"
-          [relacionarDers]="true">
+          [relacionarDers]="true"
+          (dersReferenciadosEvent)="dersReferenciados($event)">
         </app-analise-der-chips>
       </div>
 
