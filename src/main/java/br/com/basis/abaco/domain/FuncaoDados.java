@@ -69,6 +69,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Der> ders = new HashSet<>();
 
+    @JsonIgnore
     @ManyToOne
     private FuncaoDadosVersionavel funcaoDadosVersionavel;
 

@@ -8,11 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 @MappedSuperclass
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "sistema_id", "nome" }))
 public abstract class FuncaoAnaliseVersionavel {
 
     @Id
@@ -24,7 +21,7 @@ public abstract class FuncaoAnaliseVersionavel {
     private String nome;
 
     @ManyToOne
-    @JoinColumn(name="sistema_id", nullable = false)
+    @JoinColumn(name = "sistema_id")
     private Sistema sistema;
 
     public Long getId() {

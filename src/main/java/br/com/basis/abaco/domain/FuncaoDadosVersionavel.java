@@ -1,14 +1,20 @@
 package br.com.basis.abaco.domain;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-public class FuncaoDadosVersionavel extends FuncaoAnaliseVersionavel {
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "sistema_id", "nome" }))
+public class FuncaoDadosVersionavel extends FuncaoAnaliseVersionavel implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     @OneToMany(mappedBy = "funcaoDadosVersionavel")
     private Set<FuncaoDados> funcoesDados = new HashSet<>();
 
