@@ -85,9 +85,14 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
   }
 
   fecharDialog() {
-    this.funcaoDadosSelecionada = undefined;
-    this.ders = undefined;
+    this.resetarCampos();
     this.mostrarDialog = false;
+  }
+
+  private resetarCampos() {
+    this.funcaoDadosSelecionada = undefined;
+    this.ders = [];
+    this.dersReferenciados = [];
   }
 
   ngOnDestroy() {
