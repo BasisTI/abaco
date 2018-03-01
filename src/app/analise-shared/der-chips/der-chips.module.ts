@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 
 import {
   ButtonModule, ChipsModule,
-  DialogModule, InputTextareaModule
+  DialogModule, InputTextareaModule,
+  DropdownModule, MultiSelectModule
 } from 'primeng/primeng';
 import { DerChipsComponent } from './der-chips.component';
 import { FormsModule } from '@angular/forms';
 import { AbacoDerTextModule } from '../der-text/der-text.module';
+import { ReferenciadorArComponent } from './referenciador-ar/referenciador-ar.component';
 
 @NgModule({
   imports: [
@@ -20,9 +22,12 @@ import { AbacoDerTextModule } from '../der-text/der-text.module';
     AbacoDerTextModule,
     DialogModule,
     InputTextareaModule,
+    DropdownModule,
+    MultiSelectModule
   ],
   declarations: [
-    DerChipsComponent
+    DerChipsComponent,
+    ReferenciadorArComponent
   ],
   exports: [
     DerChipsComponent

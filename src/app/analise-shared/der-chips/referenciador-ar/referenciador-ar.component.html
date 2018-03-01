@@ -1,0 +1,52 @@
+<button pButton type="button"
+  class="blue-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+  label="Relacionar DERs"
+  [disabled]="!habilitarBotaoAbrirDialog()"
+  (click)="abrirDialog()">
+</button>
+
+<p-dialog header="Relacionar DERs" [(visible)]="mostrarDialog"
+  [contentStyle]="{'overflow': 'visible'}" [width]="800">
+
+  <div class="ui-g">
+    
+    <div class="ui-g-12">
+      <p-dropdown 
+        [options]="funcoesDados"
+        [(ngModel)]="funcaoDadosSelecionada"
+        (onChange)="funcaoDadosSelected($event.value)"
+        [placeholder]="funcoesDadosDropdownPlaceholder()"
+        [autoWidth]="false"
+        name="funcoesDados" 
+        optionLabel="name">
+      </p-dropdown>
+    </div>
+
+    <div class="ui-g-12">
+      <p-multiSelect name="dersMultiSelect"
+        [defaultLabel]="dersMultiSelectedPlaceholder()"
+        [disabled]="!funcaoDadosSelecionada"
+        [options]="ders"
+        [(ngModel)]="dersRelacionados"
+        optionLabel="nome">
+      </p-multiSelect>
+    </div>
+
+    <div class="ui-g ui-md-12" style="justify-content: flex-end">
+      <div class="ui-g-2">
+        <button pButton type="button"
+          class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+          label="Cancelar" (click)="fecharDialog()">
+        </button>
+      </div>
+      <div class="ui-g-2">
+        <button pButton type="button"
+          class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+          label="Relacionar" (click)="relacionar()">
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</p-dialog>
