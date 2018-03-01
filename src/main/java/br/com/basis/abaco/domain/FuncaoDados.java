@@ -51,7 +51,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @Column
     private String retStr;
 
-    @JsonManagedReference(value="funcaoDados")
+    @JsonManagedReference(value = "funcaoDados")
     @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Rlr> rlrs = new HashSet<>();
@@ -65,9 +65,12 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @Transient
     private Set<String> rlrValues;
 
-    @JsonManagedReference(value="funcaoDados")
+    @JsonManagedReference(value = "funcaoDados")
     @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Der> ders = new HashSet<>();
+
+    @ManyToOne
+    private FuncaoDadosVersionavel funcaoDadosVersionavel;
 
     public TipoFuncaoDados getTipo() {
         return tipo;
@@ -190,6 +193,14 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public void setDers(Set<Der> ders) {
         this.ders = ders;
+    }
+
+    public FuncaoDadosVersionavel getFuncaoDadosVersionavel() {
+        return funcaoDadosVersionavel;
+    }
+
+    public void setFuncaoDadosVersionavel(FuncaoDadosVersionavel funcaoDadosVersionavel) {
+        this.funcaoDadosVersionavel = funcaoDadosVersionavel;
     }
 
 }
