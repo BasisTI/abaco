@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -20,10 +22,14 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import br.com.basis.abaco.domain.audit.AbacoAudit;
+import br.com.basis.abaco.domain.audit.AbacoAuditListener;
+import br.com.basis.abaco.domain.audit.AbacoAuditable;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
 
 @MappedSuperclass
-public abstract class FuncaoAnalise {
+@EntityListeners(AbacoAuditListener.class)
+public abstract class FuncaoAnalise implements AbacoAuditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -63,6 +69,9 @@ public abstract class FuncaoAnalise {
 
     @Transient
     private Set<String> derValues;
+
+    @Embedded
+    private AbacoAudit audit;
 
     public Long getId() {
         return id;
@@ -151,9 +160,18 @@ public abstract class FuncaoAnalise {
     public void setDerValues(Set<String> derValues) {
         this.derValues = new HashSet<String>(derValues);
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hashCode(getId());
     }
+
+    public AbacoAudit getAudit() {
+        return audit;
+    }
+
+    public void setAudit(AbacoAudit audit) {
+        this.audit = audit;
+    }
+
 }
