@@ -16,6 +16,7 @@ import {
   DuplicatesResult,
   StringArrayDuplicatesFinder
 } from '../string-array-duplicates-finder';
+import { Der } from '../../der/der.model';
 
 @Component({
   selector: 'app-analise-der-chips',
@@ -25,6 +26,9 @@ export class DerChipsComponent implements OnChanges {
 
   @Input()
   values: DerChipItem[] = [];
+
+  @Input()
+  relacionarDers = false;
 
   @Output()
   valuesChange: EventEmitter<DerChipItem[]> = new EventEmitter<DerChipItem[]>();
@@ -122,6 +126,10 @@ export class DerChipsComponent implements OnChanges {
   fecharDialogEdicao() {
     this.textoEdicao = '';
     this.mostrarDialogEdicao = false;
+  }
+
+  dersReferenciados(ders: Der[]) {
+    console.log(ders);
   }
 
 }
