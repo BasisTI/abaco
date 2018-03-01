@@ -26,8 +26,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
   isEdit: boolean;
 
-  dersChips: DerChipItem[];
-  alrsChips: DerChipItem[];
+  dersChips: DerChipItem[] = [];
+  alrsChips: DerChipItem[] = [];
 
   resumo: ResumoFuncoes;
 
@@ -250,7 +250,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   }
 
   dersReferenciados(ders: Der[]) {
-    console.log(ders);
+    // XXX manter os ids?
+    const dersReferenciadosChips: DerChipItem[] = DerChipConverter.converterReferenciaveis(ders);
+    this.dersChips = this.dersChips.concat(dersReferenciadosChips);
   }
 
   cancelarEdicao() {
