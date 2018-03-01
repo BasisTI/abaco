@@ -28,6 +28,7 @@
 
     <div *ngIf="relacionarDers" style="margin-top: 5px;">
       <app-analise-referenciador-ar
+        (funcaoDadosReferenciadaEvent)="funcaoDadosReferenciada($event)"
         (dersReferenciadosEvent)="dersReferenciados($event)">
       </app-analise-referenciador-ar>
     </div>

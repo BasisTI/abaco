@@ -22,6 +22,9 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
   @Output()
   dersReferenciadosEvent: EventEmitter<Der[]> = new EventEmitter<Der[]>();
 
+  @Output()
+  funcaoDadosReferenciadaEvent: EventEmitter<string> = new EventEmitter<string>();
+
   private subscriptionAnaliseCarregada: Subscription;
 
   funcoesDados: FuncaoDados[] = [];
@@ -81,6 +84,8 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
   relacionar() {
     this.dersReferenciadosEvent.emit(this.dersReferenciados);
+    // XXX vai precisar relacionar qual funcao de dados foi relacionada?
+    this.funcaoDadosReferenciadaEvent.emit(this.funcaoDadosSelecionada.name);
     this.fecharDialog();
   }
 

@@ -52,7 +52,15 @@ export class DerChipsComponent implements OnChanges {
   onAddValue(value: string) {
     // removendo o adicionado pelo primeng no keydown de enter
     this.values.pop();
-    this.values.push(new DerChipItem(undefined, value));
+    this.addItem(new DerChipItem(undefined, value));
+  }
+
+  private addItem(derChipItem: DerChipItem) {
+    this.values.push(derChipItem);
+    this.valuesChanged();
+  }
+
+  private valuesChanged() {
     this.recalculaDuplicatas();
     this.valuesChange.emit(this.values);
   }
@@ -63,8 +71,7 @@ export class DerChipsComponent implements OnChanges {
   }
 
   onRemove(value: string) {
-    this.recalculaDuplicatas();
-    this.valuesChange.emit(this.values);
+    this.valuesChanged();
   }
 
   showTotal(): string {
@@ -92,7 +99,7 @@ export class DerChipsComponent implements OnChanges {
 
   adicionarMultiplos() {
     this.values = this.values.concat(this.converteMultiplos());
-    this.recalculaDuplicatas();
+    this.valuesChanged();
     this.fecharDialogAddMultiplos();
   }
 
@@ -129,6 +136,10 @@ export class DerChipsComponent implements OnChanges {
   fecharDialogEdicao() {
     this.textoEdicao = '';
     this.mostrarDialogEdicao = false;
+  }
+
+  funcaoDadosReferenciada(name: string) {
+    this.addItem(new DerChipItem(undefined, name));
   }
 
   dersReferenciados(ders: Der[]) {
