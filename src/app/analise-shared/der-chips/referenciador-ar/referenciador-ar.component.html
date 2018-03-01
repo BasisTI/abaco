@@ -10,7 +10,7 @@
 
   <div class="ui-g">
     
-    <div class="ui-g-12">
+    <div class="ui-g-12" style="margin-bottom: 25px">
       <p-dropdown 
         [options]="funcoesDados"
         [(ngModel)]="funcaoDadosSelecionada"
@@ -22,7 +22,7 @@
       </p-dropdown>
     </div>
 
-    <div class="ui-g-12">
+    <div class="ui-g-12" style="margin-bottom: 25px">
       <p-multiSelect name="dersMultiSelect"
         [defaultLabel]="dersMultiSelectedPlaceholder()"
         [disabled]="!funcaoDadosSelecionada"
@@ -32,7 +32,7 @@
       </p-multiSelect>
     </div>
 
-    <div class="ui-g ui-md-12" style="justify-content: flex-end">
+    <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px;">
       <div class="ui-g-2">
         <button pButton type="button"
           class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
