@@ -19,23 +19,19 @@
   </div>
 
   <div class="ui-g-2">
-    <div class="ui-g">
 
-      <div class="ui-g-12">
-        <button pButton type="button"
-          class="blue-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Adicionar múltiplos"
-          (click)="abrirDialogAddMultiplos()">
-        </button>
-      </div>
+    <button pButton type="button"
+      class="blue-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+      label="Adicionar Múltiplos"
+      (click)="abrirDialogAddMultiplos()">
+    </button>
 
-      <div class="ui-g-12" *ngIf="relacionarDers">
-        <app-analise-referenciador-ar
-          (dersReferenciadosEvent)="dersReferenciados($event)">
-        </app-analise-referenciador-ar>
-      </div>
-
+    <div *ngIf="relacionarDers" style="margin-top: 5px;">
+      <app-analise-referenciador-ar
+        (dersReferenciadosEvent)="dersReferenciados($event)">
+      </app-analise-referenciador-ar>
     </div>
+
   </div>
 
   <div class="ui-g-12">
