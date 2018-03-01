@@ -1,11 +1,11 @@
 <button pButton type="button"
   class="blue-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-  label="Relacionar DERs"
+  label="Referenciar DERs"
   [disabled]="!habilitarBotaoAbrirDialog()"
   (click)="abrirDialog()">
 </button>
 
-<p-dialog header="Relacionar DERs" [(visible)]="mostrarDialog"
+<p-dialog header="Referenciar DERs" [(visible)]="mostrarDialog"
   [contentStyle]="{'overflow': 'visible'}" [width]="800">
 
   <div class="ui-g">
@@ -27,7 +27,7 @@
         [defaultLabel]="dersMultiSelectedPlaceholder()"
         [disabled]="!funcaoDadosSelecionada"
         [options]="ders"
-        [(ngModel)]="dersRelacionados"
+        [(ngModel)]="dersReferenciados"
         optionLabel="nome">
       </p-multiSelect>
     </div>

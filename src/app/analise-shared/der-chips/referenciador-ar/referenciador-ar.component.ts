@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs/Subscription';
 export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
   @Output()
-  dersRelacionadosEvent: EventEmitter<Der[]> = new EventEmitter<Der[]>();
+  dersReferenciadosEvent: EventEmitter<Der[]> = new EventEmitter<Der[]>();
 
   private subscriptionAnaliseCarregada: Subscription;
 
@@ -31,7 +31,7 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
   funcaoDadosSelecionada: FuncaoDados;
 
-  dersRelacionados: Der[] = [];
+  dersReferenciados: Der[] = [];
 
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService
@@ -73,14 +73,15 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
   dersMultiSelectedPlaceholder(): string {
     if (!this.funcaoDadosSelecionada) {
-      return 'DERs - Selecione uma Função de Dados para selecionar quais DERs relacionar';
+      return 'DERs - Selecione uma Função de Dados para selecionar quais DERs referenciar';
     } else if (this.funcaoDadosSelecionada) {
-      return 'Selecione quais DERs deseja relacionar';
+      return 'Selecione quais DERs deseja referenciar';
     }
   }
 
   relacionar() {
-    this.dersRelacionadosEvent.emit(this.dersRelacionados);
+    console.log(this.dersReferenciados);
+    this.dersReferenciadosEvent.emit(this.dersReferenciados);
     this.fecharDialog();
   }
 
