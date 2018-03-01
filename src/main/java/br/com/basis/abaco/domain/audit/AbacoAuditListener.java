@@ -15,8 +15,10 @@ public class AbacoAuditListener {
             audit = new AbacoAudit();
             auditable.setAudit(audit);
         }
-
-        audit.setCreatedOn(ZonedDateTime.now());
+        
+        ZonedDateTime now = ZonedDateTime.now();
+        audit.setCreatedOn(now);
+        audit.setUpdatedOn(now);
     }
 
     @PreUpdate
