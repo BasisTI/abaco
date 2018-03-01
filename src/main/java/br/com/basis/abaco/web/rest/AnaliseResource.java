@@ -29,7 +29,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 
 import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
+import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
@@ -51,9 +55,13 @@ public class AnaliseResource {
 
     private final AnaliseSearchRepository analiseSearchRepository;
 
-    public AnaliseResource(AnaliseRepository analiseRepository, AnaliseSearchRepository analiseSearchRepository) {
+    private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
+
+    public AnaliseResource(AnaliseRepository analiseRepository, AnaliseSearchRepository analiseSearchRepository,
+            FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
+        this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
     }
 
     /**
@@ -92,10 +100,32 @@ public class AnaliseResource {
     private void linkAnaliseToFuncaoDados(Analise analise) {
         analise.getFuncaoDados().forEach(funcaoDados -> {
             funcaoDados.setAnalise(analise);
-            funcaoDados.getFiles().forEach(file -> file.setFuncaoDados(funcaoDados));
-            funcaoDados.getDers().forEach(der -> der.setFuncaoDados(funcaoDados));
-            funcaoDados.getRlrs().forEach(rlr -> rlr.setFuncaoDados(funcaoDados));
+            linkFuncaoDadosRelationships(funcaoDados);
+            handleVersionFuncaoDados(funcaoDados, analise.getSistema());
         });
+    }
+
+    private void linkFuncaoDadosRelationships(FuncaoDados funcaoDados) {
+        funcaoDados.getFiles().forEach(file -> file.setFuncaoDados(funcaoDados));
+        funcaoDados.getDers().forEach(der -> der.setFuncaoDados(funcaoDados));
+        funcaoDados.getRlrs().forEach(rlr -> rlr.setFuncaoDados(funcaoDados));
+    }
+
+    private void handleVersionFuncaoDados(FuncaoDados funcaoDados, Sistema sistema) {
+        String nome = funcaoDados.getName();
+        Optional<FuncaoDadosVersionavel> funcaoDadosVersionavel = funcaoDadosVersionavelRepository
+                .findOneByNomeIgnoreCaseAndSistemaId(nome, sistema.getId());
+
+        if (funcaoDadosVersionavel.isPresent()) {
+            funcaoDados.setFuncaoDadosVersionavel(funcaoDadosVersionavel.get());
+        } else {
+            FuncaoDadosVersionavel novaFDVersionavel = new FuncaoDadosVersionavel();
+            novaFDVersionavel.setNome(funcaoDados.getName());
+            novaFDVersionavel.setSistema(sistema);
+            FuncaoDadosVersionavel result = funcaoDadosVersionavelRepository.save(novaFDVersionavel);
+
+            funcaoDados.setFuncaoDadosVersionavel(result);
+        }
     }
 
     private void linkAnaliseToFuncaoTransacaos(Analise analise) {
