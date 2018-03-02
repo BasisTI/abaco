@@ -205,6 +205,7 @@ public class SistemaResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(sistema));
     }
 
+    // TODO essa ou nova rota para retornar somente o nome das funcoes
     @GetMapping("/sistemas/{id}/funcao-dados")
     public Set<FuncaoDadosVersionavel> getFuncoesDeDadosVersionaveisBySistema(@PathVariable Long id) {
         return funcaoDadosVersionavelRepository.findAllBySistemaId(id);
