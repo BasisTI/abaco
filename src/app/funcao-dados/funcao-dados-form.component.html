@@ -32,10 +32,11 @@
         </div>
 
         <div class="ui-g-12" style="margin-bottom: 25px">
-          <span class="md-inputfield">
-            <input type="text" name="nomeFuncaoDados" [(ngModel)]="currentFuncaoDados.name" pInputText/>
-            <label>Nome</label>
-          </span>
+          <label>Nome</label>
+          <p-autoComplete [(ngModel)]="currentFuncaoDados.name" 
+            [suggestions]="sugestoesAutoComplete"
+            (completeMethod)="autoCompleteNomes($event)">
+          </p-autoComplete>
         </div>
       </div>
 

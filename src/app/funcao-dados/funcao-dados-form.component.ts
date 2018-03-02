@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { AnaliseSharedDataService, PageNotificationService } from '../shared';
+import { AnaliseSharedDataService, PageNotificationService, ResponseWrapper } from '../shared';
 import { FuncaoDados } from './funcao-dados.model';
 import { Analise } from '../analise';
 import { FatorAjuste } from '../fator-ajuste';
@@ -19,6 +19,7 @@ import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generato
 import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
 import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
 import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
+import { FuncaoDadosService } from './funcao-dados.service';
 
 @Component({
   selector: 'app-analise-funcao-dados',
@@ -38,6 +39,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   colunasOptions: SelectItem[];
   colunasAMostrar = [];
 
+  private nomeDasFuncoesDoSistema: string[] = [];
+  sugestoesAutoComplete: string[] = [];
+
   // FIXME considerar o enum
   classificacoes: SelectItem[] = [
     { label: 'ALI', value: 'ALI' },
@@ -45,12 +49,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   ];
 
   private analiseCarregadaSubscription: Subscription;
+  private subscriptionSistemaSelecionado: Subscription;
 
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private funcaoDadosService: FuncaoDadosService
   ) {
     const colunas = [
       { header: 'Fator de Ajuste' },
@@ -79,6 +85,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     this.currentFuncaoDados = new FuncaoDados();
     this.subscribeToAnaliseCarregada();
     this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
+    this.subscribeToSistemaSelecionado();
   }
 
   private subscribeToAnaliseCarregada() {
@@ -90,6 +97,29 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   private atualizaResumo() {
     this.resumo = this.analise.resumoFuncaoDados;
     this.changeDetectorRef.detectChanges();
+  }
+
+  private subscribeToSistemaSelecionado() {
+    this.subscriptionSistemaSelecionado = this.analiseSharedDataService.getSistemaSelecionadoSubject()
+      .subscribe(() => {
+        this.carregarNomeDasFuncoesDeDados();
+      });
+  }
+
+  private carregarNomeDasFuncoesDeDados() {
+    const sistemaId: number = this.analiseSharedDataService.analise.sistema.id;
+    this.funcaoDadosService.findAllNamesBySistemaId(sistemaId).subscribe(
+      nomes => {
+        this.nomeDasFuncoesDoSistema = nomes;
+        this.sugestoesAutoComplete = nomes.slice();
+      });
+  }
+
+  autoCompleteNomes(event) {
+    const query = event.query;
+    // TODO qual melhor método? inclues? startsWith ignore case?
+    this.sugestoesAutoComplete = this.nomeDasFuncoesDoSistema
+      .filter(nomeFuncao => nomeFuncao.includes(query));
   }
 
   get header(): string {

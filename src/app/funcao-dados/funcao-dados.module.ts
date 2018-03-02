@@ -19,7 +19,8 @@ import {
   TabViewModule,
   InputTextareaModule,
   DialogModule,
-  MultiSelectModule
+  MultiSelectModule,
+  AutoCompleteModule
 } from 'primeng/primeng';
 
 import { AbacoSharedModule } from '../shared/abaco-shared.module';
@@ -29,6 +30,7 @@ import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/an
 import { AbacoEllipsisTooltipModule } from '../shared/ellipsis-tooltip/ellipsis-tooltip.module';
 import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.module';
 import { AbacoDerTextModule } from '../analise-shared/der-text/der-text.module';
+import { FuncaoDadosService } from './funcao-dados.service';
 
 @NgModule({
   imports: [
@@ -54,12 +56,16 @@ import { AbacoDerTextModule } from '../analise-shared/der-text/der-text.module';
     AbacoEllipsisTooltipModule,
     MultiSelectModule,
     AbacoDerChipsModule,
+    AutoCompleteModule
   ],
   declarations: [
     FuncaoDadosFormComponent
   ],
   exports: [
     FuncaoDadosFormComponent
+  ],
+  providers: [
+    FuncaoDadosService
   ]
 })
 export class AbacoFuncaoDadosModule { }
