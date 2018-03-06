@@ -77,174 +77,172 @@ public class SistemaResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            SistemaResource sistemaResource = new SistemaResource(sistemaRepository, sistemaSearchRepository, new OrganizacaoRepository() {
-				
-				@Override
-				public <S extends Organizacao> S findOne(Example<S> arg0) {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-				@Override
-				public <S extends Organizacao> Page<S> findAll(Example<S> arg0, Pageable arg1) {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-				@Override
-				public <S extends Organizacao> boolean exists(Example<S> arg0) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-				
-				@Override
-				public <S extends Organizacao> long count(Example<S> arg0) {
-					// TODO Auto-generated method stub
-					return 0;
-				}
-				
-				@Override
-				public <S extends Organizacao> S save(S arg0) {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-				@Override
-				public Organizacao findOne(Long arg0) {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-				@Override
-				public boolean exists(Long arg0) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-				
-				@Override
-				public void deleteAll() {
-					// TODO Auto-generated method stub
-					
-				}
-				
-				@Override
-				public void delete(Iterable<? extends Organizacao> arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-				
-				@Override
-				public void delete(Organizacao arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-				
-				@Override
-				public void delete(Long arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-				
-				@Override
-				public long count() {
-					// TODO Auto-generated method stub
-					return 0;
-				}
-				
-				@Override
-				public Page<Organizacao> findAll(Pageable arg0) {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-				@Override
-				public <S extends Organizacao> S saveAndFlush(S arg0) {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-				@Override
-				public <S extends Organizacao> List<S> save(Iterable<S> arg0) {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-				@Override
-				public Organizacao getOne(Long arg0) {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-				@Override
-				public void flush() {
-					// TODO Auto-generated method stub
-					
-				}
-				
-				@Override
-				public <S extends Organizacao> List<S> findAll(Example<S> arg0, Sort arg1) {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-				@Override
-				public <S extends Organizacao> List<S> findAll(Example<S> arg0) {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-				@Override
-				public List<Organizacao> findAll(Iterable<Long> arg0) {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-				@Override
-				public List<Organizacao> findAll(Sort arg0) {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-				@Override
-				public List<Organizacao> findAll() {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-				@Override
-				public void deleteInBatch(Iterable<Organizacao> arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-				
-				@Override
-				public void deleteAllInBatch() {
-					// TODO Auto-generated method stub
-					
-				}
+        SistemaResource sistemaResource = new SistemaResource(sistemaRepository, sistemaSearchRepository,
+                new OrganizacaoRepository() {
 
-                @Override
-                public List<Organizacao> findByAtivoTrue() {
-                    // TODO Auto-generated method stub
-                    return null;
-                }
-			});
+                    @Override
+                    public <S extends Organizacao> S findOne(Example<S> arg0) {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+
+                    @Override
+                    public <S extends Organizacao> Page<S> findAll(Example<S> arg0, Pageable arg1) {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+
+                    @Override
+                    public <S extends Organizacao> boolean exists(Example<S> arg0) {
+                        // TODO Auto-generated method stub
+                        return false;
+                    }
+
+                    @Override
+                    public <S extends Organizacao> long count(Example<S> arg0) {
+                        // TODO Auto-generated method stub
+                        return 0;
+                    }
+
+                    @Override
+                    public <S extends Organizacao> S save(S arg0) {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+
+                    @Override
+                    public Organizacao findOne(Long arg0) {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+
+                    @Override
+                    public boolean exists(Long arg0) {
+                        // TODO Auto-generated method stub
+                        return false;
+                    }
+
+                    @Override
+                    public void deleteAll() {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void delete(Iterable<? extends Organizacao> arg0) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void delete(Organizacao arg0) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void delete(Long arg0) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public long count() {
+                        // TODO Auto-generated method stub
+                        return 0;
+                    }
+
+                    @Override
+                    public Page<Organizacao> findAll(Pageable arg0) {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+
+                    @Override
+                    public <S extends Organizacao> S saveAndFlush(S arg0) {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+
+                    @Override
+                    public <S extends Organizacao> List<S> save(Iterable<S> arg0) {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+
+                    @Override
+                    public Organizacao getOne(Long arg0) {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+
+                    @Override
+                    public void flush() {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public <S extends Organizacao> List<S> findAll(Example<S> arg0, Sort arg1) {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+
+                    @Override
+                    public <S extends Organizacao> List<S> findAll(Example<S> arg0) {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+
+                    @Override
+                    public List<Organizacao> findAll(Iterable<Long> arg0) {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+
+                    @Override
+                    public List<Organizacao> findAll(Sort arg0) {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+
+                    @Override
+                    public List<Organizacao> findAll() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+
+                    @Override
+                    public void deleteInBatch(Iterable<Organizacao> arg0) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void deleteAllInBatch() {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public List<Organizacao> findByAtivoTrue() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                }, null, null);
         this.restSistemaMockMvc = MockMvcBuilders.standaloneSetup(sistemaResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
+                .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
+                .setMessageConverters(jacksonMessageConverter).build();
     }
 
     /**
      * Create an entity for this test.
      *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if
+     * they test an entity which requires the current entity.
      */
     public static Sistema createEntity(EntityManager em) {
-        Sistema sistema = new Sistema()
-                .sigla(DEFAULT_SIGLA)
-                .nome(DEFAULT_NOME)
+        Sistema sistema = new Sistema().sigla(DEFAULT_SIGLA).nome(DEFAULT_NOME)
                 .numeroOcorrencia(DEFAULT_NUMERO_OCORRENCIA);
         return sistema;
     }
@@ -262,10 +260,8 @@ public class SistemaResourceIntTest {
 
         // Create the Sistema
 
-        restSistemaMockMvc.perform(post("/api/sistemas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(sistema)))
-            .andExpect(status().isCreated());
+        restSistemaMockMvc.perform(post("/api/sistemas").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(sistema))).andExpect(status().isCreated());
 
         // Validate the Sistema in the database
         List<Sistema> sistemaList = sistemaRepository.findAll();
@@ -290,10 +286,10 @@ public class SistemaResourceIntTest {
         existingSistema.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restSistemaMockMvc.perform(post("/api/sistemas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingSistema)))
-            .andExpect(status().isBadRequest());
+        restSistemaMockMvc
+                .perform(post("/api/sistemas").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                        .content(TestUtil.convertObjectToJsonBytes(existingSistema)))
+                .andExpect(status().isBadRequest());
 
         // Validate the Alice in the database
         List<Sistema> sistemaList = sistemaRepository.findAll();
@@ -309,10 +305,8 @@ public class SistemaResourceIntTest {
 
         // Create the Sistema, which fails.
 
-        restSistemaMockMvc.perform(post("/api/sistemas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(sistema)))
-            .andExpect(status().isBadRequest());
+        restSistemaMockMvc.perform(post("/api/sistemas").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(sistema))).andExpect(status().isBadRequest());
 
         List<Sistema> sistemaList = sistemaRepository.findAll();
         assertThat(sistemaList).hasSize(databaseSizeBeforeTest);
@@ -325,13 +319,12 @@ public class SistemaResourceIntTest {
         sistemaRepository.saveAndFlush(sistema);
 
         // Get all the sistemaList
-        restSistemaMockMvc.perform(get("/api/sistemas?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(sistema.getId().intValue())))
-            .andExpect(jsonPath("$.[*].sigla").value(hasItem(DEFAULT_SIGLA.toString())))
-            .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())))
-            .andExpect(jsonPath("$.[*].numeroOcorrencia").value(hasItem(DEFAULT_NUMERO_OCORRENCIA.toString())));
+        restSistemaMockMvc.perform(get("/api/sistemas?sort=id,desc")).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(sistema.getId().intValue())))
+                .andExpect(jsonPath("$.[*].sigla").value(hasItem(DEFAULT_SIGLA.toString())))
+                .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())))
+                .andExpect(jsonPath("$.[*].numeroOcorrencia").value(hasItem(DEFAULT_NUMERO_OCORRENCIA.toString())));
     }
 
     @Test
@@ -341,21 +334,19 @@ public class SistemaResourceIntTest {
         sistemaRepository.saveAndFlush(sistema);
 
         // Get the sistema
-        restSistemaMockMvc.perform(get("/api/sistemas/{id}", sistema.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(sistema.getId().intValue()))
-            .andExpect(jsonPath("$.sigla").value(DEFAULT_SIGLA.toString()))
-            .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()))
-            .andExpect(jsonPath("$.numeroOcorrencia").value(DEFAULT_NUMERO_OCORRENCIA.toString()));
+        restSistemaMockMvc.perform(get("/api/sistemas/{id}", sistema.getId())).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.id").value(sistema.getId().intValue()))
+                .andExpect(jsonPath("$.sigla").value(DEFAULT_SIGLA.toString()))
+                .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()))
+                .andExpect(jsonPath("$.numeroOcorrencia").value(DEFAULT_NUMERO_OCORRENCIA.toString()));
     }
 
     @Test
     @Transactional
     public void getNonExistingSistema() throws Exception {
         // Get the sistema
-        restSistemaMockMvc.perform(get("/api/sistemas/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restSistemaMockMvc.perform(get("/api/sistemas/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -368,15 +359,10 @@ public class SistemaResourceIntTest {
 
         // Update the sistema
         Sistema updatedSistema = sistemaRepository.findOne(sistema.getId());
-        updatedSistema
-                .sigla(UPDATED_SIGLA)
-                .nome(UPDATED_NOME)
-                .numeroOcorrencia(UPDATED_NUMERO_OCORRENCIA);
+        updatedSistema.sigla(UPDATED_SIGLA).nome(UPDATED_NOME).numeroOcorrencia(UPDATED_NUMERO_OCORRENCIA);
 
-        restSistemaMockMvc.perform(put("/api/sistemas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedSistema)))
-            .andExpect(status().isOk());
+        restSistemaMockMvc.perform(put("/api/sistemas").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(updatedSistema))).andExpect(status().isOk());
 
         // Validate the Sistema in the database
         List<Sistema> sistemaList = sistemaRepository.findAll();
@@ -398,11 +384,10 @@ public class SistemaResourceIntTest {
 
         // Create the Sistema
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
-        restSistemaMockMvc.perform(put("/api/sistemas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(sistema)))
-            .andExpect(status().isCreated());
+        // If the entity doesn't have an ID, it will be created instead of just being
+        // updated
+        restSistemaMockMvc.perform(put("/api/sistemas").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(sistema))).andExpect(status().isCreated());
 
         // Validate the Sistema in the database
         List<Sistema> sistemaList = sistemaRepository.findAll();
@@ -418,9 +403,8 @@ public class SistemaResourceIntTest {
         int databaseSizeBeforeDelete = sistemaRepository.findAll().size();
 
         // Get the sistema
-        restSistemaMockMvc.perform(delete("/api/sistemas/{id}", sistema.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
+        restSistemaMockMvc.perform(delete("/api/sistemas/{id}", sistema.getId()).accept(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
         boolean sistemaExistsInEs = sistemaSearchRepository.exists(sistema.getId());
@@ -439,13 +423,12 @@ public class SistemaResourceIntTest {
         sistemaSearchRepository.save(sistema);
 
         // Search the sistema
-        restSistemaMockMvc.perform(get("/api/_search/sistemas?query=id:" + sistema.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(sistema.getId().intValue())))
-            .andExpect(jsonPath("$.[*].sigla").value(hasItem(DEFAULT_SIGLA.toString())))
-            .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())))
-            .andExpect(jsonPath("$.[*].numeroOcorrencia").value(hasItem(DEFAULT_NUMERO_OCORRENCIA.toString())));
+        restSistemaMockMvc.perform(get("/api/_search/sistemas?query=id:" + sistema.getId())).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(sistema.getId().intValue())))
+                .andExpect(jsonPath("$.[*].sigla").value(hasItem(DEFAULT_SIGLA.toString())))
+                .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())))
+                .andExpect(jsonPath("$.[*].numeroOcorrencia").value(hasItem(DEFAULT_NUMERO_OCORRENCIA.toString())));
     }
 
     @Test
