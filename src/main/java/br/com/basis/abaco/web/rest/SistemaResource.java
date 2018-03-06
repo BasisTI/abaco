@@ -37,7 +37,6 @@ import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import br.com.basis.abaco.domain.Modulo;
 import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.Sistema;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
@@ -66,17 +65,13 @@ public class SistemaResource {
 
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
-    private final FuncaoDadosRepository funcaoDadosRepository;
-
     public SistemaResource(SistemaRepository sistemaRepository, SistemaSearchRepository sistemaSearchRepository,
             OrganizacaoRepository organizacaoRepository,
-            FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
-            FuncaoDadosRepository funcaoDadosRepository) {
+            FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository) {
         this.sistemaRepository = sistemaRepository;
         this.sistemaSearchRepository = sistemaSearchRepository;
         this.organizacaoRepository = organizacaoRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
-        this.funcaoDadosRepository = funcaoDadosRepository;
     }
 
     /**
