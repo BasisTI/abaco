@@ -71,6 +71,20 @@
                 </p-dropdown>
               </div>
 
+              <div class="ui-g-12">
+                <div class="ui-g-12 ui-md-3">
+                  <label>Entrar na baseline imediatamente</label>
+                </div>
+                <div class="ui-g-12 ui-md-1">
+                  <p-radioButton name="baseline_imediatamente_sim" [value]="true" label="Sim"
+                  [(ngModel)]="analise.baselineImediatamente"></p-radioButton>
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <p-radioButton name="baseline_imediatamente_nao" [value]="false" label="Não"
+                  [(ngModel)]="analise.baselineImediatamente"></p-radioButton>
+                </div>
+              </div>
+
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <p-dataTable
                   [value]="esforcoFases" [(selection)]="analise.esforcoFases" dataKey="id"
