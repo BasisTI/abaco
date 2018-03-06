@@ -145,6 +145,9 @@ public class Analise implements Serializable {
     @Column(name = "observacoes", length = 4000)
     private String observacoes;
 
+    @Column(name = "baseline_imediatamente")
+    private boolean baselineImediatamente;
+
     public Long getId() {
         return id;
     }
@@ -431,6 +434,14 @@ public class Analise implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public boolean isBaselineImediatamente() {
+        return baselineImediatamente;
+    }
+
+    public void setBaselineImediatamente(boolean baselineImediatamente) {
+        this.baselineImediatamente = baselineImediatamente;
     }
 
     @Override
