@@ -171,6 +171,11 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
         }
         return Objects.equals(getId(), funcaoDados.getId());
     }
+    
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 
     public List<UploadedFile> getFiles() {
         return files;
@@ -189,11 +194,11 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Der> getDers() {
-        return ders;
+        return Collections.unmodifiableSet(ders);
     }
 
     public void setDers(Set<Der> ders) {
-        this.ders = ders;
+        this.ders = new HashSet<Der>(ders);
     }
 
     public FuncaoDadosVersionavel getFuncaoDadosVersionavel() {

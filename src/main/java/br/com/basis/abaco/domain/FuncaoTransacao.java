@@ -50,7 +50,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     @Column
     private String ftrStr;
 
-    @JsonManagedReference(value="funcaoTransacao")
+    @JsonManagedReference(value = "funcaoTransacao")
     @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Alr> alrs = new HashSet<>();
@@ -60,8 +60,8 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     @Transient
     private Set<String> ftrValues;
-    
-    @JsonManagedReference(value="funcaoTransacao")
+
+    @JsonManagedReference(value = "funcaoTransacao")
     @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Der> ders = new HashSet<>();
 
@@ -137,11 +137,11 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Der> getDers() {
-        return ders;
+        return Collections.unmodifiableSet(ders);
     }
 
     public void setDers(Set<Der> ders) {
-        this.ders = ders;
+        this.ders = new HashSet<Der>(ders);
     }
 
     @Override
@@ -157,6 +157,11 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
             return false;
         }
         return Objects.equals(getId(), funcaoTransacao.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     public List<UploadedFile> getFiles() {
