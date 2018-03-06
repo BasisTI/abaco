@@ -1,6 +1,7 @@
 package br.com.basis.abaco.domain;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,11 +21,11 @@ public class FuncaoDadosVersionavel extends FuncaoAnaliseVersionavel implements 
     private Set<FuncaoDados> funcoesDados = new HashSet<>();
 
     public Set<FuncaoDados> getFuncoesDados() {
-        return funcoesDados;
+        return Collections.unmodifiableSet(funcoesDados);
     }
 
     public void setFuncoesDados(Set<FuncaoDados> funcoesDados) {
-        this.funcoesDados = funcoesDados;
+        this.funcoesDados = new HashSet<>(funcoesDados);
     }
 
 }
