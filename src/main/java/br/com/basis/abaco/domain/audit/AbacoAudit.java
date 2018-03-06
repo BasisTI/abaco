@@ -21,6 +21,12 @@ public class AbacoAudit {
     @Column(name = "updated_on", nullable = false)
     @NotNull
     private ZonedDateTime updatedOn;
+    
+    {
+        ZonedDateTime now = ZonedDateTime.now();
+        createdOn = now;
+        updatedOn = now;
+    }
 
     public ZonedDateTime getCreatedOn() {
         return createdOn;

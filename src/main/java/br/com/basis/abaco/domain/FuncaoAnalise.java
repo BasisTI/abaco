@@ -71,7 +71,8 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     private Set<String> derValues;
 
     @Embedded
-    private AbacoAudit audit;
+    // XXX deve ter o new() mesmo?
+    private AbacoAudit audit = new AbacoAudit();
 
     public Long getId() {
         return id;

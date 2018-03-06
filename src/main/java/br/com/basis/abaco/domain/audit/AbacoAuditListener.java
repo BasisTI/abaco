@@ -15,14 +15,14 @@ public class AbacoAuditListener {
             audit = new AbacoAudit();
             auditable.setAudit(audit);
         }
-        
+
         ZonedDateTime now = ZonedDateTime.now();
         audit.setCreatedOn(now);
         audit.setUpdatedOn(now);
     }
 
     @PreUpdate
-    public void setUpdadtedOn(AbacoAuditable auditable) {
+    public void setUpdatedOn(AbacoAuditable auditable) {
         AbacoAudit audit = auditable.getAudit();
         audit.setUpdatedOn(ZonedDateTime.now());
     }
