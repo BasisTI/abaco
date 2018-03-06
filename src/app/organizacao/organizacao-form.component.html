@@ -82,6 +82,7 @@
                 </ng-template>
               </p-column>
               <p-column header="Manual" field="manual.nome"></p-column>
+              <p-column header="Dias de Garantia" field="diasDeGarantia"></p-column>
               <p-column header="Ativo" field="ativo">
                 <ng-template let-col let-ativo="rowData" pTemplate="body">
                   {{ ativo[col.field] ? 'Sim' : 'Não' }}
@@ -131,6 +132,13 @@
                 [monthNavigator]="true" [yearNavigator]="true" name="dataFimVigenciaContrato"
                 dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
               <label>Data Final da Vigência</label>
+              </span>
+            </div>
+            <div class="ui-g-6" style="margin-bottom: 25px">
+              <span class="md-inputfield">
+                <input type="text" name="diasDeGarantia"
+                  [(ngModel)]="novoContrato.diasDeGarantia" pInputText/>
+                <label>Dias de garantia</label>
               </span>
             </div>
             <div class = "ui-g-12" style="margin-bottom: 25px">
@@ -193,6 +201,13 @@
                 [monthNavigator]="true" [yearNavigator]="true" name="dataFimVigenciaContrato"
                 dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
               <label>Data Final da Vigência</label>
+              </span>
+            </div>
+            <div class="ui-g-6" style="margin-bottom: 25px">
+              <span class="md-inputfield">
+                <input type="text" name="diasDeGarantia"
+                  [(ngModel)]="contratoEmEdicao.diasDeGarantia" pInputText/>
+                <label>Dias de garantia</label>
               </span>
             </div>
             <div class = "ui-g-12" style="margin-bottom: 25px">
