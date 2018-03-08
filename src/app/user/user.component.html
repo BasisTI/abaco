@@ -3,13 +3,14 @@
     <div class="card card-w-title">
       <h1>Usuários</h1>
       <div class="ui-g">
-          <div class="ui-g-6">
+          <div class="ui-g-4">
             <span class="md-inputfield">
               <input type="text" pInputText class="ui-inputtext"
                 name="filtroUser"
                 [(ngModel)]="searchParams.fullName"
                 (keyup.enter)="performSearch()"
-                #filter />
+                #filter 
+                maxlength="50">
               <label>Nome</label>
             </span>
           </div>
@@ -19,17 +20,19 @@
                 name="filtroUser"
                 [(ngModel)]="searchParams.login"
                 (keyup.enter)="performSearch()"
-                #filter />
+                #filter 
+                maxlength="50"/>
               <label>Login</label>
             </span>
           </div>
-          <div class="ui-g-3">
+          <div class="ui-g-5">
             <span class="md-inputfield">
               <input type="text" pInputText class="ui-inputtext"
                 name="filtroUser"
                 [(ngModel)]="searchParams.email"
                 (keyup.enter)="performSearch()"
-                #filter />
+                #filter 
+                maxlength="100"/>
               <label>E-mail</label>
             </span>
           </div>
