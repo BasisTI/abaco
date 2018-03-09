@@ -19,6 +19,7 @@ export class ManualComponent implements OnInit {
   searchUrl: string = this.manualService.searchUrl;
 
   paginationParams = { contentIndex: null };
+
   elasticQuery: ElasticQuery = new ElasticQuery();
 
   manualSelecionado: Manual;
@@ -88,9 +89,14 @@ export class ManualComponent implements OnInit {
       this.pageNotificationService
         .addSuccessMsg(`Manual '${manualSalvo.nome}' clonado a partir do manual '${this.manualSelecionado.nome}' com sucesso!`);
       this.fecharDialogClonar();
-      this.datatable.refresh(this.elasticQuery.query);
+      this.recarregarDataTable();
     });
 
+  }
+
+  limparPesquisa() {
+    this.elasticQuery.reset();
+    this.recarregarDataTable();
   }
 
   confirmDelete(id: any) {
@@ -98,9 +104,13 @@ export class ManualComponent implements OnInit {
       message: 'Tem certeza que deseja excluir o registro?',
       accept: () => {
         this.manualService.delete(id).subscribe(() => {
-          this.datatable.refresh(this.elasticQuery.query);
+          this.recarregarDataTable();
         });
       }
     });
+  }
+
+  recarregarDataTable() {
+    this.datatable.refresh(this.elasticQuery.query);
   }
 }

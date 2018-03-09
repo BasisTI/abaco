@@ -26,15 +26,17 @@ export class UserComponent implements AfterViewInit, OnInit {
   searchUrl: string = this.userService.searchUrl;
 
   paginationParams = { contentIndex: null };
+
   elasticQuery: ElasticQuery = new ElasticQuery();
+  
   searchParams: any = {
     fullName: undefined,
     login: undefined,
     email: undefined,
     organization: undefined,
     profile: undefined,
-    team: undefined
-  }
+    team: undefined,
+  };
 
   organizations: Array<Organizacao>;
   authorities: Array<Authority>;
