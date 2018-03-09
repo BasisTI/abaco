@@ -23,6 +23,14 @@
         </div>
         <basis-datatable [url]="searchUrl"
           (buttonClick)="datatableClick($event)" #datatable>
+
+          <basis-datatable-button
+            name="clone"
+            icon="content-copy"
+            tooltip="Clonar"
+            disabled="desabilitarBotaoClonar()">
+          </basis-datatable-button>
+
           <p-column header="Código" field="id" [sortable]="true"></p-column>
           <p-column header="Nome" field="nome" [sortable]="true"></p-column>
           <p-column header="Estimada (%)" field="valorVariacaoEstimada" [sortable]="true">
@@ -50,3 +58,26 @@
     <!-- <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button> -->
   </p-footer>
 </p-confirmDialog>
+
+<p-dialog header="Clonar Manual" [(visible)]="mostrarDialogClonar"
+  [contentStyle]="{'overflow':'visible'}" [width]="800">
+  <div class="ui-g">
+    <div class="ui-g-12" style="margin-bottom: 25px">
+      <span class="md-inputfield">
+        <input type="text" name="nomeManualClonado"
+          [(ngModel)]="nomeDoManualClonado" pInputText />
+        <label>Novo nome</label>
+      </span>
+    </div>
+  </div>
+
+  <div class="ui-g ui-md-12" style="justify-content: flex-end">
+    <div class="ui-g-2">
+      <app-white-button buttonLabel="Cancelar" (click)="fecharDialogClonar()"></app-white-button>
+    </div>
+    <div class="ui-g-2">
+      <app-green-button buttonLabel="Salvar" (click)="clonar()"></app-green-button>
+    </div>
+  </div>
+
+</p-dialog>
