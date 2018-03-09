@@ -48,7 +48,6 @@ export class DerChipConverter {
     return ref.valor ? ref.valor.toString() : ref.nome;
   }
 
-  // TODO quando for somente o número?
   static converter(valores: string[]): DerChipItem[] {
     if (valores) {
       return this.doConverter(valores);
@@ -61,7 +60,6 @@ export class DerChipConverter {
     });
   }
 
-  // TODO pode ser um outro tipo não any?
   static valor(refs: AnaliseReferenciavel[]): number {
     if (!refs) {
       return 0;
