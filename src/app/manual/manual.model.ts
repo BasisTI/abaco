@@ -97,4 +97,18 @@ export class Manual implements BaseEntity, JSONable<Manual> {
     this.mappableAdjustFactors.delete(fatorAjuste);
     this.fatoresAjuste = this.mappableAdjustFactors.values();
   }
+
+  clone(): Manual {
+    return new Manual(
+      this.id,
+      this.nome,
+      this.observacao,
+      this.valorVariacaoEstimada,
+      this.valorVariacaoIndicativa,
+      this.arquivoManualId,
+      this.fatoresAjuste,
+      this.esforcoFases,
+      this.artificialId);
+
+  }
 }
