@@ -88,6 +88,7 @@ export class ManualComponent implements OnInit {
       this.pageNotificationService
         .addSuccessMsg(`Manual '${manualSalvo.nome}' clonado a partir do manual '${this.manualSelecionado.nome}' com sucesso!`);
       this.fecharDialogClonar();
+      this.datatable.refresh(this.elasticQuery.query);
     });
 
   }
