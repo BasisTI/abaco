@@ -78,14 +78,17 @@ export class ManualComponent implements OnInit {
   }
 
   clonar() {
-    const manualClonado: Manual = Object.assign({}, this.manualSelecionado);
+    const manualClonado: Manual = this.manualSelecionado.clone();
     manualClonado.id = undefined;
     manualClonado.nome = this.nomeDoManualClonado;
+    manualClonado.esforcoFases.forEach(ef => ef.id = undefined);
+    manualClonado.fatoresAjuste.forEach(fa => fa.id = undefined);
 
     this.manualService.create(manualClonado).subscribe((manualSalvo: Manual) => {
       this.pageNotificationService
         .addSuccessMsg(`Manual '${manualSalvo.nome}' clonado a partir do manual '${this.manualSelecionado.nome}' com sucesso!`);
       this.fecharDialogClonar();
+      this.datatable.refresh(this.elasticQuery.query);
     });
 
   }
