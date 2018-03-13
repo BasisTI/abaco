@@ -46,11 +46,20 @@ export class AnaliseComponent {
       message: `Tem certeza que deseja excluir a Análise com Número OS '${analise.numeroOs}'?`,
       accept: () => {
         this.analiseService.delete(analise.id).subscribe(() => {
-          this.datatable.refresh(this.elasticQuery.query);
+          this.recarregarDataTable();
           this.pageNotificationService.addDeleteMsgWithName(analise.numeroOs);
         });
       }
     });
+  }
+
+  limparPesquisa() {
+    this.elasticQuery.reset();
+    this.recarregarDataTable();
+  }
+
+  recarregarDataTable() {
+    this.datatable.refresh(this.elasticQuery.query);
   }
 
 }

@@ -19,19 +19,18 @@
 
         <div class="ui-g ui-md-12" style="justify-content: center">
           <div class="ui-md-2">
+              <app-white-button 
+                buttonLabel="Limpar Pesquisa" 
+                buttonIcon="ui-icon-clear-all" 
+                (click)="limparPesquisa()">
+              </app-white-button>
+          </div>
+          <div class="ui-md-2">
             <app-blue-button 
               buttonLabel="Pesquisar" 
               buttonIcon="ui-icon-search" 
               (click)="datatable.refresh(elasticQuery.query)">
             </app-blue-button>
-          </div>
-
-          <div class="ui-md-2">
-              <app-blue-button 
-                buttonLabel="Limpar Pesquisa" 
-                buttonIcon="ui-icon-clear-all" 
-                (click)="limparPesquisa()">
-              </app-blue-button>
           </div>
 
           <div class="ui-md-2">

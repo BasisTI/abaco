@@ -31,7 +31,7 @@ export class TipoEquipeComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit() {
-    this.datatable.refresh(this.elasticQuery.query);
+    this.recarregarDataTable();
   }
 
   datatableClick(event: DatatableClickEvent) {
@@ -56,7 +56,7 @@ export class TipoEquipeComponent implements AfterViewInit {
       message: 'Tem certeza que deseja excluir o registro?',
       accept: () => {
         this.tipoEquipeService.delete(id).subscribe(() => {
-          this.datatable.refresh(this.elasticQuery.query);
+          this.recarregarDataTable();
           this.pageNotificationService.addDeleteMsg();
         }, error => {
           if(error.status === 500) {
@@ -66,4 +66,14 @@ export class TipoEquipeComponent implements AfterViewInit {
       }
     });
   }
+
+  limparPesquisa() {
+    this.elasticQuery.reset();
+    this.recarregarDataTable();
+  }
+
+  recarregarDataTable() {
+    this.datatable.refresh(this.elasticQuery.query);
+  }
+
 }

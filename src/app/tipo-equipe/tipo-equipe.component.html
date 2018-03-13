@@ -5,7 +5,8 @@
       <div class="ui-g">
         <div class="ui-g-12">
           <span class="md-inputfield">
-            <input type="text" pInputText class="ui-inputtext"
+            <input type="text" 
+              pInputText class="ui-inputtext"
               name="filtroTipoEquipe"
               [(ngModel)]="elasticQuery.value"
               (keyup.enter)="datatable.refresh(elasticQuery.query)"
@@ -16,13 +17,27 @@
       </div>
       <div class="ui-g">
         <div class="ui-g ui-md-12" style="justify-content: center">
+
+            <div class="ui-md-2">
+                <app-white-button 
+                  buttonLabel="Limpar Pesquisa" 
+                  buttonIcon="ui-icon-clear-all" 
+                  (click)="limparPesquisa()">
+                </app-white-button>
+            </div>
+
           <div class="ui-md-2">
-            <app-blue-button buttonLabel="Pesquisar" buttonIcon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></app-blue-button>
-            <!-- <button pButton type="button" label="Pesquisar" icon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></button> -->
+            <app-blue-button buttonLabel="Pesquisar" 
+              buttonIcon="ui-icon-search" 
+              (click)="datatable.refresh(elasticQuery.query)">
+            </app-blue-button>
           </div>
-          <div class="ui-md-3">
-            <app-green-button buttonLabel="Novo Tipo de Equipe" buttonIcon="ui-icon-add" routerLink="/admin/tipoEquipe/new"></app-green-button>
-            <!-- <button pButton type="button" label="Novo Tipo de Equipe" routerLink="/admin/tipoEquipe/new" icon="ui-icon-add"></button> -->
+          <div class="ui-md-2">
+            <app-green-button 
+              buttonLabel="Novo Tipo de Equipe" 
+              buttonIcon="ui-icon-add" 
+              routerLink="/admin/tipoEquipe/new">
+            </app-green-button>
           </div>
         </div>
 

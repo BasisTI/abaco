@@ -50,7 +50,7 @@ export class TipoFaseComponent {
       message: 'Tem certeza que deseja excluir o registro?',
       accept: () => {
         this.tipoFaseService.delete(id).subscribe(() => {
-          this.datatable.refresh(this.elasticQuery.query);
+          this.recarregarDataTable();
           this.pageNotificationService.addDeleteMsg();
         }, error => {
           if(error.status === 500) {
@@ -59,5 +59,14 @@ export class TipoFaseComponent {
         });
       }
     });
+  }
+
+  limparPesquisa() {
+    this.elasticQuery.reset();
+    this.recarregarDataTable();
+  }
+
+  recarregarDataTable() {
+    this.datatable.refresh(this.elasticQuery.query);
   }
 }

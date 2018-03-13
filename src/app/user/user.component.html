@@ -3,20 +3,26 @@
     <div class="card card-w-title">
       <h1>Usuários</h1>
       <div class="ui-g">
+
           <div class="ui-g-4">
             <span class="md-inputfield">
-              <input type="text" pInputText class="ui-inputtext"
+              <input 
+                type="text" 
+                pInputText class="ui-inputtext"
                 name="filtroUser"
                 [(ngModel)]="searchParams.fullName"
                 (keyup.enter)="performSearch()"
-                #filter 
+                #filter
                 maxlength="50">
               <label>Nome</label>
             </span>
           </div>
+
           <div class="ui-g-3">
             <span class="md-inputfield">
-              <input type="text" pInputText class="ui-inputtext"
+              <input 
+                type="text" 
+                pInputText class="ui-inputtext"
                 name="filtroUser"
                 [(ngModel)]="searchParams.login"
                 (keyup.enter)="performSearch()"
@@ -25,9 +31,12 @@
               <label>Login</label>
             </span>
           </div>
+
           <div class="ui-g-5">
             <span class="md-inputfield">
-              <input type="text" pInputText class="ui-inputtext"
+              <input 
+                type="text" 
+                pInputText class="ui-inputtext"
                 name="filtroUser"
                 [(ngModel)]="searchParams.email"
                 (keyup.enter)="performSearch()"
@@ -38,71 +47,130 @@
           </div>
     </div>
     <div class="ui-g">
+
       <div class="ui-g-4">
-        <p-dropdown [options]="organizations" optionLabel="nome" [(ngModel)]="searchParams.organization" [autoWidth]="false" placeholder="Organização"></p-dropdown>
+        <p-dropdown 
+          [options]="organizations" 
+          optionLabel="nome" 
+          [(ngModel)]="searchParams.organization" 
+          [autoWidth]="false" 
+          placeholder="Organização">
+        </p-dropdown>
       </div>
+      
       <div class="ui-g-4">
-        <p-dropdown [options]="authorities" optionLabel="name" [(ngModel)]="searchParams.profile" [autoWidth]="false" placeholder="Perfil"></p-dropdown>
+        <p-dropdown 
+          [options]="authorities" 
+          optionLabel="name" 
+          [(ngModel)]="searchParams.profile" 
+          [autoWidth]="false" 
+          placeholder="Perfil">
+        </p-dropdown>
       </div>
+      
       <div class="ui-g-4">
-        <p-dropdown [options]="teams" optionLabel="nome" [autoWidth]="false" [(ngModel)]="searchParams.team" placeholder="Equipe"></p-dropdown>
+        <p-dropdown 
+          [options]="teams" 
+          optionLabel="nome" 
+          [autoWidth]="false" 
+          [(ngModel)]="searchParams.team" 
+          placeholder="Equipe">
+        </p-dropdown>
       </div>
+    
     </div>
     <div class="ui-g">
       <div class="ui-g ui-md-12" style="justify-content: center">
         <div class="ui-md-2">
-          <app-blue-button buttonLabel="Pesquisar" buttonIcon="ui-icon-search" (click)="performSearch()"></app-blue-button>
-          <!-- <button pButton type="button" label="Pesquisar" icon="ui-icon-search"
-            (click)="datatable.refresh(elasticQuery.query)"></button> -->
+          <app-white-button 
+            buttonLabel="Limpar Pesquisa" 
+            buttonIcon="ui-icon-clear-all" 
+            (click)="limparPesquisa()">
+          </app-white-button>
         </div>
-        <div class="ui-md-3">
-          <app-green-button buttonLabel="Novo Usuário" routerLink="/admin/user/new" buttonIcon="ui-icon-add"></app-green-button>
+
+        <div class="ui-md-2">
+          <app-blue-button 
+            buttonLabel="Pesquisar" 
+            buttonIcon="ui-icon-search" 
+            (click)="performSearch()">
+          </app-blue-button>
         </div>
+
+        <div class="ui-md-2">
+          <app-green-button 
+            buttonLabel="Novo Usuário" 
+            routerLink="/admin/user/new" 
+            buttonIcon="ui-icon-add">
+          </app-green-button>
+        </div>
+
       </div>
   <div class="ui-g-12 ui-md-12" style="padding: 0;">
-    <basis-datatable [url]="searchUrl"
-      (buttonClick)="datatableClick($event)" #datatable>
+    <basis-datatable 
+      [url]="searchUrl"
+      (buttonClick)="datatableClick($event)" 
+      #datatable>
+
       <p-column header="Nome" field="nome" [style]="{width:'15%'}">
         <ng-template let-user="rowData" pTemplate="body">
           {{ user.firstName + ' ' + user.lastName }}
         </ng-template>
       </p-column>
+
       <p-column header="Login" field="login" [sortable]="true"></p-column>
-      <p-column header="E-mail" field="email"
-        [style]="{'word-wrap':'break-word'}" [sortable]="true"></p-column>
-      <p-column header="Organização"
-        [style]="{'word-wrap':'break-word', 'width': '17.5%'}" [sortable]="true">
+
+      <p-column 
+        header="E-mail" 
+        field="email"
+        [style]="{'word-wrap':'break-word'}" 
+        [sortable]="true">
+      </p-column>
+      
+      <p-column 
+        header="Organização"
+        [style]="{'word-wrap':'break-word', 'width': '17.5%'}" 
+        [sortable]="true">
         <ng-template let-col let-row="rowData" pTemplate="body">
           <li *ngFor="let org of row.organizacoes">
             {{ org.nome }}
           </li>
         </ng-template>
       </p-column>
-      <p-column header="Perfil" [sortable]="true">
+      
+      <p-column 
+        header="Perfil" 
+        [sortable]="true">
         <ng-template let-col let-row="rowData" pTemplate="body">
           <li *ngFor="let perfil of row.authorities">
             {{ perfil.name }}
           </li>
         </ng-template>
       </p-column>
-      <p-column header="Equipe" [sortable]="true">
+
+      <p-column 
+        header="Equipe" 
+        [sortable]="true">
         <ng-template let-col let-row="rowData" pTemplate="body">
           <li *ngFor="let equipe of row.tipoEquipes">
             {{ equipe.nome }}
           </li>
         </ng-template>
       </p-column>
+
       <p-column header="Ativo" field="activated"
         [style]="{width:'5.5%'}" [sortable]="true">
           <ng-template let-col let-ativo="rowData" pTemplate="body">
               {{ ativo[col.field] ? 'Sim' : (ativo[col.field] != null ? 'Não' : null) }}
             </ng-template>
       </p-column>
+
     </basis-datatable>
   </div>
 </div>
   </div>
 </div>
+
 <p-confirmDialog header="Confirmação" #dialog>
   <p-footer>
     <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>

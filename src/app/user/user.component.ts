@@ -28,7 +28,7 @@ export class UserComponent implements AfterViewInit, OnInit {
   paginationParams = { contentIndex: null };
 
   elasticQuery: ElasticQuery = new ElasticQuery();
-  
+
   searchParams: any = {
     fullName: undefined,
     login: undefined,
@@ -74,7 +74,7 @@ export class UserComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
-    this.datatable.refresh(this.elasticQuery.query);
+    this.recarregarDataTable();
   }
 
   datatableClick(event: DatatableClickEvent) {
@@ -124,13 +124,21 @@ export class UserComponent implements AfterViewInit, OnInit {
     (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name !== undefined) ? (arrayParams.push(this.searchParams.profile.name)) : (this)) : (this);
     (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (arrayParams.push(this.searchParams.team.nome)) : (this)) : (this);
 
-
     return arrayParams;
   }
 
   performSearch() {
     this.checkUndefinedParams();
     this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
+    this.recarregarDataTable();
+  }
+
+  limparPesquisa() {
+    this.elasticQuery.reset();
+    this.recarregarDataTable();
+  }
+
+  recarregarDataTable() {
     this.datatable.refresh(this.elasticQuery.query);
   }
 

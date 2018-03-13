@@ -49,7 +49,7 @@ export class SistemaComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.datatable.refresh(this.elasticQuery.query);
+    this.recarregarDataTable();
   }
 
   datatableClick(event: DatatableClickEvent) {
@@ -74,7 +74,7 @@ export class SistemaComponent implements AfterViewInit {
       message: 'Tem certeza que deseja excluir o registro?',
       accept: () => {
         this.sistemaService.delete(id).subscribe(() => {
-          this.datatable.refresh(this.elasticQuery.query);
+          this.recarregarDataTable();
         });
       }
     });
@@ -89,7 +89,7 @@ export class SistemaComponent implements AfterViewInit {
   performSearch() {
     this.checkUndefinedParams();
     this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
-    this.datatable.refresh(this.elasticQuery.query)
+    this.recarregarDataTable();
   }
 
   private createStringParamsArray(): Array<string> {
@@ -100,6 +100,15 @@ export class SistemaComponent implements AfterViewInit {
     (this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push(this.searchParams.organizacao.nome)) : (this);
 
     return stringParamsArray;
+  }
+
+  limparPesquisa() {
+    this.elasticQuery.reset();
+    this.recarregarDataTable();
+  }
+
+  recarregarDataTable() {
+    this.datatable.refresh(this.elasticQuery.query);
   }
 
 }

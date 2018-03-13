@@ -30,7 +30,7 @@ export class OrganizacaoComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit() {
-    this.datatable.refresh(this.elasticQuery.query);
+    this.recarregarDataTable();
   }
 
   datatableClick(event: DatatableClickEvent) {
@@ -55,7 +55,7 @@ export class OrganizacaoComponent implements AfterViewInit {
       message: 'Tem certeza que deseja excluir o registro?',
       accept: () => {
         this.organizacaoService.delete(id).subscribe(() => {
-          this.datatable.refresh(this.elasticQuery.query);
+          this.recarregarDataTable();
         }, error => {
           if(error.status === 500) {
             this.pageNotificationService.addErrorMsg('A organização não pode ser deletada pois existe contrato associado a ela.');
@@ -64,4 +64,14 @@ export class OrganizacaoComponent implements AfterViewInit {
       }
     });
   }
+
+  limparPesquisa() {
+    this.elasticQuery.reset();
+    this.recarregarDataTable();
+  }
+
+  recarregarDataTable() {
+    this.datatable.refresh(this.elasticQuery.query);
+  }
+
 }

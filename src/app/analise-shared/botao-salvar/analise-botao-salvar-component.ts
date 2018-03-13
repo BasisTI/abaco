@@ -52,7 +52,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   }
 
 
-  motivosDesabilitar(): string {
+  public motivosDesabilitar(): string {
     return _.join(Array.from(this.motivosBotaoDesabilitado), '\n');
   }
 

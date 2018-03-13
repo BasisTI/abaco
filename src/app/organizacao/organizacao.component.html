@@ -15,14 +15,27 @@
       <div class="ui-g">
 
         <div class="ui-g ui-md-12" style="justify-content: center">
-          <div class="ui-md-2">
-            <app-blue-button buttonLabel="Pesquisar" buttonIcon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></app-blue-button>
-            <!-- <button pButton type="button" label="Pesquisar" icon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)"></button> -->
-          </div>
-          <div class="ui-md-3">
-            <app-green-button buttonLabel="Nova Organização" buttonIcon="ui-icon-add" routerLink="/organizacao/new"></app-green-button>
-            <!-- <button pButton type="button" label="Nova Organização" routerLink="/organizacao/new" icon="ui-icon-add"></button> -->
-          </div>
+              <div class="ui-md-2">
+                <app-white-button 
+                  buttonLabel="Limpar Pesquisa" 
+                  buttonIcon="ui-icon-clear-all" 
+                  (click)="limparPesquisa()">
+                </app-white-button>
+              </div>
+              <div class="ui-md-2">
+                <app-blue-button 
+                  buttonLabel="Pesquisar" 
+                  buttonIcon="ui-icon-search" 
+                  (click)="datatable.refresh(elasticQuery.query)">
+                </app-blue-button>
+              </div>
+              <div class="ui-md-2">
+                <app-green-button 
+                  buttonLabel="Nova Organização" 
+                  buttonIcon="ui-icon-add" 
+                  routerLink="/organizacao/new"
+                ></app-green-button>
+              </div>
         </div>
 
         <basis-datatable [url]="searchUrl"
