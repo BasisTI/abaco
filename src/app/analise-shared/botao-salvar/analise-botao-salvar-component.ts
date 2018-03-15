@@ -37,7 +37,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
     if (_.isEmpty(this.analise.numeroOs)) {
       this.motivosBotaoDesabilitado.add('- Informe um Número OS');
     }
-    if (_.isEmpty(this.analise.tipoContagem)) {
+    if (_.isEmpty(this.analise.metodoContagem)) {
       this.motivosBotaoDesabilitado.add('- Selecione um Tipo de Contagem');
     }
     if (this.nenhumaFuncaoAdicionada()) {

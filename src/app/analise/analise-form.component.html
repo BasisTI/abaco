@@ -64,36 +64,24 @@
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
-                  <label>Tipo de Contagem</label>
+                  <label>Método de Contagem</label>
                   <p-dropdown 
                     disabled="{{ !isContratoSelected() }}"
                     placeholder="{{ tipoDeContagemDropdownPlaceholder() }}"
-                    name="tipoContagem" 
+                    name="metodoContagem" 
                     [options]="metodosContagem"
-                    [(ngModel)]="analise.tipoContagem"  
+                    [(ngModel)]="analise.metodoContagem"  
                     [autoWidth]="false">
                   </p-dropdown>
                 </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
-                <label>Método de Contagem</label>
+                <label>Tipo de Contagem</label>
                 <p-dropdown 
-                  disabled="{{ !isContratoSelected() }}"
-                  placeholder="{{ metodoContagemDropdownPlaceholder() }}"
-                  name="metodoContagem" 
-                  [options]="metodoContagem"
-                  [(ngModel)]="analise.metodoContagem"  
-                  [autoWidth]="false">
-                </p-dropdown>
-              </div>
-
-              <div class="ui-g-12" style="margin-bottom: 25px">
-                <label>Tipo de Análise</label>
-                <p-dropdown 
-                  name="tipoContagem"
+                  name="tiposAnalise"
                   placeholder="Selecione um Tipo de Contagem"
-                  [options]="tipoContagem"
-                  [(ngModel)]="analise.tipoContagem"  
+                  [options]="tiposAnalise"
+                  [(ngModel)]="analise.tipoAnalise"  
                   [autoWidth]="false">
                 </p-dropdown>
               </div>

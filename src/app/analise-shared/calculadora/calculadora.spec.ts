@@ -22,7 +22,7 @@ describe('Calculadora de Função de Dados', () => {
 
   describe('Método Contagem INDICATIVA', () => {
 
-    beforeAll(() => metodoContagem = 'INDICATIVA' as MetodoContagem);
+    beforeAll(() => metodoContagem = 'Indicativa (NESMA)' as MetodoContagem);
 
     describe('ALI', () => {
 
@@ -72,7 +72,7 @@ describe('Calculadora de Função de Dados', () => {
 
   describe('Método Contagem ESTIMADA', () => {
 
-    beforeAll(() => metodoContagem = 'ESTIMADA' as MetodoContagem);
+    beforeAll(() => metodoContagem = 'Estimada (NESMA)' as MetodoContagem);
 
     describe('ALI', () => {
 
@@ -119,7 +119,7 @@ describe('Calculadora de Função de Dados', () => {
 
   describe('Método Contagem DETALHADA', () => {
 
-    beforeAll(() => metodoContagem = 'DETALHADA' as MetodoContagem);
+    beforeAll(() => metodoContagem = 'Detalhada (IFPUG)' as MetodoContagem);
 
     describe('ALI', () => {
       describe('Complexidade BAIXA', () => {

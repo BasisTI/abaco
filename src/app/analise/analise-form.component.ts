@@ -38,19 +38,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   fatoresAjuste: SelectItem[] = [];
   private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
 
-    /** 
-   * Método responsável por popular a combo de tipo de analise.
-  */
-  tiposAnalise: SelectItem[] = [
-    { label: 'DESENVOLVIMENTO', value: 'DESENVOLVIMENTO' },
-    { label: 'MELHORIA', value: 'MELHORIA' },
-    { label: 'APLICACAO', value: 'APLICACAO' }
-  ];
-
   /** 
    * Método responsável por popular a combo de tipo de contagem.
   */
-  tipoContagem: SelectItem[] = [
+ tiposAnalise: SelectItem[] = [
     {label: 'Projeto de Desenvolvimento', value: 'Projeto de Desenvolvimento'},
     {label: 'Projeto Melhoria', value: 'Projeto Melhoria'},
     {label: 'Contagem de Aplicação (Baseline)', value: 'Contagem de Aplicação (Baseline)'}
@@ -174,14 +165,14 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   private carregarMetodosContagem(manual: Manual) {
     this.metodosContagem = [
-      { value: 'DETALHADA', label: 'DETALHADA' },
+      { value: 'Detalhada (IFPUG)', label: 'Detalhada (IFPUG)' },
       {
-        value: 'INDICATIVA',
-        label: this.getLabelValorVariacao('INDICATIVA', manual.valorVariacaoIndicativaFormatado)
+        value: 'Indicativa (NESMA)',
+        label: this.getLabelValorVariacao('Indicativa (NESMA)', manual.valorVariacaoIndicativaFormatado)
       },
       {
-        value: 'ESTIMADA',
-        label: this.getLabelValorVariacao('ESTIMADA', manual.valorVariacaoEstimadaFormatado)
+        value: 'Estimada (NESMA)',
+        label: this.getLabelValorVariacao('Estimada (NESMA)', manual.valorVariacaoEstimadaFormatado)
       }
     ];
   }

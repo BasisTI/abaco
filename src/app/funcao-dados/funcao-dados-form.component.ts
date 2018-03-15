@@ -187,7 +187,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   deveHabilitarBotaoAdicionar(): boolean {
     // TODO complementar com outras validacoes
-    return this.isFuncionalidadeSelected() && !_.isUndefined(this.analise.tipoContagem);
+    return this.isFuncionalidadeSelected() && !_.isUndefined(this.analise.metodoContagem);
   }
 
   get labelBotaoAdicionar() {
@@ -220,7 +220,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   private doEditar() {
-    const funcaoDadosCalculada = Calculadora.calcular(this.analise.tipoContagem, this.currentFuncaoDados);
+    const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem, this.currentFuncaoDados);
     // TODO temporal coupling
     this.analise.updateFuncaoDados(funcaoDadosCalculada);
     this.atualizaResumo();
@@ -244,7 +244,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   private doAdicionar() {
-    const funcaoDadosCalculada = Calculadora.calcular(this.analise.tipoContagem, this.currentFuncaoDados);
+    const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem, this.currentFuncaoDados);
     // TODO temporal coupling entre 1-add() e 2-atualizaResumo(). 2 tem que ser chamado depois
     this.analise.addFuncaoDados(funcaoDadosCalculada);
     this.atualizaResumo();

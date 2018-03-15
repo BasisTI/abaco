@@ -17,8 +17,9 @@ export enum MetodoContagem {
   'Indicativa (NESMA)' = 'Indicativa (NESMA)',
   'Estimada (NESMA)' = 'Estimada (NESMA)'
 }
+
 export const enum TipoContagem {
-  'Projetot de Desenvolvimento',
+  'Projeto de Desenvolvimento',
   'Projeto de Melhoria',
   'Contagem de Aplicação (Baseline)'
 }
@@ -46,7 +47,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     public escopo?: string,
     public fronteiras?: string,
     public documentacao?: string,
-    public tipoContagem?: TipoContagem,
+    public tipoAnalise?: TipoContagem,
     public propositoContagem?: string,
     public sistema?: Sistema,
     public funcaoDados?: FuncaoDados[],
@@ -55,7 +56,8 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     public contrato?: Contrato,
     public esforcoFases?: EsforcoFase[],
     public observacoes?: string,
-    public baselineImediatamente?: boolean
+    public baselineImediatamente?: boolean,
+    public versaoCPM?: string
   ) {
     this.inicializaMappables(funcaoDados, funcaoTransacaos);
     this.inicializaResumos();
@@ -239,7 +241,7 @@ class AnaliseCopyFromJSON {
   private converteValoresTriviais() {
     this._analiseConverted.id = this._json.id;
     this._analiseConverted.numeroOs = this._json.numeroOs;
-    this._analiseConverted.tipoContagem = this._json.tipoContagem;
+    this._analiseConverted.metodoContagem = this._json.metodoContagem;
     this._analiseConverted.fatorAjuste = this._json.fatorAjuste;
     this._analiseConverted.valorAjuste = this._json.valorAjuste;
     this._analiseConverted.pfTotal = this._json.pfTotal;
@@ -251,6 +253,7 @@ class AnaliseCopyFromJSON {
     this._analiseConverted.propositoContagem = this._json.propositoContagem;
     this._analiseConverted.observacoes = this._json.observacoes;
     this._analiseConverted.baselineImediatamente = this._json.baselineImediatamente;
+    this._analiseConverted.versaoCPM = this._json.versaoCPM;
 
     if (!this._analiseConverted.baselineImediatamente) {
       this._analiseConverted.baselineImediatamente = false;
