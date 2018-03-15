@@ -20,7 +20,7 @@ describe('Calculadora de Função de Transação', () => {
 
   describe('Método contagem ESTIMADA', () => {
 
-    beforeAll(() => metodoContagem = 'Estimada (NESMA)' as MetodoContagem);
+    beforeAll(() => metodoContagem = 'ESTIMADA' as MetodoContagem);
 
     const ESTIMADA_PF_BRUTO_FATOR_AJUSTE_UNITARIO = 0;
 
@@ -82,7 +82,7 @@ describe('Calculadora de Função de Transação', () => {
 
   describe('Método contagem DETALHADA', () => {
 
-    beforeAll(() => metodoContagem = 'Detalhada (IFPUG)' as MetodoContagem);
+    beforeAll(() => metodoContagem = 'DETALHADA' as MetodoContagem);
 
     describe('EE', () => {
       describe('Complexidade BAIXA', () => {

@@ -42,9 +42,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
    * Método responsável por popular a combo de tipo de contagem.
   */
  tiposAnalise: SelectItem[] = [
-    {label: 'Projeto de Desenvolvimento', value: 'Projeto de Desenvolvimento'},
-    {label: 'Projeto Melhoria', value: 'Projeto Melhoria'},
-    {label: 'Contagem de Aplicação (Baseline)', value: 'Contagem de Aplicação (Baseline)'}
+    {label: 'Projeto de Desenvolvimento', value: 'DESENVOLVIMENTO'},
+    {label: 'Projeto Melhoria', value: 'MELHORIA'},
+    {label: 'Contagem de Aplicação (Baseline)', value: 'APLICACAO'}
   ];
 
   /** 
@@ -165,13 +165,13 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   private carregarMetodosContagem(manual: Manual) {
     this.metodosContagem = [
-      { value: 'Detalhada (IFPUG)', label: 'Detalhada (IFPUG)' },
+      { value: 'DETALHADA', label: 'Detalhada (IFPUG)' },
       {
-        value: 'Indicativa (NESMA)',
+        value: 'INDICATIVA',
         label: this.getLabelValorVariacao('Indicativa (NESMA)', manual.valorVariacaoIndicativaFormatado)
       },
       {
-        value: 'Estimada (NESMA)',
+        value: 'ESTIMADA',
         label: this.getLabelValorVariacao('Estimada (NESMA)', manual.valorVariacaoEstimadaFormatado)
       }
     ];

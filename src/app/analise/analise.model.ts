@@ -13,15 +13,15 @@ import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 import { Organizacao } from '../organizacao';
 
 export enum MetodoContagem {
-  'Detalhada (IFPUG)' = 'Detalhada (IFPUG)',
-  'Indicativa (NESMA)' = 'Indicativa (NESMA)',
-  'Estimada (NESMA)' = 'Estimada (NESMA)'
+  'DETALHADA' = 'DETALHADA',
+  'INDICATIVA' = 'INDICATIVA',
+  'ESTIMADA' = 'ESTIMADA'
 }
 
 export const enum TipoContagem {
-  'Projeto de Desenvolvimento',
-  'Projeto de Melhoria',
-  'Contagem de Aplicação (Baseline)'
+  'DESENVOLVIMENTO',
+  'MELHORIA',
+  'APLICACAO'
 }
 
 export class Analise implements BaseEntity, JSONable<Analise> {

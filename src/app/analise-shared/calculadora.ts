@@ -32,12 +32,12 @@ export class Calculadora {
 
   private static calcularDeAcordoComMetodoContagem() {
     switch (this.metodoContagem.toString()) {
-      case 'Indicativa (NESMA)': {
+      case 'INDICATIVA': {
         this.calcularIndicativa();
         break;
       }
-      case 'Estimada (NESMA)':
-      case 'Detalhada (IFPUG)':
+      case 'ESTIMADA':
+      case 'DETALHADA':
         this.calcularNaoIndicativa();
     }
   }

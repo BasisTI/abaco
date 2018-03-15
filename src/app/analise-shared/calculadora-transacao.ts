@@ -40,7 +40,7 @@ export class CalculadoraTransacao {
   }
 
   private static definirComplexidadePercentual() {
-    if (this.metodoContagem === MetodoContagem['Estimada (NESMA)']) {
+    if (this.metodoContagem === MetodoContagem.ESTIMADA) {
       this.funcaoTransacaoCalculada.complexidade = Complexidade.MEDIA;
     } else {
       this.definirComplexidadePercentualDetalhada();
