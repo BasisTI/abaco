@@ -4,30 +4,59 @@
       <h1>{{ user.id ? 'Editar Usuário' : 'Cadastrar Usuário' }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
         <div class="ui-g">
+
           <div class="ui-g-4" style="margin-bottom: 25px">
             <span class="md-inputfield" >
-              <input id="firstName" type="text" name="firstNameUser" maxlength="50" [(ngModel)]="user.firstName" pInputText required/>
+              <input 
+                id="firstName" 
+                type="text" 
+                name="firstNameUser" 
+                maxlength="50" 
+                [(ngModel)]="user.firstName" 
+                pInputText required/>
               <label>Primeiro Nome</label>
             </span>
           </div>
+
           <div class="ui-g-4" style="margin-bottom: 25px">
             <span class="md-inputfield" >
-              <input id="lastName" type="text" name="lastNameUser" maxlength="50" [(ngModel)]="user.lastName" pInputText required/>
+              <input 
+                id="lastName" 
+                type="text" 
+                name="lastNameUser" 
+                maxlength="50" 
+                [(ngModel)]="user.lastName" 
+                pInputText required/>
               <label>Último Nome</label>
             </span>
           </div>
+
           <div class="ui-g-4" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input id="login" type="text" name="loginUser" maxlength="99" [(ngModel)]="user.login" pInputText required/>
+              <input 
+                id="login" 
+                type="text" 
+                name="loginUser" 
+                maxlength="99" 
+                [(ngModel)]="user.login" 
+                pInputText required/>
               <label>Login</label>
             </span>
           </div>
+
           <div class="ui-g-4" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input id="email" type="text" name="email" [(ngModel)]="user.email" pInputText maxlength="100"/>
+              <input 
+                id="email" 
+                type="text" 
+                name="email" 
+                [(ngModel)]="user.email" 
+                pInputText 
+                maxlength="100"/>
               <label>Email</label>
             </span>
           </div>
+          
           <div class="ui-g-12" style="margin-bottom: 25px">
             <div class="ui-g">
               <div class="ui-g-12 ui-md-1">

@@ -13,14 +13,14 @@ import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 import { Organizacao } from '../organizacao';
 
 export enum MetodoContagem {
-  'DETALHADA' = 'DETALHADA',
-  'INDICATIVA' = 'INDICATIVA',
-  'ESTIMADA' = 'ESTIMADA'
+  'Detalhada (IFPUG)' = 'Detalhada (IFPUG)',
+  'Indicativa (NESMA)' = 'Indicativa (NESMA)',
+  'Estimada (NESMA)' = 'Estimada (NESMA)'
 }
-export const enum TipoAnalise {
-  'DESENVOLVIMENTO',
-  'MELHORIA',
-  'APLICACAO'
+export const enum TipoContagem {
+  'Projetot de Desenvolvimento',
+  'Projeto de Melhoria',
+  'Contagem de Aplicação (Baseline)'
 }
 
 export class Analise implements BaseEntity, JSONable<Analise> {
@@ -38,7 +38,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
   constructor(
     public id?: number,
     public numeroOs?: string,
-    public tipoContagem?: MetodoContagem,
+    public metodoContagem?: MetodoContagem,
     public fatorAjuste?: FatorAjuste,
     public valorAjuste?: number,
     public pfTotal?: string,
@@ -46,7 +46,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     public escopo?: string,
     public fronteiras?: string,
     public documentacao?: string,
-    public tipoAnalise?: TipoAnalise,
+    public tipoContagem?: TipoContagem,
     public propositoContagem?: string,
     public sistema?: Sistema,
     public funcaoDados?: FuncaoDados[],

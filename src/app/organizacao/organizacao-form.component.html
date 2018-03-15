@@ -13,28 +13,51 @@
           <div *ngIf="imageUrl !== undefined || imageUrl !== null" class="ui-g-12">
             <img [src]="imageUrl" alt="">
           </div>
-          <div class="ui-g-2" style="margin-bottom: 25px">
+
+          <div class="ui-g-3" style="margin-bottom: 25px">
             <span class="md-inputfield" >
-              <input type="text" name="siglaOrganizacao" [(ngModel)]="organizacao.sigla" pInputText/>
+              <input 
+                type="text" 
+                name="siglaOrganizacao" 
+                [(ngModel)]="organizacao.sigla" 
+                pInputText
+                maxlength="10"/>
               <label>Sigla</label>
             </span>
           </div>
-          <div class="ui-g-6" style="margin-bottom: 25px">
+
+          <div class="ui-g-9" style="margin-bottom: 25px">
             <span class="md-inputfield" >
-              <input type="text" name="nomeOrganizacao" [(ngModel)]="organizacao.nome" pInputText/>
+              <input 
+                type="text"
+                name="nomeOrganizacao"
+                maxlength="80"
+                [(ngModel)]="organizacao.nome" 
+                pInputText/>
               <label>Nome da Organização</label>
             </span>
           </div>
-          <div class="ui-g-5" style="margin-bottom: 25px">
+          <div class="ui-g-3" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input type="text" [textMask]="{mask: cnpjMask}" name="cnpjOrganizacao" [(ngModel)]="organizacao.cnpj" pInputText/>
+              <input 
+                type="text" 
+                [textMask]="{mask: cnpjMask}" 
+                name="cnpjOrganizacao"
+                maxlength="19"
+                [(ngModel)]="organizacao.cnpj" 
+                pInputText/>
               <label>CNPJ</label>
             </span>
           </div>
 
-          <div class="ui-g-7" style="margin-bottom: 25px">
+          <div class="ui-g-9" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input type="text" name="numeroOcorrenciaOrganizacao" [(ngModel)]="organizacao.numeroOcorrencia" pInputText/>
+              <input 
+                type="text"
+                maxlength="250"
+                name="numeroOcorrenciaOrganizacao" 
+                [(ngModel)]="organizacao.numeroOcorrencia" 
+                pInputText/>
               <label>Número da Ocorrência</label>
             </span>
           </div>
@@ -42,7 +65,7 @@
           <div class="ui-g-12" style="margin-bottom: 25px">
             <div class="ui-g">
               <div class="ui-g-12 ui-md-1">
-                <label>Ativo</label>
+                <label>Ativo:</label>
               </div>
               <div class="ui-g-12 ui-md-1">
                 <p-radioButton name="org_ativo" [value]="true" label="Sim"
@@ -61,116 +84,195 @@
               </h4>
 
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
-              <div class="ui-md-3">
-                <app-blue-button buttonLabel="Novo Contrato" buttonIcon="ui-icon-add" (click)="abrirDialogCadastroContrato()"></app-blue-button>
-                <!-- <button pButton type="button" label="Novo Contrato" icon="ui-icon-add"
-                  (click)="abrirDialogCadastroContrato()"></button> -->
+              <div class="ui-md-2">
+                <app-blue-button 
+                  buttonLabel="Novo Contrato" 
+                  buttonIcon="ui-icon-add" 
+                  (click)="abrirDialogCadastroContrato()">
+                </app-blue-button>
               </div>
             </div>
 
             <app-memory-datatable [value]="organizacao.contracts"
               (buttonClick)="datatableClick($event)">
-              <p-column header="Número do Contrato" field="numeroContrato"></p-column>
-              <p-column header="Ínicio Vigência" field="dataInicioVigencia">
+              
+              <p-column 
+                header="Número do Contrato" 
+                field="numeroContrato">
+              </p-column>
+
+              <p-column 
+                header="Ínicio Vigência" 
+                field="dataInicioVigencia">
                 <ng-template let-col let-dataInicioVigencia="rowData" pTemplate="body">
                   {{ dataInicioVigencia[col.field] | date: 'dd/MM/y' }}
                 </ng-template>
               </p-column>
-              <p-column header="Final Vigência" field="dataFimVigencia">
+
+              <p-column 
+                header="Final Vigência" 
+                field="dataFimVigencia">
                 <ng-template let-col let-dataFimVigencia="rowData" pTemplate="body">
                   {{ dataFimVigencia[col.field] | date: 'dd/MM/y' }}
                 </ng-template>
               </p-column>
-              <p-column header="Manual" field="manual.nome"></p-column>
-              <p-column header="Dias de Garantia" field="diasDeGarantia"></p-column>
-              <p-column header="Ativo" field="ativo">
+
+              <p-column 
+                header="Manual" 
+                field="manual.nome">
+              </p-column>
+
+              <p-column 
+                header="Dias de Garantia" 
+                field="diasDeGarantia">
+              </p-column>
+
+              <p-column 
+                header="Ativo" 
+                field="ativo">
                 <ng-template let-col let-ativo="rowData" pTemplate="body">
                   {{ ativo[col.field] ? 'Sim' : 'Não' }}
                 </ng-template>
               </p-column>
+
             </app-memory-datatable>
+            
           </div>
         </div>
 
         <div class="ui-g" style="justify-content: center; margin-top: 25px;">
           <div class="ui-g-2">
-            <app-white-button buttonLabel="Cancelar" routerLink="/organizacao"></app-white-button>
-            <!-- <button pButton type="button" label="Cancelar" routerLink="/organizacao"></button> -->
+            <app-white-button 
+              buttonLabel="Cancelar" 
+              routerLink="/organizacao">
+            </app-white-button>
           </div>
+
           <div class="ui-g-2">
-            <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
-            <!-- <button pButton type="submit" label="Salvar" (click)="save()" [disabled]="editForm.form.invalid || isSaving" ></button> -->
+            <app-submit-button 
+              buttonLabel="Salvar"
+              [disabled]="editForm.form.invalid || isSaving">
+            </app-submit-button>
           </div>
         </div>
 
         <!-- Dialog Cadastro Contrato -->
-        <p-dialog header="Contrato" [(visible)]="mostrarDialogCadastroContrato"
-          [contentStyle]="{'overflow':'visible'}" [width]="800">
+        <p-dialog header="Contrato" 
+          [(visible)]="mostrarDialogCadastroContrato"
+          [contentStyle]="{'overflow':'visible'}" 
+          [width]="900">
+
           <div class="ui-g">
-            <div class="ui-g-6" style="margin-bottom: 25px">
+
+            <div class="ui-g-12" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="text" name="numeroContrato" [(ngModel)]="novoContrato.numeroContrato" pInputText/>
+                <input 
+                  type="text" 
+                  name="numeroContrato" 
+                  maxlength="120"
+                  [(ngModel)]="novoContrato.numeroContrato" 
+                  pInputText/>
                 <label>Número do Contrato</label>
               </span>
             </div>
-            <div class="ui-g-6" style="margin-bottom: 25px">
-              <p-dropdown [options]="manuais" optionLabel="nome" placeholder="Manual"
-                name="manualDropdown" [(ngModel)]="novoContrato.manual"
-                [autoWidth]="false" dataKey="id"></p-dropdown>
+
+            <div class="ui-g-12" style="margin-bottom: 25px">
+              <p-dropdown 
+                [options]="manuais" 
+                optionLabel="nome" 
+                placeholder="Manual"
+                name="manualDropdown" 
+                [(ngModel)]="novoContrato.manual"
+                [autoWidth]="false" 
+                dataKey="id">
+              </p-dropdown>
             </div>
+
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <p-calendar [(ngModel)]="novoContrato.dataInicioVigencia" name="dataInicioVigenciaContrato"
-                  [monthNavigator]="true" [yearNavigator]="true"
-                  dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
+                <p-calendar 
+                  name="dataInicioVigenciaContrato"
+                  dateFormat="dd/mm/yy"
+                  yearRange="2000:2020"
+                  [(ngModel)]="novoContrato.dataInicioVigencia" 
+                  [monthNavigator]="true" 
+                  [yearNavigator]="true">
+                </p-calendar>
                 <label>Data de Início da Vigência</label>
               </span>
             </div>
+
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-              <p-calendar [(ngModel)]="novoContrato.dataFimVigencia"
-                [monthNavigator]="true" [yearNavigator]="true" name="dataFimVigenciaContrato"
-                dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
+              <p-calendar 
+                name="dataFimVigenciaContrato"
+                yearRange="2000:2020"
+                dateFormat="dd/mm/yy"
+                [(ngModel)]="novoContrato.dataFimVigencia"
+                [monthNavigator]="true" 
+                [yearNavigator]="true">
+              </p-calendar>
               <label>Data Final da Vigência</label>
               </span>
             </div>
+
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="text" name="diasDeGarantia"
-                  [(ngModel)]="novoContrato.diasDeGarantia" pInputText/>
+                <input 
+                  type="text" 
+                  name="diasDeGarantia"
+                  maxlength="6"
+                  [(ngModel)]="novoContrato.diasDeGarantia" 
+                  pInputText/>
                 <label>Dias de garantia</label>
               </span>
             </div>
+
             <div class = "ui-g-12" style="margin-bottom: 25px">
               <div class="ui-g">
+                
                 <div class="ui-g-12 ui-md-1">
-                  <label>Ativo</label>
+                  <label>Ativo:</label>
                 </div>
+
                 <div class="ui-g-12 ui-md-1">
-                  <p-radioButton name="contrato_ativo" [value]="true" label="Sim"
-                    [(ngModel)]="novoContrato.ativo"></p-radioButton>
+                  <p-radioButton name="contrato_ativo" 
+                    [value]="true" 
+                    label="Sim"
+                    [(ngModel)]="novoContrato.ativo">
+                  </p-radioButton>
                 </div>
+
                 <div class="ui-g-12 ui-md-2">
-                  <p-radioButton name="contrato_ativo" [value]="false" label="Não"
-                    [(ngModel)]="novoContrato.ativo"></p-radioButton>
+                  <p-radioButton name="contrato_ativo" 
+                    [value]="false" 
+                    label="Não"
+                    [(ngModel)]="novoContrato.ativo">
+                  </p-radioButton>
                 </div>
               </div>
             </div>
+
           </div>
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2">
-              <app-white-button buttonLabel="Cancelar" (click)="fecharDialogCadastroContrato()"></app-white-button>
-              <!-- <button pButton type="button" label="Cancelar"
-                (click)="fecharDialogCadastroContrato()"></button> -->
+              <app-white-button 
+                buttonLabel="Cancelar" 
+                (click)="fecharDialogCadastroContrato()">
+              </app-white-button>
             </div>
+
             <div class="ui-g-2">
-              <app-green-button buttonLabel="Salvar" (click)="adicionarContrato()"></app-green-button>
-              <!-- <button pButton type="button" label="Salvar"
-                (click)="adicionarContrato()"></button> -->
+              <app-green-button 
+                buttonLabel="Salvar" 
+                (click)="adicionarContrato()">
+              </app-green-button>
             </div>
+
           </div>
         </p-dialog>
+        <!-- Fim Dialog Cadastro Contrato -->
 
         <!-- Dialog edição contrato -->
         <p-dialog header="Contrato" [(visible)]="mostrarDialogEdicaoContrato"
@@ -178,38 +280,66 @@
           <div class="ui-g">
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="text" name="numeroContrato" [(ngModel)]="contratoEmEdicao.numeroContrato" pInputText/>
+                <input 
+                  type="text" 
+                  name="numeroContrato" 
+                  [(ngModel)]="contratoEmEdicao.numeroContrato" 
+                  pInputText/>
                 <label>Número do Contrato</label>
               </span>
             </div>
+
             <div class="ui-g-6" style="margin-bottom: 25px">
-              <p-dropdown [options]="manuais" optionLabel="nome" placeholder="Manual"
-                name="manualDropdown" [(ngModel)]="contratoEmEdicao.manual"
-                [autoWidth]="false" dataKey="id"></p-dropdown>
+              <p-dropdown 
+                [options]="manuais" 
+                optionLabel="nome" 
+                placeholder="Manual"
+                name="manualDropdown" 
+                [(ngModel)]="contratoEmEdicao.manual"
+                [autoWidth]="false" 
+                dataKey="id">
+              </p-dropdown>
             </div>
+
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <p-calendar [(ngModel)]="contratoEmEdicao.dataInicioVigencia" name="dataInicioVigenciaContrato"
-                  [monthNavigator]="true" [yearNavigator]="true"
-                  dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
+                <p-calendar 
+                  [(ngModel)]="contratoEmEdicao.dataInicioVigencia" 
+                  name="dataInicioVigenciaContrato"
+                  [monthNavigator]="true" 
+                  [yearNavigator]="true"
+                  dateFormat="dd/mm/yy" 
+                  yearRange="2000:2020">
+                </p-calendar>
                 <label>Data de Início da Vigência</label>
               </span>
             </div>
+
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-              <p-calendar [(ngModel)]="contratoEmEdicao.dataFimVigencia"
-                [monthNavigator]="true" [yearNavigator]="true" name="dataFimVigenciaContrato"
-                dateFormat="dd/mm/yy" yearRange="2000:2020"></p-calendar>
+              <p-calendar 
+                [(ngModel)]="contratoEmEdicao.dataFimVigencia"
+                [monthNavigator]="true" 
+                [yearNavigator]="true" 
+                name="dataFimVigenciaContrato"
+                dateFormat="dd/mm/yy" 
+                yearRange="2000:2020">
+              </p-calendar>
               <label>Data Final da Vigência</label>
               </span>
             </div>
+
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="text" name="diasDeGarantia"
-                  [(ngModel)]="contratoEmEdicao.diasDeGarantia" pInputText/>
+                <input 
+                  type="text" 
+                  name="diasDeGarantia"
+                  [(ngModel)]="contratoEmEdicao.diasDeGarantia" 
+                  pInputText/>
                 <label>Dias de garantia</label>
               </span>
             </div>
+
             <div class = "ui-g-12" style="margin-bottom: 25px">
               <div class="ui-g">
                 <div class="ui-g-12 ui-md-1">
@@ -233,12 +363,20 @@
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2">
-              <app-white-button buttonLabel="Cancelar" (click)="fecharDialogEditarContrato()"></app-white-button>
+              <app-white-button 
+                buttonLabel="Cancelar" 
+                (click)="fecharDialogEditarContrato()"
+                buttonIcon="ui-arrow-back">
+              </app-white-button>
               <!-- <button pButton type="button" label="Cancelar"
                 (click)="fecharDialogEditarContrato()"></button> -->
             </div>
+
             <div class="ui-g-2">
-              <app-green-button buttonLabel="Salvar" (click)="editarContrato()"></app-green-button>
+              <app-green-button 
+                buttonLabel="Salvar" 
+                (click)="editarContrato()">
+              </app-green-button>
               <!-- <button pButton type="button" label="Salvar"
                 (click)="editarContrato()"></button> -->
             </div>

@@ -4,13 +4,21 @@
       <h1>{{ tipoFase.id ? 'Editar Tipo de Fase' : 'Cadastrar Tipo de Fase' }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
         <div class="ui-g">
+
           <div class="ui-g-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input id="nome_fase" type="text" name="nomeTipoFase" [(ngModel)]="tipoFase.nome" [maxlength]="254" pInputText/>
+              <input 
+                id="nome_fase" 
+                type="text" 
+                name="nomeTipoFase" 
+                [(ngModel)]="tipoFase.nome" 
+                [maxlength]="250" 
+                pInputText/>
               <label>Nome</label>
             </span>
           </div>
         </div>
+
         <div class="ui-g ui-md-12" style="justify-content: center">
           <div class="ui-g-2">
             <app-white-button buttonLabel="Cancelar" routerLink="/tipoFase"></app-white-button>

@@ -6,9 +6,15 @@
         <div class="card card-w-title">
           <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
             <div class="ui-g" >
+
               <div class="ui-g-12" style="margin-bottom: 25px; margin-top: 25px">
                 <span class="md-inputfield">
-                  <input type="text" name="numeroOS" [(ngModel)]="analise.numeroOs" pInputText/>
+                  <input 
+                    type="text" 
+                    maxlength="100"
+                    name="numeroOS" 
+                    [(ngModel)]="analise.numeroOs" 
+                    pInputText/>
                   <label>Número OS</label>
                 </span>
               </div>
@@ -16,10 +22,10 @@
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <label>Organização</label>
                 <p-dropdown 
+                  dataKey="id"
                   name="organizacao"
                   optionLabel="nome"
                   placeholder="Selecione uma Organização" 
-                  dataKey="id"
                   [options]="organizacoes" 
                   [(ngModel)]="analise.organizacao" 
                   [autoWidth]="false"
@@ -58,23 +64,37 @@
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
-                <label>Tipo de Contagem</label>
+                  <label>Tipo de Contagem</label>
+                  <p-dropdown 
+                    disabled="{{ !isContratoSelected() }}"
+                    placeholder="{{ tipoDeContagemDropdownPlaceholder() }}"
+                    name="tipoContagem" 
+                    [options]="metodosContagem"
+                    [(ngModel)]="analise.tipoContagem"  
+                    [autoWidth]="false">
+                  </p-dropdown>
+                </div>
+
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <label>Método de Contagem</label>
                 <p-dropdown 
                   disabled="{{ !isContratoSelected() }}"
-                  placeholder="{{ tipoDeContagemDropdownPlaceholder() }}"
-                  name="tipoContagem" 
-                  [options]="metodosContagem"
-                  [(ngModel)]="analise.tipoContagem"  
+                  placeholder="{{ metodoContagemDropdownPlaceholder() }}"
+                  name="metodoContagem" 
+                  [options]="metodoContagem"
+                  [(ngModel)]="analise.metodoContagem"  
                   [autoWidth]="false">
                 </p-dropdown>
               </div>
 
               <div class="ui-g-12" style="margin-bottom: 25px">
                 <label>Tipo de Análise</label>
-                <p-dropdown [options]="tiposAnalise"
-                  [(ngModel)]="analise.tipoAnalise"  
-                  placeholder="Selecione um Tipo de Análise"
-                  name="analise" [autoWidth]="false">
+                <p-dropdown 
+                  name="tipoContagem"
+                  placeholder="Selecione um Tipo de Contagem"
+                  [options]="tipoContagem"
+                  [(ngModel)]="analise.tipoContagem"  
+                  [autoWidth]="false">
                 </p-dropdown>
               </div>
 
@@ -91,6 +111,31 @@
               </div>
 
               <div class="ui-g-12">
+                <div class="ui-g-12 ui-md-3">
+                    <label>Versão do CPM</label>
+                </div>
+
+                <div class="ui-g-12 ui-md-1">
+                    <p-radioButton 
+                      name="cpm" 
+                      label="4.2.1"
+                      [value]="4.2.1" 
+                      [(ngModel)]="analise.versaoCPM">
+                    </p-radioButton>
+                </div>
+
+                <div class="ui-g-12 ui-md-1">
+                    <p-radioButton 
+                      name="cpm" 
+                      label="4.3.1"
+                      [value]="4.3.1" 
+                      [(ngModel)]="analise.versaoCPM">
+                    </p-radioButton>
+                </div>
+
+              </div>
+
+              <div class="ui-g-12">
 
                 <div class="ui-g-12 ui-md-3">
                   <label>Entrar na baseline imediatamente</label>
@@ -99,8 +144,8 @@
                 <div class="ui-g-12 ui-md-1">
                   <p-radioButton 
                     name="baseline_imediatamente_sim" 
-                    [value]="true" 
                     label="Sim"
+                    [value]="true" 
                     [(ngModel)]="analise.baselineImediatamente">
                   </p-radioButton>
                 </div>
@@ -108,8 +153,8 @@
                 <div class="ui-g-12 ui-md-2">
                   <p-radioButton 
                     name="baseline_imediatamente_nao" 
-                    [value]="false" 
                     label="Não"
+                    [value]="false" 
                   [(ngModel)]="analise.baselineImediatamente">
                 </p-radioButton>
                 </div>

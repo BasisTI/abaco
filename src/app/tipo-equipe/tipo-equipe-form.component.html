@@ -6,21 +6,37 @@
         <div class="ui-g">
           <div class="ui-g-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input id="nome_tipo_equipe" type="text" name="nomeTipoEquipe" maxlength="254" [(ngModel)]="tipoEquipe.nome" pInputText required/>
+              <input 
+                id="nome_tipo_equipe" 
+                type="text" 
+                name="nomeTipoEquipe" 
+                maxlength="250" 
+                [(ngModel)]="tipoEquipe.nome" 
+                pInputText required/>
               <label>Nome</label>
             </span>
           </div>
         </div>
         <div class="ui-g ui-md-12" style="justify-content: center">
+          
           <div class="ui-g-2">
-            <app-white-button buttonLabel="Cancelar" routerLink="/admin/tipoEquipe"></app-white-button>
-            <!-- <button pButton type="button" label="Cancelar" routerLink="/admin/tipoEquipe"></button> -->
+            <app-white-button 
+              buttonLabel="Cancelar" 
+              routerLink="/admin/tipoEquipe">
+            </app-white-button>
           </div>
+          
           <div class="ui-g-2">
-            <app-submit-button (click)="editForm.submit" buttonlabel="Salvar" buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving "></app-submit-button>
-            <!-- <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button> -->
+            <app-submit-button 
+              (click)="editForm.submit" 
+              buttonlabel="Salvar" 
+              buttonLabel="Salvar" 
+              [disabled]="editForm.form.invalid || isSaving ">
+            </app-submit-button>
           </div>
+
         </div>
+        
       </form>
     </div>
   </div>

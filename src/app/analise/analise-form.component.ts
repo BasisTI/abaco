@@ -38,11 +38,33 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   fatoresAjuste: SelectItem[] = [];
   private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
 
+    /** 
+   * Método responsável por popular a combo de tipo de analise.
+  */
   tiposAnalise: SelectItem[] = [
     { label: 'DESENVOLVIMENTO', value: 'DESENVOLVIMENTO' },
     { label: 'MELHORIA', value: 'MELHORIA' },
     { label: 'APLICACAO', value: 'APLICACAO' }
   ];
+
+  /** 
+   * Método responsável por popular a combo de tipo de contagem.
+  */
+  tipoContagem: SelectItem[] = [
+    {label: 'Projeto de Desenvolvimento', value: 'Projeto de Desenvolvimento'},
+    {label: 'Projeto Melhoria', value: 'Projeto Melhoria'},
+    {label: 'Contagem de Aplicação (Baseline)', value: 'Contagem de Aplicação (Baseline)'}
+  ];
+
+  /** 
+   * Método responsável por popular a combo método de contagem.
+  */
+  metodoContagem: SelectItem[] = [
+    {label: 'Detalhada (IFPUG)', value: 'Detalhada (IFPUG)'},
+    {label: 'Indicativa (NESMA)', value: 'Indicativa (NESMA)'},
+    {label: 'Estimada (NESMA)', value: 'Estimada (NESMA)'}
+  ];
+
 
   private routeSub: Subscription;
 
@@ -194,6 +216,14 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
       return 'Selecione um Tipo de Contagem';
     } else {
       return 'Selecione um Contrato para carregar os Tipos de Contagem';
+    }
+  }
+
+  metodoContagemDropdownPlaceholder() {
+    if (this.isContratoSelected()) {
+      return 'Selecione um Método de Contagem';
+    } else {
+      return 'Selecione um Contrato para carregar os Métodos de Contagem';
     }
   }
 

@@ -18,13 +18,13 @@
         <basis-datatable [url]="searchUrl" 
           (buttonClick)="datatableClick($event)" #datatable>
           <p-column header="#" field="id"></p-column>
-          <p-column header="Numero Contrato" field="numeroContrato"></p-column>
-          <p-column header="Data Inicio Vigencia" field="dataInicioVigencia">
+          <p-column header="Número Contrato" field="numeroContrato"></p-column>
+          <p-column header="Data Início Vigência" field="dataInicioVigencia">
             <ng-template let-col let-dataInicioVigencia="rowData" pTemplate="body">
               {{ dataInicioVigencia[col.field]|date:'dd/MM/y' }}
             </ng-template>
           </p-column>
-          <p-column header="Data Fim Vigencia" field="dataFimVigencia">
+          <p-column header="Data Fim Vigência" field="dataFimVigencia">
             <ng-template let-col let-dataFimVigencia="rowData" pTemplate="body">
               {{ dataFimVigencia[col.field]|date:'dd/MM/y' }}
             </ng-template>
