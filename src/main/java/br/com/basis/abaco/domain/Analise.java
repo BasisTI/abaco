@@ -147,6 +147,10 @@ public class Analise implements Serializable {
 
     @Column(name = "baseline_imediatamente")
     private Boolean baselineImediatamente;
+    
+    @Size(max=10)
+    @Column(name = "versao_cpm")
+    private String versaoCPM;
 
     public Long getId() {
         return id;
@@ -436,12 +440,19 @@ public class Analise implements Serializable {
         return Objects.hashCode(id);
     }
 
-    public Boolean isBaselineImediatamente() {
+    public Boolean getBaselineImediatamente() {
         return baselineImediatamente;
     }
 
     public void setBaselineImediatamente(Boolean baselineImediatamente) {
         this.baselineImediatamente = baselineImediatamente;
+    }
+    public String getVersaoCPM() {
+    	return versaoCPM;
+    }
+    
+    public void setVersaoCPM(String versaoCPM) {
+    	this.versaoCPM = versaoCPM;
     }
 
     @Override
@@ -461,4 +472,5 @@ public class Analise implements Serializable {
             '}';
         // @formatter:on
     }
+
 }

@@ -64,4 +64,6 @@
     <include file="classpath:config/liquibase/changelog/20180301193125_CREATE_FuncaoDadosVersionavel_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180306202515_ADD_diasDeGarantia_Contrato_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180306212435_ADD_baselineImediatamente_Analise_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180315141925_ADD_versaoCPM_Analise_changelog.xml" relativeToChangelogFile="false"/>
+        
 </databaseChangeLog>
