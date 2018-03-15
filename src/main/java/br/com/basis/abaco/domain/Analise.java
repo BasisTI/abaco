@@ -61,8 +61,8 @@ public class Analise implements Serializable {
     private String numeroOs;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_contagem")
-    private MetodoContagem tipoContagem;
+    @Column(name = "metodo_contagem")
+    private MetodoContagem metodoContagem;
 
     @Column(name = "valor_ajuste", precision = 10, scale = 2)
     private BigDecimal valorAjuste;
@@ -171,19 +171,6 @@ public class Analise implements Serializable {
 
     public void setNumeroOs(String numeroOs) {
         this.numeroOs = numeroOs;
-    }
-
-    public MetodoContagem getTipoContagem() {
-        return tipoContagem;
-    }
-
-    public Analise tipoContagem(MetodoContagem tipoContagem) {
-        this.tipoContagem = tipoContagem;
-        return this;
-    }
-
-    public void setTipoContagem(MetodoContagem tipoContagem) {
-        this.tipoContagem = tipoContagem;
     }
 
     public BigDecimal getValorAjuste() {
@@ -455,13 +442,26 @@ public class Analise implements Serializable {
     	this.versaoCPM = versaoCPM;
     }
 
-    @Override
+    public MetodoContagem getMetodoContagem() {
+		return metodoContagem;
+	}
+
+	public void setMetodoContagem(MetodoContagem metodoContagem) {
+		this.metodoContagem = metodoContagem;
+	}
+	
+    public Analise metodoContagem(MetodoContagem metodoContagem) {
+        this.metodoContagem = metodoContagem;
+        return this;
+    }
+
+	@Override
     public String toString() {
         // // @formatter:off
         return "Analise{" +
             "id=" + id +
             ", numeroOs='" + numeroOs + "'" +
-            ", tipoContagem='" + tipoContagem + "'" +
+            ", tipoContagem='" + metodoContagem + "'" +
             ", valorAjuste='" + valorAjuste + "'" +
             ", pfTotal='" + pfTotal + "'" +
             ", escopo='" + escopo + "'" +

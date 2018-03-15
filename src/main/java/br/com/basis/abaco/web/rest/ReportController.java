@@ -641,7 +641,7 @@ public class ReportController {
         params.put("Organization",analise.getOrganizacao()==null?"Organization":analise.getOrganizacao().getNome());
         params.put("OS",analise.getNumeroOs());
         params.put("System",analise.getSistema().getNome());
-        params.put("Counting_type",analise.getTipoContagem().toString());
+        params.put("Counting_type",analise.getMetodoContagem().toString());
         params.put("Adj_amount",analise.getValorAjuste().toString());
         params.put("Gross_FP",analise.getAdjustPFTotal()==null?BigDecimal.ZERO.toString():analise.getAdjustPFTotal().toString());
         params.put("Purpose",analise.getPropositoContagem()==null?"":analise.getPropositoContagem());

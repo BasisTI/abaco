@@ -112,7 +112,7 @@ public class AnaliseResourceIntTest {
      * they test an entity which requires the current entity.
      */
     public static Analise createEntity(EntityManager em) {
-        Analise analise = new Analise().numeroOs(DEFAULT_NUMERO_OS).tipoContagem(DEFAULT_TIPO_CONTAGEM)
+        Analise analise = new Analise().numeroOs(DEFAULT_NUMERO_OS).metodoContagem(DEFAULT_TIPO_CONTAGEM)
                 .valorAjuste(DEFAULT_VALOR_AJUSTE).pfTotal(DEFAULT_PF_TOTAL).escopo(DEFAULT_ESCOPO)
                 .fronteiras(DEFAULT_FRONTEIRAS).documentacao(DEFAULT_DOCUMENTACAO).tipoAnalise(DEFAULT_TIPO_ANALISE)
                 .propositoContagem(DEFAULT_PROPOSITO_CONTAGEM);
@@ -140,7 +140,7 @@ public class AnaliseResourceIntTest {
         assertThat(analiseList).hasSize(databaseSizeBeforeCreate + 1);
         Analise testAnalise = analiseList.get(analiseList.size() - 1);
         assertThat(testAnalise.getNumeroOs()).isEqualTo(DEFAULT_NUMERO_OS);
-        assertThat(testAnalise.getTipoContagem()).isEqualTo(DEFAULT_TIPO_CONTAGEM);
+        assertThat(testAnalise.getMetodoContagem()).isEqualTo(DEFAULT_TIPO_CONTAGEM);
         assertThat(testAnalise.getValorAjuste()).isEqualTo(DEFAULT_VALOR_AJUSTE);
         assertThat(testAnalise.getPfTotal()).isEqualTo(DEFAULT_PF_TOTAL);
         assertThat(testAnalise.getEscopo()).isEqualTo(DEFAULT_ESCOPO);
@@ -233,7 +233,7 @@ public class AnaliseResourceIntTest {
 
         // Update the analise
         Analise updatedAnalise = analiseRepository.findOne(analise.getId());
-        updatedAnalise.numeroOs(UPDATED_NUMERO_OS).tipoContagem(UPDATED_TIPO_CONTAGEM).valorAjuste(UPDATED_VALOR_AJUSTE)
+        updatedAnalise.numeroOs(UPDATED_NUMERO_OS).metodoContagem(UPDATED_TIPO_CONTAGEM).valorAjuste(UPDATED_VALOR_AJUSTE)
                 .pfTotal(UPDATED_PF_TOTAL).escopo(UPDATED_ESCOPO).fronteiras(UPDATED_FRONTEIRAS)
                 .documentacao(UPDATED_DOCUMENTACAO).tipoAnalise(UPDATED_TIPO_ANALISE)
                 .propositoContagem(UPDATED_PROPOSITO_CONTAGEM);
@@ -246,7 +246,7 @@ public class AnaliseResourceIntTest {
         assertThat(analiseList).hasSize(databaseSizeBeforeUpdate);
         Analise testAnalise = analiseList.get(analiseList.size() - 1);
         assertThat(testAnalise.getNumeroOs()).isEqualTo(UPDATED_NUMERO_OS);
-        assertThat(testAnalise.getTipoContagem()).isEqualTo(UPDATED_TIPO_CONTAGEM);
+        assertThat(testAnalise.getMetodoContagem()).isEqualTo(UPDATED_TIPO_CONTAGEM);
         assertThat(testAnalise.getValorAjuste()).isEqualTo(UPDATED_VALOR_AJUSTE);
         assertThat(testAnalise.getPfTotal()).isEqualTo(UPDATED_PF_TOTAL);
         assertThat(testAnalise.getEscopo()).isEqualTo(UPDATED_ESCOPO);
