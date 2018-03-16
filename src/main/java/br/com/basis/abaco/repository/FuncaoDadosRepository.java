@@ -17,7 +17,7 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
             FuncaoDadosVersionavel funcaoDadosVersionavel);
 
     Optional<FuncaoDados> findFirstByFuncaoDadosVersionavelIdOrderByAuditUpdatedOnDesc(
-            FuncaoDadosVersionavel funcaoDadosVersionavel);
+            Long funcaoDadosVersionavelId);
 
     List<FuncaoDados> findByFuncaoDadosVersionavelIn(List<FuncaoDadosVersionavel> funcoesDadosVersionaveis);
 
