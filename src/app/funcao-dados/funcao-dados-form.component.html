@@ -1,6 +1,5 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
-    <div class="card card-w-title">
       
       <div style="margin-top: 25px">
         <h2>{{ header }} </h2>
@@ -12,8 +11,9 @@
         (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
       </app-analise-modulo-funcionalidade>
       
-      <div class="ui-g">
-        <div class="ui-g-9" style="margin-bottom: 25px">
+      <div class="ui-g-12 ui-md-12 ui-sm-12">
+
+        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
           <label>Fator de Ajuste</label>
           <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
             [(ngModel)]="currentFuncaoDados.fatorAjuste" 
@@ -22,7 +22,7 @@
             name="fatorAjuste" [autoWidth]="false">
           </p-dropdown>
         </div>
-        <div class="ui-g-3" style="margin-bottom: 25px">
+        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
           <label>Classificação</label>
           <p-dropdown [options]="classificacoes"
             [(ngModel)]="currentFuncaoDados.tipo"
@@ -31,7 +31,7 @@
           </p-dropdown>
         </div>
 
-        <div class="ui-g-12" style="margin-bottom: 25px">
+        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
           <label>Nome</label>
           <p-autoComplete [(ngModel)]="currentFuncaoDados.name" 
             [suggestions]="sugestoesAutoComplete"
@@ -40,17 +40,17 @@
         </div>
       </div>
 
-      <div class="ui-g-12" style="margin-bottom: 25px">
+      <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
         <h2>DER (TD)</h2>
         <app-analise-der-chips [(values)]="dersChips"></app-analise-der-chips>
       </div>
 
-      <div class="ui-g-12" style="margin-bottom: 25px">
+      <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
         <h2>RLR (TR)</h2>
         <app-analise-der-chips [(values)]="rlrsChips"></app-analise-der-chips>
       </div>
 
-      <div class="ui-g-12" style="margin-bottom: 25px">
+      <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
         <label>Fundamentação</label>
         <span class="md-inputfield">
           <textarea [rows]="6" [cols]="180" pInputTextarea name="funcaoDadosSustentacao" 
@@ -59,7 +59,7 @@
         </span>
       </div>
 
-      <div class="ui-g ui-md-12" style="justify-content: flex-end">
+      <div class="ui-g-12 ui-md-12 ui-sm-12" style="justify-content: flex-end">
         <div class="ui-md-3">
           <app-analise-botao-salvar></app-analise-botao-salvar>
         </div>
@@ -75,7 +75,7 @@
       </div>
 
       <!-- Tabela com as funções dados adicionadas  -->
-      <div class="ui-g" *ngIf="funcoesDados.length > 0">
+      <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="funcoesDados.length > 0">
         <hr>
 
         <div class="ui-g-12">
@@ -145,7 +145,7 @@
       </div>
 
       <!-- Resumo -->
-      <div class="ui-g" *ngIf="funcoesDados.length > 0">
+      <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="funcoesDados.length > 0">
         <hr>
         <div class="ui-g-12">
           <app-analise-funcao-resumo-table [linhasResumo]="resumo.all">
@@ -161,6 +161,5 @@
           </p-footer>
         </p-confirmDialog>
 
-    </div>
   </div>
 </div>

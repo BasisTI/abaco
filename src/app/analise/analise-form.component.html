@@ -19,7 +19,7 @@
                 </span>
               </div>
 
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                 <label>Organização</label>
                 <p-dropdown 
                   dataKey="id"
@@ -33,7 +33,7 @@
                 </p-dropdown>
               </div>
 
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                 <label>Contrato</label>
                 <p-dropdown 
                   dataKey="id"
@@ -48,7 +48,7 @@
                 </p-dropdown>
               </div>
 
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                 <label>Sistema</label>
                 <p-dropdown 
                   dataKey="id" 
@@ -63,7 +63,7 @@
                 </p-dropdown>
               </div>
 
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                   <label>Método de Contagem</label>
                   <p-dropdown 
                     disabled="{{ !isContratoSelected() }}"
@@ -75,7 +75,7 @@
                   </p-dropdown>
                 </div>
 
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                 <label>Tipo de Contagem</label>
                 <p-dropdown 
                   name="tiposAnalise"
@@ -86,7 +86,7 @@
                 </p-dropdown>
               </div>
 
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                 <label>Fator de Ajuste</label>
                 <p-dropdown
                   disabled="{{ !isContratoSelected() }}"
@@ -98,12 +98,13 @@
                 </p-dropdown>
               </div>
 
-              <div class="ui-g-12">
-                <div class="ui-g-12 ui-md-3">
+              <div class="ui-g-6 ui-md-6 ui-sm-12">
+
+                <div class="ui-g-3 ui-md-4 ui-sm-12">
                     <label>Versão do CPM</label>
                 </div>
 
-                <div class="ui-g-12 ui-md-1">
+                <div class="ui-g-2 ui-md-4 ui-sm-12">
                     <p-radioButton 
                       name="cpm" 
                       label="4.2.1"
@@ -112,7 +113,7 @@
                     </p-radioButton>
                 </div>
 
-                <div class="ui-g-12 ui-md-1">
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <p-radioButton 
                       name="cpm" 
                       label="4.3.1"
@@ -123,13 +124,13 @@
 
               </div>
 
-              <div class="ui-g-12">
+              <div class="ui-g-6 ui-md-6 ui-sm-12">
 
-                <div class="ui-g-12 ui-md-3">
+                <div class="ui-g-3 ui-md-4 ui-sm-12">
                   <label>Entrar na baseline imediatamente</label>
                 </div>
 
-                <div class="ui-g-12 ui-md-1">
+                <div class="ui-g-3 ui-md-4 ui-sm-12">
                   <p-radioButton 
                     name="baseline_imediatamente_sim" 
                     label="Sim"
@@ -138,7 +139,7 @@
                   </p-radioButton>
                 </div>
 
-                <div class="ui-g-12 ui-md-2">
+                <div class="ui-g-3 ui-md-4 ui-sm-12">
                   <p-radioButton 
                     name="baseline_imediatamente_nao" 
                     label="Não"
@@ -149,7 +150,7 @@
 
               </div>
 
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                 <p-dataTable
                   dataKey="id"
                   emptyMessage="Selecione um Contrato para escolher Fases"
@@ -164,7 +165,7 @@
                 </p-dataTable>
               </div>
 
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                 <label>Propósito da Contagem</label>
                 <span class="md-inputfield">
                   <textarea 
@@ -176,7 +177,7 @@
                 </span>
               </div>
 
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                 <label>Escopo da Contagem</label>
                 <span class="md-inputfield">
                   <textarea 
@@ -188,7 +189,7 @@
                 </span>
               </div>
 
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                 <label>Fronteira</label>
                 <span class="md-inputfield">
                   <textarea 
@@ -200,7 +201,7 @@
                 </span>
               </div>
 
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                 <label>Documentação</label>
                 <span class="md-inputfield">
                   <textarea 
@@ -212,7 +213,7 @@
                 </span>
               </div>
 
-              <div class="ui-g-12" style="margin-bottom: 25px">
+              <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                 <label>Observações</label>
                 <span class="md-inputfield">
                   <textarea 
