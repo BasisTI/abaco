@@ -1,15 +1,21 @@
 <div class="ui-g">
 
   <div class="ui-g-12" style="margin-bottom: 25px">
-    <div class="ui-g-6">
+
+    <div class="ui-g-6 ui-md-6 ui-sm-12">
+
       <div class="ui-g-12">
         <!-- filtro/pesquisa? -->
         <label>Módulo</label>
-        <p-dropdown [options]="modulos" [(ngModel)]="moduloSelecionado" optionLabel="nome"
-        (onChange)="moduloSelected($event.value)"
+        <p-dropdown 
+          [options]="modulos" 
+          [(ngModel)]="moduloSelecionado" 
+          optionLabel="nome"
+          (onChange)="moduloSelected($event.value)"
           [placeholder]="moduloDropdownPlaceholder()"
           [disabled]="!isSistemaSelected()"
-          name="modulo" [autoWidth]="false">
+          name="modulo"
+          [autoWidth]="false">
         </p-dropdown>
       </div>
 
@@ -21,20 +27,25 @@
       </div>
     </div>
 
-    <div class="ui-g-6">
+    <div class="ui-g-6 ui-md-6 ui-sm-12">
       <div class="ui-g-12">
         <!-- filtro/pesquisa? -->
         <label>Funcionalidade</label>
-        <p-dropdown [options]="funcionalidades" [(ngModel)]="funcionalidadeSelecionada" optionLabel="nome" 
+        <p-dropdown 
+          [options]="funcionalidades" 
+          [(ngModel)]="funcionalidadeSelecionada" 
+          optionLabel="nome" 
           (onChange)="funcionalidadeSelected($event.value)"
           [placeholder]="funcionalidadeDropdownPlaceholder()"
           [disabled]="!isModuloSelected()" 
-          name="funcionalidade" [autoWidth]="false">
+          name="funcionalidade" 
+          [autoWidth]="false">
         </p-dropdown>
       </div>
 
       <div class="ui-g ui-md-12" style="justify-content: flex-end">
-        <app-blue-button buttonIcon="ui-icon-add"
+        <app-blue-button 
+          buttonIcon="ui-icon-add"
           (click)="abrirDialogFuncionalidade()"
           [isDisabled]="!isModuloSelected()">
         </app-blue-button>
@@ -43,11 +54,21 @@
   </div>
 
   <!-- Dialog módulo -->
-  <p-dialog header="Módulo" [(visible)]="mostrarDialogModulo" [contentStyle]="{'overflow':'visible'}" [width]="800">
+  <p-dialog 
+    header="Módulo" 
+    [(visible)]="mostrarDialogModulo" 
+    [contentStyle]="{'overflow':'visible'}" 
+    [width]="800">
+
     <div class="ui-g">
       <div class="ui-g-12" style="margin-bottom: 25px">
         <span class="md-inputfield">
-          <input type="text" name="nomeModulo" [(ngModel)]="novoModulo.nome" pInputText (keydown.enter)="adicionarModulo()" />
+          <input 
+            type="text" 
+            name="nomeModulo" 
+            [(ngModel)]="novoModulo.nome" 
+            pInputText 
+            (keydown.enter)="adicionarModulo()"/>
           <label>Nome do Módulo</label>
         </span>
       </div>
@@ -55,23 +76,40 @@
 
     <div class="ui-g ui-md-12" style="justify-content: flex-end">
       <div class="ui-g-2">
-        <app-white-button buttonLabel="Cancelar" (click)="fecharDialogModulo()"></app-white-button>
+        <app-white-button 
+          buttonLabel="Cancelar" 
+          (click)="fecharDialogModulo()">
+        </app-white-button>
       </div>
+
       <div class="ui-g-2">
-        <app-green-button buttonLabel="Salvar" (click)="adicionarModulo()"></app-green-button>
+        <app-green-button 
+          buttonLabel="Salvar" 
+          (click)="adicionarModulo()">
+        </app-green-button>
       </div>
     </div>
+
   </p-dialog>
 
   <!-- Dialog funcionalidade -->
-  <p-dialog header="Funcionalidade" [(visible)]="mostrarDialogFuncionalidade" [contentStyle]="{'overflow':'visible'}" [width]="800">
+  <p-dialog 
+    header="Funcionalidade" 
+    [(visible)]="mostrarDialogFuncionalidade" 
+    [contentStyle]="{'overflow':'visible'}" 
+    [width]="800">
+    
     <div class="ui-g">
       <div class="ui-g-12" style="margin-bottom: 25px">
         <span>Módulo: {{ moduloName() }}</span>
       </div>
       <div class="ui-g-12" style="margin-bottom: 25px">
         <span class="md-inputfield">
-          <input type="text" name="nomeFuncionalidade" [(ngModel)]="novaFuncionalidade.nome" pInputText />
+          <input 
+            type="text" 
+            name="nomeFuncionalidade" 
+            [(ngModel)]="novaFuncionalidade.nome" 
+            pInputText />
           <label>Nome da Funcionalidade</label>
         </span>
       </div>

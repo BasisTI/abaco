@@ -253,6 +253,21 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     this.resetarEstadoPosSalvar();
   }
 
+  /**
+   * Método responsável por recuperar o nome selecionado no combo.
+   * @param nome
+   */
+  recuperarNomeSelecionado(nome: any) {
+    this.funcaoDadosService.recuperarFuncaoDadosPorIdNome(this.analise.sistema.id, nome);
+
+    this.funcaoDadosService.recuperarFuncaoDadosPorIdNome(this.analise.sistema.id, nome).subscribe(
+      fd => {
+        this.prepararParaEdicao(fd);
+      });
+
+    console.log(nome);
+  }
+
   datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
       return;

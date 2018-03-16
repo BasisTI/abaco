@@ -22,10 +22,14 @@
           Módulos
         </h4>
 
-        <p-dataTable [value]="sistema.modulos"
-          [immutable]="false" #modulosDataTable>
+        <p-dataTable 
+          [value]="sistema.modulos"
+          [immutable]="false" 
+          #modulosDataTable>
           <p-column header="Código"
-            [style]="{width: '25%'}" field="id"></p-column>
+            [style]="{width: '25%'}" 
+            field="id">
+          </p-column>
           <p-column header="Nome" field="nome"></p-column>
         </p-dataTable>
       </div>
@@ -33,18 +37,25 @@
       <div class="ui-g" style="margin-bottom: 25px">
           <h4 style>Funcionalidades</h4>
 
-          <p-dataTable [value]="sistema.funcionalidades"
-            [immutable]="false" #funcionalidadesDataTable>
+          <p-dataTable 
+            [value]="sistema.funcionalidades"
+            [immutable]="false" 
+            #funcionalidadesDataTable>
             <p-column header="Módulo" field="modulo.nome"></p-column>
             <p-column header="Nome" field="nome"></p-column>
           </p-dataTable>
-        </div>
+      </div>
 
       <div class="ui-g">
         <div class="ui-g-2">
-          <button pButton type="button" label="Voltar" routerLink="/sistema"></button>
+          <button 
+            pButton type="button" 
+            label="Voltar" 
+            routerLink="/sistema">
+          </button>
         </div>
       </div>
+      
     </div>
   </div>
 </div>

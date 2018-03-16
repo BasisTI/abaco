@@ -1,165 +1,217 @@
 <div class="ui-g ui-fluid">
-  <div class="ui-g-12">
-      
-      <div style="margin-top: 25px">
-        <h2>{{ header }} </h2>
-      </div>
-
-      <app-analise-modulo-funcionalidade
-        [isFuncaoDados]="true"
-        (moduloSelectedEvent)="moduloSelected($event)"
-        (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
-      </app-analise-modulo-funcionalidade>
-      
-      <div class="ui-g-12 ui-md-12 ui-sm-12">
-
-        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-          <label>Fator de Ajuste</label>
-          <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
-            [(ngModel)]="currentFuncaoDados.fatorAjuste" 
-            [disabled]="!isContratoSelected()"
-            [placeholder]="fatoresAjusteDropdownPlaceholder()"
-            name="fatorAjuste" [autoWidth]="false">
-          </p-dropdown>
+    <div class="ui-g-12">
+      <div class="card card-w-title">
+        
+        <div style="margin-top: 25px">
+          <h2>{{ header }} </h2>
         </div>
-        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-          <label>Classificação</label>
-          <p-dropdown [options]="classificacoes"
-            [(ngModel)]="currentFuncaoDados.tipo"
-            placeholder="Selecione uma Classificação"
-            name="classificacao" [autoWidth]="false">
-          </p-dropdown>
-        </div>
+  
+        <app-analise-modulo-funcionalidade
+          [isFuncaoDados]="true"
+          (moduloSelectedEvent)="moduloSelected($event)"
+          (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
+        </app-analise-modulo-funcionalidade>
+        
+        <div class="ui-g">
+          <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+            <label>Fator de Ajuste</label>
+            <p-dropdown 
+              [options]="fatoresAjuste | fatorAjusteToSelectItem"
+              [(ngModel)]="currentFuncaoDados.fatorAjuste" 
+              [disabled]="!isContratoSelected()"
+              [placeholder]="fatoresAjusteDropdownPlaceholder()"
+              name="fatorAjuste" 
+              [autoWidth]="false">
+            </p-dropdown>
+          </div>
 
-        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-          <label>Nome</label>
-          <p-autoComplete [(ngModel)]="currentFuncaoDados.name" 
+          <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+            <label>Classificação</label>
+            <p-dropdown 
+              [options]="classificacoes"
+              [(ngModel)]="currentFuncaoDados.tipo"
+              placeholder="Selecione uma Classificação"
+              name="classificacao" 
+              [autoWidth]="false">
+            </p-dropdown>
+          </div>
+  
+          <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+            <label>Nome</label>
+            <p-autoComplete 
+            [(ngModel)]="currentFuncaoDados.name" 
             [suggestions]="sugestoesAutoComplete"
-            (completeMethod)="autoCompleteNomes($event)">
+            (completeMethod)="autoCompleteNomes($event)"
+            (onSelect)="recuperarNomeSelecionado($event.value)">
           </p-autoComplete>
+          </div>
         </div>
-      </div>
-
-      <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-        <h2>DER (TD)</h2>
-        <app-analise-der-chips [(values)]="dersChips"></app-analise-der-chips>
-      </div>
-
-      <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-        <h2>RLR (TR)</h2>
-        <app-analise-der-chips [(values)]="rlrsChips"></app-analise-der-chips>
-      </div>
-
-      <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-        <label>Fundamentação</label>
-        <span class="md-inputfield">
-          <textarea [rows]="6" [cols]="180" pInputTextarea name="funcaoDadosSustentacao" 
-            [(ngModel)]="currentFuncaoDados.sustantation">
-          </textarea>
-        </span>
-      </div>
-
-      <div class="ui-g-12 ui-md-12 ui-sm-12" style="justify-content: flex-end">
-        <div class="ui-md-3">
-          <app-analise-botao-salvar></app-analise-botao-salvar>
+  
+        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+          <h2>DER (TD)</h2>
+          <app-analise-der-chips 
+            [(values)]="dersChips">
+          </app-analise-der-chips>
         </div>
-        <div class="ui-md-3" *ngIf="isEdit">
-          <app-white-button buttonLabel="Cancelar Alteração" (click)="cancelarEdicao()"></app-white-button>
+  
+        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+          <h2>RLR (TR)</h2>
+          <app-analise-der-chips 
+            [(values)]="rlrsChips">
+          </app-analise-der-chips>
         </div>
-        <div class="ui-md-3">
-          <app-blue-button [buttonLabel]="labelBotaoAdicionar"
-            [isDisabled]="!deveHabilitarBotaoAdicionar()"
-            buttonIcon="ui-icon-add" (click)="adicionar()">
-          </app-blue-button>
+  
+        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+          <label>Fundamentação</label>
+          <span class="md-inputfield">
+            <textarea 
+              [rows]="6" 
+              [cols]="180" 
+              pInputTextarea name="funcaoDadosSustentacao" 
+              [(ngModel)]="currentFuncaoDados.sustantation">
+            </textarea>
+          </span>
         </div>
-      </div>
-
-      <!-- Tabela com as funções dados adicionadas  -->
-      <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="funcoesDados.length > 0">
-        <hr>
-
-        <div class="ui-g-12">
-          <label>Colunas:</label>
-          <p-multiSelect 
-            [options]="colunasOptions" 
-            [ngModel]="colunasAMostrar"
-            (ngModelChange)="ordenarColunas($event)"
-            dataKey="index" 
-            [maxSelectedLabels]="10"></p-multiSelect>
+  
+        <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
+          <div class="ui-md-3 ui-sm-12">
+            <app-analise-botao-salvar></app-analise-botao-salvar>
+          </div>
+          <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
+            <app-white-button 
+              buttonLabel="Cancelar Alteração" 
+              (click)="cancelarEdicao()">
+            </app-white-button>
+          </div>
+          <div class="ui-md-3 ui-sm-12">
+            <app-blue-button 
+              [buttonLabel]="labelBotaoAdicionar"
+              [isDisabled]="!deveHabilitarBotaoAdicionar()"
+              buttonIcon="ui-icon-add" 
+              (click)="adicionar()">
+            </app-blue-button>
+          </div>
         </div>
-
-        <div class="ui-g-12">
-          <app-memory-datatable [value]="funcoesDados"
-            (buttonClick)="datatableClick($event)"
-            [responsive]="true" scrollable="true" scrollWidth="100%">
-            <div *ngFor="let col of colunasAMostrar">
-
-              <div *ngIf="col.field; else template_column">
-                <p-column [field]="col.field" [header]="col.header" 
-                  [style]="{'width': '200px'}">
-                </p-column>
-              </div>
-
-              <ng-template #template_column>
-                <p-column [header]="col.header" [style]="{'width': '200px'}">
-                  <ng-template *ngIf="col.header === 'Fator de Ajuste'"
-                    let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
-                    <app-ellipsis-tooltip
-                      [value]="formataFatorAjuste(fatorAjuste)"></app-ellipsis-tooltip>
-                  </ng-template>
-                  <ng-template *ngIf="col.header === 'Módulo'"
-                    let-modulo="rowData.funcionalidade.modulo" pTemplate="body">
-                    <app-ellipsis-tooltip
-                      [value]="modulo.nome"></app-ellipsis-tooltip>
-                  </ng-template>
-                  <ng-template *ngIf="col.header === 'Funcionalidade'"
-                    let-funcionalidade="rowData.funcionalidade" pTemplate="body">
-                    <app-ellipsis-tooltip
-                      [value]="funcionalidade.nome"></app-ellipsis-tooltip>
-                  </ng-template>
-                  <ng-template *ngIf="col.header === 'DER (TD)'"
-                    let-funcaoDados="rowData" pTemplate="body">
-                    <app-ellipsis-tooltip
-                      [value]="funcaoDados.derValue()"></app-ellipsis-tooltip>
-                  </ng-template>
-                  <ng-template *ngIf="col.header === 'RLR (TR)'"
-                    let-funcaoDados="rowData" pTemplate="body">
-                    <app-ellipsis-tooltip
-                      [value]="funcaoDados.rlrValue()"></app-ellipsis-tooltip>
-                  </ng-template>
-                  <ng-template *ngIf="col.header === 'PF Bruto'"
-                    let-grossPF="rowData.grossPF" pTemplate="body">
-                    {{ grossPF | number }}
-                  </ng-template>
-                  <ng-template *ngIf="col.header === 'PF Líquido'"
-                    let-pf="rowData.pf" pTemplate="body">
-                    {{ pf | number }}
-                  </ng-template>
-
-                </p-column>
-              </ng-template>
-
+  
+        <!-- Tabela com as funções dados adicionadas  -->
+        <div class="ui-g" *ngIf="funcoesDados.length > 0">
+            <hr>
+            <div class="ui-g-12">
+              <label>Colunas:</label>
+              <p-multiSelect 
+                [options]="colunasOptions" 
+                [ngModel]="colunasAMostrar"
+                (ngModelChange)="ordenarColunas($event)"
+                dataKey="index" 
+                [maxSelectedLabels]="10">
+              </p-multiSelect>
             </div>
-          </app-memory-datatable>
-        </div>
-      </div>
+    
+            <div class="ui-g-12">
+              <app-memory-datatable 
+                [value]="funcoesDados"
+                (buttonClick)="datatableClick($event)"
+                [responsive]="true" 
+                scrollable="true" 
+                scrollWidth="100%">
 
-      <!-- Resumo -->
-      <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="funcoesDados.length > 0">
-        <hr>
-        <div class="ui-g-12">
-          <app-analise-funcao-resumo-table [linhasResumo]="resumo.all">
-          </app-analise-funcao-resumo-table>
-        </div>
-      </div>
-      
-      <!-- Dialog confirmação deleção -->
-       <p-confirmDialog header="Confirmação" #dialog>
-          <p-footer>
-            <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-            <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
-          </p-footer>
-        </p-confirmDialog>
+                <div *ngFor="let col of colunasAMostrar">
+    
+                  <div *ngIf="col.field; else template_column">
+                    <p-column 
+                      [field]="col.field" 
+                      [header]="col.header" 
+                      [style]="{'width': '200px'}">
+                    </p-column>
+                  </div>
+    
+                  <ng-template #template_column>
+                    <p-column 
+                      [header]="col.header" 
+                      [style]="{'width': '200px'}">
 
+                      <ng-template 
+                        *ngIf="col.header === 'Fator de Ajuste'"
+                        let-fatorAjuste="rowData.fatorAjuste" 
+                        pTemplate="body">
+                        <app-ellipsis-tooltip
+                          [value]="formataFatorAjuste(fatorAjuste)">
+                        </app-ellipsis-tooltip>
+                      </ng-template>
+
+                      <ng-template 
+                        *ngIf="col.header === 'Módulo'"
+                        let-modulo="rowData.funcionalidade.modulo" 
+                        pTemplate="body">
+                        <app-ellipsis-tooltip
+                          [value]="modulo.nome">
+                        </app-ellipsis-tooltip>
+                      </ng-template>
+
+                      <ng-template 
+                        *ngIf="col.header === 'Funcionalidade'"
+                        let-funcionalidade="rowData.funcionalidade" 
+                        pTemplate="body">
+                        <app-ellipsis-tooltip
+                          [value]="funcionalidade.nome">
+                        </app-ellipsis-tooltip>
+                      </ng-template>
+
+                      <ng-template 
+                        *ngIf="col.header === 'DER (TD)'"
+                        let-funcaoDados="rowData" 
+                        pTemplate="body">
+                        <app-ellipsis-tooltip
+                          [value]="funcaoDados.derValue()">
+                        </app-ellipsis-tooltip>
+                      </ng-template>
+
+                      <ng-template 
+                        *ngIf="col.header === 'RLR (TR)'"
+                        let-funcaoDados="rowData" 
+                        pTemplate="body">
+                        <app-ellipsis-tooltip
+                          [value]="funcaoDados.rlrValue()">
+                        </app-ellipsis-tooltip>
+                      </ng-template>
+
+                      <ng-template 
+                        *ngIf="col.header === 'PF Bruto'"
+                        let-grossPF="rowData.grossPF" 
+                        pTemplate="body">
+                        {{ grossPF | number }}
+                      </ng-template>
+                      <ng-template *ngIf="col.header === 'PF Líquido'"
+                        let-pf="rowData.pf" pTemplate="body">
+                        {{ pf | number }}
+                      </ng-template>
+    
+                    </p-column>
+                  </ng-template>
+    
+                </div>
+              </app-memory-datatable>
+            </div>
+          </div>
+  
+        <!-- Resumo -->
+        <div class="ui-g" *ngIf="funcoesDados.length > 0">
+          <hr>
+          <div class="ui-g-12">
+            <app-analise-funcao-resumo-table 
+              [linhasResumo]="resumo.all">
+            </app-analise-funcao-resumo-table>
+          </div>
+        </div>
+        
+        <!-- Dialog confirmação deleção -->
+         <p-confirmDialog header="Confirmação" #dialog>
+            <p-footer>
+              <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
+              <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+            </p-footer>
+          </p-confirmDialog>
+  
+      </div>
+    </div>
   </div>
-</div>
