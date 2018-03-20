@@ -151,6 +151,10 @@ public class Analise implements Serializable {
     @Size(max=10)
     @Column(name = "versao_cpm")
     private String versaoCPM;
+    
+    @Size(max=10)
+    @Column(name = "versao_Guia_Referencia_Local")
+    private String versaoGuiaReferenciaLocal;
 
     public Long getId() {
         return id;
@@ -454,6 +458,14 @@ public class Analise implements Serializable {
         this.metodoContagem = metodoContagem;
         return this;
     }
+
+	public String getVersaoGuiaReferenciaLocal() {
+		return versaoGuiaReferenciaLocal;
+	}
+
+	public void setVersaoGuiaReferenciaLocal(String versaoGuiaReferenciaLocal) {
+		this.versaoGuiaReferenciaLocal = versaoGuiaReferenciaLocal;
+	}
 
 	@Override
     public String toString() {

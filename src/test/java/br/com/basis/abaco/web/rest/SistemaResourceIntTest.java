@@ -229,7 +229,7 @@ public class SistemaResourceIntTest {
                         // TODO Auto-generated method stub
                         return null;
                     }
-                }, null);
+                }, null, null);
         this.restSistemaMockMvc = MockMvcBuilders.standaloneSetup(sistemaResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();

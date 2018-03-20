@@ -69,7 +69,9 @@ public class SistemaResource {
 
 	private final FuncaoDadosRepository funcaoDadosRepository;
 
-	public SistemaResource(SistemaRepository sistemaRepository, SistemaSearchRepository sistemaSearchRepository,
+	public SistemaResource(
+			SistemaRepository sistemaRepository, 
+			SistemaSearchRepository sistemaSearchRepository,
 			OrganizacaoRepository organizacaoRepository,
 			FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
 			FuncaoDadosRepository funcaoDadosRepository) {
@@ -83,14 +85,11 @@ public class SistemaResource {
 
 	/**
 	 * POST /sistemas : Create a new sistema.
-	 *
-	 * @param sistema
-	 *            the sistema to create
-	 * @return the ResponseEntity with status 201 (Created) and with body the new
-	 *         sistema, or with status 400 (Bad Request) if the sistema has already
-	 *         an ID
-	 * @throws URISyntaxException
-	 *             if the Location URI syntax is incorrect
+	 * @param sistema the sistema to create
+	 * @return the ResponseEntity with status 201 (Created) 
+	 * and with body the new sistema, or with status 400 (Bad Request) 
+	 * if the sistema has already an ID
+	 * @throws URISyntaxException if the Location URI syntax is incorrect
 	 */
 	@PostMapping("/sistemas")
 	@Timed
@@ -131,15 +130,12 @@ public class SistemaResource {
 
 	/**
 	 * PUT /sistemas : Updates an existing sistema.
-	 *
-	 * @param sistema
-	 *            the sistema to update
-	 * @return the ResponseEntity with status 200 (OK) and with body the updated
-	 *         sistema, or with status 400 (Bad Request) if the sistema is not
-	 *         valid, or with status 500 (Internal Server Error) if the sistema
-	 *         couldnt be updated
-	 * @throws URISyntaxException
-	 *             if the Location URI syntax is incorrect
+	 * @param sistema the sistema to update
+	 * @return the ResponseEntity with status 200 (OK) and with body the updated 
+	 * sistema, or with status 400 (Bad Request) if the sistema is not
+	 * valid, or with status 500 (Internal Server Error) if the sistema
+	 * couldnt be updated
+	 * @throws URISyntaxException if the Location URI syntax is incorrect
 	 */
 	@PutMapping("/sistemas")
 	@Timed
@@ -151,15 +147,12 @@ public class SistemaResource {
 		Sistema linkedSistema = linkSistemaToModuleToFunctionalities(sistema);
 		Sistema result = sistemaRepository.save(linkedSistema);
 		sistemaSearchRepository.save(result);
-		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, sistema.getId().toString()))
-				.body(result);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, sistema.getId().toString())).body(result);
 	}
 
 	/**
 	 * GET /sistemas : get all the sistemas.
-	 *
-	 * @return the ResponseEntity with status 200 (OK) and the list of sistemas in
-	 *         body
+	 * @return the ResponseEntity with status 200 (OK) and the list of sistemas in body
 	 */
 	@PostMapping("/sistemas/organizations")
 	@Timed
@@ -179,9 +172,7 @@ public class SistemaResource {
 
 	/**
 	 * GET /sistemas : get all the sistemas.
-	 *
-	 * @return the ResponseEntity with status 200 (OK) and the list of sistemas in
-	 *         body
+	 * @return the ResponseEntity with status 200 (OK) and the list of sistemas in body
 	 */
 	@GetMapping("/sistemas")
 	@Timed
@@ -193,11 +184,9 @@ public class SistemaResource {
 
 	/**
 	 * GET /sistemas/:id : get the "id" sistema.
-	 *
-	 * @param id
-	 *            the id of the sistema to retrieve
-	 * @return the ResponseEntity with status 200 (OK) and with body the sistema, or
-	 *         with status 404 (Not Found)
+	 * @param id the id of the sistema to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body 
+	 * the sistema, or with status 404 (Not Found)
 	 */
 	@GetMapping("/sistemas/{id}")
 	@Timed
@@ -242,11 +231,8 @@ public class SistemaResource {
 	}
 
 	/**
-	 * SEARCH /_search/sistemas?query=:query : search for the sistema corresponding
-	 * to the query.
-	 *
-	 * @param query
-	 *            the query of the sistema search
+	 * SEARCH /_search/sistemas?query=:query : search for the sistema corresponding to the query.
+	 * @param query the query of the sistema search
 	 * @return the result of the search
 	 * @throws URISyntaxException
 	 */

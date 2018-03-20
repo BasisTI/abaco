@@ -65,5 +65,9 @@
     <include file="classpath:config/liquibase/changelog/20180306202515_ADD_diasDeGarantia_Contrato_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180306212435_ADD_baselineImediatamente_Analise_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180315141925_ADD_versaoCPM_Analise_changelog.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20180315143848_RENAME_COLUMN_TipoContagem_Para_MetodoContagem_Analise_changelog.xml" relativeToChangelogFile="false"/>    
+    <include file="classpath:config/liquibase/changelog/20180315143848_RENAME_COLUMN_TipoContagem_Para_MetodoContagem_Analise_changelog.xml" relativeToChangelogFile="false"/>  
+    <include file="classpath:config/liquibase/changelog/20180320134014_ADD_versao_do_Guia_de_referencia_Local_changelog.xml" relativeToChangelogFile="false"/>  
 </databaseChangeLog>
+
+
+
