@@ -152,9 +152,12 @@ public class Analise implements Serializable {
     @Column(name = "versao_cpm")
     private String versaoCPM;
     
-    @Size(max=10)
+    @Size(max=100)
     @Column(name = "versao_Guia_Referencia_Local")
     private String versaoGuiaReferenciaLocal;
+    
+    @Column(name = "data_homologacao_software")
+    private Date dataHomologacao;
 
     public Long getId() {
         return id;
@@ -465,6 +468,14 @@ public class Analise implements Serializable {
 
 	public void setVersaoGuiaReferenciaLocal(String versaoGuiaReferenciaLocal) {
 		this.versaoGuiaReferenciaLocal = versaoGuiaReferenciaLocal;
+	}
+
+	public Date getDataHomologacao() {
+		return dataHomologacao;
+	}
+
+	public void setDataHomologacao(Date dataHomologacao) {
+		this.dataHomologacao = dataHomologacao;
 	}
 
 	@Override
