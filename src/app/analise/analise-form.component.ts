@@ -28,6 +28,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   isSaving: boolean;
 
   organizacoes: Organizacao[];
+
   contratos: Contrato[];
   sistemas: Sistema[];
 
@@ -36,9 +37,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   metodosContagem: SelectItem[] = [];
 
   fatoresAjuste: SelectItem[] = [];
+
   private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
 
-  /** 
+  /**
    * Método responsável por popular a combo de tipo de contagem.
   */
  tiposAnalise: SelectItem[] = [
@@ -47,7 +49,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     {label: 'Contagem de Aplicação (Baseline)', value: 'APLICACAO'}
   ];
 
-  /** 
+  /**
    * Método responsável por popular a combo método de contagem.
   */
   metodoContagem: SelectItem[] = [

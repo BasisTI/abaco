@@ -58,7 +58,8 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     public observacoes?: string,
     public baselineImediatamente?: boolean,
     public versaoCPM?: string,
-    public versaoGuiaReferenciaLocal?: string
+    public versaoGuiaReferenciaLocal?: string,
+    public dataHomologacao?: Date
   ) {
     this.inicializaMappables(funcaoDados, funcaoTransacaos);
     this.inicializaResumos();
@@ -256,6 +257,7 @@ class AnaliseCopyFromJSON {
     this._analiseConverted.baselineImediatamente = this._json.baselineImediatamente;
     this._analiseConverted.versaoCPM = this._json.versaoCPM;
     this._analiseConverted.versaoGuiaReferenciaLocal = this._json.versaoGuiaReferenciaLocal;
+    this._analiseConverted.dataHomologacao = this._json.dataHomologacao;
 
     if (!this._analiseConverted.baselineImediatamente) {
       this._analiseConverted.baselineImediatamente = false;
