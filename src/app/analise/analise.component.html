@@ -5,6 +5,7 @@
     <div class="card card-w-title">
 
       <h1>Análise</h1>
+      
       <div class="ui-g">
         <div class="ui-g-12">
           <span class="md-inputfield">
@@ -48,12 +49,20 @@
 
         </div>
 
-        <basis-datatable [url]="searchUrl" (buttonClick)="datatableClick($event)"
+        <basis-datatable 
+          [url]="searchUrl" 
+          (buttonClick)="datatableClick($event)" 
           [disableView]="true"
           #datatable>
-          <p-column header="ID" field="id"></p-column>
-          <p-column header="Número OS" field="numeroOs"></p-column>
+
+          <p-column header="Organização" field="organizacao.nome"></p-column>
+          <p-column header="Contrato" field="contrato.numeroContrato"></p-column>
           <p-column header="Sistema" field="sistema.nome"></p-column>
+          <p-column header="Tipo de Contagem" field="tipoAnalise"></p-column>
+          <p-column header="PF - Total Bruto" field="adjustPFTotal"></p-column>
+          <p-column header="PF - Total Líquido" field="pfTotal"></p-column>
+          <p-column header="Data/Hora" field="created"></p-column>
+
         </basis-datatable>
 
       </div>
