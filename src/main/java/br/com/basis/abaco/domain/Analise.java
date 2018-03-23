@@ -158,9 +158,6 @@ public class Analise implements Serializable {
     
     @Column(name = "data_homologacao_software")
     private Date dataHomologacao;
-    
-    @Column(name = "data_hora_analise")
-    private Date dataHoraAnalise;
 
     public Long getId() {
         return id;
@@ -479,14 +476,6 @@ public class Analise implements Serializable {
 
 	public void setDataHomologacao(Date dataHomologacao) {
 		this.dataHomologacao = dataHomologacao;
-	}
-
-	public Date getDataHoraAnalise() {
-		return dataHoraAnalise;
-	}
-
-	public void setDataHoraAnalise(Date dataHoraAnalise) {
-		this.dataHoraAnalise = dataHoraAnalise;
 	}
 
 	@Override
