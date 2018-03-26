@@ -158,6 +158,9 @@ public class Analise implements Serializable {
     
     @Column(name = "data_homologacao_software")
     private Date dataHomologacao;
+        
+    @Column(name = "identificador_analise", length = 100)
+    private String identificadorAnalise;
 
     public Long getId() {
         return id;
@@ -476,6 +479,14 @@ public class Analise implements Serializable {
 
 	public void setDataHomologacao(Date dataHomologacao) {
 		this.dataHomologacao = dataHomologacao;
+	}
+
+	public String getIdentificadorAnalise() {
+		return identificadorAnalise;
+	}
+
+	public void setIdentificadorAnalise(String identificadorAnalise) {
+		this.identificadorAnalise = identificadorAnalise;
 	}
 
 	@Override
