@@ -128,7 +128,7 @@
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-md-3">
               <app-blue-button 
-                buttonLabel="Novo Fator de Ajuste" 
+                buttonLabel="Novo Deflator" 
                 buttonIcon="ui-icon-add" 
                 (click)="openDialogCreateAdjustFactor()">
               </app-blue-button>
@@ -143,9 +143,9 @@
               </p-column>
               <p-column header="Nome" field="nome">
               </p-column>
-              <p-column header="Fator" field="fatorFormatado">
+              <p-column header="Deflator" field="fatorFormatado">
               </p-column>
-              <p-column header="Tipo Ajuste" field="tipoAjuste">
+              <p-column header="Tipo Deflator" field="tipoAjuste">
               </p-column>
               <p-column header="Ativo" field="ativo">
                 <ng-template let-col let-ativo="rowData" pTemplate="body">
@@ -220,23 +220,23 @@
           </div>
         </p-dialog>
 
-        <!-- Dialog Novo Fator Ajuste -->
-        <p-dialog header="Fator de Ajuste" [(visible)]="showDialogCreateAdjustFactor" [contentStyle]="{'overflow':'visible'}" [width]="800">
+        <!-- Dialog Novo Deflator -->
+        <p-dialog header="Deflator" [(visible)]="showDialogCreateAdjustFactor" [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
             <div class="ui-g-6">
               <label>Nome*</label>
               <input id="nome_fator_ajuste" type="text" name="nomeFatorAjuste" [(ngModel)]="newAdjustFactor.nome" pInputText />
             </div>
             <div class="ui-g-3">
-              <label>Tipo Ajuste*</label><br>
+              <label>Tipo Deflator*</label><br>
               <p-dropdown #dd id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false" placeholder="Tipo Ajuste"></p-dropdown>
               <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="newAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
               <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
             </div>
             <div class="ui-g-3">
-              <label *ngIf="isPercentualEnum(newAdjustFactor.tipoAjuste)">Fator (%)*</label>
-              <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)">Fator (PF)*</label>
-              <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Fator*</label>
+              <label *ngIf="isPercentualEnum(newAdjustFactor.tipoAjuste)">Deflator (%)*</label>
+              <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)">Deflator (PF)*</label>
+              <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Deflator*</label>
               <p-spinner id="valor_fator" size="30" *ngIf="newAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="newAdjustFactor.fatorFormatado"></p-spinner>
               <p-spinner id="valor_fator" size="30" *ngIf="newAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="newAdjustFactor.fatorFormatado"></p-spinner>
             </div>

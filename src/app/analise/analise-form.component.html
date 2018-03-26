@@ -7,7 +7,7 @@
           <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
             <div class="ui-g" >
 
-              <div class="ui-g-12" style="margin-bottom: 25px; margin-top: 25px">
+              <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
                 <span class="md-inputfield">
                   <input 
                     type="text" 
@@ -19,7 +19,19 @@
                 </span>
               </div>
 
-              <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+              <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                <span class="md-inputfield">
+                  <input 
+                    type="text" 
+                    maxlength="100"
+                    name="identificadorAnalise" 
+                    [(ngModel)]="analise.identificadorAnalise" 
+                    pInputText/>
+                  <label>Identificador da Analise</label>
+                </span>
+              </div>
+
+              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                 <label>Organização</label>
                 <p-dropdown 
                   dataKey="id"
@@ -33,7 +45,7 @@
                 </p-dropdown>
               </div>
 
-              <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                 <label>Contrato</label>
                 <p-dropdown 
                   dataKey="id"
@@ -48,7 +60,7 @@
                 </p-dropdown>
               </div>
 
-              <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                 <label>Sistema</label>
                 <p-dropdown 
                   dataKey="id" 
@@ -87,7 +99,7 @@
               </div>
 
               <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
-                <label>Fator de Ajuste</label>
+                <label>Deflator</label>
                 <p-dropdown
                   disabled="{{ !isContratoSelected() }}"
                   placeholder="{{ fatoresAjusteDropdownPlaceholder() }}"
