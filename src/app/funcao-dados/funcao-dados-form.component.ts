@@ -59,7 +59,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private funcaoDadosService: FuncaoDadosService
   ) {
     const colunas = [
-      { header: 'Fator de Ajuste' },
+      { header: 'Deflator' },
       { header: 'Módulo' },
       { header: 'Funcionalidade' },
       { header: 'Nome', field: 'name' },
@@ -169,9 +169,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   fatoresAjusteDropdownPlaceholder() {
     if (this.isContratoSelected()) {
-      return 'Selecione um Fator de Ajuste';
+      return 'Selecione um Deflator';
     } else {
-      return `Selecione um Contrato na aba 'Geral' para carregar os Fatores de Ajuste`;
+      return `Selecione um Contrato na aba 'Geral' para carregar os Deflatores`;
     }
   }
 

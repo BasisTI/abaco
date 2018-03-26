@@ -13,8 +13,8 @@
       </app-analise-modulo-funcionalidade>
 
       <div class="ui-g">
-        <div class="ui-g-9" style="margin-bottom: 25px">
-          <label>Fator de Ajuste</label>
+        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+          <label>Deflator</label>
           <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
             [(ngModel)]="currentFuncaoTransacao.fatorAjuste" 
             [disabled]="!isContratoSelected()"
@@ -23,18 +23,23 @@
           </p-dropdown>
         </div>
 
-        <div class="ui-g-3" style="margin-bottom: 25px">
+        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
           <label>Classificação</label>
           <p-dropdown [options]="classificacoes"
             [(ngModel)]="currentFuncaoTransacao.tipo"
             placeholder="Selecione uma Classificação"
-            name="classificacao" [autoWidth]="false">
+            name="classificacao" 
+            [autoWidth]="false">
           </p-dropdown>
         </div>
 
-        <div class="ui-g-12" style="margin-bottom: 25px">
+        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
           <span class="md-inputfield">
-            <input type="text" name="nomeFuncaoTransacao" [(ngModel)]="currentFuncaoTransacao.name" pInputText/>
+            <input 
+              type="text" 
+              name="nomeFuncaoTransacao" 
+              [(ngModel)]="currentFuncaoTransacao.name" 
+              pInputText/>
             <label>Nome do Processo Elementar</label>
           </span>
         </div>

@@ -115,9 +115,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
   fatoresAjusteDropdownPlaceholder() {
     if (this.isContratoSelected()) {
-      return 'Selecione um Fator de Ajuste';
+      return 'Selecione um Deflator';
     } else {
-      return `Selecione um Contrato na aba 'Geral' para carregar os Fatores de Ajuste`;
+      return `Selecione um Contrato na aba 'Geral' para carregar os Deflatores`;
     }
   }
 
