@@ -34,14 +34,14 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   private checarSeDeveHabilitarBotaoEConstruirMotivos(): boolean {
     this.motivosBotaoDesabilitado.clear();
     // TODO complementar. hoje é só uma prova de conceito
-    if (_.isEmpty(this.analise.numeroOs)) {
-      this.motivosBotaoDesabilitado.add('- Informe um Número OS');
+    if (_.isEmpty(this.analise.organizacao)) {
+      this.motivosBotaoDesabilitado.add('- Selecione uma Organização');
     }
-    if (_.isEmpty(this.analise.metodoContagem)) {
-      this.motivosBotaoDesabilitado.add('- Selecione um Tipo de Contagem');
+    if (_.isEmpty(this.analise.equipeResponsavel)) {
+      this.motivosBotaoDesabilitado.add('- Selecione uma Equipe Responsável');
     }
-    if (this.nenhumaFuncaoAdicionada()) {
-      this.motivosBotaoDesabilitado.add('- Adicione ao menos uma Função de Dados ou Função Transação');
+    if (_.isEmpty(this.analise.sistema)) {
+      this.motivosBotaoDesabilitado.add('- Selecione um Sistema');
     }
     return _.isEmpty(this.motivosBotaoDesabilitado);
   }
@@ -50,7 +50,6 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
     const analise: Analise = this.analise;
     return _.isEmpty(analise.funcaoDados) && _.isEmpty(analise.funcaoTransacaos);
   }
-
 
   public motivosDesabilitar(): string {
     return _.join(Array.from(this.motivosBotaoDesabilitado), '\n');

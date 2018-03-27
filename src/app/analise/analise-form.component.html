@@ -1,11 +1,75 @@
 <p-tabView>
 
+  <p-tabPanel header="Inicial">
+      <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+          <div class="card card-w-title">
+            <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+              <div class="ui-g" style="margin-bottom: 25px; margin-top: 25px">
+
+
+                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                        <label>Organização</label>
+                        <p-dropdown 
+                          dataKey="id"
+                          name="organizacao"
+                          optionLabel="nome"
+                          placeholder="Selecione uma Organização" 
+                          [options]="organizacoes" 
+                          [(ngModel)]="analise.organizacao" 
+                          [autoWidth]="false"
+                          (onChange)="organizacaoSelected($event.value)">
+                        </p-dropdown>
+                    </div>
+
+                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                        <label>Equipe Responsável</label>
+                        <p-dropdown 
+                          dataKey="id"
+                          name="equipeResponsavel"
+                          optionLabel="nome"
+                          placeholder="Selecione uma Equipe Responsável" 
+                          [options]="equipeResponsavel" 
+                          [(ngModel)]="analise.equipeResponsavel" 
+                          [autoWidth]="false"
+                          (onChange)="organizacaoSelected($event.value)">
+                        </p-dropdown>
+                    </div>
+
+                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                        <label>Sistema</label>
+                        <p-dropdown 
+                          dataKey="id" 
+                          optionLabel="nome" 
+                          disabled="{{ !shouldEnableSistemaDropdown() }}"
+                          placeholder="{{ sistemaDropdownPlaceholder() }}"
+                          (onChange)="sistemaSelected()"
+                          name="sistema" 
+                          [options]="sistemas" 
+                          [(ngModel)]="analise.sistema"  
+                          [autoWidth]="false">
+                        </p-dropdown>
+                    </div>
+
+                <div class="ui-g ui-md-12" style="justify-content: flex-end">
+                    <div class="ui-md-3">
+                      <app-analise-botao-salvar></app-analise-botao-salvar>
+                    </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  </p-tabPanel>
+  
   <p-tabPanel header="Geral">
     <div class="ui-g ui-fluid">
       <div class="ui-g-12">
         <div class="card card-w-title">
-          <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
-            <div class="ui-g" >
+
+
+            <div class="ui-g" style="margin-bottom: 25px; margin-top: 25px">
 
               <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
                 <span class="md-inputfield">
@@ -31,21 +95,7 @@
                 </span>
               </div>
 
-              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
-                <label>Organização</label>
-                <p-dropdown 
-                  dataKey="id"
-                  name="organizacao"
-                  optionLabel="nome"
-                  placeholder="Selecione uma Organização" 
-                  [options]="organizacoes" 
-                  [(ngModel)]="analise.organizacao" 
-                  [autoWidth]="false"
-                  (onChange)="organizacaoSelected($event.value)">
-                </p-dropdown>
-              </div>
-
-              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+              <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                 <label>Contrato</label>
                 <p-dropdown 
                   dataKey="id"
@@ -60,22 +110,7 @@
                 </p-dropdown>
               </div>
 
-              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
-                <label>Sistema</label>
-                <p-dropdown 
-                  dataKey="id" 
-                  optionLabel="nome" 
-                  disabled="{{ !shouldEnableSistemaDropdown() }}"
-                  placeholder="{{ sistemaDropdownPlaceholder() }}"
-                  (onChange)="sistemaSelected()"
-                  name="sistema" 
-                  [options]="sistemas" 
-                  [(ngModel)]="analise.sistema"  
-                  [autoWidth]="false">
-                </p-dropdown>
-              </div>
-
-              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+              <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                   <label>Método de Contagem</label>
                   <p-dropdown 
                     disabled="{{ !isContratoSelected() }}"
@@ -87,7 +122,7 @@
                   </p-dropdown>
                 </div>
 
-              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+              <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                 <label>Tipo de Contagem</label>
                 <p-dropdown 
                   name="tiposAnalise"
@@ -98,7 +133,7 @@
                 </p-dropdown>
               </div>
 
-              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+              <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                 <label>Deflator</label>
                 <p-dropdown
                   disabled="{{ !isContratoSelected() }}"
@@ -111,7 +146,6 @@
               </div>
 
               <div class="ui-g-6 ui-md-6 ui-sm-12">
-
                 <div class="ui-g-3 ui-md-4 ui-sm-12">
                     <label>Versão do CPM</label>
                 </div>
@@ -260,15 +294,8 @@
                   </textarea>
                 </span>
               </div>
-
-              
-              <div class="ui-g ui-md-12" style="justify-content: flex-end">
-                <div class="ui-md-3">
-                  <app-analise-botao-salvar></app-analise-botao-salvar>
-                </div>
-              </div>
             </div>
-          </form>
+
         </div>
       </div>
     </div>

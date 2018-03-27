@@ -17,6 +17,8 @@ import { FatorAjuste } from '../fator-ajuste/index';
 import { Manual } from '../manual/index';
 import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
 
+import { TipoEquipe, TipoEquipeService } from '../tipo-equipe';
+
 @Component({
   selector: 'jhi-analise-form',
   templateUrl: './analise-form.component.html'
@@ -30,6 +32,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   organizacoes: Organizacao[];
 
   contratos: Contrato[];
+
   sistemas: Sistema[];
 
   esforcoFases: EsforcoFase[] = [];
@@ -37,6 +40,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   metodosContagem: SelectItem[] = [];
 
   fatoresAjuste: SelectItem[] = [];
+
+  equipeResponsavel: SelectItem[] = [];
 
   private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
 
@@ -68,10 +73,15 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     private contratoService: ContratoService,
     private sistemaService: SistemaService,
     private analiseSharedDataService: AnaliseSharedDataService,
+    private tipoEquipeService: TipoEquipeService,
   ) { }
 
   ngOnInit() {
     this.isSaving = false;
+
+    this.tipoEquipeService.query().subscribe((res: ResponseWrapper) => {
+      this.equipeResponsavel = res.json;
+    });
     this.organizacaoService.query().subscribe((res: ResponseWrapper) => {
       this.organizacoes = res.json;
     });
@@ -237,6 +247,17 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   save() {
+    //TODO: Implementar o autosave.
+  }
+
+  /**
+   * Método responsável por desabilitar os
+   * campos abaixo após a persistência da analáise na aba inicial.
+   * Organização
+   * Equipe Responsável
+   * Sistema
+  */
+  desabilitarCamposIniciais() {
 
   }
 
