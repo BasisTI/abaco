@@ -161,6 +161,9 @@ public class Analise implements Serializable {
         
     @Column(name = "identificador_analise", length = 100)
     private String identificadorAnalise;
+    
+    @ManyToOne
+    private TipoEquipe equipeResponsavel;
 
     public Long getId() {
         return id;
@@ -487,6 +490,14 @@ public class Analise implements Serializable {
 
 	public void setIdentificadorAnalise(String identificadorAnalise) {
 		this.identificadorAnalise = identificadorAnalise;
+	}
+
+	public TipoEquipe getEquipeResponsavel() {
+		return equipeResponsavel;
+	}
+
+	public void setEquipeResponsavel(TipoEquipe equipeResponsavel) {
+		this.equipeResponsavel = equipeResponsavel;
 	}
 
 	@Override

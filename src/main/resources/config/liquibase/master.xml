@@ -68,6 +68,8 @@
     <include file="classpath:config/liquibase/changelog/20180320134014_ADD_versao_do_Guia_de_referencia_Local_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180320180515_ADD_data_versao_software_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180326205727_ADD_identificador_analise_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180327193026_ADD_equipe_responsavel_changelog.xml" relativeToChangelogFile="false"/>
+    
 </databaseChangeLog>
 
 
