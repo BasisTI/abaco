@@ -17,6 +17,9 @@ export class Manual implements BaseEntity, JSONable<Manual> {
     public fatoresAjuste?: FatorAjuste[],
     public esforcoFases?: EsforcoFase[],
     public artificialId?: number,
+    public parametroInclusao?: string,
+    public parametroAlteracao?: string,
+    public parametroExclusao?: string,
   ) {
     if (esforcoFases) {
       this.mappablePhaseEfforts = new MappableEntities<EsforcoFase>(esforcoFases);
@@ -108,7 +111,10 @@ export class Manual implements BaseEntity, JSONable<Manual> {
       this.arquivoManualId,
       this.fatoresAjuste,
       this.esforcoFases,
-      this.artificialId);
+      this.artificialId,
+      this.parametroInclusao,
+      this.parametroAlteracao,
+      this.parametroExclusao);
 
   }
 }

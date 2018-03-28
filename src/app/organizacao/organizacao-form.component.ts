@@ -61,7 +61,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       this.organizacao = new Organizacao();
       if (params['id']) {
         this.organizacaoService.find(params['id']).subscribe(organizacao => {
-          this.organizacao = organizacao
+          this.organizacao = organizacao;
           this.getFile();
         });
       }
@@ -223,8 +223,8 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
   getFileInfo() {
     return this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
-      console.log(response)
+      console.log(response);
       return response;
-    })
+    });
   }
 }

@@ -11,7 +11,7 @@
           <span class="md-inputfield">
             <input type="text" 
               pInputText class="ui-inputtext" 
-              [(ngModel)]="elasticQuery.value" 
+              [(ngModel)]="elasticQuery.value"
               (keyup.enter)="datatable.refresh(elasticQuery.query)"
               #filter />
             <label>Descrição</label>
