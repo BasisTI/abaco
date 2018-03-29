@@ -1,5 +1,5 @@
 import { BaseEntity, JSONable } from '../shared';
-import { FatorAjuste } from '../fator-ajuste/index';
+import { FatorAjuste, ImpactoFatorAjuste } from '../fator-ajuste/index';
 import { Funcionalidade } from '../funcionalidade/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';

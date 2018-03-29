@@ -27,6 +27,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   isEdit: boolean;
 
   dersChips: DerChipItem[] = [];
+
   alrsChips: DerChipItem[] = [];
 
   resumo: ResumoFuncoes;
@@ -34,6 +35,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   fatoresAjuste: FatorAjuste[] = [];
 
   classificacoes: SelectItem[] = [];
+
+  showDialogNovo = false;
 
   private analiseCarregadaSubscription: Subscription;
 
@@ -206,6 +209,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     switch (event.button) {
       case 'edit':
         this.isEdit = true;
+        this.showDialogNovo = true;
         this.prepararParaEdicao(funcaoSelecionada);
         break;
       case 'delete':
@@ -283,6 +287,15 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.changeDetectorRef.detach();
     this.analiseCarregadaSubscription.unsubscribe();
+  }
+
+  openDialogNovo() {
+    this.currentFuncaoTransacao = new FuncaoTransacao();
+    this.showDialogNovo = true;
+  }
+
+  closeDialogNovo() {
+    this.showDialogNovo = false;
   }
 
 }

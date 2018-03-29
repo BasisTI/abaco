@@ -1,144 +1,208 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      
-      <div style="margin-top: 25px">
-        <h2>{{ header }} </h2>
-      </div>
-
-      <app-analise-modulo-funcionalidade
-        [isFuncaoDados]="false"
-        (moduloSelectedEvent)="moduloSelected($event)"
-        (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
-      </app-analise-modulo-funcionalidade>
 
       <div class="ui-g">
-        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-          <label>Deflator</label>
-          <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
-            [(ngModel)]="currentFuncaoTransacao.fatorAjuste" 
-            [disabled]="!isContratoSelected()"
-            [placeholder]="fatoresAjusteDropdownPlaceholder()"
-            name="fatorAjuste" [autoWidth]="false">
-          </p-dropdown>
-        </div>
+          <div class="ui-g-12">
 
-        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-          <label>Classificação</label>
-          <p-dropdown [options]="classificacoes"
-            [(ngModel)]="currentFuncaoTransacao.tipo"
-            placeholder="Selecione uma Classificação"
-            name="classificacao" 
-            [autoWidth]="false">
-          </p-dropdown>
-        </div>
+              <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
+                  <div class="ui-md-2">
+                      <app-green-button 
+                        buttonLabel="Novo" 
+                        buttonIcon="ui-icon-add" 
+                        (click)="openDialogNovo()">
+                      </app-green-button>
+                  </div>
+              </div>
 
-        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-          <span class="md-inputfield">
-            <input 
-              type="text" 
-              name="nomeFuncaoTransacao" 
-              [(ngModel)]="currentFuncaoTransacao.name" 
-              pInputText/>
-            <label>Nome do Processo Elementar</label>
-          </span>
-        </div>
-      </div>
-
-      <div class="ui-g-12" style="margin-bottom: 25px">
-        <h2>DER (TD)</h2>
-        <app-analise-der-chips [(values)]="dersChips"></app-analise-der-chips>
-      </div>
-
-      <div class="ui-g-12" style="margin-bottom: 25px">
-        <h2>FTR (AR)</h2>
-        <app-analise-der-chips 
-          [(values)]="alrsChips"
-          [relacionarDers]="true"
-          (dersReferenciadosEvent)="dersReferenciados($event)">
-        </app-analise-der-chips>
-      </div>
-
-      <div class="ui-g-12" style="margin-bottom: 25px">
-        <label>Fundamentação</label>
-        <span class="md-inputfield">
-          <textarea [rows]="6" [cols]="180" pInputTextarea name="funcaoDadosSustentacao" 
-            [(ngModel)]="currentFuncaoTransacao.sustantation">
-          </textarea>
-        </span>
-      </div>
-
-      <div class="ui-g ui-md-12" style="justify-content: flex-end">
-        <div class="ui-md-3">
-          <app-analise-botao-salvar></app-analise-botao-salvar>
-        </div>
-        <div class="ui-md-3" *ngIf="isEdit">
-          <app-white-button buttonLabel="Cancelar Alteração" (click)="cancelarEdicao()"></app-white-button>
-        </div>
-        <div class="ui-md-3">
-          <app-blue-button [buttonLabel]="labelBotaoAdicionar"
-            [isDisabled]="!deveHabilitarBotaoAdicionar()"
-            buttonIcon="ui-icon-add" (click)="adicionar()">
-          </app-blue-button>
-        </div>
-      </div>
-
-      <div class="ui-g" *ngIf="funcoesTransacoes.length > 0">
-        <hr>
-        <div class="ui-g-12">
-          <app-memory-datatable [value]="funcoesTransacoes"
-            (buttonClick)="datatableClick($event)"
-            [responsive]="true" scrollable="true" scrollWidth="100%">
-            <p-column header="Fator de Ajuste" [style]="{'width': '200px'}">
-              <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
-                {{ fatorAjuste.nome }}
-              </ng-template>
-            </p-column>
-            <p-column header="Módulo" [style]="{'width': '200px'}">
-              <ng-template let-modulo="rowData.funcionalidade.modulo" pTemplate="body">
-                {{ modulo.nome }}
-              </ng-template>
-            </p-column>
-            <p-column header="Funcionalidade" [style]="{'width': '200px'}">
-              <ng-template let-funcionalidade="rowData.funcionalidade" pTemplate="body">
-                {{ funcionalidade.nome }}
-              </ng-template>
-            </p-column>
-            <p-column field="name" header="Nome" [style]="{'width': '200px'}"></p-column>
-            <p-column field="tipo" header="Classificação" [style]="{'width': '200px'}"></p-column>
-            <p-column field="der" header="DER (TD)" [style]="{'width': '200px'}">
-              <ng-template let-funcaoDados="rowData" pTemplate="body">
-                {{ funcaoDados.derValue() }}
-              </ng-template>
-            </p-column>
-            <p-column header="FTR (AR)" [style]="{'width': '200px'}">
-              <ng-template let-funcaoDados="rowData" pTemplate="body">
-                {{ funcaoDados.ftrValue() }}
-              </ng-template>
-            </p-column>
-            <p-column field="complexidade" header="Complexidade" [style]="{'width': '200px'}"></p-column>
-            <p-column header="PF Bruto" [style]="{'width': '200px'}">
-              <ng-template let-grossPF="rowData.grossPF" pTemplate="body">
-                {{ grossPF | number }}
-              </ng-template>
-            </p-column>
-            <p-column header="PF Líquido" [style]="{'width': '200px'}">
-              <ng-template let-pf="rowData.pf" pTemplate="body">
-                {{ pf | number }}
-              </ng-template>
-            </p-column>
-          </app-memory-datatable>
-        </div>
+              <div>
+                <app-memory-datatable [value]="funcoesTransacoes"
+                  (buttonClick)="datatableClick($event)"
+                  [responsive]="true" scrollable="true" scrollWidth="100%">
+                  <p-column header="Deflator" [style]="{'width': '200px'}">
+                    <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
+                      {{ fatorAjuste.nome }}
+                    </ng-template>
+                  </p-column>
+                  <p-column header="Módulo" [style]="{'width': '200px'}">
+                    <ng-template let-modulo="rowData.funcionalidade.modulo" pTemplate="body">
+                      {{ modulo.nome }}
+                    </ng-template>
+                  </p-column>
+                  <p-column header="Funcionalidade" [style]="{'width': '200px'}">
+                    <ng-template let-funcionalidade="rowData.funcionalidade" pTemplate="body">
+                      {{ funcionalidade.nome }}
+                    </ng-template>
+                  </p-column>
+                  <p-column field="name" header="Nome" [style]="{'width': '200px'}"></p-column>
+                  <p-column field="tipo" header="Classificação" [style]="{'width': '200px'}"></p-column>
+                  <p-column field="der" header="DER (TD)" [style]="{'width': '200px'}">
+                    <ng-template let-funcaoDados="rowData" pTemplate="body">
+                      {{ funcaoDados.derValue() }}
+                    </ng-template>
+                  </p-column>
+                  <p-column header="FTR (AR)" [style]="{'width': '200px'}">
+                    <ng-template let-funcaoDados="rowData" pTemplate="body">
+                      {{ funcaoDados.ftrValue() }}
+                    </ng-template>
+                  </p-column>
+                  <p-column field="complexidade" header="Complexidade" [style]="{'width': '200px'}"></p-column>
+                  <p-column header="PF Bruto" [style]="{'width': '200px'}">
+                    <ng-template let-grossPF="rowData.grossPF" pTemplate="body">
+                      {{ grossPF | number }}
+                    </ng-template>
+                  </p-column>
+                  <p-column header="PF Líquido" [style]="{'width': '200px'}">
+                    <ng-template let-pf="rowData.pf" pTemplate="body">
+                      {{ pf | number }}
+                    </ng-template>
+                  </p-column>
+                </app-memory-datatable>
+              </div>
+          </div>
       </div>
 
       <!-- Resumo -->
       <div class="ui-g" *ngIf="funcoesTransacoes.length > 0">
-        <hr>
-        <div class="ui-g-12">
-          <app-analise-funcao-resumo-table [linhasResumo]="resumo.all">
-          </app-analise-funcao-resumo-table>
-        </div>
+          <hr>
+          <div class="ui-g-12">
+            <app-analise-funcao-resumo-table [linhasResumo]="resumo.all">
+            </app-analise-funcao-resumo-table>
+          </div>
       </div>
+
+      <!-- Dialog Função de transação -->
+      <p-dialog header="{{ header }}" [(visible)]="showDialogNovo" [contentStyle]="{'overflow':'visible'}" [width]="800">
+        <app-analise-modulo-funcionalidade
+          [isFuncaoDados]="false"
+          (moduloSelectedEvent)="moduloSelected($event)"
+          (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
+        </app-analise-modulo-funcionalidade>
+
+        <div class="ui-g">
+          <div class="ui-g-6 ui-md-6 ui-sm-12">
+            <label>Deflator</label>
+            <p-dropdown [options]="fatoresAjuste | fatorAjusteToSelectItem"
+              [(ngModel)]="currentFuncaoTransacao.fatorAjuste" 
+              [disabled]="!isContratoSelected()"
+              placeholder="Selecione..."
+              name="fatorAjuste" [autoWidth]="false">
+            </p-dropdown>
+          </div>
+  
+          <div class="ui-g-6 ui-md-6 ui-sm-12">
+            <label>Classificação</label>
+            <p-dropdown [options]="classificacoes"
+              [(ngModel)]="currentFuncaoTransacao.tipo"
+              placeholder="Selecione uma Classificação"
+              name="classificacao" 
+              [autoWidth]="false">
+            </p-dropdown>
+          </div>
+        </div>
+          <div class="ui-g">
+              <div class="ui-g-12 ui-md-12 ui-sm-12">
+
+                  <div class="ui-g-2 ui-md-2 ui-sm-12">
+                  </div>
+
+                  <div class="ui-g-3 ui-md-3 ui-sm-12">
+                    <p-radioButton 
+                      name="impacto" 
+                      value="Inclusão" 
+                      label="Inclusão" 
+                      [(ngModel)]="currentFuncaoTransacao.impacto" 
+                      inputId="preopt1">
+                    </p-radioButton>
+                  </div>
+
+                  <div class="ui-g-3 ui-md-3 ui-sm-12">
+                    <p-radioButton 
+                      name="impacto" 
+                      value="Alteração" 
+                      label="Alteração" 
+                      [(ngModel)]="currentFuncaoTransacao.impacto" 
+                      inputId="preopt2">
+                    </p-radioButton>
+                  </div>
+                  
+                  <div class="ui-g-3 ui-md-3 ui-sm-12">
+                    <p-radioButton 
+                      name="impacto" 
+                      value="Exclusão" 
+                      label="Exclusão"
+                      [(ngModel)]="currentFuncaoTransacao.impacto"
+                      inputId="preopt3">
+                    </p-radioButton>
+                  </div>
+
+                  <div class="ui-g-1 ui-md-1 ui-sm-12">
+                  </div>
+              </div>
+          </div>
+
+          <div class="ui-g-12 ui-md-12 ui-sm-12">
+            <span class="md-inputfield">
+              <input 
+                type="text" 
+                name="nomeFuncaoTransacao" 
+                [(ngModel)]="currentFuncaoTransacao.name" 
+                pInputText/>
+              <label>Nome do Processo Elementar</label>
+            </span>
+          </div>
+
+        <div class="ui-g-12">
+          <h2>DER (TD)</h2>
+          <app-analise-der-chips [(values)]="dersChips"></app-analise-der-chips>
+        </div>
+        <div class="ui-g-12">
+          <h2>FTR (AR)</h2>
+          <app-analise-der-chips 
+            [(values)]="alrsChips"
+            [relacionarDers]="true"
+            (dersReferenciadosEvent)="dersReferenciados($event)">
+          </app-analise-der-chips>
+        </div>
+        <div class="ui-g-12">
+          <label>Fundamentação</label>
+          <span class="md-inputfield">
+            <textarea [rows]="6" [cols]="180" pInputTextarea name="funcaoDadosSustentacao" 
+              [(ngModel)]="currentFuncaoTransacao.sustantation">
+            </textarea>
+          </span>
+        </div>
+
+        <div class="ui-g ui-md-12" style="justify-content: flex-end">
+
+          <!-- <div class="ui-md-3">
+            <app-analise-botao-salvar></app-analise-botao-salvar>
+          </div> -->
+
+          <div class="ui-md-3" *ngIf="isEdit">
+            <app-white-button 
+              buttonLabel="Cancelar Alteração" 
+              (click)="cancelarEdicao()">
+            </app-white-button>
+          </div>
+
+          <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
+              <app-white-button 
+                buttonLabel="Cancelar"
+                (click)="closeDialogNovo()">
+              </app-white-button>
+          </div>
+
+          <!-- <div class="ui-md-3">
+            <app-blue-button 
+              [buttonLabel]="labelBotaoAdicionar"
+              [isDisabled]="!deveHabilitarBotaoAdicionar()"
+              buttonIcon="ui-icon-add" (click)="adicionar()">
+            </app-blue-button>
+          </div> -->
+        </div>
+
+      </p-dialog>
 
     </div>
   </div>
