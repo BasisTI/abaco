@@ -30,10 +30,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   private routeSub: Subscription;
   arquivoManual: File;
   esforcoFases: Array<EsforcoFase>;
-  showDialogPhaseEffort: boolean = false;
-  showDialogEditPhaseEffort: boolean = false;
-  showDialogCreateAdjustFactor: boolean = false;
-  showDialogEditAdjustFactor: boolean = false;
+  showDialogPhaseEffort = false;
+  showDialogEditPhaseEffort = false;
+  showDialogCreateAdjustFactor = false;
+  showDialogEditAdjustFactor = false;
   tipoFases: Array<TipoFase> = [];
   percentual: number;
   newPhaseEffort: EsforcoFase = new EsforcoFase();
@@ -49,7 +49,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       label: 'Unitário',
       value: 'UNITARIO',
     },
-  ]
+  ];
+
   invalidFields: Array<string> = [];
 
   @ViewChild('fileInput') fileInput: FileUpload;
@@ -93,19 +94,19 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     if (this.manual.id !== undefined) {
       this.manualService.find(this.manual.id).subscribe(response => {
-        if(this.arquivoManual !== undefined) {
+        if (this.arquivoManual !== undefined) {
           this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
             this.manual.arquivoManualId = JSON.parse(response["_body"]).id;
             this.subscribeToSaveResponse(this.manualService.update(this.manual));
-          })
+          });
         } else {
           this.subscribeToSaveResponse(this.manualService.update(this.manual));
         }
-      })
+      });
 
     } else {
-      if(this.arquivoManual !== undefined) {
-        if(this.checkRequiredFields()) {
+      if (this.arquivoManual !== undefined) {
+        if (this.checkRequiredFields()) {
           this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
             this.manual.arquivoManualId = JSON.parse(response["_body"]).id;
             this.subscribeToSaveResponse(this.manualService.create(this.manual));
@@ -135,7 +136,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     let invalidFieldsString = "";
 
     this.invalidFields.forEach(invalidField => {
-      if(invalidField === this.invalidFields[this.invalidFields.length-1]) {
+      if (invalidField === this.invalidFields[this.invalidFields.length - 1]) {
         invalidFieldsString = invalidFieldsString + invalidField;
       } else {
         invalidFieldsString = invalidFieldsString + invalidField + ', ';
@@ -247,7 +248,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   editPhaseEffort() {
-    if(this.checkPhaseEffortRequiredFields(this.editedPhaseEffort)) {
+    if (this.checkPhaseEffortRequiredFields(this.editedPhaseEffort)) {
       this.manual.updateEsforcoFases(this.editedPhaseEffort);
       this.pageNotificationService.addUpdateMsg();
       this.closeDialogEditPhaseEffort();
@@ -257,7 +258,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   editAdjustFactor() {
-    if(this.checkAdjustFactorRequiredFields(this.editedAdjustFactor)) {
+    if (this.checkAdjustFactorRequiredFields(this.editedAdjustFactor)) {
       this.manual.updateFatoresAjuste(this.editedAdjustFactor);
       this.pageNotificationService.addUpdateMsg();
       this.closeDialogEditAdjustFactor();
@@ -278,7 +279,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   addPhaseEffort() {
     this.newPhaseEffort.esforco = this.newPhaseEffort.esforco;
-    if(this.checkPhaseEffortRequiredFields(this.newPhaseEffort)) {
+    if (this.checkPhaseEffortRequiredFields(this.newPhaseEffort)) {
       this.manual.addEsforcoFases(this.newPhaseEffort);
       this.pageNotificationService.addCreateMsg();
       this.closeDialogPhaseEffort();
@@ -293,14 +294,14 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   private checkPhaseEffortRequiredFields(phaseEffort: EsforcoFase) : boolean{
-    let isPhaseNameValid: boolean = false;
-    let isPhaseEffortValid: boolean = false;
-    let isEffortValid: boolean = false;
+    let isPhaseNameValid = false;
+    let isPhaseEffortValid = false;
+    let isEffortValid = false;
 
     this.resetMarkedFieldsPhaseEffort();
     (phaseEffort.fase !== undefined) ? (isPhaseNameValid = true) : (isPhaseNameValid = false);
 
-    if(phaseEffort.fase !== undefined)  {
+    if (phaseEffort.fase !== undefined)  {
       isPhaseNameValid = true;
     } else {
       isPhaseNameValid = false;
@@ -308,7 +309,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       document.getElementById('nome_fase_edit').setAttribute('style', 'border-bottom: solid; border-bottom-color: red;');
     }
 
-    if(phaseEffort.esforco !== undefined && phaseEffort.esforco !== 0) {
+    if (phaseEffort.esforco !== undefined && phaseEffort.esforco !== 0) {
       isEffortValid = true;
     } else {
       isEffortValid = false;
@@ -351,7 +352,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   addAdjustFactor() {
     this.newAdjustFactor.ativo = true;
-    if(this.checkAdjustFactorRequiredFields(this.newAdjustFactor)) {
+    if (this.checkAdjustFactorRequiredFields(this.newAdjustFactor)) {
       this.manual.addFatoresAjuste(this.newAdjustFactor);
       this.pageNotificationService.addCreateMsg('Registro incluído com sucesso!');
       this.closeDialogCreateAdjustFactor();
@@ -361,11 +362,11 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   private checkAdjustFactorRequiredFields(adjustFactor: FatorAjuste): boolean {
-    let isNameValid: boolean = false;
-    let isAdjustTypeValid: boolean = false;
-    let isFactorValid: boolean = false;
-    let isCodeValid: boolean = false;
-    let isOriginValid: boolean = false;
+    let isNameValid = false;
+    let isAdjustTypeValid = false;
+    let isFactorValid = false;
+    let isCodeValid = false;
+    let isOriginValid = false;
 
     this.resetMarkedFieldsAdjustFactor();
     isNameValid = this.checkRequiredField(adjustFactor.nome);
@@ -379,7 +380,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   }
 
   private checkRequiredField(field: any) {
-    let isValid: boolean = false;
+    let isValid = false;
 
     (field !== undefined && field !== '' && field !== null) ? (isValid = true) : (isValid = false);
 
@@ -418,6 +419,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   getFileInfo() {
     return this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
       return response;
-    })
+    });
   }
 }

@@ -12,8 +12,7 @@
           [(ngModel)]="moduloSelecionado" 
           optionLabel="nome"
           (onChange)="moduloSelected($event.value)"
-          [placeholder]="moduloDropdownPlaceholder()"
-          [disabled]="!isSistemaSelected()"
+          placeholder="Selecione..."
           name="modulo"
           [autoWidth]="false">
         </p-dropdown>

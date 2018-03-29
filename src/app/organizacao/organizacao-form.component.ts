@@ -28,14 +28,13 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   organizacao: Organizacao;
   isSaving: boolean;
   manuais: Manual[];
-  uploadUrl = environment.apiUrl + '/upload'
-
+  uploadUrl = environment.apiUrl + '/upload';
   mostrarDialogCadastroContrato = false;
   mostrarDialogEdicaoContrato = false;
   novoContrato: Contrato = new Contrato();
   logo: File;
   contratoEmEdicao: Contrato = new Contrato();
-  cnpjMask = [/\d/, /\d/, '.' , /\d/, /\d/,/\d/, '.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-', /\d/, /\d/]
+  cnpjMask = [/\d/, /\d/, '.' , /\d/, /\d/,/\d/, '.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-', /\d/, /\d/];
   invalidFields: Array<string> = [];
   imageUrl: any;
 
