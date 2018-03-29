@@ -34,7 +34,8 @@ export class MenuItemsService {
         visible: this.authService.isAuthenticated(),
         items: [
           { label: 'Análise', routerLink: 'analise' },
-          { label: 'Validação' }
+          // { label: 'BaseLine', routerLink: 'baseline' },
+          // { label: 'Validação' }
         ]
       }
     ];
