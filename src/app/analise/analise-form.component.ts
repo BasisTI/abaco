@@ -63,7 +63,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     {label: 'Estimada (NESMA)', value: 'Estimada (NESMA)'}
   ];
 
-
   private routeSub: Subscription;
 
   constructor(
@@ -104,7 +103,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     this.analise = analiseCarregada;
     // TODO organizacao.copyFromJSON() convertendo sistemas => não precisa da requisicao
     this.organizacaoSelected(analiseCarregada.organizacao);
-    this.contratoSelected(analiseCarregada.contrato);
+    this.carregarObjetoContrato(analiseCarregada.contrato);
     this.carregaFatorAjusteNaEdicao();
   }
 
@@ -115,11 +114,16 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  contratoSelected(contrato: Contrato) {
+  carregarObjetoContrato(contrato: Contrato) {
     const manual: Manual = contrato.manual;
     this.carregarEsforcoFases(manual);
     this.carregarMetodosContagem(manual);
     this.inicializaFatoresAjuste(manual);
+  }
+
+  contratoSelected(contrato: Contrato) {
+    this.carregarObjetoContrato(contrato);
+    this.save();
   }
 
   private inicializaFatoresAjuste(manual: Manual) {
@@ -161,7 +165,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         return 'Organização não possui nenhum Contrato cadastrado';
       }
     } else {
-      return 'Selecione uma Organização para carregar os Contratos';
+      return 'Selecione uma Organização';
     }
   }
 
@@ -201,12 +205,12 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   sistemaDropdownPlaceholder() {
     if (this.sistemas) {
       if (this.sistemas.length > 0) {
-        return 'Selecione um Sistema';
+        return 'Selecione...';
       } else {
         return 'Organização não possui nenhum Sistema cadastrado';
       }
     } else {
-      return 'Selecione uma Organização para carregar os Sistemas';
+      return 'Selecione uma Organização';
     }
   }
 
@@ -214,19 +218,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     return this.sistemas && this.sistemas.length > 0;
   }
 
-  tipoDeContagemDropdownPlaceholder() {
+  needContratoDropdownPlaceholder() {
     if (this.isContratoSelected()) {
-      return 'Selecione um Tipo de Contagem';
+      return 'Selecione...';
     } else {
-      return 'Selecione um Contrato para carregar os Tipos de Contagem';
-    }
-  }
-
-  metodoContagemDropdownPlaceholder() {
-    if (this.isContratoSelected()) {
-      return 'Selecione um Método de Contagem';
-    } else {
-      return 'Selecione um Contrato para carregar os Métodos de Contagem';
+      return 'Selecione um Contrato';
     }
   }
 
@@ -247,7 +243,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    //TODO: Implementar o autosave.
+    this.analiseService.update(this.analise);
   }
 
   /**

@@ -61,7 +61,11 @@
           <p-column header="Tipo de Contagem" field="tipoAnalise"></p-column>
           <p-column header="PF - Total Bruto" field="adjustPFTotal"></p-column>
           <p-column header="PF - Total Líquido" field="pfTotal"></p-column>
-          <p-column header="Data/Hora" field="created"></p-column>
+          <p-column header="Data / Hora" field="created">
+            <ng-template let-col let-created="rowData" pTemplate="body">
+                {{ created[col.field] | date: 'dd/MM/y / HH:mm' }}
+            </ng-template>
+          </p-column>
 
         </basis-datatable>
 
