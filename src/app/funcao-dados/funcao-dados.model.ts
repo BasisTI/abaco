@@ -39,7 +39,8 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
     public derValues?: string[],
     public rlrValues?: string[],
     public ders?: Der[],
-    public rlrs?: Rlr[]
+    public rlrs?: Rlr[],
+    public impacto?: string
   ) {
     if (!pf) {
       this.pf = 0;
@@ -100,7 +101,7 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
     return new FuncaoDados(this.id, this.artificialId, this.tipo, this.complexidade,
       this.pf, this.analise, this.funcionalidades, this.funcionalidade,
       this.fatorAjuste, this.alr, this.name, this.sustantation, this.der, this.rlr,
-      this.grossPF, this.derValues, this.rlrValues, this.ders, this.rlrs);
+      this.grossPF, this.derValues, this.rlrValues, this.ders, this.rlrs, this.impacto);
   }
 
 }

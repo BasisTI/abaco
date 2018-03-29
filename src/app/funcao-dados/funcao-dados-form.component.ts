@@ -30,6 +30,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   isEdit: boolean;
 
   dersChips: DerChipItem[];
+
   rlrsChips: DerChipItem[];
 
   resumo: ResumoFuncoes;
@@ -37,9 +38,13 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   fatoresAjuste: FatorAjuste[] = [];
 
   colunasOptions: SelectItem[];
+
   colunasAMostrar = [];
 
+  showDialogNovo = false;
+
   private nomeDasFuncoesDoSistema: string[] = [];
+
   sugestoesAutoComplete: string[] = [];
 
   // FIXME considerar o enum
@@ -277,6 +282,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     switch (event.button) {
       case 'edit':
         this.isEdit = true;
+        this.showDialogNovo = true;
         this.prepararParaEdicao(funcaoDadosSelecionada);
         break;
       case 'delete':
@@ -323,9 +329,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   cancelarEdicao() {
     this.analiseSharedDataService.funcaoAnaliseDescarregada();
     this.isEdit = false;
+    this.showDialogNovo = false;
     this.limparDadosDaTelaNaEdicaoCancelada();
-    this.pageNotificationService.addInfoMsg('Cancelada a Alteração de Função de Dados');
-    this.scrollParaInicioDaAba();
+    // this.pageNotificationService.addInfoMsg('Cancelada a Alteração de Função de Dados');
+    // this.scrollParaInicioDaAba();
   }
 
   private limparDadosDaTelaNaEdicaoCancelada() {
@@ -357,6 +364,17 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.changeDetectorRef.detach();
     this.analiseCarregadaSubscription.unsubscribe();
+  }
+
+  openDialogNovo() {
+    this.limparDadosDaTelaNaEdicaoCancelada();
+    this.showDialogNovo = true;
+  }
+
+  closeDialogNovo() {
+    this.cancelarEdicao();
+    this.limparDadosDaTelaNaEdicaoCancelada();
+    this.showDialogNovo = false;
   }
 
 }
