@@ -203,6 +203,7 @@
                               type="text" 
                               maxlength="100"
                               name="versaoGuiaReferenciaLocal" 
+                              (change)="save()"
                               [(ngModel)]="analise.versaoGuiaReferenciaLocal" 
                               pInputText/>
                             <label>Versão do Guia de Referência Local</label>
