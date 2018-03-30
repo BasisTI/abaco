@@ -55,12 +55,25 @@
           [disableView]="true"
           #datatable>
 
+          <p-column header="Número OS" field="numeroOs"></p-column>
+          <p-column header="Identificador Análise" field="identificadorAnalise"></p-column>
           <p-column header="Organização" field="organizacao.nome"></p-column>
           <p-column header="Contrato" field="contrato.numeroContrato"></p-column>
           <p-column header="Sistema" field="sistema.nome"></p-column>
           <p-column header="Tipo de Contagem" field="tipoAnalise"></p-column>
-          <p-column header="PF - Total Bruto" field="adjustPFTotal"></p-column>
-          <p-column header="PF - Total Líquido" field="pfTotal"></p-column>
+          
+          <p-column header="PF - Total Bruto" field="adjustPFTotal">
+            <ng-template let-col let-adjustPFTotal="rowData" pTemplate="body">
+                {{ adjustPFTotal[col.field] | number: '00.00'}}
+            </ng-template>
+          </p-column>
+          
+          <p-column header="PF - Total Líquido" field="pfTotal">
+              <ng-template let-col let-pfTotal="rowData" pTemplate="body">
+                  {{ pfTotal[col.field] | number: '00.00'}}
+              </ng-template>
+          </p-column>
+          
           <p-column header="Data / Hora" field="created">
             <ng-template let-col let-created="rowData" pTemplate="body">
                 {{ created[col.field] | date: 'dd/MM/y / HH:mm' }}
@@ -68,6 +81,7 @@
           </p-column>
 
         </basis-datatable>
+
 
       </div>
 

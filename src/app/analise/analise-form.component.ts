@@ -20,6 +20,7 @@ import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generato
 import { TipoEquipe, TipoEquipeService } from '../tipo-equipe';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'jhi-analise-form',
   templateUrl: './analise-form.component.html'
 })
@@ -101,9 +102,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   private inicializaValoresAposCarregamento(analiseCarregada: Analise) {
     this.analise = analiseCarregada;
-    // TODO organizacao.copyFromJSON() convertendo sistemas => não precisa da requisicao
     this.organizacaoSelected(analiseCarregada.organizacao);
-    this.carregarObjetoContrato(analiseCarregada.contrato);
+    this.carregarObjetos(analiseCarregada.contrato);
     this.carregaFatorAjusteNaEdicao();
   }
 
@@ -114,7 +114,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  carregarObjetoContrato(contrato: Contrato) {
+  carregarObjetos(contrato: Contrato) {
     const manual: Manual = contrato.manual;
     this.carregarEsforcoFases(manual);
     this.carregarMetodosContagem(manual);
@@ -122,7 +122,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   contratoSelected(contrato: Contrato) {
-    this.carregarObjetoContrato(contrato);
+    this.carregarObjetos(contrato);
     this.save();
   }
 
@@ -242,6 +242,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     this.routeSub.unsubscribe();
   }
 
+  /**
+   * Método responsável por persistir as informações das análises na edição.
+   **/
   save() {
     this.analiseService.update(this.analise);
   }
