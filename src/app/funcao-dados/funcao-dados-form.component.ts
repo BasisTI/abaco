@@ -201,9 +201,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   adicionar() {
-    if (this.deveHabilitarBotaoAdicionar()) {
-      this.adicionarOuSalvar();
-    }
+    this.adicionarOuSalvar();
+    // this.analise
   }
 
   private adicionarOuSalvar() {
@@ -326,13 +325,21 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  cancelarEdicao() {
-    this.analiseSharedDataService.funcaoAnaliseDescarregada();
-    this.isEdit = false;
-    this.showDialogNovo = false;
+  cancelar() {
     this.limparDadosDaTelaNaEdicaoCancelada();
-    // this.pageNotificationService.addInfoMsg('Cancelada a Alteração de Função de Dados');
-    // this.scrollParaInicioDaAba();
+    this.showDialogNovo = false;
+  }
+
+  cancelarEdicao() {
+    this.confirmationService.confirm({
+      message: `Tem certeza que deseja cancelar a alteração dessa Função de Dados`,
+      accept: () => {
+        this.analiseSharedDataService.funcaoAnaliseDescarregada();
+        this.isEdit = false;
+        this.showDialogNovo = false;
+        this.pageNotificationService.addInfoMsg('Cancelada a Alteração de Função de Dados');
+      }
+    });
   }
 
   private limparDadosDaTelaNaEdicaoCancelada() {

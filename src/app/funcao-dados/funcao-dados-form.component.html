@@ -128,7 +128,7 @@
         </div>
         
           <!-- Dialog adicionar função de dados  -->
-        <p-dialog header="{{ header }}" [(visible)]="showDialogNovo" [contentStyle]="{'overflow':'visible'}" [width]="900">
+        <p-dialog header="{{ header }}" [(visible)]="showDialogNovo" [contentStyle]="{'overflow':'visible'}" [width]="1200" (autoAlign)="true">
 
           <app-analise-modulo-funcionalidade
             [isFuncaoDados]="true"
@@ -211,15 +211,17 @@
             
             <div class="ui-g-12 ui-md-12 ui-sm-12">
                 <h2>DER (TD)</h2>
-                <app-analise-der-chips 
-                  [(values)]="dersChips">
+                <app-analise-der-chips  
+                  [(values)]="dersChips"
+                  (onChange)="adicionar()">
                 </app-analise-der-chips>
             </div>
         
             <div class="ui-g-12 ui-md-12 ui-sm-12">
               <h2>RLR (TR)</h2>
               <app-analise-der-chips 
-                [(values)]="rlrsChips">
+                [(values)]="rlrsChips"
+                (onChange)="adicionar()">
               </app-analise-der-chips>
             </div>
         
@@ -236,32 +238,32 @@
             </div>
 
             <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
-                <!-- <div class="ui-md-3 ui-sm-12">
+                <div class="ui-md-3 ui-sm-12">
                   <app-analise-botao-salvar></app-analise-botao-salvar>
-                </div> -->
+                </div>
 
-                <!-- <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
+                <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
                   <app-white-button 
-                    buttonLabel="Cancelar Alteração" 
-                    (click)="cancelarEdicao()">
-                  </app-white-button>
-                </div> -->
-
-                <div class="ui-g-3 ui-md-3 ui-sm-12">
-                  <app-white-button 
-                    buttonLabel="Cancelar"
+                    buttonLabel="Cancelar" 
                     (click)="cancelarEdicao()">
                   </app-white-button>
                 </div>
 
-                <!-- <div class="ui-md-3 ui-sm-12">
+                <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
+                  <app-white-button 
+                    buttonLabel="Cancelar"
+                    (click)="cancelar()">
+                  </app-white-button>
+                </div>
+
+                <div class="ui-md-3 ui-sm-12">
                   <app-blue-button 
                     [buttonLabel]="labelBotaoAdicionar"
                     [isDisabled]="!deveHabilitarBotaoAdicionar()"
                     buttonIcon="ui-icon-add" 
                     (click)="adicionar()">
                   </app-blue-button>
-                </div> -->
+                </div>
 
               </div>
 
