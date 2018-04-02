@@ -40,6 +40,7 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
     public derValues?: string[],
     public ftrValues?: string[],
     public ders?: Der[],
+    public impacto?: string,
   ) {
     if (!pf) {
       this.pf = 0;
@@ -134,6 +135,7 @@ class FuncaoTransacaoCopyFromJSON {
     this._funcaoTransacao.name = this._json.name;
     this._funcaoTransacao.sustantation = this._json.sustantation;
     this._funcaoTransacao.grossPF = this._json.grossPF;
+    this._funcaoTransacao.impacto = this._json.impacto;
   }
 
   private converteBaseEntities() {
