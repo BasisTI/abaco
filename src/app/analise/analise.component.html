@@ -53,6 +53,9 @@
           [url]="searchUrl" 
           (buttonClick)="datatableClick($event)" 
           [disableView]="true"
+          [rows]="20"
+          [rowsPerPageOptions]="rowsPerPageOptions"
+          [showPaginationFooter]="true"
           #datatable>
 
           <p-column header="Número OS" field="numeroOs"></p-column>
@@ -81,7 +84,6 @@
           </p-column>
 
         </basis-datatable>
-
 
       </div>
 

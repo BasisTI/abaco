@@ -20,6 +20,8 @@ export class AnaliseComponent {
 
   elasticQuery: ElasticQuery = new ElasticQuery();
 
+  rowsPerPageOptions: number[] = [5, 10, 20];
+
   constructor(
     private router: Router,
     private analiseService: AnaliseService,
@@ -59,7 +61,7 @@ export class AnaliseComponent {
   }
 
   recarregarDataTable() {
-    this.datatable.refresh(this.elasticQuery.query);
+    // this.datatable.reset();
   }
 
 }

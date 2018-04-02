@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { AnaliseSharedDataService, PageNotificationService, ResponseWrapper } from '../shared';
 import { FuncaoDados } from './funcao-dados.model';
-import { Analise } from '../analise';
+import { Analise, AnaliseService, AnaliseFormComponent } from '../analise';
 import { FatorAjuste } from '../fator-ajuste';
 
 import * as _ from 'lodash';
@@ -61,7 +61,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
     private changeDetectorRef: ChangeDetectorRef,
-    private funcaoDadosService: FuncaoDadosService
+    private funcaoDadosService: FuncaoDadosService,
+    private analiseService: AnaliseService,
   ) {
     const colunas = [
       { header: 'Deflator' },
@@ -202,6 +203,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   adicionar() {
     this.adicionarOuSalvar();
+    this.analiseService.update(this.analise);
     // this.analise
   }
 

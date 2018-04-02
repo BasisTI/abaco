@@ -53,6 +53,10 @@ export class FatorAjuste implements BaseEntity {
   }
 
   set fatorFormatado(fator: number) {
+    if (typeof fator === 'string') {
+      fator = Number(fator);
+    }
+
     if (this.isPercentual()) {
       this.fator = fator / 100;
     } else {

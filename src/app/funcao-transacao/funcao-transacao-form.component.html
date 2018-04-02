@@ -72,7 +72,7 @@
       </div>
 
       <!-- Dialog Função de transação -->
-      <p-dialog header="{{ header }}" [(visible)]="showDialogNovo" [contentStyle]="{'overflow':'visible'}" [width]="800">
+      <p-dialog header="{{ header }}" [(visible)]="showDialogNovo" [contentStyle]="{'height': '800px'}" [width]="800">
         <app-analise-modulo-funcionalidade
           [isFuncaoDados]="false"
           (moduloSelectedEvent)="moduloSelected($event)"
@@ -174,10 +174,6 @@
         </div>
 
         <div class="ui-g ui-md-12" style="justify-content: flex-end">
-
-          <div class="ui-md-3">
-            <app-analise-botao-salvar></app-analise-botao-salvar>
-          </div>
 
           <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
               <app-white-button 
