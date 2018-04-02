@@ -72,6 +72,9 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @JsonIgnore
     @ManyToOne
     private FuncaoDadosVersionavel funcaoDadosVersionavel;
+    
+    @Column(name="impacto")
+    private String impacto;
 
     public TipoFuncaoDados getTipo() {
         return tipo;
@@ -208,5 +211,13 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     public void setFuncaoDadosVersionavel(FuncaoDadosVersionavel funcaoDadosVersionavel) {
         this.funcaoDadosVersionavel = funcaoDadosVersionavel;
     }
+
+	public String getImpacto() {
+		return impacto;
+	}
+
+	public void setImpacto(String impacto) {
+		this.impacto = impacto;
+	}
 
 }

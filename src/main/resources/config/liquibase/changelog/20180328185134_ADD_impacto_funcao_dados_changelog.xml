@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="dudu (generated)" id="1522263118955-1">
+      <createTable tableName="impacto">
+         <column name="id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="descricao" type="VARCHAR(255)"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="dudu (generated)" id="1522263118955-2">
+      <addColumn tableName="funcao_dados">
+         <column name="impacto" type="varchar(255)"/>
+      </addColumn>
+   </changeSet>
+   <changeSet author="dudu (generated)" id="1522263118955-3">
+      <addPrimaryKey columnNames="id" constraintName="impactoPK" tableName="impacto"/>
+   </changeSet>
+   <changeSet author="dudu (generated)" id="1522263118955-4">
+      <addUniqueConstraint columnNames="descricao"
+                           constraintName="UC_IMPACTODESCRICAO_COL"
+                           tableName="impacto"/>
+   </changeSet>
+</databaseChangeLog>

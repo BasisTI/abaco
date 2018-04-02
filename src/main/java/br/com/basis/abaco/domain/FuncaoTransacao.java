@@ -60,6 +60,9 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     @Transient
     private Set<String> ftrValues;
+    
+    @Column(name="impacto")
+    private String impacto;
 
     @JsonManagedReference(value = "funcaoTransacao")
     @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

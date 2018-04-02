@@ -72,6 +72,15 @@ public class Manual implements Serializable {
     @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
     private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
+
+    @Column(name = "parametro_inclusao")
+    private String parametroInclusao;
+
+    @Column(name = "parametro_alteracao")
+    private String parametroAlteracao;
+
+    @Column(name = "parametro_exclusao")
+    private String parametroExclusao;
     
     public Long getId() {
         return id;
@@ -172,6 +181,30 @@ public class Manual implements Serializable {
 
 	public void setFatoresAjuste(Set<FatorAjuste> fatoresAjuste) {
 		this.fatoresAjuste = fatoresAjuste;
+	}
+
+	public String getParametroInclusao() {
+		return parametroInclusao;
+	}
+
+	public void setParametroInclusao(String parametroInclusao) {
+		this.parametroInclusao = parametroInclusao;
+	}
+
+	public String getParametroAlteracao() {
+		return parametroAlteracao;
+	}
+
+	public void setParametroAlteracao(String parametroAlteracao) {
+		this.parametroAlteracao = parametroAlteracao;
+	}
+
+	public String getParametroExclusao() {
+		return parametroExclusao;
+	}
+
+	public void setParametroExclusao(String parametroExclusao) {
+		this.parametroExclusao = parametroExclusao;
 	}
 
 	@Override
