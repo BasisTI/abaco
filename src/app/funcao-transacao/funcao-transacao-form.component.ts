@@ -260,11 +260,16 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   }
 
   cancelarEdicao() {
-    this.analiseSharedDataService.funcaoAnaliseDescarregada();
-    this.isEdit = false;
-    this.limparDadosDaTelaNaEdicaoCancelada();
-    this.pageNotificationService.addInfoMsg('Cancelada a Alteração de Função de Transação');
-    this.scrollParaInicioDaAba();
+    this.confirmationService.confirm({
+      message: 'Tem certeza que deseja cancelar a alteração dessa Função de Transação',
+      accept: () => {
+        this.analiseSharedDataService.funcaoAnaliseDescarregada();
+        this.isEdit = false;
+        this.cancelar();
+        this.showDialogNovo = false;
+        this.pageNotificationService.addInfoMsg('Cancelada a Alteração de Função de Transação');
+      }
+    });
   }
 
   private limparDadosDaTelaNaEdicaoCancelada() {
@@ -294,7 +299,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     this.showDialogNovo = true;
   }
 
-  closeDialogNovo() {
+  cancelar() {
+    this.limparDadosDaTelaNaEdicaoCancelada();
     this.showDialogNovo = false;
   }
 
