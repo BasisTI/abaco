@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import * as _ from 'lodash';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-analise-botao-salvar',
@@ -22,7 +23,8 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
     private analiseService: AnaliseService,
     private analiseSharedDataService: AnaliseSharedDataService,
     private pageNotificationService: PageNotificationService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router,
   ) { }
 
   habilitarBotaoSalvar(): boolean {
@@ -96,6 +98,8 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
     this.saveSubscription = result.subscribe((res: Analise) => {
       this.analise = res;
       this.pageNotificationService.addSuccessMsg('Análise salva com sucesso');
+
+      this.router.navigate(['/analise', this.analise.id, 'edit']);
     });
   }
 

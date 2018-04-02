@@ -13,6 +13,7 @@ export class Sistema implements BaseEntity {
     public numeroOcorrencia?: string,
     public organizacao?: BaseEntity,
     public modulos?: Modulo[],
+    public ehSustentacao?: boolean,
   ) {
     if (modulos) {
       this.mappableModulos = new MappableEntities<Modulo>(modulos);

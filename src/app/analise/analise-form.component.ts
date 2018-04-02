@@ -77,6 +77,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.analiseSharedDataService.init();
+    this.isEdicao = false;
     this.isSaving = false;
 
     this.tipoEquipeService.query().subscribe((res: ResponseWrapper) => {
@@ -94,7 +96,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
           this.analiseSharedDataService.analiseCarregada();
         });
       } else {
-        this.isEdicao = false;
         this.analise.esforcoFases = [];
       }
     });
@@ -115,10 +116,12 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   carregarObjetos(contrato: Contrato) {
-    const manual: Manual = contrato.manual;
-    this.carregarEsforcoFases(manual);
-    this.carregarMetodosContagem(manual);
-    this.inicializaFatoresAjuste(manual);
+    if (contrato && contrato.manual) {
+      const manual: Manual = contrato.manual;
+      this.carregarEsforcoFases(manual);
+      this.carregarMetodosContagem(manual);
+      this.inicializaFatoresAjuste(manual);
+    }
   }
 
   contratoSelected(contrato: Contrato) {

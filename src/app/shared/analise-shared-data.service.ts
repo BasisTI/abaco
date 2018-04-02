@@ -23,6 +23,11 @@ export class AnaliseSharedDataService {
   currentFuncaoDados: FuncaoDados;
   currentFuncaoTransacao: FuncaoTransacao;
 
+  init() {
+    this.isEdit = false;
+    this.analise = new Analise();
+  }
+
   isContratoSelected(): boolean {
     return !_.isUndefined(this.analise.contrato);
   }

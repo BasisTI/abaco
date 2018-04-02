@@ -20,9 +20,11 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
   }
 
   copyFromJSON(json: any) {
-    const manual = new Manual().copyFromJSON(json.manual);
-    return new Contrato(json.id, json.numeroContrato, new Date(json.dataInicioVigencia),
-      new Date(json.dataFimVigencia), manual, json.ativo, json.diasDeGarantia);
+    if (json && json.manual) {
+      const manual = new Manual().copyFromJSON(json.manual);
+      return new Contrato(json.id, json.numeroContrato, new Date(json.dataInicioVigencia),
+        new Date(json.dataFimVigencia), manual, json.ativo, json.diasDeGarantia);
+    }
   }
 
   // TODO extrair modulo? entrar pro jsonable?
