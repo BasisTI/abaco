@@ -36,6 +36,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
   classificacoes: SelectItem[] = [];
 
+  colunasAMostrar = [];
+
+  colunasOptions: SelectItem[];
+
   impacto: SelectItem[] = [
     {label: 'Inclusão', value: 'Inclusão'},
     {label: 'Alteração', value: 'Alteração'},
@@ -53,25 +57,37 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     private pageNotificationService: PageNotificationService,
     private changeDetectorRef: ChangeDetectorRef,
     private analiseService: AnaliseService,
-  ) { }
+  ) {  }
 
+  /**
+   *
+  **/
   ngOnInit() {
     this.currentFuncaoTransacao = new FuncaoTransacao();
     this.subscribeToAnaliseCarregada();
     this.initClassificacoes();
   }
 
+  /**
+   *
+  **/
   private subscribeToAnaliseCarregada() {
     this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
       this.atualizaResumo();
     });
   }
 
+  /**
+   *
+  **/
   private atualizaResumo() {
     this.resumo = this.analise.resumoFuncaoTransacoes;
     this.changeDetectorRef.detectChanges();
   }
 
+  /**
+   *
+  **/
   private initClassificacoes() {
     const classificacoes = Object.keys(TipoFuncaoTransacao).map(k => TipoFuncaoTransacao[k as any]);
     // TODO pipe generico?
@@ -80,18 +96,30 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+  **/
   get header(): string {
     return !this.isEdit ? 'Adicionar Função de Transação' : 'Alterar Função de Transação';
   }
 
+  /**
+   *
+  **/
   get currentFuncaoTransacao(): FuncaoTransacao {
     return this.analiseSharedDataService.currentFuncaoTransacao;
   }
 
+  /**
+   *
+  **/
   set currentFuncaoTransacao(currentFuncaoTransacao: FuncaoTransacao) {
     this.analiseSharedDataService.currentFuncaoTransacao = currentFuncaoTransacao;
   }
 
+  /**
+   *
+  **/
   get funcoesTransacoes(): FuncaoTransacao[] {
     if (!this.analise.funcaoTransacaos) {
       return [];
@@ -99,14 +127,23 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     return this.analise.funcaoTransacaos;
   }
 
+  /**
+   *
+  **/
   private get analise(): Analise {
     return this.analiseSharedDataService.analise;
   }
 
+  /**
+   *
+  **/
   private set analise(analise: Analise) {
     this.analiseSharedDataService.analise = analise;
   }
 
+  /**
+   *
+  **/
   private get manual() {
     if (this.analiseSharedDataService.analise.contrato) {
       return this.analiseSharedDataService.analise.contrato.manual;
@@ -114,6 +151,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     return undefined;
   }
 
+  /**
+   *
+  **/
   isContratoSelected(): boolean {
     // FIXME p-dropdown requer 2 clicks quando o [options] chama um método get()
     const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
@@ -124,6 +164,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     return isContratoSelected;
   }
 
+  /**
+   *
+  **/
   fatoresAjusteDropdownPlaceholder() {
     if (this.isContratoSelected()) {
       return 'Selecione um Deflator';
@@ -132,42 +175,69 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  **/
   moduloSelected(modulo: Modulo) {
   }
 
+  /**
+   *
+  **/
   funcionalidadeSelected(funcionalidade: Funcionalidade) {
     this.currentFuncaoTransacao.funcionalidade = funcionalidade;
   }
 
+  /**
+   *
+  **/
   isFuncionalidadeSelected(): boolean {
     return !_.isUndefined(this.currentFuncaoTransacao.funcionalidade);
   }
 
+  /**
+   *
+  **/
   deveHabilitarBotaoAdicionar(): boolean {
     // TODO complementar com outras validacoes
     return this.isFuncionalidadeSelected() && !_.isUndefined(this.analise.metodoContagem);
   }
 
+  /**
+   *
+  **/
   get labelBotaoAdicionar() {
     return !this.isEdit ? 'Adicionar' : 'Alterar';
   }
 
+  /**
+   *
+  **/
   adicionar() {
     this.adicionarOuSalvar();
     this.analiseService.update(this.analise);
   }
 
+  /**
+   *
+  **/
   private adicionarOuSalvar() {
     this.desconverterChips();
     this.doAdicionarOuSalvar();
     this.isEdit = false;
   }
 
+  /**
+   *
+  **/
   private desconverterChips() {
     this.currentFuncaoTransacao.ders = DerChipConverter.desconverterEmDers(this.dersChips);
     this.currentFuncaoTransacao.alrs = DerChipConverter.desconverterEmAlrs(this.alrsChips);
   }
 
+  /**
+   *
+  **/
   private doAdicionarOuSalvar() {
     if (this.isEdit) {
       this.doEditar();
@@ -176,6 +246,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  **/
   private doEditar() {
     const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem, this.currentFuncaoTransacao);
     // TODO temporal coupling
@@ -185,6 +258,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     this.resetarEstadoPosSalvar();
   }
 
+  /**
+   *
+  **/
   private resetarEstadoPosSalvar() {
     // Mantendo o mesmo conteudo a pedido do Leandro
     this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
@@ -198,6 +274,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     this.alrsChips.forEach(c => c.id = undefined);
   }
 
+  /**
+   *
+  **/
   private doAdicionar() {
     const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem, this.currentFuncaoTransacao);
     // TODO temporal coupling entre 1-add() e 2-atualizaResumo(). 2 tem que ser chamado depois
@@ -207,6 +286,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     this.resetarEstadoPosSalvar();
   }
 
+  /**
+   *
+  **/
   datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
       return;
@@ -224,6 +306,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  **/
   private prepararParaEdicao(funcaoSelecionada: FuncaoTransacao) {
     this.analiseSharedDataService.currentFuncaoTransacao = funcaoSelecionada;
     this.scrollParaInicioDaAba();
@@ -231,28 +316,42 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     this.pageNotificationService.addInfoMsg(`Alterando Função de Transação '${funcaoSelecionada.name}'`);
   }
 
+  /**
+   *
+  **/
   private scrollParaInicioDaAba() {
     window.scrollTo(0, 60);
   }
 
+  /**
+   *
+  **/
   private carregarValoresNaPaginaParaEdicao(funcaoSelecionada: FuncaoTransacao) {
     this.analiseSharedDataService.funcaoAnaliseCarregada();
     this.carregarFatorDeAjusteNaEdicao(funcaoSelecionada);
     this.carregarDerEAlr(funcaoSelecionada);
   }
 
+  /**
+   * Método responsável por recuperar os fatores de ajustes quando se tratar de edição.
+  **/
   private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
     this.fatoresAjuste = this.manual.fatoresAjuste;
     funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, { 'id': funcaoSelecionada.fatorAjuste.id });
   }
 
+  /**
+   * Método responsável por recuperar DER e ALR.
+  **/
   private carregarDerEAlr(ft: FuncaoTransacao) {
     this.dersChips = this.carregarReferenciavel(ft.ders, ft.derValues);
     this.alrsChips = this.carregarReferenciavel(ft.alrs, ft.ftrValues);
   }
 
-  private carregarReferenciavel(referenciaveis: AnaliseReferenciavel[],
-    strValues: string[]): DerChipItem[] {
+  /**
+   * Método responsável por recuperar das referências AR.
+  **/
+  private carregarReferenciavel(referenciaveis: AnaliseReferenciavel[], strValues: string[]): DerChipItem[] {
     if (referenciaveis && referenciaveis.length > 0) { // situacao para analises novas e editadas
       return DerChipConverter.converterReferenciaveis(referenciaveis);
     } else { // SITUACAO para analises legadas
@@ -260,17 +359,26 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  **/
   dersReferenciados(ders: Der[]) {
     // XXX manter os ids?
     const dersReferenciadosChips: DerChipItem[] = DerChipConverter.converterReferenciaveis(ders);
     this.dersChips = this.dersChips.concat(dersReferenciadosChips);
   }
 
+  /**
+   * Método responsável por cancelar e fechar a modal de alteração do formulário.
+  **/
   cancelar() {
     this.limparDadosDaTelaNaEdicaoCancelada();
     this.showDialogNovo = false;
   }
 
+  /**
+   * Método responsável por apresentar a modal dialog de cancelamento a alteração do formulário.
+  **/
   cancelarEdicao() {
     this.confirmationService.confirm({
       message: `Tem certeza que deseja cancelar a alteração?`,
@@ -283,12 +391,18 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+  **/
   private limparDadosDaTelaNaEdicaoCancelada() {
     this.currentFuncaoTransacao = new FuncaoTransacao();
     this.dersChips = [];
     this.alrsChips = [];
   }
 
+  /**
+   *
+  **/
   confirmDelete(funcaoSelecionada: FuncaoTransacao) {
     const name: string = funcaoSelecionada.name;
     this.confirmationService.confirm({
@@ -300,11 +414,17 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+  **/
   ngOnDestroy() {
     this.changeDetectorRef.detach();
     this.analiseCarregadaSubscription.unsubscribe();
   }
 
+  /**
+   * Método responsável por preparar o popup novo.
+  **/
   openDialogNovo() {
     this.currentFuncaoTransacao = new FuncaoTransacao();
     this.showDialogNovo = true;
