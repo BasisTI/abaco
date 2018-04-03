@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { AnaliseSharedDataService, PageNotificationService } from '../shared';
 import { FuncaoTransacao, TipoFuncaoTransacao } from './funcao-transacao.model';
-import { Analise } from '../analise';
+import { Analise, AnaliseService } from '../analise';
 import { FatorAjuste } from '../fator-ajuste';
 
 import * as _ from 'lodash';
@@ -36,6 +36,13 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
   classificacoes: SelectItem[] = [];
 
+  impacto: SelectItem[] = [
+    {label: 'Inclusão', value: 'Inclusão'},
+    {label: 'Alteração', value: 'Alteração'},
+    {label: 'Exclusão', value: 'Exclusão'},
+    {label: 'Conversão', value: 'Conversão'}
+  ];
+
   showDialogNovo = false;
 
   private analiseCarregadaSubscription: Subscription;
@@ -45,6 +52,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
     private changeDetectorRef: ChangeDetectorRef,
+    private analiseService: AnaliseService,
   ) { }
 
   ngOnInit() {
@@ -145,9 +153,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   }
 
   adicionar() {
-    if (this.deveHabilitarBotaoAdicionar()) {
-      this.adicionarOuSalvar();
-    }
+    this.adicionarOuSalvar();
+    this.analiseService.update(this.analise);
   }
 
   private adicionarOuSalvar() {
@@ -259,15 +266,19 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     this.dersChips = this.dersChips.concat(dersReferenciadosChips);
   }
 
+  cancelar() {
+    this.limparDadosDaTelaNaEdicaoCancelada();
+    this.showDialogNovo = false;
+  }
+
   cancelarEdicao() {
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja cancelar a alteração dessa Função de Transação',
+      message: `Tem certeza que deseja cancelar a alteração?`,
       accept: () => {
         this.analiseSharedDataService.funcaoAnaliseDescarregada();
         this.isEdit = false;
         this.cancelar();
-        this.showDialogNovo = false;
-        this.pageNotificationService.addInfoMsg('Cancelada a Alteração de Função de Transação');
+        this.pageNotificationService.addInfoMsg('Alteração cancelada.');
       }
     });
   }
@@ -297,11 +308,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   openDialogNovo() {
     this.currentFuncaoTransacao = new FuncaoTransacao();
     this.showDialogNovo = true;
-  }
-
-  cancelar() {
-    this.limparDadosDaTelaNaEdicaoCancelada();
-    this.showDialogNovo = false;
   }
 
 }
