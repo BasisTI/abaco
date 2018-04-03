@@ -30,6 +30,7 @@
               </div>
 
               <div>
+                <!-- inicio tabela -->
                 <app-memory-datatable 
                     [value]="funcoesDados"
                     (buttonClick)="datatableClick($event)"
@@ -127,8 +128,12 @@
             </div>
         </div>
         
-          <!-- Dialog adicionar função de dados  -->
-        <p-dialog header="{{ header }}" [(visible)]="showDialogNovo" [contentStyle]="{'height': '800px'}" [width]="800">
+        <!-- inincio Dialog adicionar função de dados  -->
+        <p-dialog 
+          header="{{ header }}" 
+          [(visible)]="showDialogNovo" 
+          [contentStyle]="{'height': '840px'}" 
+          [width]="800">
 
           <app-analise-modulo-funcionalidade
             [isFuncaoDados]="true"
@@ -137,19 +142,7 @@
           </app-analise-modulo-funcionalidade>
 
           <div class="ui-g">
-              <div class="ui-g-6 ui-md-6 ui-sm-12">
-                <label>Deflator</label>
-                <p-dropdown 
-                  [options]="fatoresAjuste | fatorAjusteToSelectItem"
-                  [(ngModel)]="currentFuncaoDados.fatorAjuste" 
-                  [disabled]="!isContratoSelected()"
-                  [placeholder]="fatoresAjusteDropdownPlaceholder()"
-                  name="fatorAjuste" 
-                  [autoWidth]="false">
-                </p-dropdown>
-              </div>
-    
-              <div class="ui-g-6 ui-md-6 ui-sm-12">
+            <div class="ui-g-4 ui-md-4 ui-sm-12">
                 <label>Classificação</label>
                 <p-dropdown 
                   [options]="classificacoes"
@@ -158,113 +151,97 @@
                   name="classificacao" 
                   [autoWidth]="false">
                 </p-dropdown>
-              </div>
-      
             </div>
 
-            <div class="ui-g">
-                <div class="ui-g-12 ui-md-12 ui-sm-12">
-                    <div class="ui-g-2 ui-md-2 ui-sm-12">
-                    </div>
-
-                    <div class="ui-g-3 ui-md-3 ui-sm-12">
-                      <p-radioButton 
-                        name="impacto" 
-                        value="I" 
-                        label="Inclusão" 
-                        [(ngModel)]="currentFuncaoDados.impacto">
-                      </p-radioButton>
-                    </div>
-  
-                    <div class="ui-g-3 ui-md-3 ui-sm-12">
-                      <p-radioButton 
-                        name="impacto" 
-                        value="A" 
-                        label="Alteração" 
-                        [(ngModel)]="currentFuncaoDados.impacto">
-                      </p-radioButton>
-                    </div>
-                    
-                    <div class="ui-g-3 ui-md-3 ui-sm-12">
-                      <p-radioButton 
-                        name="impacto" 
-                        value="E" 
-                        label="Exclusão"
-                        [(ngModel)]="currentFuncaoDados.impacto">
-                      </p-radioButton>
-                    </div>
-
-                    <div class="ui-g-1 ui-md-1 ui-sm-12">
-                    </div>
-                </div>
+            <div class="ui-g-4 ui-md-4 ui-sm-12">
+                <label>Impacto</label>
+                <p-dropdown 
+                  [options]="impacto"
+                  [(ngModel)]="currentFuncaoDados.impacto"
+                  placeholder="Selecione..."
+                  name="impacto" 
+                  [autoWidth]="false">
+                </p-dropdown>
             </div>
 
-            <div class="ui-g-12 ui-md-12 ui-sm-12">
-                <label>Nome</label>
-                <p-autoComplete 
-                  [(ngModel)]="currentFuncaoDados.name" 
-                  [suggestions]="sugestoesAutoComplete"
-                  (completeMethod)="autoCompleteNomes($event)"
-                  (onSelect)="recuperarNomeSelecionado($event.value)">
-                </p-autoComplete>
+            <div class="ui-g-4 ui-md-4 ui-sm-12">
+              <label>Deflator</label>
+              <p-dropdown 
+                [options]="fatoresAjuste | fatorAjusteToSelectItem"
+                [(ngModel)]="currentFuncaoDados.fatorAjuste" 
+                [disabled]="!isContratoSelected()"
+                [placeholder]="fatoresAjusteDropdownPlaceholder()"
+                name="fatorAjuste" 
+                [autoWidth]="false">
+              </p-dropdown>
             </div>
+    
+          </div>
+
+          <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-top: 25px">
+              <label>Nome</label>
+              <p-autoComplete 
+                [(ngModel)]="currentFuncaoDados.name"
+                [suggestions]="sugestoesAutoComplete"
+                (completeMethod)="autoCompleteNomes($event)"
+                (onSelect)="recuperarNomeSelecionado($event.value)">
+              </p-autoComplete>
+          </div>
             
-            <div class="ui-g-12 ui-md-12 ui-sm-12">
-                <h2>DER (TD)</h2>
-                <app-analise-der-chips  
-                  [(values)]="dersChips"
-                  (onChange)="adicionar()">
-                </app-analise-der-chips>
-            </div>
-        
-            <div class="ui-g-12 ui-md-12 ui-sm-12">
-              <h2>RLR (TR)</h2>
-              <app-analise-der-chips 
-                [(values)]="rlrsChips"
+          <div class="ui-g-12 ui-md-12 ui-sm-12">
+              <h2>DER (TD)</h2>
+              <app-analise-der-chips  
+                [(values)]="dersChips"
                 (onChange)="adicionar()">
               </app-analise-der-chips>
-            </div>
+          </div>
         
-            <div class="ui-g-12 ui-md-12 ui-sm-12">
-              <label>Fundamentação</label>
-              <span class="md-inputfield">
-                <textarea 
-                  [rows]="6" 
-                  [cols]="180" 
-                  pInputTextarea name="funcaoDadosSustentacao" 
-                  [(ngModel)]="currentFuncaoDados.sustantation">
-                </textarea>
-              </span>
+          <div class="ui-g-12 ui-md-12 ui-sm-12">
+            <h2>RLR (TR)</h2>
+            <app-analise-der-chips 
+              [(values)]="rlrsChips"
+              (onChange)="adicionar()">
+            </app-analise-der-chips>
+          </div>
+        
+          <div class="ui-g-12 ui-md-12 ui-sm-12">
+            <label>Fundamentação</label>
+            <span class="md-inputfield">
+              <textarea 
+                [rows]="3" 
+                [cols]="180" 
+                pInputTextarea name="funcaoDadosSustentacao" 
+                [(ngModel)]="currentFuncaoDados.sustantation">
+              </textarea>
+            </span>
+          </div>
+
+          <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
+            <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
+              <app-white-button 
+                buttonLabel="Cancelar" 
+                (click)="cancelarEdicao()">
+              </app-white-button>
             </div>
 
-            <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
+            <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
+              <app-white-button 
+                buttonLabel="Cancelar"
+                (click)="cancelar()">
+              </app-white-button>
+            </div>
 
-                <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
-                  <app-white-button 
-                    buttonLabel="Cancelar" 
-                    (click)="cancelarEdicao()">
-                  </app-white-button>
-                </div>
-
-                <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
-                  <app-white-button 
-                    buttonLabel="Cancelar"
-                    (click)="cancelar()">
-                  </app-white-button>
-                </div>
-
-                <div class="ui-md-3 ui-sm-12">
-                  <app-blue-button 
-                    [buttonLabel]="labelBotaoAdicionar"
-                    [isDisabled]="!deveHabilitarBotaoAdicionar()"
-                    buttonIcon="ui-icon-add" 
-                    (click)="adicionar()">
-                  </app-blue-button>
-                </div>
-
-              </div>
-
+            <div class="ui-md-3 ui-sm-12">
+              <app-blue-button 
+                [buttonLabel]="labelBotaoAdicionar"
+                [isDisabled]="!deveHabilitarBotaoAdicionar()"
+                buttonIcon="ui-icon-add" 
+                (click)="adicionar()">
+              </app-blue-button>
+            </div>
+          </div>
         </p-dialog>
+        <!-- inincio Dialog adicionar função de dados  -->
 
         <!-- Dialog confirmação deleção -->
         <p-confirmDialog header="Confirmação" #dialog>

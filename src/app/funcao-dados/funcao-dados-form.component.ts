@@ -47,6 +47,13 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   sugestoesAutoComplete: string[] = [];
 
+  impacto: SelectItem[] = [
+    {label: 'Inclusão', value: 'Inclusão'},
+    {label: 'Alteração', value: 'Alteração'},
+    {label: 'Exclusão', value: 'Exclusão'},
+    {label: 'Conversão', value: 'Conversão'}
+  ];
+
   // FIXME considerar o enum
   classificacoes: SelectItem[] = [
     { label: 'ALI', value: 'ALI' },
@@ -334,12 +341,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   cancelarEdicao() {
     this.confirmationService.confirm({
-      message: `Tem certeza que deseja cancelar a alteração dessa Função de Dados`,
+      message: `Tem certeza que deseja cancelar a alteração?`,
       accept: () => {
         this.analiseSharedDataService.funcaoAnaliseDescarregada();
         this.isEdit = false;
         this.showDialogNovo = false;
-        this.pageNotificationService.addInfoMsg('Cancelada a Alteração de Função de Dados');
+        this.pageNotificationService.addInfoMsg('Alteração cancelada.');
       }
     });
   }
@@ -378,12 +385,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   openDialogNovo() {
     this.limparDadosDaTelaNaEdicaoCancelada();
     this.showDialogNovo = true;
-  }
-
-  closeDialogNovo() {
-    this.cancelarEdicao();
-    this.limparDadosDaTelaNaEdicaoCancelada();
-    this.showDialogNovo = false;
   }
 
 }
