@@ -4,17 +4,37 @@
       <h1>{{ organizacao.id ? 'Editar Organização' : 'Incluir Organização' }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
         <div class="ui-g">
+
           <div class="ui-g-12" style="margin-bottom: 25px">
             <label>Logo da Organização</label>
-            <p-fileUpload #fileInput chooseLabel="Selecionar arquivo" (onSelect)="fileUpload($event)" accept="image/*" [showUploadButton]="false" [showCancelButton]="false">
+            <p-fileUpload 
+              #fileInput 
+              chooseLabel="Selecionar arquivo" 
+              (onSelect)="fileUpload($event)" 
+              accept="image/*" 
+              [showUploadButton]="false" 
+              [showCancelButton]="false">
             </p-fileUpload>
-            <!-- <input type="file" (change)="fileUpload($event)" name="logoOrganizacao" pInputText/> -->
           </div>
+
           <div *ngIf="imageUrl !== undefined || imageUrl !== null" class="ui-g-12">
             <img [src]="imageUrl" alt="">
           </div>
 
-          <div class="ui-g-3" style="margin-bottom: 25px">
+          <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+              <span class="md-inputfield" >
+                <input 
+                  type="text"
+                  name="nomeOrganizacao"
+                  maxlength="80"
+                  required
+                  [(ngModel)]="organizacao.nome" 
+                  pInputText/>
+                <label>Nome *</label>
+              </span>
+          </div>
+
+          <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield" >
               <input 
                 type="text" 
@@ -26,18 +46,7 @@
             </span>
           </div>
 
-          <div class="ui-g-9" style="margin-bottom: 25px">
-            <span class="md-inputfield" >
-              <input 
-                type="text"
-                name="nomeOrganizacao"
-                maxlength="80"
-                [(ngModel)]="organizacao.nome" 
-                pInputText/>
-              <label>Nome da Organização</label>
-            </span>
-          </div>
-          <div class="ui-g-3" style="margin-bottom: 25px">
+          <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input 
                 type="text" 
@@ -50,7 +59,7 @@
             </span>
           </div>
 
-          <div class="ui-g-9" style="margin-bottom: 25px">
+          <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input 
                 type="text"
@@ -62,16 +71,16 @@
             </span>
           </div>
 
-          <div class="ui-g-12" style="margin-bottom: 25px">
+          <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
             <div class="ui-g">
-              <div class="ui-g-12 ui-md-1">
+              <div class="ui-g-1 ui-md-1 ui-sm-12">
                 <label>Ativo:</label>
               </div>
-              <div class="ui-g-12 ui-md-1">
+              <div class="ui-g-1 ui-md-1 ui-sm-12">
                 <p-radioButton name="org_ativo" [value]="true" label="Sim"
                   [(ngModel)]="organizacao.ativo"></p-radioButton>
               </div>
-              <div class="ui-g-12 ui-md-1">
+              <div class="ui-g-1 ui-md-1 ui-sm-12">
                 <p-radioButton name="org_ativo" [value]="false" label="Não"
                   [(ngModel)]="organizacao.ativo"></p-radioButton>
               </div>
@@ -130,7 +139,8 @@
               <p-column 
                 header="Ativo" 
                 field="ativo">
-                <ng-template let-col let-ativo="rowData" pTemplate="body">
+                <ng-template 
+                  let-col let-ativo="rowData" pTemplate="body">
                   {{ ativo[col.field] ? 'Sim' : 'Não' }}
                 </ng-template>
               </p-column>

@@ -17,6 +17,7 @@ import { UploadService } from '../upload/upload.service';
 import {FileUpload} from 'primeng/primeng';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'jhi-organizacao-form',
   templateUrl: './organizacao-form.component.html'
 })
@@ -34,7 +35,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   novoContrato: Contrato = new Contrato();
   logo: File;
   contratoEmEdicao: Contrato = new Contrato();
-  cnpjMask = [/\d/, /\d/, '.' , /\d/, /\d/,/\d/, '.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-', /\d/, /\d/];
+  cnpjMask = [/\d/, /\d/, '.' , /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/];
   invalidFields: Array<string> = [];
   imageUrl: any;
 
@@ -51,6 +52,9 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     private uploadService: UploadService
   ) { }
 
+  /**
+   *
+   * */
   ngOnInit() {
     this.isSaving = false;
     this.manualService.query().subscribe((res: ResponseWrapper) => {
@@ -67,24 +71,39 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+   * */
   abrirDialogCadastroContrato() {
     this.mostrarDialogCadastroContrato = true;
   }
 
+  /**
+   *
+   * */
   fecharDialogCadastroContrato() {
     this.doFecharDialogCadastroContrato();
   }
 
+  /**
+   *
+   * */
   private doFecharDialogCadastroContrato() {
     this.mostrarDialogCadastroContrato = false;
     this.novoContrato = new Contrato();
   }
 
+  /**
+   *
+   * */
   adicionarContrato() {
     this.organizacao.addContrato(this.novoContrato);
     this.doFecharDialogCadastroContrato();
   }
 
+  /**
+   *
+   * */
   datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
       return;
@@ -100,20 +119,32 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+   * */
   abrirDialogEditarContrato() {
     this.mostrarDialogEdicaoContrato = true;
   }
 
+  /**
+   *
+   * */
   fecharDialogEditarContrato() {
     this.contratoEmEdicao = new Contrato();
     this.mostrarDialogEdicaoContrato = false;
   }
 
+  /**
+   *
+   * */
   editarContrato() {
     this.organizacao.updateContrato(this.contratoEmEdicao);
     this.fecharDialogEditarContrato();
   }
 
+  /**
+   *
+   * */
   confirmDeleteContrato() {
     this.confirmationService.confirm({
       message: `Tem certeza que deseja excluir o contrato '${this.contratoEmEdicao.numeroContrato}'
@@ -125,29 +156,32 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+   * */
   save() {
     this.isSaving = true;
     if (this.organizacao.id !== undefined) {
       this.organizacaoService.find(this.organizacao.id).subscribe(response => {
 
-        if(this.logo !== undefined) {
+        if (this.logo !== undefined) {
           this.uploadService.uploadFile(this.logo).subscribe(response => {
-            this.organizacao.logoId = JSON.parse(response["_body"]).id;
+            this.organizacao.logoId = JSON.parse(response['_body']).id;
             this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
-          })
+          });
         } else {
             this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
         }
-      })
+      });
     } else {
-      if(this.logo !== undefined) {
-        if(this.checkRequiredFields()) {
+      if (this.logo !== undefined) {
+        if (this.checkRequiredFields()) {
           this.uploadService.uploadFile(this.logo).subscribe(response => {
-            this.organizacao.logoId = JSON.parse(response["_body"]).id;
+            this.organizacao.logoId = JSON.parse(response['_body']).id;
             this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
-          })
+          });
         } else {
-          this.pageNotificationService.addErrorMsg('Campos Inválidos:' + this.getInvalidFieldsString());
+          this.pageNotificationService.addErrorMsg(this.getInvalidFieldsString() + ' é um Campo obrigatório.');
         }
       } else {
         this.pageNotificationService.addErrorMsg('Campo Logo está inválido!');
@@ -155,23 +189,35 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+  * Método responsável por recuperar as organizações pelo id.
+  * */
+  private recupeprarOrganizacoes(id: number): Observable<Organizacao> {
+    return this.organizacaoService.find(id);
+  }
+
+  /**
+   *
+   * */
   private checkRequiredFields(): boolean {
       let isFieldsValid = false;
 
-      if ( this.organizacao.nome === undefined || this.organizacao.nome === '' || this.organizacao.nome === null) (this.invalidFields.push('Nome'));
-      if ( this.organizacao.cnpj === undefined || this.organizacao.cnpj === '' || this.organizacao.cnpj === null) (this.invalidFields.push('CNPJ'));
-      if ( this.organizacao.numeroOcorrencia === undefined || this.organizacao.numeroOcorrencia === '' || this.organizacao.numeroOcorrencia === null) (this.invalidFields.push('Numero Ocorrencia'));
-      if ( this.organizacao.ativo === undefined) (this.invalidFields.push('Ativo'));
-
+    if (this.organizacao.nome === null || this.organizacao.nome === undefined || this.organizacao.nome === '') {
+      this.invalidFields.push('Nome');
       isFieldsValid = (this.invalidFields.length === 0);
-
+    } else {
+      isFieldsValid = true;
+    }
       return isFieldsValid;
   }
 
+  /**
+   *
+   * */
   private getInvalidFieldsString(): string {
-    let invalidFieldsString = "";
+    let invalidFieldsString = '';
     this.invalidFields.forEach(invalidField => {
-      if(invalidField === this.invalidFields[this.invalidFields.length-1]) {
+      if (invalidField === this.invalidFields[this.invalidFields.length - 1]) {
         invalidFieldsString = invalidFieldsString + invalidField;
       } else {
         invalidFieldsString = invalidFieldsString + invalidField + ', ';
@@ -181,6 +227,9 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     return invalidFieldsString;
   }
 
+  /**
+   *
+   * */
   private subscribeToSaveResponse(result: Observable<any>) {
     result.subscribe((res: Organizacao) => {
       this.isSaving = false;
@@ -189,25 +238,34 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }, (error: Response) => {
       this.isSaving = false;
 
-      switch(error.status) {
+      switch (error.status) {
         case 400: {
-          let invalidFieldNamesString = "";
-          const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
+          let invalidFieldNamesString = '';
+          const fieldErrors = JSON.parse(error['_body']).fieldErrors;
           invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-          this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+          this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
         }
       }
     });
   }
 
+  /**
+   *
+   * */
   ngOnDestroy() {
     this.routeSub.unsubscribe();
   }
 
+  /**
+   *
+   * */
   fileUpload(event: any) {
     this.logo = event.files[0];
   }
 
+  /**
+   *
+   * */
   getFile() {
     this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
 
@@ -215,11 +273,14 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       this.uploadService.getFileInfo(this.organizacao.logoId).subscribe(response => {
         fileInfo = response;
 
-        this.fileInput.files.push(new File([response["_body"]], fileInfo["originalName"]));
+        this.fileInput.files.push(new File([response['_body']], fileInfo['originalName']));
       });
     });
   }
 
+  /**
+   *
+   * */
   getFileInfo() {
     return this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
       console.log(response);
