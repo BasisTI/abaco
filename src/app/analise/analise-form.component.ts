@@ -5,7 +5,7 @@ import { Observable, Subscription } from 'rxjs/Rx';
 
 import { Analise } from './analise.model';
 import { AnaliseService } from './analise.service';
-import { ResponseWrapper, BaseEntity, AnaliseSharedDataService } from '../shared';
+import { ResponseWrapper, BaseEntity, AnaliseSharedDataService, PageNotificationService } from '../shared';
 import { Organizacao, OrganizacaoService } from '../organizacao';
 import { Contrato, ContratoService } from '../contrato';
 import { Sistema, SistemaService } from '../sistema';
@@ -74,12 +74,14 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     private sistemaService: SistemaService,
     private analiseSharedDataService: AnaliseSharedDataService,
     private tipoEquipeService: TipoEquipeService,
+    private pageNotificationService: PageNotificationService,
   ) { }
 
   ngOnInit() {
     this.analiseSharedDataService.init();
     this.isEdicao = false;
     this.isSaving = false;
+    this.habilitarCamposIniciais();
 
     this.tipoEquipeService.query().subscribe((res: ResponseWrapper) => {
       this.equipeResponsavel = res.json;
@@ -184,7 +186,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   private carregarMetodosContagem(manual: Manual) {
     this.metodosContagem = [
-      { value: 'DETALHADA', label: 'Detalhada (IFPUG)' },
+      { value: 'DETALHADA',
+        label: 'Detalhada (IFPUG)' },
       {
         value: 'INDICATIVA',
         label: this.getLabelValorVariacao('Indicativa (NESMA)', manual.valorVariacaoIndicativaFormatado)
@@ -249,18 +252,33 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
    * Método responsável por persistir as informações das análises na edição.
    **/
   save() {
-    this.analiseService.update(this.analise);
+    if (this.verificarCamposObrigatorios()) {
+      this.analiseService.update(this.analise);
+    }
+
   }
 
   /**
-   * Método responsável por desabilitar os
-   * campos abaixo após a persistência da analáise na aba inicial.
-   * Organização
-   * Equipe Responsável
-   * Sistema
-  */
-  desabilitarCamposIniciais() {
+   * Método responsável por validar campos obrigatórios na persistência.
+   **/
+  private verificarCamposObrigatorios(): boolean {
+    if (!this.analise.identificadorAnalise) {
+      this.pageNotificationService.addErrorMsg('Informe primeiro o campo Identificador da Analise para continuar.');
+      return false;
+    }
+    if (this.analise.identificadorAnalise && !this.analise.metodoContagem) {
+      this.pageNotificationService.addErrorMsg('Informe o Método de Contagem para continuar.');
+      return false;
+    }
+    if (this.analise.identificadorAnalise && this.analise.metodoContagem && !this.analise.tipoAnalise) {
+      this.pageNotificationService.addErrorMsg('Informe oTipo de Contagem para continuar.');
+      return false;
+    }
+    return true;
+  }
 
+  public habilitarCamposIniciais() {
+    return this.isEdicao;
   }
 
 }

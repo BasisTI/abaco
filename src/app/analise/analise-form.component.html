@@ -8,7 +8,8 @@
             <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
 
                 <div>
-                    <div class="ui-g">
+                    <!-- Inicio dos campos para inclusão -->
+                    <div class="ui-g" *ngIf="!isEdicao">
                       <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                           <label>Organização</label>
                           <p-dropdown 
@@ -29,7 +30,7 @@
                             dataKey="id"
                             name="equipeResponsavel"
                             optionLabel="nome"
-                            placeholder="Selecione..." 
+                            placeholder="Selecione..."
                             [options]="equipeResponsavel" 
                             [(ngModel)]="analise.equipeResponsavel" 
                             [autoWidth]="false"
@@ -53,14 +54,70 @@
                       </div>
                       
                       <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
-                        <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdicao">
+                        <div class="ui-g-3 ui-md-3 ui-sm-12">
                           <app-analise-botao-salvar></app-analise-botao-salvar>
                         </div>
                       </div>
                     </div>
+                    <!-- Fim dos campos para inclusão -->
+
+                    <div class="ui-g" *ngIf="isEdicao">
+
+                      <!-- Inicio dos campos para alteração -->
+                      <fieldset class="ui-g-12 ui-md-12 ui-sm-12">
+                        
+                        <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                            <label>Organização</label>
+                            <p-dropdown 
+                              dataKey="id"
+                              name="organizacao"
+                              optionLabel="nome"
+                              placeholder="Selecione..." 
+                              disabled="true"
+                              [options]="organizacoes" 
+                              [(ngModel)]="analise.organizacao" 
+                              [autoWidth]="false"
+                              (onChange)="organizacaoSelected($event.value)">
+                            </p-dropdown>
+                        </div>
+    
+                        <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                            <label>Equipe Responsável</label>
+                            <p-dropdown 
+                              dataKey="id"
+                              name="equipeResponsavel"
+                              optionLabel="nome"
+                              placeholder="Selecione..."
+                              disabled="true"
+                              [options]="equipeResponsavel" 
+                              [(ngModel)]="analise.equipeResponsavel" 
+                              [autoWidth]="false"
+                              (onChange)="organizacaoSelected($event.value)">
+                            </p-dropdown>
+                        </div>
+    
+                        <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                            <label>Sistema</label>
+                            <p-dropdown 
+                              dataKey="id" 
+                              optionLabel="nome" 
+                              disabled="true"
+                              placeholder="{{ sistemaDropdownPlaceholder() }}"
+                              (onChange)="sistemaSelected()"
+                              name="sistema" 
+                              [options]="sistemas" 
+                              [(ngModel)]="analise.sistema"  
+                              [autoWidth]="false">
+                            </p-dropdown>
+                        </div>
+                        
+                      </fieldset>
+                      <!-- Fim dos campos para alteração -->
+                      </div>
+
                   </div>
 
-                <div *ngIf="isEdicao">
+                <div *ngIf="isEdicao" style="margin-top: 25px">
                   <div class="ui-g">
       
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
@@ -70,22 +127,22 @@
                           maxlength="100"
                           name="identificadorAnalise"
                           [(ngModel)]="analise.identificadorAnalise"
-                          (change)="save()"
+                          (blur)="save()"
+                          required
                           pInputText/>
-                        <label>Identificador da Analise</label>
+                        <label>Identificador da Analise *</label>
                       </span>
                     </div>
       
                     <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-                        <label>Método de Contagem</label>
-                        <p-dropdown 
-                          disabled="{{ !isContratoSelected() }}"
-                          placeholder="{{ needContratoDropdownPlaceholder() }}"
+                        <label>Método de Contagem *</label>
+                        <p-dropdown
+                          placeholder="Selecione..."
                           name="metodoContagem" 
                           [options]="metodosContagem"
                           [(ngModel)]="analise.metodoContagem"  
                           [autoWidth]="false"
-                          (onChange)="save()">
+                          (blur)="save()">
                         </p-dropdown>
                       </div>
       
@@ -120,7 +177,7 @@
                                 type="text" 
                                 maxlength="100"
                                 name="versaoGuiaReferenciaLocal" 
-                                (change)="save()"
+                                (blur)="save()"
                                 [(ngModel)]="analise.versaoGuiaReferenciaLocal" 
                                 pInputText/>
                               <label>Guia de Referência Local</label>
@@ -192,7 +249,7 @@
                             pInputTextarea name="propositoContagem" 
                             [rows]="3" 
                             [cols]="180"
-                            (change)="save()"
+                            (blur)="save()"
                             [(ngModel)]="analise.propositoContagem">
                           </textarea>
                         </span>
@@ -205,7 +262,7 @@
                             pInputTextarea name="escopo" 
                             [rows]="3" 
                             [cols]="180"
-                            (change)="save()"
+                            (blur)="save()"
                             [(ngModel)]="analise.escopo">
                           </textarea>
                         </span>
@@ -218,7 +275,7 @@
                             pInputTextarea name="fronteiras" 
                             [rows]="3" 
                             [cols]="180"
-                            (change)="save()"
+                            (blur)="save()"
                             [(ngModel)]="analise.fronteiras">
                           </textarea>
                         </span>
@@ -231,7 +288,7 @@
                             pInputTextarea name="documentacao" 
                             [rows]="3" 
                             [cols]="180"
-                            (change)="save()"
+                            (blur)="save()"
                             [(ngModel)]="analise.documentacao">
                           </textarea>
                         </span>
@@ -256,7 +313,7 @@
                               maxlength="100"
                               name="numeroOS" 
                               [(ngModel)]="analise.numeroOs"
-                              (change)="save()"
+                              (blur)="save()"
                               pInputText/>
                             <label>Número OS</label>
                           </span>
@@ -298,7 +355,7 @@
                             [cols]="180"
                             autoResize = true
                             pInputTextarea name="observacoes"
-                            (change)="save()"
+                            (blur)="save()"
                             [(ngModel)]="analise.observacoes">
                           </textarea>
                         </span>

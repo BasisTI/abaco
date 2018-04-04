@@ -3,8 +3,11 @@
     <div class="card card-w-title">
       <h1>{{ manual.id ? 'Editar Manual' : 'Cadastrar Manual' }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+        
         <div class="ui-g">
-          <div class="ui-g-6" [hidden]="!manual.id" style="margin-bottom: 25px">
+          <div class="ui-g-12 ui-md-12 ui-sm-12" 
+            [hidden]="!manual.id" 
+            style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="manual.id" readonly/>
               <label>ID</label>
@@ -28,7 +31,7 @@
           <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <p-spinner 
-                size="30" 
+                size="3" 
                 name="valorVariacaoEstimada" 
                 [(ngModel)]="manual.valorVariacaoEstimadaFormatado" 
                 min="0" 
@@ -36,15 +39,14 @@
                 decimalSeparator="" 
                 thousandSeparator="">
               </p-spinner>
-              <label>{{ 'Valor da Variação Estimada (%)' }}</label>
-              <!--<label>{{ 'Valor Variacao Estimada (%)'| translate }}</label>-->
+              <label>{{ 'Valor Variacao Estimada (%)'| translate }}</label>
             </span>
           </div>
 
           <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <p-spinner 
-                size="30" 
+                size="2" 
                 name="valorVariacaoIndicativa" 
                 [(ngModel)]="manual.valorVariacaoIndicativaFormatado" 
                 min="0" 
@@ -52,8 +54,7 @@
                 decimalSeparator="" 
                 thousandSeparator="">
               </p-spinner>
-              <label>{{ 'Valor da Variação Indicativa (%)' }}</label>
-             <!--<label>{{ 'Valor Variacao Indicativa (%)'| translate }}</label>-->
+             <label>{{ 'Valor Variação Indicativa (%)'| translate }}</label>
             </span>
           </div>
 
@@ -66,11 +67,13 @@
           
           <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
             <textarea 
-            pInputTextarea name="descricao"
-            maxlength="4000"
-            [rows]="5" 
-            [cols]="180" 
-            [(ngModel)]="manual.observacao">
+              class="ui-g-12 ui-md-12 ui-sm-12"
+              pInputTextarea
+              name="descricao"
+              maxlength="4000"
+              [rows]="5" 
+              [cols]="180" 
+              [(ngModel)]="manual.observacao">
           </textarea>
           </div>
         </div>
@@ -95,45 +98,62 @@
         <div class="ui-g">
           <div class="ui-g-12 ui-md-12 ui-sm-12">
 
-            <div class="ui-g-12 ui-md-12 ui-sm-12">
+            <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
               <label>Impácto</label>
             </div>
 
-              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
-                <span class="md-inputfield">
-                  <input 
-                    type="text" 
-                    name="parametroInclusao"
-                    maxlength="3"
-                    [(ngModel)]="manual.parametroInclusao" 
-                    pInputText/>
-                  <label>{{ 'Incliusão  (%)' | translate }}</label>
-                </span>
-              </div>
+            <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+              <span class="md-inputfield">
+                <p-spinner 
+                  size="3" 
+                  name="parametroInclusao" 
+                  [(ngModel)]="manual.parametroInclusaoFormatado" 
+                  min="0" 
+                  max="100">
+                </p-spinner>
+                <label>{{ 'Inclusão (%)'| translate }}</label>
+              </span>
+            </div>
 
-              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+            <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                 <span class="md-inputfield">
-                  <input 
-                    type="text" 
-                    name="parametroAlteracao"
-                    maxlength="3"
-                    [(ngModel)]="manual.parametroAlteracao" 
-                    pInputText/>
-                  <label>{{ 'Alteração (%)' | translate }}</label>
+                  <p-spinner 
+                    size="3" 
+                    name="parametroAlteracao" 
+                    [(ngModel)]="manual.parametroAlteracaoFormatado" 
+                    min="0" 
+                    max="100">
+                  </p-spinner>
+                  <label>{{ 'Alteração (%)'| translate }}</label>
                 </span>
-              </div>
+            </div>
 
-              <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+            <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                 <span class="md-inputfield">
-                  <input 
-                    type="parametroExclusao" 
-                    name="nome"
-                    maxlength="3"
-                    [(ngModel)]="manual.parametroExclusao" 
-                    pInputText/>
-                  <label>{{ 'Exclusão  (%)' | translate }}</label>
+                  <p-spinner 
+                    size="3" 
+                    name="parametroExclusao" 
+                    [(ngModel)]="manual.parametroExclusaoFormatado" 
+                    min="0" 
+                    max="100">
+                  </p-spinner>
+                  <label>{{ 'Exclusão (%)'| translate }}</label>
                 </span>
-              </div>
+            </div>
+
+            <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+                <span class="md-inputfield">
+                  <p-spinner 
+                    size="3" 
+                    name="parametroConversao" 
+                    [(ngModel)]="manual.parametroConversaoFormatado" 
+                    min="0" 
+                    max="100">
+                  </p-spinner>
+                  <label>{{ 'Conversão (%)'| translate }}</label>
+                </span>
+            </div>
+
           </div>
         </div>
 
@@ -210,24 +230,52 @@
         <p-dialog header="Esforço por Fase" [(visible)]="showDialogPhaseEffort" [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-sm-12">
-              <label>Tipo de Fase*</label>
-              <p-dropdown id="nome_fase" autofocus="true" [options]="tipoFases" [(ngModel)]="newPhaseEffort.fase" placeholder="Tipo de Fase" [autoWidth]="false" name="fase" optionLabel="nome"></p-dropdown>
+              <label>Tipo de Fase *</label>
+              <p-dropdown 
+                id="nome_fase" 
+                autofocus="true" 
+                [options]="tipoFases" 
+                [(ngModel)]="newPhaseEffort.fase" 
+                placeholder="Tipo de Fase" 
+                [autoWidth]="false" 
+                name="fase" 
+                optionLabel="nome">
+              </p-dropdown>
             </div>
           </div>
+
           <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-sm-12">
-              <label>Esforço (%)*</label>
-              <p-spinner id="esforco" size="30" name="esforco" [(ngModel)]="newPhaseEffort.esforcoFormatado" decimalSeparator="" min="0" max="100" thousandSeparator=""></p-spinner>
+              <label>Esforço (%) *</label>
+              <p-spinner 
+                id="esforco" 
+                size="30" 
+                name="esforco" 
+                [(ngModel)]="newPhaseEffort.esforcoFormatado" 
+                decimalSeparator="" 
+                min="0" 
+                max="100" 
+                thousandSeparator="">
+              </p-spinner>
             </div>
           </div>
+
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-md-3">
-                <app-white-button buttonLabel="Cancelar" (click)="closeDialogPhaseEffort()"></app-white-button>
+                <app-white-button 
+                  buttonLabel="Cancelar" 
+                  (click)="closeDialogPhaseEffort()">
+                </app-white-button>
                 <!-- <button pButton type="button" label="Cancelar" (click)="closeDialogPhaseEffort()"></button> -->
               </div>
+
               <div class="ui-md-3">
-                <app-green-button buttonLabel="Salvar" buttonIcon="ui-icon-add" (click)="addPhaseEffort()"></app-green-button>
+                <app-green-button 
+                  buttonLabel="Salvar" 
+                  buttonIcon="ui-icon-add" 
+                  (click)="addPhaseEffort()">
+                </app-green-button>
                 <!-- <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="addPhaseEffort()"></button> -->
               </div>
             </div>
@@ -235,53 +283,120 @@
         </p-dialog>
 
         <!-- Dialog Edit  Esforco Fase -->
-        <p-dialog header="Esforço por Fase" [(visible)]="showDialogEditPhaseEffort" [contentStyle]="{'overflow':'visible'}" [width]="800">
+        <p-dialog 
+          header="Esforço por Fase" 
+          [(visible)]="showDialogEditPhaseEffort" 
+          [contentStyle]="{'overflow':'visible'}" 
+          [width]="800">
+
           <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-sm-12">
               <label>Tipo de Fase*</label>
-              <p-dropdown id="nome_fase_edit" [options]="tipoFases" [(ngModel)]="editedPhaseEffort.fase" optionLabel="nome" placeholder="Tipo de Fase" name="fase" dataKey="id" [autoWidth]="false"></p-dropdown>
+              <p-dropdown 
+                id="nome_fase_edit" 
+                [options]="tipoFases" 
+                [(ngModel)]="editedPhaseEffort.fase" 
+                optionLabel="nome" 
+                placeholder="Tipo de Fase" 
+                name="fase" 
+                dataKey="id" 
+                [autoWidth]="false">
+              </p-dropdown>
             </div>
           </div>
+
           <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-sm-12">
               <label>Esforço (%)*</label>
-              <p-spinner id="esforco_edit" name="esforco" [(ngModel)]="editedPhaseEffort.esforcoFormatado" min="0" max="100" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <p-spinner 
+                id="esforco_edit" 
+                name="esforco" 
+                [(ngModel)]="editedPhaseEffort.esforcoFormatado" 
+                min="0" 
+                max="100" 
+                decimalSeparator="" 
+                thousandSeparator="">
+              </p-spinner>
             </div>
           </div>
+
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-md-3">
-                <app-white-button buttonLabel="Cancelar" (click)="closeDialogEditPhaseEffort()"></app-white-button>
-                <!-- <button pButton type="button" (click)="closeDialogEditPhaseEffort()" label="Cancelar"></button> -->
+                <app-white-button 
+                  buttonLabel="Cancelar" 
+                  (click)="closeDialogEditPhaseEffort()">
+                </app-white-button>
               </div>
+
               <div class="ui-md-3">
-                <app-green-button buttonLabel="Salvar" buttonIcon="ui-icon-add" (click)="editPhaseEffort()"></app-green-button>
-                <!-- <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="editPhaseEffort()"></button> -->
+                <app-green-button 
+                  buttonLabel="Salvar" 
+                  buttonIcon="ui-icon-add" 
+                  (click)="editPhaseEffort()">
+                </app-green-button>->
               </div>
             </div>
           </div>
+
         </p-dialog>
 
         <!-- Dialog Novo Deflator -->
-        <p-dialog header="Deflator" [(visible)]="showDialogCreateAdjustFactor" [contentStyle]="{'overflow':'visible'}" [width]="800">
+        <p-dialog 
+          header="Deflator" 
+          [(visible)]="showDialogCreateAdjustFactor" 
+          [contentStyle]="{'overflow':'visible'}" 
+          [width]="800">
           <div class="ui-g">
+
             <div class="ui-g-6">
               <label>Nome*</label>
-              <input id="nome_fator_ajuste" type="text" name="nomeFatorAjuste" [(ngModel)]="newAdjustFactor.nome" pInputText />
+              <input 
+                id="nome_fator_ajuste" 
+                type="text" 
+                name="nomeFatorAjuste" 
+                [(ngModel)]="newAdjustFactor.nome" 
+                pInputText />
             </div>
+
             <div class="ui-g-3">
               <label>Tipo Deflator*</label><br>
-              <p-dropdown #dd id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false" placeholder="Tipo Ajuste"></p-dropdown>
-              <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="newAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
-              <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
+              <p-dropdown 
+                #dd 
+                id="tipo_ajuste" 
+                [options]="adjustTypes" 
+                name="tipoAjuste" 
+                [(ngModel)]="newAdjustFactor.tipoAjuste" 
+                filter="true" 
+                [autoWidth]="false" 
+                placeholder="Tipo Ajuste">
+              </p-dropdown>
             </div>
+
             <div class="ui-g-3">
               <label *ngIf="isPercentualEnum(newAdjustFactor.tipoAjuste)">Deflator (%)*</label>
               <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)">Deflator (PF)*</label>
               <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Deflator*</label>
-              <p-spinner id="valor_fator" size="30" *ngIf="newAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="newAdjustFactor.fatorFormatado"></p-spinner>
-              <p-spinner id="valor_fator" size="30" *ngIf="newAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="newAdjustFactor.fatorFormatado"></p-spinner>
+              
+              <p-spinner 
+                id="valor_fator" 
+                size="30" 
+                *ngIf="newAdjustFactor.tipoAjuste !== undefined" 
+                name="fator" 
+                [(ngModel)]="newAdjustFactor.fatorFormatado">
+              </p-spinner>
+
+              <p-spinner 
+                id="valor_fator" 
+                size="30" 
+                *ngIf="newAdjustFactor.tipoAjuste === undefined" 
+                [disabled]="true" 
+                name="fator" 
+                [(ngModel)]="newAdjustFactor.fatorFormatado">
+              </p-spinner>
+
             </div>
+
           </div>
           <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-sm-12">
@@ -321,36 +436,76 @@
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-g-3 ui-md-3 ui-sm-12">
-                <app-white-button buttonLabel="Cancelar" (click)="closeDialogCreateAdjustFactor()"></app-white-button>
-                <!-- <button pButton type="button" label="Cancelar" (click)="closeDialogCreateAdjustFactor()"></button> -->
+                <app-white-button 
+                  buttonLabel="Cancelar" 
+                  (click)="closeDialogCreateAdjustFactor()">
+                </app-white-button>
               </div>
+
               <div class="ui-g-3 ui-md-3 ui-sm-12">
-                <app-green-button buttonLabel="Salvar" buttonIcon="ui-icon-add" (click)="addAdjustFactor()"></app-green-button>
-                <!-- <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="addAdjustFactor()"></button> -->
+                <app-green-button 
+                  buttonLabel="Salvar" 
+                  buttonIcon="ui-icon-add" 
+                  (click)="addAdjustFactor()">
+                </app-green-button>
               </div>
             </div>
           </div>
+
         </p-dialog>
 
         <!-- Dialog Edit Fator Ajuste -->
-        <p-dialog header="Fator de Ajuste" [(visible)]="showDialogEditAdjustFactor" [contentStyle]="{'overflow':'visible'}" [width]="800">
+        <p-dialog 
+          header="Fator de Ajuste" 
+          [(visible)]="showDialogEditAdjustFactor" 
+          [contentStyle]="{'overflow':'visible'}" 
+          [width]="800">
+
           <div class="ui-g">
             <div class="ui-g-6 ui-md-6 ui-sm-12">
-              <label>Nome*</label>
-              <input id="nome_fator_ajuste" type="text" name="nomeEdicaoFatorAjuste" [(ngModel)]="editedAdjustFactor.nome" pInputText />
+              <label>Nome *</label>
+              <input 
+                id="nome_fator_ajuste" 
+                type="text" 
+                name="nomeEdicaoFatorAjuste" 
+                [(ngModel)]="editedAdjustFactor.nome" 
+                pInputText />
             </div>
+
             <div class="ui-g-3 ui-md-3 ui-sm-12">
-              <label>Tipo Ajuste*</label><br>
-              <p-dropdown id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste" [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"></p-dropdown>
-              <!-- <p-radioButton name="tipo_ajuste" value="Percentual" [(ngModel)]="editedAdjustFactor.tipoAjuste" label="Percentual"></p-radioButton>
-              <p-radioButton name="tipo_ajuste" value="Unitario" label="Unitário"></p-radioButton> -->
+              <label>Tipo Ajuste *</label><br>
+              <p-dropdown 
+                id="tipo_ajuste" 
+                [options]="adjustTypes" 
+                name="tipoAjuste" 
+                [(ngModel)]="editedAdjustFactor.tipoAjuste" 
+                filter="true" 
+                [autoWidth]="false">
+              </p-dropdown>
             </div>
+
             <div class="ui-g-3 ui-md-3 ui-sm-12">
               <label *ngIf="isPercentualEnum(editedAdjustFactor.tipoAjuste)">Fator (%)*</label>
               <label *ngIf="isUnitaryEnum(editedAdjustFactor.tipoAjuste)">Fator (PF)*</label>
               <label *ngIf="editedAdjustFactor.tipoAjuste === undefined">Fator*</label>
-              <p-spinner id="valor_fator" size="30" *ngIf="editedAdjustFactor.tipoAjuste !== undefined" name="fator" [(ngModel)]="editedAdjustFactor.fatorFormatado"></p-spinner>
-              <p-spinner id="valor_fator" size="30" *ngIf="editedAdjustFactor.tipoAjuste === undefined" [disabled]="true" name="fator" [(ngModel)]="editedAdjustFactor.fatorFormatado"></p-spinner>
+              
+              <p-spinner 
+                id="valor_fator" 
+                size="30" 
+                *ngIf="editedAdjustFactor.tipoAjuste !== undefined" 
+                name="fator" 
+                [(ngModel)]="editedAdjustFactor.fatorFormatado">
+              </p-spinner>
+
+              <p-spinner 
+                id="valor_fator" 
+                size="30" 
+                *ngIf="editedAdjustFactor.tipoAjuste === undefined" 
+                [disabled]="true" 
+                name="fator" 
+                [(ngModel)]="editedAdjustFactor.fatorFormatado">
+              </p-spinner>
+
             </div>
           </div>
           <div class="ui-g">
@@ -358,30 +513,56 @@
               <label>Descrição</label>
             </div>
           </div>
+
           <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-sm-12">
-              <textarea [rows]="5" [cols]="90" pInputTextarea name="descricaoEdicaoFatorAjuste" [(ngModel)]="editedAdjustFactor.descricao"></textarea>
+              <textarea 
+                [rows]="5" 
+                [cols]="90" 
+                pInputTextarea 
+                name="descricaoEdicaoFatorAjuste" 
+                [(ngModel)]="editedAdjustFactor.descricao">
+              </textarea>
             </div>
           </div>
+
           <div class="ui-g">
             <div class="ui-g-4 ui-md-4 ui-sm-12">
               <label>Codigo*</label>
-              <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="editedAdjustFactor.codigo" pInputText />
+              <input 
+                id="codigo_fator" 
+                type="text" 
+                name="codigo" 
+                [(ngModel)]="editedAdjustFactor.codigo" 
+                pInputText />
             </div>
+
             <div class="ui-g-5 ui-md-5 ui-sm-12">
               <label>Origem*</label>
-              <input id="origem_fator" type="text" name="origem" [(ngModel)]="editedAdjustFactor.origem" pInputText />
+              <input 
+                id="origem_fator" 
+                type="text" 
+                name="origem" 
+                [(ngModel)]="editedAdjustFactor.origem" 
+                pInputText />
             </div>
+
           </div>
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
               <div class="ui-g-3 ui-md-3 ui-sm-12">
-                <app-white-button buttonLabel="Cancelar" (click)="closeDialogEditAdjustFactor()"></app-white-button>
-                <!-- <button pButton type="button" label="Cancelar" (click)="closeDialogEditAdjustFactor()"></button> -->
+                <app-white-button 
+                  buttonLabel="Cancelar" 
+                  (click)="closeDialogEditAdjustFactor()">
+                </app-white-button>
               </div>
+
               <div class="ui-g-3 ui-md-3 ui-sm-12">
-                <app-green-button buttonLabel="Salvar" buttonIcon="ui-icon-add" (click)="editAdjustFactor()"></app-green-button>
-                <!-- <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="editAdjustFactor()"></button> -->
+                <app-green-button 
+                  buttonLabel="Salvar" 
+                  buttonIcon="ui-icon-add" 
+                  (click)="editAdjustFactor()">
+                </app-green-button>
               </div>
             </div>
           </div>
@@ -390,9 +571,7 @@
         <p-confirmDialog header="Confirmação" #dialog>
           <p-footer>
             <app-white-button buttonLabel="Não" buttonIcon="fa-close" (click)="dialog.reject()"></app-white-button>
-            <!-- <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button> -->
             <app-green-button buttonLabel="Sim" buttonIcon="fa-close" (click)="dialog.accept()"></app-green-button>
-            <!-- <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button> -->
           </p-footer>
         </p-confirmDialog>
       </form>

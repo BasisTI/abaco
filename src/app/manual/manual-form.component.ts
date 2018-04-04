@@ -92,11 +92,16 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.manual.valorVariacaoEstimada = this.manual.valorVariacaoEstimada;
     this.manual.valorVariacaoIndicativa = this.manual.valorVariacaoIndicativa;
 
+    this.manual.parametroInclusao = this.manual.parametroInclusao;
+    this.manual.parametroAlteracao = this.manual.parametroAlteracao;
+    this.manual.parametroExclusao = this.manual.parametroExclusao;
+    this.manual.parametroConversao = this.manual.parametroConversao;
+
     if (this.manual.id !== undefined) {
       this.manualService.find(this.manual.id).subscribe(response => {
         if (this.arquivoManual !== undefined) {
           this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
-            this.manual.arquivoManualId = JSON.parse(response["_body"]).id;
+            this.manual.arquivoManualId = JSON.parse(response['_body']).id;
             this.subscribeToSaveResponse(this.manualService.update(this.manual));
           });
         } else {
@@ -108,7 +113,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       if (this.arquivoManual !== undefined) {
         if (this.checkRequiredFields()) {
           this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
-            this.manual.arquivoManualId = JSON.parse(response["_body"]).id;
+            this.manual.arquivoManualId = JSON.parse(response['_body']).id;
             this.subscribeToSaveResponse(this.manualService.create(this.manual));
           });
         } else {
@@ -127,13 +132,18 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       if ( isNaN(this.manual.valorVariacaoEstimada)) (this.invalidFields.push('Valor Variação Estimada'));
       if ( isNaN(this.manual.valorVariacaoIndicativa)) (this.invalidFields.push('Valor Variação Inidicativa'));
 
+      if ( isNaN(this.manual.parametroInclusao)) (this.invalidFields.push('Inclusão'));
+      if ( isNaN(this.manual.parametroAlteracao)) (this.invalidFields.push('Alteração'));
+      if ( isNaN(this.manual.parametroExclusao)) (this.invalidFields.push('Exclusão'));
+      if ( isNaN(this.manual.parametroConversao)) (this.invalidFields.push('Conversão'));
+
       isFieldsValid = (this.invalidFields.length === 0);
 
       return isFieldsValid;
   }
 
   private getInvalidFieldsString(): string {
-    let invalidFieldsString = "";
+    let invalidFieldsString = '';
 
     this.invalidFields.forEach(invalidField => {
       if (invalidField === this.invalidFields[this.invalidFields.length - 1]) {
@@ -156,10 +166,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       this.isSaving = false;
       switch(error.status) {
         case 400: {
-          let invalidFieldNamesString = "";
-          const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
+          let invalidFieldNamesString = '';
+          const fieldErrors = JSON.parse(error['_body']).fieldErrors;
           invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-          this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+          this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
         }
       }
     });
@@ -410,7 +420,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       this.uploadService.getFileInfo(this.manual.arquivoManualId).subscribe(response => {
         fileInfo = response;
 
-        this.fileInput.files.push(new File([response["_body"]], fileInfo["originalName"]));
+        this.fileInput.files.push(new File([response['_body']], fileInfo['originalName']));
         this.loading = false;
       });
     });

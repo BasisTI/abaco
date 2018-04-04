@@ -17,9 +17,10 @@ export class Manual implements BaseEntity, JSONable<Manual> {
     public fatoresAjuste?: FatorAjuste[],
     public esforcoFases?: EsforcoFase[],
     public artificialId?: number,
-    public parametroInclusao?: string,
-    public parametroAlteracao?: string,
-    public parametroExclusao?: string,
+    public parametroInclusao?: number,
+    public parametroAlteracao?: number,
+    public parametroExclusao?: number,
+    public parametroConversao?: number,
   ) {
     if (esforcoFases) {
       this.mappablePhaseEfforts = new MappableEntities<EsforcoFase>(esforcoFases);
@@ -46,7 +47,8 @@ export class Manual implements BaseEntity, JSONable<Manual> {
     const esforcoFases: EsforcoFase[] = json.esforcoFases
       .map(efJSON => new EsforcoFase().copyFromJSON(efJSON));
     return new Manual(json.id, json.nome, json.observacao, json.valorVariacaoEstimada,
-      json.valorVariacaoIndicativa, json.arquivoManualId, fatoresAjuste, esforcoFases);
+      json.valorVariacaoIndicativa, json.arquivoManualId, fatoresAjuste, esforcoFases,
+      json.parametroInclusao, json.parametroAlteracao, json.parametroExclusao, json.parametroConversao);
   }
 
   get valorVariacaoIndicativaFormatado(): number {
@@ -69,6 +71,47 @@ export class Manual implements BaseEntity, JSONable<Manual> {
 
   set valorVariacaoEstimadaFormatado(valor: number) {
     this.valorVariacaoEstimada = valor / 100;
+  }
+
+  get parametroInclusaoFormatado(): number {
+    const valor: number = this.parametroInclusao;
+    if (valor) {
+      return valor * 100;
+    }
+  }
+  get parametroAlteracaoFormatado(): number {
+    const valor: number = this.parametroAlteracao;
+    if (valor) {
+      return valor * 100;
+    }
+  }
+  get parametroExclusaoFormatado(): number {
+    const valor: number = this.parametroExclusao;
+    if (valor) {
+      return valor * 100;
+    }
+  }
+  get parametroConversaoFormatado(): number {
+    const valor: number = this.parametroConversao;
+    if (valor) {
+      return valor * 100;
+    }
+  }
+
+  set parametroInclusaoFormatado(valor: number) {
+    this.parametroInclusao = valor / 100;
+  }
+
+  set parametroAlteracaoFormatado(valor: number) {
+    this.parametroAlteracao = valor / 100;
+  }
+
+  set parametroExclusaoFormatado(valor: number) {
+    this.parametroExclusao = valor / 100;
+  }
+
+  set parametroConversaoFormatado(valor: number) {
+    this.parametroConversao = valor / 100;
   }
 
   addEsforcoFases(esforcoFase: EsforcoFase) {
@@ -114,7 +157,8 @@ export class Manual implements BaseEntity, JSONable<Manual> {
       this.artificialId,
       this.parametroInclusao,
       this.parametroAlteracao,
-      this.parametroExclusao);
+      this.parametroExclusao,
+      this.parametroConversao);
 
   }
 }
