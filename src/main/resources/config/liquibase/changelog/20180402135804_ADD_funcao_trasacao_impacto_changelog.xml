@@ -3,9 +3,9 @@
                    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-   <changeSet author="dudu (generated)" id="1522672383368-1">
+   <changeSet author="dudu (generated)" id="1522677490725-1">
       <addColumn tableName="funcao_transacao">
-         <column name="impacto" type="varchar(30)"/>
+         <column name="impacto" type="varchar(255)"/>
       </addColumn>
    </changeSet>
 </databaseChangeLog>
