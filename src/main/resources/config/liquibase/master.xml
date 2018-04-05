@@ -72,12 +72,9 @@
     <include file="classpath:config/liquibase/changelog/20180327235913_ADD_parametro_inclusao_alteracao_exclusao_manual_changelog.xml" relativeToChangelogFile="false"/>
     <!-- <include file="classpath:config/liquibase/changelog/20180328182532_CREATE_impacto_changelog.xml" relativeToChangelogFile="false"/> -->
     <include file="classpath:config/liquibase/changelog/20180328185134_ADD_impacto_funcao_dados_changelog.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20180402123254_ADD_impacto_funcao_trasacao_changelog.xml" relativeToChangelogFile="false"/>
-    
+    <include file="classpath:config/liquibase/changelog/20180402135804_ADD_funcao_trasacao_impacto_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180404174022_ADD_parametro_conversao_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180404190619_DROP_parametro_inclusao_alteracao_exclusao_conversao_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180404190951_ADD_parametro_inclusao_alteracao_exclusao_conversao_changelog.xml" relativeToChangelogFile="false"/>
+
 </databaseChangeLog>
-
-
-
-
-
-
