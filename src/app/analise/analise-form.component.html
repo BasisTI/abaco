@@ -123,18 +123,19 @@
                   <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
                     <span class="md-inputfield">
                       <input 
+                        required
                         type="text" 
                         maxlength="100"
                         name="identificadorAnalise"
                         [(ngModel)]="analise.identificadorAnalise"
                         (change)="save()"
                         pInputText/>
-                      <label>Identificador da Analise</label>
+                      <label>Identificador da Analise *</label>
                     </span>
                   </div>
     
                   <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-                      <label>Método de Contagem</label>
+                      <label>Método de Contagem *</label>
                       <p-dropdown 
                         disabled="{{ !isContratoSelected() }}"
                         placeholder="{{ needContratoDropdownPlaceholder() }}"
@@ -147,7 +148,7 @@
                     </div>
     
                     <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-                      <label>Tipo de Contagem</label>
+                      <label>Tipo de Contagem *</label>
                       <p-dropdown 
                         name="tiposAnalise"
                         placeholder="Selecione..."
@@ -180,7 +181,7 @@
                               (change)="save()"
                               [(ngModel)]="analise.versaoGuiaReferenciaLocal" 
                               pInputText/>
-                            <label>Guia de Referência Local</label>
+                            <label>Guia de Referência Local *</label>
                           </span>
                       </div>
     
@@ -243,7 +244,7 @@
                     </div>
     
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                      <label>Propósito da Contagem</label>
+                      <label>Propósito da Contagem *</label>
                       <span class="md-inputfield">
                         <textarea 
                           pInputTextarea name="propositoContagem" 
@@ -256,7 +257,7 @@
                     </div>
     
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                      <label>Escopo da Contagem</label>
+                      <label>Escopo da Contagem *</label>
                       <span class="md-inputfield">
                         <textarea 
                           pInputTextarea name="escopo" 
@@ -282,7 +283,7 @@
                     </div>
       
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                      <label>Documentação</label>
+                      <label>Documentação *</label>
                       <span class="md-inputfield">
                         <textarea 
                           pInputTextarea name="documentacao" 
