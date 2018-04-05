@@ -183,4 +183,12 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
         this.ftrValues = new HashSet<String>(ftrValues);
     }
 
+	public String getImpacto() {
+		return impacto;
+	}
+
+	public void setImpacto(String impacto) {
+		this.impacto = impacto;
+	}
+
 }
