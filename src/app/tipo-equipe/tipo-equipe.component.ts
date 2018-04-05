@@ -21,7 +21,10 @@ export class TipoEquipeComponent implements AfterViewInit {
   searchUrl: string = this.tipoEquipeService.searchUrl;
 
   paginationParams = { contentIndex: null };
+
   elasticQuery: ElasticQuery = new ElasticQuery();
+
+  rowsPerPageOptions: number[] = [5, 10, 20];
 
   constructor(
     private router: Router,
