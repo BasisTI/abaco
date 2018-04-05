@@ -73,14 +73,25 @@ public class Manual implements Serializable {
     @JsonManagedReference
     private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
 
+    @DecimalMin(value = "0")
+    @DecimalMax(value = "1")
     @Column(name = "parametro_inclusao")
-    private String parametroInclusao;
+    private BigDecimal parametroInclusao;
 
+    @DecimalMin(value = "0")
+    @DecimalMax(value = "1")
     @Column(name = "parametro_alteracao")
-    private String parametroAlteracao;
+    private BigDecimal parametroAlteracao;
 
+    @DecimalMin(value = "0")
+    @DecimalMax(value = "1")
     @Column(name = "parametro_exclusao")
-    private String parametroExclusao;
+    private BigDecimal parametroExclusao;
+    
+    @DecimalMin(value = "0")
+    @DecimalMax(value = "1")
+    @Column(name = "parametro_conversao")
+    private BigDecimal parametroConversao;
     
     public Long getId() {
         return id;
@@ -183,28 +194,36 @@ public class Manual implements Serializable {
 		this.fatoresAjuste = fatoresAjuste;
 	}
 
-	public String getParametroInclusao() {
+	public BigDecimal getParametroInclusao() {
 		return parametroInclusao;
 	}
 
-	public void setParametroInclusao(String parametroInclusao) {
+	public void setParametroInclusao(BigDecimal parametroInclusao) {
 		this.parametroInclusao = parametroInclusao;
 	}
 
-	public String getParametroAlteracao() {
+	public BigDecimal getParametroAlteracao() {
 		return parametroAlteracao;
 	}
 
-	public void setParametroAlteracao(String parametroAlteracao) {
+	public void setParametroAlteracao(BigDecimal parametroAlteracao) {
 		this.parametroAlteracao = parametroAlteracao;
 	}
 
-	public String getParametroExclusao() {
+	public BigDecimal getParametroExclusao() {
 		return parametroExclusao;
 	}
 
-	public void setParametroExclusao(String parametroExclusao) {
+	public void setParametroExclusao(BigDecimal parametroExclusao) {
 		this.parametroExclusao = parametroExclusao;
+	}
+
+	public BigDecimal getParametroConversao() {
+		return parametroConversao;
+	}
+
+	public void setParametroConversao(BigDecimal parametroConversao) {
+		this.parametroConversao = parametroConversao;
 	}
 
 	@Override
