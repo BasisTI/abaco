@@ -21,6 +21,8 @@ export class TipoFaseComponent {
 
   elasticQuery: ElasticQuery = new ElasticQuery();
 
+  rowsPerPageOptions: number[] = [5, 10, 20];
+
   constructor(
     private router: Router,
     private tipoFaseService: TipoFaseService,
@@ -53,7 +55,7 @@ export class TipoFaseComponent {
           this.recarregarDataTable();
           this.pageNotificationService.addDeleteMsg();
         }, error => {
-          if(error.status === 500) {
+          if (error.status === 500) {
             this.pageNotificationService.addErrorMsg(`Não é possivel excluir o registro selecionado!`);
           }
         });
