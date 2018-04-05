@@ -3,7 +3,8 @@
     <div class="card card-w-title">
       <h1>{{ tipoFase.id ? 'Editar Tipo de Fase' : 'Cadastrar Tipo de Fase' }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
-        <div class="ui-g">
+        
+        <div class="ui-g" style="margin-bottom: 25px; margin-top: 25px">
 
           <div class="ui-g-12" style="margin-bottom: 25px">
             <span class="md-inputfield">

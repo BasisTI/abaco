@@ -46,9 +46,19 @@ export class Manual implements BaseEntity, JSONable<Manual> {
       .map(faJSON => new FatorAjuste().copyFromJSON(faJSON));
     const esforcoFases: EsforcoFase[] = json.esforcoFases
       .map(efJSON => new EsforcoFase().copyFromJSON(efJSON));
-    return new Manual(json.id, json.nome, json.observacao, json.valorVariacaoEstimada,
-      json.valorVariacaoIndicativa, json.arquivoManualId, fatoresAjuste, esforcoFases,
-      json.parametroInclusao, json.parametroAlteracao, json.parametroExclusao, json.parametroConversao);
+    return new Manual(
+      json.id
+      , json.nome
+      , json.observacao
+      , json.valorVariacaoEstimada
+      , json.valorVariacaoIndicativa
+      , json.arquivoManualId
+      , fatoresAjuste
+      , esforcoFases
+      , json.parametroInclusao
+      , json.parametroAlteracao
+      , json.parametroExclusao
+      , json.parametroConversao);
   }
 
   get valorVariacaoIndicativaFormatado(): number {

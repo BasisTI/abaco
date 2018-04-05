@@ -252,9 +252,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
    * Método responsável por persistir as informações das análises na edição.
    **/
   save() {
-    if (this.verificarCamposObrigatorios()) {
-      this.analiseService.update(this.analise);
-    }
+    this.analiseService.update(this.analise);
+    // if (this.verificarCamposObrigatorios()) {
+    // }
 
   }
 
