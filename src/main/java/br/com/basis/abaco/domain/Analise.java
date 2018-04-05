@@ -148,13 +148,8 @@ public class Analise implements Serializable {
     @Column(name = "baseline_imediatamente")
     private Boolean baselineImediatamente;
     
-    @Size(max=10)
-    @Column(name = "versao_cpm")
-    private String versaoCPM;
-    
-//    @Size(max=100)
-//    @Column(name = "versao_Guia_Referencia_Local")
-//    private String versaoGuiaReferenciaLocal;
+//    @ManyToOne
+//    private Manual manual;
     
     @Column(name = "data_homologacao_software")
     private Date dataHomologacao;
@@ -447,13 +442,6 @@ public class Analise implements Serializable {
     public void setBaselineImediatamente(Boolean baselineImediatamente) {
         this.baselineImediatamente = baselineImediatamente;
     }
-    public String getVersaoCPM() {
-    	return versaoCPM;
-    }
-    
-    public void setVersaoCPM(String versaoCPM) {
-    	this.versaoCPM = versaoCPM;
-    }
 
     public MetodoContagem getMetodoContagem() {
 		return metodoContagem;
@@ -467,14 +455,6 @@ public class Analise implements Serializable {
         this.metodoContagem = metodoContagem;
         return this;
     }
-
-/*	public String getVersaoGuiaReferenciaLocal() {
-		return versaoGuiaReferenciaLocal;
-	}
-
-	public void setVersaoGuiaReferenciaLocal(String versaoGuiaReferenciaLocal) {
-		this.versaoGuiaReferenciaLocal = versaoGuiaReferenciaLocal;
-	}*/
 
 	public Date getDataHomologacao() {
 		return dataHomologacao;
