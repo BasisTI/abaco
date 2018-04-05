@@ -28,6 +28,8 @@ export class ManualComponent implements OnInit {
 
   mostrarDialogClonar = false;
 
+  rowsPerPageOptions: number[] = [5, 10, 20];
+
   constructor(
     private router: Router,
     private manualService: ManualService,

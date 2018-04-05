@@ -21,6 +21,8 @@ export class SistemaComponent implements AfterViewInit {
 
   searchUrl: string = this.sistemaService.searchUrl;
 
+  rowsPerPageOptions: number[] = [5, 10, 20];
+
   paginationParams = { contentIndex: null };
   elasticQuery: ElasticQuery = new ElasticQuery();
   organizations: Array<Organizacao>;

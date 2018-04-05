@@ -20,7 +20,10 @@ export class OrganizacaoComponent implements AfterViewInit {
   searchUrl: string = this.organizacaoService.searchUrl;
 
   paginationParams = { contentIndex: null };
+
   elasticQuery: ElasticQuery = new ElasticQuery();
+
+  rowsPerPageOptions: number[] = [5, 10, 20];
 
   constructor(
     private router: Router,
@@ -57,7 +60,7 @@ export class OrganizacaoComponent implements AfterViewInit {
         this.organizacaoService.delete(id).subscribe(() => {
           this.recarregarDataTable();
         }, error => {
-          if(error.status === 500) {
+          if (error.status === 500) {
             this.pageNotificationService.addErrorMsg('A organização não pode ser deletada pois existe contrato associado a ela.');
           }
         });

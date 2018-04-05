@@ -38,8 +38,13 @@
               </div>
         </div>
 
-        <basis-datatable [url]="searchUrl"
-          (buttonClick)="datatableClick($event)" #datatable>
+        <basis-datatable 
+          [url]="searchUrl"
+          (buttonClick)="datatableClick($event)"
+          [rows]="20"
+          [rowsPerPageOptions]="rowsPerPageOptions"
+          [showPaginationFooter]="true"
+          #datatable>
           <p-column header="Sigla" field="sigla" [sortable]="true"></p-column>
           <p-column header="Nome" field="nome" [sortable]="true"></p-column>
           <p-column header="CNPJ" field="cnpj" [sortable]="true"></p-column>
