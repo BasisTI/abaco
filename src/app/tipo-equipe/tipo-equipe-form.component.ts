@@ -8,21 +8,29 @@ import { TipoEquipe } from './tipo-equipe.model';
 import { TipoEquipeService } from './tipo-equipe.service';
 
 import { PageNotificationService } from '../shared';
+import { Organizacao, OrganizacaoService } from '../organizacao';
 
 @Component({
   selector: 'jhi-tipo-equipe-form',
   templateUrl: './tipo-equipe-form.component.html'
 })
+
 export class TipoEquipeFormComponent implements OnInit, OnDestroy {
+
   tipoEquipe: TipoEquipe;
+
   isSaving: boolean;
+
   private routeSub: Subscription;
+
+  organizacoes: Organizacao[];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private tipoEquipeService: TipoEquipeService,
     private pageNotificationService: PageNotificationService,
+    private organizacaoService: OrganizacaoService,
   ) { }
 
   ngOnInit() {
@@ -33,6 +41,9 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
         this.tipoEquipeService.find(params['id']).subscribe(tipoEquipe => this.tipoEquipe = tipoEquipe);
       }
     });
+    this.organizacaoService.findActiveOrganizations().subscribe((res) => {
+      this.organizacoes = res;
+    });
   }
 
   save() {
@@ -41,11 +52,11 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     this.tipoEquipeService.query().subscribe(response => {
         teamTypesRegistered = response.json;
         if (this.tipoEquipe.id !== undefined) {
-          if(this.checkRequiredFields() && this.checkFieldsMaxLength() && !this.checkDuplicity(teamTypesRegistered)) {
+          if (this.checkRequiredFields() && this.checkFieldsMaxLength() && !this.checkDuplicity(teamTypesRegistered)) {
             this.subscribeToSaveResponse(this.tipoEquipeService.update(this.tipoEquipe));
           }
         } else {
-          if(this.checkRequiredFields() && this.checkFieldsMaxLength() && !this.checkDuplicity(teamTypesRegistered)) {
+          if (this.checkRequiredFields() && this.checkFieldsMaxLength() && !this.checkDuplicity(teamTypesRegistered)) {
             this.subscribeToSaveResponse(this.tipoEquipeService.create(this.tipoEquipe));
           }
         }
@@ -53,10 +64,10 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
   }
 
   private checkDuplicity(teamTypes: Array<TipoEquipe>) {
-    let isAlreadyRegistered: boolean = false;
+    let isAlreadyRegistered = false;
 
     teamTypes.forEach(each => {
-      if(this.tipoEquipe.nome === each.nome && this.tipoEquipe.id !== each.id) {
+      if (this.tipoEquipe.nome === each.nome && this.tipoEquipe.id !== each.id) {
         isAlreadyRegistered = true;
         this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
       }
@@ -66,17 +77,17 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
   }
 
   private resetMarkFields() {
-    document.getElementById('nome_tipo_equipe').setAttribute('style','border-color: #bdbdbd');
+    document.getElementById('nome_tipo_equipe').setAttribute('style', 'border-color: #bdbdbd');
   }
 
   private checkRequiredFields(): boolean {
     let isValid = false;
     this.resetMarkFields();
-    if(this.tipoEquipe.nome !== undefined && this.tipoEquipe.nome !== null && this.tipoEquipe.nome !== '' && this.tipoEquipe.nome !== ' ') {
+    if (this.tipoEquipe.nome !== undefined && this.tipoEquipe.nome !== null && this.tipoEquipe.nome !== '' && this.tipoEquipe.nome !== ' ') {
       isValid = true;
     } else {
       this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
-      document.getElementById('nome_tipo_equipe').setAttribute('style','border-color: red');
+      document.getElementById('nome_tipo_equipe').setAttribute('style', 'border-color: red');
     }
 
     return isValid;
@@ -85,7 +96,7 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
   private checkFieldsMaxLength() {
     let isValid = false;
 
-    if(this.tipoEquipe.nome.length < 255) {
+    if (this.tipoEquipe.nome.length < 255) {
       isValid = true;
     } else {
       this.pageNotificationService.addErrorMsg('O campo nome excede o número de caracteres permitidos.');
@@ -102,12 +113,12 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
 
     }, (error: Response) => {
       this.isSaving = false;
-      switch(error.status) {
+      switch (error.status) {
         case 400: {
-          let invalidFieldNamesString = "";
-          const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
+          let invalidFieldNamesString = '';
+          const fieldErrors = JSON.parse(error['_body']).fieldErrors;
           invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-          this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+          this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
         }
       }
     });

@@ -12,6 +12,14 @@
           <label>Nome: {{ tipoEquipe.nome }}</label>
         </div>
       </div>
+
+      <div class="ui-g-6" style="margin-bottom: 25px">
+          <h3 class="first">Organização</h3>
+          <p-dataTable [value]="tipoEquipe.organizacoes">
+            <p-column field="nome" header="Nome"></p-column>
+          </p-dataTable>
+      </div>
+
       <div class="ui-g">
         <div class="ui-g-2">
           <button pButton type="button" label="Voltar" (click)="return()"></button>

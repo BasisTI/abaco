@@ -58,8 +58,31 @@
           [rowsPerPageOptions]="rowsPerPageOptions"
           [showPaginationFooter]="true"
           #datatable>
-          <p-column header="Código" field="id" [sortable]="true"></p-column>
-          <p-column header="Nome" field="nome" [sortable]="true"></p-column>
+          <p-column 
+            header="Código" 
+            field="id" 
+            [sortable]="true"
+            [style]="{'word-wrap':'break-word', 'width': '15%'}">
+          </p-column>
+
+          <p-column 
+            header="Nome" 
+            field="nome" 
+            [sortable]="true"
+            [style]="{'word-wrap':'break-word', 'width': '35%'}">
+          </p-column>
+          
+          <p-column 
+          header="Organização"
+          [style]="{'word-wrap':'break-word', 'width': '50%'}" 
+          [sortable]="true">
+          <ng-template let-col let-row="rowData" pTemplate="body">
+            <li *ngFor="let org of row.organizacoes">
+              {{ org.nome }}
+            </li>
+          </ng-template>
+        </p-column>
+
         </basis-datatable>
       </div>
       
