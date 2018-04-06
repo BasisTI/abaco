@@ -21,6 +21,7 @@ export class Manual implements BaseEntity, JSONable<Manual> {
     public parametroAlteracao?: number,
     public parametroExclusao?: number,
     public parametroConversao?: number,
+    public versaoCPM?: number,
   ) {
     if (esforcoFases) {
       this.mappablePhaseEfforts = new MappableEntities<EsforcoFase>(esforcoFases);
@@ -58,7 +59,8 @@ export class Manual implements BaseEntity, JSONable<Manual> {
       , json.parametroInclusao
       , json.parametroAlteracao
       , json.parametroExclusao
-      , json.parametroConversao);
+      , json.parametroConversao
+      , json.versaoCPM);
   }
 
   get valorVariacaoIndicativaFormatado(): number {
@@ -168,7 +170,8 @@ export class Manual implements BaseEntity, JSONable<Manual> {
       this.parametroInclusao,
       this.parametroAlteracao,
       this.parametroExclusao,
-      this.parametroConversao);
+      this.parametroConversao,
+      this.versaoCPM);
 
   }
 }

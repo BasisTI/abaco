@@ -154,37 +154,34 @@
                 </span>
             </div>
 
+            <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-top: 25px; margin-bottom: 25px">
+
+                <div class="ui-g-3 ui-md-4 ui-sm-12">
+                    <label>Versão do CPM</label>
+                </div>
+      
+                <div class="ui-g-2 ui-md-4 ui-sm-12">
+                    <p-radioButton 
+                      name="versaoCPM" 
+                      label="4.2.1"
+                      [value]="0"
+                      [(ngModel)]="manual.versaoCPM">
+                    </p-radioButton>
+                </div>
+      
+                <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <p-radioButton 
+                      name="versaoCPM" 
+                      label="4.3.1"
+                      [value]="1"
+                      [(ngModel)]="manual.versaoCPM">
+                    </p-radioButton>
+                </div>
+      
+              </div>
+
           </div>
         </div>
-
-        <!-- colocar no manual -->
-        <!-- <div class="ui-g-6 ui-md-6 ui-sm-12">
-
-          <div class="ui-g-3 ui-md-4 ui-sm-12">
-              <label>Versão do CPM</label>
-          </div>
-
-          <div class="ui-g-2 ui-md-4 ui-sm-12">
-              <p-radioButton 
-                name="versaoCPM" 
-                label="4.2.1"
-                [value]="4.2.1"
-                [(ngModel)]="analise.versaoCPM"
-                (onClick)="save()">
-              </p-radioButton>
-          </div>
-
-          <div class="ui-g-4 ui-md-4 ui-sm-12">
-              <p-radioButton 
-                name="versaoCPM" 
-                label="4.3.1"
-                [value]="4.3.1"
-                [(ngModel)]="analise.versaoCPM"
-                (onClick)="save()">
-              </p-radioButton>
-          </div>
-
-        </div> -->
 
         <div class="ui-g">
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
@@ -369,8 +366,9 @@
           </div>
 
         </p-dialog>
+        <!-- Fim Dialog Edit  Esforco Fase -->
 
-        <!-- Dialog Novo Deflator -->
+        <!-- Inicio Dialog Novo Deflator -->
         <p-dialog 
           header="Deflator" 
           [(visible)]="showDialogCreateAdjustFactor" 
@@ -482,8 +480,9 @@
           </div>
 
         </p-dialog>
+        <!-- Fim Dialog Novo Deflator -->
 
-        <!-- Dialog Edit Fator Ajuste -->
+        <!-- Inicio Dialog Edit Fator Ajuste -->
         <p-dialog 
           header="Fator de Ajuste" 
           [(visible)]="showDialogEditAdjustFactor" 
@@ -596,6 +595,7 @@
             </div>
           </div>
         </p-dialog>
+        <!-- Inicio Dialog Edit Fator Ajuste -->
 
         <p-confirmDialog header="Confirmação" #dialog>
           <p-footer>
