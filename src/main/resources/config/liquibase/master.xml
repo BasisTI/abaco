@@ -79,5 +79,8 @@
     <include file="classpath:config/liquibase/changelog/20180405172128_DROP_versao_guia_referencia_local_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180405173923_DROP_versao_cpm_to_Analise_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180405175948_ADD_Manual_to_Analise_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180406183523_CREATE_organizacoes_in_tipoEquipe_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180406222900_ADD_versaoCpm_in_manual_changelog.xml" relativeToChangelogFile="false"/>
+    
 
 </databaseChangeLog>

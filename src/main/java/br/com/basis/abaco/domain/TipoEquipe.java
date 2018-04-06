@@ -8,7 +8,9 @@ import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A TipoEquipe.
@@ -29,6 +31,10 @@ public class TipoEquipe implements Serializable {
     @NotNull
     @Column(name = "nome", nullable = false, unique = true)
     private String nome;
+    
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "tipoequipe_organizacao", joinColumns = @JoinColumn(name = "tipoequipe_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
+	private Set<Organizacao> organizacoes = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -53,7 +59,15 @@ public class TipoEquipe implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    @Override
+    public Set<Organizacao> getOrganizacoes() {
+		return organizacoes;
+	}
+
+	public void setOrganizacoes(Set<Organizacao> organizacoes) {
+		this.organizacoes = organizacoes;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

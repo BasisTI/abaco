@@ -6,8 +6,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 
 import br.com.basis.abaco.config.Constants;
-import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Authority;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.AuthorityRepository;
@@ -45,7 +42,6 @@ import br.com.basis.abaco.service.dto.UserDTO;
 import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
 import io.swagger.annotations.ApiParam;
 
 /**

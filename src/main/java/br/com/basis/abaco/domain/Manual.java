@@ -93,6 +93,9 @@ public class Manual implements Serializable {
     @Column(name = "parametro_conversao")
     private BigDecimal parametroConversao;
     
+    @Column(name="versao_cpm")
+    private Long versaoCPM;
+    
     public Long getId() {
         return id;
     }
