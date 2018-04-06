@@ -120,7 +120,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     let isDeletationValid = true;
 
     this.sistema.funcionalidades.forEach(each => {
-      if(each.modulo.nome === this.moduloEmEdicao.nome) {
+      if (each.modulo.nome === this.moduloEmEdicao.nome) {
         isDeletationValid = false;
       }
     });
@@ -203,7 +203,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     this.sistemaService.query().subscribe(response => {
       sistemas = response.json;
 
-      if(this.sistema.id !== undefined) {
+      if (this.sistema.id !== undefined) {
         (this.checkRequiredFields() && !this.checkDuplicity(sistemas) && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
       } else {
         (this.checkRequiredFields() && !this.checkDuplicity(sistemas) && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.create(this.sistema))) : (this);
@@ -215,7 +215,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     let isAlreadyRegistered: boolean = false;
 
     sistemas.forEach(each => {
-      if(each.nome === this.sistema.nome && each.organizacao.id === this.sistema.organizacao.id && each.id !== this.sistema.id) {
+      if (each.nome === this.sistema.nome && each.organizacao.id === this.sistema.organizacao.id && each.id !== this.sistema.id) {
         isAlreadyRegistered = true;
         this.pageNotificationService.addErrorMsg('O sistema ' + each.nome + ' já está cadastrado!');
       }
@@ -226,8 +226,8 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   private checkSystemInitials() {
       let exceedsMaximumValue = false;
 
-      if(this.checkIfIsEmpty(this.sistema.sigla)) {
-        if(this.sistema.sigla.length >= 20) {
+      if (this.checkIfIsEmpty(this.sistema.sigla)) {
+        if (this.sistema.sigla.length >= 20) {
           exceedsMaximumValue = true;
           this.pageNotificationService.addErrorMsg('O campo sigla excede o número de caracteres.');
         }
@@ -239,7 +239,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   private checkIfIsEmpty(field: string) {
     let isEmpty = false;
 
-    if(field === undefined || field === null || field === "") {
+    if (field === undefined || field === null || field === "") {
         isEmpty = true;
     }
 
@@ -249,8 +249,8 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   private checkSystemName() {
     let isValid = true;
 
-    if(this.checkIfIsEmpty(this.sistema.nome)) {
-      if(this.sistema.nome.length >= 255) {
+    if (this.checkIfIsEmpty(this.sistema.nome)) {
+      if (this.sistema.nome.length >= 255) {
         isValid = false;
         this.pageNotificationService.addErrorMsg('O campo Nome excede o número de caracteres.');
       }
@@ -269,7 +269,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     (!this.checkIfIsEmpty(this.sistema.nome)) ? (isNameValid = true) : (document.getElementById('nome_sistema').setAttribute('style','border-color: red'));
     (!this.checkIfIsEmpty(this.sistema.sigla)) ? (isInitialsValid = true) : (document.getElementById('sigla_sistema').setAttribute('style','border-color: red'));
 
-    if(this.sistema.organizacao !== undefined) {
+    if (this.sistema.organizacao !== undefined) {
       isOrganizationValid = true;
     } else {
       document.getElementById('organizacao_sistema').setAttribute('style','border-bottom: solid; border-bottom-color: red;');
@@ -296,7 +296,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   private notifyRequiredFields() {
       this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios.');
 
-      document.getElementById('sigla_sistema').setAttribute('style','border-color: red');
+      document.getElementById('sigla_sistema').setAttribute('style', 'border-color: red');
 
 
   }

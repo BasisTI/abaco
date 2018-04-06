@@ -62,7 +62,7 @@ export class TipoEquipeComponent implements AfterViewInit {
           this.recarregarDataTable();
           this.pageNotificationService.addDeleteMsg();
         }, error => {
-          if(error.status === 500) {
+          if (error.status === 500) {
             this.pageNotificationService.addErrorMsg('Não é possivel excluir o registro selecionado!');
           }
         });

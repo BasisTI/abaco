@@ -17,7 +17,7 @@ export class OrganizacaoService {
 
   searchUrl = environment.apiUrl + '/_search' + this.resourceName;
 
-  findActive = environment.apiUrl + this.resourceName + '/active'
+  findActive = environment.apiUrl + this.resourceName + '/active';
 
   constructor(
     private http: HttpService,
@@ -61,7 +61,7 @@ export class OrganizacaoService {
   findActiveOrganizations() {
     return this.http.get(this.findActive).map((response: Response) => {
       return response.json();
-    })
+    });
   }
 
   private convertResponseToResponseWrapper(res: Response): ResponseWrapper {

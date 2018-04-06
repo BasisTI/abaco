@@ -52,25 +52,44 @@ export class UserComponent implements AfterViewInit, OnInit {
   ) {}
 
   ngOnInit() {
-      this.organizacaoService.query().subscribe(response => {
-        this.organizations = response.json;
-        let emptyOrg = new Organizacao();
-        emptyOrg.nome = '';
-        this.organizations.unshift(emptyOrg);
-      });
+    this.recuperarOrganizacoes();
+    this.recuperarAutorizacoes();
+    this.recuperarEquipe();
+  }
 
-      this.userService.authorities().subscribe(response => {
-        this.authorities = response;
-        let emptyProfile = new Authority();
-        this.authorities.unshift(emptyProfile);
-      });
+  /**
+   * Método responsável por recuperar as organizações.
+   */
+  recuperarOrganizacoes() {
+    this.organizacaoService.query().subscribe(response => {
+      this.organizations = response.json;
+      let emptyOrg = new Organizacao();
+      emptyOrg.nome = '';
+      this.organizations.unshift(emptyOrg);
+    });
+  }
 
-      this.tipoEquipeService.query().subscribe(response => {
-        this.teams = response.json;
-        let emptyTeam = new TipoEquipe();
-        emptyTeam.nome = '';
-        this.teams.unshift(emptyTeam);
-      });
+    /**
+   * Método responsável por recuperar as autorizações.
+   */
+  recuperarAutorizacoes() {
+    this.userService.authorities().subscribe(response => {
+      this.authorities = response;
+      let emptyProfile = new Authority();
+      this.authorities.unshift(emptyProfile);
+    });
+  }
+
+    /**
+   * Método responsável por recuperar as equipes.
+   */
+  recuperarEquipe() {
+    this.tipoEquipeService.query().subscribe(response => {
+      this.teams = response.json;
+      let emptyTeam = new TipoEquipe();
+      emptyTeam.nome = '';
+      this.teams.unshift(emptyTeam);
+    });
   }
 
   ngAfterViewInit() {

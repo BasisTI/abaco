@@ -53,7 +53,7 @@
                 [(ngModel)]="user.email" 
                 pInputText 
                 maxlength="100"/>
-              <label>Email</label>
+              <label>E-mail</label>
             </span>
           </div>
           
@@ -75,30 +75,40 @@
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <h3 class="first">Perfil</h3>
-            <p-multiSelect name="authoritiesMultiselect2"
+            <p-multiSelect 
+              name="authoritiesMultiselect2"
               defaultLabel="Selecione ao menos um perfil"
               [options]="authorities"
               [(ngModel)]="user.authorities"
               dataKey="artificialId"
               optionLabel="name"
-              selectedItemsLabel="{0} perfis selecionados"></p-multiSelect>
+              selectedItemsLabel="{0} perfis selecionados">
+            </p-multiSelect>
 
           </div>
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <h3 class="first">Organização</h3>
-            <p-multiSelect name="organizacoesMultiSelect" [options]="organizacoes"
-              [(ngModel)]="user.organizacoes" dataKey="id"
-              defaultLabel="Selecione ao menos uma organização" optionLabel="nome"
+            <p-multiSelect 
+              name="organizacoesMultiSelect" 
+              [options]="organizacoes"
+              [(ngModel)]="user.organizacoes" 
+              dataKey="id"
+              defaultLabel="Selecione ao menos uma organização" 
+              optionLabel="nome"
               selectedItemsLabel="{0} organizações selecionadas">
             </p-multiSelect>
           </div>
 
         <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
           <h3 class="first">Equipe</h3>
-          <p-multiSelect name="equipesMultiSelect" [options]="tipoEquipes"
-            [(ngModel)]="user.tipoEquipes" dataKey="id"
-            defaultLabel="Selecione ao menos uma equipe" optionLabel="nome"
+          <p-multiSelect 
+            name="equipesMultiSelect" 
+            [options]="tipoEquipes"
+            [(ngModel)]="user.tipoEquipes" 
+            dataKey="id"
+            defaultLabel="Selecione ao menos uma equipe" 
+            optionLabel="nome"
             selectedItemsLabel="{0} equipes selecionadas">
           </p-multiSelect>
         </div>
