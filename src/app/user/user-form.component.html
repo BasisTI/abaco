@@ -62,21 +62,31 @@
               <div class="ui-g-12 ui-md-4">
                 <label>Ativo</label>
               </div>
+
               <div class="ui-g-12 ui-md-4">
-                <p-radioButton name="user_ativo" [value]="true" label="Sim"
-                  [(ngModel)]="user.activated"></p-radioButton>
+                <p-radioButton name="user_ativo" 
+                  [value]="true"
+                  label="Sim"
+                  [(ngModel)]="user.activated">
+                </p-radioButton>
               </div>
+
               <div class="ui-g-12 ui-md-4">
-                <p-radioButton name="user_ativo" [value]="false" label="Não"
-                  [(ngModel)]="user.activated"></p-radioButton>
+                <p-radioButton 
+                  name="user_ativo"
+                  [value]="false"
+                  label="Não"
+                  [(ngModel)]="user.activated">
+                </p-radioButton>
               </div>
+
             </div>
           </div>
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <h3 class="first">Perfil</h3>
             <p-multiSelect 
-              name="authoritiesMultiselect2"
+              name="authoritiesMultiselect"
               defaultLabel="Selecione ao menos um perfil"
               [options]="authorities"
               [(ngModel)]="user.authorities"

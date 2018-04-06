@@ -21,10 +21,15 @@ import * as _ from 'lodash';
 export class UserFormComponent implements OnInit, OnDestroy {
 
   tipoEquipes: TipoEquipe[];
+
   organizacoes: Organizacao[];
+
   authorities: Authority[];
+
   user: User;
+
   isSaving: boolean;
+
   private routeSub: Subscription;
 
   constructor(
@@ -97,25 +102,25 @@ export class UserFormComponent implements OnInit, OnDestroy {
     let isLastNameValid = false;
     let isLoginValid = false;
 
-    if(this.user.firstName !== undefined && this.user.firstName !== null && this.user.firstName !== '') {
+    if (this.user.firstName !== undefined && this.user.firstName !== null && this.user.firstName !== '') {
       isFirstNameValid = true;
     } else {
       document.getElementById('firstName').setAttribute('style', 'border-color: red;');
     }
 
-    if(this.user.lastName !== undefined && this.user.lastName !== null && this.user.lastName !== '') {
+    if (this.user.lastName !== undefined && this.user.lastName !== null && this.user.lastName !== '') {
       isLastNameValid = true;
     } else {
       document.getElementById('lastName').setAttribute('style', 'border-color: red;');
     }
 
-    if(this.user.login !== undefined && this.user.login !== null && this.user.login !== '') {
+    if (this.user.login !== undefined && this.user.login !== null && this.user.login !== '') {
       isLoginValid = true;
     } else {
       document.getElementById('login').setAttribute('style', 'border-color: red;');
     }
 
-    if(isFirstNameValid && isLastNameValid && isLoginValid) {
+    if (isFirstNameValid && isLastNameValid && isLoginValid) {
       isValid = true;
     } else {
       this.pageNotificationService.addErrorMsg('Favor informar os campos obrigatórios!');
@@ -139,30 +144,30 @@ export class UserFormComponent implements OnInit, OnDestroy {
     }, (error: Response) => {
       this.isSaving = false;
 
-      switch(error.status) {
+      switch (error.status) {
         case 400: {
           const EXISTING_USER = 'error.userexists';
           const EXISTING_MAIL =  'error.emailexists';
           const EXISTING_FULLNAME = 'error.fullnameexists';
 
-          if(error.headers.toJSON()["x-abacoapp-error"][0] === EXISTING_USER) {
+          if (error.headers.toJSON()['x-abacoapp-error'][0] === EXISTING_USER) {
             this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
             document.getElementById('login').setAttribute('style', 'border-color: red;');
           } else {
-            if(error.headers.toJSON()["x-abacoapp-error"][0] === EXISTING_MAIL) {
+            if (error.headers.toJSON()['x-abacoapp-error'][0] === EXISTING_MAIL) {
               this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
               document.getElementById('email').setAttribute('style', 'border-color: red;');
             } else {
-              if(error.headers.toJSON()["x-abacoapp-error"][0] === EXISTING_FULLNAME) {
+              if (error.headers.toJSON()['x-abacoapp-error'][0] === EXISTING_FULLNAME) {
                 this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
                 document.getElementById('firstName').setAttribute('style', 'border-color: red;');
                 document.getElementById('lastName').setAttribute('style', 'border-color: red;');
               }
             }
-            let invalidFieldNamesString = "";
-            const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
+            let invalidFieldNamesString = '';
+            const fieldErrors = JSON.parse(error['_body']).fieldErrors;
             invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-            this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
+            this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
           }
         }
       }

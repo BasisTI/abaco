@@ -29,6 +29,8 @@ export class UserComponent implements AfterViewInit, OnInit {
 
   elasticQuery: ElasticQuery = new ElasticQuery();
 
+  rowsPerPageOptions: number[] = [5, 10, 20];
+
   searchParams: any = {
     fullName: undefined,
     login: undefined,

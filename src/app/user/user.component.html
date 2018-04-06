@@ -109,7 +109,10 @@
   <div class="ui-g-12 ui-md-12" style="padding: 0;">
     <basis-datatable 
       [url]="searchUrl"
-      (buttonClick)="datatableClick($event)" 
+      (buttonClick)="datatableClick($event)"
+      [rows]="20"
+      [rowsPerPageOptions]="rowsPerPageOptions"
+      [showPaginationFooter]="true"
       #datatable>
 
       <p-column header="Nome" field="nome" [style]="{width:'15%'}">
