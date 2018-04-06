@@ -121,7 +121,6 @@ public class Analise implements Serializable {
     private User createdBy;
 
     @ManyToOne
-    // @LastModifiedBy
     @JoinColumn
     private User editedBy;
 
@@ -147,16 +146,16 @@ public class Analise implements Serializable {
 
     @Column(name = "baseline_imediatamente")
     private Boolean baselineImediatamente;
-    
-//    @ManyToOne
-//    private Manual manual;
-    
+
+    @ManyToOne
+    private Manual manual;
+
     @Column(name = "data_homologacao_software")
     private Date dataHomologacao;
-        
+
     @Column(name = "identificador_analise", length = 100)
     private String identificadorAnalise;
-    
+
     @ManyToOne
     private TipoEquipe equipeResponsavel;
 
@@ -478,6 +477,14 @@ public class Analise implements Serializable {
 
 	public void setEquipeResponsavel(TipoEquipe equipeResponsavel) {
 		this.equipeResponsavel = equipeResponsavel;
+	}
+
+	public Manual getManual() {
+		return manual;
+	}
+
+	public void setManual(Manual manual) {
+		this.manual = manual;
 	}
 
 	@Override

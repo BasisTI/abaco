@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+   <changeSet author="dudu (generated)" id="1522951194435-1">
+      <addColumn tableName="analise">
+         <column name="manual_id" type="int8"/>
+      </addColumn>
+   </changeSet>
+   <changeSet author="dudu (generated)" id="1522951194435-2">
+      <addForeignKeyConstraint baseColumnNames="manual_id"
+                               baseTableName="analise"
+                               constraintName="FKjtr8c8y37xwf2r93s7b4wuwhx"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="manual"/>
+   </changeSet>
+</databaseChangeLog>
