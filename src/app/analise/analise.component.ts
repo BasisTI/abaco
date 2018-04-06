@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { Analise } from './analise.model';
 import { AnaliseService } from './analise.service';
 import { ElasticQuery, PageNotificationService } from '../shared';
+import { ManualService, Manual } from '../manual';
 
 @Component({
   selector: 'jhi-analise',
@@ -22,11 +23,14 @@ export class AnaliseComponent {
 
   rowsPerPageOptions: number[] = [5, 10, 20];
 
+  manuals: Array<Manual>;
+
   constructor(
     private router: Router,
     private analiseService: AnaliseService,
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
+    private manualService: ManualService,
   ) { }
 
   datatableClick(event: DatatableClickEvent) {

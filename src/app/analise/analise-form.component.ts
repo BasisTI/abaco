@@ -14,7 +14,7 @@ import { SelectItem } from 'primeng/primeng';
 import * as _ from 'lodash';
 import { EsforcoFase } from '../esforco-fase/index';
 import { FatorAjuste } from '../fator-ajuste/index';
-import { Manual } from '../manual/index';
+import { Manual, ManualService } from '../manual/index';
 import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
 
 import { TipoEquipe, TipoEquipeService } from '../tipo-equipe';
@@ -43,6 +43,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   fatoresAjuste: SelectItem[] = [];
 
   equipeResponsavel: SelectItem[] = [];
+
+  manuais: SelectItem[] = [];
 
   private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
 
@@ -75,6 +77,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     private analiseSharedDataService: AnaliseSharedDataService,
     private tipoEquipeService: TipoEquipeService,
     private pageNotificationService: PageNotificationService,
+    private manualService: ManualService,
   ) { }
 
   ngOnInit() {
@@ -82,13 +85,16 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     this.isEdicao = false;
     this.isSaving = false;
     this.habilitarCamposIniciais();
+    this.popularListaTipoEquipe();
+    this.popularListaOrganizacao();
+    this.popularListaManual();
+    this.popularAnaliseCarregada();
+  }
 
-    this.tipoEquipeService.query().subscribe((res: ResponseWrapper) => {
-      this.equipeResponsavel = res.json;
-    });
-    this.organizacaoService.query().subscribe((res: ResponseWrapper) => {
-      this.organizacoes = res.json;
-    });
+  /**
+   * Método responsável por popular o objeto analise carregada.
+  */
+  popularAnaliseCarregada() {
     this.routeSub = this.route.params.subscribe(params => {
       this.analise = new Analise();
       if (params['id']) {
@@ -100,6 +106,33 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
       } else {
         this.analise.esforcoFases = [];
       }
+    });
+  }
+
+  /**
+   * Método responsável por popular a lista dos tipos de equipe.
+  */
+  popularListaTipoEquipe() {
+    this.tipoEquipeService.query().subscribe((res: ResponseWrapper) => {
+      this.equipeResponsavel = res.json;
+    });
+  }
+
+  /**
+   * Método responsável por popular a lista de organizações.
+  */
+  popularListaOrganizacao() {
+    this.organizacaoService.query().subscribe((res: ResponseWrapper) => {
+      this.organizacoes = res.json;
+    });
+  }
+
+  /**
+   * Método responsável por popular a lista de manuais.
+  */
+  popularListaManual() {
+    this.manualService.query().subscribe((res: ResponseWrapper) => {
+      this.manuais = res.json;
     });
   }
 
@@ -279,6 +312,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   public habilitarCamposIniciais() {
     return this.isEdicao;
+  }
+
+  public nomeSistema(): string {
+    return this.analise.sistema.sigla + ' - ' + this.analise.sistema.nome;
   }
 
 }

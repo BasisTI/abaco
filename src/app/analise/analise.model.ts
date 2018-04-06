@@ -12,6 +12,7 @@ import { Modulo } from '../modulo';
 import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 import { Organizacao } from '../organizacao';
 import { TipoEquipe } from '../tipo-equipe';
+import { Manual } from '../manual';
 
 export enum MetodoContagem {
   'DETALHADA' = 'DETALHADA',
@@ -58,11 +59,10 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     public esforcoFases?: EsforcoFase[],
     public observacoes?: string,
     public baselineImediatamente?: boolean,
-    public versaoCPM?: string,
-    public versaoGuiaReferenciaLocal?: string,
     public dataHomologacao?: Date,
     public identificadorAnalise?: string,
-    public equipeResponsavel?: TipoEquipe
+    public equipeResponsavel?: TipoEquipe,
+    public manual?: Manual
 
   ) {
     this.inicializaMappables(funcaoDados, funcaoTransacaos);
@@ -259,11 +259,10 @@ class AnaliseCopyFromJSON {
     this._analiseConverted.propositoContagem = this._json.propositoContagem;
     this._analiseConverted.observacoes = this._json.observacoes;
     this._analiseConverted.baselineImediatamente = this._json.baselineImediatamente;
-    this._analiseConverted.versaoCPM = this._json.versaoCPM;
-    this._analiseConverted.versaoGuiaReferenciaLocal = this._json.versaoGuiaReferenciaLocal;
     this._analiseConverted.dataHomologacao = this._json.dataHomologacao;
     this._analiseConverted.identificadorAnalise = this._json.identificadorAnalise;
     this._analiseConverted.equipeResponsavel = this._json.equipeResponsavel;
+    this._analiseConverted.manual = this._json.manual;
 
     if (!this._analiseConverted.baselineImediatamente) {
       this._analiseConverted.baselineImediatamente = false;

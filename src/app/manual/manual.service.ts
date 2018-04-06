@@ -8,14 +8,18 @@ import { UploadService } from '../upload/upload.service';
 import { Manual } from './manual.model';
 import { ResponseWrapper, createRequestOption, JhiDateUtils, JSONable } from '../shared';
 import { EsforcoFase } from '../esforco-fase/esforco-fase.model';
-import { FatorAjuste } from '../fator-ajuste/fator-ajuste.model'
+import { FatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 
 @Injectable()
 export class ManualService {
 
-  resourceUrl = environment.apiUrl + '/manuals';
+  resourceName = '/manuals';
+
+  resourceUrl = environment.apiUrl + this.resourceName;
 
   searchUrl = environment.apiUrl + '/_search/manuals';
+
+  findActive = environment.apiUrl + this.resourceName;
 
   constructor(
     private http: HttpService,
@@ -80,4 +84,15 @@ export class ManualService {
     const copy: Manual = manual.toJSONState();
     return copy;
   }
+
+  /**
+   * Método responsável por recuperar os manuais.
+  */
+  findActiveManuais() {
+    return this.http.get(this.findActive).map((response: Response) => {
+      console.log(response.json());
+      return response.json();
+    });
+  }
+
 }
