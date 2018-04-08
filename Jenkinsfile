@@ -20,9 +20,9 @@ pipelineBuildFrontendJavascript {
     ]
 
     appImageInfo = [
-        registry: 'basis-registry.basis.com.br',
+        registry: 'fnde-registry.basis.com.br',
         dockerContext: 'docker/nginx',
-        name: 'fnde/abaco-ui',
+        name: 'abaco/abaco-ui',
         tag: _frontendImageTag 
     ]
 
