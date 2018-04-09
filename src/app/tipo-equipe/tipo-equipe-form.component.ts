@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { SelectItem } from 'primeng/primeng';
 
 import { TipoEquipe } from './tipo-equipe.model';
 import { TipoEquipeService } from './tipo-equipe.service';
@@ -42,6 +41,7 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
       }
     });
     this.organizacaoService.findActiveOrganizations().subscribe((res) => {
+      console.log(res);
       this.organizacoes = res;
     });
   }
@@ -81,17 +81,29 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
   }
 
   private checkRequiredFields(): boolean {
-    let isValid = false;
     this.resetMarkFields();
-    if (this.tipoEquipe.nome !== undefined && this.tipoEquipe.nome !== null && this.tipoEquipe.nome !== '' && this.tipoEquipe.nome !== ' ') {
-      isValid = true;
+    return this.validarObjeto(this.tipoEquipe.nome);
+  }
+
+  private validarObjeto(text: string): boolean {
+    if (text !== undefined && text !== null && text.trim() !== '') {
+      return true;
     } else {
       this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
       document.getElementById('nome_tipo_equipe').setAttribute('style', 'border-color: red');
+      return false;
     }
-
-    return isValid;
   }
+
+  // private validarOrganizacao(): boolean {
+  //   if (this.organizacoes !== undefined && this.organizacoes !== null) {
+  //     return true;
+  //   } else {
+  //     this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
+  //     document.getElementById('org').setAttribute('style', 'border-color: red');
+  //     return false;
+  //   }
+  // }
 
   private checkFieldsMaxLength() {
     let isValid = false;
@@ -109,7 +121,7 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     result.subscribe((res: TipoEquipe) => {
       this.isSaving = false;
       this.router.navigate(['/admin/tipoEquipe']);
-      (this.tipoEquipe.id === null) ? (this.pageNotificationService.addCreateMsg()) : (this.pageNotificationService.addUpdateMsg())
+      (this.tipoEquipe.id === null) ? (this.pageNotificationService.addCreateMsg()) : (this.pageNotificationService.addUpdateMsg());
 
     }, (error: Response) => {
       this.isSaving = false;

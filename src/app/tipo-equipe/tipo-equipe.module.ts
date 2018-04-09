@@ -12,7 +12,8 @@ import {
   DropdownModule,
   RadioButtonModule,
   ConfirmDialogModule,
-  ConfirmationService
+  ConfirmationService,
+  MultiSelectModule
 } from 'primeng/primeng';
 
 import {
@@ -39,7 +40,8 @@ import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
     RadioButtonModule,
     InputTextModule,
     ConfirmDialogModule,
-    AbacoButtonsModule
+    AbacoButtonsModule,
+    MultiSelectModule
   ],
   declarations: [
     TipoEquipeComponent,

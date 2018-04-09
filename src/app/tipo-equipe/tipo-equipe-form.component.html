@@ -19,7 +19,7 @@
             </span>
           </div>
 
-          <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+          <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: -25px">
               <h3 class="first">Organização *</h3>
               <p-multiSelect
                 name= "organizacoesMultiSelect"
@@ -27,11 +27,11 @@
                 [(ngModel)]="tipoEquipe.organizacoes"
                 dataKey="id"
                 defaultLabel="Selecione ao menos uma organização" 
-                optionLabel="nome"
+                optionLabel="sigla"
                 selectedItemsLabel="{0} organizações selecionadas">
               </p-multiSelect>
           </div>
-
+          
         </div>
 
         <div class="ui-g ui-md-12" style="justify-content: center">
