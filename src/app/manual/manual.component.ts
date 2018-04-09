@@ -38,11 +38,11 @@ export class ManualComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.datatable.primeDatatableComponent.onRowSelect.subscribe((event) => {
+    this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
       this.manualSelecionado = new Manual().copyFromJSON(event.data);
     });
 
-    this.datatable.primeDatatableComponent.onRowUnselect.subscribe((event) => {
+    this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
       this.manualSelecionado = undefined;
     });
   }

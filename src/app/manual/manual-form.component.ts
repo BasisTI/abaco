@@ -40,15 +40,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   editedPhaseEffort: EsforcoFase = new EsforcoFase();
   newAdjustFactor: FatorAjuste = new FatorAjuste();
   editedAdjustFactor: FatorAjuste = new FatorAjuste();
+
   adjustTypes: Array<any> = [
-    {
-      label: 'Percentual',
-      value: 'PERCENTUAL',
-    },
-    {
-      label: 'Unitário',
-      value: 'UNITARIO',
-    },
+    { label: 'Percentual', value: 'PERCENTUAL', },
+    { label: 'Unitário', value: 'UNITARIO', },
   ];
 
   invalidFields: Array<string> = [];

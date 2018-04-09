@@ -43,16 +43,44 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isSaving = false;
+    this.recuperarListaEquipe();
+    this.recuperarListaOrganizacao();
+    this.recuperarListaPerfis();
+    this.recuperarUsuarioPeloId();
+  }
+
+  /**
+   * Método responsável por popular a lista de equipes.
+  */
+  private recuperarListaEquipe() {
     this.tipoEquipeService.query().subscribe((res: ResponseWrapper) => {
       this.tipoEquipes = res.json;
     });
+  }
+
+  /**
+   * Método responsável por popular a lista de organizações.
+  */
+  private recuperarListaOrganizacao() {
     this.organizacaoService.findActiveOrganizations().subscribe((res) => {
       this.organizacoes = res;
     });
+  }
+
+  /**
+   * Método responsável por popular a lista de perfis.
+  */
+  private recuperarListaPerfis() {
     this.userService.authorities().subscribe((res: Authority[]) => {
       this.authorities = res;
       this.populateAuthoritiesArtificialIds();
     });
+  }
+
+  /**
+   * Método responsável por recuperar o usuário pelo ID.
+  */
+  private recuperarUsuarioPeloId() {
     this.routeSub = this.route.params.subscribe(params => {
       this.user = new User();
       this.user.activated = true;
@@ -75,7 +103,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
   // FIXME Solução rápida e ruim. O(n^2) no pior caso
   // Funciona para qualquer autoridade que vier no banco
-  // // Em oposição a uma solução mais simples porém hardcoded.
+  // Em oposição a uma solução mais simples porém hardcoded.
   private populateUserAuthoritiesWithArtificialId() {
     this.user.authorities.forEach(authority => {
       this.authorities.forEach(userAuthority => {
@@ -102,23 +130,27 @@ export class UserFormComponent implements OnInit, OnDestroy {
     let isLastNameValid = false;
     let isLoginValid = false;
 
-    if (this.user.firstName !== undefined && this.user.firstName !== null && this.user.firstName !== '') {
-      isFirstNameValid = true;
-    } else {
-      document.getElementById('firstName').setAttribute('style', 'border-color: red;');
-    }
+    isFirstNameValid = this.validarObjeto(this.user.firstName);
+    isLastNameValid = this.validarObjeto(this.user.lastName);
+    isLoginValid = this.validarObjeto(this.user.login);
 
-    if (this.user.lastName !== undefined && this.user.lastName !== null && this.user.lastName !== '') {
-      isLastNameValid = true;
-    } else {
-      document.getElementById('lastName').setAttribute('style', 'border-color: red;');
-    }
+    // if (this.user.firstName !== undefined && this.user.firstName !== null && this.user.firstName !== '') {
+    //   isFirstNameValid = true;
+    // } else {
+    //   document.getElementById('firstName').setAttribute('style', 'border-color: red;');
+    // }
 
-    if (this.user.login !== undefined && this.user.login !== null && this.user.login !== '') {
-      isLoginValid = true;
-    } else {
-      document.getElementById('login').setAttribute('style', 'border-color: red;');
-    }
+    // if (this.user.lastName !== undefined && this.user.lastName !== null && this.user.lastName !== '') {
+    //   isLastNameValid = true;
+    // } else {
+    //   document.getElementById('lastName').setAttribute('style', 'border-color: red;');
+    // }
+
+    // if (this.user.login !== undefined && this.user.login !== null && this.user.login !== '') {
+    //   isLoginValid = true;
+    // } else {
+    //   document.getElementById('login').setAttribute('style', 'border-color: red;');
+    // }
 
     if (isFirstNameValid && isLastNameValid && isLoginValid) {
       isValid = true;
@@ -127,6 +159,15 @@ export class UserFormComponent implements OnInit, OnDestroy {
     }
 
     return isValid;
+  }
+
+  private validarObjeto(text: string): boolean {
+    if (text !== undefined && text !== null && text !== '') {
+      return true;
+    } else {
+      document.getElementById('text').setAttribute('style', 'border-color: red;');
+      return false;
+    }
   }
 
   private returnInputToNormalStyle() {
