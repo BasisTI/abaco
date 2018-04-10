@@ -49,27 +49,18 @@ export class UserFormComponent implements OnInit, OnDestroy {
     this.recuperarUsuarioPeloId();
   }
 
-  /**
-   * Método responsável por popular a lista de equipes.
-  */
   private recuperarListaEquipe() {
     this.tipoEquipeService.query().subscribe((res: ResponseWrapper) => {
       this.tipoEquipes = res.json;
     });
   }
 
-  /**
-   * Método responsável por popular a lista de organizações.
-  */
   private recuperarListaOrganizacao() {
     this.organizacaoService.findActiveOrganizations().subscribe((res) => {
       this.organizacoes = res;
     });
   }
 
-  /**
-   * Método responsável por popular a lista de perfis.
-  */
   private recuperarListaPerfis() {
     this.userService.authorities().subscribe((res: Authority[]) => {
       this.authorities = res;
@@ -77,9 +68,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Método responsável por recuperar o usuário pelo ID.
-  */
   private recuperarUsuarioPeloId() {
     this.routeSub = this.route.params.subscribe(params => {
       this.user = new User();

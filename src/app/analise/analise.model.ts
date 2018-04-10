@@ -3,16 +3,13 @@ import { Contrato } from '../contrato';
 import { EsforcoFase } from '../esforco-fase/index';
 import { Sistema } from '../sistema/index';
 import { FuncaoDados, TipoFuncaoDados, FuncaoDadosFormComponent } from '../funcao-dados/index';
-import { Complexidade } from '../analise-shared/complexidade-enum';
 import { ResumoTotal, ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { FuncaoTransacao } from '../funcao-transacao/funcao-transacao.model';
 import { FatorAjuste } from '../fator-ajuste';
 import { ModuloDaFuncionalidadeFinder } from './modulo-finder';
-import { Modulo } from '../modulo';
 import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 import { Organizacao } from '../organizacao';
 import { TipoEquipe } from '../tipo-equipe';
-import { Manual } from '../manual';
 
 export enum MetodoContagem {
   'DETALHADA' = 'DETALHADA',
@@ -62,7 +59,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     public dataHomologacao?: Date,
     public identificadorAnalise?: string,
     public equipeResponsavel?: TipoEquipe,
-    public manual?: Manual
+    public createdOn?: Date
 
   ) {
     this.inicializaMappables(funcaoDados, funcaoTransacaos);
@@ -262,7 +259,7 @@ class AnaliseCopyFromJSON {
     this._analiseConverted.dataHomologacao = this._json.dataHomologacao;
     this._analiseConverted.identificadorAnalise = this._json.identificadorAnalise;
     this._analiseConverted.equipeResponsavel = this._json.equipeResponsavel;
-    this._analiseConverted.manual = this._json.manual;
+    this._analiseConverted.createdOn = this._json.audit.createdOn;
 
     if (!this._analiseConverted.baselineImediatamente) {
       this._analiseConverted.baselineImediatamente = false;

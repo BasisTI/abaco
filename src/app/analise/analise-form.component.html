@@ -33,8 +33,7 @@
                       placeholder="Selecione..."
                       [options]="equipeResponsavel" 
                       [(ngModel)]="analise.equipeResponsavel" 
-                      [autoWidth]="false"
-                      (onChange)="organizacaoSelected($event.value)">
+                      [autoWidth]="false">
                     </p-dropdown>
                 </div>
 
@@ -160,6 +159,20 @@
                 </div>
     
                 <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+                  <label>Contrato *</label>
+                  <p-dropdown 
+                    dataKey="id"
+                    optionLabel="numeroContrato" 
+                    placeholder="Selecione..."
+                    (onChange)="contratoSelected($event.value)"
+                    name="contrato" 
+                    [options]="contratos" 
+                    [(ngModel)]="analise.contrato" 
+                    [autoWidth]="false">
+                  </p-dropdown>
+              </div>
+
+                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                   <label>Deflator</label>
                   <p-dropdown
                     disabled="{{ !isContratoSelected() }}"
@@ -172,21 +185,20 @@
                   </p-dropdown>
                 </div>
 
-                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Manual *</label>
-                  <p-dropdown 
-                    dataKey="id"
-                    name="manual"
-                    optionLabel="nome"
-                    placeholder="Selecione..."
-                    [options]="manuais" 
-                    [(ngModel)]="analise.manual" 
-                    [autoWidth]="false"
-                    (onChange)="save()">
-                  </p-dropdown>
+              <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px; margin-top: 17px">
+                <span class="md-inputfield">
+                  <input
+                    type="text" 
+                    maxlength="100"
+                    name="manualContrato"
+                    disabled="true"
+                    [(ngModel)]="nomeManual"
+                    pInputText/>
+                  <label>Manual</label>
+                </span>
               </div>
     
-                <div class="ui-g-6 ui-md-6 ui-sm-12">
+                <div class="ui-g-3 ui-md-3 ui-sm-12">
   
                   <div class="ui-g-3 ui-md-4 ui-sm-12">
                     <label>Aguardar prazo de garantia</label>
@@ -289,20 +301,6 @@
                       pInputText/>
                     <label>Número OS</label>
                   </span>
-                </div>
-
-                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 9px">
-                    <label>Contrato</label>
-                    <p-dropdown 
-                      dataKey="id"
-                      optionLabel="numeroContrato" 
-                      placeholder="Selecione..."
-                      (onChange)="contratoSelected($event.value)"
-                      name="contrato" 
-                      [options]="contratos" 
-                      [(ngModel)]="analise.contrato" 
-                      [autoWidth]="false">
-                    </p-dropdown>
                 </div>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">

@@ -44,22 +44,18 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   equipeResponsavel: SelectItem[] = [];
 
-  manuais: SelectItem[] = [];
+  // manualContrato: Manual;
+
+  nomeManual = 'Selecione um Contrato.';
 
   private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
 
-  /**
-   * Método responsável por popular a combo de tipo de contagem.
-  */
  tiposAnalise: SelectItem[] = [
     {label: 'Projeto de Desenvolvimento', value: 'DESENVOLVIMENTO'},
     {label: 'Projeto Melhoria', value: 'MELHORIA'},
     {label: 'Contagem de Aplicação (Baseline)', value: 'APLICACAO'}
   ];
 
-  /**
-   * Método responsável por popular a combo método de contagem.
-  */
   metodoContagem: SelectItem[] = [
     {label: 'Detalhada (IFPUG)', value: 'Detalhada (IFPUG)'},
     {label: 'Indicativa (NESMA)', value: 'Indicativa (NESMA)'},
@@ -78,6 +74,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     private tipoEquipeService: TipoEquipeService,
     private pageNotificationService: PageNotificationService,
     private manualService: ManualService,
+    private equipeService: TipoEquipeService,
   ) { }
 
   ngOnInit() {
@@ -85,9 +82,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     this.isEdicao = false;
     this.isSaving = false;
     this.habilitarCamposIniciais();
-    this.popularListaTipoEquipe();
     this.popularListaOrganizacao();
-    this.popularListaManual();
     this.popularAnaliseCarregada();
   }
 
@@ -110,29 +105,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método responsável por popular a lista dos tipos de equipe.
-  */
-  popularListaTipoEquipe() {
-    this.tipoEquipeService.query().subscribe((res: ResponseWrapper) => {
-      this.equipeResponsavel = res.json;
-    });
-  }
-
-  /**
    * Método responsável por popular a lista de organizações.
   */
   popularListaOrganizacao() {
     this.organizacaoService.query().subscribe((res: ResponseWrapper) => {
       this.organizacoes = res.json;
-    });
-  }
-
-  /**
-   * Método responsável por popular a lista de manuais.
-  */
-  popularListaManual() {
-    this.manualService.query().subscribe((res: ResponseWrapper) => {
-      this.manuais = res.json;
     });
   }
 
@@ -148,15 +125,33 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     this.sistemaService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
       this.sistemas = res.json;
     });
+    this.selecionarEquipePorOrganizacao(org);
+  }
+
+  selecionarEquipePorOrganizacao(org: Organizacao) {
+    this.contratos = org.contracts;
+    this.equipeService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
+      this.equipeResponsavel = res.json;
+    });
   }
 
   carregarObjetos(contrato: Contrato) {
     if (contrato && contrato.manual) {
       const manual: Manual = contrato.manual;
+      this.definirNomeManual(manual);
       this.carregarEsforcoFases(manual);
       this.carregarMetodosContagem(manual);
       this.inicializaFatoresAjuste(manual);
     }
+  }
+
+  /**
+   * Método responsável por definir o nome manual.
+   * @param manual
+   */
+  definirNomeManual(manual: Manual) {
+    this.nomeManual = manual.nome;
+
   }
 
   contratoSelected(contrato: Contrato) {

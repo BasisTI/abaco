@@ -12,6 +12,8 @@ export class TipoEquipeService {
 
   resourceUrl = environment.apiUrl + '/tipo-equipes';
 
+  findByOrganizacaoUrl = this.resourceUrl + '/organizacoes';
+
   searchUrl = environment.apiUrl + '/_search/tipo-equipes';
 
   constructor(private http: HttpService) {}
@@ -39,10 +41,18 @@ export class TipoEquipeService {
     });
   }
 
+  /**
+   * Método responsável por recuperar todas as equipes pelo ID da organização.
+   * @param orgId
+   */
+  findAllByOrganizacaoId(orgId: number): Observable<ResponseWrapper> {
+    const url = `${this.findByOrganizacaoUrl}/${orgId}`;
+    return this.http.get(url).map((res: Response) => this.convertResponse(res));
+  }
+
   query(req?: any): Observable<ResponseWrapper> {
     const options = createRequestOption(req);
-    return this.http.get(this.resourceUrl, options)
-      .map((res: Response) => this.convertResponse(res));
+    return this.http.get(this.resourceUrl, options).map((res: Response) => this.convertResponse(res));
   }
 
   delete(id: number): Observable<Response> {
