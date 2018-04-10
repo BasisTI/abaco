@@ -48,10 +48,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   sugestoesAutoComplete: string[] = [];
 
   impacto: SelectItem[] = [
-    {label: 'Inclusão', value: 'Inclusão'},
-    {label: 'Alteração', value: 'Alteração'},
-    {label: 'Exclusão', value: 'Exclusão'},
-    {label: 'Conversão', value: 'Conversão'}
+    { label: 'Inclusão', value: 'Inclusão' },
+    { label: 'Alteração', value: 'Alteração' },
+    { label: 'Exclusão', value: 'Exclusão' },
+    { label: 'Conversão', value: 'Conversão' }
   ];
 
   // FIXME considerar o enum
@@ -234,7 +234,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   private doEditar() {
-    const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem, this.currentFuncaoDados);
+    const funcaoDadosCalculada = Calculadora.calcular(
+      this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual
+    );
     // TODO temporal coupling
     this.analise.updateFuncaoDados(funcaoDadosCalculada);
     this.atualizaResumo();

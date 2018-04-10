@@ -41,10 +41,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   colunasOptions: SelectItem[];
 
   impacto: SelectItem[] = [
-    {label: 'Inclusão', value: 'Inclusão'},
-    {label: 'Alteração', value: 'Alteração'},
-    {label: 'Exclusão', value: 'Exclusão'},
-    {label: 'Conversão', value: 'Conversão'}
+    { label: 'Inclusão', value: 'Inclusão' },
+    { label: 'Alteração', value: 'Alteração' },
+    { label: 'Exclusão', value: 'Exclusão' },
+    { label: 'Conversão', value: 'Conversão' }
   ];
 
   showDialogNovo = false;
@@ -57,7 +57,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     private pageNotificationService: PageNotificationService,
     private changeDetectorRef: ChangeDetectorRef,
     private analiseService: AnaliseService,
-  ) {  }
+  ) { }
 
   /**
    *
@@ -250,7 +250,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
    *
   **/
   private doEditar() {
-    const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem, this.currentFuncaoTransacao);
+    const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
+      this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual
+    );
     // TODO temporal coupling
     this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
     this.atualizaResumo();
