@@ -1,10 +1,12 @@
 import { FuncaoDados } from '../funcao-dados/funcao-dados.model';
 import { Complexidade } from '../analise-shared/complexidade-enum';
 import { MetodoContagem } from '../analise/index';
-import { TipoFatorAjuste } from '../fator-ajuste/index';
+import { TipoFatorAjuste, FatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 import { ComplexidadeFuncionalDados } from './calculadora/complexidade-funcional-dados';
 import { PFPorTiposComplexidades } from './calculadora/pf-por-tipos-complexidades';
 import { CalculadoraFator } from './calculadora/calculadora-fator';
+import { Manual } from '../manual/manual.model';
+import { FatorAjusteImpactoRetriever } from './calculadora/fator-ajuste-impacto-retriever';
 
 export class Calculadora {
 
@@ -16,18 +18,26 @@ export class Calculadora {
 
   private static fatorPF: number;
 
+  private static _manual: Manual;
+  private static _fatorAjuste: FatorAjuste;
+
   // TODO extrair uma interface implementada por FuncaoDados e FuncaoTransacao
-  public static calcular(metodoContagem: MetodoContagem, funcaoDados: FuncaoDados): FuncaoDados {
-    this.inicializaVariaveis(metodoContagem, funcaoDados);
+  public static calcular(metodoContagem: MetodoContagem, funcaoDados: FuncaoDados, manual?: Manual): FuncaoDados {
+    this.inicializaVariaveis(metodoContagem, funcaoDados, manual);
     this.calcularDeAcordoComMetodoContagem();
     this.aplicarFator();
     return this.funcaoDadosCalculada;
   }
 
-  private static inicializaVariaveis(metodoContagem: MetodoContagem, funcaoDados: FuncaoDados) {
+  private static inicializaVariaveis(metodoContagem: MetodoContagem, funcaoDados: FuncaoDados, manual: Manual) {
     this.funcaoDadosCalculada = funcaoDados.clone();
     this.funcaoDados = funcaoDados;
     this.metodoContagem = metodoContagem;
+    this.defineFatorAjuste(funcaoDados, manual);
+  }
+
+  private static defineFatorAjuste(fd: FuncaoDados, manual: Manual) {
+    this._fatorAjuste = FatorAjusteImpactoRetriever.retrieve(fd.fatorAjuste, fd.impacto, manual);
   }
 
   private static calcularDeAcordoComMetodoContagem() {
@@ -65,7 +75,7 @@ export class Calculadora {
 
   private static definirComplexidade() {
     // FIXME é isso aqui mesmo? funcao de dados sempre vai ter fatorAjuste?
-    if (this.funcaoDados.fatorAjuste.isUnitario()) {
+    if (this._fatorAjuste.isUnitario()) {
       this.funcaoDadosCalculada.complexidade = Complexidade.SEM;
     } else {
       this.definirComplexidadePercentual();
@@ -87,7 +97,7 @@ export class Calculadora {
   private static aplicarFator() {
     this.funcaoDadosCalculada.grossPF = this.funcaoDadosCalculada.pf;
     this.funcaoDadosCalculada.pf = CalculadoraFator.aplicarFator(
-      this.funcaoDadosCalculada.pf, this.funcaoDados.fatorAjuste
+      this.funcaoDadosCalculada.pf, this._fatorAjuste
     );
   }
 

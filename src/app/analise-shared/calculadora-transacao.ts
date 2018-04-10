@@ -1,10 +1,12 @@
 import { Complexidade } from '../analise-shared/complexidade-enum';
 import { MetodoContagem } from '../analise/analise.model';
-import { TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
+import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 import { FuncaoTransacao, TipoFuncaoTransacao } from '../funcao-transacao/funcao-transacao.model';
 import { ComplexidadeFuncionalTransacao } from './calculadora/complexidade-funcional-transacao';
 import { PFPorTiposComplexidades } from './calculadora/pf-por-tipos-complexidades';
 import { CalculadoraFator } from './calculadora/calculadora-fator';
+import { Manual } from '../manual/manual.model';
+import { FatorAjusteImpactoRetriever } from './calculadora/fator-ajuste-impacto-retriever';
 
 export class CalculadoraTransacao {
 
@@ -16,23 +18,31 @@ export class CalculadoraTransacao {
 
   private static fatorPF: number;
 
+  private static _manual: Manual;
+  private static _fatorAjuste: FatorAjuste;
+
   // TODO extrair uma interface implementada por FuncaoDados e FuncaoTransacao
-  public static calcular(metodoContagem: MetodoContagem, funcaoTransacao: FuncaoTransacao): FuncaoTransacao {
-    this.inicializaVariaveis(metodoContagem, funcaoTransacao);
+  public static calcular(metodoContagem: MetodoContagem, funcaoTransacao: FuncaoTransacao, manual?: Manual): FuncaoTransacao {
+    this.inicializaVariaveis(metodoContagem, funcaoTransacao, manual);
     this.definirComplexidade();
     this.calcularPfsDeAcordoComGrupoDeDadosLogicos();
     this.aplicarFator();
     return this.funcaoTransacaoCalculada;
   }
 
-  private static inicializaVariaveis(metodoContagem: MetodoContagem, funcaoTransacao: FuncaoTransacao) {
+  private static inicializaVariaveis(metodoContagem: MetodoContagem, funcaoTransacao: FuncaoTransacao, manual: Manual) {
     this.funcaoTransacaoCalculada = funcaoTransacao.clone();
     this.funcaoTransacao = funcaoTransacao;
     this.metodoContagem = metodoContagem;
+    this.defineFatorAjuste(funcaoTransacao, manual);
+  }
+
+  private static defineFatorAjuste(ft: FuncaoTransacao, manual: Manual) {
+    this._fatorAjuste = FatorAjusteImpactoRetriever.retrieve(ft.fatorAjuste, ft.impacto, manual);
   }
 
   private static definirComplexidade() {
-    if (this.funcaoTransacao.fatorAjuste.isUnitario()) {
+    if (this._fatorAjuste.isUnitario()) {
       this.funcaoTransacaoCalculada.complexidade = Complexidade.SEM;
     } else {
       this.definirComplexidadePercentual();
@@ -67,7 +77,7 @@ export class CalculadoraTransacao {
   private static aplicarFator() {
     this.funcaoTransacaoCalculada.grossPF = this.funcaoTransacaoCalculada.pf;
     this.funcaoTransacaoCalculada.pf = CalculadoraFator.aplicarFator(
-      this.funcaoTransacaoCalculada.pf, this.funcaoTransacao.fatorAjuste
+      this.funcaoTransacaoCalculada.pf, this._fatorAjuste
     );
   }
 
