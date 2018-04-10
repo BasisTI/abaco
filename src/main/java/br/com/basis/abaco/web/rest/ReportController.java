@@ -1,5 +1,26 @@
 package br.com.basis.abaco.web.rest;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
@@ -13,26 +34,6 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by roman on 10/24/17.
@@ -607,8 +608,8 @@ public class ReportController {
         params.put("OS",analise.getNumeroOs());
         params.put("System",analise.getSistema().getNome());
         params.put("fp",analise.getPfTotal());
-        params.put("createDate",analise.getCreated());
-        params.put("updateDate",analise.getEdited());
+        params.put("createDate",analise.getAudit().getCreatedOn());
+        params.put("updateDate",analise.getAudit().getUpdatedOn());
        // params.put("SUBREPORT_DATASOURCE",new JRBeanCollectionDataSource(this.convertTranFunctions(analise)));
         List<DetailFunctionRecord> data = this.convertDataFunctions(analise);
         data.addAll(this.convertTranFunctions(analise));
@@ -649,8 +650,8 @@ public class ReportController {
         params.put("Documentation",analise.getDocumentacao()==null?"":analise.getDocumentacao());
         params.put("Scope",analise.getEscopo()==null?"":analise.getEscopo());
         params.put("Type",analise.getTipoAnalise().toString());
-        params.put("createDate",analise.getCreated());
-        params.put("updateDate",analise.getEdited());
+        params.put("createDate",analise.getAudit().getCreatedOn());
+        params.put("updateDate",analise.getAudit().getUpdatedOn());
 
         List<TotalRecord> totals = this.generateListOfTotals(analise);
         //params.put("Gross_FP",totals.get(totals.size()-1).getGross_fp().toString());

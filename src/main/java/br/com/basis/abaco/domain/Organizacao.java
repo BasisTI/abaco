@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -69,6 +70,10 @@ public class Organizacao implements Serializable {
 	@OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@JsonManagedReference
 	private Set<Contrato> contracts = new HashSet<>();
+	
+	@JsonIgnore
+	@ManyToMany(mappedBy = "organizacoes", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<TipoEquipe> tipoEquipe = new HashSet<>();
 
 	@Size(max = 10)
 	@Column(name = "sigla")
@@ -204,6 +209,14 @@ public class Organizacao implements Serializable {
 
 	public void setLogoId(int logoId) {
 		this.logoId = logoId;
+	}
+
+	public Set<TipoEquipe> getTipoEquipe() {
+		return tipoEquipe;
+	}
+
+	public void setTipoEquipe(Set<TipoEquipe> tipoEquipe) {
+		this.tipoEquipe = tipoEquipe;
 	}
 
 	@Override

@@ -6,8 +6,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import javax.validation.Valid;
 
@@ -32,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 
-import br.com.basis.abaco.domain.Manual;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
@@ -58,6 +55,7 @@ public class TipoEquipeResource {
 
 	public TipoEquipeResource(TipoEquipeRepository tipoEquipeRepository,
 			TipoEquipeSearchRepository tipoEquipeSearchRepository) {
+		
 		this.tipoEquipeRepository = tipoEquipeRepository;
 		this.tipoEquipeSearchRepository = tipoEquipeSearchRepository;
 	}
@@ -65,8 +63,8 @@ public class TipoEquipeResource {
 	/**
 	 * POST /tipo-equipes : Create a new tipoEquipe.
 	 *
-	 * @param tipoEquipe
-	 *            the tipoEquipe to create
+	 * @param tipoEquipe 
+	 * the tipoEquipe to create
 	 * @return the ResponseEntity with status 201 (Created) and with body the new
 	 *         tipoEquipe, or with status 400 (Bad Request) if the tipoEquipe has
 	 *         already an ID
@@ -91,8 +89,8 @@ public class TipoEquipeResource {
 	/**
 	 * PUT /tipo-equipes : Updates an existing tipoEquipe.
 	 *
-	 * @param tipoEquipe
-	 *            the tipoEquipe to update
+	 * @param tipoEquipe 
+	 * the tipoEquipe to update
 	 * @return the ResponseEntity with status 200 (OK) and with body the updated
 	 *         tipoEquipe, or with status 400 (Bad Request) if the tipoEquipe is not
 	 *         valid, or with status 500 (Internal Server Error) if the tipoEquipe
@@ -118,7 +116,7 @@ public class TipoEquipeResource {
 	 * GET /tipo-equipes : get all the tipoEquipes.
 	 *
 	 * @param pageable
-	 *            the pagination information
+	 * the pagination information
 	 * @return the ResponseEntity with status 200 (OK) and the list of tipoEquipes
 	 *         in body
 	 */
@@ -144,6 +142,19 @@ public class TipoEquipeResource {
 		log.debug("REST request to get TipoEquipe : {}", id);
 		TipoEquipe tipoEquipe = tipoEquipeRepository.findOne(id);
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoEquipe));
+	}
+	
+	/**
+	 * 
+	 * @param idOrganizacao
+	 * @return
+	 */
+	@GetMapping("/tipo-equipes/organizacoes/{idOrganizacao}")
+	@Timed
+	public List<TipoEquipe> getAllTipoEquipeByOrganizacao(@PathVariable Long idOrganizacao) {
+		log.debug("REST request to get all TipoEquipes");
+		List<TipoEquipe> tipoEquipe = tipoEquipeRepository.findAllByOrganizacoes_Id(idOrganizacao);
+		return tipoEquipe;
 	}
 
 	/**
