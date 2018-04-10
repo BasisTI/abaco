@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
@@ -28,13 +29,12 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import br.com.basis.abaco.domain.audit.AbacoAudit;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.TipoAnalise;
 import io.swagger.annotations.ApiModel;
@@ -101,12 +101,9 @@ public class Analise implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Organizacao organizacao;
-
-    @CreatedDate
-    private Date created;
-
-    @LastModifiedDate
-    private Date edited;
+    
+    @Embedded
+    private AbacoAudit audit = new AbacoAudit();
 
     // FIXME @CreatedBy e @LastModifiedBy de Analise não seguem o padrão dado em
     // User
@@ -146,9 +143,6 @@ public class Analise implements Serializable {
 
     @Column(name = "baseline_imediatamente")
     private Boolean baselineImediatamente;
-
-    @ManyToOne
-    private Manual manual;
 
     @Column(name = "data_homologacao_software")
     private Date dataHomologacao;
@@ -373,22 +367,6 @@ public class Analise implements Serializable {
         return Objects.equals(id, analise.id);
     }
 
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getEdited() {
-        return edited;
-    }
-
-    public void setEdited(Date edited) {
-        this.edited = edited;
-    }
-
     public User getCreatedBy() {
         return createdBy;
     }
@@ -479,12 +457,12 @@ public class Analise implements Serializable {
 		this.equipeResponsavel = equipeResponsavel;
 	}
 
-	public Manual getManual() {
-		return manual;
+	public AbacoAudit getAudit() {
+		return audit;
 	}
 
-	public void setManual(Manual manual) {
-		this.manual = manual;
+	public void setAudit(AbacoAudit audit) {
+		this.audit = audit;
 	}
 
 	@Override

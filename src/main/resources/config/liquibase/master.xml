@@ -81,6 +81,7 @@
     <include file="classpath:config/liquibase/changelog/20180405175948_ADD_Manual_to_Analise_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180406183523_CREATE_organizacoes_in_tipoEquipe_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180406222900_ADD_versaoCpm_in_manual_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180409145819_ADD_created_on_updated_on_in_Analise_changelog.xml" relativeToChangelogFile="false"/>
     
 
 </databaseChangeLog>
