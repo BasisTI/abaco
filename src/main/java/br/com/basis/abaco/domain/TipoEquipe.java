@@ -1,6 +1,7 @@
 package br.com.basis.abaco.domain;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -21,8 +22,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * A TipoEquipe.
@@ -74,11 +73,11 @@ public class TipoEquipe implements Serializable {
     // setters here, do not remove
 
     public Set<Organizacao> getOrganizacoes() {
-        return organizacoes;
+        return Collections.unmodifiableSet(organizacoes);
     }
 
     public void setOrganizacoes(Set<Organizacao> orgs) {
-        this.organizacoes = orgs;
+        this.organizacoes = new HashSet<>(orgs);
     }
 
     @Override
