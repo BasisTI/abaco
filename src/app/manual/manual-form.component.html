@@ -103,55 +103,52 @@
             </div>
 
             <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-              <span class="md-inputfield">
-                <p-spinner 
-                  size="3" 
-                  name="parametroInclusao" 
-                  [(ngModel)]="manual.parametroInclusaoFormatado" 
-                  min="0" 
-                  max="100">
-                </p-spinner>
-                <label>{{ 'Inclusão (%)'| translate }}</label>
-              </span>
+                <span class="md-inputfield">
+                    <input 
+                      required
+                      type="text" 
+                      maxlength="3"
+                      name="parametroInclusao"
+                      [(ngModel)]="manual.parametroInclusaoFormatado"
+                      pInputText/>
+                    <label>Inclusão (%) *</label>
+                  </span>
             </div>
-
             <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                 <span class="md-inputfield">
-                  <p-spinner 
-                    size="3" 
-                    name="parametroAlteracao" 
-                    [(ngModel)]="manual.parametroAlteracaoFormatado" 
-                    min="0" 
-                    max="100">
-                  </p-spinner>
-                  <label>{{ 'Alteração (%)'| translate }}</label>
-                </span>
+                    <input 
+                      required
+                      type="text" 
+                      maxlength="3"
+                      name="parametroAlteracaoFormatado"
+                      [(ngModel)]="manual.parametroAlteracaoFormatado"
+                      pInputText/>
+                    <label>Alteração (%) *</label>
+                  </span>
             </div>
-
             <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                 <span class="md-inputfield">
-                  <p-spinner 
-                    size="3" 
-                    name="parametroExclusao" 
-                    [(ngModel)]="manual.parametroExclusaoFormatado" 
-                    min="0" 
-                    max="100">
-                  </p-spinner>
-                  <label>{{ 'Exclusão (%)'| translate }}</label>
-                </span>
+                    <input 
+                      required
+                      type="text" 
+                      maxlength="3"
+                      name="parametroExclusaoFormatado"
+                      [(ngModel)]="manual.parametroExclusaoFormatado"
+                      pInputText/>
+                    <label>Exclusão (%) *</label>
+                  </span>
             </div>
-
             <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                 <span class="md-inputfield">
-                  <p-spinner 
-                    size="3" 
-                    name="parametroConversao" 
-                    [(ngModel)]="manual.parametroConversaoFormatado" 
-                    min="0" 
-                    max="100">
-                  </p-spinner>
-                  <label>{{ 'Conversão (%)'| translate }}</label>
-                </span>
+                    <input 
+                      required
+                      type="text" 
+                      maxlength="3"
+                      name="parametroConversaoFormatado"
+                      [(ngModel)]="manual.parametroConversaoFormatado"
+                      pInputText/>
+                    <label>Conversão (%) *</label>
+                  </span>
             </div>
 
             <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-top: 25px; margin-bottom: 25px">
