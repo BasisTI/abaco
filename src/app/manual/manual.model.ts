@@ -47,8 +47,9 @@ export class Manual implements BaseEntity, JSONable<Manual> {
       .map(faJSON => new FatorAjuste().copyFromJSON(faJSON));
     const esforcoFases: EsforcoFase[] = json.esforcoFases
       .map(efJSON => new EsforcoFase().copyFromJSON(efJSON));
+      console.log(json);
     return new Manual(
-      json.id
+        json.id
       , json.nome
       , json.observacao
       , json.valorVariacaoEstimada
@@ -56,6 +57,7 @@ export class Manual implements BaseEntity, JSONable<Manual> {
       , json.arquivoManualId
       , fatoresAjuste
       , esforcoFases
+      , undefined
       , json.parametroInclusao
       , json.parametroAlteracao
       , json.parametroExclusao
@@ -91,35 +93,38 @@ export class Manual implements BaseEntity, JSONable<Manual> {
       return valor * 100;
     }
   }
+
+  set parametroInclusaoFormatado(valor: number) {
+    this.parametroInclusao = valor / 100;
+  }
+
   get parametroAlteracaoFormatado(): number {
     const valor: number = this.parametroAlteracao;
     if (valor) {
       return valor * 100;
     }
   }
+
+  set parametroAlteracaoFormatado(valor: number) {
+    this.parametroAlteracao = valor / 100;
+  }
+
   get parametroExclusaoFormatado(): number {
     const valor: number = this.parametroExclusao;
     if (valor) {
       return valor * 100;
     }
   }
+
+  set parametroExclusaoFormatado(valor: number) {
+    this.parametroExclusao = valor / 100;
+  }
+
   get parametroConversaoFormatado(): number {
     const valor: number = this.parametroConversao;
     if (valor) {
       return valor * 100;
     }
-  }
-
-  set parametroInclusaoFormatado(valor: number) {
-    this.parametroInclusao = valor / 100;
-  }
-
-  set parametroAlteracaoFormatado(valor: number) {
-    this.parametroAlteracao = valor / 100;
-  }
-
-  set parametroExclusaoFormatado(valor: number) {
-    this.parametroExclusao = valor / 100;
   }
 
   set parametroConversaoFormatado(valor: number) {
