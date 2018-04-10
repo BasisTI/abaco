@@ -7,20 +7,19 @@ import org.springframework.stereotype.Repository;
 
 import br.com.basis.abaco.domain.TipoEquipe;
 
-
 /**
  * Spring Data JPA repository for the TipoEquipe entity.
  */
 @SuppressWarnings("unused")
 @Repository
 public interface TipoEquipeRepository extends JpaRepository<TipoEquipe, Long> {
-	
+
     /**
      * Get list of systems by organizations
      *
      * @param organizacao
      * @return
      */
-	List<TipoEquipe> findAllByOrganizacoes_Id(Long idOrganizacao);
+    List<TipoEquipe> findAllByOrganizacoes_Id(Long idOrganizacao);
 
 }

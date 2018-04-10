@@ -43,12 +43,13 @@ public class TipoEquipe implements Serializable {
     @NotNull
     @Column(name = "nome", nullable = false, unique = true)
     private String nome;
-    
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "tipoequipe_organizacao", joinColumns = @JoinColumn(name = "tipoequipe_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
-	private Set<Organizacao> organizacoes = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "tipoequipe_organizacao", joinColumns = @JoinColumn(name = "tipoequipe_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
+    private Set<Organizacao> organizacoes = new HashSet<>();
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not
+    // remove
     public Long getId() {
         return id;
     }
@@ -69,17 +70,18 @@ public class TipoEquipe implements Serializable {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here, do not remove
 
     public Set<Organizacao> getOrganizacoes() {
-		return organizacoes;
-	}
+        return organizacoes;
+    }
 
-	public void setOrganizacoes(Set<Organizacao> orgs) {
-		this.organizacoes = orgs;
-	}
+    public void setOrganizacoes(Set<Organizacao> orgs) {
+        this.organizacoes = orgs;
+    }
 
-	@Override
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
@@ -101,9 +103,6 @@ public class TipoEquipe implements Serializable {
 
     @Override
     public String toString() {
-        return "TipoEquipe{" +
-            "id=" + getId() +
-            ", nome='" + getNome() + "'" +
-            "}";
+        return "TipoEquipe{" + "id=" + getId() + ", nome='" + getNome() + "'" + "}";
     }
 }
