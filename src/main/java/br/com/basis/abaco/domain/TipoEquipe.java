@@ -63,19 +63,19 @@ public class TipoEquipe implements Serializable {
 		return organizacoes;
 	}
 
-	public void setOrganizacoes(Set<Organizacao> organizacoes) {
-		this.organizacoes = organizacoes;
+	public void setOrganizacoes(Set<Organizacao> orgs) {
+		this.organizacoes = orgs;
 	}
 
 	@Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object obj) {
+        if (obj == this) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (null == obj || getClass() != obj.getClass()) {
             return false;
         }
-        TipoEquipe tipoEquipe = (TipoEquipe) o;
+        TipoEquipe tipoEquipe = (TipoEquipe) obj;
         if (tipoEquipe.getId() == null || getId() == null) {
             return false;
         }
