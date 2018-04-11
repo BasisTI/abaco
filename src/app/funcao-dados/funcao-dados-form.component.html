@@ -133,7 +133,7 @@
           header="{{ header }}" 
           [(visible)]="showDialogNovo" 
           [contentStyle]="{'height': '840px'}" 
-          [width]="800">
+          [width]="900">
 
           <app-analise-modulo-funcionalidade
             [isFuncaoDados]="true"
@@ -142,8 +142,19 @@
           </app-analise-modulo-funcionalidade>
 
           <div class="ui-g">
+
+            <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                <label>Nome</label>
+                <p-autoComplete 
+                  [(ngModel)]="currentFuncaoDados.name"
+                  [suggestions]="sugestoesAutoComplete"
+                  (completeMethod)="autoCompleteNomes($event)"
+                  (onSelect)="recuperarNomeSelecionado($event.value)">
+                </p-autoComplete>
+            </div>
+
             <div class="ui-g-4 ui-md-4 ui-sm-12">
-                <label>Classificação</label>
+                <label>Classificação *</label>
                 <p-dropdown 
                   [options]="classificacoes"
                   [(ngModel)]="currentFuncaoDados.tipo"
@@ -154,7 +165,7 @@
             </div>
 
             <div class="ui-g-4 ui-md-4 ui-sm-12">
-                <label>Impacto</label>
+                <label>Impacto *</label>
                 <p-dropdown 
                   [options]="impacto"
                   [(ngModel)]="currentFuncaoDados.impacto"
@@ -176,16 +187,6 @@
               </p-dropdown>
             </div>
     
-          </div>
-
-          <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-top: 25px">
-              <label>Nome</label>
-              <p-autoComplete 
-                [(ngModel)]="currentFuncaoDados.name"
-                [suggestions]="sugestoesAutoComplete"
-                (completeMethod)="autoCompleteNomes($event)"
-                (onSelect)="recuperarNomeSelecionado($event.value)">
-              </p-autoComplete>
           </div>
             
           <div class="ui-g-12 ui-md-12 ui-sm-12">

@@ -2,6 +2,7 @@
 <p-dataTable [value]="linhasResumo"
   [responsive]="true" scrollable="true" scrollWidth="100%">
   <p-column field="label"></p-column>
+
   <div *ngFor="let complexidade of complexidades">
     <p-column [header]="complexidade">
       <ng-template let-linhaResumo="rowData" pTemplate="body">
@@ -9,19 +10,27 @@
       </ng-template>
     </p-column>
   </div>
-  <p-column header="Total">
+
+  <!-- <p-column header="Impacto">
+    IMPLEMENTAR NA PRÓXIMA VERSÃO
+  </p-column> -->
+
+  <p-column header="Quantidade">
     <ng-template let-linhaResumo="rowData" pTemplate="body">
       {{ linhaResumo.getQuantidadeTotal() }}
     </ng-template>
   </p-column>
-  <p-column header="PF - Total Bruto">
+
+  <p-column header="PF - Total">
     <ng-template let-linhaResumo="rowData" pTemplate="body">
       {{ linhaResumo.getTotalGrossPF() | number }}
     </ng-template>
   </p-column>
-  <p-column header="PF - Total Líquido">
+
+  <p-column header="PF - Ajustado">
     <ng-template let-linhaResumo="rowData" pTemplate="body">
       {{ linhaResumo.getTotalPf() | number }}
     </ng-template>
   </p-column>
+
 </p-dataTable>

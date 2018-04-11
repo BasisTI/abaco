@@ -134,7 +134,7 @@
           header="{{ header }}" 
           [(visible)]="showDialogNovo" 
           [contentStyle]="{'height': '840px'}" 
-          [width]="800">
+          [width]="900">
           
           <div>
             <app-analise-modulo-funcionalidade
@@ -146,8 +146,8 @@
 
           <div class="ui-g">
             <div class="ui-g-4 ui-md-4 ui-sm-12">
-                <label>Classificação</label>
-                <p-dropdown 
+                <label>Classificação *</label>
+                <p-dropdown
                   [options]="classificacoes"
                   [(ngModel)]="currentFuncaoTransacao.tipo"
                   placeholder="Selecione uma Classificação"
@@ -157,8 +157,9 @@
             </div>
 
             <div class="ui-g-4 ui-md-4 ui-sm-12">
-                <label>Impacto</label>
-                <p-dropdown 
+                <label>Impacto *</label>
+                <p-dropdown
+                  required = "true"
                   [options]="impacto"
                   [(ngModel)]="currentFuncaoTransacao.impacto"
                   placeholder="Selecione..."
@@ -179,7 +180,7 @@
               </p-dropdown>
             </div>
 
-          </div>
+          </div>840
   
           <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-top: 25px">
             <span class="md-inputfield">
@@ -238,7 +239,8 @@
               <app-blue-button 
                 [buttonLabel]="labelBotaoAdicionar"
                 [isDisabled]="!deveHabilitarBotaoAdicionar()"
-                buttonIcon="ui-icon-add" (click)="adicionar()">
+                buttonIcon="ui-icon-add" 
+                (click)="adicionar()">
               </app-blue-button>
             </div>
           </div>

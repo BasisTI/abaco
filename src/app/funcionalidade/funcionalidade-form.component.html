@@ -16,15 +16,43 @@
               <label>Nome</label>
             </span>
           </div>
+          
           <div class="ui-g-6">
-            <p-dropdown [options]="modulos" optionLabel="id" placeholder="Modulo" name="modulo" [(ngModel)]="funcionalidade.modulo" [autoWidth]="false" dataKey="id"></p-dropdown>
+            <p-dropdown 
+              [options]="modulos" 
+              optionLabel="id" 
+              placeholder="Modulo" 
+              name="modulo" 
+              [(ngModel)]="funcionalidade.modulo" 
+              [autoWidth]="false" 
+              dataKey="id">
+            </p-dropdown>
           </div>
+
           <div class="ui-g-6">
-            <p-dropdown [options]="funcaodados" optionLabel="id" placeholder="FuncaoDados" name="funcaoDados" [(ngModel)]="funcionalidade.funcaoDados" [autoWidth]="false" dataKey="id"></p-dropdown>
+            <p-dropdown 
+              [options]="funcaodados" 
+              optionLabel="id" 
+              placeholder="FuncaoDados" 
+              name="funcaoDados" 
+              [(ngModel)]="funcionalidade.funcaoDados" 
+              [autoWidth]="false" 
+              dataKey="id">
+            </p-dropdown>
           </div>
+
           <div class="ui-g-6">
-            <p-dropdown [options]="funcaotransacaos" optionLabel="id" placeholder="FuncaoTransacao" name="funcaoTransacao" [(ngModel)]="funcionalidade.funcaoTransacao" [autoWidth]="false" dataKey="id"></p-dropdown>
+            <p-dropdown 
+              [options]="funcaotransacaos" 
+              optionLabel="id" 
+              placeholder="FuncaoTransacao" 
+              name="funcaoTransacao" 
+              [(ngModel)]="funcionalidade.funcaoTransacao" 
+              [autoWidth]="false" 
+              dataKey="id">
+            </p-dropdown>
           </div>
+
         </div>
         <div class="ui-g">
           <div class="ui-g-2">
