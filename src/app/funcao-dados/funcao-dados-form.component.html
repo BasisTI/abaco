@@ -24,7 +24,7 @@
                     [ngModel]="colunasAMostrar"
                     (ngModelChange)="ordenarColunas($event)"
                     dataKey="index" 
-                    [maxSelectedLabels]="10">
+                    [maxSelectedLabels]="colunasOptions.length">
                   </p-multiSelect>
                 </div>
               </div>
@@ -61,7 +61,7 @@
                             [value]="formataFatorAjuste(fatorAjuste)">
                           </app-ellipsis-tooltip>
                         </ng-template>
-    
+   
                         <ng-template 
                           *ngIf="col.header === 'Módulo'"
                           let-modulo="rowData.funcionalidade.modulo" 
@@ -99,12 +99,12 @@
                         </ng-template>
     
                         <ng-template 
-                          *ngIf="col.header === 'PF Bruto'"
+                          *ngIf="col.header === 'PF - Total'"
                           let-grossPF="rowData.grossPF" 
                           pTemplate="body">
                           {{ grossPF | number }}
                         </ng-template>
-                        <ng-template *ngIf="col.header === 'PF Líquido'"
+                        <ng-template *ngIf="col.header === 'PF - Ajustado'"
                           let-pf="rowData.pf" pTemplate="body">
                           {{ pf | number }}
                         </ng-template>
@@ -178,7 +178,7 @@
             <div class="ui-g-4 ui-md-4 ui-sm-12">
               <label>Deflator</label>
               <p-dropdown 
-                [options]="fatoresAjuste | fatorAjusteToSelectItem"
+                [options]="fatoresAjuste"
                 [(ngModel)]="currentFuncaoDados.fatorAjuste" 
                 [disabled]="!isContratoSelected()"
                 [placeholder]="fatoresAjusteDropdownPlaceholder()"

@@ -20,6 +20,7 @@ import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
 import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
 import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
 import { FuncaoDadosService } from './funcao-dados.service';
+import { Manual } from '../manual';
 
 @Component({
   selector: 'app-analise-funcao-dados',
@@ -35,7 +36,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   resumo: ResumoFuncoes;
 
-  fatoresAjuste: FatorAjuste[] = [];
+  fatoresAjuste: SelectItem[] = [];
 
   colunasOptions: SelectItem[];
 
@@ -60,6 +61,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     { label: 'AIE', value: 'AIE' }
   ];
 
+  private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
+
   private analiseCarregadaSubscription: Subscription;
   private subscriptionSistemaSelecionado: Subscription;
 
@@ -73,6 +76,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   ) {
     const colunas = [
       { header: 'Deflator' },
+      { header: 'Impacto', field: 'impacto' },
       { header: 'Módulo' },
       { header: 'Funcionalidade' },
       { header: 'Nome', field: 'name' },
@@ -80,8 +84,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
       { header: 'DER (TD)' },
       { header: 'RLR (TR)' },
       { header: 'Complexidade', field: 'complexidade' },
-      { header: 'PF Bruto' },
-      { header: 'PF Líquido' }
+      { header: 'PF - Total' },
+      { header: 'PF - Ajustado' }
     ];
 
     this.colunasOptions = colunas.map((col, index) => {
@@ -174,7 +178,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     // FIXME p-dropdown requer 2 clicks quando o [options] chama um método get()
     const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
     if (isContratoSelected && this.fatoresAjuste.length === 0) {
-      this.fatoresAjuste = this.manual.fatoresAjuste;
+      this.inicializaFatoresAjuste(this.manual);
     }
 
     return isContratoSelected;
@@ -279,8 +283,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
       fd => {
         this.prepararParaEdicao(fd);
       });
-
-    console.log(nome);
   }
 
   datatableClick(event: DatatableClickEvent) {
@@ -317,9 +319,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     this.carregarDerERlr(funcaoDadosSelecionada);
   }
 
-  private carregarFatorDeAjusteNaEdicao(fd: FuncaoDados) {
-    this.fatoresAjuste = this.manual.fatoresAjuste;
-    fd.fatorAjuste = _.find(this.fatoresAjuste, { 'id': fd.fatorAjuste.id });
+  private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
+    this.inicializaFatoresAjuste(this.manual);
+    funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, {value: { 'id': funcaoSelecionada.fatorAjuste.id }} ).value;
   }
 
   private carregarDerERlr(fd: FuncaoDados) {
@@ -372,7 +374,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   formataFatorAjuste(fatorAjuste: FatorAjuste): string {
-    return FatorAjusteLabelGenerator.generate(fatorAjuste);
+    if (fatorAjuste) {
+      return FatorAjusteLabelGenerator.generate(fatorAjuste);
+    } else {
+      return 'Nenhum';
+    }
   }
 
   ordenarColunas(colunasAMostrarModificada: SelectItem[]) {
@@ -388,6 +394,16 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   openDialogNovo() {
     this.limparDadosDaTelaNaEdicaoCancelada();
     this.showDialogNovo = true;
+  }
+
+  private inicializaFatoresAjuste(manual: Manual) {
+    const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+    this.fatoresAjuste =
+      faS.map(fa => {
+        const label = FatorAjusteLabelGenerator.generate(fa);
+        return { label: label, value: fa };
+      });
+    this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
   }
 
 }

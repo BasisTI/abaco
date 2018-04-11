@@ -136,6 +136,7 @@ class FuncaoDadosCopyFromJSON {
     this._funcaoDados.name = this._json.name;
     this._funcaoDados.sustantation = this._json.sustantation;
     this._funcaoDados.grossPF = this._json.grossPF;
+    this._funcaoDados.impacto = this._json.impacto;
   }
 
   private converteBaseEntities() {
