@@ -29,7 +29,7 @@
     <div class="ui-g-6 ui-md-6 ui-sm-12">
       <div class="ui-g-12">
         <!-- filtro/pesquisa? -->
-        <label>Funcionalidade</label>
+        <label>Submódulo</label>
         <p-dropdown 
           [options]="funcionalidades" 
           [(ngModel)]="funcionalidadeSelecionada" 
@@ -93,7 +93,7 @@
 
   <!-- Dialog funcionalidade -->
   <p-dialog 
-    header="Funcionalidade" 
+    header="Submódulo" 
     [(visible)]="mostrarDialogFuncionalidade" 
     [contentStyle]="{'overflow':'visible'}" 
     [width]="800">
@@ -109,7 +109,7 @@
             name="nomeFuncionalidade" 
             [(ngModel)]="novaFuncionalidade.nome" 
             pInputText />
-          <label>Nome da Funcionalidade</label>
+          <label>Nome do Submódulo</label>
         </span>
       </div>
     </div>

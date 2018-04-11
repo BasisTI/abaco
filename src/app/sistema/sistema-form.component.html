@@ -80,7 +80,8 @@
           </div>
 
           <!-- Datatable modulos -->
-          <app-memory-datatable [value]="sistema.modulos"
+          <app-memory-datatable 
+            [value]="sistema.modulos"
             [editEventName]="editModuloEventName"
             [deleteEventName]="deleteModuloEventName"
             (buttonClick)="datatableClick($event)">
@@ -95,16 +96,16 @@
 
         </div>
 
-        <!-- Funcionalidades -->
+        <!-- Submódulo -->
         <div class="ui-g">
           <h4 style="margin-bottom: 0px;">
-            Funcionalidades
+              Submódulo
           </h4>
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-md-2">
               <app-blue-button 
-                buttonLabel="Nova Funcionalidade"
+                buttonLabel="Novo Submódulo"
                 buttonIcon="ui-icon-add" 
                 (click)="abrirDialogFuncionalidade()"
                 [isDisabled]="deveDesabilitarBotaoNovaFuncionalidade()">
@@ -113,7 +114,8 @@
           </div>
 
           <!-- Datatable Funcionalidades -->
-          <app-memory-datatable [value]="sistema.funcionalidades"
+          <app-memory-datatable 
+            [value]="sistema.funcionalidades"
             [editEventName]="editFuncionalidadeEventName"
             [deleteEventName]="deleteFuncionalidadeEventName"
             (buttonClick)="datatableClick($event)">
@@ -215,8 +217,10 @@
         </p-confirmDialog>
 
         <!-- Dialog funcionalidade -->
-        <p-dialog header="Funcionalidade" [(visible)]="mostrarDialogFuncionalidade"
-          [contentStyle]="{'overflow':'visible'}" [width]="800">
+        <p-dialog header="Submódulo" 
+          [(visible)]="mostrarDialogFuncionalidade"
+          [contentStyle]="{'overflow':'visible'}" 
+          [width]="800">
           <div class="ui-g">
             <div class="ui-g-12" style="margin-bottom: 25px">
               <span class="md-inputfield">
@@ -226,7 +230,7 @@
                   maxlength="100"
                   [(ngModel)]="novaFuncionalidade.nome" 
                   pInputText />
-                <label>Nome da Funcionalidade</label>
+                <label>Nome do Submódulo</label>
               </span>
             </div>
 

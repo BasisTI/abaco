@@ -150,7 +150,9 @@ class FuncaoDadosCopyFromJSON {
   }
 
   private converteFatorAjuste() {
-    this._funcaoDados.fatorAjuste = new FatorAjuste().copyFromJSON(this._json.fatorAjuste);
+    if (this._json.fatorAjuste) {
+      this._funcaoDados.fatorAjuste = new FatorAjuste().copyFromJSON(this._json.fatorAjuste);
+    }
   }
 
   // TODO como converter quando vier DER / RLR entidade persistida no banco?

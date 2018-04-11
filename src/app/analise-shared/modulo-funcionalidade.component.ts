@@ -262,15 +262,15 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     if (this.isModuloSelected()) {
       return this.funcionalidadeDropdownPlaceHolderComModuloSelecionado();
     } else {
-      return 'Selecione um Módulo para carregar as Funcionalidades';
+      return 'Selecione um Módulo para carregar os Submódulos';
     }
   }
 
   private funcionalidadeDropdownPlaceHolderComModuloSelecionado(): string {
     if (this.moduloSelecionadoTemFuncionalidade()) {
-      return 'Selecione uma Funcionalidade';
+      return 'Selecione um Submódulo';
     } else {
-      return 'Nenhuma Funcionalidade cadastrada';
+      return 'Nenhum Submódulo cadastrado';
     }
   }
 
@@ -319,7 +319,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
   private criarMensagemDeSucessoDaCriacaoDaFuncionalidade(nomeFunc: string, nomeModulo: string, nomeSistema: string) {
     this.pageNotificationService
-      .addSuccessMsg(`Funcionalidade '${nomeFunc}' criada no Módulo '${nomeModulo}' do Sistema '${nomeSistema}'`);
+      .addSuccessMsg(`Submódulo '${nomeFunc}' criado no Módulo '${nomeModulo}' do Sistema '${nomeSistema}'`);
   }
 
   ngOnDestroy() {
