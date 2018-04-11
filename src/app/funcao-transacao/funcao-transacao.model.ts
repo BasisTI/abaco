@@ -100,7 +100,7 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
       this.complexidade, this.pf, this.analise, this.funcionalidades,
       this.funcionalidade, this.fatorAjuste, this.alrs,
       this.name, this.sustantation, this.der, this.ftr, this.grossPF,
-      this.derValues, this.ftrValues, this.ders);
+      this.derValues, this.ftrValues, this.ders, this.impacto);
   }
 }
 
@@ -149,7 +149,9 @@ class FuncaoTransacaoCopyFromJSON {
   }
 
   private converteFatorAjuste() {
-    this._funcaoTransacao.fatorAjuste = new FatorAjuste().copyFromJSON(this._json.fatorAjuste);
+    if (this._json.fatorAjuste) {
+      this._funcaoTransacao.fatorAjuste = new FatorAjuste().copyFromJSON(this._json.fatorAjuste);
+    }
   }
 
   private converteTextos() {

@@ -17,6 +17,8 @@ import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
 import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
 import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
 import { Der } from '../der/der.model';
+import { Manual } from '../manual';
+import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
 
 @Component({
   selector: 'app-analise-funcao-transacao',
@@ -32,7 +34,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
   resumo: ResumoFuncoes;
 
-  fatoresAjuste: FatorAjuste[] = [];
+  fatoresAjuste: SelectItem[] = [];
 
   classificacoes: SelectItem[] = [];
 
@@ -46,6 +48,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     { label: 'Exclusão', value: 'Exclusão' },
     { label: 'Conversão', value: 'Conversão' }
   ];
+
+  private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
 
   showDialogNovo = false;
 
@@ -158,7 +162,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     // FIXME p-dropdown requer 2 clicks quando o [options] chama um método get()
     const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
     if (isContratoSelected && this.fatoresAjuste.length === 0) {
-      this.fatoresAjuste = this.manual.fatoresAjuste;
+      this.inicializaFatoresAjuste(this.manual);
     }
 
     return isContratoSelected;
@@ -280,7 +284,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
    *
   **/
   private doAdicionar() {
-    const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem, this.currentFuncaoTransacao);
+    const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
+      this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
     // TODO temporal coupling entre 1-add() e 2-atualizaResumo(). 2 tem que ser chamado depois
     this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
     this.atualizaResumo();
@@ -338,8 +343,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
    * Método responsável por recuperar os fatores de ajustes quando se tratar de edição.
   **/
   private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
-    this.fatoresAjuste = this.manual.fatoresAjuste;
-    funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, { 'id': funcaoSelecionada.fatorAjuste.id });
+    this.inicializaFatoresAjuste(this.manual);
+    // this.fatoresAjuste = this.manual.fatoresAjuste;
+    funcaoSelecionada.fatorAjuste =
+    _.find(this.fatoresAjuste, { value: { id: funcaoSelecionada.fatorAjuste.id } }).value;
   }
 
   /**
@@ -430,6 +437,16 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   openDialogNovo() {
     this.currentFuncaoTransacao = new FuncaoTransacao();
     this.showDialogNovo = true;
+  }
+
+  private inicializaFatoresAjuste(manual: Manual) {
+    const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+    this.fatoresAjuste =
+      faS.map(fa => {
+        const label = FatorAjusteLabelGenerator.generate(fa);
+        return { label: label, value: fa };
+      });
+    this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
   }
 
 }

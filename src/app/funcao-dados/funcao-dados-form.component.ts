@@ -211,6 +211,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   adicionar() {
     this.adicionarOuSalvar();
     this.analiseService.update(this.analise);
+
   }
 
   private adicionarOuSalvar() {

@@ -31,8 +31,14 @@
                       <ng-template 
                         let-fatorAjuste="rowData.fatorAjuste" 
                         pTemplate="body">
-                        {{ fatorAjuste.nome }}
+                        {{ fatorAjuste ? fatorAjuste.nome : 'Nenhum' }}
                       </ng-template>
+                    </p-column>
+
+                    <p-column 
+                      header="Impacto" 
+                      [style]="{'width': '200px'}"
+                      field="impacto">
                     </p-column>
 
                     <p-column 
@@ -171,7 +177,7 @@
             <div class="ui-g-4 ui-md-4 ui-sm-12">
               <label>Deflator</label>
               <p-dropdown 
-                [options]="fatoresAjuste | fatorAjusteToSelectItem"
+                [options]="fatoresAjuste"
                 [(ngModel)]="currentFuncaoTransacao.fatorAjuste" 
                 [disabled]="!isContratoSelected()"
                 placeholder="Selecione..."
