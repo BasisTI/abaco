@@ -92,8 +92,33 @@ export class Analise implements BaseEntity, JSONable<Analise> {
 
   private generateResumoTotal() {
     this._resumoTotal = new ResumoTotal(this._resumoFuncaoDados, this._resumoFuncaoTransacao);
+    this.calcularTotalPFs();
+  }
+
+  private calcularTotalPFs() {
     this.pfTotal = this._resumoTotal.getTotalPf().toString();
     this.adjustPFTotal = this._resumoTotal.getTotalGrossPf().toString();
+    this.adjustPFTotal = this.calcularPfTotalAjustado().toString();
+  }
+
+  private calcularPfTotalAjustado(): number {
+    return this.pfTotalAjustadoSomentePorFatorAjuste() * this.totalEsforcoFases();
+  }
+
+  private pfTotalAjustadoSomentePorFatorAjuste(): number {
+    const pfTotal = this._resumoTotal.getTotalPf();
+    if (this.fatorAjuste) {
+      return this.fatorAjuste.aplicarFator(pfTotal);
+    }
+    return pfTotal;
+  }
+
+  private totalEsforcoFases(): number {
+    const initialValue = 0;
+    if (this.esforcoFases) {
+      return this.esforcoFases.reduce((val, ef) => val + ef.esforco, initialValue);
+    }
+    return 1;
   }
 
   // TODO extrair classe
@@ -129,7 +154,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
 
   // como AnaliseCopyFromJSON chama new() no inicio do processo, construtor não roda como deveria
   copyFromJSON(json: any): Analise {
-    const analiseCopiada: Analise =  new AnaliseCopyFromJSON(json).copy();
+    const analiseCopiada: Analise = new AnaliseCopyFromJSON(json).copy();
     analiseCopiada.inicializaMappables(analiseCopiada.funcaoDados, analiseCopiada.funcaoTransacaos);
     analiseCopiada.generateAllResumos();
     return analiseCopiada;
@@ -245,7 +270,6 @@ class AnaliseCopyFromJSON {
     this._analiseConverted.id = this._json.id;
     this._analiseConverted.numeroOs = this._json.numeroOs;
     this._analiseConverted.metodoContagem = this._json.metodoContagem;
-    this._analiseConverted.fatorAjuste = this._json.fatorAjuste;
     this._analiseConverted.valorAjuste = this._json.valorAjuste;
     this._analiseConverted.pfTotal = this._json.pfTotal;
     this._analiseConverted.adjustPFTotal = this._json.adjustPFTotal;
@@ -269,6 +293,7 @@ class AnaliseCopyFromJSON {
   private converteFuncoes() {
     const sistema = this._analiseConverted.sistema;
     this.inicializaFuncoesFromJSON();
+    this.iniciarFatorAjusteFromJSON();
     this.populaModuloDasFuncionalidadesDasFuncoes(this._analiseConverted.funcaoDados, sistema);
     this.populaModuloDasFuncionalidadesDasFuncoes(this._analiseConverted.funcaoTransacaos, sistema);
   }
@@ -281,6 +306,12 @@ class AnaliseCopyFromJSON {
     if (this._json.funcaoTransacaos) {
       this._analiseConverted.funcaoTransacaos = this._json.funcaoTransacaos
         .map(fJSON => new FuncaoTransacao().copyFromJSON(fJSON));
+    }
+  }
+
+  private iniciarFatorAjusteFromJSON() {
+    if (this._json.fatorAjuste) {
+      this._analiseConverted.fatorAjuste = new FatorAjuste().copyFromJSON(this._json.fatorAjuste);
     }
   }
 

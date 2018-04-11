@@ -208,8 +208,12 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   private carregarEsforcoFases(manual: Manual) {
     this.esforcoFases = _.cloneDeep(manual.esforcoFases);
-    // Leandro pediu para trazer todos selecionados
-    this.analise.esforcoFases = _.cloneDeep(manual.esforcoFases);
+
+    if (!this.isEdicao) {
+      // Leandro pediu para trazer todos selecionados
+      this.analise.esforcoFases = _.cloneDeep(manual.esforcoFases);
+
+    }
   }
 
   private carregarMetodosContagem(manual: Manual) {

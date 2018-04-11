@@ -85,5 +85,13 @@ export class FatorAjuste implements BaseEntity {
     return this.tipoAjuste === TipoFatorAjuste.UNITARIO;
   }
 
+  aplicarFator(pf: number): number {
+    if (this.isUnitario()) {
+      return this.fator;
+    } else {
+      return pf * this.fator;
+    }
+  }
+
 
 }
