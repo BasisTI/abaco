@@ -65,14 +65,14 @@
           <p-column header="Detalhe" field="metodoContagem"></p-column>
           
           <p-column header="PF Total">
-            <ng-template let-col let-adjustPFTotal="rowData.adjustPFTotal" pTemplate="body">
-                {{ adjustPFTotal | number: '00.00'}}
+            <ng-template let-col let-pfTotal="rowData.pfTotal" pTemplate="body">
+              {{ pfTotal | number: '00.00'}}
             </ng-template>
           </p-column>
           
           <p-column header="PF Ajustado">
-              <ng-template let-col let-pfTotal="rowData.pfTotal" pTemplate="body">
-                  {{ pfTotal | number: '00.00'}}
+            <ng-template let-col let-adjustPFTotal="rowData.adjustPFTotal" pTemplate="body">
+                {{ adjustPFTotal | number: '00.00'}}
               </ng-template>
           </p-column>
           
