@@ -5,8 +5,11 @@
   (click)="abrirDialog()">
 </button>
 
-<p-dialog header="Referenciar AR" [(visible)]="mostrarDialog"
-  [contentStyle]="{'overflow': 'visible'}" [width]="800">
+<p-dialog 
+  header="Referenciar AR" 
+  [(visible)]="mostrarDialog"
+  [contentStyle]="{'overflow': 'visible'}" 
+  [width]="800">
 
   <div class="ui-g">
     
@@ -23,7 +26,8 @@
     </div>
 
     <div class="ui-g-12" style="margin-bottom: 25px">
-      <p-multiSelect name="dersMultiSelect"
+      <p-multiSelect 
+        name="dersMultiSelect"
         [defaultLabel]="dersMultiSelectedPlaceholder()"
         [disabled]="!funcaoDadosSelecionada"
         [options]="ders"
@@ -34,15 +38,20 @@
 
     <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px;">
       <div class="ui-g-2">
-        <button pButton type="button"
+        <button 
+          pButton type="button"
           class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Cancelar" (click)="fecharDialog()">
+          label="Cancelar"
+          (click)="fecharDialog()">
         </button>
       </div>
+
       <div class="ui-g-2">
-        <button pButton type="button"
+        <button 
+          pButton type="button"
           class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Relacionar" (click)="relacionar()">
+          label="Relacionar"
+          (click)="relacionar()">
         </button>
       </div>
     </div>

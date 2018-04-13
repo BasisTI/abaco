@@ -28,6 +28,7 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
   private subscriptionAnaliseCarregada: Subscription;
 
   funcoesDados: FuncaoDados[] = [];
+
   ders: Der[] = [];
 
   mostrarDialog = false;
@@ -35,6 +36,8 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
   funcaoDadosSelecionada: FuncaoDados;
 
   dersReferenciados: Der[] = [];
+
+  valorVariavel: string;
 
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService
@@ -83,6 +86,9 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
   }
 
   relacionar() {
+    this.dersReferenciados.forEach(der => {
+      der.id = undefined;
+    });
     this.dersReferenciadosEvent.emit(this.dersReferenciados);
     // XXX vai precisar relacionar qual funcao de dados foi relacionada?
     this.funcaoDadosReferenciadaEvent.emit(this.funcaoDadosSelecionada.name);
