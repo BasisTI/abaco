@@ -11,6 +11,7 @@ import { FatorAjusteImpactoRetriever } from './calculadora/fator-ajuste-impacto-
 export class Calculadora {
 
   private static funcaoDados: FuncaoDados;
+
   private static metodoContagem: MetodoContagem;
 
   // ainda não sei como vai ficar após generalizar
@@ -19,10 +20,11 @@ export class Calculadora {
   private static fatorPF: number;
 
   private static _manual: Manual;
+
   private static _fatorAjuste: FatorAjuste;
 
   // TODO extrair uma interface implementada por FuncaoDados e FuncaoTransacao
-  public static calcular(metodoContagem: MetodoContagem, funcaoDados: FuncaoDados, manual?: Manual): FuncaoDados {
+  public static calcular(metodoContagem: MetodoContagem, funcaoDados: FuncaoDados, manual: Manual): FuncaoDados {
     this.inicializaVariaveis(metodoContagem, funcaoDados, manual);
     this.calcularDeAcordoComMetodoContagem();
     this.aplicarFator();
