@@ -41,7 +41,6 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
       }
     });
     this.organizacaoService.findActiveOrganizations().subscribe((res) => {
-      console.log(res);
       this.organizacoes = res;
     });
   }
