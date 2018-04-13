@@ -264,7 +264,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   private doAdicionar() {
-    const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem, this.currentFuncaoDados);
+    const funcaoDadosCalculada = Calculadora.calcular(
+      this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
     // TODO temporal coupling entre 1-add() e 2-atualizaResumo(). 2 tem que ser chamado depois
     this.analise.addFuncaoDados(funcaoDadosCalculada);
     this.atualizaResumo();
@@ -299,6 +300,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         break;
       case 'delete':
         this.confirmDelete(funcaoDadosSelecionada);
+        this.showDialogNovo = false;
     }
   }
 
@@ -340,11 +342,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   cancelar() {
-    this.limparDadosDaTelaNaEdicaoCancelada();
     this.showDialogNovo = false;
+    this.limparDadosDaTelaNaEdicaoCancelada();
   }
 
-  cancelarEdicao() {
+  cancelarEdicaoDialog() {
     this.confirmationService.confirm({
       message: `Tem certeza que deseja cancelar a alteração?`,
       accept: () => {
@@ -356,6 +358,15 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  cancelarEdicao() {
+    this.showDialogNovo = false;
+    this.analiseSharedDataService.funcaoAnaliseDescarregada();
+    this.isEdit = false;
+    this.limparDadosDaTelaNaEdicaoCancelada();
+    this.pageNotificationService.addInfoMsg('Cancelada a Alteração de Função de Dados');
+    this.scrollParaInicioDaAba();
+  }
+
   private limparDadosDaTelaNaEdicaoCancelada() {
     this.currentFuncaoDados = new FuncaoDados();
     this.dersChips = [];
@@ -363,12 +374,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   confirmDelete(funcaoDadosSelecionada: FuncaoDados) {
-    const name: string = funcaoDadosSelecionada.name;
     this.confirmationService.confirm({
-      message: `Tem certeza que deseja excluir a Função de Dados '${name}'?`,
+      message: `Tem certeza que deseja excluir a Função de Dados '${funcaoDadosSelecionada.name}'?`,
       accept: () => {
+        this.showDialogNovo = false;
         this.analise.deleteFuncaoDados(funcaoDadosSelecionada);
-        this.pageNotificationService.addDeleteMsgWithName(name);
+        this.pageNotificationService.addDeleteMsgWithName(funcaoDadosSelecionada.name);
       }
     });
   }
