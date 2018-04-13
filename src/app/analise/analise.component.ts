@@ -49,7 +49,7 @@ export class AnaliseComponent {
 
   confirmDelete(analise: Analise) {
     this.confirmationService.confirm({
-      message: `Tem certeza que deseja excluir a Análise com Número OS '${analise.numeroOs}'?`,
+      message: `Tem certeza que deseja excluir a Análise '${analise.identificadorAnalise}'?`,
       accept: () => {
         this.analiseService.delete(analise.id).subscribe(() => {
           this.recarregarDataTable();
