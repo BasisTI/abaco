@@ -69,7 +69,6 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
     document.getElementById('nome_fase').setAttribute('style', 'border-color: #bdbdbd');
     if (this.tipoFase.nome !== null && this.tipoFase.nome !== undefined && this.tipoFase.nome !== "") {
       isNameValid = true;
-      console.log(this.tipoFase.nome.length);
       if (this.tipoFase.nome.length > 254) {
         this.pageNotificationService.addErrorMsg('O nome da fase excede o máximo de caracteres!');
         isNameValid = false;
