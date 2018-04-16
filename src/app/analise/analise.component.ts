@@ -65,7 +65,7 @@ export class AnaliseComponent {
   }
 
   recarregarDataTable() {
-    this.datatable.refresh(this.elasticQuery.query);
+    this.datatable.reset();
   }
 
 }
