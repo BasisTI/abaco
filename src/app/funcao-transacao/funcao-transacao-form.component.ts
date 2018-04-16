@@ -376,7 +376,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   **/
   dersReferenciados(ders: Der[]) {
     // XXX manter os ids?
-    const dersReferenciadosChips: DerChipItem[] = DconfirmDeleteerChipConverter.converterReferenciaveis(ders);
+    const dersReferenciadosChips: DerChipItem[] = DerChipConverter.converterReferenciaveis(ders);
     this.dersChips = this.dersChips.concat(dersReferenciadosChips);
   }
 
