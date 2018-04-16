@@ -16,7 +16,7 @@ describe('Calculadora de Função de Dados', () => {
 
   it('deve lançar erro se não houver um fator de ajuste', () => {
     expect(() => {
-      Calculadora.calcular('DETALHADA' as MetodoContagem, new FuncaoDados());
+      Calculadora.calcular('DETALHADA' as MetodoContagem, new FuncaoDados(), undefined);
     }).toThrowError();
   });
 
@@ -183,7 +183,7 @@ describe('Calculadora de Função de Dados', () => {
     function verificaPfBrutoDetalhada(funcoes: FuncaoDados[], pfBrutoEsperado: number) {
       funcoes.forEach(funcao => {
         const funcaoCalculada: FuncaoDados =
-          Calculadora.calcular(metodoContagem, funcao);
+          Calculadora.calcular(metodoContagem, funcao, null);
         expect(funcaoCalculada.grossPF).toEqual(pfBrutoEsperado);
       });
     }
@@ -196,7 +196,7 @@ describe('Calculadora de Função de Dados', () => {
       describe(specHelper.descricaoDaFuncao, () => {
 
         beforeEach(() => {
-          funcaoDadosCalculada = Calculadora.calcular(metodoContagem, specHelper.funcaoDadosEntrada);
+          funcaoDadosCalculada = Calculadora.calcular(metodoContagem, specHelper.funcaoDadosEntrada, undefined);
         });
 
         it(`deve ter PF bruto ${specHelper.pfBruto}`, () => {

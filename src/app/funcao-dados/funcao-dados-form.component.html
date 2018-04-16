@@ -1,6 +1,7 @@
 <div class="ui-g ui-fluid">
     <div class="ui-g-12">
       <div class="card card-w-title">
+
         <div class="ui-g">
           <div class="ui-g-12">
 
@@ -117,19 +118,9 @@
               </div>
           </div>
         </div>
-
-        <!-- Resumo -->
-        <div class="ui-g" *ngIf="funcoesDados.length > 0">
-            <hr>
-            <div class="ui-g-12">
-              <app-analise-funcao-resumo-table 
-                [linhasResumo]="resumo.all">
-              </app-analise-funcao-resumo-table>
-            </div>
-        </div>
         
-        <!-- inincio Dialog adicionar função de dados  -->
-        <p-dialog 
+        <!-- inicio Dialog adicionar função de dados  -->
+        <p-dialog
           header="{{ header }}" 
           [(visible)]="showDialogNovo" 
           [contentStyle]="{'height': '840px'}" 
@@ -227,7 +218,7 @@
 
             <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
               <app-white-button 
-                buttonLabel="Cancelar"
+                buttonLabel="Fechar"
                 (click)="cancelar()">
               </app-white-button>
             </div>
@@ -242,7 +233,17 @@
             </div>
           </div>
         </p-dialog>
-        <!-- inincio Dialog adicionar função de dados  -->
+        <!-- Fim Dialog adicionar função de dados  -->
+
+        <!-- Resumo -->
+        <div class="ui-g" *ngIf="funcoesDados.length > 0">
+            <hr>
+            <div class="ui-g-12">
+              <app-analise-funcao-resumo-table 
+                [linhasResumo]="resumo.all">
+              </app-analise-funcao-resumo-table>
+            </div>
+        </div>
 
         <!-- Dialog confirmação deleção -->
         <p-confirmDialog header="Confirmação" #dialog>

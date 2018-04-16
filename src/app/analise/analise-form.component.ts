@@ -14,10 +14,9 @@ import { SelectItem } from 'primeng/primeng';
 import * as _ from 'lodash';
 import { EsforcoFase } from '../esforco-fase/index';
 import { FatorAjuste } from '../fator-ajuste/index';
-import { Manual, ManualService } from '../manual/index';
+import { Manual } from '../manual/index';
 import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
-
-import { TipoEquipe, TipoEquipeService } from '../tipo-equipe';
+import { TipoEquipeService } from '../tipo-equipe';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -71,10 +70,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     private contratoService: ContratoService,
     private sistemaService: SistemaService,
     private analiseSharedDataService: AnaliseSharedDataService,
-    private tipoEquipeService: TipoEquipeService,
-    private pageNotificationService: PageNotificationService,
-    private manualService: ManualService,
     private equipeService: TipoEquipeService,
+    private pageNotificationService: PageNotificationService,
+
   ) { }
 
   ngOnInit() {
@@ -146,14 +144,17 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método responsável por definir o nome manual.
+   * Método responsável por setar o nome do manual.
    * @param manual
    */
   definirNomeManual(manual: Manual) {
     this.nomeManual = manual.nome;
 
   }
-
+/**
+ *
+ * @param contrato
+ */
   contratoSelected(contrato: Contrato) {
     this.carregarObjetos(contrato);
     this.save();
@@ -282,7 +283,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   /**
    * Método responsável por persistir as informações das análises na edição.
-   **/
+  **/
   save() {
     this.analiseService.update(this.analise);
     // if (this.verificarCamposObrigatorios()) {
@@ -292,7 +293,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   /**
    * Método responsável por validar campos obrigatórios na persistência.
-   **/
+  **/
   private verificarCamposObrigatorios(): boolean {
     if (!this.analise.identificadorAnalise) {
       this.pageNotificationService.addErrorMsg('Informe primeiro o campo Identificador da Analise para continuar.');

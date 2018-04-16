@@ -67,6 +67,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
    *
   **/
   ngOnInit() {
+    this.isEdit = false;
     this.currentFuncaoTransacao = new FuncaoTransacao();
     this.subscribeToAnaliseCarregada();
     this.initClassificacoes();
@@ -164,7 +165,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     if (isContratoSelected && this.fatoresAjuste.length === 0) {
       this.inicializaFatoresAjuste(this.manual);
     }
-
     return isContratoSelected;
   }
 
@@ -301,6 +301,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
       return;
     }
 
+  /**
+   *
+  **/
     const funcaoSelecionada: FuncaoTransacao = event.selection.clone();
     switch (event.button) {
       case 'edit':
@@ -309,7 +312,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.prepararParaEdicao(funcaoSelecionada);
         break;
       case 'delete':
-        this.confirmDelete(funcaoSelecionada);
+      this.delete(funcaoSelecionada);
     }
   }
 
@@ -373,7 +376,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   **/
   dersReferenciados(ders: Der[]) {
     // XXX manter os ids?
-    const dersReferenciadosChips: DerChipItem[] = DerChipConverter.converterReferenciaveis(ders);
+    const dersReferenciadosChips: DerChipItem[] = DconfirmDeleteerChipConverter.converterReferenciaveis(ders);
     this.dersChips = this.dersChips.concat(dersReferenciadosChips);
   }
 
@@ -386,15 +389,27 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método responsável por apresentar a modal dialog de cancelamento a alteração do formulário.
+   *
   **/
   cancelarEdicao() {
+    this.showDialogNovo = false;
+    this.analiseSharedDataService.funcaoAnaliseDescarregada();
+    this.isEdit = false;
+    this.limparDadosDaTelaNaEdicaoCancelada();
+    this.pageNotificationService.addInfoMsg('Alteração cancelada.');
+    this.scrollParaInicioDaAba();
+  }
+
+  /**
+   *
+  **/
+  cancelarEdicaoDialog() {
     this.confirmationService.confirm({
       message: `Tem certeza que deseja cancelar a alteração?`,
       accept: () => {
         this.analiseSharedDataService.funcaoAnaliseDescarregada();
         this.isEdit = false;
-        this.cancelar();
+        this.showDialogNovo = false;
         this.pageNotificationService.addInfoMsg('Alteração cancelada.');
       }
     });
@@ -412,15 +427,20 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   /**
    *
   **/
-  confirmDelete(funcaoSelecionada: FuncaoTransacao) {
-    const name: string = funcaoSelecionada.name;
+  confirmDelete(funcaoTransacaoSelecionada: FuncaoTransacao) {
     this.confirmationService.confirm({
-      message: `Tem certeza que deseja excluir a Função de Transação '${name}'?`,
+      message: `Tem certeza que deseja excluir a Função de Transação '${funcaoTransacaoSelecionada.name}'?`,
       accept: () => {
-        this.analise.deleteFuncaoTransacao(funcaoSelecionada);
-        this.pageNotificationService.addDeleteMsgWithName(name);
+        this.showDialogNovo = false;
+        this.analise.deleteFuncaoTransacao(funcaoTransacaoSelecionada);
+        this.pageNotificationService.addDeleteMsgWithName(funcaoTransacaoSelecionada.name);
       }
     });
+  }
+
+  delete(funcaoTransacaoSelecionada: FuncaoTransacao) {
+    this.analise.deleteFuncaoTransacao(funcaoTransacaoSelecionada);
+    this.pageNotificationService.addDeleteMsgWithName(funcaoTransacaoSelecionada.name);
   }
 
   /**
@@ -435,7 +455,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
    * Método responsável por preparar o popup novo.
   **/
   openDialogNovo() {
-    this.currentFuncaoTransacao = new FuncaoTransacao();
+    this.limparDadosDaTelaNaEdicaoCancelada();
     this.showDialogNovo = true;
   }
 

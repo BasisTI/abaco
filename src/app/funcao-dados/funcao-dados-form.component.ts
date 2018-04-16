@@ -300,7 +300,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         break;
       case 'delete':
         this.confirmDelete(funcaoDadosSelecionada);
-        this.showDialogNovo = false;
     }
   }
 
@@ -377,7 +376,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     this.confirmationService.confirm({
       message: `Tem certeza que deseja excluir a Função de Dados '${funcaoDadosSelecionada.name}'?`,
       accept: () => {
-        this.showDialogNovo = false;
         this.analise.deleteFuncaoDados(funcaoDadosSelecionada);
         this.pageNotificationService.addDeleteMsgWithName(funcaoDadosSelecionada.name);
       }
