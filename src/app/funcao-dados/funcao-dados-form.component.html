@@ -118,7 +118,17 @@
               </div>
           </div>
         </div>
-        
+
+        <!-- Resumo -->
+        <div class="ui-g" *ngIf="funcoesDados.length > 0">
+          <hr>
+          <div class="ui-g-12">
+            <app-analise-funcao-resumo-table 
+              [linhasResumo]="resumo.all">
+            </app-analise-funcao-resumo-table>
+          </div>
+        </div>
+
         <!-- inicio Dialog adicionar função de dados  -->
         <p-dialog
           header="{{ header }}" 
@@ -234,24 +244,6 @@
           </div>
         </p-dialog>
         <!-- Fim Dialog adicionar função de dados  -->
-
-        <!-- Resumo -->
-        <div class="ui-g" *ngIf="funcoesDados.length > 0">
-            <hr>
-            <div class="ui-g-12">
-              <app-analise-funcao-resumo-table 
-                [linhasResumo]="resumo.all">
-              </app-analise-funcao-resumo-table>
-            </div>
-        </div>
-
-        <!-- Dialog confirmação deleção -->
-        <p-confirmDialog header="Confirmação" #dialog>
-          <p-footer>
-            <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-            <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
-          </p-footer>
-        </p-confirmDialog>
   
       </div>
     </div>
