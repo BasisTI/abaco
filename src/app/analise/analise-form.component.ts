@@ -19,7 +19,6 @@ import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generato
 import { TipoEquipeService } from '../tipo-equipe';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'jhi-analise-form',
   templateUrl: './analise-form.component.html'
 })
