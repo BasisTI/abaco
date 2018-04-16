@@ -2,6 +2,8 @@
 
 set -eu
 
+npm --version
+
 npm install
 #npm run build -- --prod
 npm run build
