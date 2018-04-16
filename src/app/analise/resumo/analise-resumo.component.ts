@@ -20,7 +20,7 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
 
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {

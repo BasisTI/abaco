@@ -65,7 +65,8 @@ import { FuncaoDadosService } from './funcao-dados.service';
     FuncaoDadosFormComponent
   ],
   providers: [
-    FuncaoDadosService
+    FuncaoDadosService,
+    ConfirmationService
   ]
 })
 export class AbacoFuncaoDadosModule { }

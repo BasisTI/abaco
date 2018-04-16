@@ -40,7 +40,7 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
   valorVariavel: string;
 
   constructor(
-    private analiseSharedDataService: AnaliseSharedDataService
+    private analiseSharedDataService: AnaliseSharedDataService,
   ) { }
 
   ngOnInit() {

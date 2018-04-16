@@ -59,7 +59,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     public dataHomologacao?: Date,
     public identificadorAnalise?: string,
     public equipeResponsavel?: TipoEquipe,
-    public createdOn?: Date
+    public createdOn?: Date,
 
   ) {
     this.inicializaMappables(funcaoDados, funcaoTransacaos);

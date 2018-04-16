@@ -58,6 +58,8 @@ import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.modul
   exports: [
     FuncaoTransacaoFormComponent
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  providers: [
+    ConfirmationService
+  ]
 })
 export class AbacoFuncaoTransacaoModule {}

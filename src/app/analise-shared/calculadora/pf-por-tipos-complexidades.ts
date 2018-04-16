@@ -26,13 +26,14 @@ export class PFPorTiposComplexidades {
   static initialize() {
     this._tipoToPfPorComplexidade = new Map<string, PFPorComplexidade>();
 
-    // TODO Complexidade.SEM, quais devem ser os valores brutos?
-    this.add(TipoFuncaoDados.ALI, 7, 7, 10, 15);
-    this.add(TipoFuncaoDados.AIE, 5, 5, 7, 10);
+    this.add(TipoFuncaoDados.ALI, 0, 7, 10, 15);
+    this.add(TipoFuncaoDados.AIE, 0, 5, 7, 10);
+    this.add(TipoFuncaoDados.INM, 0, 0, 0, 0);
 
     this.add(TipoFuncaoTransacao.CE, 0, 3, 4, 6);
     this.add(TipoFuncaoTransacao.EE, 0, 3, 4, 6);
     this.add(TipoFuncaoTransacao.SE, 0, 4, 5, 7);
+    this.add(TipoFuncaoTransacao.INM, 0, 0, 0, 0);
   }
 
   private static add(tipo: string, s: number, b: number, m: number, a: number) {

@@ -349,3 +349,11 @@
     <app-analise-resumo></app-analise-resumo>
   </p-tabPanel>
 </p-tabView>
+
+<!-- Dialog confirmação deleção -->
+<p-confirmDialog header="Confirmação" #dialog>
+  <p-footer>
+    <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
+    <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

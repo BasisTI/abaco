@@ -38,7 +38,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private tipoEquipeService: TipoEquipeService,
     private organizacaoService: OrganizacaoService,
-    private pageNotificationService: PageNotificationService
+    private pageNotificationService: PageNotificationService,
   ) { }
 
   ngOnInit() {

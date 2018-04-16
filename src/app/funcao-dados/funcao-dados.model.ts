@@ -11,7 +11,8 @@ import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter
 
 export enum TipoFuncaoDados {
   'ALI' = 'ALI',
-  'AIE' = 'AIE'
+  'AIE' = 'AIE',
+  'INM' = 'INM'
 }
 
 export class FuncaoDados implements BaseEntity, FuncaoResumivel,
@@ -40,7 +41,8 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
     public rlrValues?: string[],
     public ders?: Der[],
     public rlrs?: Rlr[],
-    public impacto?: string
+    public impacto?: string,
+    public quantidade?: number
   ) {
     if (!pf) {
       this.pf = 0;
@@ -101,7 +103,8 @@ export class FuncaoDados implements BaseEntity, FuncaoResumivel,
     return new FuncaoDados(this.id, this.artificialId, this.tipo, this.complexidade,
       this.pf, this.analise, this.funcionalidades, this.funcionalidade,
       this.fatorAjuste, this.alr, this.name, this.sustantation, this.der, this.rlr,
-      this.grossPF, this.derValues, this.rlrValues, this.ders, this.rlrs, this.impacto);
+      this.grossPF, this.derValues, this.rlrValues, this.ders, this.rlrs, this.impacto,
+      this.quantidade);
   }
 
 }
@@ -137,6 +140,7 @@ class FuncaoDadosCopyFromJSON {
     this._funcaoDados.sustantation = this._json.sustantation;
     this._funcaoDados.grossPF = this._json.grossPF;
     this._funcaoDados.impacto = this._json.impacto;
+    this._funcaoDados.quantidade = this._json.quantidade;
   }
 
   private converteBaseEntities() {

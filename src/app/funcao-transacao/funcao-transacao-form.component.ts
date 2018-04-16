@@ -301,18 +301,14 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-  /**
-   *
-  **/
     const funcaoSelecionada: FuncaoTransacao = event.selection.clone();
     switch (event.button) {
       case 'edit':
         this.isEdit = true;
-        this.showDialogNovo = true;
         this.prepararParaEdicao(funcaoSelecionada);
         break;
       case 'delete':
-      this.delete(funcaoSelecionada);
+      this.confirmDelete(funcaoSelecionada);
     }
   }
 

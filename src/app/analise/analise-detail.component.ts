@@ -16,7 +16,7 @@ export class AnaliseDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private analiseService: AnaliseService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {

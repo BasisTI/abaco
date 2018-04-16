@@ -15,7 +15,7 @@ export class ParseResult {
 
   private duplicateResult: DuplicatesResult;
 
-  constructor(tipo: string, numero?: number, textos?: string[]) {
+  constructor(tipo: string, numero?: number, textos?: string[], ) {
     this.tipo = tipo;
     this.numero = numero;
     this.textos = textos;

@@ -12,7 +12,8 @@ import { Alr } from '../alr/alr.model';
 export enum TipoFuncaoTransacao {
   'EE' = 'EE', // entrada externa
   'SE' = 'SE', // saida externa
-  'CE' = 'CE' // consulta externa
+  'CE' = 'CE', // consulta externa
+  'INM' = 'INM'
 }
 
 export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
@@ -41,6 +42,7 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
     public ftrValues?: string[],
     public ders?: Der[],
     public impacto?: string,
+    public quantidade?: number
   ) {
     if (!pf) {
       this.pf = 0;
@@ -100,7 +102,7 @@ export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
       this.complexidade, this.pf, this.analise, this.funcionalidades,
       this.funcionalidade, this.fatorAjuste, this.alrs,
       this.name, this.sustantation, this.der, this.ftr, this.grossPF,
-      this.derValues, this.ftrValues, this.ders, this.impacto);
+      this.derValues, this.ftrValues, this.ders, this.impacto, this.quantidade);
   }
 }
 
@@ -136,6 +138,7 @@ class FuncaoTransacaoCopyFromJSON {
     this._funcaoTransacao.sustantation = this._json.sustantation;
     this._funcaoTransacao.grossPF = this._json.grossPF;
     this._funcaoTransacao.impacto = this._json.impacto;
+    this._funcaoTransacao.quantidade = this._json.quantidade;
   }
 
   private converteBaseEntities() {
