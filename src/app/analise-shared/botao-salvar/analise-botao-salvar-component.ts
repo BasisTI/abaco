@@ -91,6 +91,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   }
 
   private cadastrar() {
+    this.definirValorPadrao();
     this.subscribeToSaveResponse(this.analiseService.create(this.analise));
   }
 
@@ -114,5 +115,9 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
       subscription.unsubscribe();
     }
   }
+
+  private definirValorPadrao() {
+    this.analise.baselineImediatamente = true;
+ }
 
 }
