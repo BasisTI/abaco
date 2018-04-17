@@ -42,8 +42,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   equipeResponsavel: SelectItem[] = [];
 
-  // manualContrato: Manual;
-
   nomeManual = 'Selecione um Contrato.';
 
   private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
@@ -62,6 +60,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   private routeSub: Subscription;
 
+  /**
+   *
+  */
   constructor(
     private route: ActivatedRoute,
     private analiseService: AnaliseService,
@@ -74,6 +75,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
   ) { }
 
+  /**
+   *
+  */
   ngOnInit() {
     this.analiseSharedDataService.init();
     this.isEdicao = false;
@@ -101,6 +105,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     });
   }
 
+
   /**
    * Método responsável por popular a lista de organizações.
   */
@@ -110,6 +115,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+  */
   private inicializaValoresAposCarregamento(analiseCarregada: Analise) {
     this.analise = analiseCarregada;
     this.organizacaoSelected(analiseCarregada.organizacao);
@@ -117,6 +125,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     this.carregaFatorAjusteNaEdicao();
   }
 
+  /**
+   *
+  */
   organizacaoSelected(org: Organizacao) {
     this.contratos = org.contracts;
     this.sistemaService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
@@ -125,6 +136,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     this.selecionarEquipePorOrganizacao(org);
   }
 
+  /**
+   *
+  */
   selecionarEquipePorOrganizacao(org: Organizacao) {
     this.contratos = org.contracts;
     this.equipeService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
@@ -132,6 +146,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+  */
   carregarObjetos(contrato: Contrato) {
     if (contrato && contrato.manual) {
       const manual: Manual = contrato.manual;
@@ -145,20 +162,23 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   /**
    * Método responsável por setar o nome do manual.
    * @param manual
-   */
+  */
   definirNomeManual(manual: Manual) {
     this.nomeManual = manual.nome;
 
   }
-/**
- *
- * @param contrato
- */
+  /**
+   *
+   * @param contrato
+  */
   contratoSelected(contrato: Contrato) {
     this.carregarObjetos(contrato);
     this.save();
   }
 
+  /**
+   *
+  */
   private inicializaFatoresAjuste(manual: Manual) {
     const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
     this.fatoresAjuste =
@@ -169,10 +189,16 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
   }
 
+  /**
+   *
+  */
   sistemaSelected() {
     this.analiseSharedDataService.sistemaSelecionado();
   }
 
+  /**
+   *
+  */
   private carregaFatorAjusteNaEdicao() {
     const fatorAjuste: FatorAjuste = this.analise.fatorAjuste;
     if (fatorAjuste) {
@@ -182,14 +208,23 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   get analise(): Analise {
     return this.analiseSharedDataService.analise;
   }
 
+  /**
+   *
+  */
   set analise(analise: Analise) {
     this.analiseSharedDataService.analise = analise;
   }
 
+  /**
+   *
+  */
   contratoDropdownPlaceholder() {
     if (this.contratos) {
       if (this.contratos.length > 0) {
@@ -202,10 +237,16 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   shouldEnableContratoDropdown() {
     return this.contratos && this.contratos.length > 0;
   }
 
+  /**
+   *
+  */
   private carregarEsforcoFases(manual: Manual) {
     this.esforcoFases = _.cloneDeep(manual.esforcoFases);
 
@@ -216,6 +257,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   private carregarMetodosContagem(manual: Manual) {
     this.metodosContagem = [
       { value: 'DETALHADA',
@@ -231,15 +275,24 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     ];
   }
 
+  /**
+   *
+  */
   private getLabelValorVariacao(label: string, valorVariacao: number): string {
     return label + ' - ' + valorVariacao + '%';
   }
 
+  /**
+   *
+  */
   totalEsforcoFases() {
     const initialValue = 0;
     return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforcoFormatado, initialValue);
   }
 
+  /**
+   *
+  */
   sistemaDropdownPlaceholder() {
     if (this.sistemas) {
       if (this.sistemas.length > 0) {
@@ -252,10 +305,16 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   shouldEnableSistemaDropdown() {
     return this.sistemas && this.sistemas.length > 0;
   }
 
+  /**
+   *
+  */
   needContratoDropdownPlaceholder() {
     if (this.isContratoSelected()) {
       return 'Selecione...';
@@ -264,10 +323,16 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   isContratoSelected(): boolean {
     return this.analiseSharedDataService.isContratoSelected();
   }
 
+  /**
+   *
+  */
   fatoresAjusteDropdownPlaceholder() {
     if (this.isContratoSelected()) {
       return 'Selecione um Fator de Ajuste';
@@ -276,6 +341,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   ngOnDestroy() {
     this.routeSub.unsubscribe();
   }
@@ -284,9 +352,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
    * Método responsável por persistir as informações das análises na edição.
   **/
   save() {
-    this.analiseService.update(this.analise);
-    // if (this.verificarCamposObrigatorios()) {
-    // }
+    if (this.verificarCamposObrigatorios()) {
+      this.analiseService.update(this.analise);
+    }
 
   }
 
@@ -294,25 +362,50 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
    * Método responsável por validar campos obrigatórios na persistência.
   **/
   private verificarCamposObrigatorios(): boolean {
+    const isValid = true;
+
     if (!this.analise.identificadorAnalise) {
-      this.pageNotificationService.addErrorMsg('Informe primeiro o campo Identificador da Analise para continuar.');
-      return false;
+      this.pageNotificationService.addInfoMsg('Informe o campo Identificador da Analise para continuar.');
+      return isValid;
     }
-    if (this.analise.identificadorAnalise && !this.analise.metodoContagem) {
-      this.pageNotificationService.addErrorMsg('Informe o Método de Contagem para continuar.');
-      return false;
+    if (!this.analise.contrato) {
+      this.pageNotificationService.addInfoMsg('Informe o Contrato para continuar.');
+      return isValid;
     }
-    if (this.analise.identificadorAnalise && this.analise.metodoContagem && !this.analise.tipoAnalise) {
-      this.pageNotificationService.addErrorMsg('Informe oTipo de Contagem para continuar.');
-      return false;
+
+    if (!this.analise.metodoContagem) {
+      this.pageNotificationService.addInfoMsg('Informe o Método de Contagem para continuar.');
+      return isValid;
     }
-    return true;
+    if (!this.analise.tipoAnalise) {
+      this.pageNotificationService.addInfoMsg('Informe o Tipo de Contagem para continuar.');
+      return isValid;
+    }
+    if (!this.analise.propositoContagem) {
+      this.pageNotificationService.addInfoMsg('Informe o Propósito da Contagem para continuar.');
+      return isValid;
+    }
+    if (!this.analise.propositoContagem) {
+      this.pageNotificationService.addInfoMsg('Informe o Escopo da Contagem para continuar.');
+      return isValid;
+    }
+    if (!this.analise.propositoContagem) {
+      this.pageNotificationService.addInfoMsg('Informe a Documentação para continuar.');
+      return isValid;
+    }
+    return isValid;
   }
 
+  /**
+   *
+  */
   public habilitarCamposIniciais() {
     return this.isEdicao;
   }
 
+  /**
+   *
+  */
   public nomeSistema(): string {
     return this.analise.sistema.sigla + ' - ' + this.analise.sistema.nome;
   }

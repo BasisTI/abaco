@@ -119,7 +119,7 @@
             <div style="margin-bottom: 25px; margin-top: 25px" *ngIf="isEdicao">
               <div class="ui-g">
     
-                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 18px">
                   <span class="md-inputfield">
                     <input 
                       required
@@ -132,10 +132,26 @@
                     <label>Identificador da Analise *</label>
                   </span>
                 </div>
-    
+
+                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+                  <label>Contrato *</label>
+                  <p-dropdown 
+                    required
+                    dataKey="id"
+                    optionLabel="numeroContrato" 
+                    placeholder="Selecione..."
+                    (onChange)="contratoSelected($event.value)"
+                    name="contrato" 
+                    [options]="contratos" 
+                    [(ngModel)]="analise.contrato" 
+                    [autoWidth]="false">
+                  </p-dropdown>
+                </div>
+
                 <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                   <label>Método de Contagem *</label>
-                  <p-dropdown 
+                  <p-dropdown
+                    required
                     disabled="{{ !isContratoSelected() }}"
                     placeholder="{{ needContratoDropdownPlaceholder() }}"
                     name="metodoContagem" 
@@ -148,7 +164,8 @@
     
                 <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                   <label>Tipo de Contagem *</label>
-                  <p-dropdown 
+                  <p-dropdown
+                    required
                     name="tiposAnalise"
                     placeholder="Selecione..."
                     [options]="tiposAnalise"
@@ -157,24 +174,11 @@
                     (onChange)="save()">
                   </p-dropdown>
                 </div>
-    
-                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Contrato *</label>
-                  <p-dropdown 
-                    dataKey="id"
-                    optionLabel="numeroContrato" 
-                    placeholder="Selecione..."
-                    (onChange)="contratoSelected($event.value)"
-                    name="contrato" 
-                    [options]="contratos" 
-                    [(ngModel)]="analise.contrato" 
-                    [autoWidth]="false">
-                  </p-dropdown>
-              </div>
 
                 <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                   <label>Deflator</label>
                   <p-dropdown
+                    required
                     disabled="{{ !isContratoSelected() }}"
                     placeholder="{{ needContratoDropdownPlaceholder() }}"
                     name="fatorAjuste" 
@@ -188,6 +192,7 @@
               <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px; margin-top: 17px">
                 <span class="md-inputfield">
                   <input
+                    required
                     type="text" 
                     maxlength="100"
                     name="manualContrato"
@@ -200,27 +205,27 @@
     
                 <div class="ui-g-3 ui-md-3 ui-sm-12">
   
-                  <div class="ui-g-3 ui-md-4 ui-sm-12">
-                    <label>Aguardar prazo de garantia</label>
+                  <div class="ui-g-6 ui-md-6 ui-sm-12">
+                    <label>Aguardar prazo de garantia?</label>
                   </div>
   
-                  <div class="ui-g-3 ui-md-4 ui-sm-12">
+                  <div class="ui-g-3 ui-md-3 ui-sm-12">
                     <p-radioButton 
-                      name="baseline_imediatamente_nao"
-                      label="Não"
-                      [value]="false" 
-                      [(ngModel)]="analise.baselineImediatamente"
-                      (onChange)="save()">
-                    </p-radioButton>
-                  </div>
-
-                  <div class="ui-g-3 ui-md-4 ui-sm-12">
-                    <p-radioButton 
-                      name="baseline_imediatamente_sim" 
+                      name="baseline_imediatamente" 
                       label="Sim"
                       [value]="true" 
                       [(ngModel)]="analise.baselineImediatamente"
-                      (onChange)="save()">
+                      (onClick)="save()">
+                    </p-radioButton>
+                  </div>
+
+                  <div class="ui-g-3 ui-md-3 ui-sm-12">
+                    <p-radioButton 
+                      name="baseline_imediatamente"
+                      label="Não"
+                      [value]="false" 
+                      [(ngModel)]="analise.baselineImediatamente"
+                      (onClick)="save()">
                     </p-radioButton>
                   </div>
 
@@ -229,7 +234,8 @@
                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
                   <label>Propósito da Contagem *</label>
                   <span class="md-inputfield">
-                    <textarea 
+                    <textarea
+                      required
                       pInputTextarea name="propositoContagem" 
                       [rows]="3" 
                       [cols]="180"
@@ -242,7 +248,8 @@
                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
                   <label>Escopo da Contagem *</label>
                   <span class="md-inputfield">
-                    <textarea 
+                    <textarea
+                      required
                       pInputTextarea name="escopo" 
                       [rows]="3" 
                       [cols]="180"
@@ -255,7 +262,7 @@
                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
                   <label>Fronteira</label>
                   <span class="md-inputfield">
-                    <textarea 
+                    <textarea
                       pInputTextarea name="fronteiras" 
                       [rows]="3" 
                       [cols]="180"
@@ -268,7 +275,8 @@
                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
                   <label>Documentação *</label>
                   <span class="md-inputfield">
-                    <textarea 
+                    <textarea
+                      required
                       pInputTextarea name="documentacao" 
                       [rows]="3" 
                       [cols]="180"
@@ -290,7 +298,7 @@
                   </span>
                 </div>
 
-                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                <div class="ui-g-8 ui-md-8 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
                   <span class="md-inputfield">
                     <input 
                       type="text" 
@@ -299,7 +307,7 @@
                       [(ngModel)]="analise.numeroOs"
                       (change)="save()"
                       pInputText/>
-                    <label>Número OS</label>
+                    <label>Número da Ordem de Serviço</label>
                   </span>
                 </div>
 
