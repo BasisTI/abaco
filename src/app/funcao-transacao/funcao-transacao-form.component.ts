@@ -219,6 +219,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   **/
   adicionar() {
     this.adicionarOuSalvar();
+    this.salvarAnalise();
+  }
+
+  salvarAnalise() {
     this.analiseService.update(this.analise);
   }
 
@@ -427,8 +431,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     this.confirmationService.confirm({
       message: `Tem certeza que deseja excluir a Função de Transação '${funcaoTransacaoSelecionada.name}'?`,
       accept: () => {
-        this.showDialogNovo = false;
         this.analise.deleteFuncaoTransacao(funcaoTransacaoSelecionada);
+        this.salvarAnalise();
         this.pageNotificationService.addDeleteMsgWithName(funcaoTransacaoSelecionada.name);
       }
     });

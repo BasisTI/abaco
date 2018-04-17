@@ -215,8 +215,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   adicionar() {
     this.adicionarOuSalvar();
-    this.analiseService.update(this.analise);
+    this.salvarAnalise();
+  }
 
+  salvarAnalise() {
+    this.analiseService.update(this.analise);
   }
 
   private adicionarOuSalvar() {
@@ -378,6 +381,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
       message: `Tem certeza que deseja excluir a Função de Dados '${funcaoDadosSelecionada.name}'?`,
       accept: () => {
         this.analise.deleteFuncaoDados(funcaoDadosSelecionada);
+        this.salvarAnalise();
         this.pageNotificationService.addDeleteMsgWithName(funcaoDadosSelecionada.name);
       }
     });
