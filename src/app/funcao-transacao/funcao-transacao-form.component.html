@@ -198,12 +198,12 @@
             </span>
           </div>
   
-          <div class="ui-g-12">
+          <div class="ui-g-12" *ngIf="!isEstimada">
             <h2>DER (TD)</h2>
             <app-analise-der-chips [(values)]="dersChips"></app-analise-der-chips>
           </div>
 
-          <div class="ui-g-12">
+          <div class="ui-g-12" *ngIf="!isEstimada">
             <h2>FTR (AR)</h2>
             <app-analise-der-chips 
               [(values)]="alrsChips"

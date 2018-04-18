@@ -28,6 +28,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
   isEdit: boolean;
 
+  isEstimada: boolean;
+
   dersChips: DerChipItem[] = [];
 
   alrsChips: DerChipItem[] = [];
@@ -136,6 +138,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
    *
   **/
   private get analise(): Analise {
+    this.isEstimada = this.analiseSharedDataService.analise.metodoContagem  === 'ESTIMADA';
     return this.analiseSharedDataService.analise;
   }
 
