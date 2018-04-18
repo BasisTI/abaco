@@ -84,17 +84,19 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   save() {
     this.isSaving = true;
-    this.manual.valorVariacaoEstimada = this.manual.valorVariacaoEstimada;
-    this.manual.valorVariacaoIndicativa = this.manual.valorVariacaoIndicativa;
-
-    this.manual.parametroInclusao = this.manual.parametroInclusao;
-    this.manual.parametroAlteracao = this.manual.parametroAlteracao;
-    this.manual.parametroExclusao = this.manual.parametroExclusao;
-    this.manual.parametroConversao = this.manual.parametroConversao;
 
     if (this.manual.id !== undefined) {
-      this.manualService.find(this.manual.id).subscribe(response => {
+      this.editar();
+    } else {
+      this.novo();
+    }
+  }
+
+  private editar() {
+    this.manualService.find(this.manual.id).subscribe(response => {
+      if (this.checkRequiredFields()) {
         if (this.arquivoManual !== undefined) {
+          // tslint:disable-next-line:no-shadowed-variable
           this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
             this.manual.arquivoManualId = JSON.parse(response['_body']).id;
             this.subscribeToSaveResponse(this.manualService.update(this.manual));
@@ -102,39 +104,69 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         } else {
           this.subscribeToSaveResponse(this.manualService.update(this.manual));
         }
-      });
-
-    } else {
-      if (this.arquivoManual !== undefined) {
-        if (this.checkRequiredFields()) {
-          this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
-            this.manual.arquivoManualId = JSON.parse(response['_body']).id;
-            this.subscribeToSaveResponse(this.manualService.create(this.manual));
-          });
-        } else {
-          this.pageNotificationService.addErrorMsg('Campos inválidos: ' + this.getInvalidFieldsString());
-          this.invalidFields = [];
-        }
       } else {
-        this.pageNotificationService.addErrorMsg('Campo Arquivo Manual está inválido!');
+        this.privateExibirMensagemCamposInvalidos(1);
       }
+    });
+  }
+
+  private novo() {
+    if (this.arquivoManual !== undefined) {
+      if (this.checkRequiredFields()) {
+        this.definirValorpadrao();
+        this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
+        this.manual.arquivoManualId = JSON.parse(response['_body']).id;
+        this.subscribeToSaveResponse(this.manualService.create(this.manual));
+        });
+      } else {
+        this.privateExibirMensagemCamposInvalidos(1);
+      }
+    } else {
+      this.privateExibirMensagemCamposInvalidos(2);
     }
   }
 
   private checkRequiredFields(): boolean {
       let isFieldsValid = false;
 
-      if ( isNaN(this.manual.valorVariacaoEstimada)) (this.invalidFields.push('Valor Variação Estimada'));
-      if ( isNaN(this.manual.valorVariacaoIndicativa)) (this.invalidFields.push('Valor Variação Inidicativa'));
-
-      if ( isNaN(this.manual.parametroInclusao)) (this.invalidFields.push('Inclusão'));
-      if ( isNaN(this.manual.parametroAlteracao)) (this.invalidFields.push('Alteração'));
-      if ( isNaN(this.manual.parametroExclusao)) (this.invalidFields.push('Exclusão'));
-      if ( isNaN(this.manual.parametroConversao)) (this.invalidFields.push('Conversão'));
+      if (!this.manual.valorVariacaoEstimada || this.manual.valorVariacaoEstimada === undefined) {
+        this.invalidFields.push('Valor Variação Estimada');
+      }
+      if (!this.manual.valorVariacaoIndicativa || this.manual.valorVariacaoIndicativa === undefined) {
+        this.invalidFields.push('Valor Variação Indicativa');
+      }
+      if (!this.manual.nome || this.manual.nome === undefined) {
+        this.invalidFields.push('Nome');
+      }
+      if (!this.manual.parametroInclusao || this.manual.parametroInclusao === undefined) {
+        this.invalidFields.push('Inclusão');
+      }
+      if (!this.manual.parametroAlteracao || this.manual.parametroAlteracao === undefined) {
+        this.invalidFields.push('Alteração');
+      }
+      if (!this.manual.parametroExclusao || this.manual.parametroExclusao === undefined) {
+        this.invalidFields.push('Exclusão');
+      }
+      if (!this.manual.parametroConversao || this.manual.parametroConversao === undefined) {
+        this.invalidFields.push('Conversão');
+      }
 
       isFieldsValid = (this.invalidFields.length === 0);
 
       return isFieldsValid;
+  }
+
+  privateExibirMensagemCamposInvalidos(codErro: number) {
+    switch (codErro) {
+      case 1:
+        this.pageNotificationService.addErrorMsg('Campos inválidos: ' + this.getInvalidFieldsString());
+        this.invalidFields = [];
+        return;
+      case 2:
+        this.pageNotificationService.addErrorMsg('Campo Arquivo Manual está inválido!');
+        return;
+
+    }
   }
 
   private getInvalidFieldsString(): string {
@@ -151,6 +183,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     return invalidFieldsString;
   }
 
+  private definirValorpadrao() {
+    this.manual.versaoCPM = 1;
+  }
+
   private subscribeToSaveResponse(result: Observable<Manual>) {
     result.subscribe((res: Manual) => {
       this.isSaving = false;
@@ -159,7 +195,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }, (error: Response) => {
       alert(error);
       this.isSaving = false;
-      switch(error.status) {
+      switch (error.status) {
         case 400: {
           let invalidFieldNamesString = '';
           const fieldErrors = JSON.parse(error['_body']).fieldErrors;
@@ -298,7 +334,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     document.getElementById('nome_fase').setAttribute('style', 'border-bottom: solid; border-bottom-color: #bdbdbd;');
   }
 
-  private checkPhaseEffortRequiredFields(phaseEffort: EsforcoFase) : boolean{
+  private checkPhaseEffortRequiredFields(phaseEffort: EsforcoFase): boolean {
     let isPhaseNameValid = false;
     let isPhaseEffortValid = false;
     let isEffortValid = false;
@@ -323,7 +359,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       console.log(phaseEffort.esforco);
     }
 
-    (isPhaseNameValid && isEffortValid) ? (isPhaseEffortValid = true) : (isPhaseEffortValid = false)
+    (isPhaseNameValid && isEffortValid) ? (isPhaseEffortValid = true) : (isPhaseEffortValid = false);
 
     return isPhaseEffortValid;
   }
@@ -412,6 +448,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
 
       let fileInfo;
+      // tslint:disable-next-line:no-shadowed-variable
       this.uploadService.getFileInfo(this.manual.arquivoManualId).subscribe(response => {
         fileInfo = response;
 

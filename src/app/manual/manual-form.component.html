@@ -18,43 +18,40 @@
         <div class="ui-g">
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input 
+              <input
+                required
                 type="text" 
                 name="nome"
                 maxlength="250"
                 [(ngModel)]="manual.nome" 
                 pInputText/>
-              <label>{{ 'Nome' | translate }}</label>
+              <label>{{ 'Nome *' | translate }}</label>
             </span>
           </div>
 
           <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <p-spinner 
-                size="3" 
-                name="valorVariacaoEstimada" 
-                [(ngModel)]="manual.valorVariacaoEstimadaFormatado" 
-                min="0" 
-                max="100" 
-                decimalSeparator="" 
-                thousandSeparator="">
-              </p-spinner>
-              <label>{{ 'Valor Variacao Estimada (%)'| translate }}</label>
+              <input 
+                required
+                type="text" 
+                maxlength="3"
+                name="valorVariacaoEstimada"
+                [(ngModel)]="manual.valorVariacaoEstimadaFormatado"
+                pInputText/>
+              <label>Valor Variacao Estimada (%)</label>
             </span>
           </div>
 
           <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <p-spinner 
-                size="2" 
-                name="valorVariacaoIndicativa" 
-                [(ngModel)]="manual.valorVariacaoIndicativaFormatado" 
-                min="0" 
-                max="100" 
-                decimalSeparator="" 
-                thousandSeparator="">
-              </p-spinner>
-             <label>{{ 'Valor Variação Indicativa (%)'| translate }}</label>
+              <input 
+                required
+                type="text" 
+                maxlength="3"
+                name="valorVariacaoIndicativa"
+                [(ngModel)]="manual.valorVariacaoIndicativaFormatado"
+                pInputText/>
+              <label>Valor Variação Indicativa (%)</label>
             </span>
           </div>
 
@@ -80,7 +77,7 @@
 
         <div class="ui-g">
           <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-            <label>Arquivo Manual</label>
+            <label>Arquivo Manual *</label>
             <span class="md-inputfield">
               <p-fileUpload 
                 #fileInput 
@@ -116,15 +113,15 @@
             </div>
             <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                 <span class="md-inputfield">
-                    <input 
-                      required
-                      type="text" 
-                      maxlength="3"
-                      name="parametroAlteracao"
-                      [(ngModel)]="manual.parametroAlteracaoFormatado"
-                      pInputText/>
-                    <label>Alteração (%) *</label>
-                  </span>
+                  <input 
+                    required
+                    type="text" 
+                    maxlength="3"
+                    name="parametroAlteracao"
+                    [(ngModel)]="manual.parametroAlteracaoFormatado"
+                    pInputText/>
+                  <label>Alteração (%) *</label>
+                </span>
             </div>
             <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                 <span class="md-inputfield">
@@ -161,7 +158,7 @@
                     <p-radioButton 
                       name="versaoCPM" 
                       label="4.2.1"
-                      [value]="0"
+                      [value]="421"
                       [(ngModel)]="manual.versaoCPM">
                     </p-radioButton>
                 </div>
@@ -170,7 +167,7 @@
                     <p-radioButton 
                       name="versaoCPM" 
                       label="4.3.1"
-                      [value]="1"
+                      [value]="431"
                       [(ngModel)]="manual.versaoCPM">
                     </p-radioButton>
                 </div>
