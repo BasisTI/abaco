@@ -320,7 +320,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
     this.analiseSharedDataService.funcaoAnaliseCarregada();
-    this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
+
+    if (funcaoDadosSelecionada.fatorAjuste !== undefined && !funcaoDadosSelecionada.fatorAjuste) {
+      this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
+    }
+
     this.carregarDerERlr(funcaoDadosSelecionada);
   }
 

@@ -309,6 +309,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     switch (event.button) {
       case 'edit':
         this.isEdit = true;
+        this.showDialogNovo = true;
         this.prepararParaEdicao(funcaoSelecionada);
         break;
       case 'delete':
@@ -338,7 +339,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   **/
   private carregarValoresNaPaginaParaEdicao(funcaoSelecionada: FuncaoTransacao) {
     this.analiseSharedDataService.funcaoAnaliseCarregada();
-    this.carregarFatorDeAjusteNaEdicao(funcaoSelecionada);
+
+    if (funcaoSelecionada.fatorAjuste !== undefined && !funcaoSelecionada.fatorAjuste) {
+      this.carregarFatorDeAjusteNaEdicao(funcaoSelecionada);
+    }
+
     this.carregarDerEAlr(funcaoSelecionada);
   }
 
@@ -347,9 +352,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   **/
   private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
     this.inicializaFatoresAjuste(this.manual);
-    // this.fatoresAjuste = this.manual.fatoresAjuste;
-    funcaoSelecionada.fatorAjuste =
-    _.find(this.fatoresAjuste, { value: { id: funcaoSelecionada.fatorAjuste.id } }).value;
+    funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, {value: { 'id': funcaoSelecionada.fatorAjuste.id }} ).value;
   }
 
   /**
@@ -433,6 +436,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
       accept: () => {
         this.analise.deleteFuncaoTransacao(funcaoTransacaoSelecionada);
         this.salvarAnalise();
+        this.atualizaResumo();
         this.pageNotificationService.addDeleteMsgWithName(funcaoTransacaoSelecionada.name);
       }
     });
