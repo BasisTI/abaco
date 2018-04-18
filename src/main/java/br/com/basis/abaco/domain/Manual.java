@@ -229,6 +229,14 @@ public class Manual implements Serializable {
 		this.parametroConversao = parametroConversao;
 	}
 
+	public Long getVersaoCPM() {
+		return versaoCPM;
+	}
+
+	public void setVersaoCPM(Long versaoCPM) {
+		this.versaoCPM = versaoCPM;
+	}
+
 	@Override
     public boolean equals(Object o) {
         if (this == o) {
