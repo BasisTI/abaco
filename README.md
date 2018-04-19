@@ -1,6 +1,6 @@
 # Ábaco
 
-![Logo Ábaco](img/Logo-Produto-Abaco.png)
+![Logo Ábaco](https://raw.githubusercontent.com/BasisTI/abaco/master/img/Logo-Produto-Abaco.png)
 
 ## Ábaco é o primeiro software gratuito (freeware) publicado pela Basis.
 
