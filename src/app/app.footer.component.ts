@@ -8,14 +8,13 @@ import { AppComponent } from './app.component';
         <div class="card clearfix">
 
           <span class="footer-text-left">
-            Desenvolvido por Basis Tecnologia S.A. / basis.com.br
+            Desenvolvido por Basis Tecnologia S.A. <a HREF="http://www.basis.com.br" TARGET="_blank">basis.com.br</a>
           </span>
-
           <span class="footer-text-right">
             <span class="ui-icon ui-icon-copyright">
             </span>
             <span>
-              Todos os direitos reservados
+            <a HREF="https://www.basis.com.br/nossos-produtos" TARGET="_blank">Clique aqui para ver a licença.</a>
             </span>
           </span>
 
