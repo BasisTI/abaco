@@ -10,7 +10,7 @@ import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter
 import { Alr } from '../alr/alr.model';
 
 export enum TipoFuncaoTransacao {
-  'EE' = 'EE - Entrata Externa',
+  'EE' = 'EE - Entrada Externa',
   'SE' = 'SE - Saída Externa',
   'CE' = 'CE - Consulta Externa',
   'INM' = 'INM - Item Não Mensurável'
