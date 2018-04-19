@@ -1,28 +1,40 @@
-# PrimeCli
+# Ábaco
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.3.0.
+![Logo Ábaco](img/Logo-Produto-Abaco.png)
 
-## Development server
+## Ábaco é o primeiro software gratuito (freeware) publicado pela Basis.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+O produto tem como foco a disponibilização de funcionalidades que auxiliem a gestão e execução da Análise de Pontos de Função. Por meio da iniciativa de publicação do código em um repositório aberto, o Ábaco permitirá a qualquer usuário da iniciativa privada ou governamental o acesso a um eficiente sistema para estimativas e medições de software. O Termo de Licença de Uso – EULA visa conciliar o senso de comunidade com o licenciamento gratuito da ferramenta.
 
-## Code scaffolding
+## Termo de Licença de Uso - EULA
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+**EULA – ÁBACO**
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+Este Contrato de Licença de Usuário Final (“EULA”) é um acordo legal entre licenciado (pessoa Física ou Jurídica) denominada LICENCIADO e Basis Tecnologia da Informação S.A., pessoa jurídica de direito privado, de caráter técnico, inscrita no CNPJ nº 11.777.162/0001-57, com sede no SCS Quadra 08, Venâncio Shopping, Bloco B-50, 8° andar, Salas 824 a 842 (pares), Brasília – DF, CEP 70.333-900, doravante denominado LICENCIANTE, para uso e distribuição do programa de computador Ábaco (o “SOFTWARE”), disponibilizado neste ato pela LICENCIANTE mediante as cláusulas e condições seguintes.
 
-## Running unit tests
+1. DO OBJETO
+   1. O presente instrumento tem como objeto o direito de uso no ato do licenciamento do SOFTWARE, que abrange o programa de computador e pode incluir quaisquer materiais impressos, e qualquer documentação “online” ou eletrônica. Ao utilizar o SOFTWARE, mesmo que parcial ou a título de teste, o LICENCIADO estará vinculado aos termos deste EULA, concordando com os mesmos. Em caso de discordância dos termos aqui apresentados, a utilização do SOFTWARE deve ser imediatamente interrompida.
+1. DECLARAÇÃO DE ACEITE
+   1. O LICENCIADO declara ter conhecimento dos direitos e obrigações decorrentes do presente EULA, constituindo este instrumento o acordo completo entre as partes. Declara, ainda, ter lido, compreendido e aceitado todos os termos e condições.
+1. **RESTRIÇÕES**
+   1. **Em hipótese alguma é permitido ao LICENCIADO ou a terceiros distribuir de forma onerosa, provisória ou permanente o SOFTWARE objeto deste EULA, assim como seus módulos, partes, manuais ou quaisquer informações relativas ao mesmo, ou produtos derivados;**
+   1. **Também é vedado retirar ou alterar, total ou parcialmente, os avisos de reserva de direito existente no SOFTWARE e na documentação;**
+   1. **É mister observar que a utilização do SOFTWARE como objeto meio para atividades remuneradas não configura quebra das restrições aqui descritas.**
+1. PRAZO DE VIGÊNCIA
+   1. O presente EULA entra em vigor na data de seu aceite pelo LICENCIADO, que é configurado a partir da utilização/ distribuição do SOFTWARE.
+   1. O prazo de licenciamento do SOFTWARE vigorará por tempo indeterminado.
+1. RESCISÃO
+   1. Em nenhum caso a LICENCIANTE será responsável por danos pessoais ou qualquer prejuízo incidental, especial, indireto ou consequente, incluindo, sem limitação, prejuízos por perda de lucro, corrupção ou perda de dados, falha de transmissão ou recepção de dados, não continuidade do negócio ou qualquer outro prejuízo ou perda comercial, decorrentes ou relacionados ao seu uso ou sua inabilidade em usar o software, por qualquer outro motivo.
+1. **DISPOSIÇÕES LEGAIS**
+   1. **O LICENCIADO pode promover alterações nas especificações e/ou características do SOFTWARE licenciado para a melhoria e/ou correções de erros, observando sempre as cláusulas deste EULA;**
+   1. **Melhorias e/ou correções no código do SOFTWARE realizadas pelo LICENCIADO devem ser disponibilizadas à LICENCIANTE de forma que possam ser incorporadas em uma nova versão da ferramenta;**
+   1. **O LICENCIADO poderá prestar serviços remunerados a terceiros utilizando o SOFTWARE da LICENCIANTE;**
+   1. **Caso o LICENCIADO venha a desenvolver um novo módulo ou produto que caracterize cópia/modificação, de todo ou em parte, quer seja do dicionário de dados, quer seja do programa, este novo produto estará condicionado a estas cláusulas contratuais;**
+   1. **Se qualquer disposição deste EULA for considerada nula, anulável, inválida ou inoperante, nenhuma outra disposição deste EULA será afetada como consequência disso e, portanto, as disposições restantes deste EULA permanecerão em pleno vigor e efeito como se tal disposição nula, anulável, inválida ou inoperante não estivesse contida neste EULA;**
+1. FORO
+   1. As PARTES elegem o Foro de Brasília – DF como único competente para dirimir as dúvidas ou controvérsias decorrentes deste Contrato.
+   
+*Brasília/DF, 11 de abril de 2018.*
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+:warning: Ao baixar o código fonte, o usuário declara que entende e concorda com o Termo de Licença de Uso – EULA.
