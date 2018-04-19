@@ -1,156 +1,40 @@
-# abaco
-This application was generated using JHipster 4.0.7, you can find documentation and help at [https://jhipster.github.io/documentation-archive/v4.0.7](https://jhipster.github.io/documentation-archive/v4.0.7).
+# Ábaco
 
-## Development
+![Logo Ábaco](https://raw.githubusercontent.com/BasisTI/abaco/master/img/Logo-Produto-Abaco.png)
 
-Before you can build this project, you must install and configure the following dependencies on your machine:
+## Ábaco é o primeiro software gratuito (freeware) publicado pela Basis.
 
-1. [Node.js][]: We use Node to run a development web server and build the project.
-   Depending on your system, you can install Node either from source or as a pre-packaged bundle.
-2. [Yarn][]: We use Yarn to manage Node dependencies.
-   Depending on your system, you can install Yarn either from source or as a pre-packaged bundle.
+O produto tem como foco a disponibilização de funcionalidades que auxiliem a gestão e execução da Análise de Pontos de Função. Por meio da iniciativa de publicação do código em um repositório aberto, o Ábaco permitirá a qualquer usuário da iniciativa privada ou governamental o acesso a um eficiente sistema para estimativas e medições de software. O Termo de Licença de Uso – EULA visa conciliar o senso de comunidade com o licenciamento gratuito da ferramenta.
 
-After installing Node, you should be able to run the following command to install development tools.
-You will only need to run this command when dependencies change in `package.json`.
-
-    yarn install
-
-We use yarn scripts and [Webpack][] as our build system.
+## Termo de Licença de Uso - EULA
 
 
-Run the following commands in two separate terminals to create a blissful development experience where your browser
-auto-refreshes when files change on your hard drive.
+**EULA – ÁBACO**
 
-    ./mvnw
-    yarn start
+Este Contrato de Licença de Usuário Final (“EULA”) é um acordo legal entre licenciado (pessoa Física ou Jurídica) denominada LICENCIADO e Basis Tecnologia da Informação S.A., pessoa jurídica de direito privado, de caráter técnico, inscrita no CNPJ nº 11.777.162/0001-57, com sede no SCS Quadra 08, Venâncio Shopping, Bloco B-50, 8° andar, Salas 824 a 842 (pares), Brasília – DF, CEP 70.333-900, doravante denominado LICENCIANTE, para uso e distribuição do programa de computador Ábaco (o “SOFTWARE”), disponibilizado neste ato pela LICENCIANTE mediante as cláusulas e condições seguintes.
 
-[Yarn][] is also used to manage CSS and JavaScript dependencies used in this application. You can upgrade dependencies by
-specifying a newer version in `package.json`. You can also run `yarn update` and `yarn install` to manage dependencies.
-Add the `help` flag on any command to see how you can use it. For example, `yarn help update`.
+1. DO OBJETO
+   1. O presente instrumento tem como objeto o direito de uso no ato do licenciamento do SOFTWARE, que abrange o programa de computador e pode incluir quaisquer materiais impressos, e qualquer documentação “online” ou eletrônica. Ao utilizar o SOFTWARE, mesmo que parcial ou a título de teste, o LICENCIADO estará vinculado aos termos deste EULA, concordando com os mesmos. Em caso de discordância dos termos aqui apresentados, a utilização do SOFTWARE deve ser imediatamente interrompida.
+1. DECLARAÇÃO DE ACEITE
+   1. O LICENCIADO declara ter conhecimento dos direitos e obrigações decorrentes do presente EULA, constituindo este instrumento o acordo completo entre as partes. Declara, ainda, ter lido, compreendido e aceitado todos os termos e condições.
+1. **RESTRIÇÕES**
+   1. **Em hipótese alguma é permitido ao LICENCIADO ou a terceiros distribuir de forma onerosa, provisória ou permanente o SOFTWARE objeto deste EULA, assim como seus módulos, partes, manuais ou quaisquer informações relativas ao mesmo, ou produtos derivados;**
+   1. **Também é vedado retirar ou alterar, total ou parcialmente, os avisos de reserva de direito existente no SOFTWARE e na documentação;**
+   1. **É mister observar que a utilização do SOFTWARE como objeto meio para atividades remuneradas não configura quebra das restrições aqui descritas.**
+1. PRAZO DE VIGÊNCIA
+   1. O presente EULA entra em vigor na data de seu aceite pelo LICENCIADO, que é configurado a partir da utilização/ distribuição do SOFTWARE.
+   1. O prazo de licenciamento do SOFTWARE vigorará por tempo indeterminado.
+1. RESCISÃO
+   1. Em nenhum caso a LICENCIANTE será responsável por danos pessoais ou qualquer prejuízo incidental, especial, indireto ou consequente, incluindo, sem limitação, prejuízos por perda de lucro, corrupção ou perda de dados, falha de transmissão ou recepção de dados, não continuidade do negócio ou qualquer outro prejuízo ou perda comercial, decorrentes ou relacionados ao seu uso ou sua inabilidade em usar o software, por qualquer outro motivo.
+1. **DISPOSIÇÕES LEGAIS**
+   1. **O LICENCIADO pode promover alterações nas especificações e/ou características do SOFTWARE licenciado para a melhoria e/ou correções de erros, observando sempre as cláusulas deste EULA;**
+   1. **Melhorias e/ou correções no código do SOFTWARE realizadas pelo LICENCIADO devem ser disponibilizadas à LICENCIANTE de forma que possam ser incorporadas em uma nova versão da ferramenta;**
+   1. **O LICENCIADO poderá prestar serviços remunerados a terceiros utilizando o SOFTWARE da LICENCIANTE;**
+   1. **Caso o LICENCIADO venha a desenvolver um novo módulo ou produto que caracterize cópia/modificação, de todo ou em parte, quer seja do dicionário de dados, quer seja do programa, este novo produto estará condicionado a estas cláusulas contratuais;**
+   1. **Se qualquer disposição deste EULA for considerada nula, anulável, inválida ou inoperante, nenhuma outra disposição deste EULA será afetada como consequência disso e, portanto, as disposições restantes deste EULA permanecerão em pleno vigor e efeito como se tal disposição nula, anulável, inválida ou inoperante não estivesse contida neste EULA;**
+1. FORO
+   1. As PARTES elegem o Foro de Brasília – DF como único competente para dirimir as dúvidas ou controvérsias decorrentes deste Contrato.
+   
+*Brasília/DF, 11 de abril de 2018.*
 
-The `yarn run` command will list all of the scripts available to run for this project.
-
-### Managing dependencies
-
-For example, to add [Leaflet][] library as a runtime dependency of your application, you would run following command:
-
-    yarn add --exact leaflet
-
-To benefit from TypeScript type definitions from [DefinitelyTyped][] repository in development, you would run following command:
-
-    yarn add --dev --exact @types/leaflet
-
-Then you would import the JS and CSS files specified in library's installation instructions so that [Webpack][] knows about them:
-
-Edit `src/main/webapp/app/vendor.ts`file:
-~~~
-import 'leaflet/dist/leaflet.js';
-~~~
-
-Edit `src/main/webapp/content/css/vendor.css` file:
-~~~
-@import '~leaflet/dist/leaflet.css';
-~~~
-
-Note: there are still few other things remaining to do for Leaflet that we won't detail here.
-
-For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
-
-### Using angular-cli
-
-You can also use [Angular CLI][] to generate some custom client code.
-
-For example, the following command:
-
-    ng generate component my-component
-
-will generate few files:
-
-    create src/main/webapp/app/my-component/my-component.component.html
-    create src/main/webapp/app/my-component/my-component.component.ts
-    update src/main/webapp/app/app.module.ts
-
-## Building for production
-
-To optimize the abaco application for production, run:
-
-    ./mvnw -Pprod clean package
-
-This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.
-To ensure everything worked, run:
-
-    java -jar target/*.war
-
-Then navigate to [http://localhost:8080](http://localhost:8080) in your browser.
-
-Refer to [Using JHipster in production][] for more details.
-
-## Testing
-
-To launch your application's tests, run:
-
-    ./mvnw clean test
-
-### Client tests
-
-Unit tests are run by [Karma][] and written with [Jasmine][]. They're located in `src/test/javascript/` and can be run with:
-
-    yarn test
-
-UI end-to-end tests are powered by [Protractor][], which is built on top of WebDriverJS. They're located in `src/test/javascript/e2e`
-and can be run by starting Spring Boot in one terminal (`./mvnw spring-boot:run`) and running the tests (`gulp itest`) in a second one.
-### Other tests
-
-Performance tests are run by [Gatling][] and written in Scala. They're located in `src/test/gatling` and can be run with:
-
-    ./mvnw gatling:execute
-
-For more information, refer to the [Running tests page][].
-
-## Using Docker to simplify development (optional)
-
-You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the `src/main/docker` folder to launch required third party services.
-For example, to start a postgresql database in a docker container, run:
-
-    docker-compose -f src/main/docker/postgresql.yml up -d
-
-To stop it and remove the container, run:
-
-    docker-compose -f src/main/docker/postgresql.yml down
-
-You can also fully dockerize your application and all the services that it depends on.
-To achieve this, first build a docker image of your app by running:
-
-    ./mvnw package -Pprod docker:build
-
-Then run:
-
-    docker-compose -f src/main/docker/app.yml up -d
-
-For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`yo jhipster:docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
-
-## Continuous Integration (optional)
-
-To configure CI for your project, run the ci-cd sub-generator (`yo jhipster:ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
-
-[JHipster Homepage and latest documentation]: https://jhipster.github.io
-[JHipster 4.0.7 archive]: https://jhipster.github.io/documentation-archive/v4.0.7
-
-[Using JHipster in development]: https://jhipster.github.io/documentation-archive/v4.0.7/development/
-[Service Discovery and Configuration with the JHipster-Registry]: https://jhipster.github.io/documentation-archive/v4.0.7/microservices-architecture/#jhipster-registry
-[Using Docker and Docker-Compose]: https://jhipster.github.io/documentation-archive/v4.0.7/docker-compose
-[Using JHipster in production]: https://jhipster.github.io/documentation-archive/v4.0.7/production/
-[Running tests page]: https://jhipster.github.io/documentation-archive/v4.0.7/running-tests/
-[Setting up Continuous Integration]: https://jhipster.github.io/documentation-archive/v4.0.7/setting-up-ci/
-
-[Gatling]: http://gatling.io/
-[Node.js]: https://nodejs.org/
-[Yarn]: https://yarnpkg.org/
-[Webpack]: https://webpack.github.io/
-[Angular CLI]: https://cli.angular.io/
-[BrowserSync]: http://www.browsersync.io/
-[Karma]: http://karma-runner.github.io/
-[Jasmine]: http://jasmine.github.io/2.0/introduction.html
-[Protractor]: https://angular.github.io/protractor/
-[Leaflet]: http://leafletjs.com/
-[DefinitelyTyped]: http://definitelytyped.org/
+:warning: Ao baixar o código fonte, o usuário declara que entende e concorda com o Termo de Licença de Uso – EULA.
