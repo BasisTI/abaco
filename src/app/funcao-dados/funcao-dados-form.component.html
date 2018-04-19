@@ -165,7 +165,7 @@
                 </p-dropdown>
             </div>
 
-            <div class="ui-g-4 ui-md-4 ui-sm-12">
+            <div class="ui-g-3 ui-md-3 ui-sm-12">
                 <label>Impacto *</label>
                 <p-dropdown 
                   [options]="impacto"
@@ -176,7 +176,7 @@
                 </p-dropdown>
             </div>
 
-            <div class="ui-g-4 ui-md-4 ui-sm-12">
+            <div class="ui-g-5 ui-md-5 ui-sm-12">
               <label>Deflator</label>
               <p-dropdown 
                 [options]="fatoresAjuste"
@@ -189,21 +189,21 @@
             </div>
     
           </div>
-            
-          <div class="ui-g-12 ui-md-12 ui-sm-12">
-              <h2>DER (TD)</h2>
-              <app-analise-der-chips  
-                [(values)]="dersChips"
-                (onChange)="adicionar()">
-              </app-analise-der-chips>
-          </div>
-        
+          
           <div class="ui-g-12 ui-md-12 ui-sm-12">
             <h2>RLR (TR)</h2>
             <app-analise-der-chips 
               [(values)]="rlrsChips"
               (onChange)="adicionar()">
             </app-analise-der-chips>
+          </div>
+
+          <div class="ui-g-12 ui-md-12 ui-sm-12">
+              <h2>DER (TD)</h2>
+              <app-analise-der-chips  
+                [(values)]="dersChips"
+                (onChange)="adicionar()">
+              </app-analise-der-chips>
           </div>
         
           <div class="ui-g-12 ui-md-12 ui-sm-12">

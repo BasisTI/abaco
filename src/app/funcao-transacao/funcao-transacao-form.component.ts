@@ -70,9 +70,17 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
   **/
   ngOnInit() {
     this.isEdit = false;
-    this.currentFuncaoTransacao = new FuncaoTransacao();
+    this.iniciarObjetos();
     this.subscribeToAnaliseCarregada();
     this.initClassificacoes();
+  }
+
+  /**
+   *
+  **/
+  private iniciarObjetos() {
+    this.currentFuncaoTransacao = new FuncaoTransacao();
+    this.currentFuncaoTransacao.funcionalidade = new Funcionalidade();
   }
 
   /**
@@ -275,8 +283,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
    *
   **/
   private resetarEstadoPosSalvar() {
+    this.iniciarObjetos();
+
     // Mantendo o mesmo conteudo a pedido do Leandro
-    this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
+    // this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
 
     // TODO inappropriate intimacy DEMAIS
     this.currentFuncaoTransacao.artificialId = undefined;
@@ -425,7 +435,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
    *
   **/
   private limparDadosDaTelaNaEdicaoCancelada() {
-    this.currentFuncaoTransacao = new FuncaoTransacao();
+    this.iniciarObjetos();
     this.dersChips = [];
     this.alrsChips = [];
   }

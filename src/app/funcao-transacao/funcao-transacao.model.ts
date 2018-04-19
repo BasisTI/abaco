@@ -10,10 +10,10 @@ import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter
 import { Alr } from '../alr/alr.model';
 
 export enum TipoFuncaoTransacao {
-  'EE' = 'EE', // entrada externa
-  'SE' = 'SE', // saida externa
-  'CE' = 'CE', // consulta externa
-  'INM' = 'INM'
+  'EE' = 'EE - Entrata Externa',
+  'SE' = 'SE - Saída Externa',
+  'CE' = 'CE - Consulta Externa',
+  'INM' = 'INM - Item Não Mensurável'
 }
 
 export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,

@@ -58,8 +58,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
   // FIXME considerar o enum
   classificacoes: SelectItem[] = [
-    { label: 'ALI', value: 'ALI' },
-    { label: 'AIE', value: 'AIE' }
+    { label: 'ALI - Arquivo Lógico Interno', value: 'ALI' },
+    { label: 'AIE - Arquivo de Interface Externa', value: 'AIE' }
   ];
 
   private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };

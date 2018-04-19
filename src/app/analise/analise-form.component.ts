@@ -410,4 +410,100 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     return this.analise.sistema.sigla + ' - ' + this.analise.sistema.nome;
   }
 
+  /**
+   *
+  */
+  public tooltipIdentificadorAnalise(): string {
+    if (!this.analise.identificadorAnalise) {
+      return 'Informe o Identificador da Análise.';
+    } else {
+      return 'Identificador da Análise informado.';
+    }
+  }
+
+  /**
+   *
+  */
+  public tooltipContrato(): string {
+    if (!this.analise.contrato) {
+      return 'Informe o Contrato.';
+    } else {
+      return 'Contrato informado.';
+    }
+  }
+
+  /**
+   *
+  */
+  public tooltipMedodoContagem(): string {
+    if (!this.analise.metodoContagem) {
+      return 'Informe o Método de Contagem.';
+    } else {
+      return 'Método de Contagem informado.';
+    }
+  }
+
+  /**
+   * Conceito tipo da contagem.
+  */
+  public tooltipTipoContagem(): string {
+    return 'Projeto de Desenvolvimento: Desenvolve e entrega' +
+    ' a 1a versão de uma aplicação de software. Seu tamanho' +
+    ' funcional é medida da função fornecida aos usuários' +
+    ' por ela, como medido pela respectiva contagem.' +
+    ' Projeto de Melhoria: Desenvolve e entrega manutenção adaptativa.' +
+    ' Seu tamanho funcional é a medida das funções incluídas, alteradas ou excluídas' +
+    ' ao final do projeto, como medido pela respectiva contagem.' +
+    ' Contagem de Aplicação: Consiste de um ou mais componentes,' +
+    ' módulos ou subsistemas. Sua medição funcional de' +
+    ' tamanho é uma medida da função que uma aplicação' +
+    ' fornece ao usuário, determinada pela respectiva contagem.';
+  }
+
+  /**
+   * Conceito propósito da contagem.
+  */
+  public tooltipPropositoContagem(): string {
+    return 'Fornece uma resposta a um problema de negócio.' +
+    ' Determina o Tipo de Contagem e o Escopo da' +
+    ' Contagem. Influencia o posicionamento da Fronteira da' +
+    ' Aplicação.';
+  }
+
+  /**
+   * Conceito Escopo da Contagem.
+  */
+  public tooltipEscopoContagem(): string {
+    return 'É um conjunto de Requisitos Funcionais do usuário;' +
+    ' Define um subconjunto do sistema medido;' +
+    ' É determinado pelo propósito da contagem;' +
+    ' Identifica quais funções serão incluídas na medição funcional de tamanho' +
+    ' e pode incluir mais de uma aplicação.';
+  }
+
+  /**
+   * Conceito da fronteira.
+  */
+  public tooltipFronteira(): string {
+    return 'Define o que é externo à aplicação.' +
+    ' Indica a fronteira entre o software sendo medido e o usuário.' +
+    ' Age como uma ‘membrana’ pela qual dados processados pelas transações' +
+    ' (EE,SE,CE) passam entrando e saindo.' +
+    ' Compreende dados mantidos pela aplicação (ALI)' +
+    ' Apóia na identificação de dados referenciados , ' +
+    ' mas não mantidos dentro da fronteira da aplicação (AIE)' +
+    ' É dependente da visão externa de negócio da aplicação pelo usuário.' +
+    ' É independente de considerações técnicas e/ou de implementação.';
+  }
+
+  /**
+   *
+  */
+ public tooltipDocumentacao(): string {
+  if (!this.analise.documentacao) {
+    return 'Informe a Documentação.';
+  } else {
+    return 'Documentação informada.';
+  }
+}
 }

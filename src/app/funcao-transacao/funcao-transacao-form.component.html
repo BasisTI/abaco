@@ -161,7 +161,7 @@
                 </p-dropdown>
             </div>
 
-            <div class="ui-g-4 ui-md-4 ui-sm-12">
+            <div class="ui-g-3 ui-md-3 ui-sm-12">
                 <label>Impacto *</label>
                 <p-dropdown
                   required = "true"
@@ -173,7 +173,7 @@
                 </p-dropdown>
             </div>
 
-            <div class="ui-g-4 ui-md-4 ui-sm-12">
+            <div class="ui-g-5 ui-md-5 ui-sm-12">
               <label>Deflator</label>
               <p-dropdown 
                 [options]="fatoresAjuste"
@@ -197,11 +197,6 @@
               <label>Nome do Processo Elementar</label>
             </span>
           </div>
-  
-          <div class="ui-g-12" *ngIf="!isEstimada">
-            <h2>DER (TD)</h2>
-            <app-analise-der-chips [(values)]="dersChips"></app-analise-der-chips>
-          </div>
 
           <div class="ui-g-12" *ngIf="!isEstimada">
             <h2>FTR (AR)</h2>
@@ -210,6 +205,11 @@
               [relacionarDers]="true"
               (dersReferenciadosEvent)="dersReferenciados($event)">
             </app-analise-der-chips>
+          </div>
+
+          <div class="ui-g-12" *ngIf="!isEstimada">
+            <h2>DER (TD)</h2>
+            <app-analise-der-chips [(values)]="dersChips"></app-analise-der-chips>
           </div>
 
           <div class="ui-g-12">
