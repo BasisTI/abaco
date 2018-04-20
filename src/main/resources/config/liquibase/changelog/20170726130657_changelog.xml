@@ -105,14 +105,6 @@
    <changeSet author="123 (generated)" id="1501074424728-10">
       <dropForeignKeyConstraint baseTableName="organizacao" constraintName="fk_organizacao_contrato_id"/>
    </changeSet>
-   <changeSet author="123 (generated)" id="1501074424728-11">
-      <dropUniqueConstraint constraintName="jhi_social_user_connection_user_id_provider_id_provider_use_key"
-                            tableName="jhi_social_user_connection"/>
-   </changeSet>
-   <changeSet author="123 (generated)" id="1501074424728-12">
-      <dropUniqueConstraint constraintName="jhi_social_user_connection_user_id_provider_id_rank_key"
-                            tableName="jhi_social_user_connection"/>
-   </changeSet>
    <changeSet author="123 (generated)" id="1501074424728-13">
       <dropColumn columnName="contrato_id" tableName="organizacao"/>
    </changeSet>
