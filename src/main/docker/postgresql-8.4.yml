@@ -1,0 +1,11 @@
+version: '2'
+services:
+    abaco-postgresql:
+        image: nahuel/postgresql-8.4
+        # volumes:
+        #     - ~/volumes/jhipster/abaco/postgresql/:/var/lib/postgresql/
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=1
+        ports:
+            - 5432:5432
