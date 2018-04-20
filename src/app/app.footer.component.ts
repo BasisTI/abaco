@@ -10,11 +10,14 @@ import { AppComponent } from './app.component';
           <span class="footer-text-left">
             Desenvolvido por Basis Tecnologia S.A. <a HREF="http://www.basis.com.br" TARGET="_blank">basis.com.br</a>
           </span>
+
           <span class="footer-text-right">
-            <span class="ui-icon ui-icon-copyright">
+            <span class="ui-icon ui-icon-copyright"></span>
+            <span>
+              <a HREF="https://www.basis.com.br/nossos-produtos" TARGET="_blank">Clique aqui para ver a licença.</a>
             </span>
             <span>
-            <a HREF="https://www.basis.com.br/nossos-produtos" TARGET="_blank">Clique aqui para ver a licença.</a>
+              <app-version-tag class="footer-text-left"></app-version-tag>
             </span>
           </span>
 
@@ -22,4 +25,5 @@ import { AppComponent } from './app.component';
     </div>
   `
 })
+
 export class AppFooterComponent { }

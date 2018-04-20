@@ -18,7 +18,8 @@ import {
   HttpService,
   SecurityModule,
   AuthService,
-  AUTH_CONFIG
+  AUTH_CONFIG,
+  VersionTagModule
 } from '@basis/angular-components';
 import { authServiceFactory } from './auth-service-factory';
 
@@ -99,7 +100,8 @@ export function createTranslateLoader(http: HttpClient) {
         useFactory: (createTranslateLoader),
         deps: [HttpClient]
       }
-    })
+    }),
+    VersionTagModule.forRoot()
     /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
   ],
   declarations: [
