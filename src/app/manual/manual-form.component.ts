@@ -50,6 +50,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
   @ViewChild('fileInput') fileInput: FileUpload;
 
+  /**
+   *
+  */
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -65,6 +68,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     translate.use(sessionStorage.getItem('language'));
   }
 
+  /**
+   *
+  */
   ngOnInit() {
     this.isSaving = false;
     this.routeSub = this.route.params.subscribe(params => {
@@ -82,6 +88,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+  */
   save() {
     this.isSaving = true;
 
@@ -92,6 +101,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   private editar() {
     this.manualService.find(this.manual.id).subscribe(response => {
       if (this.checkRequiredFields()) {
@@ -110,6 +122,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+  */
   private novo() {
     if (this.arquivoManual !== undefined) {
       if (this.checkRequiredFields()) {
@@ -126,6 +141,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   private checkRequiredFields(): boolean {
       let isFieldsValid = false;
 
@@ -156,6 +174,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
       return isFieldsValid;
   }
 
+  /**
+   *
+  */
   privateExibirMensagemCamposInvalidos(codErro: number) {
     switch (codErro) {
       case 1:
@@ -169,6 +190,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   private getInvalidFieldsString(): string {
     let invalidFieldsString = '';
 
@@ -183,10 +207,16 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     return invalidFieldsString;
   }
 
+  /**
+   *
+  */
   private definirValorpadrao() {
     this.manual.versaoCPM = 1;
   }
 
+  /**
+   *
+  */
   private subscribeToSaveResponse(result: Observable<Manual>) {
     result.subscribe((res: Manual) => {
       this.isSaving = false;
@@ -206,14 +236,23 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+  */
   ngOnDestroy() {
     this.routeSub.unsubscribe();
   }
 
+  /**
+   *
+  */
   uploadFile(event) {
     this.arquivoManual = event.files[0];
   }
 
+  /**
+   *
+  */
   datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
       return;
@@ -231,6 +270,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   adjustFactorDatatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
       return;
@@ -249,14 +291,24 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   isPercentualEnum(value: TipoFatorAjuste) {
 
     return (value !== undefined) ? (value.toString() === 'PERCENTUAL') : (false);
   }
 
+  /**
+   *
+  */
   isUnitaryEnum(value: TipoFatorAjuste) {
     return (value !== undefined) ? (value.toString() === 'UNITARIO') : (false);
   }
+
+  /**
+   *
+  */
   confirmDeletePhaseEffort() {
     this.confirmationService.confirm({
       message: 'Tem certeza que deseja excluir o Esforço por fase ' + this.editedPhaseEffort.fase.nome + '?',
@@ -268,6 +320,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+  */
   confirmDeleteAdjustFactor() {
     this.confirmationService.confirm({
       message: 'Tem certeza que deseja excluir o Fator de Ajuste ' + this.editedAdjustFactor.nome + '?',
@@ -279,15 +334,24 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+  */
   openDialogPhaseEffort() {
     this.newPhaseEffort = new EsforcoFase();
     this.showDialogPhaseEffort = true;
   }
 
+  /**
+   *
+  */
   openDialogEditPhaseEffort() {
       this.showDialogEditPhaseEffort = true;
   }
 
+  /**
+   *
+  */
   editPhaseEffort() {
     if (this.checkPhaseEffortRequiredFields(this.editedPhaseEffort)) {
       this.manual.updateEsforcoFases(this.editedPhaseEffort);
@@ -298,6 +362,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   editAdjustFactor() {
     if (this.checkAdjustFactorRequiredFields(this.editedAdjustFactor)) {
       this.manual.updateFatoresAjuste(this.editedAdjustFactor);
@@ -308,16 +375,25 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   closeDialogPhaseEffort() {
     this.newPhaseEffort = new EsforcoFase();
     this.showDialogPhaseEffort = false;
   }
 
+  /**
+   *
+  */
   closeDialogEditPhaseEffort() {
     this.editedPhaseEffort = new EsforcoFase();
     this.showDialogEditPhaseEffort = false;
   }
 
+  /**
+   *
+  */
   addPhaseEffort() {
     this.newPhaseEffort.esforco = this.newPhaseEffort.esforco;
     if (this.checkPhaseEffortRequiredFields(this.newPhaseEffort)) {
@@ -329,11 +405,17 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   private resetMarkedFieldsPhaseEffort() {
     document.getElementById('esforco').setAttribute('style', 'border-bottom: solid; border-bottom-color: #bdbdbd;');
     document.getElementById('nome_fase').setAttribute('style', 'border-bottom: solid; border-bottom-color: #bdbdbd;');
   }
 
+  /**
+   *
+  */
   private checkPhaseEffortRequiredFields(phaseEffort: EsforcoFase): boolean {
     let isPhaseNameValid = false;
     let isPhaseEffortValid = false;
@@ -364,6 +446,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     return isPhaseEffortValid;
   }
 
+  /**
+   *
+  */
   getPhaseEffortTotalPercentual() {
     let total = 0;
     this.manual.esforcoFases.forEach(each => {
@@ -373,24 +458,39 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     return total;
   }
 
+  /**
+   *
+  */
   openDialogCreateAdjustFactor() {
     this.showDialogCreateAdjustFactor = true;
   }
 
+  /**
+   *
+  */
   closeDialogCreateAdjustFactor() {
     this.showDialogCreateAdjustFactor = false;
     this.newAdjustFactor = new FatorAjuste();
   }
 
+  /**
+   *
+  */
   openDialogEditAdjustFactor() {
     this.showDialogEditAdjustFactor = true;
   }
 
+  /**
+   *
+  */
   closeDialogEditAdjustFactor() {
       this.showDialogEditAdjustFactor = false;
       this.editedAdjustFactor = new FatorAjuste();
   }
 
+  /**
+   *
+  */
   addAdjustFactor() {
     this.newAdjustFactor.ativo = true;
     if (this.checkAdjustFactorRequiredFields(this.newAdjustFactor)) {
@@ -402,24 +502,26 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+  */
   private checkAdjustFactorRequiredFields(adjustFactor: FatorAjuste): boolean {
     let isNameValid = false;
     let isAdjustTypeValid = false;
     let isFactorValid = false;
-    let isCodeValid = false;
-    let isOriginValid = false;
 
     this.resetMarkedFieldsAdjustFactor();
     isNameValid = this.checkRequiredField(adjustFactor.nome);
     isAdjustTypeValid = this.checkRequiredField(adjustFactor.tipoAjuste);
     isFactorValid = this.checkRequiredField(adjustFactor.fator);
-    isCodeValid = this.checkRequiredField(adjustFactor.codigo);
-    isOriginValid = this.checkRequiredField(adjustFactor.origem);
 
-    this.markFieldsAdjustFactor(isNameValid, isAdjustTypeValid, isFactorValid, isCodeValid, isOriginValid);
-    return (isNameValid && isAdjustTypeValid && isFactorValid && isCodeValid && isOriginValid);
+    this.markFieldsAdjustFactor(isNameValid, isAdjustTypeValid, isFactorValid);
+    return (isNameValid && isAdjustTypeValid && isFactorValid);
   }
 
+  /**
+   *
+  */
   private checkRequiredField(field: any) {
     let isValid = false;
 
@@ -428,14 +530,24 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     return isValid;
   }
 
-  private markFieldsAdjustFactor(isNameValid: boolean, isAdjustTypeValid: boolean, isFactorValid: boolean, isCodeValid: boolean, isOriginValid: boolean) {
-      (!isNameValid) ? (document.getElementById('nome_fator_ajuste').setAttribute('style', 'border-color: red;')) : (this);
-      (!isAdjustTypeValid) ? (document.getElementById('tipo_ajuste').setAttribute('style', 'border-bottom: solid; border-bottom-color: red;')) : (this);
-      (!isFactorValid) ? (document.getElementById('valor_fator').setAttribute('style', 'border-bottom: solid; border-bottom-color: red;')) : (this);
-      (!isCodeValid) ? (document.getElementById('codigo_fator').setAttribute('style', 'border-color: red;')) : (this);
-      (!isOriginValid) ? (document.getElementById('origem_fator').setAttribute('style', 'border-color: red;')) : (this);
+  /**
+   *
+  */
+ private markFieldsAdjustFactor(
+   isNameValid: boolean,
+   isAdjustTypeValid: boolean,
+   isFactorValid: boolean) {
+     (!isNameValid) ? (document.getElementById('nome_fator_ajuste')
+        .setAttribute('style', 'border-color: red;')) : (this);
+      (!isAdjustTypeValid) ? (document.getElementById('tipo_ajuste')
+        .setAttribute('style', 'border-bottom: solid; border-bottom-color: red;')) : (this);
+      (!isFactorValid) ? (document.getElementById('valor_fator')
+        .setAttribute('style', 'border-bottom: solid; border-bottom-color: red;')) : (this);
   }
 
+  /**
+   *
+  */
   private resetMarkedFieldsAdjustFactor() {
     document.getElementById('nome_fator_ajuste').setAttribute('style', 'border-color: #bdbdbd;');
     document.getElementById('tipo_ajuste').setAttribute('style', 'border-bottom: solid; border-bottom-color: #bdbdbd;');
@@ -443,6 +555,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     document.getElementById('codigo_fator').setAttribute('style', 'border-color: #bdbdbd;');
     document.getElementById('origem_fator').setAttribute('style', 'border-color: #bdbdbd;');
   }
+
+  /**
+   *
+  */
   getFile() {
     this.loading = true;
     this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
@@ -458,9 +574,26 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+  */
   getFileInfo() {
     return this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
       return response;
     });
   }
+
+  /**
+   *
+  */
+  public habilitarDeflator(): boolean {
+    if (this.newAdjustFactor.tipoAjuste !== undefined) {
+      return false;
+    }
+    if (this.editedAdjustFactor.tipoAjuste !== undefined) {
+      return false;
+    }
+    return true;
+  }
+
 }

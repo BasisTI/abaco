@@ -237,11 +237,12 @@
             </app-memory-datatable>
           </div>
         </div>
-        <div class="ui-g">
-          <div class="ui-g-2">
+
+        <div class="ui-g" style="justify-content: center; margin-top: 25px;">
+          <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-white-button buttonLabel="Cancelar" routerLink="/manual"></app-white-button>
           </div>
-          <div class="ui-g-2">
+          <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
           </div>
         </div>
@@ -282,21 +283,19 @@
 
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
-              <div class="ui-md-3">
+              <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-white-button 
                   buttonLabel="Cancelar" 
                   (click)="closeDialogPhaseEffort()">
                 </app-white-button>
-                <!-- <button pButton type="button" label="Cancelar" (click)="closeDialogPhaseEffort()"></button> -->
               </div>
 
-              <div class="ui-md-3">
+              <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-green-button 
                   buttonLabel="Salvar" 
                   buttonIcon="ui-icon-add" 
                   (click)="addPhaseEffort()">
                 </app-green-button>
-                <!-- <button pButton type="button" label="Salvar" icon="ui-icon-add" (click)="addPhaseEffort()"></button> -->
               </div>
             </div>
           </div>
@@ -342,14 +341,14 @@
 
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
-              <div class="ui-md-3">
+              <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-white-button 
                   buttonLabel="Cancelar" 
                   (click)="closeDialogEditPhaseEffort()">
                 </app-white-button>
               </div>
 
-              <div class="ui-md-3">
+              <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-green-button 
                   buttonLabel="Salvar" 
                   buttonIcon="ui-icon-add" 
@@ -371,7 +370,7 @@
           <div class="ui-g">
 
             <div class="ui-g-6">
-              <label>Nome*</label>
+              <label>Nome *</label>
               <input 
                 id="nome_fator_ajuste" 
                 type="text" 
@@ -381,7 +380,7 @@
             </div>
 
             <div class="ui-g-3">
-              <label>Tipo Deflator*</label><br>
+              <label>Tipo Deflator *</label><br>
               <p-dropdown 
                 #dd 
                 id="tipo_ajuste" 
@@ -395,26 +394,17 @@
             </div>
 
             <div class="ui-g-3">
-              <label *ngIf="isPercentualEnum(newAdjustFactor.tipoAjuste)">Deflator (%)*</label>
-              <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)">Deflator (PF)*</label>
-              <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Deflator*</label>
+              <label *ngIf="isPercentualEnum(newAdjustFactor.tipoAjuste)">Deflator (%) *</label>
+              <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)">Deflator (PF) *</label>
+              <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Deflator *</label>
               
-              <p-spinner 
-                id="valor_fator" 
-                size="30" 
-                *ngIf="newAdjustFactor.tipoAjuste !== undefined" 
-                name="fator" 
-                [(ngModel)]="newAdjustFactor.fatorFormatado">
-              </p-spinner>
-
-              <p-spinner 
-                id="valor_fator" 
-                size="30" 
-                *ngIf="newAdjustFactor.tipoAjuste === undefined" 
-                [disabled]="true" 
-                name="fator" 
-                [(ngModel)]="newAdjustFactor.fatorFormatado">
-              </p-spinner>
+              <input 
+                id="valor_fator"
+                size="3" 
+                name="fator"
+                [disabled]="habilitarDeflator()" 
+                [(ngModel)]="newAdjustFactor.fatorFormatado"
+                pInputText/>
 
             </div>
 
@@ -435,7 +425,7 @@
             </div>
           </div>
           <div class="ui-g">
-            <div class="ui-g-4 ui-md-4 ui-sm-12">
+            <div class="ui-g-5 ui-md-5 ui-sm-12">
               <label>Codigo</label>
               <input 
                 id="codigo_fator" 
@@ -444,10 +434,9 @@
                 [(ngModel)]="newAdjustFactor.codigo" 
                 pInputText />
             </div>
-            <div class="ui-g-5 ui-md-5 ui-sm-12">
+            <div class="ui-g-7 ui-md-7 ui-sm-12">
               <label>Origem</label>
-              <input 
-                id="origem_fator" 
+              <input id="origem_fator" 
                 type="text" 
                 name="origem" 
                 [(ngModel)]="newAdjustFactor.origem" 
@@ -456,14 +445,14 @@
           </div>
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
-              <div class="ui-g-3 ui-md-3 ui-sm-12">
+              <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-white-button 
                   buttonLabel="Cancelar" 
                   (click)="closeDialogCreateAdjustFactor()">
                 </app-white-button>
               </div>
 
-              <div class="ui-g-3 ui-md-3 ui-sm-12">
+              <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-green-button 
                   buttonLabel="Salvar" 
                   buttonIcon="ui-icon-add" 
@@ -507,28 +496,20 @@
             </div>
 
             <div class="ui-g-3 ui-md-3 ui-sm-12">
-              <label *ngIf="isPercentualEnum(editedAdjustFactor.tipoAjuste)">Fator (%)*</label>
-              <label *ngIf="isUnitaryEnum(editedAdjustFactor.tipoAjuste)">Fator (PF)*</label>
-              <label *ngIf="editedAdjustFactor.tipoAjuste === undefined">Fator*</label>
+              <label *ngIf="isPercentualEnum(editedAdjustFactor.tipoAjuste)">Deflator (%) *</label>
+              <label *ngIf="isUnitaryEnum(editedAdjustFactor.tipoAjuste)">Deflator (PF) *</label>
+              <label *ngIf="editedAdjustFactor.tipoAjuste === undefined">Deflator *</label>
               
-              <p-spinner 
-                id="valor_fator" 
-                size="30" 
-                *ngIf="editedAdjustFactor.tipoAjuste !== undefined" 
-                name="fator" 
-                [(ngModel)]="editedAdjustFactor.fatorFormatado">
-              </p-spinner>
-
-              <p-spinner 
-                id="valor_fator" 
-                size="30" 
-                *ngIf="editedAdjustFactor.tipoAjuste === undefined" 
-                [disabled]="true" 
-                name="fator" 
-                [(ngModel)]="editedAdjustFactor.fatorFormatado">
-              </p-spinner>
+              <input 
+                id="valor_fator"
+                size="3" 
+                name="fator"
+                [disabled]="habilitarDeflator()" 
+                [(ngModel)]="editedAdjustFactor.fatorFormatado"
+                pInputText/>
 
             </div>
+
           </div>
           <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-sm-12">
@@ -549,7 +530,7 @@
           </div>
 
           <div class="ui-g">
-            <div class="ui-g-4 ui-md-4 ui-sm-12">
+            <div class="ui-g-5 ui-md-5 ui-sm-12">
               <label>Codigo*</label>
               <input 
                 id="codigo_fator" 
@@ -559,7 +540,7 @@
                 pInputText />
             </div>
 
-            <div class="ui-g-5 ui-md-5 ui-sm-12">
+            <div class="ui-g-7 ui-md-7 ui-sm-12">
               <label>Origem*</label>
               <input 
                 id="origem_fator" 
