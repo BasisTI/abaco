@@ -31,18 +31,16 @@
           </span>
         </div>
 
-        <div class="ui-g-4 ui-md-4 ui-sm-12">
-          <span class="md-inputfield">
-              <p-dropdown 
-                [options]="organizations" 
-                [(ngModel)]="searchParams.organizacao" 
-                dataKey="nome" 
-                optionLabel="nome" 
-                [autoWidth]="false" 
-                placeholder="Organização">
-              </p-dropdown>
-          </span>
+        <div class="ui-g-4">
+          <p-dropdown 
+            [options]="organizations" 
+            optionLabel="nome" 
+            [(ngModel)]="searchParams.organizacao" 
+            [autoWidth]="false" 
+            placeholder="Organização">
+          </p-dropdown>
         </div>
+
       </div>
 
       <div class="ui-g">

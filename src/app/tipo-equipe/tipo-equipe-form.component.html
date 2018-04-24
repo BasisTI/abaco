@@ -36,19 +36,18 @@
 
         <div class="ui-g ui-md-12" style="justify-content: center">
           
-          <div class="ui-g-2">
+          <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-white-button 
               buttonLabel="Cancelar" 
               routerLink="/admin/tipoEquipe">
             </app-white-button>
           </div>
           
-          <div class="ui-g-2">
+          <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-submit-button 
-              (click)="editForm.submit" 
-              buttonlabel="Salvar" 
+              (click)="editForm.submit"
               buttonLabel="Salvar" 
-              [disabled]="editForm.form.invalid || isSaving ">
+              [disabled]="editForm.form.invalid || isSaving">
             </app-submit-button>
           </div>
 
