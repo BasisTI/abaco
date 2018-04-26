@@ -3,7 +3,6 @@ import { Funcionalidade } from '../funcionalidade/index';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
 import { FatorAjuste } from '../fator-ajuste/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
-import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';
 import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 import { Der } from '../der/der.model';
 import { Rlr } from '../rlr/rlr.model';
@@ -15,8 +14,7 @@ export enum TipoFuncaoDados {
   'INM' = 'INM'
 }
 
-export class FuncaoDados implements BaseEntity, FuncaoResumivel,
-  FuncaoAnalise, JSONable<FuncaoDados> {
+export class FuncaoDados implements BaseEntity, FuncaoAnalise, JSONable<FuncaoDados> {
 
   detStr: string;
   retStr: string;

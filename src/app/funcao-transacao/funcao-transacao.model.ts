@@ -3,7 +3,6 @@ import { FatorAjuste, ImpactoFatorAjuste } from '../fator-ajuste/index';
 import { Funcionalidade } from '../funcionalidade/index';
 import { Complexidade } from '../analise-shared/complexidade-enum';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
-import { FuncaoResumivel } from '../analise-shared/resumo-funcoes';
 import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 import { Der } from '../der/der.model';
 import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
@@ -16,8 +15,7 @@ export enum TipoFuncaoTransacao {
   'INM' = 'INM'
 }
 
-export class FuncaoTransacao implements BaseEntity, FuncaoResumivel,
-  FuncaoAnalise, JSONable<FuncaoTransacao> {
+export class FuncaoTransacao implements BaseEntity, FuncaoAnalise, JSONable<FuncaoTransacao> {
 
   detStr: string;
   ftrStr: string;

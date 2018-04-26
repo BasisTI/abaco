@@ -2,9 +2,86 @@ import { Complexidade } from './complexidade-enum';
 import { AnaliseSharedUtils } from './analise-shared-utils';
 import { Impacto } from './impacto-enum';
 
-/**
- *
-*/
+export interface FuncaoResumivel {
+
+  complexidade?: Complexidade;
+  pf?: number;
+  grossPF?: number;
+  impacto?: Impacto;
+  tipoAsString(): string;
+
+}
+
+export class ResumoTotal {
+
+  private _linhasResumo: LinhaResumo[] = [];
+
+  private readonly _resumoFuncoes: ResumoFuncoes[];
+
+  private readonly _ultimaLinhaTotal: UltimaLinhaTotal;
+
+  private readonly _complexidades: string[] = AnaliseSharedUtils.complexidades;
+
+  private readonly _impactos: string[] = AnaliseSharedUtils.impactos;
+
+  constructor(...resumoFuncoes: ResumoFuncoes[]) {
+    this._resumoFuncoes = resumoFuncoes;
+    this.adicionaTodosResumosGrupoLogicoDeCadaResumoFuncoes();
+    this._ultimaLinhaTotal = new UltimaLinhaTotal(this._linhasResumo);
+    this._linhasResumo.push(this._ultimaLinhaTotal);
+  }
+
+  private adicionaTodosResumosGrupoLogicoDeCadaResumoFuncoes() {
+    this._resumoFuncoes.forEach(resumo => {
+      this._linhasResumo = this._linhasResumo.concat(resumo.all);
+    });
+  }
+
+  get all(): LinhaResumo[] {
+    return this._linhasResumo;
+  }
+
+  getTotalPf(): number {
+    return this._ultimaLinhaTotal.getTotalPf();
+  }
+
+  getTotalGrossPf(): number {
+    return this._ultimaLinhaTotal.getTotalGrossPF();
+  }
+
+}
+
+export class ResumoFuncoes {
+
+  private tipoGrupoLogicoToResumo: Map<string, ResumoGrupoLogico>;
+
+  private _tipos: string[];
+
+  constructor(tipos: string[]) {
+    this._tipos = tipos;
+    this.tipoGrupoLogicoToResumo = new Map<string, ResumoGrupoLogico>();
+    this.criaResumoPorGrupoLogico();
+  }
+
+  private criaResumoPorGrupoLogico() {
+    this._tipos.forEach(tipo => {
+      const resumo: ResumoGrupoLogico = new ResumoGrupoLogico(tipo);
+      this.tipoGrupoLogicoToResumo.set(tipo, resumo);
+    });
+  }
+
+  somaFuncao(funcao: FuncaoResumivel) {
+    const tipoGrupoLogico = funcao.tipoAsString();
+    const resumo = this.tipoGrupoLogicoToResumo.get(tipoGrupoLogico);
+    resumo.incrementaTotais(funcao);
+  }
+
+  get all(): LinhaResumo[] {
+    return Array.from(this.tipoGrupoLogicoToResumo.values());
+  }
+
+}
+
 export interface LinhaResumo {
 
   readonly label;
@@ -17,120 +94,7 @@ export interface LinhaResumo {
 
 }
 
-/**
- *
-*/
-export interface FuncaoResumivel {
-
-  complexidade?: Complexidade;
-  pf?: number;
-  grossPF?: number;
-  impacto?: Impacto;
-  tipoAsString(): string;
-}
-
-/**
- *
-*/
-export class ResumoTotal {
-
-  private _linhasResumo: LinhaResumo[] = [];
-  private readonly _resumoFuncoes: ResumoFuncoes[];
-  private readonly _ultimaLinhaTotal: UltimaLinhaTotal;
-  private readonly _complexidades: string[] = AnaliseSharedUtils.complexidades;
-  private readonly _impactos: string[] = AnaliseSharedUtils.impactos;
-
-  /**
-   *
-  */
-  constructor(...resumoFuncoes: ResumoFuncoes[]) {
-    this._resumoFuncoes = resumoFuncoes;
-    this.adicionaTodosResumosGrupoLogicoDeCadaResumoFuncoes();
-    this._ultimaLinhaTotal = new UltimaLinhaTotal(this._linhasResumo);
-    this._linhasResumo.push(this._ultimaLinhaTotal);
-  }
-
-  /**
-   *
-  */
-  private adicionaTodosResumosGrupoLogicoDeCadaResumoFuncoes() {
-    this._resumoFuncoes.forEach(resumo => {
-      this._linhasResumo = this._linhasResumo.concat(resumo.all);
-    });
-  }
-
-  /**
-   *
-  */
-  get all(): LinhaResumo[] {
-    return this._linhasResumo;
-  }
-
-  /**
-   *
-  */
-  getTotalPf(): number {
-    return this._ultimaLinhaTotal.getTotalPf();
-  }
-
-  /**
-   *
-  */
-  getTotalGrossPf(): number {
-    return this._ultimaLinhaTotal.getTotalGrossPF();
-  }
-
-}
-
-/**
- *
-*/
-export class ResumoFuncoes {
-
-  private tipoGrupoLogicoToResumo: Map<string, ResumoGrupoLogico>;
-
-  private _tipos: string[];
-
-  /**
-   *
-  */
-  constructor(tipos: string[]) {
-    this._tipos = tipos;
-    this.tipoGrupoLogicoToResumo = new Map<string, ResumoGrupoLogico>();
-    this.criaResumoPorGrupoLogico();
-  }
-
-  /**
-   *
-  */
-  private criaResumoPorGrupoLogico() {
-    this._tipos.forEach(tipo => {
-      const resumo: ResumoGrupoLogico = new ResumoGrupoLogico(tipo);
-      this.tipoGrupoLogicoToResumo.set(tipo, resumo);
-    });
-  }
-
-  /**
-   *
-  */
-  somaFuncao(funcao: FuncaoResumivel) {
-    const tipoGrupoLogico = funcao.tipoAsString();
-    const resumo = this.tipoGrupoLogicoToResumo.get(tipoGrupoLogico);
-    resumo.incrementaTotais(funcao);
-  }
-
-  /**
-   *
-  */
-  get all(): LinhaResumo[] {
-    return Array.from(this.tipoGrupoLogicoToResumo.values());
-  }
-
-}
-
-/**
- *
-*/
+// TODO ResumoGrupoLogico / UltimaLinhaTotal podem herdar de uma classe abstrata comum
 export class ResumoGrupoLogico implements LinhaResumo {
 
   readonly label: string;
@@ -145,9 +109,6 @@ export class ResumoGrupoLogico implements LinhaResumo {
 
   private _totalGrossPF = 0;
 
-  /**
-   *
-  */
   constructor(label: string) {
     this.label = label;
     this.complexidadeToTotal = new Map<string, number>();
@@ -156,9 +117,6 @@ export class ResumoGrupoLogico implements LinhaResumo {
     this.inicializaOcorrenciasComoZeroParaImpacto();
   }
 
-  /**
-   *
-  */
   private inicializaOcorrenciasComoZeroParaComplexidades() {
     const complexidades: string[] = AnaliseSharedUtils.complexidades;
     complexidades.forEach(c => this.complexidadeToTotal.set(c, 0));
@@ -172,9 +130,6 @@ export class ResumoGrupoLogico implements LinhaResumo {
     impactos.forEach(c => this.impactoTotal.set(c, 0));
   }
 
-  /**
-   *
-  */
   incrementaTotais(funcao: FuncaoResumivel) {
     this.incrementaPorComplexidade(funcao.complexidade);
     this.incrementaPorImpacto(funcao.impacto);
@@ -182,9 +137,6 @@ export class ResumoGrupoLogico implements LinhaResumo {
     this._quantidadeTotal += 1;
   }
 
-  /**
-   *
-  */
   private incrementaPorComplexidade(complexidade: Complexidade) {
     const complexidadeStr = complexidade;
     const totalDaComplexidade = this.complexidadeToTotal.get(complexidadeStr);
@@ -200,38 +152,23 @@ export class ResumoGrupoLogico implements LinhaResumo {
     this.impactoTotal.set(impactoStr, totalDoImpacto + 1);
   }
 
-  /**
-   *
-  */
   private incrementaPfs(pf: number, grossPF: number) {
     this._totalPf += pf;
     this._totalGrossPF += grossPF;
   }
 
-  /**
-   *
-  */
   getTotalPf(): number {
     return this._totalPf;
   }
 
-  /**
-   *
-  */
   getTotalGrossPF(): number {
     return this._totalGrossPF;
   }
 
-  /**
-   *
-  */
   getQuantidadeTotal(): number {
     return this._quantidadeTotal;
   }
 
-  /**
-   *
-  */
   totalPorComplexidade(complexidade: Complexidade): number {
     return this.complexidadeToTotal.get(complexidade.toString());
   }
@@ -261,20 +198,14 @@ class UltimaLinhaTotal implements LinhaResumo {
 
   private _totalGrossPF = 0;
 
-  /**
-   *
-  */
   constructor(linhasResumo: LinhaResumo[]) {
     this._linhasResumo = linhasResumo;
-    this.inicializaMapaComplexidade();
+    this.inicializaMapa();
     this.inicializaMapaImpacto();
     this.somaTudo();
   }
 
-  /**
-   *
-  */
-  private inicializaMapaComplexidade() {
+  private inicializaMapa() {
     this.complexidadeToTotal = new Map<string, number>();
     const complexidades: string[] = AnaliseSharedUtils.complexidades;
     complexidades.forEach(c => this.complexidadeToTotal.set(c, 0));
@@ -350,30 +281,18 @@ class UltimaLinhaTotal implements LinhaResumo {
     this.impactoTotal.set(impactoStr, totalDoImpacto + valor);
   }
 
-  /**
-   *
-  */
   getTotalPf(): number {
     return this._totalPf;
   }
 
-  /**
-   *
-  */
   getTotalGrossPF(): number {
     return this._totalGrossPF;
   }
 
-  /**
-   *
-  */
   getQuantidadeTotal(): number {
     return this._quantidadeTotal;
   }
 
-  /**
-   *
-  */
   totalPorComplexidade(complexidade: Complexidade): number {
     return this.complexidadeToTotal.get(complexidade.toString());
   }
