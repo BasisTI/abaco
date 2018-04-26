@@ -14,10 +14,6 @@
     </p-column>
   </div>
 
-  <!-- <p-column header="Impacto">
-    IMPLEMENTAR NA PRÓXIMA VERSÃO
-  </p-column> -->
-
   <p-column header="Quantidade">
     <ng-template let-linhaResumo="rowData" pTemplate="body">
       {{ linhaResumo.getQuantidadeTotal() }}
@@ -46,27 +42,14 @@
   [responsive]="true" 
   scrollable="true" 
   scrollWidth="100%">
-  
   <p-column field="label"></p-column>
 
-  <p-column header="Inclusão">
-    <ng-template pTemplate="body">
-    </ng-template>
-  </p-column>
-
-  <p-column header="Alteração">
-    <ng-template pTemplate="body">
-    </ng-template>
-  </p-column>
-
-  <p-column header="Exclusão">
-    <ng-template pTemplate="body">
-    </ng-template>
-  </p-column>
-
-  <p-column header="Conversão">
-    <ng-template pTemplate="body">
-    </ng-template>
-  </p-column>
+  <div *ngFor="let impacto of impactos">
+      <p-column [header]="impacto">
+        <ng-template let-linhaResumo="rowData" pTemplate="body">
+          {{ linhaResumo.totalPorImpacto(impacto) }}
+        </ng-template>
+      </p-column>
+    </div>
 
 </p-dataTable>

@@ -14,6 +14,8 @@ export class FuncaoResumoTableComponent implements OnInit {
 
   complexidades: string[];
 
+  impactos: string[];
+
   ngOnInit() {
     this.complexidades = AnaliseSharedUtils.complexidades;
   }
