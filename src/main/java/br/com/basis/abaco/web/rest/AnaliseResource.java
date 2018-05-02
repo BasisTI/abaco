@@ -67,13 +67,13 @@ public class AnaliseResource {
     /**
      * POST /analises : Create a new analise.
      *
-     * @param analise
-     *            the analise to create
+     * @param analise 
+     *         the analise to create
      * @return the ResponseEntity with status 201 (Created) and with body the new
      *         analise, or with status 400 (Bad Request) if the analise has already
      *         an ID
      * @throws URISyntaxException
-     *             if the Location URI syntax is incorrect
+     *         if the Location URI syntax is incorrect
      */
     @PostMapping("/analises")
     @Timed
@@ -150,13 +150,13 @@ public class AnaliseResource {
      * PUT /analises : Updates an existing analise.
      *
      * @param analise
-     *            the analise to update
+     *         the analise to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated
      *         analise, or with status 400 (Bad Request) if the analise is not
      *         valid, or with status 500 (Internal Server Error) if the analise
      *         couldnt be updated
      * @throws URISyntaxException
-     *             if the Location URI syntax is incorrect
+     *         if the Location URI syntax is incorrect
      */
     @PutMapping("/analises")
     @Timed
@@ -189,16 +189,6 @@ public class AnaliseResource {
         log.debug("REST request to get a page of Analises");
 
         Page<Analise> page = analiseRepository.findAll(pageable);
-
-        // page.forEach(analise -> {
-        // analise.getFuncaoDados().forEach(entry -> {
-        // entry.setAnalise(null);
-
-        // });
-        // analise.getFuncaoTransacaos().forEach(entry -> {
-        // entry.setAnalise(null);
-        // });
-        // });
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
