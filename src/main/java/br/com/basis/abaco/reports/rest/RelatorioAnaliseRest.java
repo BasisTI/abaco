@@ -23,8 +23,7 @@ import net.sf.jasperreports.engine.JRException;
 public class RelatorioAnaliseRest {
 
 	private static String caminhoRalatorioAnalise = "reports/analise/analise.jasper";
-	// private static String caminhoImagem =
-	// "reports/analise/imagem/fnde_mec_brasil.png";
+	 private static String caminhoImagem = "reports/analise/imagem/fnde_mec_brasil.png";
 
 	@Context
 	HttpServletRequest request;
@@ -48,12 +47,6 @@ public class RelatorioAnaliseRest {
 		return response.build();
 
 	}
-
-	// private SimpleDateFormat formatarData() {
-	// SimpleDateFormat dataFormatada = new SimpleDateFormat("dd/MM/yyyy");
-	//
-	// return dataFormatada;
-	// }
 
 	/**
 	 * Método responsável por popular o parametro do Jasper.
