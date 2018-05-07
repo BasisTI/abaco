@@ -7,6 +7,7 @@ import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 import { Der } from '../der/der.model';
 import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
 import { Alr } from '../alr/alr.model';
+import { Impacto } from '../analise-shared/impacto-enum';
 
 export enum TipoFuncaoTransacao {
   'EE' = 'EE',
@@ -39,7 +40,7 @@ export class FuncaoTransacao implements BaseEntity, FuncaoAnalise, JSONable<Func
     public derValues?: string[],
     public ftrValues?: string[],
     public ders?: Der[],
-    public impacto?: string,
+    public impacto?: Impacto,
     public quantidade?: number
   ) {
     if (!pf) {

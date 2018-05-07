@@ -7,6 +7,7 @@ import { FuncaoAnalise } from '../analise-shared/funcao-analise';
 import { Der } from '../der/der.model';
 import { Rlr } from '../rlr/rlr.model';
 import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
+import { Impacto } from '../analise-shared/impacto-enum';
 
 export enum TipoFuncaoDados {
   'ALI' = 'ALI',
@@ -39,7 +40,7 @@ export class FuncaoDados implements BaseEntity, FuncaoAnalise, JSONable<FuncaoDa
     public rlrValues?: string[],
     public ders?: Der[],
     public rlrs?: Rlr[],
-    public impacto?: string,
+    public impacto?: Impacto,
     public quantidade?: number
   ) {
     if (!pf) {
