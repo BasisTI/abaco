@@ -21,31 +21,30 @@ import net.sf.jasperreports.engine.JasperPrint;
  */
 public class RelatorioUtil {
 
-	private HttpServletResponse response;
+    private HttpServletResponse response;
 
-	public HttpServletRequest request;
-	
-	public RelatorioUtil() {}
-	
-    public RelatorioUtil(HttpServletResponse response , HttpServletRequest request) {
-		this.response = response;
-		this.request = request;
-	}
+    public HttpServletRequest request;
 
-	public HttpServletResponse getResponse() {
-		return response;
-	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-    public byte[] gerarPdf(HttpServletRequest request, String caminhoJasperResolucao, Map parametrosJasper) throws IOException, JRException {
-		InputStream reportStream = request.getSession().getServletContext().getResourceAsStream(caminhoJasperResolucao);
+    public RelatorioUtil() {
+    }
+
+    public RelatorioUtil(HttpServletResponse response, HttpServletRequest request) {
+        this.response = response;
+        this.request = request;
+    }
+
+    public HttpServletResponse getResponse() {
+        return response;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public byte[] gerarPdf(HttpServletRequest request, String caminhoJasperResolucao, Map parametrosJasper)
+            throws IOException, JRException {
+        InputStream reportStream = request.getSession().getServletContext().getResourceAsStream(caminhoJasperResolucao);
         JasperPrint print = JasperFillManager.fillReport(reportStream, parametrosJasper, new JREmptyDataSource());
         File pdf = File.createTempFile("output.", ".pdf");
         JasperExportManager.exportReportToPdfStream(print, new FileOutputStream(pdf));
         return JasperExportManager.exportReportToPdf(print);
     }
-	
-	
-	
-	
+
 }
