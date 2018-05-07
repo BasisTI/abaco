@@ -23,7 +23,7 @@ public class RelatorioUtil {
 
 	private HttpServletResponse response;
 
-	private HttpServletRequest request;
+	public HttpServletRequest request;
 	
 	public RelatorioUtil() {}
 	

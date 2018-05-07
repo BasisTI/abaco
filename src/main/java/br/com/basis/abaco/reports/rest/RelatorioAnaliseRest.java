@@ -23,7 +23,6 @@ import net.sf.jasperreports.engine.JRException;
 public class RelatorioAnaliseRest {
 
 	private static String caminhoRalatorioAnalise = "reports/analise/analise.jasper";
-	 private static String caminhoImagem = "reports/analise/imagem/fnde_mec_brasil.png";
 
 	@Context
 	HttpServletRequest request;
@@ -54,6 +53,28 @@ public class RelatorioAnaliseRest {
 	private Map<String, Object> popularParametroAnalise() {
 		parametro = new HashMap<String, Object>();
 
+		parametro.put("PFTOTAL", analise.getPfTotal());
+		parametro.put("PFAJUSTADO", analise.getAdjustPFTotal());
+		parametro.put("DATACRIADO", analise.getAudit().getCreatedOn());
+		parametro.put("DATAALTERADO", analise.getAudit().getUpdatedOn());
+		parametro.put("CRIADOPOR", analise.getCreatedBy());
+		parametro.put("EDITADOPOR", analise.getEditedBy());
+		parametro.put("VALORAJUSTE", analise.getValorAjuste());
+		parametro.put("GATANTIA", garantia());
+
+		popularDadosBasicos();
+		popularContrato();
+		popularSistema();
+		popularManual();
+
+		return parametro;
+	}
+	
+	private void popularDadosBasicos() {
+		parametro.put("EQUIPE", analise.getEquipeResponsavel());
+		parametro.put("IDENTIFICADOR", analise.getIdentificadorAnalise());
+		parametro.put("FATORAJUSTE", analise.getFatorAjuste().getNome());
+		parametro.put("TIPOANALISE", analise.getTipoAnalise());
 		parametro.put("PROPOSITO", validarNulos(analise.getPropositoContagem()));
 		parametro.put("ESCOPO", validarNulos(analise.getEscopo()));
 		parametro.put("FONTEIRA", analise.getFronteiras());
@@ -62,28 +83,8 @@ public class RelatorioAnaliseRest {
 		parametro.put("FUNCAOTRANSACAO", analise.getFuncaoTransacaos());
 		parametro.put("AJUSTES", analise.getFatorAjuste());
 		parametro.put("OBSERVACOES", analise.getObservacoes());
-
-		parametro.put("PFTOTAL", analise.getPfTotal());
-		parametro.put("PFAJUSTADO", analise.getAdjustPFTotal());
-		parametro.put("TIPOANALISE", analise.getTipoAnalise());
-
-		parametro.put("DATACRIADO", analise.getAudit().getCreatedOn());
-		parametro.put("DATAALTERADO", analise.getAudit().getUpdatedOn());
-		parametro.put("CRIADOPOR", analise.getCreatedBy());
-		parametro.put("EDITADOPOR", analise.getEditedBy());
 		parametro.put("DATAHOMOLOGACAO", analise.getDataHomologacao());
-		parametro.put("EQUIPE", analise.getEquipeResponsavel());
 		parametro.put("NUMEROOS", analise.getNumeroOs());
-		parametro.put("VALORAJUSTE", analise.getValorAjuste());
-		parametro.put("IDENTIFICADOR", analise.getIdentificadorAnalise());
-		parametro.put("GATANTIA", garantia());
-		parametro.put("FATORAJUSTE", analise.getFatorAjuste().getNome());
-
-		popularContrato();
-		popularSistema();
-		popularManual();
-
-		return parametro;
 	}
 
 	private void popularContrato() {
