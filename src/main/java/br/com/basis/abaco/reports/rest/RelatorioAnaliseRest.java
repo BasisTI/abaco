@@ -1,13 +1,13 @@
 package br.com.basis.abaco.reports.rest;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -19,7 +19,6 @@ import net.sf.jasperreports.engine.JRException;
  * @author eduardo.andrade
  * @since 27/04/2018
  */
-@Path("/relatorio")
 public class RelatorioAnaliseRest {
 
     private static String caminhoRalatorioAnalise = "reports/analise/analise.jasper";
@@ -34,11 +33,16 @@ public class RelatorioAnaliseRest {
     private void init() {
         analise = new Analise();
     }
-
-    @GET
-    @Path("/pdfAnalise/{idAnalise}")
-    public Response downloadAnalise(@PathParam("idAnalise") Long idAnalise) throws IOException, JRException {
+    
+    private void popularObjeto(Analise analise) {
+        this.analise = analise;
+        
+    }
+    
+    @Produces("application/pdf")
+    public Response downloadAnalise(Analise analise) throws IOException, JRException {
         init();
+        popularObjeto(analise);
         RelatorioUtil relatorio = new RelatorioUtil();
         byte[] pdf = relatorio.gerarPdf(request, caminhoRalatorioAnalise, popularParametroAnalise());
         ResponseBuilder response = Response.ok((Object) pdf);
@@ -49,77 +53,152 @@ public class RelatorioAnaliseRest {
 
     /**
      * Método responsável por popular o parametro do Jasper.
-     */
+    */
     private Map<String, Object> popularParametroAnalise() {
         parametro = new HashMap<String, Object>();
         
-        parametro.put("PFTOTAL", analise.getPfTotal());
-        parametro.put("PFAJUSTADO", analise.getAdjustPFTotal());
-        parametro.put("DATACRIADO", analise.getAudit().getCreatedOn());
-        parametro.put("DATAALTERADO", analise.getAudit().getUpdatedOn());
-        parametro.put("CRIADOPOR", analise.getCreatedBy());
-        parametro.put("EDITADOPOR", analise.getEditedBy());
-        parametro.put("VALORAJUSTE", analise.getValorAjuste());
-        parametro.put("GATANTIA", garantia());
+        parametro.put("PFTOTAL", validarAtributosNulos(analise.getPfTotal()));
+        parametro.put("PFAJUSTADO", validarAtributosNulos(analise.getAdjustPFTotal()));
+        parametro.put("DATACRIADO", validarAtributosNulos(analise.getAudit().getCreatedOn().toString()));
+        parametro.put("DATAALTERADO", validarAtributosNulos(analise.getAudit().getUpdatedOn().toString()));
+        parametro.put("VALORAJUSTE", validarAtributosNulos(String.valueOf(analise.getValorAjuste())));
+        parametro.put("GATANTIA", validarAtributosNulos(garantia()));
         
+        popularUsuarios();
+        popularFatorAjuste();
         popularDadosBasicos();
         popularContrato();
+        popularOrganizacao();
         popularSistema();
         popularManual();
         
         return parametro;
     }
-
-    private void popularDadosBasicos() {
-        parametro.put("EQUIPE", analise.getEquipeResponsavel());
-        parametro.put("IDENTIFICADOR", analise.getIdentificadorAnalise());
-        parametro.put("FATORAJUSTE", analise.getFatorAjuste().getNome());
-        parametro.put("TIPOANALISE", analise.getTipoAnalise());
-        parametro.put("PROPOSITO", validarNulos(analise.getPropositoContagem()));
-        parametro.put("ESCOPO", validarNulos(analise.getEscopo()));
-        parametro.put("FONTEIRA", analise.getFronteiras());
-        parametro.put("DOCUMENTACAO", analise.getDocumentacao());
-        parametro.put("FUNCAODADOS", analise.getFuncaoDados());
-        parametro.put("FUNCAOTRANSACAO", analise.getFuncaoTransacaos());
-        parametro.put("AJUSTES", analise.getFatorAjuste());
-        parametro.put("OBSERVACOES", analise.getObservacoes());
-        parametro.put("DATAHOMOLOGACAO", analise.getDataHomologacao());
-        parametro.put("NUMEROOS", analise.getNumeroOs());
+    
+    /**
+     * 
+    */
+    private void popularUsuarios() {
+        if(validarObjetosNulos(analise.getCreatedBy())) {
+            parametro.put("CRIADOPOR", validarAtributosNulos(analise.getCreatedBy().getLogin()));            
+        }
+        if(validarObjetosNulos(analise.getCreatedBy())) {
+            parametro.put("EDITADOPOR", validarAtributosNulos(analise.getEditedBy().getLogin()));            
+        }        
     }
 
+    /**
+     * 
+    */    
+    private void popularFatorAjuste() {
+        if(validarObjetosNulos(analise.getFatorAjuste())) {
+            parametro.put("FATORAJUSTE", validarAtributosNulos(analise.getFatorAjuste().getNome()));            
+        }
+    }
+
+    /**
+     * 
+    */
+    private void popularDadosBasicos() {
+        parametro.put("EQUIPE", validarAtributosNulos(analise.getEquipeResponsavel().toString()));
+        parametro.put("IDENTIFICADOR", validarAtributosNulos(analise.getIdentificadorAnalise()));
+        parametro.put("TIPOANALISE", validarAtributosNulos(analise.getTipoAnalise().toString()));
+        parametro.put("PROPOSITO", validarAtributosNulos(analise.getPropositoContagem()));
+        parametro.put("ESCOPO", validarAtributosNulos(analise.getEscopo()));
+        parametro.put("FONTEIRA", validarAtributosNulos(analise.getFronteiras()));
+        parametro.put("DOCUMENTACAO", validarAtributosNulos(analise.getDocumentacao()));
+        parametro.put("OBSERVACOES", validarAtributosNulos(analise.getObservacoes()));
+        parametro.put("DATAHOMOLOGACAO", validarAtributosNulos(formatarData(analise.getDataHomologacao())));
+        parametro.put("NUMEROOS", validarAtributosNulos(analise.getNumeroOs()));
+    }
+    
+//    private void popularListaFuncaoDados() {
+//        String ders = "";
+//        String alr = "";
+//        String impacto = "";
+//        String nome = "";
+//        String tipo = "";
+//        
+//        if(validarObjetosNulos(analise.getFuncaoDados())) {
+//            for(FuncaoDados fd : analise.getFuncaoDados()) {
+//                nome = fd.getName();
+//                impacto = fd.getImpacto();
+//                tipo = fd.getTipo().name();
+//                alr = fd.getAlr().getNome();
+//                
+//               for(Der der : fd.getDers()) {
+//                   ders += der.getNome(); 
+//               }
+//                
+//            }
+//            parametro.put("FDNOME",nome);
+//            parametro.put("FDDERS",ders);
+//            parametro.put("FDIMPACTO",impacto);
+//            parametro.put("FDTIPO", tipo);
+//            parametro.put("FDALR", alr);
+//
+//        }
+//    }
+//    
+//    private void popularListaFuncaoTransacao() {
+//        if(validarObjetosNulos(analise.getFuncaoTransacaos())) {
+//            parametro.put("FUNCAOTRANSACAO", validarAtributosNulos(analise.getFuncaoTransacaos().toString()));            
+//        }
+//    }
+
+    /**
+     * 
+    */
     private void popularContrato() {
 
         if (analise.getContrato() != null) {
-            parametro.put("CONTRATO", analise.getContrato().getNumeroContrato());
-            parametro.put("ORGANIZACAO", analise.getContrato().getOrganization().getSigla());
-            parametro.put("ORGANIZACAONM", analise.getContrato().getOrganization().getNome());
-            parametro.put("CONTRATODTINICIO", analise.getContrato().getDataInicioVigencia());
-            parametro.put("CONTRATODTFIM", analise.getContrato().getDataFimVigencia());
-            parametro.put("CONTRATOGARANTIA", analise.getContrato().getDiasDeGarantia());
-            parametro.put("CONTRATOATIVO", analise.getContrato().getAtivo());
-            parametro.put("VERSAOCPM", analise.getContrato().getManual().getVersaoCPM());
+            parametro.put("CONTRATO", validarAtributosNulos(analise.getContrato().getNumeroContrato()));
+            parametro.put("CONTRATODTINICIO", validarAtributosNulos(analise.getContrato().getDataInicioVigencia().toString()));
+            parametro.put("CONTRATODTFIM", validarAtributosNulos(analise.getContrato().getDataFimVigencia().toString()));
+            parametro.put("CONTRATOGARANTIA", validarAtributosNulos(analise.getContrato().getDiasDeGarantia().toString()));
+            parametro.put("CONTRATOATIVO", validarAtributosNulos(analise.getContrato().getAtivo().toString()));
         }
 
     }
+    
+    /**
+     * 
+    */
+    private void popularOrganizacao() {
+        if(validarObjetosNulos(analise.getContrato().getOrganization())) {
+            parametro.put("ORGANIZACAO", validarAtributosNulos(analise.getContrato().getOrganization().getSigla()));
+            parametro.put("ORGANIZACAONM", validarAtributosNulos(analise.getContrato().getOrganization().getNome()));            
+        }
+        
+    }
 
+    /**
+     * 
+    */
     private void popularSistema() {
 
         if (analise.getSistema() != null) {
-            parametro.put("SISTEMASG", analise.getSistema().getSigla());
-            parametro.put("SISTEMANM", analise.getSistema().getNome());
-            parametro.put("SISTEMAMODULOS", analise.getSistema().getModulos());
+            parametro.put("SISTEMASG", validarAtributosNulos(analise.getSistema().getSigla()));
+            parametro.put("SISTEMANM", validarAtributosNulos(analise.getSistema().getNome()));
         }
 
     }
 
+    /**
+     * 
+    */
     private void popularManual() {
 
         if (analise.getContrato() != null && analise.getContrato().getManual() != null) {
-            parametro.put("MANUALNM", analise.getContrato().getManual().getNome());
-            parametro.put("METODOCONTAGEM", analise.getMetodoContagem());
+            parametro.put("MANUALNM", validarAtributosNulos(analise.getContrato().getManual().getNome()));
+            parametro.put("METODOCONTAGEM", validarAtributosNulos(analise.getMetodoContagem().toString()));
+            parametro.put("VERSAOCPM", validarAtributosNulos(analise.getContrato().getManual().getVersaoCPM().toString()));
         }
     }
 
+    /**
+     * 
+    */
     private String garantia() {
         if (analise.getBaselineImediatamente()) {
             return "Sim";
@@ -128,11 +207,39 @@ public class RelatorioAnaliseRest {
         }
     }
 
-    private String validarNulos(String valor) {
+    /**
+     * 
+    */
+    private String validarAtributosNulos(String valor) {
         if (valor == null) {
             return "---";
         } else {
             return valor;
+        }
+    }
+    
+    /**
+     * 
+    */
+    private boolean validarObjetosNulos(Object objeto) {
+        if(objeto == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    /**
+     * Método responsável por formatar a data.
+     * @param data
+     * @return
+     */
+    public String formatarData(Date data) {
+        SimpleDateFormat dataFormatada = new SimpleDateFormat("dd/MM/yyyy");
+        if(data != null) {
+            return dataFormatada.format(data);
+        } else {
+            return null;
         }
     }
 

@@ -32,6 +32,16 @@ public class AbacoApp {
     private static final Logger log = LoggerFactory.getLogger(AbacoApp.class);
 
     private final Environment env;
+    
+    private static String logMain = "\n----------------------------------------------------------\n\t" +
+            "Application '{}' is running! Access URLs:\n\t" +
+            "Local: \t\t{}://localhost:{}\n\t" +
+            "External: \t{}://{}:{}\n\t" +
+            "Profile(s): \t{}\n----------------------------------------------------------";
+    
+    private String messageMisConfigured = "You have misconfigured your application! It should not run ";
+    
+    private String  messageProfiles = "with both the 'dev' and 'prod' profiles at the same time.";
 
     public AbacoApp(Environment env) {
         this.env = env;
@@ -48,12 +58,10 @@ public class AbacoApp {
     public void initApplication() {
         Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
         if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT) && activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_PRODUCTION)) {
-            log.error("You have misconfigured your application! It should not run " +
-                "with both the 'dev' and 'prod' profiles at the same time.");
+            log.error(messageMisConfigured + messageProfiles);
         }
         if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT) && activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_CLOUD)) {
-            log.error("You have misconfigured your application! It should not" +
-                "run with both the 'dev' and 'cloud' profiles at the same time.");
+            log.error(messageMisConfigured + messageProfiles);
         }
     }
 
@@ -71,11 +79,7 @@ public class AbacoApp {
         if (env.getProperty("server.ssl.key-store") != null) {
             protocol = "https";
         }
-        log.info("\n----------------------------------------------------------\n\t" +
-                "Application '{}' is running! Access URLs:\n\t" +
-                "Local: \t\t{}://localhost:{}\n\t" +
-                "External: \t{}://{}:{}\n\t" +
-                "Profile(s): \t{}\n----------------------------------------------------------",
+        log.info(logMain,
             env.getProperty("spring.application.name"),
             protocol,
             env.getProperty("server.port"),
@@ -84,4 +88,7 @@ public class AbacoApp {
             env.getProperty("server.port"),
             env.getActiveProfiles());
     }
+    
+    
+    
 }

@@ -2,6 +2,7 @@ package br.com.basis.abaco.web.rest;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -32,6 +33,7 @@ import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
@@ -39,6 +41,7 @@ import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.swagger.annotations.ApiParam;
+import net.sf.jasperreports.engine.JRException;
 
 /**
  * REST controller for managing Analise.
@@ -56,9 +59,13 @@ public class AnaliseResource {
     private final AnaliseSearchRepository analiseSearchRepository;
 
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
+    
+    private RelatorioAnaliseRest relatorioAnaliseRest;
 
-    public AnaliseResource(AnaliseRepository analiseRepository, AnaliseSearchRepository analiseSearchRepository,
-            FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository) {
+    public AnaliseResource(
+             AnaliseRepository analiseRepository
+            ,AnaliseSearchRepository analiseSearchRepository
+            ,FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
@@ -68,12 +75,11 @@ public class AnaliseResource {
      * POST /analises : Create a new analise.
      *
      * @param analise 
-     *         the analise to create
+     * the analise to create
      * @return the ResponseEntity with status 201 (Created) and with body the new
-     *         analise, or with status 400 (Bad Request) if the analise has already
-     *         an ID
+     * analise, or with status 400 (Bad Request) if the analise has already an ID
      * @throws URISyntaxException
-     *         if the Location URI syntax is incorrect
+     * if the Location URI syntax is incorrect
      */
     @PostMapping("/analises")
     @Timed
@@ -81,8 +87,7 @@ public class AnaliseResource {
         log.debug("REST request to save Analise : {}", analise);
         if (analise.getId() != null) {
             return ResponseEntity.badRequest().headers(
-                    HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID"))
-                    .body(null);
+                    HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
         }
         linkFuncoesToAnalise(analise);
         Analise result = analiseRepository.save(analise);
@@ -150,13 +155,13 @@ public class AnaliseResource {
      * PUT /analises : Updates an existing analise.
      *
      * @param analise
-     *         the analise to update
+     * the analise to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated
-     *         analise, or with status 400 (Bad Request) if the analise is not
-     *         valid, or with status 500 (Internal Server Error) if the analise
-     *         couldnt be updated
+     * analise, or with status 400 (Bad Request) if the analise is not
+     * valid, or with status 500 (Internal Server Error) if the analise
+     * couldnt be updated
      * @throws URISyntaxException
-     *         if the Location URI syntax is incorrect
+     * if the Location URI syntax is incorrect
      */
     @PutMapping("/analises")
     @Timed
@@ -172,16 +177,32 @@ public class AnaliseResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
                 .body(result);
     }
+    
+    /**
+     * Método responsável por requisitar a geração do relatório de Análise.
+     * @param analise
+     * @throws URISyntaxException
+     * @throws JRException 
+     * @throws IOException 
+     */
+    @PutMapping("/relatorioAnalise")
+    @Timed
+    public void gerarRelatorioAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException, IOException, JRException {
+        relatorioAnaliseRest = new RelatorioAnaliseRest();
+        
+        log.debug("REST request to generate report Analise : {}", analise);
+        relatorioAnaliseRest.downloadAnalise(analise);
+    }
 
     /**
      * GET /analises : get all the analises.
      *
      * @param pageable
-     *            the pagination information
+     * the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of analises in
-     *         body
+     * body
      * @throws URISyntaxException
-     *             if there is an error to generate the pagination HTTP headers
+     * if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/analises")
     @Timed
@@ -198,21 +219,15 @@ public class AnaliseResource {
      * GET /analises/:id : get the "id" analise.
      *
      * @param id
-     *            the id of the analise to retrieve
+     * the id of the analise to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the analise, or
-     *         with status 404 (Not Found)
+     * with status 404 (Not Found)
      */
     @GetMapping("/analises/{id}")
     @Timed
     public ResponseEntity<Analise> getAnalise(@PathVariable Long id) {
         log.debug("REST request to get Analise : {}", id);
         Analise analise = analiseRepository.findOne(id);
-        // analise.getFuncaoDados().forEach(entry -> {
-        // entry.setAnalise(null);
-        // });
-        // analise.getFuncaoTransacaos().forEach(entry -> {
-        // entry.setAnalise(null);
-        // });
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
     }
 
@@ -220,7 +235,7 @@ public class AnaliseResource {
      * DELETE /analises/:id : delete the "id" analise.
      *
      * @param id
-     *            the id of the analise to delete
+     * the id of the analise to delete
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/analises/{id}")
@@ -237,17 +252,16 @@ public class AnaliseResource {
      * to the query.
      *
      * @param query
-     *            the query of the analise search
+     * the query of the analise search
      * @param pageable
-     *            the pagination information
+     * the pagination information
      * @return the result of the search
      * @throws URISyntaxException
-     *             if there is an error to generate the pagination HTTP headers
+     * if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/_search/analises")
     @Timed
-    // TODO todos os endpoint elastic poderiam ter o defaultValue
-    // impacta na paginacao do frontend
+    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
     public ResponseEntity<List<Analise>> searchAnalises(@RequestParam(defaultValue = "*") String query,
             @ApiParam Pageable pageable) throws URISyntaxException {
         log.debug("REST request to search for a page of Analises for query {}", query);
