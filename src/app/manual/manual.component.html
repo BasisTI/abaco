@@ -113,13 +113,15 @@
   </p-footer>
 </p-confirmDialog>
 
-<p-dialog header="Clonar Manual" [(visible)]="mostrarDialogClonar"
-  [contentStyle]="{'overflow':'visible'}" [width]="800">
+<p-dialog header="Clonar Manual" [(visible)]="mostrarDialogClonar" [contentStyle]="{'overflow':'visible'}" [width]="800">
   <div class="ui-g">
-    <div class="ui-g-12" style="margin-bottom: 30px"> 
+    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 30px"> 
       <span class="md-inputfield">
-        <input type="text" name="nomeManualClonado"
-          [(ngModel)]="nomeDoManualClonado" pInputText 
+        <input 
+          type="text" 
+          name="nomeManualClonado"
+          [(ngModel)]="nomeDoManualClonado" 
+          pInputText 
           size="90"
           maxlength="250"/>
         <label>Nome</label>
@@ -129,10 +131,8 @@
 
   <div class="ui-g ui-md-12" style="justify-content: flex-end">
     <div>
-      <app-white-button buttonLabel="Cancelar" (click)="fecharDialogClonar()"></app-white-button>
-    </div>
-    <div>
-      <app-green-button buttonLabel="Salvar" (click)="clonar()"></app-green-button>
+      <app-white-button buttonLabel="Cancelar" buttonIcon="fa-close" (click)="fecharDialogClonar()"></app-white-button>
+      <app-green-button buttonLabel="Salvar" buttonIcon="ui-icon-save" (click)="clonar()"></app-green-button>
     </div>
   </div>
 
