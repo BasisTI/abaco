@@ -14,6 +14,8 @@ export class AnaliseService {
 
   searchUrl = environment.apiUrl + '/_search/analises';
 
+  relatorioUrl = environment.apiUrl + '/relatorioAnalise';
+
 
   constructor(private http: HttpService) {}
 
@@ -28,6 +30,14 @@ export class AnaliseService {
   update(analise: Analise): Observable<Analise> {
     const copy = this.convert(analise);
     return this.http.put(this.resourceUrl, copy).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
+    });
+  }
+
+  gerarRelatorioAnalise(analise: Analise): Observable<Analise> {
+    const copy = this.convert(analise);
+    return this.http.put(this.relatorioUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
     });

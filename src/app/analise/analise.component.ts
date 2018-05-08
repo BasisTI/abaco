@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
@@ -12,7 +12,7 @@ import { ElasticQuery, PageNotificationService } from '../shared';
   selector: 'jhi-analise',
   templateUrl: './analise.component.html'
 })
-export class AnaliseComponent {
+export class AnaliseComponent implements OnInit {
 
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
@@ -22,12 +22,24 @@ export class AnaliseComponent {
 
   rowsPerPageOptions: number[] = [5, 10, 20];
 
+  analiseSelecionada: Analise;
+
   constructor(
     private router: Router,
     private analiseService: AnaliseService,
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
   ) { }
+
+  ngOnInit() {
+    this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
+      this.analiseSelecionada = new Analise().copyFromJSON(event.data);
+    });
+
+    this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
+      this.analiseSelecionada = undefined;
+    });
+  }
 
   datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
@@ -39,6 +51,9 @@ export class AnaliseComponent {
         break;
       case 'delete':
         this.confirmDelete(event.selection);
+        break;
+      case 'relatorio':
+        this.gerarRelatorio(event.selection);
         break;
     }
   }
@@ -62,6 +77,18 @@ export class AnaliseComponent {
 
   recarregarDataTable() {
     this.datatable.reset();
+  }
+
+  gerarRelatorio(analise: Analise) {
+    this.analiseService.gerarRelatorioAnalise(analise);
+  }
+
+  desabilitarBotaoRelatorio(): boolean {
+    if (this.analiseSelecionada) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }
