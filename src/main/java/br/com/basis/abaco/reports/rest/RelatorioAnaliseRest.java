@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
@@ -21,15 +21,22 @@ import net.sf.jasperreports.engine.JRException;
  */
 public class RelatorioAnaliseRest {
 
-    private static String caminhoRalatorioAnalise = "reports/analise/analise.jasper";
+    private static String caminhoRalatorioAnalise = "/resources/reports/analise/analise.jasper";
+    ///home/dudu/Desenv/Workspaces/Basis/abaco/src/main/resources/reports/analise/analise.jasper
 
-    @Context
     HttpServletRequest request;
+    
+    HttpServletResponse response;
 
     private Analise analise;
 
     private Map<String, Object> parametro;
 
+    public RelatorioAnaliseRest(HttpServletResponse response, HttpServletRequest request ) {
+        this.response = response;
+        this.request = request;
+    }
+    
     private void init() {
         analise = new Analise();
     }
@@ -43,7 +50,7 @@ public class RelatorioAnaliseRest {
     public Response downloadAnalise(Analise analise) throws IOException, JRException {
         init();
         popularObjeto(analise);
-        RelatorioUtil relatorio = new RelatorioUtil();
+        RelatorioUtil relatorio = new RelatorioUtil( this.response, this.request);
         byte[] pdf = relatorio.gerarPdf(request, caminhoRalatorioAnalise, popularParametroAnalise());
         ResponseBuilder response = Response.ok((Object) pdf);
         response.header("Content-Disposition", "attachment; Analise " + analise.getIdentificadorAnalise() + ".pdf");
@@ -53,7 +60,7 @@ public class RelatorioAnaliseRest {
 
     /**
      * Método responsável por popular o parametro do Jasper.
-    */
+     */
     private Map<String, Object> popularParametroAnalise() {
         parametro = new HashMap<String, Object>();
         
@@ -77,7 +84,7 @@ public class RelatorioAnaliseRest {
     
     /**
      * 
-    */
+     */
     private void popularUsuarios() {
         if(validarObjetosNulos(analise.getCreatedBy())) {
             parametro.put("CRIADOPOR", validarAtributosNulos(analise.getCreatedBy().getLogin()));            
@@ -148,48 +155,45 @@ public class RelatorioAnaliseRest {
 
     /**
      * 
-    */
+     */
     private void popularContrato() {
 
-        if (analise.getContrato() != null) {
+        if (validarObjetosNulos(analise.getContrato())) {
             parametro.put("CONTRATO", validarAtributosNulos(analise.getContrato().getNumeroContrato()));
             parametro.put("CONTRATODTINICIO", validarAtributosNulos(analise.getContrato().getDataInicioVigencia().toString()));
             parametro.put("CONTRATODTFIM", validarAtributosNulos(analise.getContrato().getDataFimVigencia().toString()));
             parametro.put("CONTRATOGARANTIA", validarAtributosNulos(analise.getContrato().getDiasDeGarantia().toString()));
-            parametro.put("CONTRATOATIVO", validarAtributosNulos(analise.getContrato().getAtivo().toString()));
+            parametro.put("CONTRATOATIVO", validarAtributosNulos(verificarCondicao(analise.getContrato().getAtivo())));
         }
-
     }
     
     /**
      * 
-    */
+     */
     private void popularOrganizacao() {
         if(validarObjetosNulos(analise.getContrato().getOrganization())) {
             parametro.put("ORGANIZACAO", validarAtributosNulos(analise.getContrato().getOrganization().getSigla()));
             parametro.put("ORGANIZACAONM", validarAtributosNulos(analise.getContrato().getOrganization().getNome()));            
         }
-        
     }
 
     /**
      * 
-    */
+     */
     private void popularSistema() {
 
-        if (analise.getSistema() != null) {
+        if (validarObjetosNulos(analise.getSistema())) {
             parametro.put("SISTEMASG", validarAtributosNulos(analise.getSistema().getSigla()));
             parametro.put("SISTEMANM", validarAtributosNulos(analise.getSistema().getNome()));
         }
-
     }
 
     /**
      * 
-    */
+     */
     private void popularManual() {
 
-        if (analise.getContrato() != null && analise.getContrato().getManual() != null) {
+        if (validarObjetosNulos(analise.getContrato()) && validarObjetosNulos(analise.getContrato().getManual())) {
             parametro.put("MANUALNM", validarAtributosNulos(analise.getContrato().getManual().getNome()));
             parametro.put("METODOCONTAGEM", validarAtributosNulos(analise.getMetodoContagem().toString()));
             parametro.put("VERSAOCPM", validarAtributosNulos(analise.getContrato().getManual().getVersaoCPM().toString()));
@@ -198,7 +202,7 @@ public class RelatorioAnaliseRest {
 
     /**
      * 
-    */
+     */
     private String garantia() {
         if (analise.getBaselineImediatamente()) {
             return "Sim";
@@ -209,7 +213,7 @@ public class RelatorioAnaliseRest {
 
     /**
      * 
-    */
+     */
     private String validarAtributosNulos(String valor) {
         if (valor == null) {
             return "---";
@@ -217,10 +221,10 @@ public class RelatorioAnaliseRest {
             return valor;
         }
     }
-    
+
     /**
      * 
-    */
+     */
     private boolean validarObjetosNulos(Object objeto) {
         if(objeto == null) {
             return false;
@@ -228,9 +232,9 @@ public class RelatorioAnaliseRest {
             return true;
         }
     }
-    
+
     /**
-     * Método responsável por formatar a data.
+     * Método responsável por formatar a data par dia/mês/ano.
      * @param data
      * @return
      */
@@ -239,8 +243,18 @@ public class RelatorioAnaliseRest {
         if(data != null) {
             return dataFormatada.format(data);
         } else {
-            return null;
+            return "---";
         }
+    }
+
+    /**
+     * Método responsável por verificar a condição do valor,
+     * valor true = Sim, valor false = Não.
+     * @param valor
+     * @return
+     */
+    private String verificarCondicao(Boolean valor) {
+        return (valor) ? "Sim" : "Não";
     }
 
 }

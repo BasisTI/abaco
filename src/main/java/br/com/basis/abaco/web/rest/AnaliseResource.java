@@ -8,10 +8,13 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -61,6 +64,12 @@ public class AnaliseResource {
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
     
     private RelatorioAnaliseRest relatorioAnaliseRest;
+    
+    @Autowired
+    private HttpServletRequest request;
+    
+    @Autowired
+    private HttpServletResponse response;
 
     public AnaliseResource(
              AnaliseRepository analiseRepository
@@ -188,8 +197,7 @@ public class AnaliseResource {
     @PutMapping("/relatorioAnalise")
     @Timed
     public void gerarRelatorioAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException, IOException, JRException {
-        relatorioAnaliseRest = new RelatorioAnaliseRest();
-        
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
         log.debug("REST request to generate report Analise : {}", analise);
         relatorioAnaliseRest.downloadAnalise(analise);
     }
@@ -197,10 +205,8 @@ public class AnaliseResource {
     /**
      * GET /analises : get all the analises.
      *
-     * @param pageable
-     * the pagination information
-     * @return the ResponseEntity with status 200 (OK) and the list of analises in
-     * body
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of analises in body
      * @throws URISyntaxException
      * if there is an error to generate the pagination HTTP headers
      */
@@ -208,9 +214,7 @@ public class AnaliseResource {
     @Timed
     public ResponseEntity<List<Analise>> getAllAnalises(@ApiParam Pageable pageable) throws URISyntaxException {
         log.debug("REST request to get a page of Analises");
-
         Page<Analise> page = analiseRepository.findAll(pageable);
-
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
