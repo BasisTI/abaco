@@ -71,7 +71,7 @@ public class RelatorioUtil {
      * @throws IOException
      */
     @SuppressWarnings({ "rawtypes", "unchecked", "static-access" })
-    public byte[] gerarPdf(HttpServletRequest request, String caminhoJasperResolucao, Map parametrosJasper)throws IOException {
+    public byte[] gerarPdf(HttpServletRequest request, String caminhoJasperResolucao, Map parametrosJasper) throws IOException {
         try {
             InputStream reportStream = getClass().getClassLoader().getSystemResourceAsStream(caminhoJasperResolucao);
             JasperPrint print = JasperFillManager.fillReport(reportStream, parametrosJasper, new JREmptyDataSource());
@@ -81,9 +81,6 @@ public class RelatorioUtil {
         } catch(JRException j) {
           j.printStackTrace();
           return null;
-        } catch(Exception e) {
-            e.printStackTrace();
-            return null;
         }
     }
     
