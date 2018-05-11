@@ -1,6 +1,8 @@
 package br.com.basis.abaco.reports.rest;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,14 +23,17 @@ import net.sf.jasperreports.engine.JRException;
  */
 public class RelatorioAnaliseRest {
 
-    private static String caminhoRalatorioAnalise = "/resources/reports/analise/analise.jasper";
-    ///home/dudu/Desenv/Workspaces/Basis/abaco/src/main/resources/reports/analise/analise.jasper
-
-    HttpServletRequest request;
+    private static String caminhoRalatorioAnalise = "reports/analise/analise.jasper";
     
-    HttpServletResponse response;
+    private static String caminhoImagem = "reports/img/fnde_logo.png";
+
+    private HttpServletRequest request;
+    
+    private HttpServletResponse response;
 
     private Analise analise;
+    
+    private RelatorioUtil relatorio;
 
     private Map<String, Object> parametro;
 
@@ -37,48 +42,65 @@ public class RelatorioAnaliseRest {
         this.request = request;
     }
     
+    /**
+     * 
+     */
     private void init() {
         analise = new Analise();
+        relatorio = new RelatorioUtil( this.response, this.request);
     }
     
+    /**
+     * 
+     * @param analise
+     */
     private void popularObjeto(Analise analise) {
         this.analise = analise;
-        
     }
     
+    /**
+     * 
+     * @param analise
+     * @return
+     * @throws IOException
+     * @throws JRException
+     */
     @Produces("application/pdf")
-    public Response downloadAnalise(Analise analise) throws IOException, JRException {
+    public Response downloadAnalisePdf(Analise analise) throws IOException, JRException {
         init();
         popularObjeto(analise);
-        RelatorioUtil relatorio = new RelatorioUtil( this.response, this.request);
         byte[] pdf = relatorio.gerarPdf(request, caminhoRalatorioAnalise, popularParametroAnalise());
         ResponseBuilder response = Response.ok((Object) pdf);
         response.header("Content-Disposition", "attachment; Analise " + analise.getIdentificadorAnalise() + ".pdf");
         return response.build();
-
     }
-
+    
+    /**
+     * 
+     * @param analise
+     * @throws FileNotFoundException
+     * @throws JRException
+     */
+    public void downloadAnalise(Analise analise) throws FileNotFoundException, JRException {
+        init();
+        popularObjeto(analise);
+        relatorio.downloadPdfAnalise(analise, caminhoRalatorioAnalise, popularParametroAnalise());
+    }
+    
     /**
      * Método responsável por popular o parametro do Jasper.
      */
+    @SuppressWarnings("static-access")
     private Map<String, Object> popularParametroAnalise() {
         parametro = new HashMap<String, Object>();
-        
-        parametro.put("PFTOTAL", validarAtributosNulos(analise.getPfTotal()));
-        parametro.put("PFAJUSTADO", validarAtributosNulos(analise.getAdjustPFTotal()));
-        parametro.put("DATACRIADO", validarAtributosNulos(analise.getAudit().getCreatedOn().toString()));
-        parametro.put("DATAALTERADO", validarAtributosNulos(analise.getAudit().getUpdatedOn().toString()));
-        parametro.put("VALORAJUSTE", validarAtributosNulos(String.valueOf(analise.getValorAjuste())));
-        parametro.put("GATANTIA", validarAtributosNulos(garantia()));
-        
+        InputStream reportStream = getClass().getClassLoader().getSystemResourceAsStream(caminhoImagem);
         popularUsuarios();
         popularFatorAjuste();
-        popularDadosBasicos();
+        popularDadosBasicos(reportStream);
         popularContrato();
         popularOrganizacao();
         popularSistema();
         popularManual();
-        
         return parametro;
     }
     
@@ -106,7 +128,14 @@ public class RelatorioAnaliseRest {
     /**
      * 
     */
-    private void popularDadosBasicos() {
+    private void popularDadosBasicos(InputStream reportStream) {
+        parametro.put("IMAGEMLOGO", reportStream);
+        parametro.put("PFTOTAL", validarAtributosNulos(analise.getPfTotal()));
+        parametro.put("PFAJUSTADO", validarAtributosNulos(analise.getAdjustPFTotal()));
+        parametro.put("DATACRIADO", validarAtributosNulos(analise.getAudit().getCreatedOn().toString()));
+        parametro.put("DATAALTERADO", validarAtributosNulos(analise.getAudit().getUpdatedOn().toString()));
+        parametro.put("VALORAJUSTE", validarAtributosNulos(String.valueOf(analise.getValorAjuste())));
+        parametro.put("GATANTIA", validarAtributosNulos(garantia()));
         parametro.put("EQUIPE", validarAtributosNulos(analise.getEquipeResponsavel().toString()));
         parametro.put("IDENTIFICADOR", validarAtributosNulos(analise.getIdentificadorAnalise()));
         parametro.put("TIPOANALISE", validarAtributosNulos(analise.getTipoAnalise().toString()));
@@ -119,45 +148,10 @@ public class RelatorioAnaliseRest {
         parametro.put("NUMEROOS", validarAtributosNulos(analise.getNumeroOs()));
     }
     
-//    private void popularListaFuncaoDados() {
-//        String ders = "";
-//        String alr = "";
-//        String impacto = "";
-//        String nome = "";
-//        String tipo = "";
-//        
-//        if(validarObjetosNulos(analise.getFuncaoDados())) {
-//            for(FuncaoDados fd : analise.getFuncaoDados()) {
-//                nome = fd.getName();
-//                impacto = fd.getImpacto();
-//                tipo = fd.getTipo().name();
-//                alr = fd.getAlr().getNome();
-//                
-//               for(Der der : fd.getDers()) {
-//                   ders += der.getNome(); 
-//               }
-//                
-//            }
-//            parametro.put("FDNOME",nome);
-//            parametro.put("FDDERS",ders);
-//            parametro.put("FDIMPACTO",impacto);
-//            parametro.put("FDTIPO", tipo);
-//            parametro.put("FDALR", alr);
-//
-//        }
-//    }
-//    
-//    private void popularListaFuncaoTransacao() {
-//        if(validarObjetosNulos(analise.getFuncaoTransacaos())) {
-//            parametro.put("FUNCAOTRANSACAO", validarAtributosNulos(analise.getFuncaoTransacaos().toString()));            
-//        }
-//    }
-
     /**
      * 
      */
     private void popularContrato() {
-
         if (validarObjetosNulos(analise.getContrato())) {
             parametro.put("CONTRATO", validarAtributosNulos(analise.getContrato().getNumeroContrato()));
             parametro.put("CONTRATODTINICIO", validarAtributosNulos(analise.getContrato().getDataInicioVigencia().toString()));
@@ -173,7 +167,7 @@ public class RelatorioAnaliseRest {
     private void popularOrganizacao() {
         if(validarObjetosNulos(analise.getContrato().getOrganization())) {
             parametro.put("ORGANIZACAO", validarAtributosNulos(analise.getContrato().getOrganization().getSigla()));
-            parametro.put("ORGANIZACAONM", validarAtributosNulos(analise.getContrato().getOrganization().getNome()));            
+            parametro.put("ORGANIZACAONM", validarAtributosNulos(analise.getContrato().getOrganization().getNome())); 
         }
     }
 
@@ -181,7 +175,6 @@ public class RelatorioAnaliseRest {
      * 
      */
     private void popularSistema() {
-
         if (validarObjetosNulos(analise.getSistema())) {
             parametro.put("SISTEMASG", validarAtributosNulos(analise.getSistema().getSigla()));
             parametro.put("SISTEMANM", validarAtributosNulos(analise.getSistema().getNome()));
@@ -192,7 +185,6 @@ public class RelatorioAnaliseRest {
      * 
      */
     private void popularManual() {
-
         if (validarObjetosNulos(analise.getContrato()) && validarObjetosNulos(analise.getContrato().getManual())) {
             parametro.put("MANUALNM", validarAtributosNulos(analise.getContrato().getManual().getNome()));
             parametro.put("METODOCONTAGEM", validarAtributosNulos(analise.getMetodoContagem().toString()));

@@ -46,9 +46,6 @@ public class ReportController {
     @Autowired
     private AnaliseRepository analiseRepository;
 
-
-
-
     public static class DetailFunctionRecord{
 
         private String name;
@@ -143,23 +140,18 @@ public class ReportController {
         }
     }
 
-
-
     public static class StringRecord{
 
         private String value;
         private long type;
 
-
         public String getValue() {
             return value;
         }
 
-
         public StringRecord() {
 
         }
-
 
         public StringRecord(String value, long type) {
             this.value=value;
@@ -178,8 +170,6 @@ public class ReportController {
             this.type = type;
         }
     }
-
-
 
     public static class FileRecord{
 
@@ -211,8 +201,6 @@ public class ReportController {
             this.format = format;
         }
     }
-
-
 
     public static class FunctionRecord{
 
@@ -317,7 +305,6 @@ public class ReportController {
         }
     }
 
-
     public static class TotalRecord{
 
         private String title;
@@ -396,13 +383,10 @@ public class ReportController {
         public void setGross_fp(BigDecimal gross_fp) {
             this.gross_fp = gross_fp;
         }
-
-
     }
 
     /**
      * Generate list of total records
-     *
      * @param analise
      *             the given analise
      * @return
@@ -423,7 +407,6 @@ public class ReportController {
                     break;
                 case ALI:
                     record = ilf;
-
             }
 
             record.setNet_fp(record.getNet_fp().add(f.getPf()));
@@ -457,9 +440,7 @@ public class ReportController {
                     record = eo;
                 case CE:
                     record = eq;
-
             }
-
 
             record.setNet_fp(record.getNet_fp().add(f.getPf()));
             record.setGross_fp(record.getGross_fp().add(f.getGrossPF()));
@@ -490,8 +471,6 @@ public class ReportController {
         return result;
     }
 
-
-
     private List<DetailFunctionRecord> convertDataFunctions(Analise analise) {
         List<DetailFunctionRecord> list = new ArrayList<>();
         for(FuncaoDados f:analise.getFuncaoDados()) {
@@ -509,11 +488,9 @@ public class ReportController {
                     relList.add(new StringRecord(row,0));
                 }
             }
-
             if (relList.size()==0) {
                 relList.add(new StringRecord("0",0));
             }
-
             record.setRlr(new JRBeanCollectionDataSource(relList));
             List<StringRecord> derList = new ArrayList<>();
             if (f.getDetStr()!=null && !f.getDetStr().isEmpty()){
@@ -524,9 +501,7 @@ public class ReportController {
             if (derList.size()==0) {
                 derList.add(new StringRecord("0",0));
             }
-
             record.setDer(new JRBeanCollectionDataSource(derList));
-
             List<FileRecord> files = new ArrayList<>();
             for(UploadedFile uploadedFile:f.getFiles()){
                 FileRecord file = new FileRecord();
@@ -535,15 +510,12 @@ public class ReportController {
                 file.setFormat(StringUtils.getFormatFile(uploadedFile.getFilename()));
                 files.add(file);
             }
-
             record.setFiles(new JRBeanCollectionDataSource(files));
-
             list.add(record);
         }
 
         return list;
     }
-
 
     private List<DetailFunctionRecord> convertTranFunctions(Analise analise) {
         List<DetailFunctionRecord> list = new ArrayList<>();
@@ -562,11 +534,9 @@ public class ReportController {
                     relList.add(new StringRecord(row,1));
                 }
             }
-
             if (relList.size()==0) {
                 relList.add(new StringRecord("0",0));
             }
-
             record.setRlr(new JRBeanCollectionDataSource(relList));
             List<StringRecord> derList = new ArrayList<>();
             if (f.getDetStr()!=null && !f.getDetStr().isEmpty()){
@@ -574,13 +544,10 @@ public class ReportController {
                     derList.add(new StringRecord(row,1));
                 }
             }
-
             if (derList.size()==0) {
                 derList.add(new StringRecord("0",0));
             }
-
             record.setDer(new JRBeanCollectionDataSource(derList));
-
             List<FileRecord> files = new ArrayList<>();
             for(UploadedFile uploadedFile:f.getFiles()){
                 FileRecord file = new FileRecord();
@@ -589,17 +556,13 @@ public class ReportController {
                 file.setFormat(StringUtils.getFormatFile(uploadedFile.getFilename()));
                 files.add(file);
             }
-
             record.setFiles(new JRBeanCollectionDataSource(files));
-
             list.add(record);
         }
-
         return list;
     }
 
-
-
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @GetMapping("/analiseReport/detailed/{id}")
     public ResponseEntity<byte[]> createDetailedReport(@PathVariable long id) throws FileNotFoundException, JRException {
         Analise analise = this.analiseRepository.findOne(id);
@@ -610,33 +573,22 @@ public class ReportController {
         params.put("fp",analise.getPfTotal());
         params.put("createDate",analise.getAudit().getCreatedOn());
         params.put("updateDate",analise.getAudit().getUpdatedOn());
-       // params.put("SUBREPORT_DATASOURCE",new JRBeanCollectionDataSource(this.convertTranFunctions(analise)));
         List<DetailFunctionRecord> data = this.convertDataFunctions(analise);
         data.addAll(this.convertTranFunctions(analise));
         JRDataSource dataSource = new JRBeanCollectionDataSource(data);
         File jasperFile = new File(getClass().getClassLoader().getResource("reports/detailed_analise_report.jasper").getFile());
-
-
         JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(new FileInputStream(jasperFile),params, dataSource);
-
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
-
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
         return response;
-
     }
-
-
-
-
-        @GetMapping("/analiseReport/simple/{id}")
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @GetMapping("/analiseReport/simple/{id}")
     public ResponseEntity<byte[]> createAnaliseReport(@PathVariable long id) throws FileNotFoundException, JRException {
-
-
         Analise analise = this.analiseRepository.findOne(id);
         Map params = new HashMap();
         params.put("Organization",analise.getOrganizacao()==null?"Organization":analise.getOrganizacao().getNome());
@@ -652,11 +604,8 @@ public class ReportController {
         params.put("Type",analise.getTipoAnalise().toString());
         params.put("createDate",analise.getAudit().getCreatedOn());
         params.put("updateDate",analise.getAudit().getUpdatedOn());
-
         List<TotalRecord> totals = this.generateListOfTotals(analise);
-        //params.put("Gross_FP",totals.get(totals.size()-1).getGross_fp().toString());
         params.put("summaryDataSource",new JRBeanCollectionDataSource(totals));
-
         List<FunctionRecord> dataFunctions = new ArrayList<>();
         for(FuncaoDados f:analise.getFuncaoDados()){
             FunctionRecord record = new FunctionRecord();
@@ -691,20 +640,14 @@ public class ReportController {
             record.setDer(String.valueOf(StringUtils.getDERRLRValue(f.getDetStr())));
             tranFunctions.add(record);
         }
-        //params.put("dataFunctionSource",new JRBeanCollectionDataSource(tranFunctions));
         params.put("tranFunctionSource",new JRBeanCollectionDataSource(tranFunctions));
 
-
-
-
         File jasperFile = new File(getClass().getClassLoader().getResource("reports/simple_analise_report.jasper").getFile());
-
 
         JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(new FileInputStream(jasperFile),params, new JREmptyDataSource());
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
-
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);

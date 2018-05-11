@@ -70,7 +70,13 @@ public class AnaliseResource {
     
     @Autowired
     private HttpServletResponse response;
-
+    
+    /**
+     * Método construtor.
+     * @param analiseRepository
+     * @param analiseSearchRepository
+     * @param funcaoDadosVersionavelRepository
+     */
     public AnaliseResource(
              AnaliseRepository analiseRepository
             ,AnaliseSearchRepository analiseSearchRepository
@@ -106,11 +112,28 @@ public class AnaliseResource {
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
 
+    /**
+     * 
+     * @param id
+     * @return
+     */
+    private Analise recuperarAnalise(Long id) {
+        return analiseRepository.findOne(id);
+    }
+    
+    /**
+     * 
+     * @param analise
+     */
     private void linkFuncoesToAnalise(Analise analise) {
         linkAnaliseToFuncaoDados(analise);
         linkAnaliseToFuncaoTransacaos(analise);
     }
 
+    /**
+     * 
+     * @param analise
+     */
     private void linkAnaliseToFuncaoDados(Analise analise) {
         analise.getFuncaoDados().forEach(funcaoDados -> {
             funcaoDados.setAnalise(analise);
@@ -119,17 +142,25 @@ public class AnaliseResource {
         });
     }
 
+    /**
+     * 
+     * @param funcaoDados
+     */
     private void linkFuncaoDadosRelationships(FuncaoDados funcaoDados) {
         funcaoDados.getFiles().forEach(file -> file.setFuncaoDados(funcaoDados));
         funcaoDados.getDers().forEach(der -> der.setFuncaoDados(funcaoDados));
         funcaoDados.getRlrs().forEach(rlr -> rlr.setFuncaoDados(funcaoDados));
     }
 
+    /**
+     * 
+     * @param funcaoDados
+     * @param sistema
+     */
     private void handleVersionFuncaoDados(FuncaoDados funcaoDados, Sistema sistema) {
         String nome = funcaoDados.getName();
-        Optional<FuncaoDadosVersionavel> funcaoDadosVersionavel = funcaoDadosVersionavelRepository
-                .findOneByNomeIgnoreCaseAndSistemaId(nome, sistema.getId());
-
+        Optional<FuncaoDadosVersionavel> funcaoDadosVersionavel = 
+                funcaoDadosVersionavelRepository.findOneByNomeIgnoreCaseAndSistemaId(nome, sistema.getId());
         if (funcaoDadosVersionavel.isPresent()) {
             funcaoDados.setFuncaoDadosVersionavel(funcaoDadosVersionavel.get());
         } else {
@@ -137,11 +168,14 @@ public class AnaliseResource {
             novaFDVersionavel.setNome(funcaoDados.getName());
             novaFDVersionavel.setSistema(sistema);
             FuncaoDadosVersionavel result = funcaoDadosVersionavelRepository.save(novaFDVersionavel);
-
             funcaoDados.setFuncaoDadosVersionavel(result);
         }
     }
 
+    /**
+     * 
+     * @param analise
+     */
     private void linkAnaliseToFuncaoTransacaos(Analise analise) {
         analise.getFuncaoTransacaos().forEach(funcaoTransacao -> {
             funcaoTransacao.setAnalise(analise);
@@ -151,6 +185,10 @@ public class AnaliseResource {
         });
     }
 
+    /**
+     * 
+     * @param result
+     */
     private void unlinkAnaliseFromFuncoes(Analise result) {
         result.getFuncaoDados().forEach(entry -> {
             entry.setAnalise(null);
@@ -188,23 +226,7 @@ public class AnaliseResource {
     }
     
     /**
-     * Método responsável por requisitar a geração do relatório de Análise.
-     * @param analise
-     * @throws URISyntaxException
-     * @throws JRException 
-     * @throws IOException 
-     */
-    @PutMapping("/relatorioAnalise")
-    @Timed
-    public void gerarRelatorioAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException, IOException, JRException {
-        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
-        log.debug("REST request to generate report Analise : {}", analise);
-        relatorioAnaliseRest.downloadAnalise(analise);
-    }
-
-    /**
      * GET /analises : get all the analises.
-     *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of analises in body
      * @throws URISyntaxException
@@ -221,7 +243,6 @@ public class AnaliseResource {
 
     /**
      * GET /analises/:id : get the "id" analise.
-     *
      * @param id
      * the id of the analise to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the analise, or
@@ -231,13 +252,12 @@ public class AnaliseResource {
     @Timed
     public ResponseEntity<Analise> getAnalise(@PathVariable Long id) {
         log.debug("REST request to get Analise : {}", id);
-        Analise analise = analiseRepository.findOne(id);
+        Analise analise = recuperarAnalise(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
-    }
+    }   
 
     /**
      * DELETE /analises/:id : delete the "id" analise.
-     *
      * @param id
      * the id of the analise to delete
      * @return the ResponseEntity with status 200 (OK)
@@ -252,9 +272,7 @@ public class AnaliseResource {
     }
 
     /**
-     * SEARCH /_search/analises?query=:query : search for the analise corresponding
-     * to the query.
-     *
+     * SEARCH /_search/analises?query=:query : search for the analise corresponding to the query.
      * @param query
      * the query of the analise search
      * @param pageable
@@ -272,6 +290,22 @@ public class AnaliseResource {
         Page<Analise> page = analiseSearchRepository.search(queryStringQuery(query), pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+    
+    /**
+     * Método responsável por requisitar a geração do relatório de Análise.
+     * @param analise
+     * @throws URISyntaxException
+     * @throws JRException 
+     * @throws IOException 
+     */
+    @GetMapping("/relatorioAnalise/{id}")
+    @Timed
+    public void gerarRelatorioAnalise(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+        Analise analise = recuperarAnalise(id);
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
+        log.debug("REST request to generate report Analise : {}", analise);
+        relatorioAnaliseRest.downloadAnalisePdf(analise);
     }
 
 }
