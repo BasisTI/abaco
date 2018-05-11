@@ -35,9 +35,8 @@ export class AnaliseService {
     });
   }
 
-  gerarRelatorioAnalise(analise: Analise): Observable<Analise> {
-    const copy = this.convert(analise);
-    return this.http.put(this.relatorioUrl, copy).map((res: Response) => {
+  gerarRelatorioAnalise(id: number): Observable<Analise> {
+    return this.http.get(`${this.relatorioUrl}/${id}`).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
     });

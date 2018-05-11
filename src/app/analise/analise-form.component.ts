@@ -355,7 +355,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     if (this.verificarCamposObrigatorios()) {
       this.analiseService.update(this.analise);
     }
-
   }
 
   /**

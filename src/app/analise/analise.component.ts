@@ -80,7 +80,7 @@ export class AnaliseComponent implements OnInit {
   }
 
   gerarRelatorio(analise: Analise) {
-    this.analiseService.gerarRelatorioAnalise(analise);
+    this.analiseService.gerarRelatorioAnalise(analise.id);
   }
 
   desabilitarBotaoRelatorio(): boolean {
