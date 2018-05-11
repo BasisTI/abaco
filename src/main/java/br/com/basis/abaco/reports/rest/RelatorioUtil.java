@@ -69,19 +69,15 @@ public class RelatorioUtil {
      * @param parametrosJasper
      * @return
      * @throws IOException
+     * @throws JRException 
      */
     @SuppressWarnings({ "rawtypes", "unchecked", "static-access" })
-    public byte[] gerarPdf(HttpServletRequest request, String caminhoJasperResolucao, Map parametrosJasper) throws IOException {
-        try {
-            InputStream reportStream = getClass().getClassLoader().getSystemResourceAsStream(caminhoJasperResolucao);
-            JasperPrint print = JasperFillManager.fillReport(reportStream, parametrosJasper, new JREmptyDataSource());
-            File pdf = File.createTempFile("output.", ".pdf");
-            JasperExportManager.exportReportToPdfStream(print, new FileOutputStream(pdf));
-            return JasperExportManager.exportReportToPdf(print);            
-        } catch(JRException j) {
-          j.printStackTrace();
-          return null;
-        }
+    public byte[] gerarPdf(HttpServletRequest request, String caminhoJasperResolucao, Map parametrosJasper) throws IOException, JRException {
+        InputStream reportStream = getClass().getClassLoader().getSystemResourceAsStream(caminhoJasperResolucao);
+        JasperPrint print = JasperFillManager.fillReport(reportStream, parametrosJasper, new JREmptyDataSource());
+        File pdf = File.createTempFile("output.", ".pdf");
+        JasperExportManager.exportReportToPdfStream(print, new FileOutputStream(pdf));
+        return JasperExportManager.exportReportToPdf(print);            
     }
     
     /**
