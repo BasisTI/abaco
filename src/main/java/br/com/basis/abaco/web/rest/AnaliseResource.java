@@ -301,11 +301,12 @@ public class AnaliseResource {
      */
     @GetMapping("/relatorioAnalise/{id}")
     @Timed
-    public void gerarRelatorioAnalise(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+    public ResponseEntity<byte[]> gerarRelatorioAnalise(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = recuperarAnalise(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
         log.debug("REST request to generate report Analise : {}", analise);
-        relatorioAnaliseRest.downloadAnalisePdf(analise);
+        return relatorioAnaliseRest.downloadAnalise(analise);
     }
+
 
 }

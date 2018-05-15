@@ -71,13 +71,14 @@ public class RelatorioUtil {
      * @throws IOException
      * @throws JRException 
      */
+    @Deprecated
     @SuppressWarnings({ "rawtypes", "unchecked", "static-access" })
     public byte[] gerarPdf(HttpServletRequest request, String caminhoJasperResolucao, Map parametrosJasper) throws IOException, JRException {
         InputStream reportStream = getClass().getClassLoader().getSystemResourceAsStream(caminhoJasperResolucao);
         JasperPrint print = JasperFillManager.fillReport(reportStream, parametrosJasper, new JREmptyDataSource());
         File pdf = File.createTempFile("output.", ".pdf");
         JasperExportManager.exportReportToPdfStream(print, new FileOutputStream(pdf));
-        return JasperExportManager.exportReportToPdf(print);            
+        return JasperExportManager.exportReportToPdf(print);
     }
     
     /**
@@ -103,10 +104,11 @@ public class RelatorioUtil {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("", analise.getIdentificadorAnalise());
         ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
         return response;
     }
-    
+   
     /**
      * 
      * @param analise
@@ -120,8 +122,6 @@ public class RelatorioUtil {
             this.popularRelList(f);
             this.popularDerFdList(f);
             this.popularArquivoFd(f);
-
-
             list.add(record);
         }
         return list;

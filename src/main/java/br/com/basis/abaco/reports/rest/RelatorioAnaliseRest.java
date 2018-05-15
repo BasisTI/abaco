@@ -14,7 +14,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import org.springframework.http.ResponseEntity;
+
 import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.FatorAjuste;
 import net.sf.jasperreports.engine.JRException;
 
 /**
@@ -65,6 +68,7 @@ public class RelatorioAnaliseRest {
      * @throws IOException
      * @throws JRException
      */
+    @Deprecated
     @Produces("application/pdf")
     public Response downloadAnalisePdf(Analise analise) throws IOException, JRException {
         init();
@@ -74,19 +78,19 @@ public class RelatorioAnaliseRest {
         response.header("Content-Disposition", "attachment; Analise " + analise.getIdentificadorAnalise() + ".pdf");
         return response.build();
     }
-    
+
     /**
      * 
      * @param analise
      * @throws FileNotFoundException
      * @throws JRException
      */
-    public void downloadAnalise(Analise analise) throws FileNotFoundException, JRException {
+    public ResponseEntity<byte[]> downloadAnalise(Analise analise) throws FileNotFoundException, JRException {
         init();
         popularObjeto(analise);
-        relatorio.downloadPdfAnalise(analise, caminhoRalatorioAnalise, popularParametroAnalise());
+        return relatorio.downloadPdfAnalise(analise, caminhoRalatorioAnalise, popularParametroAnalise());
     }
-    
+
     /**
      * Método responsável por popular o parametro do Jasper.
      */
@@ -95,7 +99,6 @@ public class RelatorioAnaliseRest {
         parametro = new HashMap<String, Object>();
         InputStream reportStream = getClass().getClassLoader().getSystemResourceAsStream(caminhoImagem);
         popularUsuarios();
-        popularFatorAjuste();
         popularDadosBasicos(reportStream);
         popularContrato();
         popularOrganizacao();
@@ -103,7 +106,7 @@ public class RelatorioAnaliseRest {
         popularManual();
         return parametro;
     }
-    
+
     /**
      * 
      */
@@ -111,18 +114,9 @@ public class RelatorioAnaliseRest {
         if(validarObjetosNulos(analise.getCreatedBy())) {
             parametro.put("CRIADOPOR", validarAtributosNulos(analise.getCreatedBy().getLogin()));            
         }
-        if(validarObjetosNulos(analise.getCreatedBy())) {
+        if(validarObjetosNulos(analise.getEditedBy())) {
             parametro.put("EDITADOPOR", validarAtributosNulos(analise.getEditedBy().getLogin()));            
         }        
-    }
-
-    /**
-     * 
-    */    
-    private void popularFatorAjuste() {
-        if(validarObjetosNulos(analise.getFatorAjuste())) {
-            parametro.put("FATORAJUSTE", validarAtributosNulos(analise.getFatorAjuste().getNome()));            
-        }
     }
 
     /**
@@ -136,18 +130,19 @@ public class RelatorioAnaliseRest {
         parametro.put("DATAALTERADO", validarAtributosNulos(analise.getAudit().getUpdatedOn().toString()));
         parametro.put("VALORAJUSTE", validarAtributosNulos(String.valueOf(analise.getValorAjuste())));
         parametro.put("GATANTIA", validarAtributosNulos(garantia()));
-        parametro.put("EQUIPE", validarAtributosNulos(analise.getEquipeResponsavel().toString()));
+        parametro.put("EQUIPE", validarAtributosNulos(analise.getEquipeResponsavel().getNome()));
         parametro.put("IDENTIFICADOR", validarAtributosNulos(analise.getIdentificadorAnalise()));
         parametro.put("TIPOANALISE", validarAtributosNulos(analise.getTipoAnalise().toString()));
         parametro.put("PROPOSITO", validarAtributosNulos(analise.getPropositoContagem()));
         parametro.put("ESCOPO", validarAtributosNulos(analise.getEscopo()));
-        parametro.put("FONTEIRA", validarAtributosNulos(analise.getFronteiras()));
+        parametro.put("FRONTEIRA", validarAtributosNulos(analise.getFronteiras()));
         parametro.put("DOCUMENTACAO", validarAtributosNulos(analise.getDocumentacao()));
         parametro.put("OBSERVACOES", validarAtributosNulos(analise.getObservacoes()));
-        parametro.put("DATAHOMOLOGACAO", validarAtributosNulos(formatarData(analise.getDataHomologacao())));
+        parametro.put("DATAHMG", validarAtributosNulos(formatarData(analise.getDataHomologacao())));
         parametro.put("NUMEROOS", validarAtributosNulos(analise.getNumeroOs()));
+        parametro.put("FATORAJUSTE", verificarFatorAjuste(analise.getFatorAjuste()));
     }
-    
+
     /**
      * 
      */
@@ -160,7 +155,7 @@ public class RelatorioAnaliseRest {
             parametro.put("CONTRATOATIVO", validarAtributosNulos(verificarCondicao(analise.getContrato().getAtivo())));
         }
     }
-    
+
     /**
      * 
      */
@@ -188,8 +183,33 @@ public class RelatorioAnaliseRest {
         if (validarObjetosNulos(analise.getContrato()) && validarObjetosNulos(analise.getContrato().getManual())) {
             parametro.put("MANUALNM", validarAtributosNulos(analise.getContrato().getManual().getNome()));
             parametro.put("METODOCONTAGEM", validarAtributosNulos(analise.getMetodoContagem().toString()));
-            parametro.put("VERSAOCPM", validarAtributosNulos(analise.getContrato().getManual().getVersaoCPM().toString()));
+            parametro.put("VERSAOCPM", verificarVersaoCPM(analise.getContrato().getManual().getVersaoCPM()));
         }
+    }
+
+    /**
+     * 
+     */
+    private String verificarFatorAjuste(FatorAjuste valor) {
+        if(valor == null) {
+            return "Nenhum";
+        } else {
+            return valor.getNome();
+        }
+    }
+
+    /**
+     * 
+     */
+    private String verificarVersaoCPM(Long valor) {
+
+        if(valor == 431) {
+            return "4.3.1";
+        }
+        if(valor == 421) {
+            return "4.2.1";
+        }
+        return "---";
     }
 
     /**
