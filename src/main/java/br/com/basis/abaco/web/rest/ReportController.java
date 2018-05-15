@@ -171,7 +171,7 @@ public class ReportController {
         }
     }
 
-    public static class FileRecord{
+    public static class FileRecord {
 
         private String name;
         private String size;
@@ -202,7 +202,7 @@ public class ReportController {
         }
     }
 
-    public static class FunctionRecord{
+    public static class FunctionRecord {
 
        private String name;
        private String adj_factor;
@@ -305,7 +305,7 @@ public class ReportController {
         }
     }
 
-    public static class TotalRecord{
+    public static class TotalRecord {
 
         private String title;
         private int none=0;
