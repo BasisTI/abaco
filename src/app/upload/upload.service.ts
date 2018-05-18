@@ -12,16 +12,16 @@ export class UploadService {
     upload: environment.apiUrl + '/upload',
     getFile: environment.apiUrl + '/getFile',
     getFileInfo: environment.apiUrl + '/getFile/info'
-  }
+  };
 
   uploadFile(file: File) {
     const headers: any = {
       'Content-Type': 'multipart/form-data',
-    }
+    };
 
     let body = new FormData();
 
-    body.append('file', file)
+    body.append('file', file);
 
     return this.http.post(this.resources.upload, body).map(response => {
       return response;
@@ -35,7 +35,7 @@ export class UploadService {
       }
     }).map(response => {
       return response;
-    })
+    });
   }
 
   getFileInfo(id: number) {
@@ -45,7 +45,7 @@ export class UploadService {
       }
     }).map(response => {
       return response.json();
-    })
+    });
   }
 
 }
