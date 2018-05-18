@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2018-05-15T10:47:17 -->
+<!-- 2018-05-17T10:13:30 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="analise" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9ac44673-b60e-4209-99b8-14605622790d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="PROPOSITO" class="java.lang.String"/>
@@ -36,6 +36,8 @@
 	<parameter name="GARANTIA" class="java.lang.String"/>
 	<parameter name="VERSAOCPM" class="java.lang.String"/>
 	<parameter name="IMAGEMLOGO" class="java.io.InputStream"/>
+	<parameter name="SUB_REPORTS_FUNCAO_DADOS" class="java.io.InputStream"/>
+	<parameter name="SUB_REPORTS_FUNCAO_TRANSACAO" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -347,27 +349,21 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$P{VERSAOCPM}]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="3" y="397" width="207" height="21" uuid="ba536d08-f894-4555-8a19-01401e18640e"/>
-					<textElement>
-						<font fontName="SansSerif" size="16" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Função de Dados]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="3" y="521" width="207" height="21" uuid="42e3c438-4e83-435d-a057-e2329842d656"/>
-					<textElement>
-						<font fontName="SansSerif" size="16" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Função de Transação]]></text>
-				</staticText>
-				<textField>
-					<reportElement x="71" y="460" width="413" height="30" uuid="b43217f3-ab8d-48f1-83f8-43dff238c28a"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{SISTEMASG} + " - " + $P{SISTEMANM}]]></textFieldExpression>
-				</textField>
+				<subreport>
+					<reportElement x="3" y="404" width="545" height="109" uuid="2ac16630-8c94-4826-82ff-3300663c88e0"/>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{SUB_REPORTS_FUNCAO_DADOS}]]></subreportExpression>
+				</subreport>
+				<subreport>
+					<reportElement x="3" y="534" width="545" height="109" uuid="2604512e-c612-4dc3-911a-3b8ba01eefbb">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{SUB_REPORTS_FUNCAO_TRANSACAO}]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement x="0" y="518" width="100" height="1" uuid="a56c1666-f915-4129-b236-beb969c1e1a6"/>
+				</break>
 			</frame>
 		</band>
 	</detail>
