@@ -1,10 +1,8 @@
 package br.com.basis.abaco.reports.rest;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +10,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.springframework.http.ResponseEntity;
 
@@ -79,24 +74,6 @@ public class RelatorioAnaliseRest {
     /**
      * 
      * @param analise
-     * @return
-     * @throws IOException
-     * @throws JRException
-     */
-    @Deprecated
-    @Produces("application/pdf")
-    public Response downloadAnalisePdf(Analise analise) throws IOException, JRException {
-        init();
-        popularObjeto(analise);
-        byte[] pdf = relatorio.gerarPdf(request, caminhoRalatorioAnalise, popularParametroAnalise());
-        ResponseBuilder response = Response.ok((Object) pdf);
-        response.header("Content-Disposition", "attachment; Analise " + analise.getIdentificadorAnalise() + ".pdf");
-        return response.build();
-    }
-
-    /**
-     * 
-     * @param analise
      * @throws FileNotFoundException
      * @throws JRException
      */
@@ -120,8 +97,8 @@ public class RelatorioAnaliseRest {
         this.popularOrganizacao();
         this.popularSistema();
         this.popularManual();
-//        this.popularFuncaoDados();
-//        this.popularFuncaoTransacao();
+        this.popularFuncaoDados();
+        this.popularFuncaoTransacao();
         this.popularCountsFd();
         this.popularCountsFt();
         return parametro;

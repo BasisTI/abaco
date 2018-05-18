@@ -25,6 +25,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 
 /**
@@ -61,8 +62,9 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     @Transient
     private Set<String> ftrValues;
     
+    @Enumerated(EnumType.STRING)
     @Column(name="impacto")
-    private String impacto;
+    private ImpactoFatorAjuste impacto;
 
     @JsonManagedReference(value = "funcaoTransacao")
     @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -183,11 +185,11 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
         this.ftrValues = new HashSet<String>(ftrValues);
     }
 
-	public String getImpacto() {
+	public ImpactoFatorAjuste getImpacto() {
 		return impacto;
 	}
 
-	public void setImpacto(String impacto) {
+	public void setImpacto(ImpactoFatorAjuste impacto) {
 		this.impacto = impacto;
 	}
 

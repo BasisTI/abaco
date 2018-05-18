@@ -4,9 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,25 +43,6 @@ public class RelatorioUtil {
         return response;
     }
 
-    /**
-     * 
-     * @param request
-     * @param caminhoJasperResolucao
-     * @param parametrosJasper
-     * @return
-     * @throws IOException
-     * @throws JRException 
-     */
-    @Deprecated
-    @SuppressWarnings({ "rawtypes", "unchecked", "static-access" })
-    public byte[] gerarPdf(HttpServletRequest request, String caminhoJasperResolucao, Map parametrosJasper) throws IOException, JRException {
-        InputStream reportStream = getClass().getClassLoader().getSystemResourceAsStream(caminhoJasperResolucao);
-        JasperPrint print = JasperFillManager.fillReport(reportStream, parametrosJasper, new JREmptyDataSource());
-        File pdf = File.createTempFile("output.", ".pdf");
-        JasperExportManager.exportReportToPdfStream(print, new FileOutputStream(pdf));
-        return JasperExportManager.exportReportToPdf(print);
-    }
-    
     /**
      * 
      * @param analise

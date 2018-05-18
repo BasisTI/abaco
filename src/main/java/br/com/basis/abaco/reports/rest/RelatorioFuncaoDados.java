@@ -72,9 +72,9 @@ public class RelatorioFuncaoDados {
         for(FuncaoDados f : analise.getFuncaoDados()) {
             this.countALiComplex(f);
             this.countAieComplex(f);
+            this.countInmComplex(f);
             this.countAliImpacto(f);
             this.countAieImpacto(f);
-            this.countInmComplex(f);
             this.countInmImpacto(f);
         }
         return dadosFd;
