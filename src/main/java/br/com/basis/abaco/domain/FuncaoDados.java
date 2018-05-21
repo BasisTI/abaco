@@ -77,7 +77,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name="impacto")
     private ImpactoFatorAjuste impacto;
-
+    
     public TipoFuncaoDados getTipo() {
         return tipo;
     }

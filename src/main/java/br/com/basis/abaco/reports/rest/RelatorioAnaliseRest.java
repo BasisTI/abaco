@@ -86,7 +86,6 @@ public class RelatorioAnaliseRest {
     /**
      * Método responsável por popular o parametro do Jasper.
      */
-    @SuppressWarnings("static-access")
     private Map<String, Object> popularParametroAnalise() {
         parametro = new HashMap<String, Object>();
         this.popularImagemRelatorio();
@@ -235,7 +234,7 @@ public class RelatorioAnaliseRest {
      * 
      */
     private void popularCountsFt() {
-        FuncaoTransacaoDTO ft = null;
+        FuncaoTransacaoDTO ft = relatorioFuncaoTransacao.recuperarCounts(analise);
         this.popularComplexidadeEe(ft);
         this.popularComplexidadeSe(ft);
         this.popularComplexidadeCe(ft);
@@ -282,7 +281,7 @@ public class RelatorioAnaliseRest {
         parametro.put("AIEPFTOTAL", "---");
         parametro.put("AIEPFAJUSTADO", "---");
     }
-    
+
     /**
      * 
      * @param fd
@@ -447,6 +446,18 @@ public class RelatorioAnaliseRest {
      * @param ft
      */
     private Integer somaQuantidades(Integer sem, Integer baixa, Integer media, Integer alta) {
+        if(sem == null) {
+            sem = 0;
+        }
+        if(baixa == null ) {
+            baixa = 0;
+        }
+        if(media == null) {
+            media = 0;
+        }
+        if(alta == null) {
+            alta = 0;
+        }
         return sem + baixa + media + alta;
     }
     

@@ -213,7 +213,7 @@ public class RelatorioFuncaoTransacao {
             dadosFt.getImpactoDto().setCeConversao(+1);
         }
     }
-    
+
     /**
      * 
      * @param f
