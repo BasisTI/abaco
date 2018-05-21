@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
@@ -39,9 +37,10 @@ public class RelatorioFuncaoDados {
         
         for(FuncaoDados f : analise.getFuncaoDados()) {
             this.init();
-            this.popularObjetoFd(f);
-//            this.popularRlrList(f); 
-//            this.popularDerListFd(f);
+            this.popularObjeto(f);
+            this.popularImpacto(f);
+            this.popularModulo(f);
+            this.popularNome(f);
             list.add(dadosFd);
         }
         return list;
@@ -51,16 +50,48 @@ public class RelatorioFuncaoDados {
      * 
      * @param f
      */
-    private void popularObjetoFd(FuncaoDados f) {
-        dadosFd.setFatorAjuste(f.getFatorAjuste() == null ? "---" : f.getFatorAjuste().getNome());
-        dadosFd.setImpacto(f.getImpacto() == null && !f.getImpacto().toString().isEmpty()? "---" : f.getImpacto().toString());
-        dadosFd.setModulo(f.getFuncionalidade() == null && f.getFuncionalidade().getModulo() == null ? "---" : f.getFuncionalidade().getModulo().getNome());
-        dadosFd.setFuncionalidade(f.getFuncionalidade() == null? "---" : f.getFuncionalidade().getNome());
-        dadosFd.setNome(f.getName() == null && !f.getName().isEmpty() ? "---" : f.getName());
-        dadosFd.setTipo(f.getTipo() == null ? "---" : f.getTipo().toString());
-        dadosFd.setComplexidade(f.getComplexidade() == null ? "---" : f.getComplexidade().toString());
-        dadosFd.setPfTotal(f.getGrossPF() == null ? BigDecimal.valueOf(0L) : f.getGrossPF());
-        dadosFd.setPfTotal(f.getPf() == null ? BigDecimal.valueOf(0L) : f.getPf());
+    private void popularObjeto(FuncaoDados f) {
+        dadosFd.setFatorAjuste(f.getFatorAjuste() == null 
+                ? "---" : f.getFatorAjuste().getNome());
+        dadosFd.setFuncionalidade(f.getFuncionalidade() == null
+                ? "---" : f.getFuncionalidade().getNome());
+        dadosFd.setTipo(f.getTipo() == null 
+                ? "---" : f.getTipo().toString());
+        dadosFd.setComplexidade(f.getComplexidade() == null 
+                ? "---" : f.getComplexidade().toString());
+        dadosFd.setPfTotal(f.getGrossPF() == null 
+                ? BigDecimal.valueOf(0L) : f.getGrossPF());
+        dadosFd.setPfTotal(f.getPf() == null 
+                ? BigDecimal.valueOf(0L) : f.getPf());
+    }
+    
+    /**
+     * 
+     * @param f
+     */
+    private void popularImpacto(FuncaoDados f) {
+        dadosFd.setImpacto(f.getImpacto() == null 
+                && !f.getImpacto().toString().isEmpty() 
+                ? "---" : f.getImpacto().toString());
+    }
+    
+    /**
+     * 
+     * @param f
+     */
+    private void popularModulo(FuncaoDados f) {
+        dadosFd.setModulo(f.getFuncionalidade() == null 
+                && f.getFuncionalidade().getModulo() == null 
+                ? "---" : f.getFuncionalidade().getModulo().getNome());
+    }
+    
+    /**
+     * 
+     * @param f
+     */
+    private void popularNome(FuncaoDados f) {
+        dadosFd.setNome(f.getName() == null 
+                && !f.getName().isEmpty() ? "---" : f.getName());
     }
     
     /**
@@ -194,52 +225,6 @@ public class RelatorioFuncaoDados {
         }
     }
     
-    /**
-     * Método responsável por popular um objeto do tipo 
-     * String concatenando as informações recuperadas da lista
-     * e somando a quantidade de registros encontrados.
-     * @param f
-     */
-    public FuncaoDadosDTO popularRlrList(FuncaoDados f) {
-        String rlr = "";
-        Integer total = 0;
-        List<Rlr> rlrs = new ArrayList<Rlr>();
-        
-        if(rlrs != null && rlrs.size() > 0) {
-            for(Rlr r : rlrs) {
-                if(r.getFuncaoDados().getId() == f.getId()) {
-                    rlr += r.getNome() + ", ";
-                    total ++;
-                }
-            }
-        }
-        dadosFd.setRlr(rlr);
-        dadosFd.setTotalRlr(total);
-        return dadosFd;
-    }
-    
-    /**
-     * Método responsável por popular um objeto do tipo 
-     * String concatenando as informações recuperadas da lista
-     * e somando a quantidade de registros encontrados em função de dados.
-     * @param f
-     */
-    public FuncaoDadosDTO popularDerListFd(FuncaoDados f) {
-        String der = "";
-        Integer total = 0;
-        List<Der> ders = new ArrayList<Der>();
-        
-        if(ders != null && ders.size() > 0) {
-            for(Der d : ders) {
-                if(d.getFuncaoDados().getId() == f.getId()) {
-                    der += d.getNome() + ", ";
-                    total ++;
-                }
-            }
-        }
-        dadosFd.setDer(der);
-        dadosFd.setTotalDer(total);
-        return dadosFd;
-    }
+
         
 }

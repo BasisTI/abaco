@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
@@ -41,26 +40,59 @@ public class RelatorioFuncaoTransacao {
         
         for(FuncaoTransacao f : analise.getFuncaoTransacaos()) {
             this.init();
-            this.popularObjetoFt(f);
+            this.popularObjeto(f);
+            this.popularImpacto(f);
+            this.popularModulo(f);
+            this.popularNome(f);
             list.add(dadosFt);
         }
         return list;
+    }
+
+    /**
+     * 
+     * @param f
+     */
+    private void popularObjeto(FuncaoTransacao f) {
+        dadosFt.setFatorAjuste(f.getFatorAjuste() == null 
+                ? "---" : f.getFatorAjuste().getNome());
+        dadosFt.setFuncionalidade(f.getFuncionalidade() == null
+                ? "---" : f.getFuncionalidade().getNome());
+        dadosFt.setTipo(f.getTipo() == null 
+                ? "---" : f.getTipo().toString());
+        dadosFt.setComplexidade(f.getComplexidade() == null 
+                ? "---" : f.getComplexidade().toString());
+        dadosFt.setPfTotal(f.getGrossPF() == null 
+                ? BigDecimal.valueOf(0L) : f.getGrossPF());
+        dadosFt.setPfTotal(f.getPf() == null 
+                ? BigDecimal.valueOf(0L) : f.getPf());
     }
     
     /**
      * 
      * @param f
      */
-    private void popularObjetoFt(FuncaoTransacao f) {
-        dadosFt.setFatorAjuste(f.getFatorAjuste() == null ? "---" : f.getFatorAjuste().getNome());
-        dadosFt.setImpacto(f.getImpacto() == null && !f.getImpacto().toString().isEmpty()? "---" : f.getImpacto().toString());
-        dadosFt.setModulo(f.getFuncionalidade() == null && f.getFuncionalidade().getModulo() == null ? "---" : f.getFuncionalidade().getModulo().getNome());
-        dadosFt.setFuncionalidade(f.getFuncionalidade() == null? "---" : f.getFuncionalidade().getNome());
-        dadosFt.setNome(f.getName() == null && !f.getName().isEmpty() ? "---" : f.getName());
-        dadosFt.setTipo(f.getTipo() == null ? "---" : f.getTipo().toString());
-        dadosFt.setComplexidade(f.getComplexidade() == null ? "---" : f.getComplexidade().toString());
-        dadosFt.setPfTotal(f.getGrossPF() == null ? BigDecimal.valueOf(0L) : f.getGrossPF());
-        dadosFt.setPfTotal(f.getPf() == null ? BigDecimal.valueOf(0L) : f.getPf());
+    private void popularImpacto(FuncaoTransacao f) {
+        dadosFt.setImpacto(f.getImpacto() == null 
+                && !f.getImpacto().toString().isEmpty()? "---" : f.getImpacto().toString());
+    }
+    
+    /**
+     * 
+     * @param f
+     */
+    private void popularModulo(FuncaoTransacao f) {
+        dadosFt.setModulo(f.getFuncionalidade() == null 
+                && f.getFuncionalidade().getModulo() == null ? "---" : f.getFuncionalidade().getModulo().getNome());
+    }
+    
+    /**
+     * 
+     * @param f
+     */
+    private void popularNome(FuncaoTransacao f) {
+        dadosFt.setNome(f.getName() == null 
+                && !f.getName().isEmpty() ? "---" : f.getName());
     }
     
     /**
@@ -233,27 +265,4 @@ public class RelatorioFuncaoTransacao {
         }
     }
     
-    /**
-     * Método responsável por popular um objeto do tipo 
-     * String concatenando as informações recuperadas da lista
-     * e somando a quantidade de registros encontrados em função de transação.
-     * @param f
-     */
-    public FuncaoTransacaoDTO popularDerListFt(FuncaoTransacao f) {
-        String der = "";
-        Integer total = 0;
-        List<Der> ders = new ArrayList<Der>();
-        
-        if(ders != null && ders.size() > 0) {
-            for(Der d : ders) {
-                if(d.getFuncaoTransacao().getId() == f.getId()) {
-                    der += d.getNome() + ", ";
-                    total ++;
-                }
-            }
-        }
-        dadosFt.setDer(der);
-        dadosFt.setTotalDer(total);
-        return dadosFt;
-    }
 }

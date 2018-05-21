@@ -112,7 +112,7 @@ public class RelatorioAnaliseRest {
         }
         if(validarObjetosNulos(analise.getEditedBy())) {
             parametro.put("EDITADOPOR", validarAtributosNulos(analise.getEditedBy().getLogin()));            
-        }        
+        }
     }
     
     /**

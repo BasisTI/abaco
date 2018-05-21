@@ -398,6 +398,7 @@ public class ReportController {
         TotalRecord ei = new TotalRecord("EI");
         TotalRecord eo = new TotalRecord("EO");
         TotalRecord eq = new TotalRecord("EQ");
+        TotalRecord inm = new TotalRecord("INM");
         TotalRecord total = new TotalRecord("Total");
         TotalRecord record = eif;
         for(FuncaoDados f:analise.getFuncaoDados()){
@@ -407,6 +408,8 @@ public class ReportController {
                     break;
                 case ALI:
                     record = ilf;
+                case INM :
+                    record = inm;
             }
 
             record.setNet_fp(record.getNet_fp().add(f.getPf()));
@@ -440,6 +443,8 @@ public class ReportController {
                     record = eo;
                 case CE:
                     record = eq;
+                case INM:
+                    record = inm;
             }
 
             record.setNet_fp(record.getNet_fp().add(f.getPf()));
