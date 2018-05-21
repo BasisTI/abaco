@@ -1,52 +1,88 @@
 <div class="ui-g ui-fluid" *ngIf="organizacao">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>Organizacao</h1>
+
+      <h1>Organização</h1>
+
       <div class="ui-g">
+
         <div class="ui-g-4">
           <img src="logo" alt="">
         </div>
+
       </div>
+
       <div class="ui-g">
-        <div class="ui-g-2" style="margin-bottom: 25px">
+
+        <div class="ui-g-12 ui-md-12 ui-sm-12">
           <label>Sigla: {{ organizacao.sigla }}</label>
         </div>
-        <div class="ui-g-10">
+        <div class="ui-g-12 ui-md-12 ui-sm-12">
           <label>Nome: {{ organizacao.nome }}</label>
         </div>
-        <div class="ui-g-5">
-          <label>Cnpj: {{ organizacao.cnpj }}</label>
+        <div class="ui-g-12 ui-md-12 ui-sm-12">
+          <label>CNPJ: {{ organizacao.cnpj }}</label>
         </div>
-        <div class="ui-g-5">
-          <label>Numero Ocorrencia: {{ organizacao.numeroOcorrencia }}</label>
+        <div class="ui-g-12 ui-md-12 ui-sm-12">
+          <label>Número ocorrência: {{ organizacao.numeroOcorrencia }}</label>
         </div>
-        <div class="ui-g-2">
+        <div class="ui-g-12 ui-md-12 ui-sm-12">
           <label>Ativo: {{ organizacao.ativo ? 'Sim' : 'Não' }}</label>
         </div>
       </div>
+
       <div class="ui-g" style="margin-bottom: 25px">
           <h4>Contratos</h4>
 
-          <p-dataTable [value]="organizacao.contracts"
-            [immutable]="false" #contratosDataTable>
-            <p-column header="Número do Contrato" field="numeroContrato"></p-column>
-            <p-column header="Ínicio Vigência" field="dataInicioVigencia">
-              <ng-template let-col let-dataInicioVigencia="rowData" pTemplate="body">
+          <p-dataTable 
+            [value]="organizacao.contracts"
+            [immutable]="false" 
+            #contratosDataTable>
+            
+            <p-column 
+              header="Número do Contrato" 
+              field="numeroContrato">
+            </p-column>
+            
+            <p-column
+              header="Ínicio Vigência" 
+              field="dataInicioVigencia">
+              <ng-template 
+                let-col 
+                let-dataInicioVigencia="rowData" 
+                pTemplate="body">
                 {{ dataInicioVigencia[col.field] | date: 'dd/MM/y' }}
               </ng-template>
             </p-column>
-            <p-column header="Final Vigência" field="dataFimVigencia">
-              <ng-template let-col let-dataFimVigencia="rowData" pTemplate="body">
+            
+            <p-column 
+              header="Final Vigência" 
+              field="dataFimVigencia">
+              <ng-template 
+                let-col 
+                let-dataFimVigencia="rowData" 
+                pTemplate="body">
                 {{ dataFimVigencia[col.field] | date: 'dd/MM/y' }}
               </ng-template>
             </p-column>
-            <p-column header="Manual" field="manual.nome"></p-column>
-            <p-column header="Ativo" field="ativo">
-              <ng-template let-col let-ativo="rowData" pTemplate="body">
+
+            <p-column 
+              header="Manual" 
+              field="manual.nome">
+            </p-column>
+            
+            <p-column 
+              header="Ativo" 
+              field="ativo">
+              <ng-template 
+                let-col 
+                let-ativo="rowData" 
+                pTemplate="body">
                 {{ ativo[col.field] ? 'Sim' : 'Não' }}
               </ng-template>
             </p-column>
           </p-dataTable>
+
         </div>
       <div class="ui-g">
         <div class="ui-g-2">
