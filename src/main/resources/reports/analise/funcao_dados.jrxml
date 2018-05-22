@@ -1,19 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2018-05-17T09:55:00 -->
+<!-- 2018-05-22T10:32:16 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FuncaoDados" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1523ab18-460a-4b3f-a43f-83520c5d34a5">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="ALISEM" class="java.lang.String"/>
+	<parameter name="ALIBAIXA" class="java.lang.String"/>
+	<parameter name="ALIMEDIA" class="java.lang.String"/>
+	<parameter name="ALIALTA" class="java.lang.String"/>
+	<parameter name="ALIQUANDIDADE" class="java.lang.String"/>
+	<parameter name="ALIPFTOTAL" class="java.lang.String"/>
+	<parameter name="ALIPFAJUSTADO" class="java.lang.String"/>
+	<parameter name="AIESEM" class="java.lang.String"/>
+	<parameter name="AIEBAIXA" class="java.lang.String"/>
+	<parameter name="AIEMEDIA" class="java.lang.String"/>
+	<parameter name="AIEALTA" class="java.lang.String"/>
+	<parameter name="AIEQUANTIDADE" class="java.lang.String"/>
+	<parameter name="AIEPFTOTAL" class="java.lang.String"/>
+	<parameter name="AIEPFAJUSTADO" class="java.lang.String"/>
+	<parameter name="INMSEM" class="java.lang.String"/>
+	<parameter name="INMBAIXA" class="java.lang.String"/>
+	<parameter name="INMMEDIA" class="java.lang.String"/>
+	<parameter name="INMALTA" class="java.lang.String"/>
+	<parameter name="INMQUANTIDADE" class="java.lang.String"/>
+	<parameter name="INMPFTOTAL" class="java.lang.String"/>
+	<parameter name="INMPFAJUSTADO" class="java.lang.String"/>
+	<parameter name="ALIINCLUSAO" class="java.lang.String"/>
+	<parameter name="ALIALTERACAO" class="java.lang.String"/>
+	<parameter name="ALIEXCLUSAO" class="java.lang.String"/>
+	<parameter name="ALICONVERSAO" class="java.lang.String"/>
+	<parameter name="AIEINCLUSAO" class="java.lang.String"/>
+	<parameter name="AIEALTERACAO" class="java.lang.String"/>
+	<parameter name="AIEEXCLUSAO" class="java.lang.String"/>
+	<parameter name="AIECONVERSAO" class="java.lang.String"/>
+	<parameter name="INMINCLUSAO" class="java.lang.String"/>
+	<parameter name="INMALTERACAO" class="java.lang.String"/>
+	<parameter name="INMEXCLUSAO" class="java.lang.String"/>
+	<parameter name="INMCONVERSAO" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="funcaodados.nome" class="java.lang.String"/>
-	<field name="funcaodados.classificacao" class="java.lang.String"/>
-	<field name="funcaodados.impacto" class="java.lang.String"/>
-	<field name="funcaodados.rlr" class="java.lang.String"/>
-	<field name="funcaodados.der" class="java.lang.String"/>
-	<field name="funcaodados.complexidade" class="java.lang.String"/>
-	<field name="funcaodados.pftotal" class="java.lang.String"/>
-	<field name="funcaodados.pfajustado" class="java.lang.String"/>
+	<field name="funcaoDadosDTO.nome" class="java.lang.String"/>
+	<field name="funcaoDadosDTO.tipo" class="java.lang.String"/>
+	<field name="funcaoDadosDTO.impacto" class="java.lang.String"/>
+	<field name="funcaoDadosDTO.rlr" class="java.lang.String"/>
+	<field name="funcaoDadosDTO.der" class="java.lang.String"/>
+	<field name="funcaoDadosDTO.complexidade" class="java.lang.String"/>
+	<field name="funcaoDadosDTO.pfTotal" class="java.math.BigDecimal"/>
+	<field name="funcaoDadosDTO.pfAjustado" class="java.math.BigDecimal"/>
 	<detail>
 		<band height="330" splitType="Stretch">
 			<frame>
@@ -90,42 +123,42 @@
 				<textField>
 					<reportElement positionType="Float" x="1" y="38" width="254" height="21" uuid="f3aab21b-aeed-44a8-bb50-d27ef15eb842"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcaodados.nome}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{funcaoDadosDTO.nome}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="257" y="38" width="36" height="21" uuid="dbd9d5b0-7680-46bb-aec9-394eccc87b43"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcaodados.classificacao}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{funcaoDadosDTO.tipo}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="295" y="38" width="43" height="21" uuid="b97d17db-7b26-42eb-802d-14a736404635"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcaodados.impacto}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{funcaoDadosDTO.impacto}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="340" y="38" width="27" height="21" uuid="8c57bc17-f716-4887-95b1-2c7ec6459e98"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcaodados.rlr}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{funcaoDadosDTO.rlr}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="369" y="38" width="30" height="21" uuid="eb115481-a270-4516-b96e-73f4d1ef0fd9"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcaodados.der}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{funcaoDadosDTO.der}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="401" y="38" width="54" height="21" uuid="fbc17242-53f0-469c-ba1a-2052052951ad"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcaodados.complexidade}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{funcaoDadosDTO.complexidade}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="457" y="38" width="44" height="21" uuid="f5ab4e3d-d862-49b9-a72d-fcfdd5ecfd22"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcaodados.pftotal}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{funcaoDadosDTO.pfTotal}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="503" y="38" width="47" height="21" uuid="4d830f8f-4b71-4c85-ac67-b50e715a2f46"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcaodados.pfajustado}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{funcaoDadosDTO.pfAjustado}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement positionType="Float" x="1" y="64" width="549" height="21" uuid="bb268a57-d0a3-40dc-8e38-b76382c9a111"/>
@@ -361,6 +394,171 @@
 					</textElement>
 					<text><![CDATA[INM]]></text>
 				</staticText>
+				<textField>
+					<reportElement positionType="Float" x="67" y="100" width="67" height="14" uuid="53cc5cda-f457-4cd0-bbff-293df8ee482d"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{ALISEM}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="67" y="114" width="67" height="14" uuid="a338cd9d-ffb5-4dd8-944c-162691cdea64"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{AIESEM}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="67" y="128" width="67" height="14" uuid="ac43f4c0-d5e1-4d2f-94fd-ac6895edb932"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{INMSEM}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="134" y="100" width="67" height="14" uuid="9ec2b25c-d4bd-441a-93eb-9d153dae70eb"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{ALIBAIXA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="134" y="114" width="67" height="14" uuid="ecb68d1f-ee25-4608-b4ea-cd0369f23961"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{AIEBAIXA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="134" y="128" width="67" height="14" uuid="fa91372d-2d99-4af7-bfe8-3fb310885e24"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{INMBAIXA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="201" y="100" width="67" height="14" uuid="ba2eddb1-edfa-4067-9373-fb999a62acdb"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{ALIMEDIA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="201" y="114" width="67" height="14" uuid="fd77f105-4181-403a-9c69-2ea497f5aa20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{AIEMEDIA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="201" y="128" width="67" height="14" uuid="3d4bca12-89ab-4427-9058-20ca91216794"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{INMMEDIA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="268" y="100" width="67" height="14" uuid="dd3039ee-dbec-4aac-ac63-0f479b62b7b2"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{ALIALTA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="268" y="114" width="67" height="14" uuid="1cddfb78-f41d-44e7-a406-72f4946855c1"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{AIEALTA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="268" y="128" width="67" height="14" uuid="c10d27a9-9d87-49b0-82a2-c3aa7be4ee6f"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{INMALTA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="335" y="128" width="67" height="14" uuid="e4ebb3e8-edda-4c20-92c4-1b1ee4346f53"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{INMQUANTIDADE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="335" y="114" width="67" height="14" uuid="c1f5583b-0f03-4125-bde4-cf91fb358e36"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{AIEQUANTIDADE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="335" y="100" width="67" height="14" uuid="87958f30-f785-4bf6-8fd9-1f7dd07f738b"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{ALIQUANDIDADE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="402" y="128" width="67" height="14" uuid="e793ec3c-d066-4b6a-abb4-df57b28a07f9"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{INMPFTOTAL}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="402" y="114" width="67" height="14" uuid="674bb15a-b493-454a-92e0-d01f7c1c1bbc"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{AIEPFTOTAL}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="402" y="100" width="67" height="14" uuid="057375ac-a313-41e7-80f0-9fe443715994"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{ALIPFTOTAL}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="469" y="128" width="67" height="14" uuid="e6200b0c-e78e-47c7-938d-fc1cb5df0efe"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{INMPFAJUSTADO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="469" y="114" width="67" height="14" uuid="de92ba65-8218-479a-9f72-d228f1516b66"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{AIEPFAJUSTADO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="469" y="100" width="67" height="14" uuid="6427f21d-8ddb-4e21-b732-98031a20b479"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{ALIPFAJUSTADO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="111" y="182" width="110" height="14" uuid="b0a1a170-0b7b-4b49-9054-e53cf0721ae9"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{ALIINCLUSAO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="111" y="196" width="110" height="14" uuid="702d3f27-8bb9-4e20-a1f9-f79e2b4dcd31"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{AIEINCLUSAO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="111" y="210" width="110" height="14" uuid="21cce673-baa5-41e6-b19b-6071d58c3978"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{INMINCLUSAO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="221" y="210" width="110" height="14" uuid="97a6c07f-41f7-492b-aa06-aa30328c84c6"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{INMALTERACAO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="221" y="196" width="110" height="14" uuid="ac03e261-031c-435f-ba73-fc6c0d79db85"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{AIEALTERACAO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="221" y="182" width="110" height="14" uuid="7739099a-f3f7-4168-8316-7b6679640a14"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{ALIALTERACAO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="331" y="210" width="110" height="14" uuid="4fedd4fe-bb83-40d0-8667-3b6dfb0564ea"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{INMEXCLUSAO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="331" y="196" width="110" height="14" uuid="f886e0b5-885e-4179-9ca7-4d90822c0018"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{AIEEXCLUSAO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="331" y="182" width="110" height="14" uuid="92a617d8-38f5-4a76-bc76-740c9fad6287"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{ALIEXCLUSAO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="441" y="182" width="109" height="14" uuid="63113a52-8932-4fdf-bf1c-2f5dc7861705"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{ALICONVERSAO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="441" y="196" width="109" height="14" uuid="d8b461b4-ca98-42cc-9956-67f0084ca446"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{AIECONVERSAO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="441" y="210" width="109" height="14" uuid="50b49bdf-1ebd-4fb8-b15b-41ebe5b7b847"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$P{INMCONVERSAO}]]></textFieldExpression>
+				</textField>
 			</frame>
 		</band>
 	</detail>

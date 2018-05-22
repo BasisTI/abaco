@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2018-05-17T10:13:30 -->
+<!-- 2018-05-22T10:54:45 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="analise" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9ac44673-b60e-4209-99b8-14605622790d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="PROPOSITO" class="java.lang.String"/>
@@ -349,21 +349,6 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$P{VERSAOCPM}]]></textFieldExpression>
 				</textField>
-				<subreport>
-					<reportElement x="3" y="404" width="545" height="109" uuid="2ac16630-8c94-4826-82ff-3300663c88e0"/>
-					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA[$P{SUB_REPORTS_FUNCAO_DADOS}]]></subreportExpression>
-				</subreport>
-				<subreport>
-					<reportElement x="3" y="534" width="545" height="109" uuid="2604512e-c612-4dc3-911a-3b8ba01eefbb">
-						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					</reportElement>
-					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA[$P{SUB_REPORTS_FUNCAO_TRANSACAO}]]></subreportExpression>
-				</subreport>
-				<break>
-					<reportElement x="0" y="518" width="100" height="1" uuid="a56c1666-f915-4129-b236-beb969c1e1a6"/>
-				</break>
 			</frame>
 		</band>
 	</detail>
