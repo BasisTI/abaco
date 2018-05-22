@@ -152,11 +152,11 @@ public class RelatorioAnaliseRest {
     */
     @SuppressWarnings("static-access")
     private void popularSubRelatorios() {
-        InputStream SUB_REPORTS_FUNCAO_DADOS = getClass().getClassLoader().getSystemResourceAsStream(caminhoRelatorioFuncaoDados);
-        InputStream SUB_REPORTS_FUNCAO_TRANSACAO = getClass().getClassLoader().getSystemResourceAsStream(caminhoRelatorioFuncaoTransacao);
+        InputStream caminhoRelatorioFd = getClass().getClassLoader().getSystemResourceAsStream(caminhoRelatorioFuncaoDados);
+        InputStream caminhoRelatorioFT = getClass().getClassLoader().getSystemResourceAsStream(caminhoRelatorioFuncaoTransacao);
         
-        parametro.put("SUB_REPORTS_FUNCAO_DADOS", SUB_REPORTS_FUNCAO_DADOS);
-        parametro.put("SUB_REPORTS_FUNCAO_TRANSACAO", SUB_REPORTS_FUNCAO_TRANSACAO);        
+        parametro.put("SUB_REPORTS_FUNCAO_DADOS", caminhoRelatorioFd);
+        parametro.put("SUB_REPORTS_FUNCAO_TRANSACAO", caminhoRelatorioFT);
     }
 
     /**
@@ -512,11 +512,7 @@ public class RelatorioAnaliseRest {
      * 
      */
     private boolean validarObjetosNulos(Object objeto) {
-        if(objeto == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return objeto == null ? false : true;
     }
 
     /**

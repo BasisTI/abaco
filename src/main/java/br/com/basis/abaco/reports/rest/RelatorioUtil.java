@@ -29,7 +29,7 @@ public class RelatorioUtil {
 
     private HttpServletResponse response;
 
-    public HttpServletRequest request;
+    private HttpServletRequest request;
 
     public RelatorioUtil() {
     }
@@ -41,6 +41,10 @@ public class RelatorioUtil {
 
     public HttpServletResponse getResponse() {
         return response;
+    }
+    
+    public HttpServletRequest getRequest() {
+        return request;
     }
 
     /**
