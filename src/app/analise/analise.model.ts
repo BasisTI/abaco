@@ -71,7 +71,10 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     }
   }
 
-  private inicializaMappables(funcaoDados: FuncaoDados[], funcaoTransacaos) {
+  /**
+   *
+  */
+  private inicializaMappables(funcaoDados: FuncaoDados[], funcaoTransacaos: FuncaoTransacao[]) {
     if (funcaoDados) {
       this.mappableFuncaoDados = new MappableEntities<FuncaoDados>(funcaoDados);
     } else {
@@ -84,35 +87,52 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     }
   }
 
+  /**
+   *
+  */
   private inicializaResumos() {
     this._resumoFuncaoDados = new ResumoFuncoes(FuncaoDados.tipos());
     this._resumoFuncaoTransacao = new ResumoFuncoes(FuncaoTransacao.tipos());
     this.generateResumoTotal();
   }
 
+  /**
+   *
+  */
   private generateResumoTotal() {
     this._resumoTotal = new ResumoTotal(this._resumoFuncaoDados, this._resumoFuncaoTransacao);
     this.calcularTotalPFs();
   }
 
+  /**
+   *
+  */
   private calcularTotalPFs() {
-    this.pfTotal = this._resumoTotal.getTotalPf().toString();
-    // this.adjustPFTotal = this._resumoTotal.getTotalGrossPf().toString();
+    this.pfTotal = this._resumoTotal.getTotalGrossPf().toString();
     this.adjustPFTotal = this.calcularPfTotalAjustado().toString();
   }
 
+  /**
+   *
+  */
   private calcularPfTotalAjustado(): number {
     return this.pfTotalAjustadoSomentePorFatorAjuste() * this.totalEsforcoFases();
   }
 
+  /**
+   *
+  */
   private pfTotalAjustadoSomentePorFatorAjuste(): number {
-    const pfTotal = this._resumoTotal.getTotalPf();
+    const pfTotalAjustado = this._resumoTotal.getTotalPf();
     if (this.fatorAjuste) {
-      return this.fatorAjuste.aplicarFator(pfTotal);
+      return this.fatorAjuste.aplicarFator(pfTotalAjustado);
     }
-    return pfTotal;
+    return pfTotalAjustado;
   }
 
+  /**
+   *
+  */
   private totalEsforcoFases(): number {
     const initialValue = 0;
     if (this.esforcoFases) {
