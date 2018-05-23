@@ -1,8 +1,14 @@
-import { FatorAjuste, TipoFatorAjuste } from '../../fator-ajuste/fator-ajuste.model';
+import { FatorAjuste, TipoFatorAjuste, ImpactoFatorAjuste } from '../../fator-ajuste/fator-ajuste.model';
 import { Manual } from '../../manual/manual.model';
 
 export class FatorAjusteImpactoRetriever {
 
+  /**
+   *
+   * @param fatorAjuste
+   * @param impacto
+   * @param manual
+   */
   static retrieve(fatorAjuste: FatorAjuste, impacto: string, manual: Manual): FatorAjuste {
     if (fatorAjuste) {
       return fatorAjuste;
@@ -11,6 +17,11 @@ export class FatorAjusteImpactoRetriever {
     }
   }
 
+  /**
+   *
+   * @param impacto
+   * @param manual
+   */
   private static generateFatorAjusteFromImpacto(impacto: string, manual: Manual): FatorAjuste {
     const fatorAjuste: FatorAjuste = new FatorAjuste();
     fatorAjuste.fator = this.retrieveFator(impacto, manual);
@@ -18,15 +29,20 @@ export class FatorAjusteImpactoRetriever {
     return fatorAjuste;
   }
 
+  /**
+   *
+   * @param impacto
+   * @param manual
+   */
   private static retrieveFator(impacto: string, manual: Manual): number {
     switch (impacto) {
-      case 'Inclusão':
+      case ImpactoFatorAjuste.INCLUSAO:
         return manual.parametroInclusao;
-      case 'Alteração':
+      case ImpactoFatorAjuste.ALTERACAO:
         return manual.parametroAlteracao;
-      case 'Exclusão':
+      case ImpactoFatorAjuste.EXCLUSAO:
         return manual.parametroExclusao;
-      case 'Inclusão':
+      case ImpactoFatorAjuste.CONVERSAO:
         return manual.parametroConversao;
     }
   }
