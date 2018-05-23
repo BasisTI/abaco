@@ -71,6 +71,16 @@ public class AbacoApp {
         if (env.getProperty("server.ssl.key-store") != null) {
             protocol = "https";
         }
+        defineLog(env, protocol);
+    }
+    
+    /**
+     * 
+     * @param env
+     * @param protocol
+     * @throws UnknownHostException
+     */
+    private static void defineLog(Environment env, String protocol) throws UnknownHostException {
         log.info("\n----------------------------------------------------------\n\t" +
                 "Application '{}' is running! Access URLs:\n\t" +
                 "Local: \t\t{}://localhost:{}\n\t" +
