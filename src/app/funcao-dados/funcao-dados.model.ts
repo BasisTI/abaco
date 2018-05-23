@@ -8,6 +8,7 @@ import { Der } from '../der/der.model';
 import { Rlr } from '../rlr/rlr.model';
 import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
 import { Impacto } from '../analise-shared/impacto-enum';
+import { FuncaoResumivel } from '../analise-shared';
 
 export enum TipoFuncaoDados {
   'ALI' = 'ALI',
@@ -15,7 +16,7 @@ export enum TipoFuncaoDados {
   'INM' = 'INM'
 }
 
-export class FuncaoDados implements BaseEntity, FuncaoAnalise, JSONable<FuncaoDados> {
+export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, JSONable<FuncaoDados> {
 
   detStr: string;
   retStr: string;
