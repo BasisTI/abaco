@@ -64,7 +64,7 @@ export class AnaliseComponent implements OnInit {
       accept: () => {
         this.analiseService.delete(analise.id).subscribe(() => {
           this.recarregarDataTable();
-          this.pageNotificationService.addDeleteMsgWithName(analise.numeroOs);
+          this.pageNotificationService.addDeleteMsgWithName(analise.identificadorAnalise);
         });
       }
     });
