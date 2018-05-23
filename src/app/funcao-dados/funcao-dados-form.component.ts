@@ -50,10 +50,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   sugestoesAutoComplete: string[] = [];
 
   impacto: SelectItem[] = [
-    { label: 'Inclusão', value: 'Inclusão' },
-    { label: 'Alteração', value: 'Alteração' },
-    { label: 'Exclusão', value: 'Exclusão' },
-    { label: 'Conversão', value: 'Conversão' }
+    { label: 'Inclusão', value: 'INCLUSAO' },
+    { label: 'Alteração', value: 'ALTERACAO' },
+    { label: 'Exclusão', value: 'EXCLUSAO' },
+    { label: 'Conversão', value: 'CONVERSAO' },
+    { label: 'Item Não Mensurável', value: 'INM' }
   ];
 
   // FIXME considerar o enum

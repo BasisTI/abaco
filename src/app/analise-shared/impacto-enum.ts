@@ -1,7 +1,8 @@
 export enum Impacto {
-    'Inclusão' = 'Inclusão',
-    'Alteração' = 'Alteração',
-    'Exclusão' = 'Exclusão',
-    'Conversão'= 'Conversão',
+    'INCLUSAO' = 'INCLUSAO',
+    'ALTERACAO' = 'ALTERACAO',
+    'EXCLUSAO' = 'EXCLUSAO',
+    'CONVERSAO' = 'CONVERSAO',
+    'INM' = 'INM',
 
 }

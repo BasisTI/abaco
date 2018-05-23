@@ -2,5 +2,6 @@ export enum Complexidade {
   'SEM' = 'SEM',
   'BAIXA' = 'BAIXA',
   'MEDIA' = 'MEDIA',
-  'ALTA'= 'ALTA',
+  'ALTA' = 'ALTA',
+  'INM' = 'INM',
 }

@@ -97,7 +97,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
 
   private calcularTotalPFs() {
     this.pfTotal = this._resumoTotal.getTotalPf().toString();
-    this.adjustPFTotal = this._resumoTotal.getTotalGrossPf().toString();
+    // this.adjustPFTotal = this._resumoTotal.getTotalGrossPf().toString();
     this.adjustPFTotal = this.calcularPfTotalAjustado().toString();
   }
 
