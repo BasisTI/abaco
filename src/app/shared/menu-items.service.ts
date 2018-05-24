@@ -15,27 +15,36 @@ export class MenuItemsService {
         label: 'Administração', icon: 'supervisor_account',
         visible: this.isLoggedAdmin(),
         items: [
-          { label: 'Tipo de Equipe', routerLink: 'admin/tipoEquipe' },
-          { label: 'Usuários', routerLink: 'admin/user' }
+          { label: 'Tipo de Equipe', routerLink: 'admin/tipoEquipe', icon: 'people' },
+          { label: 'Usuários', routerLink: 'admin/user', icon: 'person'}
         ]
       },
       {
         label: 'Cadastros Básicos', icon: 'description',
         visible: this.authService.isAuthenticated(),
         items: [
-          { label: 'Tipo de Fase', routerLink: 'tipoFase' },
-          { label: 'Manual', routerLink: 'manual' },
-          { label: 'Organização', routerLink: 'organizacao' },
-          { label: 'Sistema', routerLink: 'sistema' }
+          { label: 'Tipo de Fase', routerLink: 'tipoFase', icon: 'beenhere' },
+          { label: 'Manual', routerLink: 'manual', icon: 'description'},
+          { label: 'Organização', routerLink: 'organizacao', icon: 'business' },
+          { label: 'Sistema', routerLink: 'sistema', icon: 'laptop' }
         ]
       },
       {
         label: 'Análise', icon: 'insert_chart',
         visible: this.authService.isAuthenticated(),
         items: [
-          { label: 'Análise', routerLink: 'analise' },
+          { label: 'Análise', routerLink: 'analise', icon: 'description' },
           // { label: 'BaseLine', routerLink: 'baseline' },
+          // { label: 'Compare' }
           // { label: 'Validação' }
+        ]
+      },
+      {
+        label: 'Configuração', icon: 'settings',
+        visible: this.authService.isAuthenticated(),
+        items: [
+          {label: 'Reindexar', routerLink: 'elasticSearch', icon: 'refresh' },
+          {label: 'Alterar Senha', routerLink: '' }
         ]
       }
     ];
