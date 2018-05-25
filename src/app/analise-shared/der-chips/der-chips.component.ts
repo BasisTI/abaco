@@ -103,6 +103,13 @@ export class DerChipsComponent implements OnChanges {
     this.fecharDialogAddMultiplos();
   }
 
+  /**
+   *
+   */
+  limparMultiplos() {
+    this.values = null;
+  }
+
   private converteMultiplos(): DerChipItem[] {
     const parseResult: ParseResult = DerTextParser.parse(this.addMultiplosTexto);
     if (parseResult.textos) {
