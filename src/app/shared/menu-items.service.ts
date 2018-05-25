@@ -15,8 +15,9 @@ export class MenuItemsService {
         label: 'Administração', icon: 'supervisor_account',
         visible: this.isLoggedAdmin(),
         items: [
+          { label: 'Reindexar', routerLink: 'elasticsearch', icon: 'refresh' },
           { label: 'Tipo de Equipe', routerLink: 'admin/tipoEquipe', icon: 'people' },
-          { label: 'Usuários', routerLink: 'admin/user', icon: 'person'}
+          { label: 'Usuários', routerLink: 'admin/user', icon: 'person'},
         ]
       },
       {
@@ -39,14 +40,14 @@ export class MenuItemsService {
           // { label: 'Validação' }
         ]
       },
-      {
-        label: 'Configuração', icon: 'settings',
-        visible: this.authService.isAuthenticated(),
-        items: [
-          {label: 'Reindexar', routerLink: 'elasticSearch', icon: 'refresh' },
-          {label: 'Alterar Senha', routerLink: '' }
-        ]
-      }
+      // {
+        // label: 'Configuração', icon: 'settings',
+        // visible: this.authService.isAuthenticated(),
+        // items: [
+          // {label: 'Reindexar', routerLink: 'elasticsearch', icon: 'refresh' },
+          // {label: 'Alterar Senha', routerLink: '' }
+        // ]
+      // }
     ];
   }
 

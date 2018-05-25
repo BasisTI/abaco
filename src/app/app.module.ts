@@ -57,6 +57,7 @@ import { AdminGuard } from './admin.guard';
 import { HttpClient } from '@angular/common/http';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { AbacoElasticSearchModule } from './elasticsearch/elasticsearch.module';
 
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
@@ -83,6 +84,7 @@ export function createTranslateLoader(http: HttpClient) {
     AbacoOrganizacaoModule,
     AbacoContratoModule,
     AbacoTipoEquipeModule,
+    AbacoElasticSearchModule,
     AbacoUserModule,
     AbacoTipoFaseModule,
     AbacoSistemaModule,
