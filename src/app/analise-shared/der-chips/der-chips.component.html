@@ -10,7 +10,8 @@
       (onRemove)="onRemove($event.value)">
 
       <ng-template let-item pTemplate="item">
-        <span class="ui-chips-token-label ng-star-inserted"
+        <span
+          class="ui-chips-token-label ng-star-inserted"
           (dblclick)="doubleClickChip(item)">
           {{ item.text }}
         </span>
@@ -20,6 +21,7 @@
   </div>
 
   <div class="ui-g-3 ui-md-3 ui-sm-12">
+
     <button 
       pButton 
       type="button"
@@ -34,6 +36,7 @@
         (dersReferenciadosEvent)="dersReferenciados($event)">
       </app-analise-referenciador-ar>
     </div>
+
   </div>
 
   <div class="ui-g-3 ui-md-3 ui-sm-12">
@@ -59,32 +62,48 @@
 
 </div>
 
-<p-dialog header="Adicionar múltiplos" [(visible)]="mostrarDialogAddMultiplos"
-  [contentStyle]="{'overflow': 'visible'}" [width]="800">
+<p-dialog 
+  header="Adicionar múltiplos"
+  [(visible)]="mostrarDialogAddMultiplos"
+  [contentStyle]="{'overflow': 'visible'}"
+  [width]="800">
+
   <div class="ui-g">
     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-      <app-analise-der-text [(value)]="addMultiplosTexto"></app-analise-der-text>
+      <app-analise-der-text 
+        [(value)]="addMultiplosTexto">
+      </app-analise-der-text>
     </div>
 
     <div class="ui-g ui-md-12" style="justify-content: flex-end">
       <div class="ui-g-12 ui-md-12 ui-sm-12">
-        <button pButton type="button"
+        <button
+          pButton
+          type="button"
           class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Cancelar" (click)="fecharDialogAddMultiplos()">
+          label="Cancelar" 
+          (click)="fecharDialogAddMultiplos()">
         </button>
       </div>
+
       <div class="ui-g-2 ui-md-2 ui-sm-12">
-        <button pButton type="button"
+        <button
+          pButton
+          type="button"
           class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Adicionar" (click)="adicionarMultiplos()">
+          label="Adicionar" 
+          (click)="adicionarMultiplos()">
         </button>
       </div>
     </div>
   </div>
 </p-dialog>
 
-<p-dialog header="Editar" [(visible)]="mostrarDialogEdicao"
-  [contentStyle]="{'overflow': 'visible'}" [width]="800">
+<p-dialog
+  header="Editar"
+  [(visible)]="mostrarDialogEdicao"
+  [contentStyle]="{'overflow': 'visible'}" 
+  [width]="800">
 
   <div class="ui-g">
 
@@ -106,10 +125,14 @@
           (click)="fecharDialogEdicao()">
         </button>
       </div>
+
       <div class="ui-g-2 ui-md-2 ui-sm-12">
-        <button pButton type="button"
+        <button
+          pButton
+          type="button"
           class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Editar" (click)="editarChip()">
+          label="Editar" 
+          (click)="editarChip()">
         </button>
       </div>
     </div>

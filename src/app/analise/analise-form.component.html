@@ -54,7 +54,12 @@
                 
                 <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: center; margin-top: 25px;">
                   <div class="ui-g-2 ui-md-2 ui-sm-12">
-                    <app-white-button buttonLabel="Cancelar" routerLink="/analise"></app-white-button>
+
+                    <app-white-button
+                      buttonLabel="Cancelar" 
+                      routerLink="/analise">
+                    </app-white-button>
+
                   </div>
                   <div class="ui-g-2 ui-md-2 ui-sm-12">
                     <app-analise-botao-salvar></app-analise-botao-salvar>
@@ -357,8 +362,8 @@
                   </p-dataTable>
                 </div>
 
-                  <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                    <label>Observações</label>
+                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                  <label>Observações</label>
                     <span class="md-inputfield">
                       <textarea 
                         [rows]="3" 
@@ -371,6 +376,15 @@
                     </span>
                   </div>
                 </div>
+
+                <div class="ui-g-2 ui-md-2 ui-sm-12" style="margin-bottom: 25px">
+                  <app-white-button
+                  buttonLabel="Voltar" 
+                  routerLink="/analise">
+                </app-white-button>
+
+                </div>
+
               </div>
           </form>
         </div>
@@ -378,13 +392,21 @@
     </div>
   </p-tabPanel>
 
-  <p-tabPanel header="Funções de Dados" *ngIf="isEdicao">
+  <p-tabPanel
+    header="Funções de Dados"
+    *ngIf="isEdicao">
     <app-analise-funcao-dados></app-analise-funcao-dados>
   </p-tabPanel>
-  <p-tabPanel header="Funções de Transação" *ngIf="isEdicao">
+
+  <p-tabPanel
+    header="Funções de Transação"
+    *ngIf="isEdicao">
     <app-analise-funcao-transacao></app-analise-funcao-transacao>
   </p-tabPanel>
-  <p-tabPanel header="Resumo" *ngIf="isEdicao">
+
+  <p-tabPanel
+    header="Resumo" 
+    *ngIf="isEdicao">
     <app-analise-resumo></app-analise-resumo>
   </p-tabPanel>
 </p-tabView>

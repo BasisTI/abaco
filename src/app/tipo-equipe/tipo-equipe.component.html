@@ -7,7 +7,7 @@
       <h1>Tipo de Equipe</h1>
       <div class="ui-g">
   
-        <div class="ui-g-12">
+        <div class="ui-g-12 ui-md-12 ui-sm-12">
           <span class="md-inputfield">
             <input 
               type="text" 
@@ -27,7 +27,7 @@
   
         <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
 
-            <div class="ui-md-2">
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-white-button 
                   buttonLabel="Limpar Pesquisa" 
                   buttonIcon="ui-icon-clear-all" 
@@ -35,16 +35,16 @@
                 </app-white-button>
             </div>
 
-          <div class="ui-md-2">
+          <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-blue-button buttonLabel="Pesquisar" 
               buttonIcon="ui-icon-search" 
               (click)="datatable.refresh(elasticQuery.query)">
             </app-blue-button>
           </div>
 
-          <div class="ui-md-2">
+          <div class="uui-g-2 ui-md-2 ui-sm-12">
             <app-green-button 
-              buttonLabel="Novo Tipo de Equipe" 
+              buttonLabel="Novo" 
               buttonIcon="ui-icon-add" 
               routerLink="/admin/tipoEquipe/new">
             </app-green-button>

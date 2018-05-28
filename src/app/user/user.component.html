@@ -4,7 +4,7 @@
       <h1>Usuários</h1>
       <div class="ui-g">
 
-          <div class="ui-g-4">
+          <div class="ui-g-4 ui-md-4 ui-sm-12">
             <span class="md-inputfield">
               <input 
                 type="text" 
@@ -18,7 +18,7 @@
             </span>
           </div>
 
-          <div class="ui-g-4">
+          <div class="ui-g-4 ui-md-4 ui-sm-12">
             <span class="md-inputfield">
               <input 
                 type="text" 
@@ -32,7 +32,7 @@
             </span>
           </div>
 
-          <div class="ui-g-4">
+          <div class="ui-g-4 ui-md-4 ui-sm-12">
             <span class="md-inputfield">
               <input 
                 type="text" 
@@ -48,7 +48,7 @@
     </div>
     <div class="ui-g">
 
-      <div class="ui-g-4">
+      <div class="ui-g-4 ui-md-4 ui-sm-12">
         <p-dropdown 
           [options]="organizations" 
           optionLabel="nome" 
@@ -58,7 +58,7 @@
         </p-dropdown>
       </div>
       
-      <div class="ui-g-4">
+      <div class="ui-g-4 ui-md-4 ui-sm-12">
         <p-dropdown 
           [options]="authorities" 
           optionLabel="name" 
@@ -68,7 +68,7 @@
         </p-dropdown>
       </div>
       
-      <div class="ui-g-4">
+      <div class="ui-g-4 ui-md-4 ui-sm-12">
         <p-dropdown 
           [options]="teams" 
           optionLabel="nome" 
@@ -81,7 +81,7 @@
     </div>
     <div class="ui-g">
       <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
-        <div class="ui-md-2">
+        <div class="ui-g-2 ui-md-2 ui-sm-12">
           <app-white-button 
             buttonLabel="Limpar Pesquisa" 
             buttonIcon="ui-icon-clear-all" 
@@ -89,7 +89,7 @@
           </app-white-button>
         </div>
 
-        <div class="ui-md-2">
+        <div class="ui-g-2 ui-md-2 ui-sm-12">
           <app-blue-button 
             buttonLabel="Pesquisar" 
             buttonIcon="ui-icon-search" 
@@ -97,9 +97,9 @@
           </app-blue-button>
         </div>
 
-        <div class="ui-md-2">
+        <div class="ui-g-2 ui-md-2 ui-sm-12">
           <app-green-button 
-            buttonLabel="Novo Usuário" 
+            buttonLabel="Novo" 
             routerLink="/admin/user/new" 
             buttonIcon="ui-icon-add">
           </app-green-button>
