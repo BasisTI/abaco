@@ -2,7 +2,7 @@
   <div class="ui-g-12">
     <div class="card card-w-title">
       <h1>{{ manual.id ? 'Editar Manual' : 'Cadastrar Manual' }}</h1>
-      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+      <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
         
         <div class="ui-g">
           <div class="ui-g-12 ui-md-12 ui-sm-12" 
@@ -19,14 +19,24 @@
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input
-                required
+                id="nome_manual"
                 type="text" 
                 name="nome"
                 maxlength="250"
                 [(ngModel)]="manual.nome" 
-                pInputText/>
+                pInputText
+                #nome='ngModel'
+                required/>
               <label>{{ 'Nome *' | translate }}</label>
+              <div *ngIf="editForm.controls['nome'] 
+                && !editForm.controls['nome'].valid 
+                && (editForm.controls['nome'].touched 
+                || editForm.submitted)" 
+                class="ui-message ui-messages-error">
+                Campo obrigatório.
+              </div>
             </span>
+
           </div>
 
           <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
@@ -37,8 +47,16 @@
                 maxlength="3"
                 name="valorVariacaoEstimada"
                 [(ngModel)]="manual.valorVariacaoEstimadaFormatado"
+                #valorVariacaoEstimada='ngModel'
                 pInputText/>
-              <label>Valor Variacao Estimada (%)</label>
+              <label>Valor Variacao Estimada (%) *</label>
+              <div *ngIf="editForm.controls['valorVariacaoEstimada'] 
+                && !editForm.controls['valorVariacaoEstimada'].valid 
+                && (editForm.controls['valorVariacaoEstimada'].touched 
+                || editForm.submitted)" 
+                class="ui-message ui-messages-error">
+                Campo obrigatório.
+              </div>
             </span>
           </div>
 
@@ -49,9 +67,17 @@
                 type="text" 
                 maxlength="3"
                 name="valorVariacaoIndicativa"
+                #valorVariacaoIndicativa='ngModel'
                 [(ngModel)]="manual.valorVariacaoIndicativaFormatado"
                 pInputText/>
-              <label>Valor Variação Indicativa (%)</label>
+              <label>Valor Variação Indicativa (%) *</label>
+              <div *ngIf="editForm.controls['valorVariacaoIndicativa'] 
+                && !editForm.controls['valorVariacaoIndicativa'].valid 
+                && (editForm.controls['valorVariacaoIndicativa'].touched 
+                || editForm.submitted)" 
+                class="ui-message ui-messages-error">
+                Campo obrigatório.
+              </div>
             </span>
           </div>
 
@@ -85,7 +111,7 @@
                 [showUploadButton]="false" 
                 [showCancelButton]="false" 
                 name="arquivoManual" 
-                (onSelect)="uploadFile($event)" 
+                (onSelect)="uploadFile($event)"
                 accept=".pdf,.odt,.doc,.docx">
               </p-fileUpload>
             </span>
@@ -107,8 +133,16 @@
                     maxlength="3"
                     name="parametroInclusao"
                     [(ngModel)]="manual.parametroInclusaoFormatado"
+                    #parametroInclusao='ngModel'
                     pInputText/>
                   <label>Inclusão (%) *</label>
+                  <div *ngIf="editForm.controls['parametroInclusao'] 
+                  && !editForm.controls['parametroInclusao'].valid 
+                  && (editForm.controls['parametroInclusao'].touched 
+                  || editForm.submitted)" 
+                  class="ui-message ui-messages-error">
+                  Campo obrigatório.
+                </div>
                 </span>
             </div>
             <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
@@ -119,8 +153,16 @@
                     maxlength="3"
                     name="parametroAlteracao"
                     [(ngModel)]="manual.parametroAlteracaoFormatado"
+                    #parametroAlteracao='ngModel'
                     pInputText/>
                   <label>Alteração (%) *</label>
+                  <div *ngIf="editForm.controls['parametroAlteracao'] 
+                  && !editForm.controls['parametroAlteracao'].valid 
+                  && (editForm.controls['parametroAlteracao'].touched 
+                  || editForm.submitted)" 
+                  class="ui-message ui-messages-error">
+                  Campo obrigatório.
+                </div>
                 </span>
             </div>
             <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
@@ -131,8 +173,16 @@
                       maxlength="3"
                       name="parametroExclusao"
                       [(ngModel)]="manual.parametroExclusaoFormatado"
+                      #parametroExclusao='ngModel'
                       pInputText/>
                     <label>Exclusão (%) *</label>
+                    <div *ngIf="editForm.controls['parametroExclusao'] 
+                    && !editForm.controls['parametroExclusao'].valid 
+                    && (editForm.controls['parametroExclusao'].touched 
+                    || editForm.submitted)" 
+                    class="ui-message ui-messages-error">
+                    Campo obrigatório.
+                  </div>
                   </span>
             </div>
             <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
@@ -143,8 +193,16 @@
                       maxlength="3"
                       name="parametroConversao"
                       [(ngModel)]="manual.parametroConversaoFormatado"
+                      #parametroConversao='ngModel'
                       pInputText/>
                     <label>Conversão (%) *</label>
+                    <div *ngIf="editForm.controls['parametroConversao'] 
+                    && !editForm.controls['parametroConversao'].valid 
+                    && (editForm.controls['parametroConversao'].touched 
+                    || editForm.submitted)" 
+                    class="ui-message ui-messages-error">
+                    Campo obrigatório.
+                  </div>
                   </span>
             </div>
 

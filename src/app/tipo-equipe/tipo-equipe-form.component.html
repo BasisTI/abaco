@@ -2,24 +2,33 @@
   <div class="ui-g-12">
     <div class="card card-w-title">
       <h1>{{ tipoEquipe.id ? 'Editar Tipo de Equipe' : 'Cadastrar Tipo de Equipe' }}</h1>
-      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+      <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
         
         <div class="ui-g">
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
             <span class="md-inputfield">
               <input 
-                id="nome_tipo_equipe" 
                 type="text" 
                 name="nomeTipoEquipe" 
                 maxlength="250" 
                 [(ngModel)]="tipoEquipe.nome" 
-                pInputText required/>
+                pInputText
+                #nomeTipoEquipe='ngModel'
+                required/>
               <label>Nome *</label>
+              <div *ngIf="editForm.controls['nomeTipoEquipe'] 
+              && !editForm.controls['nomeTipoEquipe'].valid 
+              && (editForm.controls['nomeTipoEquipe'].touched 
+              || editForm.submitted)" 
+              class="ui-message ui-messages-error">
+              Campo obrigatório.
+            </div>
             </span>
           </div>
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: -25px">
+            <span>
               <h3 class="first">Organização *</h3>
               <p-multiSelect
                 name= "organizacoesMultiSelect"
@@ -28,10 +37,20 @@
                 dataKey="id"
                 defaultLabel="Selecione ao menos uma organização" 
                 optionLabel="sigla"
-                selectedItemsLabel="{0} organizações selecionadas">
+                selectedItemsLabel="{0} organizações selecionadas"
+                #organizacoesMultiSelect='ngModel'
+                required>
               </p-multiSelect>
+              <div *ngIf="editForm.controls['organizacoesMultiSelect'] 
+              && !editForm.controls['organizacoesMultiSelect'].valid 
+              && (editForm.controls['organizacoesMultiSelect'].touched 
+              || editForm.submitted)" 
+              class="ui-message ui-messages-error">
+              Campo obrigatório.
+            </div>
+            </span>
           </div>
-          
+
         </div>
 
         <div class="ui-g ui-md-12" style="justify-content: center">

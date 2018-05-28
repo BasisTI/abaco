@@ -91,7 +91,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
   /**
    *
   */
-  save() {
+  save(form) {
+    if (!form.valid) {
+      this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
+      return;
+    }
+
     this.isSaving = true;
 
     if (this.manual.id !== undefined) {

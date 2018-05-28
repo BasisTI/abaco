@@ -45,21 +45,27 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  save() {
-    this.isSaving = true;
-    let teamTypesRegistered: Array<TipoEquipe>;
-    this.tipoEquipeService.query().subscribe(response => {
+  save(form) {
+
+    if (!form.valid) {
+      this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
+      return;
+    }
+
+      this.isSaving = true;
+      let teamTypesRegistered: Array<TipoEquipe>;
+      this.tipoEquipeService.query().subscribe(response => {
         teamTypesRegistered = response.json;
         if (this.tipoEquipe.id !== undefined) {
-          if (this.checkRequiredFields() && this.checkFieldsMaxLength() && !this.checkDuplicity(teamTypesRegistered)) {
+          if (this.checkFieldsMaxLength() && !this.checkDuplicity(teamTypesRegistered)) {
             this.subscribeToSaveResponse(this.tipoEquipeService.update(this.tipoEquipe));
           }
         } else {
-          if (this.checkRequiredFields() && this.checkFieldsMaxLength() && !this.checkDuplicity(teamTypesRegistered)) {
+          if (this.checkFieldsMaxLength() && !this.checkDuplicity(teamTypesRegistered)) {
             this.subscribeToSaveResponse(this.tipoEquipeService.create(this.tipoEquipe));
           }
         }
-    });
+      });
   }
 
   private checkDuplicity(teamTypes: Array<TipoEquipe>) {
@@ -77,32 +83,8 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
 
   private resetMarkFields() {
     document.getElementById('nome_tipo_equipe').setAttribute('style', 'border-color: #bdbdbd');
+    document.getElementById('org_tipo_equipe').setAttribute('style', 'border-color: #bdbdbd');
   }
-
-  private checkRequiredFields(): boolean {
-    this.resetMarkFields();
-    return this.validarObjeto(this.tipoEquipe.nome);
-  }
-
-  private validarObjeto(text: string): boolean {
-    if (text !== undefined && text !== null && text.trim() !== '') {
-      return true;
-    } else {
-      this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
-      document.getElementById('nome_tipo_equipe').setAttribute('style', 'border-color: red');
-      return false;
-    }
-  }
-
-  // private validarOrganizacao(): boolean {
-  //   if (this.organizacoes !== undefined && this.organizacoes !== null) {
-  //     return true;
-  //   } else {
-  //     this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
-  //     document.getElementById('org').setAttribute('style', 'border-color: red');
-  //     return false;
-  //   }
-  // }
 
   private checkFieldsMaxLength() {
     let isValid = false;
@@ -138,4 +120,17 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.routeSub.unsubscribe();
   }
+
+  public informarNome(): string {
+    if (!this.tipoEquipe.nome) {
+      return 'Campo obrigatório.';
+    }
+  }
+
+  public informarOrganizacao(): string {
+    if (!this.tipoEquipe.organizacoes) {
+      return 'Campo obrigatório.';
+    }
+  }
+
 }

@@ -2,58 +2,89 @@
   <div class="ui-g-12">
     <div class="card card-w-title">
       <h1>{{ user.id ? 'Editar Usuário' : 'Cadastrar Usuário' }}</h1>
-      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+      <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
         <div class="ui-g">
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield" >
               <input 
-                id="firstName" 
                 type="text" 
                 name="firstNameUser" 
+                #firstNameUser='ngModel'
                 maxlength="50" 
                 [(ngModel)]="user.firstName" 
                 pInputText required/>
-              <label>Primeiro Nome</label>
+              <label>Primeiro Nome *</label>
+
+              <div *ngIf="editForm.controls['firstNameUser'] 
+                  && !editForm.controls['firstNameUser'].valid 
+                  && (editForm.controls['firstNameUser'].touched 
+                  || editForm.submitted)" 
+                  class="ui-message ui-messages-error">
+                Campo obrigatório.
+              </div>
+
             </span>
           </div>
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield" >
               <input 
-                id="lastName" 
                 type="text" 
                 name="lastNameUser" 
-                maxlength="50" 
+                maxlength="50"
+                #lastNameUser='ngModel'
                 [(ngModel)]="user.lastName" 
                 pInputText required/>
-              <label>Último Nome</label>
+              <label>Último Nome *</label>
+              <div *ngIf="editForm.controls['lastNameUser'] 
+                  && !editForm.controls['lastNameUser'].valid 
+                  && (editForm.controls['lastNameUser'].touched 
+                  || editForm.submitted)" 
+                  class="ui-message ui-messages-error">
+                Campo obrigatório.
+              </div>
             </span>
           </div>
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input 
-                id="login" 
                 type="text" 
                 name="loginUser" 
                 maxlength="99" 
                 [(ngModel)]="user.login" 
+                #loginUser='ngModel'
                 pInputText required/>
-              <label>Login</label>
+              <label>Login *</label>
+              <div *ngIf="editForm.controls['loginUser'] 
+                  && !editForm.controls['loginUser'].valid 
+                  && (editForm.controls['loginUser'].touched 
+                  || editForm.submitted)" 
+                  class="ui-message ui-messages-error">
+                Campo obrigatório.
+              </div>
             </span>
           </div>
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input 
-                id="email" 
                 type="text" 
                 name="email" 
                 [(ngModel)]="user.email" 
                 pInputText 
-                maxlength="100"/>
-              <label>E-mail</label>
+                maxlength="100"
+                #email='ngModel'
+                required/>
+              <label>E-mail *</label>
+              <div *ngIf="editForm.controls['email'] 
+                  && !editForm.controls['email'].valid 
+                  && (editForm.controls['email'].touched 
+                  || editForm.submitted)" 
+                  class="ui-message ui-messages-error">
+                Campo obrigatório.
+              </div>
             </span>
           </div>
           
@@ -84,42 +115,76 @@
           </div>
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-            <h3 class="first">Perfil</h3>
-            <p-multiSelect 
-              name="authoritiesMultiselect"
-              defaultLabel="Selecione ao menos um perfil"
-              [options]="authorities"
-              [(ngModel)]="user.authorities"
-              dataKey="artificialId"
-              optionLabel="name"
-              selectedItemsLabel="{0} perfis selecionados">
-            </p-multiSelect>
+            <span>
+              <h3 class="first">Perfil *</h3>
+              <p-multiSelect 
+                name="authoritiesMultiselect"
+                defaultLabel="Selecione ao menos um perfil"
+                [options]="authorities"
+                [(ngModel)]="user.authorities"
+                dataKey="artificialId"
+                optionLabel="name"
+                selectedItemsLabel="{0} perfis selecionados"
+                #authoritiesMultiselect='ngModel'
+                required>
+              </p-multiSelect>
+
+              <div *ngIf="editForm.controls['authoritiesMultiselect'] 
+                && !editForm.controls['authoritiesMultiselect'].valid 
+                && (editForm.controls['authoritiesMultiselect'].touched 
+                || editForm.submitted)" 
+                class="ui-message ui-messages-error">
+                Campo obrigatório.
+              </div>
+            </span>
           </div>
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-            <h3 class="first">Organização</h3>
-            <p-multiSelect 
-              name="organizacoesMultiSelect" 
-              [options]="organizacoes"
-              [(ngModel)]="user.organizacoes" 
-              dataKey="id"
-              defaultLabel="Selecione ao menos uma organização" 
-              optionLabel="nome"
-              selectedItemsLabel="{0} organizações selecionadas">
-            </p-multiSelect>
+            <span>
+              <h3 class="first">Organização *</h3>
+              <p-multiSelect 
+                name="organizacoesMultiSelect" 
+                [options]="organizacoes"
+                [(ngModel)]="user.organizacoes" 
+                dataKey="id"
+                defaultLabel="Selecione ao menos uma organização" 
+                optionLabel="nome"
+                selectedItemsLabel="{0} organizações selecionadas"
+                #organizacoesMultiSelect='ngModel'
+                required>
+              </p-multiSelect>
+              <div *ngIf="editForm.controls['organizacoesMultiSelect'] 
+                && !editForm.controls['organizacoesMultiSelect'].valid 
+                && (editForm.controls['organizacoesMultiSelect'].touched 
+                || editForm.submitted)" 
+                class="ui-message ui-messages-error">
+                Campo obrigatório.
+              </div>
+            </span>
           </div>
 
         <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-          <h3 class="first">Equipe</h3>
-          <p-multiSelect 
-            name="equipesMultiSelect" 
-            [options]="tipoEquipes"
-            [(ngModel)]="user.tipoEquipes" 
-            dataKey="id"
-            defaultLabel="Selecione ao menos uma equipe" 
-            optionLabel="nome"
-            selectedItemsLabel="{0} equipes selecionadas">
-          </p-multiSelect>
+          <span>
+            <h3 class="first">Equipe *</h3>
+            <p-multiSelect 
+              name="equipesMultiSelect" 
+              [options]="tipoEquipes"
+              [(ngModel)]="user.tipoEquipes" 
+              dataKey="id"
+              defaultLabel="Selecione ao menos uma equipe" 
+              optionLabel="nome"
+              selectedItemsLabel="{0} equipes selecionadas"
+              #equipesMultiSelect='ngModel'
+              required>
+            </p-multiSelect>
+            <div *ngIf="editForm.controls['equipesMultiSelect'] 
+            && !editForm.controls['equipesMultiSelect'].valid 
+            && (editForm.controls['equipesMultiSelect'].touched 
+            || editForm.submitted)" 
+            class="ui-message ui-messages-error">
+            Campo obrigatório.
+          </div>
+          </span>
         </div>
 
       </div>

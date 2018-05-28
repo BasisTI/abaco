@@ -2,20 +2,28 @@
   <div class="ui-g-12">
     <div class="card card-w-title">
       <h1>{{ tipoFase.id ? 'Editar Tipo de Fase' : 'Cadastrar Tipo de Fase' }}</h1>
-      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+      <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
         
         <div class="ui-g" style="margin-bottom: 25px; margin-top: 25px">
 
           <div class="ui-g-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input 
-                id="nome_fase" 
                 type="text" 
                 name="nomeTipoFase" 
                 [(ngModel)]="tipoFase.nome" 
-                [maxlength]="250" 
-                pInputText/>
+                [maxlength]="250"
+                #nomeTipoFase='ngModel'
+                pInputText
+                required/>
               <label>Nome</label>
+              <div *ngIf="editForm.controls['nomeTipoFase'] 
+              && !editForm.controls['nomeTipoFase'].valid 
+              && (editForm.controls['nomeTipoFase'].touched 
+              || editForm.submitted)" 
+              class="ui-message ui-messages-error">
+              Campo obrigatório.
+            </div>
             </span>
           </div>
         </div>

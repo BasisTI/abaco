@@ -35,14 +35,20 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  save() {
-    this.tipoFaseService.query().subscribe(response => {
-      let allPhases = response;
+  save(form) {
 
-      if(this.checkPhaseNameIsValid()) {
-        if(!this.checkIfPhaseAlreadyExist(allPhases.json)) {
+    if (!form.valid) {
+      this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+      return;
+    }
+
+    this.tipoFaseService.query().subscribe(response => {
+      const allPhases = response;
+
+      if (this.checkPhaseNameIsValid()) {
+        if (!this.checkIfPhaseAlreadyExist(allPhases.json)) {
           this.isSaving = true;
-          if(this.tipoFase.id !== undefined) {
+          if (this.tipoFase.id !== undefined) {
             this.subscribeToSaveResponse(this.tipoFaseService.update(this.tipoFase));
           } else {
             this.subscribeToSaveResponse(this.tipoFaseService.create(this.tipoFase));

@@ -102,15 +102,24 @@ export class UserFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  save() {
-    this.isSaving = true;
+  /**
+   *
+   * */
+  save(form) {
+    if ( !form.valid ) {
+      this.pageNotificationService.addErrorMsg('Favor preencher os campos Obrigatórios!');
+      return;
+    }
     if (this.user.id !== undefined) {
-      (this.isUsernamesValid()) ? (this.subscribeToSaveResponse(this.userService.update(this.user))) : (this)
+      this.userService.update(this.user);
     } else {
-      (this.isUsernamesValid()) ? (this.subscribeToSaveResponse(this.userService.create(this.user))) : (this)
+      this.userService.create(this.user);
     }
   }
 
+  /**
+   *
+   * */
   private isUsernamesValid(): boolean {
     let isValid = false;
     this.returnInputToNormalStyle();
@@ -122,33 +131,17 @@ export class UserFormComponent implements OnInit, OnDestroy {
     isLastNameValid = this.validarObjeto(this.user.lastName);
     isLoginValid = this.validarObjeto(this.user.login);
 
-    // if (this.user.firstName !== undefined && this.user.firstName !== null && this.user.firstName !== '') {
-    //   isFirstNameValid = true;
-    // } else {
-    //   document.getElementById('firstName').setAttribute('style', 'border-color: red;');
-    // }
-
-    // if (this.user.lastName !== undefined && this.user.lastName !== null && this.user.lastName !== '') {
-    //   isLastNameValid = true;
-    // } else {
-    //   document.getElementById('lastName').setAttribute('style', 'border-color: red;');
-    // }
-
-    // if (this.user.login !== undefined && this.user.login !== null && this.user.login !== '') {
-    //   isLoginValid = true;
-    // } else {
-    //   document.getElementById('login').setAttribute('style', 'border-color: red;');
-    // }
-
     if (isFirstNameValid && isLastNameValid && isLoginValid) {
       isValid = true;
     } else {
       this.pageNotificationService.addErrorMsg('Favor informar os campos obrigatórios!');
     }
-
     return isValid;
   }
 
+  /**
+   *
+   * */
   private validarObjeto(text: string): boolean {
     if (text !== undefined && text !== null && text !== '') {
       return true;
@@ -158,6 +151,9 @@ export class UserFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   *
+   * */
   private returnInputToNormalStyle() {
       document.getElementById('firstName').setAttribute('style', 'border-color: #bdbdbd;');
       document.getElementById('lastName').setAttribute('style', 'border-color: #bdbdbd;');
@@ -165,6 +161,9 @@ export class UserFormComponent implements OnInit, OnDestroy {
       document.getElementById('email').setAttribute('style', 'border-color: #bdbdbd;');
   }
 
+  /**
+   *
+   * */
   private subscribeToSaveResponse(result: Observable<User>) {
     result.subscribe((res: User) => {
       this.isSaving = false;
