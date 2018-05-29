@@ -206,7 +206,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   deveHabilitarBotaoAdicionar(): boolean {
-    // TODO complementar com outras validacoes
     return this.isFuncionalidadeSelected() && !_.isUndefined(this.analise.metodoContagem);
   }
 
@@ -215,6 +214,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
   }
 
   adicionar() {
+    if (this.currentFuncaoDados.tipo === undefined
+      || this.currentFuncaoDados.impacto === undefined
+      || this.currentFuncaoDados.name === undefined) {
+        this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+        return;
+      }
     this.adicionarOuSalvar();
     this.salvarAnalise();
   }

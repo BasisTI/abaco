@@ -6,7 +6,7 @@
         
         <div class="ui-g" style="margin-bottom: 25px; margin-top: 25px">
 
-          <div class="ui-g-12" style="margin-bottom: 25px">
+          <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input 
                 type="text" 
@@ -18,22 +18,22 @@
                 required/>
               <label>Nome</label>
               <div *ngIf="editForm.controls['nomeTipoFase'] 
-              && !editForm.controls['nomeTipoFase'].valid 
-              && (editForm.controls['nomeTipoFase'].touched 
-              || editForm.submitted)" 
-              class="ui-message ui-messages-error">
-              Campo obrigatório.
-            </div>
+                && !editForm.controls['nomeTipoFase'].valid 
+                && (editForm.controls['nomeTipoFase'].touched 
+                || editForm.submitted)" 
+                class="ui-message ui-messages-error">
+                Campo obrigatório.
+              </div>
             </span>
           </div>
         </div>
 
         <div class="ui-g ui-md-12" style="justify-content: center">
-          <div class="ui-g-2">
+          <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-white-button buttonLabel="Cancelar" routerLink="/tipoFase"></app-white-button>
             <!-- <button pButton type="button" label="Cancelar" routerLink="/tipoFase"></button> -->
           </div>
-          <div class="ui-g-2">
+          <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
             <!-- <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button> -->
           </div>

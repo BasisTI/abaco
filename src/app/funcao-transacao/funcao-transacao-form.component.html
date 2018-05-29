@@ -3,10 +3,10 @@
       <div class="card card-w-title">
   
         <div class="ui-g">
-            <div class="ui-g-12">
+            <div class="ui-g-12 ui-md-12 ui-sm-12">
   
                 <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-top: 25px">
-                    <div class="ui-md-2">
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-green-button 
                           buttonLabel="Novo" 
                           buttonIcon="ui-icon-add" 
@@ -128,7 +128,7 @@
         <!-- Resumo -->
         <div class="ui-g" *ngIf="funcoesTransacoes.length > 0">
             <hr>
-            <div class="ui-g-12">
+            <div class="ui-g-12 ui-md-12 ui-sm-12">
               <app-analise-funcao-resumo-table [linhasResumo]="resumo.all">
               </app-analise-funcao-resumo-table>
             </div>
@@ -151,20 +151,23 @@
 
           <div class="ui-g">
             <div class="ui-g-4 ui-md-4 ui-sm-12">
+              <span>
                 <label>Classificação *</label>
                 <p-dropdown
                   [options]="classificacoes"
                   [(ngModel)]="currentFuncaoTransacao.tipo"
                   placeholder="Selecione uma Classificação"
                   name="classificacao" 
-                  [autoWidth]="false">
+                  [autoWidth]="false"
+                  required>
                 </p-dropdown>
+              </span>
             </div>
 
             <div class="ui-g-3 ui-md-3 ui-sm-12">
                 <label>Impacto *</label>
                 <p-dropdown
-                  required = "true"
+                  required
                   [options]="impacto"
                   [(ngModel)]="currentFuncaoTransacao.impacto"
                   placeholder="Selecione..."
@@ -194,11 +197,12 @@
                 name="nomeFuncaoTransacao" 
                 [(ngModel)]="currentFuncaoTransacao.name" 
                 pInputText/>
-              <label>Nome do Processo Elementar</label>
+              <label>Nome do Processo Elementar *</label>
+
             </span>
           </div>
 
-          <div class="ui-g-12" *ngIf="!isEstimada">
+          <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="!isEstimada">
             <h2>FTR (AR)</h2>
             <app-analise-der-chips 
               [(values)]="alrsChips"
@@ -207,12 +211,12 @@
             </app-analise-der-chips>
           </div>
 
-          <div class="ui-g-12" *ngIf="!isEstimada">
+          <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="!isEstimada">
             <h2>DER (TD)</h2>
             <app-analise-der-chips [(values)]="dersChips"></app-analise-der-chips>
           </div>
 
-          <div class="ui-g-12">
+          <div class="ui-g-12 ui-md-12 ui-sm-12">
             <label>Fundamentação</label>
             <span class="md-inputfield">
               <textarea 
@@ -226,7 +230,7 @@
   
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
   
-            <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
+            <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="isEdit">
                 <app-white-button 
                   buttonLabel="Cancelar" 
                   (click)="cancelarEdicao()">
@@ -240,7 +244,7 @@
                 </app-white-button>
             </div>
   
-            <div class="ui-md-3">
+            <div class="ui-g-3 ui-md-3 ui-sm-12">
               <app-blue-button 
                 [buttonLabel]="labelBotaoAdicionar"
                 [isDisabled]="!deveHabilitarBotaoAdicionar()"

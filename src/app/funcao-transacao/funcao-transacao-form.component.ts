@@ -230,6 +230,13 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
    *
   **/
   adicionar() {
+    if (this.currentFuncaoTransacao.tipo === undefined
+    || this.currentFuncaoTransacao.impacto === undefined
+    || this.currentFuncaoTransacao.name === undefined
+    || this.currentFuncaoTransacao.funcionalidade.id === undefined) {
+      this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+      return;
+    }
     this.adicionarOuSalvar();
     this.salvarAnalise();
   }

@@ -6,20 +6,21 @@
 
       <div class="ui-g-12">
         <!-- filtro/pesquisa? -->
-        <label>Módulo</label>
+        <label>Módulo *</label>
         <p-dropdown 
+          optionLabel="nome"
+          name="modulo"
+          placeholder="Selecione..."
           [options]="modulos" 
           [(ngModel)]="moduloSelecionado" 
-          optionLabel="nome"
           (onChange)="moduloSelected($event.value)"
-          placeholder="Selecione..."
-          name="modulo"
           [autoWidth]="false">
         </p-dropdown>
       </div>
 
       <div class="ui-g ui-md-12" style="justify-content: flex-end">
-        <app-blue-button buttonIcon="ui-icon-add"
+        <app-blue-button
+          buttonIcon="ui-icon-add"
           (click)="abrirDialogModulo()"
           [isDisabled]="!isSistemaSelected()">
         </app-blue-button>
@@ -29,15 +30,15 @@
     <div class="ui-g-6 ui-md-6 ui-sm-12">
       <div class="ui-g-12">
         <!-- filtro/pesquisa? -->
-        <label>Submódulo</label>
+        <label>Submódulo *</label>
         <p-dropdown 
+          optionLabel="nome" 
+          name="funcionalidade"
           [options]="funcionalidades" 
           [(ngModel)]="funcionalidadeSelecionada" 
-          optionLabel="nome" 
           (onChange)="funcionalidadeSelected($event.value)"
           [placeholder]="funcionalidadeDropdownPlaceholder()"
           [disabled]="!isModuloSelected()" 
-          name="funcionalidade" 
           [autoWidth]="false">
         </p-dropdown>
       </div>
@@ -68,7 +69,7 @@
             [(ngModel)]="novoModulo.nome" 
             pInputText 
             (keydown.enter)="adicionarModulo()"/>
-          <label>Nome do Módulo</label>
+          <label>Nome *</label>
         </span>
       </div>
     </div>
@@ -91,7 +92,7 @@
 
   </p-dialog>
 
-  <!-- Dialog funcionalidade -->
+  <!-- Dialog Submódulo -->
   <p-dialog 
     header="Submódulo" 
     [(visible)]="mostrarDialogFuncionalidade" 
@@ -109,7 +110,7 @@
             name="nomeFuncionalidade" 
             [(ngModel)]="novaFuncionalidade.nome" 
             pInputText />
-          <label>Nome do Submódulo</label>
+          <label>Nome *</label>
         </span>
       </div>
     </div>

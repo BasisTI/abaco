@@ -97,7 +97,10 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   }
 
   editarModulo() {
-    // update funciona pois a cópia possui o mesmo artificialId
+    if (this.moduloEmEdicao.nome === undefined || this.moduloEmEdicao.nome.trim.length === 0) {
+      this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+      return;
+    }
     this.sistema.updateModulo(this.moduloEmEdicao);
     this.fecharDialogEditarModulo();
   }
@@ -106,11 +109,13 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     this.confirmationService.confirm({
       message: `Tem certeza que deseja excluir o módulo '${this.moduloEmEdicao.nome}' ?`,
       accept: () => {
-        if(this.moduleCanBeDeleted()) {
+        if (this.moduleCanBeDeleted()) {
           this.sistema.deleteModulo(this.moduloEmEdicao);
           this.moduloEmEdicao = new Modulo();
         } else {
-          this.pageNotificationService.addErrorMsg('O módulo ' + this.moduloEmEdicao.nome + ' não pode ser excluído porque existem funcionalidades atribuídas.');
+          this.pageNotificationService.addErrorMsg('O módulo '
+          + this.moduloEmEdicao.nome
+          + ' não pode ser excluído porque existem funcionalidades atribuídas.');
         }
       }
     });
@@ -142,6 +147,10 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   }
 
   adicionarModulo() {
+    if (this.novoModulo.nome === undefined) {
+      this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+      return;
+    }
     this.sistema.addModulo(this.novoModulo);
     this.doFecharDialogModulo();
   }
@@ -166,6 +175,10 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   }
 
   adicionarFuncionalidade() {
+    if (this.novaFuncionalidade.nome === undefined || this.novaFuncionalidade.modulo === undefined) {
+      this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+      return;
+    }
     this.sistema.addFuncionalidade(this.novaFuncionalidade);
     this.doFecharDialogFuncionalidade();
   }
@@ -196,7 +209,11 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  save() {
+  save(form) {
+    if (!form.valid) {
+      this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+      return;
+    }
     this.isSaving = true;
     (this.sistema.modulos === undefined) ? (this.sistema.modulos = []) : (this.sistema);
     let sistemas: Array<Sistema>;
@@ -204,15 +221,19 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
       sistemas = response.json;
 
       if (this.sistema.id !== undefined) {
-        (this.checkRequiredFields() && !this.checkDuplicity(sistemas) && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
+        (this.checkRequiredFields() && !this.checkDuplicity(sistemas)
+        && this.checkSystemName())
+        ? (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
       } else {
-        (this.checkRequiredFields() && !this.checkDuplicity(sistemas) && this.checkSystemName()) ? (this.subscribeToSaveResponse(this.sistemaService.create(this.sistema))) : (this);
+        (this.checkRequiredFields() && !this.checkDuplicity(sistemas)
+        && this.checkSystemName())
+        ? (this.subscribeToSaveResponse(this.sistemaService.create(this.sistema))) : (this);
       }
     });
   }
 
   private checkDuplicity(sistemas: Array<Sistema>) {
-    let isAlreadyRegistered: boolean = false;
+    let isAlreadyRegistered: boolean;
 
     sistemas.forEach(each => {
       if (each.nome === this.sistema.nome && each.organizacao.id === this.sistema.organizacao.id && each.id !== this.sistema.id) {
@@ -239,7 +260,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   private checkIfIsEmpty(field: string) {
     let isEmpty = false;
 
-    if (field === undefined || field === null || field === "") {
+    if (field === undefined || field === null || field === '') {
         isEmpty = true;
     }
 
@@ -266,23 +287,31 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     let isRequiredFieldsValid = false;
 
     this.resetFocusFields();
-    (!this.checkIfIsEmpty(this.sistema.nome)) ? (isNameValid = true) : (document.getElementById('nome_sistema').setAttribute('style','border-color: red'));
-    (!this.checkIfIsEmpty(this.sistema.sigla)) ? (isInitialsValid = true) : (document.getElementById('sigla_sistema').setAttribute('style','border-color: red'));
+    (!this.checkIfIsEmpty(this.sistema.nome))
+      ? (isNameValid = true)
+      : (document.getElementById('nome_sistema').setAttribute('style', 'border-color: red'));
+    (!this.checkIfIsEmpty(this.sistema.sigla))
+      ? (isInitialsValid = true)
+      : (document.getElementById('sigla_sistema').setAttribute('style', 'border-color: red'));
 
     if (this.sistema.organizacao !== undefined) {
       isOrganizationValid = true;
     } else {
-      document.getElementById('organizacao_sistema').setAttribute('style','border-bottom: solid; border-bottom-color: red;');
+      document.getElementById('organizacao_sistema').setAttribute('style', 'border-bottom: solid; border-bottom-color: red;');
     }
-    // (this.sistema.organizacao !== undefined) ? (isOrganizationValid = true) : (document.getElementById('organizacao_sistema').setAttribute('style','border-bottom: solid') && document.getElementById('organizacao_sistema').setAttribute('style','border-bottom-color: red'));
-    console.log(this.sistema.organizacao);
-    (isNameValid && isInitialsValid && isOrganizationValid) ? (isRequiredFieldsValid = true) : (isRequiredFieldsValid = false);
 
-    (!isRequiredFieldsValid) ? (this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios!')) : (this);
+    console.log(this.sistema.organizacao);
+    (isNameValid
+      && isInitialsValid
+      && isOrganizationValid)
+      ? (isRequiredFieldsValid = true)
+      : (isRequiredFieldsValid = false);
+
+    (!isRequiredFieldsValid)
+      ? (this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios!')) : (this);
 
     console.log(isNameValid);
     console.log(isInitialsValid);
-
     console.log(isRequiredFieldsValid);
     return isRequiredFieldsValid;
   }
@@ -290,7 +319,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   private resetFocusFields() {
     document.getElementById('nome_sistema').setAttribute('style', 'border-color: #bdbdbd');
     document.getElementById('sigla_sistema').setAttribute('style', 'border-color: #bdbdbd');
-    document.getElementById('organizacao_sistema').setAttribute('style','border-bottom: none')
+    document.getElementById('organizacao_sistema').setAttribute('style', 'border-bottom: none');
   }
 
   private notifyRequiredFields() {
@@ -304,20 +333,22 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   private subscribeToSaveResponse(result: Observable<Sistema>) {
     result.subscribe((res: Sistema) => {
       this.isSaving = false;
-      this.pageNotificationService.addCreateMsg('Sistema cadastrado com sucesso!')
+      this.pageNotificationService.addCreateMsg('Sistema cadastrado com sucesso!');
       this.router.navigate(['/sistema']);
     }, (error: Response) => {
       this.isSaving = false;
 
       switch (error.status) {
         case 404: {
-          let invalidFieldNamesString = "";
-          const fieldErrors = JSON.parse(error["_body"]).fieldErrors;
+          let invalidFieldNamesString = '';
+          const fieldErrors = JSON.parse(error['body']).fieldErrors;
           invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-          this.pageNotificationService.addErrorMsg("Campos inválidos: " + invalidFieldNamesString);
-        };
+          this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
+          break;
+        }
         default: {
           this.pageNotificationService.addErrorMsg('Ocorreu um erro no sistema!');
+          break;
         }
       }
     });

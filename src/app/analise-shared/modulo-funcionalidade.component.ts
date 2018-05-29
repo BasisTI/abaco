@@ -235,6 +235,10 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
   }
 
   adicionarModulo() {
+    if (this.novoModulo.nome === undefined) {
+      this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+      return;
+    }
     const sistemaId = this.sistema.id;
     // TODO inserir um spinner, talvez bloquear a UI
     this.moduloService.create(this.novoModulo, sistemaId).subscribe((moduloCriado: Modulo) => {
@@ -290,6 +294,10 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
   }
 
   adicionarFuncionalidade() {
+    if (this.novaFuncionalidade.nome === undefined) {
+      this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+      return;
+    }
     const moduloId = this.moduloSelecionado.id;
     const sistemaId = this.sistema.id;
     // TODO inserir um spinner

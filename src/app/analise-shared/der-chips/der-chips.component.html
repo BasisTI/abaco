@@ -20,8 +20,14 @@
     </p-chips>
   </div>
 
-  <div class="ui-g-3 ui-md-3 ui-sm-12">
+  <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="relacionarDers">
+    <app-analise-referenciador-ar
+      (funcaoDadosReferenciadaEvent)="funcaoDadosReferenciada($event)"
+      (dersReferenciadosEvent)="dersReferenciados($event)">
+    </app-analise-referenciador-ar>
+  </div>
 
+  <div class="ui-g-3 ui-md-3 ui-sm-12">
     <button 
       pButton 
       type="button"
@@ -29,14 +35,6 @@
       label="Adicionar Múltiplos"
       (click)="abrirDialogAddMultiplos()">
     </button>
-
-    <div *ngIf="relacionarDers" style="margin-top: 5px;">
-      <app-analise-referenciador-ar
-        (funcaoDadosReferenciadaEvent)="funcaoDadosReferenciada($event)"
-        (dersReferenciadosEvent)="dersReferenciados($event)">
-      </app-analise-referenciador-ar>
-    </div>
-
   </div>
 
   <div class="ui-g-3 ui-md-3 ui-sm-12">

@@ -159,7 +159,17 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   /**
    *
    * */
-  save() {
+  save(form) {
+    if (this.organizacao.id === undefined && this.logo === undefined) {
+      this.pageNotificationService.addErrorMsg('Favor inclua o arquivo Logo da Organização!');
+      return;
+    }
+
+    if (!form.valid) {
+      this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+      return;
+    }
+
     this.isSaving = true;
     if (this.organizacao.id !== undefined) {
       this.organizacaoService.find(this.organizacao.id).subscribe(response => {

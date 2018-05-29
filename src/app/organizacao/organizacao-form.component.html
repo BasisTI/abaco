@@ -2,7 +2,7 @@
   <div class="ui-g-12">
     <div class="card card-w-title">
       <h1>{{ organizacao.id ? 'Editar Organização' : 'Incluir Organização' }}</h1>
-      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+      <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
         <div class="ui-g">
 
           <div class="ui-g-12" style="margin-bottom: 25px">
@@ -29,8 +29,16 @@
                   maxlength="80"
                   required
                   [(ngModel)]="organizacao.nome" 
-                  pInputText/>
+                  pInputText
+                  #nomeOrganizacao='ngModel'/>
                 <label>Nome *</label>
+                <div *ngIf="editForm.controls['nomeOrganizacao'] 
+                  && !editForm.controls['nomeOrganizacao'].valid 
+                  && (editForm.controls['nomeOrganizacao'].touched 
+                  || editForm.submitted)" 
+                  class="ui-message ui-messages-error">
+                  Campo obrigatório.
+                </div>
               </span>
           </div>
 
