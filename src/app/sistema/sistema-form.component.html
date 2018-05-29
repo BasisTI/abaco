@@ -2,7 +2,7 @@
   <div class="ui-g-12">
     <div class="card card-w-title">
       <h1>{{ sistema.id ? 'Editar Sistema' : 'Cadastrar Sistema' }}</h1>
-      <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm"
+      <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm"
         (keydown.enter)="$event.preventDefault()">
         <div class="ui-g">
 
