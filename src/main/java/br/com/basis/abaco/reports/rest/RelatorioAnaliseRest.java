@@ -51,7 +51,7 @@ public class RelatorioAnaliseRest {
         this.response = response;
         this.request = request;
     }
-    
+
     /**
      * 
      */
@@ -60,9 +60,8 @@ public class RelatorioAnaliseRest {
         relatorio = new RelatorioUtil( this.response, this.request);
         relatorioFuncaoDados = new RelatorioFuncaoDados();
         relatorioFuncaoTransacao = new RelatorioFuncaoTransacao();
-        
     }
-    
+
     /**
      * 
      * @param analise
@@ -70,7 +69,7 @@ public class RelatorioAnaliseRest {
     private void popularObjeto(Analise analise) {
         this.analise = analise;
     }
-    
+
     /**
      * 
      * @param analise
@@ -114,7 +113,7 @@ public class RelatorioAnaliseRest {
             parametro.put("EDITADOPOR", validarAtributosNulos(analise.getEditedBy().getLogin()));            
         }
     }
-    
+
     /**
      * 
     */
@@ -146,7 +145,7 @@ public class RelatorioAnaliseRest {
         parametro.put("NUMEROOS", validarAtributosNulos(analise.getNumeroOs()));
         parametro.put("FATORAJUSTE", verificarFatorAjuste(analise.getFatorAjuste()));
     }
-    
+
     /**
      * 
     */
@@ -202,21 +201,21 @@ public class RelatorioAnaliseRest {
             parametro.put("VERSAOCPM", verificarVersaoCPM(analise.getContrato().getManual().getVersaoCPM()));
         }
     }
-    
+
     /**
      * 
      */
     private List<FuncaoDadosDTO> popularFuncaoDados() {
         return relatorioFuncaoDados.prepararListaFuncaoDados(analise);
     }
-    
+
     /**
      * 
      */
     private List<FuncaoTransacaoDTO> popularFuncaoTransacao() {
         return relatorioFuncaoTransacao.prepararListaFuncaoTransacao(analise);
     }
-    
+
     /**
      * 
      */
@@ -229,7 +228,7 @@ public class RelatorioAnaliseRest {
         this.popularImpactoAie(fd);
         this.popularImpactoInm(fd);
     }
-    
+
     /**
      * 
      */
@@ -245,39 +244,38 @@ public class RelatorioAnaliseRest {
         this.popularImpactoInm(ft);
     }
     
-    
     /**
      * 
      * @param fd
      */
     private void popularComplexidadeAli(FuncaoDadosDTO fd) {
-        parametro.put("ALISEM", fd.getComplexidadeDto().getAliSem());
-        parametro.put("ALIBAIXA", fd.getComplexidadeDto().getAliBaixa());
-        parametro.put("ALIMEDIA", fd.getComplexidadeDto().getAliMedia());
-        parametro.put("ALIALTA", fd.getComplexidadeDto().getAliAlta());
-        parametro.put("ALIQUANDIDADE", somaQuantidades(
+        parametro.put("ALISEM", transformarInteiro(fd.getComplexidadeDto().getAliSem()));
+        parametro.put("ALIBAIXA", transformarInteiro(fd.getComplexidadeDto().getAliBaixa()));
+        parametro.put("ALIMEDIA", transformarInteiro(fd.getComplexidadeDto().getAliMedia()));
+        parametro.put("ALIALTA", transformarInteiro(fd.getComplexidadeDto().getAliAlta()));
+        parametro.put("ALIQUANDIDADE", transformarInteiro(somaQuantidades(
                  fd.getComplexidadeDto().getAliSem()
                 ,fd.getComplexidadeDto().getAliBaixa()
                 ,fd.getComplexidadeDto().getAliMedia()
-                ,fd.getComplexidadeDto().getAliAlta()));
+                ,fd.getComplexidadeDto().getAliAlta())));
         parametro.put("ALIPFTOTAL", "---");
         parametro.put("ALIPFAJUSTADO", "---");
     }
-    
+
     /**
      * 
      * @param fd
      */
     private void popularComplexidadeAie(FuncaoDadosDTO fd) {
-        parametro.put("AIESEM", fd.getComplexidadeDto().getAieSem());
-        parametro.put("AIEBAIXA", fd.getComplexidadeDto().getAieBaixa());
-        parametro.put("AIEMEDIA", fd.getComplexidadeDto().getAieMedia());
-        parametro.put("AIEALTA", fd.getComplexidadeDto().getAieAlta());
-        parametro.put("AIEQUANTIDADE", somaQuantidades(
+        parametro.put("AIESEM", transformarInteiro(fd.getComplexidadeDto().getAieSem()));
+        parametro.put("AIEBAIXA", transformarInteiro(fd.getComplexidadeDto().getAieBaixa()));
+        parametro.put("AIEMEDIA", transformarInteiro(fd.getComplexidadeDto().getAieMedia()));
+        parametro.put("AIEALTA", transformarInteiro(fd.getComplexidadeDto().getAieAlta()));
+        parametro.put("AIEQUANTIDADE", transformarInteiro(somaQuantidades(
                  fd.getComplexidadeDto().getAieSem()
                 ,fd.getComplexidadeDto().getAieBaixa()
                 ,fd.getComplexidadeDto().getAieMedia()
-                ,fd.getComplexidadeDto().getAieAlta()));
+                ,fd.getComplexidadeDto().getAieAlta())));
         parametro.put("AIEPFTOTAL", "---");
         parametro.put("AIEPFAJUSTADO", "---");
     }
@@ -287,114 +285,122 @@ public class RelatorioAnaliseRest {
      * @param fd
      */
     private void popularComplexidadeInm(FuncaoDadosDTO fd) {
-        parametro.put("INMSEM", fd.getComplexidadeDto().getInmSemFd());
-        parametro.put("INMBAIXA", fd.getComplexidadeDto().getInmBaixaFd());
-        parametro.put("INMMEDIA", fd.getComplexidadeDto().getInmMediaFd());
-        parametro.put("INMALTA", fd.getComplexidadeDto().getInmAltaFd());
-        parametro.put("INMQUANTIDADE", somaQuantidades(
+        parametro.put("INMSEM", transformarInteiro(fd.getComplexidadeDto().getInmSemFd()));
+        parametro.put("INMBAIXA", transformarInteiro(fd.getComplexidadeDto().getInmBaixaFd()));
+        parametro.put("INMMEDIA", transformarInteiro(fd.getComplexidadeDto().getInmMediaFd()));
+        parametro.put("INMALTA", transformarInteiro(fd.getComplexidadeDto().getInmAltaFd()));
+        parametro.put("INMQUANTIDADE", transformarInteiro(somaQuantidades(
                  fd.getComplexidadeDto().getInmSemFd()
                 ,fd.getComplexidadeDto().getInmBaixaFd()
                 ,fd.getComplexidadeDto().getInmMediaFd()
-                ,fd.getComplexidadeDto().getInmAltaFd()));
+                ,fd.getComplexidadeDto().getInmAltaFd())));
         parametro.put("INMPFTOTAL", "---");
         parametro.put("INMPFAJUSTADO", "---");
     }
-    
+
     /**
      * 
      * @param fd
      */
     private void popularImpactoAli(FuncaoDadosDTO fd) {
-      parametro.put("ALIINCLUSAO", fd.getImpactoDto().getAliInclusao());
-      parametro.put("ALIALTERACAO", fd.getImpactoDto().getAliAlteracao());
-      parametro.put("ALIEXCLUSAO", fd.getImpactoDto().getAliExclusao());
-      parametro.put("ALICONVERSAO", fd.getImpactoDto().getAliConversao());
+      parametro.put("ALIINCLUSAO", transformarInteiro(fd.getImpactoDto().getAliInclusao()));
+      parametro.put("ALIALTERACAO", transformarInteiro(fd.getImpactoDto().getAliAlteracao()));
+      parametro.put("ALIEXCLUSAO", transformarInteiro(fd.getImpactoDto().getAliExclusao()));
+      parametro.put("ALICONVERSAO", transformarInteiro(fd.getImpactoDto().getAliConversao()));
     }
-    
+
     /**
      * 
      * @param fd
      */
     private void popularImpactoAie(FuncaoDadosDTO fd) {
-      parametro.put("AIEINCLUSAO", fd.getImpactoDto().getAieInclusao());
-      parametro.put("AIEALTERACAO", fd.getImpactoDto().getAieAlteracao());
-      parametro.put("AIEEXCLUSAO", fd.getImpactoDto().getAieExclusao());
-      parametro.put("AIECONVERSAO", fd.getImpactoDto().getAieConversao());
+      parametro.put("AIEINCLUSAO", transformarInteiro(fd.getImpactoDto().getAieInclusao()));
+      parametro.put("AIEALTERACAO", transformarInteiro(fd.getImpactoDto().getAieAlteracao()));
+      parametro.put("AIEEXCLUSAO", transformarInteiro(fd.getImpactoDto().getAieExclusao()));
+      parametro.put("AIECONVERSAO", transformarInteiro(fd.getImpactoDto().getAieConversao()));
     }
-    
+
     /**
      * 
      * @param fd
      */
     private void popularImpactoInm(FuncaoDadosDTO fd) {
-      parametro.put("INMINCLUSAO", fd.getImpactoDto().getInmInclusaoFd());
-      parametro.put("INMALTERACAO", fd.getImpactoDto().getInmAlteracaoFd());
-      parametro.put("INMEXCLUSAO", fd.getImpactoDto().getInmExclusaoFd());
-      parametro.put("INMCONVERSAO", fd.getImpactoDto().getInmConversaoFd());
+      parametro.put("INMINCLUSAO", transformarInteiro(fd.getImpactoDto().getInmInclusaoFd()));
+      parametro.put("INMALTERACAO", transformarInteiro(fd.getImpactoDto().getInmAlteracaoFd()));
+      parametro.put("INMEXCLUSAO", transformarInteiro(fd.getImpactoDto().getInmExclusaoFd()));
+      parametro.put("INMCONVERSAO", transformarInteiro(fd.getImpactoDto().getInmConversaoFd()));
     }
-    
+
     /**
      * 
      * @param ft
      */
     private void popularComplexidadeEe(FuncaoTransacaoDTO ft) {
-        parametro.put("EESEM", ft.getComplexidadeDto().getEeSem());
-        parametro.put("EEBAIXA", ft.getComplexidadeDto().getEeBaixa());
-        parametro.put("EEMEDIA", ft.getComplexidadeDto().getEeMedia());
-        parametro.put("EEALTA", ft.getComplexidadeDto().getEeAlta());
-        parametro.put("EEQUANTIDADE", somaQuantidades(
+        parametro.put("EESEM", transformarInteiro(ft.getComplexidadeDto().getEeSem()));
+        parametro.put("EEBAIXA", transformarInteiro(ft.getComplexidadeDto().getEeBaixa()));
+        parametro.put("EEMEDIA", transformarInteiro(ft.getComplexidadeDto().getEeMedia()));
+        parametro.put("EEALTA", transformarInteiro(ft.getComplexidadeDto().getEeAlta()));
+        parametro.put("EEQUANTIDADE", transformarInteiro(somaQuantidades(
                  ft.getComplexidadeDto().getEeSem()
                 ,ft.getComplexidadeDto().getEeBaixa()
                 ,ft.getComplexidadeDto().getEeMedia()
-                ,ft.getComplexidadeDto().getEeAlta()));
+                ,ft.getComplexidadeDto().getEeAlta())));
+        parametro.put("EEPFTOTAL", "---");
+        parametro.put("EEPFAJUSTADO", "---");
     }
-    
+
     /**
      * 
      * @param ft
      */
     private void popularComplexidadeSe(FuncaoTransacaoDTO ft) {
-        parametro.put("SESEM", ft.getComplexidadeDto().getSeSem());
-        parametro.put("SEBAIXA", ft.getComplexidadeDto().getSeBaixa());
-        parametro.put("SEMEDIA", ft.getComplexidadeDto().getSeMedia());
-        parametro.put("SEALTA", ft.getComplexidadeDto().getSeAlta());
-        parametro.put("SEQUANTIDADE", somaQuantidades(
+        parametro.put("SESEM", transformarInteiro(ft.getComplexidadeDto().getSeSem()));
+        parametro.put("SEBAIXA", transformarInteiro(ft.getComplexidadeDto().getSeBaixa()));
+        parametro.put("SEMEDIA", transformarInteiro(ft.getComplexidadeDto().getSeMedia()));
+        parametro.put("SEALTA", transformarInteiro(ft.getComplexidadeDto().getSeAlta()));
+        parametro.put("SEQUANTIDADE", transformarInteiro(somaQuantidades(
                  ft.getComplexidadeDto().getSeSem()
                 ,ft.getComplexidadeDto().getSeBaixa()
                 ,ft.getComplexidadeDto().getSeMedia()
-                ,ft.getComplexidadeDto().getSeAlta()));
+                ,ft.getComplexidadeDto().getSeAlta())));
+        parametro.put("SEPFTOTAL", "---");
+        parametro.put("SEPFAJUSTADO", "---");
     }
-    
+
     /**
      * 
      * @param ft
      */
     private void popularComplexidadeCe(FuncaoTransacaoDTO ft) {
-        parametro.put("CESEM", ft.getComplexidadeDto().getCeSem());
-        parametro.put("CEBAIXA", ft.getComplexidadeDto().getCeBaixa());
-        parametro.put("CEMEDIA", ft.getComplexidadeDto().getCeMedia());
-        parametro.put("CEALTA", ft.getComplexidadeDto().getCeAlta());
-        parametro.put("CEQUANTIDADE", somaQuantidades(
+        parametro.put("CESEM", transformarInteiro(ft.getComplexidadeDto().getCeSem()));
+        parametro.put("CEBAIXA", transformarInteiro(ft.getComplexidadeDto().getCeBaixa()));
+        parametro.put("CEMEDIA", transformarInteiro(ft.getComplexidadeDto().getCeMedia()));
+        parametro.put("CEALTA", transformarInteiro(ft.getComplexidadeDto().getCeAlta()));
+        parametro.put("CEQUANTIDADE", transformarInteiro(somaQuantidades(
                  ft.getComplexidadeDto().getCeSem()
                 ,ft.getComplexidadeDto().getCeBaixa()
                 ,ft.getComplexidadeDto().getCeMedia()
-                ,ft.getComplexidadeDto().getCeAlta()));
+                ,ft.getComplexidadeDto().getCeAlta())));
+        parametro.put("CEPFTOTAL", "---");
+        parametro.put("CEPFAJUSTADO", "---");
     }
-    
+
     /**
      * 
      * @param ft
      */
     private void popularComplexidadeInm(FuncaoTransacaoDTO ft) {
-        parametro.put("INMFTSEM", ft.getComplexidadeDto().getInmSemFt());
-        parametro.put("INMFTBAIXA", ft.getComplexidadeDto().getInmBaixaFt());
-        parametro.put("INMFTMEDIA", ft.getComplexidadeDto().getInmMediaFt());
-        parametro.put("INMFTALTA", ft.getComplexidadeDto().getInmAltaFt());
-        parametro.put("INMFTQUANTIDADE", somaQuantidades(
+        parametro.put("INMFTSEM", transformarInteiro(ft.getComplexidadeDto().getInmSemFt()));
+        parametro.put("INMFTBAIXA", transformarInteiro(ft.getComplexidadeDto().getInmBaixaFt()));
+        parametro.put("INMFTMEDIA", transformarInteiro(ft.getComplexidadeDto().getInmMediaFt()));
+        parametro.put("INMFTALTA", transformarInteiro(ft.getComplexidadeDto().getInmAltaFt()));
+        parametro.put("INMFTQUANTIDADE", transformarInteiro(somaQuantidades(
                  ft.getComplexidadeDto().getInmSemFt()
                 ,ft.getComplexidadeDto().getInmBaixaFt()
                 ,ft.getComplexidadeDto().getInmMediaFt()
-                ,ft.getComplexidadeDto().getInmAltaFt()));
+                ,ft.getComplexidadeDto().getInmAltaFt())));
+        parametro.put("INMFTPFTOTAL", "---");
+        parametro.put("INMFTPFAJUSTADO", "---");
     }
 
     /**
@@ -402,45 +408,45 @@ public class RelatorioAnaliseRest {
      * @param ft
      */
     private void popularImpactoEe(FuncaoTransacaoDTO ft) {
-        parametro.put("EEINCLUSAO", ft.getImpactoDto().getEeInclusao());
-        parametro.put("EEALTERACAO", ft.getImpactoDto().getEeAlteracao());
-        parametro.put("EEEXCLUSAO", ft.getImpactoDto().getEeExclusao());
-        parametro.put("EECONVERSAO", ft.getImpactoDto().getEeConversao());
+        parametro.put("EEINCLUSAO", transformarInteiro(ft.getImpactoDto().getEeInclusao()));
+        parametro.put("EEALTERACAO", transformarInteiro(ft.getImpactoDto().getEeAlteracao()));
+        parametro.put("EEEXCLUSAO", transformarInteiro(ft.getImpactoDto().getEeExclusao()));
+        parametro.put("EECONVERSAO", transformarInteiro(ft.getImpactoDto().getEeConversao()));
     }
-    
+
     /**
      * 
      * @param ft
      */
     private void popularImpactoSe(FuncaoTransacaoDTO ft) {
-        parametro.put("SEINCLUSAO", ft.getImpactoDto().getSeInclusao());
-        parametro.put("SEALTERACAO", ft.getImpactoDto().getSeAlteracao());
-        parametro.put("SEEXCLUSAO", ft.getImpactoDto().getSeExclusao());
-        parametro.put("SECONVERSAO", ft.getImpactoDto().getSeConversao());
+        parametro.put("SEINCLUSAO", transformarInteiro(ft.getImpactoDto().getSeInclusao()));
+        parametro.put("SEALTERACAO", transformarInteiro(ft.getImpactoDto().getSeAlteracao()));
+        parametro.put("SEEXCLUSAO", transformarInteiro(ft.getImpactoDto().getSeExclusao()));
+        parametro.put("SECONVERSAO", transformarInteiro(ft.getImpactoDto().getSeConversao()));
     }
-    
+
     /**
      * 
      * @param ft
      */
     private void popularImpactoCe(FuncaoTransacaoDTO ft) {
-        parametro.put("CEINCLUSAO", ft.getImpactoDto().getCeInclusao());
-        parametro.put("CEALTERACAO", ft.getImpactoDto().getCeAlteracao());
-        parametro.put("CEEXCLUSAO", ft.getImpactoDto().getCeExclusao());
-        parametro.put("CECONVERSAO", ft.getImpactoDto().getCeConversao());
+        parametro.put("CEINCLUSAO", transformarInteiro(ft.getImpactoDto().getCeInclusao()));
+        parametro.put("CEALTERACAO", transformarInteiro(ft.getImpactoDto().getCeAlteracao()));
+        parametro.put("CEEXCLUSAO", transformarInteiro(ft.getImpactoDto().getCeExclusao()));
+        parametro.put("CECONVERSAO", transformarInteiro(ft.getImpactoDto().getCeConversao()));
     }
-    
+
     /**
      * 
      * @param ft
      */
     private void popularImpactoInm(FuncaoTransacaoDTO ft) {
-        parametro.put("INMFTINCLUSAO", ft.getImpactoDto().getInmInclusaoFt());
-        parametro.put("INMFTALTERACAO", ft.getImpactoDto().getInmAlteracaoFt());
-        parametro.put("INMFTEXCLUSAO", ft.getImpactoDto().getInmExclusaoFt());
-        parametro.put("INMFTCONVERSAO", ft.getImpactoDto().getInmConversaoFt());
+        parametro.put("INMFTINCLUSAO", transformarInteiro(ft.getImpactoDto().getInmInclusaoFt()));
+        parametro.put("INMFTALTERACAO", transformarInteiro(ft.getImpactoDto().getInmAlteracaoFt()));
+        parametro.put("INMFTEXCLUSAO", transformarInteiro(ft.getImpactoDto().getInmExclusaoFt()));
+        parametro.put("INMFTCONVERSAO", transformarInteiro(ft.getImpactoDto().getInmConversaoFt()));
     }
-    
+
     /**
      * 
      * @param ft
@@ -460,7 +466,7 @@ public class RelatorioAnaliseRest {
         }
         return sem + baixa + media + alta;
     }
-    
+
     /**
      * 
      */
@@ -495,7 +501,7 @@ public class RelatorioAnaliseRest {
             return "Não";
         }
     }
-    
+
     /**
      * Método responsável por validar se o atributo é nulo,
      * se ele for nulo é incluído o valor ---.
@@ -537,6 +543,13 @@ public class RelatorioAnaliseRest {
      */
     private String verificarCondicao(Boolean valor) {
         return (valor) ? "Sim" : "Não";
+    }
+    
+    private String transformarInteiro(Integer valor) {
+        if(valor == null) {
+            valor = 0;
+        }
+        return valor.toString();
     }
 
 }
