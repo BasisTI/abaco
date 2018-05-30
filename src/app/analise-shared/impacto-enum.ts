@@ -3,6 +3,5 @@ export enum Impacto {
     'ALTERACAO' = 'ALTERACAO',
     'EXCLUSAO' = 'EXCLUSAO',
     'CONVERSAO' = 'CONVERSAO',
-    'INM' = 'INM',
 
 }
