@@ -1,7 +1,5 @@
 package br.com.basis.abaco.service.dto;
 
-import java.math.BigDecimal;
-
 /**
  * @author eduardo.andrade
  * @since 15/05/2018
@@ -25,10 +23,6 @@ public class FuncaoDadosDTO {
     private Integer totalRlr;
     
     private String complexidade;
-    
-    private BigDecimal pfTotal;
-    
-    private BigDecimal pfAjustado;
     
     private String rlr;
     
@@ -124,22 +118,6 @@ public class FuncaoDadosDTO {
 
     public void setTotalDer(Integer totalDer) {
         this.totalDer = totalDer;
-    }
-
-    public BigDecimal getPfTotal() {
-        return pfTotal;
-    }
-
-    public void setPfTotal(BigDecimal pfTotal) {
-        this.pfTotal = pfTotal;
-    }
-
-    public BigDecimal getPfAjustado() {
-        return pfAjustado;
-    }
-
-    public void setPfAjustado(BigDecimal pfAjustado) {
-        this.pfAjustado = pfAjustado;
     }
 
     public ComplexidadeDTO getComplexidadeDto() {

@@ -61,6 +61,34 @@ public class ComplexidadeDTO {
     private Integer inmMediaFt;
     
     private Integer inmAltaFt;
+    
+    private Double pfTotalAli;
+    
+    private Double pfTotalAie;
+    
+    private Double pfTotalInmFd;
+    
+    private Double pfTotalEe;
+    
+    private Double pfTotalSe;
+    
+    private Double pfTotalCe;
+    
+    private Double pfTotalInmFt;
+    
+    private Double pfAjustadoAli;
+    
+    private Double pfAjustadoAie;
+    
+    private Double pfAjustadoInmFd;
+    
+    private Double pfAjustadoEe;
+    
+    private Double pfAjustadoSe;
+    
+    private Double pfAjustadoCe;
+    
+    private Double pfAjustadoInmFt;
 
     public Integer getAliSem() {
         return aliSem;
@@ -285,5 +313,118 @@ public class ComplexidadeDTO {
     public void setInmAltaFt(Integer inmAltaFt) {
         this.inmAltaFt = inmAltaFt;
     }
+
+    public Double getPfTotalAli() {
+        return pfTotalAli;
+    }
+
+    public void setPfTotalAli(Double pfTotalAli) {
+        this.pfTotalAli = pfTotalAli;
+    }
+
+    public Double getPfTotalAie() {
+        return pfTotalAie;
+    }
+
+    public void setPfTotalAie(Double pfTotalAie) {
+        this.pfTotalAie = pfTotalAie;
+    }
+
+    public Double getPfTotalInmFd() {
+        return pfTotalInmFd;
+    }
+
+    public void setPfTotalInmFd(Double pfTotalInmFd) {
+        this.pfTotalInmFd = pfTotalInmFd;
+    }
+
+    public Double getPfTotalEe() {
+        return pfTotalEe;
+    }
+
+    public void setPfTotalEe(Double pfTotalEe) {
+        this.pfTotalEe = pfTotalEe;
+    }
+
+    public Double getPfTotalSe() {
+        return pfTotalSe;
+    }
+
+    public void setPfTotalSe(Double pfTotalSe) {
+        this.pfTotalSe = pfTotalSe;
+    }
+
+    public Double getPfTotalCe() {
+        return pfTotalCe;
+    }
+
+    public void setPfTotalCe(Double pfTotalCe) {
+        this.pfTotalCe = pfTotalCe;
+    }
+
+    public Double getPfTotalInmFt() {
+        return pfTotalInmFt;
+    }
+
+    public void setPfTotalInmFt(Double pfTotalInmFt) {
+        this.pfTotalInmFt = pfTotalInmFt;
+    }
+
+    public Double getPfAjustadoAli() {
+        return pfAjustadoAli;
+    }
+
+    public void setPfAjustadoAli(Double pfAjustadoAli) {
+        this.pfAjustadoAli = pfAjustadoAli;
+    }
+
+    public Double getPfAjustadoAie() {
+        return pfAjustadoAie;
+    }
+
+    public void setPfAjustadoAie(Double pfAjustadoAie) {
+        this.pfAjustadoAie = pfAjustadoAie;
+    }
+
+    public Double getPfAjustadoInmFd() {
+        return pfAjustadoInmFd;
+    }
+
+    public void setPfAjustadoInmFd(Double pfAjustadoInmFd) {
+        this.pfAjustadoInmFd = pfAjustadoInmFd;
+    }
+
+    public Double getPfAjustadoEe() {
+        return pfAjustadoEe;
+    }
+
+    public void setPfAjustadoEe(Double pfAjustadoEe) {
+        this.pfAjustadoEe = pfAjustadoEe;
+    }
+
+    public Double getPfAjustadoSe() {
+        return pfAjustadoSe;
+    }
+
+    public void setPfAjustadoSe(Double pfAjustadoSe) {
+        this.pfAjustadoSe = pfAjustadoSe;
+    }
+
+    public Double getPfAjustadoCe() {
+        return pfAjustadoCe;
+    }
+
+    public void setPfAjustadoCe(Double pfAjustadoCe) {
+        this.pfAjustadoCe = pfAjustadoCe;
+    }
+
+    public Double getPfAjustadoInmFt() {
+        return pfAjustadoInmFt;
+    }
+
+    public void setPfAjustadoInmFt(Double pfAjustadoInmFt) {
+        this.pfAjustadoInmFt = pfAjustadoInmFt;
+    }
+
     
 }

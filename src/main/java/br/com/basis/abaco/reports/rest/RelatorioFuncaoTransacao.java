@@ -1,6 +1,5 @@
 package br.com.basis.abaco.reports.rest;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,16 +36,39 @@ public class RelatorioFuncaoTransacao {
      */
     public List<FuncaoTransacaoDTO> prepararListaFuncaoTransacao(Analise analise) {
         List<FuncaoTransacaoDTO> list = new ArrayList<>();
-        
         for(FuncaoTransacao f : analise.getFuncaoTransacaos()) {
             this.init();
             this.popularObjeto(f);
             this.popularImpacto(f);
             this.popularModulo(f);
             this.popularNome(f);
+            this.popularPFs(f);
             list.add(dadosFt);
         }
         return list;
+    }
+    
+    /**
+     * 
+     * @param f
+     */
+    private void popularPFs(FuncaoTransacao f) {
+        if(f.getTipo() == TipoFuncaoTransacao.EE) {
+            dadosFt.getComplexidadeDto().setPfTotalEe(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalEe(), f.getGrossPF().doubleValue()));
+            dadosFt.getComplexidadeDto().setPfAjustadoEe(incrementarPfs(dadosFt.getComplexidadeDto().getPfAjustadoEe(), f.getPf().doubleValue()));
+        }
+        if(f.getTipo() == TipoFuncaoTransacao.SE) {
+            dadosFt.getComplexidadeDto().setPfTotalSe(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalSe(),f.getGrossPF().doubleValue()));
+            dadosFt.getComplexidadeDto().setPfAjustadoSe(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalSe(),f.getPf().doubleValue()));
+        }
+        if(f.getTipo() == TipoFuncaoTransacao.CE) {
+            dadosFt.getComplexidadeDto().setPfTotalCe(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalCe(),f.getGrossPF().doubleValue()));
+            dadosFt.getComplexidadeDto().setPfAjustadoCe(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalCe(),f.getPf().doubleValue()));
+        }
+        if(f.getTipo() == TipoFuncaoTransacao.INM) {
+            dadosFt.getComplexidadeDto().setPfTotalInmFt(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalInmFt(),f.getGrossPF().doubleValue()));
+            dadosFt.getComplexidadeDto().setPfAjustadoInmFt(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalInmFt(),f.getPf().doubleValue()));
+        }
     }
 
     /**
@@ -58,8 +80,6 @@ public class RelatorioFuncaoTransacao {
         dadosFt.setFuncionalidade(f.getFuncionalidade() == null ? "---" : f.getFuncionalidade().getNome());
         dadosFt.setTipo(f.getTipo() == null ? "---" : f.getTipo().toString());
         dadosFt.setComplexidade(f.getComplexidade() == null ? "---" : f.getComplexidade().toString());
-        dadosFt.setPfTotal(f.getGrossPF() == null ? BigDecimal.valueOf(0L) : f.getGrossPF());
-        dadosFt.setPfTotal(f.getPf() == null ? BigDecimal.valueOf(0L) : f.getPf());
     }
     
     /**
@@ -107,7 +127,7 @@ public class RelatorioFuncaoTransacao {
         return dadosFt;
     }
     
-    /**
+    /**Double
      * 
      * @param f
      */
@@ -268,4 +288,21 @@ public class RelatorioFuncaoTransacao {
         return valor == null ? 1 : valor +1;
     }
     
+    /**
+     * 
+     * @param valor1
+     * @param valor2
+     * @return
+     */
+    private Double incrementarPfs(Double valor1, Double valor2) {
+        Double valor3 = null;
+        
+        if(valor2 != null && valor1 == null) {
+            valor1 = valor2;
+            valor3 = valor1;
+            valor3 += valor2;
+        }
+        return valor3;
+    }
+        
 }

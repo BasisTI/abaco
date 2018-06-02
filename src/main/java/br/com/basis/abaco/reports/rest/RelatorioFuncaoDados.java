@@ -1,6 +1,5 @@
 package br.com.basis.abaco.reports.rest;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +40,7 @@ public class RelatorioFuncaoDados {
             this.popularImpacto(f);
             this.popularModulo(f);
             this.popularNome(f);
+            this.popularPFs(f);
             list.add(dadosFd);
         }
         return list;
@@ -50,13 +50,31 @@ public class RelatorioFuncaoDados {
      * 
      * @param f
      */
+    private void popularPFs(FuncaoDados f) {
+
+        if(f.getTipo() == TipoFuncaoDados.ALI) {
+            dadosFd.getComplexidadeDto().setPfTotalAli(incrementarPfs(dadosFd.getComplexidadeDto().getPfTotalAli(), f.getGrossPF().doubleValue()));
+            dadosFd.getComplexidadeDto().setPfAjustadoAli(incrementarPfs(dadosFd.getComplexidadeDto().getPfAjustadoAli(), f.getPf().doubleValue()));
+        }
+        if(f.getTipo() == TipoFuncaoDados.AIE) {
+            dadosFd.getComplexidadeDto().setPfTotalAie(incrementarPfs(dadosFd.getComplexidadeDto().getPfTotalAie(), f.getGrossPF().doubleValue()));
+            dadosFd.getComplexidadeDto().setPfAjustadoAie(incrementarPfs(dadosFd.getComplexidadeDto().getPfAjustadoAie(), f.getPf().doubleValue()));
+        }
+        if(f.getTipo() == TipoFuncaoDados.INM) {
+            dadosFd.getComplexidadeDto().setPfTotalInmFd(incrementarPfs(dadosFd.getComplexidadeDto().getPfTotalInmFd(), f.getGrossPF().doubleValue()));
+            dadosFd.getComplexidadeDto().setPfAjustadoInmFd(incrementarPfs(dadosFd.getComplexidadeDto().getPfAjustadoInmFd(), f.getPf().doubleValue()));
+        }
+    }
+
+    /**
+     * 
+     * @param f
+     */
     private void popularObjeto(FuncaoDados f) {
         dadosFd.setFatorAjuste(f.getFatorAjuste() == null ? "---" : f.getFatorAjuste().getNome());
         dadosFd.setFuncionalidade(f.getFuncionalidade() == null ? "---" : f.getFuncionalidade().getNome());
         dadosFd.setTipo(f.getTipo() == null ? "---" : f.getTipo().toString());
         dadosFd.setComplexidade(f.getComplexidade() == null ? "---" : f.getComplexidade().toString());
-        dadosFd.setPfTotal(f.getGrossPF() == null ? BigDecimal.valueOf(0L) : f.getGrossPF());
-        dadosFd.setPfTotal(f.getPf() == null ? BigDecimal.valueOf(0L) : f.getPf());
         dadosFd.setNome(f.getName() == null ? "---" : f.getName());
         dadosFd.setImpacto(f.getImpacto().toString());
     }
@@ -228,6 +246,23 @@ public class RelatorioFuncaoDados {
      */
     private Integer incrementar(Integer valor) {
         return valor == null ? 1 : valor +1;
+    }
+    
+    /**
+     * 
+     * @param valor1
+     * @param valor2
+     * @return
+     */
+    private Double incrementarPfs(Double valor1, Double valor2) {
+        Double valor3 = null;
+        
+        if(valor2 != null && valor1 == null) {
+            valor1 = valor2;
+            valor3 = valor1;
+            valor3 += valor2;
+        }
+        return valor3;
     }
     
 

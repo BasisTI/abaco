@@ -129,6 +129,7 @@ public class RelatorioAnaliseRest {
     private void popularDadosBasicos() {
         parametro.put("PFTOTAL", validarAtributosNulos(analise.getPfTotal()));
         parametro.put("PFAJUSTADO", validarAtributosNulos(analise.getAdjustPFTotal()));
+        parametro.put("AJUSTADOSPF", calcularPFsAjustado(analise.getPfTotal(), analise.getAdjustPFTotal()));
         parametro.put("DATACRIADO", validarAtributosNulos(analise.getAudit().getCreatedOn().toString()));
         parametro.put("DATAALTERADO", validarAtributosNulos(analise.getAudit().getUpdatedOn().toString()));
         parametro.put("VALORAJUSTE", validarAtributosNulos(String.valueOf(analise.getValorAjuste())));
@@ -153,7 +154,6 @@ public class RelatorioAnaliseRest {
     private void popularSubRelatorios() {
         InputStream caminhoRelatorioFd = getClass().getClassLoader().getSystemResourceAsStream(caminhoRelatorioFuncaoDados);
         InputStream caminhoRelatorioFT = getClass().getClassLoader().getSystemResourceAsStream(caminhoRelatorioFuncaoTransacao);
-        
         parametro.put("SUB_REPORTS_FUNCAO_DADOS", caminhoRelatorioFd);
         parametro.put("SUB_REPORTS_FUNCAO_TRANSACAO", caminhoRelatorioFT);
     }
@@ -258,8 +258,8 @@ public class RelatorioAnaliseRest {
                 ,fd.getComplexidadeDto().getAliBaixa()
                 ,fd.getComplexidadeDto().getAliMedia()
                 ,fd.getComplexidadeDto().getAliAlta())));
-        parametro.put("ALIPFTOTAL", "---");
-        parametro.put("ALIPFAJUSTADO", "---");
+        parametro.put("ALIPFTOTAL", transformarBigDecimal(fd.getComplexidadeDto().getPfTotalAli()));
+        parametro.put("ALIPFAJUSTADO", transformarBigDecimal(fd.getComplexidadeDto().getPfAjustadoAli()));
     }
 
     /**
@@ -276,8 +276,8 @@ public class RelatorioAnaliseRest {
                 ,fd.getComplexidadeDto().getAieBaixa()
                 ,fd.getComplexidadeDto().getAieMedia()
                 ,fd.getComplexidadeDto().getAieAlta())));
-        parametro.put("AIEPFTOTAL", "---");
-        parametro.put("AIEPFAJUSTADO", "---");
+        parametro.put("AIEPFTOTAL", transformarBigDecimal(fd.getComplexidadeDto().getPfTotalAie()));
+        parametro.put("AIEPFAJUSTADO", transformarBigDecimal(fd.getComplexidadeDto().getPfAjustadoAie()));
     }
 
     /**
@@ -294,8 +294,8 @@ public class RelatorioAnaliseRest {
                 ,fd.getComplexidadeDto().getInmBaixaFd()
                 ,fd.getComplexidadeDto().getInmMediaFd()
                 ,fd.getComplexidadeDto().getInmAltaFd())));
-        parametro.put("INMPFTOTAL", "---");
-        parametro.put("INMPFAJUSTADO", "---");
+        parametro.put("INMPFTOTAL", transformarBigDecimal(fd.getComplexidadeDto().getPfTotalInmFd()));
+        parametro.put("INMPFAJUSTADO", transformarBigDecimal(fd.getComplexidadeDto().getPfAjustadoInmFd()));
     }
 
     /**
@@ -345,8 +345,8 @@ public class RelatorioAnaliseRest {
                 ,ft.getComplexidadeDto().getEeBaixa()
                 ,ft.getComplexidadeDto().getEeMedia()
                 ,ft.getComplexidadeDto().getEeAlta())));
-        parametro.put("EEPFTOTAL", "---");
-        parametro.put("EEPFAJUSTADO", "---");
+        parametro.put("EEPFTOTAL", transformarBigDecimal(ft.getComplexidadeDto().getPfTotalEe()));
+        parametro.put("EEPFAJUSTADO", transformarBigDecimal(ft.getComplexidadeDto().getPfAjustadoEe()));
     }
 
     /**
@@ -363,8 +363,8 @@ public class RelatorioAnaliseRest {
                 ,ft.getComplexidadeDto().getSeBaixa()
                 ,ft.getComplexidadeDto().getSeMedia()
                 ,ft.getComplexidadeDto().getSeAlta())));
-        parametro.put("SEPFTOTAL", "---");
-        parametro.put("SEPFAJUSTADO", "---");
+        parametro.put("SEPFTOTAL", transformarBigDecimal(ft.getComplexidadeDto().getPfTotalSe()));
+        parametro.put("SEPFAJUSTADO", transformarBigDecimal(ft.getComplexidadeDto().getPfAjustadoSe()));
     }
 
     /**
@@ -381,8 +381,8 @@ public class RelatorioAnaliseRest {
                 ,ft.getComplexidadeDto().getCeBaixa()
                 ,ft.getComplexidadeDto().getCeMedia()
                 ,ft.getComplexidadeDto().getCeAlta())));
-        parametro.put("CEPFTOTAL", "---");
-        parametro.put("CEPFAJUSTADO", "---");
+        parametro.put("CEPFTOTAL", transformarBigDecimal(ft.getComplexidadeDto().getPfTotalCe()));
+        parametro.put("CEPFAJUSTADO", transformarBigDecimal(ft.getComplexidadeDto().getPfAjustadoCe()));
     }
 
     /**
@@ -399,8 +399,8 @@ public class RelatorioAnaliseRest {
                 ,ft.getComplexidadeDto().getInmBaixaFt()
                 ,ft.getComplexidadeDto().getInmMediaFt()
                 ,ft.getComplexidadeDto().getInmAltaFt())));
-        parametro.put("INMFTPFTOTAL", "---");
-        parametro.put("INMFTPFAJUSTADO", "---");
+        parametro.put("INMFTPFTOTAL", transformarBigDecimal(ft.getComplexidadeDto().getPfTotalInmFt()));
+        parametro.put("INMFTPFAJUSTADO", transformarBigDecimal(ft.getComplexidadeDto().getPfAjustadoInmFt()));
     }
 
     /**
@@ -544,7 +544,12 @@ public class RelatorioAnaliseRest {
     private String verificarCondicao(Boolean valor) {
         return (valor) ? "Sim" : "Não";
     }
-    
+
+    /**
+     * 
+     * @param valor
+     * @return
+     */
     private String transformarInteiro(Integer valor) {
         if(valor == null) {
             valor = 0;
@@ -552,4 +557,25 @@ public class RelatorioAnaliseRest {
         return valor.toString();
     }
 
+    /**
+     * 
+     * @param valor
+     * @return
+     */
+    private String transformarBigDecimal(Double valor) {
+        if(valor == null) {
+            valor = 0.0;
+        }
+        return valor.toString().replace(".", ",");
+    }
+    
+    private String calcularPFsAjustado(String valor1, String valor2) {
+        Double valorCalculado = null;
+        if(valor1 != null && valor2 != null) {
+            valorCalculado = Double.parseDouble(valor1) - Double.parseDouble(valor2);
+        }
+        return valorCalculado.toString().replace(".", ".");
+    }
+
 }
+
