@@ -22,7 +22,6 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 /**
  * @author eduardo.andrade
@@ -55,16 +54,16 @@ public class RelatorioUtil {
      * @param analise
      * @param caminhoJasperResolucao
      * @param parametrosJasper
+     * @param funcoes
      * @return
      * @throws FileNotFoundException
      * @throws JRException
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public ResponseEntity<byte[]> downloadPdfAnalise(Analise analise, String caminhoJasperResolucao, Map parametrosJasper, List<FuncoesDTO> funcoes) throws FileNotFoundException, JRException {
-        
-        JRBeanCollectionDataSource funcoesDados = new JRBeanCollectionDataSource(funcoes);
+    public ResponseEntity<byte[]> downloadPdfAnalise(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
         
         File jasperFile = new File(getClass().getClassLoader().getResource(caminhoJasperResolucao).getFile());
+//        JRBeanCollectionDataSource funcoesDados = new JRBeanCollectionDataSource(funcoes);
 //        JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(new FileInputStream(jasperFile), parametrosJasper, funcoesDados);
         JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(new FileInputStream(jasperFile), parametrosJasper, new JREmptyDataSource());
         
