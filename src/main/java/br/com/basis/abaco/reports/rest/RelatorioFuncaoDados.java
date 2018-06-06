@@ -40,12 +40,11 @@ public class RelatorioFuncaoDados {
             this.popularImpacto(f);
             this.popularModulo(f);
             this.popularNome(f);
-            this.popularPFs(f);
             list.add(dadosFd);
         }
         return list;
     }
-    
+
     /**
      * 
      * @param f
@@ -121,6 +120,7 @@ public class RelatorioFuncaoDados {
             this.countAliImpacto(f);
             this.countAieImpacto(f);
             this.countInmImpacto(f);
+            this.popularPFs(f);
         }
         return dadosFd;
     }

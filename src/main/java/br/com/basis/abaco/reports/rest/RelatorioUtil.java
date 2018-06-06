@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.service.dto.FuncoesDTO;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -63,8 +61,6 @@ public class RelatorioUtil {
     public ResponseEntity<byte[]> downloadPdfAnalise(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
         
         File jasperFile = new File(getClass().getClassLoader().getResource(caminhoJasperResolucao).getFile());
-//        JRBeanCollectionDataSource funcoesDados = new JRBeanCollectionDataSource(funcoes);
-//        JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(new FileInputStream(jasperFile), parametrosJasper, funcoesDados);
         JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(new FileInputStream(jasperFile), parametrosJasper, new JREmptyDataSource());
         
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

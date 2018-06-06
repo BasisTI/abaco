@@ -42,7 +42,6 @@ public class RelatorioFuncaoTransacao {
             this.popularImpacto(f);
             this.popularModulo(f);
             this.popularNome(f);
-            this.popularPFs(f);
             list.add(dadosFt);
         }
         return list;
@@ -123,6 +122,7 @@ public class RelatorioFuncaoTransacao {
             this.countSeImpacto(f);
             this.countCeImpacto(f);
             this.countInmImpacto(f);
+            this.popularPFs(f);
         }
         return dadosFt;
     }

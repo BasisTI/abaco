@@ -27,10 +27,6 @@ public class RelatorioAnaliseRest {
 
     private static String caminhoRalatorioAnalise = "reports/analise/analise.jasper";
     
-    private static String caminhoRelatorioFuncaoDados = "reports/analise/funcao_dados.jasper";
-    
-    private static String caminhoRelatorioFuncaoTransacao = "reports/analise/funcao_transacao.jasper";
-    
     private static String caminhoImagem = "reports/img/fnde_logo.png";
 
     private HttpServletRequest request;
@@ -90,7 +86,6 @@ public class RelatorioAnaliseRest {
         this.popularImagemRelatorio();
         this.popularUsuarios();
         this.popularDadosBasicos();
-        this.popularSubRelatorios();
         this.popularContrato();
         this.popularOrganizacao();
         this.popularSistema();
@@ -129,7 +124,7 @@ public class RelatorioAnaliseRest {
     private void popularDadosBasicos() {
         parametro.put("PFTOTAL", validarAtributosNulos(analise.getPfTotal()));
         parametro.put("PFAJUSTADO", validarAtributosNulos(analise.getAdjustPFTotal()));
-        parametro.put("AJUSTADOSPF", calcularPFsAjustado(analise.getPfTotal(), analise.getAdjustPFTotal()));
+        parametro.put("AJUSTESPF", calcularPFsAjustado(analise.getPfTotal(), analise.getAdjustPFTotal()));
         parametro.put("DATACRIADO", validarAtributosNulos(analise.getAudit().getCreatedOn().toString()));
         parametro.put("DATAALTERADO", validarAtributosNulos(analise.getAudit().getUpdatedOn().toString()));
         parametro.put("VALORAJUSTE", validarAtributosNulos(String.valueOf(analise.getValorAjuste())));
@@ -145,17 +140,6 @@ public class RelatorioAnaliseRest {
         parametro.put("DATAHMG", validarAtributosNulos(formatarData(analise.getDataHomologacao())));
         parametro.put("NUMEROOS", validarAtributosNulos(analise.getNumeroOs()));
         parametro.put("FATORAJUSTE", verificarFatorAjuste(analise.getFatorAjuste()));
-    }
-
-    /**
-     * 
-    */
-    @SuppressWarnings("static-access")
-    private void popularSubRelatorios() {
-        InputStream caminhoRelatorioFd = getClass().getClassLoader().getSystemResourceAsStream(caminhoRelatorioFuncaoDados);
-        InputStream caminhoRelatorioFT = getClass().getClassLoader().getSystemResourceAsStream(caminhoRelatorioFuncaoTransacao);
-        parametro.put("SUB_REPORTS_FUNCAO_DADOS", caminhoRelatorioFd);
-        parametro.put("SUB_REPORTS_FUNCAO_TRANSACAO", caminhoRelatorioFT);
     }
 
     /**
@@ -574,7 +558,7 @@ public class RelatorioAnaliseRest {
         if(valor1 != null && valor2 != null) {
             valorCalculado = Double.parseDouble(valor1) - Double.parseDouble(valor2);
         }
-        return valorCalculado.toString().replace(".", ".");
+        return valorCalculado.toString().replace(".", ".").substring(0,3);
     }
 
 }
