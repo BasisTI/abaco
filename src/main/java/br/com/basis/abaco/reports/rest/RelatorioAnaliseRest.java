@@ -554,7 +554,7 @@ public class RelatorioAnaliseRest {
     }
     
     private String calcularPFsAjustado(String valor1, String valor2) {
-        Double valorCalculado = null;
+        Double valorCalculado = 0.0;
         if(valor1 != null && valor2 != null) {
             valorCalculado = Double.parseDouble(valor1) - Double.parseDouble(valor2);
         }
