@@ -9,12 +9,17 @@ import { TipoEquipeService } from './tipo-equipe.service';
 import { ElasticQuery } from '../shared';
 
 import { PageNotificationService } from '../shared';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { MessageUtil } from '../util/message.util';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'jhi-tipo-equipe',
   templateUrl: './tipo-equipe.component.html'
 })
 export class TipoEquipeComponent implements AfterViewInit {
+
+  @BlockUI() blockUI: NgBlockUI;
 
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
@@ -33,11 +38,11 @@ export class TipoEquipeComponent implements AfterViewInit {
     private pageNotificationService: PageNotificationService,
   ) { }
 
-  ngAfterViewInit() {
+  public ngAfterViewInit() {
     this.recarregarDataTable();
   }
 
-  datatableClick(event: DatatableClickEvent) {
+  public datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
       return;
     }
@@ -54,28 +59,30 @@ export class TipoEquipeComponent implements AfterViewInit {
     }
   }
 
-  confirmDelete(id: any) {
+  public confirmDelete(id: any) {
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja excluir o registro?',
+      message: MessageUtil.CONFIRMAR_EXCLUSAO,
       accept: () => {
+        this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
         this.tipoEquipeService.delete(id).subscribe(() => {
           this.recarregarDataTable();
           this.pageNotificationService.addDeleteMsg();
+          this.blockUI.stop();
         }, error => {
           if (error.status === 500) {
-            this.pageNotificationService.addErrorMsg('Não é possivel excluir o registro selecionado!');
+            this.pageNotificationService.addErrorMsg(MessageUtil.ERROR_DELETE_REGISTRO);
           }
         });
       }
     });
   }
 
-  limparPesquisa() {
+  public limparPesquisa() {
     this.elasticQuery.reset();
     this.recarregarDataTable();
   }
 
-  recarregarDataTable() {
+  public recarregarDataTable() {
     this.datatable.refresh(this.elasticQuery.query);
   }
 
