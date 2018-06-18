@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.FatorAjuste;
@@ -75,7 +76,19 @@ public class RelatorioAnaliseRest {
     public ResponseEntity<byte[]> downloadAnalise(Analise analise) throws FileNotFoundException, JRException {
         init();
         popularObjeto(analise);
-        return relatorio.downloadPdfAnalise(analise, caminhoRalatorioAnalise, popularParametroAnalise());
+        return relatorio.downloadPdfArquivo(analise, caminhoRalatorioAnalise, analise.getIdentificadorAnalise().trim(),popularParametroAnalise());
+    }
+    
+    /**
+     * 
+     * @param analise
+     * @throws FileNotFoundException
+     * @throws JRException
+     */
+    public @ResponseBody byte[] downloadAnalisePDF(Analise analise) throws FileNotFoundException, JRException {
+        init();
+        popularObjeto(analise);
+        return relatorio.downloadPdfBrowser(analise, caminhoRalatorioAnalise, analise.getIdentificadorAnalise().trim(), popularParametroAnalise());
     }
 
     /**
@@ -553,6 +566,12 @@ public class RelatorioAnaliseRest {
         return valor.toString().replace(".", ",");
     }
     
+    /**
+     * 
+     * @param valor1
+     * @param valor2
+     * @return
+     */
     private String calcularPFsAjustado(String valor1, String valor2) {
         Double valorCalculado = 0.0;
         if(valor1 != null && valor2 != null) {
