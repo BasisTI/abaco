@@ -1,18 +1,22 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConfirmationService } from 'primeng/primeng';
+import { ConfirmationService} from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
-
+import { BlockUI, NgBlockUI} from 'ng-block-ui';
 import { environment } from '../../environments/environment';
 import { Analise } from './analise.model';
 import { AnaliseService } from './analise.service';
 import { ElasticQuery, PageNotificationService } from '../shared';
+import { MessageUtil } from '../util/message.util';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'jhi-analise',
   templateUrl: './analise.component.html'
 })
 export class AnaliseComponent implements OnInit {
+
+  @BlockUI() blockUI: NgBlockUI;
 
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
@@ -24,6 +28,9 @@ export class AnaliseComponent implements OnInit {
 
   analiseSelecionada: Analise;
 
+  /**
+   *
+   */
   constructor(
     private router: Router,
     private analiseService: AnaliseService,
@@ -31,7 +38,10 @@ export class AnaliseComponent implements OnInit {
     private pageNotificationService: PageNotificationService,
   ) { }
 
-  ngOnInit() {
+  /**
+   *
+   */
+  public ngOnInit() {
     this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
       this.analiseSelecionada = new Analise().copyFromJSON(event.data);
     });
@@ -41,7 +51,10 @@ export class AnaliseComponent implements OnInit {
     });
   }
 
-  datatableClick(event: DatatableClickEvent) {
+  /**
+   *
+   */
+  public datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
       return;
     }
@@ -58,32 +71,49 @@ export class AnaliseComponent implements OnInit {
     }
   }
 
-  confirmDelete(analise: Analise) {
+  /**
+   *
+   */
+  public confirmDelete(analise: Analise) {
     this.confirmationService.confirm({
-      message: `Tem certeza que deseja excluir a Análise '${analise.identificadorAnalise}'?`,
+      message: MessageUtil.CONFIRMAR_EXCLUSAO + ' ' + analise.identificadorAnalise + '?',
       accept: () => {
+        this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
         this.analiseService.delete(analise.id).subscribe(() => {
           this.recarregarDataTable();
+          this.blockUI.stop();
           this.pageNotificationService.addDeleteMsgWithName(analise.identificadorAnalise);
         });
       }
     });
   }
 
-  limparPesquisa() {
+  /**
+   *
+   */
+  public limparPesquisa() {
     this.elasticQuery.reset();
     this.recarregarDataTable();
   }
 
-  recarregarDataTable() {
-    this.datatable.reset();
+  /**
+   *
+   */
+  public recarregarDataTable() {
+    this.datatable.refresh(undefined);
   }
 
-  gerarRelatorio(analise: Analise) {
-    this.analiseService.gerarRelatorioAnalise(analise.id);
+  /**
+   *
+   */
+  public gerarRelatorio(analise: Analise) {
+    this.analiseService.geraRelatorioPDF(analise.id);
   }
 
-  desabilitarBotaoRelatorio(): boolean {
+  /**
+   *
+   */
+  public desabilitarBotaoRelatorio(): boolean {
     if (this.analiseSelecionada) {
       return true;
     } else {

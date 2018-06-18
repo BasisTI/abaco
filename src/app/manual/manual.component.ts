@@ -2,17 +2,21 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
-
 import { environment } from '../../environments/environment';
 import { Manual } from './manual.model';
 import { ManualService } from './manual.service';
 import { ElasticQuery, PageNotificationService } from '../shared';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { MessageUtil } from '../util/message.util';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'jhi-manual',
   templateUrl: './manual.component.html'
 })
 export class ManualComponent implements OnInit {
+
+  @BlockUI() blockUI: NgBlockUI;
 
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
@@ -37,17 +41,16 @@ export class ManualComponent implements OnInit {
     private pageNotificationService: PageNotificationService
   ) { }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
       this.manualSelecionado = new Manual().copyFromJSON(event.data);
     });
-
     this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
       this.manualSelecionado = undefined;
     });
   }
 
-  desabilitarBotaoClonar(): boolean {
+  public desabilitarBotaoClonar(): boolean {
     if (this.manualSelecionado) {
       return true;
     } else {
@@ -55,7 +58,7 @@ export class ManualComponent implements OnInit {
     }
   }
 
-  datatableClick(event: DatatableClickEvent) {
+  public datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
       return;
     }
@@ -74,13 +77,13 @@ export class ManualComponent implements OnInit {
     }
   }
 
-  fecharDialogClonar() {
+  public fecharDialogClonar() {
     this.nomeDoManualClonado = '';
     this.manualSelecionado = undefined;
     this.mostrarDialogClonar = false;
   }
 
-  clonar() {
+  public clonar() {
     const manualClonado: Manual = this.manualSelecionado.clone();
     manualClonado.id = undefined;
     manualClonado.nome = this.nomeDoManualClonado;
@@ -93,26 +96,27 @@ export class ManualComponent implements OnInit {
       this.fecharDialogClonar();
       this.recarregarDataTable();
     });
-
   }
 
-  limparPesquisa() {
+  public limparPesquisa() {
     this.elasticQuery.reset();
     this.recarregarDataTable();
   }
 
-  confirmDelete(id: any) {
+  public confirmDelete(id: any) {
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja excluir o registro?',
+      message: MessageUtil.CONFIRMAR_EXCLUSAO,
       accept: () => {
+        this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
         this.manualService.delete(id).subscribe(() => {
           this.recarregarDataTable();
+          this.blockUI.stop();
         });
       }
     });
   }
 
-  recarregarDataTable() {
+  public recarregarDataTable() {
     this.datatable.refresh(this.elasticQuery.query);
   }
 }

@@ -2,7 +2,6 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
-
 import { environment } from '../../environments/environment';
 import { Sistema } from './sistema.model';
 import { SistemaService } from './sistema.service';
@@ -10,12 +9,17 @@ import { ElasticQuery } from '../shared';
 import { Organizacao } from '../organizacao/organizacao.model';
 import { OrganizacaoService } from '../organizacao/organizacao.service';
 import { StringConcatService } from '../shared/string-concat.service';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { MessageUtil } from '../util/message.util';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'jhi-sistema',
   templateUrl: './sistema.component.html'
 })
 export class SistemaComponent implements AfterViewInit {
+
+  @BlockUI() blockUI: NgBlockUI;
 
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
@@ -34,7 +38,7 @@ export class SistemaComponent implements AfterViewInit {
     }
   };
 
-  constructor(
+  constructor (
     private router: Router,
     private sistemaService: SistemaService,
     private confirmationService: ConfirmationService,
@@ -50,11 +54,17 @@ export class SistemaComponent implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
+  /**
+   *
+   */
+  public ngAfterViewInit() {
     this.recarregarDataTable();
   }
 
-  datatableClick(event: DatatableClickEvent) {
+  /**
+   *
+   */
+  public datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
       return;
     }
@@ -71,29 +81,44 @@ export class SistemaComponent implements AfterViewInit {
     }
   }
 
-  confirmDelete(id: any) {
+  /**
+   *
+   * @param id
+   */
+  public confirmDelete(id: any) {
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja excluir o registro?',
+      message: MessageUtil.CONFIRMAR_EXCLUSAO,
       accept: () => {
+        this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
         this.sistemaService.delete(id).subscribe(() => {
           this.recarregarDataTable();
+          this.blockUI.stop();
         });
       }
     });
   }
 
+  /**
+   *
+   */
   private checkUndefinedParams() {
     (this.searchParams.sigla === '') ? (this.searchParams.sigla = undefined) : (this);
     (this.searchParams.nomeSistema === '') ? (this.searchParams.nomeSistema = undefined) : (this);
     (this.searchParams.organizacao.nome === '') ? (this.searchParams.organizacao.nome = undefined) : (this);
   }
 
-  performSearch() {
+  /**
+   *
+   */
+  public performSearch() {
     this.checkUndefinedParams();
     this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
     this.recarregarDataTable();
   }
 
+  /**
+   *
+   */
   private createStringParamsArray(): Array<string> {
     let stringParamsArray: Array<string> = [];
 
@@ -104,13 +129,18 @@ export class SistemaComponent implements AfterViewInit {
     return stringParamsArray;
   }
 
-  limparPesquisa() {
+  /**
+   *
+   */
+  public limparPesquisa() {
     this.elasticQuery.reset();
     this.recarregarDataTable();
   }
 
-  recarregarDataTable() {
+  /**
+   *
+   */
+  public recarregarDataTable() {
     this.datatable.refresh(this.elasticQuery.query);
   }
-
 }
