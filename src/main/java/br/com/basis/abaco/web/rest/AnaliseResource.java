@@ -316,7 +316,7 @@ public class AnaliseResource {
      * @throws JRException 
      * @throws IOException 
      */
-    @GetMapping("/analises/relatorios/{id}")
+    @GetMapping("/relatorios/{id}")
     @Timed
     public @ResponseBody byte[] gerarRelatorioAnalise(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = recuperarAnalise(id);
