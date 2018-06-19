@@ -13,9 +13,11 @@ export class AnaliseService {
 
   resourceUrl = environment.apiUrl + '/analises';
 
+  relatoriosUrl = environment.apiUrl + '/relatorios/';
+
   searchUrl = environment.apiUrl + '/_search/analises';
 
-  relatorioUrl = environment.apiUrl + '/relatorioAnalise';
+  relatorioAnaliseUrl = environment.apiUrl + '/relatorioAnalise';
 
   @BlockUI() blockUI: NgBlockUI;
 
@@ -47,7 +49,7 @@ export class AnaliseService {
    *
    */
   public gerarRelatorioAnalise(id: number) {
-    window.open(`${this.relatorioUrl}/${id}`);
+    window.open(`${this.relatorioAnaliseUrl}/${id}`);
   }
 
   /**
@@ -55,7 +57,7 @@ export class AnaliseService {
    */
   public geraRelatorioPDF(id: number): Observable<string> {
     this.blockUI.start('GERANDO RELATORIO...');
-    this.http.get(this.resourceUrl + `/relatorios/${id}`, {
+    this.http.get(`${this.relatoriosUrl}/${id}`, {
     method: RequestMethod.Get,
     responseType: ResponseContentType.Blob,
   }).subscribe(
