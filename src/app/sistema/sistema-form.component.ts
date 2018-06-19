@@ -210,10 +210,10 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   }
 
   save(form) {
-    if (!form.valid) {
-      this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
-      return;
-    }
+    // if (!form.valid) {
+    //   this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+    //   return;
+    // }
     this.isSaving = true;
     (this.sistema.modulos === undefined) ? (this.sistema.modulos = []) : (this.sistema);
     let sistemas: Array<Sistema>;
@@ -324,10 +324,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   private notifyRequiredFields() {
       this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios.');
-
       document.getElementById('sigla_sistema').setAttribute('style', 'border-color: red');
-
-
   }
 
   private subscribeToSaveResponse(result: Observable<Sistema>) {
