@@ -120,22 +120,22 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="nomeFt" class="java.util.List"/>
-	<field name="tipoFt" class="java.util.List"/>
-	<field name="impactoFt" class="java.util.List"/>
+	<field name="nomeFt" class="java.lang.String"/>
+	<field name="tipoFt" class="java.lang.String"/>
+	<field name="impactoFt" class="java.lang.String"/>
 	<field name="ftrFt" class="java.lang.String"/>
-	<field name="derFt" class="java.util.List"/>
-	<field name="complexidadeFt" class="java.util.List"/>
-	<field name="pfTotalFt" class="java.util.List"/>
-	<field name="pfAjustadoFt" class="java.util.List"/>
-	<field name="nomeFd" class="java.util.List"/>
-	<field name="tipoFd" class="java.util.List"/>
-	<field name="impactoFd" class="java.util.List"/>
-	<field name="rlrFd" class="java.util.List"/>
-	<field name="derFd" class="java.util.List"/>
-	<field name="complexidadeFd" class="java.util.List"/>
-	<field name="pfTotalFd" class="java.util.List"/>
-	<field name="pfAjustadoFd" class="java.util.List"/>
+	<field name="derFt" class="java.lang.String"/>
+	<field name="complexidadeFt" class="java.lang.String"/>
+	<field name="pfTotalFt" class="java.lang.String"/>
+	<field name="pfAjustadoFt" class="java.lang.String"/>
+	<field name="nomeFd" class="java.lang.String"/>
+	<field name="tipoFd" class="java.lang.String"/>
+	<field name="impactoFd" class="java.lang.String"/>
+	<field name="rlrFd" class="java.lang.String"/>
+	<field name="derFd" class="java.lang.String"/>
+	<field name="complexidadeFd" class="java.lang.String"/>
+	<field name="pfTotalFd" class="java.lang.String"/>
+	<field name="pfAjustadoFd" class="java.lang.String"/>
 	<title>
 		<band height="67" splitType="Stretch">
 			<frame>

@@ -43,6 +43,7 @@ public class RelatorioFuncaoTransacao {
             this.popularModulo(f);
             this.popularNome(f);
             this.popularPFs(f);
+            this.popularValoresVazios();
             list.add(funcoesDTO);
         }
         return list;
@@ -78,6 +79,25 @@ public class RelatorioFuncaoTransacao {
     private void popularPFs(FuncaoTransacao f) {
         funcoesDTO.setPfTotalFt(f.getGrossPF().toString());
         funcoesDTO.setPfAjustadoFt(f.getPf().toString());
+    }
+    
+    /**
+     * 
+     */
+    private void popularValoresVazios() {
+        funcoesDTO.setFatorAjusteFd("---");
+        funcoesDTO.setImpactoFd("---");
+        funcoesDTO.setModuloFd("---");
+        funcoesDTO.setFuncionalidadeFd("---");
+        funcoesDTO.setNomeFd("---");
+        funcoesDTO.setTipoFd("---");
+        funcoesDTO.setTotalDerFd(0);
+        funcoesDTO.setTotalRlrFd(0);
+        funcoesDTO.setComplexidadeFd("---");
+        funcoesDTO.setRlrFd("---");
+        funcoesDTO.setDerFd("---");
+        funcoesDTO.setPfTotalFd("---");
+        funcoesDTO.setPfAjustadoFd("---");
     }
 
     /**

@@ -98,14 +98,13 @@ public class RelatorioUtil {
         
         JRBeanCollectionDataSource funcoes = new JRBeanCollectionDataSource(listFuncoes);
         JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(new FileInputStream(jasperFile), parametrosJasper, funcoes);
-        
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
-        
+
         response.setContentType("application/x-pdf");
         response.setHeader("Content-Disposition", "inline; filename=" + nomeArquivo + ".pdf");
         return  JasperExportManager.exportReportToPdf(jasperPrint);
-
     }
     
     /**
