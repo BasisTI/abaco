@@ -19,6 +19,10 @@ import br.com.basis.abaco.service.dto.ImpactoDTO;
 public class RelatorioFuncaoDados {
        
     private FuncoesDTO funcoesDTO;
+    
+    private Integer valorRlr;
+    
+    private Integer valorDer;
             
     private void init() {
         funcoesDTO = new FuncoesDTO();
@@ -41,10 +45,34 @@ public class RelatorioFuncaoDados {
             this.popularModulo(f);
             this.popularNome(f);
             this.popularPFs(f);
+            this.popularRlr(f);
+            this.popularDer(f);
             this.popularValoresVazios();
             list.add(funcoesDTO);
         }
+        
+        this.valorRlr = 0;
+        this.valorDer = 0;
+        
         return list;
+    }
+    
+    /**
+     * 
+     * @param f
+     */
+    private void popularRlr(FuncaoDados f) {
+        this.valorRlr =+ f.getRlrs().size();
+        funcoesDTO.setRlrFd(valorRlr.toString());
+    }
+    
+    /**
+     * 
+     * @param f
+     */
+    private void popularDer(FuncaoDados f) {
+        this.valorDer =+ f.getDers().size();
+        funcoesDTO.setDerFd(valorDer.toString());
     }
 
     /**
