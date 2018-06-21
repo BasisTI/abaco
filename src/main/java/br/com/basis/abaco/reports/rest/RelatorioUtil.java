@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,11 +21,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.service.dto.FuncoesDTO;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 /**
  * @author eduardo.andrade
@@ -89,10 +92,12 @@ public class RelatorioUtil {
      * @throws JRException
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public @ResponseBody byte[] downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, String nomeArquivo,  Map parametrosJasper) throws FileNotFoundException, JRException {
+    public @ResponseBody byte[] downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, String nomeArquivo,  Map parametrosJasper, List<FuncoesDTO> listFuncoes) throws FileNotFoundException, JRException {
         
         File jasperFile = new File(getClass().getClassLoader().getResource(caminhoJasperResolucao).getFile());
-        JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(new FileInputStream(jasperFile), parametrosJasper, new JREmptyDataSource());
+        
+        JRBeanCollectionDataSource funcoes = new JRBeanCollectionDataSource(listFuncoes);
+        JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(new FileInputStream(jasperFile), parametrosJasper, funcoes);
         
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);

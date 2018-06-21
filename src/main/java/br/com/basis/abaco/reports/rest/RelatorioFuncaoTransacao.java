@@ -9,7 +9,7 @@ import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 import br.com.basis.abaco.service.dto.ComplexidadeDTO;
-import br.com.basis.abaco.service.dto.FuncaoTransacaoDTO;
+import br.com.basis.abaco.service.dto.FuncoesDTO;
 import br.com.basis.abaco.service.dto.ImpactoDTO;
 
 /**
@@ -18,15 +18,15 @@ import br.com.basis.abaco.service.dto.ImpactoDTO;
  */
 public class RelatorioFuncaoTransacao {
 
-    private FuncaoTransacaoDTO dadosFt;
+    private FuncoesDTO funcoesDTO;
     
     /**
      * 
      */
     private void init() {
-        dadosFt = new FuncaoTransacaoDTO();
-        dadosFt.setComplexidadeDto(new ComplexidadeDTO());
-        dadosFt.setImpactoDto(new ImpactoDTO());
+        funcoesDTO = new FuncoesDTO();
+        funcoesDTO.setComplexidadeDtoFt(new ComplexidadeDTO());
+        funcoesDTO.setImpactoDtoFt(new ImpactoDTO());
     }
     
     /**
@@ -34,40 +34,50 @@ public class RelatorioFuncaoTransacao {
      * @param analise
      * @return
      */
-    public List<FuncaoTransacaoDTO> prepararListaFuncaoTransacao(Analise analise) {
-        List<FuncaoTransacaoDTO> list = new ArrayList<>();
+    public List<FuncoesDTO> prepararListaFuncaoTransacao(Analise analise) {
+        List<FuncoesDTO> list = new ArrayList<>();
         for(FuncaoTransacao f : analise.getFuncaoTransacaos()) {
             this.init();
             this.popularObjeto(f);
             this.popularImpacto(f);
             this.popularModulo(f);
             this.popularNome(f);
-            list.add(dadosFt);
+            this.popularPFs(f);
+            list.add(funcoesDTO);
         }
         return list;
     }
     
     /**
-     * 
+     * Método responsável por popular os valores de ponto de função do parâmetro do relatório por tipo.
+     * @param f
+     */
+    private void popularPFsTipo(FuncaoTransacao f) {
+        if(f.getTipo() == TipoFuncaoTransacao.EE) {
+            funcoesDTO.getComplexidadeDtoFt().setPfTotalEe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalEe(), f.getGrossPF().doubleValue()));
+            funcoesDTO.getComplexidadeDtoFt().setPfAjustadoEe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfAjustadoEe(), f.getPf().doubleValue()));
+        }
+        if(f.getTipo() == TipoFuncaoTransacao.SE) {
+            funcoesDTO.getComplexidadeDtoFt().setPfTotalSe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalSe(),f.getGrossPF().doubleValue()));
+            funcoesDTO.getComplexidadeDtoFt().setPfAjustadoSe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalSe(),f.getPf().doubleValue()));
+        }
+        if(f.getTipo() == TipoFuncaoTransacao.CE) {
+            funcoesDTO.getComplexidadeDtoFt().setPfTotalCe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalCe(),f.getGrossPF().doubleValue()));
+            funcoesDTO.getComplexidadeDtoFt().setPfAjustadoCe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalCe(),f.getPf().doubleValue()));
+        }
+        if(f.getTipo() == TipoFuncaoTransacao.INM) {
+            funcoesDTO.getComplexidadeDtoFt().setPfTotalInmFt(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalInmFt(),f.getGrossPF().doubleValue()));
+            funcoesDTO.getComplexidadeDtoFt().setPfAjustadoInmFt(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalInmFt(),f.getPf().doubleValue()));
+        }
+    }
+    
+    /**
+     * Método responsável por popular os valores de ponto de função do fieldset do relatório.
      * @param f
      */
     private void popularPFs(FuncaoTransacao f) {
-        if(f.getTipo() == TipoFuncaoTransacao.EE) {
-            dadosFt.getComplexidadeDto().setPfTotalEe(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalEe(), f.getGrossPF().doubleValue()));
-            dadosFt.getComplexidadeDto().setPfAjustadoEe(incrementarPfs(dadosFt.getComplexidadeDto().getPfAjustadoEe(), f.getPf().doubleValue()));
-        }
-        if(f.getTipo() == TipoFuncaoTransacao.SE) {
-            dadosFt.getComplexidadeDto().setPfTotalSe(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalSe(),f.getGrossPF().doubleValue()));
-            dadosFt.getComplexidadeDto().setPfAjustadoSe(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalSe(),f.getPf().doubleValue()));
-        }
-        if(f.getTipo() == TipoFuncaoTransacao.CE) {
-            dadosFt.getComplexidadeDto().setPfTotalCe(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalCe(),f.getGrossPF().doubleValue()));
-            dadosFt.getComplexidadeDto().setPfAjustadoCe(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalCe(),f.getPf().doubleValue()));
-        }
-        if(f.getTipo() == TipoFuncaoTransacao.INM) {
-            dadosFt.getComplexidadeDto().setPfTotalInmFt(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalInmFt(),f.getGrossPF().doubleValue()));
-            dadosFt.getComplexidadeDto().setPfAjustadoInmFt(incrementarPfs(dadosFt.getComplexidadeDto().getPfTotalInmFt(),f.getPf().doubleValue()));
-        }
+        funcoesDTO.setPfTotalFt(f.getGrossPF().toString());
+        funcoesDTO.setPfAjustadoFt(f.getPf().toString());
     }
 
     /**
@@ -75,10 +85,10 @@ public class RelatorioFuncaoTransacao {
      * @param f
      */
     private void popularObjeto(FuncaoTransacao f) {
-        dadosFt.setFatorAjuste(f.getFatorAjuste() == null ? "---" : f.getFatorAjuste().getNome());
-        dadosFt.setFuncionalidade(f.getFuncionalidade() == null ? "---" : f.getFuncionalidade().getNome());
-        dadosFt.setTipo(f.getTipo() == null ? "---" : f.getTipo().toString());
-        dadosFt.setComplexidade(f.getComplexidade() == null ? "---" : f.getComplexidade().toString());
+        funcoesDTO.setFatorAjusteFt(f.getFatorAjuste() == null ? "---" : f.getFatorAjuste().getNome());
+        funcoesDTO.setFuncionalidadeFt(f.getFuncionalidade() == null ? "---" : f.getFuncionalidade().getNome());
+        funcoesDTO.setTipoFt(f.getTipo() == null ? "---" : f.getTipo().toString());
+        funcoesDTO.setComplexidadeFt(f.getComplexidade() == null ? "---" : f.getComplexidade().toString());
     }
     
     /**
@@ -86,7 +96,7 @@ public class RelatorioFuncaoTransacao {
      * @param f
      */
     private void popularImpacto(FuncaoTransacao f) {
-        dadosFt.setImpacto(f.getImpacto() == null 
+        funcoesDTO.setImpactoFt(f.getImpacto() == null 
                 && !f.getImpacto().toString().isEmpty()? "---" : f.getImpacto().toString());
     }
     
@@ -95,7 +105,7 @@ public class RelatorioFuncaoTransacao {
      * @param f
      */
     private void popularModulo(FuncaoTransacao f) {
-        dadosFt.setModulo(f.getFuncionalidade() == null 
+        funcoesDTO.setModuloFt(f.getFuncionalidade() == null 
                 && f.getFuncionalidade().getModulo() == null ? "---" : f.getFuncionalidade().getModulo().getNome());
     }
     
@@ -104,7 +114,7 @@ public class RelatorioFuncaoTransacao {
      * @param f
      */
     private void popularNome(FuncaoTransacao f) {
-        dadosFt.setNome(f.getName() == null 
+        funcoesDTO.setNomeFt(f.getName() == null 
                 && !f.getName().isEmpty() ? "---" : f.getName());
     }
     
@@ -112,7 +122,7 @@ public class RelatorioFuncaoTransacao {
      * 
      * @param f
      */
-    public FuncaoTransacaoDTO recuperarCounts(Analise analise) {
+    public FuncoesDTO recuperarCounts(Analise analise) {
         for(FuncaoTransacao f : analise.getFuncaoTransacaos()) {
             this.countEeComplex(f);
             this.countSeComplex(f);
@@ -122,9 +132,9 @@ public class RelatorioFuncaoTransacao {
             this.countSeImpacto(f);
             this.countCeImpacto(f);
             this.countInmImpacto(f);
-            this.popularPFs(f);
+            this.popularPFsTipo(f);
         }
-        return dadosFt;
+        return funcoesDTO;
     }
     
     /**Double
@@ -133,16 +143,16 @@ public class RelatorioFuncaoTransacao {
      */
     private void countEeComplex(FuncaoTransacao f) {
         if(f.getTipo() == TipoFuncaoTransacao.EE && f.getComplexidade() == Complexidade.SEM) {
-            dadosFt.getComplexidadeDto().setEeSem(incrementar(dadosFt.getComplexidadeDto().getEeSem()));
+            funcoesDTO.getComplexidadeDtoFt().setEeSem(incrementar(funcoesDTO.getComplexidadeDtoFt().getEeSem()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.EE && f.getComplexidade() == Complexidade.BAIXA) {
-            dadosFt.getComplexidadeDto().setEeBaixa(incrementar(dadosFt.getComplexidadeDto().getEeBaixa()));
+            funcoesDTO.getComplexidadeDtoFt().setEeBaixa(incrementar(funcoesDTO.getComplexidadeDtoFt().getEeBaixa()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.EE && f.getComplexidade() == Complexidade.MEDIA) {
-            dadosFt.getComplexidadeDto().setEeMedia(incrementar(dadosFt.getComplexidadeDto().getEeMedia()));
+            funcoesDTO.getComplexidadeDtoFt().setEeMedia(incrementar(funcoesDTO.getComplexidadeDtoFt().getEeMedia()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.EE && f.getComplexidade() == Complexidade.ALTA) {
-            dadosFt.getComplexidadeDto().setEeAlta(incrementar(dadosFt.getComplexidadeDto().getEeAlta()));
+            funcoesDTO.getComplexidadeDtoFt().setEeAlta(incrementar(funcoesDTO.getComplexidadeDtoFt().getEeAlta()));
         }
     }
     
@@ -152,16 +162,16 @@ public class RelatorioFuncaoTransacao {
      */
     private void countSeComplex(FuncaoTransacao f) {
         if(f.getTipo() == TipoFuncaoTransacao.SE && f.getComplexidade() == Complexidade.SEM) {
-            dadosFt.getComplexidadeDto().setSeSem(incrementar(dadosFt.getComplexidadeDto().getSeSem()));
+            funcoesDTO.getComplexidadeDtoFt().setSeSem(incrementar(funcoesDTO.getComplexidadeDtoFt().getSeSem()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.SE && f.getComplexidade() == Complexidade.BAIXA) {
-            dadosFt.getComplexidadeDto().setSeBaixa(incrementar(dadosFt.getComplexidadeDto().getSeBaixa()));
+            funcoesDTO.getComplexidadeDtoFt().setSeBaixa(incrementar(funcoesDTO.getComplexidadeDtoFt().getSeBaixa()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.SE && f.getComplexidade() == Complexidade.MEDIA) {
-            dadosFt.getComplexidadeDto().setSeMedia(incrementar(dadosFt.getComplexidadeDto().getSeMedia()));
+            funcoesDTO.getComplexidadeDtoFt().setSeMedia(incrementar(funcoesDTO.getComplexidadeDtoFt().getSeMedia()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.SE && f.getComplexidade() == Complexidade.ALTA) {
-            dadosFt.getComplexidadeDto().setSeAlta(incrementar(dadosFt.getComplexidadeDto().getSeAlta()));
+            funcoesDTO.getComplexidadeDtoFt().setSeAlta(incrementar(funcoesDTO.getComplexidadeDtoFt().getSeAlta()));
         }
     }
     
@@ -171,16 +181,16 @@ public class RelatorioFuncaoTransacao {
      */
     private void countCeComplex(FuncaoTransacao f) {
         if(f.getTipo() == TipoFuncaoTransacao.CE && f.getComplexidade() == Complexidade.SEM) {
-            dadosFt.getComplexidadeDto().setCeSem(incrementar(dadosFt.getComplexidadeDto().getCeSem()));
+            funcoesDTO.getComplexidadeDtoFt().setCeSem(incrementar(funcoesDTO.getComplexidadeDtoFt().getCeSem()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.CE && f.getComplexidade() == Complexidade.BAIXA) {
-            dadosFt.getComplexidadeDto().setCeBaixa(incrementar(dadosFt.getComplexidadeDto().getCeBaixa()));
+            funcoesDTO.getComplexidadeDtoFt().setCeBaixa(incrementar(funcoesDTO.getComplexidadeDtoFt().getCeBaixa()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.CE && f.getComplexidade() == Complexidade.MEDIA) {
-            dadosFt.getComplexidadeDto().setCeMedia(incrementar(dadosFt.getComplexidadeDto().getCeMedia()));
+            funcoesDTO.getComplexidadeDtoFt().setCeMedia(incrementar(funcoesDTO.getComplexidadeDtoFt().getCeMedia()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.CE && f.getComplexidade() == Complexidade.ALTA) {
-            dadosFt.getComplexidadeDto().setCeAlta(incrementar(dadosFt.getComplexidadeDto().getCeAlta()));
+            funcoesDTO.getComplexidadeDtoFt().setCeAlta(incrementar(funcoesDTO.getComplexidadeDtoFt().getCeAlta()));
         }
     }
     
@@ -190,16 +200,16 @@ public class RelatorioFuncaoTransacao {
      */
     private void countInmComplex(FuncaoTransacao f) {
         if(f.getTipo() == TipoFuncaoTransacao.INM && f.getComplexidade() == Complexidade.SEM) {
-            dadosFt.getComplexidadeDto().setCeSem(incrementar(dadosFt.getComplexidadeDto().getCeSem()));
+            funcoesDTO.getComplexidadeDtoFt().setCeSem(incrementar(funcoesDTO.getComplexidadeDtoFt().getCeSem()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.INM && f.getComplexidade() == Complexidade.BAIXA) {
-            dadosFt.getComplexidadeDto().setCeBaixa(incrementar(dadosFt.getComplexidadeDto().getCeBaixa()));
+            funcoesDTO.getComplexidadeDtoFt().setCeBaixa(incrementar(funcoesDTO.getComplexidadeDtoFt().getCeBaixa()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.INM && f.getComplexidade() == Complexidade.MEDIA) {
-            dadosFt.getComplexidadeDto().setCeMedia(incrementar(dadosFt.getComplexidadeDto().getCeMedia()));
+            funcoesDTO.getComplexidadeDtoFt().setCeMedia(incrementar(funcoesDTO.getComplexidadeDtoFt().getCeMedia()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.INM && f.getComplexidade() == Complexidade.ALTA) {
-            dadosFt.getComplexidadeDto().setCeAlta(incrementar(dadosFt.getComplexidadeDto().getCeAlta()));
+            funcoesDTO.getComplexidadeDtoFt().setCeAlta(incrementar(funcoesDTO.getComplexidadeDtoFt().getCeAlta()));
         }
     }
     
@@ -209,16 +219,16 @@ public class RelatorioFuncaoTransacao {
      */
     private void countEeImpacto(FuncaoTransacao f) {
         if(f.getTipo() == TipoFuncaoTransacao.EE && f.getImpacto() == ImpactoFatorAjuste.INCLUSAO) {
-            dadosFt.getImpactoDto().setEeInclusao(incrementar(dadosFt.getImpactoDto().getEeInclusao()));
+            funcoesDTO.getImpactoDtoFt().setEeInclusao(incrementar(funcoesDTO.getImpactoDtoFt().getEeInclusao()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.EE && f.getImpacto() == ImpactoFatorAjuste.ALTERACAO) {
-            dadosFt.getImpactoDto().setEeAlteracao(incrementar(dadosFt.getImpactoDto().getEeAlteracao()));
+            funcoesDTO.getImpactoDtoFt().setEeAlteracao(incrementar(funcoesDTO.getImpactoDtoFt().getEeAlteracao()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.EE && f.getImpacto() == ImpactoFatorAjuste.EXCLUSAO) {
-            dadosFt.getImpactoDto().setEeExclusao(incrementar(dadosFt.getImpactoDto().getEeExclusao()));
+            funcoesDTO.getImpactoDtoFt().setEeExclusao(incrementar(funcoesDTO.getImpactoDtoFt().getEeExclusao()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.EE && f.getImpacto() == ImpactoFatorAjuste.CONVERSAO) {
-            dadosFt.getImpactoDto().setEeConversao(incrementar(dadosFt.getImpactoDto().getEeConversao()));
+            funcoesDTO.getImpactoDtoFt().setEeConversao(incrementar(funcoesDTO.getImpactoDtoFt().getEeConversao()));
         }
     }
     
@@ -228,16 +238,16 @@ public class RelatorioFuncaoTransacao {
      */
     private void countSeImpacto(FuncaoTransacao f) {
         if(f.getTipo() == TipoFuncaoTransacao.SE && f.getImpacto() == ImpactoFatorAjuste.INCLUSAO) {
-            dadosFt.getImpactoDto().setSeInclusao(incrementar(dadosFt.getImpactoDto().getSeInclusao()));
+            funcoesDTO.getImpactoDtoFt().setSeInclusao(incrementar(funcoesDTO.getImpactoDtoFt().getSeInclusao()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.SE && f.getImpacto() == ImpactoFatorAjuste.ALTERACAO) {
-            dadosFt.getImpactoDto().setSeAlteracao(incrementar(dadosFt.getImpactoDto().getSeAlteracao()));
+            funcoesDTO.getImpactoDtoFt().setSeAlteracao(incrementar(funcoesDTO.getImpactoDtoFt().getSeAlteracao()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.SE && f.getImpacto() == ImpactoFatorAjuste.EXCLUSAO) {
-            dadosFt.getImpactoDto().setSeExclusao(incrementar(dadosFt.getImpactoDto().getSeExclusao()));
+            funcoesDTO.getImpactoDtoFt().setSeExclusao(incrementar(funcoesDTO.getImpactoDtoFt().getSeExclusao()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.SE && f.getImpacto() == ImpactoFatorAjuste.CONVERSAO) {
-            dadosFt.getImpactoDto().setSeConversao(incrementar(dadosFt.getImpactoDto().getSeConversao()));
+            funcoesDTO.getImpactoDtoFt().setSeConversao(incrementar(funcoesDTO.getImpactoDtoFt().getSeConversao()));
         }
     }
     
@@ -247,16 +257,16 @@ public class RelatorioFuncaoTransacao {
      */
     private void countCeImpacto(FuncaoTransacao f) {
         if(f.getTipo() == TipoFuncaoTransacao.CE && f.getImpacto() == ImpactoFatorAjuste.INCLUSAO) {
-            dadosFt.getImpactoDto().setCeInclusao(incrementar(dadosFt.getImpactoDto().getCeInclusao()));
+            funcoesDTO.getImpactoDtoFt().setCeInclusao(incrementar(funcoesDTO.getImpactoDtoFt().getCeInclusao()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.CE && f.getImpacto() == ImpactoFatorAjuste.ALTERACAO) {
-            dadosFt.getImpactoDto().setCeAlteracao(incrementar(dadosFt.getImpactoDto().getCeAlteracao()));
+            funcoesDTO.getImpactoDtoFt().setCeAlteracao(incrementar(funcoesDTO.getImpactoDtoFt().getCeAlteracao()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.CE && f.getImpacto() == ImpactoFatorAjuste.EXCLUSAO) {
-            dadosFt.getImpactoDto().setCeExclusao(incrementar(dadosFt.getImpactoDto().getCeExclusao()));
+            funcoesDTO.getImpactoDtoFt().setCeExclusao(incrementar(funcoesDTO.getImpactoDtoFt().getCeExclusao()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.CE && f.getImpacto() == ImpactoFatorAjuste.CONVERSAO) {
-            dadosFt.getImpactoDto().setCeConversao(incrementar(dadosFt.getImpactoDto().getCeConversao()));
+            funcoesDTO.getImpactoDtoFt().setCeConversao(incrementar(funcoesDTO.getImpactoDtoFt().getCeConversao()));
         }
     }
 
@@ -266,16 +276,16 @@ public class RelatorioFuncaoTransacao {
      */
     private void countInmImpacto(FuncaoTransacao f) {
         if(f.getTipo() == TipoFuncaoTransacao.INM && f.getImpacto() == ImpactoFatorAjuste.INCLUSAO) {
-            dadosFt.getImpactoDto().setInmInclusaoFt(incrementar(dadosFt.getImpactoDto().getInmInclusaoFt()));
+            funcoesDTO.getImpactoDtoFt().setInmInclusaoFt(incrementar(funcoesDTO.getImpactoDtoFt().getInmInclusaoFt()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.INM && f.getImpacto() == ImpactoFatorAjuste.ALTERACAO) {
-            dadosFt.getImpactoDto().setInmAlteracaoFt(incrementar(dadosFt.getImpactoDto().getInmAlteracaoFt()));
+            funcoesDTO.getImpactoDtoFt().setInmAlteracaoFt(incrementar(funcoesDTO.getImpactoDtoFt().getInmAlteracaoFt()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.INM && f.getImpacto() == ImpactoFatorAjuste.EXCLUSAO) {
-            dadosFt.getImpactoDto().setInmExclusaoFt(incrementar(dadosFt.getImpactoDto().getInmExclusaoFt()));
+            funcoesDTO.getImpactoDtoFt().setInmExclusaoFt(incrementar(funcoesDTO.getImpactoDtoFt().getInmExclusaoFt()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.INM && f.getImpacto() == ImpactoFatorAjuste.CONVERSAO) {
-            dadosFt.getImpactoDto().setInmConversaoFt(incrementar(dadosFt.getImpactoDto().getInmConversaoFt()));
+            funcoesDTO.getImpactoDtoFt().setInmConversaoFt(incrementar(funcoesDTO.getImpactoDtoFt().getInmConversaoFt()));
         }
     }
     

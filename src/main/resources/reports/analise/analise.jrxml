@@ -3,7 +3,7 @@
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="ireport.zoom" value="1.6105100000000012"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="1392"/>
+	<property name="ireport.y" value="1121"/>
 	<parameter name="PROPOSITO" class="java.lang.String"/>
 	<parameter name="ESCOPO" class="java.lang.String"/>
 	<parameter name="FRONTEIRA" class="java.lang.String"/>
@@ -120,22 +120,22 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="funcoesDTO.nomeFt" class="java.util.List"/>
-	<field name="funcoesDTO.classificacaoFt" class="java.util.List"/>
-	<field name="funcoesDTO.impactoFt" class="java.util.List"/>
-	<field name="funcoesDTO.ftrFt" class="java.lang.String"/>
-	<field name="funcoesDTO.derFt" class="java.util.List"/>
-	<field name="funcoesDTO.complexidadeFt" class="java.util.List"/>
-	<field name="funcoesDTO.pftotalFt" class="java.util.List"/>
-	<field name="funcoesDTO.pfajustadoFt" class="java.util.List"/>
-	<field name="funcoesDTO.nomeFd" class="java.util.List"/>
-	<field name="funcoesDTO.tipoFd" class="java.util.List"/>
-	<field name="funcoesDTO.impactoFd" class="java.util.List"/>
-	<field name="funcoesDTO.rlrFd" class="java.util.List"/>
-	<field name="funcoesDTO.derFd" class="java.util.List"/>
-	<field name="funcoesDTO.complexidadeFd" class="java.util.List"/>
-	<field name="funcoesDTO.pfTotalFd" class="java.util.List"/>
-	<field name="funcoesDTO.pfAjustadoFd" class="java.util.List"/>
+	<field name="nomeFt" class="java.util.List"/>
+	<field name="tipoFt" class="java.util.List"/>
+	<field name="impactoFt" class="java.util.List"/>
+	<field name="ftrFt" class="java.lang.String"/>
+	<field name="derFt" class="java.util.List"/>
+	<field name="complexidadeFt" class="java.util.List"/>
+	<field name="pfTotalFt" class="java.util.List"/>
+	<field name="pfAjustadoFt" class="java.util.List"/>
+	<field name="nomeFd" class="java.util.List"/>
+	<field name="tipoFd" class="java.util.List"/>
+	<field name="impactoFd" class="java.util.List"/>
+	<field name="rlrFd" class="java.util.List"/>
+	<field name="derFd" class="java.util.List"/>
+	<field name="complexidadeFd" class="java.util.List"/>
+	<field name="pfTotalFd" class="java.util.List"/>
+	<field name="pfAjustadoFd" class="java.util.List"/>
 	<title>
 		<band height="67" splitType="Stretch">
 			<frame>
@@ -492,42 +492,42 @@
 				<textField>
 					<reportElement positionType="Float" x="1" y="56" width="254" height="21" uuid="a23b5712-34a8-4374-84ac-03bacb30e33d"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.nomeFd}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nomeFd}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="257" y="56" width="36" height="21" uuid="4cbae9c3-0ebe-4c3a-9d2e-33865590e283"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.tipoFd}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{tipoFd}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="295" y="56" width="43" height="21" uuid="26a9157f-9e6b-407f-b66c-f105dffe1b8b"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.impactoFd}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{impactoFd}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="340" y="56" width="27" height="21" uuid="622c512d-0439-47da-9156-b216c355085a"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.rlrFd}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{rlrFd}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="369" y="56" width="30" height="21" uuid="ace5475c-7324-4b43-9081-9e79cbbf52ed"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.derFd}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{derFd}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="401" y="56" width="54" height="21" uuid="6cdaa391-c001-4e0b-8738-dcc26130f153"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.complexidadeFd}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{complexidadeFd}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="457" y="56" width="44" height="21" uuid="39d469f5-a766-4eb3-8dbc-5332ef1ad74e"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.pfTotalFd}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{pfTotalFd}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="503" y="56" width="47" height="21" uuid="7a78fc0c-1511-4550-a8b5-b95c1fa2f87b"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.pfAjustadoFd}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{pfAjustadoFd}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement positionType="Float" x="1" y="82" width="549" height="21" backcolor="#D4D4D4" uuid="c1c69678-117a-4bbc-934d-5ce418dd4956"/>
@@ -1002,42 +1002,42 @@
 				<textField>
 					<reportElement positionType="Float" x="1" y="65" width="254" height="21" uuid="81a541d7-1c60-43d1-ab95-6ea91414da4c"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.nomeFt}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nomeFt}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="257" y="65" width="36" height="21" uuid="1b6592f4-90f0-469a-bbff-cd4517a955f9"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.classificacaoFt}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{tipoFt}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="295" y="65" width="43" height="21" uuid="8d1107ce-10c9-4f7a-847e-d737a53e9744"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.impactoFt}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{impactoFt}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="340" y="65" width="27" height="21" uuid="7af659b0-433e-49ec-973d-0a704357fe51"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.ftrFt}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{ftrFt}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="369" y="65" width="30" height="21" uuid="958b0827-7cfe-4d93-9565-7d77281f57eb"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.derFt}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{derFt}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="401" y="65" width="54" height="21" uuid="e53c4859-d8fa-450a-88eb-d9c505f00ff9"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.complexidadeFt}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{complexidadeFt}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="457" y="65" width="44" height="21" uuid="9dcddc18-5e0a-41e7-af87-e3f62a5e5d8d"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.pftotalFt}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{pfTotalFt}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement positionType="Float" x="503" y="65" width="47" height="21" uuid="d9cb83ab-568c-42d6-a54a-f259531c20f4"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{funcoesDTO.pfajustadoFt}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{pfAjustadoFt}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement positionType="Float" x="1" y="91" width="549" height="21" uuid="d9d0bc9a-14ad-4910-8c41-2a99b94ccd4f"/>

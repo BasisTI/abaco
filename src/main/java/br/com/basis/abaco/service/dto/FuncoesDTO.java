@@ -32,6 +32,10 @@ public class FuncoesDTO {
     
     private ImpactoDTO impactoDtoFd;
     
+    private String pfTotalFd;
+    
+    private String pfAjustadoFd;
+    
     private String fatorAjusteFt;
     
     private String impactoFt;
@@ -57,6 +61,10 @@ public class FuncoesDTO {
     private ComplexidadeDTO complexidadeDtoFt;
     
     private ImpactoDTO impactoDtoFt;
+    
+    private String pfTotalFt;
+    
+    private String pfAjustadoFt;
 
     public String getFatorAjusteFd() {
         return fatorAjusteFd;
@@ -264,6 +272,38 @@ public class FuncoesDTO {
 
     public void setImpactoDtoFt(ImpactoDTO impactoDtoFt) {
         this.impactoDtoFt = impactoDtoFt;
+    }
+
+    public String getPfTotalFd() {
+        return pfTotalFd;
+    }
+
+    public void setPfTotalFd(String pfTotalFd) {
+        this.pfTotalFd = pfTotalFd;
+    }
+
+    public String getPfAjustadoFd() {
+        return pfAjustadoFd;
+    }
+
+    public void setPfAjustadoFd(String pfAjustadoFd) {
+        this.pfAjustadoFd = pfAjustadoFd;
+    }
+
+    public String getPfTotalFt() {
+        return pfTotalFt;
+    }
+
+    public void setPfTotalFt(String pfTotalFt) {
+        this.pfTotalFt = pfTotalFt;
+    }
+
+    public String getPfAjustadoFt() {
+        return pfAjustadoFt;
+    }
+
+    public void setPfAjustadoFt(String pfAjustadoFt) {
+        this.pfAjustadoFt = pfAjustadoFt;
     }
    
     
