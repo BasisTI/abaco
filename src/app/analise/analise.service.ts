@@ -13,7 +13,7 @@ export class AnaliseService {
 
   resourceUrl = environment.apiUrl + '/analises';
 
-  relatoriosUrl = environment.apiUrl + '/relatorios/';
+  relatoriosUrl = environment.apiUrl + '/relatorios';
 
   searchUrl = environment.apiUrl + '/_search/analises';
 
