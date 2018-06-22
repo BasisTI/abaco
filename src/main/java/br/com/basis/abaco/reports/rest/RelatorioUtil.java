@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class RelatorioUtil {
         ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
         return response;
     }
-    
+
     /**
      * Método responsável por exibir o PDF no browser.
      * @param analise
@@ -93,15 +94,11 @@ public class RelatorioUtil {
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public @ResponseBody byte[] downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, String nomeArquivo,  Map parametrosJasper, List<FuncoesDTO> listFuncoes) throws FileNotFoundException, JRException {
-        
-        File jasperFile = new File(getClass().getClassLoader().getResource(caminhoJasperResolucao).getFile());
-        
+        InputStream stram = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
         JRBeanCollectionDataSource funcoes = new JRBeanCollectionDataSource(listFuncoes);
-        JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(new FileInputStream(jasperFile), parametrosJasper, funcoes);
-
+        JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(stram, parametrosJasper, funcoes);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
-
         response.setContentType("application/x-pdf");
         response.setHeader("Content-Disposition", "inline; filename=" + nomeArquivo + ".pdf");
         return  JasperExportManager.exportReportToPdf(jasperPrint);
