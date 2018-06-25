@@ -429,7 +429,7 @@
 				<staticText>
 					<reportElement positionType="Float" x="0" y="0" width="550" height="32" uuid="db6f57c7-b494-43a8-82ae-f3918c3090e0"/>
 					<textElement verticalAlignment="Middle">
-						<font fontName="DejaVu Sans" size="16" isBold="true"/>
+						<font fontName="SansSerif" size="16" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Função de Dados]]></text>
 				</staticText>
