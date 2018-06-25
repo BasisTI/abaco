@@ -3,7 +3,6 @@ package br.com.basis.abaco.reports.rest;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -68,13 +67,10 @@ public class RelatorioUtil {
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public ResponseEntity<byte[]> downloadPdfArquivo(Analise analise, String caminhoJasperResolucao, String nomeArquivo, Map parametrosJasper) throws FileNotFoundException, JRException {
-        
-        File jasperFile = new File(getClass().getClassLoader().getResource(caminhoJasperResolucao).getFile());
-        JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(new FileInputStream(jasperFile), parametrosJasper, new JREmptyDataSource());
-        
+        InputStream stram = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
+        JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(stram, parametrosJasper, new JREmptyDataSource());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.pdf\"", nomeArquivo));
