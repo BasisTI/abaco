@@ -82,19 +82,19 @@ public class RelatorioFuncaoTransacao {
      * @param f
      */
     private void popularPFsTipo(FuncaoTransacao f) {
-        if(f.getTipo() == TipoFuncaoTransacao.EE) {
+        if(f.getTipo() == TipoFuncaoTransacao.EE && f.getGrossPF() != null && f.getPf() != null) {
             funcoesDTO.getComplexidadeDtoFt().setPfTotalEe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalEe(), f.getGrossPF().doubleValue()));
             funcoesDTO.getComplexidadeDtoFt().setPfAjustadoEe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfAjustadoEe(), f.getPf().doubleValue()));
         }
-        if(f.getTipo() == TipoFuncaoTransacao.SE) {
+        if(f.getTipo() == TipoFuncaoTransacao.SE && f.getGrossPF() != null && f.getPf() != null) {
             funcoesDTO.getComplexidadeDtoFt().setPfTotalSe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalSe(),f.getGrossPF().doubleValue()));
             funcoesDTO.getComplexidadeDtoFt().setPfAjustadoSe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalSe(),f.getPf().doubleValue()));
         }
-        if(f.getTipo() == TipoFuncaoTransacao.CE) {
+        if(f.getTipo() == TipoFuncaoTransacao.CE && f.getGrossPF() != null && f.getPf() != null) {
             funcoesDTO.getComplexidadeDtoFt().setPfTotalCe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalCe(),f.getGrossPF().doubleValue()));
             funcoesDTO.getComplexidadeDtoFt().setPfAjustadoCe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalCe(),f.getPf().doubleValue()));
         }
-        if(f.getTipo() == TipoFuncaoTransacao.INM) {
+        if(f.getTipo() == TipoFuncaoTransacao.INM && f.getGrossPF() != null && f.getPf() != null) {
             funcoesDTO.getComplexidadeDtoFt().setPfTotalInmFt(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalInmFt(),f.getGrossPF().doubleValue()));
             funcoesDTO.getComplexidadeDtoFt().setPfAjustadoInmFt(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalInmFt(),f.getPf().doubleValue()));
         }
@@ -105,8 +105,15 @@ public class RelatorioFuncaoTransacao {
      * @param f
      */
     private void popularPFs(FuncaoTransacao f) {
-        funcoesDTO.setPfTotalFt(f.getGrossPF().toString());
-        funcoesDTO.setPfAjustadoFt(f.getPf().toString());
+        if(f.getGrossPF() != null) {
+            funcoesDTO.setPfTotalFt(f.getGrossPF().toString());
+        } else {
+            funcoesDTO.setPfTotalFt("---");
+        } if(f.getPf() != null) {
+            funcoesDTO.setPfAjustadoFt(f.getPf().toString());
+        } else {
+            funcoesDTO.setPfAjustadoFt("---");
+        }
     }
     
     /**

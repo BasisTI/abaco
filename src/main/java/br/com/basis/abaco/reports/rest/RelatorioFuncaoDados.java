@@ -80,16 +80,17 @@ public class RelatorioFuncaoDados {
      * @param f
      */
     private void popularPFsTipo(FuncaoDados f) {
-
-        if(f.getTipo() == TipoFuncaoDados.ALI) {
+        
+        if(f.getTipo() == TipoFuncaoDados.ALI && f.getGrossPF() != null && f.getPf() != null) {
             funcoesDTO.getComplexidadeDtoFd().setPfTotalAli(incrementarPfs(funcoesDTO.getComplexidadeDtoFd().getPfTotalAli(), f.getGrossPF().doubleValue()));
             funcoesDTO.getComplexidadeDtoFd().setPfAjustadoAli(incrementarPfs(funcoesDTO.getComplexidadeDtoFd().getPfAjustadoAli(), f.getPf().doubleValue()));
         }
-        if(f.getTipo() == TipoFuncaoDados.AIE) {
+        if(f.getTipo() == TipoFuncaoDados.AIE && f.getGrossPF() != null && f.getPf() != null) {
             funcoesDTO.getComplexidadeDtoFd().setPfTotalAie(incrementarPfs(funcoesDTO.getComplexidadeDtoFd().getPfTotalAie(), f.getGrossPF().doubleValue()));
             funcoesDTO.getComplexidadeDtoFd().setPfAjustadoAie(incrementarPfs(funcoesDTO.getComplexidadeDtoFd().getPfAjustadoAie(), f.getPf().doubleValue()));
         }
-        if(f.getTipo() == TipoFuncaoDados.INM) {
+        
+        if(f.getTipo() == TipoFuncaoDados.INM && f.getGrossPF() != null && f.getPf() != null) {
             funcoesDTO.getComplexidadeDtoFd().setPfTotalInmFd(incrementarPfs(funcoesDTO.getComplexidadeDtoFd().getPfTotalInmFd(), f.getGrossPF().doubleValue()));
             funcoesDTO.getComplexidadeDtoFd().setPfAjustadoInmFd(incrementarPfs(funcoesDTO.getComplexidadeDtoFd().getPfAjustadoInmFd(), f.getPf().doubleValue()));
         }
@@ -100,8 +101,16 @@ public class RelatorioFuncaoDados {
      * @param f
      */
     private void popularPFs(FuncaoDados f) {
-        funcoesDTO.setPfTotalFd(f.getGrossPF().toString());
-        funcoesDTO.setPfAjustadoFd(f.getPf().toString());
+        if(f.getGrossPF() != null) {
+            funcoesDTO.setPfTotalFd(f.getGrossPF().toString());
+        } else {
+            funcoesDTO.setPfTotalFd("---");
+        }
+        if(f.getPf() != null) {
+            funcoesDTO.setPfAjustadoFd(f.getPf().toString());
+        } else {
+            funcoesDTO.setPfAjustadoFd("---");
+        }
     }
     
     /**
@@ -322,7 +331,5 @@ public class RelatorioFuncaoDados {
         }
         return valor3;
     }
-    
-
-        
+            
 }
