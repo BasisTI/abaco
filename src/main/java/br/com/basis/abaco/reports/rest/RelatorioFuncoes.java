@@ -535,9 +535,6 @@ public class RelatorioFuncoes {
      * @return
      */
     private boolean validarPFs(BigDecimal valor1, BigDecimal valor2) {
-        if(valor1 != null && valor2 != null) {
-            return true;
-        }
-        return false;
+        return valor1 != null && valor2 != null ? true : false;
     }
 }
