@@ -1,5 +1,6 @@
 package br.com.basis.abaco.reports.rest;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,19 +83,19 @@ public class RelatorioFuncoes {
      * @param f
      */
     private void popularPFsFt(FuncaoTransacao f) {
-        if(f.getTipo() == TipoFuncaoTransacao.EE) {
+        if(f.getTipo() == TipoFuncaoTransacao.EE && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoes.getComplexidadeDtoFt().setPfTotalEe(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfTotalEe(), f.getGrossPF().doubleValue()));
             funcoes.getComplexidadeDtoFt().setPfAjustadoEe(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfAjustadoEe(), f.getPf().doubleValue()));
         }
-        if(f.getTipo() == TipoFuncaoTransacao.SE) {
+        if(f.getTipo() == TipoFuncaoTransacao.SE && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoes.getComplexidadeDtoFt().setPfTotalSe(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfTotalSe(),f.getGrossPF().doubleValue()));
             funcoes.getComplexidadeDtoFt().setPfAjustadoSe(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfTotalSe(),f.getPf().doubleValue()));
         }
-        if(f.getTipo() == TipoFuncaoTransacao.CE) {
+        if(f.getTipo() == TipoFuncaoTransacao.CE && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoes.getComplexidadeDtoFt().setPfTotalCe(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfTotalCe(),f.getGrossPF().doubleValue()));
             funcoes.getComplexidadeDtoFt().setPfAjustadoCe(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfTotalCe(),f.getPf().doubleValue()));
         }
-        if(f.getTipo() == TipoFuncaoTransacao.INM) {
+        if(f.getTipo() == TipoFuncaoTransacao.INM && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoes.getComplexidadeDtoFt().setPfTotalInmFt(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfTotalInmFt(),f.getGrossPF().doubleValue()));
             funcoes.getComplexidadeDtoFt().setPfAjustadoInmFt(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfTotalInmFt(),f.getPf().doubleValue()));
         }
@@ -314,15 +315,15 @@ public class RelatorioFuncoes {
      */
     private void popularPFsFd(FuncaoDados f) {
 
-        if(f.getTipo() == TipoFuncaoDados.ALI) {
+        if(f.getTipo() == TipoFuncaoDados.ALI && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoes.getComplexidadeDtoFd().setPfTotalAli(incrementarPfs(funcoes.getComplexidadeDtoFd().getPfTotalAli(), f.getGrossPF().doubleValue()));
             funcoes.getComplexidadeDtoFd().setPfAjustadoAli(incrementarPfs(funcoes.getComplexidadeDtoFd().getPfAjustadoAli(), f.getPf().doubleValue()));
         }
-        if(f.getTipo() == TipoFuncaoDados.AIE) {
+        if(f.getTipo() == TipoFuncaoDados.AIE && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoes.getComplexidadeDtoFd().setPfTotalAie(incrementarPfs(funcoes.getComplexidadeDtoFd().getPfTotalAie(), f.getGrossPF().doubleValue()));
             funcoes.getComplexidadeDtoFd().setPfAjustadoAie(incrementarPfs(funcoes.getComplexidadeDtoFd().getPfAjustadoAie(), f.getPf().doubleValue()));
         }
-        if(f.getTipo() == TipoFuncaoDados.INM) {
+        if(f.getTipo() == TipoFuncaoDados.INM && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoes.getComplexidadeDtoFd().setPfTotalInmFd(incrementarPfs(funcoes.getComplexidadeDtoFd().getPfTotalInmFd(), f.getGrossPF().doubleValue()));
             funcoes.getComplexidadeDtoFd().setPfAjustadoInmFd(incrementarPfs(funcoes.getComplexidadeDtoFd().getPfAjustadoInmFd(), f.getPf().doubleValue()));
         }
@@ -525,5 +526,18 @@ public class RelatorioFuncoes {
             valor3 += valor2;
         }
         return valor3;
+    }
+    
+    /**
+     * Método responsável por verificar se os valores não estão nulos.
+     * @param valor1
+     * @param valor2
+     * @return
+     */
+    private boolean validarPFs(BigDecimal valor1, BigDecimal valor2) {
+        if(valor1 != null && valor2 != null) {
+            return true;
+        }
+        return false;
     }
 }
