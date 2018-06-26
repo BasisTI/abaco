@@ -1,5 +1,6 @@
 package br.com.basis.abaco.reports.rest;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,15 +42,7 @@ public class RelatorioFuncaoTransacao {
     public List<FuncoesDTO> prepararListaFuncaoTransacao(Analise analise) {
         List<FuncoesDTO> list = new ArrayList<>();
         for(FuncaoTransacao f : analise.getFuncaoTransacaos()) {
-            this.init();
-            this.popularObjeto(f);
-            this.popularImpacto(f);
-            this.popularModulo(f);
-            this.popularNome(f);
-            this.popularPFs(f);
-            this.popularFtr(f);
-            this.popularDer(f);
-            this.popularValoresVazios();
+            this.popularObjetoFuncoesDTO(f);
             list.add(funcoesDTO);
         }
         
@@ -63,7 +56,22 @@ public class RelatorioFuncaoTransacao {
      * 
      * @param f
      */
-    private void popularFtr(FuncaoTransacao f) {
+    private void popularObjetoFuncoesDTO(FuncaoTransacao f) {
+        this.init();
+        this.popularObjeto(f);
+        this.popularImpacto(f);
+        this.popularModulo(f);
+        this.popularNome(f);
+        this.popularPFs(f);
+        this.popularFtr();
+        this.popularDer(f);
+    }
+    
+    /**
+     * 
+     * @param f
+     */
+    private void popularFtr() {
         this.valorFtr =+ 0;
         funcoesDTO.setFtrFt(valorFtr.toString());            
     }
@@ -82,22 +90,29 @@ public class RelatorioFuncaoTransacao {
      * @param f
      */
     private void popularPFsTipo(FuncaoTransacao f) {
-        if(f.getTipo() == TipoFuncaoTransacao.EE && f.getGrossPF() != null && f.getPf() != null) {
+        if(f.getTipo() == TipoFuncaoTransacao.EE && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoesDTO.getComplexidadeDtoFt().setPfTotalEe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalEe(), f.getGrossPF().doubleValue()));
             funcoesDTO.getComplexidadeDtoFt().setPfAjustadoEe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfAjustadoEe(), f.getPf().doubleValue()));
         }
-        if(f.getTipo() == TipoFuncaoTransacao.SE && f.getGrossPF() != null && f.getPf() != null) {
+        if(f.getTipo() == TipoFuncaoTransacao.SE && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoesDTO.getComplexidadeDtoFt().setPfTotalSe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalSe(),f.getGrossPF().doubleValue()));
             funcoesDTO.getComplexidadeDtoFt().setPfAjustadoSe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalSe(),f.getPf().doubleValue()));
         }
-        if(f.getTipo() == TipoFuncaoTransacao.CE && f.getGrossPF() != null && f.getPf() != null) {
+        if(f.getTipo() == TipoFuncaoTransacao.CE && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoesDTO.getComplexidadeDtoFt().setPfTotalCe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalCe(),f.getGrossPF().doubleValue()));
             funcoesDTO.getComplexidadeDtoFt().setPfAjustadoCe(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalCe(),f.getPf().doubleValue()));
         }
-        if(f.getTipo() == TipoFuncaoTransacao.INM && f.getGrossPF() != null && f.getPf() != null) {
+        if(f.getTipo() == TipoFuncaoTransacao.INM && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoesDTO.getComplexidadeDtoFt().setPfTotalInmFt(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalInmFt(),f.getGrossPF().doubleValue()));
             funcoesDTO.getComplexidadeDtoFt().setPfAjustadoInmFt(incrementarPfs(funcoesDTO.getComplexidadeDtoFt().getPfTotalInmFt(),f.getPf().doubleValue()));
         }
+    }
+    
+    private boolean validarPFs(BigDecimal valor1, BigDecimal valor2) {
+        if(valor1 != null && valor2 != null) {
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -116,25 +131,6 @@ public class RelatorioFuncaoTransacao {
         }
     }
     
-    /**
-     * 
-     */
-    private void popularValoresVazios() {
-        funcoesDTO.setFatorAjusteFd("---");
-        funcoesDTO.setImpactoFd("---");
-        funcoesDTO.setModuloFd("---");
-        funcoesDTO.setFuncionalidadeFd("---");
-        funcoesDTO.setNomeFd("---");
-        funcoesDTO.setTipoFd("---");
-        funcoesDTO.setTotalDerFd(0);
-        funcoesDTO.setTotalRlrFd(0);
-        funcoesDTO.setComplexidadeFd("---");
-        funcoesDTO.setRlrFd("---");
-        funcoesDTO.setDerFd("---");
-        funcoesDTO.setPfTotalFd("---");
-        funcoesDTO.setPfAjustadoFd("---");
-    }
-
     /**
      * 
      * @param f

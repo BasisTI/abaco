@@ -40,9 +40,7 @@ public class RelatorioAnaliseRest {
 
     private Map<String, Object> parametro;
     
-    private RelatorioFuncaoDados relatorioFuncaoDados;
-    
-    private RelatorioFuncaoTransacao relatorioFuncaoTransacao;
+    private RelatorioFuncoes relatorioFuncoes;
     
     private List<FuncoesDTO> listFuncoes;
 
@@ -58,8 +56,7 @@ public class RelatorioAnaliseRest {
         listFuncoes = new ArrayList<FuncoesDTO>();
         analise = new Analise();
         relatorio = new RelatorioUtil( this.response, this.request);
-        relatorioFuncaoDados = new RelatorioFuncaoDados();
-        relatorioFuncaoTransacao = new RelatorioFuncaoTransacao();
+        relatorioFuncoes = new RelatorioFuncoes();
     }
 
     /**
@@ -106,8 +103,7 @@ public class RelatorioAnaliseRest {
         this.popularOrganizacao();
         this.popularSistema();
         this.popularManual();
-        this.popularFuncaoDados();
-        this.popularFuncaoTransacao();  
+        this.popularFuncao();
         this.popularCountsFd();
         this.popularCountsFt();
         return parametro;
@@ -201,21 +197,9 @@ public class RelatorioAnaliseRest {
             parametro.put("VERSAOCPM", verificarVersaoCPM(analise.getContrato().getManual().getVersaoCPM()));
         }
     }
-
-    /**
-     * 
-     */
-    private void popularFuncaoDados() {
-        for (FuncoesDTO funcoesDTO : relatorioFuncaoDados.prepararListaFuncaoDados(analise)) {
-            listFuncoes.add(funcoesDTO);
-        }
-    }
-
-    /**
-     * 
-     */
-    private void popularFuncaoTransacao() {
-        for(FuncoesDTO funcoesDTO : relatorioFuncaoTransacao.prepararListaFuncaoTransacao(analise)) {
+    
+    private void popularFuncao() {
+        for (FuncoesDTO funcoesDTO : relatorioFuncoes.prepararListaFuncoes(analise)) {
             listFuncoes.add(funcoesDTO);
         }
     }
@@ -224,7 +208,7 @@ public class RelatorioAnaliseRest {
      * 
      */
     private void popularCountsFd() {
-        FuncoesDTO fd = relatorioFuncaoDados.recuperarCounts(analise);
+        FuncoesDTO fd = relatorioFuncoes.recuperarCountsFd(analise);
         this.popularComplexidadeAli(fd);
         this.popularComplexidadeAie(fd);
         this.popularComplexidadeInmFd(fd);
@@ -237,7 +221,7 @@ public class RelatorioAnaliseRest {
      * 
      */
     private void popularCountsFt() {
-        FuncoesDTO ft = relatorioFuncaoTransacao.recuperarCounts(analise);
+        FuncoesDTO ft = relatorioFuncoes.recuperarCountsFt(analise);
         this.popularComplexidadeEe(ft);
         this.popularComplexidadeSe(ft);
         this.popularComplexidadeCe(ft);

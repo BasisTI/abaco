@@ -39,15 +39,7 @@ public class RelatorioFuncaoDados {
         List<FuncoesDTO> list = new ArrayList<>();
         
         for(FuncaoDados f : analise.getFuncaoDados()) {
-            this.init();
-            this.popularObjeto(f);
-            this.popularImpacto(f);
-            this.popularModulo(f);
-            this.popularNome(f);
-            this.popularPFs(f);
-            this.popularRlr(f);
-            this.popularDer(f);
-            this.popularValoresVazios();
+            this.popularObjetoFuncoesDTO(f);
             list.add(funcoesDTO);
         }
         
@@ -55,6 +47,21 @@ public class RelatorioFuncaoDados {
         this.valorDer = 0;
         
         return list;
+    }
+    
+    /**
+     * 
+     * @param f
+     */
+    private void popularObjetoFuncoesDTO(FuncaoDados f) {
+        this.init();
+        this.popularObjeto(f);
+        this.popularImpacto(f);
+        this.popularModulo(f);
+        this.popularNome(f);
+        this.popularPFs(f);
+        this.popularRlr(f);
+        this.popularDer(f);
     }
     
     /**
@@ -113,25 +120,6 @@ public class RelatorioFuncaoDados {
         }
     }
     
-    /**
-     * 
-     */
-    private void popularValoresVazios() {
-        funcoesDTO.setFatorAjusteFt("---");
-        funcoesDTO.setImpactoFt("---");
-        funcoesDTO.setModuloFt("---");
-        funcoesDTO.setFuncionalidadeFt("---");
-        funcoesDTO.setNomeFt("---");
-        funcoesDTO.setTipoFt("---");
-        funcoesDTO.setTotalDerFt(0);
-        funcoesDTO.setTotalFtrFt(0);
-        funcoesDTO.setComplexidadeFt("---");
-        funcoesDTO.setFtrFt("---");
-        funcoesDTO.setDerFt("---");
-        funcoesDTO.setPfTotalFt("---");
-        funcoesDTO.setPfAjustadoFt("---");
-    }
-
     /**
      * 
      * @param f

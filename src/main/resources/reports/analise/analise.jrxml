@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="analise" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9ac44673-b60e-4209-99b8-14605622790d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-	<property name="ireport.zoom" value="1.6105100000000012"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="1121"/>
+	<property name="ireport.zoom" value="1.7715610000000022"/>
+	<property name="ireport.x" value="43"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="PROPOSITO" class="java.lang.String"/>
 	<parameter name="ESCOPO" class="java.lang.String"/>
 	<parameter name="FRONTEIRA" class="java.lang.String"/>

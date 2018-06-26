@@ -41,26 +41,40 @@ public class RelatorioFuncoes {
     public List<FuncoesDTO> prepararListaFuncoes(Analise analise) {
         List<FuncoesDTO> list = new ArrayList<>();
         for(FuncaoTransacao f : analise.getFuncaoTransacaos()) {
-            this.init();
-            this.popularObjetoFt(f);
-            this.popularImpacto(f);
-            this.popularModulo(f);
-            this.popularNome(f);
-            this.popularPFsFt(f);
+            this.popularFuncaoTransacao(f);
             list.add(funcoes);
         }
-        
         for(FuncaoDados f : analise.getFuncaoDados()) {
-            this.init();
-            this.popularObjetoFd(f);
-            this.popularImpactoFd(f);
-            this.popularModuloFd(f);
-            this.popularNomeFd(f);
-            this.popularPFsFd(f);
+            this.popularFuncaoDados(f);
             list.add(funcoes);
         }
-        
         return list;
+    }
+    
+    /**
+     * Método responsável por popular o objeto FuncoesDTO com as informações da função de transação.
+     * @param analise
+     */
+    private void popularFuncaoTransacao(FuncaoTransacao f) {
+        this.init();
+        this.popularObjetoFt(f);
+        this.popularImpacto(f);
+        this.popularModulo(f);
+        this.popularNome(f);
+        this.popularPFsFt(f);
+    }
+    
+    /**
+     * Método responsável por popular o objeto FuncoesDTO com as informações da função de dados.
+     * @param f
+     */
+    private void popularFuncaoDados(FuncaoDados f) {
+        this.init();
+        this.popularObjetoFd(f);
+        this.popularImpactoFd(f);
+        this.popularModuloFd(f);
+        this.popularNomeFd(f);
+        this.popularPFsFd(f);
     }
    
     /**

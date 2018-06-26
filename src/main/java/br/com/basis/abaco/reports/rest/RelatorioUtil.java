@@ -1,13 +1,8 @@
 package br.com.basis.abaco.reports.rest;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -98,26 +93,6 @@ public class RelatorioUtil {
         response.setContentType("application/x-pdf");
         response.setHeader("Content-Disposition", "inline; filename=" + nomeArquivo + ".pdf");
         return  JasperExportManager.exportReportToPdf(jasperPrint);
-    }
-    
-    /**
-     * 
-     * @param nomeArquivoCSV
-     * @param cabecalho
-     * @param conteudo
-     * @return
-     * @throws IOException
-     */
-    public byte[] gerarRelatorioCSV(String nomeArquivoCSV, String cabecalho, String conteudo) throws IOException {
-        FileOutputStream arquivo = new FileOutputStream(new File(nomeArquivoCSV));
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        baos.writeTo(arquivo);
-        BufferedWriter file = new BufferedWriter(new OutputStreamWriter(baos));
-        file.append(cabecalho);
-        file.append(conteudo);
-        file.close();
-        arquivo.close();
-        return baos.toByteArray();
     }
 
 }
