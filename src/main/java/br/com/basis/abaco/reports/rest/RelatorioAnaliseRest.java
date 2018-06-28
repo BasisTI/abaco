@@ -214,6 +214,9 @@ public class RelatorioAnaliseRest {
         parametro.put("FATORAJUSTE", verificarFatorAjuste(analise.getFatorAjuste()));
     }
     
+    /**
+     * 
+     */
     private void popularFuncao() {
         for (FuncoesDTO funcoesDTO : relatorioFuncoes.prepararListaFuncoes(analise)) {
             listFuncoes.add(funcoesDTO);
@@ -246,14 +249,14 @@ public class RelatorioAnaliseRest {
      */
     private FuncaoDadosDTO popularObjetoFd(FuncoesDTO f) {
         FuncaoDadosDTO fd = new FuncaoDadosDTO();
-        fd.setNome(f.getNomeFd());
-        fd.setClassificacao(f.getTipoFd());
-        fd.setImpacto(f.getImpactoFd());
-        fd.setRlr(f.getRlrFd());
-        fd.setDer(f.getDerFd());
-        fd.setComplexidade(f.getComplexidadeFd());
-        fd.setPfTotal(f.getPfTotalFd());
-        fd.setPfAjustado(f.getPfAjustadoFd());
+        fd.setNomeFd(f.getNomeFd());
+        fd.setClassificacaoFd(f.getTipoFd());
+        fd.setImpactoFd(f.getImpactoFd());
+        fd.setRlrFd(f.getRlrFd());
+        fd.setDerFd(f.getDerFd());
+        fd.setComplexidadeFd(f.getComplexidadeFd());
+        fd.setPfTotalFd(f.getPfTotalFd());
+        fd.setPfAjustadoFd(f.getPfAjustadoFd());
         return fd;
     }
     
@@ -264,14 +267,14 @@ public class RelatorioAnaliseRest {
      */
     private FuncaoTransacaoDTO popularObjetoFt(FuncoesDTO f) {
         FuncaoTransacaoDTO ft = new FuncaoTransacaoDTO();
-        ft.setNome(f.getNomeFt());
-        ft.setClassificacao(f.getTipoFt());
-        ft.setImpacto(f.getImpactoFt());
-        ft.setFtr(f.getFtrFt());
-        ft.setDer(f.getDerFt());
-        ft.setComplexidade(f.getComplexidadeFt());
-        ft.setPfTotal(f.getPfTotalFt());
-        ft.setPfAjustado(f.getPfAjustadoFt());
+        ft.setNomeFt(f.getNomeFt());
+        ft.setClassificacaoFt(f.getTipoFt());
+        ft.setImpactoFt(f.getImpactoFt());
+        ft.setFtrFt(f.getFtrFt());
+        ft.setDerFt(f.getDerFt());
+        ft.setComplexidadeFt(f.getComplexidadeFt());
+        ft.setPfTotalFt(f.getPfTotalFt());
+        ft.setPfAjustadoFt(f.getPfAjustadoFt());
         return ft;        
     }
 

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="analise" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9ac44673-b60e-4209-99b8-14605622790d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="ireport.zoom" value="1.7715610000000024"/>
@@ -63,27 +64,27 @@
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
-		<field name="nome" class="java.lang.String"/>
-		<field name="classificacao" class="java.lang.String"/>
-		<field name="impacto" class="java.lang.String"/>
-		<field name="ftr" class="java.lang.String"/>
-		<field name="der" class="java.lang.String"/>
-		<field name="complexidade" class="java.lang.String"/>
-		<field name="pfTotal" class="java.lang.String"/>
-		<field name="pfAjustado" class="java.lang.String"/>
+		<field name="nomeFt" class="java.lang.String"/>
+		<field name="classificacaoFt" class="java.lang.String"/>
+		<field name="impactoFt" class="java.lang.String"/>
+		<field name="ftrFt" class="java.lang.String"/>
+		<field name="derFt" class="java.lang.String"/>
+		<field name="complexidadeFt" class="java.lang.String"/>
+		<field name="pfTotalFt" class="java.lang.String"/>
+		<field name="pfAjustadoFt" class="java.lang.String"/>
 	</subDataset>
 	<subDataset name="Dataset2" uuid="07e0f874-a4e2-4e5b-9af8-de9ba8c9f39c">
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
-		<field name="nome" class="java.lang.String"/>
-		<field name="classificacao" class="java.lang.String"/>
-		<field name="impacto" class="java.lang.String"/>
-		<field name="rlr" class="java.lang.String"/>
-		<field name="der" class="java.lang.String"/>
-		<field name="complexidade" class="java.lang.String"/>
-		<field name="pfTotal" class="java.lang.String"/>
-		<field name="pfAjustado" class="java.lang.String"/>
+		<field name="nomeFd" class="java.lang.String"/>
+		<field name="classificacaoFd" class="java.lang.String"/>
+		<field name="impactoFd" class="java.lang.String"/>
+		<field name="rlrFd" class="java.lang.String"/>
+		<field name="derFd" class="java.lang.String"/>
+		<field name="complexidadeFd" class="java.lang.String"/>
+		<field name="pfTotalFd" class="java.lang.String"/>
+		<field name="pfAjustadoFd" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="PROPOSITO" class="java.lang.String"/>
 	<parameter name="ESCOPO" class="java.lang.String"/>
@@ -526,7 +527,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="170" height="30" isRemoveLineWhenBlank="true" uuid="7a755675-99ab-4952-8446-6f30ed344e67"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{nomeFd}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -545,7 +546,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="60" height="30" isRemoveLineWhenBlank="true" uuid="8cf599cb-bae1-4b4c-af53-f0458526e4e3"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{classificacao}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{classificacaoFd}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -564,7 +565,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="80" height="30" isRemoveLineWhenBlank="true" uuid="0f17080e-5097-4f38-8200-53c3f507f715"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{impacto}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{impactoFd}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -583,7 +584,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="50" height="30" isRemoveLineWhenBlank="true" uuid="638d4534-599f-4cff-acc7-d45dd9065962"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{rlr}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{rlrFd}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -602,7 +603,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="50" height="30" isRemoveLineWhenBlank="true" uuid="fe9bc030-2f73-4192-8f28-f2aab019a41c"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{der}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{derFd}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -621,7 +622,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="60" height="30" isRemoveLineWhenBlank="true" uuid="37d56ef2-0699-40fe-9124-f2eabed25e80"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{complexidade}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{complexidadeFd}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -640,7 +641,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="44" height="30" isRemoveLineWhenBlank="true" uuid="48d35372-f8b2-4528-a9b4-6e6647da33bb"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{pfTotal}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{pfTotalFd}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -659,7 +660,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="40" height="30" isRemoveLineWhenBlank="true" uuid="a764f1f1-5d1c-447b-9cbd-53b3dc1eb81f"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{pfAjustado}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{pfAjustadoFd}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -1113,7 +1114,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="160" height="30" isRemoveLineWhenBlank="true" uuid="6c9b5799-e8a1-479e-838b-884d8a7864db"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{nomeFt}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -1132,7 +1133,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="50" height="30" isRemoveLineWhenBlank="true" uuid="8e3040aa-fe97-4187-8538-f4dfe3706dee"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{classificacao}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{classificacaoFt}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -1151,7 +1152,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="70" height="30" isRemoveLineWhenBlank="true" uuid="4df5950c-0135-48f2-b3e3-a02a18b30dac"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{impacto}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{impactoFt}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -1170,7 +1171,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="60" height="30" isRemoveLineWhenBlank="true" uuid="3b3e2ad9-6a5d-4806-b29c-07e45843f37e"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{ftr}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{ftrFt}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -1189,7 +1190,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="50" height="30" isRemoveLineWhenBlank="true" uuid="029fe007-f8fe-42af-8694-f30a300514b9"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{der}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{derFt}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -1208,7 +1209,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="50" height="30" isRemoveLineWhenBlank="true" uuid="d3f36fad-2c2e-47f2-8aab-ed9cc2fddc3b"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{complexidade}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{complexidadeFt}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -1227,7 +1228,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="60" height="30" isRemoveLineWhenBlank="true" uuid="06e6921c-d6bd-42c1-9a86-e6a17d6a4e30"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{pfTotal}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{pfTotalFt}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -1246,7 +1247,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="50" height="30" isRemoveLineWhenBlank="true" uuid="dae924aa-24cf-464c-814d-479b053e400a"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{pfAjustado}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{pfAjustadoFt}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>

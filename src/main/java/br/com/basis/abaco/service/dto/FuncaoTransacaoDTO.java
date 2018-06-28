@@ -7,83 +7,84 @@ package br.com.basis.abaco.service.dto;
  */
 public class FuncaoTransacaoDTO {
 
-    private String nome;
+    private String nomeFt;
     
-    private String classificacao;
+    private String classificacaoFt;
     
-    private String impacto;
+    private String impactoFt;
     
-    private String ftr;
+    private String FtrFt;
     
-    private String der;
+    private String derFt;
     
-    private String complexidade;
+    private String complexidadeFt;
     
-    private String pfTotal;
+    private String pfTotalFt;
     
-    private String pfAjustado;
+    private String pfAjustadoFt;
 
-    public String getNome() {
-        return nome;
+    public String getNomeFt() {
+        return nomeFt;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeFt(String nomeFt) {
+        this.nomeFt = nomeFt;
     }
 
-    public String getClassificacao() {
-        return classificacao;
+    public String getClassificacaoFt() {
+        return classificacaoFt;
     }
 
-    public void setClassificacao(String classificacao) {
-        this.classificacao = classificacao;
+    public void setClassificacaoFt(String classificacaoFt) {
+        this.classificacaoFt = classificacaoFt;
     }
 
-    public String getImpacto() {
-        return impacto;
+    public String getImpactoFt() {
+        return impactoFt;
     }
 
-    public void setImpacto(String impacto) {
-        this.impacto = impacto;
+    public void setImpactoFt(String impactoFt) {
+        this.impactoFt = impactoFt;
     }
 
-    public String getFtr() {
-        return ftr;
+    public String getFtrFt() {
+        return FtrFt;
     }
 
-    public void setFtr(String ftr) {
-        this.ftr = ftr;
+    public void setFtrFt(String ftrFt) {
+        FtrFt = ftrFt;
     }
 
-    public String getDer() {
-        return der;
+    public String getDerFt() {
+        return derFt;
     }
 
-    public void setDer(String der) {
-        this.der = der;
+    public void setDerFt(String derFt) {
+        this.derFt = derFt;
     }
 
-    public String getComplexidade() {
-        return complexidade;
+    public String getComplexidadeFt() {
+        return complexidadeFt;
     }
 
-    public void setComplexidade(String complexidade) {
-        this.complexidade = complexidade;
+    public void setComplexidadeFt(String complexidadeFt) {
+        this.complexidadeFt = complexidadeFt;
     }
 
-    public String getPfTotal() {
-        return pfTotal;
+    public String getPfTotalFt() {
+        return pfTotalFt;
     }
 
-    public void setPfTotal(String pfTotal) {
-        this.pfTotal = pfTotal;
+    public void setPfTotalFt(String pfTotalFt) {
+        this.pfTotalFt = pfTotalFt;
     }
 
-    public String getPfAjustado() {
-        return pfAjustado;
+    public String getPfAjustadoFt() {
+        return pfAjustadoFt;
     }
 
-    public void setPfAjustado(String pfAjustado) {
-        this.pfAjustado = pfAjustado;
+    public void setPfAjustadoFt(String pfAjustadoFt) {
+        this.pfAjustadoFt = pfAjustadoFt;
     }
+
 }
