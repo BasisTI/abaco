@@ -300,13 +300,13 @@ public class AnaliseResource {
      * @throws JRException 
      * @throws IOException 
      */
-    @GetMapping("/relatorioAnalise/{id}")
+    @GetMapping("/relatorioPdfArquivo/{id}")
     @Timed
-    public ResponseEntity<byte[]> gerarRelatorioAnalises(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+    public ResponseEntity<byte[]> downloadPdfArquivo(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = recuperarAnalise(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
         log.debug("REST request to generate report Analise : {}", analise);
-        return relatorioAnaliseRest.downloadAnalise(analise);
+        return relatorioAnaliseRest.downloadPdfArquivo(analise);
     }
     
     /**
@@ -316,13 +316,13 @@ public class AnaliseResource {
      * @throws JRException 
      * @throws IOException 
      */
-    @GetMapping("/relatorios/{id}")
+    @GetMapping("/relatorioPdfBrowser/{id}")
     @Timed
-    public @ResponseBody byte[] gerarRelatorioAnalise(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+    public @ResponseBody byte[] downloadPdfBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = recuperarAnalise(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
         log.debug("REST request to generate report Analise : {}", analise);
-        return relatorioAnaliseRest.downloadAnalisePDF(analise);
+        return relatorioAnaliseRest.downloadPdfBrowser(analise);
     }
     
 }

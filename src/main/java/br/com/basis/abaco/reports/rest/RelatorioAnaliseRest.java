@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.FatorAjuste;
+import br.com.basis.abaco.service.dto.FuncaoDadosDTO;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoDTO;
 import br.com.basis.abaco.service.dto.FuncoesDTO;
 import net.sf.jasperreports.engine.JRException;
 
@@ -73,10 +75,10 @@ public class RelatorioAnaliseRest {
      * @throws FileNotFoundException
      * @throws JRException
      */
-    public ResponseEntity<byte[]> downloadAnalise(Analise analise) throws FileNotFoundException, JRException {
+    public ResponseEntity<byte[]> downloadPdfArquivo(Analise analise) throws FileNotFoundException, JRException {
         init();
         popularObjeto(analise);
-        return relatorio.downloadPdfArquivo(analise, caminhoRalatorioAnalise, analise.getIdentificadorAnalise().trim(),popularParametroAnalise());
+        return relatorio.downloadPdfArquivo(analise, caminhoRalatorioAnalise, popularParametroAnalise());
     }
     
     /**
@@ -85,10 +87,10 @@ public class RelatorioAnaliseRest {
      * @throws FileNotFoundException
      * @throws JRException
      */
-    public @ResponseBody byte[] downloadAnalisePDF(Analise analise) throws FileNotFoundException, JRException {
+    public @ResponseBody byte[] downloadPdfBrowser(Analise analise) throws FileNotFoundException, JRException {
         init();
         popularObjeto(analise);
-        return relatorio.downloadPdfBrowser(analise, caminhoRalatorioAnalise, analise.getIdentificadorAnalise().trim(), popularParametroAnalise(), listFuncoes);
+        return relatorio.downloadPdfBrowser(analise, caminhoRalatorioAnalise, popularParametroAnalise());
     }
 
     /**
@@ -98,12 +100,15 @@ public class RelatorioAnaliseRest {
         parametro = new HashMap<String, Object>();
         this.popularImagemRelatorio();
         this.popularUsuarios();
-        this.popularDadosBasicos();
+        this.popularDadosGerais();
         this.popularContrato();
         this.popularOrganizacao();
         this.popularSistema();
         this.popularManual();
+        this.popularResumo();
+        this.popularDadosBasicos();
         this.popularFuncao();
+        this.popularListaParametro();
         this.popularCountsFd();
         this.popularCountsFt();
         return parametro;
@@ -122,38 +127,30 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     * Método responsável por acessar o caminho da imagem da logo do relatório e popular o parâmetro.
     */
-    @SuppressWarnings("static-access")
     private void popularImagemRelatorio() {
-        InputStream reportStream = getClass().getClassLoader().getSystemResourceAsStream(caminhoImagem);
+        InputStream reportStream = getClass().getClassLoader().getResourceAsStream(caminhoImagem);
         parametro.put("IMAGEMLOGO", reportStream);
     }
-
+    
     /**
-     * 
-    */
-    private void popularDadosBasicos() {
-        parametro.put("PFTOTAL", validarAtributosNulos(analise.getPfTotal()));
-        parametro.put("PFAJUSTADO", validarAtributosNulos(analise.getAdjustPFTotal()));
-        parametro.put("AJUSTESPF", calcularPFsAjustado(analise.getPfTotal(), analise.getAdjustPFTotal()));
-        parametro.put("DATACRIADO", validarAtributosNulos(analise.getAudit().getCreatedOn().toString()));
-        parametro.put("DATAALTERADO", validarAtributosNulos(analise.getAudit().getUpdatedOn().toString()));
-        parametro.put("VALORAJUSTE", validarAtributosNulos(String.valueOf(analise.getValorAjuste())));
-        parametro.put("GARANTIA", validarAtributosNulos(garantia()));
+     * Método responsável por popular as informações Gerais do relatório.
+     */
+    private void popularDadosGerais() {
         parametro.put("EQUIPE", validarAtributosNulos(analise.getEquipeResponsavel().getNome()));
         parametro.put("IDENTIFICADOR", validarAtributosNulos(analise.getIdentificadorAnalise()));
         parametro.put("TIPOANALISE", validarAtributosNulos(analise.getTipoAnalise().toString()));
+        parametro.put("GARANTIA", validarAtributosNulos(garantia()));
+        parametro.put("DATAHMG", validarAtributosNulos(formatarData(analise.getDataHomologacao())));
+        parametro.put("NUMEROOS", validarAtributosNulos(analise.getNumeroOs()));
         parametro.put("PROPOSITO", validarAtributosNulos(analise.getPropositoContagem()));
         parametro.put("ESCOPO", validarAtributosNulos(analise.getEscopo()));
         parametro.put("FRONTEIRA", validarAtributosNulos(analise.getFronteiras()));
         parametro.put("DOCUMENTACAO", validarAtributosNulos(analise.getDocumentacao()));
         parametro.put("OBSERVACOES", validarAtributosNulos(analise.getObservacoes()));
-        parametro.put("DATAHMG", validarAtributosNulos(formatarData(analise.getDataHomologacao())));
-        parametro.put("NUMEROOS", validarAtributosNulos(analise.getNumeroOs()));
-        parametro.put("FATORAJUSTE", verificarFatorAjuste(analise.getFatorAjuste()));
     }
-
+    
     /**
      * 
      */
@@ -198,10 +195,84 @@ public class RelatorioAnaliseRest {
         }
     }
     
+    /**
+     * Método responsável por popular as informações do resumo da análise.
+     */
+    private void popularResumo() {
+        parametro.put("PFTOTAL", validarAtributosNulos(analise.getPfTotal()));
+        parametro.put("AJUSTESPF", calcularPFsAjustado(analise.getPfTotal(), analise.getAdjustPFTotal()));
+        parametro.put("PFAJUSTADO", validarAtributosNulos(analise.getAdjustPFTotal()));
+    }
+    
+    /**
+     * 
+    */
+    private void popularDadosBasicos() {
+        parametro.put("DATACRIADO", validarAtributosNulos(analise.getAudit().getCreatedOn().toString()));
+        parametro.put("DATAALTERADO", validarAtributosNulos(analise.getAudit().getUpdatedOn().toString()));
+        parametro.put("VALORAJUSTE", validarAtributosNulos(String.valueOf(analise.getValorAjuste())));
+        parametro.put("FATORAJUSTE", verificarFatorAjuste(analise.getFatorAjuste()));
+    }
+    
     private void popularFuncao() {
         for (FuncoesDTO funcoesDTO : relatorioFuncoes.prepararListaFuncoes(analise)) {
             listFuncoes.add(funcoesDTO);
         }
+    }
+    
+    /**
+     * 
+     */
+    private void popularListaParametro() {
+        List<FuncaoTransacaoDTO> listFuncaoFT = new ArrayList<>();
+        List<FuncaoDadosDTO> listFuncaoFD = new ArrayList<>();
+        
+        for(FuncoesDTO f : listFuncoes) {
+            if(f.getNomeFd() != null) {
+                listFuncaoFD.add(popularObjetoFd(f));
+            }
+            if(f.getNomeFt() != null) {
+                listFuncaoFT.add(popularObjetoFt(f));
+            }
+        }
+        parametro.put("LISTAFUNCAOFT", listFuncaoFT);
+        parametro.put("LISTAFUNCAOFD", listFuncaoFD);
+    }
+    
+    /**
+     * 
+     * @param f
+     * @return
+     */
+    private FuncaoDadosDTO popularObjetoFd(FuncoesDTO f) {
+        FuncaoDadosDTO fd = new FuncaoDadosDTO();
+        fd.setNome(f.getNomeFd());
+        fd.setClassificacao(f.getTipoFd());
+        fd.setImpacto(f.getImpactoFd());
+        fd.setRlr(f.getRlrFd());
+        fd.setDer(f.getDerFd());
+        fd.setComplexidade(f.getComplexidadeFd());
+        fd.setPfTotal(f.getPfTotalFd());
+        fd.setPfAjustado(f.getPfAjustadoFd());
+        return fd;
+    }
+    
+    /**
+     * 
+     * @param f
+     * @return
+     */
+    private FuncaoTransacaoDTO popularObjetoFt(FuncoesDTO f) {
+        FuncaoTransacaoDTO ft = new FuncaoTransacaoDTO();
+        ft.setNome(f.getNomeFt());
+        ft.setClassificacao(f.getTipoFt());
+        ft.setImpacto(f.getImpactoFt());
+        ft.setFtr(f.getFtrFt());
+        ft.setDer(f.getDerFt());
+        ft.setComplexidade(f.getComplexidadeFt());
+        ft.setPfTotal(f.getPfTotalFt());
+        ft.setPfAjustado(f.getPfAjustadoFt());
+        return ft;        
     }
 
     /**
