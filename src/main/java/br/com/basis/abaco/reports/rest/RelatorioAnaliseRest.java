@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.FatorAjuste;
+import br.com.basis.abaco.reports.util.RelatorioUtil;
 import br.com.basis.abaco.service.dto.FuncaoDadosDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoDTO;
 import br.com.basis.abaco.service.dto.FuncoesDTO;
@@ -119,10 +120,10 @@ public class RelatorioAnaliseRest {
      */
     private void popularUsuarios() {
         if(validarObjetosNulos(analise.getCreatedBy())) {
-            parametro.put("CRIADOPOR", validarAtributosNulos(analise.getCreatedBy().getLogin()));            
+            parametro.put("CRIADOPOR", analise.getCreatedBy().getLogin());            
         }
         if(validarObjetosNulos(analise.getEditedBy())) {
-            parametro.put("EDITADOPOR", validarAtributosNulos(analise.getEditedBy().getLogin()));            
+            parametro.put("EDITADOPOR", analise.getEditedBy().getLogin());            
         }
     }
 
@@ -138,17 +139,17 @@ public class RelatorioAnaliseRest {
      * Método responsável por popular as informações Gerais do relatório.
      */
     private void popularDadosGerais() {
-        parametro.put("EQUIPE", validarAtributosNulos(analise.getEquipeResponsavel().getNome()));
-        parametro.put("IDENTIFICADOR", validarAtributosNulos(analise.getIdentificadorAnalise()));
-        parametro.put("TIPOANALISE", validarAtributosNulos(analise.getTipoAnalise().toString()));
-        parametro.put("GARANTIA", validarAtributosNulos(garantia()));
-        parametro.put("DATAHMG", validarAtributosNulos(formatarData(analise.getDataHomologacao())));
-        parametro.put("NUMEROOS", validarAtributosNulos(analise.getNumeroOs()));
-        parametro.put("PROPOSITO", validarAtributosNulos(analise.getPropositoContagem()));
-        parametro.put("ESCOPO", validarAtributosNulos(analise.getEscopo()));
-        parametro.put("FRONTEIRA", validarAtributosNulos(analise.getFronteiras()));
-        parametro.put("DOCUMENTACAO", validarAtributosNulos(analise.getDocumentacao()));
-        parametro.put("OBSERVACOES", validarAtributosNulos(analise.getObservacoes()));
+        parametro.put("EQUIPE", analise.getEquipeResponsavel().getNome());
+        parametro.put("IDENTIFICADOR", analise.getIdentificadorAnalise());
+        parametro.put("TIPOANALISE", analise.getTipoAnalise().toString());
+        parametro.put("GARANTIA", garantia());
+        parametro.put("DATAHMG", formatarData(analise.getDataHomologacao()));
+        parametro.put("NUMEROOS", analise.getNumeroOs());
+        parametro.put("PROPOSITO", analise.getPropositoContagem());
+        parametro.put("ESCOPO", analise.getEscopo());
+        parametro.put("FRONTEIRA", analise.getFronteiras());
+        parametro.put("DOCUMENTACAO", analise.getDocumentacao());
+        parametro.put("OBSERVACOES", analise.getObservacoes());
     }
     
     /**
@@ -156,11 +157,11 @@ public class RelatorioAnaliseRest {
      */
     private void popularContrato() {
         if (validarObjetosNulos(analise.getContrato())) {
-            parametro.put("CONTRATO", validarAtributosNulos(analise.getContrato().getNumeroContrato()));
-            parametro.put("CONTRATODTINICIO", validarAtributosNulos(analise.getContrato().getDataInicioVigencia().toString()));
-            parametro.put("CONTRATODTFIM", validarAtributosNulos(analise.getContrato().getDataFimVigencia().toString()));
-            parametro.put("CONTRATOGARANTIA", validarAtributosNulos(analise.getContrato().getDiasDeGarantia().toString()));
-            parametro.put("CONTRATOATIVO", validarAtributosNulos(verificarCondicao(analise.getContrato().getAtivo())));
+            parametro.put("CONTRATO", analise.getContrato().getNumeroContrato());
+            parametro.put("CONTRATODTINICIO", analise.getContrato().getDataInicioVigencia().toString());
+            parametro.put("CONTRATODTFIM", analise.getContrato().getDataFimVigencia().toString());
+            parametro.put("CONTRATOGARANTIA", analise.getContrato().getDiasDeGarantia().toString());
+            parametro.put("CONTRATOATIVO", verificarCondicao(analise.getContrato().getAtivo()));
         }
     }
 
@@ -169,8 +170,8 @@ public class RelatorioAnaliseRest {
      */
     private void popularOrganizacao() {
         if(validarObjetosNulos(analise.getContrato().getOrganization())) {
-            parametro.put("ORGANIZACAO", validarAtributosNulos(analise.getContrato().getOrganization().getSigla()));
-            parametro.put("ORGANIZACAONM", validarAtributosNulos(analise.getContrato().getOrganization().getNome())); 
+            parametro.put("ORGANIZACAO", analise.getContrato().getOrganization().getSigla());
+            parametro.put("ORGANIZACAONM", analise.getContrato().getOrganization().getNome()); 
         }
     }
 
@@ -179,8 +180,8 @@ public class RelatorioAnaliseRest {
      */
     private void popularSistema() {
         if (validarObjetosNulos(analise.getSistema())) {
-            parametro.put("SISTEMASG", validarAtributosNulos(analise.getSistema().getSigla()));
-            parametro.put("SISTEMANM", validarAtributosNulos(analise.getSistema().getNome()));
+            parametro.put("SISTEMASG", analise.getSistema().getSigla());
+            parametro.put("SISTEMANM", analise.getSistema().getNome());
         }
     }
 
@@ -189,8 +190,8 @@ public class RelatorioAnaliseRest {
      */
     private void popularManual() {
         if (validarObjetosNulos(analise.getContrato()) && validarObjetosNulos(analise.getContrato().getManual())) {
-            parametro.put("MANUALNM", validarAtributosNulos(analise.getContrato().getManual().getNome()));
-            parametro.put("METODOCONTAGEM", validarAtributosNulos(analise.getMetodoContagem().toString()));
+            parametro.put("MANUALNM", analise.getContrato().getManual().getNome());
+            parametro.put("METODOCONTAGEM", analise.getMetodoContagem().toString());
             parametro.put("VERSAOCPM", verificarVersaoCPM(analise.getContrato().getManual().getVersaoCPM()));
         }
     }
@@ -199,18 +200,18 @@ public class RelatorioAnaliseRest {
      * Método responsável por popular as informações do resumo da análise.
      */
     private void popularResumo() {
-        parametro.put("PFTOTAL", validarAtributosNulos(analise.getPfTotal()));
+        parametro.put("PFTOTAL", analise.getPfTotal());
         parametro.put("AJUSTESPF", calcularPFsAjustado(analise.getPfTotal(), analise.getAdjustPFTotal()));
-        parametro.put("PFAJUSTADO", validarAtributosNulos(analise.getAdjustPFTotal()));
+        parametro.put("PFAJUSTADO", analise.getAdjustPFTotal());
     }
     
     /**
      * 
     */
     private void popularDadosBasicos() {
-        parametro.put("DATACRIADO", validarAtributosNulos(analise.getAudit().getCreatedOn().toString()));
-        parametro.put("DATAALTERADO", validarAtributosNulos(analise.getAudit().getUpdatedOn().toString()));
-        parametro.put("VALORAJUSTE", validarAtributosNulos(String.valueOf(analise.getValorAjuste())));
+        parametro.put("DATACRIADO", analise.getAudit().getCreatedOn().toString());
+        parametro.put("DATAALTERADO", analise.getAudit().getUpdatedOn().toString());
+        parametro.put("VALORAJUSTE", String.valueOf(analise.getValorAjuste()));
         parametro.put("FATORAJUSTE", verificarFatorAjuste(analise.getFatorAjuste()));
     }
     
@@ -550,7 +551,7 @@ public class RelatorioAnaliseRest {
         if(valor == 421) {
             return "4.2.1";
         }
-        return "---";
+        return null;
     }
 
     /**
@@ -561,18 +562,6 @@ public class RelatorioAnaliseRest {
             return "Sim";
         } else {
             return "Não";
-        }
-    }
-
-    /**
-     * Método responsável por validar se o atributo é nulo,
-     * se ele for nulo é incluído o valor ---.
-     */
-    private String validarAtributosNulos(String valor) {
-        if (valor == null) {
-            return "---";
-        } else {
-            return valor;
         }
     }
 
@@ -593,7 +582,7 @@ public class RelatorioAnaliseRest {
         if(data != null) {
             return dataFormatada.format(data);
         } else {
-            return "---";
+            return null;
         }
     }
 

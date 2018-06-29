@@ -1,4 +1,4 @@
-package br.com.basis.abaco.reports.rest;
+package br.com.basis.abaco.reports.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
