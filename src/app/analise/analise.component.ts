@@ -77,18 +77,12 @@ export class AnaliseComponent implements OnInit {
       case 'delete':
         this.confirmDelete(event.selection);
         break;
-      // case 'view':
-      //   this.router.navigate(['/analise', event.selection.id]);
-      //   break;
-      case 'relatorio':
-        this.gerarRelatorio(event.selection);
+      case 'relatorioBrowser':
+        this.geraRelatorioPdfBrowser(event.selection);
         break;
-      // case 'bloquear':
-      //   this.bloqueiaRelatorio(event.selection);
-      //   break;
-      // case 'desbloquear':
-      //   this.desbloqueiaRelatorio(event.selection);
-      //   break;
+      case 'relatorioArquivo' :
+        this.gerarRelatorioPdfArquivo(event.selection);
+        break;
     }
   }
 
@@ -125,10 +119,17 @@ export class AnaliseComponent implements OnInit {
   }
 
   /**
-   *
+   * Método responsável por gerar o relatório diretamente sem a apresentação do relatório no browser.
    */
-  public gerarRelatorio(analise: Analise) {
-    this.analiseService.geraRelatorioPDF(analise.id);
+  public gerarRelatorioPdfArquivo(analise: Analise) {
+    this.analiseService.gerarRelatorioPdfArquivo(analise.id);
+  }
+
+  /**
+   * Método responsável pela a apresentação do relatório no browser.
+   */
+  public geraRelatorioPdfBrowser(analise: Analise) {
+    this.analiseService.geraRelatorioPdfBrowser(analise.id);
   }
 
   /**
