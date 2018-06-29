@@ -64,6 +64,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
    *
   */
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private analiseService: AnaliseService,
     private organizacaoService: OrganizacaoService,
@@ -119,6 +120,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
    *
   */
   private inicializaValoresAposCarregamento(analiseCarregada: Analise) {
+    if (analiseCarregada.bloqueiaAnalise){
+      this.pageNotificationService.addErrorMsg('Você não pode editar uma análise bloqueada!')
+      this.router.navigate(['/analise'])
+    }
     this.analise = analiseCarregada;
     this.organizacaoSelected(analiseCarregada.organizacao);
     this.carregarObjetos(analiseCarregada.contrato);

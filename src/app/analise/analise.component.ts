@@ -28,6 +28,11 @@ export class AnaliseComponent implements OnInit {
 
   analiseSelecionada: Analise;
 
+  block: boolean;
+
+  unblock: boolean;
+
+
   /**
    *
    */
@@ -42,10 +47,16 @@ export class AnaliseComponent implements OnInit {
    *
    */
   public ngOnInit() {
+    this.block = true;
+    this.unblock = true;
     this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
-      this.analiseSelecionada = new Analise().copyFromJSON(event.data);
+      this.block = true;
+      this.unblock = true;
+      this.analiseSelecionada = event.data;
+      console.log(event.data);
+      this.block = !event.data.bloqueiaAnalise;
+      this.unblock = event.data.bloqueiaAnalise;
     });
-
     this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
       this.analiseSelecionada = undefined;
     });
@@ -60,14 +71,24 @@ export class AnaliseComponent implements OnInit {
     }
     switch (event.button) {
       case 'edit':
+        if(event.selection.bloqueiaAnalise){ this.pageNotificationService.addErrorMsg('Você não pode editar uma análise bloqueada!'); return }
         this.router.navigate(['/analise', event.selection.id, 'edit']);
         break;
       case 'delete':
         this.confirmDelete(event.selection);
         break;
+      // case 'view':
+      //   this.router.navigate(['/analise', event.selection.id]);
+      //   break;
       case 'relatorio':
         this.gerarRelatorio(event.selection);
         break;
+      // case 'bloquear':
+      //   this.bloqueiaRelatorio(event.selection);
+      //   break;
+      // case 'desbloquear':
+      //   this.desbloqueiaRelatorio(event.selection);
+      //   break;
     }
   }
 
@@ -100,7 +121,7 @@ export class AnaliseComponent implements OnInit {
    *
    */
   public recarregarDataTable() {
-    this.datatable.refresh(undefined);
+    this.datatable.refresh(this.elasticQuery.query);
   }
 
   /**
@@ -121,4 +142,37 @@ export class AnaliseComponent implements OnInit {
     }
   }
 
+  public bloqueiaRelatorio() {
+    if(this.analiseSelecionada.bloqueiaAnalise){
+      this.pageNotificationService.addErrorMsg('Registro já está bloqueado');
+      return;
+    }
+    this.confirmationService.confirm({
+      message: MessageUtil.CONFIRMAR_BLOQUEIO + ' ' + this.analiseSelecionada.identificadorAnalise + '?',
+      accept: () => {
+        this.blockUI.start();
+        this.analiseService.block(this.analiseSelecionada);
+          this.blockUI.stop();
+          this.pageNotificationService.addBlockMsgWithName(this.analiseSelecionada.identificadorAnalise);
+          this.recarregarDataTable();
+      }
+    });
+  }
+
+  public desbloqueiaRelatorio() {
+    if(!this.analiseSelecionada.bloqueiaAnalise){
+      this.pageNotificationService.addErrorMsg('Registro já está desbloqueado');
+      return;
+    }
+    this.confirmationService.confirm({
+      message: MessageUtil.CONFIRMAR_DESBLOQUEIO + ' ' + this.analiseSelecionada.identificadorAnalise + '?',
+      accept: () => {
+        this.blockUI.start();
+        this.analiseService.unblock(this.analiseSelecionada);
+          this.blockUI.stop();
+          this.pageNotificationService.addBlockMsgWithName(this.analiseSelecionada.identificadorAnalise);
+          this.recarregarDataTable();
+      }
+    });
+  }
 }

@@ -50,4 +50,7 @@ export class MessageUtil {
     public static NOTIFICACAO_ATUALIZACAO_ATIVO_ERROR = 'Error ao ativar uma aotificação!';
     public static INVALIDO_ENVIO_PAGAMENTO = 'O projeto não se encontra mais em fase de acompanhamento!';
     public static PROJETO_NAO_ENCONTRADO = 'O Projeto não foi encontrado';
+    public static CONFIRMAR_BLOQUEIO = 'Tem certeza que deseja bloquear o registro';
+    public static CONFIRMAR_DESBLOQUEIO = 'Tem certeza que deseja desbloquear o registro';
+
 }

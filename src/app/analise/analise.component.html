@@ -57,13 +57,34 @@
           [rowsPerPageOptions]="rowsPerPageOptions"
           [showPaginationFooter]="true"
           #datatable>
-
-        <basis-datatable-button
-          name="relatorio"
-          tooltip="Relatório"
-          icon="description"
-          disabled="desabilitarBotaoRelatorio()">
-        </basis-datatable-button>
+          <button
+            pButton
+            type="button"
+            name="desbloquear"
+            pTooltip="Desbloquear"
+            icon="ui-icon-block"
+            (click)="desbloqueiaRelatorio()"
+            class="ui-button-success"
+            [disabled]="this.block">
+          </button>
+          <p></p>
+          <button
+            pButton
+            type="button"
+            name="bloquear"
+            pTooltip="Bloquear"
+            tooltip="Bloquear"
+            icon="ui-icon-block"
+            (click)="bloqueiaRelatorio()"
+            class="ui-button-danger"
+            [disabled]="this.unblock">
+          </button>
+          <basis-datatable-button
+            name="relatorio"
+            tooltip="Relatório"
+            icon="description"
+            disabled="desabilitarBotaoRelatorio()">
+          </basis-datatable-button>
           <!-- <p-column header="Número OS" field="numeroOs"></p-column> -->
           <p-column header="Identificador Análise" field="identificadorAnalise"></p-column>
           <p-column header="Equipe" field="equipeResponsavel.nome"></p-column>
@@ -87,6 +108,12 @@
                 {{ createdOn | date: 'dd/MM/y / HH:mm' }}
             </ng-template>
           </p-column>
+
+          <p-column header="Bloqueado" field="bloqueiaAnalise">
+            <ng-template let-col let-bloqueiaAnalise="rowData" pTemplate="body">
+                {{ bloqueiaAnalise[col.field] ? 'Sim' : 'Não' }}
+            </ng-template>
+        </p-column>
 
         </basis-datatable>
 
