@@ -305,6 +305,5 @@ public class FuncoesDTO {
     public void setPfAjustadoFt(String pfAjustadoFt) {
         this.pfAjustadoFt = pfAjustadoFt;
     }
-   
     
 }

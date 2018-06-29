@@ -17,10 +17,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.FatorAjuste;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.reports.util.RelatorioUtil;
+import br.com.basis.abaco.service.dto.AlrFtDTO;
+import br.com.basis.abaco.service.dto.DerFdDTO;
+import br.com.basis.abaco.service.dto.DerFtDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadosDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoDTO;
 import br.com.basis.abaco.service.dto.FuncoesDTO;
+import br.com.basis.abaco.service.dto.RlrFdDTO;
 import net.sf.jasperreports.engine.JRException;
 
 /**
@@ -30,6 +37,8 @@ import net.sf.jasperreports.engine.JRException;
 public class RelatorioAnaliseRest {
 
     private static String caminhoRalatorioAnalise = "reports/analise/analise.jasper";
+    
+    private static String caminhoAnaliseDetalhada = "reports/analise/analise_detalhada.jasper";
     
     private static String caminhoImagem = "reports/img/fnde_logo.png";
 
@@ -46,6 +55,8 @@ public class RelatorioAnaliseRest {
     private RelatorioFuncoes relatorioFuncoes;
     
     private List<FuncoesDTO> listFuncoes;
+    
+    private static String deflator = " Deflator em Projetos de Melhoria";
 
     public RelatorioAnaliseRest(HttpServletResponse response, HttpServletRequest request ) {
         this.response = response;
@@ -110,6 +121,7 @@ public class RelatorioAnaliseRest {
         this.popularDadosBasicos();
         this.popularFuncao();
         this.popularListaParametro();
+        this.popularAjustes();
         this.popularCountsFd();
         this.popularCountsFt();
         return parametro;
@@ -245,6 +257,83 @@ public class RelatorioAnaliseRest {
     
     /**
      * 
+     */
+    private void popularListaFuncaoTransacao() {
+        List<FuncaoTransacaoDTO> listFuncaoFT = new ArrayList<>();
+        
+        for(FuncoesDTO f : listFuncoes) {
+            if(f.getNomeFt() != null) {
+                listFuncaoFT.add(popularObjetoFt(f));
+            }
+        }
+        parametro.put("LISTAFUNCAOFT", listFuncaoFT);
+    }
+    
+    /**
+     * 
+     */
+    private void popularListaFuncaoDados() {
+        List<FuncaoDadosDTO> listFuncaoFD = new ArrayList<>();
+        
+        for(FuncoesDTO f : listFuncoes) {
+            if(f.getNomeFd() != null) {
+                listFuncaoFD.add(popularObjetoFd(f));
+            }
+        }
+        parametro.put("LISTAFUNCAOFD", listFuncaoFD);
+    }
+    
+    /**
+     * 
+     */
+    private void popularListaRlrFd() {
+        //TODO: implementar a função de alimentação da listagem de RLR da função de dados.
+        List<RlrFdDTO> listRlrFD = new ArrayList<>();
+        
+        for(FuncaoDados fd : analise.getFuncaoDados()) {
+            RlrFdDTO objeto = new RlrFdDTO();
+//            objeto.setNome(fd.getRlrs());
+        }
+    }
+
+    /**
+     * 
+     */ 
+    private void popularListaDerFd() {
+      //TODO: implementar a função de alimentação da listagem de DER da função de dados.
+        List<DerFdDTO> listDerFD = new ArrayList<>();
+        
+        for(FuncaoDados fd : analise.getFuncaoDados()) {
+            
+        }
+    }
+    
+    /**
+     * 
+     */
+    private void popularListaArlFt() {
+      //TODO: implementar a função de alimentação da listagem de ARL da função de transação.
+        List<AlrFtDTO> listArlFT = new ArrayList<>();
+        
+        for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
+            
+        }
+    }
+    
+    /**
+     * 
+     */
+    private void popularListaDerFt() {
+      //TODO: implementar a função de alimentação da listagem de DER da função de transação.
+        List<DerFtDTO> listDerFT = new ArrayList<>();
+        
+        for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
+            
+        }
+    }
+    
+    /**
+     * 
      * @param f
      * @return
      */
@@ -277,6 +366,16 @@ public class RelatorioAnaliseRest {
         ft.setPfTotalFt(f.getPfTotalFt());
         ft.setPfAjustadoFt(f.getPfAjustadoFt());
         return ft;        
+    }
+    
+    /**
+     * Método responsável por popular os parâmetros de ajustes para relatório detalhado.
+     */
+    private void popularAjustes() {
+        parametro.put("AJUSTESINCLUSAO",  funcao(ImpactoFatorAjuste.INCLUSAO.toString()) + deflator + " - Funções incluídas");
+        parametro.put("AJUSTESALTERACAO",  funcao(ImpactoFatorAjuste.ALTERACAO.toString()) + deflator + " - Funções alteradas");
+        parametro.put("AJUSTESEXCLUSAO",  funcao(ImpactoFatorAjuste.EXCLUSAO.toString()) + deflator + " - Funções excluídas");
+        parametro.put("AJUSTESCONVERSAO",  funcao(ImpactoFatorAjuste.CONVERSAO.toString()) + deflator + " - Funções convertidas");
     }
 
     /**
@@ -508,6 +607,25 @@ public class RelatorioAnaliseRest {
         parametro.put("INMFTALTERACAO", transformarInteiro(ft.getImpactoDtoFt().getInmAlteracaoFt()));
         parametro.put("INMFTEXCLUSAO", transformarInteiro(ft.getImpactoDtoFt().getInmExclusaoFt()));
         parametro.put("INMFTCONVERSAO", transformarInteiro(ft.getImpactoDtoFt().getInmConversaoFt()));
+    }
+    
+    /**
+     * 
+     * @param valor
+     * @return
+     */
+    private String funcao(String valor) {
+        switch(valor) {
+            case "INCLUSAO" :
+                return analise.getContrato().getManual().getParametroInclusao().toString();
+            case "ALTERACAO" : 
+                return analise.getContrato().getManual().getParametroAlteracao().toString();
+            case "EXCLUSAO" : 
+                return analise.getContrato().getManual().getParametroExclusao().toString();
+            case "CONVERSAO" :
+                return analise.getContrato().getManual().getParametroConversao().toString();
+        }
+        return null;
     }
     
     /**
