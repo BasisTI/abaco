@@ -176,12 +176,12 @@
 		<field name="nomeFt" class="java.lang.String"/>
 		<field name="nomeAlrsFt" class="java.lang.String"/>
 	</subDataset>
-	<subDataset name="DatasetFtDer" uuid="73c4a83a-5b67-4d8e-8ecd-2bfd0ce14d12">
+	<subDataset name="DatasetFdDer" uuid="73c4a83a-5b67-4d8e-8ecd-2bfd0ce14d12">
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
-		<field name="nomeFt" class="java.lang.String"/>
-		<field name="nomeDerFt" class="java.lang.String"/>
+		<field name="nomeFd" class="java.lang.String"/>
+		<field name="nomeDerFd" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="PROPOSITO" class="java.lang.String"/>
 	<parameter name="ESCOPO" class="java.lang.String"/>
@@ -1778,7 +1778,7 @@
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Funções de Dados:]]></text>
+					<text><![CDATA[Funções de Dados]]></text>
 				</staticText>
 				<componentElement>
 					<reportElement x="2" y="49" width="551" height="60" uuid="5298cb69-67a7-4bdf-ab0b-7098ec388226">
@@ -1846,7 +1846,7 @@
 									<textElement verticalAlignment="Middle" markup="none">
 										<font isBold="true"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$F{nomeFt}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{nomeFd}]]></textFieldExpression>
 								</textField>
 							</jr:tableHeader>
 							<jr:columnHeader style="Table 4_CH" height="30">
@@ -1878,7 +1878,7 @@
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Funções de Transação:]]></text>
+					<text><![CDATA[Funções de Transação]]></text>
 				</staticText>
 				<componentElement>
 					<reportElement x="2" y="29" width="551" height="60" uuid="7afee768-1d57-43af-a162-cd4e8c916f47">

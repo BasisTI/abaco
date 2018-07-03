@@ -15,10 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.FatorAjuste;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.reports.util.RelatorioUtil;
 import br.com.basis.abaco.service.dto.AlrFtDTO;
@@ -121,6 +124,7 @@ public class RelatorioAnaliseRest {
         this.popularDadosBasicos();
         this.popularFuncao();
         this.popularListaParametro();
+        this.popularListas();
         this.popularAjustes();
         this.popularCountsFd();
         this.popularCountsFt();
@@ -242,6 +246,7 @@ public class RelatorioAnaliseRest {
     private void popularListaParametro() {
         List<FuncaoTransacaoDTO> listFuncaoFT = new ArrayList<>();
         List<FuncaoDadosDTO> listFuncaoFD = new ArrayList<>();
+
         
         for(FuncoesDTO f : listFuncoes) {
             if(f.getNomeFd() != null) {
@@ -253,6 +258,80 @@ public class RelatorioAnaliseRest {
         }
         parametro.put("LISTAFUNCAOFT", listFuncaoFT);
         parametro.put("LISTAFUNCAOFD", listFuncaoFD);
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    private int countQuantidadeDerFd(Long id) {
+        int total = 0;
+        for(FuncaoDados fd : analise.getFuncaoDados()) {
+            if(fd.getId() == id) {
+                total = fd.getDers().size();
+            }
+        }
+        return total;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    private int countQuantidadeRlrFd(Long id) {
+        int total = 0;
+        for(FuncaoDados fd : analise.getFuncaoDados()) {
+            if(fd.getId() == id) {
+                total = fd.getRlrs().size();
+            }
+        }
+        return total;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    private int countQuantidadeFtrFt(Long id) {
+        int total = 0;
+        for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
+            if(ft.getId() == id) {
+                total = ft.getAlrs().size();
+            }
+        }
+        return total;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    private int countQuantidadeDerFt(Long id) {
+        int total = 0;
+        for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
+            if(ft.getId() == id) {
+                total = ft.getDers().size();
+            }
+        }
+        return total;
+    }
+    
+    /**
+     * Método responsável por invocar os métodos que populam as listas 
+     * DER função de transação, 
+     * ARL função de transação, 
+     * DER função de dados, 
+     * RLR função de dados, 
+     * função de transação e função de dados.
+     */
+    private void popularListas() {
+        this.popularListaDerFt();
+        this.popularListaArlFt();
+        this.popularListaDerFd();
+        this.popularListaRlrFd();
+        this.popularListaFuncaoTransacao();
+        this.popularListaFuncaoDados();
+        
     }
     
     /**
@@ -284,52 +363,82 @@ public class RelatorioAnaliseRest {
     }
     
     /**
-     * 
+     * Método responsável por popular a lista RLR função de dados.
      */
     private void popularListaRlrFd() {
-        //TODO: implementar a função de alimentação da listagem de RLR da função de dados.
         List<RlrFdDTO> listRlrFD = new ArrayList<>();
         
         for(FuncaoDados fd : analise.getFuncaoDados()) {
-            RlrFdDTO objeto = new RlrFdDTO();
-//            objeto.setNome(fd.getRlrs());
+            
+            for(Rlr rlr : fd.getRlrs()) {
+                RlrFdDTO objeto = new RlrFdDTO();
+
+                if(rlr.getNome() != null) {
+                    objeto.setNome(rlr.getNome());
+                    listRlrFD.add(objeto);
+                }
+            }
         }
+        parametro.put("LISTARLRFD", listRlrFD);
     }
 
     /**
-     * 
+     * Método responsável por popular a lista DER função de dados.
      */ 
     private void popularListaDerFd() {
-      //TODO: implementar a função de alimentação da listagem de DER da função de dados.
         List<DerFdDTO> listDerFD = new ArrayList<>();
         
         for(FuncaoDados fd : analise.getFuncaoDados()) {
             
+            for(Der der : fd.getDers()) {
+                DerFdDTO objeto = new DerFdDTO();
+
+                if(der.getNome() != null) {
+                    objeto.setNome(der.getNome());
+                    listDerFD.add(objeto);
+                }
+            }
         }
+        parametro.put("LISTADERFD", listDerFD);
     }
     
     /**
-     * 
+     * Método responsável por popular a lista ARL função de transação.
      */
     private void popularListaArlFt() {
-      //TODO: implementar a função de alimentação da listagem de ARL da função de transação.
         List<AlrFtDTO> listArlFT = new ArrayList<>();
         
         for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
             
+            for(Alr alr : ft.getAlrs()) {
+                AlrFtDTO objeto = new AlrFtDTO();
+                
+                if(alr.getNome() != null) {
+                    objeto.setNome(alr.getNome());
+                    listArlFT.add(objeto);
+                }
+            }
         }
+        parametro.put("LISTAARLFT", listArlFT);
     }
     
     /**
-     * 
+     * Método responsável por popular a lista DER função de transação.
      */
     private void popularListaDerFt() {
-      //TODO: implementar a função de alimentação da listagem de DER da função de transação.
         List<DerFtDTO> listDerFT = new ArrayList<>();
         
         for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
-            
+            for(Der der : ft.getDers()) {
+                DerFtDTO objeto = new DerFtDTO();
+                
+                if(der.getNome() != null) {
+                    objeto.setNome(der.getNome());
+                    listDerFT.add(objeto);
+                }
+            }
         }
+        parametro.put("LISTADERFT", listDerFT);
     }
     
     /**
@@ -345,6 +454,10 @@ public class RelatorioAnaliseRest {
         fd.setRlrFd(f.getRlrFd());
         fd.setDerFd(f.getDerFd());
         fd.setComplexidadeFd(f.getComplexidadeFd());
+        fd.setPfTotalFd(f.getPfTotalFd());
+        fd.setPfAjustadoFd(f.getPfAjustadoFd());
+        fd.setDerFd(Integer.toString(this.countQuantidadeDerFd(f.getIdFd())));
+        fd.setRlrFd(Integer.toString(this.countQuantidadeRlrFd(f.getIdFd())));
         fd.setPfTotalFd(f.getPfTotalFd());
         fd.setPfAjustadoFd(f.getPfAjustadoFd());
         return fd;
@@ -363,6 +476,10 @@ public class RelatorioAnaliseRest {
         ft.setFtrFt(f.getFtrFt());
         ft.setDerFt(f.getDerFt());
         ft.setComplexidadeFt(f.getComplexidadeFt());
+        ft.setPfTotalFt(f.getPfTotalFt());
+        ft.setPfAjustadoFt(f.getPfAjustadoFt());
+        ft.setDerFt(Integer.toString(this.countQuantidadeDerFt(f.getIdFt())));
+        ft.setFtrFt(Integer.toString(this.countQuantidadeFtrFt(f.getIdFt())));
         ft.setPfTotalFt(f.getPfTotalFt());
         ft.setPfAjustadoFt(f.getPfAjustadoFt());
         return ft;        

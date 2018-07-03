@@ -106,10 +106,13 @@ public class RelatorioFuncoes {
      * @param f
      */
     private void popularObjetoFt(FuncaoTransacao f) {
+        funcoes.setIdFt(f.getId());
         funcoes.setFatorAjusteFt(f.getFatorAjuste() == null ? "---" : f.getFatorAjuste().getNome());
         funcoes.setFuncionalidadeFt(f.getFuncionalidade() == null ? "---" : f.getFuncionalidade().getNome());
         funcoes.setTipoFt(f.getTipo() == null ? "---" : f.getTipo().toString());
         funcoes.setComplexidadeFt(f.getComplexidade() == null ? "---" : f.getComplexidade().toString());
+        funcoes.setPfTotalFt(f.getGrossPF().toString());
+        funcoes.setPfAjustadoFt(f.getPf().toString());
     }
     
     /**
@@ -334,12 +337,15 @@ public class RelatorioFuncoes {
      * @param f
      */
     private void popularObjetoFd(FuncaoDados f) {
+        funcoes.setIdFd(f.getId());
         funcoes.setFatorAjusteFd(f.getFatorAjuste() == null ? "---" : f.getFatorAjuste().getNome());
         funcoes.setFuncionalidadeFd(f.getFuncionalidade() == null ? "---" : f.getFuncionalidade().getNome());
         funcoes.setTipoFd(f.getTipo() == null ? "---" : f.getTipo().toString());
         funcoes.setComplexidadeFd(f.getComplexidade() == null ? "---" : f.getComplexidade().toString());
         funcoes.setNomeFd(f.getName() == null ? "---" : f.getName());
         funcoes.setImpactoFd(f.getImpacto().toString());
+        funcoes.setPfTotalFd(f.getGrossPF().toString());
+        funcoes.setPfAjustadoFd(f.getPf().toString());
     }
     
     /**
