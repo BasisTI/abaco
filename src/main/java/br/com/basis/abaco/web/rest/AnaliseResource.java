@@ -306,7 +306,7 @@ public class AnaliseResource {
     public ResponseEntity<byte[]> downloadPdfArquivo(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = recuperarAnalise(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
-        log.debug("REST request to generate report Analise : {}", analise);
+        log.debug("REST request to generate report Analise at download archive: {}", analise);
         return relatorioAnaliseRest.downloadPdfArquivo(analise, TipoRelatorio.ANALISE);
     }
     
@@ -322,7 +322,7 @@ public class AnaliseResource {
     public @ResponseBody byte[] downloadPdfBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = recuperarAnalise(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
-        log.debug("REST request to generate report Analise : {}", analise);
+        log.debug("REST request to generate report Analise in browser : {}", analise);
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE);
     }
     
@@ -338,7 +338,7 @@ public class AnaliseResource {
     public @ResponseBody byte[] downloadPdfDetalhadoBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = recuperarAnalise(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
-        log.debug("REST request to generate report Analise : {}", analise);
+        log.debug("REST request to generate report Analise detalhado in browser : {}", analise);
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
     }
 }

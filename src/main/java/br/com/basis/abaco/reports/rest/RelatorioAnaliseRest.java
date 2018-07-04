@@ -282,7 +282,7 @@ public class RelatorioAnaliseRest {
     private int countQuantidadeDerFd(Long id) {
         int total = 0;
         for(FuncaoDados fd : analise.getFuncaoDados()) {
-            if(fd.getId() == id) {
+            if(fd.getId().equals(id)) {
                 total = fd.getDers().size();
             }
         }
@@ -296,7 +296,7 @@ public class RelatorioAnaliseRest {
     private int countQuantidadeRlrFd(Long id) {
         int total = 0;
         for(FuncaoDados fd : analise.getFuncaoDados()) {
-            if(fd.getId() == id) {
+            if(fd.getId().equals(id)) {
                 total = fd.getRlrs().size();
             }
         }
@@ -310,7 +310,7 @@ public class RelatorioAnaliseRest {
     private int countQuantidadeFtrFt(Long id) {
         int total = 0;
         for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
-            if(ft.getId() == id) {
+            if(ft.getId().equals(id)) {
                 total = ft.getAlrs().size();
             }
         }
@@ -324,7 +324,7 @@ public class RelatorioAnaliseRest {
     private int countQuantidadeDerFt(Long id) {
         int total = 0;
         for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
-            if(ft.getId() == id) {
+            if(ft.getId().equals(id)) {
                 total = ft.getDers().size();
             }
         }
@@ -760,8 +760,9 @@ public class RelatorioAnaliseRest {
                 return analise.getContrato().getManual().getParametroExclusao().toString();
             case "CONVERSAO" :
                 return analise.getContrato().getManual().getParametroConversao().toString();
+            default :
+                return null;
         }
-        return null;
     }
     
     /**
