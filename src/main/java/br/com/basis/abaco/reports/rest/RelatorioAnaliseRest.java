@@ -23,6 +23,7 @@ import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
+import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.util.RelatorioUtil;
 import br.com.basis.abaco.service.dto.AlrFtDTO;
 import br.com.basis.abaco.service.dto.DerFdDTO;
@@ -90,22 +91,36 @@ public class RelatorioAnaliseRest {
      * @throws FileNotFoundException
      * @throws JRException
      */
-    public ResponseEntity<byte[]> downloadPdfArquivo(Analise analise) throws FileNotFoundException, JRException {
+    public ResponseEntity<byte[]> downloadPdfArquivo(Analise analise, TipoRelatorio tipo) throws FileNotFoundException, JRException {
         init();
         popularObjeto(analise);
-        return relatorio.downloadPdfArquivo(analise, caminhoRalatorioAnalise, popularParametroAnalise());
+        
+        if(tipo == TipoRelatorio.ANALISE) {
+            return relatorio.downloadPdfArquivo(analise, caminhoRalatorioAnalise, popularParametroAnalise());
+        } else if(tipo == TipoRelatorio.ANALISE_DETALHADA) {
+            return relatorio.downloadPdfArquivo(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
+        } else {
+            return null;
+        }
     }
     
-    /**
+    /**empolgação
      * 
      * @param analise
      * @throws FileNotFoundException
      * @throws JRException
      */
-    public @ResponseBody byte[] downloadPdfBrowser(Analise analise) throws FileNotFoundException, JRException {
+    public @ResponseBody byte[] downloadPdfBrowser(Analise analise, TipoRelatorio tipo) throws FileNotFoundException, JRException {
         init();
         popularObjeto(analise);
-        return relatorio.downloadPdfBrowser(analise, caminhoRalatorioAnalise, popularParametroAnalise());
+        
+        if(tipo == TipoRelatorio.ANALISE) {
+            return relatorio.downloadPdfBrowser(analise, caminhoRalatorioAnalise, popularParametroAnalise());
+        } else if(tipo == TipoRelatorio.ANALISE_DETALHADA) {
+            return relatorio.downloadPdfBrowser(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
+        } else {
+            return null;
+        }
     }
 
     /**

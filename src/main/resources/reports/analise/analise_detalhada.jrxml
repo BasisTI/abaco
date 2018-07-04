@@ -140,7 +140,7 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<subDataset name="Dataset1" uuid="f4c066c5-7877-47c7-ac5a-cdc01ac6683e">
+	<subDataset name="DSfuncaoTransacao" uuid="f4c066c5-7877-47c7-ac5a-cdc01ac6683e">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 		<queryString>
 			<![CDATA[]]>
@@ -154,7 +154,7 @@
 		<field name="pfTotalFt" class="java.lang.String"/>
 		<field name="pfAjustadoFt" class="java.lang.String"/>
 	</subDataset>
-	<subDataset name="Dataset2" uuid="07e0f874-a4e2-4e5b-9af8-de9ba8c9f39c">
+	<subDataset name="DSfuncaoDados" uuid="07e0f874-a4e2-4e5b-9af8-de9ba8c9f39c">
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
@@ -167,21 +167,36 @@
 		<field name="pfTotalFd" class="java.lang.String"/>
 		<field name="pfAjustadoFd" class="java.lang.String"/>
 	</subDataset>
-	<subDataset name="DatasetAlrsFt" uuid="ce7e0f2e-12db-4bee-98f7-2d2df384d37d">
+	<subDataset name="DSRlrFD" uuid="ce7e0f2e-12db-4bee-98f7-2d2df384d37d">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-		<parameter name="nomeRlrsFd" class="java.lang.String"/>
-		<queryString>
-			<![CDATA[]]>
-		</queryString>
-		<field name="nomeFt" class="java.lang.String"/>
-		<field name="nomeAlrsFt" class="java.lang.String"/>
-	</subDataset>
-	<subDataset name="DatasetFdDer" uuid="73c4a83a-5b67-4d8e-8ecd-2bfd0ce14d12">
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
 		<field name="nomeFd" class="java.lang.String"/>
-		<field name="nomeDerFd" class="java.lang.String"/>
+		<field name="nome" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="DSDerFD" uuid="73c4a83a-5b67-4d8e-8ecd-2bfd0ce14d12">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="nomeFd" class="java.lang.String"/>
+		<field name="nome" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="DSAlrFT" uuid="ce7e0f2e-12db-4bee-98f7-2d2df384d37d">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="nomeFt" class="java.lang.String"/>
+		<field name="nome" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="DSDerFt" uuid="ce7e0f2e-12db-4bee-98f7-2d2df384d37d">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="nomeFt" class="java.lang.String"/>
+		<field name="nome" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="PROPOSITO" class="java.lang.String"/>
 	<parameter name="ESCOPO" class="java.lang.String"/>
@@ -298,6 +313,10 @@
 	<parameter name="INMCONVERSAO" class="java.lang.String"/>
 	<parameter name="LISTAFUNCAOFT" class="java.util.List"/>
 	<parameter name="LISTAFUNCAOFD" class="java.util.List"/>
+	<parameter name="LISTARLRFD" class="java.util.List"/>
+	<parameter name="LISTADERFD" class="java.util.List"/>
+	<parameter name="LISTAARLFT" class="java.util.List"/>
+	<parameter name="LISTADERFT" class="java.util.List"/>
 	<parameter name="AJUSTESINCLUSAO" class="java.lang.String"/>
 	<parameter name="AJUSTESALTERACAO" class="java.lang.String"/>
 	<parameter name="AJUSTESEXCLUSAO" class="java.lang.String"/>
@@ -607,7 +626,7 @@
 						<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
 					</reportElement>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="Dataset2" uuid="5cbfd667-3875-4b04-846e-5adff8661991">
+						<datasetRun subDataset="DSfuncaoDados" uuid="5cbfd667-3875-4b04-846e-5adff8661991">
 							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFUNCAOFD})]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="215" uuid="3757f544-af28-4f17-8109-893ce9833e12">
@@ -786,8 +805,8 @@
 						<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
 						<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
 					</reportElement>
-					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
-						<datasetRun subDataset="Dataset1" uuid="dd5e83be-af3c-485b-a6d8-756f88140b1e">
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+						<datasetRun subDataset="DSfuncaoTransacao" uuid="dd5e83be-af3c-485b-a6d8-756f88140b1e">
 							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFUNCAOFT})]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="215" uuid="e93e6861-334e-4b22-835c-c0e4754a4e41">
@@ -1781,15 +1800,15 @@
 					<text><![CDATA[Funções de Dados]]></text>
 				</staticText>
 				<componentElement>
-					<reportElement x="2" y="49" width="551" height="60" uuid="5298cb69-67a7-4bdf-ab0b-7098ec388226">
+					<reportElement x="2" y="49" width="551" height="91" uuid="5298cb69-67a7-4bdf-ab0b-7098ec388226">
 						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 						<property name="com.jaspersoft.studio.table.style.table_header" value="Table 3_TH"/>
 						<property name="com.jaspersoft.studio.table.style.column_header" value="Table 3_CH"/>
 						<property name="com.jaspersoft.studio.table.style.detail" value="Table 3_TD"/>
 					</reportElement>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="Dataset_fd" uuid="61380bb5-001d-49a9-82ef-bc374f44e97b">
-							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						<datasetRun subDataset="DSRlrFD" uuid="71aeaa4b-f02c-459b-b388-0dc708ef2292">
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTARLRFD})]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="551" uuid="cc4d7da8-6f8d-43d7-8a93-e7c6700ff64a">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
@@ -1819,24 +1838,24 @@
 							</jr:columnHeader>
 							<jr:detailCell style="Table 3_TD" height="30">
 								<textField>
-									<reportElement x="0" y="0" width="551" height="30" uuid="d2e8e30b-fadc-4a37-a3e8-974e1dc797f0"/>
+									<reportElement x="0" y="0" width="551" height="30" uuid="7944ebce-d0fb-4f0b-9ddb-1dd4fe49cc6a"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{nomeRlrsFd}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
 					</jr:table>
 				</componentElement>
 				<componentElement>
-					<reportElement x="2" y="144" width="551" height="60" uuid="85c91c12-7aa6-415b-9011-7c6e29861fa5">
+					<reportElement x="2" y="144" width="551" height="91" uuid="85c91c12-7aa6-415b-9011-7c6e29861fa5">
 						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 						<property name="com.jaspersoft.studio.table.style.table_header" value="Table 4_TH"/>
 						<property name="com.jaspersoft.studio.table.style.column_header" value="Table 4_CH"/>
 						<property name="com.jaspersoft.studio.table.style.detail" value="Table 4_TD"/>
 					</reportElement>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="DatasetFdDer" uuid="7f5f068d-42e2-4753-a7f0-a943bc4f426a">
-							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						<datasetRun subDataset="DSDerFD" uuid="d15efb02-9b59-484b-a78e-44bc721c1903">
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTADERFD})]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="551" uuid="dcd58754-219d-4cd6-839c-842e263ee4fe">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
@@ -1860,9 +1879,9 @@
 							</jr:columnHeader>
 							<jr:detailCell style="Table 4_TD" height="30">
 								<textField>
-									<reportElement x="0" y="0" width="551" height="30" uuid="e80e1907-36b9-406b-8597-cc58706cbef5"/>
+									<reportElement x="0" y="0" width="551" height="30" uuid="88e7e765-7f53-4d8c-997b-b59ea9e2317c"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$P{nomeDerFd}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -1881,15 +1900,15 @@
 					<text><![CDATA[Funções de Transação]]></text>
 				</staticText>
 				<componentElement>
-					<reportElement x="2" y="29" width="551" height="60" uuid="7afee768-1d57-43af-a162-cd4e8c916f47">
+					<reportElement x="2" y="29" width="551" height="91" uuid="7afee768-1d57-43af-a162-cd4e8c916f47">
 						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 						<property name="com.jaspersoft.studio.table.style.table_header" value="Table 3_TH"/>
 						<property name="com.jaspersoft.studio.table.style.column_header" value="Table 3_CH"/>
 						<property name="com.jaspersoft.studio.table.style.detail" value="Table 3_TD"/>
 					</reportElement>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="DatasetAlrsFt" uuid="6e867604-b0a5-4975-af2f-f1172d30db2b">
-							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						<datasetRun subDataset="DSAlrFT" uuid="b23a3435-3c79-41e6-a1df-dd040084c027">
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAARLFT})]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="551" uuid="cbd75ba1-a863-4eb3-95cc-cf212436738e">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
@@ -1919,24 +1938,24 @@
 							</jr:columnHeader>
 							<jr:detailCell style="Table 3_TD" height="30">
 								<textField>
-									<reportElement x="0" y="0" width="551" height="30" uuid="2caac37b-b892-4ef8-93b4-e8b24349d8e4"/>
+									<reportElement x="0" y="0" width="551" height="30" uuid="73b3bcab-da89-4539-9ebe-f7ca1f59b5c1"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{nomeAlrsFt}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
 					</jr:table>
 				</componentElement>
 				<componentElement>
-					<reportElement x="2" y="124" width="551" height="60" uuid="8d0fb6d5-84f2-4aa3-a024-8f95472d6b94">
+					<reportElement x="2" y="124" width="551" height="91" uuid="8d0fb6d5-84f2-4aa3-a024-8f95472d6b94">
 						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 						<property name="com.jaspersoft.studio.table.style.table_header" value="Table 4_TH"/>
 						<property name="com.jaspersoft.studio.table.style.column_header" value="Table 4_CH"/>
 						<property name="com.jaspersoft.studio.table.style.detail" value="Table 4_TD"/>
 					</reportElement>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="DatasetFtDer" uuid="4389a478-95a6-42d6-aac3-ca6220c356b0">
-							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						<datasetRun subDataset="DSDerFt" uuid="6806662d-9210-4d67-8144-838c3f9a705a">
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTADERFT})]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="551" uuid="eed3e007-c10b-4cb9-935e-c7b240975d80">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
@@ -1960,9 +1979,9 @@
 							</jr:columnHeader>
 							<jr:detailCell style="Table 4_TD" height="30">
 								<textField>
-									<reportElement x="0" y="0" width="551" height="30" uuid="d4fdeb3a-60c9-412a-b938-5b6ae0b47ec8"/>
+									<reportElement x="0" y="0" width="551" height="30" uuid="9c8d47eb-3c0f-4563-a68d-f40d9faaf580"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{nomeDerFt}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>

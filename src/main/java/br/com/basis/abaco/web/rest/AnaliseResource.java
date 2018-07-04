@@ -37,6 +37,7 @@ import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
@@ -306,7 +307,7 @@ public class AnaliseResource {
         Analise analise = recuperarAnalise(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
         log.debug("REST request to generate report Analise : {}", analise);
-        return relatorioAnaliseRest.downloadPdfArquivo(analise);
+        return relatorioAnaliseRest.downloadPdfArquivo(analise, TipoRelatorio.ANALISE);
     }
     
     /**
@@ -322,7 +323,22 @@ public class AnaliseResource {
         Analise analise = recuperarAnalise(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
         log.debug("REST request to generate report Analise : {}", analise);
-        return relatorioAnaliseRest.downloadPdfBrowser(analise);
+        return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE);
     }
     
+    /**
+     * Método responsável por requisitar a geração do relatório de Análise.
+     * @param analise
+     * @throws URISyntaxException
+     * @throws JRException 
+     * @throws IOException 
+     */
+    @GetMapping("/downloadPdfDetalhadoBrowser/{id}")
+    @Timed
+    public @ResponseBody byte[] downloadPdfDetalhadoBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+        Analise analise = recuperarAnalise(id);
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
+        log.debug("REST request to generate report Analise : {}", analise);
+        return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
+    }
 }
