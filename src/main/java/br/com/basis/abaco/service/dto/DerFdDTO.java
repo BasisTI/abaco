@@ -7,6 +7,8 @@ package br.com.basis.abaco.service.dto;
 public class DerFdDTO {
 
     private String nome;
+    
+    private String nomeFd;
 
     public String getNome() {
         return nome;
@@ -14,5 +16,13 @@ public class DerFdDTO {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getNomeFd() {
+        return nomeFd;
+    }
+
+    public void setNomeFd(String nomeFd) {
+        this.nomeFd = nomeFd;
     }
 }

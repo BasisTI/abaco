@@ -390,6 +390,7 @@ public class RelatorioAnaliseRest {
 
                 if(rlr.getNome() != null) {
                     objeto.setNome(rlr.getNome());
+                    objeto.setNomeFd(rlr.getFuncaoDados().getName());
                     listRlrFD.add(objeto);
                 }
             }
@@ -410,6 +411,7 @@ public class RelatorioAnaliseRest {
 
                 if(der.getNome() != null) {
                     objeto.setNome(der.getNome());
+                    objeto.setNomeFd(der.getFuncaoDados().getName());
                     listDerFD.add(objeto);
                 }
             }
@@ -430,6 +432,7 @@ public class RelatorioAnaliseRest {
                 
                 if(alr.getNome() != null) {
                     objeto.setNome(alr.getNome());
+                    objeto.setNomeFt(alr.getFuncaoTransacao().getName());
                     listArlFT.add(objeto);
                 }
             }
@@ -449,6 +452,7 @@ public class RelatorioAnaliseRest {
                 
                 if(der.getNome() != null) {
                     objeto.setNome(der.getNome());
+                    objeto.setNomeFt(der.getFuncaoTransacao().getName());
                     listDerFT.add(objeto);
                 }
             }
