@@ -53,7 +53,6 @@ export class AnaliseComponent implements OnInit {
       this.block = true;
       this.unblock = true;
       this.analiseSelecionada = event.data;
-      console.log(event.data);
       this.block = !event.data.bloqueiaAnalise;
       this.unblock = event.data.bloqueiaAnalise;
     });
@@ -155,7 +154,9 @@ export class AnaliseComponent implements OnInit {
         this.analiseService.block(this.analiseSelecionada);
           this.blockUI.stop();
           this.pageNotificationService.addBlockMsgWithName(this.analiseSelecionada.identificadorAnalise);
-          this.recarregarDataTable();
+          setTimeout(() => this.recarregarDataTable(), 2000);
+          this.block = true;
+          this.unblock = true;
       }
     });
   }
@@ -172,7 +173,9 @@ export class AnaliseComponent implements OnInit {
         this.analiseService.unblock(this.analiseSelecionada);
           this.blockUI.stop();
           this.pageNotificationService.addBlockMsgWithName(this.analiseSelecionada.identificadorAnalise);
-          this.recarregarDataTable();
+          setTimeout(() => this.recarregarDataTable(), 2000);
+          this.block = true;
+          this.unblock = true;
       }
     });
   }
