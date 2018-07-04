@@ -71,6 +71,9 @@ export class AnaliseComponent implements OnInit {
       case 'relatorioArquivo' :
         this.gerarRelatorioPdfArquivo(event.selection);
         break;
+      case 'relatorioBrowserDetalhado' :
+        this.geraRelatorioPdfDetalhadoBrowser(event.selection);
+        break;
     }
   }
 
@@ -108,6 +111,7 @@ export class AnaliseComponent implements OnInit {
 
   /**
    * Método responsável por gerar o relatório diretamente sem a apresentação do relatório no browser.
+   * @param analise
    */
   public gerarRelatorioPdfArquivo(analise: Analise) {
     this.analiseService.gerarRelatorioPdfArquivo(analise.id);
@@ -115,9 +119,18 @@ export class AnaliseComponent implements OnInit {
 
   /**
    * Método responsável pela a apresentação do relatório no browser.
+   * @param analise
    */
   public geraRelatorioPdfBrowser(analise: Analise) {
     this.analiseService.geraRelatorioPdfBrowser(analise.id);
+  }
+
+  /**
+   * Método responsável por gerar o relatório detalhado da analise.
+   * @param analise
+   */
+  public geraRelatorioPdfDetalhadoBrowser(analise: Analise) {
+    this.analiseService.geraRelatorioPdfDetalhadoBrowser(analise.id);
   }
 
   /**

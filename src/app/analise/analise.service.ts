@@ -17,6 +17,8 @@ export class AnaliseService {
 
   relatorioAnaliseUrl = environment.apiUrl + '/relatorioPdfArquivo';
 
+  relatoriosDetalhadoUrl = environment.apiUrl + '/downloadPdfDetalhadoBrowser';
+
   searchUrl = environment.apiUrl + '/_search/analises';
 
   @BlockUI() blockUI: NgBlockUI;
@@ -58,6 +60,29 @@ export class AnaliseService {
   public geraRelatorioPdfBrowser(id: number): Observable<string> {
     this.blockUI.start('GERANDO RELATORIO...');
     this.http.get(`${this.relatoriosUrl}/${id}`, {
+    method: RequestMethod.Get,
+    responseType: ResponseContentType.Blob,
+  }).subscribe(
+      (response) => {
+        const mediaType = 'application/pdf';
+        const blob = new Blob([response.blob()], {type: mediaType});
+        const fileURL = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.download = 'analise.pdf';
+        anchor.href = fileURL;
+        window.open(fileURL, '_blank', '');
+        this.blockUI.stop();
+        return null;
+      });
+      return null;
+  }
+
+    /**
+   *
+   */
+  public geraRelatorioPdfDetalhadoBrowser(id: number): Observable<string> {
+    this.blockUI.start('GERANDO RELATORIO...');
+    this.http.get(`${this.relatoriosDetalhadoUrl}/${id}`, {
     method: RequestMethod.Get,
     responseType: ResponseContentType.Blob,
   }).subscribe(
