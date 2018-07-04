@@ -97,5 +97,33 @@ public class RelatorioUtil {
         
         return  JasperExportManager.exportReportToPdf(jasperPrint);
     }
+    
+    /**
+     * Método responsável por exibir o PDF da base line no browser.
+     * @param analise
+     * @param caminhoJasperResolucao
+     * @param parametrosJasper
+     * @param funcoes
+     * @return
+     * @throws FileNotFoundException
+     * @throws JRException
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public @ResponseBody byte[] downloadPdfBaselineBrowser(String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
+        
+        InputStream stram = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
+        
+        JasperPrint jasperPrint = (JasperPrint)JasperFillManager.fillReport(stram, parametrosJasper, new JREmptyDataSource());
+        
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        
+        JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+        
+        response.setContentType("application/x-pdf");
+        
+        response.setHeader("Content-Disposition", "inline; filename=" + ".pdf");
+        
+        return  JasperExportManager.exportReportToPdf(jasperPrint);
+    }
 
 }

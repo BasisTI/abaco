@@ -5,6 +5,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,7 @@ import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
+import br.com.basis.abaco.reports.rest.RelatorioBaselineRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
@@ -66,6 +68,8 @@ public class AnaliseResource {
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
     
     private RelatorioAnaliseRest relatorioAnaliseRest;
+    
+    private RelatorioBaselineRest relatorioBaselineRest;
     
     @Autowired
     private HttpServletRequest request;
@@ -121,6 +125,14 @@ public class AnaliseResource {
      */
     private Analise recuperarAnalise(Long id) {
         return analiseRepository.findOne(id);
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    private List<Analise> recuperarTodasAnalises() {
+        return analiseRepository.findAll();
     }
     
     /**
@@ -340,5 +352,21 @@ public class AnaliseResource {
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
         log.debug("REST request to generate report Analise detalhado in browser : {}", analise);
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
+    }
+    /**
+     * Método responsável por requisitar a geração do relatório de Baseline.
+     * @param analise
+     * @throws URISyntaxException
+     * @throws JRException 
+     * @throws IOException 
+     */
+    @GetMapping("/downloadPdfBaselineBrowser")
+    @Timed
+    public @ResponseBody byte[] downloadPdfBaselineBrowser() throws URISyntaxException, IOException, JRException {
+        List<Analise> listAnalise = new ArrayList<Analise>();
+        relatorioBaselineRest = new RelatorioBaselineRest(this.response,this.request);
+        listAnalise = recuperarTodasAnalises();
+        log.debug("REST request to generate report Analise baseline in browser : {}", listAnalise);
+        return relatorioBaselineRest.downloadPdfBaselineBrowser(listAnalise);
     }
 }

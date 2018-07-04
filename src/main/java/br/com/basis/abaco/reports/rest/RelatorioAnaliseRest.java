@@ -62,7 +62,7 @@ public class RelatorioAnaliseRest {
     
     private static String deflator = " Deflator em Projetos de Melhoria";
 
-    public RelatorioAnaliseRest(HttpServletResponse response, HttpServletRequest request ) {
+    public RelatorioAnaliseRest(HttpServletResponse response, HttpServletRequest request) {
         this.response = response;
         this.request = request;
     }
@@ -99,9 +99,8 @@ public class RelatorioAnaliseRest {
             return relatorio.downloadPdfArquivo(analise, caminhoRalatorioAnalise, popularParametroAnalise());
         } else if(tipo == TipoRelatorio.ANALISE_DETALHADA) {
             return relatorio.downloadPdfArquivo(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
-        } else {
-            return null;
         }
+        return null;
     }
     
     /**empolgação
@@ -118,11 +117,12 @@ public class RelatorioAnaliseRest {
             return relatorio.downloadPdfBrowser(analise, caminhoRalatorioAnalise, popularParametroAnalise());
         } else if(tipo == TipoRelatorio.ANALISE_DETALHADA) {
             return relatorio.downloadPdfBrowser(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
-        } else {
-            return null;
         }
+        return null;
     }
+    
 
+    
     /**
      * Método responsável por popular o parametro do Jasper.
      */
