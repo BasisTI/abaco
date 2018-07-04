@@ -217,6 +217,9 @@ public class AnaliseResource {
         log.debug("REST request to update Analise : {}", analise);
         if (analise.getId() == null) {
             return createAnalise(analise);
+        } if (analise.getbloqueiaAnalise()) {
+            return ResponseEntity.badRequest().headers(
+                HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
         }
         linkFuncoesToAnalise(analise);
         Analise result = analiseRepository.save(analise);
