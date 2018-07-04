@@ -6,6 +6,10 @@ package br.com.basis.abaco.service.dto;
  */
 public class FuncoesDTO {
     
+    private Long idFd;
+    
+    private Long idFt;
+    
     private String fatorAjusteFd;
     
     private String impactoFd;
@@ -305,6 +309,21 @@ public class FuncoesDTO {
     public void setPfAjustadoFt(String pfAjustadoFt) {
         this.pfAjustadoFt = pfAjustadoFt;
     }
-   
+
+    public Long getIdFd() {
+        return idFd;
+    }
+
+    public void setIdFd(Long idFd) {
+        this.idFd = idFd;
+    }
+
+    public Long getIdFt() {
+        return idFt;
+    }
+
+    public void setIdFt(Long idFt) {
+        this.idFt = idFt;
+    }
     
 }

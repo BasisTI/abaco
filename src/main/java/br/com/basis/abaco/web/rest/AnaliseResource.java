@@ -37,6 +37,7 @@ import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
@@ -329,13 +330,13 @@ public class AnaliseResource {
      * @throws JRException
      * @throws IOException
      */
-    @GetMapping("/relatorioAnalise/{id}")
+    @GetMapping("/relatorioPdfArquivo/{id}")
     @Timed
-    public ResponseEntity<byte[]> gerarRelatorioAnalises(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+    public ResponseEntity<byte[]> downloadPdfArquivo(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = recuperarAnalise(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
-        log.debug("REST request to generate report Analise : {}", analise);
-        return relatorioAnaliseRest.downloadAnalise(analise);
+        log.debug("REST request to generate report Analise at download archive: {}", analise);
+        return relatorioAnaliseRest.downloadPdfArquivo(analise, TipoRelatorio.ANALISE);
     }
 
     /**
@@ -345,13 +346,28 @@ public class AnaliseResource {
      * @throws JRException
      * @throws IOException
      */
-    @GetMapping("/relatorios/{id}")
+    @GetMapping("/relatorioPdfBrowser/{id}")
     @Timed
-    public @ResponseBody byte[] gerarRelatorioAnalise(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+    public @ResponseBody byte[] downloadPdfBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = recuperarAnalise(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
-        log.debug("REST request to generate report Analise : {}", analise);
-        return relatorioAnaliseRest.downloadAnalisePDF(analise);
+        log.debug("REST request to generate report Analise in browser : {}", analise);
+        return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE);
     }
-
+    
+    /**
+     * Método responsável por requisitar a geração do relatório de Análise.
+     * @param analise
+     * @throws URISyntaxException
+     * @throws JRException 
+     * @throws IOException 
+     */
+    @GetMapping("/downloadPdfDetalhadoBrowser/{id}")
+    @Timed
+    public @ResponseBody byte[] downloadPdfDetalhadoBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+        Analise analise = recuperarAnalise(id);
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response,this.request);
+        log.debug("REST request to generate report Analise detalhado in browser : {}", analise);
+        return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
+    }
 }
