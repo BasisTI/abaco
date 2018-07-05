@@ -139,12 +139,13 @@ public class UserResource {
 			User newUser = userRepository.save(userReadyToBeSaved);
 			userSearchRepository.save(newUser);
 			log.debug("Created Information for User: {}", user);
+			newUser.setLangKey("pt_BR");
 			mailService.sendCreationEmail(newUser);
 			return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
 					.headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin())).body(newUser);
 		}
 	}
-	
+
 	private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
 	    return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage)).body(null);
 	}
@@ -258,7 +259,7 @@ public class UserResource {
 	 * @param query
 	 *            the query to search
 	 * @return the result of the search
-	 * @throws URISyntaxException 
+	 * @throws URISyntaxException
 	 */
 	@GetMapping("/_search/users")
 	@Timed
@@ -266,7 +267,7 @@ public class UserResource {
 	public ResponseEntity<List<User>> search(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
 	    Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-	    
+
 	    Page<User> page = userSearchRepository.search(queryStringQuery(query), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/users");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);

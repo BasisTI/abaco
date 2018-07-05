@@ -66,17 +66,17 @@ public class AnaliseResource {
     private final AnaliseSearchRepository analiseSearchRepository;
 
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
-    
+
     private RelatorioAnaliseRest relatorioAnaliseRest;
     
     private RelatorioBaselineRest relatorioBaselineRest;
     
     @Autowired
     private HttpServletRequest request;
-    
+
     @Autowired
     private HttpServletResponse response;
-    
+
     /**
      * Método construtor.
      * @param analiseRepository
@@ -95,7 +95,7 @@ public class AnaliseResource {
     /**
      * POST /analises : Create a new analise.
      *
-     * @param analise 
+     * @param analise
      * the analise to create
      * @return the ResponseEntity with status 201 (Created) and with body the new
      * analise, or with status 400 (Bad Request) if the analise has already an ID
@@ -119,14 +119,14 @@ public class AnaliseResource {
     }
 
     /**
-     * 
+     *
      * @param id
      * @return
      */
     private Analise recuperarAnalise(Long id) {
         return analiseRepository.findOne(id);
     }
-    
+
     /**
      * 
      * @return
@@ -145,7 +145,7 @@ public class AnaliseResource {
     }
 
     /**
-     * 
+     *
      * @param analise
      */
     private void linkAnaliseToFuncaoDados(Analise analise) {
@@ -157,7 +157,7 @@ public class AnaliseResource {
     }
 
     /**
-     * 
+     *
      * @param funcaoDados
      */
     private void linkFuncaoDadosRelationships(FuncaoDados funcaoDados) {
@@ -167,13 +167,13 @@ public class AnaliseResource {
     }
 
     /**
-     * 
+     *
      * @param funcaoDados
      * @param sistema
      */
     private void handleVersionFuncaoDados(FuncaoDados funcaoDados, Sistema sistema) {
         String nome = funcaoDados.getName();
-        Optional<FuncaoDadosVersionavel> funcaoDadosVersionavel = 
+        Optional<FuncaoDadosVersionavel> funcaoDadosVersionavel =
                 funcaoDadosVersionavelRepository.findOneByNomeIgnoreCaseAndSistemaId(nome, sistema.getId());
         if (funcaoDadosVersionavel.isPresent()) {
             funcaoDados.setFuncaoDadosVersionavel(funcaoDadosVersionavel.get());
@@ -187,7 +187,7 @@ public class AnaliseResource {
     }
 
     /**
-     * 
+     *
      * @param analise
      */
     private void linkAnaliseToFuncaoTransacaos(Analise analise) {
@@ -200,7 +200,7 @@ public class AnaliseResource {
     }
 
     /**
-     * 
+     *
      * @param result
      */
     private void unlinkAnaliseFromFuncoes(Analise result) {
@@ -230,6 +230,9 @@ public class AnaliseResource {
         log.debug("REST request to update Analise : {}", analise);
         if (analise.getId() == null) {
             return createAnalise(analise);
+        } if (analise.getbloqueiaAnalise()) {
+            return ResponseEntity.badRequest().headers(
+                HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
         }
         linkFuncoesToAnalise(analise);
         Analise result = analiseRepository.save(analise);
@@ -238,7 +241,33 @@ public class AnaliseResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
                 .body(result);
     }
-    
+
+    @PutMapping("/analises/{id}/block")
+    @Timed
+    public ResponseEntity<Analise> blockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
+        log.debug("REST request to block Analise : {}", analise);
+        linkFuncoesToAnalise(analise);
+        analise.setbloqueiaAnalise(true);
+        Analise result = analiseRepository.save(analise);
+        unlinkAnaliseFromFuncoes(result);
+        analiseSearchRepository.save(result);
+        return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
+            .body(result);
+    }
+
+    @PutMapping("/analises/{id}/unblock")
+    @Timed
+    public ResponseEntity<Analise> unblockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
+        log.debug("REST request to block Analise : {}", analise);
+        linkFuncoesToAnalise(analise);
+        analise.setbloqueiaAnalise(false);
+        Analise result = analiseRepository.save(analise);
+        unlinkAnaliseFromFuncoes(result);
+        analiseSearchRepository.save(result);
+        return ResponseEntity.ok().headers(HeaderUtil.unblockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
+            .body(result);
+    }
+
     /**
      * GET /analises : get all the analises.
      * @param pageable the pagination information
@@ -268,7 +297,7 @@ public class AnaliseResource {
         log.debug("REST request to get Analise : {}", id);
         Analise analise = recuperarAnalise(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
-    }   
+    }
 
     /**
      * DELETE /analises/:id : delete the "id" analise.
@@ -305,13 +334,13 @@ public class AnaliseResource {
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
-    
+
     /**
      * Método responsável por requisitar a geração do relatório de Análise.
      * @param analise
      * @throws URISyntaxException
-     * @throws JRException 
-     * @throws IOException 
+     * @throws JRException
+     * @throws IOException
      */
     @GetMapping("/relatorioPdfArquivo/{id}")
     @Timed
@@ -321,13 +350,13 @@ public class AnaliseResource {
         log.debug("REST request to generate report Analise at download archive: {}", analise);
         return relatorioAnaliseRest.downloadPdfArquivo(analise, TipoRelatorio.ANALISE);
     }
-    
+
     /**
      * Método responsável por requisitar a geração do relatório de Análise.
      * @param analise
      * @throws URISyntaxException
-     * @throws JRException 
-     * @throws IOException 
+     * @throws JRException
+     * @throws IOException
      */
     @GetMapping("/relatorioPdfBrowser/{id}")
     @Timed

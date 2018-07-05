@@ -101,7 +101,7 @@ public class Analise implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Organizacao organizacao;
-    
+
     @Embedded
     private AbacoAudit audit = new AbacoAudit();
 
@@ -149,6 +149,9 @@ public class Analise implements Serializable {
 
     @Column(name = "identificador_analise", length = 100)
     private String identificadorAnalise;
+
+    @Column(name = "bloqueado")
+    private boolean bloqueiaAnalise;
 
     @ManyToOne
     private TipoEquipe equipeResponsavel;
@@ -420,6 +423,14 @@ public class Analise implements Serializable {
         this.baselineImediatamente = baselineImediatamente;
     }
 
+    public Boolean getbloqueiaAnalise() {
+        return bloqueiaAnalise;
+    }
+
+    public void setbloqueiaAnalise(Boolean bloqueiaAnalise) {
+        this.bloqueiaAnalise = bloqueiaAnalise;
+    }
+
     public MetodoContagem getMetodoContagem() {
 		return metodoContagem;
 	}
@@ -427,7 +438,7 @@ public class Analise implements Serializable {
 	public void setMetodoContagem(MetodoContagem metodoContagem) {
 		this.metodoContagem = metodoContagem;
 	}
-	
+
     public Analise metodoContagem(MetodoContagem metodoContagem) {
         this.metodoContagem = metodoContagem;
         return this;

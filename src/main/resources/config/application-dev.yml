@@ -61,7 +61,7 @@ spring:
                   logs: target/elasticsearch/log
                   data: target/elasticsearch/data
     mail:
-        host: localhost
+        host: smtp.basis.intern
         port: 25
         username:
         password:

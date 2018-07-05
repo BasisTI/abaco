@@ -51,7 +51,7 @@ spring:
             cluster-name:
             cluster-nodes: localhost:9300
     mail:
-        host: localhost
+        host: smtp.basis.intern
         port: 25
         username:
         password:
