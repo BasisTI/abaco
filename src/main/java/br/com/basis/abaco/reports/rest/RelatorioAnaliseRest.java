@@ -389,8 +389,8 @@ public class RelatorioAnaliseRest {
                 RlrFdDTO objeto = new RlrFdDTO();
 
                 if(rlr.getNome() != null) {
-                    objeto.setNome(rlr.getNome());
-                    objeto.setNomeFd(rlr.getFuncaoDados().getName());
+                    objeto.setRlrDto(rlr.getNome());
+                    objeto.setNomeRlrFdDto(rlr.getFuncaoDados().getName());
                     listRlrFD.add(objeto);
                 }
             }
@@ -431,8 +431,8 @@ public class RelatorioAnaliseRest {
                 AlrFtDTO objeto = new AlrFtDTO();
 
                 if(alr.getNome() != null) {
-                    objeto.setNome(alr.getNome());
-                    objeto.setNomeFt(alr.getFuncaoTransacao().getName());
+                    objeto.setNomeAlrDto(alr.getNome());
+                    objeto.setNomeAlrFtDto(alr.getFuncaoTransacao().getName());
                     listArlFT.add(objeto);
                 }
             }

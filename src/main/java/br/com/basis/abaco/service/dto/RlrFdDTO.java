@@ -6,23 +6,23 @@ package br.com.basis.abaco.service.dto;
  */
 public class RlrFdDTO {
 
-    private String nome;
-    
-    private String nomeFd;
+    private String RlrDto;
 
-    public String getNome() {
-        return nome;
+    private String nomeRlrFdDto;
+
+    public String getRlrDto() {
+        return RlrDto;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setRlrDto(String rlrDto) {
+        this.RlrDto = rlrDto;
     }
 
-    public String getNomeFd() {
-        return nomeFd;
+    public String getNomeRlrFdDto() {
+        return nomeRlrFdDto;
     }
 
-    public void setNomeFd(String nomeFd) {
-        this.nomeFd = nomeFd;
+    public void setNomeRlrFdDto(String nomeRlrFdDto) {
+        this.nomeRlrFdDto = nomeRlrFdDto;
     }
 }
