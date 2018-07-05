@@ -41,25 +41,25 @@ import net.sf.jasperreports.engine.JRException;
 public class RelatorioAnaliseRest {
 
     private static String caminhoRalatorioAnalise = "reports/analise/analise.jasper";
-    
+
     private static String caminhoAnaliseDetalhada = "reports/analise/analise_detalhada.jasper";
-    
+
     private static String caminhoImagem = "reports/img/fnde_logo.png";
 
     private HttpServletRequest request;
-    
+
     private HttpServletResponse response;
 
     private Analise analise;
-    
+
     private RelatorioUtil relatorio;
 
     private Map<String, Object> parametro;
-    
+
     private RelatorioFuncoes relatorioFuncoes;
-    
+
     private List<FuncoesDTO> listFuncoes;
-    
+
     private static String deflator = " Deflator em Projetos de Melhoria";
 
     public RelatorioAnaliseRest(HttpServletResponse response, HttpServletRequest request) {
@@ -68,7 +68,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      */
     private void init() {
         listFuncoes = new ArrayList<FuncoesDTO>();
@@ -78,7 +78,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param analise
      */
     private void popularObjeto(Analise analise) {
@@ -86,7 +86,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param analise
      * @throws FileNotFoundException
      * @throws JRException
@@ -94,7 +94,7 @@ public class RelatorioAnaliseRest {
     public ResponseEntity<byte[]> downloadPdfArquivo(Analise analise, TipoRelatorio tipo) throws FileNotFoundException, JRException {
         init();
         popularObjeto(analise);
-        
+
         if(tipo == TipoRelatorio.ANALISE) {
             return relatorio.downloadPdfArquivo(analise, caminhoRalatorioAnalise, popularParametroAnalise());
         } else if(tipo == TipoRelatorio.ANALISE_DETALHADA) {
@@ -102,9 +102,9 @@ public class RelatorioAnaliseRest {
         }
         return null;
     }
-    
+
     /**empolgação
-     * 
+     *
      * @param analise
      * @throws FileNotFoundException
      * @throws JRException
@@ -112,7 +112,7 @@ public class RelatorioAnaliseRest {
     public @ResponseBody byte[] downloadPdfBrowser(Analise analise, TipoRelatorio tipo) throws FileNotFoundException, JRException {
         init();
         popularObjeto(analise);
-        
+
         if(tipo == TipoRelatorio.ANALISE) {
             return relatorio.downloadPdfBrowser(analise, caminhoRalatorioAnalise, popularParametroAnalise());
         } else if(tipo == TipoRelatorio.ANALISE_DETALHADA) {
@@ -120,9 +120,9 @@ public class RelatorioAnaliseRest {
         }
         return null;
     }
-    
 
-    
+
+
     /**
      * Método responsável por popular o parametro do Jasper.
      */
@@ -147,14 +147,14 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      */
     private void popularUsuarios() {
         if(validarObjetosNulos(analise.getCreatedBy())) {
-            parametro.put("CRIADOPOR", analise.getCreatedBy().getLogin());            
+            parametro.put("CRIADOPOR", analise.getCreatedBy().getLogin());
         }
         if(validarObjetosNulos(analise.getEditedBy())) {
-            parametro.put("EDITADOPOR", analise.getEditedBy().getLogin());            
+            parametro.put("EDITADOPOR", analise.getEditedBy().getLogin());
         }
     }
 
@@ -165,7 +165,7 @@ public class RelatorioAnaliseRest {
         InputStream reportStream = getClass().getClassLoader().getResourceAsStream(caminhoImagem);
         parametro.put("IMAGEMLOGO", reportStream);
     }
-    
+
     /**
      * Método responsável por popular as informações Gerais do relatório.
      */
@@ -182,9 +182,9 @@ public class RelatorioAnaliseRest {
         parametro.put("DOCUMENTACAO", analise.getDocumentacao());
         parametro.put("OBSERVACOES", analise.getObservacoes());
     }
-    
+
     /**
-     * 
+     *
      */
     private void popularContrato() {
         if (validarObjetosNulos(analise.getContrato())) {
@@ -197,17 +197,17 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      */
     private void popularOrganizacao() {
         if(validarObjetosNulos(analise.getContrato().getOrganization())) {
             parametro.put("ORGANIZACAO", analise.getContrato().getOrganization().getSigla());
-            parametro.put("ORGANIZACAONM", analise.getContrato().getOrganization().getNome()); 
+            parametro.put("ORGANIZACAONM", analise.getContrato().getOrganization().getNome());
         }
     }
 
     /**
-     * 
+     *
      */
     private void popularSistema() {
         if (validarObjetosNulos(analise.getSistema())) {
@@ -217,7 +217,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      */
     private void popularManual() {
         if (validarObjetosNulos(analise.getContrato()) && validarObjetosNulos(analise.getContrato().getManual())) {
@@ -226,7 +226,7 @@ public class RelatorioAnaliseRest {
             parametro.put("VERSAOCPM", verificarVersaoCPM(analise.getContrato().getManual().getVersaoCPM()));
         }
     }
-    
+
     /**
      * Método responsável por popular as informações do resumo da análise.
      */
@@ -235,9 +235,9 @@ public class RelatorioAnaliseRest {
         parametro.put("AJUSTESPF", calcularPFsAjustado(analise.getPfTotal(), analise.getAdjustPFTotal()));
         parametro.put("PFAJUSTADO", analise.getAdjustPFTotal());
     }
-    
+
     /**
-     * 
+     *
     */
     private void popularDadosBasicos() {
         parametro.put("DATACRIADO", analise.getAudit().getCreatedOn().toString());
@@ -245,24 +245,24 @@ public class RelatorioAnaliseRest {
         parametro.put("VALORAJUSTE", String.valueOf(analise.getValorAjuste()));
         parametro.put("FATORAJUSTE", verificarFatorAjuste(analise.getFatorAjuste()));
     }
-    
+
     /**
-     * 
+     *
      */
     private void popularFuncao() {
         for (FuncoesDTO funcoesDTO : relatorioFuncoes.prepararListaFuncoes(analise)) {
             listFuncoes.add(funcoesDTO);
         }
     }
-    
+
     /**
-     * 
+     *
      */
     private void popularListaParametro() {
         List<FuncaoTransacaoDTO> listFuncaoFT = new ArrayList<>();
         List<FuncaoDadosDTO> listFuncaoFD = new ArrayList<>();
 
-        
+
         for(FuncoesDTO f : listFuncoes) {
             if(f.getNomeFd() != null) {
                 listFuncaoFD.add(popularObjetoFd(f));
@@ -274,9 +274,9 @@ public class RelatorioAnaliseRest {
         parametro.put("LISTAFUNCAOFT", listFuncaoFT);
         parametro.put("LISTAFUNCAOFD", listFuncaoFD);
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     private int countQuantidadeDerFd(Long id) {
@@ -288,9 +288,9 @@ public class RelatorioAnaliseRest {
         }
         return total;
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     private int countQuantidadeRlrFd(Long id) {
@@ -302,9 +302,9 @@ public class RelatorioAnaliseRest {
         }
         return total;
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     private int countQuantidadeFtrFt(Long id) {
@@ -316,9 +316,9 @@ public class RelatorioAnaliseRest {
         }
         return total;
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     private int countQuantidadeDerFt(Long id) {
@@ -330,13 +330,13 @@ public class RelatorioAnaliseRest {
         }
         return total;
     }
-    
+
     /**
-     * Método responsável por invocar os métodos que populam as listas 
-     * DER função de transação, 
-     * ARL função de transação, 
-     * DER função de dados, 
-     * RLR função de dados, 
+     * Método responsável por invocar os métodos que populam as listas
+     * DER função de transação,
+     * ARL função de transação,
+     * DER função de dados,
+     * RLR função de dados,
      * função de transação e função de dados.
      */
     private void popularListas() {
@@ -346,15 +346,15 @@ public class RelatorioAnaliseRest {
         this.popularListaRlrFd();
         this.popularListaFuncaoTransacao();
         this.popularListaFuncaoDados();
-        
+
     }
-    
+
     /**
-     * 
+     *
      */
     private void popularListaFuncaoTransacao() {
         List<FuncaoTransacaoDTO> listFuncaoFT = new ArrayList<>();
-        
+
         for(FuncoesDTO f : listFuncoes) {
             if(f.getNomeFt() != null) {
                 listFuncaoFT.add(popularObjetoFt(f));
@@ -362,13 +362,13 @@ public class RelatorioAnaliseRest {
         }
         parametro.put("LISTAFUNCAOFT", listFuncaoFT);
     }
-    
+
     /**
-     * 
+     *
      */
     private void popularListaFuncaoDados() {
         List<FuncaoDadosDTO> listFuncaoFD = new ArrayList<>();
-        
+
         for(FuncoesDTO f : listFuncoes) {
             if(f.getNomeFd() != null) {
                 listFuncaoFD.add(popularObjetoFd(f));
@@ -376,15 +376,15 @@ public class RelatorioAnaliseRest {
         }
         parametro.put("LISTAFUNCAOFD", listFuncaoFD);
     }
-    
+
     /**
      * Método responsável por popular a lista RLR função de dados.
      */
     private void popularListaRlrFd() {
         List<RlrFdDTO> listRlrFD = new ArrayList<>();
-        
+
         for(FuncaoDados fd : analise.getFuncaoDados()) {
-            
+
             for(Rlr rlr : fd.getRlrs()) {
                 RlrFdDTO objeto = new RlrFdDTO();
 
@@ -400,12 +400,12 @@ public class RelatorioAnaliseRest {
 
     /**
      * Método responsável por popular a lista DER função de dados.
-     */ 
+     */
     private void popularListaDerFd() {
         List<DerFdDTO> listDerFD = new ArrayList<>();
-        
+
         for(FuncaoDados fd : analise.getFuncaoDados()) {
-            
+
             for(Der der : fd.getDers()) {
                 DerFdDTO objeto = new DerFdDTO();
 
@@ -418,18 +418,18 @@ public class RelatorioAnaliseRest {
         }
         parametro.put("LISTADERFD", listDerFD);
     }
-    
+
     /**
      * Método responsável por popular a lista ARL função de transação.
      */
     private void popularListaArlFt() {
         List<AlrFtDTO> listArlFT = new ArrayList<>();
-        
+
         for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
-            
+
             for(Alr alr : ft.getAlrs()) {
                 AlrFtDTO objeto = new AlrFtDTO();
-                
+
                 if(alr.getNome() != null) {
                     objeto.setNome(alr.getNome());
                     objeto.setNomeFt(alr.getFuncaoTransacao().getName());
@@ -439,17 +439,17 @@ public class RelatorioAnaliseRest {
         }
         parametro.put("LISTAARLFT", listArlFT);
     }
-    
+
     /**
      * Método responsável por popular a lista DER função de transação.
      */
     private void popularListaDerFt() {
         List<DerFtDTO> listDerFT = new ArrayList<>();
-        
+
         for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
             for(Der der : ft.getDers()) {
                 DerFtDTO objeto = new DerFtDTO();
-                
+
                 if(der.getNome() != null) {
                     objeto.setNome(der.getNome());
                     objeto.setNomeFt(der.getFuncaoTransacao().getName());
@@ -459,9 +459,9 @@ public class RelatorioAnaliseRest {
         }
         parametro.put("LISTADERFT", listDerFT);
     }
-    
+
     /**
-     * 
+     *
      * @param f
      * @return
      */
@@ -481,9 +481,9 @@ public class RelatorioAnaliseRest {
         fd.setPfAjustadoFd(f.getPfAjustadoFd());
         return fd;
     }
-    
+
     /**
-     * 
+     *
      * @param f
      * @return
      */
@@ -501,9 +501,9 @@ public class RelatorioAnaliseRest {
         ft.setFtrFt(Integer.toString(this.countQuantidadeFtrFt(f.getIdFt())));
         ft.setPfTotalFt(f.getPfTotalFt());
         ft.setPfAjustadoFt(f.getPfAjustadoFt());
-        return ft;        
+        return ft;
     }
-    
+
     /**
      * Método responsável por popular os parâmetros de ajustes para relatório detalhado.
      */
@@ -515,7 +515,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      */
     private void popularCountsFd() {
         FuncoesDTO fd = relatorioFuncoes.recuperarCountsFd(analise);
@@ -528,7 +528,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      */
     private void popularCountsFt() {
         FuncoesDTO ft = relatorioFuncoes.recuperarCountsFt(analise);
@@ -541,9 +541,9 @@ public class RelatorioAnaliseRest {
         this.popularImpactoCe(ft);
         this.popularImpactoInmFt(ft);
     }
-    
+
     /**
-     * 
+     *
      * @param fd
      */
     private void popularComplexidadeAli(FuncoesDTO fd) {
@@ -561,7 +561,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param fd
      */
     private void popularComplexidadeAie(FuncoesDTO fd) {
@@ -579,7 +579,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param fd
      */
     private void popularComplexidadeInmFd(FuncoesDTO fd) {
@@ -597,7 +597,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param fd
      */
     private void popularImpactoAli(FuncoesDTO fd) {
@@ -608,7 +608,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param fd
      */
     private void popularImpactoAie(FuncoesDTO fd) {
@@ -619,7 +619,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param fd
      */
     private void popularImpactoInmFd(FuncoesDTO fd) {
@@ -630,7 +630,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param ft
      */
     private void popularComplexidadeEe(FuncoesDTO ft) {
@@ -648,7 +648,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param ft
      */
     private void popularComplexidadeSe(FuncoesDTO ft) {
@@ -666,7 +666,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param ft
      */
     private void popularComplexidadeCe(FuncoesDTO ft) {
@@ -684,7 +684,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param ft
      */
     private void popularComplexidadeInmFt(FuncoesDTO ft) {
@@ -702,7 +702,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param ft
      */
     private void popularImpactoEe(FuncoesDTO ft) {
@@ -713,7 +713,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param ft
      */
     private void popularImpactoSe(FuncoesDTO ft) {
@@ -724,7 +724,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param ft
      */
     private void popularImpactoCe(FuncoesDTO ft) {
@@ -735,7 +735,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param ft
      */
     private void popularImpactoInmFt(FuncoesDTO ft) {
@@ -744,49 +744,43 @@ public class RelatorioAnaliseRest {
         parametro.put("INMFTEXCLUSAO", transformarInteiro(ft.getImpactoDtoFt().getInmExclusaoFt()));
         parametro.put("INMFTCONVERSAO", transformarInteiro(ft.getImpactoDtoFt().getInmConversaoFt()));
     }
-    
+
     /**
-     * 
+     *
      * @param valor
      * @return
      */
     private String funcao(String valor) {
-        switch(valor) {
-            case "INCLUSAO" :
-                return analise.getContrato().getManual().getParametroInclusao().toString();
-            case "ALTERACAO" : 
-                return analise.getContrato().getManual().getParametroAlteracao().toString();
-            case "EXCLUSAO" : 
-                return analise.getContrato().getManual().getParametroExclusao().toString();
-            case "CONVERSAO" :
-                return analise.getContrato().getManual().getParametroConversao().toString();
-            default :
-                return null;
-        }
-    }
-    
-    /**
-     * 
-     * @param ft
-     */
-    private Integer somaQuantidades(Integer sem, Integer baixa, Integer media, Integer alta) {
-        if(sem == null) {
-            sem = 0;
-        }
-        if(baixa == null ) {
-            baixa = 0;
-        }
-        if(media == null) {
-            media = 0;
-        }
-        if(alta == null) {
-            alta = 0;
-        }
-        return sem + baixa + media + alta;
+        if (valor.equals("INCLUSAO")){ return analise.getContrato().getManual().getParametroInclusao().toString(); }
+        if (valor.equals("ALTERACAO")){ return analise.getContrato().getManual().getParametroInclusao().toString(); }
+        if (valor.equals("EXCLUSAO")){ return analise.getContrato().getManual().getParametroInclusao().toString(); }
+        if (valor.equals("CONVERSAO")){ return analise.getContrato().getManual().getParametroInclusao().toString(); }
+        return null;
     }
 
     /**
-     * 
+     *
+     * @param ft
+     */
+    private Integer somaQuantidades(Integer sem, Integer baixa, Integer media, Integer alta) {
+        Integer sem2 = sem, baixa2 = baixa, media2 = media, alta2 = alta;
+        if(sem2 == null) {
+            sem2 = 0;
+        }
+        if(baixa2 == null ) {
+            baixa2 = 0;
+        }
+        if(media2 == null) {
+            media2 = 0;
+        }
+        if(alta2 == null) {
+            alta2 = 0;
+        }
+        return sem2 + baixa2 + media2 + alta2;
+    }
+
+    /**
+     *
      */
     private String verificarFatorAjuste(FatorAjuste valor) {
         if(valor == null) {
@@ -797,7 +791,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      */
     private String verificarVersaoCPM(Long valor) {
         if(valor == 431) {
@@ -810,7 +804,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      */
     private String garantia() {
         if (analise.getBaselineImediatamente()) {
@@ -821,7 +815,7 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      */
     private boolean validarObjetosNulos(Object objeto) {
         return objeto == null ? false : true;
@@ -852,31 +846,33 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     * 
+     *
      * @param valor
      * @return
      */
     private String transformarInteiro(Integer valor) {
-        if(valor == null) {
-            valor = 0;
+        Integer valor2 = valor;
+        if(valor2 == null) {
+            valor2 = 0;
         }
-        return valor.toString();
+        return valor2.toString();
     }
 
     /**
-     * 
+     *
      * @param valor
      * @return
      */
     private String transformarBigDecimal(Double valor) {
-        if(valor == null) {
-            valor = 0.0;
+        Double valor2 = valor;
+        if(valor2 == null) {
+            valor2 = 0.0;
         }
-        return valor.toString().replace(".", ",");
+        return valor2.toString().replace(".", ",");
     }
-    
+
     /**
-     * 
+     *
      * @param valor1
      * @param valor2
      * @return

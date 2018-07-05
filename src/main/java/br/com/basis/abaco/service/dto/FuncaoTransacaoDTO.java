@@ -8,19 +8,19 @@ package br.com.basis.abaco.service.dto;
 public class FuncaoTransacaoDTO {
 
     private String nomeFt;
-    
+
     private String classificacaoFt;
-    
+
     private String impactoFt;
-    
-    private String FtrFt;
-    
+
+    private String ftrFt;
+
     private String derFt;
-    
+
     private String complexidadeFt;
-    
+
     private String pfTotalFt;
-    
+
     private String pfAjustadoFt;
 
     public String getNomeFt() {
@@ -48,11 +48,11 @@ public class FuncaoTransacaoDTO {
     }
 
     public String getFtrFt() {
-        return FtrFt;
+        return ftrFt;
     }
 
     public void setFtrFt(String ftrFt) {
-        FtrFt = ftrFt;
+        this.ftrFt = ftrFt;
     }
 
     public String getDerFt() {

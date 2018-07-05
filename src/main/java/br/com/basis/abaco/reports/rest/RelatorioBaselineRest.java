@@ -24,21 +24,21 @@ import net.sf.jasperreports.engine.JRException;
 public class RelatorioBaselineRest {
 
     private static String caminhoRelatorioBaseline = "reports/analise/baseline.jasper";
-    
+
     private static String caminhoImagem = "reports/img/fnde_logo.png";
 
     private HttpServletRequest request;
-    
+
     private HttpServletResponse response;
-    
+
     private Map<String, Object> parametro;
-    
+
     private RelatorioUtil relatorio;
-    
+
     private BaselineDTO objeto;
-    
+
     /**
-     * 
+     *
      * @param response
      * @param request
      */
@@ -46,16 +46,16 @@ public class RelatorioBaselineRest {
         this.response = response;
         this.request = request;
     }
-    
+
     /**
-     * 
+     *
      */
     private void init() {
         relatorio = new RelatorioUtil( this.response, this.request);
     }
-    
+
     /**
-     * 
+     *
      * @param listAnalise
      * @return
      * @throws FileNotFoundException
@@ -65,7 +65,7 @@ public class RelatorioBaselineRest {
         init();
         return relatorio.downloadPdfBaselineBrowser(caminhoRelatorioBaseline, popularBaseline(listAnalise));
     }
-    
+
     /**
      *
      * @return
@@ -76,7 +76,7 @@ public class RelatorioBaselineRest {
         this.popularListaBaseLine(listAnalise);
         return parametro;
     }
-    
+
     /**
      * Método responsável por acessar o caminho da imagem da logo do relatório e popular o parâmetro.
     */
@@ -91,49 +91,43 @@ public class RelatorioBaselineRest {
      */
     private void popularListaBaseLine(List<Analise> listAnalise) {
         List<BaselineDTO> listBaseline = new ArrayList<>();
-        Double pfTotalGeral = 0.0;
-        Double pfAPagarGeral = 0.0;
-        Double pfTotal = 0.0;
-        Double pfAPagar = 0.0;
-        
+        Double pfTotalGeral = 0.0, pfAPagarGeral = 0.0, pfTotal = 0.0, pfAPagar = 0.0;
         for(Analise a : listAnalise) {
             objeto = new BaselineDTO();
-            if(!objeto.getSistema().equals(a.getSistema())) {
+            if(!objeto.getSistema().equals(a.getSistema().toString())) {
                 pfTotal = 0.0;
-                pfAPagar = 0.0;
-            }
+                pfAPagar = 0.0; }
             pfTotal += Double.valueOf(a.getPfTotal());
             pfAPagar += Double.valueOf(a.getAdjustPFTotal());
             objeto.setSistema(a.getSistema().getNome());
             objeto.setPfTotal(pfTotal.toString());
             objeto.setPfAPagar(pfAPagar.toString());
-            objeto.setGarantia(a.getBaselineImediatamente() == true ? "Sim" : "Não");
-            
+            objeto.setGarantia(a.getBaselineImediatamente() ? "Sim" : "Não");
+
             pfTotalGeral += pfTotal;
             pfAPagarGeral += pfAPagar;
-            listBaseline.add(objeto);
-        }
+            listBaseline.add(objeto); }
         this.popularParametroBaseline(listBaseline);
         this.popularParametroPF(pfTotalGeral, pfAPagarGeral);
     }
-    
+
     /**
-     * 
-     * @param TotalGeral
+     *
+     * @param totalGeral
      * @param aPagarGeral
      */
-    private void popularParametroPF(Double TotalGeral, Double aPagarGeral) {
-        parametro.put("PFTOTAL", TotalGeral);
+    private void popularParametroPF(Double totalGeral, Double aPagarGeral) {
+        parametro.put("PFTOTAL", totalGeral);
         parametro.put("PFTOTALAPAGAR", aPagarGeral);
     }
-    
+
     /**
-     * 
+     *
      * @param listBaseline
      */
     private void popularParametroBaseline(List<BaselineDTO> listBaseline) {
         parametro.put("LISTABASELINE", listBaseline);
     }
-    
+
 
 }

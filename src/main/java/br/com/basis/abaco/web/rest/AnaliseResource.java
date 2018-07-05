@@ -68,9 +68,9 @@ public class AnaliseResource {
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
     private RelatorioAnaliseRest relatorioAnaliseRest;
-    
+
     private RelatorioBaselineRest relatorioBaselineRest;
-    
+
     @Autowired
     private HttpServletRequest request;
 
@@ -128,15 +128,15 @@ public class AnaliseResource {
     }
 
     /**
-     * 
+     *
      * @return
      */
     private List<Analise> recuperarTodasAnalises() {
         return analiseRepository.findAll();
     }
-    
+
     /**
-     * 
+     *
      * @param analise
      */
     private void linkFuncoesToAnalise(Analise analise) {
@@ -366,13 +366,13 @@ public class AnaliseResource {
         log.debug("REST request to generate report Analise in browser : {}", analise);
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE);
     }
-    
+
     /**
      * Método responsável por requisitar a geração do relatório de Análise.
      * @param analise
      * @throws URISyntaxException
-     * @throws JRException 
-     * @throws IOException 
+     * @throws JRException
+     * @throws IOException
      */
     @GetMapping("/downloadPdfDetalhadoBrowser/{id}")
     @Timed
@@ -386,16 +386,14 @@ public class AnaliseResource {
      * Método responsável por requisitar a geração do relatório de Baseline.
      * @param analise
      * @throws URISyntaxException
-     * @throws JRException 
-     * @throws IOException 
+     * @throws JRException
+     * @throws IOException
      */
     @GetMapping("/downloadPdfBaselineBrowser")
     @Timed
     public @ResponseBody byte[] downloadPdfBaselineBrowser() throws URISyntaxException, IOException, JRException {
-        List<Analise> listAnalise = new ArrayList<Analise>();
         relatorioBaselineRest = new RelatorioBaselineRest(this.response,this.request);
-        listAnalise = recuperarTodasAnalises();
-        log.debug("REST request to generate report Analise baseline in browser : {}", listAnalise);
-        return relatorioBaselineRest.downloadPdfBaselineBrowser(listAnalise);
+        log.debug("REST request to generate report Analise baseline in browser : {}", recuperarTodasAnalises());
+        return relatorioBaselineRest.downloadPdfBaselineBrowser(recuperarTodasAnalises());
     }
 }

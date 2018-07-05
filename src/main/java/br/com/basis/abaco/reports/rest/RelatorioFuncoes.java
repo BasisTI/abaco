@@ -22,9 +22,11 @@ import br.com.basis.abaco.service.dto.ImpactoDTO;
 public class RelatorioFuncoes {
 
     private FuncoesDTO funcoes;
-    
+
+    private String dash = "---";
+
     /**
-     * 
+     *
      */
     private void init() {
         funcoes = new FuncoesDTO();
@@ -33,9 +35,9 @@ public class RelatorioFuncoes {
         funcoes.setComplexidadeDtoFd(new ComplexidadeDTO());
         funcoes.setImpactoDtoFd(new ImpactoDTO());
     }
-    
+
     /**
-     * 
+     *
      * @param analise
      * @return
      */
@@ -51,7 +53,7 @@ public class RelatorioFuncoes {
         }
         return list;
     }
-    
+
     /**
      * Método responsável por popular o objeto FuncoesDTO com as informações da função de transação.
      * @param analise
@@ -64,7 +66,7 @@ public class RelatorioFuncoes {
         this.popularNome(f);
         this.popularPFsFt(f);
     }
-    
+
     /**
      * Método responsável por popular o objeto FuncoesDTO com as informações da função de dados.
      * @param f
@@ -77,9 +79,9 @@ public class RelatorioFuncoes {
         this.popularNomeFd(f);
         this.popularPFsFd(f);
     }
-   
+
     /**
-     * 
+     *
      * @param f
      */
     private void popularPFsFt(FuncaoTransacao f) {
@@ -102,48 +104,48 @@ public class RelatorioFuncoes {
     }
 
     /**
-     * 
+     *
      * @param f
      */
     private void popularObjetoFt(FuncaoTransacao f) {
         funcoes.setIdFt(f.getId());
-        funcoes.setFatorAjusteFt(f.getFatorAjuste() == null ? "---" : f.getFatorAjuste().getNome());
-        funcoes.setFuncionalidadeFt(f.getFuncionalidade() == null ? "---" : f.getFuncionalidade().getNome());
-        funcoes.setTipoFt(f.getTipo() == null ? "---" : f.getTipo().toString());
-        funcoes.setComplexidadeFt(f.getComplexidade() == null ? "---" : f.getComplexidade().toString());
+        funcoes.setFatorAjusteFt(f.getFatorAjuste() == null ? dash : f.getFatorAjuste().getNome());
+        funcoes.setFuncionalidadeFt(f.getFuncionalidade() == null ? dash : f.getFuncionalidade().getNome());
+        funcoes.setTipoFt(f.getTipo() == null ? dash : f.getTipo().toString());
+        funcoes.setComplexidadeFt(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
         funcoes.setPfTotalFt(f.getGrossPF().toString());
         funcoes.setPfAjustadoFt(f.getPf().toString());
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void popularImpacto(FuncaoTransacao f) {
-        funcoes.setImpactoFt(f.getImpacto() == null 
-                && !f.getImpacto().toString().isEmpty()? "---" : f.getImpacto().toString());
+        funcoes.setImpactoFt(f.getImpacto() == null
+                && !f.getImpacto().toString().isEmpty()? dash : f.getImpacto().toString());
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void popularModulo(FuncaoTransacao f) {
-        funcoes.setModuloFt(f.getFuncionalidade() == null 
-                && f.getFuncionalidade().getModulo() == null ? "---" : f.getFuncionalidade().getModulo().getNome());
+        funcoes.setModuloFt(f.getFuncionalidade() == null
+                && f.getFuncionalidade().getModulo() == null ? dash : f.getFuncionalidade().getModulo().getNome());
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void popularNome(FuncaoTransacao f) {
-        funcoes.setNomeFt(f.getName() == null 
-                && !f.getName().isEmpty() ? "---" : f.getName());
+        funcoes.setNomeFt(f.getName() == null
+                && !f.getName().isEmpty() ? dash : f.getName());
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     public FuncoesDTO recuperarCountsFt(Analise analise) {
@@ -159,9 +161,9 @@ public class RelatorioFuncoes {
         }
         return funcoes;
     }
-    
+
     /**Double
-     * 
+     *
      * @param f
      */
     private void countEeComplex(FuncaoTransacao f) {
@@ -178,9 +180,9 @@ public class RelatorioFuncoes {
             funcoes.getComplexidadeDtoFt().setEeAlta(incrementar(funcoes.getComplexidadeDtoFt().getEeAlta()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void countSeComplex(FuncaoTransacao f) {
@@ -197,9 +199,9 @@ public class RelatorioFuncoes {
             funcoes.getComplexidadeDtoFt().setSeAlta(incrementar(funcoes.getComplexidadeDtoFt().getSeAlta()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void countCeComplex(FuncaoTransacao f) {
@@ -216,9 +218,9 @@ public class RelatorioFuncoes {
             funcoes.getComplexidadeDtoFt().setCeAlta(incrementar(funcoes.getComplexidadeDtoFt().getCeAlta()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void countInmComplex(FuncaoTransacao f) {
@@ -235,9 +237,9 @@ public class RelatorioFuncoes {
             funcoes.getComplexidadeDtoFt().setCeAlta(incrementar(funcoes.getComplexidadeDtoFt().getCeAlta()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void countEeImpacto(FuncaoTransacao f) {
@@ -254,9 +256,9 @@ public class RelatorioFuncoes {
             funcoes.getImpactoDtoFt().setEeConversao(incrementar(funcoes.getImpactoDtoFt().getEeConversao()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void countSeImpacto(FuncaoTransacao f) {
@@ -273,9 +275,9 @@ public class RelatorioFuncoes {
             funcoes.getImpactoDtoFt().setSeConversao(incrementar(funcoes.getImpactoDtoFt().getSeConversao()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void countCeImpacto(FuncaoTransacao f) {
@@ -294,7 +296,7 @@ public class RelatorioFuncoes {
     }
 
     /**
-     * 
+     *
      * @param f
      */
     private void countInmImpacto(FuncaoTransacao f) {
@@ -311,9 +313,9 @@ public class RelatorioFuncoes {
             funcoes.getImpactoDtoFt().setInmConversaoFt(incrementar(funcoes.getImpactoDtoFt().getInmConversaoFt()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void popularPFsFd(FuncaoDados f) {
@@ -331,58 +333,58 @@ public class RelatorioFuncoes {
             funcoes.getComplexidadeDtoFd().setPfAjustadoInmFd(incrementarPfs(funcoes.getComplexidadeDtoFd().getPfAjustadoInmFd(), f.getPf().doubleValue()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void popularObjetoFd(FuncaoDados f) {
         funcoes.setIdFd(f.getId());
-        funcoes.setFatorAjusteFd(f.getFatorAjuste() == null ? "---" : f.getFatorAjuste().getNome());
-        funcoes.setFuncionalidadeFd(f.getFuncionalidade() == null ? "---" : f.getFuncionalidade().getNome());
-        funcoes.setTipoFd(f.getTipo() == null ? "---" : f.getTipo().toString());
-        funcoes.setComplexidadeFd(f.getComplexidade() == null ? "---" : f.getComplexidade().toString());
-        funcoes.setNomeFd(f.getName() == null ? "---" : f.getName());
+        funcoes.setFatorAjusteFd(f.getFatorAjuste() == null ? dash : f.getFatorAjuste().getNome());
+        funcoes.setFuncionalidadeFd(f.getFuncionalidade() == null ? dash : f.getFuncionalidade().getNome());
+        funcoes.setTipoFd(f.getTipo() == null ? dash : f.getTipo().toString());
+        funcoes.setComplexidadeFd(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
+        funcoes.setNomeFd(f.getName() == null ? dash : f.getName());
         funcoes.setImpactoFd(f.getImpacto().toString());
         funcoes.setPfTotalFd(f.getGrossPF().toString());
         funcoes.setPfAjustadoFd(f.getPf().toString());
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void popularImpactoFd(FuncaoDados f) {
-        funcoes.setImpactoFd(f.getImpacto() == null 
-                && !f.getImpacto().toString().isEmpty() 
-                ? "---" : f.getImpacto().toString());
+        funcoes.setImpactoFd(f.getImpacto() == null
+                && !f.getImpacto().toString().isEmpty()
+                ? dash : f.getImpacto().toString());
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void popularModuloFd(FuncaoDados f) {
-        funcoes.setModuloFd(f.getFuncionalidade() == null 
-                && f.getFuncionalidade().getModulo() == null 
-                ? "---" : f.getFuncionalidade().getModulo().getNome());
+        funcoes.setModuloFd(f.getFuncionalidade() == null
+                && f.getFuncionalidade().getModulo() == null
+                ? dash : f.getFuncionalidade().getModulo().getNome());
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void popularNomeFd(FuncaoDados f) {
-        funcoes.setNomeFd(f.getName() == null 
-                && !f.getName().isEmpty() ? "---" : f.getName());
+        funcoes.setNomeFd(f.getName() == null
+                && !f.getName().isEmpty() ? dash : f.getName());
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     public FuncoesDTO recuperarCountsFd(Analise analise) {
-        
+
         for(FuncaoDados f : analise.getFuncaoDados()) {
             this.countALiComplex(f);
             this.countAieComplex(f);
@@ -393,9 +395,9 @@ public class RelatorioFuncoes {
         }
         return funcoes;
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void countALiComplex(FuncaoDados f) {
@@ -412,9 +414,9 @@ public class RelatorioFuncoes {
             funcoes.getComplexidadeDtoFd().setAliAlta(incrementar(funcoes.getComplexidadeDtoFd().getAliAlta()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void countAieComplex(FuncaoDados f) {
@@ -431,9 +433,9 @@ public class RelatorioFuncoes {
             funcoes.getComplexidadeDtoFd().setAieAlta(incrementar(funcoes.getComplexidadeDtoFd().getAieAlta()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void countInmComplex(FuncaoDados f) {
@@ -450,9 +452,9 @@ public class RelatorioFuncoes {
             funcoes.getComplexidadeDtoFd().setInmAltaFd(incrementar(funcoes.getComplexidadeDtoFd().getInmAltaFd()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void countAliImpacto(FuncaoDados f) {
@@ -469,9 +471,9 @@ public class RelatorioFuncoes {
             funcoes.getImpactoDtoFd().setAliConversao(incrementar(funcoes.getImpactoDtoFd().getAliConversao()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param f
      */
     private void countAieImpacto(FuncaoDados f) {
@@ -488,9 +490,9 @@ public class RelatorioFuncoes {
             funcoes.getImpactoDtoFd().setAieConversao(incrementar(funcoes.getImpactoDtoFd().getAieConversao()));
         }
     }
- 
+
     /**
-     * 
+     *
      * @param f
      */
     private void countInmImpacto(FuncaoDados f) {
@@ -507,33 +509,33 @@ public class RelatorioFuncoes {
             funcoes.getImpactoDtoFd().setInmConversaoFd(incrementar(funcoes.getImpactoDtoFd().getInmConversaoFd()));
         }
     }
-    
+
     /**
-     * 
+     *
      * @param valor
      * @return
      */
     private Integer incrementar(Integer valor) {
         return valor == null ? 1 : valor +1;
     }
-    
+
     /**
-     * 
+     *
      * @param valor1
      * @param valor2
      * @return
      */
     private Double incrementarPfs(Double valor1, Double valor2) {
-        Double valor3 = null;
-        
-        if(valor2 != null && valor1 == null) {
-            valor1 = valor2;
-            valor3 = valor1;
-            valor3 += valor2;
+        Double valor3 = null, val2 = valor2, val1 = valor1;
+
+        if(val2 != null && val1 == null) {
+            val1 = val2;
+            valor3 = val1;
+            valor3 += val2;
         }
         return valor3;
     }
-    
+
     /**
      * Método responsável por verificar se os valores não estão nulos.
      * @param valor1
