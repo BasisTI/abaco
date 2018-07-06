@@ -238,9 +238,9 @@
         <div class="ui-g">
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-3 ui-md-3 ui-sm-12">
-              <app-blue-button 
+              <app-blue-button
                 buttonLabel="Novo Esforço Fase"
-                buttonIcon="ui-icon-add" 
+                buttonIcon="ui-icon-add"
                 (click)="openDialogPhaseEffort()">
               </app-blue-button>
             </div>
@@ -310,14 +310,14 @@
           <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
               <label>Tipo de Fase *</label>
-              <p-dropdown 
-                id="nome_fase" 
-                autofocus="true" 
-                [options]="tipoFases" 
-                [(ngModel)]="newPhaseEffort.fase" 
-                placeholder="Tipo de Fase" 
-                [autoWidth]="false" 
-                name="fase" 
+              <p-dropdown
+                id="nome_fase"
+                autofocus="true"
+                [options]="tipoFases"
+                [(ngModel)]="newPhaseEffort.fase"
+                placeholder="Tipo de Fase"
+                [autoWidth]="false"
+                name="fase"
                 optionLabel="nome">
               </p-dropdown>
             </div>
@@ -326,9 +326,9 @@
           <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
               <label>Esforço (%) *</label>
-                <input 
+                <input
                 required
-                type="text" 
+                type="text"
                 maxlength="3"
                 name="esforco"
                 [(ngModel)]="newPhaseEffort.esforcoFormatado"
@@ -339,16 +339,16 @@
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
               <div class="ui-g-2 ui-md-2 ui-sm-12">
-                <app-white-button 
-                  buttonLabel="Cancelar" 
+                <app-white-button
+                  buttonLabel="Cancelar"
                   (click)="closeDialogPhaseEffort()">
                 </app-white-button>
               </div>
 
               <div class="ui-g-2 ui-md-2 ui-sm-12">
-                <app-green-button 
-                  buttonLabel="Salvar" 
-                  buttonIcon="ui-icon-add" 
+                <app-green-button
+                  buttonLabel="Salvar"
+                  buttonIcon="ui-icon-add"
                   (click)="addPhaseEffort()">
                 </app-green-button>
               </div>
@@ -357,23 +357,23 @@
         </p-dialog>
 
         <!-- Dialog Edit  Esforco Fase -->
-        <p-dialog 
-          header="Esforço por Fase" 
-          [(visible)]="showDialogEditPhaseEffort" 
-          [contentStyle]="{'overflow':'visible'}" 
+        <p-dialog
+          header="Esforço por Fase"
+          [(visible)]="showDialogEditPhaseEffort"
+          [contentStyle]="{'overflow':'visible'}"
           [width]="800">
 
           <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
               <label>Tipo de Fase*</label>
-              <p-dropdown 
-                id="nome_fase_edit" 
-                [options]="tipoFases" 
-                [(ngModel)]="editedPhaseEffort.fase" 
-                optionLabel="nome" 
-                placeholder="Tipo de Fase" 
-                name="fase" 
-                dataKey="id" 
+              <p-dropdown
+                id="nome_fase_edit"
+                [options]="tipoFases"
+                [(ngModel)]="editedPhaseEffort.fase"
+                optionLabel="nome"
+                placeholder="Tipo de Fase"
+                name="fase"
+                dataKey="id"
                 [autoWidth]="false">
               </p-dropdown>
             </div>
@@ -382,12 +382,12 @@
           <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
               <label>Esforço (%)*</label>
-              <input 
+              <input
                 required
-                type="text" 
+                type="text"
                 maxlength="3"
                 name="esforco"
-                [(ngModel)]="editedPhaseEffort.esforcoFormatado" 
+                [(ngModel)]="editedPhaseEffort.esforcoFormatado"
                 pInputText/>
             </div>
           </div>
@@ -395,16 +395,16 @@
           <div class="ui-g">
             <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
               <div class="ui-g-2 ui-md-2 ui-sm-12">
-                <app-white-button 
-                  buttonLabel="Cancelar" 
+                <app-white-button
+                  buttonLabel="Cancelar"
                   (click)="closeDialogEditPhaseEffort()">
                 </app-white-button>
               </div>
 
               <div class="ui-g-2 ui-md-2 ui-sm-12">
-                <app-green-button 
-                  buttonLabel="Salvar" 
-                  buttonIcon="ui-icon-add" 
+                <app-green-button
+                  buttonLabel="Salvar"
+                  buttonIcon="ui-icon-add"
                   (click)="editPhaseEffort()">
                 </app-green-button>->
               </div>
