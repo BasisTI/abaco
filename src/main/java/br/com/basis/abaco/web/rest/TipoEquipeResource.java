@@ -1,5 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.Organizacao;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.net.URI;
@@ -45,156 +46,159 @@ import io.github.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api")
 public class TipoEquipeResource {
 
-	private final Logger log = LoggerFactory.getLogger(TipoEquipeResource.class);
+    private final Logger log = LoggerFactory.getLogger(TipoEquipeResource.class);
 
-	private static final String ENTITY_NAME = "tipoEquipe";
+    private static final String ENTITY_NAME = "tipoEquipe";
 
-	private final TipoEquipeRepository tipoEquipeRepository;
+    private final TipoEquipeRepository tipoEquipeRepository;
 
-	private final TipoEquipeSearchRepository tipoEquipeSearchRepository;
+    private final TipoEquipeSearchRepository tipoEquipeSearchRepository;
 
-	public TipoEquipeResource(TipoEquipeRepository tipoEquipeRepository,
-			TipoEquipeSearchRepository tipoEquipeSearchRepository) {
-		
-		this.tipoEquipeRepository = tipoEquipeRepository;
-		this.tipoEquipeSearchRepository = tipoEquipeSearchRepository;
-	}
+    public TipoEquipeResource(TipoEquipeRepository tipoEquipeRepository,
+            TipoEquipeSearchRepository tipoEquipeSearchRepository) {
 
-	/**
-	 * POST /tipo-equipes : Create a new tipoEquipe.
-	 *
-	 * @param tipoEquipe 
-	 * the tipoEquipe to create
-	 * @return the ResponseEntity with status 201 (Created) and with body the new
-	 *         tipoEquipe, or with status 400 (Bad Request) if the tipoEquipe has
-	 *         already an ID
-	 * @throws URISyntaxException
-	 *             if the Location URI syntax is incorrect
-	 */
-	@PostMapping("/tipo-equipes")
-	@Timed
-	public ResponseEntity<TipoEquipe> createTipoEquipe(@Valid @RequestBody TipoEquipe tipoEquipe)
-			throws URISyntaxException {
-		log.debug("REST request to save TipoEquipe : {}", tipoEquipe);
-		if (tipoEquipe.getId() != null) {
-			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists",
-					"A new TipoEquipe cannot already have an ID")).body(null);
-		}
-		TipoEquipe result = tipoEquipeRepository.save(tipoEquipe);
-		tipoEquipeSearchRepository.save(result);
-		return ResponseEntity.created(new URI("/api/tipo-equipes/" + result.getId()))
-				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
-	}
+        this.tipoEquipeRepository = tipoEquipeRepository;
+        this.tipoEquipeSearchRepository = tipoEquipeSearchRepository;
+    }
 
-	/**
-	 * PUT /tipo-equipes : Updates an existing tipoEquipe.
-	 *
-	 * @param tipoEquipe 
-	 * the tipoEquipe to update
-	 * @return the ResponseEntity with status 200 (OK) and with body the updated
-	 *         tipoEquipe, or with status 400 (Bad Request) if the tipoEquipe is not
-	 *         valid, or with status 500 (Internal Server Error) if the tipoEquipe
-	 *         couldn't be updated
-	 * @throws URISyntaxException
-	 *             if the Location URI syntax is incorrect
-	 */
-	@PutMapping("/tipo-equipes")
-	@Timed
-	public ResponseEntity<TipoEquipe> updateTipoEquipe(@Valid @RequestBody TipoEquipe tipoEquipe)
-			throws URISyntaxException {
-		log.debug("REST request to update TipoEquipe : {}", tipoEquipe);
-		if (tipoEquipe.getId() == null) {
-			return createTipoEquipe(tipoEquipe);
-		}
-		TipoEquipe result = tipoEquipeRepository.save(tipoEquipe);
-		tipoEquipeSearchRepository.save(result);
-		return ResponseEntity.ok()
-				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, tipoEquipe.getId().toString())).body(result);
-	}
+    /**
+     * POST /tipo-equipes : Create a new tipoEquipe.
+     *
+     * @param tipoEquipe the tipoEquipe to create
+     * @return the ResponseEntity with status 201 (Created) and with body the
+     * new tipoEquipe, or with status 400 (Bad Request) if the tipoEquipe has
+     * already an ID
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @PostMapping("/tipo-equipes")
+    @Timed
+    public ResponseEntity<TipoEquipe> createTipoEquipe(@Valid @RequestBody TipoEquipe tipoEquipe)
+            throws URISyntaxException {
+        log.debug("REST request to save TipoEquipe : {}", tipoEquipe);
+        if (tipoEquipe.getId() != null) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists",
+                    "A new TipoEquipe cannot already have an ID")).body(null);
+        }
+        TipoEquipe result = tipoEquipeRepository.save(tipoEquipe);
+        tipoEquipeSearchRepository.save(result);
+        return ResponseEntity.created(new URI("/api/tipo-equipes/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+    }
 
-	/**
-	 * GET /tipo-equipes : get all the tipoEquipes.
-	 *
-	 * @param pageable
-	 * the pagination information
-	 * @return the ResponseEntity with status 200 (OK) and the list of tipoEquipes
-	 *         in body
-	 */
-	@GetMapping("/tipo-equipes")
-	@Timed
-	public List<TipoEquipe> getAllTipoEquipes() {
-		log.debug("REST request to get a page of TipoEquipes");
-		List<TipoEquipe> tipoEquipes = tipoEquipeRepository.findAll();
-		return tipoEquipes;
-	}
+    /**
+     * PUT /tipo-equipes : Updates an existing tipoEquipe.
+     *
+     * @param tipoEquipe the tipoEquipe to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated
+     * tipoEquipe, or with status 400 (Bad Request) if the tipoEquipe is not
+     * valid, or with status 500 (Internal Server Error) if the tipoEquipe
+     * couldn't be updated
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @PutMapping("/tipo-equipes")
+    @Timed
+    public ResponseEntity<TipoEquipe> updateTipoEquipe(@Valid @RequestBody TipoEquipe tipoEquipe)
+            throws URISyntaxException {
+        log.debug("REST request to update TipoEquipe : {}", tipoEquipe);
+        if (tipoEquipe.getId() == null) {
+            return createTipoEquipe(tipoEquipe);
+        }
+        TipoEquipe result = tipoEquipeRepository.save(tipoEquipe);
+        tipoEquipeSearchRepository.save(result);
+        return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, tipoEquipe.getId().toString())).body(result);
+    }
 
-	/**
-	 * GET /tipo-equipes/:id : get the "id" tipoEquipe.
-	 *
-	 * @param id
-	 *            the id of the tipoEquipe to retrieve
-	 * @return the ResponseEntity with status 200 (OK) and with body the tipoEquipe,
-	 *         or with status 404 (Not Found)
-	 */
-	@GetMapping("/tipo-equipes/{id}")
-	@Timed
-	public ResponseEntity<TipoEquipe> getTipoEquipe(@PathVariable Long id) {
-		log.debug("REST request to get TipoEquipe : {}", id);
-		TipoEquipe tipoEquipe = tipoEquipeRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoEquipe));
-	}
-	
-	/**
-	 * 
-	 * @param idOrganizacao
-	 * @return
-	 */
-	@GetMapping("/tipo-equipes/organizacoes/{idOrganizacao}")
-	@Timed
-	public List<TipoEquipe> getAllTipoEquipeByOrganizacao(@PathVariable Long idOrganizacao) {
-		log.debug("REST request to get all TipoEquipes");
-		List<TipoEquipe> tipoEquipe = tipoEquipeRepository.findAllByOrganizacoes_Id(idOrganizacao);
-		return tipoEquipe;
-	}
+    /**
+     * GET /tipo-equipes : get all the tipoEquipes.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of
+     * tipoEquipes in body
+     */
+    @GetMapping("/tipo-equipes")
+    @Timed
+    public List<TipoEquipe> getAllTipoEquipes() {
+        log.debug("REST request to get a page of TipoEquipes");
+        List<TipoEquipe> tipoEquipes = tipoEquipeRepository.findAll();
+        return tipoEquipes;
+    }
 
-	/**
-	 * DELETE /tipo-equipes/:id : delete the "id" tipoEquipe.
-	 *
-	 * @param id
-	 *            the id of the tipoEquipe to delete
-	 * @return the ResponseEntity with status 200 (OK)
-	 */
-	@DeleteMapping("/tipo-equipes/{id}")
-	@Timed
-	public ResponseEntity<Void> deleteTipoEquipe(@PathVariable Long id) {
-		log.debug("REST request to delete TipoEquipe : {}", id);
-		tipoEquipeRepository.delete(id);
-		tipoEquipeSearchRepository.delete(id);
-		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-	}
+    /**
+     * GET /tipo-equipes/:id : get the "id" tipoEquipe.
+     *
+     * @param id the id of the tipoEquipe to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the
+     * tipoEquipe, or with status 404 (Not Found)
+     */
+    @GetMapping("/tipo-equipes/{id}")
+    @Timed
+    public ResponseEntity<TipoEquipe> getTipoEquipe(@PathVariable Long id) {
+        log.debug("REST request to get TipoEquipe : {}", id);
+        TipoEquipe tipoEquipe = tipoEquipeRepository.findOne(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoEquipe));
+    }
 
-	/**
-	 * SEARCH /_search/tipo-equipes?query=:query : search for the tipoEquipe
-	 * corresponding to the query.
-	 *
-	 * @param query
-	 *            the query of the tipoEquipe search
-	 * @param pageable
-	 *            the pagination information
-	 * @return the result of the search
-	 * @throws URISyntaxException 
-	 */
-	@GetMapping("/_search/tipo-equipes")
-	@Timed
-	public ResponseEntity<List<TipoEquipe>> searchTipoEquipes(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
-		log.debug("REST request to search for a page of TipoEquipes for query {}", query);
-		
-		Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+    /**
+     *
+     * @param idOrganizacao
+     * @return
+     */
+    @GetMapping("/tipo-equipes/organizacoes/{idOrganizacao}")
+    @Timed
+    public List<TipoEquipe> getAllTipoEquipeByOrganizacao(@PathVariable Long idOrganizacao) {
+        log.debug("REST request to get all TipoEquipes");
+        List<TipoEquipe> tipoEquipe = tipoEquipeRepository.findAllByOrganizacoes_Id(idOrganizacao);
+        return tipoEquipe;
+    }
+
+    /**
+     * DELETE /tipo-equipes/:id : delete the "id" tipoEquipe.
+     *
+     * @param id the id of the tipoEquipe to delete
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @DeleteMapping("/tipo-equipes/{id}")
+    @Timed
+    public ResponseEntity<Void> deleteTipoEquipe(@PathVariable Long id) {
+        log.debug("REST request to delete TipoEquipe : {}", id);
+
+        try {
+            TipoEquipe equipe = tipoEquipeRepository.findOne(id);
+
+            if (equipe.getOrganizacoes() != null) {
+                tipoEquipeRepository.deleteTipoEquipeOrganizacao(id);
+            }
+
+        } catch (Exception e) {
+            log.debug("ERRO: {}", e.toString());
+        }
+
+        tipoEquipeRepository.delete(id);
+        tipoEquipeSearchRepository.delete(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+    /**
+     * SEARCH /_search/tipo-equipes?query=:query : search for the tipoEquipe
+     * corresponding to the query.
+     *
+     * @param query the query of the tipoEquipe search
+     * @param pageable the pagination information
+     * @return the result of the search
+     * @throws URISyntaxException
+     */
+    @GetMapping("/_search/tipo-equipes")
+    @Timed
+    public ResponseEntity<List<TipoEquipe>> searchTipoEquipes(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
+        log.debug("REST request to search for a page of TipoEquipes for query {}", query);
+
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-        
-		Page<TipoEquipe> page = tipoEquipeSearchRepository.search(queryStringQuery(query), newPageable);
+
+        Page<TipoEquipe> page = tipoEquipeSearchRepository.search(queryStringQuery(query), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/tipo-equipes");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-	}
+    }
 
 }
