@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import br.com.basis.abaco.domain.TipoEquipe;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Spring Data JPA repository for the TipoEquipe entity.
@@ -21,5 +24,10 @@ public interface TipoEquipeRepository extends JpaRepository<TipoEquipe, Long> {
      * @return
      */
     List<TipoEquipe> findAllByOrganizacoes_Id(Long idOrganizacao);
+
+    @Query(value = "DELETE FROM tipoequipe_organizacao WHERE tipoequipe_id = ?1 ;",
+            nativeQuery = true
+    )
+    void deleteTipoEquipeOrganizacao(Long idEquipe);
 
 }
