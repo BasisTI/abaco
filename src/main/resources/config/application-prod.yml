@@ -53,7 +53,7 @@ spring:
     mail:
         host: smtp.basis.intern
         port: 25
-        username:
+        username: abaco@basis.com.br
         password:
     thymeleaf:
         cache: true
