@@ -111,9 +111,9 @@ export class UserFormComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.user.id !== undefined) {
-      this.userService.update(this.user);
+      this.subscribeToSaveResponse(this.userService.update(this.user));
     } else {
-      this.userService.create(this.user);
+      this.subscribeToSaveResponse(this.userService.create(this.user));
     }
   }
 
