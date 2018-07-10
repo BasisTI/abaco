@@ -34,6 +34,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   moduloEmEdicao: Modulo = new Modulo();
 
   mostrarDialogFuncionalidade = false;
+  valido = false;
   mostrarDialogEditarFuncionalidade = false;
   novaFuncionalidade: Funcionalidade = new Funcionalidade();
   oldFuncionalidade: Funcionalidade;
@@ -97,10 +98,12 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
   }
 
   editarModulo() {
-    if (this.moduloEmEdicao.nome === undefined || this.moduloEmEdicao.nome.trim.length === 0) {
+    if (this.moduloEmEdicao.nome === undefined || this.moduloEmEdicao.nome.length === 0) {
+      this.valido = true;
       this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
       return;
     }
+    this.valido = false;
     this.sistema.updateModulo(this.moduloEmEdicao);
     this.fecharDialogEditarModulo();
   }
@@ -148,9 +151,11 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   adicionarModulo() {
     if (this.novoModulo.nome === undefined) {
+      this.valido = true;
       this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
       return;
     }
+    this.valido = false;
     this.sistema.addModulo(this.novoModulo);
     this.doFecharDialogModulo();
   }
@@ -161,6 +166,8 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   abrirDialogFuncionalidade() {
     if (!this.deveDesabilitarBotaoNovaFuncionalidade()) {
+      this.funcionalidadeEmEdicao.nome = undefined;
+      this.funcionalidadeEmEdicao.modulo = undefined;
       this.mostrarDialogFuncionalidade = true;
     }
   }
@@ -176,9 +183,11 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   adicionarFuncionalidade() {
     if (this.novaFuncionalidade.nome === undefined || this.novaFuncionalidade.modulo === undefined) {
+      this.valido = true;
       this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
       return;
     }
+    this.valido = false;
     this.sistema.addFuncionalidade(this.novaFuncionalidade);
     this.doFecharDialogFuncionalidade();
   }
@@ -194,6 +203,12 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
   editarFuncionalidade() {
     // update funciona pois a cópia possui o mesmo artificialId
+    if (this.funcionalidadeEmEdicao.nome === undefined || this.funcionalidadeEmEdicao.modulo === undefined || this.funcionalidadeEmEdicao.nome.length === 0) {
+      this.valido = true;
+      this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+      return;
+    }
+    this.valido = false;
     this.sistema.updateFuncionalidade(this.funcionalidadeEmEdicao, this.oldFuncionalidade);
     this.fecharDialogEditarFuncionalidade();
   }

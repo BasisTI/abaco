@@ -179,7 +179,7 @@
                 <div *ngIf="editForm.controls['nomeModulo'] 
                   && !editForm.controls['nomeModulo'].valid 
                   && (editForm.controls['nomeModulo'].touched 
-                  || editForm.submitted)" 
+                  || editForm.submitted || valido) " 
                   class="ui-message ui-messages-error">
                   Campo obrigatório.
                 </div>
@@ -215,16 +215,16 @@
               <span class="md-inputfield">
                 <input 
                   type="text" 
-                  name="nomeModulo"
+                  name="EditnomeModulo"
                   maxlength="100"
                   [(ngModel)]="moduloEmEdicao.nome"
                   pInputText 
                   (keydown.enter)="editarModulo()"/>
                 <label>Nome do Módulo</label>
-                <div *ngIf="editForm.controls['nomeModulo'] 
-                  && !editForm.controls['nomeModulo'].valid 
-                  && (editForm.controls['nomeModulo'].touched 
-                  || editForm.submitted)" 
+                <div *ngIf="(editForm.controls['EditnomeModulo'] 
+                  && !editForm.controls['EditnomeModulo'].valid 
+                  && (editForm.controls['EditnomeModulo'].touched 
+                  || editForm.submitted) || valido)" 
                   class="ui-message ui-messages-error">
                   Campo obrigatório.
                 </div>
@@ -274,12 +274,13 @@
                   [(ngModel)]="novaFuncionalidade.nome" 
                   pInputText
                   required
-                  #nomeFuncionalidade='ngModel'/>
+                  #nomeFuncionalidade='ngModel'
+                  (keydown.enter)="adicionarFuncionalidade()"/>
                 <label>Nome *</label>
                 <div *ngIf="editForm.controls['nomeFuncionalidade'] 
                   && !editForm.controls['nomeFuncionalidade'].valid 
                   && (editForm.controls['nomeFuncionalidade'].touched 
-                  || editForm.submitted)" 
+                  || editForm.submitted || valido)" 
                   class="ui-message ui-messages-error">
                   Campo obrigatório.
                 </div>
@@ -301,7 +302,7 @@
                 <div *ngIf="editForm.controls['funcionalidadeModulo'] 
                   && !editForm.controls['funcionalidadeModulo'].valid 
                   && (editForm.controls['funcionalidadeModulo'].touched 
-                  || editForm.submitted)" 
+                  || editForm.submitted || valido)" 
                   class="ui-message ui-messages-error">
                   Campo obrigatório.
                 </div>
@@ -342,12 +343,13 @@
                   [(ngModel)]="funcionalidadeEmEdicao.nome" 
                   pInputText
                   required
-                  #nomeFuncionalidade='ngModel'/>
+                  #nomeFuncionalidade='ngModel'
+                  (keydown.enter)="editarFuncionalidade()"/>
                 <label>Nome *</label>
                 <div *ngIf="editForm.controls['nomeFuncionalidade'] 
                   && !editForm.controls['nomeFuncionalidade'].valid 
                   && (editForm.controls['nomeFuncionalidade'].touched 
-                  || editForm.submitted)" 
+                  || editForm.submitted || valido)" 
                   class="ui-message ui-messages-error">
                   Campo obrigatório.
                 </div>
@@ -369,7 +371,7 @@
                 <div *ngIf="editForm.controls['funcionalidadeModulo'] 
                   && !editForm.controls['funcionalidadeModulo'].valid 
                   && (editForm.controls['funcionalidadeModulo'].touched 
-                  || editForm.submitted)" 
+                  || editForm.submitted || valido)" 
                   class="ui-message ui-messages-error">
                   Campo obrigatório.
                 </div>
