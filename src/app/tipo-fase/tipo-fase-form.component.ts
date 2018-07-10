@@ -72,7 +72,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
   private checkPhaseNameIsValid(): boolean {
     let isNameValid: boolean = false;
 
-    document.getElementById('nome_fase').setAttribute('style', 'border-color: #bdbdbd');
+//    document.getElementById('nome_fase').setAttribute('style', 'border-color: #bdbdbd');
     if (this.tipoFase.nome !== null && this.tipoFase.nome !== undefined && this.tipoFase.nome !== "") {
       isNameValid = true;
       if (this.tipoFase.nome.length > 254) {
@@ -81,7 +81,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
       }
     } else {
       this.pageNotificationService.addErrorMsg('Favor, informar os campos obrigatórios!');
-      document.getElementById('nome_fase').setAttribute('style', 'border-color: red');
+//      document.getElementById('nome_fase').setAttribute('style', 'border-color: red');
     }
 
     return isNameValid;
