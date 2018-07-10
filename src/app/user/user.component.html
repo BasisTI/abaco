@@ -146,7 +146,7 @@
         [sortable]="true">
         <ng-template let-col let-row="rowData" pTemplate="body">
           <li *ngFor="let perfil of row.authorities">
-            {{ perfil.name }}
+            {{ perfil.description }}
           </li>
         </ng-template>
       </p-column>

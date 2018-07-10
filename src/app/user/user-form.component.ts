@@ -86,6 +86,17 @@ export class UserFormComponent implements OnInit, OnDestroy {
   private populateAuthoritiesArtificialIds() {
     this.authorities.forEach((authority, index) => {
       authority.artificialId = index;
+      switch (index){
+        case 0: {
+          authority.description = "Administrador";
+          break;
+        }
+
+        case 1: {
+          authority.description = "Usuário";
+          break;
+        }
+      }
     });
   }
 

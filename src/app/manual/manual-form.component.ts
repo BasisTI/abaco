@@ -86,6 +86,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     this.tipoFaseService.query().subscribe((response: ResponseWrapper) => {
       this.tipoFases = response.json;
     });
+    this.manual.versaoCPM = 421;
   }
 
   /**
