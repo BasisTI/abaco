@@ -113,13 +113,11 @@ public class UserResource {
 	 * mail with an activation link. The user needs to be activated on creation.
 	 * </p>
 	 *
-	 * @param user
-	 *            the user to create
+	 * @param user the user to create
 	 * @return the ResponseEntity with status 201 (Created) and with body the new
 	 *         user, or with status 400 (Bad Request) if the login or email is
 	 *         already in use
-	 * @throws URISyntaxException
-	 *             if the Location URI syntax is incorrect
+	 * @throws URISyntaxException if the Location URI syntax is incorrect
 	 */
 	@PostMapping("/users")
 	@Timed
@@ -129,11 +127,11 @@ public class UserResource {
 
 		// Lowercase the user login before comparing with database
 		if (userRepository.findOneByLogin(user.getLogin().toLowerCase()).isPresent()) {
-			return   this.createBadRequest("userexists","Login already in use");
+			return this.createBadRequest("userexists", "Login already in use");
 		} else if (userRepository.findOneByEmail(user.getEmail()).isPresent()) {
-			return this.createBadRequest("emailexists","Email already in use");
+			return this.createBadRequest("emailexists", "Email already in use");
 		} else if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
-		    return this.createBadRequest("fullnameexists", "Full Name already in use");
+			return this.createBadRequest("fullnameexists", "Full Name already in use");
 		} else {
 			User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
 			User newUser = userRepository.save(userReadyToBeSaved);
@@ -147,14 +145,14 @@ public class UserResource {
 	}
 
 	private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
-	    return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage)).body(null);
+		return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
+				.body(null);
 	}
 
 	/**
 	 * PUT /users : Updates an existing User.
 	 *
-	 * @param managedUserVM
-	 *            the user to update
+	 * @param managedUserVM the user to update
 	 * @return the ResponseEntity with status 200 (OK) and with body the updated
 	 *         user, or with status 400 (Bad Request) if the login or email is
 	 *         already in use, or with status 500 (Internal Server Error) if the
@@ -176,31 +174,29 @@ public class UserResource {
 			return ResponseEntity.badRequest()
 					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "userexists", "Login already in use"))
 					.body(null);
-		} else if (!userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId().equals(user.getId())) {
-            return ResponseEntity.badRequest()
+		} if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
+            if (!userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId().equals(user.getId())) {
+                return ResponseEntity.badRequest()
                     .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use"))
                     .body(null);
-        } else {
-		        User updatableUser = userService.generateUpdatableUser(user);
-		        User updatedUser = userRepository.save(updatableUser);
-		        userSearchRepository.save(updatedUser);
-		        log.debug("Changed Information for User: {}", user);
+            }
+        }
+            User updatableUser = userService.generateUpdatableUser(user);
+            User updatedUser = userRepository.save(updatableUser);
+            userSearchRepository.save(updatedUser);
+            log.debug("Changed Information for User: {}", user);
 
-		        return ResponseEntity.ok()
-		                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString()))
-		                .body(updatedUser);
-		}
-
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString()))
+                .body(updatedUser);
 	}
 
 	/**
 	 * GET /users : get all users.
 	 *
-	 * @param pageable
-	 *            the pagination information
+	 * @param pageable the pagination information
 	 * @return the ResponseEntity with status 200 (OK) and with body all users
-	 * @throws URISyntaxException
-	 *             if the pagination headers couldn't be generated
+	 * @throws URISyntaxException if the pagination headers couldn't be generated
 	 */
 	@GetMapping("/users")
 	@Timed
@@ -214,8 +210,7 @@ public class UserResource {
 	/**
 	 * GET /users/:login : get the "login" user.
 	 *
-	 * @param login
-	 *            the login of the user to find
+	 * @param login the login of the user to find
 	 * @return the ResponseEntity with status 200 (OK) and with body the "login"
 	 *         user, or with status 404 (Not Found)
 	 */
@@ -239,8 +234,7 @@ public class UserResource {
 	/**
 	 * DELETE /users/:login : delete the "login" User.
 	 *
-	 * @param login
-	 *            the login of the user to delete
+	 * @param login the login of the user to delete
 	 * @return the ResponseEntity with status 200 (OK)
 	 */
 	@DeleteMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
@@ -256,20 +250,21 @@ public class UserResource {
 	 * SEARCH /_search/users/:query : search for the User corresponding to the
 	 * query.
 	 *
-	 * @param query
-	 *            the query to search
+	 * @param query the query to search
 	 * @return the result of the search
 	 * @throws URISyntaxException
 	 */
 	@GetMapping("/_search/users")
 	@Timed
 	@Secured(AuthoritiesConstants.ADMIN)
-	public ResponseEntity<List<User>> search(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
-	    Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+	public ResponseEntity<List<User>> search(@RequestParam(defaultValue = "*") String query, @RequestParam String order,
+			@RequestParam(name = "page") int pageNumber, @RequestParam int size,
+			@RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
+		Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+		Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
-	    Page<User> page = userSearchRepository.search(queryStringQuery(query), newPageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/users");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+		Page<User> page = userSearchRepository.search(queryStringQuery(query), newPageable);
+		HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/users");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 }
