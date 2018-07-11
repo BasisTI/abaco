@@ -63,7 +63,7 @@ spring:
     mail:
         host: smtp.basis.intern
         port: 25
-        username:
+        username: abaco@basis.com.br
         password:
     messages:
         cache-seconds: 1
