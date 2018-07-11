@@ -19,7 +19,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.staticmock.AbstractMethodMockingControl.Expectations;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -121,8 +120,7 @@ public class TipoEquipeResource {
     @Timed
     public List<TipoEquipe> getAllTipoEquipes() {
         log.debug("REST request to get a page of TipoEquipes");
-        List<TipoEquipe> tipoEquipes = tipoEquipeRepository.findAll();
-        return tipoEquipes;
+        return tipoEquipeRepository.findAll();
     }
 
     /**
@@ -149,8 +147,7 @@ public class TipoEquipeResource {
     @Timed
     public List<TipoEquipe> getAllTipoEquipeByOrganizacao(@PathVariable Long idOrganizacao) {
         log.debug("REST request to get all TipoEquipes");
-        List<TipoEquipe> tipoEquipe = tipoEquipeRepository.findAllByOrganizacoes_Id(idOrganizacao);
-        return tipoEquipe;
+        return tipoEquipeRepository.findAllByOrganizacoes_Id(idOrganizacao);
     }
 
     /**
@@ -161,7 +158,7 @@ public class TipoEquipeResource {
      */
     @DeleteMapping("/tipo-equipes/{id}")
     @Timed
-    public ResponseEntity<Void> deleteTipoEquipe(@PathVariable Long id) throws RuntimeException {
+    public ResponseEntity<Void> deleteTipoEquipe(@PathVariable Long id) {
         log.debug("REST request to delete TipoEquipe : {}", id);
 
         tipoEquipeRepository.delete(id);
