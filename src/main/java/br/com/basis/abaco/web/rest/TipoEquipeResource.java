@@ -170,8 +170,9 @@ public class TipoEquipeResource {
                 tipoEquipeRepository.deleteTipoEquipeOrganizacao(id);
             }
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.debug("ERRO: {}", e.toString());
+            throw new RuntimeException(e);
         }
 
         tipoEquipeRepository.delete(id);

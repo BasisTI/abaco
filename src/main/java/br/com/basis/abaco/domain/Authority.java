@@ -50,8 +50,8 @@ public class Authority implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o){ return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
         Authority authority = (Authority) o;
         return Objects.equals(name, authority.name) &&
             Objects.equals(description, authority.description);

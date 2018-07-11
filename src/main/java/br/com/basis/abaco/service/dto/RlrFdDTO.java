@@ -6,16 +6,16 @@ package br.com.basis.abaco.service.dto;
  */
 public class RlrFdDTO {
 
-    private String RlrDto;
+    private String rlrDto;
 
     private String nomeRlrFdDto;
 
     public String getRlrDto() {
-        return RlrDto;
+        return rlrDto;
     }
 
-    public void setRlrDto(String rlrDto) {
-        this.RlrDto = rlrDto;
+    public void setRlrDto(String rlrDto2) {
+        this.rlrDto = rlrDto2;
     }
 
     public String getNomeRlrFdDto() {
