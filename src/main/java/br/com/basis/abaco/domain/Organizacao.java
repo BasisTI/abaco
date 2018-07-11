@@ -73,7 +73,7 @@ public class Organizacao implements Serializable {
 	private Set<Contrato> contracts = new HashSet<>();
 	
 	@JsonIgnore
-	@ManyToMany(mappedBy = "organizacoes", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "organizacoes", fetch = FetchType.EAGER)
 	private Set<TipoEquipe> tipoEquipe = new HashSet<>();
 
 	@Size(max = 10)

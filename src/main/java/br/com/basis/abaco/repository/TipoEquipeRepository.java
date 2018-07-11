@@ -25,9 +25,4 @@ public interface TipoEquipeRepository extends JpaRepository<TipoEquipe, Long> {
      */
     List<TipoEquipe> findAllByOrganizacoes_Id(Long idOrganizacao);
 
-    @Query(value = "DELETE FROM tipoequipe_organizacao WHERE tipoequipe_id = ?1 ;",
-            nativeQuery = true
-    )
-    void deleteTipoEquipeOrganizacao(Long idEquipe);
-
 }

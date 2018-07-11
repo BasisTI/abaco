@@ -163,17 +163,6 @@ public class TipoEquipeResource {
     public ResponseEntity<Void> deleteTipoEquipe(@PathVariable Long id) {
         log.debug("REST request to delete TipoEquipe : {}", id);
 
-        try {
-            TipoEquipe equipe = tipoEquipeRepository.findOne(id);
-
-            if (equipe.getOrganizacoes() != null) {
-                tipoEquipeRepository.deleteTipoEquipeOrganizacao(id);
-            }
-
-        } catch (Exception e) {
-            log.debug("ERRO: {}", e.toString());
-        }
-
         tipoEquipeRepository.delete(id);
         tipoEquipeSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
