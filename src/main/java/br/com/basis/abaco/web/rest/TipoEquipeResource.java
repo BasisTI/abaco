@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.staticmock.AbstractMethodMockingControl.Expectations;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -160,7 +161,7 @@ public class TipoEquipeResource {
      */
     @DeleteMapping("/tipo-equipes/{id}")
     @Timed
-    public ResponseEntity<Void> deleteTipoEquipe(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTipoEquipe(@PathVariable Long id) throws RuntimeException {
         log.debug("REST request to delete TipoEquipe : {}", id);
 
         try {
@@ -170,9 +171,8 @@ public class TipoEquipeResource {
                 tipoEquipeRepository.deleteTipoEquipeOrganizacao(id);
             }
 
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             log.debug("ERRO: {}", e.toString());
-            throw new RuntimeException(e);
         }
 
         tipoEquipeRepository.delete(id);
