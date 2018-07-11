@@ -62,7 +62,7 @@ public class Authority implements Serializable {
 
         return Objects.hash(name, description);
     }
-    
+
     @Override
     public String toString() {
         return "Authority{" +
