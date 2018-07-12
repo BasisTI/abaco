@@ -47,7 +47,7 @@ public class FatorAjuste implements Serializable {
     private String nome;
 
     @NotNull
-    @Column(name = "fator", precision = 10, scale = 2, nullable = false)
+    @Column(name = "fator", precision = 10, scale = 4, nullable = false)
     @JsonDeserialize(using = BigDecimalSerializer.class)
     private BigDecimal fator;
 

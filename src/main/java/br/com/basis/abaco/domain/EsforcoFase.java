@@ -37,7 +37,7 @@ public class EsforcoFase implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Column(name = "esforco", precision = 10, scale = 2)
+    @Column(name = "esforco", precision = 10, scale = 4)
     @DecimalMin(value = "0")
     @DecimalMax(value = "1")
     private BigDecimal esforco;
