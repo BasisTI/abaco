@@ -62,7 +62,7 @@
       </addColumn>
 
       <addColumn tableName="funcao_dados">
-         <column name="grosspf" type="decimal(10,2)"/>
+         <column name="grosspf" type="decimal(10,4)"/>
       </addColumn>
 
 
@@ -92,7 +92,7 @@
       </addColumn>
 
       <addColumn tableName="funcao_transacao">
-         <column name="grosspf" type="decimal(10,2)"/>
+         <column name="grosspf" type="decimal(10,4)"/>
       </addColumn>
 
 

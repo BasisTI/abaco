@@ -29,7 +29,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="pf" type="decimal(10,2)">
+            <column name="pf" type="decimal(10,4)">
                 <constraints nullable="true" />
             </column>
 

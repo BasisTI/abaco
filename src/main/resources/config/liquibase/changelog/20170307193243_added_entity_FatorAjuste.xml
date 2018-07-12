@@ -25,7 +25,7 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="fator" type="decimal(10,2)">
+            <column name="fator" type="decimal(10,4)">
                 <constraints nullable="false" />
             </column>
 
