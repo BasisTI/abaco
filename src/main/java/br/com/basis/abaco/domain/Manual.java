@@ -74,22 +74,22 @@ public class Manual implements Serializable {
     private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
 
     @DecimalMin(value = "0")
-    @DecimalMax(value = "1")
+    @DecimalMax(value = "4")
     @Column(name = "parametro_inclusao")
     private BigDecimal parametroInclusao;
 
     @DecimalMin(value = "0")
-    @DecimalMax(value = "1")
+    @DecimalMax(value = "4")
     @Column(name = "parametro_alteracao")
     private BigDecimal parametroAlteracao;
 
     @DecimalMin(value = "0")
-    @DecimalMax(value = "1")
+    @DecimalMax(value = "4")
     @Column(name = "parametro_exclusao")
     private BigDecimal parametroExclusao;
     
     @DecimalMin(value = "0")
-    @DecimalMax(value = "1")
+    @DecimalMax(value = "4")
     @Column(name = "parametro_conversao")
     private BigDecimal parametroConversao;
     
