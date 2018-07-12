@@ -5,22 +5,22 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
    <changeSet author="dudu (generated)" id="1522869002821-1">
       <addColumn tableName="manual">
-         <column name="parametro_alteracao" type="numeric(10, 2)"/>
+         <column name="parametro_alteracao" type="numeric(10,4)"/>
       </addColumn>
    </changeSet>
    <changeSet author="dudu (generated)" id="1522869002821-2">
       <addColumn tableName="manual">
-         <column name="parametro_conversao" type="numeric(10, 2)"/>
+         <column name="parametro_conversao" type="numeric(10,4)"/>
       </addColumn>
    </changeSet>
    <changeSet author="dudu (generated)" id="1522869002821-3">
       <addColumn tableName="manual">
-         <column name="parametro_exclusao" type="numeric(10, 2)"/>
+         <column name="parametro_exclusao" type="numeric(10,4)"/>
       </addColumn>
    </changeSet>
    <changeSet author="dudu (generated)" id="1522869002821-4">
       <addColumn tableName="manual">
-         <column name="parametro_inclusao" type="numeric(10, 2)"/>
+         <column name="parametro_inclusao" type="numeric(10,4)"/>
       </addColumn>
    </changeSet>
 </databaseChangeLog>
