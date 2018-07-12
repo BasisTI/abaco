@@ -23,6 +23,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.validator.constraints.br.CNPJ;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -52,8 +53,8 @@ public class Organizacao implements Serializable {
 	private String nome;
 
 	@Size(max = 19)
-	@Pattern(regexp = "(^(\\d{2}.\\d{3}.\\d{3}/\\d{4}-\\d{2})|(\\d{14})$)")
-	@Column(name = "cnpj", length = 19)
+	@Column(name = "cnpj", length = 14)
+    @CNPJ(message = "CNPJ inválido")
 	private String cnpj;
 
 	@NotNull
@@ -71,7 +72,7 @@ public class Organizacao implements Serializable {
 	@OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@JsonManagedReference
 	private Set<Contrato> contracts = new HashSet<>();
-	
+
 	@JsonIgnore
 	@ManyToMany(mappedBy = "organizacoes", fetch = FetchType.EAGER)
 	private Set<TipoEquipe> tipoEquipe = new HashSet<>();
@@ -82,7 +83,7 @@ public class Organizacao implements Serializable {
 
 	@Column(name="logo_id")
 	private int logoId;
-	
+
 	public Long getId() {
 		return id;
 	}

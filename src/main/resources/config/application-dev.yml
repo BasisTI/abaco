@@ -63,7 +63,7 @@ spring:
     mail:
         host: smtp.basis.intern
         port: 25
-        username: abaco@basis.com.br
+        username:
         password:
     messages:
         cache-seconds: 1
@@ -114,7 +114,7 @@ jhipster:
                 token-validity-in-seconds: 86400
                 token-validity-in-seconds-for-remember-me: 2592000
     mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: abaco@localhost
+        from: abaco@basis.com.br
         base-url: http://127.0.0.1:8080
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
