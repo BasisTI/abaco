@@ -40,10 +40,10 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     @Column(name = "complexidade")
     private Complexidade complexidade;
 
-    @Column(name = "pf", precision = 10, scale = 2)
+    @Column(name = "pf", precision = 10, scale = 4)
     private BigDecimal pf;
 
-    @Column(name = "grosspf", precision = 10, scale = 2)
+    @Column(name = "grosspf", precision = 10, scale = 4)
     private BigDecimal grossPF;
 
     @ManyToOne

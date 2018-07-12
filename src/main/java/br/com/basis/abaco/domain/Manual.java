@@ -53,13 +53,13 @@ public class Manual implements Serializable {
     @NotNull
     @DecimalMin(value = "0")
     @DecimalMax(value = "1")
-    @Column(name = "valor_variacao_estimada", precision = 10, scale = 2, nullable = false)
+    @Column(name = "valor_variacao_estimada", precision = 10, scale = 4, nullable = false)
     private BigDecimal valorVariacaoEstimada;
 
     @NotNull
     @DecimalMin(value = "0")
     @DecimalMax(value = "1")
-    @Column(name = "valor_variacao_indicativa", precision = 10, scale = 2, nullable = false)
+    @Column(name = "valor_variacao_indicativa", precision = 10, scale = 4, nullable = false)
     private BigDecimal valorVariacaoIndicativa;
 
     @Column(name="arquivo_manual_id")

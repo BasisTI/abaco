@@ -64,7 +64,7 @@ public class Analise implements Serializable {
     @Column(name = "metodo_contagem")
     private MetodoContagem metodoContagem;
 
-    @Column(name = "valor_ajuste", precision = 10, scale = 2)
+    @Column(name = "valor_ajuste", precision = 10, scale = 4)
     private BigDecimal valorAjuste;
 
     @Column(name = "pf_total")
