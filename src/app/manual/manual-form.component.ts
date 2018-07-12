@@ -93,7 +93,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         }
 
         this.isSaving = true;
-
+        
         if (this.manual.id !== undefined) {
             this.editar();
         } else {

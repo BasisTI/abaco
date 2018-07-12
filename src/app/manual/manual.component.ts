@@ -33,7 +33,7 @@ export class ManualComponent implements OnInit {
   mostrarDialogClonar = false;
 
   rowsPerPageOptions: number[] = [5, 10, 20];
-
+  
   constructor(
     private router: Router,
     private manualService: ManualService,
@@ -42,6 +42,7 @@ export class ManualComponent implements OnInit {
   ) { }
 
   public ngOnInit() {
+      
     this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
       this.manualSelecionado = new Manual().copyFromJSON(event.data);
     });

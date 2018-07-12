@@ -43,13 +43,15 @@
                     <span class="md-inputfield">
                         <input 
                             required
-                            type="text" 
-                            maxlength="3"
+                            min="0" 
+                            step="0.010" 
+                            type="number" 
+                            maxlength="5"
                             name="valorVariacaoEstimada"
                             [(ngModel)]="manual.valorVariacaoEstimadaFormatado"
                             #valorVariacaoEstimada='ngModel'
                             pInputText/>
-                        <label>Valor Variacao Estimada (%) *</label>
+                        <label>Valor Variação Estimada (%) *</label>
                         <div *ngIf="editForm.controls['valorVariacaoEstimada'] 
                             && !editForm.controls['valorVariacaoEstimada'].valid 
                             && (editForm.controls['valorVariacaoEstimada'].touched 
@@ -64,8 +66,10 @@
                 <span class="md-inputfield">
                     <input 
                         required
-                        type="text" 
-                        maxlength="3"
+                        min="0" 
+                        step="0.010" 
+                        type="number" 
+                        maxlength="5"
                         name="valorVariacaoIndicativa"
                         #valorVariacaoIndicativa='ngModel'
                         [(ngModel)]="manual.valorVariacaoIndicativaFormatado"
@@ -129,8 +133,10 @@
                 <span class="md-inputfield">
                     <input 
                         required
-                        type="text" 
-                        maxlength="3"
+                        min="0" 
+                        step="0.010" 
+                        type="number" 
+                        maxlength="5"
                         name="parametroInclusao"
                         [(ngModel)]="manual.parametroInclusaoFormatado"
                         #parametroInclusao='ngModel'
@@ -149,8 +155,10 @@
             <span class="md-inputfield">
                 <input 
                     required
-                    type="text" 
-                    maxlength="3"
+                    min="0" 
+                    step="0.010" 
+                    type="number" 
+                    maxlength="5"
                     name="parametroAlteracao"
                     [(ngModel)]="manual.parametroAlteracaoFormatado"
                     #parametroAlteracao='ngModel'
@@ -169,8 +177,10 @@
         <span class="md-inputfield">
             <input 
                 required
-                type="text" 
-                maxlength="3"
+                min="0" 
+                step="0.010" 
+                type="number" 
+                maxlength="5"
                 name="parametroExclusao"
                 [(ngModel)]="manual.parametroExclusaoFormatado"
                 #parametroExclusao='ngModel'
@@ -189,8 +199,10 @@
     <span class="md-inputfield">
         <input 
             required
-            type="text" 
-            maxlength="3"
+            min="0" 
+            step="0.010" 
+            type="number" 
+            maxlength="5"
             name="parametroConversao"
             [(ngModel)]="manual.parametroConversaoFormatado"
             #parametroConversao='ngModel'
@@ -328,8 +340,10 @@
             <label>Esforço (%) *</label>
             <input 
                 required
-                type="text" 
-                maxlength="3"
+                min="0" 
+                step="0.010" 
+                type="number" 
+                maxlength="5"
                 name="esforco"
                 [(ngModel)]="newPhaseEffort.esforcoFormatado"
                 pInputText/>
@@ -384,8 +398,10 @@
             <label>Esforço (%)*</label>
             <input 
                 required
-                type="text" 
-                maxlength="3"
+                min="0" 
+                step="0.010" 
+                type="number" 
+                maxlength="5"
                 name="esforco"
                 [(ngModel)]="editedPhaseEffort.esforcoFormatado" 
                 pInputText/>
