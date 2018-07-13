@@ -77,11 +77,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         private analiseService: AnaliseService,
     ) {
         const colunas = [
+            {header: 'Nome', field: 'name'},
             {header: 'Deflator'},
             {header: 'Impacto', field: 'impacto'},
             {header: 'Módulo'},
             {header: 'Funcionalidade'},
-            {header: 'Nome', field: 'name'},
             {header: 'Classificação', field: 'tipo'},
             {header: 'DER (TD)'},
             {header: 'RLR (TR)'},
