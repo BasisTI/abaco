@@ -1,250 +1,253 @@
 <div class="ui-g ui-fluid">
     <div class="ui-g-12">
-      <div class="card card-w-title">
+        <div class="card card-w-title">
 
-        <div class="ui-g">
-          <div class="ui-g-12">
-
-              <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
-                  <div class="ui-md-2">
-                      <app-green-button 
-                        buttonLabel="Novo" 
-                        buttonIcon="ui-icon-add" 
-                        (click)="openDialogNovo()">
-                      </app-green-button>
-                  </div>
-              </div>
-
-              <!-- Tabela com as funções dados adicionadas  -->
-              <div class="ui-g" *ngIf="funcoesDados.length > 0">
-                <hr>
+            <div class="ui-g">
                 <div class="ui-g-12">
-                  <label>Colunas:</label>
-                  <p-multiSelect 
-                    [options]="colunasOptions" 
-                    [ngModel]="colunasAMostrar"
-                    (ngModelChange)="ordenarColunas($event)"
-                    dataKey="index" 
-                    [maxSelectedLabels]="colunasOptions.length">
-                  </p-multiSelect>
-                </div>
-              </div>
 
-              <div>
-                <!-- inicio tabela -->
-                <app-memory-datatable 
-                    [value]="funcoesDados"
-                    (buttonClick)="datatableClick($event)"
-                    [responsive]="true" 
-                    scrollable="true" 
-                    scrollWidth="100%">
-    
-                    <div *ngFor="let col of colunasAMostrar">
-        
-                      <div *ngIf="col.field; else template_column">
-                        <p-column 
-                          [field]="col.field" 
-                          [header]="col.header" 
-                          [style]="{'width': '200px'}">
-                        </p-column>
-                      </div>
-        
-                      <ng-template #template_column>
-                        <p-column 
-                          [header]="col.header" 
-                          [style]="{'width': '200px'}">
-    
-                        <ng-template 
-                          *ngIf="col.header === 'Deflator'"
-                          let-fatorAjuste="rowData.fatorAjuste" 
-                          pTemplate="body">
-                          <app-ellipsis-tooltip
-                            [value]="formataFatorAjuste(fatorAjuste)">
-                          </app-ellipsis-tooltip>
+                    <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
+                        <div class="ui-md-2">
+                            <app-green-button 
+                                buttonLabel="Novo" 
+                                buttonIcon="ui-icon-add" 
+                                (click)="openDialogNovo()">
+                            </app-green-button>
+                        </div>
+                    </div>
+
+                    <!-- Tabela com as funções dados adicionadas  -->
+                    <div class="ui-g" *ngIf="funcoesDados.length > 0">
+                        <hr>
+                        <div class="ui-g-12">
+                            <label>Colunas:</label>
+                            <p-multiSelect 
+                                [options]="colunasOptions" 
+                                [ngModel]="colunasAMostrar"
+                                (ngModelChange)="ordenarColunas($event)"
+                                dataKey="index" 
+                                [maxSelectedLabels]="colunasOptions.length">
+                            </p-multiSelect>
+                        </div>
+                    </div>
+
+                    <div>
+                        <!-- inicio tabela -->
+                        <app-memory-datatable 
+                            [value]="funcoesDados"
+                            (buttonClick)="datatableClick($event)"
+                            [responsive]="true" 
+                            scrollable="true" 
+                            scrollWidth="100%">
+
+                            <div *ngFor="let col of colunasAMostrar">
+
+                                <div *ngIf="col.field; else template_column">
+                                    <p-column 
+                                        [field]="col.field" 
+                                        [header]="col.header" 
+                                        [style]="{'width': '200px'}">
+                                    </p-column>
+                                </div>
+
+                                <ng-template #template_column>
+                                    <p-column 
+                                        [header]="col.header" 
+                                        [style]="{'width': '200px'}">
+
+                                        <ng-template 
+                                            *ngIf="col.header === 'Deflator'"
+                                            let-fatorAjuste="rowData.fatorAjuste" 
+                                            pTemplate="body">
+                                            <app-ellipsis-tooltip
+                                                [value]="formataFatorAjuste(fatorAjuste)">
+                                            </app-ellipsis-tooltip>
+                                        </ng-template>
+
+                                        <ng-template 
+                                            *ngIf="col.header === 'Módulo'"
+                                            let-modulo="rowData.funcionalidade.modulo" 
+                                            pTemplate="body">
+                                            <app-ellipsis-tooltip
+                                                [value]="modulo.nome">
+                                            </app-ellipsis-tooltip>
+                                        </ng-template>
+
+                                        <ng-template 
+                                            *ngIf="col.header === 'Funcionalidade'"
+                                            let-funcionalidade="rowData.funcionalidade" 
+                                            pTemplate="body">
+                                            <app-ellipsis-tooltip
+                                                [value]="funcionalidade.nome">
+                                            </app-ellipsis-tooltip>
+                                        </ng-template>
+
+                                        <ng-template 
+                                            *ngIf="col.header === 'DER (TD)'"
+                                            let-funcaoDados="rowData" 
+                                            pTemplate="body">
+                                            <app-ellipsis-tooltip
+                                                [value]="funcaoDados.derValue()">
+                                            </app-ellipsis-tooltip>
+                                        </ng-template>
+
+                                        <ng-template 
+                                            *ngIf="col.header === 'RLR (TR)'"
+                                            let-funcaoDados="rowData" 
+                                            pTemplate="body">
+                                            <app-ellipsis-tooltip
+                                                [value]="funcaoDados.rlrValue()">
+                                            </app-ellipsis-tooltip>
+                                        </ng-template>
+
+                                        <ng-template 
+                                            *ngIf="col.header === 'PF - Total'"
+                                            let-grossPF="rowData.grossPF" 
+                                            pTemplate="body">
+                                            {{ grossPF | number }}
+                                    </ng-template>
+                                    <ng-template *ngIf="col.header === 'PF - Ajustado'"
+                                        let-pf="rowData.pf" pTemplate="body">
+                                        {{ pf | number }}
+                                </ng-template>
+
+                            </p-column>
                         </ng-template>
-   
-                        <ng-template 
-                          *ngIf="col.header === 'Módulo'"
-                          let-modulo="rowData.funcionalidade.modulo" 
-                          pTemplate="body">
-                          <app-ellipsis-tooltip
-                            [value]="modulo.nome">
-                          </app-ellipsis-tooltip>
-                        </ng-template>
-    
-                        <ng-template 
-                          *ngIf="col.header === 'Funcionalidade'"
-                          let-funcionalidade="rowData.funcionalidade" 
-                          pTemplate="body">
-                          <app-ellipsis-tooltip
-                            [value]="funcionalidade.nome">
-                          </app-ellipsis-tooltip>
-                        </ng-template>
-    
-                        <ng-template 
-                          *ngIf="col.header === 'DER (TD)'"
-                          let-funcaoDados="rowData" 
-                          pTemplate="body">
-                          <app-ellipsis-tooltip
-                            [value]="funcaoDados.derValue()">
-                          </app-ellipsis-tooltip>
-                        </ng-template>
-    
-                        <ng-template 
-                          *ngIf="col.header === 'RLR (TR)'"
-                          let-funcaoDados="rowData" 
-                          pTemplate="body">
-                          <app-ellipsis-tooltip
-                            [value]="funcaoDados.rlrValue()">
-                          </app-ellipsis-tooltip>
-                        </ng-template>
-    
-                        <ng-template 
-                          *ngIf="col.header === 'PF - Total'"
-                          let-grossPF="rowData.grossPF" 
-                          pTemplate="body">
-                          {{ grossPF | number }}
-                        </ng-template>
-                        <ng-template *ngIf="col.header === 'PF - Ajustado'"
-                          let-pf="rowData.pf" pTemplate="body">
-                          {{ pf | number }}
-                        </ng-template>
-        
-                        </p-column>
-                      </ng-template>
-        
+
                     </div>
                 </app-memory-datatable>
-              </div>
-          </div>
+            </div>
         </div>
+    </div>
 
-        <!-- Resumo -->
-        <div class="ui-g" *ngIf="funcoesDados.length > 0">
-          <hr>
-          <div class="ui-g-12">
+    <!-- Resumo -->
+    <div class="ui-g" *ngIf="funcoesDados.length > 0">
+        <hr>
+        <div class="ui-g-12">
             <app-analise-funcao-resumo-table 
-              [linhasResumo]="resumo.all">
+                [linhasResumo]="resumo.all">
             </app-analise-funcao-resumo-table>
-          </div>
         </div>
+    </div>
 
-        <!-- inicio Dialog adicionar função de dados  -->
-        <p-dialog
-          header="{{ header }}" 
-          [(visible)]="showDialogNovo" 
-          [contentStyle]="{'height': '840px'}" 
-          [width]="900">
+    <!-- inicio Dialog adicionar função de dados  -->
+    <p-dialog
+        header="{{ header }}" 
+        [(visible)]="showDialogNovo" 
+        [contentStyle]="{'height': '840px'}" 
+        [width]="900">
 
-          <app-analise-modulo-funcionalidade
-            [isFuncaoDados]="true"
-            (moduloSelectedEvent)="moduloSelected($event)"
-            (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
-          </app-analise-modulo-funcionalidade>
-
-          <div class="ui-g">
+        <div class="ui-g">
 
             <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                 <label>Nome *</label>
                 <p-autoComplete 
-                  [(ngModel)]="currentFuncaoDados.name"
-                  [suggestions]="sugestoesAutoComplete"
-                  (completeMethod)="autoCompleteNomes($event)"
-                  (onSelect)="recuperarNomeSelecionado($event.value)">
+                    [(ngModel)]="currentFuncaoDados.name"
+                    [suggestions]="sugestoesAutoComplete"
+                    (completeMethod)="autoCompleteNomes($event)"
+                    (onSelect)="recuperarNomeSelecionado($event.value)">
                 </p-autoComplete>
             </div>
+        </div>
+
+        <app-analise-modulo-funcionalidade
+            [isFuncaoDados]="true"
+            (moduloSelectedEvent)="moduloSelected($event)"
+            (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
+        </app-analise-modulo-funcionalidade>
+
+        <div class="ui-g">
 
             <div class="ui-g-4 ui-md-4 ui-sm-12">
                 <label>Classificação *</label>
                 <p-dropdown 
-                  [options]="classificacoes"
-                  [(ngModel)]="currentFuncaoDados.tipo"
-                  placeholder="Selecione uma Classificação"
-                  name="classificacao" 
-                  [autoWidth]="false">
+                    [options]="classificacoes"
+                    [(ngModel)]="currentFuncaoDados.tipo"
+                    placeholder="Selecione uma Classificação"
+                    name="classificacao" 
+                    [autoWidth]="false">
                 </p-dropdown>
             </div>
 
             <div class="ui-g-3 ui-md-3 ui-sm-12">
                 <label>Impacto *</label>
                 <p-dropdown 
-                  [options]="impacto"
-                  [(ngModel)]="currentFuncaoDados.impacto"
-                  placeholder="Selecione..."
-                  name="impacto" 
-                  [autoWidth]="false">
+                    [options]="impacto"
+                    [(ngModel)]="currentFuncaoDados.impacto"
+                    placeholder="Selecione..."
+                    name="impacto" 
+                    [autoWidth]="false">
                 </p-dropdown>
             </div>
 
             <div class="ui-g-5 ui-md-5 ui-sm-12">
-              <label>Deflator</label>
-              <p-dropdown 
-                [options]="fatoresAjuste"
-                [(ngModel)]="currentFuncaoDados.fatorAjuste" 
-                [disabled]="!isContratoSelected()"
-                [placeholder]="fatoresAjusteDropdownPlaceholder()"
-                name="fatorAjuste" 
-                [autoWidth]="false">
-              </p-dropdown>
+                <label>Deflator</label>
+                <p-dropdown 
+                    [options]="fatoresAjuste"
+                    [(ngModel)]="currentFuncaoDados.fatorAjuste" 
+                    [disabled]="!isContratoSelected()"
+                    [placeholder]="fatoresAjusteDropdownPlaceholder()"
+                    name="fatorAjuste" 
+                    [autoWidth]="false">
+                </p-dropdown>
             </div>
-    
-          </div>
-          
-          <div class="ui-g-12 ui-md-12 ui-sm-12">
+
+        </div>
+
+        <div class="ui-g-12 ui-md-12 ui-sm-12">
             <h2>RLR (TR)</h2>
             <app-analise-der-chips 
-              [(values)]="rlrsChips"
-              (onChange)="adicionar()">
+                [(values)]="rlrsChips"
+                (onChange)="adicionar()">
             </app-analise-der-chips>
-          </div>
+        </div>
 
-          <div class="ui-g-12 ui-md-12 ui-sm-12">
-              <h2>DER (TD)</h2>
-              <app-analise-der-chips  
+        <div class="ui-g-12 ui-md-12 ui-sm-12">
+            <h2>DER (TD)</h2>
+            <app-analise-der-chips  
                 [(values)]="dersChips"
                 (onChange)="adicionar()">
-              </app-analise-der-chips>
-          </div>
-        
-          <div class="ui-g-12 ui-md-12 ui-sm-12">
+            </app-analise-der-chips>
+        </div>
+
+        <div class="ui-g-12 ui-md-12 ui-sm-12">
             <label>Fundamentação</label>
             <span class="md-inputfield">
-              <textarea 
-                [rows]="3" 
-                [cols]="180" 
-                pInputTextarea name="funcaoDadosSustentacao" 
-                [(ngModel)]="currentFuncaoDados.sustantation">
-              </textarea>
+                <textarea 
+                    [rows]="3" 
+                    [cols]="180" 
+                    pInputTextarea name="funcaoDadosSustentacao" 
+                    [(ngModel)]="currentFuncaoDados.sustantation">
+                </textarea>
             </span>
-          </div>
+        </div>
 
-          <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
+        <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
             <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
-              <app-white-button 
-                buttonLabel="Cancelar" 
-                (click)="cancelarEdicao()">
-              </app-white-button>
+                <app-white-button 
+                    buttonLabel="Cancelar" 
+                    (click)="cancelarEdicao()">
+                </app-white-button>
             </div>
 
             <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
-              <app-white-button 
-                buttonLabel="Fechar"
-                (click)="cancelar()">
-              </app-white-button>
+                <app-white-button 
+                    buttonLabel="Fechar"
+                    (click)="cancelar()">
+                </app-white-button>
             </div>
 
             <div class="ui-md-3 ui-sm-12">
-              <app-blue-button 
-                [buttonLabel]="labelBotaoAdicionar"
-                [isDisabled]="!deveHabilitarBotaoAdicionar()"
-                buttonIcon="ui-icon-add" 
-                (click)="adicionar()">
-              </app-blue-button>
+                <app-blue-button 
+                    [buttonLabel]="labelBotaoAdicionar"
+                    [isDisabled]="!deveHabilitarBotaoAdicionar()"
+                    buttonIcon="ui-icon-add" 
+                    (click)="adicionar()">
+                </app-blue-button>
             </div>
-          </div>
-        </p-dialog>
-        <!-- Fim Dialog adicionar função de dados  -->
-  
-      </div>
-    </div>
-  </div>
+        </div>
+    </p-dialog>
+    <!-- Fim Dialog adicionar função de dados  -->
+
+</div>
+</div>
+</div>

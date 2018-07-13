@@ -25,12 +25,6 @@
                             scrollWidth="100%">
 
                             <p-column 
-                                field="name" 
-                                header="Nome" 
-                                [style]="{'width': '200px'}">
-                            </p-column>
-
-                            <p-column 
                                 header="Deflator" 
                                 [style]="{'width': '200px'}">
                                 <ng-template 
@@ -64,6 +58,12 @@
                                     pTemplate="body">
                                     {{ funcionalidade.nome }}
                                 </ng-template>
+                            </p-column>
+
+                            <p-column 
+                                field="name" 
+                                header="Nome" 
+                                [style]="{'width': '200px'}">
                             </p-column>
 
                             <p-column 
@@ -134,6 +134,7 @@
                 </div>
             </div>
 
+
             <!-- Inicio Dialog Função de transação -->
             <p-dialog 
                 header="{{ header }}" 
@@ -141,7 +142,19 @@
                 [contentStyle]="{'height': '840px'}" 
                 [width]="900">
 
-                <div>
+                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-top: 25px">
+                    <span class="md-inputfield">
+                        <input 
+                            type="text" 
+                            name="nomeFuncaoTransacao" 
+                            [(ngModel)]="currentFuncaoTransacao.name" 
+                            pInputText/>
+                        <label>Nome do Processo Elementar *</label>
+
+                    </span>
+                </div>
+
+                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-top: 25px">
                     <app-analise-modulo-funcionalidade
                         [isFuncaoDados]="false"
                         (moduloSelectedEvent)="moduloSelected($event)"
@@ -149,9 +162,7 @@
                     </app-analise-modulo-funcionalidade>
                 </div>
 
-                <div class="ui-g">
-                    <div class="ui-g-4 ui-md-4 ui-sm-12">
-                        <span>
+                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
                             <label>Classificação *</label>
                             <p-dropdown
                                 [options]="classificacoes"
@@ -161,10 +172,9 @@
                                 [autoWidth]="false"
                                 required>
                             </p-dropdown>
-                        </span>
                     </div>
 
-                    <div class="ui-g-3 ui-md-3 ui-sm-12">
+                     <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
                         <label>Impacto *</label>
                         <p-dropdown
                             required
@@ -176,7 +186,7 @@
                     </p-dropdown>
                 </div>
 
-                <div class="ui-g-5 ui-md-5 ui-sm-12">
+                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
                     <label>Deflator</label>
                     <p-dropdown 
                         [options]="fatoresAjuste"
@@ -188,19 +198,6 @@
                     </p-dropdown>
                 </div>
 
-            </div>
-
-            <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-top: 25px">
-                <span class="md-inputfield">
-                    <input 
-                        type="text" 
-                        name="nomeFuncaoTransacao" 
-                        [(ngModel)]="currentFuncaoTransacao.name" 
-                        pInputText/>
-                    <label>Nome do Processo Elementar *</label>
-
-                </span>
-            </div>
 
             <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="!isEstimada">
                 <h2>FTR (AR)</h2>
