@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatatableModule } from '@basis/angular-components';
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
+import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
 
 import {
   ButtonModule,
@@ -47,7 +48,8 @@ import { StringConcatService } from '../shared/string-concat.service';
     DataTableModule,
     DialogModule,
     MemoryDataTableModule,
-    AbacoButtonsModule
+    AbacoButtonsModule,
+    BotoesExportacaoModule,
   ],
   declarations: [
     SistemaComponent,

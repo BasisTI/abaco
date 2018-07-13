@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatatableModule } from '@basis/angular-components';
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
+import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
 import {
   ButtonModule,
   InputTextModule,
@@ -51,7 +52,8 @@ import { TextMaskModule } from 'angular2-text-mask';
     CheckboxModule,
     FileUploadModule,
     AbacoButtonsModule,
-    TextMaskModule
+    TextMaskModule,
+    BotoesExportacaoModule,
   ],
   declarations: [
     OrganizacaoComponent,

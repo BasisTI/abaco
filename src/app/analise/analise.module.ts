@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatatableModule } from '@basis/angular-components';
 
+import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
+
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
 
 import {
@@ -58,6 +60,7 @@ import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/an
     AbacoFuncaoTransacaoModule,
     AbacoAnaliseResumoModule,
     AbacoAnaliseBotaoSalvarModule,
+    BotoesExportacaoModule,
   ],
   declarations: [
     AnaliseComponent,
