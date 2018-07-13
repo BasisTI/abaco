@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy  } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
@@ -8,7 +8,7 @@ import { TipoEquipe } from './tipo-equipe.model';
 import { TipoEquipeService } from './tipo-equipe.service';
 import { ElasticQuery } from '../shared';
 
-import { PageNotificationService } from '../shared';
+import { PageNotificationService } from '@basis/angular-components';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { MessageUtil } from '../util/message.util';
 
@@ -31,12 +31,19 @@ export class TipoEquipeComponent implements AfterViewInit {
 
   rowsPerPageOptions: number[] = [5, 10, 20];
 
+  valueFiltroCampo: string;
+
   constructor(
     private router: Router,
     private tipoEquipeService: TipoEquipeService,
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
-  ) { }
+     ) { }
+
+    valueFiltro(valuefiltro: string) {
+    this.valueFiltroCampo = valuefiltro;
+    this.datatable.refresh(valuefiltro);
+  }
 
   public ngAfterViewInit() {
     this.recarregarDataTable();
@@ -70,7 +77,7 @@ export class TipoEquipeComponent implements AfterViewInit {
           this.blockUI.stop();
         }, error => {
           if (error.status === 500) {
-            this.pageNotificationService.addErrorMsg(MessageUtil.ERROR_DELETE_REGISTRO);
+            this.pageNotificationService.addErrorMessage(MessageUtil.ERROR_DELETE_REGISTRO);
           }
         });
       }
