@@ -119,6 +119,21 @@
 
     <dependencies>
         <dependency>
+            <groupId>br.gov.nuvem</groupId>
+            <artifactId>dynamic-exports</artifactId>
+            <version>1.0.3</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>batik-bridge</artifactId>
+                    <groupId>org.apache.xmlgraphics</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jasperreports</artifactId>
+                    <groupId>net.sf.jasperreports</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-hibernate5</artifactId>
         </dependency>
@@ -1114,10 +1129,10 @@
                     <version>${prometheus-simpleclient.version}</version>
                 </dependency>
                 <dependency>
-	                <groupId>xml-apis</groupId>
-	                <artifactId>xml-apis</artifactId>
-	                <version>1.4.01</version>
-				</dependency>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                    <version>1.4.01</version>
+                </dependency>
             </dependencies>
         </profile>
         <profile>
