@@ -107,9 +107,10 @@ export class DerChipsComponent implements OnChanges {
    *
    */
   limparMultiplos() {
-    this.values = null;
+      console.log("this.values ",this.values)
+    this.values = [];
   }
-
+  
   private converteMultiplos(): DerChipItem[] {
     const parseResult: ParseResult = DerTextParser.parse(this.addMultiplosTexto);
     if (parseResult.textos) {
