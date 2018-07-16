@@ -171,10 +171,12 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     this.isSaving = true;
-    if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
-      this.cnpjValido = true;
-      this.pageNotificationService.addErrorMsg('CNPJ inválido');
-      return;
+    if (this.organizacao.cnpj !== null){
+      if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
+        this.cnpjValido = true;
+        this.pageNotificationService.addErrorMsg('CNPJ inválido');
+        return;
+      }
     } else{
         if (this.organizacao.id !== undefined) {
           this.organizacaoService.find(this.organizacao.id).subscribe(response => {
