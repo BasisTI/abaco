@@ -5,6 +5,9 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatatableModule } from '@basis/angular-components';
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
+import {NgxMaskModule} from 'ngx-mask';
+import { UtilModule } from '../util/util.module';
+
 import {
   ButtonModule,
   InputTextModule,
@@ -50,7 +53,9 @@ import { TextMaskModule } from 'angular2-text-mask';
     MemoryDataTableModule,
     CheckboxModule,
     FileUploadModule,
+    NgxMaskModule.forRoot(),
     AbacoButtonsModule,
+    UtilModule,
     TextMaskModule
   ],
   declarations: [

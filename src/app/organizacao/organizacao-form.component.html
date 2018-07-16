@@ -58,12 +58,17 @@
             <span class="md-inputfield">
               <input 
                 type="text" 
-                [textMask]="{mask: cnpjMask}" 
                 name="cnpjOrganizacao"
-                maxlength="19"
+                maxlength="18" 
+                minlength="14"
+                mask="99.999.999/9999-99" 
+                pattern="[0-9]+$"
                 [(ngModel)]="organizacao.cnpj" 
                 pInputText/>
               <label>CNPJ</label>
+              <div *ngIf="(cnpjValido && editForm.submitted)" class="ui-message ui-messages-error">
+                CNPJ Inválido!
+              </div>
             </span>
           </div>
 

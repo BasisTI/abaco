@@ -8,6 +8,8 @@ import { Organizacao } from './organizacao.model';
 import { OrganizacaoService } from './organizacao.service';
 import { ElasticQuery } from '../shared';
 import { PageNotificationService } from '../shared/page-notification.service';
+import {NgxMaskModule} from 'ngx-mask';
+
 
 @Component({
   selector: 'jhi-organizacao',

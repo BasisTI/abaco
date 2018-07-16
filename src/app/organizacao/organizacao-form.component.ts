@@ -15,6 +15,8 @@ import { environment } from '../../environments/environment';
 import { PageNotificationService } from '../shared/page-notification.service';
 import { UploadService } from '../upload/upload.service';
 import {FileUpload} from 'primeng/primeng';
+import {NgxMaskModule} from 'ngx-mask';
+import { ValidacaoUtil } from '../util/validacao.util'
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -28,6 +30,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   contratos: Contrato[] = [];
   organizacao: Organizacao;
   isSaving: boolean;
+  cnpjValido: boolean;
   manuais: Manual[];
   uploadUrl = environment.apiUrl + '/upload';
   mostrarDialogCadastroContrato = false;
@@ -35,7 +38,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   novoContrato: Contrato = new Contrato();
   logo: File;
   contratoEmEdicao: Contrato = new Contrato();
-  cnpjMask = [/\d/, /\d/, '.' , /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/];
   invalidFields: Array<string> = [];
   imageUrl: any;
 
@@ -56,6 +58,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
    *
    * */
   ngOnInit() {
+    this.cnpjValido = false;
     this.isSaving = false;
     this.manualService.query().subscribe((res: ResponseWrapper) => {
       this.manuais = res.json;
@@ -69,6 +72,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         });
       }
     });
+    this.organizacao.ativo = true;
   }
 
   /**
@@ -160,43 +164,45 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
    *
    * */
   save(form) {
-    if (this.organizacao.id === undefined && this.logo === undefined) {
-      this.pageNotificationService.addErrorMsg('Favor inclua o arquivo Logo da Organização!');
-      return;
-    }
-
+    this.cnpjValido = false;
     if (!form.valid) {
       this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
       return;
     }
 
     this.isSaving = true;
-    if (this.organizacao.id !== undefined) {
-      this.organizacaoService.find(this.organizacao.id).subscribe(response => {
+    if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
+      this.cnpjValido = true;
+      this.pageNotificationService.addErrorMsg('CNPJ inválido');
+      return;
+    } else{
+        if (this.organizacao.id !== undefined) {
+          this.organizacaoService.find(this.organizacao.id).subscribe(response => {
 
-        if (this.logo !== undefined) {
-          this.uploadService.uploadFile(this.logo).subscribe(response => {
-            this.organizacao.logoId = JSON.parse(response['_body']).id;
-            this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
+            if (this.logo !== undefined) {
+              this.uploadService.uploadFile(this.logo).subscribe(response => {
+                this.organizacao.logoId = JSON.parse(response['_body']).id;
+                this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
+              });
+            } else {
+                this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
+            }
           });
         } else {
-            this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
+            if (this.checkRequiredFields()) {
+              if (this.organizacao.logoId !== undefined){
+                this.uploadService.uploadFile(this.logo).subscribe(response => {
+                  this.organizacao.logoId = JSON.parse(response['_body']).id;
+                  this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
+                  });
+              } else {
+                this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
+              }
+            } else {
+              this.pageNotificationService.addErrorMsg(this.getInvalidFieldsString() + ' é um Campo obrigatório.');
+            }
         }
-      });
-    } else {
-      if (this.logo !== undefined) {
-        if (this.checkRequiredFields()) {
-          this.uploadService.uploadFile(this.logo).subscribe(response => {
-            this.organizacao.logoId = JSON.parse(response['_body']).id;
-            this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
-          });
-        } else {
-          this.pageNotificationService.addErrorMsg(this.getInvalidFieldsString() + ' é um Campo obrigatório.');
-        }
-      } else {
-        this.pageNotificationService.addErrorMsg('Campo Logo está inválido!');
       }
-    }
   }
 
   /**

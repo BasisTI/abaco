@@ -11,6 +11,7 @@ import { ConfirmationService } from 'primeng/primeng';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { PRIMENG_IMPORTS } from './primeng-imports';
 import 'rxjs/add/operator/toPromise';
+import {NgxMaskModule} from 'ngx-mask';
 
 import {
   DatatableModule,
@@ -96,6 +97,7 @@ export function createTranslateLoader(http: HttpClient) {
     HttpClientModule,
     LoginModule,
     SecurityModule.forRoot(),
+    NgxMaskModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
