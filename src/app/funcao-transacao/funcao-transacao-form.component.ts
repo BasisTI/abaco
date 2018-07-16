@@ -26,7 +26,7 @@ import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator'
 })
 export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
-    isEdit: boolean;
+    isEdit; nomeInvalido; moduloInvalido; submoduloInvalido; classInvalida; impactoInvalido: boolean;
 
     isEstimada: boolean;
 
@@ -225,11 +225,21 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     get labelBotaoAdicionar() {
         return !this.isEdit ? 'Adicionar' : 'Alterar';
     }
+    impactoValido() {
+        this.impactoInvalido = false;
+    }
 
+    classValida() {
+        this.classInvalida = false;
+    }   
     /**
      *
     **/
     adicionar() {
+        if (this.currentFuncaoTransacao.impacto === undefined) {this.impactoInvalido = true}
+        if (this.currentFuncaoTransacao.name === undefined) {this.nomeInvalido = true}
+        if (this.currentFuncaoTransacao.tipo === undefined) {this.classInvalida = true}
+
         if (this.currentFuncaoTransacao.tipo === undefined
             || this.currentFuncaoTransacao.impacto === undefined
             || this.currentFuncaoTransacao.name === undefined

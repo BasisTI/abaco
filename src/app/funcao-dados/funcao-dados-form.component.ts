@@ -29,7 +29,7 @@ import {Manual} from '../manual';
 })
 export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
-    isEdit: boolean;
+    isEdit; nomeInvalido; moduloInvalido; submoduloInvalido; classInvalida; impactoInvalido: boolean;
 
     dersChips: DerChipItem[];
 
@@ -212,8 +212,21 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     get labelBotaoAdicionar() {
         return !this.isEdit ? 'Adicionar' : 'Alterar';
     }
+    nomeValido() {
+        this.nomeInvalido = false;
+    }
+    impactoValido() {
+        this.impactoInvalido = false;
+    }
 
+    classValida() {
+        this.classInvalida = false;
+    }
     adicionar() {
+        if (this.currentFuncaoDados.impacto === undefined) {this.impactoInvalido = true}
+        if (this.currentFuncaoDados.name === undefined) {this.nomeInvalido = true}
+        if (this.currentFuncaoDados.tipo === undefined) {this.classInvalida = true}
+        
         if (this.currentFuncaoDados.tipo === undefined
             || this.currentFuncaoDados.impacto === undefined
             || this.currentFuncaoDados.name === undefined) {

@@ -150,7 +150,10 @@
                             [(ngModel)]="currentFuncaoTransacao.name" 
                             pInputText/>
                         <label>Nome do Processo Elementar *</label>
-
+                        <div *ngIf="nomeInvalido" 
+                            class="ui-message ui-messages-error">
+                            Campo obrigatório.
+                        </div>
                     </span>
                 </div>
 
@@ -170,8 +173,13 @@
                                 placeholder="Selecione uma Classificação"
                                 name="classificacao" 
                                 [autoWidth]="false"
-                                required>
+                                required
+                                (onChange)="classValida()">
                             </p-dropdown>
+                            <div *ngIf="classInvalida" 
+                                class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
                     </div>
 
                      <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
@@ -182,8 +190,13 @@
                             [(ngModel)]="currentFuncaoTransacao.impacto"
                             placeholder="Selecione..."
                             name="impacto" 
+                            (onChange)="impactoValido()"
                             [autoWidth]="false">
                     </p-dropdown>
+                    <div *ngIf="impactoInvalido" 
+                        class="ui-message ui-messages-error">
+                        Campo obrigatório.
+                     </div>
                 </div>
 
                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
@@ -244,7 +257,6 @@
                 <div class="ui-g-3 ui-md-3 ui-sm-12">
                     <app-blue-button 
                         [buttonLabel]="labelBotaoAdicionar"
-                        [isDisabled]="!deveHabilitarBotaoAdicionar()"
                         buttonIcon="ui-icon-add" 
                         (click)="adicionar()">
                     </app-blue-button>
