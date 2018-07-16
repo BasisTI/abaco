@@ -122,7 +122,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
         if (this.arquivoManual !== undefined) {
             if (this.checkRequiredFields()) {
-
                 this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
                     this.manual.arquivoManualId = JSON.parse(response['_body']).id;
                     this.subscribeToSaveResponse(this.manualService.create(this.manual));
@@ -130,8 +129,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             } else {
                 this.privateExibirMensagemCamposInvalidos(1);
             }
+        } else if (this.checkRequiredFields()) {
+                this.subscribeToSaveResponse(this.manualService.create(this.manual));
         } else {
-            this.privateExibirMensagemCamposInvalidos(2);
+            this.privateExibirMensagemCamposInvalidos(1);
         }
     }
 
