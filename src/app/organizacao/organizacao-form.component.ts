@@ -171,40 +171,39 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     this.isSaving = true;
-    if (this.organizacao.cnpj !== null){
+    if (this.organizacao.cnpj !== undefined && this.organizacao.cnpj !== ' '){
       if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
         this.cnpjValido = true;
         this.pageNotificationService.addErrorMsg('CNPJ inválido');
         return;
       }
-    } else{
-        if (this.organizacao.id !== undefined) {
-          this.organizacaoService.find(this.organizacao.id).subscribe(response => {
+    }
+    if (this.organizacao.id !== undefined) {
+      this.organizacaoService.find(this.organizacao.id).subscribe(response => {
 
-            if (this.logo !== undefined) {
-              this.uploadService.uploadFile(this.logo).subscribe(response => {
-                this.organizacao.logoId = JSON.parse(response['_body']).id;
-                this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
-              });
-            } else {
-                this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
-            }
+        if (this.logo !== undefined) {
+          this.uploadService.uploadFile(this.logo).subscribe(response => {
+            this.organizacao.logoId = JSON.parse(response['_body']).id;
+            this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
           });
         } else {
-            if (this.checkRequiredFields()) {
-              if (this.organizacao.logoId !== undefined){
-                this.uploadService.uploadFile(this.logo).subscribe(response => {
-                  this.organizacao.logoId = JSON.parse(response['_body']).id;
-                  this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
-                  });
-              } else {
-                this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
-              }
-            } else {
-              this.pageNotificationService.addErrorMsg(this.getInvalidFieldsString() + ' é um Campo obrigatório.');
-            }
+            this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
         }
-      }
+      });
+    } else {
+        if (this.checkRequiredFields()) {
+          if (this.organizacao.logoId !== undefined){
+            this.uploadService.uploadFile(this.logo).subscribe(response => {
+              this.organizacao.logoId = JSON.parse(response['_body']).id;
+              this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
+              });
+          } else {
+            this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
+          }
+        } else {
+          this.pageNotificationService.addErrorMsg(this.getInvalidFieldsString() + ' é um Campo obrigatório.');
+        }
+    }
   }
 
   /**

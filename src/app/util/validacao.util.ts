@@ -9,7 +9,7 @@ export class ValidacaoUtil {
       
         cnpj = cnpj.replace(/[^\d]+/g,'');
 
-        if(cnpj == '') return false;
+        if(cnpj == '') return true;
             
         if (cnpj.length != 14)
             return false;
