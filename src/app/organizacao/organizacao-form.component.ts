@@ -171,7 +171,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     this.isSaving = true;
-    if (this.organizacao.cnpj !== undefined && this.organizacao.cnpj !== ' '){
+    if (this.organizacao.cnpj !== undefined && this.organizacao.cnpj !== ' ' && this.organizacao.cnpj !== null){
       if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
         this.cnpjValido = true;
         this.pageNotificationService.addErrorMsg('CNPJ inválido');
