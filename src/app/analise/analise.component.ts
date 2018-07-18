@@ -24,7 +24,7 @@ export class AnaliseComponent implements OnInit {
 
   elasticQuery: ElasticQuery = new ElasticQuery();
 
-  rowsPerPageOptions: number[] = [5, 10, 20];
+  rowsPerPageOptions: number[] = [5, 10, 20, 50, 100];
 
   analiseSelecionada: Analise;
 

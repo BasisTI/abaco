@@ -60,6 +60,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     public identificadorAnalise?: string,
     public equipeResponsavel?: TipoEquipe,
     public createdOn?: Date,
+    public updatedOn?: Date,
     public bloqueiaAnalise?: boolean,
 
   ) {
@@ -305,6 +306,7 @@ class AnaliseCopyFromJSON {
     this._analiseConverted.identificadorAnalise = this._json.identificadorAnalise;
     this._analiseConverted.equipeResponsavel = this._json.equipeResponsavel;
     this._analiseConverted.createdOn = this._json.audit.createdOn;
+    this._analiseConverted.updatedOn = this._json.audit.updatedOn;
     this._analiseConverted.bloqueiaAnalise = this._json.bloqueiaAnalise;
 
     if (!this._analiseConverted.baselineImediatamente) {

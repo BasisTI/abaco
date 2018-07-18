@@ -94,30 +94,37 @@
             disabled="desabilitarBotaoRelatorio()">
           </basis-datatable-button>
 
-          <p-column header="Identificador Análise" field="identificadorAnalise"></p-column>
-          <p-column header="Equipe" field="equipeResponsavel.nome"></p-column>
-          <p-column header="Sistema" field="sistema.sigla"></p-column>
-          <p-column header="Detalhe" field="metodoContagem"></p-column>
+          <p-column header="Organização" field="organizacao.nome" [sortable] = "true"></p-column>
+          <p-column header="Identificador Análise" field="identificadorAnalise" [sortable] = "true"></p-column>
+          <p-column header="Equipe" field="equipeResponsavel.nome" [sortable] = "true"></p-column>
+          <p-column header="Sistema" field="sistema.sigla" [sortable] = "true"></p-column>
+          <p-column header="Método de Contagem" field="metodoContagem" [sortable] = "true"></p-column>
           
-          <p-column header="PF Total">
+          <p-column header="PF Total" [sortable] = "true">
             <ng-template let-col let-pfTotal="rowData.pfTotal" pTemplate="body">
               {{ pfTotal | number: '00.00'}}
             </ng-template>
           </p-column>
           
-          <p-column header="PF Ajustado">
+          <p-column header="PF Ajustado" [sortable] = "true">
             <ng-template let-col let-adjustPFTotal="rowData.adjustPFTotal" pTemplate="body">
                 {{ adjustPFTotal | number: '00.00'}}
               </ng-template>
           </p-column>
           
-          <p-column header="Data / Hora">
+          <p-column header="Data Criação" [sortable] = "true">
             <ng-template let-col let-createdOn="rowData.audit.createdOn" pTemplate="body">
-                {{ createdOn | date: 'dd/MM/y / HH:mm' }}
+                {{ createdOn | date: 'dd/MM/y - HH:mm' }}
             </ng-template>
           </p-column>
 
-          <p-column header="Bloqueado" field="bloqueiaAnalise">
+          <p-column header="Data última Alteração" [sortable] = "true">
+            <ng-template let-col let-updatedOn="rowData.audit.updatedOn" pTemplate="body">
+                {{ updatedOn | date: 'dd/MM/y - HH:mm' }}
+            </ng-template>
+          </p-column>
+
+          <p-column header="Bloqueado" field="bloqueiaAnalise" [sortable] = "true">
             <ng-template let-col let-bloqueiaAnalise="rowData" pTemplate="body">
                 {{ bloqueiaAnalise[col.field] ? 'Sim' : 'Não' }}
             </ng-template>

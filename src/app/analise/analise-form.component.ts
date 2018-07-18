@@ -137,6 +137,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     this.contratos = org.contracts;
     this.sistemaService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
       this.sistemas = res.json;
+      console.log(res.json);
     });
     this.selecionarEquipePorOrganizacao(org);
   }
