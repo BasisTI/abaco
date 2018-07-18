@@ -2,6 +2,7 @@ package br.com.basis.abaco.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -475,6 +476,18 @@ public class Analise implements Serializable {
 	public void setAudit(AbacoAudit audit) {
 		this.audit = audit;
 	}
+
+    public ZonedDateTime getCreatedOn() {
+        return audit.getCreatedOn();
+    }
+
+    public void setCreatedOn(ZonedDateTime updatedOn) { audit.setCreatedOn(updatedOn); }
+
+    public ZonedDateTime getUpdatedOn() {
+        return audit.getUpdatedOn();
+    }
+
+    public void setUpdatedOn(ZonedDateTime updatedOn) { audit.setUpdatedOn(updatedOn); }
 
 	@Override
     public String toString() {
