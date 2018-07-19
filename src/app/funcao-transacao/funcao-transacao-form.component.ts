@@ -26,8 +26,10 @@ import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator'
 })
 export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
-    isEdit; nomeInvalido; moduloInvalido; submoduloInvalido; classInvalida; impactoInvalido: boolean;
+     nomeInvalido; moduloInvalido; submoduloInvalido; classInvalida; impactoInvalido: boolean;
 
+    isEdit: boolean;
+    
     isEstimada: boolean;
 
     dersChips: DerChipItem[] = [];
@@ -231,8 +233,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     classValida() {
         this.classInvalida = false;
-    }   
-    /**
+    }
+    /**k
      *
     **/
     adicionar() {
@@ -268,8 +270,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
      *
     **/
     private desconverterChips() {
-        this.currentFuncaoTransacao.ders = DerChipConverter.desconverterEmDers(this.dersChips);
-        this.currentFuncaoTransacao.alrs = DerChipConverter.desconverterEmAlrs(this.alrsChips);
+        if (this.dersChips != null && this.alrsChips != null ) {
+            this.currentFuncaoTransacao.ders = DerChipConverter.desconverterEmDers(this.dersChips);
+            this.currentFuncaoTransacao.alrs = DerChipConverter.desconverterEmAlrs(this.alrsChips);
+        }
     }
 
     /**
@@ -287,14 +291,16 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
      *
     **/
     private doEditar() {
-        const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
-            this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual
-        );
-        // TODO temporal coupling
-        this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
-        this.atualizaResumo();
-        this.pageNotificationService.addSuccessMsg(`Função de Transação '${funcaoTransacaoCalculada.name}' alterada com sucesso`);
-        this.resetarEstadoPosSalvar();
+        if (this.preAdd()) {
+            const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
+                this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual
+            );
+            // TODO temporal coupling
+            this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
+            this.atualizaResumo();
+            this.pageNotificationService.addSuccessMsg(`Função de Transação '${funcaoTransacaoCalculada.name}' alterada com sucesso`);
+            this.resetarEstadoPosSalvar();
+        }
     }
 
     /**
@@ -320,13 +326,50 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
      *
     **/
     private doAdicionar() {
-        const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
-            this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-        // TODO temporal coupling entre 1-add() e 2-atualizaResumo(). 2 tem que ser chamado depois
-        this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
-        this.atualizaResumo();
-        this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
-        this.resetarEstadoPosSalvar();
+        if (this.preAdd()) {
+            const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
+                this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
+            // TODO temporal coupling entre 1-add() e 2-atualizaResumo(). 2 tem que ser chamado depois
+
+            console.log(funcaoTransacaoCalculada);
+
+            this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
+            this.atualizaResumo();
+            this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
+            this.resetarEstadoPosSalvar();
+        }
+    }
+
+    private preAdd(): boolean {
+        let retorno: boolean = true;
+
+        retorno = (this.verificaDadosObrigatorios() && this.verificaDeflator()) ? true : false;
+
+        return retorno;
+
+    }
+
+    verificaDadosObrigatorios(): boolean {
+        let retorno: boolean = true;
+        if (this.analise.metodoContagem == null &&
+            this.currentFuncaoTransacao == null &&
+            this.analise.contrato.manual == null) {
+            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório na aba: GERAL!');
+            retorno = false;
+        } else {
+            return retorno
+        }
+    }
+
+    verificaDeflator(): boolean {
+        let retorno: boolean = true;
+        if (this.currentFuncaoTransacao.fatorAjuste == null
+            && this.currentFuncaoTransacao.impacto.toString() == "INM") {
+            this.pageNotificationService.addErrorMsg('Selecione um Deflator!');
+
+            retorno = false;
+        }
+        return retorno;
     }
 
     /**
