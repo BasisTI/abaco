@@ -1,5 +1,6 @@
 package br.com.basis.abaco.domain;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -21,7 +22,7 @@ import java.util.Objects;
 @Table(name = "fase")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "fase")
-public class Fase implements Serializable {
+public class Fase implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
 

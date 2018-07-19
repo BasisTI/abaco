@@ -7,6 +7,8 @@ import br.com.basis.abaco.repository.FaseRepository;
 import br.com.basis.abaco.repository.search.FaseSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import com.netflix.discovery.converters.Auto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +50,9 @@ public class FaseResourceIntTest {
     private FaseSearchRepository faseSearchRepository;
 
     @Autowired
+    private DynamicExportsService dynamicExportsService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -66,7 +71,7 @@ public class FaseResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            FaseResource faseResource = new FaseResource(faseRepository, faseSearchRepository);
+            FaseResource faseResource = new FaseResource(faseRepository, faseSearchRepository, dynamicExportsService);
         this.restFaseMockMvc = MockMvcBuilders.standaloneSetup(faseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
