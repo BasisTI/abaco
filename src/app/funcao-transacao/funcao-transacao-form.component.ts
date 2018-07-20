@@ -19,6 +19,7 @@ import {DerChipConverter} from '../analise-shared/der-chips/der-chip-converter';
 import {Der} from '../der/der.model';
 import {Manual} from '../manual';
 import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
+import {ModuloFuncionalidadeComponent} from '../analise-shared/modulo-funcionalidade.component'
 
 @Component({
     selector: 'app-analise-funcao-transacao',
@@ -26,10 +27,12 @@ import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator'
 })
 export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
-     nomeInvalido; moduloInvalido; submoduloInvalido; classInvalida; impactoInvalido: boolean;
+    moduloFuncionalidade: ModuloFuncionalidadeComponent;
+
+    nomeInvalido; moduloInvalido; submoduloInvalido; classInvalida; impactoInvalido: boolean;
 
     isEdit: boolean;
-    
+
     isEstimada: boolean;
 
     dersChips: DerChipItem[] = [];
@@ -68,9 +71,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         private analiseService: AnaliseService,
     ) {}
 
-    /**
-     *
-    **/
     ngOnInit() {
         this.isEdit = false;
         this.iniciarObjetos();
@@ -78,34 +78,22 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.initClassificacoes();
     }
 
-    /**
-     *
-    **/
     private iniciarObjetos() {
         this.currentFuncaoTransacao = new FuncaoTransacao();
         this.currentFuncaoTransacao.funcionalidade = new Funcionalidade();
     }
 
-    /**
-     *
-    **/
     private subscribeToAnaliseCarregada() {
         this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
             this.atualizaResumo();
         });
     }
 
-    /**
-     *
-    **/
     private atualizaResumo() {
         this.resumo = this.analise.resumoFuncaoTransacoes;
         this.changeDetectorRef.detectChanges();
     }
 
-    /**
-     *
-    **/
     private initClassificacoes() {
         const classificacoes = Object.keys(TipoFuncaoTransacao).map(k => TipoFuncaoTransacao[k as any]);
         // TODO pipe generico?
@@ -114,30 +102,18 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     *
-    **/
     get header(): string {
         return !this.isEdit ? 'Adicionar Função de Transação' : 'Alterar Função de Transação';
     }
 
-    /**
-     *
-    **/
     get currentFuncaoTransacao(): FuncaoTransacao {
         return this.analiseSharedDataService.currentFuncaoTransacao;
     }
 
-    /**
-     *
-    **/
     set currentFuncaoTransacao(currentFuncaoTransacao: FuncaoTransacao) {
         this.analiseSharedDataService.currentFuncaoTransacao = currentFuncaoTransacao;
     }
 
-    /**
-     *
-    **/
     get funcoesTransacoes(): FuncaoTransacao[] {
         if (!this.analise.funcaoTransacaos) {
             return [];
@@ -145,24 +121,15 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         return this.analise.funcaoTransacaos;
     }
 
-    /**
-     *
-    **/
     private get analise(): Analise {
         this.isEstimada = this.analiseSharedDataService.analise.metodoContagem === 'ESTIMADA';
         return this.analiseSharedDataService.analise;
     }
 
-    /**
-     *
-    **/
     private set analise(analise: Analise) {
         this.analiseSharedDataService.analise = analise;
     }
 
-    /**
-     *
-    **/
     private get manual() {
         if (this.analiseSharedDataService.analise.contrato) {
             return this.analiseSharedDataService.analise.contrato.manual;
@@ -170,9 +137,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         return undefined;
     }
 
-    /**
-     *
-    **/
     isContratoSelected(): boolean {
         // FIXME p-dropdown requer 2 clicks quando o [options] chama um método get()
         const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
@@ -182,9 +146,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         return isContratoSelected;
     }
 
-    /**
-     *
-    **/
     fatoresAjusteDropdownPlaceholder() {
         if (this.isContratoSelected()) {
             return 'Selecione um Deflator';
@@ -193,37 +154,22 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     *
-    **/
     moduloSelected(modulo: Modulo) {
     }
 
-    /**
-     *
-    **/
     funcionalidadeSelected(funcionalidade: Funcionalidade) {
         this.currentFuncaoTransacao.funcionalidade = funcionalidade;
     }
 
-    /**
-     *
-    **/
     isFuncionalidadeSelected(): boolean {
         return !_.isUndefined(this.currentFuncaoTransacao.funcionalidade);
     }
 
-    /**
-     *
-    **/
     deveHabilitarBotaoAdicionar(): boolean {
         // TODO complementar com outras validacoes
         return this.isFuncionalidadeSelected() && !_.isUndefined(this.analise.metodoContagem);
     }
 
-    /**
-     *
-    **/
     get labelBotaoAdicionar() {
         return !this.isEdit ? 'Adicionar' : 'Alterar';
     }
@@ -234,9 +180,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     classValida() {
         this.classInvalida = false;
     }
-    /**k
-     *
-    **/
+
     adicionar() {
         if (this.currentFuncaoTransacao.impacto === undefined) {this.impactoInvalido = true}
         if (this.currentFuncaoTransacao.name === undefined) {this.nomeInvalido = true}
@@ -257,28 +201,19 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.analiseService.update(this.analise);
     }
 
-    /**
-     *
-    **/
     private adicionarOuSalvar() {
         this.desconverterChips();
         this.doAdicionarOuSalvar();
         this.isEdit = false;
     }
 
-    /**
-     *
-    **/
     private desconverterChips() {
-        if (this.dersChips != null && this.alrsChips != null ) {
+        if (this.dersChips != null && this.alrsChips != null) {
             this.currentFuncaoTransacao.ders = DerChipConverter.desconverterEmDers(this.dersChips);
             this.currentFuncaoTransacao.alrs = DerChipConverter.desconverterEmAlrs(this.alrsChips);
         }
     }
 
-    /**
-     *
-    **/
     private doAdicionarOuSalvar() {
         if (this.isEdit) {
             this.doEditar();
@@ -287,9 +222,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     *
-    **/
     private doEditar() {
         if (this.preAdd()) {
             const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
@@ -298,45 +230,24 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             // TODO temporal coupling
             this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
             this.atualizaResumo();
+            this.showDialogNovo = false;
             this.pageNotificationService.addSuccessMsg(`Função de Transação '${funcaoTransacaoCalculada.name}' alterada com sucesso`);
-            this.resetarEstadoPosSalvar();
         }
     }
 
-    /**
-     *
-    **/
-    private resetarEstadoPosSalvar() {
-        this.iniciarObjetos();
-
-        // Mantendo o mesmo conteudo a pedido do Leandro
-        // this.currentFuncaoTransacao = this.currentFuncaoTransacao.clone();
-
-        // TODO inappropriate intimacy DEMAIS
-        this.currentFuncaoTransacao.artificialId = undefined;
-        this.currentFuncaoTransacao.id = undefined;
-
-        // clonando mas forçando novos a serem persistidos
-        this.dersChips.forEach(c => c.id = undefined);
-        this.alrsChips.forEach(c => c.id = undefined);
-        this.showDialogNovo = false;
-    }
-
-    /**
-     *
-    **/
     private doAdicionar() {
         if (this.preAdd()) {
             const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
                 this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
             // TODO temporal coupling entre 1-add() e 2-atualizaResumo(). 2 tem que ser chamado depois
 
-            console.log(funcaoTransacaoCalculada);
 
             this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
             this.atualizaResumo();
             this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
-            this.resetarEstadoPosSalvar();
+            //            this.limparDadosDaTelaNaEdicaoCancelada();
+            this.showDialogNovo = false;
+            //            this.resetarEstadoPosSalvar();
         }
     }
 
@@ -372,9 +283,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         return retorno;
     }
 
-    /**
-     *
-    **/
     datatableClick(event: DatatableClickEvent) {
         if (!event.selection) {
             return;
@@ -392,9 +300,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     *
-    **/
     private prepararParaEdicao(funcaoSelecionada: FuncaoTransacao) {
         this.analiseSharedDataService.currentFuncaoTransacao = funcaoSelecionada;
         this.scrollParaInicioDaAba();
@@ -402,16 +307,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.pageNotificationService.addInfoMsg(`Alterando Função de Transação '${funcaoSelecionada.name}'`);
     }
 
-    /**
-     *
-    **/
     private scrollParaInicioDaAba() {
         window.scrollTo(0, 60);
     }
 
-    /**
-     *
-    **/
     private carregarValoresNaPaginaParaEdicao(funcaoSelecionada: FuncaoTransacao) {
         this.analiseSharedDataService.funcaoAnaliseCarregada();
 
@@ -449,9 +348,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     *
-    **/
     dersReferenciados(ders: Der[]) {
         // XXX manter os ids?
         const dersReferenciadosChips: DerChipItem[] = DerChipConverter.converterReferenciaveis(ders);
@@ -466,9 +362,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.showDialogNovo = false;
     }
 
-    /**
-     *
-    **/
     cancelarEdicao() {
         this.showDialogNovo = false;
         this.analiseSharedDataService.funcaoAnaliseDescarregada();
@@ -478,9 +371,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.scrollParaInicioDaAba();
     }
 
-    /**
-     *
-    **/
     cancelarEdicaoDialog() {
         this.confirmationService.confirm({
             message: `Tem certeza que deseja cancelar a alteração?`,
@@ -493,11 +383,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     *
-    **/
     private limparDadosDaTelaNaEdicaoCancelada() {
-        this.iniciarObjetos();
+        this.currentFuncaoTransacao.name = null;
         this.dersChips = [];
         this.alrsChips = [];
     }

@@ -137,6 +137,7 @@
 
             <!-- Inicio Dialog Função de transação -->
             <p-dialog 
+                id="dialog-funcao-transacao"
                 header="{{ header }}" 
                 [(visible)]="showDialogNovo" 
                 [contentStyle]="{'height': '840px'}" 
@@ -159,7 +160,7 @@
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-top: 25px">
                     <app-analise-modulo-funcionalidade
-                        [isFuncaoDados]="false"
+                        [isFuncaoDados]="true"
                         (moduloSelectedEvent)="moduloSelected($event)"
                         (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
                     </app-analise-modulo-funcionalidade>
@@ -190,7 +191,7 @@
                     [(ngModel)]="currentFuncaoTransacao.impacto"
                     placeholder="Selecione..."
                     name="impacto"
-                            (onChange)="impactoValido()"
+                    (onChange)="impactoValido()"
                     [autoWidth]="false">
             </p-dropdown>
             <div *ngIf="impactoInvalido" 
@@ -257,7 +258,7 @@
                 <app-blue-button 
                     [buttonLabel]="labelBotaoAdicionar"
                     buttonIcon="ui-icon-add" 
-                        (click)="adicionar()">
+                    (click)="adicionar()">
                 </app-blue-button>
             </div>
         </div>
