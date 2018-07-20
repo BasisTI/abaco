@@ -198,18 +198,23 @@
                 <label>Número do Contrato</label>
               </span>
             </div>
-
-            <div class="ui-g-12" style="margin-bottom: 25px">
-              <p-dropdown 
-                [options]="manuais" 
-                optionLabel="nome" 
-                placeholder="Manual"
-                name="manualDropdown" 
-                [(ngModel)]="novoContrato.manual"
-                [autoWidth]="false" 
-                dataKey="id">
-              </p-dropdown>
-            </div>
+              
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <p-dropdown 
+                  [options]="manuais" 
+                  optionLabel="nome" 
+                  placeholder="Manual *"
+                  name="manualDropdown" 
+                  [(ngModel)]="novoContrato.manual"
+                  [autoWidth]="false" 
+                  (onChange)="validarManual()"
+                  dataKey="id">
+                </p-dropdown>
+                <div *ngIf="manualInvalido" 
+                  class="ui-messages-error">
+                  Manual obrigatório.
+                </div>
+              </div>
 
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
@@ -260,9 +265,9 @@
 
                 <div class="ui-g-12 ui-md-1">
                   <p-radioButton name="contrato_ativo" 
+                    [(ngModel)]="novoContrato.ativo"
                     [value]="true" 
-                    label="Sim"
-                    [(ngModel)]="novoContrato.ativo">
+                    label="Sim">
                   </p-radioButton>
                 </div>
 

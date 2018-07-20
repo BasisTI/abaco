@@ -29,7 +29,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
   contratos: Contrato[] = [];
   organizacao: Organizacao;
-  isSaving: boolean;
+  isSaving; manualInvalido: boolean;
   cnpjValido: boolean;
   manuais: Manual[];
   uploadUrl = environment.apiUrl + '/upload';
@@ -80,6 +80,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
    * */
   abrirDialogCadastroContrato() {
     this.mostrarDialogCadastroContrato = true;
+    this.novoContrato.ativo = true;
   }
 
   /**
@@ -87,6 +88,13 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
    * */
   fecharDialogCadastroContrato() {
     this.doFecharDialogCadastroContrato();
+  }
+
+  /**
+   *
+   * */
+  validarManual() {
+    this.manualInvalido = false;
   }
 
   /**
@@ -101,6 +109,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
    *
    * */
   adicionarContrato() {
+    if (this.novoContrato.manual === null || this.novoContrato.manual === undefined){
+      this.manualInvalido = true;
+      this.pageNotificationService.addErrorMsg("Selecione um manual");
+      return
+    }
     this.organizacao.addContrato(this.novoContrato);
     this.doFecharDialogCadastroContrato();
   }
