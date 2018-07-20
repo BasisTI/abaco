@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.basis.abaco.service.util.RandomUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -133,12 +134,14 @@ public class UserResource {
 		} else if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
 			return this.createBadRequest("fullnameexists", "Full Name already in use");
 		} else {
+
+            user.setLangKey("pt_BR");
+            user.setPassword(RandomUtil.generatePassword());
+			mailService.sendCreationEmail(user);
 			User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
 			User newUser = userRepository.save(userReadyToBeSaved);
 			userSearchRepository.save(newUser);
 			log.debug("Created Information for User: {}", user);
-			newUser.setLangKey("pt_BR");
-			mailService.sendCreationEmail(newUser);
 			return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
 					.headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin())).body(newUser);
 		}
