@@ -496,6 +496,7 @@ public class Analise implements Serializable {
             "id=" + id +
             ", numeroOs='" + numeroOs + "'" +
             ", tipoContagem='" + metodoContagem + "'" +
+            ", dataHomologacao='" + dataHomologacao + "'" +
             ", valorAjuste='" + valorAjuste + "'" +
             ", pfTotal='" + pfTotal + "'" +
             ", escopo='" + escopo + "'" +
