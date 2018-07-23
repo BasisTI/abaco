@@ -54,7 +54,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         {label: 'Alteração', value: 'ALTERACAO'},
         {label: 'Exclusão', value: 'EXCLUSAO'},
         {label: 'Conversão', value: 'CONVERSAO'},
-        {label: 'Item Não Mensurável', value: 'INM'}
+        {label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS'}
     ];
 
     private fatorAjusteNenhumSelectItem = {label: 'Nenhum', value: undefined};

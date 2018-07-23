@@ -113,11 +113,8 @@
           </p-column>
 
           <p-column header="Dias restantes em Garantia" [sortable]="true">
-            <ng-template let-col 
-            let-diasDeGarantia="rowData.contrato.diasDeGarantia"
-            let-dataHomologacao="rowData.dataHomologacao"
-            let-baselineImediatamante="rowData.baselineImediatamente" pTemplate="body">
-                {{ baselineImediatamante ? diasDeGarantia : '0' }}
+            <ng-template let-dado="rowData" pTemplate="body">
+                {{ dado | datePipe }}
               </ng-template>
           </p-column>
           

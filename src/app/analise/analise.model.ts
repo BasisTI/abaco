@@ -56,7 +56,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     public esforcoFases?: EsforcoFase[],
     public observacoes?: string,
     public baselineImediatamente?: boolean,
-    public dataHomologacao?: Date,
+    public dataHomologacao?: any,
     public identificadorAnalise?: string,
     public equipeResponsavel?: TipoEquipe,
     public createdOn?: Date,

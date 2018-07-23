@@ -27,6 +27,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   isEdicao: boolean;
 
   isSaving: boolean;
+  dataAnalise: any;
+  dataHomol: any;
 
   organizacoes: Organizacao[];
 
@@ -83,6 +85,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     this.analiseSharedDataService.init();
     this.isEdicao = false;
     this.isSaving = false;
+    this.dataHomol = new Date();
     this.habilitarCamposIniciais();
     this.popularListaOrganizacao();
     this.popularAnaliseCarregada();
@@ -99,6 +102,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.analiseService.find(params['id']).subscribe(analise => {
           this.inicializaValoresAposCarregamento(analise);
           this.analiseSharedDataService.analiseCarregada();
+          this.dataAnalise = this.analise;
+          this.dataHomol.setMonth(parseInt(this.dataAnalise.dataHomologacao.substring(5,7)) - 1);
+          this.dataHomol.setDate(parseInt(this.dataAnalise.dataHomologacao.substring(8,10)));
+          this.dataHomol.setFullYear(parseInt(this.dataAnalise.dataHomologacao.substring(0,4)));
+          this.analise.dataHomologacao = this.dataHomol;
         });
       } else {
         this.analise.esforcoFases = [];
