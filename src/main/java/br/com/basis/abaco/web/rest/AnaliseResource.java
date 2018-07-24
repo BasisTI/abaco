@@ -8,6 +8,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import br.com.basis.abaco.utils.PageUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -328,10 +331,12 @@ public class AnaliseResource {
     @GetMapping("/_search/analises")
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchAnalises(@RequestParam(defaultValue = "*") String query,
-            @ApiParam Pageable pageable) throws URISyntaxException {
+    public ResponseEntity<List<Analise>> searchAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
         log.debug("REST request to search for a page of Analises for query {}", query);
-        Page<Analise> page = analiseSearchRepository.search(queryStringQuery(query), pageable);
+        Page<Analise> page = analiseSearchRepository.search(queryStringQuery(query), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
