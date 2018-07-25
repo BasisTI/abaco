@@ -29,6 +29,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   isSaving: boolean;
   dataAnalise: any;
   dataHomol: any;
+  diasGarantia: number;
 
   organizacoes: Organizacao[];
 
@@ -107,6 +108,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
           this.dataHomol.setDate(parseInt(this.dataAnalise.dataHomologacao.substring(8,10)));
           this.dataHomol.setFullYear(parseInt(this.dataAnalise.dataHomologacao.substring(0,4)));
           this.analise.dataHomologacao = this.dataHomol;
+          this.diasGarantia = this.analise.contrato.diasDeGarantia;
         });
       } else {
         this.analise.esforcoFases = [];
@@ -368,6 +370,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
   save() {
     if (this.verificarCamposObrigatorios()) {
       this.analiseService.update(this.analise);
+      this.diasGarantia = this.analise.contrato.diasDeGarantia;
     }
   }
 
@@ -392,18 +395,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
     if (!this.analise.tipoAnalise) {
       this.pageNotificationService.addInfoMsg('Informe o Tipo de Contagem para continuar.');
-      return isValid;
-    }
-    if (!this.analise.propositoContagem) {
-      this.pageNotificationService.addInfoMsg('Informe o Propósito da Contagem para continuar.');
-      return isValid;
-    }
-    if (!this.analise.propositoContagem) {
-      this.pageNotificationService.addInfoMsg('Informe o Escopo da Contagem para continuar.');
-      return isValid;
-    }
-    if (!this.analise.propositoContagem) {
-      this.pageNotificationService.addInfoMsg('Informe a Documentação para continuar.');
       return isValid;
     }
     return isValid;

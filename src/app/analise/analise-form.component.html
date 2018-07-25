@@ -127,7 +127,7 @@
             <div style="margin-bottom: 25px; margin-top: 25px" *ngIf="isEdicao">
               <div class="ui-g">
     
-                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 18px">
+                <div class="ui-g-6 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 18px">
                   <span class="md-inputfield">
                     <input 
                       required
@@ -136,13 +136,12 @@
                       name="identificadorAnalise"
                       [(ngModel)]="analise.identificadorAnalise"
                       (change)="save()"
-                      pInputText
-                      pTooltip="{{ tooltipIdentificadorAnalise() }}"/>
+                      pInputText/>
                     <label>Identificador da Analise *</label>
                   </span>
                 </div>
 
-                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                   <label>Contrato *</label>
                   <p-dropdown 
                     required
@@ -153,12 +152,11 @@
                     name="contrato" 
                     [options]="contratos" 
                     [(ngModel)]="analise.contrato" 
-                    [autoWidth]="false"
-                    pTooltip="{{ tooltipContrato() }}">
+                    [autoWidth]="false">
                   </p-dropdown>
                 </div>
 
-                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                   <label>Método de Contagem *</label>
                   <p-dropdown
                     required
@@ -168,12 +166,11 @@
                     [options]="metodosContagem"
                     [(ngModel)]="analise.metodoContagem"  
                     [autoWidth]="false"
-                    (onChange)="save()"
-                    pTooltip="{{ tooltipMedodoContagem() }}">
+                    (onChange)="save()">
                   </p-dropdown>
                 </div>
     
-                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                   <label>Tipo de Contagem *</label>
                   <p-dropdown
                     required
@@ -186,7 +183,7 @@
                   </p-dropdown>
                 </div>
 
-                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                   <label>Deflator</label>
                   <p-dropdown
                     required
@@ -200,7 +197,7 @@
                   </p-dropdown>
                 </div>
 
-              <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px; margin-top: 17px">
+              <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 17px">
                 <span class="md-inputfield">
                   <input
                     required
@@ -214,60 +211,24 @@
                 </span>
               </div>
     
-                <div class="ui-g-3 ui-md-3 ui-sm-12">
-  
-                  <div class="ui-g-6 ui-md-6 ui-sm-12">
-                    <label>Aguardar prazo de garantia?</label>
-                  </div>
-  
-                  <div class="ui-g-3 ui-md-3 ui-sm-12">
-                    <p-radioButton 
-                      name="baseline_imediatamente" 
-                      label="Sim"
-                      [value]="true" 
-                      [(ngModel)]="analise.baselineImediatamente"
-                      (onClick)="save()">
-                    </p-radioButton>
-                  </div>
-
-                  <div class="ui-g-3 ui-md-3 ui-sm-12">
-                    <p-radioButton 
-                      name="baseline_imediatamente"
-                      label="Não"
-                      [value]="false" 
-                      [(ngModel)]="analise.baselineImediatamente"
-                      (onClick)="save()">
-                    </p-radioButton>
-                  </div>
-
-                </div>
-    
                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Propósito da Contagem *</label>
+                  <label>Propósito da Contagem</label>
                   <span class="md-inputfield">
                     <textarea
-                      required
                       pInputTextarea name="propositoContagem" 
-                      [rows]="3" 
-                      [cols]="180"
                       (change)="save()"
-                      [(ngModel)]="analise.propositoContagem"
-                      pTooltip="{{ tooltipPropositoContagem() }}">
+                      [(ngModel)]="analise.propositoContagem">
                     </textarea>
                   </span>
                 </div>
     
                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Escopo da Contagem *</label>
+                  <label>Escopo da Contagem</label>
                   <span class="md-inputfield">
                     <textarea
-                      required
                       pInputTextarea name="escopo" 
-                      [rows]="3" 
-                      [cols]="180"
                       (change)="save()"
-                      [(ngModel)]="analise.escopo"
-                      pTooltip="{{ tooltipEscopoContagem() }}">
+                      [(ngModel)]="analise.escopo">
                     </textarea>
                   </span>
                 </div>
@@ -277,31 +238,53 @@
                   <span class="md-inputfield">
                     <textarea
                       pInputTextarea name="fronteiras" 
-                      [rows]="3" 
-                      [cols]="180"
                       (change)="save()"
-                      [(ngModel)]="analise.fronteiras"
-                      pTooltip="{{ tooltipFronteira() }}">
+                      [(ngModel)]="analise.fronteiras">
                     </textarea>
                   </span>
                 </div>
       
                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Documentação *</label>
+                  <label>Documentação</label>
                   <span class="md-inputfield">
                     <textarea
                       required
-                      pInputTextarea name="documentacao" 
-                      [rows]="3" 
-                      [cols]="180"
+                      pInputTextarea name="documentacao"
                       (change)="save()"
-                      [(ngModel)]="analise.documentacao"
-                      pTooltip="{{ tooltipDocumentacao() }}">
+                      [(ngModel)]="analise.documentacao">
                     </textarea>
                   </span>
                 </div>
 
-                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                <div class="ui-g-3 ui-md-6 ui-sm-12">
+  
+                  <div class="ui-g-6 ui-md-6 ui-sm-12">
+                    Aguardar prazo de garantia {{diasGarantia > 0 ? " de " + diasGarantia + " dias" : null}}?
+                  </div>
+                  
+                  <div class="ui-g-3 ui-md-2 ui-sm-12">
+                    <p-radioButton 
+                      name="baseline_imediatamente" 
+                      label="Sim"
+                      [value]="true" 
+                      [(ngModel)]="analise.baselineImediatamente"
+                      (onClick)="save()">
+                    </p-radioButton>
+                  </div>
+
+                  <div class="ui-g-3 ui-md-2 ui-sm-12">
+                    <p-radioButton 
+                      name="baseline_imediatamente"
+                      label="Não"
+                      [value]="false" 
+                      [(ngModel)]="analise.baselineImediatamente"
+                      (onClick)="save()">
+                    </p-radioButton>
+                  </div>
+                  
+                </div>
+
+                <div class="ui-g-4 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
                   <span class="md-inputfield">
                     <p-calendar 
                       name="dataHomol"
@@ -309,20 +292,7 @@
                       dateFormat="dd/mm/yy"
                       (onSelect)="save()">
                     </p-calendar>
-                    <label>Data da homologação (do software)</label>
-                  </span>
-                </div>
-
-                <div class="ui-g-8 ui-md-8 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
-                  <span class="md-inputfield">
-                    <input 
-                      type="text" 
-                      maxlength="100"
-                      name="numeroOS" 
-                      [(ngModel)]="analise.numeroOs"
-                      (change)="save()"
-                      pInputText/>
-                    <label>Número da Ordem de Serviço</label>
+                    <label>Data da homologação (do software) {{analise.baselineImediatamente ? " *" : null}}</label>
                   </span>
                 </div>
 
