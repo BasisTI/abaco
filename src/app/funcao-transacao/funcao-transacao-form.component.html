@@ -169,6 +169,7 @@
                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
                     <label>Classificação *</label>
                     <p-dropdown
+                        [filter]="true"
                         [options]="classificacoes"
                         [(ngModel)]="currentFuncaoTransacao.tipo"
                         placeholder="Selecione uma Classificação"
@@ -186,6 +187,7 @@
             <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
                 <label>Impacto *</label>
                 <p-dropdown
+                    [filter]="true"
                     required
                     [options]="impacto"
                     [(ngModel)]="currentFuncaoTransacao.impacto"
@@ -203,6 +205,7 @@
         <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
             <label>Deflator</label>
             <p-dropdown 
+                [filter]="true"
                 [options]="fatoresAjuste"
                 [(ngModel)]="currentFuncaoTransacao.fatorAjuste" 
                 [disabled]="!isContratoSelected()"

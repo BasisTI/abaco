@@ -33,6 +33,7 @@
 
         <div class="ui-g-4 ui-md-4 ui-sm-12">
           <p-dropdown 
+            [filter]="true"
             [options]="organizations" 
             optionLabel="nome" 
             [(ngModel)]="searchParams.organizacao" 

@@ -13,6 +13,7 @@
                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                     <label>Organização</label>
                     <p-dropdown 
+                      [filter]="true"
                       dataKey="id"
                       name="organizacao"
                       optionLabel="nome"
@@ -27,6 +28,7 @@
                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                     <label>Equipe Responsável</label>
                     <p-dropdown 
+                      [filter]="true"
                       dataKey="id"
                       name="equipeResponsavel"
                       optionLabel="nome"
@@ -40,6 +42,7 @@
                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                     <label>Sistema</label>
                     <p-dropdown 
+                      [filter]="true"
                       dataKey="id" 
                       optionLabel="sigla" 
                       disabled="{{ !shouldEnableSistemaDropdown() }}"
@@ -76,6 +79,7 @@
                   <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
                       <label>Organização</label>
                       <p-dropdown 
+                        [filter]="true"
                         dataKey="id"
                         name="organizacao"
                         optionLabel="nome"
@@ -90,7 +94,8 @@
 
                   <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
                       <label>Equipe Responsável</label>
-                      <p-dropdown 
+                      <p-dropdown
+                        [filter]="true" 
                         dataKey="id"
                         name="equipeResponsavel"
                         optionLabel="nome"
@@ -106,6 +111,7 @@
                   <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
                       <label>Sistema</label>
                       <p-dropdown 
+                        [filter]="true"
                         dataKey="id" 
                         optionLabel="sigla" 
                         disabled="true"
@@ -143,7 +149,8 @@
 
                 <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                   <label>Contrato *</label>
-                  <p-dropdown 
+                  <p-dropdown
+                    [filter]="true" 
                     required
                     dataKey="id"
                     optionLabel="numeroContrato" 
@@ -159,6 +166,7 @@
                 <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                   <label>Método de Contagem *</label>
                   <p-dropdown
+                    [filter]="true"
                     required
                     disabled="{{ !isContratoSelected() }}"
                     placeholder="{{ needContratoDropdownPlaceholder() }}"
@@ -173,6 +181,7 @@
                 <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                   <label>Tipo de Contagem *</label>
                   <p-dropdown
+                    [filter]="true"
                     required
                     name="tiposAnalise"
                     placeholder="Selecione..."
@@ -186,6 +195,7 @@
                 <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                   <label>Deflator</label>
                   <p-dropdown
+                    [filter]="true"
                     required
                     disabled="{{ !isContratoSelected() }}"
                     placeholder="{{ needContratoDropdownPlaceholder() }}"

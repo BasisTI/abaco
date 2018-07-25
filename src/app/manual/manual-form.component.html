@@ -323,6 +323,7 @@
         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
             <label>Tipo de Fase *</label>
             <p-dropdown 
+                [filter]="true"
                 id="nome_fase" 
                 autofocus="true" 
                 [options]="tipoFases" 
@@ -381,6 +382,7 @@
         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
             <label>Tipo de Fase*</label>
             <p-dropdown 
+                [filter]="true"
                 id="nome_fase_edit" 
                 [options]="tipoFases" 
                 [(ngModel)]="editedPhaseEffort.fase" 
@@ -451,6 +453,7 @@
         <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
             <label>Tipo Deflator *</label><br>
             <p-dropdown 
+                [filter]="true"
                 #dd 
                 id="tipo_ajuste" 
                 [options]="adjustTypes" 
@@ -556,6 +559,7 @@
         <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
             <label>Tipo Ajuste *</label><br>
             <p-dropdown 
+                [filter]="true"
                 id="tipo_ajuste" 
                 [options]="adjustTypes" 
                 name="tipoAjuste" 

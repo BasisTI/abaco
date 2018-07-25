@@ -65,6 +65,7 @@
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span>
               <p-dropdown
+                [filter]="true"
                 id="organizacao_sistema"
                 [options]="organizacaos"
                 optionLabel="nome"
@@ -290,6 +291,7 @@
             <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
               <span>
                 <p-dropdown
+                  [filter]="true"
                   [options]="sistema.modulos"
                   optionLabel="nome"
                   placeholder="Módulo *"
@@ -359,6 +361,7 @@
             <div class="ui-g-12" style="margin-bottom: 25px">
               <span>
                 <p-dropdown 
+                  [filter]="true"
                   [options]="sistema.modulos" 
                   optionLabel="nome"
                   placeholder="Módulo *" 

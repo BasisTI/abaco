@@ -29,7 +29,7 @@
             </span>
           </div>
           <div class="ui-g-6">
-            <p-dropdown [options]="manuals" optionLabel="nome" placeholder="Manual" name="manual" [(ngModel)]="contrato.manual" [autoWidth]="false" dataKey="id"></p-dropdown>
+            <p-dropdown [filter]="true" [options]="manuals" optionLabel="nome" placeholder="Manual" name="manual" [(ngModel)]="contrato.manual" [autoWidth]="false" dataKey="id"></p-dropdown>
           </div>
         </div>
         <div class="ui-g">

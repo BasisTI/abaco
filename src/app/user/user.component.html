@@ -50,6 +50,7 @@
 
       <div class="ui-g-4 ui-md-4 ui-sm-12">
         <p-dropdown 
+          [filter]="true"
           [options]="organizations" 
           optionLabel="nome" 
           [(ngModel)]="searchParams.organization" 
@@ -60,6 +61,7 @@
       
       <div class="ui-g-4 ui-md-4 ui-sm-12">
         <p-dropdown 
+          [filter]="true"
           [options]="authorities" 
           optionLabel="name" 
           [(ngModel)]="searchParams.profile" 
@@ -70,6 +72,7 @@
       
       <div class="ui-g-4 ui-md-4 ui-sm-12">
         <p-dropdown 
+          [filter]="true"
           [options]="teams" 
           optionLabel="nome" 
           [autoWidth]="false" 
