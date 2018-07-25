@@ -304,6 +304,11 @@
                     </p-calendar>
                     <label>Data da homologação (do software) {{analise.baselineImediatamente ? " *" : null}}</label>
                   </span>
+
+                  <div *ngIf="analise.baselineImediatamente && !(analise.dataHomologacao)" class="ui-message ui-messages-error">
+                      Campo Obrigatório!
+                  </div>
+
                 </div>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">

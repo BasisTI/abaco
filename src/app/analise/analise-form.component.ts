@@ -90,6 +90,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     this.habilitarCamposIniciais();
     this.popularListaOrganizacao();
     this.popularAnaliseCarregada();
+    this.popularGarantia();
   }
 
   /**
@@ -114,6 +115,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.analise.esforcoFases = [];
       }
     });
+  }
+
+  popularGarantia(){
+    this.diasGarantia = this.analise.contrato.diasDeGarantia;
   }
 
 
