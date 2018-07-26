@@ -260,6 +260,36 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     this.atualizarFuncoesTransacao();
   }
 
+  clone(): Analise {
+    return new Analise(
+      this.id,
+      this.numeroOs,
+      this.metodoContagem,
+      this.fatorAjuste,
+      this.valorAjuste,
+      this.pfTotal,
+      this.adjustPFTotal,
+      this.escopo,
+      this.fronteiras,
+      this.documentacao,
+      this.tipoAnalise,
+      this.propositoContagem,
+      this.sistema,
+      this.funcaoDados,
+      this.funcaoTransacaos,
+      this.organizacao,
+      this.contrato,
+      this.esforcoFases,
+      this.observacoes,
+      this.baselineImediatamente,
+      this.dataHomologacao,
+      this.identificadorAnalise,
+      this.equipeResponsavel,
+      this.createdOn,
+      this.updatedOn,
+      this.bloqueiaAnalise,);
+  }
+
 }
 
 class AnaliseCopyFromJSON {
@@ -360,5 +390,4 @@ class AnaliseCopyFromJSON {
     this._analiseConverted.esforcoFases = this._json.esforcoFases
       .map(efJSON => new EsforcoFase().copyFromJSON(efJSON));
   }
-
 }

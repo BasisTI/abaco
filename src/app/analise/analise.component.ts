@@ -26,7 +26,7 @@ export class AnaliseComponent implements OnInit {
 
   rowsPerPageOptions: number[] = [5, 10, 20, 50, 100];
 
-  analiseSelecionada: Analise;
+  analiseSelecionada; analiseReadyToClone: Analise;
 
   block: boolean;
 
@@ -50,6 +50,7 @@ export class AnaliseComponent implements OnInit {
     this.block = true;
     this.unblock = true;
     this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
+      this.analiseReadyToClone = new Analise().copyFromJSON(event.data);
       this.block = true;
       this.unblock = true;
       this.analiseSelecionada = event.data;
@@ -59,6 +60,7 @@ export class AnaliseComponent implements OnInit {
     });
     this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
       this.analiseSelecionada = undefined;
+      this.analiseReadyToClone = undefined;
     });
   }
 
@@ -86,9 +88,28 @@ export class AnaliseComponent implements OnInit {
       case 'relatorioBrowserDetalhado' :
         this.geraRelatorioPdfDetalhadoBrowser(event.selection);
         break;
+      case 'clone' :
+        this.clonar(this.analiseReadyToClone);
+        break;
     }
   }
 
+  public clonar(analise: Analise){
+    const analiseClonada = analise.clone();
+    this.confirmationService.confirm({
+      message: MessageUtil.CONFIRMAR_CLONE + ' ' + this.analiseSelecionada.identificadorAnalise + '?',
+      accept: () => {
+        analiseClonada.id = undefined;
+        analiseClonada.identificadorAnalise += " - CÓPIA";
+        analiseClonada.bloqueiaAnalise = false;
+        this.analiseService.create(analiseClonada).subscribe(() => {
+          this.pageNotificationService.addSuccessMsg(`Análise '${this.analiseSelecionada.identificadorAnalise}' clonada com sucesso!`);
+          this.recarregarDataTable();
+        });
+      }
+    });
+    
+  }
   /**
    *
    */
@@ -164,13 +185,12 @@ export class AnaliseComponent implements OnInit {
     this.confirmationService.confirm({
       message: MessageUtil.CONFIRMAR_BLOQUEIO + ' ' + this.analiseSelecionada.identificadorAnalise + '?',
       accept: () => {
-        this.blockUI.start();
-        this.analiseService.block(this.analiseSelecionada);
-          this.blockUI.stop();
+        this.analiseService.block(this.analiseSelecionada).subscribe(() => {
           this.pageNotificationService.addBlockMsgWithName(this.analiseSelecionada.identificadorAnalise);
-          setTimeout(() => this.recarregarDataTable(), 2000);
+          this.recarregarDataTable();
           this.block = true;
           this.unblock = true;
+        })
       }
     });
   }
@@ -183,13 +203,12 @@ export class AnaliseComponent implements OnInit {
     this.confirmationService.confirm({
       message: MessageUtil.CONFIRMAR_DESBLOQUEIO + ' ' + this.analiseSelecionada.identificadorAnalise + '?',
       accept: () => {
-        this.blockUI.start();
-        this.analiseService.unblock(this.analiseSelecionada);
-          this.blockUI.stop();
-          this.pageNotificationService.addBlockMsgWithName(this.analiseSelecionada.identificadorAnalise);
-          setTimeout(() => this.recarregarDataTable(), 2000);
+        this.analiseService.unblock(this.analiseSelecionada).subscribe(() => {
+          this.pageNotificationService.addUnblockMsgWithName(this.analiseSelecionada.identificadorAnalise);
+          this.recarregarDataTable();
           this.block = true;
           this.unblock = true;
+        });
       }
     });
   }
