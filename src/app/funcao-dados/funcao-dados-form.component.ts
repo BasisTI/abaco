@@ -29,7 +29,13 @@ import {Manual} from '../manual';
 })
 export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
-    isEdit; nomeInvalido; moduloInvalido; submoduloInvalido; classInvalida; impactoInvalido: boolean;
+    isEdit;
+    nomeInvalido;
+    moduloInvalido;
+    submoduloInvalido;
+    classInvalida;
+    impactoInvalido: boolean;
+    hideElementTDTR: boolean;
 
     dersChips: DerChipItem[];
 
@@ -105,6 +111,18 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.subscribeToAnaliseCarregada();
         this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
         this.subscribeToSistemaSelecionado();
+        // this.disableTRDER();
+    }
+
+    disableTRDER() {
+        // console.log("disableTRDER " ,this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA')
+        // this.hideElementTDTR = this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA';
+
+        if(this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA' || this.analiseSharedDataService.analise.metodoContagem === 'ESTIMADA' ){
+            this.hideElementTDTR = true;
+        }else{
+            this.hideElementTDTR = false;
+        }
     }
 
     private subscribeToAnaliseCarregada() {
@@ -212,9 +230,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     get labelBotaoAdicionar() {
         return !this.isEdit ? 'Adicionar' : 'Alterar';
     }
+
     nomeValido() {
         this.nomeInvalido = false;
     }
+
     impactoValido() {
         this.impactoInvalido = false;
     }
@@ -222,11 +242,18 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     classValida() {
         this.classInvalida = false;
     }
+
     adicionar() {
-        if (this.currentFuncaoDados.impacto === undefined) {this.impactoInvalido = true}
-        if (this.currentFuncaoDados.name === undefined) {this.nomeInvalido = true}
-        if (this.currentFuncaoDados.tipo === undefined) {this.classInvalida = true}
-        
+        if (this.currentFuncaoDados.impacto === undefined) {
+            this.impactoInvalido = true;
+        }
+        if (this.currentFuncaoDados.name === undefined) {
+            this.nomeInvalido = true;
+        }
+        if (this.currentFuncaoDados.tipo === undefined) {
+            this.classInvalida = true;
+        }
+
         if (this.currentFuncaoDados.tipo === undefined
             || this.currentFuncaoDados.impacto === undefined
             || this.currentFuncaoDados.name === undefined) {
@@ -360,7 +387,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 //    }
 
     private carregarReferenciavel(referenciaveis: AnaliseReferenciavel[],
-        strValues: string[]): DerChipItem[] {
+                                  strValues: string[]): DerChipItem[] {
         if (referenciaveis && referenciaveis.length > 0) {
             // situacao para analises novas e editadas
             return DerChipConverter.converterReferenciaveis(referenciaveis);
@@ -431,6 +458,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     openDialogNovo() {
+        this.disableTRDER();
         this.limparDadosDaTelaNaEdicaoCancelada();
         this.showDialogNovo = true;
     }
