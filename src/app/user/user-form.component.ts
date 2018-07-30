@@ -105,11 +105,19 @@ export class UserFormComponent implements OnInit, OnDestroy {
   // Em oposição a uma solução mais simples porém hardcoded.
   private populateUserAuthoritiesWithArtificialId() {
     this.user.authorities.forEach(authority => {
-      this.authorities.forEach(userAuthority => {
-        if (authority.name === userAuthority.name) {
-          userAuthority.artificialId = authority.artificialId;
+      switch (authority.name){
+        case "ROLE_ADMIN": {
+          authority.description = "Administrador";
+          authority.artificialId = 0;
+          break;
         }
-      });
+
+        case "ROLE_USER": {
+          authority.description = "Usuário";
+          authority.artificialId = 1;
+          break;
+        }
+      }
     });
   }
 

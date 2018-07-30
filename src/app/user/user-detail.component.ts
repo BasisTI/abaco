@@ -28,7 +28,22 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   load(id) {
     this.userService.find(id).subscribe((user) => {
       this.user = user;
+      this.user.authorities.forEach((authority, index) => {
+        authority.artificialId = index;
+        switch (index){
+          case 0: {
+            authority.description = "Administrador";
+            break;
+          }
+  
+          case 1: {
+            authority.description = "Usuário";
+            break;
+          }
+        }
+      });
     });
+    
   }
 
   ngOnDestroy() {
