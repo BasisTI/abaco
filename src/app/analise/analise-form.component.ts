@@ -95,6 +95,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.disableFuncaoTrasacao = this.analise.metodoContagem !== 'INDICATIVA';
     }
 
+
     /**
      * Método responsável por popular o objeto analise carregada.
      */
@@ -112,6 +113,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                     this.dataHomol.setFullYear(parseInt(this.dataAnalise.dataHomologacao.substring(0, 4)));
                     this.analise.dataHomologacao = this.dataHomol;
                     this.diasGarantia = this.analise.contrato.diasDeGarantia;
+                    this.save();
                 });
             } else {
                 this.analise.esforcoFases = [];
@@ -120,7 +122,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     popularGarantia() {
-        this.diasGarantia = this.analise.contrato.diasDeGarantia;
+        this.diasGarantia !== undefined ? this.diasGarantia = this.analise.contrato.diasDeGarantia : null;
     }
 
 
@@ -154,7 +156,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.contratos = org.contracts;
         this.sistemaService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
             this.sistemas = res.json;
-            console.log(res.json);
         });
         this.selecionarEquipePorOrganizacao(org);
     }

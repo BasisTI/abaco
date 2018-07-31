@@ -8,6 +8,7 @@ import { Analise } from './analise.model';
 import { AnaliseService } from './analise.service';
 import { ElasticQuery, PageNotificationService } from '../shared';
 import { MessageUtil } from '../util/message.util';
+import { FuncaoDados } from '../funcao-dados';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -102,9 +103,32 @@ export class AnaliseComponent implements OnInit {
         analiseClonada.id = undefined;
         analiseClonada.identificadorAnalise += " - CÓPIA";
         analiseClonada.bloqueiaAnalise = false;
-        this.analiseService.create(analiseClonada).subscribe(() => {
+
+        analiseClonada.funcaoDados.forEach(FuncaoDados => { 
+          FuncaoDados.id = undefined;
+          FuncaoDados.ders.forEach(Ders => {
+            Ders.id = undefined;
+          });
+          FuncaoDados.rlrs.forEach(rlrs => {
+            rlrs.id = undefined;
+          });
+        });
+
+        analiseClonada.funcaoTransacaos.forEach(funcaoTransacaos => {
+          funcaoTransacaos.id = undefined;
+          funcaoTransacaos.ders.forEach(ders => {
+            ders.id = undefined;
+          });
+          funcaoTransacaos.alrs.forEach(alrs => {
+            alrs.id = undefined;
+          });
+        });
+
+        this.analiseService.create(analiseClonada).subscribe((res) => {
+          
           this.pageNotificationService.addSuccessMsg(`Análise '${this.analiseSelecionada.identificadorAnalise}' clonada com sucesso!`);
           this.recarregarDataTable();
+          this.router.navigate(['/analise', res.id, 'edit']);
         });
       }
     });
@@ -114,6 +138,10 @@ export class AnaliseComponent implements OnInit {
    *
    */
   public confirmDelete(analise: Analise) {
+    if(this.analiseSelecionada.bloqueiaAnalise){
+      this.pageNotificationService.addErrorMsg('Você não pode excluir uma análise bloqueada!');
+      return;
+    }
     this.confirmationService.confirm({
       message: MessageUtil.CONFIRMAR_EXCLUSAO + ' ' + analise.identificadorAnalise + '?',
       accept: () => {
