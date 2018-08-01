@@ -112,13 +112,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
         this.subscribeToSistemaSelecionado();
         // this.disableTRDER();
+
     }
 
     disableTRDER() {
-        // console.log("disableTRDER " ,this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA')
-        // this.hideElementTDTR = this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA';
 
-        if(this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA' || this.analiseSharedDataService.analise.metodoContagem === 'ESTIMADA' ){
+        if (this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA' || this.analiseSharedDataService.analise.metodoContagem === 'ESTIMADA' ){
             this.hideElementTDTR = true;
         }else{
             this.hideElementTDTR = false;
@@ -260,13 +259,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
             return;
         }
+
         this.adicionarOuSalvar();
         this.salvarAnalise();
     }
 
     salvarAnalise() {
-        console.log(this.analise);
         this.analiseService.update(this.analise);
+
         this.showDialogNovo = false;
     }
 

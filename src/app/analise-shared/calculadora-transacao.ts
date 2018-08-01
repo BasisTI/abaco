@@ -75,9 +75,11 @@ export class CalculadoraTransacao {
 
   // FIXME aplicar fator que vem da aba geral também
   private static aplicarFator() {
+      console.log('fatorAjuste a ', this._fatorAjuste);
+      console.log('asdfasdfasdfadsf a ', this.funcaoTransacao.quantidade);
     this.funcaoTransacaoCalculada.grossPF = this.funcaoTransacaoCalculada.pf;
     this.funcaoTransacaoCalculada.pf = CalculadoraFator.aplicarFator(
-      this.funcaoTransacaoCalculada.pf, this._fatorAjuste
+      this.funcaoTransacaoCalculada.pf, this._fatorAjuste, this.funcaoTransacao.quantidade
     );
   }
 
