@@ -28,4 +28,13 @@
     class="ui-button-danger"
     icon="delete">
   </basis-datatable-button>
+
+  <basis-datatable-button
+    *ngIf="!disableClone"
+    [tooltip]="selectedRow != null ? 'Clonar' : 'Escolha um registro para clonar.'" 
+    [disabled]="selectedRow == null"
+    (click)="onClick(cloneEventName, $event)"
+    class="ui-button-dark"
+    icon="content-copy">
+    </basis-datatable-button>
 </div>
