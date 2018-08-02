@@ -266,7 +266,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.atualizaResumo();
             this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
             //            this.limparDadosDaTelaNaEdicaoCancelada();
-            this.showDialogNovo = false;
+            this.showDialogEdit = false;
             //            this.resetarEstadoPosSalvar();
         }
     }
