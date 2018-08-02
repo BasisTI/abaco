@@ -162,8 +162,7 @@
                 </app-analise-modulo-funcionalidade>
 
                 <div class="ui-g">
-
-                    <div class="ui-g-4 ui-md-4 ui-sm-12">
+                    <div class="ui-g-3 ui-md-6 ui-sm-12">
                         <label>Classificação *</label>
                         <p-dropdown
                                 [filter]="true"
@@ -180,7 +179,7 @@
                         </div>
                     </div>
 
-                    <div class="ui-g-3 ui-md-3 ui-sm-12">
+                    <div class="ui-g-3 ui-md-6 ui-sm-12">
                         <label>Impacto *</label>
                         <p-dropdown
                                 [filter]="true"
@@ -197,7 +196,9 @@
                         </div>
                     </div>
 
-                    <div class="ui-g-5 ui-md-5 ui-sm-12">
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g-3 ui-md-6 ui-sm-12">
                         <label>Deflator</label>
                         <p-dropdown
                                 [filter]="true"
@@ -208,6 +209,16 @@
                                 name="fatorAjuste"
                                 [autoWidth]="false">
                         </p-dropdown>
+                    </div>
+
+
+                    <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
+                        <label>Quantidade</label>
+                        <input type="number" class="ui-inputtext" min="0"
+                                [(ngModel)]="currentFuncaoDados.quantidade">
+
+
+
                     </div>
 
                 </div>

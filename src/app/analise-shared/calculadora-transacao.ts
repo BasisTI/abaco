@@ -77,7 +77,7 @@ export class CalculadoraTransacao {
   private static aplicarFator() {
     this.funcaoTransacaoCalculada.grossPF = this.funcaoTransacaoCalculada.pf;
     this.funcaoTransacaoCalculada.pf = CalculadoraFator.aplicarFator(
-      this.funcaoTransacaoCalculada.pf, this._fatorAjuste
+      this.funcaoTransacaoCalculada.pf, this._fatorAjuste, this.funcaoTransacao.quantidade
     );
   }
 
