@@ -28,6 +28,9 @@ export class MemoryDatatableComponent implements AfterViewInit {
   @Input()
   deleteEventName = 'delete';
 
+  @Input()
+  cloneEventName = 'clone';
+
   selectedRow: any;
 
   @Input()
@@ -35,6 +38,9 @@ export class MemoryDatatableComponent implements AfterViewInit {
 
   @Input()
   disableDelete: boolean;
+
+  @Input()
+  disableClone: boolean;
 
   @Input()
   responsive = false;

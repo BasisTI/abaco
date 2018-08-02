@@ -138,7 +138,7 @@
             <!-- Inicio Dialog Função de transação -->
             <p-dialog 
                 id="dialog-funcao-transacao"
-                header="{{ header }}" 
+                header="Adicionar Função de Transação" 
                 [(visible)]="showDialogNovo" 
                 [contentStyle]="{'height': '840px'}" 
                 [width]="900">
@@ -169,7 +169,6 @@
                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
                     <label>Classificação *</label>
                     <p-dropdown
-                        [filter]="true"
                         [options]="classificacoes"
                         [(ngModel)]="currentFuncaoTransacao.tipo"
                         placeholder="Selecione uma Classificação"
@@ -187,7 +186,6 @@
             <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
                 <label>Impacto *</label>
                 <p-dropdown
-                    [filter]="true"
                     required
                     [options]="impacto"
                     [(ngModel)]="currentFuncaoTransacao.impacto"
@@ -205,7 +203,6 @@
         <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
             <label>Deflator</label>
             <p-dropdown 
-                [filter]="true"
                 [options]="fatoresAjuste"
                 [(ngModel)]="currentFuncaoTransacao.fatorAjuste" 
                 [disabled]="!isContratoSelected()"
@@ -259,9 +256,271 @@
 
             <div class="ui-g-3 ui-md-3 ui-sm-12">
                 <app-blue-button 
-                    [buttonLabel]="labelBotaoAdicionar"
+                    buttonLabel="Adicionar"
                     buttonIcon="ui-icon-add" 
                     (click)="adicionar()">
+                </app-blue-button>
+            </div>
+        </div>
+
+    </p-dialog>
+    <!-- Fim Dialog Função de transação -->
+
+    
+            <!-- Inicio Alterar Função de transação -->
+            <p-dialog 
+                header="Alterar Função de Transação" 
+                [(visible)]="showDialogEdit" 
+                [contentStyle]="{'height': '840px'}" 
+                [width]="900">
+
+                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-top: 25px">
+                    <span class="md-inputfield">
+                        <input 
+                            type="text" 
+                            name="nomeFuncaoTransacao" 
+                            [(ngModel)]="currentFuncaoTransacao.name" 
+                            pInputText/>
+                        <label>Nome do Processo Elementar *</label>
+                        <div *ngIf="nomeInvalido" 
+                            class="ui-message ui-messages-error">
+                            Campo obrigatório.
+                        </div>
+                    </span>
+                </div>
+
+                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-top: 25px">
+                    <app-analise-modulo-funcionalidade
+                        [isFuncaoDados]="false"
+                        (moduloSelectedEvent)="moduloSelected($event)"
+                        (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
+                    </app-analise-modulo-funcionalidade>
+                </div>
+
+                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
+                    <label>Classificação *</label>
+                    <p-dropdown
+                        [options]="classificacoes"
+                        [(ngModel)]="currentFuncaoTransacao.tipo"
+                        placeholder="Selecione uma Classificação"
+                        name="classificacao" 
+                        [autoWidth]="false"
+                        required
+                        (onChange)="classValida()">
+                </p-dropdown>
+                <div *ngIf="classInvalida" 
+                    class="ui-message ui-messages-error">
+                    Campo obrigatório.
+                </div>
+            </div>
+
+            <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
+                <label>Impacto *</label>
+                <p-dropdown
+                    required
+                    [options]="impacto"
+                    [(ngModel)]="currentFuncaoTransacao.impacto"
+                    placeholder="Selecione..."
+                    name="impacto"
+                    (onChange)="impactoValido()"
+                    [autoWidth]="false">
+            </p-dropdown>
+            <div *ngIf="impactoInvalido" 
+                class="ui-message ui-messages-error">
+                Campo obrigatório.
+            </div>
+        </div>
+
+        <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
+            <label>Deflator</label>
+            <p-dropdown 
+                [options]="fatoresAjuste"
+                [(ngModel)]="currentFuncaoTransacao.fatorAjuste" 
+                [disabled]="!isContratoSelected()"
+                placeholder="Selecione..."
+                name="fatorAjuste" 
+                [autoWidth]="false">
+            </p-dropdown>
+        </div>
+
+        <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="!isEstimada">
+            <h2>FTR (AR)</h2>
+            <app-analise-der-chips 
+                [(values)]="alrsChips"
+                [relacionarDers]="true"
+                (dersReferenciadosEvent)="dersReferenciados($event)">
+            </app-analise-der-chips>
+        </div>
+
+        <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="!isEstimada">
+            <h2>DER (TD)</h2>
+            <app-analise-der-chips [(values)]="dersChips"></app-analise-der-chips>
+        </div>
+
+        <div class="ui-g-12 ui-md-12 ui-sm-12">
+            <label>Fundamentação</label>
+            <span class="md-inputfield">
+                <textarea 
+                    [rows]="3" 
+                    [cols]="180" 
+                    pInputTextarea name="funcaoDadosSustentacao" 
+                    [(ngModel)]="currentFuncaoTransacao.sustantation">
+                </textarea>
+            </span>
+        </div>
+
+        <div class="ui-g ui-md-12" style="justify-content: flex-end">
+
+            <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="isEdit">
+                <app-white-button 
+                    buttonLabel="Cancelar" 
+                    (click)="cancelarEdicao()">
+                </app-white-button>
+            </div>
+
+            <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
+                <app-white-button 
+                    buttonLabel="Fechar"
+                    (click)="cancelar()">
+                </app-white-button>
+            </div>
+
+            <div class="ui-g-3 ui-md-3 ui-sm-12">
+                <app-blue-button 
+                    buttonLabel="Alterar"
+                    buttonIcon="ui-icon-add" 
+                    (click)="adicionar()">
+                </app-blue-button>
+            </div>
+        </div>
+
+    </p-dialog>
+    <!-- Fim Alterar Função de transação -->
+
+
+            <!-- Inicio Clonar Função de transação -->
+            <p-dialog 
+                header="Clonar Função de Transação" 
+                [(visible)]="showDialogClone" 
+                [contentStyle]="{'height': '840px'}" 
+                [width]="900">
+
+                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-top: 25px">
+                    <span class="md-inputfield">
+                        <input 
+                            type="text" 
+                            name="nomeFuncaoTransacao" 
+                            [(ngModel)]="currentFuncaoTransacao.name" 
+                            pInputText/>
+                        <label>Nome do Processo Elementar *</label>
+                        <div *ngIf="nomeInvalido" 
+                            class="ui-message ui-messages-error">
+                            Campo obrigatório.
+                        </div>
+                    </span>
+                </div>
+
+                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-top: 25px">
+                    <app-analise-modulo-funcionalidade
+                        [isFuncaoDados]="false"
+                        (moduloSelectedEvent)="moduloSelected($event)"
+                        (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
+                    </app-analise-modulo-funcionalidade>
+                </div>
+
+                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
+                    <label>Classificação *</label>
+                    <p-dropdown
+                        [options]="classificacoes"
+                        [(ngModel)]="currentFuncaoTransacao.tipo"
+                        placeholder="Selecione uma Classificação"
+                        name="classificacao" 
+                        [autoWidth]="false"
+                        required
+                        (onChange)="classValida()">
+                </p-dropdown>
+                <div *ngIf="classInvalida" 
+                    class="ui-message ui-messages-error">
+                    Campo obrigatório.
+                </div>
+            </div>
+
+            <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
+                <label>Impacto *</label>
+                <p-dropdown
+                    required
+                    [options]="impacto"
+                    [(ngModel)]="currentFuncaoTransacao.impacto"
+                    placeholder="Selecione..."
+                    name="impacto"
+                    (onChange)="impactoValido()"
+                    [autoWidth]="false">
+            </p-dropdown>
+            <div *ngIf="impactoInvalido" 
+                class="ui-message ui-messages-error">
+                Campo obrigatório.
+            </div>
+        </div>
+
+        <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-top: 25px">
+            <label>Deflator</label>
+            <p-dropdown 
+                [options]="fatoresAjuste"
+                [(ngModel)]="currentFuncaoTransacao.fatorAjuste" 
+                [disabled]="!isContratoSelected()"
+                placeholder="Selecione..."
+                name="fatorAjuste" 
+                [autoWidth]="false">
+            </p-dropdown>
+        </div>
+
+        <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="!isEstimada">
+            <h2>FTR (AR)</h2>
+            <app-analise-der-chips 
+                [(values)]="alrsChips"
+                [relacionarDers]="true"
+                (dersReferenciadosEvent)="dersReferenciados($event)">
+            </app-analise-der-chips>
+        </div>
+
+        <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="!isEstimada">
+            <h2>DER (TD)</h2>
+            <app-analise-der-chips [(values)]="dersChips"></app-analise-der-chips>
+        </div>
+
+        <div class="ui-g-12 ui-md-12 ui-sm-12">
+            <label>Fundamentação</label>
+            <span class="md-inputfield">
+                <textarea 
+                    [rows]="3" 
+                    [cols]="180" 
+                    pInputTextarea name="funcaoDadosSustentacao" 
+                    [(ngModel)]="currentFuncaoTransacao.sustantation">
+                </textarea>
+            </span>
+        </div>
+
+        <div class="ui-g ui-md-12" style="justify-content: flex-end">
+
+            <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="isEdit">
+                <app-white-button 
+                    buttonLabel="Cancelar" 
+                    (click)="cancelarEdicao()">
+                </app-white-button>
+            </div>
+
+            <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
+                <app-white-button 
+                    buttonLabel="Fechar"
+                    (click)="cancelar()">
+                </app-white-button>
+            </div>
+
+            <div class="ui-g-3 ui-md-3 ui-sm-12">
+                <app-blue-button 
+                    buttonLabel="Clonar"
+                    buttonIcon="ui-icon-add" 
+                    (click)="clonar()">
                 </app-blue-button>
             </div>
         </div>
@@ -272,3 +531,4 @@
 </div>
 </div>
 </div>
+

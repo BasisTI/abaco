@@ -36,6 +36,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     classInvalida;
     impactoInvalido: boolean;
     hideElementTDTR: boolean;
+    hideShowQuantidade: boolean;
 
     dersChips: DerChipItem[];
 
@@ -50,6 +51,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     colunasAMostrar = [];
 
     showDialogNovo = false;
+
+    showDialogClone = false;
+
+    showDialogEdit = false;
 
     private nomeDasFuncoesDoSistema: string[] = [];
 
@@ -106,21 +111,21 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.hideShowQuantidade = true;
         this.isEdit = false;
+        this.hideShowQuantidade = true;
         this.currentFuncaoDados = new FuncaoDados();
         this.subscribeToAnaliseCarregada();
         this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
         this.subscribeToSistemaSelecionado();
-        // this.disableTRDER();
+
     }
 
     disableTRDER() {
-        // console.log("disableTRDER " ,this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA')
-        // this.hideElementTDTR = this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA';
 
-        if(this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA' || this.analiseSharedDataService.analise.metodoContagem === 'ESTIMADA' ){
+        if (this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA' || this.analiseSharedDataService.analise.metodoContagem === 'ESTIMADA') {
             this.hideElementTDTR = true;
-        }else{
+        } else {
             this.hideElementTDTR = false;
         }
     }
@@ -163,7 +168,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     get header(): string {
         return !this.isEdit ? 'Adicionar Função de Dados' : 'Alterar Função de Dados';
     }
-
+   
     get currentFuncaoDados(): FuncaoDados {
         return this.analiseSharedDataService.currentFuncaoDados;
     }
@@ -195,10 +200,18 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     isContratoSelected(): boolean {
+
         // FIXME p-dropdown requer 2 clicks quando o [options] chama um método get()
         const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
         if (isContratoSelected && this.fatoresAjuste.length === 0) {
+
             this.inicializaFatoresAjuste(this.manual);
+        }
+
+        if (this.currentFuncaoDados.fatorAjuste === undefined) {
+            this.hideShowQuantidade = true;
+        }else{
+            this.hideShowQuantidade = false;
         }
 
         return isContratoSelected;
@@ -260,19 +273,45 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
             return;
         }
+
         this.adicionarOuSalvar();
         this.salvarAnalise();
     }
 
+    clonar() {
+        if (this.currentFuncaoDados.impacto === undefined) {
+            this.impactoInvalido = true;
+        }
+        if (this.currentFuncaoDados.name === undefined) {
+            this.nomeInvalido = true;
+        }
+        if (this.currentFuncaoDados.tipo === undefined) {
+            this.classInvalida = true;
+        }
+
+        if (this.currentFuncaoDados.tipo === undefined
+            || this.currentFuncaoDados.impacto === undefined
+            || this.currentFuncaoDados.name === undefined) {
+            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            return;
+        }
+        this.adicionarClone();
+        this.salvarAnalise();
+    }
+
     salvarAnalise() {
-        console.log(this.analise);
         this.analiseService.update(this.analise);
-        this.showDialogNovo = false;
     }
 
     private adicionarOuSalvar() {
         this.desconverterChips();
         this.doAdicionarOuSalvar();
+        this.isEdit = false;
+    }
+
+    private adicionarClone() {
+        this.desconverterChips();
+        this.doClonar();
         this.isEdit = false;
     }
 
@@ -296,6 +335,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         // TODO temporal coupling
         this.analise.updateFuncaoDados(funcaoDadosCalculada);
         this.atualizaResumo();
+        this.showDialogEdit = false;
         this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
         this.resetarEstadoPosSalvar();
     }
@@ -321,6 +361,18 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         // TODO temporal coupling entre 1-add() e 2-atualizaResumo(). 2 tem que ser chamado depois
         this.analise.addFuncaoDados(funcaoDadosCalculada);
         this.atualizaResumo();
+        this.showDialogNovo = false;
+        this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
+        this.resetarEstadoPosSalvar();
+    }
+
+    private doClonar() {
+        const funcaoDadosCalculada = Calculadora.calcular(
+            this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
+        // TODO temporal coupling entre 1-add() e 2-atualizaResumo(). 2 tem que ser chamado depois
+        this.analise.addFuncaoDados(funcaoDadosCalculada);
+        this.atualizaResumo();
+        this.showDialogClone = false;
         this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
         this.resetarEstadoPosSalvar();
     }
@@ -346,20 +398,35 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         const funcaoDadosSelecionada: FuncaoDados = event.selection.clone();
         switch (event.button) {
             case 'edit':
+                this.disableTRDER();
                 this.isEdit = true;
-                this.showDialogNovo = true;
+                this.showDialogEdit = true;
                 this.prepararParaEdicao(funcaoDadosSelecionada);
                 break;
             case 'delete':
                 this.confirmDelete(funcaoDadosSelecionada);
+                break;
+            case 'clone':
+                this.disableTRDER();
+                this.isEdit = true;
+                this.showDialogClone = true;
+                this.prepararParaClonar(funcaoDadosSelecionada);
+                this.currentFuncaoDados.id = undefined;
+                this.currentFuncaoDados.artificialId = undefined;
         }
     }
 
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
-        this.scrollParaInicioDaAba();
         this.carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada);
         this.pageNotificationService.addInfoMsg(`Alterando Função de Dados '${funcaoDadosSelecionada.name}'`);
+    }
+
+    private prepararParaClonar(funcaoDadosSelecionada: FuncaoDados) {
+        this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
+        this.currentFuncaoDados.name= this.currentFuncaoDados.name+' - Cópia';
+        this.carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada);
+        this.pageNotificationService.addInfoMsg(`Clonando Função de Dados '${funcaoDadosSelecionada.name}'`);
     }
 
     private scrollParaInicioDaAba() {
@@ -369,11 +436,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         this.analiseSharedDataService.funcaoAnaliseCarregada();
 
-        if (funcaoDadosSelecionada.fatorAjuste !== undefined && !funcaoDadosSelecionada.fatorAjuste) {
-            this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
-        }
-
-//        this.carregarDerERlr(funcaoDadosSelecionada);
+        this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
+        
+        this.carregarDerERlr(funcaoDadosSelecionada);
     }
 
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
@@ -381,10 +446,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, {value: {'id': funcaoSelecionada.fatorAjuste.id}}).value;
     }
 
-//    private carregarDerERlr(fd: FuncaoDados) {
-//        this.dersChips = this.carregarReferenciavel(fd.ders, fd.derValues);
-//        this.rlrsChips = this.carregarReferenciavel(fd.rlrs, fd.rlrValues);
-//    }
+   private carregarDerERlr(fd: FuncaoDados) {
+       this.dersChips = this.carregarReferenciavel(fd.ders, fd.derValues);
+       this.rlrsChips = this.carregarReferenciavel(fd.rlrs, fd.rlrValues);
+   }
 
     private carregarReferenciavel(referenciaveis: AnaliseReferenciavel[],
                                   strValues: string[]): DerChipItem[] {
@@ -398,6 +463,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     cancelar() {
         this.showDialogNovo = false;
+        this.showDialogClone = false;
+        this.showDialogEdit = false;
         this.limparDadosDaTelaNaEdicaoCancelada();
     }
 
@@ -407,14 +474,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             accept: () => {
                 this.analiseSharedDataService.funcaoAnaliseDescarregada();
                 this.isEdit = false;
-                this.showDialogNovo = false;
+                this.showDialogEdit = false;
                 this.pageNotificationService.addInfoMsg('Alteração cancelada.');
             }
         });
     }
 
     cancelarEdicao() {
-        this.showDialogNovo = false;
+        this.showDialogEdit = false;
         this.analiseSharedDataService.funcaoAnaliseDescarregada();
         this.isEdit = false;
         this.limparDadosDaTelaNaEdicaoCancelada();
@@ -458,6 +525,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     openDialogNovo() {
+        this.hideShowQuantidade = true;
         this.disableTRDER();
         this.limparDadosDaTelaNaEdicaoCancelada();
         this.showDialogNovo = true;
