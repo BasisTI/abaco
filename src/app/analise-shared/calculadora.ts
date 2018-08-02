@@ -59,10 +59,8 @@ export class Calculadora {
         this.funcaoDadosCalculada.rlr = '0';
         this.funcaoDadosCalculada.complexidade = Complexidade.SEM;
 
-        console.log("this.funcaoDados.quantidade ",this.funcaoDados.quantidade);
 
-        if (this.funcaoDados.quantidade === undefined) {
-
+        if (this.funcaoDados.quantidade === undefined || this.funcaoDados.quantidade === 0) {
             this.definePFIndicativaDeAcordoComGrupoDadosLogicos();
         } else {
             this.definePFIndicativaDeAcordoComAQuantidade();

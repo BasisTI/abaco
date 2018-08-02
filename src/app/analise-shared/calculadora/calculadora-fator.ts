@@ -9,7 +9,7 @@ export class CalculadoraFator {
             return pf * fatorAjuste.fator;
         } else { // UNITÁRIO
 
-            const retorno: number = (quantidade === undefined) ? fatorAjuste.fator : fatorAjuste.fator * quantidade;
+            const retorno: number = (quantidade === undefined || quantidade === 0 ) ? fatorAjuste.fator : fatorAjuste.fator * quantidade;
             return retorno;
         }
     }

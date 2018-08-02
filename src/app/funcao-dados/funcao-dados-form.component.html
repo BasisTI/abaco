@@ -212,9 +212,9 @@
                     </div>
 
 
-                    <div class="ui-g-3 ui-md-6 ui-sm-12">
+                    <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
                         <label>Quantidade</label>
-                        <input type="number" class="ui-inputtext"
+                        <input type="number" class="ui-inputtext" min="0"
                                 [(ngModel)]="currentFuncaoDados.quantidade">
 
 

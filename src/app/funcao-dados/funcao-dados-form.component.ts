@@ -36,6 +36,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     classInvalida;
     impactoInvalido: boolean;
     hideElementTDTR: boolean;
+    hideShowQuantidade: boolean;
 
     dersChips: DerChipItem[];
 
@@ -106,20 +107,21 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.hideShowQuantidade = true;
         this.isEdit = false;
+        this.hideShowQuantidade = true;
         this.currentFuncaoDados = new FuncaoDados();
         this.subscribeToAnaliseCarregada();
         this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
         this.subscribeToSistemaSelecionado();
-        // this.disableTRDER();
 
     }
 
     disableTRDER() {
 
-        if (this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA' || this.analiseSharedDataService.analise.metodoContagem === 'ESTIMADA' ){
+        if (this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA' || this.analiseSharedDataService.analise.metodoContagem === 'ESTIMADA') {
             this.hideElementTDTR = true;
-        }else{
+        } else {
             this.hideElementTDTR = false;
         }
     }
@@ -194,10 +196,18 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     isContratoSelected(): boolean {
+
         // FIXME p-dropdown requer 2 clicks quando o [options] chama um método get()
         const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
         if (isContratoSelected && this.fatoresAjuste.length === 0) {
+
             this.inicializaFatoresAjuste(this.manual);
+        }
+
+        if (this.currentFuncaoDados.fatorAjuste === undefined) {
+            this.hideShowQuantidade = true;
+        }else{
+            this.hideShowQuantidade = false;
         }
 
         return isContratoSelected;
@@ -362,6 +372,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.pageNotificationService.addInfoMsg(`Alterando Função de Dados '${funcaoDadosSelecionada.name}'`);
     }
 
+
     private scrollParaInicioDaAba() {
         window.scrollTo(0, 60);
     }
@@ -458,6 +469,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     openDialogNovo() {
+        this.hideShowQuantidade = true;
         this.disableTRDER();
         this.limparDadosDaTelaNaEdicaoCancelada();
         this.showDialogNovo = true;
