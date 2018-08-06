@@ -58,6 +58,13 @@ public class FuncaoDadosResource {
     @PostMapping("/funcao-dados")
     @Timed
     public ResponseEntity<FuncaoDados> createFuncaoDados(@RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
+
+        FuncaoDados f = funcaoDadosRepository.findName(2101l,funcaoDados.getName());
+
+        log.debug("FuncaoDados : {}", f.toString());
+
+
+
         log.debug("REST request to save FuncaoDados : {}", funcaoDados);
         if (funcaoDados.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);

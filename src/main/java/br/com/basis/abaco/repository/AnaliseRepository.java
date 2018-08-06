@@ -2,6 +2,7 @@ package br.com.basis.abaco.repository;
 
 import br.com.basis.abaco.domain.Analise;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
@@ -11,4 +12,5 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 public interface AnaliseRepository extends JpaRepository<Analise,Long> {
     Optional<Analise> findOneById (Long id);
+
 }

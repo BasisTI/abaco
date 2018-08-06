@@ -12,6 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import br.com.basis.abaco.utils.PageUtils;
 
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import br.com.basis.abaco.utils.PageUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -74,6 +79,8 @@ public class AnaliseResource {
 
     private RelatorioBaselineRest relatorioBaselineRest;
 
+    private final FuncaoDadosRepository funcaoDadosRepository;
+
     @Autowired
     private HttpServletRequest request;
 
@@ -89,9 +96,10 @@ public class AnaliseResource {
     public AnaliseResource(
              AnaliseRepository analiseRepository
             ,AnaliseSearchRepository analiseSearchRepository
-            ,FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository) {
+            ,FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository, FuncaoDadosRepository funcaoDadosRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
+        this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
     }
 
@@ -322,7 +330,6 @@ public class AnaliseResource {
      * SEARCH /_search/analises?query=:query : search for the analise corresponding to the query.
      * @param query
      * the query of the analise search
-     * @param pageable
      * the pagination information
      * @return the result of the search
      * @throws URISyntaxException

@@ -4,6 +4,7 @@ import br.com.basis.abaco.AbacoApp;
 
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
@@ -77,6 +78,9 @@ public class AnaliseResourceIntTest {
     private AnaliseSearchRepository analiseSearchRepository;
 
     @Autowired
+    private FuncaoDadosRepository funcaoDadosRepository;
+
+    @Autowired
     private FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
     @Autowired
@@ -99,7 +103,7 @@ public class AnaliseResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         AnaliseResource analiseResource = new AnaliseResource(analiseRepository, analiseSearchRepository,
-                funcaoDadosVersionavelRepository);
+                funcaoDadosVersionavelRepository,funcaoDadosRepository);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();
