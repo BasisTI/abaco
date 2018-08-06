@@ -6,7 +6,7 @@ import { DatatableComponent, DatatableClickEvent } from '@basis/angular-componen
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
 import { UserService } from './user.service';
-import { ElasticQuery } from '../shared';
+import { ElasticQuery, PageNotificationService } from '../shared';
 import { AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Organizacao } from '../organizacao/organizacao.model';
 import { OrganizacaoService } from '../organizacao/organizacao.service';
@@ -50,7 +50,8 @@ export class UserComponent implements AfterViewInit, OnInit {
     private confirmationService: ConfirmationService,
     private organizacaoService: OrganizacaoService,
     private tipoEquipeService: TipoEquipeService,
-    private stringConcatService: StringConcatService
+    private stringConcatService: StringConcatService,
+    private pageNotificationService: PageNotificationService
   ) {}
 
   ngOnInit() {
@@ -121,7 +122,14 @@ export class UserComponent implements AfterViewInit, OnInit {
       accept: () => {
         this.userService.delete(user).subscribe(() => {
           this.datatable.refresh(this.elasticQuery.query);
-        });
+          this.pageNotificationService.addDeleteMsg();
+
+        },error => {
+          if(error.status === 400){
+            this.pageNotificationService.addErrorMsg('Você não pode excluir o usuário Administrador!');
+
+          }
+      });
       }
     });
   }
