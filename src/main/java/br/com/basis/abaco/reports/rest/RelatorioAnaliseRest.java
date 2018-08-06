@@ -388,11 +388,11 @@ public class RelatorioAnaliseRest {
             for(Rlr rlr : fd.getRlrs()) {
                 RlrFdDTO objeto = new RlrFdDTO();
 
-                if(rlr.getNome() != null) {
-                    objeto.setRlrDto(rlr.getNome());
-                    objeto.setNomeRlrFdDto(rlr.getFuncaoDados().getName());
-                    listRlrFD.add(objeto);
-                }
+                // if(rlr.getNome() != null) {
+                //     objeto.setRlrDto(rlr.getNome());
+                //     objeto.setNomeRlrFdDto(rlr.getFuncaoDados().getName());
+                //     listRlrFD.add(objeto);
+                // }
             }
         }
         parametro.put("LISTARLRFD", listRlrFD);
@@ -430,11 +430,11 @@ public class RelatorioAnaliseRest {
             for(Alr alr : ft.getAlrs()) {
                 AlrFtDTO objeto = new AlrFtDTO();
 
-                if(alr.getNome() != null) {
-                    objeto.setNomeAlrDto(alr.getNome());
-                    objeto.setNomeAlrFtDto(alr.getFuncaoTransacao().getName());
-                    listArlFT.add(objeto);
-                }
+                // if(alr.getNome() != null) {
+                //     objeto.setNomeAlrDto(alr.getNome());
+                //     objeto.setNomeAlrFtDto(alr.getFuncaoTransacao().getName());
+                //     listArlFT.add(objeto);
+                // }
             }
         }
         parametro.put("LISTAARLFT", listArlFT);

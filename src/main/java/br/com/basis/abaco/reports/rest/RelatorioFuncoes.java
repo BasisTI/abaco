@@ -346,8 +346,17 @@ public class RelatorioFuncoes {
         funcoes.setComplexidadeFd(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
         funcoes.setNomeFd(f.getName() == null ? dash : f.getName());
         funcoes.setImpactoFd(f.getImpacto().toString());
-        funcoes.setPfTotalFd(f.getGrossPF().toString());
-        funcoes.setPfAjustadoFd(f.getPf().toString());
+        if (f.getGrossPF() != null){
+            funcoes.setPfTotalFd(f.getGrossPF().toString());
+        } else {
+            funcoes.setPfTotalFd("0");
+        }
+        if (f.getPf() != null){
+            funcoes.setPfAjustadoFd(f.getPf().toString());
+        } else {
+            funcoes.setPfAjustadoFd("0");
+        }
+
     }
 
     /**
