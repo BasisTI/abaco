@@ -224,8 +224,8 @@ public class UserService {
 		}).map(UserDTO::new);
 	}
 
-	public void deleteUser(String login) {
-		userRepository.findOneByLogin(login).ifPresent(user -> {
+	public void deleteUser(Long id) {
+		userRepository.findOneById(id).ifPresent(user -> {
 			socialService.deleteUserSocialConnection(user.getLogin());
 			userRepository.delete(user);
 			userSearchRepository.delete(user);
