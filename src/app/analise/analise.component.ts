@@ -191,7 +191,11 @@ export class AnaliseComponent implements OnInit {
    * @param analise
    */
   public geraRelatorioPdfDetalhadoBrowser(analise: Analise) {
-    this.analiseService.geraRelatorioPdfDetalhadoBrowser(analise.id);
+    if ((analise.metodoContagem === "DETALHADA" && (analise.funcaoDados.length === 0 || analise.funcaoTransacaos.length === 0)) || analise.funcaoDados.length === 0){
+      this.pageNotificationService.addErrorMsg('Preencha os campos Função de dados e/ou Função de transação para gerar um relatório');
+    } else {
+      this.analiseService.geraRelatorioPdfDetalhadoBrowser(analise.id);
+    }
   }
 
   /**
