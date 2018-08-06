@@ -1,5 +1,4 @@
 <p-tabView>
-
     <p-tabPanel header="Geral">
         <div class="ui-g ui-fluid">
             <div class="ui-g-12">
@@ -21,7 +20,7 @@
                                             [options]="organizacoes"
                                             [(ngModel)]="analise.organizacao"
                                             [autoWidth]="false"
-                                            (onChange)="organizacaoSelected($event.value)">
+                                            (onChange)="setSistamaOrganizacao($event.value)">
                                     </p-dropdown>
                                 </div>
 
@@ -45,9 +44,9 @@
                                             [filter]="true"
                                             dataKey="id"
                                             optionLabel="sigla"
-                                            disabled="{{ !shouldEnableSistemaDropdown() }}"
+                                            disabled="{{ !disabledSistemaDropdown() }}"
                                             placeholder="{{ sistemaDropdownPlaceholder() }}"
-                                            (onChange)="sistemaSelected()"
+                                            (onChange)="getSistemaSelecionado()"
                                             name="sistema"
                                             [options]="sistemas"
                                             [(ngModel)]="analise.sistema"
@@ -88,7 +87,7 @@
                                                 [options]="organizacoes"
                                                 [(ngModel)]="analise.organizacao"
                                                 [autoWidth]="false"
-                                                (onChange)="organizacaoSelected($event.value)">
+                                                (onChange)="setSistamaOrganizacao($event.value)">
                                         </p-dropdown>
                                     </div>
 
@@ -104,7 +103,7 @@
                                                 [options]="equipeResponsavel"
                                                 [(ngModel)]="analise.equipeResponsavel"
                                                 [autoWidth]="false"
-                                                (onChange)="organizacaoSelected($event.value)">
+                                                (onChange)="setSistamaOrganizacao($event.value)">
                                         </p-dropdown>
                                     </div>
 
@@ -116,7 +115,7 @@
                                                 optionLabel="sigla"
                                                 disabled="true"
                                                 placeholder="{{ sistemaDropdownPlaceholder() }}"
-                                                (onChange)="sistemaSelected()"
+                                                (onChange)="getSistemaSelecionado()"
                                                 name="sistema"
                                                 [options]="sistemas"
                                                 [(ngModel)]="analise.sistema"
@@ -168,7 +167,7 @@
                                     <p-dropdown
                                             [filter]="true"
                                             required
-                                            disabled="{{ !isContratoSelected() }}"
+                                            (click)="!disabledFuncaoTransacao()"
                                             placeholder="{{ needContratoDropdownPlaceholder() }}"
                                             name="metodoContagem"
                                             [options]="metodosContagem"
@@ -266,7 +265,7 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-3 ui-md-6 ui-sm-12">
+                                <div class="ui-g-4 ui-md-6 ui-sm-12">
 
                                     <div class="ui-g-6 ui-md-6 ui-sm-12">
                                         Aguardar prazo de garantia {{diasGarantia > 0 ? " de " + diasGarantia + " dias"
@@ -303,7 +302,7 @@
                                                 dateFormat="dd/mm/yy"
                                                 (onSelect)="save()">
                                         </p-calendar>
-                                        <label>Data da homologação (do software) {{analise.baselineImediatamente ? " *" : null}}</label>
+                                        <label>Data da homologação (software) {{analise.baselineImediatamente ? " *" : null}}</label>
                                     </span>
 
                                     <div *ngIf="analise.baselineImediatamente && !(analise.dataHomologacao)"
@@ -405,3 +404,4 @@
         <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>
+
