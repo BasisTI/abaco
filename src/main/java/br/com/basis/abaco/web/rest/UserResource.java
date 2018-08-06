@@ -94,6 +94,8 @@ public class UserResource {
 
 	private final UserService userService;
 
+	private String userexists = "userexists";
+
 	private final UserSearchRepository userSearchRepository;
 
 	private final AuthorityRepository authorityRepository;
@@ -129,7 +131,7 @@ public class UserResource {
 
 		// Lowercase the user login before comparing with database
 		if (userRepository.findOneByLogin(user.getLogin().toLowerCase()).isPresent()) {
-			return this.createBadRequest("userexists", "Login already in use");
+			return this.createBadRequest(userexists, "Login already in use");
 		} else if (userRepository.findOneByEmail(user.getEmail()).isPresent()) {
 			return this.createBadRequest("emailexists", "Email already in use");
 		} else if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
@@ -176,7 +178,7 @@ public class UserResource {
 		existingUser = userRepository.findOneByLogin(user.getLogin().toLowerCase());
 		if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
 			return ResponseEntity.badRequest()
-					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "userexists", "Login already in use"))
+					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, userexists, "Login already in use"))
 					.body(null);
 		} if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
             if (!userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId().equals(user.getId())) {
@@ -247,7 +249,7 @@ public class UserResource {
 	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
 		log.debug("REST request to delete User: {}", id);
         if (id == 3l) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME,"userexists", "Você não pode excluir o usuário Administrador!"))
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME,userexists, "Você não pode excluir o usuário Administrador!"))
                 .body(null);
         }else {
             userService.deleteUser(id);
