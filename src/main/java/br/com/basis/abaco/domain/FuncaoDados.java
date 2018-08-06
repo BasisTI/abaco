@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import io.swagger.models.auth.In;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -51,6 +52,9 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     @Column
     private String retStr;
+
+    @Column
+    private Integer quantidade;
 
     @JsonManagedReference(value = "funcaoDados")
     @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -222,4 +226,15 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 		this.impacto = impacto;
 	}
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
 }
