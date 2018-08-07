@@ -36,7 +36,6 @@ export class ManualService {
 
     update(manual: Manual): Observable<Manual> {
         const copy = this.convert(manual);
-        console.log(copy);
         return this.http.put(this.resourceUrl, copy).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertItemFromServer(jsonResponse);
@@ -52,7 +51,6 @@ export class ManualService {
 
     query(req?: any): Observable<ResponseWrapper> {
         const options = createRequestOption(req);
-        console.log(options);
         return this.http.get(this.resourceUrl, options)
             .map((res: Response) => this.convertResponse(res));
     }
@@ -91,7 +89,6 @@ export class ManualService {
     */
     findActiveManuais() {
         return this.http.get(this.findActive).map((response: Response) => {
-            console.log(response.json());
             return response.json();
         });
     }

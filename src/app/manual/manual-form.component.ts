@@ -241,7 +241,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 this.openDialogEditPhaseEffort();
                 break;
             case 'delete':
-                console.log(event.selection);
                 this.editedPhaseEffort = event.selection.clone();
                 this.confirmDeletePhaseEffort();
         }
@@ -259,7 +258,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 this.openDialogEditAdjustFactor();
                 break;
             case 'delete':
-                console.log(event.selection);
                 this.editedAdjustFactor = event.selection.clone();
                 this.confirmDeleteAdjustFactor();
         }

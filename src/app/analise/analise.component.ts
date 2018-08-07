@@ -57,7 +57,6 @@ export class AnaliseComponent implements OnInit {
       this.analiseSelecionada = event.data;
       this.block = !event.data.bloqueiaAnalise;
       this.unblock = event.data.bloqueiaAnalise;
-      console.log(event.data);
     });
     this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
       this.analiseSelecionada = undefined;

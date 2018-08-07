@@ -313,7 +313,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
    * */
   getFileInfo() {
     return this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
-      console.log(response);
       return response;
     });
   }
