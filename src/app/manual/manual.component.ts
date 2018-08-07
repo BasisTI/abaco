@@ -96,7 +96,12 @@ export class ManualComponent implements OnInit {
         .addSuccessMsg(`Manual '${manualSalvo.nome}' clonado a partir do manual '${this.manualSelecionado.nome}' com sucesso!`);
       this.fecharDialogClonar();
       this.recarregarDataTable();
-    });
+
+    },error => {
+      if(error.status === 400){
+        this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+      }
+      });
   }
 
   public limparPesquisa() {

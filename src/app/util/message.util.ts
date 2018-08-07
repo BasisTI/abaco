@@ -6,6 +6,7 @@ export class MessageUtil {
     public static CONFIRMAR_BLOQUEIO = 'Tem certeza que deseja bloquear o registro';
     public static CONFIRMAR_DESBLOQUEIO = 'Tem certeza que deseja desbloquear o registro';
     public static CONFIRMAR_CLONE = 'Tem certeza que deseja clonar o registro';
+    public static ERROR_SALVAR_REGISTRO = 'Falha ao salvar registro';
 
     public static INDICATIVA = 'INDICATIVA';
     public static DETALHADA = 'DETALHADA';

@@ -125,7 +125,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
                     this.manual.arquivoManualId = JSON.parse(response['_body']).id;
                     this.subscribeToSaveResponse(this.manualService.create(this.manual));
-                });
+                    });
             } else {
                 this.privateExibirMensagemCamposInvalidos(1);
             }
@@ -209,16 +209,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.isSaving = false;
             this.router.navigate(['/manual']);
             this.pageNotificationService.addCreateMsg();
-        }, (error: Response) => {
-            alert(error);
-            this.isSaving = false;
-            switch (error.status) {
-                case 400: {
-                    let invalidFieldNamesString = '';
-                    const fieldErrors = JSON.parse(error['_body']).fieldErrors;
-                    invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-                    this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
-                }
+        }, error => {
+            if(error.status === 400){
+              this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
             }
         });
     }
