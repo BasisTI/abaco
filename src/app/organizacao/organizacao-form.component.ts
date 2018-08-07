@@ -29,7 +29,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
   contratos: Contrato[] = [];
   organizacao: Organizacao;
-  isSaving; manualInvalido: boolean;
+  isSaving; manualInvalido; isEdit: boolean;
   cnpjValido: boolean;
   manuais: Manual[];
   uploadUrl = environment.apiUrl + '/upload';
@@ -58,6 +58,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
    *
    * */
   ngOnInit() {
+    this.isEdit = false;
     this.cnpjValido = false;
     this.isSaving = false;
     this.manualService.query().subscribe((res: ResponseWrapper) => {
@@ -197,9 +198,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         if (this.logo !== undefined) {
           this.uploadService.uploadFile(this.logo).subscribe(response => {
             this.organizacao.logoId = JSON.parse(response['_body']).id;
+            this.isEdit = true;
             this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
           });
         } else {
+            this.isEdit = true;
             this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
         }
       });
@@ -264,7 +267,8 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     result.subscribe((res: Organizacao) => {
       this.isSaving = false;
       this.router.navigate(['/organizacao']);
-      this.pageNotificationService.addCreateMsg();
+
+      this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg();
     }, (error: Response) => {
       this.isSaving = false;
 
