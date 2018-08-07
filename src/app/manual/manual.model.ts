@@ -125,7 +125,6 @@ export class Manual implements BaseEntity, JSONable<Manual> {
         let valorString: string = valor.toString().slice(0, 6);
 
         if (valor) {
-            console.log(Number(valorString));
             return Number(valorString);
         }
     }

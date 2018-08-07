@@ -112,7 +112,6 @@ export class DerChipsComponent implements OnChanges {
      *
      */
     limparMultiplos() {
-        console.log("this.values ", this.values)
         this.values = [];
     }
 
