@@ -24,7 +24,7 @@ import {FileUpload} from 'primeng/primeng';
 })
 export class ManualFormComponent implements OnInit, OnDestroy {
     manual: Manual;
-    isSaving: boolean;
+    isSaving; isEdit: boolean;
     loading: boolean;
     private routeSub: Subscription;
     arquivoManual: File;
@@ -107,9 +107,11 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 if (this.arquivoManual !== undefined) {
                     this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
                         this.manual.arquivoManualId = JSON.parse(response['_body']).id;
+                        this.isEdit = true;
                         this.subscribeToSaveResponse(this.manualService.update(this.manual));
                     });
                 } else {
+                    this.isEdit = true;
                     this.subscribeToSaveResponse(this.manualService.update(this.manual));
                 }
             } else {
@@ -208,7 +210,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         result.subscribe((res: Manual) => {
             this.isSaving = false;
             this.router.navigate(['/manual']);
-            this.pageNotificationService.addCreateMsg();
+            this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg();
         }, error => {
             if(error.status === 400){
               this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
