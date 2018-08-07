@@ -30,6 +30,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
   isSaving: boolean;
 
+  isEdit: boolean;
+
   private routeSub: Subscription;
 
   constructor(
@@ -130,6 +132,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.user.id !== undefined) {
+      this.isEdit = true;
       this.subscribeToSaveResponse(this.userService.update(this.user));
     } else {
       this.subscribeToSaveResponse(this.userService.create(this.user));
@@ -187,7 +190,13 @@ export class UserFormComponent implements OnInit, OnDestroy {
     result.subscribe((res: User) => {
       this.isSaving = false;
       this.router.navigate(['/admin/user']);
-      this.pageNotificationService.addCreateMsg();
+      if (this.isEdit){
+        this.pageNotificationService.addUpdateMsg();
+      }
+      else{
+        this.pageNotificationService.addCreateMsg();
+      }
+      
     }, (error: Response) => {
       this.isSaving = false;
 
