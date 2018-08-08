@@ -271,14 +271,28 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg();
     }, (error: Response) => {
       this.isSaving = false;
+      if(error.status === 400){
+        let errorType : string = error.headers.toJSON()['x-abacoapp-error'][0];
 
-      switch (error.status) {
-        case 400: {
-          let invalidFieldNamesString = '';
-          const fieldErrors = JSON.parse(error['_body']).fieldErrors;
-          invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-          this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
+        switch(errorType){
+          case "error.organizacaoexists" : {
+            this.pageNotificationService.addErrorMsg('Já existe organização cadastrada com mesmo nome!');
+            document.getElementById('login').setAttribute('style', 'border-color: red;');
+          }
+          case "error.cnpjexists" : {
+            this.pageNotificationService.addErrorMsg('Já existe organização cadastrada com mesmo CNPJ!');
+            document.getElementById('login').setAttribute('style', 'border-color: red;');
+          }
+          case "error.beggindateGTenddate" : {
+            console.log("Entrei no case pelo organizacao-form.components");
+            this.pageNotificationService.addErrorMsg('"Início Vigência" não pode ser posterior a "Final Vigência"');
+            document.getElementById('login').setAttribute('style', 'border-color: red;');
+          }
         }
+        let invalidFieldNamesString = '';
+        const fieldErrors = JSON.parse(error['_body']).fieldErrors;
+        invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
+        this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
       }
     });
   }
