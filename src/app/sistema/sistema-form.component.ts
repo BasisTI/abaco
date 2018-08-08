@@ -26,7 +26,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
     organizacaos: any[];
     sistema: Sistema;
-    isSaving: boolean;
+    isSaving; isEdit; boolean;
 
     mostrarDialogModulo = false;
     mostrarDialogEditarModulo = false;
@@ -239,7 +239,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
             if (this.sistema.id !== undefined) {
                 (this.checkRequiredFields() && !this.checkDuplicity(sistemas)
                     && this.checkSystemName())
-                    ? (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
+                    ? (this.isEdit = true) && (this.subscribeToSaveResponse(this.sistemaService.update(this.sistema))) : (this);
             } else {
                 (this.checkRequiredFields() && !this.checkDuplicity(sistemas)
                     && this.checkSystemName())
@@ -341,7 +341,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     private subscribeToSaveResponse(result: Observable<Sistema>) {
         result.subscribe((res: Sistema) => {
             this.isSaving = false;
-            this.pageNotificationService.addCreateMsg('Sistema cadastrado com sucesso!');
+            this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg('Sistema cadastrado com sucesso!');
             this.router.navigate(['/sistema']);
         }, (error: Response) => {
             this.isSaving = false;
