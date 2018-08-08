@@ -209,10 +209,19 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.isSaving = false;
             this.router.navigate(['/manual']);
             this.pageNotificationService.addCreateMsg();
-        }, error => {
-            if(error.status === 400){
-              this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
-            }
+        }, 
+        (error: Response) => {
+            this.isSaving = false;
+      
+            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.manualexists') {
+                this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+                document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
+                }
+            let invalidFieldNamesString = '';
+            const fieldErrors = JSON.parse(error['_body']).fieldErrors;
+            invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
+            this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
+              
         });
     }
 
