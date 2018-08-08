@@ -5,12 +5,14 @@ import { DatatableComponent, DatatableClickEvent } from '@basis/angular-componen
 import { environment } from '../../environments/environment';
 import { Sistema } from './sistema.model';
 import { SistemaService } from './sistema.service';
-import { ElasticQuery } from '../shared';
+import { ElasticQuery, PageNotificationService } from '../shared';
 import { Organizacao } from '../organizacao/organizacao.model';
 import { OrganizacaoService } from '../organizacao/organizacao.service';
 import { StringConcatService } from '../shared/string-concat.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { MessageUtil } from '../util/message.util';
+import { Response } from '@angular/http';
+
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -43,7 +45,8 @@ export class SistemaComponent implements AfterViewInit {
     private sistemaService: SistemaService,
     private confirmationService: ConfirmationService,
     private organizacaoService: OrganizacaoService,
-    private stringConcatService: StringConcatService
+    private stringConcatService: StringConcatService,
+    private pageNotificationService: PageNotificationService
   ) {
     let emptyOrganization = new Organizacao();
 
@@ -92,8 +95,14 @@ export class SistemaComponent implements AfterViewInit {
         this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
         this.sistemaService.delete(id).subscribe(() => {
           this.recarregarDataTable();
+          this.pageNotificationService.addDeleteMsg();
           this.blockUI.stop();
-        });
+        }, (error: Response) => {
+            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.analiseexists') {
+              this.pageNotificationService.addErrorMsg('O sistema está vinculado a uma análise e não pode ser excluído!');
+            }
+          }
+        );
       }
     });
   }

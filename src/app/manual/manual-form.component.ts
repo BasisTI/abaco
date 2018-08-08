@@ -210,7 +210,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         result.subscribe((res: Manual) => {
             this.isSaving = false;
             this.router.navigate(['/manual']);
-            this.pageNotificationService.addCreateMsg();
+            this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg();
         }, 
         (error: Response) => {
             this.isSaving = false;

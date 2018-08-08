@@ -1,6 +1,6 @@
 export class MessageUtil {
     public static SELECIONE = 'Selecione...';
-    public static CONFIRMAR_EXCLUSAO = 'Tem certeza que deseja exclui o registro ';
+    public static CONFIRMAR_EXCLUSAO = 'Tem certeza que deseja excluir o registro ';
     public static ERROR_DELETE_REGISTRO = 'Falha ao excluir registro';
     public static EXCLUINDO_REGISTRO = 'Excluindo...';
     public static CONFIRMAR_BLOQUEIO = 'Tem certeza que deseja bloquear o registro';
