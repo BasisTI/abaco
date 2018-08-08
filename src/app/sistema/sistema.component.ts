@@ -142,6 +142,9 @@ export class SistemaComponent implements AfterViewInit {
    *
    */
   public limparPesquisa() {
+    this.searchParams.sigla = undefined;
+    this.searchParams.organizacao = undefined;
+    this.searchParams.nomeSistema = undefined;
     this.elasticQuery.reset();
     this.recarregarDataTable();
   }
