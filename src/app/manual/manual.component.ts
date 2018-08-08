@@ -8,6 +8,7 @@ import { ManualService } from './manual.service';
 import { ElasticQuery, PageNotificationService } from '../shared';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { MessageUtil } from '../util/message.util';
+import { Response } from '@angular/http';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -97,10 +98,17 @@ export class ManualComponent implements OnInit {
       this.fecharDialogClonar();
       this.recarregarDataTable();
 
-    },error => {
-      if(error.status === 400){
-        this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
-      }
+    }, (error: Response) => {
+
+      if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.manualexists') {
+          this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+          document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
+          }
+      let invalidFieldNamesString = '';
+      const fieldErrors = JSON.parse(error['_body']).fieldErrors;
+      invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
+      this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
+       
       });
   }
 
@@ -117,7 +125,13 @@ export class ManualComponent implements OnInit {
         this.manualService.delete(id).subscribe(() => {
           this.recarregarDataTable();
           this.blockUI.stop();
-        });
+        }, (error: Response) => {
+
+          if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.contratoexists') {
+              this.pageNotificationService.addErrorMsg('Manual '+this.manualSelecionado.nome+' está vinculado a um Contrato e não pode ser excluído!');
+              }
+        }
+      );
       }
     });
   }
