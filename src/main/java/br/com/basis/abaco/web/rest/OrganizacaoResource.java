@@ -59,6 +59,16 @@ public class OrganizacaoResource {
         this.organizacaoSearchRepository = organizacaoSearchRepository;
     }
 
+    /**
+     * Function to format a bad request URL to be returned to frontend
+     * @param errorKey The key identifing the error occured
+     * @param defaultMessage Default message to display to user
+     * @return The bad request URL
+     */
+    private ResponseEntity<Organizacao> createBadRequest(String errorKey, String defaultMessage) {
+        return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
+            .body(null);
+    }
 
     /**
      * POST  /organizacaos : Create a new organizacao.
@@ -72,8 +82,21 @@ public class OrganizacaoResource {
     public ResponseEntity<Organizacao> createOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
         log.debug("REST request to save Organizacao : {}", organizacao);
         if (organizacao.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new organizacao cannot already have an ID")).body(null);
+            return this.createBadRequest("idoexists", "A new organizacao cannot already have an ID");
         }
+
+        /* Verifing if there is an existing Organizacao with same name */
+        Optional<Organizacao> existingOrganizacao = organizacaoRepository.findOneByNome(organizacao.getNome());
+        if (existingOrganizacao.isPresent()) {
+            return this.createBadRequest("organizacaoexists", "Organizacao already in use");
+        }
+
+        /* Verifing if there is an existing Organizacao with same cnpj */
+        existingOrganizacao = organizacaoRepository.findOneByCnpj(organizacao.getCnpj());
+        if (existingOrganizacao.isPresent()) {
+            return this.createBadRequest("cnpjexists", "CNPJ already in use");
+        }
+
         Organizacao result = organizacaoRepository.save(organizacao);
         organizacaoSearchRepository.save(result);
 
@@ -98,6 +121,19 @@ public class OrganizacaoResource {
         if (organizacao.getId() == null) {
             return createOrganizacao(organizacao);
         }
+
+        /* Verifing if there is an existing Organizacao with same name */
+        Optional<Organizacao> existingOrganizacao = organizacaoRepository.findOneByNome(organizacao.getNome());
+        if (existingOrganizacao.isPresent() && !organizacao.getId().equals(existingOrganizacao.get().getId()) ){
+                return this.createBadRequest("organizacaoexists", "Organizacao already in use");
+        }
+
+        /* Verifing if there is an existing Organizacao with same cnpj */
+        existingOrganizacao = organizacaoRepository.findOneByCnpj(organizacao.getCnpj());
+        if (existingOrganizacao.isPresent() && !organizacao.getId().equals(existingOrganizacao.get().getId())) {
+                return this.createBadRequest("cnpjexists", "CNPJ already in use");
+        }
+
         Organizacao result = organizacaoRepository.save(organizacao);
         organizacaoSearchRepository.save(result);
 

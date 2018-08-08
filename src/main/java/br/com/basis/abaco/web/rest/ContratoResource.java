@@ -50,6 +50,17 @@ public class ContratoResource {
     }
 
     /**
+     * Function to format a bad request URL to be returned to frontend
+     * @param errorKey The key identifing the error occured
+     * @param defaultMessage Default message to display to user
+     * @return The bad request URL
+     */
+    private ResponseEntity<Contrato> createBadRequest(String errorKey, String defaultMessage) {
+        return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
+            .body(null);
+    }
+
+    /**
      * POST  /contratoes : Create a new contrato.
      *
      * @param contrato the contrato to create
@@ -63,6 +74,12 @@ public class ContratoResource {
         if (contrato.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new contrato cannot already have an ID")).body(null);
         }
+
+        /* Verifing field "Inicio Vigência" and "Final Vigência" */
+        if (contrato.getDataInicioVigencia().isAfter(contrato.getDataFimVigencia())){
+            return this.createBadRequest("beggindateGTenddate", "Filed \"Início Vigência\" is after \"Final Vigência\"");
+        }
+
         Contrato result = contratoRepository.save(contrato);
         contratoSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/contratoes/" + result.getId()))
