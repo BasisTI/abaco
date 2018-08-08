@@ -225,9 +225,16 @@ public class SistemaResource {
 	@Timed
 	public ResponseEntity<Void> deleteSistema(@PathVariable Long id) {
 		log.debug("REST request to delete Sistema : {}", id);
+		if (sistemaRepository.quantidadeSistema(id) > 0) {
+			return ResponseEntity.badRequest().headers(
+               HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseexists", "This System can not be deleted"))
+               .body(null);
+		}
+
 		sistemaRepository.delete(id);
 		sistemaSearchRepository.delete(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+		
 	}
 
 	/**
