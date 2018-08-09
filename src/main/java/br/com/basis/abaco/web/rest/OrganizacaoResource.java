@@ -81,15 +81,11 @@ public class OrganizacaoResource {
     @Timed
     public ResponseEntity<Organizacao> createOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
         log.debug("REST request to save Organizacao : {}", organizacao);
-        if (organizacao.getId() != null) {
-            return this.createBadRequest("idoexists", "A new organizacao cannot already have an ID");
-        }
+        if (organizacao.getId() != null) { return this.createBadRequest("idoexists", "A new organizacao cannot already have an ID"); }
 
         /* Verifing if there is an existing Organizacao with same name */
         Optional<Organizacao> existingOrganizacao = organizacaoRepository.findOneByNome(organizacao.getNome());
-        if (existingOrganizacao.isPresent()) {
-            return this.createBadRequest("organizacaoexists", "Organizacao already in use");
-        }
+        if (existingOrganizacao.isPresent()) { return this.createBadRequest("organizacaoexists", "Organizacao already in use"); }
 
         /* Verifing if there is an existing Organizacao with same cnpj */
         if (organizacao.getCnpj() != null){
@@ -102,8 +98,7 @@ public class OrganizacaoResource {
         Organizacao result = organizacaoRepository.save(organizacao);
         organizacaoSearchRepository.save(result);
 
-        return ResponseEntity.created(new URI("/api/organizacaos/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+        return ResponseEntity.created(new URI("/api/organizacaos/" + result.getId())).headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
