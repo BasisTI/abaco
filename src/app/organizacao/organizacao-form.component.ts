@@ -185,7 +185,10 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     this.isSaving = true;
-    if (this.organizacao.cnpj !== undefined && this.organizacao.cnpj !== ' ' && this.organizacao.cnpj !== null){
+    if (this.organizacao.cnpj === '') {this.organizacao.cnpj = undefined}
+
+    if (this.organizacao.cnpj !== undefined && this.organizacao.cnpj !== ' '){
+      if (this.organizacao.cnpj)
       if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
         this.cnpjValido = true;
         this.pageNotificationService.addErrorMsg('CNPJ inválido');
@@ -207,19 +210,15 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-        if (this.checkRequiredFields()) {
-          if (this.organizacao.logoId !== undefined){
-            this.uploadService.uploadFile(this.logo).subscribe(response => {
-              this.organizacao.logoId = JSON.parse(response['_body']).id;
-              this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
-              });
-          } else {
+        if (this.logo !== undefined){
+          this.uploadService.uploadFile(this.logo).subscribe(response => {
+            this.organizacao.logoId = JSON.parse(response['_body']).id;
             this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
-          }
+            });
         } else {
-          this.pageNotificationService.addErrorMsg(this.getInvalidFieldsString() + ' é um Campo obrigatório.');
-        }
-    }
+          this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
+          }
+      }
   }
 
   /**
@@ -229,20 +228,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     return this.organizacaoService.find(id);
   }
 
-  /**
-   *
-   * */
-  private checkRequiredFields(): boolean {
-      let isFieldsValid = false;
-
-    if (this.organizacao.nome === null || this.organizacao.nome === undefined || this.organizacao.nome === '') {
-      this.invalidFields.push('Nome');
-      isFieldsValid = (this.invalidFields.length === 0);
-    } else {
-      isFieldsValid = true;
-    }
-      return isFieldsValid;
-  }
+  
 
   /**
    *
@@ -277,16 +263,13 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         switch(errorType){
           case "error.organizacaoexists" : {
             this.pageNotificationService.addErrorMsg('Já existe organização cadastrada com mesmo nome!');
-            document.getElementById('login').setAttribute('style', 'border-color: red;');
           }
           case "error.cnpjexists" : {
             this.pageNotificationService.addErrorMsg('Já existe organização cadastrada com mesmo CNPJ!');
-            document.getElementById('login').setAttribute('style', 'border-color: red;');
           }
           case "error.beggindateGTenddate" : {
             console.log("Entrei no case pelo organizacao-form.components");
             this.pageNotificationService.addErrorMsg('"Início Vigência" não pode ser posterior a "Final Vigência"');
-            document.getElementById('login').setAttribute('style', 'border-color: red;');
           }
         }
         let invalidFieldNamesString = '';
