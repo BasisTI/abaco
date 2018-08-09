@@ -79,7 +79,7 @@ public class ContratoResource {
         if (contrato.getDataInicioVigencia().isAfter(contrato.getDataFimVigencia())){
             return this.createBadRequest("beggindateGTenddate", "Filed \"Início Vigência\" is after \"Final Vigência\"");
         }
-
+        
         Contrato result = contratoRepository.save(contrato);
         contratoSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/contratoes/" + result.getId()))
@@ -100,9 +100,16 @@ public class ContratoResource {
     @Timed
     public ResponseEntity<Contrato> updateContrato(@RequestBody Contrato contrato) throws URISyntaxException {
         log.debug("REST request to update Contrato : {}", contrato);
+
+        /* Verifing field "Inicio Vigência" and "Final Vigência" */
+        if (contrato.getDataInicioVigencia().isAfter(contrato.getDataFimVigencia())){
+            return this.createBadRequest("beggindateGTenddate", "Filed \"Início Vigência\" is after \"Final Vigência\"");
+        }
+
         if (contrato.getId() == null) {
             return createContrato(contrato);
         }
+
         Contrato result = contratoRepository.save(contrato);
         contratoSearchRepository.save(result);
         return ResponseEntity.ok()

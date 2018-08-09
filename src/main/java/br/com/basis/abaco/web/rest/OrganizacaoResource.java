@@ -92,9 +92,11 @@ public class OrganizacaoResource {
         }
 
         /* Verifing if there is an existing Organizacao with same cnpj */
-        existingOrganizacao = organizacaoRepository.findOneByCnpj(organizacao.getCnpj());
-        if (existingOrganizacao.isPresent()) {
-            return this.createBadRequest("cnpjexists", "CNPJ already in use");
+        if (organizacao.getCnpj() != null){
+            existingOrganizacao = organizacaoRepository.findOneByCnpj(organizacao.getCnpj());
+            if (existingOrganizacao.isPresent()) {
+                return this.createBadRequest("cnpjexists", "CNPJ already in use");
+            }
         }
 
         Organizacao result = organizacaoRepository.save(organizacao);
