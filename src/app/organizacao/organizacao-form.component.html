@@ -192,7 +192,7 @@
                 <input 
                   type="text" 
                   name="numeroContrato" 
-                  maxlength="120"
+                  maxlength="100"
                   [(ngModel)]="novoContrato.numeroContrato" 
                   pInputText/>
                 <label>Número do Contrato</label>
@@ -248,9 +248,9 @@
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
                 <input 
-                  type="text" 
+                  type="number" 
                   name="diasDeGarantia"
-                  maxlength="6"
+                  mask="999"
                   [(ngModel)]="novoContrato.diasDeGarantia" 
                   pInputText/>
                 <label>Dias de garantia</label>
@@ -311,6 +311,7 @@
               <span class="md-inputfield">
                 <input 
                   type="text" 
+                  maxlength="100"
                   name="numeroContrato" 
                   [(ngModel)]="contratoEmEdicao.numeroContrato" 
                   pInputText/>
@@ -362,7 +363,8 @@
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
                 <input 
-                  type="text" 
+                  type="number" 
+                  mask="999"
                   name="diasDeGarantia"
                   [(ngModel)]="contratoEmEdicao.diasDeGarantia" 
                   pInputText/>
