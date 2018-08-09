@@ -31,6 +31,7 @@ export class ContratoFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isSaving = false;
+    this.isEdit = false;
     this.manualService.query().subscribe((res: ResponseWrapper) => {
       this.manuals = res.json;
     });
@@ -43,6 +44,12 @@ export class ContratoFormComponent implements OnInit, OnDestroy {
   }
 
   save() {
+    if (!(this.contrato.dataInicioValida())){
+      this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
+      document.getElementById('login').setAttribute('style', 'border-color: red;');
+      
+      return
+    }
     this.isSaving = true;
     if (this.contrato.id !== undefined) {
       this.isEdit = true;

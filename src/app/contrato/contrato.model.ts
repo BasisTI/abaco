@@ -32,4 +32,8 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
     return new Contrato(this.id, this.numeroContrato, this.dataInicioVigencia,
       this.dataFimVigencia, this.manual, this.ativo, this.diasDeGarantia, this.artificialId);
   }
+
+  dataInicioValida(): boolean {
+      return this.dataInicioVigencia.getTime() < this.dataFimVigencia.getTime();
+  }
 }

@@ -17,6 +17,7 @@ import { UploadService } from '../upload/upload.service';
 import {FileUpload} from 'primeng/primeng';
 import {NgxMaskModule} from 'ngx-mask';
 import { ValidacaoUtil } from '../util/validacao.util'
+import { ValueTransformer } from '@angular/compiler/src/util';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -98,6 +99,13 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     this.manualInvalido = false;
   }
 
+  validarDataInicio() {
+    if (!(this.novoContrato.dataInicioValida()) || !(this.contratoEmEdicao.dataInicioValida())){
+      this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
+      document.getElementById('login').setAttribute('style', 'border-color: red;');
+    }
+  }
+
   /**
    *
    * */
@@ -113,6 +121,12 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     if (this.novoContrato.manual === null || this.novoContrato.manual === undefined){
       this.manualInvalido = true;
       this.pageNotificationService.addErrorMsg("Selecione um manual");
+      return
+    }
+    if (!(this.novoContrato.dataInicioValida())){
+      this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
+      document.getElementById('login').setAttribute('style', 'border-color: red;');
+      
       return
     }
     this.organizacao.addContrato(this.novoContrato);
@@ -278,15 +292,18 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
           case "error.organizacaoexists" : {
             this.pageNotificationService.addErrorMsg('Já existe organização cadastrada com mesmo nome!');
             document.getElementById('login').setAttribute('style', 'border-color: red;');
+            break;
           }
           case "error.cnpjexists" : {
             this.pageNotificationService.addErrorMsg('Já existe organização cadastrada com mesmo CNPJ!');
             document.getElementById('login').setAttribute('style', 'border-color: red;');
+            break;
           }
           case "error.beggindateGTenddate" : {
             console.log("Entrei no case pelo organizacao-form.components");
             this.pageNotificationService.addErrorMsg('"Início Vigência" não pode ser posterior a "Final Vigência"');
             document.getElementById('login').setAttribute('style', 'border-color: red;');
+            break;
           }
         }
         let invalidFieldNamesString = '';
