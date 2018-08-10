@@ -6,6 +6,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.validation.Valid;
 
@@ -70,6 +72,13 @@ public class OrganizacaoResource {
             .body(null);
     }
 
+    public boolean validaCampo(String campo) {
+        final String regra = "^\\S+(\\s{1}\\S+)*$";
+        Pattern padrao = Pattern.compile(regra);
+        Matcher matcherCampo = padrao.matcher(campo);
+        return matcherCampo.find();
+    }
+
     /**
      * POST  /organizacaos : Create a new organizacao.
      *
@@ -82,6 +91,28 @@ public class OrganizacaoResource {
     public ResponseEntity<Organizacao> createOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
         log.debug("REST request to save Organizacao : {}", organizacao);
         if (organizacao.getId() != null) { return this.createBadRequest("idoexists", "A new organizacao cannot already have an ID"); }
+
+        // Verificando validade de campos com relação à existência de espaços em branco no início ou no final e,opcionalmente, mais de um espaço entre palavras
+        if (organizacao.getNome() != null) {
+            if (!validaCampo(organizacao.getNome())) {
+                return this.createBadRequest("orgNomeInvalido", "Nome de organização inválido");
+            }
+        }
+        if (organizacao.getCnpj() != null) {
+            if (!validaCampo(organizacao.getCnpj())) {
+                return this.createBadRequest("orgCnpjInvalido", "CNPJ de organização inválido");
+            }
+        }
+        if (organizacao.getSigla() != null) {
+            if (!validaCampo(organizacao.getSigla())) {
+                return this.createBadRequest("orgSiglaInvalido", "Sigla de organização inválido");
+            }
+        }
+        if (organizacao.getNumeroOcorrencia() != null) {
+            if (!validaCampo(organizacao.getNumeroOcorrencia())) {
+                return this.createBadRequest("orgNumOcorInvalido", "Numero da Ocorrência de organização inválido");
+            }
+        }
 
         /* Verifing if there is an existing Organizacao with same name */
         Optional<Organizacao> existingOrganizacao = organizacaoRepository.findOneByNome(organizacao.getNome());
