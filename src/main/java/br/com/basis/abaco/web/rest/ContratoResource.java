@@ -79,7 +79,7 @@ public class ContratoResource {
         if (contrato.getDataInicioVigencia().isAfter(contrato.getDataFimVigencia())){
             return this.createBadRequest("beggindateGTenddate", "Filed \"Início Vigência\" is after \"Final Vigência\"");
         }
-        
+
         Contrato result = contratoRepository.save(contrato);
         contratoSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/contratoes/" + result.getId()))
