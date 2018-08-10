@@ -56,6 +56,8 @@ public class OrganizacaoResource {
 
     private final OrganizacaoSearchRepository organizacaoSearchRepository;
 
+    private String erro, mensagem;
+
     public OrganizacaoResource(OrganizacaoRepository organizacaoRepository, OrganizacaoSearchRepository organizacaoSearchRepository) {
         this.organizacaoRepository = organizacaoRepository;
         this.organizacaoSearchRepository = organizacaoSearchRepository;
@@ -79,6 +81,48 @@ public class OrganizacaoResource {
         return matcherCampo.find();
     }
 
+    private boolean validaCamposOrganizacao(Organizacao org) {
+        // Verificando validade de campos com relação à existência de espaços em branco no início ou no final e,opcionalmente, mais de um espaço entre palavras
+        if (org.getNome() != null && !validaCampo(org.getNome())) {
+            this.erro = "orgNomeInvalido";
+            this.mensagem = "Nome de organização inválido";
+            return false;
+        }
+        if (org.getCnpj() != null) {
+            if (!validaCampo(org.getCnpj())){
+                this.erro = "orgCnpjInvalido";
+                this.mensagem = "CNPJ de organização inválido";
+                return false;
+
+            }
+            /* Verifing if there is an existing Organizacao with same cnpj */
+            Optional<Organizacao> existingOrganizacao = organizacaoRepository.findOneByCnpj(org.getCnpj());
+            if (existingOrganizacao.isPresent()) {
+                this.erro = "cnpjexists";
+                this.mensagem = "CNPJ already in use";
+                return false;
+            }
+        }
+        if (org.getSigla() != null && !validaCampo(org.getSigla())) {
+            this.erro = "orgSiglaInvalido";
+            this.mensagem = "Sigla de organização inválido";
+            return false;
+        }
+        if (org.getNumeroOcorrencia() != null && !validaCampo(org.getNumeroOcorrencia())) {
+            this.erro = "orgNumOcorInvalido";
+            this.mensagem = "Numero da Ocorrência de organização inválido";
+            return false;
+        }
+        /* Verifing if there is an existing Organizacao with same name */
+        Optional<Organizacao> existingOrganizacao = organizacaoRepository.findOneByNome(org.getNome());
+        if (existingOrganizacao.isPresent() && (!existingOrganizacao.get().getId().equals(org.getId()))) {
+            this.erro = "organizacaoexists";
+            this.mensagem = "Organizacao already in use";
+            return false;
+        }
+        return true;
+    }
+
     /**
      * POST  /organizacaos : Create a new organizacao.
      *
@@ -92,38 +136,8 @@ public class OrganizacaoResource {
         log.debug("REST request to save Organizacao : {}", organizacao);
         if (organizacao.getId() != null) { return this.createBadRequest("idoexists", "A new organizacao cannot already have an ID"); }
 
-        // Verificando validade de campos com relação à existência de espaços em branco no início ou no final e,opcionalmente, mais de um espaço entre palavras
-        if (organizacao.getNome() != null) {
-            if (!validaCampo(organizacao.getNome())) {
-                return this.createBadRequest("orgNomeInvalido", "Nome de organização inválido");
-            }
-        }
-        if (organizacao.getCnpj() != null) {
-            if (!validaCampo(organizacao.getCnpj())) {
-                return this.createBadRequest("orgCnpjInvalido", "CNPJ de organização inválido");
-            }
-        }
-        if (organizacao.getSigla() != null) {
-            if (!validaCampo(organizacao.getSigla())) {
-                return this.createBadRequest("orgSiglaInvalido", "Sigla de organização inválido");
-            }
-        }
-        if (organizacao.getNumeroOcorrencia() != null) {
-            if (!validaCampo(organizacao.getNumeroOcorrencia())) {
-                return this.createBadRequest("orgNumOcorInvalido", "Numero da Ocorrência de organização inválido");
-            }
-        }
-
-        /* Verifing if there is an existing Organizacao with same name */
-        Optional<Organizacao> existingOrganizacao = organizacaoRepository.findOneByNome(organizacao.getNome());
-        if (existingOrganizacao.isPresent()) { return this.createBadRequest("organizacaoexists", "Organizacao already in use"); }
-
-        /* Verifing if there is an existing Organizacao with same cnpj */
-        if (organizacao.getCnpj() != null){
-            existingOrganizacao = organizacaoRepository.findOneByCnpj(organizacao.getCnpj());
-            if (existingOrganizacao.isPresent()) {
-                return this.createBadRequest("cnpjexists", "CNPJ already in use");
-            }
+        if (!validaCamposOrganizacao(organizacao)) {
+            return this.createBadRequest(this.erro, this.mensagem);
         }
 
         Organizacao result = organizacaoRepository.save(organizacao);
@@ -150,16 +164,8 @@ public class OrganizacaoResource {
             return createOrganizacao(organizacao);
         }
 
-        /* Verifing if there is an existing Organizacao with same name */
-        Optional<Organizacao> existingOrganizacao = organizacaoRepository.findOneByNome(organizacao.getNome());
-        if (existingOrganizacao.isPresent() && !organizacao.getId().equals(existingOrganizacao.get().getId()) ){
-                return this.createBadRequest("organizacaoexists", "Organizacao already in use");
-        }
-
-        /* Verifing if there is an existing Organizacao with same cnpj */
-        existingOrganizacao = organizacaoRepository.findOneByCnpj(organizacao.getCnpj());
-        if (existingOrganizacao.isPresent() && !organizacao.getId().equals(existingOrganizacao.get().getId())) {
-                return this.createBadRequest("cnpjexists", "CNPJ already in use");
+        if (!validaCamposOrganizacao(organizacao)) {
+            return this.createBadRequest(this.erro, this.mensagem);
         }
 
         Organizacao result = organizacaoRepository.save(organizacao);
