@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -59,10 +60,9 @@ public class FuncaoDadosResource {
     @Timed
     public ResponseEntity<FuncaoDados> createFuncaoDados(@RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
 
-        FuncaoDados f = funcaoDadosRepository.findName(2101l,funcaoDados.getName());
+        FuncaoDados f = funcaoDadosRepository.findName(2101l, funcaoDados.getName());
 
         log.debug("FuncaoDados : {}", f.toString());
-
 
 
         log.debug("REST request to save FuncaoDados : {}", funcaoDados);
@@ -109,7 +109,7 @@ public class FuncaoDadosResource {
     public List<FuncaoDados> getAllFuncaoDados() {
         log.debug("REST request to get all FuncaoDados");
         List<FuncaoDados> funcaoDados = funcaoDadosRepository.findAll();
-        funcaoDados.stream().filter(f->f.getAnalise()!=null).forEach(f -> {
+        funcaoDados.stream().filter(f -> f.getAnalise() != null).forEach(f -> {
             if (f.getAnalise().getFuncaoDados() != null) {
                 f.getAnalise().getFuncaoDados().clear();
             }
@@ -138,6 +138,21 @@ public class FuncaoDadosResource {
             funcaoDados.getAnalise().getFuncaoTransacaos().clear();
         }
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDados));
+    }
+
+    /**
+     * GET  /funcao-dados/analise/:id : get the "id" analise.
+     *
+     * @param id the id of the funcaoDados to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the funcaoDados, or with status 404 (Not Found)
+     */
+    @GetMapping("/funcao-dados/analise/{id}")
+    @Timed
+    public List<FuncaoDados> getFuncaoDadosAnalise(@PathVariable Long id) {
+        log.debug("REST request to get FuncaoDados : {}", id);
+        List<FuncaoDados> funcaoDados = null;
+        funcaoDados = funcaoDadosRepository.findByAnalise(id);
+        return funcaoDados;
     }
 
     /**

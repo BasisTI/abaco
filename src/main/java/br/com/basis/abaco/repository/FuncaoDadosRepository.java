@@ -2,6 +2,7 @@ package br.com.basis.abaco.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -24,5 +25,8 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
 
     @Query( value = "SELECT * FROM funcao_dados WHERE analise_id = ?1 AND name = ?2", nativeQuery = true)
     FuncaoDados findName(Long idAnalise, String name);
+
+    @Query( value = "SELECT * FROM funcao_dados WHERE analise_id = ?1", nativeQuery = true)
+    List<FuncaoDados> findByAnalise(Long id);
 
 }
