@@ -26,6 +26,8 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
   @Input()
   isFuncaoDados: boolean;
 
+  @Input() moduloNameParam: boolean;
+
   @Output()
   moduloSelectedEvent = new EventEmitter<Modulo>();
 

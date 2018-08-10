@@ -31,12 +31,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     isEdit;
     nomeInvalido;
-    moduloInvalido;
-    submoduloInvalido;
     classInvalida;
     impactoInvalido: boolean;
     hideElementTDTR: boolean;
     hideShowQuantidade: boolean;
+
+    moduloCache: Funcionalidade;
 
     dersChips: DerChipItem[];
 
@@ -168,7 +168,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     get header(): string {
         return !this.isEdit ? 'Adicionar Função de Dados' : 'Alterar Função de Dados';
     }
-   
+
     get currentFuncaoDados(): FuncaoDados {
         return this.analiseSharedDataService.currentFuncaoDados;
     }
@@ -229,6 +229,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     funcionalidadeSelected(funcionalidade: Funcionalidade) {
+        if (funcionalidade.modulo){
+            this.moduloCache = funcionalidade;
+        }
         this.currentFuncaoDados.funcionalidade = funcionalidade;
     }
 
@@ -355,7 +358,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.rlrsChips.forEach(c => c.id = undefined);
     }
 
+    public verificarModulo(){
+        if(this.currentFuncaoDados.funcionalidade === undefined){
+            this.currentFuncaoDados.funcionalidade = this.moduloCache;
+        }
+    }
+
     private doAdicionar() {
+        this.verificarModulo();
         const funcaoDadosCalculada = Calculadora.calcular(
             this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
         // TODO temporal coupling entre 1-add() e 2-atualizaResumo(). 2 tem que ser chamado depois
@@ -424,7 +434,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     private prepararParaClonar(funcaoDadosSelecionada: FuncaoDados) {
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
-        this.currentFuncaoDados.name= this.currentFuncaoDados.name+' - Cópia';
+        this.currentFuncaoDados.name = this.currentFuncaoDados.name + ' - Cópia';
         this.carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada);
         this.pageNotificationService.addInfoMsg(`Clonando Função de Dados '${funcaoDadosSelecionada.name}'`);
     }
@@ -437,7 +447,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.analiseSharedDataService.funcaoAnaliseCarregada();
 
         this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
-        
+
         this.carregarDerERlr(funcaoDadosSelecionada);
     }
 
