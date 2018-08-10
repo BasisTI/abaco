@@ -34,6 +34,7 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
   }
 
   dataInicioValida(): boolean {
+    if (this.dataInicioVigencia != null && this.dataFimVigencia != null)
       return this.dataInicioVigencia.getTime() < this.dataFimVigencia.getTime();
   }
 }
