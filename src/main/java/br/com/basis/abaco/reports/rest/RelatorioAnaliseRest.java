@@ -382,19 +382,6 @@ public class RelatorioAnaliseRest {
      */
     private void popularListaRlrFd() {
         List<RlrFdDTO> listRlrFD = new ArrayList<>();
-
-        for(FuncaoDados fd : analise.getFuncaoDados()) {
-
-            for(Rlr rlr : fd.getRlrs()) {
-                RlrFdDTO objeto = new RlrFdDTO();
-
-                if(rlr.getNome() != null) {
-                    objeto.setRlrDto(rlr.getNome());
-                    objeto.setNomeRlrFdDto(rlr.getFuncaoDados().getName());
-                    listRlrFD.add(objeto);
-                }
-            }
-        }
         parametro.put("LISTARLRFD", listRlrFD);
     }
 
@@ -424,19 +411,6 @@ public class RelatorioAnaliseRest {
      */
     private void popularListaArlFt() {
         List<AlrFtDTO> listArlFT = new ArrayList<>();
-
-        for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
-
-            for(Alr alr : ft.getAlrs()) {
-                AlrFtDTO objeto = new AlrFtDTO();
-
-                if(alr.getNome() != null) {
-                    objeto.setNomeAlrDto(alr.getNome());
-                    objeto.setNomeAlrFtDto(alr.getFuncaoTransacao().getName());
-                    listArlFT.add(objeto);
-                }
-            }
-        }
         parametro.put("LISTAARLFT", listArlFT);
     }
 

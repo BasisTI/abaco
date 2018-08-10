@@ -78,6 +78,14 @@ public class ManualResource {
                     HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new manual cannot already have an ID"))
                     .body(null);
         }
+
+        Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
+        if (existingManual.isPresent()) {
+            return ResponseEntity.badRequest()
+                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "manualexists", "Manual already in use"))
+                .body(null);
+        }
+
         Manual linkedManual = linkManualToPhaseEffortsAndAdjustFactors(manual);
         Manual result = manualRepository.save(linkedManual);
         manualSearchRepository.save(result);
@@ -97,7 +105,7 @@ public class ManualResource {
 
         return manual;
     }
-    
+
     /**
      * PUT /manuals : Updates an existing manual.
      *
@@ -164,6 +172,13 @@ public class ManualResource {
     @Timed
     public ResponseEntity<Void> deleteManual(@PathVariable Long id) {
         log.debug("REST request to delete Manual : {}", id);
+
+        if(manualRepository.quantidadeContrato(id) > 0) {
+            return ResponseEntity.badRequest().headers(
+                HeaderUtil.createFailureAlert(ENTITY_NAME, "contratoexists", "A manual cannot be deleted"))
+                .body(null);
+        }
+
         manualRepository.delete(id);
         manualSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
@@ -176,21 +191,21 @@ public class ManualResource {
      * @param query
      *            the query of the manual search
      * @return the result of the search
-     * @throws URISyntaxException 
+     * @throws URISyntaxException
      */
     @GetMapping("/_search/manuals")
     @Timed
     public ResponseEntity<List<Manual>> searchManuals(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         log.debug("REST request to search Manuals for query {}", query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        
+
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
         Page<Manual> page = manualSearchRepository.search(queryStringQuery(query), newPageable);
-        
+
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/manuals");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
-    
-    
+
+
 
 }

@@ -51,6 +51,10 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     @Column
     private String ftrStr;
 
+    @Column
+    private Integer quantidade;
+
+
     @JsonManagedReference(value = "funcaoTransacao")
     @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -61,9 +65,9 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     @Transient
     private Set<String> ftrValues;
-    
+
     @Enumerated(EnumType.STRING)
-    @Column(name="impacto")
+    @Column(name = "impacto")
     private ImpactoFatorAjuste impacto;
 
     @JsonManagedReference(value = "funcaoTransacao")
@@ -185,12 +189,23 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
         this.ftrValues = new HashSet<String>(ftrValues);
     }
 
-	public ImpactoFatorAjuste getImpacto() {
-		return impacto;
-	}
+    public ImpactoFatorAjuste getImpacto() {
+        return impacto;
+    }
 
-	public void setImpacto(ImpactoFatorAjuste impacto) {
-		this.impacto = impacto;
-	}
+    public void setImpacto(ImpactoFatorAjuste impacto) {
+        this.impacto = impacto;
+    }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
 }

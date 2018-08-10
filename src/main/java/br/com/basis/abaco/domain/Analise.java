@@ -481,7 +481,7 @@ public class Analise implements Serializable {
         return audit.getCreatedOn();
     }
 
-    public void setCreatedOn(ZonedDateTime updatedOn) { audit.setCreatedOn(updatedOn); }
+    public void setCreatedOn(ZonedDateTime createdOn) { audit.setCreatedOn(createdOn); }
 
     public ZonedDateTime getUpdatedOn() {
         return audit.getUpdatedOn();
@@ -496,6 +496,7 @@ public class Analise implements Serializable {
             "id=" + id +
             ", numeroOs='" + numeroOs + "'" +
             ", tipoContagem='" + metodoContagem + "'" +
+            ", dataHomologacao='" + dataHomologacao + "'" +
             ", valorAjuste='" + valorAjuste + "'" +
             ", pfTotal='" + pfTotal + "'" +
             ", escopo='" + escopo + "'" +

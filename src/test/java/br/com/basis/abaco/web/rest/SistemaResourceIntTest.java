@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -229,6 +230,16 @@ public class SistemaResourceIntTest {
                         // TODO Auto-generated method stub
                         return null;
                     }
+
+					@Override
+					public Optional<Organizacao> findOneByNome(String nome) {
+						return null;
+					}
+
+					@Override
+					public Optional<Organizacao> findOneByCnpj(String cnpj) {
+						return null;
+					}
                 }, null, null);
         this.restSistemaMockMvc = MockMvcBuilders.standaloneSetup(sistemaResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)

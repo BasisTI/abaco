@@ -1,5 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
+import static br.com.basis.abaco.web.rest.util.HeaderUtil.createEntityDeletionAlert;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.net.URI;
@@ -7,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.basis.abaco.service.util.RandomUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -92,6 +94,8 @@ public class UserResource {
 
 	private final UserService userService;
 
+	private String userexists = "userexists";
+
 	private final UserSearchRepository userSearchRepository;
 
 	private final AuthorityRepository authorityRepository;
@@ -127,18 +131,20 @@ public class UserResource {
 
 		// Lowercase the user login before comparing with database
 		if (userRepository.findOneByLogin(user.getLogin().toLowerCase()).isPresent()) {
-			return this.createBadRequest("userexists", "Login already in use");
+			return this.createBadRequest(userexists, "Login already in use");
 		} else if (userRepository.findOneByEmail(user.getEmail()).isPresent()) {
 			return this.createBadRequest("emailexists", "Email already in use");
 		} else if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
 			return this.createBadRequest("fullnameexists", "Full Name already in use");
 		} else {
+
+            user.setLangKey("pt_BR");
+            user.setPassword(RandomUtil.generatePassword());
+			mailService.sendCreationEmail(user);
 			User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
 			User newUser = userRepository.save(userReadyToBeSaved);
 			userSearchRepository.save(newUser);
 			log.debug("Created Information for User: {}", user);
-			newUser.setLangKey("pt_BR");
-			mailService.sendCreationEmail(newUser);
 			return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
 					.headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin())).body(newUser);
 		}
@@ -152,7 +158,7 @@ public class UserResource {
 	/**
 	 * PUT /users : Updates an existing User.
 	 *
-	 * @param managedUserVM the user to update
+	 * @param user the user to update
 	 * @return the ResponseEntity with status 200 (OK) and with body the updated
 	 *         user, or with status 400 (Bad Request) if the login or email is
 	 *         already in use, or with status 500 (Internal Server Error) if the
@@ -172,7 +178,7 @@ public class UserResource {
 		existingUser = userRepository.findOneByLogin(user.getLogin().toLowerCase());
 		if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
 			return ResponseEntity.badRequest()
-					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "userexists", "Login already in use"))
+					.headers(HeaderUtil.createFailureAlert(ENTITY_NAME, userexists, "Login already in use"))
 					.body(null);
 		} if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
             if (!userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId().equals(user.getId())) {
@@ -208,9 +214,9 @@ public class UserResource {
 	}
 
 	/**
-	 * GET /users/:login : get the "login" user.
+	 * GET /users/:id : get the "id" user.
 	 *
-	 * @param login the login of the user to find
+	 * @param id the id of the user to find
 	 * @return the ResponseEntity with status 200 (OK) and with body the "login"
 	 *         user, or with status 404 (Not Found)
 	 */
@@ -232,18 +238,23 @@ public class UserResource {
 	}
 
 	/**
-	 * DELETE /users/:login : delete the "login" User.
+	 * DELETE /users/:id : delete the "id" User.
 	 *
-	 * @param login the login of the user to delete
+	 * @param id the login of the user to delete
 	 * @return the ResponseEntity with status 200 (OK)
 	 */
-	@DeleteMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
+	@DeleteMapping("/users/{id}")
 	@Timed
 	@Secured(AuthoritiesConstants.ADMIN)
-	public ResponseEntity<Void> deleteUser(@PathVariable String login) {
-		log.debug("REST request to delete User: {}", login);
-		userService.deleteUser(login);
-		return ResponseEntity.ok().headers(HeaderUtil.createAlert("userManagement.deleted", login)).build();
+	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+		log.debug("REST request to delete User: {}", id);
+        if (id == 3l) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME,userexists, "Você não pode excluir o usuário Administrador!"))
+                .body(null);
+        }else {
+            userService.deleteUser(id);
+            return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        }
 	}
 
 	/**

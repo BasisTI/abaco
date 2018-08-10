@@ -111,7 +111,7 @@ jhipster:
             jwt:
                 secret: my-secret-token-to-change-in-production
                 # Token is valid 24 hours
-                token-validity-in-seconds: 86400
+                token-validity-in-seconds: 2592000
                 token-validity-in-seconds-for-remember-me: 2592000
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: abaco@basis.com.br
