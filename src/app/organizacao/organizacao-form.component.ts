@@ -114,6 +114,35 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     this.novoContrato = new Contrato();
   }
 
+  validaCamposContrato(contrato: Contrato) {
+    let regra: RegExp = /^\S+(\s{1}\S+)*$/;
+    if (!regra.test(contrato.numeroContrato)) {
+      this.pageNotificationService.addErrorMsg('Número do Contrato contém espaços! Favor verificar.');
+      //document.getElementById('login').setAttribute('style', 'border-color: red;');
+      return false;
+    }
+    if (contrato.dataInicioVigencia != null) {
+      if (!regra.test(contrato.dataInicioVigencia.toString())){
+        this.pageNotificationService.addErrorMsg('Data de Início da Vigência não contém uma data válida! Favor verificar.');
+        //document.getElementById('login').setAttribute('style', 'border-color: red;');
+        return false;
+      }
+    }
+    if (contrato.dataFimVigencia != null) {
+      if (!regra.test(contrato.dataFimVigencia.toString())){
+        this.pageNotificationService.addErrorMsg('Data Final da Vigência não contém uma data válida! Favor verificar.');
+        //document.getElementById('login').setAttribute('style', 'border-color: red;');
+        return false;
+      }
+    }
+    if (isNaN(contrato.diasDeGarantia)) {
+      this.pageNotificationService.addErrorMsg('Dias de garantia deve conter apenas dígitos!');
+      //document.getElementById('login').setAttribute('style', 'border-color: red;');
+      return false;
+    }
+    return true;
+  }
+
   /**
    *
    * */
@@ -125,12 +154,15 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
     if (!(this.novoContrato.dataInicioValida())){
       this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
-      document.getElementById('login').setAttribute('style', 'border-color: red;');
+      //document.getElementById('login').setAttribute('style', 'border-color: red;');
       
       return
     }
-    this.organizacao.addContrato(this.novoContrato);
-    this.doFecharDialogCadastroContrato();
+    if (this.validaCamposContrato(this.novoContrato)){
+      this.organizacao.addContrato(this.novoContrato);
+      this.doFecharDialogCadastroContrato();
+    }
+    
   }
 
   /**
@@ -275,6 +307,26 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         let errorType : string = error.headers.toJSON()['x-abacoapp-error'][0];
 
         switch(errorType){
+          case "error.orgNomeInvalido" : {
+            this.pageNotificationService.addErrorMsg('O campo "Nome" possui carcteres inválidos! Verifique se há espaços no início, no final ou mais de um espaço entre palavras.');
+            //document.getElementById('login').setAttribute('style', 'border-color: red;');
+            break;
+          }
+          case "error.orgCnpjInvalido" : {
+            this.pageNotificationService.addErrorMsg('O campo "CNPJ" possui carcteres inválidos! Verifique se há espaços no início ou no final.');
+            //document.getElementById('login').setAttribute('style', 'border-color: red;');
+            break;
+          }
+          case "error.orgSiglaInvalido" : {
+            this.pageNotificationService.addErrorMsg('O campo "Sigla" possui carcteres inválidos! Verifique se há espaços no início ou no final.');
+            //document.getElementById('login').setAttribute('style', 'border-color: red;');
+            break;
+          }
+          case "error.orgNumOcorInvalido" : {
+            this.pageNotificationService.addErrorMsg('O campo "Número da Ocorrência" possui carcteres inválidos! Verifique se há espaços no início ou no final.');
+            //document.getElementById('login').setAttribute('style', 'border-color: red;');
+            break;
+          }
           case "error.organizacaoexists" : {
             this.pageNotificationService.addErrorMsg('Já existe organização cadastrada com mesmo nome!');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
