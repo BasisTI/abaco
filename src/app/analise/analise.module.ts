@@ -36,6 +36,7 @@ import { AbacoSharedModule } from '../shared/abaco-shared.module';
 import { AbacoFuncaoTransacaoModule } from '../funcao-transacao/funcao-transacao.module';
 import { AbacoAnaliseResumoModule } from './resumo/analise-resumo.module';
 import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
+import { UtilModule } from '../util/util.module';
 
 @NgModule({
   imports: [
@@ -61,6 +62,7 @@ import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/an
     AbacoAnaliseResumoModule,
     AbacoAnaliseBotaoSalvarModule,
     BotoesExportacaoModule,
+    UtilModule
   ],
   declarations: [
     AnaliseComponent,

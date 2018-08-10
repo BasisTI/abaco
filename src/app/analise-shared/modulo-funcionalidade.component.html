@@ -8,6 +8,7 @@
         <!-- filtro/pesquisa? -->
         <label>Módulo *</label>
         <p-dropdown 
+          [filter]="true"
           optionLabel="nome"
           name="modulo"
           placeholder="Selecione..."
@@ -32,6 +33,7 @@
         <!-- filtro/pesquisa? -->
         <label>Submódulo *</label>
         <p-dropdown 
+          [filter]="true"
           optionLabel="nome" 
           name="funcionalidade"
           [options]="funcionalidades" 

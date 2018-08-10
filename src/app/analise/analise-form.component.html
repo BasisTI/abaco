@@ -1,420 +1,407 @@
 <p-tabView>
+    <p-tabPanel header="Geral">
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12">
+                <div class="card card-w-title">
 
-  <p-tabPanel header="Geral">
-    <div class="ui-g ui-fluid">
-      <div class="ui-g-12">
-        <div class="card card-w-title">
-            
-          <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+                    <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
 
-            <div>
-              <!-- Inicio dos campos para inclusão -->
-              <div class="ui-g" *ngIf="!isEdicao">
-                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
-                    <label>Organização</label>
-                    <p-dropdown 
-                      dataKey="id"
-                      name="organizacao"
-                      optionLabel="nome"
-                      placeholder="Selecione..." 
-                      [options]="organizacoes" 
-                      [(ngModel)]="analise.organizacao" 
-                      [autoWidth]="false"
-                      (onChange)="organizacaoSelected($event.value)">
-                    </p-dropdown>
+                        <div>
+                            <!-- Inicio dos campos para inclusão -->
+                            <div class="ui-g" *ngIf="!isEdicao">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Organização</label>
+                                    <p-dropdown
+                                            [filter]="true"
+                                            dataKey="id"
+                                            name="organizacao"
+                                            optionLabel="nome"
+                                            placeholder="Selecione..."
+                                            [options]="organizacoes"
+                                            [(ngModel)]="analise.organizacao"
+                                            [autoWidth]="false"
+                                            (onChange)="setSistamaOrganizacao($event.value)">
+                                    </p-dropdown>
+                                </div>
+
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Equipe Responsável</label>
+                                    <p-dropdown
+                                            [filter]="true"
+                                            dataKey="id"
+                                            name="equipeResponsavel"
+                                            optionLabel="nome"
+                                            placeholder="Selecione..."
+                                            [options]="equipeResponsavel"
+                                            [(ngModel)]="analise.equipeResponsavel"
+                                            [autoWidth]="false">
+                                    </p-dropdown>
+                                </div>
+
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Sistema</label>
+                                    <p-dropdown
+                                            [filter]="true"
+                                            dataKey="id"
+                                            optionLabel="sigla"
+                                            disabled="{{ !disabledSistemaDropdown() }}"
+                                            placeholder="{{ sistemaDropdownPlaceholder() }}"
+                                            (onChange)="getSistemaSelecionado()"
+                                            name="sistema"
+                                            [options]="sistemas"
+                                            [(ngModel)]="analise.sistema"
+                                            [autoWidth]="false">
+                                    </p-dropdown>
+                                </div>
+
+                                <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: center; margin-top: 25px;">
+                                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+
+                                        <app-white-button
+                                                buttonLabel="Cancelar"
+                                                routerLink="/analise">
+                                        </app-white-button>
+
+                                    </div>
+                                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                                        <app-analise-botao-salvar></app-analise-botao-salvar>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Fim dos campos para inclusão -->
+
+                            <div class="ui-g" *ngIf="isEdicao">
+
+                                <!-- Inicio dos campos para alteração -->
+                                <fieldset class="ui-g-12 ui-md-12 ui-sm-12">
+
+                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                                        <label>Organização</label>
+                                        <p-dropdown
+                                                [filter]="true"
+                                                dataKey="id"
+                                                name="organizacao"
+                                                optionLabel="nome"
+                                                placeholder="Selecione..."
+                                                disabled="true"
+                                                [options]="organizacoes"
+                                                [(ngModel)]="analise.organizacao"
+                                                [autoWidth]="false"
+                                                (onChange)="setSistamaOrganizacao($event.value)">
+                                        </p-dropdown>
+                                    </div>
+
+                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                                        <label>Equipe Responsável</label>
+                                        <p-dropdown
+                                                [filter]="true"
+                                                dataKey="id"
+                                                name="equipeResponsavel"
+                                                optionLabel="nome"
+                                                placeholder="Selecione..."
+                                                disabled="true"
+                                                [options]="equipeResponsavel"
+                                                [(ngModel)]="analise.equipeResponsavel"
+                                                [autoWidth]="false"
+                                                (onChange)="setSistamaOrganizacao($event.value)">
+                                        </p-dropdown>
+                                    </div>
+
+                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                                        <label>Sistema</label>
+                                        <p-dropdown
+                                                [filter]="true"
+                                                dataKey="id"
+                                                optionLabel="sigla"
+                                                disabled="true"
+                                                placeholder="{{ sistemaDropdownPlaceholder() }}"
+                                                (onChange)="getSistemaSelecionado()"
+                                                name="sistema"
+                                                [options]="sistemas"
+                                                [(ngModel)]="analise.sistema"
+                                                [autoWidth]="false">
+                                        </p-dropdown>
+                                    </div>
+
+                                </fieldset>
+                                <!-- Fim dos campos para alteração -->
+                            </div>
+
+                        </div>
+
+                        <div style="margin-bottom: 25px; margin-top: 25px" *ngIf="isEdicao">
+                            <div class="ui-g">
+
+                                <div class="ui-g-6 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 18px">
+                                    <span class="md-inputfield">
+                                        <input
+                                                required
+                                                type="text"
+                                                maxlength="100"
+                                                name="identificadorAnalise"
+                                                [(ngModel)]="analise.identificadorAnalise"
+                                                (change)="save()"
+                                                pInputText/>
+                                        <label>Identificador da Analise *</label>
+                                    </span>
+                                </div>
+
+                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Contrato *</label>
+                                    <p-dropdown
+                                            [filter]="true"
+                                            required
+                                            dataKey="id"
+                                            optionLabel="numeroContrato"
+                                            placeholder="Selecione..."
+                                            (onChange)="contratoSelected($event.value)"
+                                            name="contrato"
+                                            [options]="contratos"
+                                            [(ngModel)]="analise.contrato"
+                                            [autoWidth]="false">
+                                    </p-dropdown>
+                                </div>
+
+                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Método de Contagem *</label>
+                                    <p-dropdown
+                                            [filter]="true"
+                                            required
+                                            (click)="!disabledFuncaoTransacao()"
+                                            placeholder="{{ needContratoDropdownPlaceholder() }}"
+                                            name="metodoContagem"
+                                            [options]="metodosContagem"
+                                            [(ngModel)]="analise.metodoContagem"
+                                            [autoWidth]="false"
+                                            (onChange)="save()">
+                                    </p-dropdown>
+                                </div>
+
+                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Tipo de Contagem *</label>
+                                    <p-dropdown
+                                            [filter]="true"
+                                            required
+                                            name="tiposAnalise"
+                                            placeholder="Selecione..."
+                                            [options]="tiposAnalise"
+                                            [(ngModel)]="analise.tipoAnalise"
+                                            [autoWidth]="false"
+                                            (onChange)="save()">
+                                    </p-dropdown>
+                                </div>
+
+                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Deflator</label>
+                                    <p-dropdown
+                                            [filter]="true"
+                                            required
+                                            disabled="{{ !isContratoSelected() }}"
+                                            placeholder="{{ needContratoDropdownPlaceholder() }}"
+                                            name="fatorAjuste"
+                                            [options]="fatoresAjuste"
+                                            [(ngModel)]="analise.fatorAjuste"
+                                            [autoWidth]="false"
+                                            (onChange)="save()">
+                                    </p-dropdown>
+                                </div>
+
+                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 17px">
+                                    <span class="md-inputfield">
+                                        <input
+                                                required
+                                                type="text"
+                                                maxlength="100"
+                                                name="manualContrato"
+                                                disabled="true"
+                                                [(ngModel)]="nomeManual"
+                                                pInputText/>
+                                        <label>Manual</label>
+                                    </span>
+                                </div>
+
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Propósito da Contagem</label>
+                                    <span class="md-inputfield">
+                                        <textarea
+                                                pInputTextarea name="propositoContagem"
+                                                (change)="save()"
+                                                [(ngModel)]="analise.propositoContagem">
+                                        </textarea>
+                                    </span>
+                                </div>
+
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Escopo da Contagem</label>
+                                    <span class="md-inputfield">
+                                        <textarea
+                                                pInputTextarea name="escopo"
+                                                (change)="save()"
+                                                [(ngModel)]="analise.escopo">
+                                        </textarea>
+                                    </span>
+                                </div>
+
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Fronteira</label>
+                                    <span class="md-inputfield">
+                                        <textarea
+                                                pInputTextarea name="fronteiras"
+                                                (change)="save()"
+                                                [(ngModel)]="analise.fronteiras">
+                                        </textarea>
+                                    </span>
+                                </div>
+
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Documentação</label>
+                                    <span class="md-inputfield">
+                                        <textarea
+                                                required
+                                                pInputTextarea name="documentacao"
+                                                (change)="save()"
+                                                [(ngModel)]="analise.documentacao">
+                                        </textarea>
+                                    </span>
+                                </div>
+
+                                <div class="ui-g-4 ui-md-6 ui-sm-12">
+
+                                    <div class="ui-g-6 ui-md-6 ui-sm-12">
+                                        Aguardar prazo de garantia {{diasGarantia > 0 ? " de " + diasGarantia + " dias"
+                                        : null}}?
+                                    </div>
+
+                                    <div class="ui-g-3 ui-md-2 ui-sm-12">
+                                        <p-radioButton
+                                                name="baseline_imediatamente"
+                                                label="Sim"
+                                                [value]="true"
+                                                [(ngModel)]="analise.baselineImediatamente"
+                                                (onClick)="save()">
+                                        </p-radioButton>
+                                    </div>
+
+                                    <div class="ui-g-3 ui-md-2 ui-sm-12">
+                                        <p-radioButton
+                                                name="baseline_imediatamente"
+                                                label="Não"
+                                                [value]="false"
+                                                [(ngModel)]="analise.baselineImediatamente"
+                                                (onClick)="save()">
+                                        </p-radioButton>
+                                    </div>
+
+                                </div>
+
+                                <div class="ui-g-4 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                                    <span class="md-inputfield">
+                                        <p-calendar
+                                                name="dataHomol"
+                                                [(ngModel)]="analise.dataHomologacao"
+                                                dateFormat="dd/mm/yy"
+                                                (onSelect)="save()">
+                                        </p-calendar>
+                                        <label>Data da homologação (software) {{analise.baselineImediatamente ? " *" : null}}</label>
+                                    </span>
+
+                                    <div *ngIf="analise.baselineImediatamente && !(analise.dataHomologacao)"
+                                         class="ui-message ui-messages-error">
+                                        Campo Obrigatório!
+                                    </div>
+
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                                    <p-dataTable
+                                            dataKey="id"
+                                            emptyMessage="Selecione um Contrato para escolher Fases"
+                                            [value]="esforcoFases"
+                                            [(selection)]="analise.esforcoFases"
+                                            (onHeaderCheckboxToggle)="save()"
+                                            (onRowSelect)="save()"
+                                            (onRowUnselect)="save()"
+                                            [headerCheckboxToggleAllPages]="true">
+
+                                        <p-header>Fases</p-header>
+
+                                        <p-column
+                                                selectionMode="multiple"
+                                                [style]="{'width':'15%'}">
+                                        </p-column>
+
+                                        <p-column
+                                                header="Nome"
+                                                field="fase.nome">
+                                        </p-column>
+
+                                        <p-column
+                                                header="Esforço %"
+                                                field="esforcoFormatado">
+                                        </p-column>
+
+                                        <p-footer
+                                                *ngIf="analise.contrato">
+                                            Total: {{ totalEsforcoFases() }}%
+                                        </p-footer>
+                                    </p-dataTable>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Observações</label>
+                                    <span class="md-inputfield">
+                                        <textarea
+                                                [rows]="3"
+                                                [cols]="180"
+                                                autoResize=true
+                                                pInputTextarea name="observacoes"
+                                                (change)="save()"
+                                                [(ngModel)]="analise.observacoes">
+                                        </textarea>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="ui-g-2 ui-md-2 ui-sm-12" style="margin-bottom: 25px">
+                                <app-white-button
+                                        buttonLabel="Voltar"
+                                        routerLink="/analise">
+                                </app-white-button>
+
+                            </div>
+
+                        </div>
+                    </form>
                 </div>
-
-                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
-                    <label>Equipe Responsável</label>
-                    <p-dropdown 
-                      dataKey="id"
-                      name="equipeResponsavel"
-                      optionLabel="nome"
-                      placeholder="Selecione..."
-                      [options]="equipeResponsavel" 
-                      [(ngModel)]="analise.equipeResponsavel" 
-                      [autoWidth]="false">
-                    </p-dropdown>
-                </div>
-
-                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
-                    <label>Sistema</label>
-                    <p-dropdown 
-                      dataKey="id" 
-                      optionLabel="sigla" 
-                      disabled="{{ !shouldEnableSistemaDropdown() }}"
-                      placeholder="{{ sistemaDropdownPlaceholder() }}"
-                      (onChange)="sistemaSelected()"
-                      name="sistema" 
-                      [options]="sistemas" 
-                      [(ngModel)]="analise.sistema"  
-                      [autoWidth]="false">
-                    </p-dropdown>
-                </div>
-                
-                <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: center; margin-top: 25px;">
-                  <div class="ui-g-2 ui-md-2 ui-sm-12">
-
-                    <app-white-button
-                      buttonLabel="Cancelar" 
-                      routerLink="/analise">
-                    </app-white-button>
-
-                  </div>
-                  <div class="ui-g-2 ui-md-2 ui-sm-12">
-                    <app-analise-botao-salvar></app-analise-botao-salvar>
-                  </div>
-                </div>
-              </div>
-              <!-- Fim dos campos para inclusão -->
-
-              <div class="ui-g" *ngIf="isEdicao">
-
-                <!-- Inicio dos campos para alteração -->
-                <fieldset class="ui-g-12 ui-md-12 ui-sm-12">
-                  
-                  <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
-                      <label>Organização</label>
-                      <p-dropdown 
-                        dataKey="id"
-                        name="organizacao"
-                        optionLabel="nome"
-                        placeholder="Selecione..." 
-                        disabled="true"
-                        [options]="organizacoes" 
-                        [(ngModel)]="analise.organizacao" 
-                        [autoWidth]="false"
-                        (onChange)="organizacaoSelected($event.value)">
-                      </p-dropdown>
-                  </div>
-
-                  <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
-                      <label>Equipe Responsável</label>
-                      <p-dropdown 
-                        dataKey="id"
-                        name="equipeResponsavel"
-                        optionLabel="nome"
-                        placeholder="Selecione..."
-                        disabled="true"
-                        [options]="equipeResponsavel" 
-                        [(ngModel)]="analise.equipeResponsavel" 
-                        [autoWidth]="false"
-                        (onChange)="organizacaoSelected($event.value)">
-                      </p-dropdown>
-                  </div>
-
-                  <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
-                      <label>Sistema</label>
-                      <p-dropdown 
-                        dataKey="id" 
-                        optionLabel="sigla" 
-                        disabled="true"
-                        placeholder="{{ sistemaDropdownPlaceholder() }}"
-                        (onChange)="sistemaSelected()"
-                        name="sistema" 
-                        [options]="sistemas" 
-                        [(ngModel)]="analise.sistema"  
-                        [autoWidth]="false">
-                      </p-dropdown>
-                  </div>
-                  
-                </fieldset>
-                <!-- Fim dos campos para alteração -->
-                </div>
-
             </div>
-
-            <div style="margin-bottom: 25px; margin-top: 25px" *ngIf="isEdicao">
-              <div class="ui-g">
-    
-                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 18px">
-                  <span class="md-inputfield">
-                    <input 
-                      required
-                      type="text" 
-                      maxlength="100"
-                      name="identificadorAnalise"
-                      [(ngModel)]="analise.identificadorAnalise"
-                      (change)="save()"
-                      pInputText
-                      pTooltip="{{ tooltipIdentificadorAnalise() }}"/>
-                    <label>Identificador da Analise *</label>
-                  </span>
-                </div>
-
-                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Contrato *</label>
-                  <p-dropdown 
-                    required
-                    dataKey="id"
-                    optionLabel="numeroContrato" 
-                    placeholder="Selecione..."
-                    (onChange)="contratoSelected($event.value)"
-                    name="contrato" 
-                    [options]="contratos" 
-                    [(ngModel)]="analise.contrato" 
-                    [autoWidth]="false"
-                    pTooltip="{{ tooltipContrato() }}">
-                  </p-dropdown>
-                </div>
-
-                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Método de Contagem *</label>
-                  <p-dropdown
-                    required
-                    disabled="{{ !isContratoSelected() }}"
-                    placeholder="{{ needContratoDropdownPlaceholder() }}"
-                    name="metodoContagem" 
-                    [options]="metodosContagem"
-                    [(ngModel)]="analise.metodoContagem"  
-                    [autoWidth]="false"
-                    (onChange)="save()"
-                    pTooltip="{{ tooltipMedodoContagem() }}">
-                  </p-dropdown>
-                </div>
-    
-                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Tipo de Contagem *</label>
-                  <p-dropdown
-                    required
-                    name="tiposAnalise"
-                    placeholder="Selecione..."
-                    [options]="tiposAnalise"
-                    [(ngModel)]="analise.tipoAnalise"  
-                    [autoWidth]="false"
-                    (onChange)="save()"
-                    pTooltip="{{ tooltipTipoContagem() }}">
-                  </p-dropdown>
-                </div>
-
-                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Deflator</label>
-                  <p-dropdown
-                    required
-                    disabled="{{ !isContratoSelected() }}"
-                    placeholder="{{ needContratoDropdownPlaceholder() }}"
-                    name="fatorAjuste" 
-                    [options]="fatoresAjuste"
-                    [(ngModel)]="analise.fatorAjuste"
-                    [autoWidth]="false"
-                    (onChange)="save()">
-                  </p-dropdown>
-                </div>
-
-              <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px; margin-top: 17px">
-                <span class="md-inputfield">
-                  <input
-                    required
-                    type="text" 
-                    maxlength="100"
-                    name="manualContrato"
-                    disabled="true"
-                    [(ngModel)]="nomeManual"
-                    pInputText/>
-                  <label>Manual</label>
-                </span>
-              </div>
-    
-                <div class="ui-g-3 ui-md-3 ui-sm-12">
-  
-                  <div class="ui-g-6 ui-md-6 ui-sm-12">
-                    <label>Aguardar prazo de garantia?</label>
-                  </div>
-  
-                  <div class="ui-g-3 ui-md-3 ui-sm-12">
-                    <p-radioButton 
-                      name="baseline_imediatamente" 
-                      label="Sim"
-                      [value]="true" 
-                      [(ngModel)]="analise.baselineImediatamente"
-                      (onClick)="save()">
-                    </p-radioButton>
-                  </div>
-
-                  <div class="ui-g-3 ui-md-3 ui-sm-12">
-                    <p-radioButton 
-                      name="baseline_imediatamente"
-                      label="Não"
-                      [value]="false" 
-                      [(ngModel)]="analise.baselineImediatamente"
-                      (onClick)="save()">
-                    </p-radioButton>
-                  </div>
-
-                </div>
-    
-                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Propósito da Contagem *</label>
-                  <span class="md-inputfield">
-                    <textarea
-                      required
-                      pInputTextarea name="propositoContagem" 
-                      [rows]="3" 
-                      [cols]="180"
-                      (change)="save()"
-                      [(ngModel)]="analise.propositoContagem"
-                      pTooltip="{{ tooltipPropositoContagem() }}">
-                    </textarea>
-                  </span>
-                </div>
-    
-                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Escopo da Contagem *</label>
-                  <span class="md-inputfield">
-                    <textarea
-                      required
-                      pInputTextarea name="escopo" 
-                      [rows]="3" 
-                      [cols]="180"
-                      (change)="save()"
-                      [(ngModel)]="analise.escopo"
-                      pTooltip="{{ tooltipEscopoContagem() }}">
-                    </textarea>
-                  </span>
-                </div>
-    
-                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Fronteira</label>
-                  <span class="md-inputfield">
-                    <textarea
-                      pInputTextarea name="fronteiras" 
-                      [rows]="3" 
-                      [cols]="180"
-                      (change)="save()"
-                      [(ngModel)]="analise.fronteiras"
-                      pTooltip="{{ tooltipFronteira() }}">
-                    </textarea>
-                  </span>
-                </div>
-      
-                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Documentação *</label>
-                  <span class="md-inputfield">
-                    <textarea
-                      required
-                      pInputTextarea name="documentacao" 
-                      [rows]="3" 
-                      [cols]="180"
-                      (change)="save()"
-                      [(ngModel)]="analise.documentacao"
-                      pTooltip="{{ tooltipDocumentacao() }}">
-                    </textarea>
-                  </span>
-                </div>
-
-                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
-                  <span class="md-inputfield">
-                    <p-calendar 
-                      name="dataHomol"
-                      [(ngModel)]="analise.dataHomologacao" 
-                      dateFormat="dd/mm/yy"
-                      (onSelect)="save()">
-                    </p-calendar>
-                    <label>Data da homologação (do software)</label>
-                  </span>
-                </div>
-
-                <div class="ui-g-8 ui-md-8 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
-                  <span class="md-inputfield">
-                    <input 
-                      type="text" 
-                      maxlength="100"
-                      name="numeroOS" 
-                      [(ngModel)]="analise.numeroOs"
-                      (change)="save()"
-                      pInputText/>
-                    <label>Número da Ordem de Serviço</label>
-                  </span>
-                </div>
-
-                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                  <p-dataTable
-                    dataKey="id"
-                    emptyMessage="Selecione um Contrato para escolher Fases"
-                    [value]="esforcoFases" 
-                    [(selection)]="analise.esforcoFases"
-                    (onHeaderCheckboxToggle) ="save()"
-                    (onRowSelect) ="save()"
-                    (onRowUnselect) ="save()"
-                    [headerCheckboxToggleAllPages]="true">
-                    
-                    <p-header>Fases</p-header>
-
-                    <p-column 
-                      selectionMode="multiple" 
-                      [style]="{'width':'15%'}">
-                    </p-column>
-                    
-                    <p-column 
-                      header="Nome" 
-                      field="fase.nome">
-                    </p-column>
-
-                    <p-column 
-                      header="Esforço %" 
-                      field="esforcoFormatado">
-                    </p-column>
-
-                    <p-footer 
-                      *ngIf="analise.contrato">
-                      Total: {{ totalEsforcoFases() }}%
-                    </p-footer>
-                  </p-dataTable>
-                </div>
-
-                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                  <label>Observações</label>
-                    <span class="md-inputfield">
-                      <textarea 
-                        [rows]="3" 
-                        [cols]="180"
-                        autoResize = true
-                        pInputTextarea name="observacoes"
-                        (change)="save()"
-                        [(ngModel)]="analise.observacoes">
-                      </textarea>
-                    </span>
-                  </div>
-                </div>
-
-                <div class="ui-g-2 ui-md-2 ui-sm-12" style="margin-bottom: 25px">
-                  <app-white-button
-                  buttonLabel="Voltar" 
-                  routerLink="/analise">
-                </app-white-button>
-
-                </div>
-
-              </div>
-          </form>
         </div>
-      </div>
-    </div>
-  </p-tabPanel>
+    </p-tabPanel>
 
-  <p-tabPanel
-    header="Funções de Dados"
-    *ngIf="isEdicao">
-    <app-analise-funcao-dados></app-analise-funcao-dados>
-  </p-tabPanel>
+    <p-tabPanel
+            header="Funções de Dados"
+            *ngIf="isEdicao">
+        <app-analise-funcao-dados></app-analise-funcao-dados>
+    </p-tabPanel>
 
-  <p-tabPanel
-    header="Funções de Transação"
-    *ngIf="isEdicao">
-    <app-analise-funcao-transacao></app-analise-funcao-transacao>
-  </p-tabPanel>
+    <p-tabPanel
+            [disabled]="!disableFuncaoTrasacao"
+            header="Funções de Transação"
+            *ngIf="isEdicao">
+        <app-analise-funcao-transacao></app-analise-funcao-transacao>
+    </p-tabPanel>
 
-  <p-tabPanel
-    header="Resumo" 
-    *ngIf="isEdicao">
-    <app-analise-resumo></app-analise-resumo>
-  </p-tabPanel>
+    <p-tabPanel
+            header="Resumo"
+            *ngIf="isEdicao">
+        <app-analise-resumo></app-analise-resumo>
+    </p-tabPanel>
 </p-tabView>
 
 <!-- Dialog confirmação deleção -->
 <p-confirmDialog header="Confirmação" #dialog>
-  <p-footer>
-    <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-    <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
-  </p-footer>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+    </p-footer>
 </p-confirmDialog>
+

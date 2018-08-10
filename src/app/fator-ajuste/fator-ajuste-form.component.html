@@ -36,13 +36,13 @@
             </div>
           </div>
           <div class="ui-g-6">
-            <p-dropdown [options]="dropdownTipoFatorAjuste" placeholder="TipoFatorAjuste" name="tipoAjuste" [(ngModel)]="fatorAjuste.tipoAjuste" [autoWidth]="false"></p-dropdown>
+            <p-dropdown [filter]="true" [options]="dropdownTipoFatorAjuste" placeholder="TipoFatorAjuste" name="tipoAjuste" [(ngModel)]="fatorAjuste.tipoAjuste" [autoWidth]="false"></p-dropdown>
           </div>
           <div class="ui-g-6">
-            <p-dropdown [options]="dropdownImpactoFatorAjuste" placeholder="ImpactoFatorAjuste" name="impacto" [(ngModel)]="fatorAjuste.impacto" [autoWidth]="false"></p-dropdown>
+            <p-dropdown [filter]="true" [options]="dropdownImpactoFatorAjuste" placeholder="ImpactoFatorAjuste" name="impacto" [(ngModel)]="fatorAjuste.impacto" [autoWidth]="false"></p-dropdown>
           </div>
           <div class="ui-g-6">
-            <p-dropdown [options]="manuals" optionLabel="nome" placeholder="Manual" name="manual" [(ngModel)]="fatorAjuste.manual" [autoWidth]="false" dataKey="id"></p-dropdown>
+            <p-dropdown [filter]="true" [options]="manuals" optionLabel="nome" placeholder="Manual" name="manual" [(ngModel)]="fatorAjuste.manual" [autoWidth]="false" dataKey="id"></p-dropdown>
           </div>
         </div>
         <div class="ui-g">

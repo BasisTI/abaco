@@ -24,7 +24,7 @@ import {FileUpload} from 'primeng/primeng';
 })
 export class ManualFormComponent implements OnInit, OnDestroy {
     manual: Manual;
-    isSaving: boolean;
+    isSaving; isEdit: boolean;
     loading: boolean;
     private routeSub: Subscription;
     arquivoManual: File;
@@ -80,7 +80,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.tipoFaseService.query().subscribe((response: ResponseWrapper) => {
             this.tipoFases = response.json;
         });
-        this.manual.versaoCPM = 421;
+        this.manual.versaoCPM = 431;
     }
 
     /**
@@ -93,7 +93,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         }
 
         this.isSaving = true;
-
+        
         if (this.manual.id !== undefined) {
             this.editar();
         } else {
@@ -107,9 +107,11 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 if (this.arquivoManual !== undefined) {
                     this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
                         this.manual.arquivoManualId = JSON.parse(response['_body']).id;
+                        this.isEdit = true;
                         this.subscribeToSaveResponse(this.manualService.update(this.manual));
                     });
                 } else {
+                    this.isEdit = true;
                     this.subscribeToSaveResponse(this.manualService.update(this.manual));
                 }
             } else {
@@ -122,16 +124,17 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
         if (this.arquivoManual !== undefined) {
             if (this.checkRequiredFields()) {
-
                 this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
                     this.manual.arquivoManualId = JSON.parse(response['_body']).id;
                     this.subscribeToSaveResponse(this.manualService.create(this.manual));
-                });
+                    });
             } else {
                 this.privateExibirMensagemCamposInvalidos(1);
             }
+        } else if (this.checkRequiredFields()) {
+                this.subscribeToSaveResponse(this.manualService.create(this.manual));
         } else {
-            this.privateExibirMensagemCamposInvalidos(2);
+            this.privateExibirMensagemCamposInvalidos(1);
         }
     }
 
@@ -207,18 +210,20 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         result.subscribe((res: Manual) => {
             this.isSaving = false;
             this.router.navigate(['/manual']);
-            this.pageNotificationService.addCreateMsg();
-        }, (error: Response) => {
-            alert(error);
+            this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg();
+        }, 
+        (error: Response) => {
             this.isSaving = false;
-            switch (error.status) {
-                case 400: {
-                    let invalidFieldNamesString = '';
-                    const fieldErrors = JSON.parse(error['_body']).fieldErrors;
-                    invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-                    this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
+      
+            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.manualexists') {
+                this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+                document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
                 }
-            }
+            let invalidFieldNamesString = '';
+            const fieldErrors = JSON.parse(error['_body']).fieldErrors;
+            invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
+            this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
+              
         });
     }
 
@@ -240,7 +245,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 this.openDialogEditPhaseEffort();
                 break;
             case 'delete':
-                console.log(event.selection);
                 this.editedPhaseEffort = event.selection.clone();
                 this.confirmDeletePhaseEffort();
         }
@@ -258,7 +262,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 this.openDialogEditAdjustFactor();
                 break;
             case 'delete':
-                console.log(event.selection);
                 this.editedAdjustFactor = event.selection.clone();
                 this.confirmDeleteAdjustFactor();
         }

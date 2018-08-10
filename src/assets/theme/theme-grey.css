@@ -4956,7 +4956,7 @@ body .ui-datatable .ui-paginator {
 body .ui-datatable .ui-datatable-thead > tr {
   border-color: #cacaca; }
   body .ui-datatable .ui-datatable-thead > tr th {
-    padding: .625em .875em;
+    /*padding: .625em .875em;*/
     background-color: #ffffff; }
     body .ui-datatable .ui-datatable-thead > tr th.ui-sortable-column:not(.ui-state-active):hover {
       background-color: #e8e8e8;

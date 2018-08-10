@@ -10,7 +10,7 @@ export enum ImpactoFatorAjuste {
   'ALTERACAO' = 'ALTERACAO',
   'EXCLUSAO' = 'EXCLUSAO',
   'CONVERSAO' = 'CONVERSAO',
-  'ITENS_NAO_MENSURAVEIS' = 'ITENS_NAK_MENSURAVEIS'
+  'ITENS_NAO_MENSURAVEIS' = 'ITENS_NAO_MENSURAVEIS'
 }
 
 export class FatorAjuste implements BaseEntity {

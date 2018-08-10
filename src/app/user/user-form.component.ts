@@ -30,6 +30,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
   isSaving: boolean;
 
+  isEdit: boolean;
+
   private routeSub: Subscription;
 
   constructor(
@@ -105,11 +107,19 @@ export class UserFormComponent implements OnInit, OnDestroy {
   // Em oposição a uma solução mais simples porém hardcoded.
   private populateUserAuthoritiesWithArtificialId() {
     this.user.authorities.forEach(authority => {
-      this.authorities.forEach(userAuthority => {
-        if (authority.name === userAuthority.name) {
-          userAuthority.artificialId = authority.artificialId;
+      switch (authority.name){
+        case "ROLE_ADMIN": {
+          authority.description = "Administrador";
+          authority.artificialId = 0;
+          break;
         }
-      });
+
+        case "ROLE_USER": {
+          authority.description = "Usuário";
+          authority.artificialId = 1;
+          break;
+        }
+      }
     });
   }
 
@@ -122,6 +132,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.user.id !== undefined) {
+      this.isEdit = true;
       this.subscribeToSaveResponse(this.userService.update(this.user));
     } else {
       this.subscribeToSaveResponse(this.userService.create(this.user));
@@ -179,7 +190,13 @@ export class UserFormComponent implements OnInit, OnDestroy {
     result.subscribe((res: User) => {
       this.isSaving = false;
       this.router.navigate(['/admin/user']);
-      this.pageNotificationService.addCreateMsg();
+      if (this.isEdit){
+        this.pageNotificationService.addUpdateMsg();
+      }
+      else{
+        this.pageNotificationService.addCreateMsg();
+      }
+      
     }, (error: Response) => {
       this.isSaving = false;
 

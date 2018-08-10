@@ -15,6 +15,7 @@
     
     <div class="ui-g-12" style="margin-bottom: 25px">
       <p-dropdown 
+        [filter]="true"
         [options]="funcoesDados"
         [(ngModel)]="funcaoDadosSelecionada"
         (onChange)="funcaoDadosSelected($event.value)"

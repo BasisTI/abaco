@@ -21,7 +21,8 @@
           <label>Nome: {{ organizacao.nome }}</label>
         </div>
         <div class="ui-g-12 ui-md-12 ui-sm-12">
-          <label>CNPJ: {{ organizacao.cnpj }}</label>
+          <label>CNPJ: </label>
+          <input type="text" name="cnpj" mask="99.999.999/9999-99" [ngModel]="organizacao.cnpj" readonly/>
         </div>
         <div class="ui-g-12 ui-md-12 ui-sm-12">
           <label>Número ocorrência: {{ organizacao.numeroOcorrencia }}</label>

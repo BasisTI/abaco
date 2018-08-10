@@ -61,40 +61,39 @@
           <p-column header="Código" field="id" [sortable]="true"></p-column>
           
           <p-column header="Nome" field="nome" [sortable]="true" [style]="{'width': '15%'}"></p-column>
-          
           <p-column header="Estimada" field="valorVariacaoEstimada" [sortable]="true">
             <ng-template let-col let-valorVariacaoEstimada="rowData" pTemplate="body">
-              {{ valorVariacaoEstimada[col.field]* 100 }}%
+              {{ (valorVariacaoEstimada[col.field] * 100).toString() | slice:0:4}}%
             </ng-template>
           </p-column>
           
           <p-column header="Indicativa" field="valorVariacaoIndicativa" [sortable]="true">
-            <ng-template pTemplate="body" let-col let-valorVariacaoIndicativa="rowData">
-              {{ valorVariacaoIndicativa[col.field]* 100 }}%
+            <ng-template pTemplate="body" let-col let-valorVariacaoIndicativa="rowData" >
+              {{ (valorVariacaoIndicativa[col.field] * 100).toString() | slice:0:4}}%
             </ng-template>
           </p-column>
           
           <p-column header="Inclusão" field="parametroInclusao" [sortable]="true">
             <ng-template let-col let-parametroInclusao="rowData" pTemplate="body">
-                {{ parametroInclusao[col.field]* 100 }}%
+                 {{ (parametroInclusao[col.field] * 100).toString() | slice:0:4}}%
             </ng-template>
           </p-column>
           
           <p-column header="Alteração" field="parametroAlteracao" [sortable]="true">
             <ng-template let-col let-parametroAlteracao="rowData" pTemplate="body">
-                {{ parametroAlteracao[col.field]* 100 }}%
+                 {{ (parametroAlteracao[col.field] * 100).toString() | slice:0:4}}%
             </ng-template>
           </p-column>
           
           <p-column header="Exclusão" field="parametroExclusao" [sortable]="true">
             <ng-template let-col let-parametroExclusao="rowData" pTemplate="body">
-                {{ parametroExclusao[col.field]* 100 }}%
+                {{ (parametroExclusao[col.field] * 100).toString() | slice:0:4}}%
             </ng-template>
           </p-column>
           
           <p-column header="Conversão" field="parametroConversao" [sortable]="true">
             <ng-template let-col let-parametroConversao="rowData" pTemplate="body">
-                {{ parametroConversao[col.field]* 100 }}%
+                {{ (parametroConversao[col.field] * 100).toString() | slice:0:4}}%
             </ng-template>
           </p-column>
 
@@ -115,7 +114,7 @@
 <p-confirmDialog header="Confirmação" #dialog>
   <p-footer>
     <app-white-button buttonLabel="Não" buttonIcon="fa-close" (click)="dialog.reject()"></app-white-button>
-    <app-green-button buttonLabel="Sim" buttonIcon="fa-close" (click)="dialog.accept()"></app-green-button>
+    <app-green-button buttonLabel="Sim" buttonIcon="fa-check" (click)="dialog.accept()"></app-green-button>
   </p-footer>
 </p-confirmDialog>
 
@@ -123,7 +122,8 @@
   <div class="ui-g">
     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 30px"> 
       <span class="md-inputfield">
-        <input 
+        <input
+          id="nome_manual"
           type="text" 
           name="nomeManualClonado"
           [(ngModel)]="nomeDoManualClonado" 
