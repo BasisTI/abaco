@@ -15,7 +15,7 @@ public final class AbacoUtil {
     public static String getReportFooter() {
         StringBuilder footer = new StringBuilder();
         //TODO Informar o nome do Usuário Logado
-        footer.append("Gerado por  <NomeUsuario>  em ");
+        footer.append("Gerado por admin em ");
         footer.append(localDateTimeEmString(LocalDateTime.now()));
 
         return footer.toString();

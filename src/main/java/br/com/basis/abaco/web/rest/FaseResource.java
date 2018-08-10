@@ -179,17 +179,8 @@ public class FaseResource {
 
     @GetMapping(value = "/tipoFase/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
-    public ResponseEntity<InputStreamResource> getRelatorioExportacao(@PathVariable String tipoRelatorio,
-                                                                      @RequestParam(defaultValue = "*") String query) {
-        try {
-            return gerarRelatorioExportacao(tipoRelatorio, query);
-        } catch (RelatorioException e) {
-            log.error(e.getMessage(), e);
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, RelatorioException.getCodeEntidade(), e.getMessage())).body(null);
-        }
-    }
 
-    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(String tipoRelatorio, String query) throws RelatorioException {
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
