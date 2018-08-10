@@ -38,6 +38,7 @@ testem.log
 /e2e/*.map
 
 # System Files
+frontend_install.sh
 .DS_Store
 Thumbs.db
 /nbproject/private/

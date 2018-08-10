@@ -17,6 +17,7 @@ import { UploadService } from '../upload/upload.service';
 import {FileUpload} from 'primeng/primeng';
 import {NgxMaskModule} from 'ngx-mask';
 import { ValidacaoUtil } from '../util/validacao.util'
+import { ValueTransformer } from '@angular/compiler/src/util';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -98,6 +99,13 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     this.manualInvalido = false;
   }
 
+  validarDataInicio() {
+    if (!(this.novoContrato.dataInicioValida()) || !(this.contratoEmEdicao.dataInicioValida())){
+      this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
+      document.getElementById('login').setAttribute('style', 'border-color: red;');
+    }
+  }
+
   /**
    *
    * */
@@ -113,6 +121,12 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     if (this.novoContrato.manual === null || this.novoContrato.manual === undefined){
       this.manualInvalido = true;
       this.pageNotificationService.addErrorMsg("Selecione um manual");
+      return
+    }
+    if (!(this.novoContrato.dataInicioValida())){
+      this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
+      document.getElementById('login').setAttribute('style', 'border-color: red;');
+      
       return
     }
     this.organizacao.addContrato(this.novoContrato);
@@ -185,7 +199,10 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     this.isSaving = true;
-    if (this.organizacao.cnpj !== undefined && this.organizacao.cnpj !== ' ' && this.organizacao.cnpj !== null){
+    if (this.organizacao.cnpj === '') {this.organizacao.cnpj = undefined}
+
+    if (this.organizacao.cnpj !== undefined && this.organizacao.cnpj !== ' '){
+      if (this.organizacao.cnpj)
       if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
         this.cnpjValido = true;
         this.pageNotificationService.addErrorMsg('CNPJ inválido');
@@ -207,19 +224,15 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-        if (this.checkRequiredFields()) {
-          if (this.organizacao.logoId !== undefined){
-            this.uploadService.uploadFile(this.logo).subscribe(response => {
-              this.organizacao.logoId = JSON.parse(response['_body']).id;
-              this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
-              });
-          } else {
+        if (this.logo !== undefined){
+          this.uploadService.uploadFile(this.logo).subscribe(response => {
+            this.organizacao.logoId = JSON.parse(response['_body']).id;
             this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
-          }
+            });
         } else {
-          this.pageNotificationService.addErrorMsg(this.getInvalidFieldsString() + ' é um Campo obrigatório.');
-        }
-    }
+          this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
+          }
+      }
   }
 
   /**
@@ -229,20 +242,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     return this.organizacaoService.find(id);
   }
 
-  /**
-   *
-   * */
-  private checkRequiredFields(): boolean {
-      let isFieldsValid = false;
-
-    if (this.organizacao.nome === null || this.organizacao.nome === undefined || this.organizacao.nome === '') {
-      this.invalidFields.push('Nome');
-      isFieldsValid = (this.invalidFields.length === 0);
-    } else {
-      isFieldsValid = true;
-    }
-      return isFieldsValid;
-  }
+  
 
   /**
    *
@@ -271,14 +271,31 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg();
     }, (error: Response) => {
       this.isSaving = false;
+      if(error.status === 400){
+        let errorType : string = error.headers.toJSON()['x-abacoapp-error'][0];
 
-      switch (error.status) {
-        case 400: {
-          let invalidFieldNamesString = '';
-          const fieldErrors = JSON.parse(error['_body']).fieldErrors;
-          invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-          this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
+        switch(errorType){
+          case "error.organizacaoexists" : {
+            this.pageNotificationService.addErrorMsg('Já existe organização cadastrada com mesmo nome!');
+            //document.getElementById('login').setAttribute('style', 'border-color: red;');
+            break;
+          }
+          case "error.cnpjexists" : {
+            this.pageNotificationService.addErrorMsg('Já existe organização cadastrada com mesmo CNPJ!');
+            //document.getElementById('login').setAttribute('style', 'border-color: red;');
+            break;
+          }
+          case "error.beggindateGTenddate" : {
+            console.log("Entrei no case pelo organizacao-form.components");
+            this.pageNotificationService.addErrorMsg('"Início Vigência" não pode ser posterior a "Final Vigência"');
+            //document.getElementById('login').setAttribute('style', 'border-color: red;');
+            break;
+          }
         }
+        let invalidFieldNamesString = '';
+        const fieldErrors = JSON.parse(error['_body']).fieldErrors;
+        invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
+        this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
       }
     });
   }

@@ -24,6 +24,24 @@
       </div>
 
       <div class="ui-g">
+        <h1>Impacto</h1>
+        <div class="ui-g-12">
+          <app-memory-datatable [value]="manualArray" (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true" disableDelete="true">
+            <p-column header="Inclusão(%)" field="parametroInclusaoFormatado">
+            </p-column>
+            <p-column header="Alteração(%)" field="parametroAlteracaoFormatado">
+            </p-column>
+            <p-column header="Exclusão(%)" field="parametroExclusaoFormatado">
+            </p-column>
+            <p-column header="Conversão(%)" field="parametroConversaoFormatado">
+            </p-column>
+            <p-column header="Versão CPM" field="versaoCPM">
+            </p-column>
+          </app-memory-datatable>
+        </div>
+      </div>
+
+      <div class="ui-g">
         <h1>Esforços por Fase</h1>
         <div class="ui-g-12">
           <app-memory-datatable [value]="manual.esforcoFases" (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true" disableDelete="true">

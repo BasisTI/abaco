@@ -13,6 +13,7 @@ import { UploadService } from '../upload/upload.service';
 export class ManualDetailComponent implements OnInit, OnDestroy {
 
   manual: Manual;
+  manualArray: Manual[] = [];
   private subscription: Subscription;
   fileName: string;
 
@@ -33,6 +34,7 @@ export class ManualDetailComponent implements OnInit, OnDestroy {
     this.manualService.find(id).subscribe((manual) => {
       this.manual = manual;
       this.getFileInfo();
+      this.manualArray.push(manual);
     });
   }
 

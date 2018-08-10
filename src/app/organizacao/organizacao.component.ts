@@ -60,10 +60,11 @@ export class OrganizacaoComponent implements AfterViewInit {
       message: 'Tem certeza que deseja excluir o registro?',
       accept: () => {
         this.organizacaoService.delete(id).subscribe(() => {
+          this.pageNotificationService.addDeleteMsg();
           this.recarregarDataTable();
         }, error => {
           if (error.status === 500) {
-            this.pageNotificationService.addErrorMsg('A organização não pode ser deletada pois existe contrato associado a ela.');
+            this.pageNotificationService.addErrorMsg('A organização não pode ser deletada pois está associada a um contrato, equipe ou análise!');
           }
         });
       }
