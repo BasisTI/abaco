@@ -35,4 +35,9 @@ export class FuncaoDadosService {
             .map((res: Response) => res.json());
         };
 
+    public delete(id: number): Observable<Response> {
+        return this.http.delete(`${this.sistemaResourceUrl}/${id}`);
+    }
+
+
 }

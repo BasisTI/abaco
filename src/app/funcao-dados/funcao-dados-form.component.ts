@@ -1,12 +1,18 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {AnaliseSharedDataService, PageNotificationService} from '../shared';
+import {Component, OnInit, Input, ChangeDetectorRef, OnDestroy} from '@angular/core';
+import {AnaliseSharedDataService, PageNotificationService, ResponseWrapper} from '../shared';
 import {FuncaoDados} from './funcao-dados.model';
 import {Analise, AnaliseService} from '../analise';
 import {FatorAjuste} from '../fator-ajuste';
 
 import * as _ from 'lodash';
-import {ConfirmationService, SelectItem} from 'primeng/primeng';
+import {Modulo} from '../modulo/index';
+import {Funcionalidade} from '../funcionalidade/index';
+import {SelectItem} from 'primeng/primeng';
+import {Calculadora} from '../analise-shared/calculadora';
 import {DatatableClickEvent} from '@basis/angular-components';
+import {ConfirmationService} from 'primeng/primeng';
+import {ResumoFuncoes} from '../analise-shared/resumo-funcoes';
+import {AfterViewInit, AfterContentInit} from '@angular/core/src/metadata/lifecycle_hooks';
 import {Subscription} from 'rxjs/Subscription';
 
 import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
@@ -14,9 +20,8 @@ import {DerChipItem} from '../analise-shared/der-chips/der-chip-item';
 import {DerChipConverter} from '../analise-shared/der-chips/der-chip-converter';
 import {AnaliseReferenciavel} from '../analise-shared/analise-referenciavel';
 import {FuncaoDadosService} from './funcao-dados.service';
+import {AnaliseSharedUtils} from '../analise-shared/analise-shared-utils';
 import {Manual} from '../manual';
-import {Funcionalidade} from '../funcionalidade';
-import {Calculadora, ResumoFuncoes} from '../analise-shared';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -136,7 +141,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     // Carrega nome das funçeõs de dados
     private loadDataFunctionsName() {
-        this.funcaoDadosService.findAllNamesBySistemaId(this.analiseSharedDataService.analise.sistema.id).subscribe(
+        const sistemaId: number = this.analiseSharedDataService.analise.sistema.id;
+        this.funcaoDadosService.findAllNamesBySistemaId(sistemaId).subscribe(
             nomes => {
                 this.nomeDasFuncoesDoSistema = nomes;
                 this.sugestoesAutoComplete = nomes.slice();
@@ -266,15 +272,22 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private editar() {
+        this.verifyDataRequire();
+        this.desconverterChips();
+        this.verificarModulo();
+
         const funcaoDadosCalculada = Calculadora.calcular(
             this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual
         );
+
         this.analise.updateFuncaoDados(funcaoDadosCalculada);
         this.atualizaResumo();
-        this.configurarDialog();
-        this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
         this.resetarEstadoPosSalvar();
+
+        this.salvarAnalise();
         this.fecharDialog();
+        this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
+
     }
 
     fecharDialog() {
@@ -371,8 +384,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     // Carregar Referencial
-    public loadReference(referenciaveis: AnaliseReferenciavel[],
-                         strValues: string[]): DerChipItem[] {
+    private loadReference(referenciaveis: AnaliseReferenciavel[],
+                                  strValues: string[]): DerChipItem[] {
 
         if (referenciaveis) {
             if (referenciaveis.length > 0) {
@@ -382,14 +395,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             }
         } else {
             return DerChipConverter.converter(strValues);
-        }
-    }
-
-    formataFatorAjuste(fatorAjuste: FatorAjuste): string {
-        if (fatorAjuste) {
-            return FatorAjusteLabelGenerator.generate(fatorAjuste);
-        } else {
-            return 'Nenhum';
         }
     }
 
@@ -410,7 +415,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    public ordenarColunas(colunasAMostrarModificada: SelectItem[]) {
+    formataFatorAjuste(fatorAjuste: FatorAjuste): string {
+        return fatorAjuste ? FatorAjusteLabelGenerator.generate(fatorAjuste) : 'Nenhum';
+    }
+
+    ordenarColunas(colunasAMostrarModificada: SelectItem[]) {
         this.colunasAMostrar = colunasAMostrarModificada;
         this.colunasAMostrar = _.sortBy(this.colunasAMostrar, col => col.index);
     }
