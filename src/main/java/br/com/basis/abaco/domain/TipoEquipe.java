@@ -20,6 +20,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cascade;
@@ -34,7 +35,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @Table(name = "tipo_equipe")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "tipoequipe")
-public class TipoEquipe implements Serializable {
+public class TipoEquipe implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
 
@@ -83,6 +84,18 @@ public class TipoEquipe implements Serializable {
     public void setOrganizacoes(Set<Organizacao> orgs) {
         this.organizacoes = new HashSet<>(orgs);
     }
+
+    public String getNomeOrg(){
+        String nomes = "";
+
+        for(Organizacao org : organizacoes){
+            nomes += org.getNome() + ". ";
+        }
+
+        return nomes;
+    }
+
+
 
     @Override
     public boolean equals(Object obj) {
