@@ -4,18 +4,17 @@
 
             <div class="ui-g">
                 <div class="ui-g-12">
-
                     <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
                         <div class="ui-md-2">
                             <app-green-button
                                     buttonLabel="Novo"
                                     buttonIcon="ui-icon-add"
-                                    (click)="openDialogNovo()">
+                                    (click)="openDialog(false)">
                             </app-green-button>
                         </div>
                     </div>
 
-                    <!-- Tabela com as funções dados adicionadas  -->
+                    <!-- TABELA DE FUNÇÕES ADICIONADOAS  -->
                     <div class="ui-g" *ngIf="funcoesDados.length > 0">
                         <hr>
                         <div class="ui-g-12">
@@ -31,7 +30,6 @@
                     </div>
 
                     <div>
-                        <!-- inicio tabela -->
                         <app-memory-datatable
                                 [value]="funcoesDados"
                                 (buttonClick)="datatableClick($event)"
@@ -40,7 +38,6 @@
                                 scrollWidth="100%">
 
                             <div *ngFor="let col of colunasAMostrar">
-
                                 <div *ngIf="col.field; else template_column">
                                     <p-column
                                             [field]="col.field"
@@ -53,7 +50,6 @@
                                     <p-column
                                             [header]="col.header"
                                             [style]="{'width': '200px'}">
-
                                         <ng-template
                                                 *ngIf="col.header === 'Deflator'"
                                                 let-fatorAjuste="rowData.fatorAjuste"
@@ -120,7 +116,7 @@
                 </div>
             </div>
 
-            <!-- Resumo -->
+            <!--RESUMO-->
             <div class="ui-g" *ngIf="funcoesDados.length > 0">
                 <hr>
                 <div class="ui-g-12">
@@ -130,15 +126,15 @@
                 </div>
             </div>
 
-            <!-- inicio Dialog adicionar função de dados  -->
+
+            <!-- DIALOG: ADICIONAR E EDITAR FUNÇÃO DE DADOS -->
             <p-dialog
-                    header="Adicionar Função de Dados"
-                    [(visible)]="showDialogNovo"
-                    [contentStyle]="{'height': '840px'}"
-                    [width]="900">
+                    [(visible)]="showDialog"
+                    [(header)]="textHeader"
+                    [contentStyle]="{'height': ['windowHeightDialog']}"
+                    [width]="[windowWidthDialog]">
 
                 <div class="ui-g">
-
                     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                         <label>Nome *</label>
                         <p-autoComplete
@@ -157,8 +153,7 @@
 
                 <app-analise-modulo-funcionalidade
                         [isFuncaoDados]="false"
-                        (moduloSelectedEvent)="moduloSelected($event)"
-                        (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
+                        (funcionalidadeSelectedEvent)="functionalitySelected($event)">
                 </app-analise-modulo-funcionalidade>
 
                 <div class="ui-g">
@@ -215,8 +210,7 @@
                     <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
                         <label>Quantidade</label>
                         <input type="number" class="ui-inputtext" min="0"
-                                [(ngModel)]="currentFuncaoDados.quantidade">
-
+                               [(ngModel)]="currentFuncaoDados.quantidade">
 
 
                     </div>
@@ -225,8 +219,6 @@
 
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
-
-
                     <h2>RLR (TR)</h2>
                     <app-analise-der-chips
                             [(values)]="rlrsChips"
@@ -261,7 +253,7 @@
                     <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
                         <app-white-button
                                 buttonLabel="Cancelar"
-                                (click)="cancelarEdicao()">
+                                (click)="cancelar()">
                         </app-white-button>
                     </div>
 
@@ -274,292 +266,14 @@
 
                     <div class="ui-md-3 ui-sm-12">
                         <app-blue-button
-                                buttonLabel="Adicionar"
+                                buttonLabel="Salvar"
                                 buttonIcon="ui-icon-add"
-                                (click)="adicionar()">
+                                (click)="buttonSaveEdit()">
                         </app-blue-button>
                     </div>
                 </div>
             </p-dialog>
             <!-- Fim Dialog adicionar função de dados  -->
-
-            <!-- inicio Alterar função de dados  -->
-            <p-dialog
-                    header="Alterar Função de Dados"
-                    [(visible)]="showDialogEdit"
-                    [contentStyle]="{'height': '840px'}"
-                    [width]="900">
-
-                <div class="ui-g">
-
-                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                        <label>Nome *</label>
-                        <p-autoComplete
-                                [(ngModel)]="currentFuncaoDados.name"
-                                [suggestions]="sugestoesAutoComplete"
-                                (completeMethod)="autoCompleteNomes($event)"
-                                (onSelect)="recuperarNomeSelecionado($event.value)"
-                                (onKeyUp)="nomeValido()">
-                        </p-autoComplete>
-                        <div *ngIf="nomeInvalido"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                        </div>
-                    </div>
-                </div>
-
-                <app-analise-modulo-funcionalidade
-                        [isFuncaoDados]="true"
-                        (moduloSelectedEvent)="moduloSelected($event)"
-                        (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
-                </app-analise-modulo-funcionalidade>
-
-                <div class="ui-g">
-
-                    <div class="ui-g-4 ui-md-4 ui-sm-12">
-                        <label>Classificação *</label>
-                        <p-dropdown
-                                [filter]="true"
-                                [options]="classificacoes"
-                                [(ngModel)]="currentFuncaoDados.tipo"
-                                placeholder="Selecione uma Classificação"
-                                name="classificacao"
-                                [autoWidth]="false"
-                                (onChange)="classValida()">
-                        </p-dropdown>
-                        <div *ngIf="classInvalida"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                        </div>
-                    </div>
-
-                    <div class="ui-g-3 ui-md-3 ui-sm-12">
-                        <label>Impacto *</label>
-                        <p-dropdown
-                                [filter]="true"
-                                [options]="impacto"
-                                [(ngModel)]="currentFuncaoDados.impacto"
-                                placeholder="Selecione..."
-                                name="impacto"
-                                [autoWidth]="false"
-                                (onChange)="impactoValido()">
-                        </p-dropdown>
-                        <div *ngIf="impactoInvalido"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                        </div>
-                    </div>
-
-                    <div class="ui-g-5 ui-md-5 ui-sm-12">
-                        <label>Deflator</label>
-                        <p-dropdown
-                                [filter]="true"
-                                [options]="fatoresAjuste"
-                                [(ngModel)]="currentFuncaoDados.fatorAjuste"
-                                [disabled]="!isContratoSelected()"
-                                [placeholder]="fatoresAjusteDropdownPlaceholder()"
-                                name="fatorAjuste"
-                                [autoWidth]="false">
-                        </p-dropdown>
-                    </div>
-
-                </div>
-
-
-                <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
-
-
-                    <h2>RLR (TR)</h2>
-                    <app-analise-der-chips
-                            [(values)]="rlrsChips"
-                            (onChange)="adicionar()">
-                    </app-analise-der-chips>
-                    <div hidden="hideElementTDTR">
-
-                    </div>
-                </div>
-
-                <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
-                    <h2>DER (TD)</h2>
-                    <app-analise-der-chips
-                            [(values)]="dersChips"
-                            (onChange)="adicionar()">
-                    </app-analise-der-chips>
-                </div>
-
-                <div class="ui-g-12 ui-md-12 ui-sm-12">
-                    <label>Fundamentação</label>
-                    <span class="md-inputfield">
-                <textarea
-                        [rows]="3"
-                        [cols]="180"
-                        pInputTextarea name="funcaoDadosSustentacao"
-                        [(ngModel)]="currentFuncaoDados.sustantation">
-                </textarea>
-            </span>
-                </div>
-
-                <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
-                    <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
-                        <app-white-button
-                                buttonLabel="Cancelar"
-                                (click)="cancelarEdicao()">
-                        </app-white-button>
-                    </div>
-
-                    <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
-                        <app-white-button
-                                buttonLabel="Fechar"
-                                (click)="cancelar()">
-                        </app-white-button>
-                    </div>
-
-                    <div class="ui-md-3 ui-sm-12">
-                        <app-blue-button
-                                buttonLabel="Alterar"
-                                buttonIcon="ui-icon-add"
-                                (click)="adicionar()">
-                        </app-blue-button>
-                    </div>
-                </div>
-            </p-dialog>
-            <!-- Fim Alterar função de dados  -->
-
-
-            <!-- inicio Dialog clonar função de dados  -->
-            <p-dialog
-                    header="Clonar Função de Dados"
-                    [(visible)]="showDialogClone"
-                    [contentStyle]="{'height': '840px'}"
-                    [width]="900">
-
-                <div class="ui-g">
-
-                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                        <label>Nome *</label>
-                        <p-autoComplete
-                                [(ngModel)]="currentFuncaoDados.name"
-                                [suggestions]="sugestoesAutoComplete"
-                                (completeMethod)="autoCompleteNomes($event)"
-                                (onSelect)="recuperarNomeSelecionado($event.value)"
-                                (onKeyUp)="nomeValido()">
-                        </p-autoComplete>
-                        <div *ngIf="nomeInvalido"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                        </div>
-                    </div>
-                </div>
-
-                <app-analise-modulo-funcionalidade
-                        [isFuncaoDados]="true"
-                        (moduloSelectedEvent)="moduloSelected($event)"
-                        (funcionalidadeSelectedEvent)="funcionalidadeSelected($event)">
-                </app-analise-modulo-funcionalidade>
-
-                <div class="ui-g">
-
-                    <div class="ui-g-4 ui-md-4 ui-sm-12">
-                        <label>Classificação *</label>
-                        <p-dropdown
-                                [filter]="true"
-                                [options]="classificacoes"
-                                [(ngModel)]="currentFuncaoDados.tipo"
-                                placeholder="Selecione uma Classificação"
-                                name="classificacao"
-                                [autoWidth]="false"
-                                (onChange)="classValida()">
-                        </p-dropdown>
-                        <div *ngIf="classInvalida"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                        </div>
-                    </div>
-
-                    <div class="ui-g-3 ui-md-3 ui-sm-12">
-                        <label>Impacto *</label>
-                        <p-dropdown
-                                [filter]="true"
-                                [options]="impacto"
-                                [(ngModel)]="currentFuncaoDados.impacto"
-                                placeholder="Selecione..."
-                                name="impacto"
-                                [autoWidth]="false"
-                                (onChange)="impactoValido()">
-                        </p-dropdown>
-                        <div *ngIf="impactoInvalido"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                        </div>
-                    </div>
-
-                    <div class="ui-g-5 ui-md-5 ui-sm-12">
-                        <label>Deflator</label>
-                        <p-dropdown
-                                [filter]="true"
-                                [options]="fatoresAjuste"
-                                [(ngModel)]="currentFuncaoDados.fatorAjuste"
-                                [disabled]="!isContratoSelected()"
-                                [placeholder]="fatoresAjusteDropdownPlaceholder()"
-                                name="fatorAjuste"
-                                [autoWidth]="false">
-                        </p-dropdown>
-                    </div>
-
-                </div>
-
-
-                <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
-
-
-                    <h2>RLR (TR)</h2>
-                    <app-analise-der-chips
-                            [(values)]="rlrsChips"
-                            (onChange)="adicionar()">
-                    </app-analise-der-chips>
-                    <div hidden="hideElementTDTR">
-
-                    </div>
-                </div>
-
-                <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
-                    <h2>DER (TD)</h2>
-                    <app-analise-der-chips
-                            [(values)]="dersChips"
-                            (onChange)="adicionar()">
-                    </app-analise-der-chips>
-                </div>
-
-                <div class="ui-g-12 ui-md-12 ui-sm-12">
-                    <label>Fundamentação</label>
-                    <span class="md-inputfield">
-                <textarea
-                        [rows]="3"
-                        [cols]="180"
-                        pInputTextarea name="funcaoDadosSustentacao"
-                        [(ngModel)]="currentFuncaoDados.sustantation">
-                </textarea>
-            </span>
-                </div>
-
-                <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
-                    <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
-                        <app-white-button
-                                buttonLabel="Cancelar"
-                                (click)="cancelar()">
-                        </app-white-button>
-                    </div>
-
-                    <div class="ui-md-3 ui-sm-12">
-                        <app-blue-button
-                                buttonLabel="Clonar"
-                                buttonIcon="ui-icon-add"
-                                (click)="clonar()">
-                        </app-blue-button>
-                    </div>
-                </div>
-            </p-dialog>
-            <!-- Fim Dialog clonar função de dados  -->
 
         </div>
     </div>
