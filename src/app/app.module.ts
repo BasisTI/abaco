@@ -20,7 +20,8 @@ import {
   SecurityModule,
   AuthService,
   AUTH_CONFIG,
-  VersionTagModule
+  VersionTagModule,
+  PageNotificationModule
 } from '@basis/angular-components';
 import { authServiceFactory } from './auth-service-factory';
 
@@ -97,6 +98,7 @@ export function createTranslateLoader(http: HttpClient) {
     HttpClientModule,
     LoginModule,
     SecurityModule.forRoot(),
+    PageNotificationModule.forRoot(),
     NgxMaskModule.forRoot(),
     TranslateModule.forRoot({
       loader: {

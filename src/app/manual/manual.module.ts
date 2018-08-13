@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatatableModule } from '@basis/angular-components';
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
+import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
 import {
   ButtonModule,
   InputTextModule,
@@ -59,6 +60,7 @@ export function createTranslateLoader(http: HttpClient) {
     ConfirmDialogModule,
     MemoryDataTableModule,
     AbacoButtonsModule,
+    BotoesExportacaoModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

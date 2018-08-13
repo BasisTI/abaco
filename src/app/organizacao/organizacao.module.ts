@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatatableModule } from '@basis/angular-components';
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
+import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
 import {NgxMaskModule} from 'ngx-mask';
 import { UtilModule } from '../util/util.module';
 
@@ -55,8 +56,9 @@ import { TextMaskModule } from 'angular2-text-mask';
     FileUploadModule,
     NgxMaskModule.forRoot(),
     AbacoButtonsModule,
+    TextMaskModule,
+    BotoesExportacaoModule,
     UtilModule,
-    TextMaskModule
   ],
   declarations: [
     OrganizacaoComponent,
