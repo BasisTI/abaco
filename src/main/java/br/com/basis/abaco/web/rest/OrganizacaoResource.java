@@ -56,7 +56,9 @@ public class OrganizacaoResource {
 
     private final OrganizacaoSearchRepository organizacaoSearchRepository;
 
-    private String erro, mensagem;
+    private String[] erro = {"orgNomeInvalido", "orgCnpjInvalido", "orgSiglaInvalido", "orgNumOcorInvalido", "organizacaoexists", "cnpjexists"};
+    private String[] mensagem = {"Nome de organização inválido", "CNPJ de organização inválido", "Sigla de organização inválido", "Numero da Ocorrência de organização inválido", "Organizacao already in use", "CNPJ already in use"};
+
 
     public OrganizacaoResource(OrganizacaoRepository organizacaoRepository, OrganizacaoSearchRepository organizacaoSearchRepository) {
         this.organizacaoRepository = organizacaoRepository;
@@ -81,48 +83,27 @@ public class OrganizacaoResource {
         return matcherCampo.find();
     }
 
-    private boolean validaCamposOrganizacao(Organizacao org) {
-        // Verificando validade de campos com relação à existência de espaços em branco no início ou no final e,opcionalmente, mais de um espaço entre palavras
-        if (org.getNome() != null && !validaCampo(org.getNome())) {
-            this.erro = "orgNomeInvalido";
-            this.mensagem = "Nome de organização inválido";
-            return false;
-        }
-        if (org.getCnpj() != null) {
-            if (!validaCampo(org.getCnpj())){
-                this.erro = "orgCnpjInvalido";
-                this.mensagem = "CNPJ de organização inválido";
-                return false;
+    private int validaCamposOrganizacao(Organizacao org) {
+        String[] campos = {org.getNome(), org.getCnpj(), org.getSigla(), org.getNumeroOcorrencia()};
+        int i = 0;
 
+        while (i < campos.length) {
+            if (campos[i] != null && !validaCampo(campos[i])) {
+                return i;
             }
-            /* Verifing if there is an existing Organizacao with same cnpj */
-            Optional<Organizacao> existingOrganizacao = organizacaoRepository.findOneByCnpj(org.getCnpj());
-            if (existingOrganizacao.isPresent()) {
-                this.erro = "cnpjexists";
-                this.mensagem = "CNPJ already in use";
-                return false;
-            }
-        }
-        if (org.getSigla() != null && !validaCampo(org.getSigla())) {
-            this.erro = "orgSiglaInvalido";
-            this.mensagem = "Sigla de organização inválido";
-            return false;
-        }
-        if (org.getNumeroOcorrencia() != null && !validaCampo(org.getNumeroOcorrencia())) {
-            this.erro = "orgNumOcorInvalido";
-            this.mensagem = "Numero da Ocorrência de organização inválido";
-            return false;
+            i++;
         }
         /* Verifing if there is an existing Organizacao with same name */
         Optional<Organizacao> existingOrganizacao = organizacaoRepository.findOneByNome(org.getNome());
         if (existingOrganizacao.isPresent() && (!existingOrganizacao.get().getId().equals(org.getId()))) {
-            this.erro = "organizacaoexists";
-            this.mensagem = "Organizacao already in use";
-            return false;
+            return 4;
         }
-        return true;
+        existingOrganizacao = organizacaoRepository.findOneByCnpj(org.getCnpj());
+        if (existingOrganizacao.isPresent()) {
+            return 5;
+        }
+        return -1;
     }
-
     /**
      * POST  /organizacaos : Create a new organizacao.
      *
@@ -133,11 +114,13 @@ public class OrganizacaoResource {
     @PostMapping("/organizacaos")
     @Timed
     public ResponseEntity<Organizacao> createOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
+        int i;
         log.debug("REST request to save Organizacao : {}", organizacao);
         if (organizacao.getId() != null) { return this.createBadRequest("idoexists", "A new organizacao cannot already have an ID"); }
 
-        if (!validaCamposOrganizacao(organizacao)) {
-            return this.createBadRequest(this.erro, this.mensagem);
+        i = validaCamposOrganizacao(organizacao);
+        if (i >= 0) {
+            return this.createBadRequest(this.erro[i], this.mensagem[i]);
         }
 
         Organizacao result = organizacaoRepository.save(organizacao);
@@ -159,13 +142,15 @@ public class OrganizacaoResource {
     @PutMapping("/organizacaos")
     @Timed
     public ResponseEntity<Organizacao> updateOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
+        int i;
         log.debug("REST request to update Organizacao : {}", organizacao);
         if (organizacao.getId() == null) {
             return createOrganizacao(organizacao);
         }
 
-        if (!validaCamposOrganizacao(organizacao)) {
-            return this.createBadRequest(this.erro, this.mensagem);
+        i = validaCamposOrganizacao(organizacao);
+        if (i >= 0) {
+            return this.createBadRequest(this.erro[i], this.mensagem[i]);
         }
 
         Organizacao result = organizacaoRepository.save(organizacao);
