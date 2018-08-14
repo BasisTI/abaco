@@ -9,6 +9,19 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import java.io.ByteArrayOutputStream;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioOrganizacaoColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.http.MediaType;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -56,9 +69,12 @@ public class OrganizacaoResource {
 
     private final OrganizacaoSearchRepository organizacaoSearchRepository;
 
-    public OrganizacaoResource(OrganizacaoRepository organizacaoRepository, OrganizacaoSearchRepository organizacaoSearchRepository) {
+    private final DynamicExportsService dynamicExportsService;
+
+    public OrganizacaoResource(OrganizacaoRepository organizacaoRepository, OrganizacaoSearchRepository organizacaoSearchRepository, DynamicExportsService dynamicExportsService) {
         this.organizacaoRepository = organizacaoRepository;
         this.organizacaoSearchRepository = organizacaoSearchRepository;
+        this.dynamicExportsService = dynamicExportsService;
     }
 
     /**
@@ -241,5 +257,21 @@ public class OrganizacaoResource {
       List<Organizacao> activeOrganizations = this.organizacaoRepository.findByAtivoTrue();
       
       return activeOrganizations;
+    }
+
+    @GetMapping(value = "/organizacao/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @Timed
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        try {
+            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
+            Page<Organizacao> result =  organizacaoSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioOrganizacaoColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            log.error(e.getMessage(), e);
+            throw new RelatorioException(e);
+        }
+        return DynamicExporter.output(byteArrayOutputStream,
+            "relatorio." + tipoRelatorio);
     }
 }
