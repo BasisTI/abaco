@@ -8,7 +8,7 @@ public class RelatorioFaseColunas extends PropriedadesRelatorio {
 
     public RelatorioFaseColunas() {
         super("Listagem de Fases", "Total de Fases");
-        super.getColunas().add(new ColunasPropriedadeRelatorio("id", "Código da Fase", Long.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
+        super.getColunas().add(new ColunasPropriedadeRelatorio("id", "Código da Fase", Long.class, 10, "####", DynamicExportsConstants.ALINHAR_ESQUERDA));
         super.getColunas().add(new ColunasPropriedadeRelatorio("nome", "Nome da Fase", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
 
     }

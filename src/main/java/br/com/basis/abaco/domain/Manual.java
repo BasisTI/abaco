@@ -21,6 +21,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -34,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Table(name = "manual")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "manual")
-public class Manual implements Serializable {
+public class Manual implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
 
