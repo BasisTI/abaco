@@ -7,6 +7,7 @@ import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,6 +60,9 @@ public class TipoEquipeResourceIntTest {
     @Autowired
     private EntityManager em;
 
+    @Autowired
+    private DynamicExportsService dynamicExportsService;
+
     private MockMvc restTipoEquipeMockMvc;
 
     private TipoEquipe tipoEquipe;
@@ -66,7 +70,7 @@ public class TipoEquipeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final TipoEquipeResource tipoEquipeResource = new TipoEquipeResource(tipoEquipeRepository, tipoEquipeSearchRepository);
+        final TipoEquipeResource tipoEquipeResource = new TipoEquipeResource(tipoEquipeRepository, tipoEquipeSearchRepository, dynamicExportsService);
         this.restTipoEquipeMockMvc = MockMvcBuilders.standaloneSetup(tipoEquipeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

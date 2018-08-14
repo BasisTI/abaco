@@ -8,6 +8,7 @@ import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.service.UserService;
 import br.com.basis.abaco.service.MailService;
 
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +41,9 @@ public class UserResourceIntTest {
 
 	@Autowired
 	private MailService mailService;
+
+	@Autowired
+    private DynamicExportsService dynamicExportsService;
 
 	@Autowired
 	private UserService userService;
@@ -76,7 +80,7 @@ public class UserResourceIntTest {
 	@Before
 	public void setup() {
 		UserResource userResource = new UserResource(userRepository, mailService, userService, userSearchRepository,
-				authorityRepository);
+				authorityRepository, dynamicExportsService);
 		this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
 	}
 

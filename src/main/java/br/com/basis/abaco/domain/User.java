@@ -21,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -38,7 +39,7 @@ import br.com.basis.abaco.config.Constants;
 @Table(name = "jhi_user")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "user")
-public class User extends AbstractAuditingEntity implements Serializable {
+public class User extends AbstractAuditingEntity implements Serializable, ReportObject {
 
 	private static final long serialVersionUID = 1L;
 
@@ -173,6 +174,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
 		return activated;
 	}
 
+	public String getAtivoString() {
+	    if (getActivated()) {
+	        return "Sim";
+        }
+        return "Não";
+    }
+
 	public void setActivated(boolean activated) {
 		this.activated = activated;
 	}
@@ -209,8 +217,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
 		this.langKey = langKey;
 	}
 
-	public Set<Authority> getAuthorities() {
-		return authorities;
+	public Set<Authority> getAuthorities() { 
+		return authorities; 
 	}
 
 	public void setAuthorities(Set<Authority> authorities) {
@@ -221,6 +229,16 @@ public class User extends AbstractAuditingEntity implements Serializable {
 		return tipoEquipes;
 	}
 
+    public String getNomeEquipe(){
+        String nomes = "";
+
+        for(TipoEquipe equipe : tipoEquipes){
+            nomes += equipe.getNome() + ". ";
+        }
+
+        return nomes;
+    }
+
 	public void setTipoEquipes(Set<TipoEquipe> tipoEquipes) {
 		this.tipoEquipes = tipoEquipes;
 	}
@@ -228,6 +246,16 @@ public class User extends AbstractAuditingEntity implements Serializable {
 	public Set<Organizacao> getOrganizacoes() {
 		return organizacoes;
 	}
+
+    public String getNomeOrg(){
+        String nomes = "";
+
+        for(Organizacao org : organizacoes){
+            nomes += org.getNome() + ". ";
+        }
+
+        return nomes;
+    }
 
 	public void setOrganizacoes(Set<Organizacao> organizacoes) {
 		this.organizacoes = organizacoes;
