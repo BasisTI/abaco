@@ -117,12 +117,14 @@
             </div>
 
             <!--RESUMO-->
-            <div class="ui-g" *ngIf="funcoesDados.length > 0">
-                <hr>
-                <div class="ui-g-12">
-                    <app-analise-funcao-resumo-table
-                            [linhasResumo]="resumo.all">
-                    </app-analise-funcao-resumo-table>
+            <div [hidden]="[true]">
+                <div class="ui-g" *ngIf="funcoesDados.length > 0" >
+                    <hr>
+                    <div class="ui-g-12">
+                        <app-analise-funcao-resumo-table
+                                [linhasResumo]="resumo.all">
+                        </app-analise-funcao-resumo-table>
+                    </div>
                 </div>
             </div>
 
