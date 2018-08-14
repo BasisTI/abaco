@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -32,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Table(name = "sistema")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "sistema")
-public class Sistema implements Serializable {
+public class Sistema implements Serializable, ReportObject {
 
 	private static final long serialVersionUID = 1L;
 
@@ -110,6 +111,10 @@ public class Sistema implements Serializable {
 	public Organizacao getOrganizacao() {
 		return organizacao;
 	}
+
+    public String getNomeOrg(){
+        return organizacao.getNome();
+    }
 
 	public Sistema organizacao(Organizacao organizacao) {
 		this.organizacao = organizacao;
