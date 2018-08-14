@@ -99,7 +99,7 @@ public class OrganizacaoResource {
             return 4;
         }
         existingOrganizacao = organizacaoRepository.findOneByCnpj(org.getCnpj());
-        if (existingOrganizacao.isPresent()) {
+        if (existingOrganizacao.isPresent() && (!existingOrganizacao.get().getId().equals(org.getId()))) {
             return 5;
         }
         return -1;
