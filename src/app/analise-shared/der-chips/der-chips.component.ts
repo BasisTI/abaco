@@ -59,14 +59,14 @@ export class DerChipsComponent implements OnChanges {
 
         const valores: string[] = this.values.map(chipItem => chipItem.text);
 
-        if (valores.indexOf(derChipItem.text) == -1) {
+        if (valores.indexOf(derChipItem.text) === -1) {
             this.values.push(derChipItem);
             this.valuesChanged();
         }
     }
 
     private valuesChanged() {
-        this.recalculaDuplicatas();
+        // this.recalculaDuplicatas();
         this.valuesChange.emit(this.values);
     }
 
@@ -103,8 +103,10 @@ export class DerChipsComponent implements OnChanges {
     }
 
     adicionarMultiplos() {
-        this.values = this.values.concat(this.converteMultiplos());
-        this.valuesChanged();
+        if (this.verificaMultiplosDuplicados(this.addMultiplosTexto)) {
+            this.values = this.values.concat(this.converteMultiplos());
+            this.valuesChanged();
+        }
         this.fecharDialogAddMultiplos();
     }
 
@@ -113,6 +115,12 @@ export class DerChipsComponent implements OnChanges {
      */
     limparMultiplos() {
         this.values = [];
+    }
+
+    private verificaMultiplosDuplicados(texto: string): boolean {
+        const valores: string[] = this.values.map(chipItem => chipItem.text);
+        const index = valores.indexOf(texto);
+        return index === -1;
     }
 
     private converteMultiplos(): DerChipItem[] {
