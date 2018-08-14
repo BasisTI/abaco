@@ -240,6 +240,13 @@ public class SistemaResourceIntTest {
 					public Optional<Organizacao> findOneByCnpj(String cnpj) {
 						return null;
 					}
+
+
+                    @Override
+                    public List<Organizacao> searchActiveOrganizations() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
                 }, null, null);
         this.restSistemaMockMvc = MockMvcBuilders.standaloneSetup(sistemaResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
