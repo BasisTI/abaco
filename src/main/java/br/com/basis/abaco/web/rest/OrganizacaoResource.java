@@ -175,6 +175,15 @@ public class OrganizacaoResource {
         return organizacaos;
     }
 
+    @GetMapping("/organizacaos/ativas")
+    @Timed
+    public List<Organizacao> searchActiveOrganizations() {
+        log.debug("REST request to get all Organizacaos");
+        List<Organizacao> organizacaos = organizacaoRepository.searchActiveOrganizations();
+
+        return organizacaos;
+    }
+
     /**
      * GET  /organizacaos/:id : get the "id" organizacao.
      *
