@@ -1,23 +1,21 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.AbacoApp;
-import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -28,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -63,6 +60,9 @@ public class SistemaResourceIntTest {
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
+    private DynamicExportsService dynamicExportsService;
+
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
     @Autowired
@@ -75,172 +75,20 @@ public class SistemaResourceIntTest {
 
     private Sistema sistema;
 
+    @Autowired
+    private OrganizacaoRepository organizacaoRepository;
+
+    @Autowired
+    private FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
+
+    @Autowired
+    private FuncaoDadosRepository funcaoDadosRepository;
+
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        SistemaResource sistemaResource = new SistemaResource(sistemaRepository, sistemaSearchRepository,
-                new OrganizacaoRepository() {
-
-                    @Override
-                    public <S extends Organizacao> S findOne(Example<S> arg0) {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-                    @Override
-                    public <S extends Organizacao> Page<S> findAll(Example<S> arg0, Pageable arg1) {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-                    @Override
-                    public <S extends Organizacao> boolean exists(Example<S> arg0) {
-                        // TODO Auto-generated method stub
-                        return false;
-                    }
-
-                    @Override
-                    public <S extends Organizacao> long count(Example<S> arg0) {
-                        // TODO Auto-generated method stub
-                        return 0;
-                    }
-
-                    @Override
-                    public <S extends Organizacao> S save(S arg0) {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-                    @Override
-                    public Organizacao findOne(Long arg0) {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-                    @Override
-                    public boolean exists(Long arg0) {
-                        // TODO Auto-generated method stub
-                        return false;
-                    }
-
-                    @Override
-                    public void deleteAll() {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public void delete(Iterable<? extends Organizacao> arg0) {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public void delete(Organizacao arg0) {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public void delete(Long arg0) {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public long count() {
-                        // TODO Auto-generated method stub
-                        return 0;
-                    }
-
-                    @Override
-                    public Page<Organizacao> findAll(Pageable arg0) {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-                    @Override
-                    public <S extends Organizacao> S saveAndFlush(S arg0) {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-                    @Override
-                    public <S extends Organizacao> List<S> save(Iterable<S> arg0) {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-                    @Override
-                    public Organizacao getOne(Long arg0) {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-                    @Override
-                    public void flush() {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public <S extends Organizacao> List<S> findAll(Example<S> arg0, Sort arg1) {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-                    @Override
-                    public <S extends Organizacao> List<S> findAll(Example<S> arg0) {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-                    @Override
-                    public List<Organizacao> findAll(Iterable<Long> arg0) {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-                    @Override
-                    public List<Organizacao> findAll(Sort arg0) {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-                    @Override
-                    public List<Organizacao> findAll() {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-                    @Override
-                    public void deleteInBatch(Iterable<Organizacao> arg0) {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public void deleteAllInBatch() {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public List<Organizacao> findByAtivoTrue() {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-
-					@Override
-					public Optional<Organizacao> findOneByNome(String nome) {
-						return null;
-					}
-
-					@Override
-					public Optional<Organizacao> findOneByCnpj(String cnpj) {
-						return null;
-					}
-                }, null, null);
+        SistemaResource sistemaResource = new SistemaResource(sistemaRepository, sistemaSearchRepository, organizacaoRepository, funcaoDadosVersionavelRepository, funcaoDadosRepository,  dynamicExportsService);
         this.restSistemaMockMvc = MockMvcBuilders.standaloneSetup(sistemaResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();
