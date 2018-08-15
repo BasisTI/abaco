@@ -27,9 +27,7 @@ export class AnaliseComponent implements OnInit {
     analiseSelecionada;
     analiseReadyToClone: Analise;
 
-    block: boolean;
-
-    unblock: boolean;
+    blocked: boolean;
 
     constructor(
         private router: Router,
@@ -40,15 +38,11 @@ export class AnaliseComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.block = true;
-        this.unblock = true;
+        this.blocked = false;
         this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
             this.analiseReadyToClone = new Analise().copyFromJSON(event.data);
-            this.block = true;
-            this.unblock = true;
             this.analiseSelecionada = event.data;
-            this.block = !event.data.bloqueiaAnalise;
-            this.unblock = event.data.bloqueiaAnalise;
+            this.blocked = event.data.bloqueiaAnalise;
             console.log(event.data);
         });
         this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
@@ -206,7 +200,7 @@ export class AnaliseComponent implements OnInit {
      * Desabilita botão relatório
      */
     public desabilitarBotaoRelatorio(): boolean {
-        return !!this.analiseSelecionada;
+        return !this.analiseSelecionada;
     }
 
     /**
@@ -223,8 +217,7 @@ export class AnaliseComponent implements OnInit {
                 this.analiseService.block(this.analiseSelecionada).subscribe(() => {
                     this.pageNotificationService.addBlockMsgWithName(this.analiseSelecionada.identificadorAnalise);
                     this.recarregarDataTable();
-                    this.block = true;
-                    this.unblock = true;
+                    this.blocked = !this.blocked;
                 });
             }
         });
@@ -245,8 +238,7 @@ export class AnaliseComponent implements OnInit {
                 this.analiseService.unblock(this.analiseSelecionada).subscribe(() => {
                     this.pageNotificationService.addUnblockMsgWithName(this.analiseSelecionada.identificadorAnalise);
                     this.recarregarDataTable();
-                    this.block = true;
-                    this.unblock = true;
+                    this.blocked = !this.blocked;
                 });
             }
         });

@@ -58,18 +58,18 @@
                             [rowsPerPageOptions]="rowsPerPageOptions"
                             [showPaginationFooter]="true"
                             #datatable>
-                        <button
+
+                        <button *ngIf="blocked"
                                 pButton
                                 type="button"
                                 name="desbloquear"
                                 pTooltip="Desbloquear"
                                 icon="ui-icon-block"
                                 (click)="desbloqueiaRelatorio()"
-                                class="ui-button-success"
-                                [disabled]="this.block">
+                                class="ui-button-success">
                         </button>
                         <p></p>
-                        <button
+                        <button *ngIf="!blocked"
                                 pButton
                                 type="button"
                                 name="bloquear"
@@ -78,14 +78,14 @@
                                 icon="ui-icon-block"
                                 (click)="bloqueiaRelatorio()"
                                 class="ui-button-danger"
-                                [disabled]="this.unblock">
+                                [disabled]="desabilitarBotaoRelatorio()">
                         </button>
 
                         <basis-datatable-button
                                 name="clone"
                                 tooltip="Clonar"
                                 icon="content-copy"
-                                disabled="desabilitarBotaoRelatorio()">
+                                [disabled]="desabilitarBotaoRelatorio()">
                         </basis-datatable-button>
 
                         <!-- <basis-datatable-button
