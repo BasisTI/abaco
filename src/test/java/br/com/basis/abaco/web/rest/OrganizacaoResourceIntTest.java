@@ -7,6 +7,7 @@ import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,6 +61,9 @@ public class OrganizacaoResourceIntTest {
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
+    private DynamicExportsService dynamicExportsService;
+
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
     @Autowired
@@ -75,7 +79,7 @@ public class OrganizacaoResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            OrganizacaoResource organizacaoResource = new OrganizacaoResource(organizacaoRepository, organizacaoSearchRepository);
+            OrganizacaoResource organizacaoResource = new OrganizacaoResource(organizacaoRepository, organizacaoSearchRepository, dynamicExportsService);
         this.restOrganizacaoMockMvc = MockMvcBuilders.standaloneSetup(organizacaoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

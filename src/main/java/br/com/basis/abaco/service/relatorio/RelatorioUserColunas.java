@@ -12,6 +12,7 @@ public class RelatorioUserColunas extends PropriedadesRelatorio {
         super.getColunas().add(new ColunasPropriedadeRelatorio("login", "Login", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
         super.getColunas().add(new ColunasPropriedadeRelatorio("email", "Email", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
         super.getColunas().add(new ColunasPropriedadeRelatorio("nomeOrg", "Organização", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
+        super.getColunas().add(new ColunasPropriedadeRelatorio("perfil", "Perfil", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
         super.getColunas().add(new ColunasPropriedadeRelatorio("nomeEquipe", "Equipe", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
         super.getColunas().add(new ColunasPropriedadeRelatorio("ativoString", "Ativo?", String.class, 10, DynamicExportsConstants.MASCARA_NULL, DynamicExportsConstants.ALINHAR_ESQUERDA));
 
