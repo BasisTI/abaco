@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
@@ -343,6 +342,7 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Long getGarantiaRestante() throws ParseException {
+        if (contrato == null || dataHomologacao == null){ return 0l; }
         Integer garantia = contrato.getDiasDeGarantia();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date dateWithoutTime = sdf.parse(sdf.format(new Date()));
@@ -461,7 +461,12 @@ public class Analise implements Serializable, ReportObject {
 		return metodoContagem;
 	}
 
-	public  String getMetodoContagemString() { return metodoContagem.toString(); }
+	public  String getMetodoContagemString() {
+        if (metodoContagem == null) {
+            return "";
+        }
+        return metodoContagem.toString();
+    }
 
 	public void setMetodoContagem(MetodoContagem metodoContagem) {
 		this.metodoContagem = metodoContagem;
