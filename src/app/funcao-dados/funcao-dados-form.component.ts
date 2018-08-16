@@ -327,12 +327,22 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     fecharDialog() {
+        this.limparMensagensErros();
         this.showDialog = false;
         this.analiseSharedDataService.funcaoAnaliseDescarregada();
         this.currentFuncaoDados = new FuncaoDados();
         this.dersChips = [];
         this.rlrsChips = [];
         window.scrollTo(0, 60);
+    }
+
+    limparMensagensErros(){
+        this.nomeInvalido = false;
+        this.classInvalida = false;
+        this.impactoInvalido = false;
+        this.erroUnitario = false;
+        this.erroTR = false;
+        this.erroTD = false;
     }
 
     private resetarEstadoPosSalvar() {
