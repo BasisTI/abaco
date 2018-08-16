@@ -13,7 +13,7 @@ export class DatePipe implements PipeTransform {
             dataHomologacao.setFullYear(parseInt(analise.dataHomologacao.substring(0,4)));
 
             let garantia: any = analise.contrato.diasDeGarantia * 86400000;
-            let result = ((garantia - (dataHoje - dataHomologacao)) / 86400000);
+            let result = Math.floor(((garantia - (dataHoje - dataHomologacao)) / 86400000));
             if (result < 0  || !analise.baselineImediatamente){
                 result = 0
                 return result;
