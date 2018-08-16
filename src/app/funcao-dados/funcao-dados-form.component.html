@@ -118,7 +118,7 @@
 
             <!--RESUMO-->
             <div [hidden]="[true]">
-                <div class="ui-g" *ngIf="funcoesDados.length > 0" >
+                <div class="ui-g" *ngIf="funcoesDados.length > 0">
                     <hr>
                     <div class="ui-g-12">
                         <app-analise-funcao-resumo-table
@@ -144,8 +144,7 @@
                                 [(ngModel)]="currentFuncaoDados.name"
                                 [suggestions]="sugestoesAutoComplete"
                                 (completeMethod)="autoCompleteNomes($event)"
-                                (onSelect)="recuperarNomeSelecionado($event.value)"
-                                (onKeyUp)="nomeValido()">
+                                (onSelect)="recuperarNomeSelecionado($event.value)">
                         </p-autoComplete>
                         <div *ngIf="nomeInvalido"
                              class="ui-message ui-messages-error">
@@ -204,6 +203,7 @@
                                 [(ngModel)]="currentFuncaoDados.fatorAjuste"
                                 [disabled]="!isContratoSelected()"
                                 [placeholder]="fatoresAjusteDropdownPlaceholder()"
+                                (onChange)="contratoSelecionado()"
                                 name="fatorAjuste"
                                 [autoWidth]="false">
                         </p-dropdown>
@@ -212,10 +212,12 @@
 
                     <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
                         <label>Quantidade</label>
-                        <input type="number" class="ui-inputtext" min="0"
+                        <input type="number" class="ui-inputtext" min="1"
                                [(ngModel)]="currentFuncaoDados.quantidade">
-
-
+                        <div *ngIf="erroUnitario"
+                             class="ui-message ui-messages-error">
+                            Campo obrigatório.
+                        </div>
                     </div>
 
                 </div>
@@ -227,9 +229,11 @@
                             [(values)]="rlrsChips"
                             (onChange)="adicionar()">
                     </app-analise-der-chips>
-                    <div hidden="hideElementTDTR">
-
+                    <div *ngIf="erroTR"
+                         class="ui-message ui-messages-error">
+                        Campo obrigatório.
                     </div>
+
                 </div>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
@@ -238,6 +242,10 @@
                             [(values)]="dersChips"
                             (onChange)="adicionar()">
                     </app-analise-der-chips>
+                    <div *ngIf="erroTD"
+                         class="ui-message ui-messages-error">
+                        Campo obrigatório.
+                    </div>
                 </div>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12">

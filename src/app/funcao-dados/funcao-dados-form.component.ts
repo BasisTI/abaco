@@ -66,6 +66,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private analiseCarregadaSubscription: Subscription;
     private subscriptionSistemaSelecionado: Subscription;
     private nomeDasFuncoesDoSistema: string[] = [];
+    public erroTR: boolean;
+    public erroTD: boolean;
+    public erroUnitario: boolean;
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -103,7 +106,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoDados = new FuncaoDados();
         this.subscribeToAnaliseCarregada();
         this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
-        this.subscribeToSistemaSelecionado();
+      //  this.subscribeToSistemaSelecionado();
 
     }
 
@@ -123,7 +126,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private subscribeToAnaliseCarregada() {
         this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
             this.atualizaResumo();
-            this.loadDataFunctionsName();
+          //  this.loadDataFunctionsName();
         });
     }
 
@@ -135,7 +138,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private subscribeToSistemaSelecionado() {
         this.subscriptionSistemaSelecionado = this.analiseSharedDataService.getSistemaSelecionadoSubject()
             .subscribe(() => {
-                this.loadDataFunctionsName();
+               this.loadDataFunctionsName();
             });
     }
 
@@ -193,8 +196,15 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 this.inicializaFatoresAjuste(this.manual);
             }
         }
-        this.hideShowQuantidade = this.currentFuncaoDados.fatorAjuste === undefined;
         return isContratoSelected;
+    }
+
+    contratoSelecionado() {
+        if (this.currentFuncaoDados.fatorAjuste.tipoAjuste.toString() === 'UNITARIO') {
+            this.hideShowQuantidade = this.currentFuncaoDados.fatorAjuste === undefined;
+        }else{
+            this.hideShowQuantidade = true;
+        }
     }
 
     fatoresAjusteDropdownPlaceholder() {
@@ -207,30 +217,21 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     // Funcionalidade Selecionada
     functionalitySelected(funcionalidade: Funcionalidade) {
-        if (!funcionalidade.modulo) {
+        if (!funcionalidade) {
         } else {
             this.moduloCache = funcionalidade;
         }
         this.currentFuncaoDados.funcionalidade = funcionalidade;
     }
 
-    nomeValido() {
-        this.nomeInvalido = false;
-    }
-
-    impactoValido() {
-        this.impactoInvalido = false;
-    }
-
-    classValida() {
-        this.classInvalida = false;
-    }
-
     adicionar() {
-        this.verifyDataRequire();
+        const retorno: boolean = this.verifyDataRequire();
+        if (!retorno) {
+            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            return;
+        }
         this.desconverterChips();
         this.verificarModulo();
-
         const funcaoDadosCalculada = Calculadora.calcular(
             this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
 
@@ -243,23 +244,53 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
     }
 
-    private verifyDataRequire() {
-        if (this.currentFuncaoDados.impacto === undefined) {
-            this.impactoInvalido = true;
-        }
+    private verifyDataRequire(): boolean {
+        let retorno = true;
+
         if (this.currentFuncaoDados.name === undefined) {
             this.nomeInvalido = true;
-        }
-        if (this.currentFuncaoDados.tipo === undefined) {
-            this.classInvalida = true;
+            retorno = false;
+        } else {
+            this.nomeInvalido = false;
         }
 
-        if (this.currentFuncaoDados.tipo === undefined
-            || this.currentFuncaoDados.impacto === undefined
-            || this.currentFuncaoDados.name === undefined) {
-            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
-            return;
+        if (this.currentFuncaoDados.impacto === undefined) {
+            this.impactoInvalido = true;
+            retorno = false;
+        } else {
+            this.impactoInvalido = false;
         }
+
+        this.classInvalida = this.currentFuncaoDados.tipo === undefined;
+        if (this.currentFuncaoDados.fatorAjuste !== undefined) {
+            if (this.currentFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' &&
+                this.currentFuncaoDados.quantidade === undefined) {
+                this.erroUnitario = true;
+                retorno = false;
+            }
+        }
+
+        if (this.analiseSharedDataService.analise.metodoContagem !== 'INDICATIVA') {
+            if (this.rlrsChips === undefined) {
+                this.erroTR = true;
+                retorno = false;
+            } else {
+                this.erroTR = false;
+            }
+            if (this.dersChips === undefined) {
+                this.erroTD = true;
+                retorno = false;
+            } else {
+                this.erroTD = false;
+            }
+        }
+
+        if (this.currentFuncaoDados.funcionalidade === undefined) {
+            this.pageNotificationService.addErrorMsg('Selecione um Módulo e Submódulo');
+            retorno = false;
+        }
+
+        return retorno;
     }
 
     salvarAnalise() {
@@ -267,12 +298,18 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private desconverterChips() {
-        this.currentFuncaoDados.ders = DerChipConverter.desconverterEmDers(this.dersChips);
-        this.currentFuncaoDados.rlrs = DerChipConverter.desconverterEmRlrs(this.rlrsChips);
+        if (this.dersChips != null && this.rlrsChips != null) {
+            this.currentFuncaoDados.ders = DerChipConverter.desconverterEmDers(this.dersChips);
+            this.currentFuncaoDados.rlrs = DerChipConverter.desconverterEmRlrs(this.rlrsChips);
+        }
     }
 
     private editar() {
-        this.verifyDataRequire();
+        const retorno: boolean = this.verifyDataRequire();
+        if (!retorno) {
+            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            return;
+        }
         this.desconverterChips();
         this.verificarModulo();
 
@@ -301,8 +338,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     private resetarEstadoPosSalvar() {
         this.currentFuncaoDados = this.currentFuncaoDados.clone();
+
         this.currentFuncaoDados.artificialId = undefined;
         this.currentFuncaoDados.id = undefined;
+
         this.dersChips.forEach(c => c.id = undefined);
         this.rlrsChips.forEach(c => c.id = undefined);
     }
@@ -312,6 +351,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             return;
         }
         this.currentFuncaoDados.funcionalidade = this.moduloCache;
+    }
+
+    classValida() {
+        this.classInvalida = false;
+    }
+
+    impactoValido() {
+        this.impactoInvalido = false;
     }
 
     /**
@@ -352,8 +399,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
+
         this.disableTRDER();
         this.configurarDialog();
+
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
         this.carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada);
         this.pageNotificationService.addInfoMsg(`Alterando Função de Dados '${funcaoDadosSelecionada.name}'`);
@@ -385,7 +434,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     // Carregar Referencial
     private loadReference(referenciaveis: AnaliseReferenciavel[],
-                                  strValues: string[]): DerChipItem[] {
+                          strValues: string[]): DerChipItem[] {
 
         if (referenciaveis) {
             if (referenciaveis.length > 0) {
