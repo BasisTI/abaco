@@ -107,7 +107,7 @@ public class AnaliseResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         AnaliseResource analiseResource = new AnaliseResource(analiseRepository, analiseSearchRepository,
-                funcaoDadosVersionavelRepository,funcaoDadosRepository, dynamicExportsService);
+                funcaoDadosVersionavelRepository, dynamicExportsService);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();
