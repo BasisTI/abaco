@@ -270,13 +270,13 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         }
 
         if (this.analiseSharedDataService.analise.metodoContagem !== 'INDICATIVA') {
-            if (this.rlrsChips === undefined) {
+            if (this.rlrsChips === undefined || this.rlrsChips === null) {
                 this.erroTR = true;
                 retorno = false;
             } else {
                 this.erroTR = false;
             }
-            if (this.dersChips === undefined) {
+            if (this.dersChips === undefined || this.dersChips === null) {
                 this.erroTD = true;
                 retorno = false;
             } else {
