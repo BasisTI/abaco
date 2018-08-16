@@ -1,11 +1,10 @@
-import {Component, OnInit, Input, ChangeDetectorRef, OnDestroy} from '@angular/core';
-import {AnaliseSharedDataService, PageNotificationService, ResponseWrapper} from '../shared';
+import {Component, OnInit, ChangeDetectorRef, OnDestroy} from '@angular/core';
+import {AnaliseSharedDataService, PageNotificationService} from '../shared';
 import {FuncaoDados} from './funcao-dados.model';
 import {Analise, AnaliseService} from '../analise';
 import {FatorAjuste} from '../fator-ajuste';
 
 import * as _ from 'lodash';
-import {Modulo} from '../modulo/index';
 import {Funcionalidade} from '../funcionalidade/index';
 import {SelectItem} from 'primeng/primeng';
 import {Calculadora} from '../analise-shared/calculadora';
@@ -106,7 +105,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoDados = new FuncaoDados();
         this.subscribeToAnaliseCarregada();
         this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
-      //  this.subscribeToSistemaSelecionado();
+        //  this.subscribeToSistemaSelecionado();
 
     }
 
@@ -126,7 +125,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private subscribeToAnaliseCarregada() {
         this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
             this.atualizaResumo();
-          //  this.loadDataFunctionsName();
+            //  this.loadDataFunctionsName();
         });
     }
 
@@ -138,7 +137,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private subscribeToSistemaSelecionado() {
         this.subscriptionSistemaSelecionado = this.analiseSharedDataService.getSistemaSelecionadoSubject()
             .subscribe(() => {
-               this.loadDataFunctionsName();
+                this.loadDataFunctionsName();
             });
     }
 
@@ -202,7 +201,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     contratoSelecionado() {
         if (this.currentFuncaoDados.fatorAjuste.tipoAjuste.toString() === 'UNITARIO') {
             this.hideShowQuantidade = this.currentFuncaoDados.fatorAjuste === undefined;
-        }else{
+        } else {
             this.hideShowQuantidade = true;
         }
     }
