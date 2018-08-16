@@ -7,7 +7,7 @@ import br.com.basis.dynamicexports.pojo.PropriedadesRelatorio;
 import java.math.BigDecimal;
 
 public class RelatorioManualColunas extends PropriedadesRelatorio {
-    String mascara = "##%";
+    private final String mascara = "##%";
 
     public RelatorioManualColunas() {
         super("Listagem de Manuais", "Total de Manuais");

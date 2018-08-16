@@ -241,10 +241,11 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 	}
 
     public String getNomeEquipe(){
+	    String ponto = ". ";
         StringBuilder bld = new StringBuilder();
 
         for(TipoEquipe equipe : tipoEquipes){
-            bld.append(equipe.getNome() + ". ");
+            bld.append(equipe.getNome() + ponto);
         }
 
         return bld.toString();
@@ -259,10 +260,11 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 	}
 
     public String getNomeOrg(){
+        String ponto = ". ";
         StringBuilder bld = new StringBuilder();
 
         for(Organizacao org : organizacoes){
-            bld.append(org.getNome() + ". ");
+            bld.append(org.getNome() + ponto);
         }
 
         return bld.toString();
