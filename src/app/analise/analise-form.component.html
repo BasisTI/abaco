@@ -191,7 +191,7 @@
                                     </p-dropdown>
                                 </div>
 
-                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
                                     <label>Deflator</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -206,7 +206,7 @@
                                     </p-dropdown>
                                 </div>
 
-                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 17px">
+                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 17px" [hidden]="validacaoCampos">
                                     <span class="md-inputfield">
                                         <input
                                                 required
@@ -220,7 +220,7 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
                                     <label>Propósito da Contagem</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -231,7 +231,7 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
                                     <label>Escopo da Contagem</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -242,7 +242,7 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
                                     <label>Fronteira</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -253,7 +253,7 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
                                     <label>Documentação</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -265,14 +265,14 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-4 ui-md-6 ui-sm-12">
+                                <div class="ui-g-4 ui-md-6 ui-sm-12" [hidden]="validacaoCampos">
 
                                     <div class="ui-g-6 ui-md-6 ui-sm-12">
                                         Aguardar prazo de garantia {{diasGarantia > 0 ? " de " + diasGarantia + " dias"
                                         : null}}?
                                     </div>
 
-                                    <div class="ui-g-3 ui-md-2 ui-sm-12">
+                                    <div class="ui-g-3 ui-md-2 ui-sm-12" >
                                         <p-radioButton
                                                 name="baseline_imediatamente"
                                                 label="Sim"
@@ -294,7 +294,7 @@
 
                                 </div>
 
-                                <div class="ui-g-4 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                                <div class="ui-g-4 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px" [hidden]="validacaoCampos">
                                     <span class="md-inputfield">
                                         <p-calendar
                                                 name="dataHomol"
@@ -312,7 +312,7 @@
 
                                 </div>
 
-                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
                                     <p-dataTable
                                             dataKey="id"
                                             emptyMessage="Selecione um Contrato para escolher Fases"
@@ -347,7 +347,7 @@
                                     </p-dataTable>
                                 </div>
 
-                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
                                     <label>Observações</label>
                                     <span class="md-inputfield">
                                         <textarea

@@ -31,6 +31,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     dataAnalise: any;
     dataHomol: any;
     diasGarantia: number;
+    public validacaoCampos: boolean;
 
     organizacoes: Organizacao[];
 
@@ -78,6 +79,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.validacaoCampos = true;
         this.analiseSharedDataService.init();
         this.isEdicao = false;
         this.isSaving = false;
@@ -332,10 +334,24 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por persistir as informações das análises na edição.
      **/
     save() {
+        this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
             this.analiseService.update(this.analise);
             this.diasGarantia = this.analise.contrato.diasDeGarantia;
         }
+    }
+
+    private validaCamposObrigatorios(){
+        const validacaoIdentificadorAnalise = this.analise.identificadorAnalise !== undefined;
+        const validacaoContrato = this.analise.contrato !== undefined;
+        const validacaoMetodoContagem = this.analise.metodoContagem !== null;
+        const validacaoTipoAnallise = this.analise.tipoAnalise !== null;
+
+        this.validacaoCampos = !(validacaoIdentificadorAnalise === true
+            &&  validacaoContrato === true
+            && validacaoMetodoContagem  === true
+            && validacaoTipoAnallise === true );
+
     }
 
     /**
