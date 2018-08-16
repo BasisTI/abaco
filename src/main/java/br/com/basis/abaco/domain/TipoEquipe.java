@@ -84,13 +84,13 @@ public class TipoEquipe implements Serializable, ReportObject {
 
     public String getNomeOrg(){
         String ponto = ". ";
-        StringBuilder bld = new StringBuilder();
+        String nomeOrg = "";
 
         for(Organizacao org : organizacoes){
-            bld.append(org.getNome() + ponto);
+            nomeOrg = nomeOrg.concat(org.getNome()).concat(ponto);
         }
 
-        return bld.toString();
+        return nomeOrg;
     }
 
 
