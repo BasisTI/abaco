@@ -21,7 +21,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -43,13 +43,16 @@ public class Sistema implements Serializable {
 
 	@Size(max = 20)
 	@Column(name = "sigla", length = 20)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String sigla;
 
 	@NotNull
 	@Column(name = "nome", nullable = false)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String nome;
 
 	@Column(name = "numero_ocorrencia")
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String numeroOcorrencia;
 
 	@ManyToOne

@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -35,6 +35,7 @@ public class Der implements Serializable {
     private Long id;
 
     @Column(name = "nome")
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
     private Integer valor;

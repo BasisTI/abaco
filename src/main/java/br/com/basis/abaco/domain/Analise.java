@@ -30,7 +30,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -59,6 +59,7 @@ public class Analise implements Serializable {
     private Long id;
 
     @Column(name = "numero_os")
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String numeroOs;
 
     @Enumerated(EnumType.STRING)
@@ -69,21 +70,26 @@ public class Analise implements Serializable {
     private BigDecimal valorAjuste;
 
     @Column(name = "pf_total")
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String pfTotal;
 
     @Column(name = "pf_total_adjust")
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String adjustPFTotal;
 
     @Size(max = 4000)
     @Column(name = "escopo", length = 4000)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String escopo;
 
     @Size(max = 4000)
     @Column(name = "fronteiras", length = 4000)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String fronteiras;
 
     @Size(max = 4000)
     @Column(name = "documentacao", length = 4000)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String documentacao;
 
     @Enumerated(EnumType.STRING)

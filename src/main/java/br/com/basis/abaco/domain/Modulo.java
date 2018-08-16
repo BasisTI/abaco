@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -43,6 +43,7 @@ public class Modulo implements Serializable {
 
 	@NotNull
 	@Column(name = "nome", nullable = false)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String nome;
 
 	@ManyToOne

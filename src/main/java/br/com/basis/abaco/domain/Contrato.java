@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -39,6 +39,7 @@ public class Contrato implements Serializable {
     private Long id;
 
     @Column(name = "numero_contrato")
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String numeroContrato;
 
     @Column(name = "data_inicio_vigencia")

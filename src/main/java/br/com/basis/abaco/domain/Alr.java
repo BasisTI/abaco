@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,6 +37,7 @@ public class Alr implements Serializable {
     private Long id;
 
     @Column(name = "nome")
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
     private Integer valor;

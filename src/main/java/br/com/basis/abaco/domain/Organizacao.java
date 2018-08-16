@@ -24,12 +24,16 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.br.CNPJ;
+import org.postgresql.core.Keyword;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.swagger.annotations.ApiModel;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 /**
  * <Enter note text here>
@@ -50,11 +54,13 @@ public class Organizacao implements Serializable {
 
 	@Size(max = 80)
 	@Column(name = "nome", length = 80)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String nome;
 
 	@Size(max = 19)
 	@Column(name = "cnpj", length = 14)
     @CNPJ(message = "CNPJ inválido")
+    @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
 	private String cnpj;
 
 	@NotNull
@@ -62,6 +68,7 @@ public class Organizacao implements Serializable {
 	private Boolean ativo;
 
 	@Column(name = "numero_ocorrencia")
+    @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
 	private String numeroOcorrencia;
 
 	@OneToMany(mappedBy = "organizacao", fetch = FetchType.EAGER)
@@ -79,6 +86,7 @@ public class Organizacao implements Serializable {
 
 	@Size(max = 10)
 	@Column(name = "sigla")
+    @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
 	private String sigla;
 
 	@Column(name="logo_id")

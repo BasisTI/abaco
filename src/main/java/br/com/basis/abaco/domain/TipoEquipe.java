@@ -26,7 +26,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.*;
 
 /**
  * A TipoEquipe.
@@ -46,6 +46,7 @@ public class TipoEquipe implements Serializable, ReportObject {
 
     @NotNull
     @Column(name = "nome", nullable = false, unique = true)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)

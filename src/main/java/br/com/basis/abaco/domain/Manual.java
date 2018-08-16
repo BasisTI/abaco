@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -45,6 +45,7 @@ public class Manual implements Serializable, ReportObject {
     private Long id;
 
     @Column(name = "nome")
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
     @Size(max = 4000)

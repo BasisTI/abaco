@@ -26,7 +26,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Email;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -52,6 +52,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 	@Pattern(regexp = Constants.LOGIN_REGEX)
 	@Size(min = 1, max = 100)
 	@Column(length = 100, unique = true, nullable = false)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String login;
 
 	@JsonIgnore
@@ -62,15 +63,18 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 
 	@Size(max = 50)
 	@Column(name = "first_name", length = 50)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String firstName;
 
 	@Size(max = 50)
 	@Column(name = "last_name", length = 50)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String lastName;
 
 	@Email
 	@Size(max = 100)
 	@Column(length = 100, unique = true)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String email;
 
 	@NotNull

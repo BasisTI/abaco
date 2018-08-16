@@ -3,7 +3,7 @@ package br.com.basis.abaco.domain;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,6 +32,7 @@ public class Fase implements Serializable, ReportObject {
     private Long id;
 
     @Column(name = "nome", unique=true)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
     public Long getId() {

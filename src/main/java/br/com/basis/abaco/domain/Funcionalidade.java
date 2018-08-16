@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,6 +36,7 @@ public class Funcionalidade implements Serializable {
 
 	@NotNull
 	@Column(name = "nome", nullable = false)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String nome;
 
 	@ManyToOne
