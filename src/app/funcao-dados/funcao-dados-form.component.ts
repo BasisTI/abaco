@@ -68,6 +68,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     public erroTR: boolean;
     public erroTD: boolean;
     public erroUnitario: boolean;
+    public erroDeflator: boolean;
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -260,12 +261,25 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             this.impactoInvalido = false;
         }
 
+        if (this.currentFuncaoDados.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0
+            && this.currentFuncaoDados.fatorAjuste === undefined){
+            this.erroDeflator = true;
+            retorno = false;
+            this.pageNotificationService.addErrorMsg('Selecione um Deflator');
+        }else{
+            this.erroDeflator = false;
+        }
+
+        console.log(this.currentFuncaoDados.impacto);
+
         this.classInvalida = this.currentFuncaoDados.tipo === undefined;
         if (this.currentFuncaoDados.fatorAjuste !== undefined) {
             if (this.currentFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' &&
                 this.currentFuncaoDados.quantidade === undefined) {
                 this.erroUnitario = true;
                 retorno = false;
+            }else{
+                this.erroUnitario = false;
             }
         }
 
@@ -343,6 +357,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.erroUnitario = false;
         this.erroTR = false;
         this.erroTD = false;
+        this.erroDeflator = false;
     }
 
     private resetarEstadoPosSalvar() {

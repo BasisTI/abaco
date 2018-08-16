@@ -207,6 +207,10 @@
                                 name="fatorAjuste"
                                 [autoWidth]="false">
                         </p-dropdown>
+                        <div *ngIf="erroDeflator"
+                             class="ui-message ui-messages-error">
+                            Campo obrigatório.
+                        </div>
                     </div>
 
 
