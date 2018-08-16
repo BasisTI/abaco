@@ -38,9 +38,10 @@ public final class AbacoUtil {
     }
 
     public static String removeCaracteresEmBranco(String str) {
+       String str2 = str;
         if (StringUtils.isNotEmpty(str)){
-            str = (str.trim().replaceAll("\\s+", ""));
+            str2 = (str.trim().replaceAll("\\s+", ""));
         }
-        return str;
+        return str2;
     }
 }

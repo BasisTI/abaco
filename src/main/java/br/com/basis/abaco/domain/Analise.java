@@ -2,6 +2,8 @@ package br.com.basis.abaco.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
@@ -28,6 +30,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.*;
@@ -49,7 +52,7 @@ import io.swagger.annotations.ApiModel;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "analise")
 @EntityListeners(AuditingEntityListener.class)
-public class Analise implements Serializable {
+public class Analise implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
 
@@ -279,6 +282,8 @@ public class Analise implements Serializable {
         return sistema;
     }
 
+    public String getNomeSistema() { return sistema.getNome(); }
+
     public Analise sistema(Sistema sistema) {
         this.sistema = sistema;
         return this;
@@ -342,6 +347,18 @@ public class Analise implements Serializable {
         return contrato;
     }
 
+    public Long getGarantiaRestante() throws ParseException {
+        if (contrato == null || dataHomologacao == null){ return 0l; }
+        Integer garantia = contrato.getDiasDeGarantia();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateWithoutTime = sdf.parse(sdf.format(new Date()));
+        Long diferenca = dateWithoutTime.getTime() - dataHomologacao.getTime();
+        if (garantia - (diferenca / 86400000) < 0){
+            return 0l;
+        }
+        return garantia - (diferenca / 86400000);
+    }
+
     public void setContrato(Contrato contrato) {
         this.contrato = contrato;
     }
@@ -349,6 +366,8 @@ public class Analise implements Serializable {
     public Organizacao getOrganizacao() {
         return organizacao;
     }
+
+    public String getNomeOrg(){ return organizacao.getNome(); }
 
     public void setOrganizacao(Organizacao organizacao) {
         this.organizacao = organizacao;
@@ -434,6 +453,12 @@ public class Analise implements Serializable {
         return bloqueiaAnalise;
     }
 
+    public String getBloqueiaString() {
+        if (bloqueiaAnalise) {
+            return "Sim";
+        } return "Não";
+    }
+
     public void setbloqueiaAnalise(Boolean bloqueiaAnalise) {
         this.bloqueiaAnalise = bloqueiaAnalise;
     }
@@ -441,6 +466,13 @@ public class Analise implements Serializable {
     public MetodoContagem getMetodoContagem() {
 		return metodoContagem;
 	}
+
+	public  String getMetodoContagemString() {
+        if (metodoContagem == null) {
+            return "";
+        }
+        return metodoContagem.toString();
+    }
 
 	public void setMetodoContagem(MetodoContagem metodoContagem) {
 		this.metodoContagem = metodoContagem;
@@ -470,6 +502,8 @@ public class Analise implements Serializable {
 	public TipoEquipe getEquipeResponsavel() {
 		return equipeResponsavel;
 	}
+
+	public String getNomeEquipe() { return equipeResponsavel.getNome(); }
 
 	public void setEquipeResponsavel(TipoEquipe equipeResponsavel) {
 		this.equipeResponsavel = equipeResponsavel;

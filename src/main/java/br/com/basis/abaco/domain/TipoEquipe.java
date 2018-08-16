@@ -23,10 +23,7 @@ import javax.validation.constraints.NotNull;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.elasticsearch.annotations.*;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 /**
  * A TipoEquipe.
@@ -87,13 +84,14 @@ public class TipoEquipe implements Serializable, ReportObject {
     }
 
     public String getNomeOrg(){
-        String nomes = "";
+        String ponto = ". ";
+        String nomeOrg = "";
 
         for(Organizacao org : organizacoes){
-            nomes += org.getNome() + ". ";
+            nomeOrg = nomeOrg.concat(org.getNome()).concat(ponto);
         }
 
-        return nomes;
+        return nomeOrg;
     }
 
 

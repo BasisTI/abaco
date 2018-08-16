@@ -225,6 +225,17 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 		return authorities; 
 	}
 
+	public String getPerfil() {
+        final String[] nomes = {""};
+        if(authorities != null){
+            authorities.forEach(authority -> {
+                nomes[0] += authority.getDescription() + ". ";
+            });
+        }
+
+        return nomes[0];
+    }
+
 	public void setAuthorities(Set<Authority> authorities) {
 		this.authorities = authorities;
 	}
@@ -234,13 +245,16 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 	}
 
     public String getNomeEquipe(){
-        String nomes = "";
+
+        String ponto = ". ";
+        String nomeEquipe = "";
 
         for(TipoEquipe equipe : tipoEquipes){
-            nomes += equipe.getNome() + ". ";
+            nomeEquipe = nomeEquipe.concat(equipe.getNome()).concat(ponto);
         }
 
-        return nomes;
+        return nomeEquipe;
+
     }
 
 	public void setTipoEquipes(Set<TipoEquipe> tipoEquipes) {
@@ -252,13 +266,14 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 	}
 
     public String getNomeOrg(){
-        String nomes = "";
+        String ponto = ". ";
+        String nomeOrg = "";
 
         for(Organizacao org : organizacoes){
-            nomes += org.getNome() + ". ";
+            nomeOrg = nomeOrg.concat(org.getNome()).concat(ponto);
         }
 
-        return nomes;
+        return nomeOrg;
     }
 
 	public void setOrganizacoes(Set<Organizacao> organizacoes) {

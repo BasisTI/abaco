@@ -18,9 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.br.CNPJ;
@@ -43,7 +43,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Table(name = "organizacao")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "organizacao")
-public class Organizacao implements Serializable {
+public class Organizacao implements Serializable, ReportObject {
 
 	private static final long serialVersionUID = 1L;
 
@@ -129,6 +129,13 @@ public class Organizacao implements Serializable {
 	public Boolean getAtivo() {
 		return ativo;
 	}
+
+    public String getAtivoString() {
+        if (getAtivo()) {
+            return "Sim";
+        }
+        return "Não";
+    }
 
 	public Organizacao ativo(Boolean ativo) {
 		this.ativo = ativo;

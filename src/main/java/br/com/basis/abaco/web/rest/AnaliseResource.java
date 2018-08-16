@@ -12,10 +12,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import br.com.basis.abaco.utils.PageUtils;
 
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import br.com.basis.abaco.utils.PageUtils;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import java.io.ByteArrayOutputStream;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.http.MediaType;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,7 +64,6 @@ import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.swagger.annotations.ApiParam;
-import net.sf.jasperreports.engine.JRException;
 
 /**
  * REST controller for managing Analise.
@@ -79,7 +86,7 @@ public class AnaliseResource {
 
     private RelatorioBaselineRest relatorioBaselineRest;
 
-    private final FuncaoDadosRepository funcaoDadosRepository;
+    private DynamicExportsService dynamicExportsService;
 
     @Autowired
     private HttpServletRequest request;
@@ -96,11 +103,11 @@ public class AnaliseResource {
     public AnaliseResource(
              AnaliseRepository analiseRepository
             ,AnaliseSearchRepository analiseSearchRepository
-            ,FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository, FuncaoDadosRepository funcaoDadosRepository) {
+            ,FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository, DynamicExportsService dynamicExportsService) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
-        this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
+        this.dynamicExportsService = dynamicExportsService;
     }
 
     /**
@@ -408,5 +415,21 @@ public class AnaliseResource {
         relatorioBaselineRest = new RelatorioBaselineRest(this.response,this.request);
         log.debug("REST request to generate report Analise baseline in browser : {}", recuperarTodasAnalises());
         return relatorioBaselineRest.downloadPdfBaselineBrowser(recuperarTodasAnalises());
+    }
+
+    @GetMapping(value = "/analise/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @Timed
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        try {
+            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
+            Page<Analise> result =  analiseSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioAnaliseColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            log.error(e.getMessage(), e);
+            throw new RelatorioException(e);
+        }
+        return DynamicExporter.output(byteArrayOutputStream,
+            "relatorio." + tipoRelatorio);
     }
 }

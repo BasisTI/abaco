@@ -9,6 +9,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import java.io.ByteArrayOutputStream;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioSistemaColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.http.MediaType;
+
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -69,18 +82,21 @@ public class SistemaResource {
 
 	private final FuncaoDadosRepository funcaoDadosRepository;
 
+	private final DynamicExportsService dynamicExportsService;
+
 	public SistemaResource(
 			SistemaRepository sistemaRepository, 
 			SistemaSearchRepository sistemaSearchRepository,
 			OrganizacaoRepository organizacaoRepository,
 			FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
-			FuncaoDadosRepository funcaoDadosRepository) {
+			FuncaoDadosRepository funcaoDadosRepository, DynamicExportsService dynamicExportsService) {
 
 		this.sistemaRepository = sistemaRepository;
 		this.sistemaSearchRepository = sistemaSearchRepository;
 		this.organizacaoRepository = organizacaoRepository;
 		this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
 		this.funcaoDadosRepository = funcaoDadosRepository;
+		this.dynamicExportsService = dynamicExportsService;
 	}
 
 	/**
@@ -257,4 +273,19 @@ public class SistemaResource {
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 
+    @GetMapping(value = "/sistema/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @Timed
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        try {
+            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
+            Page<Sistema> result =  sistemaSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioSistemaColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            log.error(e.getMessage(), e);
+            throw new RelatorioException(e);
+        }
+        return DynamicExporter.output(byteArrayOutputStream,
+            "relatorio." + tipoRelatorio);
+    }
 }
