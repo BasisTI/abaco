@@ -270,8 +270,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             this.erroDeflator = false;
         }
 
-        console.log(this.currentFuncaoDados.impacto);
-
         this.classInvalida = this.currentFuncaoDados.tipo === undefined;
         if (this.currentFuncaoDados.fatorAjuste !== undefined) {
             if (this.currentFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' &&
