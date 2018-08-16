@@ -229,7 +229,6 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
             });
         }
 
-
         return nomes[0];
     }
 
@@ -242,13 +241,13 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 	}
 
     public String getNomeEquipe(){
-        String nomes = "";
+        StringBuilder bld = new StringBuilder();
 
         for(TipoEquipe equipe : tipoEquipes){
-            nomes += equipe.getNome() + ". ";
+            bld.append(equipe.getNome() + ". ");
         }
 
-        return nomes;
+        return bld.toString();
     }
 
 	public void setTipoEquipes(Set<TipoEquipe> tipoEquipes) {
@@ -260,13 +259,13 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 	}
 
     public String getNomeOrg(){
-        String nomes = "";
+        StringBuilder bld = new StringBuilder();
 
         for(Organizacao org : organizacoes){
-            nomes += org.getNome() + ". ";
+            bld.append(org.getNome() + ". ");
         }
 
-        return nomes;
+        return bld.toString();
     }
 
 	public void setOrganizacoes(Set<Organizacao> organizacoes) {

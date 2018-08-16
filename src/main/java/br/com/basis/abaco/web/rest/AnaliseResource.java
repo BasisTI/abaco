@@ -25,11 +25,6 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.http.MediaType;
 
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import br.com.basis.abaco.utils.PageUtils;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -93,8 +88,6 @@ public class AnaliseResource {
 
     private DynamicExportsService dynamicExportsService;
 
-    private final FuncaoDadosRepository funcaoDadosRepository;
-
     @Autowired
     private HttpServletRequest request;
 
@@ -110,10 +103,9 @@ public class AnaliseResource {
     public AnaliseResource(
              AnaliseRepository analiseRepository
             ,AnaliseSearchRepository analiseSearchRepository
-            ,FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository, FuncaoDadosRepository funcaoDadosRepository, DynamicExportsService dynamicExportsService) {
+            ,FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository, DynamicExportsService dynamicExportsService) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
-        this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.dynamicExportsService = dynamicExportsService;
     }
