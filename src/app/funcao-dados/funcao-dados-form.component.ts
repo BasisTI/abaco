@@ -262,11 +262,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         }
 
         if (this.currentFuncaoDados.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0
-            && this.currentFuncaoDados.fatorAjuste === undefined){
+            && this.currentFuncaoDados.fatorAjuste === undefined) {
             this.erroDeflator = true;
             retorno = false;
             this.pageNotificationService.addErrorMsg('Selecione um Deflator');
-        }else{
+        } else {
             this.erroDeflator = false;
         }
 
@@ -276,12 +276,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 this.currentFuncaoDados.quantidade === undefined) {
                 this.erroUnitario = true;
                 retorno = false;
-            }else{
+            } else {
                 this.erroUnitario = false;
             }
         }
 
-        if (this.analiseSharedDataService.analise.metodoContagem !== 'INDICATIVA') {
+        if (this.analiseSharedDataService.analise.metodoContagem === 'DETALHADA') {
             if (this.rlrsChips === undefined || this.rlrsChips === null) {
                 this.erroTR = true;
                 retorno = false;
@@ -289,8 +289,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 this.erroTR = false;
             }
             if (this.dersChips === undefined || this.dersChips === null) {
+                // if (this.manual) {
                 this.erroTD = true;
                 retorno = false;
+                // }
             } else {
                 this.erroTD = false;
             }
@@ -312,6 +314,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         if (this.dersChips != null && this.rlrsChips != null) {
             this.currentFuncaoDados.ders = DerChipConverter.desconverterEmDers(this.dersChips);
             this.currentFuncaoDados.rlrs = DerChipConverter.desconverterEmRlrs(this.rlrsChips);
+            console.log(this.currentFuncaoDados);
         }
     }
 
@@ -348,7 +351,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         window.scrollTo(0, 60);
     }
 
-    limparMensagensErros(){
+    limparMensagensErros() {
         this.nomeInvalido = false;
         this.classInvalida = false;
         this.impactoInvalido = false;
@@ -364,8 +367,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoDados.artificialId = undefined;
         this.currentFuncaoDados.id = undefined;
 
-        this.dersChips.forEach(c => c.id = undefined);
-        this.rlrsChips.forEach(c => c.id = undefined);
+        if (this.dersChips !== undefined && this.rlrsChips) {
+            this.dersChips.forEach(c => c.id = undefined);
+            this.rlrsChips.forEach(c => c.id = undefined);
+        }
+
     }
 
     public verificarModulo() {
@@ -440,16 +446,18 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         this.analiseSharedDataService.funcaoAnaliseCarregada();
-        this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
         this.carregarDerERlr(funcaoDadosSelecionada);
+        this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
     }
 
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
         this.inicializaFatoresAjuste(this.manual);
         funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, {value: {'id': funcaoSelecionada.fatorAjuste.id}}).value;
+
     }
 
     private carregarDerERlr(fd: FuncaoDados) {
+        console.log("FDDDDDDDDDDDDDDD ", fd);
         this.dersChips = this.loadReference(fd.ders, fd.derValues);
         this.rlrsChips = this.loadReference(fd.rlrs, fd.rlrValues);
     }
@@ -516,6 +524,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
 
     private inicializaFatoresAjuste(manual: Manual) {
+        console.log("manual.fatoresAjuste ",manual.fatoresAjuste);
         const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
         this.fatoresAjuste =
             faS.map(fa => {

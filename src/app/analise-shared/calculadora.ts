@@ -72,6 +72,7 @@ export class Calculadora {
     private static definePFIndicativaDeAcordoComAQuantidade() {
         const fator: number = this.funcaoDados.fatorAjuste.fator * 100;
         this.funcaoDadosCalculada.pf = fator * this.funcaoDados.quantidade;
+        this.definePFIndicativaDeAcordoComGrupoDadosLogicos();
     }
 
     private static definePFIndicativaDeAcordoComGrupoDadosLogicos() {
@@ -101,6 +102,8 @@ export class Calculadora {
     private static definirComplexidadePercentual() {
         this.funcaoDadosCalculada.complexidade =
             ComplexidadeFuncionalDados.calcular(this.funcaoDados.derValue(), this.funcaoDados.rlrValue());
+
+        console.log('this.funcaoDadosCalculada.complexidade ',this.funcaoDadosCalculada.complexidade );
     }
 
     private static calcularPfsDeAcordoComGrupoDeDadosLogicos() {
