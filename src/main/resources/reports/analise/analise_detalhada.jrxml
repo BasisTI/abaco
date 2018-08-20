@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="analise" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9ac44673-b60e-4209-99b8-14605622790d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="ireport.zoom" value="1.1000000000000019"/>
@@ -172,8 +172,8 @@
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
-		<field name="nomeFd" class="java.lang.String"/>
-		<field name="nome" class="java.lang.String"/>
+		<field name="nomeRlrFdDto" class="java.lang.String"/>
+		<field name="rlrDto" class="java.lang.String"/>
 	</subDataset>
 	<subDataset name="DSDerFD" uuid="73c4a83a-5b67-4d8e-8ecd-2bfd0ce14d12">
 		<queryString>
@@ -187,8 +187,8 @@
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
-		<field name="nomeFt" class="java.lang.String"/>
-		<field name="nome" class="java.lang.String"/>
+		<field name="nomeAlrFtDto" class="java.lang.String"/>
+		<field name="nomeAlrDto" class="java.lang.String"/>
 	</subDataset>
 	<subDataset name="DSDerFt" uuid="ce7e0f2e-12db-4bee-98f7-2d2df384d37d">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
@@ -1818,7 +1818,7 @@
 									<textElement verticalAlignment="Middle" markup="none">
 										<font isBold="true"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$F{nomeFd}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{nomeRlrFdDto}]]></textFieldExpression>
 								</textField>
 							</jr:tableHeader>
 							<jr:columnHeader style="Table 3_CH" height="30" rowSpan="1">
@@ -1840,7 +1840,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="551" height="30" uuid="7944ebce-d0fb-4f0b-9ddb-1dd4fe49cc6a"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{rlrDto}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -1918,7 +1918,7 @@
 									<textElement verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$F{nomeFt}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{nomeAlrFtDto}]]></textFieldExpression>
 								</textField>
 							</jr:tableHeader>
 							<jr:columnHeader style="Table 3_CH" height="30">
@@ -1940,7 +1940,7 @@
 								<textField>
 									<reportElement x="0" y="0" width="551" height="30" uuid="73b3bcab-da89-4539-9ebe-f7ca1f59b5c1"/>
 									<textElement verticalAlignment="Middle"/>
-									<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{nomeAlrDto}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
