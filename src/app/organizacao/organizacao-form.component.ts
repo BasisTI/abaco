@@ -338,7 +338,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             break;
           }
           case "error.beggindateGTenddate" : {
-            console.log("Entrei no case pelo organizacao-form.components");
             this.pageNotificationService.addErrorMsg('"Início Vigência" não pode ser posterior a "Final Vigência"');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
             break;

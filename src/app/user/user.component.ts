@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
+import { Response } from '@angular/http';
 
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
@@ -124,10 +125,21 @@ export class UserComponent implements AfterViewInit, OnInit {
           this.datatable.refresh(this.elasticQuery.query);
           this.pageNotificationService.addDeleteMsg();
 
-        },error => {
+        },(error: Response) => {
           if(error.status === 400){
-            this.pageNotificationService.addErrorMsg('Você não pode excluir o usuário Administrador!');
+            let errorType : string = error.headers.toJSON()['x-abacoapp-error'][0];
 
+            switch(errorType){
+              case "error.userexists" : {
+                this.pageNotificationService.addErrorMsg('Você não pode excluir o Administrador!');
+                break;
+              }
+
+              case "error.analiseexists" : {
+                this.pageNotificationService.addErrorMsg('Você não pode excluir o usuário porque ele é dono de alguma Análise!');
+                break;
+              }
+            }
           }
       });
       }

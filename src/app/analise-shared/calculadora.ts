@@ -76,7 +76,7 @@ export class Calculadora {
 
     private static definePFIndicativaDeAcordoComGrupoDadosLogicos() {
         // TODO extrair constantes
-
+        this.definePFIndicativaDeAcordoComAQuantidade();
         if (this.funcaoDados.tipo === 'ALI') {
             this.funcaoDadosCalculada.pf = 35;
         } else { // AIE
