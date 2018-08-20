@@ -2,6 +2,7 @@ package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.AbacoApp;
 import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.AuthorityRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
@@ -38,6 +39,9 @@ public class UserResourceIntTest {
 
 	@Autowired
 	private UserRepository userRepository;
+
+    @Autowired
+    private AnaliseRepository analiseRepository;
 
 	@Autowired
 	private MailService mailService;
@@ -80,7 +84,7 @@ public class UserResourceIntTest {
 	@Before
 	public void setup() {
 		UserResource userResource = new UserResource(userRepository, mailService, userService, userSearchRepository,
-				authorityRepository, dynamicExportsService);
+				authorityRepository, dynamicExportsService, analiseRepository);
 		this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
 	}
 

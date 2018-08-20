@@ -8,6 +8,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.security.SecurityUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import br.com.basis.abaco.utils.PageUtils;
@@ -78,6 +81,8 @@ public class AnaliseResource {
 
     private final AnaliseRepository analiseRepository;
 
+    private final UserRepository userRepository;
+
     private final AnaliseSearchRepository analiseSearchRepository;
 
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
@@ -103,11 +108,12 @@ public class AnaliseResource {
     public AnaliseResource(
              AnaliseRepository analiseRepository
             ,AnaliseSearchRepository analiseSearchRepository
-            ,FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository, DynamicExportsService dynamicExportsService) {
+            ,FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository, DynamicExportsService dynamicExportsService, UserRepository userRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.dynamicExportsService = dynamicExportsService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -128,6 +134,7 @@ public class AnaliseResource {
             return ResponseEntity.badRequest().headers(
                     HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
         }
+        analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
         linkFuncoesToAnalise(analise);
         Analise result = analiseRepository.save(analise);
         unlinkAnaliseFromFuncoes(result);
