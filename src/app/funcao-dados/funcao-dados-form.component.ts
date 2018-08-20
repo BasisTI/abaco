@@ -201,7 +201,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     contratoSelecionado() {
-        if (this.currentFuncaoDados.fatorAjuste.tipoAjuste.toString() === 'UNITARIO') {
+        if (this.currentFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO') {
             this.hideShowQuantidade = this.currentFuncaoDados.fatorAjuste === undefined;
         } else {
             this.hideShowQuantidade = true;

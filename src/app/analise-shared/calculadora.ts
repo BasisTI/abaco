@@ -60,7 +60,8 @@ export class Calculadora {
         this.funcaoDadosCalculada.complexidade = Complexidade.SEM;
 
 
-        if (this.funcaoDados.quantidade === undefined || this.funcaoDados.quantidade === 0) {
+        console.log("his.funcaoDados.quantidade", this.funcaoDados.quantidade);
+        if (this.funcaoDados.quantidade === undefined) {
             this.definePFIndicativaDeAcordoComGrupoDadosLogicos();
         } else {
             this.definePFIndicativaDeAcordoComAQuantidade();
@@ -77,7 +78,6 @@ export class Calculadora {
 
     private static definePFIndicativaDeAcordoComGrupoDadosLogicos() {
         // TODO extrair constantes
-        this.definePFIndicativaDeAcordoComAQuantidade();
         if (this.funcaoDados.tipo === 'ALI') {
             this.funcaoDadosCalculada.pf = 35;
         } else { // AIE
