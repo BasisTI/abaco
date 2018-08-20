@@ -87,7 +87,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.habilitarCamposIniciais();
         this.listOrganizacoes();
         this.getAnalise();
-        this.getGarantia();
         this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
     }
 
@@ -108,7 +107,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                     this.analiseSharedDataService.analiseCarregada();
                     this.dataAnalise = this.analise;
                     this.setDataHomologacao();
-                    this.diasGarantia = this.analise.contrato.diasDeGarantia;
+                    this.diasGarantia = this.getGarantia();
                     this.save();
                 });
             } else {
@@ -132,8 +131,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     /**
      * Método responsável por popular os dias de garantia do contrato
      */
-    getGarantia() {
-        this.diasGarantia !== undefined ? this.diasGarantia = this.analise.contrato.diasDeGarantia : null;
+    getGarantia(): any {
+        this.diasGarantia !== undefined ? this.diasGarantia = this.analise.contrato.diasDeGarantia : undefined;
     }
 
     /**

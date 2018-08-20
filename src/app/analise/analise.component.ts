@@ -43,7 +43,6 @@ export class AnaliseComponent implements OnInit {
             this.analiseReadyToClone = new Analise().copyFromJSON(event.data);
             this.analiseSelecionada = event.data;
             this.blocked = event.data.bloqueiaAnalise;
-            console.log(event.data);
         });
         this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
             this.analiseSelecionada = undefined;

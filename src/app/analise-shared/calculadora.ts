@@ -102,8 +102,6 @@ export class Calculadora {
     private static definirComplexidadePercentual() {
         this.funcaoDadosCalculada.complexidade =
             ComplexidadeFuncionalDados.calcular(this.funcaoDados.derValue(), this.funcaoDados.rlrValue());
-
-        console.log('this.funcaoDadosCalculada.complexidade ',this.funcaoDadosCalculada.complexidade );
     }
 
     private static calcularPfsDeAcordoComGrupoDeDadosLogicos() {

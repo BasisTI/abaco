@@ -315,7 +315,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         if (this.dersChips != null && this.rlrsChips != null) {
             this.currentFuncaoDados.ders = DerChipConverter.desconverterEmDers(this.dersChips);
             this.currentFuncaoDados.rlrs = DerChipConverter.desconverterEmRlrs(this.rlrsChips);
-            console.log(this.currentFuncaoDados);
         }
     }
 
@@ -453,7 +452,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
         this.inicializaFatoresAjuste(this.manual);
-        funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, {value: {'id': funcaoSelecionada.fatorAjuste.id}}).value;
+        if (funcaoSelecionada.fatorAjuste !== undefined) {
+            funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, {value: {'id': funcaoSelecionada.fatorAjuste.id}}).value;
+        }
 
     }
 
@@ -527,7 +528,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
 
     private inicializaFatoresAjuste(manual: Manual) {
-        console.log("manual.fatoresAjuste ",manual.fatoresAjuste);
         const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
         this.fatoresAjuste =
             faS.map(fa => {
