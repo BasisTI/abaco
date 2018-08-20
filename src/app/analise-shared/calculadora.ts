@@ -60,7 +60,6 @@ export class Calculadora {
         this.funcaoDadosCalculada.complexidade = Complexidade.SEM;
 
 
-        console.log("his.funcaoDados.quantidade", this.funcaoDados.quantidade);
         if (this.funcaoDados.quantidade === undefined) {
             this.definePFIndicativaDeAcordoComGrupoDadosLogicos();
         } else {
@@ -71,8 +70,11 @@ export class Calculadora {
     }
 
     private static definePFIndicativaDeAcordoComAQuantidade() {
-        const fator: number = this.funcaoDados.fatorAjuste.fator * 100;
-        this.funcaoDadosCalculada.pf = fator * this.funcaoDados.quantidade;
+
+        if (this.funcaoDados.fatorAjuste !== undefined) {
+            const fator: number = this.funcaoDados.fatorAjuste.fator * 100;
+            this.funcaoDadosCalculada.pf = fator * this.funcaoDados.quantidade;
+        }
         this.definePFIndicativaDeAcordoComGrupoDadosLogicos();
     }
 

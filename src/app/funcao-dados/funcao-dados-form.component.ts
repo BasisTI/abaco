@@ -204,7 +204,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         if (this.currentFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO') {
             this.hideShowQuantidade = this.currentFuncaoDados.fatorAjuste === undefined;
         } else {
+            this.currentFuncaoDados.quantidade = undefined;
             this.hideShowQuantidade = true;
+            this.currentFuncaoDados.quantidade = undefined;
         }
     }
 
@@ -326,6 +328,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         }
         this.desconverterChips();
         this.verificarModulo();
+
+        console.log("currentFuncaoDados ",this.currentFuncaoDados.quantidade);
 
         const funcaoDadosCalculada = Calculadora.calcular(
             this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual
