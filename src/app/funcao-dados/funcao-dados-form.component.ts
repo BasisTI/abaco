@@ -21,6 +21,7 @@ import {AnaliseReferenciavel} from '../analise-shared/analise-referenciavel';
 import {FuncaoDadosService} from './funcao-dados.service';
 import {AnaliseSharedUtils} from '../analise-shared/analise-shared-utils';
 import {Manual} from '../manual';
+import {Modulo} from '../modulo';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -457,9 +458,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private carregarDerERlr(fd: FuncaoDados) {
-        console.log("FDDDDDDDDDDDDDDD ", fd);
         this.dersChips = this.loadReference(fd.ders, fd.derValues);
         this.rlrsChips = this.loadReference(fd.rlrs, fd.rlrValues);
+    }
+
+    moduloSelected(modulo: Modulo) {
     }
 
     // Carregar Referencial
