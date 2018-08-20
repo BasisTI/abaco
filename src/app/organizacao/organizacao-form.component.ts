@@ -102,7 +102,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   validarDataInicio() {
     if (!(this.novoContrato.dataInicioValida()) || !(this.contratoEmEdicao.dataInicioValida())){
       this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
-      document.getElementById('login').setAttribute('style', 'border-color: red;');
+      //document.getElementById('login').setAttribute('style', 'border-color: red;');
     }
   }
 
@@ -338,7 +338,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             break;
           }
           case "error.beggindateGTenddate" : {
-            console.log("Entrei no case pelo organizacao-form.components");
             this.pageNotificationService.addErrorMsg('"Início Vigência" não pode ser posterior a "Final Vigência"');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
             break;

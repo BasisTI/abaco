@@ -10,6 +10,7 @@ import {ModuloDaFuncionalidadeFinder} from './modulo-finder';
 import {FuncaoAnalise} from '../analise-shared/funcao-analise';
 import {Organizacao} from '../organizacao';
 import {TipoEquipe} from '../tipo-equipe';
+import { User } from '../user';
 
 export enum MetodoContagem {
     'DETALHADA' = 'DETALHADA',
@@ -59,6 +60,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
         public dataHomologacao?: any,
         public identificadorAnalise?: string,
         public equipeResponsavel?: TipoEquipe,
+        public createdBy?: User,
         public createdOn?: Date,
         public updatedOn?: Date,
         public bloqueiaAnalise?: boolean,
@@ -284,6 +286,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
             this.dataHomologacao,
             this.identificadorAnalise,
             this.equipeResponsavel,
+            this.createdBy,
             this.createdOn,
             this.updatedOn,
             this.bloqueiaAnalise,);

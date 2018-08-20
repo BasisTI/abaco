@@ -106,7 +106,9 @@ export class AnaliseService {
   public find(id: number): Observable<Analise> {
     return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
       const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
+      let analiseJson = this.convertItemFromServer(jsonResponse);
+      analiseJson.createdBy = jsonResponse.createdBy;
+      return analiseJson;
     });
   }
 
