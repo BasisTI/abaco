@@ -230,6 +230,10 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.organizacao.sigla === '' || this.organizacao.sigla === undefined || this.organizacao.sigla === null){
+      return this.pageNotificationService.addErrorMsg('O campo Sigla é obrigatório!')
+    }
+
     this.isSaving = true;
     if (this.organizacao.cnpj === '') {this.organizacao.cnpj = undefined}
 
