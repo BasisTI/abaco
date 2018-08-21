@@ -102,37 +102,41 @@
                                 disabled="desabilitarBotaoRelatorio()">
                         </basis-datatable-button>
 
-                        <p-column header="Organização" field="organizacao.nome" [sortable]="true"
-                                  [style]="{'font-size': '1.1vw','width': '100px'}"></p-column>
-                        <p-column header="Identificador Análise" field="identificadorAnalise" [sortable]="true"
-                                  [style]="{'font-size': '1.1vw','width': '100px'}"></p-column>
-                        <p-column header="Equipe" field="equipeResponsavel.nome" [sortable]="true"
-                                  [style]="{'font-size': '1.1vw'}"></p-column>
-                        <p-column header="Sistema" field="sistema.sigla" [sortable]="true"
-                                  [style]="{'font-size': '1.1vw'}"></p-column>
-                        <p-column header="Método de Contagem" field="metodoContagem" [sortable]="true"
-                                  [style]="{'font-size': '1.1vw'}"></p-column>
 
-                        <p-column header="PF Total" [sortable]="true" [style]="{'font-size': '1.1vw'}">
+                        
+                        
+                        <p-column header="Organização" field="organizacao.nome" [sortable]="true"
+                                  [style]="{'font-size': '1.0vw'}"></p-column>
+
+                        <p-column header="Identificador Análise" field="identificadorAnalise" [sortable]="true"
+                                  [style]="{'font-size': '1.0vw'}"></p-column>
+                        <p-column header="Equipe" field="equipeResponsavel.nome" [sortable]="true"
+                                  [style]="{'font-size': '1.0vw'}"></p-column>
+                        <p-column header="Sistema" field="sistema.sigla" [sortable]="true"
+                                  [style]="{'font-size': '1.0vw'}"></p-column>
+                        <p-column header="Método de Contagem" field="metodoContagem" [sortable]="true"
+                                  [style]="{'font-size': '1.0vw'}"></p-column>
+
+                        <p-column header="PF Total" [sortable]="true" [style]="{'font-size': '1.0vw'}">
                             <ng-template let-col let-pfTotal="rowData.pfTotal" pTemplate="body">
                                 {{ pfTotal > 0 ? pfTotal : 0 | number: '00.00'}}
                             </ng-template>
                         </p-column>
 
-                        <p-column header="PF Ajustado" [sortable]="true" [style]="{'font-size': '1.1vw'}">
+                        <p-column header="PF Ajustado" [sortable]="true" [style]="{'font-size': '1.0vw'}">
                             <ng-template let-col let-adjustPFTotal="rowData.adjustPFTotal" pTemplate="body">
                                 {{ adjustPFTotal > 0 ? adjustPFTotal : 0 | number: '00.00'}}
                             </ng-template>
                         </p-column>
 
                         <p-column header="Dias restantes em Garantia" [sortable]="true"
-                                  [style]="{'font-size': '1.1vw'}">
+                                  [style]="{'font-size': '1.0vw'}">
                             <ng-template let-dado="rowData" pTemplate="body">
                                 {{ dado | datePipe }}
                             </ng-template>
                         </p-column>
 
-                        <p-column header="Data Criação" [sortable]="true" [style]="{'font-size': '1.1vw'}">
+                        <p-column header="Data Criação" [sortable]="true" [style]="{'font-size': '1.0vw'}">
                             <ng-template let-col let-createdOn="rowData.audit.createdOn" pTemplate="body">
                                 {{ createdOn | date: 'dd/MM/y - HH:mm' }}
                             </ng-template>
@@ -145,7 +149,7 @@
                         </p-column> -->
 
                         <p-column header="Bloqueado" field="bloqueiaAnalise" [sortable]="true"
-                                  [style]="{'font-size': '1.1vw'}">
+                                  [style]="{'font-size': '1.0vw'}">
                             <ng-template let-col let-bloqueiaAnalise="rowData" pTemplate="body">
                                 {{ bloqueiaAnalise[col.field] ? 'Sim' : 'Não' }}
                             </ng-template>
