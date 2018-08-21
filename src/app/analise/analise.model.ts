@@ -43,6 +43,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
         public fatorAjuste?: FatorAjuste,
         public valorAjuste?: number,
         public pfTotal?: string,
+        public pfTotalEsforco?: string,
         public adjustPFTotal?: string,
         public escopo?: string,
         public fronteiras?: string,
@@ -112,20 +113,23 @@ export class Analise implements BaseEntity, JSONable<Analise> {
      */
     private calcularTotalPFs() {
         this.pfTotal = this._resumoTotal.getTotalGrossPf().toString();
-        this.adjustPFTotal = this.calcularPfTotalAjustado().toString();
+        this.adjustPFTotal = this.aplicaTotalEsforco(this.ajustarPfTotal()).toFixed(2).toString();
+        this.pfTotalEsforco = this.aplicaTotalEsforco(this._resumoTotal.getTotalGrossPf()).toFixed(2).toString();
     }
 
     /**
-     *
+     * Renomenando método de "calcularPfTotalAjustado()"
+     * para "aplicaTotalEsforco()" por motivo de legibilidade e clareza
      */
-    private calcularPfTotalAjustado(): number {
-        return this.pfTotalAjustadoSomentePorFatorAjuste() * this.totalEsforcoFases();
+    private aplicaTotalEsforco(pf: number): number {
+        return pf * this.totalEsforcoFases();
     }
 
     /**
-     *
+     * Renomenando método de "pfTotalAjustadoSomentePorFatorAjuste()"
+     * para "ajustarPfTotal()" por motivo de legibilidade e clareza
      */
-    private pfTotalAjustadoSomentePorFatorAjuste(): number {
+    private ajustarPfTotal(): number {
         const pfTotalAjustado = this._resumoTotal.getTotalPf();
         if (this.fatorAjuste) {
             return this.fatorAjuste.aplicarFator(pfTotalAjustado);
@@ -269,6 +273,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
             this.fatorAjuste,
             this.valorAjuste,
             this.pfTotal,
+            this.pfTotalEsforco,
             this.adjustPFTotal,
             this.escopo,
             this.fronteiras,
@@ -326,6 +331,7 @@ class AnaliseCopyFromJSON {
         this._analiseConverted.metodoContagem = this._json.metodoContagem;
         this._analiseConverted.valorAjuste = this._json.valorAjuste;
         this._analiseConverted.pfTotal = this._json.pfTotal;
+        this._analiseConverted.pfTotalEsforco = this._json.pfTotalEsforco;
         this._analiseConverted.adjustPFTotal = this._json.adjustPFTotal;
         this._analiseConverted.escopo = this._json.escopo;
         this._analiseConverted.fronteiras = this._json.fronteiras;

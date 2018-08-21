@@ -1,8 +1,9 @@
 <div class="ui-g ui-fluid">
   <div class="card card-w-title">
     <div class="ui-g-12" style="margin-top: 25px">
-      <h2>PF - Total: {{ this.resumoTotal.getTotalGrossPf()}}</h2>
-      <h2>PF - Final Ajustado: {{ this.resumoTotal.getTotalPf()}}</h2>
+      
+      <h2>PF - Final Total: {{ analise.pfTotalEsforco }}</h2>
+      <h2>PF - Final Ajustado: {{ analise.adjustPFTotal }}</h2>
       
       <app-analise-funcao-resumo-table [linhasResumo]="analise.resumoTotal.all">
       </app-analise-funcao-resumo-table>
