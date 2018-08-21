@@ -47,30 +47,30 @@ export abstract class ComplexidadeFuncional {
 }
 
 export class ComplexidadeFuncionalALIeAIE extends ComplexidadeFuncional {
+    isPrimeiraColuna(): boolean {
+        return this.der < 5;
+    }
 
-  isPrimeiraColuna(): boolean {
-    return this.der < 20;
-  }
+    isSegundaColuna(): boolean {
+        return this.der >= 5 && this.der <= 15;
+    }
 
-  isSegundaColuna(): boolean {
-    return this.der >= 20 && this.der <= 50;
-  }
+    isTerceiraColuna(): boolean {
+        return this.der > 15;
+    }
 
-  isTerceiraColuna(): boolean {
-    return this.der > 50;
-  }
+    isPrimeiraLinha(): boolean {
+        return this.nonDer < 2;
+    }
 
-  isPrimeiraLinha(): boolean {
-    return this.nonDer === 1;
-  }
+    isSegundaLinha(): boolean {
+        return this.nonDer === 2;
+    }
 
-  isSegundaLinha(): boolean {
-    return this.nonDer >= 2 && this.nonDer <= 5;
-  }
+    isTerceiraLinha(): boolean {
+        return this.nonDer > 2;
+    }
 
-  isTerceiraLinha(): boolean {
-    return this.nonDer > 5;
-  }
 }
 
 export class ComplexidadeFuncionalEE extends ComplexidadeFuncional {
