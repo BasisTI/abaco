@@ -2,6 +2,7 @@ package br.com.basis.abaco.reports.rest;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -752,10 +753,10 @@ public class RelatorioAnaliseRest {
      * @return
      */
     private String funcao(String valor) {
-        if (valor.equals("INCLUSAO")){ return analise.getContrato().getManual().getParametroInclusao().toString(); }
-        if (valor.equals("ALTERACAO")){ return analise.getContrato().getManual().getParametroInclusao().toString(); }
-        if (valor.equals("EXCLUSAO")){ return analise.getContrato().getManual().getParametroInclusao().toString(); }
-        if (valor.equals("CONVERSAO")){ return analise.getContrato().getManual().getParametroInclusao().toString(); }
+        if (valor.equals("INCLUSAO")){ return Integer.valueOf(analise.getContrato().getManual().getParametroInclusao().multiply(new BigDecimal(100)).intValue()).toString() + "%"; }
+        if (valor.equals("ALTERACAO")){ return Integer.valueOf(analise.getContrato().getManual().getParametroAlteracao().multiply(new BigDecimal(100)).intValue()).toString() + "%"; }
+        if (valor.equals("EXCLUSAO")){ return Integer.valueOf(analise.getContrato().getManual().getParametroExclusao().multiply(new BigDecimal(100)).intValue()).toString() + "%"; }
+        if (valor.equals("CONVERSAO")){ return Integer.valueOf(analise.getContrato().getManual().getParametroConversao().multiply(new BigDecimal(100)).intValue()).toString() + "%"; }
         return null;
     }
 
