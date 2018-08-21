@@ -234,7 +234,7 @@ public class OrganizacaoResource {
      *
      * @param query the query of the organizacao search
      * @return the result of the search
-     * @throws URISyntaxException 
+     * @throws URISyntaxException
      */
     @GetMapping("/_search/organizacaos")
     @Timed
@@ -243,7 +243,7 @@ public class OrganizacaoResource {
 
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-        
+
         Page<Organizacao> page = organizacaoSearchRepository.search(queryStringQuery(query), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/organizacaos");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -253,7 +253,7 @@ public class OrganizacaoResource {
     @GetMapping("/organizacaos/active")
     public List<Organizacao> getAllOrganizationsActive() {
       List<Organizacao> activeOrganizations = this.organizacaoRepository.findByAtivoTrue();
-      
+
       return activeOrganizations;
     }
 
