@@ -1847,7 +1847,7 @@
 					</jr:table>
 				</componentElement>
 				<componentElement>
-					<reportElement x="2" y="144" width="551" height="91" uuid="85c91c12-7aa6-415b-9011-7c6e29861fa5">
+					<reportElement positionType="Float" x="2" y="144" width="551" height="91" uuid="85c91c12-7aa6-415b-9011-7c6e29861fa5">
 						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 						<property name="com.jaspersoft.studio.table.style.table_header" value="Table 4_TH"/>
 						<property name="com.jaspersoft.studio.table.style.column_header" value="Table 4_CH"/>
@@ -1947,7 +1947,7 @@
 					</jr:table>
 				</componentElement>
 				<componentElement>
-					<reportElement x="2" y="124" width="551" height="91" uuid="8d0fb6d5-84f2-4aa3-a024-8f95472d6b94">
+					<reportElement positionType="Float" x="2" y="124" width="551" height="91" uuid="8d0fb6d5-84f2-4aa3-a024-8f95472d6b94">
 						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 						<property name="com.jaspersoft.studio.table.style.table_header" value="Table 4_TH"/>
 						<property name="com.jaspersoft.studio.table.style.column_header" value="Table 4_CH"/>
