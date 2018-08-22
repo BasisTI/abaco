@@ -49,14 +49,14 @@ export class OrganizacaoService {
   }
 
   query(req?: any): Observable<ResponseWrapper> {
-    const options = createRequestOption(req);
-    return this.http.get(this.resourceUrl + '/ativas', options)
-      .map((res: Response) => this.convertResponseToResponseWrapper(res));
+      const options = createRequestOption(req);
+      return this.http.get(this.resourceUrl, options)
+          .map((res: Response) => this.convertResponseToResponseWrapper(res));
   }
 
     searchActiveOrganizations(req?: any): Observable<ResponseWrapper> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
+        return this.http.get(this.resourceUrl + '/ativas', options)
             .map((res: Response) => this.convertResponseToResponseWrapper(res));
     }
 

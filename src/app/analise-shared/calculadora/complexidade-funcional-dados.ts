@@ -1,5 +1,5 @@
 import { Complexidade } from '../complexidade-enum';
-import { ComplexidadeFuncionalALIeAIE } from './complexidade-funcional';
+import {ComplexidadeFuncionalALIeAIE, ComplexidadeFuncionalEE} from './complexidade-funcional';
 
 export class ComplexidadeFuncionalDados {
 
