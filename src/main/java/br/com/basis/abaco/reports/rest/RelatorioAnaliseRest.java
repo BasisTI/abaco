@@ -3,6 +3,7 @@ package br.com.basis.abaco.reports.rest;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -753,10 +754,10 @@ public class RelatorioAnaliseRest {
      * @return
      */
     private String funcao(String valor) {
-        if (valor.equals("INCLUSAO")){ return Integer.valueOf(analise.getContrato().getManual().getParametroInclusao().multiply(new BigDecimal(100)).intValue()).toString() + "%"; }
-        if (valor.equals("ALTERACAO")){ return Integer.valueOf(analise.getContrato().getManual().getParametroAlteracao().multiply(new BigDecimal(100)).intValue()).toString() + "%"; }
-        if (valor.equals("EXCLUSAO")){ return Integer.valueOf(analise.getContrato().getManual().getParametroExclusao().multiply(new BigDecimal(100)).intValue()).toString() + "%"; }
-        if (valor.equals("CONVERSAO")){ return Integer.valueOf(analise.getContrato().getManual().getParametroConversao().multiply(new BigDecimal(100)).intValue()).toString() + "%"; }
+        if (valor.equals("INCLUSAO")){ return Integer.toString(analise.getContrato().getManual().getParametroInclusao().multiply(new BigDecimal(100)).intValue()) + "%"; }
+        if (valor.equals("ALTERACAO")){ return Integer.toString(analise.getContrato().getManual().getParametroAlteracao().multiply(new BigDecimal(100)).intValue()) + "%"; }
+        if (valor.equals("EXCLUSAO")){ return Integer.toString(analise.getContrato().getManual().getParametroExclusao().multiply(new BigDecimal(100)).intValue()) + "%"; }
+        if (valor.equals("CONVERSAO")){ return Integer.toString(analise.getContrato().getManual().getParametroConversao().multiply(new BigDecimal(100)).intValue()) + "%"; }
         return null;
     }
 
@@ -884,7 +885,9 @@ public class RelatorioAnaliseRest {
         if(valor1 != null && valor2 != null) {
             valorCalculado = Double.parseDouble(valor1) - Double.parseDouble(valor2);
         }
-        return valorCalculado.toString().replace(".", ".").substring(0,3);
+        DecimalFormat df = new DecimalFormat("#.##");
+
+        return df.format(valorCalculado);
     }
 
 }
