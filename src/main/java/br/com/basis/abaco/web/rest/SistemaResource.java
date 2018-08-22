@@ -76,8 +76,6 @@ public class SistemaResource {
 
 	private final SistemaSearchRepository sistemaSearchRepository;
 
-	private final OrganizacaoRepository organizacaoRepository;
-
 	private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
 	private final FuncaoDadosRepository funcaoDadosRepository;
@@ -87,13 +85,11 @@ public class SistemaResource {
 	public SistemaResource(
 			SistemaRepository sistemaRepository, 
 			SistemaSearchRepository sistemaSearchRepository,
-			OrganizacaoRepository organizacaoRepository,
 			FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
 			FuncaoDadosRepository funcaoDadosRepository, DynamicExportsService dynamicExportsService) {
 
 		this.sistemaRepository = sistemaRepository;
 		this.sistemaSearchRepository = sistemaSearchRepository;
-		this.organizacaoRepository = organizacaoRepository;
 		this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
 		this.funcaoDadosRepository = funcaoDadosRepository;
 		this.dynamicExportsService = dynamicExportsService;
@@ -181,9 +177,9 @@ public class SistemaResource {
 	@GetMapping("/sistemas/organizacao/{idOrganizacao}")
 	@Timed
 	@Transactional
-	public Set<Sistema> getAllSistemasByOrganizacaoId(@PathVariable Long idOrganizacao) {
-		Organizacao organizacao = organizacaoRepository.findOne(idOrganizacao);
-		return organizacao.getSistemas();
+	public Set<Sistema> findAllSystemOrg(@PathVariable Long idOrganizacao) {
+        log.debug("REST request to get all Sistemas by Organizacao");
+		return sistemaRepository.findAllSystemOrg(idOrganizacao);
 	}
 
 	/**
@@ -194,8 +190,7 @@ public class SistemaResource {
 	@Timed
 	public List<Sistema> getAllSistemas() {
 		log.debug("REST request to get all Sistemas");
-		List<Sistema> sistemas = sistemaRepository.findAll();
-		return sistemas;
+		return sistemaRepository.findAll();
 	}
 
 	/**
