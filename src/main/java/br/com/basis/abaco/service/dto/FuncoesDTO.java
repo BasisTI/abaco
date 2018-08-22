@@ -79,6 +79,9 @@ public class FuncoesDTO {
     }
 
     public String getImpactoFd() {
+        if (impactoFd.equals("ITENS_NAO_MENSURAVEIS")){
+            return "OUTROS";
+        }
         return impactoFd;
     }
 

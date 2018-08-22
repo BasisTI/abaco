@@ -91,15 +91,15 @@ public class RelatorioFuncoes {
         }
         if(f.getTipo() == TipoFuncaoTransacao.SE && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoes.getComplexidadeDtoFt().setPfTotalSe(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfTotalSe(),f.getGrossPF().doubleValue()));
-            funcoes.getComplexidadeDtoFt().setPfAjustadoSe(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfTotalSe(),f.getPf().doubleValue()));
+            funcoes.getComplexidadeDtoFt().setPfAjustadoSe(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfAjustadoSe(),f.getPf().doubleValue()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.CE && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoes.getComplexidadeDtoFt().setPfTotalCe(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfTotalCe(),f.getGrossPF().doubleValue()));
-            funcoes.getComplexidadeDtoFt().setPfAjustadoCe(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfTotalCe(),f.getPf().doubleValue()));
+            funcoes.getComplexidadeDtoFt().setPfAjustadoCe(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfAjustadoCe(),f.getPf().doubleValue()));
         }
         if(f.getTipo() == TipoFuncaoTransacao.INM && validarPFs(f.getGrossPF(), f.getPf())) {
             funcoes.getComplexidadeDtoFt().setPfTotalInmFt(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfTotalInmFt(),f.getGrossPF().doubleValue()));
-            funcoes.getComplexidadeDtoFt().setPfAjustadoInmFt(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfTotalInmFt(),f.getPf().doubleValue()));
+            funcoes.getComplexidadeDtoFt().setPfAjustadoInmFt(incrementarPfs(funcoes.getComplexidadeDtoFt().getPfAjustadoInmFt(),f.getPf().doubleValue()));
         }
     }
 
@@ -158,6 +158,7 @@ public class RelatorioFuncoes {
             this.countSeImpacto(f);
             this.countCeImpacto(f);
             this.countInmImpacto(f);
+            this.popularPFsFt(f);
         }
         return funcoes;
     }
@@ -401,6 +402,7 @@ public class RelatorioFuncoes {
             this.countAliImpacto(f);
             this.countAieImpacto(f);
             this.countInmImpacto(f);
+            this.popularPFsFd(f);
         }
         return funcoes;
     }
@@ -535,14 +537,13 @@ public class RelatorioFuncoes {
      * @return
      */
     private Double incrementarPfs(Double valor1, Double valor2) {
-        Double valor3 = null, val2 = valor2, val1 = valor1;
+        Double val2 = valor2;
+        Double val1 = valor1;
 
-        if(val2 != null && val1 == null) {
-            val1 = val2;
-            valor3 = val1;
-            valor3 += val2;
-        }
-        return valor3;
+        if (val1 == null) { val1 = 0.0; }
+        if (val2 == null) { val2 = 0.0; }
+
+        return val1 + val2;
     }
 
     /**
