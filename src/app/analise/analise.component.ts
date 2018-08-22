@@ -187,12 +187,7 @@ export class AnaliseComponent implements OnInit {
      * @param analise
      */
     public geraRelatorioPdfDetalhadoBrowser(analise: Analise) {
-        if ((analise.metodoContagem === MessageUtil.DETALHADA && (analise.funcaoDados.length === 0
-            || analise.funcaoTransacaos.length === 0)) || analise.funcaoDados.length === 0) {
-            this.pageNotificationService.addErrorMsg(MessageUtil.ERRO_PDF_RELATORIO_CAMPOS);
-        } else {
             this.analiseService.geraRelatorioPdfDetalhadoBrowser(analise.id);
-        }
     }
 
     /**
