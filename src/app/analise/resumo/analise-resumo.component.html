@@ -7,6 +7,22 @@
       
       <app-analise-funcao-resumo-table [linhasResumo]="analise.resumoTotal.all">
       </app-analise-funcao-resumo-table>
+
+      <h2>Fases</h2>
+     <p-dataTable
+      [value]="esforcoFases">
+
+        <p-column
+            header="Nome"
+            field="fase.nome">
+        </p-column>
+
+        <p-column
+            header="Esforço %"
+            field="esforcoFormatado">
+        </p-column>
+     </p-dataTable>
+
     </div>
   </div>
 </div>

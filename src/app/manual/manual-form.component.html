@@ -261,7 +261,7 @@
 
 <div class="ui-g">
     <div class="ui-g-12 ui-md-12 ui-sm-12" id="tabela-tipo-fase">
-        <app-memory-datatable [value]="manual.esforcoFases" (buttonClick)="datatableClick($event)">
+        <app-memory-datatable [value]="manual.esforcoFases" (buttonClick)="datatableClick($event)" disableClone="true">
             <p-column header="Tipo de Fase" field="fase.nome">
             </p-column>
             <p-column header="Percentual (%)" field="esforcoFormatado">
@@ -290,7 +290,7 @@
 
 <div class="ui-g">
     <div class="ui-g-12 ui-md-12 ui-sm-12" id="tabela-deflator">
-        <app-memory-datatable [value]="manual.fatoresAjuste" (buttonClick)="adjustFactorDatatableClick($event)">
+        <app-memory-datatable [value]="manual.fatoresAjuste" (buttonClick)="adjustFactorDatatableClick($event)" disableClone="true">
             <p-column header="Código" field="codigo">
             </p-column>
             <p-column header="Nome" field="nome">

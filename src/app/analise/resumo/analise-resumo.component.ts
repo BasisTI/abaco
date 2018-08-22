@@ -5,6 +5,7 @@ import { AnaliseSharedUtils } from '../../analise-shared/analise-shared-utils';
 import { AnaliseSharedDataService } from '../../shared';
 import { Analise } from '../analise.model';
 import { Subscription } from 'rxjs/Subscription';
+import { EsforcoFase } from '../../esforco-fase';
 
 @Component({
   selector: 'app-analise-resumo',
@@ -16,8 +17,10 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
 
   complexidades: string[];
 
-  private analiseCarregadaSubscription: Subscription;
+  esforcoFases: EsforcoFase[];
 
+  private analiseCarregadaSubscription: Subscription;
+  
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -27,6 +30,7 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
     this.complexidades = AnaliseSharedUtils.complexidades;
     this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
       this.resumoTotal = this.analiseSharedDataService.analise.resumoTotal;
+      this.esforcoFases = this.analiseSharedDataService.analise.esforcoFases;
       this.changeDetectorRef.detectChanges();
     });
   }

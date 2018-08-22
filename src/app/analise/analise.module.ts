@@ -9,6 +9,8 @@ import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao
 
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
 
+import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
+
 import {
   ButtonModule,
   InputTextModule,
@@ -62,7 +64,8 @@ import { UtilModule } from '../util/util.module';
     AbacoAnaliseResumoModule,
     AbacoAnaliseBotaoSalvarModule,
     BotoesExportacaoModule,
-    UtilModule
+    UtilModule,
+    MemoryDataTableModule
   ],
   declarations: [
     AnaliseComponent,

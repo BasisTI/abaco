@@ -26,7 +26,7 @@
       <div class="ui-g">
         <h1>Impacto</h1>
         <div class="ui-g-12">
-          <app-memory-datatable [value]="manualArray" (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true" disableDelete="true">
+          <app-memory-datatable [value]="manualArray" (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true" disableDelete="true" disableClone="true">
             <p-column header="Inclusão(%)" field="parametroInclusaoFormatado">
             </p-column>
             <p-column header="Alteração(%)" field="parametroAlteracaoFormatado">
@@ -44,7 +44,7 @@
       <div class="ui-g">
         <h1>Esforços por Fase</h1>
         <div class="ui-g-12">
-          <app-memory-datatable [value]="manual.esforcoFases" (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true" disableDelete="true">
+          <app-memory-datatable [value]="manual.esforcoFases" (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true" disableDelete="true" disableClone="true">
             <p-column header="Tipo de fase" field="fase.nome">
             </p-column>
             <p-column header="Percentual (%)" field="esforcoFormatado">
@@ -56,7 +56,7 @@
       <div class="ui-g">
         <div class="ui-g-12">
           <h1>Fatores de Ajuste</h1>
-          <app-memory-datatable [value]="manual.fatoresAjuste" (buttonClick)="adjustFactorDatatableClick($event)" disableEdit="true" disableView="true" disableDelete="true">
+          <app-memory-datatable [value]="manual.fatoresAjuste" (buttonClick)="adjustFactorDatatableClick($event)" disableEdit="true" disableView="true" disableDelete="true" disableClone="true">
             <p-column header="Codigo" field="codigo">
             </p-column>
             <p-column header="Nome" field="nome">
