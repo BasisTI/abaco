@@ -104,11 +104,6 @@ export class ManualComponent implements OnInit {
           this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
           document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
           }
-      let invalidFieldNamesString = '';
-      const fieldErrors = JSON.parse(error['_body']).fieldErrors;
-      invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-      this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
-       
       });
   }
 
