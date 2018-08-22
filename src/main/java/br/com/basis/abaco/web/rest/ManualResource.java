@@ -141,6 +141,14 @@ public class ManualResource {
         if (manual.getId() == null) {
             return createManual(manual);
         }
+
+        Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
+        if (existingManual.isPresent()) {
+            return ResponseEntity.badRequest()
+                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "manualexists", "Manual already in use"))
+                .body(null);
+        }
+        
         Manual result = manualRepository.save(manual);
         manualSearchRepository.save(result);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, manual.getId().toString()))
