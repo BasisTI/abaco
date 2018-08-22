@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Spring Data JPA repository for the Sistema entity.
@@ -23,5 +24,9 @@ public interface SistemaRepository extends JpaRepository<Sistema, Long> {
 
     @Query( value = "SELECT count(*) FROM ANALISE WHERE sistema_id = ?1", nativeQuery = true)
     public Integer quantidadeSistema(Long id);
+
+
+    @Query( value = "Select * FROM SISTEMA WHERE organizacao_id = ?1", nativeQuery = true)
+    public Set<Sistema> findAllSystemOrg(Long id);
 
 }

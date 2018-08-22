@@ -181,9 +181,10 @@ public class SistemaResource {
 	@GetMapping("/sistemas/organizacao/{idOrganizacao}")
 	@Timed
 	@Transactional
-	public Set<Sistema> getAllSistemasByOrganizacaoId(@PathVariable Long idOrganizacao) {
-		Organizacao organizacao = organizacaoRepository.findOne(idOrganizacao);
-		return organizacao.getSistemas();
+	public Set<Sistema> findAllSystemOrg(@PathVariable Long idOrganizacao) {
+        log.debug("REST request to get all Sistemas by Organizacao");
+        Set<Sistema> sistemas = sistemaRepository.findAllSystemOrg(idOrganizacao);
+		return sistemas;
 	}
 
 	/**
