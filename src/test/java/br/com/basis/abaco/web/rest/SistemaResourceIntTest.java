@@ -4,7 +4,6 @@ import br.com.basis.abaco.AbacoApp;
 import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
-import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
@@ -76,9 +75,6 @@ public class SistemaResourceIntTest {
     private Sistema sistema;
 
     @Autowired
-    private OrganizacaoRepository organizacaoRepository;
-
-    @Autowired
     private FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
     @Autowired
@@ -88,7 +84,7 @@ public class SistemaResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        SistemaResource sistemaResource = new SistemaResource(sistemaRepository, sistemaSearchRepository, organizacaoRepository, funcaoDadosVersionavelRepository, funcaoDadosRepository,  dynamicExportsService);
+        SistemaResource sistemaResource = new SistemaResource(sistemaRepository, sistemaSearchRepository, funcaoDadosVersionavelRepository, funcaoDadosRepository,  dynamicExportsService);
         this.restSistemaMockMvc = MockMvcBuilders.standaloneSetup(sistemaResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();
