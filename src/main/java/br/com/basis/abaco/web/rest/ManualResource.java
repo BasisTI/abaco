@@ -148,7 +148,7 @@ public class ManualResource {
                 .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "manualexists", "Manual already in use"))
                 .body(null);
         }
-        
+
         Manual result = manualRepository.save(manual);
         manualSearchRepository.save(result);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, manual.getId().toString()))
