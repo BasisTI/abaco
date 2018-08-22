@@ -467,8 +467,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     configurarDialog() {
         this.getTextDialog();
-        this.windowHeightDialog = window.innerHeight * 0.70;
-        this.windowWidthDialog = window.innerWidth * 0.60;
+        this.windowHeightDialog = window.innerHeight * 0.60;
+        this.windowWidthDialog = window.innerWidth * 0.50;
         this.showDialog = true;
     }
 
