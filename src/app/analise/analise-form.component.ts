@@ -17,6 +17,7 @@ import {MessageUtil} from '../util/message.util';
 import {FatorAjuste} from '../fator-ajuste';
 import {EsforcoFase} from '../esforco-fase';
 import {Manual} from '../manual';
+import {Response} from '@angular/http';
 
 @Component({
     selector: 'jhi-analise-form',
@@ -64,6 +65,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     ];
 
     private routeSub: Subscription;
+    public hideShowSelectEquipe: boolean;
 
     constructor(
         private router: Router,
@@ -80,6 +82,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.validacaoCampos = true;
+        this.hideShowSelectEquipe = true;
         this.analiseSharedDataService.init();
         this.isEdicao = false;
         this.isSaving = false;
@@ -139,8 +142,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular a lista de organizações.
      */
     listOrganizacoes() {
-        this.organizacaoService.query().subscribe((res: ResponseWrapper) => {
+        this.organizacaoService.searchActiveOrganizations().subscribe((res: ResponseWrapper) => {
             this.organizacoes = res.json;
+        },(error: Response) => {
+            this.pageNotificationService.addErrorMsg('Ops! Ocorreu algum erro');
         });
     }
 
@@ -170,7 +175,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     setSistamaOrganizacao(org: Organizacao) {
         this.contratos = org.contracts;
-        this.sistemaService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
+        this.sistemaService.findAllSystemOrg(org.id).subscribe((res: ResponseWrapper) => {
             this.sistemas = res.json;
         });
         this.setEquipeOrganizacao(org);
@@ -183,6 +188,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.contratos = org.contracts;
         this.equipeService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
             this.equipeResponsavel = res.json;
+            if(this.equipeResponsavel !== null){
+                this.hideShowSelectEquipe = false;
+            }
         });
     }
 

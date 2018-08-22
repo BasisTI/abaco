@@ -50,10 +50,8 @@
                     </div>
 
                     <basis-datatable
-                            tableStyle="width:auto"
                             [url]="searchUrl"
                             (buttonClick)="datatableClick($event)"
-                            [disableView]="true"
                             [rows]="20"
                             [rowsPerPageOptions]="rowsPerPageOptions"
                             [showPaginationFooter]="true"
@@ -102,10 +100,7 @@
                                 disabled="desabilitarBotaoRelatorio()">
                         </basis-datatable-button>
 
-
-                        
-                        
-                        <p-column header="Organização" field="organizacao.nome" [sortable]="true"
+                        <p-column header="Organização" field="organizacao.sigla" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}"></p-column>
 
                         <p-column header="Identificador Análise" field="identificadorAnalise" [sortable]="true"

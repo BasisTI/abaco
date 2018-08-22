@@ -25,20 +25,6 @@
                                 </div>
 
                                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
-                                    <label>Equipe Responsável</label>
-                                    <p-dropdown
-                                            [filter]="true"
-                                            dataKey="id"
-                                            name="equipeResponsavel"
-                                            optionLabel="nome"
-                                            placeholder="Selecione..."
-                                            [options]="equipeResponsavel"
-                                            [(ngModel)]="analise.equipeResponsavel"
-                                            [autoWidth]="false">
-                                    </p-dropdown>
-                                </div>
-
-                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                                     <label>Sistema</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -50,6 +36,21 @@
                                             name="sistema"
                                             [options]="sistemas"
                                             [(ngModel)]="analise.sistema"
+                                            [autoWidth]="false">
+                                    </p-dropdown>
+                                </div>
+
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Equipe Responsável</label>
+                                    <p-dropdown
+                                            [filter]="true"
+                                            dataKey="id"
+                                            name="equipeResponsavel"
+                                            optionLabel="nome"
+                                            placeholder="Selecione..."
+                                            [disabled]="hideShowSelectEquipe"
+                                            [options]="equipeResponsavel"
+                                            [(ngModel)]="analise.equipeResponsavel"
                                             [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
@@ -90,7 +91,6 @@
                                                 (onChange)="setSistamaOrganizacao($event.value)">
                                         </p-dropdown>
                                     </div>
-
                                     <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
                                         <label>Equipe Responsável</label>
                                         <p-dropdown
