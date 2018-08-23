@@ -77,7 +77,6 @@ public class RelatorioFuncoes {
         this.popularImpactoFd(f);
         this.popularModuloFd(f);
         this.popularNomeFd(f);
-        this.popularPFsFd(f);
     }
 
     /**
