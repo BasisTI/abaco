@@ -1,0 +1,116 @@
+<div class="ui-g ui-fluid" *ngIf="analise">
+        <div class="ui-g-12">
+            <h1>Visualizar Análise</h1>
+
+            <div class="ui-g">
+
+              <div class="ui-g-4" style="margin-bottom: 25px">
+                <label>Organização: {{ analise.organizacao.nome }}</label>
+              </div>
+
+              <div class="ui-g-4" style="margin-bottom: 25px">
+                <label>Equipe Responsável: {{ analise.equipeResponsavel.nome }}</label>
+              </div>
+
+              <div class="ui-g-4" style="margin-bottom: 25px">
+                <label>Sistema: {{ analise.sistema.nome }}</label>
+              </div>
+
+              <div class="ui-g-4" style="margin-bottom: 25px">
+                <label>Identificador da Análise: {{ analise.identificadorAnalise }}</label>
+              </div>
+
+              <div class="ui-g-4" style="margin-bottom: 25px">
+                    <label>Contrato: {{ analise.contrato.numeroContrato }}</label>
+              </div>
+
+              <div class="ui-g-4" style="margin-bottom: 25px">
+                    <label>Método de Contagem: {{ analise.metodoContagem }}</label>
+              </div>
+
+              <div class="ui-g-4" style="margin-bottom: 25px">
+                    <label>Tipo de Contagem: {{ analise.tipoAnalise }}</label>
+              </div>
+
+              <div class="ui-g-4" style="margin-bottom: 25px">
+                    <label>Deflator: {{ analise.fatorAjuste.fatorFormatado }}</label>
+              </div>
+
+              <div class="ui-g-4" style="margin-bottom: 25px">
+                    <label>Manual: {{ analise.contrato.manual.nome }}</label>
+              </div>
+
+            </div>
+
+            <div class="ui-g">
+
+                <div class="ui-g-6" style="margin-bottom: 25px; overflow: scroll !important; width: 50%" >
+                    <label>Propósito da Contagem: {{ analise.propositoContagem }}</label>
+                </div>
+
+                <div class="ui-g-6" style="margin-bottom: 25px; overflow: scroll !important; width: 50%">
+                    <label>Escopo da Contagem: {{ analise.escopo}}</label>
+                </div>
+
+                <div class="ui-g-6" style="margin-bottom: 25px; overflow: scroll !important; width: 50%">
+                    <label>Fronteira: {{ analise.fronteiras}}</label>
+                </div>
+
+                <div class="ui-g-6" style="margin-bottom: 25px; overflow: scroll !important; width: 50%">
+                    <label>Documentação: {{ analise.documentacao}}</label>
+                </div>
+                
+            </div>
+
+            <div class="ui-g-12 ui-md-12 ui-sm-12">
+
+                    <div class="ui-g-6 ui-md-6 ui-sm-12">
+                        <label>Aguardar prazo de garantia {{analise.contrato.diasDeGarantia > 0 ? " de " + analise.contrato.diasDeGarantia + " dias"
+                        : null}}?</label>
+                    </div>
+
+                    <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="analise.baselineImediatamente === true" >
+                        <label>Sim</label>
+                    </div>
+
+                    <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="analise.baselineImediatamente === false" >
+                        <label>Não</label>
+                    </div>
+
+            </div>
+
+            <div class="ui-g-12 ui-md-12 ui-sm-12">
+                <label >Data da homologação (software): {{analise.dataHomologacao | date: 'dd/MM/y'}}</label>
+            </div>
+
+            <div class="ui-g-12">
+                <h4>Fases</h4>
+                <p-dataTable
+                [value]="analise.esforcoFases">
+        
+                <p-column
+                    header="Nome"
+                    field="fase.nome">
+                </p-column>
+        
+                <p-column
+                    header="Esforço %"
+                    field="esforcoFormatado">
+                </p-column>
+                </p-dataTable>
+            </div>
+
+            <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px; overflow: scroll !important; width: 100%">
+                <label>Observações: {{ analise.documentacao}}</label>
+            </div>
+
+            <div class="ui-g-2 ui-md-2 ui-sm-2" style="margin-bottom: 25px;">
+                    <app-white-button
+                            buttonLabel="Voltar"
+                            routerLink="/analise">
+                    </app-white-button>
+
+            </div>
+     </div>
+ </div>
+      

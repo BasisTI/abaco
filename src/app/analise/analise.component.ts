@@ -66,6 +66,9 @@ export class AnaliseComponent implements OnInit {
                 }
                 this.router.navigate(['/analise', event.selection.id, 'edit']);
                 break;
+            case 'view':
+                this.router.navigate(['/analise', event.selection.id]);
+                break;
             case 'delete':
                 this.confirmDelete(event.selection);
                 break;
