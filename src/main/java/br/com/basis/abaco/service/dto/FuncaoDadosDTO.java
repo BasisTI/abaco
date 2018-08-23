@@ -23,6 +23,12 @@ public class FuncaoDadosDTO {
     
     private String pfAjustadoFd;
 
+    private String fatorAjusteFd;
+
+    public String getFatorAjusteFd() { return fatorAjusteFd; }
+
+    public void setFatorAjusteFd(String fatorAjusteFd) { this.fatorAjusteFd = fatorAjusteFd; }
+
     public String getNomeFd() {
         return nomeFd;
     }
