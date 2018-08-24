@@ -35,6 +35,9 @@ public class BaseLineAnalitico implements Serializable {
     @Column(name = "impacto")
     private String impacto;
 
+    @Column(name = "classificacao")
+    private String classificacao;
+
     @Column(name = "analise_id")
     private Long analiseid;
 
@@ -76,6 +79,14 @@ public class BaseLineAnalitico implements Serializable {
         this.idsistema = idsistema;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
     public String getImpacto() {
         return impacto;
     }
@@ -84,12 +95,12 @@ public class BaseLineAnalitico implements Serializable {
         this.impacto = impacto;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getClassificacao() {
+        return classificacao;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setClassificacao(String classificacao) {
+        this.classificacao = classificacao;
     }
 
     public Long getAnaliseid() {
