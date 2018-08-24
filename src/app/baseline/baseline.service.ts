@@ -6,6 +6,7 @@ import {Response} from '@angular/http';
 import {Observable} from '../../../node_modules/rxjs';
 import {BaselineSintetico} from './baseline-sintetico.model';
 import {BaselineAnalitico} from './baseline-analitico.model';
+import {Sistema} from '../sistema/sistema.model';
 
 
 @Injectable()
@@ -23,6 +24,13 @@ export class BaselineService {
     allBaselineSintetico(): Observable<ResponseWrapper> {
         return this.http.get(`${this.sinteticosUrl}`).map((res: Response) => {
             return this.convertResponseSintetico(res);
+        });
+    }
+
+    getSistemaSintetico(id: number): Observable<BaselineSintetico> {
+        return this.http.get(`${this.sinteticosUrl}${id}`).map((res: Response) => {
+            const jsonResponse = res.json();
+            return this.convertJsonToSintetico(jsonResponse);
         });
     }
 
@@ -49,6 +57,11 @@ export class BaselineService {
 
     private convertItemSintetico(json: any): BaselineSintetico {
         return BaselineSintetico.convertJsonToObject(json);
+    }
+
+    private convertJsonToSintetico(json: any): BaselineSintetico {
+        const entity: BaselineSintetico = BaselineSintetico.convertJsonToObject(json);
+        return entity;
     }
 
     private convertResponseAnalitico(res: Response): ResponseWrapper {

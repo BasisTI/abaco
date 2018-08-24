@@ -24,7 +24,10 @@ import {
     BaselineService,
     BaselineComponent,
     BaselineViewComponent,
-    baselineRoute, BaselineFuncaoDadosComponent, BaselineFuncaoTransacaoComponent
+    baselineRoute,
+    BaselineFuncaoDadosComponent,
+    BaselineFuncaoTransacaoComponent,
+    BaselineInfSistemaComponent
 } from './';
 
 import {AbacoButtonsModule} from '../abaco-buttons/abaco-buttons.module';
@@ -60,7 +63,8 @@ import {BaselineImpactoComponent} from './analitico/impacto/baseline-impacto.com
         BaselineFuncaoDadosComponent,
         BaselineFuncaoTransacaoComponent,
         BaselineComplexidadeComponent,
-        BaselineImpactoComponent
+        BaselineImpactoComponent,
+        BaselineInfSistemaComponent
     ],
     providers: [
         BaselineService,
