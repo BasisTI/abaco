@@ -1,12 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpService} from '@basis/angular-components';
 import {environment} from '../../environments/environment';
-import {createRequestOption, ResponseWrapper} from '../shared';
+import {ResponseWrapper} from '../shared';
 import {Response} from '@angular/http';
 import {Observable} from '../../../node_modules/rxjs';
-import {FatorAjuste} from '../fator-ajuste/fator-ajuste.model';
 import {BaselineSintetico} from './baseline-sintetico.model';
-import {Sistema} from '../sistema/sistema.model';
+import {BaselineAnalitico} from './baseline-analitico.model';
 
 
 @Injectable()
@@ -14,7 +13,8 @@ export class BaselineService {
 
     resourceUrl = environment.apiUrl + '/';
     sinteticosUrl = this.resourceUrl + 'baseline-sinteticos/';
-    analiticosUrl = this.resourceUrl + 'baseline-analiticos/';
+    analiticosFDUrl = this.resourceUrl + 'baseline-analiticos/fd/';
+    analiticosFTUrl = this.resourceUrl + 'baseline-analiticos/ft/';
 
 
     constructor(private http: HttpService) {
@@ -22,24 +22,46 @@ export class BaselineService {
 
     allBaselineSintetico(): Observable<ResponseWrapper> {
         return this.http.get(`${this.sinteticosUrl}`).map((res: Response) => {
-            console.log('res ', res);
-            return this.convertResponse(res);
+            return this.convertResponseSintetico(res);
         });
     }
 
+    baselineAnaliticoFD(id: number): Observable<ResponseWrapper> {
+        return this.http.get(`${this.analiticosFDUrl}${id}`).map((res: Response) => {
+            return this.convertResponseAnalitico(res);
+        });
+    }
 
-    private convertResponse(res: Response): ResponseWrapper {
+    baselineAnaliticoFT(id: number): Observable<ResponseWrapper> {
+        return this.http.get(`${this.analiticosFTUrl}${id}`).map((res: Response) => {
+            return this.convertResponseAnalitico(res);
+        });
+    }
+
+    private convertResponseSintetico(res: Response): ResponseWrapper {
         const jsonResponse = res.json();
         const result = [];
         for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
+            result.push(this.convertItemSintetico(jsonResponse[i]));
         }
         return new ResponseWrapper(res.headers, result, res.status);
     }
 
-    private convertItemFromServer(json: any): BaselineSintetico {
+    private convertItemSintetico(json: any): BaselineSintetico {
         return BaselineSintetico.convertJsonToObject(json);
     }
 
+    private convertResponseAnalitico(res: Response): ResponseWrapper {
+        const jsonResponse = res.json();
+        const result = [];
+        for (let i = 0; i < jsonResponse.length; i++) {
+            result.push(this.convertItemAnalitico(jsonResponse[i]));
+        }
+        return new ResponseWrapper(res.headers, result, res.status);
+    }
+
+    private convertItemAnalitico(json: any): BaselineAnalitico {
+        return BaselineAnalitico.convertJsonToObject(json);
+    }
 
 }

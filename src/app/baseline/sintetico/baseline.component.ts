@@ -10,6 +10,7 @@ import {Organizacao} from '../../organizacao/organizacao.model';
 import {BaselineService} from '../baseline.service';
 import {BaselineSintetico} from '../baseline-sintetico.model';
 import {Sistema} from '../../sistema';
+import {BaselineAnalitico} from '../baseline-analitico.model';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -21,13 +22,10 @@ export class BaselineComponent implements OnInit {
     elasticQuery: ElasticQuery = new ElasticQuery();
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
     rowsPerPageOptions: number[] = [5, 10, 20];
-    public baselineSinteticos: BaselineSintetico[];
 
     constructor (
         private router: Router,
-        private sistemaService: SistemaService,
         private baselineService: BaselineService,
-        private confirmationService: ConfirmationService,
     ) {
     }
 

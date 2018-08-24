@@ -23,7 +23,7 @@ describe('MappableEntities', () => {
   });
 
 
-  describe('Instantiating with an initial list', () => {
+  describe('Instantiating with an initial sintetico', () => {
     it('should add all values passed in the constructor', () => {
       const e2 = { name: 'entity2', id: 2, artificialId: undefined };
       const e3 = _.clone(entityWithNoIds);

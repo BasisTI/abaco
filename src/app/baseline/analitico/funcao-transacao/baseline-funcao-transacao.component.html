@@ -1,0 +1,28 @@
+<div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
+        <div class="card card-w-title">
+
+            <h1>Funções de Transação</h1>
+            <div class="ui-g">
+                <div class="ui-g">
+                    <basis-datatable
+                            [rows]="20"
+                            [disableDelete]="true"
+                            [disableEdit]="true"
+                            [disableView]="true"
+                            [rowsPerPageOptions]="rowsPerPageOptionsFT"
+                            [showPaginationFooter]="true"
+                            #datatableFT>
+                        <p-column header="Nome" field="nome" [sortable]="true"></p-column>
+                        <p-column header="Classif." field="classificacao" [sortable]="true"></p-column>
+                        <p-column header="I/A/E" field="impacto" [sortable]="true"></p-column>
+                        <p-column header="RLR" field="rlralr" [sortable]="true"></p-column>
+                        <p-column header="DER" field="der" [sortable]="true"></p-column>
+                        <p-column header="Complexidade" field="complexidade" [sortable]="true"></p-column>
+                    </basis-datatable>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

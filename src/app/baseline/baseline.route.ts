@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
-import {BaselineComponent} from './list/baseline.component';
-import { BaselineViewComponent } from './view/baseline-view.component';
+import {BaselineComponent} from './sintetico/baseline.component';
+import { BaselineViewComponent } from './analitico/baseline-view.component';
 
 import { AuthGuard } from '@basis/angular-components';
 
