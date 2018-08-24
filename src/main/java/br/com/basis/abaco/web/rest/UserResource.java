@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioUserColunas;
 import br.com.basis.abaco.service.util.RandomUtil;
@@ -242,6 +243,19 @@ public class UserResource {
 		log.debug("REST request to get User : {}", id);
 		return userService.getUserWithAuthorities(id);
 	}
+
+    /**
+     * GET /users/current : get the current logged user.
+     *
+     * @return a String containing user's id in body, or with status 404 (Not Found)
+     */
+    @GetMapping("/users/logged")
+    @Timed
+    @Secured(AuthoritiesConstants.USER)
+    public User getLoggedUser() {
+        log.debug("REST request to get current logged user");
+        return userRepository.findOneWithAuthoritiesByLogin(Sec]urityUtils.getCurrentUserLogin()).orElse(null);
+    }
 
 	@GetMapping("/users/authorities")
 	@Timed
