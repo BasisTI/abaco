@@ -5,6 +5,7 @@
 /target/www/**
 /src/test/javascript/coverage/
 /src/test/javascript/PhantomJS*/
+/src/main/resources/reports/analise/analise_detalhada.jasper
 
 ######################
 # Node
