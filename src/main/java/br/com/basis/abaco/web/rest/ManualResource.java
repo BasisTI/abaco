@@ -143,7 +143,7 @@ public class ManualResource {
         }
 
         Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
-        if (existingManual.isPresent()) {
+        if (existingManual.isPresent() && (!existingManual.get().getId().equals(manual.getId()))) {
             return ResponseEntity.badRequest()
                 .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "manualexists", "Manual already in use"))
                 .body(null);

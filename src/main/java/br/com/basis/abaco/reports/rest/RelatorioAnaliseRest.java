@@ -482,6 +482,7 @@ public class RelatorioAnaliseRest {
         fd.setRlrFd(Integer.toString(this.countQuantidadeRlrFd(f.getIdFd())));
         fd.setPfTotalFd(f.getPfTotalFd());
         fd.setPfAjustadoFd(f.getPfAjustadoFd());
+        fd.setFatorAjusteFd(f.getFatorAjusteFd());
         return fd;
     }
 
@@ -504,6 +505,7 @@ public class RelatorioAnaliseRest {
         ft.setFtrFt(Integer.toString(this.countQuantidadeFtrFt(f.getIdFt())));
         ft.setPfTotalFt(f.getPfTotalFt());
         ft.setPfAjustadoFt(f.getPfAjustadoFt());
+        ft.setFatorAjusteFt(f.getFatorAjusteFt());
         return ft;
     }
 

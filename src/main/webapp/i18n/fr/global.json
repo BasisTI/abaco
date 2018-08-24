@@ -22,6 +22,7 @@
                 "funcaoDados": "Funcao Dados",
                 "funcaoTransacao": "Funcao Transacao",
                 "alr": "Alr",
+                "baseLineSintetico": "Base Line Sintetico",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

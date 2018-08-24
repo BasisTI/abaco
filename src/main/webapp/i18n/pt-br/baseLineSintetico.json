@@ -1,0 +1,27 @@
+
+{
+    "abacoApp": {
+        "baseLineSintetico" : {
+            "home": {
+                "title": "Base Line Sinteticos",
+                "createLabel": "Criar novo Base Line Sintetico",
+                "createOrEditLabel": "Criar ou editar Base Line Sintetico",
+                "search": "Pesquisar por Base Line Sintetico"
+            },
+            "created": "Um novo Base Line Sintetico foi criado com o identificador {{ param }}",
+            "updated": "Um Base Line Sintetico foi atualizado com o identificador {{ param }}",
+            "deleted": "Um Base Line Sintetico foi deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Base Line Sintetico {{ id }}?"
+            },
+            "detail": {
+                "title": "Base Line Sintetico"
+            },
+            "idsistema": "Idsistema",
+            "sigla": "Sigla",
+            "nome": "Nome",
+            "numeroocorrencia": "Numeroocorrencia",
+            "sum": "Sum"
+        }
+    }
+}

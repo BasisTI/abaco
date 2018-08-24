@@ -25,6 +25,7 @@
                 "alr": "Alr",
                 "validation":"Validation",
                 "team":"Team",
+                "baseLineSintetico": "Base Line Sintetico",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
