@@ -1,0 +1,36 @@
+
+{
+    "abacoApp": {
+        "baseLineAnalitico" : {
+            "home": {
+                "title": "BaseLineAnaliticos",
+                "createLabel": "Créer un nouveau Base Line Analitico",
+                "createOrEditLabel": "Créer ou éditer un Base Line Analitico",
+                "search": "Recherche pour Base Line Analitico"
+            },
+            "created": "Un nouveau Base Line Analitico a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Base Line Analitico avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Base Line Analitico avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Base Line Analitico {{ id }} ?"
+            },
+            "detail": {
+                "title": "Base Line Analitico"
+            },
+            "text": "Text",
+            "impacto": "Impacto",
+            "tipo": "Tipo",
+            "analiseid": "Analiseid",
+            "datahomologacaosoftware": "Datahomologacaosoftware",
+            "idsistema": "Idsistema",
+            "nome": "Nome",
+            "sigla": "Sigla",
+            "name": "Name",
+            "pf": "Pf",
+            "idfuncaodados": "Idfuncaodados",
+            "complexidade": "Complexidade",
+            "der": "Der",
+            "rlralr": "Rlralr"
+        }
+    }
+}

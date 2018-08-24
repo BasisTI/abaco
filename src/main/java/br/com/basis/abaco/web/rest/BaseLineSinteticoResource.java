@@ -29,7 +29,7 @@ public class BaseLineSinteticoResource {
     }
 
 
-    @GetMapping("/base-line-sinteticos")
+    @GetMapping("/baseline-sinteticos")
     @Timed
     public List<BaseLineSintetico> getAllBaseLineSinteticos() {
         log.debug("REST request to get all BaseLineSinteticos");

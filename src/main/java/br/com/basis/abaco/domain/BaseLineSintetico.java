@@ -26,7 +26,7 @@ public class BaseLineSintetico implements Serializable {
 
     @Id
     @Column(name = "id_sistema", precision=10, scale=2)
-    private BigDecimal idsistema;
+    private Long idsistema;
 
     @Column(name = "sigla")
     private String sigla;
@@ -40,16 +40,16 @@ public class BaseLineSintetico implements Serializable {
     @Column(name = "sum", precision=10, scale=2)
     private BigDecimal sum;
 
-    public BigDecimal getIdsistema() {
+    public Long getIdsistema() {
         return idsistema;
     }
 
-    public BaseLineSintetico idsistema(BigDecimal idsistema) {
+    public BaseLineSintetico idsistema(Long idsistema) {
         this.idsistema = idsistema;
         return this;
     }
 
-    public void setIdsistema(BigDecimal idsistema) {
+    public void setIdsistema(Long idsistema) {
         this.idsistema = idsistema;
     }
 
