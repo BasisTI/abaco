@@ -254,7 +254,7 @@ public class UserResource {
     @Secured(AuthoritiesConstants.USER)
     public User getLoggedUser() {
         log.debug("REST request to get current logged user");
-        return userRepository.findOneWithAuthoritiesByLogin(Sec]urityUtils.getCurrentUserLogin()).orElse(null);
+        return userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).orElse(null);
     }
 
 	@GetMapping("/users/authorities")
