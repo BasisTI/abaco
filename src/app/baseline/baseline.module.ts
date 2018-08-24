@@ -29,9 +29,11 @@ import {
 
 import {AbacoButtonsModule} from '../abaco-buttons/abaco-buttons.module';
 import {StringConcatService} from '../shared/string-concat.service';
+import {TableModule} from 'primeng/table';
 
 @NgModule({
     imports: [
+        TableModule,
         CommonModule,
         HttpModule,
         FormsModule,

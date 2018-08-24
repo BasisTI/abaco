@@ -24,7 +24,6 @@ import {
     PageNotificationModule
 } from '@basis/angular-components';
 import {authServiceFactory} from './auth-service-factory';
-
 import {AuthModule} from './auth.module';
 import {AppRoutes} from './app.routes';
 import {AppComponent} from './app.component';

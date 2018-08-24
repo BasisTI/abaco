@@ -1,2 +1,25 @@
-<h2>EM PRODUÇÃO</h2>
-<h2>LISTAR SISTEMAS </h2>
+<div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
+        <div class="card card-w-title">
+
+            <h1>Baseline</h1>
+            <div class="ui-g">
+                <div class="ui-g">
+                    <basis-datatable
+                            (buttonClick)="datatableClick($event)"
+                            [rows]="20"
+                            [disableDelete]="true"
+                            [disableEdit]="true"
+                            [rowsPerPageOptions]="rowsPerPageOptions"
+                            [showPaginationFooter]="true"
+                            #datatable>
+                        <p-column header="Nome" field="nome" [sortable]="true"></p-column>
+                        <p-column header="Sigla" field="sigla" [sortable]="true"></p-column>
+                        <p-column header="Número da Ocorrência" field="numeroocorrencia" [sortable]="true"></p-column>
+                        <p-column header="Pontos de Função" field="sum" [sortable]="true"></p-column>
+                    </basis-datatable>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
