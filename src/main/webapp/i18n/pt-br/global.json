@@ -26,6 +26,7 @@
                 "validation":"Validação",
                 "team":"Equipe",
                 "analise": "Analise",
+                "baseLineSintetico": "Base Line Sintetico",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

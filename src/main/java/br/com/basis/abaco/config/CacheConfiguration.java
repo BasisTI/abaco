@@ -69,6 +69,7 @@ public class CacheConfiguration {
             cm.createCache(br.com.basis.abaco.domain.Alr.class.getName(), jcacheConfiguration);
             cm.createCache(br.com.basis.abaco.domain.Alr.class.getName() + ".funcaoDados", jcacheConfiguration);
             cm.createCache(br.com.basis.abaco.domain.TipoEquipe.class.getName(), jcacheConfiguration);
+            cm.createCache(br.com.basis.abaco.domain.BaseLineSintetico.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }
