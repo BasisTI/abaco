@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * REST controller for managing BaseLineAnalitico.
@@ -22,8 +23,6 @@ import java.util.List;
 public class BaseLineAnaliticoResource {
 
     private final Logger log = LoggerFactory.getLogger(BaseLineAnaliticoResource.class);
-
-    private static final String ENTITY_NAME = "baseLineAnalitico";
 
     private final BaseLineAnaliticoRepository baseLineAnaliticoRepository;
 
@@ -39,9 +38,9 @@ public class BaseLineAnaliticoResource {
      */
     @GetMapping("/baseline-analiticos")
     @Timed
-    public List<BaseLineAnalitico> getAllBaseLineAnaliticos() {
+    public Set<BaseLineAnalitico> getAllBaseLineAnaliticos() {
         log.debug("REST request to get all BaseLineAnaliticos");
-        return baseLineAnaliticoRepository.findAll();
+        return baseLineAnaliticoRepository.getAllAnaliticos();
     }
 
 

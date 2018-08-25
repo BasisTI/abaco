@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -21,5 +22,8 @@ public interface BaseLineAnaliticoRepository extends JpaRepository<BaseLineAnali
 
     @Query( value = "SELECT * FROM baseline_analitico where id_sistema = ?1 AND tipo = 'fd'", nativeQuery = true)
     List<BaseLineAnalitico> getAllAnaliticosFD(Long id);
+
+    @Query( value = "select * from baseline_analitico", nativeQuery = true)
+    Set<BaseLineAnalitico> getAllAnaliticos();
 
 }

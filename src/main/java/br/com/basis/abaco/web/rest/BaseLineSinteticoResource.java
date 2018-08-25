@@ -24,16 +24,12 @@ import java.util.Optional;
 public class BaseLineSinteticoResource {
 
     private final Logger log = LoggerFactory.getLogger(BaseLineSinteticoResource.class);
-
-    private static final String ENTITY_NAME = "baseLineSintetico";
-
     private final BaseLineSinteticoRepository baseLineSinteticoRepository;
 
 
     public BaseLineSinteticoResource(BaseLineSinteticoRepository baseLineSinteticoRepository) {
         this.baseLineSinteticoRepository = baseLineSinteticoRepository;
     }
-
 
     @GetMapping("/baseline-sinteticos")
     @Timed

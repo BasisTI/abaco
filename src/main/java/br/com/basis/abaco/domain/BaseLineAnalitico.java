@@ -1,11 +1,6 @@
 package br.com.basis.abaco.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import org.hibernate.annotations.Immutable;
 import org.springframework.data.elasticsearch.annotations.Document;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,14 +13,15 @@ import java.util.Date;
  * A BaseLineAnalitico.
  */
 @Entity
-@Immutable
 @Table(name = "baseline_analitico")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "baselineanalitico")
 public class BaseLineAnalitico implements Serializable {
 
     @Id
-    @Column(name = "id_sistema", precision = 10, scale = 2)
+    @Column(name = "id_funcao_dados")
+    private Long idfuncaodados;
+
+    @Column(name = "id_sistema")
     private Long idsistema;
 
     @Column(name = "tipo")
@@ -55,9 +51,6 @@ public class BaseLineAnalitico implements Serializable {
     @Column(name = "pf")
     private BigDecimal pf;
 
-    @Column(name = "id_funcao_dados")
-    private Long idfuncaodados;
-
     @Column(name = "complexidade")
     private String complexidade;
 
@@ -66,6 +59,14 @@ public class BaseLineAnalitico implements Serializable {
 
     @Column(name = "rlr_alr")
     private BigDecimal rlralr;
+
+    public Long getIdfuncaodados() {
+        return idfuncaodados;
+    }
+
+    public void setIdfuncaodados(Long idfuncaodados) {
+        this.idfuncaodados = idfuncaodados;
+    }
 
     public Long getIdsistema() {
         return idsistema;
@@ -145,14 +146,6 @@ public class BaseLineAnalitico implements Serializable {
 
     public void setPf(BigDecimal pf) {
         this.pf = pf;
-    }
-
-    public Long getIdfuncaodados() {
-        return idfuncaodados;
-    }
-
-    public void setIdfuncaodados(Long idfuncaodados) {
-        this.idfuncaodados = idfuncaodados;
     }
 
     public String getComplexidade() {

@@ -1,8 +1,5 @@
 package br.com.basis.abaco.domain;
 
-
-import org.hibernate.annotations.Immutable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,7 +11,6 @@ import java.math.BigDecimal;
  * A BaseLineSintetico.
  */
 @Entity
-@Immutable
 @Table(name = "baseline_sintetico")
 public class BaseLineSintetico implements Serializable {
 
