@@ -3,15 +3,16 @@ package br.com.basis.abaco.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
-
 import org.hibernate.annotations.Immutable;
 import org.springframework.data.elasticsearch.annotations.Document;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * A BaseLineAnalitico.
@@ -23,10 +24,8 @@ import java.util.Objects;
 @Document(indexName = "baselineanalitico")
 public class BaseLineAnalitico implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @Column(name = "id_sistema", precision=10, scale=2)
+    @Column(name = "id_sistema", precision = 10, scale = 2)
     private Long idsistema;
 
     @Column(name = "tipo")
@@ -67,9 +66,6 @@ public class BaseLineAnalitico implements Serializable {
 
     @Column(name = "rlr_alr")
     private BigDecimal rlralr;
-
-    public BaseLineAnalitico() {
-    }
 
     public Long getIdsistema() {
         return idsistema;
@@ -181,24 +177,5 @@ public class BaseLineAnalitico implements Serializable {
 
     public void setRlralr(BigDecimal rlralr) {
         this.rlralr = rlralr;
-    }
-
-    @Override
-    public String toString() {
-        return "BaseLineAnalitico{" +
-            "idsistema=" + idsistema +
-            ", impacto='" + impacto + '\'' +
-            ", tipo='" + tipo + '\'' +
-            ", analiseid=" + analiseid +
-            ", dataHomologacao=" + dataHomologacao +
-            ", nome='" + nome + '\'' +
-            ", sigla='" + sigla + '\'' +
-            ", name='" + name + '\'' +
-            ", pf=" + pf +
-            ", idfuncaodados=" + idfuncaodados +
-            ", complexidade='" + complexidade + '\'' +
-            ", der=" + der +
-            ", rlralr=" + rlralr +
-            '}';
     }
 }

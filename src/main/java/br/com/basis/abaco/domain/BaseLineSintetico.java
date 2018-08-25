@@ -1,16 +1,14 @@
 package br.com.basis.abaco.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
 
 import org.hibernate.annotations.Immutable;
-import org.hibernate.annotations.Subselect;
-import org.springframework.data.elasticsearch.annotations.Document;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 /**
  * A BaseLineSintetico.
@@ -18,11 +16,7 @@ import java.util.Objects;
 @Entity
 @Immutable
 @Table(name = "baseline_sintetico")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "baselinesintetico")
 public class BaseLineSintetico implements Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "id_sistema", precision=10, scale=2)
@@ -44,22 +38,12 @@ public class BaseLineSintetico implements Serializable {
         return idsistema;
     }
 
-    public BaseLineSintetico idsistema(Long idsistema) {
-        this.idsistema = idsistema;
-        return this;
-    }
-
     public void setIdsistema(Long idsistema) {
         this.idsistema = idsistema;
     }
 
     public String getSigla() {
         return sigla;
-    }
-
-    public BaseLineSintetico sigla(String sigla) {
-        this.sigla = sigla;
-        return this;
     }
 
     public void setSigla(String sigla) {
@@ -70,11 +54,6 @@ public class BaseLineSintetico implements Serializable {
         return nome;
     }
 
-    public BaseLineSintetico nome(String nome) {
-        this.nome = nome;
-        return this;
-    }
-
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -83,22 +62,12 @@ public class BaseLineSintetico implements Serializable {
         return numeroocorrencia;
     }
 
-    public BaseLineSintetico numeroocorrencia(String numeroocorrencia) {
-        this.numeroocorrencia = numeroocorrencia;
-        return this;
-    }
-
     public void setNumeroocorrencia(String numeroocorrencia) {
         this.numeroocorrencia = numeroocorrencia;
     }
 
     public BigDecimal getSum() {
         return sum;
-    }
-
-    public BaseLineSintetico sum(BigDecimal sum) {
-        this.sum = sum;
-        return this;
     }
 
     public void setSum(BigDecimal sum) {
