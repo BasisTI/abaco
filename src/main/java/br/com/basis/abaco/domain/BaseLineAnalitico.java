@@ -37,7 +37,7 @@ public class BaseLineAnalitico implements Serializable {
     private Long analiseid;
 
     @Column(name = "data_homologacao_software")
-    private Date dataHomologacao;
+    private String dataHomologacao;
 
     @Column(name = "nome")
     private String nome;
@@ -108,11 +108,11 @@ public class BaseLineAnalitico implements Serializable {
         this.analiseid = analiseid;
     }
 
-    public Date getDataHomologacao() {
+    public String getDataHomologacao() {
         return dataHomologacao;
     }
 
-    public void setDataHomologacao(Date dataHomologacao) {
+    public void setDataHomologacao(String dataHomologacao) {
         this.dataHomologacao = dataHomologacao;
     }
 
