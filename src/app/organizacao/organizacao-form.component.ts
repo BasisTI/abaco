@@ -70,7 +70,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       if (params['id']) {
         this.organizacaoService.find(params['id']).subscribe(organizacao => {
           this.organizacao = organizacao;
-          this.getFile();
+          // this.getFile();
         });
       }
     });
@@ -372,17 +372,17 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   /**
    *
    * */
-  getFile() {
-    this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
+  // getFile() {
+  //   this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
 
-      let fileInfo;
-      this.uploadService.getFileInfo(this.organizacao.logoId).subscribe(response => {
-        fileInfo = response;
+  //     let fileInfo;
+  //     this.uploadService.getFileInfo(this.organizacao.logoId).subscribe(response => {
+  //       fileInfo = response;
 
-        this.fileInput.files.push(new File([response['_body']], fileInfo['originalName']));
-      });
-    });
-  }
+  //       this.fileInput.files.push(new File([response['_body']], fileInfo['originalName']));
+  //     });
+  //   });
+  // }
 
   /**
    *

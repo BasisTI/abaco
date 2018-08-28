@@ -32,13 +32,11 @@ import {
 
 import {AbacoButtonsModule} from '../abaco-buttons/abaco-buttons.module';
 import {StringConcatService} from '../shared/string-concat.service';
-import {TableModule} from 'primeng/table';
 import {BaselineComplexidadeComponent} from './analitico/complexidade/baseline-complexidade.component';
 import {BaselineImpactoComponent} from './analitico/impacto/baseline-impacto.component';
 
 @NgModule({
     imports: [
-        TableModule,
         CommonModule,
         HttpModule,
         FormsModule,

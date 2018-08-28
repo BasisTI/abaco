@@ -31,9 +31,9 @@ export class OrganizacaoDetailComponent implements OnInit, OnDestroy {
   load(id) {
     this.organizacaoService.find(id).subscribe((organizacao) => {
       this.organizacao = organizacao;
-      this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
+      // this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
         
-      })
+      // })
     });
   }
 
