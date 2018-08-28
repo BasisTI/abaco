@@ -51,7 +51,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
       });
     }, error => {
-      console.log(error.status);
       switch (error.status) {
         case 401: {
           this.pageNotificationService.addErrorMsg('Usuário ou senha inválidos!');

@@ -50,7 +50,7 @@
                 [(ngModel)]="organizacao.sigla" 
                 pInputText
                 maxlength="10"/>
-              <label>Sigla</label>
+              <label>Sigla*</label>
             </span>
           </div>
 
@@ -58,12 +58,17 @@
             <span class="md-inputfield">
               <input 
                 type="text" 
-                [textMask]="{mask: cnpjMask}" 
                 name="cnpjOrganizacao"
-                maxlength="19"
+                maxlength="18" 
+                minlength="14"
+                mask="99.999.999/9999-99" 
+                pattern="[0-9]+$"
                 [(ngModel)]="organizacao.cnpj" 
                 pInputText/>
               <label>CNPJ</label>
+              <div *ngIf="(cnpjValido && editForm.submitted)" class="ui-message ui-messages-error">
+                CNPJ Inválido!
+              </div>
             </span>
           </div>
 
@@ -175,7 +180,7 @@
         </div>
 
         <!-- Dialog Cadastro Contrato -->
-        <p-dialog header="Contrato" 
+        <p-dialog header="Contrato"
           [(visible)]="mostrarDialogCadastroContrato"
           [contentStyle]="{'overflow':'visible'}" 
           [width]="900">
@@ -187,32 +192,38 @@
                 <input 
                   type="text" 
                   name="numeroContrato" 
-                  maxlength="120"
+                  maxlength="100"
                   [(ngModel)]="novoContrato.numeroContrato" 
                   pInputText/>
                 <label>Número do Contrato</label>
               </span>
             </div>
-
-            <div class="ui-g-12" style="margin-bottom: 25px">
-              <p-dropdown 
-                [options]="manuais" 
-                optionLabel="nome" 
-                placeholder="Manual"
-                name="manualDropdown" 
-                [(ngModel)]="novoContrato.manual"
-                [autoWidth]="false" 
-                dataKey="id">
-              </p-dropdown>
-            </div>
+              
+              <div class="ui-g-12" style="margin-bottom: 25px">
+                <p-dropdown 
+                  [filter]="true"
+                  [options]="manuais" 
+                  optionLabel="nome" 
+                  placeholder="Manual *"
+                  name="manualDropdown" 
+                  [(ngModel)]="novoContrato.manual"
+                  [autoWidth]="false" 
+                  (onChange)="validarManual()"
+                  dataKey="id">
+                </p-dropdown>
+                <div *ngIf="manualInvalido" 
+                  class="ui-messages-error">
+                  Manual obrigatório.
+                </div>
+              </div>
 
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
                 <p-calendar 
                   name="dataInicioVigenciaContrato"
                   dateFormat="dd/mm/yy"
-                  yearRange="2000:2020"
-                  [(ngModel)]="novoContrato.dataInicioVigencia" 
+                  yearRange="2000:2050"
+                  [(ngModel)]="novoContrato.dataInicioVigencia"
                   [monthNavigator]="true" 
                   [yearNavigator]="true">
                 </p-calendar>
@@ -224,7 +235,7 @@
               <span class="md-inputfield">
               <p-calendar 
                 name="dataFimVigenciaContrato"
-                yearRange="2000:2020"
+                yearRange="2000:2050"
                 dateFormat="dd/mm/yy"
                 [(ngModel)]="novoContrato.dataFimVigencia"
                 [monthNavigator]="true" 
@@ -237,9 +248,9 @@
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
                 <input 
-                  type="text" 
+                  type="number" 
                   name="diasDeGarantia"
-                  maxlength="6"
+                  mask="999"
                   [(ngModel)]="novoContrato.diasDeGarantia" 
                   pInputText/>
                 <label>Dias de garantia</label>
@@ -255,9 +266,9 @@
 
                 <div class="ui-g-12 ui-md-1">
                   <p-radioButton name="contrato_ativo" 
+                    [(ngModel)]="novoContrato.ativo"
                     [value]="true" 
-                    label="Sim"
-                    [(ngModel)]="novoContrato.ativo">
+                    label="Sim">
                   </p-radioButton>
                 </div>
 
@@ -300,6 +311,7 @@
               <span class="md-inputfield">
                 <input 
                   type="text" 
+                  maxlength="100"
                   name="numeroContrato" 
                   [(ngModel)]="contratoEmEdicao.numeroContrato" 
                   pInputText/>
@@ -309,6 +321,7 @@
 
             <div class="ui-g-6" style="margin-bottom: 25px">
               <p-dropdown 
+                [filter]="true"
                 [options]="manuais" 
                 optionLabel="nome" 
                 placeholder="Manual"
@@ -327,7 +340,7 @@
                   [monthNavigator]="true" 
                   [yearNavigator]="true"
                   dateFormat="dd/mm/yy" 
-                  yearRange="2000:2020">
+                  yearRange="2000:2050">
                 </p-calendar>
                 <label>Data de Início da Vigência</label>
               </span>
@@ -341,7 +354,7 @@
                 [yearNavigator]="true" 
                 name="dataFimVigenciaContrato"
                 dateFormat="dd/mm/yy" 
-                yearRange="2000:2020">
+                yearRange="2000:2050">
               </p-calendar>
               <label>Data Final da Vigência</label>
               </span>
@@ -350,7 +363,8 @@
             <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
                 <input 
-                  type="text" 
+                  type="number" 
+                  mask="999"
                   name="diasDeGarantia"
                   [(ngModel)]="contratoEmEdicao.diasDeGarantia" 
                   pInputText/>

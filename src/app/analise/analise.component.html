@@ -1,106 +1,174 @@
 <div class="ui-g ui-fluid">
 
-  <div class="ui-g-12 ui-md-12 ui-sm-12">
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
 
-    <div class="card card-w-title">
+        <div class="card card-w-title">
 
-      <h1>Análise</h1>
-      
-      <div class="ui-g">
-        <div class="ui-g-12 ui-md-12 ui-sm-12">
+            <h1>Análise</h1>
+
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
           <span class="md-inputfield">
-            <input type="text" 
-              pInputText class="ui-inputtext" 
-              [(ngModel)]="elasticQuery.value"
-              (keyup.enter)="datatable.refresh(elasticQuery.query)"
-              #filter />
+            <input type="text"
+                   pInputText class="ui-inputtext"
+                   [(ngModel)]="elasticQuery.value"
+                   (keyup.enter)="datatable.refresh(elasticQuery.query)"
+                   #filter/>
             <label>Descrição</label>
           </span>
+                </div>
+            </div>
+
+            <div class="ui-g">
+
+                    <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
+
+                        <div class="ui-g-2 ui-md-2 ui-sm-12">
+                            <app-white-button
+                                    buttonLabel="Limpar Pesquisa"
+                                    buttonIcon="ui-icon-clear-all"
+                                    (click)="limparPesquisa()">
+                            </app-white-button>
+                        </div>
+
+                        <div class="ui-g-2 ui-md-2 ui-sm-12">
+                            <app-blue-button
+                                    buttonLabel="Pesquisar"
+                                    buttonIcon="ui-icon-search"
+                                    (click)="datatable.refresh(elasticQuery.query)">
+                            </app-blue-button>
+                        </div>
+
+                        <div class="ui-g-2 ui-md-2 ui-sm-12">
+                            <app-green-button
+                                    buttonLabel="Novo"
+                                    buttonIcon="ui-icon-add"
+                                    routerLink="/analise/new">
+                            </app-green-button>
+                        </div>
+
+                    </div>
+
+                    <basis-datatable
+                            [url]="searchUrl"
+                            (buttonClick)="datatableClick($event)"
+                            [rows]="20"
+                            [disableView] = "true"
+                            [rowsPerPageOptions]="rowsPerPageOptions"
+                            [showPaginationFooter]="true"
+                            #datatable>
+
+                        <button *ngIf="blocked"
+                                pButton
+                                type="button"
+                                name="desbloquear"
+                                pTooltip="Desbloquear"
+                                icon="ui-icon-block"
+                                (click)="desbloqueiaRelatorio()"
+                                class="ui-button-success">
+                        </button>
+                        <p></p>
+                        <button *ngIf="!blocked"
+                                pButton
+                                type="button"
+                                name="bloquear"
+                                pTooltip="Bloquear"
+                                tooltip="Bloquear"
+                                icon="ui-icon-block"
+                                (click)="bloqueiaRelatorio()"
+                                class="ui-button-danger"
+                                [disabled]="desabilitarBotaoRelatorio()">
+                        </button>
+
+                        <basis-datatable-button
+                                name="clone"
+                                tooltip="Clonar"
+                                icon="content-copy"
+                                [disabled]="desabilitarBotaoRelatorio()">
+                        </basis-datatable-button>
+
+                        <basis-datatable-button
+                          name="geraBaselinePdfBrowser"
+                          tooltip="Relatório Baseline"
+                          icon="description"
+                          disabled="desabilitarBotaoRelatorio()">
+                        </basis-datatable-button>
+
+                        <basis-datatable-button
+                                name="relatorioBrowserDetalhado"
+                                tooltip="Relatório Detalhado"
+                                icon="description"
+                                disabled="desabilitarBotaoRelatorio()">
+                        </basis-datatable-button>
+
+                        <p-column header="Organização" field="organizacao.sigla" [sortable]="true"
+                                  [style]="{'font-size': '1.0vw'}"></p-column>
+
+                        <p-column header="Identificador Análise" field="identificadorAnalise" [sortable]="true"
+                                  [style]="{'font-size': '1.0vw'}"></p-column>
+                        <p-column header="Equipe" field="equipeResponsavel.nome" [sortable]="true"
+                                  [style]="{'font-size': '1.0vw'}"></p-column>
+                        <p-column header="Sistema" field="sistema.sigla" [sortable]="true"
+                                  [style]="{'font-size': '1.0vw'}"></p-column>
+                        <p-column header="Método de Contagem" field="metodoContagem" [sortable]="true"
+                                  [style]="{'font-size': '1.0vw'}"></p-column>
+
+                        <p-column header="PF Total" [sortable]="true" [style]="{'font-size': '1.0vw'}">
+                            <ng-template let-col let-pfTotal="rowData.pfTotal" pTemplate="body">
+                                {{ pfTotal > 0 ? pfTotal : 0 | number: '00.00'}}
+                            </ng-template>
+                        </p-column>
+
+                        <p-column header="PF Ajustado" [sortable]="true" [style]="{'font-size': '1.0vw'}">
+                            <ng-template let-col let-adjustPFTotal="rowData.adjustPFTotal" pTemplate="body">
+                                {{ adjustPFTotal > 0 ? adjustPFTotal : 0 | number: '00.00'}}
+                            </ng-template>
+                        </p-column>
+
+                        <p-column header="Dias restantes em Garantia" [sortable]="true"
+                                  [style]="{'font-size': '1.0vw'}">
+                            <ng-template let-dado="rowData" pTemplate="body">
+                                {{ dado | datePipe }}
+                            </ng-template>
+                        </p-column>
+
+                        <p-column header="Data Criação" [sortable]="true" [style]="{'font-size': '1.0vw'}">
+                            <ng-template let-col let-createdOn="rowData.audit.createdOn" pTemplate="body">
+                                {{ createdOn | date: 'dd/MM/y - HH:mm' }}
+                            </ng-template>
+                        </p-column>
+
+                        <!-- <p-column header="Data última Alteração" [sortable] = "true">
+                          <ng-template let-col let-updatedOn="rowData.audit.updatedOn" pTemplate="body">
+                              {{ updatedOn | date: 'dd/MM/y - HH:mm' }}
+                          </ng-template>
+                        </p-column> -->
+
+                        <p-column header="Bloqueado" field="bloqueiaAnalise" [sortable]="true"
+                                  [style]="{'font-size': '1.0vw'}">
+                            <ng-template let-col let-bloqueiaAnalise="rowData" pTemplate="body">
+                                {{ bloqueiaAnalise[col.field] ? 'Sim' : 'Não' }}
+                            </ng-template>
+                        </p-column>
+
+                    </basis-datatable>
+
+                    <div class="ui-g-12 ui-md-2">
+                        <app-botoes-exportacao resourceName="analise" >
+                        </app-botoes-exportacao>
+                    </div>
+
+                </div>
+
         </div>
-      </div>
-
-      <div class="ui-g">
-
-        <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
-
-            <div class="ui-g-2 ui-md-2 ui-sm-12">
-                <app-white-button 
-                  buttonLabel="Limpar Pesquisa" 
-                  buttonIcon="ui-icon-clear-all" 
-                  (click)="limparPesquisa()">
-                </app-white-button>
-              </div>
-
-              <div class="ui-g-2 ui-md-2 ui-sm-12">
-                <app-blue-button 
-                  buttonLabel="Pesquisar" 
-                  buttonIcon="ui-icon-search" 
-                  (click)="datatable.refresh(elasticQuery.query)">
-                </app-blue-button>
-              </div>
-
-              <div class="ui-g-2 ui-md-2 ui-sm-12">
-                <app-green-button 
-                  buttonLabel="Novo" 
-                  buttonIcon="ui-icon-add" 
-                  routerLink="/analise/new">
-                </app-green-button>
-              </div>
-
-        </div>
-
-        <basis-datatable 
-          [url]="searchUrl" 
-          (buttonClick)="datatableClick($event)" 
-          [disableView]="true"
-          [rows]="20"
-          [rowsPerPageOptions]="rowsPerPageOptions"
-          [showPaginationFooter]="true"
-          #datatable>
-
-        <basis-datatable-button
-          name="relatorio"
-          tooltip="Relatório"
-          icon="description"
-          disabled="desabilitarBotaoRelatorio()">
-        </basis-datatable-button>
-          <!-- <p-column header="Número OS" field="numeroOs"></p-column> -->
-          <p-column header="Identificador Análise" field="identificadorAnalise"></p-column>
-          <p-column header="Equipe" field="equipeResponsavel.nome"></p-column>
-          <p-column header="Sistema" field="sistema.sigla"></p-column>
-          <p-column header="Detalhe" field="metodoContagem"></p-column>
-          
-          <p-column header="PF Total">
-            <ng-template let-col let-pfTotal="rowData.pfTotal" pTemplate="body">
-              {{ pfTotal | number: '00.00'}}
-            </ng-template>
-          </p-column>
-          
-          <p-column header="PF Ajustado">
-            <ng-template let-col let-adjustPFTotal="rowData.adjustPFTotal" pTemplate="body">
-                {{ adjustPFTotal | number: '00.00'}}
-              </ng-template>
-          </p-column>
-          
-          <p-column header="Data / Hora">
-            <ng-template let-col let-createdOn="rowData.audit.createdOn" pTemplate="body">
-                {{ createdOn | date: 'dd/MM/y / HH:mm' }}
-            </ng-template>
-          </p-column>
-
-        </basis-datatable>
-
-      </div>
 
     </div>
-
-  </div>
 
 </div>
 
 <p-confirmDialog header="Confirmação" #dialog>
-  <p-footer>
-    <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-    <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
-  </p-footer>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+    </p-footer>
 </p-confirmDialog>

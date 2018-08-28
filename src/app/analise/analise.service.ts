@@ -13,11 +13,15 @@ export class AnaliseService {
 
   resourceUrl = environment.apiUrl + '/analises';
 
-  relatoriosUrl = environment.apiUrl + '/relatorios';
+  relatoriosUrl = environment.apiUrl + '/relatorioPdfBrowser';
+
+  relatorioAnaliseUrl = environment.apiUrl + '/relatorioPdfArquivo';
+
+  relatoriosDetalhadoUrl = environment.apiUrl + '/downloadPdfDetalhadoBrowser';
 
   searchUrl = environment.apiUrl + '/_search/analises';
 
-  relatorioAnaliseUrl = environment.apiUrl + '/relatorioAnalise';
+  relatoriosBaselineUrl = environment.apiUrl + '/downloadPdfBaselineBrowser';
 
   @BlockUI() blockUI: NgBlockUI;
 
@@ -48,16 +52,62 @@ export class AnaliseService {
   /**
    *
    */
-  public gerarRelatorioAnalise(id: number) {
+  public gerarRelatorioPdfArquivo(id: number) {
     window.open(`${this.relatorioAnaliseUrl}/${id}`);
   }
 
   /**
    *
    */
-  public geraRelatorioPDF(id: number): Observable<string> {
+  public geraRelatorioPdfBrowser(id: number): Observable<string> {
     this.blockUI.start('GERANDO RELATORIO...');
     this.http.get(`${this.relatoriosUrl}/${id}`, {
+    method: RequestMethod.Get,
+    responseType: ResponseContentType.Blob,
+  }).subscribe(
+      (response) => {
+        const mediaType = 'application/pdf';
+        const blob = new Blob([response.blob()], {type: mediaType});
+        const fileURL = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.download = 'analise.pdf';
+        anchor.href = fileURL;
+        window.open(fileURL, '_blank', '');
+        this.blockUI.stop();
+        return null;
+      });
+      return null;
+  }
+
+    /**
+   *
+   */
+  public geraRelatorioPdfDetalhadoBrowser(id: number): Observable<string> {
+    this.blockUI.start('GERANDO RELATORIO...');
+    this.http.get(`${this.relatoriosDetalhadoUrl}/${id}`, {
+    method: RequestMethod.Get,
+    responseType: ResponseContentType.Blob,
+  }).subscribe(
+      (response) => {
+        const mediaType = 'application/pdf';
+        const blob = new Blob([response.blob()], {type: mediaType});
+        const fileURL = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.download = 'analise.pdf';
+        anchor.href = fileURL;
+        window.open(fileURL, '_blank', '');
+        this.blockUI.stop();
+        return null;
+      });
+      return null;
+  }
+
+  /**
+   *
+   */
+  public geraBaselinePdfBrowser(): Observable<string> {
+    this.blockUI.start('GERANDO RELATORIO...');
+    this.http.get(`${this.relatoriosBaselineUrl}`, {
     method: RequestMethod.Get,
     responseType: ResponseContentType.Blob,
   }).subscribe(
@@ -81,7 +131,9 @@ export class AnaliseService {
   public find(id: number): Observable<Analise> {
     return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
       const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
+      let analiseJson = this.convertItemFromServer(jsonResponse);
+      analiseJson.createdBy = jsonResponse.createdBy;
+      return analiseJson;
     });
   }
 
@@ -99,6 +151,26 @@ export class AnaliseService {
    */
   public delete(id: number): Observable<Response> {
     return this.http.delete(`${this.resourceUrl}/${id}`);
+  }
+
+  /**
+   *
+   */
+  public block(analise: Analise): Observable<Analise> {
+    const copy = analise;
+    return this.http.put(`${this.resourceUrl}/${copy.id}/block`, copy).map((res: Response) => {
+      return this.convertItemFromServer(copy);
+    });
+  }
+
+  /**
+   *
+   */
+  public unblock(analise: Analise): Observable<Analise> {
+    const copy = analise;
+    return this.http.put(`${this.resourceUrl}/${copy.id}/unblock`, copy).map((res: Response) => {
+      return this.convertItemFromServer(copy);
+    });
   }
 
   /**

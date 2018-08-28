@@ -47,7 +47,11 @@
           #datatable>
           <p-column header="Sigla" field="sigla" [sortable]="true"></p-column>
           <p-column header="Nome" field="nome" [sortable]="true"></p-column>
-          <p-column header="CNPJ" field="cnpj" [sortable]="true"></p-column>
+          <p-column header="CNPJ" field="cnpj" [sortable]="true">
+            <ng-template  let-col let-item="rowData" pTemplate="body">
+              {{ item.cnpj | cpfCnpj }}
+            </ng-template>
+          </p-column>
           <p-column header="Número da Ocorrência" field="numeroOcorrencia" [sortable]="true"></p-column>
           <p-column header="Ativo" field="ativo" [sortable]="true">
             <ng-template let-col let-ativo="rowData" pTemplate="body">
@@ -55,6 +59,12 @@
             </ng-template>
           </p-column>
         </basis-datatable>
+
+        <div class="ui-g-12 ui-md-2">
+          <app-botoes-exportacao resourceName="organizacao" >
+          </app-botoes-exportacao>
+        </div>
+
       </div>
     </div>
   </div>

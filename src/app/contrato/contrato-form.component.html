@@ -29,7 +29,42 @@
             </span>
           </div>
           <div class="ui-g-6">
-            <p-dropdown [options]="manuals" optionLabel="nome" placeholder="Manual" name="manual" [(ngModel)]="contrato.manual" [autoWidth]="false" dataKey="id"></p-dropdown>
+            <p-dropdown [filter]="true" [options]="manuals" optionLabel="nome" placeholder="Manual" name="manual" [(ngModel)]="contrato.manual" [autoWidth]="false" dataKey="id"></p-dropdown>
+          </div>
+          <div class="ui-g-6" style="margin-bottom: 25px">
+            <span class="md-inputfield">
+              <input 
+                type="text" 
+                name="diasDeGarantia"
+                maxlength="6"
+                [(ngModel)]="contrato.diasDeGarantia" 
+                pInputText/>
+              <label>Dias de garantia</label>
+            </span>
+          </div>
+          <div class = "ui-g-12" style="margin-bottom: 25px">
+            <div class="ui-g">
+              
+              <div class="ui-g-12 ui-md-1">
+                <label>Ativo:</label>
+              </div>
+
+              <div class="ui-g-12 ui-md-1">
+                <p-radioButton name="contrato_ativo" 
+                  [(ngModel)]="contrato.ativo"
+                  [value]="true" 
+                  label="Sim">
+                </p-radioButton>
+              </div>
+
+              <div class="ui-g-12 ui-md-2">
+                <p-radioButton name="contrato_ativo" 
+                  [value]="false" 
+                  label="Não"
+                  [(ngModel)]="contrato.ativo">
+                </p-radioButton>
+              </div>
+            </div>
           </div>
         </div>
         <div class="ui-g">

@@ -50,6 +50,7 @@
 
       <div class="ui-g-4 ui-md-4 ui-sm-12">
         <p-dropdown 
+          [filter]="true"
           [options]="organizations" 
           optionLabel="nome" 
           [(ngModel)]="searchParams.organization" 
@@ -60,6 +61,7 @@
       
       <div class="ui-g-4 ui-md-4 ui-sm-12">
         <p-dropdown 
+          [filter]="true"
           [options]="authorities" 
           optionLabel="name" 
           [(ngModel)]="searchParams.profile" 
@@ -70,6 +72,7 @@
       
       <div class="ui-g-4 ui-md-4 ui-sm-12">
         <p-dropdown 
+          [filter]="true"
           [options]="teams" 
           optionLabel="nome" 
           [autoWidth]="false" 
@@ -146,7 +149,7 @@
         [sortable]="true">
         <ng-template let-col let-row="rowData" pTemplate="body">
           <li *ngFor="let perfil of row.authorities">
-            {{ perfil.name }}
+            {{ perfil.description }}
           </li>
         </ng-template>
       </p-column>
@@ -169,6 +172,12 @@
       </p-column>
 
     </basis-datatable>
+
+    <div class="ui-g-12 ui-md-2">
+      <app-botoes-exportacao resourceName="users" >
+      </app-botoes-exportacao>
+  </div>
+
   </div>
 </div>
   </div>

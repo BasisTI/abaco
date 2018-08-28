@@ -5,7 +5,11 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatatableModule } from '@basis/angular-components';
 
+import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
+
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
+
+import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
 
 import {
   ButtonModule,
@@ -34,6 +38,7 @@ import { AbacoSharedModule } from '../shared/abaco-shared.module';
 import { AbacoFuncaoTransacaoModule } from '../funcao-transacao/funcao-transacao.module';
 import { AbacoAnaliseResumoModule } from './resumo/analise-resumo.module';
 import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
+import { UtilModule } from '../util/util.module';
 
 @NgModule({
   imports: [
@@ -58,6 +63,9 @@ import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/an
     AbacoFuncaoTransacaoModule,
     AbacoAnaliseResumoModule,
     AbacoAnaliseBotaoSalvarModule,
+    BotoesExportacaoModule,
+    UtilModule,
+    MemoryDataTableModule
   ],
   declarations: [
     AnaliseComponent,

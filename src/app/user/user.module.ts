@@ -4,6 +4,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatatableModule } from '@basis/angular-components';
+import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
 import {
   ButtonModule,
   InputTextModule,
@@ -44,7 +45,8 @@ import { StringConcatService } from '../shared/string-concat.service';
     DataTableModule,
     ConfirmDialogModule,
     AbacoButtonsModule,
-    MultiSelectModule
+    MultiSelectModule,
+    BotoesExportacaoModule,
   ],
   declarations: [
     UserComponent,

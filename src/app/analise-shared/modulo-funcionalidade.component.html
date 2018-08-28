@@ -1,127 +1,131 @@
 <div class="ui-g">
 
-  <div class="ui-g-12" style="margin-bottom: 25px">
+    <div class="ui-g-12" style="margin-bottom: 25px">
 
-    <div class="ui-g-6 ui-md-6 ui-sm-12">
+        <div class="ui-g-6 ui-md-6 ui-sm-12">
 
-      <div class="ui-g-12">
-        <!-- filtro/pesquisa? -->
-        <label>Módulo *</label>
-        <p-dropdown 
-          optionLabel="nome"
-          name="modulo"
-          placeholder="Selecione..."
-          [options]="modulos" 
-          [(ngModel)]="moduloSelecionado" 
-          (onChange)="moduloSelected($event.value)"
-          [autoWidth]="false">
-        </p-dropdown>
-      </div>
+            <div class="ui-g-12">
+                <!-- filtro/pesquisa? -->
+                <label>Módulo *</label>
+                <p-dropdown
+                        id="modulo-modulo"
+                        [filter]="true"
+                        optionLabel="nome"
+                        name="modulo"
+                        placeholder="Selecione..."
+                        [options]="modulos"
+                        [(ngModel)]="moduloSelecionado"
+                        (onChange)="moduloSelected($event.value)"
+                        [autoWidth]="false">
+                </p-dropdown>
+            </div>
 
-      <div class="ui-g ui-md-12" style="justify-content: flex-end">
-        <app-blue-button
-          buttonIcon="ui-icon-add"
-          (click)="abrirDialogModulo()"
-          [isDisabled]="!isSistemaSelected()">
-        </app-blue-button>
-      </div>
+            <div class="ui-g ui-md-12" style="justify-content: flex-end">
+                <app-blue-button
+                        buttonIcon="ui-icon-add"
+                        (click)="abrirDialogModulo()"
+                        [isDisabled]="!isSistemaSelected()">
+                </app-blue-button>
+            </div>
+        </div>
+
+        <div class="ui-g-6 ui-md-6 ui-sm-12">
+            <div class="ui-g-12">
+                <!-- filtro/pesquisa? -->
+                <label>Submódulo *</label>
+                <p-dropdown
+                        id="modulo-submodulo"
+                        [filter]="true"
+                        optionLabel="nome"
+                        name="funcionalidade"
+                        [options]="funcionalidades"
+                        [(ngModel)]="funcionalidadeSelecionada"
+                        (onChange)="funcionalidadeSelected($event.value)"
+                        [placeholder]="funcionalidadeDropdownPlaceholder()"
+                        [disabled]="!isModuloSelected()"
+                        [autoWidth]="false">
+                </p-dropdown>
+            </div>
+
+            <div class="ui-g ui-md-12" style="justify-content: flex-end">
+                <app-blue-button
+                        buttonIcon="ui-icon-add"
+                        (click)="abrirDialogFuncionalidade()"
+                        [isDisabled]="!isModuloSelected()">
+                </app-blue-button>
+            </div>
+        </div>
     </div>
 
-    <div class="ui-g-6 ui-md-6 ui-sm-12">
-      <div class="ui-g-12">
-        <!-- filtro/pesquisa? -->
-        <label>Submódulo *</label>
-        <p-dropdown 
-          optionLabel="nome" 
-          name="funcionalidade"
-          [options]="funcionalidades" 
-          [(ngModel)]="funcionalidadeSelecionada" 
-          (onChange)="funcionalidadeSelected($event.value)"
-          [placeholder]="funcionalidadeDropdownPlaceholder()"
-          [disabled]="!isModuloSelected()" 
-          [autoWidth]="false">
-        </p-dropdown>
-      </div>
+    <!-- Dialog módulo -->
+    <p-dialog
+            header="Módulo"
+            [(visible)]="mostrarDialogModulo"
+            [contentStyle]="{'overflow':'visible'}"
+            [width]="800">
 
-      <div class="ui-g ui-md-12" style="justify-content: flex-end">
-        <app-blue-button 
-          buttonIcon="ui-icon-add"
-          (click)="abrirDialogFuncionalidade()"
-          [isDisabled]="!isModuloSelected()">
-        </app-blue-button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Dialog módulo -->
-  <p-dialog 
-    header="Módulo" 
-    [(visible)]="mostrarDialogModulo" 
-    [contentStyle]="{'overflow':'visible'}" 
-    [width]="800">
-
-    <div class="ui-g">
-      <div class="ui-g-12" style="margin-bottom: 25px">
+        <div class="ui-g">
+            <div class="ui-g-12" style="margin-bottom: 25px">
         <span class="md-inputfield">
-          <input 
-            type="text" 
-            name="nomeModulo" 
-            [(ngModel)]="novoModulo.nome" 
-            pInputText 
-            (keydown.enter)="adicionarModulo()"/>
+          <input
+                  type="text"
+                  name="nomeModulo"
+                  [(ngModel)]="novoModulo.nome"
+                  pInputText
+                  (keydown.enter)="adicionarModulo()"/>
           <label>Nome *</label>
         </span>
-      </div>
-    </div>
+            </div>
+        </div>
 
-    <div class="ui-g ui-md-12" style="justify-content: flex-end">
-      <div class="ui-g-2">
-        <app-white-button 
-          buttonLabel="Cancelar" 
-          (click)="fecharDialogModulo()">
-        </app-white-button>
-      </div>
+        <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2">
+                <app-white-button
+                        buttonLabel="Cancelar"
+                        (click)="fecharDialogModulo()">
+                </app-white-button>
+            </div>
 
-      <div class="ui-g-2">
-        <app-green-button 
-          buttonLabel="Salvar" 
-          (click)="adicionarModulo()">
-        </app-green-button>
-      </div>
-    </div>
+            <div class="ui-g-2">
+                <app-green-button
+                        buttonLabel="Salvar"
+                        (click)="adicionarModulo()">
+                </app-green-button>
+            </div>
+        </div>
 
-  </p-dialog>
+    </p-dialog>
 
-  <!-- Dialog Submódulo -->
-  <p-dialog 
-    header="Submódulo" 
-    [(visible)]="mostrarDialogFuncionalidade" 
-    [contentStyle]="{'overflow':'visible'}" 
-    [width]="800">
-    
-    <div class="ui-g">
-      <div class="ui-g-12" style="margin-bottom: 25px">
-        <span>Módulo: {{ moduloName() }}</span>
-      </div>
-      <div class="ui-g-12" style="margin-bottom: 25px">
+    <!-- Dialog Submódulo -->
+    <p-dialog
+            header="Submódulo"
+            [(visible)]="mostrarDialogFuncionalidade"
+            [contentStyle]="{'overflow':'visible'}"
+            [width]="800">
+
+        <div class="ui-g">
+            <div class="ui-g-12" style="margin-bottom: 25px">
+                <span>Módulo: {{ moduloName() }}</span>
+            </div>
+            <div class="ui-g-12" style="margin-bottom: 25px">
         <span class="md-inputfield">
-          <input 
-            type="text" 
-            name="nomeFuncionalidade" 
-            [(ngModel)]="novaFuncionalidade.nome" 
-            pInputText />
+          <input
+                  type="text"
+                  name="nomeFuncionalidade"
+                  [(ngModel)]="novaFuncionalidade.nome"
+                  pInputText/>
           <label>Nome *</label>
         </span>
-      </div>
-    </div>
+            </div>
+        </div>
 
-    <div class="ui-g ui-md-12" style="justify-content: flex-end">
-      <div class="ui-g-2">
-        <app-white-button buttonLabel="Cancelar" (click)="fecharDialogFuncionalidade()"></app-white-button>
-      </div>
-      <div class="ui-g-2">
-        <app-green-button buttonLabel="Salvar" (click)="adicionarFuncionalidade()"></app-green-button>
-      </div>
-    </div>
-  </p-dialog>
+        <div class="ui-g ui-md-12" style="justify-content: flex-end">
+            <div class="ui-g-2">
+                <app-white-button buttonLabel="Cancelar" (click)="fecharDialogFuncionalidade()"></app-white-button>
+            </div>
+            <div class="ui-g-2">
+                <app-green-button buttonLabel="Salvar" (click)="adicionarFuncionalidade()"></app-green-button>
+            </div>
+        </div>
+    </p-dialog>
 </div>

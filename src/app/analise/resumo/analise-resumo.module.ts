@@ -23,6 +23,8 @@ import { AbacoAnaliseSharedModule } from '../../analise-shared/analise-shared.mo
 
 import { AnaliseResumoComponent } from './analise-resumo.component';
 
+import { MemoryDataTableModule } from '../../memory-datatable/memory-datatable.module';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -41,6 +43,7 @@ import { AnaliseResumoComponent } from './analise-resumo.component';
     AbacoSharedModule,
     DialogModule,
     AbacoAnaliseSharedModule,
+    MemoryDataTableModule
   ],
   declarations: [
     AnaliseResumoComponent

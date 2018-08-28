@@ -8,6 +8,7 @@ import { ManualService } from './manual.service';
 import { ElasticQuery, PageNotificationService } from '../shared';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { MessageUtil } from '../util/message.util';
+import { Response } from '@angular/http';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -33,7 +34,7 @@ export class ManualComponent implements OnInit {
   mostrarDialogClonar = false;
 
   rowsPerPageOptions: number[] = [5, 10, 20];
-
+  
   constructor(
     private router: Router,
     private manualService: ManualService,
@@ -42,6 +43,7 @@ export class ManualComponent implements OnInit {
   ) { }
 
   public ngOnInit() {
+      
     this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
       this.manualSelecionado = new Manual().copyFromJSON(event.data);
     });
@@ -95,7 +97,14 @@ export class ManualComponent implements OnInit {
         .addSuccessMsg(`Manual '${manualSalvo.nome}' clonado a partir do manual '${this.manualSelecionado.nome}' com sucesso!`);
       this.fecharDialogClonar();
       this.recarregarDataTable();
-    });
+
+    }, (error: Response) => {
+
+      if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.manualexists') {
+          this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+          document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
+          }
+      });
   }
 
   public limparPesquisa() {
@@ -111,7 +120,13 @@ export class ManualComponent implements OnInit {
         this.manualService.delete(id).subscribe(() => {
           this.recarregarDataTable();
           this.blockUI.stop();
-        });
+        }, (error: Response) => {
+
+          if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.contratoexists') {
+              this.pageNotificationService.addErrorMsg('Manual '+this.manualSelecionado.nome+' está vinculado a um Contrato e não pode ser excluído!');
+              }
+        }
+      );
       }
     });
   }

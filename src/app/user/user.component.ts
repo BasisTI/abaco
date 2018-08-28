@@ -2,11 +2,12 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
+import { Response } from '@angular/http';
 
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
 import { UserService } from './user.service';
-import { ElasticQuery } from '../shared';
+import { ElasticQuery, PageNotificationService } from '../shared';
 import { AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Organizacao } from '../organizacao/organizacao.model';
 import { OrganizacaoService } from '../organizacao/organizacao.service';
@@ -50,7 +51,8 @@ export class UserComponent implements AfterViewInit, OnInit {
     private confirmationService: ConfirmationService,
     private organizacaoService: OrganizacaoService,
     private tipoEquipeService: TipoEquipeService,
-    private stringConcatService: StringConcatService
+    private stringConcatService: StringConcatService,
+    private pageNotificationService: PageNotificationService
   ) {}
 
   ngOnInit() {
@@ -121,7 +123,25 @@ export class UserComponent implements AfterViewInit, OnInit {
       accept: () => {
         this.userService.delete(user).subscribe(() => {
           this.datatable.refresh(this.elasticQuery.query);
-        });
+          this.pageNotificationService.addDeleteMsg();
+
+        },(error: Response) => {
+          if(error.status === 400){
+            let errorType : string = error.headers.toJSON()['x-abacoapp-error'][0];
+
+            switch(errorType){
+              case "error.userexists" : {
+                this.pageNotificationService.addErrorMsg('Você não pode excluir o Administrador!');
+                break;
+              }
+
+              case "error.analiseexists" : {
+                this.pageNotificationService.addErrorMsg('Você não pode excluir o usuário porque ele é dono de alguma Análise!');
+                break;
+              }
+            }
+          }
+      });
       }
     });
   }

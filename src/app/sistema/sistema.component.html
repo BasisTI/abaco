@@ -33,6 +33,7 @@
 
         <div class="ui-g-4 ui-md-4 ui-sm-12">
           <p-dropdown 
+            [filter]="true"
             [options]="organizations" 
             optionLabel="nome" 
             [(ngModel)]="searchParams.organizacao" 
@@ -83,6 +84,11 @@
           <p-column header="Organização" field="organizacao.nome" [sortable]="true"></p-column>
         </basis-datatable>
         
+        <div class="ui-g-12 ui-md-2">
+          <app-botoes-exportacao resourceName="sistema" >
+          </app-botoes-exportacao>
+        </div>
+
       </div>
 
     </div>

@@ -49,7 +49,7 @@ export class UserService {
   }
 
   delete(user: User): Observable<Response> {
-    return this.http.delete(`${this.resourceUrl}/${user.login}`);
+    return this.http.delete(`${this.resourceUrl}/${user.id}`);
   }
 
   authorities(): Observable<Authority[]> {
