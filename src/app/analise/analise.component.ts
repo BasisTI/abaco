@@ -1,9 +1,17 @@
+import { Manual } from './../manual/manual.model';
+import { SistemaService } from './../sistema/sistema.service';
+import { Sistema } from './../sistema/sistema.model';
+import { TipoEquipeService } from './../tipo-equipe/tipo-equipe.service';
+import { OrganizacaoService } from './../organizacao/organizacao.service';
+import { TipoEquipe } from './../tipo-equipe/tipo-equipe.model';
+import { Organizacao } from './../organizacao/organizacao.model';
+import { StringConcatService } from './../shared/string-concat.service';
 import {Component, ViewChild, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {ConfirmationService} from 'primeng/primeng';
+import { ConfirmationService, SelectItem } from 'primeng/primeng';
 import {DatatableComponent, DatatableClickEvent} from '@basis/angular-components';
 import {BlockUI, NgBlockUI} from 'ng-block-ui';
-import {Analise} from './analise.model';
+import { Analise, MetodoContagem } from './analise.model';
 import {AnaliseService} from './analise.service';
 import {ElasticQuery, PageNotificationService} from '../shared';
 import {MessageUtil} from '../util/message.util';
@@ -26,18 +34,42 @@ export class AnaliseComponent implements OnInit {
 
     analiseSelecionada;
     analiseReadyToClone: Analise;
+    nomeSistemas: Array<Sistema>;
+    organizations: Array<Organizacao>;
+    teams: Array<TipoEquipe>;
+    searchParams: any = {
+        identidicador: undefined,
+        nomeSistema: undefined,
+        metContagem: undefined,
+        organizacao: undefined,
+        team:undefined
+      };
+
+      metsContagens =[
+        { value: 'DETALHADA', text: 'DETALHADA'},
+        { value: 'INDICATIVA', text: 'INDICATIVA'},
+        { value: 'ESTIMATIVA', text: 'ESTIMATIVA'}
+        ];
 
     blocked: boolean;
 
     constructor(
         private router: Router,
-        private analiseService: AnaliseService,
         private confirmationService: ConfirmationService,
+        private sistemaService: SistemaService,
+        private analiseService: AnaliseService,
+        private tipoEquipeService: TipoEquipeService,
+        private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
-    ) {
-    }
+        private stringConcatService: StringConcatService
+    ) {}
 
     public ngOnInit() {
+
+        this.recuperarOrganizacoes();
+        this.recuperarEquipe();
+        this.recuperarSistema();
+
         this.blocked = false;
         this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
             this.analiseReadyToClone = new Analise().copyFromJSON(event.data);
@@ -49,6 +81,37 @@ export class AnaliseComponent implements OnInit {
             this.analiseReadyToClone = undefined;
         });
     }
+
+    recuperarOrganizacoes() {
+        this.organizacaoService.query().subscribe(response => {
+          this.organizations = response.json;
+          let emptyOrg = new Organizacao();
+          emptyOrg.nome = '';
+          this.organizations.unshift(emptyOrg);
+        });
+      }
+
+      recuperarSistema(){
+          this.sistemaService.query().subscribe(response =>{
+            this.nomeSistemas = response.json;
+            let emptySystem = new Sistema();
+            emptySystem.nome = '';
+            this.nomeSistemas.unshift(emptySystem);
+          });
+      }
+
+      recuperarEquipe() {
+        this.tipoEquipeService.query().subscribe(response => {
+          this.teams = response.json;
+          let emptyTeam = new TipoEquipe();
+          emptyTeam.nome = '';
+          this.teams.unshift(emptyTeam);
+        });
+      }
+
+      ngAfterViewInit() {
+        this.recarregarDataTable();
+      }
 
     /**
      * Clique na tabela análise
@@ -163,6 +226,11 @@ export class AnaliseComponent implements OnInit {
     public limparPesquisa() {
         this.elasticQuery.reset();
         this.recarregarDataTable();
+        this.searchParams.organizacao = undefined;
+        this.searchParams.identificador = undefined;
+        this.searchParams.nomeSistema = undefined;
+        this.searchParams.metContagem = undefined;
+        this.searchParams.team = undefined;
     }
 
     /**
@@ -170,7 +238,7 @@ export class AnaliseComponent implements OnInit {
      */
     public recarregarDataTable() {
         this.datatable.refresh(this.elasticQuery.query);
-    }
+      }
 
     /**
      * Método responsável por gerar o relatório diretamente sem a apresentação do relatório no browser.
@@ -203,6 +271,33 @@ export class AnaliseComponent implements OnInit {
     public geraBaselinePdfBrowser() {
         this.analiseService.geraBaselinePdfBrowser();
 }
+    private checkUndefinedParams() {
+        (this.searchParams.identificador === '') ? (this.searchParams.identificador = undefined) : (this);
+        (this.searchParams.nomeSistema !== undefined) ? ((this.searchParams.nomeSistema.nome === '') ? (this.searchParams.nomeSistema.nome = undefined) : (this)) : (this);
+        (this.searchParams.metContagem !== undefined) ? ((this.searchParams.metContagem.text === '') ? (this.searchParams.metContagem.text = undefined) : (this)) : (this);
+        (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)) : (this);
+        (this.searchParams.organizacao !== undefined) ? ((this.searchParams.organizacao.nome === '') ? (this.searchParams.organizacao.nome = undefined) : (console.log('Caiu no false'))) : (this);
+      }
+    
+      private createStringParamsArray(): Array<string> {
+        let stringParamsArray: Array<string> = [];
+    
+        (this.searchParams.identificador !== undefined) ? (stringParamsArray.push(this.searchParams.identificador)) : (this);
+        (this.searchParams.nomeSistema !== undefined) ? ((this.searchParams.nomeSistema.nome !== undefined) ? (stringParamsArray.push(this.searchParams.nomeSistema.nome)) : (this)) : (this);
+        (this.searchParams.metContagem !== undefined) ? ((this.searchParams.metContagem.text !== undefined) ? (stringParamsArray.push(this.searchParams.metContagem.text)) : (this)) : (this);
+        (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (stringParamsArray.push(this.searchParams.team.nome)) : (this)) : (this);
+        (this.searchParams.organizacao !== undefined) ? ((this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push(this.searchParams.organizacao.nome)) : (this)) : (this);
+    
+        return stringParamsArray;
+      }
+
+      public performSearch() {
+        this.checkUndefinedParams();
+        this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
+        this.recarregarDataTable();
+      }
+
+      
 
     /**
      * Desabilita botão relatório
@@ -252,3 +347,5 @@ export class AnaliseComponent implements OnInit {
         });
     }
 }
+
+ 

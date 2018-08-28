@@ -15,6 +15,8 @@ export class AnaliseService {
 
   relatoriosUrl = environment.apiUrl + '/relatorioPdfBrowser';
 
+  findByOrganizacaoUrl = this.resourceUrl + '/organizacao';
+
   relatorioAnaliseUrl = environment.apiUrl + '/relatorioPdfArquivo';
 
   relatoriosDetalhadoUrl = environment.apiUrl + '/downloadPdfDetalhadoBrowser';
@@ -135,6 +137,12 @@ export class AnaliseService {
       analiseJson.createdBy = jsonResponse.createdBy;
       return analiseJson;
     });
+  }
+
+  findAllByOrganizacaoId(orgId: number): Observable<ResponseWrapper> {
+    const url = `${this.findByOrganizacaoUrl}/${orgId}`;
+    return this.http.get(url)
+      .map((res: Response) => this.convertResponse(res));
   }
 
   /**
