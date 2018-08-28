@@ -4,10 +4,13 @@ import br.com.basis.abaco.AbacoApp;
 
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
+import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,10 +80,19 @@ public class AnaliseResourceIntTest {
     private AnaliseSearchRepository analiseSearchRepository;
 
     @Autowired
+    private FuncaoDadosRepository funcaoDadosRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+    @Autowired
+    private DynamicExportsService dynamicExportsService;
 
     @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
@@ -99,7 +111,7 @@ public class AnaliseResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         AnaliseResource analiseResource = new AnaliseResource(analiseRepository, analiseSearchRepository,
-                funcaoDadosVersionavelRepository);
+                funcaoDadosVersionavelRepository, dynamicExportsService, userRepository);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();

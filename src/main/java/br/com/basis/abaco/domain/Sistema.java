@@ -19,9 +19,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -32,7 +37,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Table(name = "sistema")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "sistema")
-public class Sistema implements Serializable {
+public class Sistema implements Serializable, ReportObject {
 
 	private static final long serialVersionUID = 1L;
 
@@ -43,13 +48,16 @@ public class Sistema implements Serializable {
 
 	@Size(max = 20)
 	@Column(name = "sigla", length = 20)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String sigla;
 
 	@NotNull
 	@Column(name = "nome", nullable = false)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String nome;
 
 	@Column(name = "numero_ocorrencia")
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String numeroOcorrencia;
 
 	@ManyToOne
@@ -110,6 +118,10 @@ public class Sistema implements Serializable {
 	public Organizacao getOrganizacao() {
 		return organizacao;
 	}
+
+    public String getNomeOrg(){
+        return organizacao.getNome();
+    }
 
 	public Sistema organizacao(Organizacao organizacao) {
 		this.organizacao = organizacao;

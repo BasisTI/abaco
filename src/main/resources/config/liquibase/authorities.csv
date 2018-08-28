@@ -1,3 +1,3 @@
-name
-ROLE_ADMIN
-ROLE_USER
+name;description
+ROLE_ADMIN;Administrador
+ROLE_USER;Usuário

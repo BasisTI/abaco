@@ -83,5 +83,9 @@
     <include file="classpath:config/liquibase/changelog/20180406222900_ADD_versaoCpm_in_manual_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180409145819_ADD_created_on_updated_on_in_Analise_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180410160049_DROP_column_Manual_to_Analise_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/201806289385649_ADD_bloqueado_in_Analise_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/201807319385650_ADD_quantidade_in_FuncaoDados__Transacao_changelog.xml" relativeToChangelogFile="false"/>
 
+    <include file="config/liquibase/changelog/20180823220848_added_entity_BaseLineSintetico.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180824144515_added_entity_BaseLineAnalitico.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

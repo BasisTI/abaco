@@ -21,9 +21,14 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -34,7 +39,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Table(name = "manual")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "manual")
-public class Manual implements Serializable {
+public class Manual implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
 
@@ -44,6 +49,7 @@ public class Manual implements Serializable {
     private Long id;
 
     @Column(name = "nome")
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
     @Size(max = 4000)
@@ -53,13 +59,13 @@ public class Manual implements Serializable {
     @NotNull
     @DecimalMin(value = "0")
     @DecimalMax(value = "1")
-    @Column(name = "valor_variacao_estimada", precision = 10, scale = 2, nullable = false)
+    @Column(name = "valor_variacao_estimada", precision = 10, scale = 4, nullable = false)
     private BigDecimal valorVariacaoEstimada;
 
     @NotNull
     @DecimalMin(value = "0")
     @DecimalMax(value = "1")
-    @Column(name = "valor_variacao_indicativa", precision = 10, scale = 2, nullable = false)
+    @Column(name = "valor_variacao_indicativa", precision = 10, scale = 4, nullable = false)
     private BigDecimal valorVariacaoIndicativa;
 
     @Column(name="arquivo_manual_id")
@@ -74,22 +80,22 @@ public class Manual implements Serializable {
     private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
 
     @DecimalMin(value = "0")
-    @DecimalMax(value = "1")
+    @DecimalMax(value = "4")
     @Column(name = "parametro_inclusao")
     private BigDecimal parametroInclusao;
 
     @DecimalMin(value = "0")
-    @DecimalMax(value = "1")
+    @DecimalMax(value = "4")
     @Column(name = "parametro_alteracao")
     private BigDecimal parametroAlteracao;
 
     @DecimalMin(value = "0")
-    @DecimalMax(value = "1")
+    @DecimalMax(value = "4")
     @Column(name = "parametro_exclusao")
     private BigDecimal parametroExclusao;
     
     @DecimalMin(value = "0")
-    @DecimalMax(value = "1")
+    @DecimalMax(value = "4")
     @Column(name = "parametro_conversao")
     private BigDecimal parametroConversao;
     

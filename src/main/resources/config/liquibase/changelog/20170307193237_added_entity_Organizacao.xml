@@ -25,7 +25,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="cnpj" type="varchar(19)">
+            <column name="cnpj" type="varchar(14)">
                 <constraints nullable="true" />
             </column>
 

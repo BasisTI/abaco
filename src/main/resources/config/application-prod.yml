@@ -51,9 +51,9 @@ spring:
             cluster-name:
             cluster-nodes: localhost:9300
     mail:
-        host: localhost
+        host: smtp.basis.intern
         port: 25
-        username:
+        username: abaco@basis.com.br
         password:
     thymeleaf:
         cache: true
@@ -105,11 +105,11 @@ jhipster:
             jwt:
                 secret: b3713bf16e9f83abed5d68d94d59c84c26e051cc
                 # Token is valid 24 hours
-                token-validity-in-seconds: 86400
+                token-validity-in-seconds: 2592000
                 token-validity-in-seconds-for-remember-me: 2592000
     mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: abaco@localhost
-        base-url: http://my-server-url-to-change # Modify according to your server's URL
+        from: abaco@basis.com.br
+        base-url: http://abaco-fnde.tst.basis.com.br # Modify according to your server's URL
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         graphite:

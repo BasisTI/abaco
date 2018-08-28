@@ -6,13 +6,30 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import java.io.ByteArrayOutputStream;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioOrganizacaoColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.http.MediaType;
 
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +48,10 @@ import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
+import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing Organizacao.
@@ -51,12 +68,56 @@ public class OrganizacaoResource {
 
     private final OrganizacaoSearchRepository organizacaoSearchRepository;
 
-    public OrganizacaoResource(OrganizacaoRepository organizacaoRepository, OrganizacaoSearchRepository organizacaoSearchRepository) {
+    private String[] erro = {"orgNomeInvalido", "orgCnpjInvalido", "orgSiglaInvalido", "orgNumOcorInvalido", "organizacaoexists", "cnpjexists"};
+    private String[] mensagem = {"Nome de organização inválido", "CNPJ de organização inválido", "Sigla de organização inválido", "Numero da Ocorrência de organização inválido", "Organizacao already in use", "CNPJ already in use"};
+
+    private final DynamicExportsService dynamicExportsService;
+
+    public OrganizacaoResource(OrganizacaoRepository organizacaoRepository, OrganizacaoSearchRepository organizacaoSearchRepository, DynamicExportsService dynamicExportsService) {
         this.organizacaoRepository = organizacaoRepository;
         this.organizacaoSearchRepository = organizacaoSearchRepository;
+        this.dynamicExportsService = dynamicExportsService;
     }
 
+    /**
+     * Function to format a bad request URL to be returned to frontend
+     * @param errorKey The key identifing the error occured
+     * @param defaultMessage Default message to display to user
+     * @return The bad request URL
+     */
+    private ResponseEntity<Organizacao> createBadRequest(String errorKey, String defaultMessage) {
+        return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
+            .body(null);
+    }
 
+    public boolean validaCampo(String campo) {
+        final String regra = "^\\S+(\\s{1}\\S+)*$";
+        Pattern padrao = Pattern.compile(regra);
+        Matcher matcherCampo = padrao.matcher(campo);
+        return matcherCampo.find();
+    }
+
+    private int validaCamposOrganizacao(Organizacao org) {
+        String[] campos = {org.getNome(), org.getCnpj(), org.getSigla(), org.getNumeroOcorrencia()};
+        int i = 0;
+
+        while (i < campos.length) {
+            if (campos[i] != null && !validaCampo(campos[i])) {
+                return i;
+            }
+            i++;
+        }
+        /* Verifing if there is an existing Organizacao with same name */
+        Optional<Organizacao> existingOrganizacao = organizacaoRepository.findOneByNome(org.getNome());
+        if (existingOrganizacao.isPresent() && (!existingOrganizacao.get().getId().equals(org.getId()))) {
+            return 4;
+        }
+        existingOrganizacao = organizacaoRepository.findOneByCnpj(org.getCnpj());
+        if (org.getCnpj() != null && existingOrganizacao.isPresent() && (!existingOrganizacao.get().getId().equals(org.getId()))) {
+            return 5;
+        }
+        return -1;
+    }
     /**
      * POST  /organizacaos : Create a new organizacao.
      *
@@ -67,15 +128,19 @@ public class OrganizacaoResource {
     @PostMapping("/organizacaos")
     @Timed
     public ResponseEntity<Organizacao> createOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
+        int i;
         log.debug("REST request to save Organizacao : {}", organizacao);
-        if (organizacao.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new organizacao cannot already have an ID")).body(null);
+        if (organizacao.getId() != null) { return this.createBadRequest("idoexists", "A new organizacao cannot already have an ID"); }
+
+        i = validaCamposOrganizacao(organizacao);
+        if (i >= 0) {
+            return this.createBadRequest(this.erro[i], this.mensagem[i]);
         }
+
         Organizacao result = organizacaoRepository.save(organizacao);
         organizacaoSearchRepository.save(result);
 
-        return ResponseEntity.created(new URI("/api/organizacaos/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+        return ResponseEntity.created(new URI("/api/organizacaos/" + result.getId())).headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -91,10 +156,17 @@ public class OrganizacaoResource {
     @PutMapping("/organizacaos")
     @Timed
     public ResponseEntity<Organizacao> updateOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
+        int i;
         log.debug("REST request to update Organizacao : {}", organizacao);
         if (organizacao.getId() == null) {
             return createOrganizacao(organizacao);
         }
+
+        i = validaCamposOrganizacao(organizacao);
+        if (i >= 0) {
+            return this.createBadRequest(this.erro[i], this.mensagem[i]);
+        }
+
         Organizacao result = organizacaoRepository.save(organizacao);
         organizacaoSearchRepository.save(result);
 
@@ -113,6 +185,15 @@ public class OrganizacaoResource {
     public List<Organizacao> getAllOrganizacaos() {
         log.debug("REST request to get all Organizacaos");
         List<Organizacao> organizacaos = organizacaoRepository.findAll();
+
+        return organizacaos;
+    }
+
+    @GetMapping("/organizacaos/ativas")
+    @Timed
+    public List<Organizacao> searchActiveOrganizations() {
+        log.debug("REST request to get all Organizacaos");
+        List<Organizacao> organizacaos = organizacaoRepository.searchActiveOrganizations();
 
         return organizacaos;
     }
@@ -153,14 +234,17 @@ public class OrganizacaoResource {
      *
      * @param query the query of the organizacao search
      * @return the result of the search
-     * @throws URISyntaxException 
+     * @throws URISyntaxException
      */
     @GetMapping("/_search/organizacaos")
     @Timed
-    public ResponseEntity<List<Organizacao>> searchOrganizacaos(@RequestParam(defaultValue = "*") String query, @ApiParam Pageable pageable) throws URISyntaxException {
+    public ResponseEntity<List<Organizacao>> searchOrganizacaos(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         log.debug("REST request to search Organizacaos for query {}", query);
-        
-        Page<Organizacao> page = organizacaoSearchRepository.search(queryStringQuery(query), pageable);
+
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        Page<Organizacao> page = organizacaoSearchRepository.search(queryStringQuery(query), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/organizacaos");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -169,7 +253,23 @@ public class OrganizacaoResource {
     @GetMapping("/organizacaos/active")
     public List<Organizacao> getAllOrganizationsActive() {
       List<Organizacao> activeOrganizations = this.organizacaoRepository.findByAtivoTrue();
-      
+
       return activeOrganizations;
+    }
+
+    @GetMapping(value = "/organizacao/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @Timed
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        try {
+            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
+            Page<Organizacao> result =  organizacaoSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioOrganizacaoColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            log.error(e.getMessage(), e);
+            throw new RelatorioException(e);
+        }
+        return DynamicExporter.output(byteArrayOutputStream,
+            "relatorio." + tipoRelatorio);
     }
 }

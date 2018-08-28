@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
+
+    <!--
+        Added the entity BaseLineSintetico.
+    -->
+    <changeSet id="20180823220848-1" author="jhipster">
+        <createView catalogName="baseline_sintetico"
+                    replaceIfExists="false"
+                    schemaName="public"
+                    viewName="baseline_sintetico">
+            <![CDATA[
+          SELECT W.ID_SISTEMA,  W.SIGLA, W.NOME, W.NUMERO_OCORRENCIA, SUM(W.PF)
+FROM (
+SELECT 'fd', C.IMPACTO, C.TIPO, C.ANALISE_ID, A.DATA_HOMOLOGACAO_SOFTWARE, B.ID AS ID_SISTEMA, B.NOME, B.SIGLA, C.NAME, C.PF, C.ID AS ID_DADOS_TRANS, C.COMPLEXIDADE, B.NUMERO_OCORRENCIA,
+(SELECT COUNT(ID) FROM DER D WHERE D.FUNCAO_DADOS_ID = C.ID) AS DER,
+(SELECT COUNT(ID) FROM RLR E WHERE E.FUNCAO_DADOS_ID = C.ID) AS RLR_ALR
+FROM ANALISE A
+INNER JOIN SISTEMA B ON A.SISTEMA_ID = B.ID
+INNER JOIN FUNCAO_DADOS C ON C.ANALISE_ID = A.ID
+LEFT JOIN DER D ON D.FUNCAO_DADOS_ID = C.ID
+LEFT JOIN RLR E ON E.FUNCAO_DADOS_ID = C.ID
+WHERE  A.DATA_HOMOLOGACAO_SOFTWARE IS NOT NULL
+AND A.DATA_HOMOLOGACAO_SOFTWARE = (SELECT  MAX(A1.DATA_HOMOLOGACAO_SOFTWARE)
+				   FROM ANALISE A1
+				   INNER JOIN FUNCAO_DADOS C1 ON C1.ANALISE_ID = A1.ID AND C1.NAME = C.NAME)
+AND A.ID NOT IN (SELECT A2.ID FROM ANALISE A2
+                 WHERE A2.BASELINE_IMEDIATAMENTE = TRUE
+                 AND current_timestamp <= DATA_HOMOLOGACAO_SOFTWARE + (SELECT DIAS_DE_GARANTIA FROM CONTRATO WHERE ID = A2.CONTRATO_ID)
+                 )
+UNION
+SELECT 'ft', C.IMPACTO, C.TIPO, C.ANALISE_ID, A.DATA_HOMOLOGACAO_SOFTWARE, B.ID AS ID_SISTEMA, B.NOME, B.SIGLA, C.NAME, C.PF, C.ID AS ID_DADOS_TRANS, C.COMPLEXIDADE, B.NUMERO_OCORRENCIA,
+(SELECT COUNT(ID) FROM DER D WHERE D.FUNCAO_TRANSACAO_ID = C.ID) AS DER,
+(SELECT COUNT(ID) FROM ALR E WHERE E.FUNCAO_TRANSACAO_ID = C.ID) AS RLR_ALR
+FROM ANALISE A
+INNER JOIN SISTEMA B ON A.SISTEMA_ID = B.ID
+INNER JOIN FUNCAO_TRANSACAO C ON C.ANALISE_ID = A.ID
+WHERE  A.DATA_HOMOLOGACAO_SOFTWARE IS NOT NULL
+AND A.DATA_HOMOLOGACAO_SOFTWARE = (SELECT  MAX(A1.DATA_HOMOLOGACAO_SOFTWARE)
+				  FROM ANALISE A1
+				  INNER JOIN FUNCAO_TRANSACAO C1 ON C1.ANALISE_ID = A1.ID AND C1.NAME = C.NAME)
+AND A.ID NOT IN (SELECT A2.ID FROM ANALISE A2
+                 WHERE A2.BASELINE_IMEDIATAMENTE = TRUE
+                 AND current_timestamp <= DATA_HOMOLOGACAO_SOFTWARE + (SELECT DIAS_DE_GARANTIA FROM CONTRATO WHERE ID = A2.CONTRATO_ID)
+                 )
+) W
+GROUP BY ID_SISTEMA,  SIGLA, NOME, NUMERO_OCORRENCIA
+             ]]>
+        </createView>
+
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+</databaseChangeLog>

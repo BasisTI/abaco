@@ -145,19 +145,19 @@ public class UserService {
 	/**
 	 * Copies (shallow) an User and then: 1 - Set language key if not present 2 -
 	 * Set a generated password 3 - Set a generated resetKey
-	 * 
+	 *
 	 * @param user
 	 * @return
 	 */
 	public User prepareUserToBeSaved(User user) {
 		User userCopy = shallowCopyUser(user);
-		String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+		String encryptedPassword = passwordEncoder.encode(userCopy.getPassword());
 		userCopy.setPassword(encryptedPassword);
 		userCopy.setResetKey(RandomUtil.generateResetKey());
 		userCopy.setResetDate(ZonedDateTime.now());
 		return userCopy;
 	}
-	
+
 	public User generateUpdatableUser(User userToBeUpdated) {
 		User userPreUpdate = userRepository.findOne(userToBeUpdated.getId());
 		User updatableUser = shallowCopyUser(userToBeUpdated);
@@ -165,7 +165,7 @@ public class UserService {
 			updatableUser.setPassword(userPreUpdate.getPassword());
 		if(updatableUser.getLangKey() == null)
 			updatableUser.setLangKey(userPreUpdate.getLangKey());
-		
+
 		return updatableUser;
 	}
 
@@ -224,8 +224,8 @@ public class UserService {
 		}).map(UserDTO::new);
 	}
 
-	public void deleteUser(String login) {
-		userRepository.findOneByLogin(login).ifPresent(user -> {
+	public void deleteUser(Long id) {
+		userRepository.findOneById(id).ifPresent(user -> {
 			socialService.deleteUserSocialConnection(user.getLogin());
 			userRepository.delete(user);
 			userSearchRepository.delete(user);

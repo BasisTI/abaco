@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,9 +20,13 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
 
 /**
  * A TipoEquipe.
@@ -30,7 +35,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @Table(name = "tipo_equipe")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "tipoequipe")
-public class TipoEquipe implements Serializable {
+public class TipoEquipe implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
 
@@ -41,9 +46,10 @@ public class TipoEquipe implements Serializable {
 
     @NotNull
     @Column(name = "nome", nullable = false, unique = true)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinTable(name = "tipoequipe_organizacao", joinColumns = @JoinColumn(name = "tipoequipe_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
     private Set<Organizacao> organizacoes = new HashSet<>();
 
@@ -79,6 +85,19 @@ public class TipoEquipe implements Serializable {
     public void setOrganizacoes(Set<Organizacao> orgs) {
         this.organizacoes = new HashSet<>(orgs);
     }
+
+    public String getNomeOrg(){
+        String ponto = ". ";
+        String nomeOrg = "";
+
+        for(Organizacao org : organizacoes){
+            nomeOrg = nomeOrg.concat(org.getNome()).concat(ponto);
+        }
+
+        return nomeOrg;
+    }
+
+
 
     @Override
     public boolean equals(Object obj) {

@@ -1,14 +1,8 @@
-package br.com.basis.abaco.reports.rest;
+package br.com.basis.abaco.reports.util;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,13 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.service.dto.FuncoesDTO;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 /**
  * @author eduardo.andrade
@@ -41,16 +33,16 @@ public class RelatorioUtil {
 
     public RelatorioUtil() {
     }
-    
+
     public RelatorioUtil(HttpServletResponse response, HttpServletRequest request) {
         this.response = response;
-        this.request = request; 
+        this.request = request;
     }
 
     public HttpServletResponse getResponse() {
         return response;
     }
-    
+
     public HttpServletRequest getRequest() {
         return request;
     }
@@ -66,16 +58,15 @@ public class RelatorioUtil {
      * @throws JRException
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public ResponseEntity<byte[]> downloadPdfArquivo(Analise analise, String caminhoJasperResolucao, String nomeArquivo, Map parametrosJasper) throws FileNotFoundException, JRException {
+    public ResponseEntity<byte[]> downloadPdfArquivo(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
         InputStream stram = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
         JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(stram, parametrosJasper, new JREmptyDataSource());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.pdf\"", nomeArquivo));
-        ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
-        return response;
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.pdf\"", analise.getIdentificadorAnalise().trim()));
+        return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
     }
 
     /**
@@ -89,35 +80,49 @@ public class RelatorioUtil {
      * @throws JRException
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public @ResponseBody byte[] downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, String nomeArquivo,  Map parametrosJasper, List<FuncoesDTO> listFuncoes) throws FileNotFoundException, JRException {
+    public @ResponseBody byte[] downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
+
         InputStream stram = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
-        JRBeanCollectionDataSource funcoes = new JRBeanCollectionDataSource(listFuncoes);
-        JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(stram, parametrosJasper, funcoes);
+
+        JasperPrint jasperPrint = (JasperPrint)JasperFillManager.fillReport(stram, parametrosJasper, new JREmptyDataSource());
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+
         response.setContentType("application/x-pdf");
-        response.setHeader("Content-Disposition", "inline; filename=" + nomeArquivo + ".pdf");
+
+        response.setHeader("Content-Disposition", "inline; filename=" + analise.getIdentificadorAnalise().trim() + ".pdf");
+
         return  JasperExportManager.exportReportToPdf(jasperPrint);
     }
-    
+
     /**
-     * 
-     * @param nomeArquivoCSV
-     * @param cabecalho
-     * @param conteudo
+     * Método responsável por exibir o PDF da base line no browser.
+     * @param analise
+     * @param caminhoJasperResolucao
+     * @param parametrosJasper
+     * @param funcoes
      * @return
-     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws JRException
      */
-    public byte[] gerarRelatorioCSV(String nomeArquivoCSV, String cabecalho, String conteudo) throws IOException {
-        FileOutputStream arquivo = new FileOutputStream(new File(nomeArquivoCSV));
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        baos.writeTo(arquivo);
-        BufferedWriter file = new BufferedWriter(new OutputStreamWriter(baos));
-        file.append(cabecalho);
-        file.append(conteudo);
-        file.close();
-        arquivo.close();
-        return baos.toByteArray();
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public @ResponseBody byte[] downloadPdfBaselineBrowser(String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
+
+        InputStream stram = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
+
+        JasperPrint jasperPrint = (JasperPrint)JasperFillManager.fillReport(stram, parametrosJasper, new JREmptyDataSource());
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+
+        response.setContentType("application/x-pdf");
+
+        response.setHeader("Content-Disposition", "inline; filename=" + ".pdf");
+
+        return  JasperExportManager.exportReportToPdf(jasperPrint);
     }
 
 }

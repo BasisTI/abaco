@@ -1,5 +1,9 @@
 FROM openjdk:8-jre-alpine
 
+RUN apk --no-cache add msttcorefonts-installer fontconfig && \
+update-ms-fonts && \
+fc-cache -f
+
 ENV SPRING_OUTPUT_ANSI_ENABLED=ALWAYS \
     JHIPSTER_SLEEP=0 \
     JAVA_OPTS="-server -Xmx2G -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -Duser.timezone=America/Sao_Paulo"

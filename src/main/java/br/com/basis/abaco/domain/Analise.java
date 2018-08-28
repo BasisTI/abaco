@@ -2,6 +2,9 @@ package br.com.basis.abaco.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -27,9 +30,13 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -48,7 +55,7 @@ import io.swagger.annotations.ApiModel;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "analise")
 @EntityListeners(AuditingEntityListener.class)
-public class Analise implements Serializable {
+public class Analise implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
 
@@ -58,31 +65,37 @@ public class Analise implements Serializable {
     private Long id;
 
     @Column(name = "numero_os")
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String numeroOs;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "metodo_contagem")
     private MetodoContagem metodoContagem;
 
-    @Column(name = "valor_ajuste", precision = 10, scale = 2)
+    @Column(name = "valor_ajuste", precision = 10, scale = 4)
     private BigDecimal valorAjuste;
 
     @Column(name = "pf_total")
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String pfTotal;
 
     @Column(name = "pf_total_adjust")
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String adjustPFTotal;
 
     @Size(max = 4000)
     @Column(name = "escopo", length = 4000)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String escopo;
 
     @Size(max = 4000)
     @Column(name = "fronteiras", length = 4000)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String fronteiras;
 
     @Size(max = 4000)
     @Column(name = "documentacao", length = 4000)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String documentacao;
 
     @Enumerated(EnumType.STRING)
@@ -101,7 +114,7 @@ public class Analise implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Organizacao organizacao;
-    
+
     @Embedded
     private AbacoAudit audit = new AbacoAudit();
 
@@ -149,6 +162,9 @@ public class Analise implements Serializable {
 
     @Column(name = "identificador_analise", length = 100)
     private String identificadorAnalise;
+
+    @Column(name = "bloqueado")
+    private boolean bloqueiaAnalise;
 
     @ManyToOne
     private TipoEquipe equipeResponsavel;
@@ -269,6 +285,8 @@ public class Analise implements Serializable {
         return sistema;
     }
 
+    public String getNomeSistema() { return sistema.getNome(); }
+
     public Analise sistema(Sistema sistema) {
         this.sistema = sistema;
         return this;
@@ -332,6 +350,18 @@ public class Analise implements Serializable {
         return contrato;
     }
 
+    public Long getGarantiaRestante() throws ParseException {
+        if (contrato == null || dataHomologacao == null){ return 0l; }
+        Integer garantia = contrato.getDiasDeGarantia();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateWithoutTime = sdf.parse(sdf.format(new Date()));
+        Long diferenca = dateWithoutTime.getTime() - dataHomologacao.getTime();
+        if (garantia - (diferenca / 86400000) < 0){
+            return 0l;
+        }
+        return garantia - (diferenca / 86400000);
+    }
+
     public void setContrato(Contrato contrato) {
         this.contrato = contrato;
     }
@@ -339,6 +369,8 @@ public class Analise implements Serializable {
     public Organizacao getOrganizacao() {
         return organizacao;
     }
+
+    public String getNomeOrg(){ return organizacao.getNome(); }
 
     public void setOrganizacao(Organizacao organizacao) {
         this.organizacao = organizacao;
@@ -420,14 +452,35 @@ public class Analise implements Serializable {
         this.baselineImediatamente = baselineImediatamente;
     }
 
+    public Boolean getbloqueiaAnalise() {
+        return bloqueiaAnalise;
+    }
+
+    public String getBloqueiaString() {
+        if (bloqueiaAnalise) {
+            return "Sim";
+        } return "Não";
+    }
+
+    public void setbloqueiaAnalise(Boolean bloqueiaAnalise) {
+        this.bloqueiaAnalise = bloqueiaAnalise;
+    }
+
     public MetodoContagem getMetodoContagem() {
 		return metodoContagem;
 	}
 
+	public  String getMetodoContagemString() {
+        if (metodoContagem == null) {
+            return "";
+        }
+        return metodoContagem.toString();
+    }
+
 	public void setMetodoContagem(MetodoContagem metodoContagem) {
 		this.metodoContagem = metodoContagem;
 	}
-	
+
     public Analise metodoContagem(MetodoContagem metodoContagem) {
         this.metodoContagem = metodoContagem;
         return this;
@@ -453,6 +506,8 @@ public class Analise implements Serializable {
 		return equipeResponsavel;
 	}
 
+	public String getNomeEquipe() { return equipeResponsavel.getNome(); }
+
 	public void setEquipeResponsavel(TipoEquipe equipeResponsavel) {
 		this.equipeResponsavel = equipeResponsavel;
 	}
@@ -465,6 +520,18 @@ public class Analise implements Serializable {
 		this.audit = audit;
 	}
 
+    public ZonedDateTime getCreatedOn() {
+        return audit.getCreatedOn();
+    }
+
+    public void setCreatedOn(ZonedDateTime createdOn) { audit.setCreatedOn(createdOn); }
+
+    public ZonedDateTime getUpdatedOn() {
+        return audit.getUpdatedOn();
+    }
+
+    public void setUpdatedOn(ZonedDateTime updatedOn) { audit.setUpdatedOn(updatedOn); }
+
 	@Override
     public String toString() {
         // // @formatter:off
@@ -472,6 +539,7 @@ public class Analise implements Serializable {
             "id=" + id +
             ", numeroOs='" + numeroOs + "'" +
             ", tipoContagem='" + metodoContagem + "'" +
+            ", dataHomologacao='" + dataHomologacao + "'" +
             ", valorAjuste='" + valorAjuste + "'" +
             ", pfTotal='" + pfTotal + "'" +
             ", escopo='" + escopo + "'" +

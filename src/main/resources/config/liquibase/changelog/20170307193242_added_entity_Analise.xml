@@ -29,7 +29,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="valor_ajuste" type="decimal(10,2)">
+            <column name="valor_ajuste" type="decimal(10,4)">
                 <constraints nullable="true" />
             </column>
 

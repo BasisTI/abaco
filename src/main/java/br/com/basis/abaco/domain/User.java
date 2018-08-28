@@ -21,11 +21,16 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -38,7 +43,7 @@ import br.com.basis.abaco.config.Constants;
 @Table(name = "jhi_user")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "user")
-public class User extends AbstractAuditingEntity implements Serializable {
+public class User extends AbstractAuditingEntity implements Serializable, ReportObject {
 
 	private static final long serialVersionUID = 1L;
 
@@ -61,15 +66,18 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
 	@Size(max = 50)
 	@Column(name = "first_name", length = 50)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String firstName;
 
 	@Size(max = 50)
 	@Column(name = "last_name", length = 50)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String lastName;
 
 	@Email
 	@Size(max = 100)
 	@Column(length = 100, unique = true)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String email;
 
 	@NotNull
@@ -173,6 +181,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
 		return activated;
 	}
 
+	public String getAtivoString() {
+	    if (getActivated()) {
+	        return "Sim";
+        }
+        return "Não";
+    }
+
 	public void setActivated(boolean activated) {
 		this.activated = activated;
 	}
@@ -209,8 +224,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
 		this.langKey = langKey;
 	}
 
-	public Set<Authority> getAuthorities() {
-		return authorities;
+	public Set<Authority> getAuthorities() { 
+		return authorities; 
 	}
 
 	public void setAuthorities(Set<Authority> authorities) {
@@ -221,6 +236,19 @@ public class User extends AbstractAuditingEntity implements Serializable {
 		return tipoEquipes;
 	}
 
+    public String getNomeEquipe(){
+
+        String ponto = ". ";
+        String nomeEquipe = "";
+
+        for(TipoEquipe equipe : tipoEquipes){
+            nomeEquipe = nomeEquipe.concat(equipe.getNome()).concat(ponto);
+        }
+
+        return nomeEquipe;
+
+    }
+
 	public void setTipoEquipes(Set<TipoEquipe> tipoEquipes) {
 		this.tipoEquipes = tipoEquipes;
 	}
@@ -228,6 +256,17 @@ public class User extends AbstractAuditingEntity implements Serializable {
 	public Set<Organizacao> getOrganizacoes() {
 		return organizacoes;
 	}
+
+    public String getNomeOrg(){
+        String ponto = ". ";
+        String nomeOrg = "";
+
+        for(Organizacao org : organizacoes){
+            nomeOrg = nomeOrg.concat(org.getNome()).concat(ponto);
+        }
+
+        return nomeOrg;
+    }
 
 	public void setOrganizacoes(Set<Organizacao> organizacoes) {
 		this.organizacoes = organizacoes;

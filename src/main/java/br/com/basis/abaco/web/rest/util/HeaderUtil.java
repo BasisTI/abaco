@@ -31,9 +31,18 @@ public final class HeaderUtil {
         return createAlert(APPLICATION_NAME + "." + entityName + ".updated", param);
     }
 
+    public static HttpHeaders blockEntityUpdateAlert(String entityName, String param) {
+        return createAlert(APPLICATION_NAME + "." + entityName + ".blocked", param);
+    }
+
+    public static HttpHeaders unblockEntityUpdateAlert(String entityName, String param) {
+        return createAlert(APPLICATION_NAME + "." + entityName + ".unblocked", param);
+    }
+
     public static HttpHeaders createEntityDeletionAlert(String entityName, String param) {
         return createAlert(APPLICATION_NAME + "." + entityName + ".deleted", param);
     }
+
 
     public static HttpHeaders createFailureAlert(String entityName, String errorKey, String defaultMessage) {
         log.error("Entity creation failed, {}", defaultMessage);

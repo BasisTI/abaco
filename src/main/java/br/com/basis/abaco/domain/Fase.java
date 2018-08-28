@@ -1,8 +1,12 @@
 package br.com.basis.abaco.domain;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +25,7 @@ import java.util.Objects;
 @Table(name = "fase")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "fase")
-public class Fase implements Serializable {
+public class Fase implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,6 +35,7 @@ public class Fase implements Serializable {
     private Long id;
 
     @Column(name = "nome", unique=true)
+    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
     public Long getId() {

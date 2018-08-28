@@ -7,6 +7,19 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import java.io.ByteArrayOutputStream;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioManualColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.http.MediaType;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -53,9 +66,12 @@ public class ManualResource {
 
     private final ManualSearchRepository manualSearchRepository;
 
-    public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository) {
+    private final DynamicExportsService dynamicExportsService;
+
+    public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository, DynamicExportsService dynamicExportsService) {
         this.manualRepository = manualRepository;
         this.manualSearchRepository = manualSearchRepository;
+        this.dynamicExportsService = dynamicExportsService;
     }
 
     /**
@@ -78,6 +94,14 @@ public class ManualResource {
                     HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new manual cannot already have an ID"))
                     .body(null);
         }
+
+        Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
+        if (existingManual.isPresent()) {
+            return ResponseEntity.badRequest()
+                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "manualexists", "Manual already in use"))
+                .body(null);
+        }
+
         Manual linkedManual = linkManualToPhaseEffortsAndAdjustFactors(manual);
         Manual result = manualRepository.save(linkedManual);
         manualSearchRepository.save(result);
@@ -97,7 +121,7 @@ public class ManualResource {
 
         return manual;
     }
-    
+
     /**
      * PUT /manuals : Updates an existing manual.
      *
@@ -117,6 +141,14 @@ public class ManualResource {
         if (manual.getId() == null) {
             return createManual(manual);
         }
+
+        Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
+        if (existingManual.isPresent() && (!existingManual.get().getId().equals(manual.getId()))) {
+            return ResponseEntity.badRequest()
+                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "manualexists", "Manual already in use"))
+                .body(null);
+        }
+
         Manual result = manualRepository.save(manual);
         manualSearchRepository.save(result);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, manual.getId().toString()))
@@ -164,6 +196,13 @@ public class ManualResource {
     @Timed
     public ResponseEntity<Void> deleteManual(@PathVariable Long id) {
         log.debug("REST request to delete Manual : {}", id);
+
+        if(manualRepository.quantidadeContrato(id) > 0) {
+            return ResponseEntity.badRequest().headers(
+                HeaderUtil.createFailureAlert(ENTITY_NAME, "contratoexists", "A manual cannot be deleted"))
+                .body(null);
+        }
+
         manualRepository.delete(id);
         manualSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
@@ -176,21 +215,35 @@ public class ManualResource {
      * @param query
      *            the query of the manual search
      * @return the result of the search
-     * @throws URISyntaxException 
+     * @throws URISyntaxException
      */
     @GetMapping("/_search/manuals")
     @Timed
     public ResponseEntity<List<Manual>> searchManuals(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         log.debug("REST request to search Manuals for query {}", query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        
+
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
         Page<Manual> page = manualSearchRepository.search(queryStringQuery(query), newPageable);
-        
+
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/manuals");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
-    
-    
+
+    @GetMapping(value = "/manuals/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @Timed
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream;
+        try {
+            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
+            Page<Manual> result =  manualSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioManualColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
+        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+            log.error(e.getMessage(), e);
+            throw new RelatorioException(e);
+        }
+        return DynamicExporter.output(byteArrayOutputStream,
+            "relatorio." + tipoRelatorio);
+    }
 
 }

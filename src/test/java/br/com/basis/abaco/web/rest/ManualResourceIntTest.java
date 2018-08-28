@@ -7,6 +7,7 @@ import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -75,6 +76,9 @@ public class ManualResourceIntTest {
     private ExceptionTranslator exceptionTranslator;
 
     @Autowired
+    private DynamicExportsService dynamicExportsService;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restManualMockMvc;
@@ -84,7 +88,7 @@ public class ManualResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            ManualResource manualResource = new ManualResource(manualRepository, manualSearchRepository);
+            ManualResource manualResource = new ManualResource(manualRepository, manualSearchRepository, dynamicExportsService);
         this.restManualMockMvc = MockMvcBuilders.standaloneSetup(manualResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
