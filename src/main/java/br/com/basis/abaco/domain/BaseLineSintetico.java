@@ -1,5 +1,7 @@
 package br.com.basis.abaco.domain;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,7 +14,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "baseline_sintetico")
-public class BaseLineSintetico implements Serializable {
+public class BaseLineSintetico implements Serializable, ReportObject {
 
     @Id
     @Column(name = "id_sistema", precision=10, scale=2)
