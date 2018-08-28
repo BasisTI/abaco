@@ -28,4 +28,9 @@ export const userRoute: Routes = [
     component: UserDetailComponent,
     canActivate: [AuthGuard, AdminGuard]
   },
+  {
+    path: 'usuario/edit',
+    component: UserFormComponent,
+    canActivate: [AuthGuard]
+  },
 ];

@@ -2,13 +2,13 @@ import {MenuItem} from 'primeng/primeng';
 import {Injectable} from '@angular/core';
 import {AuthService} from '@basis/angular-components';
 import {User} from '../user';
+import {SenhaComponent} from '../senha';
 import {ADMIN_ROLE} from './constants';
 
 @Injectable()
 export class MenuItemsService {
 
-    constructor(private authService: AuthService<User>) {
-    }
+    constructor(private authService: AuthService<User>) { }
 
     get all(): MenuItem[] {
         return [
@@ -41,14 +41,15 @@ export class MenuItemsService {
                     // { label: 'Validação' }
                 ]
             },
-            // {
-            // label: 'Configuração', icon: 'settings',
-            // visible: this.authService.isAuthenticated(),
-            // items: [
+            {
+            label: 'Configuração', icon: 'settings',
+            visible: this.authService.isAuthenticated(),
+            items: [
             // {label: 'Reindexar', routerLink: 'elasticsearch', icon: 'refresh' },
-            // {label: 'Alterar Senha', routerLink: '' }
-            // ]
-            // }
+            {label: 'Editar usuário', routerLink: `usuario/edit`, icon: 'tag_faces' },
+            {label: 'Alterar Senha', routerLink: `senha`, icon: 'security' }
+            ]
+            }
         ];
     }
 

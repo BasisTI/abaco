@@ -47,9 +47,10 @@
             </span>
           </div>
 
-          <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+          <div *ngIf="this.isAdmin" class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input 
+                
                 type="text" 
                 name="loginUser" 
                 maxlength="99" 
@@ -88,7 +89,7 @@
             </span>
           </div>
           
-          <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+          <div *ngIf="this.isAdmin" class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <div class="ui-g">
               <div class="ui-g-12 ui-md-4">
                 <label>Ativo</label>
@@ -114,7 +115,7 @@
             </div>
           </div>
 
-          <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+          <div *ngIf="this.isAdmin" class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span>
               <h3 class="first">Perfil *</h3>
               <p-multiSelect 
@@ -139,7 +140,7 @@
             </span>
           </div>
 
-          <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+          <div *ngIf="this.isAdmin && isAdminEdit" class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span>
               <h3 class="first">Organização *</h3>
               <p-multiSelect 
@@ -163,7 +164,7 @@
             </span>
           </div>
 
-        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+        <div *ngIf="this.isAdmin && this.isAdminEdit" class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
           <span>
             <h3 class="first">Equipe *</h3>
             <p-multiSelect 
