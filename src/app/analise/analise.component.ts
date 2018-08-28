@@ -84,6 +84,9 @@ export class AnaliseComponent implements OnInit {
             case 'clone' :
                 this.clonar(this.analiseReadyToClone);
                 break;
+            case 'geraBaselinePdfBrowser' :
+                this.geraBaselinePdfBrowser();
+                break;
         }
     }
 
@@ -192,6 +195,14 @@ export class AnaliseComponent implements OnInit {
     public geraRelatorioPdfDetalhadoBrowser(analise: Analise) {
             this.analiseService.geraRelatorioPdfDetalhadoBrowser(analise.id);
     }
+
+     /**
+     * Método responsável por gerar o relatório da baseline.
+     * @param analise
+     */
+    public geraBaselinePdfBrowser() {
+        this.analiseService.geraBaselinePdfBrowser();
+}
 
     /**
      * Desabilita botão relatório
