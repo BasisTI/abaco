@@ -1,5 +1,7 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.BaseLineAnalitico;
 
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,9 +28,12 @@ public class BaseLineAnaliticoResource {
     private final Logger log = LoggerFactory.getLogger(BaseLineAnaliticoResource.class);
 
     private final BaseLineAnaliticoRepository baseLineAnaliticoRepository;
+    private final FuncaoDadosRepository funcaoDadosRepository;
 
-    public BaseLineAnaliticoResource(BaseLineAnaliticoRepository baseLineAnaliticoRepository) {
+    public BaseLineAnaliticoResource(BaseLineAnaliticoRepository baseLineAnaliticoRepository,
+                                     FuncaoDadosRepository funcaoDadosRepository1) {
         this.baseLineAnaliticoRepository = baseLineAnaliticoRepository;
+        this.funcaoDadosRepository = funcaoDadosRepository1;
     }
 
 
@@ -56,6 +62,25 @@ public class BaseLineAnaliticoResource {
     public List<BaseLineAnalitico> getBaseLineAnaliticoFT(@PathVariable Long id) {
         log.debug("REST request to get FT BaseLineAnalitico : {}", id);
         return baseLineAnaliticoRepository.getAllAnaliticosFT(id);
+    }
+
+    @GetMapping("/baseline-analiticos/funcao-dados/{id}")
+    @Timed
+    public List<FuncaoDados> getFDBaseline(@PathVariable Long id) {
+        log.debug("REST request to get FD BaseLineAnalitico : {}", id);
+        List<BaseLineAnalitico> integerList = baseLineAnaliticoRepository.getAllAnaliticosFD(id);
+        List<FuncaoDados> fds = new ArrayList<>();
+
+        for (BaseLineAnalitico baseLineAnalitico : integerList){
+            Long idFuncaoDados = baseLineAnalitico.getIdfuncaodados();
+
+            if(idFuncaoDados != null){
+                FuncaoDados fd = funcaoDadosRepository.findById(idFuncaoDados);
+                fds.add(fd);
+            }
+        }
+
+        return fds;
     }
 
 }
