@@ -202,7 +202,7 @@ export class AnaliseComponent implements OnInit {
      */
     public geraBaselinePdfBrowser() {
         this.analiseService.geraBaselinePdfBrowser();
-}
+    }
 
     /**
      * Desabilita botão relatório
