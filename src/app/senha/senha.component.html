@@ -6,73 +6,8 @@
       style="margin: 0px auto 0 auto; min-height: 400px;"
       *ngIf="authenticated">
       
-      <form
-        name="passwordForm" 
-        role="form" 
-        (ngSubmit)="senha()">
-
         <h1>Trocar Senha</h1>
 
-        <div class="ui-g" style="justify-content: center;">
-
-          <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px;">
-            <span class="md-inputfield">
-              <input 
-                required
-                pPassword 
-                type="password" 
-                name="oldPassword" 
-                [(ngModel)]="this.oldPassword" 
-                [feedback]="false" />
-              <label>Senha Atual *</label>
-            </span>
-          </div>
-
-          <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px;">
-            <span class="md-inputfield">
-              <input
-                required
-                pPassword 
-                type="password" 
-                name="newPassword" 
-                [(ngModel)]="this.newPassword" 
-                [feedback]="false" />
-              <label>Digite a Nova Senha *</label>
-            </span>
-          </div>
-
-          <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px;">
-            <span class="md-inputfield">
-              <input
-                required
-                pPassword 
-                type="password" 
-                name="newPasswordConfirm" 
-                [(ngModel)]="this.newPasswordConfirm" 
-                [feedback]="false" />
-              <label>Confirme a Nova Senha *</label>
-            </span>
-          </div>
-
-        </div>
-
-        <div class="ui-g-12" style="justify-content: center">
-            <button pButton type="submit" label="Atualizar Senha"></button>
-        </div>
-      </form>
     </div>
-
-    <!-- Inicio Após a autenticação exibir o campo abaixo-->
-    <!-- Arrumar cartão de confirmação abaixo
-    <div class="card login-panel" *ngIf="authenticated"
-      style="margin: 0px auto 0 auto; min-height: 50px;">
-      <span style="font-size: 20px;"> {{ authenticatedUserFullName() }} </span>
-
-      <p style="font-size: 20px;">Bem-vindo ao Ábaco</p>
-      <i class="material-icons" style="font-size: 200px; color: #618849;">blur_linear</i>
-    </div>
-    -->
-    <!-- Fim Após a autenticação exibir o campo abaixo-->
-
   </div>
 </div>

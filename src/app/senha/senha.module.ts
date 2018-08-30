@@ -16,7 +16,7 @@ import {
     PasswordModule
 } from 'primeng/primeng';
 
-import { SenhaComponent, senhaRoute, SenhaService } from './';
+import { SenhaComponent, SenhaFormComponent, senhaRoute, SenhaService } from './';
 
 @NgModule({
     imports: [
@@ -36,11 +36,11 @@ import { SenhaComponent, senhaRoute, SenhaService } from './';
         SecurityModule.forRoot()
     ],
     declarations: [
+        SenhaFormComponent,
         SenhaComponent
     ],
     providers: [
-        SenhaService,
-        AuthService
+        SenhaService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

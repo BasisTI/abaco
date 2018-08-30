@@ -127,15 +127,15 @@ export class UserComponent implements AfterViewInit, OnInit {
 
         }, (error: Response) => {
           if (error.status === 400) {
-            let errorType : string = error.headers.toJSON()['x-abacoapp-error'][0];
+            const errorType: string = error.headers.toJSON()['x-abacoapp-error'][0];
 
             switch (errorType) {
-              case "error.userexists" : {
+              case 'error.userexists' : {
                 this.pageNotificationService.addErrorMsg('Você não pode excluir o Administrador!');
                 break;
               }
 
-              case "error.analiseexists" : {
+              case 'error.analiseexists' : {
                 this.pageNotificationService.addErrorMsg('Você não pode excluir o usuário porque ele é dono de alguma Análise!');
                 break;
               }
