@@ -15,6 +15,7 @@ export class BaselineService {
     resourceUrl = environment.apiUrl + '/';
     sinteticosUrl = this.resourceUrl + 'baseline-sinteticos/';
     analiticosFDUrl = this.resourceUrl + 'baseline-analiticos/fd/';
+    analiticosFuncaoDadosUrl = this.resourceUrl + 'baseline-analiticos/funcao-dados/';
     analiticosFTUrl = this.resourceUrl + 'baseline-analiticos/ft/';
 
 
@@ -36,6 +37,12 @@ export class BaselineService {
 
     baselineAnaliticoFD(id: number): Observable<ResponseWrapper> {
         return this.http.get(`${this.analiticosFDUrl}${id}`).map((res: Response) => {
+            return this.convertResponseAnalitico(res);
+        });
+    }
+
+    analiticosFuncaoDados(id: number): Observable<ResponseWrapper> {
+        return this.http.get(`${this.analiticosFuncaoDadosUrl}${id}`).map((res: Response) => {
             return this.convertResponseAnalitico(res);
         });
     }
