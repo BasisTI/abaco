@@ -92,10 +92,10 @@ public class BaseLineAnaliticoResource {
         List<BaseLineAnalitico> integerList = baseLineAnaliticoRepository.getAllAnaliticosFD(id);
         List<FuncaoDados> fds = new ArrayList<>();
 
-        for (BaseLineAnalitico baseLineAnalitico : integerList){
+        for (BaseLineAnalitico baseLineAnalitico : integerList) {
             Long idFuncaoDados = baseLineAnalitico.getIdfuncaodados();
 
-            if(idFuncaoDados != null){
+            if (idFuncaoDados != null) {
                 FuncaoDados fd = funcaoDadosRepository.findById(idFuncaoDados);
                 fds.add(fd);
             }
