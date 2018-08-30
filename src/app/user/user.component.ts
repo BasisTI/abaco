@@ -125,17 +125,17 @@ export class UserComponent implements AfterViewInit, OnInit {
           this.datatable.refresh(this.elasticQuery.query);
           this.pageNotificationService.addDeleteMsg();
 
-        },(error: Response) => {
-          if(error.status === 400){
-            let errorType : string = error.headers.toJSON()['x-abacoapp-error'][0];
+        }, (error: Response) => {
+          if (error.status === 400) {
+            const errorType: string = error.headers.toJSON()['x-abacoapp-error'][0];
 
-            switch(errorType){
-              case "error.userexists" : {
+            switch (errorType) {
+              case 'error.userexists' : {
                 this.pageNotificationService.addErrorMsg('Você não pode excluir o Administrador!');
                 break;
               }
 
-              case "error.analiseexists" : {
+              case 'error.analiseexists' : {
                 this.pageNotificationService.addErrorMsg('Você não pode excluir o usuário porque ele é dono de alguma Análise!');
                 break;
               }

@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, OnDestroy, OnChanges } from '@angular/core';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { SelectItem } from 'primeng/primeng';
 
+import {AuthService} from '@basis/angular-components';
 import { User } from './user.model';
 import { UserService } from './user.service';
 import { TipoEquipe, TipoEquipeService } from '../tipo-equipe';
@@ -11,6 +12,7 @@ import { Organizacao, OrganizacaoService } from '../organizacao';
 import { ResponseWrapper } from '../shared';
 import { Authority } from './authority.model';
 import { PageNotificationService } from '../shared/page-notification.service';
+import {ADMIN_ROLE} from '../shared/constants';
 
 import * as _ from 'lodash';
 
@@ -32,16 +34,34 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
   isEdit: boolean;
 
+  // O usuário logado é admin? - Flag utilizada para esconder os campos que usuário o comum não pode alterar.
+  isAdmin: boolean;
+  // Flag de edição pelo menu de administração
+  isAdminEdit = true;
+
   private routeSub: Subscription;
+  private urlSub: Subscription;     // Subscritor para capturar a URL ativa
+
+  // URL ativa - utilizado para verificar se o componente foi ativado pelo menu de administração ou de edição de usuário
+  private url: string;
 
   constructor(
+    private authService: AuthService<User>,
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
     private tipoEquipeService: TipoEquipeService,
     private organizacaoService: OrganizacaoService,
     private pageNotificationService: PageNotificationService,
-  ) { }
+  ) {
+    this.recuperarUrl();                  // Capturando URL ativa
+    if (this.url === 'usuario,edit') {    // Se for uma edição de usuário..
+      this.loadCurrentUser();             // Carrrega os dados do usuário logado,
+      this.isEdit = true;                 // Levanta flag de edição,
+      this.isAdmin = this.isUserAdmin();  // Seta a flag de administrador (ou não) e...
+      this.isAdminEdit = false;           // Não seta a flag de edição pelo menu de administração
+    }
+  }
 
   ngOnInit() {
     this.isSaving = false;
@@ -70,6 +90,17 @@ export class UserFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /*
+   * Função parar recuperar a URL que ativou o componente.
+   * Utlizada para verificar se foi ativado pelo menu de administração
+   * ou pelo menu de edição de usuário
+   * */
+  private recuperarUrl() {
+    this.urlSub = this.route.url.subscribe((res: UrlSegment[]) => {
+      this.url = res.toString();
+    });
+  }
+
   private recuperarUsuarioPeloId() {
     this.routeSub = this.route.params.subscribe(params => {
       this.user = new User();
@@ -88,14 +119,14 @@ export class UserFormComponent implements OnInit, OnDestroy {
   private populateAuthoritiesArtificialIds() {
     this.authorities.forEach((authority, index) => {
       authority.artificialId = index;
-      switch (index){
+      switch (index) {
         case 0: {
-          authority.description = "Administrador";
+          authority.description = 'Administrador';
           break;
         }
 
         case 1: {
-          authority.description = "Usuário";
+          authority.description = 'Usuário';
           break;
         }
       }
@@ -107,15 +138,15 @@ export class UserFormComponent implements OnInit, OnDestroy {
   // Em oposição a uma solução mais simples porém hardcoded.
   private populateUserAuthoritiesWithArtificialId() {
     this.user.authorities.forEach(authority => {
-      switch (authority.name){
-        case "ROLE_ADMIN": {
-          authority.description = "Administrador";
+      switch (authority.name) {
+        case 'ROLE_ADMIN': {
+          authority.description = 'Administrador';
           authority.artificialId = 0;
           break;
         }
 
-        case "ROLE_USER": {
-          authority.description = "Usuário";
+        case 'ROLE_USER': {
+          authority.description = 'Usuário';
           authority.artificialId = 1;
           break;
         }
@@ -190,13 +221,13 @@ export class UserFormComponent implements OnInit, OnDestroy {
     result.subscribe((res: User) => {
       this.isSaving = false;
       this.router.navigate(['/admin/user']);
-      if (this.isEdit){
+      if (this.isEdit) {
         this.pageNotificationService.addUpdateMsg();
       }
-      else{
+      else {
         this.pageNotificationService.addCreateMsg();
       }
-      
+
     }, (error: Response) => {
       this.isSaving = false;
 
@@ -230,7 +261,38 @@ export class UserFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /*
+   * Função para recuperar dados do usuário logado para edição
+   * */
+  loadCurrentUser() {
+    this.userService.findCurrentUser().subscribe((res: User) => {
+        this.user = res;
+        this.user.authorities.forEach((authority, index) => {
+            authority.artificialId = index;
+            switch (index) {
+                case 0: {
+                    authority.description = 'Administrador';
+                    break;
+                }
+
+                case 1: {
+                    authority.description = 'Usuário';
+                    break;
+                }
+            }
+        });
+    });
+  }
+
   ngOnDestroy() {
     this.routeSub.unsubscribe();
+    this.urlSub.unsubscribe();
+  }
+
+  /*
+   * Função que seta a flag de administração para controle dos campos que serão apresentados quando da edição de usuário.
+   * */
+  private isUserAdmin(): boolean {
+    return this.authService.isAuthenticated && this.authService.hasRole(ADMIN_ROLE);
   }
 }

@@ -16,7 +16,7 @@ import { PageNotificationService } from '../shared/page-notification.service';
 import { UploadService } from '../upload/upload.service';
 import {FileUpload} from 'primeng/primeng';
 import {NgxMaskModule} from 'ngx-mask';
-import { ValidacaoUtil } from '../util/validacao.util'
+import { ValidacaoUtil } from '../util/validacao.util';
 import { ValueTransformer } from '@angular/compiler/src/util';
 
 @Component({
@@ -115,21 +115,21 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   }
 
   validaCamposContrato(contrato: Contrato) {
-    let regra: RegExp = /^\S+(\s{1}\S+)*$/;
+    const regra: RegExp = /^\S+(\s{1}\S+)*$/;
     if (!regra.test(contrato.numeroContrato)) {
       this.pageNotificationService.addErrorMsg('Número do Contrato contém espaços! Favor verificar.');
       //document.getElementById('login').setAttribute('style', 'border-color: red;');
       return false;
     }
     if (contrato.dataInicioVigencia != null) {
-      if (!regra.test(contrato.dataInicioVigencia.toString())){
+      if (!regra.test(contrato.dataInicioVigencia.toString())) {
         this.pageNotificationService.addErrorMsg('Data de Início da Vigência não contém uma data válida! Favor verificar.');
         //document.getElementById('login').setAttribute('style', 'border-color: red;');
         return false;
       }
     }
     if (contrato.dataFimVigencia != null) {
-      if (!regra.test(contrato.dataFimVigencia.toString())){
+      if (!regra.test(contrato.dataFimVigencia.toString())) {
         this.pageNotificationService.addErrorMsg('Data Final da Vigência não contém uma data válida! Favor verificar.');
         //document.getElementById('login').setAttribute('style', 'border-color: red;');
         return false;
@@ -147,22 +147,21 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
    *
    * */
   adicionarContrato() {
-    if (this.novoContrato.manual === null || this.novoContrato.manual === undefined){
+    if (this.novoContrato.manual === null || this.novoContrato.manual === undefined) {
       this.manualInvalido = true;
-      this.pageNotificationService.addErrorMsg("Selecione um manual");
-      return
+      this.pageNotificationService.addErrorMsg('Selecione um manual');
+      return;
     }
-    if (!(this.novoContrato.dataInicioValida())){
+    if (!(this.novoContrato.dataInicioValida())) {
       this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
       //document.getElementById('login').setAttribute('style', 'border-color: red;');
-      
-      return
+      return;
     }
-    if (this.validaCamposContrato(this.novoContrato)){
+    if (this.validaCamposContrato(this.novoContrato)) {
       this.organizacao.addContrato(this.novoContrato);
       this.doFecharDialogCadastroContrato();
     }
-    
+
   }
 
   /**
@@ -230,19 +229,22 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.organizacao.sigla === '' || this.organizacao.sigla === undefined || this.organizacao.sigla === null){
-      return this.pageNotificationService.addErrorMsg('O campo Sigla é obrigatório!')
+    if (this.organizacao.sigla === '' || this.organizacao.sigla === undefined || this.organizacao.sigla === null) {
+      return this.pageNotificationService.addErrorMsg('O campo Sigla é obrigatório!');
     }
 
     this.isSaving = true;
-    if (this.organizacao.cnpj === '') {this.organizacao.cnpj = undefined}
+    if (this.organizacao.cnpj === '') {
+      this.organizacao.cnpj = undefined;
+    }
 
-    if (this.organizacao.cnpj !== undefined && this.organizacao.cnpj !== ' '){
-      if (this.organizacao.cnpj)
-      if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
-        this.cnpjValido = true;
-        this.pageNotificationService.addErrorMsg('CNPJ inválido');
-        return;
+    if (this.organizacao.cnpj !== undefined && this.organizacao.cnpj !== ' ') {
+      if (this.organizacao.cnpj) {
+        if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
+          this.cnpjValido = true;
+          this.pageNotificationService.addErrorMsg('CNPJ inválido');
+          return;
+        }
       }
     }
     if (this.organizacao.id !== undefined) {
@@ -260,7 +262,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-        if (this.logo !== undefined){
+        if (this.logo !== undefined) {
           this.uploadService.uploadFile(this.logo).subscribe(response => {
             this.organizacao.logoId = JSON.parse(response['_body']).id;
             this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
@@ -277,8 +279,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   private recupeprarOrganizacoes(id: number): Observable<Organizacao> {
     return this.organizacaoService.find(id);
   }
-
-  
 
   /**
    *
@@ -307,41 +307,41 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg();
     }, (error: Response) => {
       this.isSaving = false;
-      if(error.status === 400){
-        let errorType : string = error.headers.toJSON()['x-abacoapp-error'][0];
+      if (error.status === 400) {
+        const errorType: string = error.headers.toJSON()['x-abacoapp-error'][0];
 
-        switch(errorType){
-          case "error.orgNomeInvalido" : {
+        switch (errorType) {
+          case 'error.orgNomeInvalido' : {
             this.pageNotificationService.addErrorMsg('O campo "Nome" possui carcteres inválidos! Verifique se há espaços no início, no final ou mais de um espaço entre palavras.');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
             break;
           }
-          case "error.orgCnpjInvalido" : {
+          case 'error.orgCnpjInvalido' : {
             this.pageNotificationService.addErrorMsg('O campo "CNPJ" possui carcteres inválidos! Verifique se há espaços no início ou no final.');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
             break;
           }
-          case "error.orgSiglaInvalido" : {
+          case 'error.orgSiglaInvalido' : {
             this.pageNotificationService.addErrorMsg('O campo "Sigla" possui carcteres inválidos! Verifique se há espaços no início ou no final.');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
             break;
           }
-          case "error.orgNumOcorInvalido" : {
+          case 'error.orgNumOcorInvalido' : {
             this.pageNotificationService.addErrorMsg('O campo "Número da Ocorrência" possui carcteres inválidos! Verifique se há espaços no início ou no final.');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
             break;
           }
-          case "error.organizacaoexists" : {
+          case 'error.organizacaoexists' : {
             this.pageNotificationService.addErrorMsg('Já existe organização cadastrada com mesmo nome!');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
             break;
           }
-          case "error.cnpjexists" : {
+          case 'error.cnpjexists' : {
             this.pageNotificationService.addErrorMsg('Já existe organização cadastrada com mesmo CNPJ!');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
             break;
           }
-          case "error.beggindateGTenddate" : {
+          case 'error.beggindateGTenddate' : {
             this.pageNotificationService.addErrorMsg('"Início Vigência" não pode ser posterior a "Final Vigência"');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
             break;

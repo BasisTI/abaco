@@ -53,6 +53,7 @@ import {MemoryDataTableModule} from './memory-datatable/memory-datatable.module'
 import {UploadService} from './upload/upload.service';
 import {FileUploadModule} from 'primeng/primeng';
 import {LoginModule} from './login/login.module';
+import {SenhaModule} from './senha/senha.module';
 import {environment} from '../environments/environment';
 import {MenuItemsService} from './shared/menu-items.service';
 import {AdminGuard} from './admin.guard';
@@ -98,6 +99,7 @@ export function createTranslateLoader(http: HttpClient) {
         FileUploadModule,
         HttpClientModule,
         LoginModule,
+        SenhaModule,
         SecurityModule.forRoot(),
         PageNotificationModule.forRoot(),
         NgxMaskModule.forRoot(),
