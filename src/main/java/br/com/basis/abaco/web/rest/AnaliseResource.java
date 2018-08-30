@@ -410,20 +410,10 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
     }
     /**
-     * Método responsável por requisitar a geração do relatório de Baseline.
-     * @param analise
-     * @throws URISyntaxException
-     * @throws JRException
-     * @throws IOException
+     * Método responsável pela exportação da pesquisa.
+     * @param tipoRelatorio
+     * @throws RelatorioException
      */
-//    @GetMapping("/downloadPdfBaselineBrowser")
-//    @Timed
-//    public @ResponseBody byte[] downloadPdfBaselineBrowser() throws URISyntaxException, IOException, JRException {
-//        relatorioBaselineRest = new RelatorioBaselineRest(this.response,this.request);
-//        log.debug("REST request to generate report Analise baseline in browser : {}", recuperarTodasAnalises());
-//        return relatorioBaselineRest.downloadPdfBaselineBrowser(recuperarTodasAnalises());
-//    }
-
     @GetMapping(value = "/analise/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
