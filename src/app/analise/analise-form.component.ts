@@ -27,6 +27,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     isEdicao: boolean;
     disableFuncaoTrasacao: boolean;
+    disableAba: boolean;
 
     isSaving: boolean;
     dataAnalise: any;
@@ -81,6 +82,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.disableAba = true;
         this.validacaoCampos = true;
         this.hideShowSelectEquipe = true;
         this.analiseSharedDataService.init();
@@ -90,7 +92,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.habilitarCamposIniciais();
         this.listOrganizacoes();
         this.getAnalise();
-        this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
     }
 
     ngOnDestroy() {
@@ -304,9 +305,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     /**
      * Atuva ou desativa a tab Funcao de Transação
      */
-    disabledFuncaoTransacao() {
-        this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
-    }
+    // disabledFuncaoTransacao() {
+    //     this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
+    // }
 
     /**
      * Verifica se algum contrato foi selecioando
@@ -359,6 +360,14 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             && validacaoMetodoContagem  === true
             && validacaoTipoAnallise === true );
 
+        this.enableDisableAba();
+    }
+
+    enableDisableAba(){
+        if (this.validacaoCampos === false){
+            this.disableAba = false;
+            this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
+        }
     }
 
     /**

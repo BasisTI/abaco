@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpService} from '@basis/angular-components';
 import {environment} from '../../environments/environment';
 import {ResponseWrapper} from '../shared';
-import {Response} from '@angular/http';
+import {Response, RequestMethod, ResponseContentType, } from '@angular/http';
 import {Observable} from '../../../node_modules/rxjs';
 import {BaselineSintetico} from './baseline-sintetico.model';
 import {BaselineAnalitico} from './baseline-analitico.model';
@@ -17,6 +17,7 @@ export class BaselineService {
     analiticosFDUrl = this.resourceUrl + 'baseline-analiticos/fd/';
     analiticosFuncaoDadosUrl = this.resourceUrl + 'baseline-analiticos/funcao-dados/';
     analiticosFTUrl = this.resourceUrl + 'baseline-analiticos/ft/';
+    relatoriosBaselineUrl = this.resourceUrl + '/downloadPdfBaselineBrowser/';
 
 
     constructor(private http: HttpService) {
@@ -83,5 +84,26 @@ export class BaselineService {
     private convertItemAnalitico(json: any): BaselineAnalitico {
         return BaselineAnalitico.convertJsonToObject(json);
     }
+
+    /**
+   *
+   */
+  public geraBaselinePdfBrowser(id: number): Observable<string> {
+    this.http.get(`${this.relatoriosBaselineUrl}${id}`, {
+    method: RequestMethod.Get,
+    responseType: ResponseContentType.Blob,
+  }).subscribe(
+      (response) => {
+        const mediaType = 'application/pdf';
+        const blob = new Blob([response.blob()], {type: mediaType});
+        const fileURL = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.download = 'analise.pdf';
+        anchor.href = fileURL;
+        window.open(fileURL, '_blank', '');
+        return null;
+      });
+      return null;
+  }
 
 }

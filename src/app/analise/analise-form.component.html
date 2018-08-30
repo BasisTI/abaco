@@ -167,7 +167,6 @@
                                     <p-dropdown
                                             [filter]="true"
                                             required
-                                            (click)="!disabledFuncaoTransacao()"
                                             placeholder="{{ needContratoDropdownPlaceholder() }}"
                                             name="metodoContagem"
                                             [options]="metodosContagem"
@@ -378,6 +377,7 @@
     </p-tabPanel>
 
     <p-tabPanel
+            [disabled]="disableAba"
             header="Funções de Dados"
             *ngIf="isEdicao">
         <app-analise-funcao-dados></app-analise-funcao-dados>
@@ -391,6 +391,7 @@
     </p-tabPanel>
 
     <p-tabPanel
+            [disabled]="disableAba"
             header="Resumo"
             *ngIf="isEdicao">
         <app-analise-resumo></app-analise-resumo>
