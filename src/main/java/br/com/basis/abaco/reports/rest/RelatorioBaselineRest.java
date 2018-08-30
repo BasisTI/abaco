@@ -113,12 +113,12 @@ public class RelatorioBaselineRest {
         for(BaseLineAnalitico a : baselineFts) {
             objeto = new BaselineDTO();
 
-            objeto.setNome(a.getName());
-            objeto.setClassificacao(a.getClassificacao());
-            objeto.setRlr(a.getRlralr().toString());
             objeto.setDer(a.getDer().toString());
             objeto.setComplexidade(a.getComplexidade());
             objeto.setPf(a.getPf().toString());
+            objeto.setNome(a.getName());
+            objeto.setClassificacao(a.getClassificacao());
+            objeto.setRlr(a.getRlralr().toString());
 
             listBaselineFtsDTO.add(objeto); }
 
