@@ -39,8 +39,12 @@
           
         </div>
 
-        <basis-datatable [url]="searchUrl" (buttonClick)="datatableClick($event)" [rows]="20" [rowsPerPageOptions]="rowsPerPageOptions"
-          [showPaginationFooter]="true" #datatable>
+        <basis-datatable [url]="searchUrl" 
+          (buttonClick)="datatableClick($event)" 
+          (dblclick)="onRowDblclick($event)"
+          [rows]="20" [rowsPerPageOptions]="rowsPerPageOptions"
+          [showPaginationFooter]="true" 
+          #datatable>
 
           <p-column header="Código" field="id" [sortable]="true" [style]="{'word-wrap':'break-word', 'width': '15%'}">
           </p-column>

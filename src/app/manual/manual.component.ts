@@ -79,6 +79,19 @@ export class ManualComponent implements OnInit {
     }
   }
 
+  public onRowDblclick(event) {
+    
+    if (event.target.nodeName === 'TD') {
+      this.abrirEditar();
+    }else if (event.target.parentNode.nodeName === 'TD') {
+      this.abrirEditar();
+    }
+}
+
+abrirEditar(){
+  this.router.navigate(['/manual', this.manualSelecionado.id, 'edit']);
+}
+
   public fecharDialogClonar() {
     this.nomeDoManualClonado = '';
     this.manualSelecionado = undefined;

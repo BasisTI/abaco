@@ -31,6 +31,7 @@ export class SistemaComponent implements AfterViewInit {
 
   paginationParams = { contentIndex: null };
   elasticQuery: ElasticQuery = new ElasticQuery();
+  sistemaSelecionado: Sistema;
   organizations: Array<Organizacao>;
   searchParams: any = {
     sigla: undefined,
@@ -55,6 +56,15 @@ export class SistemaComponent implements AfterViewInit {
       this.organizations = response.json;
       this.organizations.unshift(emptyOrganization);
     });
+  }
+
+  public ngOnInit(){
+    this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
+      this.sistemaSelecionado = event.data;
+    });
+  this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
+    this.sistemaSelecionado = undefined;
+  });
   }
 
   /**
@@ -83,6 +93,19 @@ export class SistemaComponent implements AfterViewInit {
         break;
     }
   }
+
+  public onRowDblclick(event) {
+    
+    if (event.target.nodeName === 'TD') {
+      this.abrirEditar();
+    }else if (event.target.parentNode.nodeName === 'TD') {
+      this.abrirEditar();
+    }
+}
+
+abrirEditar(){
+  this.router.navigate(['/sistema', this.sistemaSelecionado.id, 'edit']);
+}
 
   /**
    *

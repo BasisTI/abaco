@@ -46,9 +46,10 @@ export class AnaliseComponent implements OnInit {
       };
 
       metsContagens =[
+        { value: '', text: ''},
         { value: 'DETALHADA', text: 'DETALHADA'},
         { value: 'INDICATIVA', text: 'INDICATIVA'},
-        { value: 'ESTIMATIVA', text: 'ESTIMATIVA'}
+        { value: 'ESTIMADA', text: 'ESTIMADA'}
         ];
 
     blocked: boolean;
@@ -151,6 +152,19 @@ export class AnaliseComponent implements OnInit {
                 this.geraBaselinePdfBrowser();
                 break;
         }
+    }
+
+    public onRowDblclick(event) {
+    
+        if (event.target.nodeName === 'TD') {
+          this.abrirEditar();
+        }else if (event.target.parentNode.nodeName === 'TD') {
+          this.abrirEditar();
+        }
+    }
+    
+    abrirEditar(){
+      this.router.navigate(['/analise', this.analiseSelecionada.id, 'edit']);
     }
 
     /**

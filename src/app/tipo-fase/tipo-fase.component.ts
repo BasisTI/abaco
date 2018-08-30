@@ -18,6 +18,8 @@ export class TipoFaseComponent {
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
   searchUrl: string = this.tipoFaseService.searchUrl;
+  
+  tipoFaseSelecionada: TipoFase;
 
   elasticQuery: ElasticQuery = new ElasticQuery();
 
@@ -29,6 +31,15 @@ export class TipoFaseComponent {
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
   ) {}
+
+  public ngOnInit(){
+    this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
+      this.tipoFaseSelecionada = event.data;
+    });
+  this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
+    this.tipoFaseSelecionada = undefined;
+  });
+  }
 
   datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
@@ -46,6 +57,19 @@ export class TipoFaseComponent {
         break;
     }
   }
+
+  public onRowDblclick(event) {
+    
+    if (event.target.nodeName === 'TD') {
+      this.abrirEditar();
+    }else if (event.target.parentNode.nodeName === 'TD') {
+      this.abrirEditar();
+    }
+}
+
+abrirEditar(){
+  this.router.navigate(['/tipoFase', this.tipoFaseSelecionada.id, 'edit']);
+}
 
   confirmDelete(id: any) {
     this.confirmationService.confirm({

@@ -27,6 +27,8 @@ export class TipoEquipeComponent implements AfterViewInit {
 
   paginationParams = { contentIndex: null };
 
+  equipeSelecionada: TipoEquipe;
+
   elasticQuery: ElasticQuery = new ElasticQuery();
 
   rowsPerPageOptions: number[] = [5, 10, 20];
@@ -43,6 +45,15 @@ export class TipoEquipeComponent implements AfterViewInit {
     valueFiltro(valuefiltro: string) {
     this.valueFiltroCampo = valuefiltro;
     this.datatable.refresh(valuefiltro);
+  }
+
+  public ngOnInit(){
+    this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
+      this.equipeSelecionada = event.data;
+    });
+  this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
+    this.equipeSelecionada = undefined;
+  });
   }
 
   public ngAfterViewInit() {
@@ -65,6 +76,19 @@ export class TipoEquipeComponent implements AfterViewInit {
         break;
     }
   }
+
+  public onRowDblclick(event) {
+    
+    if (event.target.nodeName === 'TD') {
+      this.abrirEditar();
+    }else if (event.target.parentNode.nodeName === 'TD') {
+      this.abrirEditar();
+    }
+}
+
+abrirEditar(){
+  this.router.navigate(['/admin/tipoEquipe', this.equipeSelecionada.id, 'edit']);
+}
 
   public confirmDelete(id: any) {
     this.confirmationService.confirm({

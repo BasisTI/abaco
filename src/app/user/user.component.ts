@@ -26,6 +26,8 @@ export class UserComponent implements AfterViewInit, OnInit {
 
   searchUrl: string = this.userService.searchUrl;
 
+  usuarioSelecionado: User;
+
   paginationParams = { contentIndex: null };
 
   elasticQuery: ElasticQuery = new ElasticQuery();
@@ -59,6 +61,13 @@ export class UserComponent implements AfterViewInit, OnInit {
     this.recuperarOrganizacoes();
     this.recuperarAutorizacoes();
     this.recuperarEquipe();
+
+    this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
+      this.usuarioSelecionado = event.data;
+    });
+  this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
+    this.usuarioSelecionado = undefined;
+  });
   }
 
   /**
@@ -116,6 +125,19 @@ export class UserComponent implements AfterViewInit, OnInit {
         break;
     }
   }
+
+  public onRowDblclick(event) {
+    
+    if (event.target.nodeName === 'TD') {
+      this.abrirEditar();
+    }else if (event.target.parentNode.nodeName === 'TD') {
+      this.abrirEditar();
+    }
+}
+
+abrirEditar(){
+  this.router.navigate(['/admin/user', this.usuarioSelecionado.id, 'edit']);
+}
 
   confirmDelete(user: User) {
     this.confirmationService.confirm({
