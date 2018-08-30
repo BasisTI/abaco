@@ -34,10 +34,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
   isEdit: boolean;
 
-  // O usuário logado é admin? - Flag utilizada para esconder os campos que usuário o comum não pode alterar.
+  // O usuário logado é admin? - Flag utilizada para desabilitar os campos que usuário o comum não pode alterar.
   isAdmin: boolean;
-  // Flag de edição pelo menu de administração
-  isAdminEdit = true;
 
   private routeSub: Subscription;
   private urlSub: Subscription;     // Subscritor para capturar a URL ativa
@@ -54,12 +52,11 @@ export class UserFormComponent implements OnInit, OnDestroy {
     private organizacaoService: OrganizacaoService,
     private pageNotificationService: PageNotificationService,
   ) {
+    this.isAdmin = this.isUserAdmin();    // Seta a flag de administrador (ou não) e...
     this.recuperarUrl();                  // Capturando URL ativa
     if (this.url === 'usuario,edit') {    // Se for uma edição de usuário..
       this.loadCurrentUser();             // Carrrega os dados do usuário logado,
       this.isEdit = true;                 // Levanta flag de edição,
-      this.isAdmin = this.isUserAdmin();  // Seta a flag de administrador (ou não) e...
-      this.isAdminEdit = false;           // Não seta a flag de edição pelo menu de administração
     }
   }
 
@@ -294,5 +291,9 @@ export class UserFormComponent implements OnInit, OnDestroy {
    * */
   private isUserAdmin(): boolean {
     return this.authService.isAuthenticated && this.authService.hasRole(ADMIN_ROLE);
+  }
+
+  desabilitado(): boolean {
+    return !this.isAdmin;
   }
 }

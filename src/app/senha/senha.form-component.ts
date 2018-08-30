@@ -55,23 +55,19 @@ export class SenhaFormComponent implements OnInit, OnDestroy {
 
 
   senha() {
-    let sucesso = false;
     if (this.newPassword === this.newPasswordConfirm) {
       this.loginService.login(this.login, this.oldPassword).subscribe(() => {
         this.senhaService.changePassword(this.newPassword).subscribe(() => {
-          sucesso = true;
           const msg = 'Senha alterada com sucesso para o usuário ' + this.login + '!';
           this.pageNotificationService.addSuccessMsg(msg);
           console.log(msg);
         }, error => {
           if (error.status === 400) {
-            sucesso = false;
             this.verificaErro(error.headers.toJSON()['x-abacoapp-error'][0]);
           }
         });
       }, error => {
         if (error.status === 401) {
-          sucesso = false;
           this.verificaErro('error.passwdMismatch');
         }
       });
@@ -97,7 +93,6 @@ export class SenhaFormComponent implements OnInit, OnDestroy {
       } break;
       default: {
         msgErro = 'Entrei no default.\nAlgo ainda está errado...';
-        console.log('Entrei no default do case...');
       }
     }
     this.pageNotificationService.addErrorMsg(msgErro);
