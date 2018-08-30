@@ -146,4 +146,3 @@ backend_start.sh
 ######################
 .eslintcache
 /.apt_generated/
-src/main/resources/reports/analise/analise_detalhada.jasper
