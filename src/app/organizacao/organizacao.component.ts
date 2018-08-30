@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
@@ -21,6 +21,8 @@ export class OrganizacaoComponent implements AfterViewInit {
 
   searchUrl: string = this.organizacaoService.searchUrl;
 
+  organizacaoSelecionada: Organizacao;
+
   paginationParams = { contentIndex: null };
 
   elasticQuery: ElasticQuery = new ElasticQuery();
@@ -34,11 +36,21 @@ export class OrganizacaoComponent implements AfterViewInit {
     private pageNotificationService: PageNotificationService
   ) {}
 
+  public ngOnInit(){
+    this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
+      this.organizacaoSelecionada = event.data;
+    });
+  this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
+    this.organizacaoSelecionada = undefined;
+  });
+  }
+
   ngAfterViewInit() {
     this.recarregarDataTable();
   }
 
   datatableClick(event: DatatableClickEvent) {
+    console.log(event)
     if (!event.selection) {
       return;
     }
@@ -54,6 +66,19 @@ export class OrganizacaoComponent implements AfterViewInit {
         break;
     }
   }
+
+  public onRowDblclick(event) {
+    
+    if (event.target.nodeName === 'TD') {
+      this.abrirEditar();
+    }else if (event.target.parentNode.nodeName === 'TD') {
+      this.abrirEditar();
+    }
+}
+
+abrirEditar(){
+  this.router.navigate(['/organizacao', this.organizacaoSelecionada.id, 'edit']);
+}
 
   confirmDelete(id: any) {
     this.confirmationService.confirm({
