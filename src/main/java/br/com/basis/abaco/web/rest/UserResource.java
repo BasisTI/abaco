@@ -185,32 +185,50 @@ public class UserResource {
 	 */
 	@PutMapping("/users")
 	@Timed
-	@Secured(AuthoritiesConstants.ADMIN)
+	@Secured(AuthoritiesConstants.USER)
 	public ResponseEntity<User> updateUser(@RequestBody User user) {
 		log.debug("REST request to update User : {}", user);
+		// Verificação de consistência - Não pode haver dois usuários com e-mails iguais
 		Optional<User> existingUser = userRepository.findOneByEmail(user.getEmail());
 		if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
 			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "emailexists", "E-mail already in use"))
 					.body(null);
 		}
+		// Verificação de consistência - Não pode haver dois usuários com logins iguais
 		existingUser = userRepository.findOneByLogin(user.getLogin().toLowerCase());
 		if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
 			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, userexists, "Login already in use"))
 					.body(null);
 		}
+        // Verificação de consistência - Não pode haver dois usuários com nome completo iguais
 		if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
             if (!userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId().equals(user.getId())) {
                 return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use"))
                     .body(null);
             }
         }
-            User updatableUser = userService.generateUpdatableUser(user);
-            User updatedUser = userRepository.save(updatableUser);
-            userSearchRepository.save(updatedUser);
-            log.debug("Changed Information for User: {}", user);
+        // Verificando qual a autoridade do usuário logado
+        Authority adminAuth = new Authority();
+		adminAuth.setName(AuthoritiesConstants.ADMIN);
+		adminAuth.setDescription("Administrador");
+		// Restringindo os campos que o usuário comum pode alterar.
+        if (!user.getAuthorities().contains(adminAuth) && userRepository.findOneById(user.getId()).isPresent()) {
+            String newFirstName = user.getFirstName();
+            String newLastName = user.getLastName();
+            String newEmail = user.getEmail();
+            user = userRepository.findOneById(user.getId()).get();
+            user.setFirstName(newFirstName);
+            user.setLastName(newLastName);
+            user.setEmail(newEmail);
+        }
+        // Atualizando os dados do usuário
+        User updatableUser = userService.generateUpdatableUser(user);
+        User updatedUser = userRepository.save(updatableUser);
+        userSearchRepository.save(updatedUser);
+        log.debug("Changed Information for User: {}", user);
 
-            return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString()))
-                .body(updatedUser);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString()))
+            .body(updatedUser);
 	}
 
 	/**
@@ -245,16 +263,18 @@ public class UserResource {
 	}
 
     /**
-     * GET /users/current : get the current logged user.
+     * GET /users/current : get the current logged user data.
      *
-     * @return a String containing user's id in body, or with status 404 (Not Found)
+     * @return a User object containing user's data, or with status 404 (Not Found)
      */
     @GetMapping("/users/logged")
     @Timed
     @Secured(AuthoritiesConstants.USER)
     public User getLoggedUser() {
         log.debug("REST request to get current logged user");
-        return userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).orElse(null);
+        String login = SecurityUtils.getCurrentUserLogin();
+        log.debug("====> User returned: {}", login);
+        return userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
     }
 
 	@GetMapping("/users/authorities")
