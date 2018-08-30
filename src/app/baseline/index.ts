@@ -9,3 +9,4 @@ export * from './analitico/funcao-transacao/baseline-funcao-transacao.component'
 export * from './analitico/complexidade/baseline-complexidade.component';
 export * from './analitico/impacto/baseline-impacto.component';
 export * from './analitico/identificacao-sistema/baseline-inf-sistema.component';
+export * from '../baseline/baseline.service'

@@ -1,113 +1,132 @@
 import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-  OnDestroy,
+    Component,
+    Input,
+    Output,
+    EventEmitter,
+    OnInit,
+    OnDestroy,
 } from '@angular/core';
 
-import { AnaliseSharedDataService } from '../../../shared/analise-shared-data.service';
-import { Analise } from '../../../analise/analise.model';
-import { FuncaoDados } from '../../../funcao-dados/funcao-dados.model';
-import { Der } from '../../../der/der.model';
-import { Subscription } from 'rxjs/Subscription';
+import {AnaliseSharedDataService} from '../../../shared/analise-shared-data.service';
+import {Analise} from '../../../analise/analise.model';
+import {FuncaoDados} from '../../../funcao-dados/funcao-dados.model';
+import {Der} from '../../../der/der.model';
+import {Subscription} from 'rxjs/Subscription';
+import {ResponseWrapper} from '../../../shared';
+import {BaselineService} from '../../../baseline';
 
 @Component({
-  selector: 'app-analise-referenciador-ar',
-  templateUrl: './referenciador-ar.component.html'
+    selector: 'app-analise-referenciador-ar',
+    templateUrl: './referenciador-ar.component.html'
 })
 export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
-  @Output()
-  dersReferenciadosEvent: EventEmitter<Der[]> = new EventEmitter<Der[]>();
+    @Output()
+    dersReferenciadosEvent: EventEmitter<Der[]> = new EventEmitter<Der[]>();
 
-  @Output()
-  funcaoDadosReferenciadaEvent: EventEmitter<string> = new EventEmitter<string>();
+    @Output()
+    funcaoDadosReferenciadaEvent: EventEmitter<string> = new EventEmitter<string>();
 
-  private subscriptionAnaliseCarregada: Subscription;
+    private subscriptionAnaliseCarregada: Subscription;
 
-  funcoesDados: FuncaoDados[] = [];
+    funcoesDados: FuncaoDados[] = [];
 
-  ders: Der[] = [];
+    ders: Der[] = [];
 
-  mostrarDialog = false;
+    idAnalise: number;
 
-  funcaoDadosSelecionada: FuncaoDados;
+    mostrarDialog = false;
 
-  dersReferenciados: Der[] = [];
+    funcaoDadosSelecionada: FuncaoDados;
 
-  valorVariavel: string;
+    dersReferenciados: Der[] = [];
 
-  constructor(
-    private analiseSharedDataService: AnaliseSharedDataService,
-  ) { }
+    valorVariavel: string;
 
-  ngOnInit() {
-    // TODO quais eventos observar?
-    // precisa de um evento de funcaoDados adicionada?
-    this.subscribeAnaliseCarregada();
-  }
-
-  private subscribeAnaliseCarregada() {
-    this.subscriptionAnaliseCarregada = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
-      this.funcoesDados = this.analiseSharedDataService.analise.funcaoDados;
-    });
-  }
-
-  abrirDialog() {
-    if (this.habilitarBotaoAbrirDialog()) {
-      this.mostrarDialog = true;
+    constructor(
+        private analiseSharedDataService: AnaliseSharedDataService,
+        private baselineService: BaselineService
+    ) {
     }
-  }
 
-  habilitarBotaoAbrirDialog(): boolean {
-    if (!this.funcoesDados) {
-      return false;
+    ngOnInit() {
+        // TODO quais eventos observar?
+        // precisa de um evento de funcaoDados adicionada?
+        this.subscribeAnaliseCarregada();
     }
-    return this.funcoesDados.length > 0;
-  }
 
-  funcoesDadosDropdownPlaceholder(): string {
-    return 'Selecione uma Função Dados';
-  }
+    private subscribeAnaliseCarregada() {
+        this.subscriptionAnaliseCarregada = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
+            console.log(this.analiseSharedDataService.analise.id);
 
-  funcaoDadosSelected(fd: FuncaoDados) {
-    this.funcaoDadosSelecionada = fd;
-    this.ders = fd.ders;
-  }
+            this.idAnalise = this.analiseSharedDataService.analise.id;
 
-  dersMultiSelectedPlaceholder(): string {
-    if (!this.funcaoDadosSelecionada) {
-      return 'DERs - Selecione uma Função de Dados para selecionar quais DERs referenciar';
-    } else if (this.funcaoDadosSelecionada) {
-      return 'Selecione quais DERs deseja referenciar';
+            this.baselineService.analiticosFuncaoDados(
+                this.analiseSharedDataService.analise.sistema.id).subscribe((res: ResponseWrapper) => {
+                this.funcoesDados = res.json;
+            });
+        });
     }
-  }
 
-  relacionar() {
-    this.dersReferenciados.forEach(der => {
-      der.id = undefined;
-    });
-    this.dersReferenciadosEvent.emit(this.dersReferenciados);
-    // XXX vai precisar relacionar qual funcao de dados foi relacionada?
-    this.funcaoDadosReferenciadaEvent.emit(this.funcaoDadosSelecionada.name);
-    this.fecharDialog();
-  }
 
-  fecharDialog() {
-    this.resetarCampos();
-    this.mostrarDialog = false;
-  }
+    findIndexToUpdate(newItem) {
+        return newItem.id === this;
+    }
 
-  private resetarCampos() {
-    this.funcaoDadosSelecionada = undefined;
-    this.ders = [];
-    this.dersReferenciados = [];
-  }
+    abrirDialog() {
+        if (this.habilitarBotaoAbrirDialog()) {
+            this.subscribeAnaliseCarregada();
+            this.mostrarDialog = true;
+        }
+    }
 
-  ngOnDestroy() {
+    habilitarBotaoAbrirDialog(): boolean {
+        if (!this.funcoesDados) {
+            return false;
+        }
+        return this.funcoesDados.length > 0;
+    }
 
-  }
+    funcoesDadosDropdownPlaceholder(): string {
+        return 'Selecione uma Função Dados';
+    }
+
+    funcaoDadosSelected(fd: FuncaoDados) {
+        this.funcaoDadosSelecionada = fd;
+        this.ders = fd.ders;
+    }
+
+    dersMultiSelectedPlaceholder(): string {
+        if (!this.funcaoDadosSelecionada) {
+            return 'DERs - Selecione uma Função de Dados para selecionar quais DERs referenciar';
+        } else if (this.funcaoDadosSelecionada) {
+            return 'Selecione quais DERs deseja referenciar';
+        }
+    }
+
+    relacionar() {
+        this.dersReferenciados.forEach(der => {
+            der.id = undefined;
+        });
+        this.dersReferenciadosEvent.emit(this.dersReferenciados);
+        // XXX vai precisar relacionar qual funcao de dados foi relacionada?
+        this.funcaoDadosReferenciadaEvent.emit(this.funcaoDadosSelecionada.name);
+        this.fecharDialog();
+    }
+
+    fecharDialog() {
+        this.resetarCampos();
+        this.mostrarDialog = false;
+    }
+
+    private resetarCampos() {
+        this.funcaoDadosSelecionada = undefined;
+        this.ders = [];
+        this.dersReferenciados = [];
+    }
+
+    ngOnDestroy() {
+
+    }
 
 }

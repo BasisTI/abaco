@@ -279,7 +279,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     dersReferenciados(ders: Der[]) {
         const dersReferenciadosChips: DerChipItem[] = DerChipConverter.converterReferenciaveis(ders);
-        this.dersChips = this.dersChips.concat(dersReferenciadosChips);
+        // if(this.dersChips !== undefined){
+        this.dersChips = dersReferenciadosChips;
+        // }
     }
 
     private editar() {

@@ -57,11 +57,12 @@ export class DerChipsComponent implements OnChanges {
 
     private addItem(derChipItem: DerChipItem) {
 
-        const valores: string[] = this.values.map(chipItem => chipItem.text);
-
-        if (valores.indexOf(derChipItem.text) === -1) {
-            this.values.push(derChipItem);
-            this.valuesChanged();
+        if (this.values !== undefined) {
+            const valores: string[] = this.values.map(chipItem => chipItem.text);
+            if (valores.indexOf(derChipItem.text) === -1) {
+                this.values.push(derChipItem);
+                this.valuesChanged();
+            }
         }
     }
 
