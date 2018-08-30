@@ -416,13 +416,13 @@ public class AnaliseResource {
      * @throws JRException
      * @throws IOException
      */
-    @GetMapping("/downloadPdfBaselineBrowser")
-    @Timed
-    public @ResponseBody byte[] downloadPdfBaselineBrowser() throws URISyntaxException, IOException, JRException {
-        relatorioBaselineRest = new RelatorioBaselineRest(this.response,this.request);
-        log.debug("REST request to generate report Analise baseline in browser : {}", recuperarTodasAnalises());
-        return relatorioBaselineRest.downloadPdfBaselineBrowser(recuperarTodasAnalises());
-    }
+//    @GetMapping("/downloadPdfBaselineBrowser")
+//    @Timed
+//    public @ResponseBody byte[] downloadPdfBaselineBrowser() throws URISyntaxException, IOException, JRException {
+//        relatorioBaselineRest = new RelatorioBaselineRest(this.response,this.request);
+//        log.debug("REST request to generate report Analise baseline in browser : {}", recuperarTodasAnalises());
+//        return relatorioBaselineRest.downloadPdfBaselineBrowser(recuperarTodasAnalises());
+//    }
 
     @GetMapping(value = "/analise/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed

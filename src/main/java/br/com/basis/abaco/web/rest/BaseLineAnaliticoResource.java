@@ -1,17 +1,23 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.BaseLineSintetico;
+import br.com.basis.abaco.reports.rest.RelatorioBaselineRest;
 import com.codahale.metrics.annotation.Timed;
 import br.com.basis.abaco.domain.BaseLineAnalitico;
 
 import br.com.basis.abaco.repository.BaseLineAnaliticoRepository;
+import br.com.basis.abaco.repository.BaseLineSinteticoRepository;
+import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Set;
 
@@ -26,8 +32,24 @@ public class BaseLineAnaliticoResource {
 
     private final BaseLineAnaliticoRepository baseLineAnaliticoRepository;
 
-    public BaseLineAnaliticoResource(BaseLineAnaliticoRepository baseLineAnaliticoRepository) {
+    private final BaseLineSinteticoRepository baseLineSinteticoRepository;
+
+    private RelatorioBaselineRest relatorioBaselineRest;
+
+    @Autowired
+    private HttpServletRequest request;
+
+    @Autowired
+    private HttpServletResponse response;
+
+
+    public BaseLineAnaliticoResource(BaseLineAnaliticoRepository baseLineAnaliticoRepository, BaseLineSinteticoRepository baseLineSinteticoRepository) {
         this.baseLineAnaliticoRepository = baseLineAnaliticoRepository;
+        this.baseLineSinteticoRepository = baseLineSinteticoRepository;
+    }
+
+    private BaseLineSintetico recuperarBaselinePorSistema(Long id){
+        return baseLineSinteticoRepository.getBaseLineSinteticoId(id);
     }
 
 
@@ -56,6 +78,15 @@ public class BaseLineAnaliticoResource {
     public List<BaseLineAnalitico> getBaseLineAnaliticoFT(@PathVariable Long id) {
         log.debug("REST request to get FT BaseLineAnalitico : {}", id);
         return baseLineAnaliticoRepository.getAllAnaliticosFT(id);
+    }
+
+    @GetMapping("/downloadPdfBaselineBrowser/{id}")
+    @Timed
+    public @ResponseBody
+    byte[] downloadPdfBaselineBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+        relatorioBaselineRest = new RelatorioBaselineRest(this.response,this.request);
+        log.debug("REST request to generate report Analise baseline in browser : {}", recuperarBaselinePorSistema(id));
+        return relatorioBaselineRest.downloadPdfBaselineBrowser(recuperarBaselinePorSistema(id), getBaseLineAnaliticoFD(id), getBaseLineAnaliticoFT(id));
     }
 
 }

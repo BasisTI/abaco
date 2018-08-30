@@ -1,49 +1,65 @@
 package br.com.basis.abaco.service.dto;
 
-/**
- * @author eduardo.andrade
- * @since 04/07/2018
- */
 public class BaselineDTO {
 
-    private String sistema;
-    
-    private String pfTotal;
-    
-    private String pfAPagar;
-    
-    private String garantia;
+    private String nome;
 
-    public String getSistema() {
-        return sistema;
+    private String classificacao;
+
+    private String rlr;
+
+    private String der;
+
+    private String complexidade;
+
+    private String pf;
+
+    public String getNome() {
+        return nome;
     }
 
-    public void setSistema(String sistema) {
-        this.sistema = sistema;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public String getPfTotal() {
-        return pfTotal;
+    public String getClassificacao() {
+        return classificacao;
     }
 
-    public void setPfTotal(String pfTotal) {
-        this.pfTotal = pfTotal;
+    public void setClassificacao(String classificacao) {
+        this.classificacao = classificacao;
     }
 
-    public String getPfAPagar() {
-        return pfAPagar;
+    public String getRlr() {
+        return rlr;
     }
 
-    public void setPfAPagar(String pfAPagar) {
-        this.pfAPagar = pfAPagar;
+    public void setRlr(String rlr) {
+        this.rlr = rlr;
     }
 
-    public String getGarantia() {
-        return garantia;
+    public String getDer() {
+        return der;
     }
 
-    public void setGarantia(String garantia) {
-        this.garantia = garantia;
+    public void setDer(String der) {
+        this.der = der;
+    }
+
+    public String getComplexidade() {
+        return complexidade;
+    }
+
+    public void setComplexidade(String complexidade) {
+        this.complexidade = complexidade;
+    }
+
+    public String getPf() {
+        return pf;
+    }
+
+    public void setPf(String pf) {
+        this.pf = pf;
     }
 
 }
