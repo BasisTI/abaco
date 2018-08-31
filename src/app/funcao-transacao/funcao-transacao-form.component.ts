@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectorRef, OnDestroy} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, OnDestroy, Input} from '@angular/core';
 import {AnaliseSharedDataService, PageNotificationService} from '../shared';
 import {Analise, AnaliseService} from '../analise';
 import {FatorAjuste} from '../fator-ajuste';
@@ -29,7 +29,7 @@ import {Der} from '../der/der.model';
 export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     textHeader: string;
-    isEdit;
+    @Input() isEdit: boolean;
     nomeInvalido;
     classInvalida;
     impactoInvalido: boolean;

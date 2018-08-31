@@ -57,8 +57,6 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
     private subscribeAnaliseCarregada() {
         this.subscriptionAnaliseCarregada = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
-            console.log(this.analiseSharedDataService.analise.id);
-
             this.idAnalise = this.analiseSharedDataService.analise.id;
 
             this.baselineService.analiticosFuncaoDados(

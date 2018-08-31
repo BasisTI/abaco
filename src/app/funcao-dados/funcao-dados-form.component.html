@@ -14,26 +14,11 @@
                         </div>
                     </div>
 
-                    <!-- TABELA DE FUNÇÕES ADICIONADOAS  -->
-                    <div class="ui-g" *ngIf="funcoesDados.length > 0">
-                        <hr>
-                        <div class="ui-g-12">
-                            <label>Colunas:</label>
-                            <p-multiSelect
-                                    [options]="colunasOptions"
-                                    [ngModel]="colunasAMostrar"
-                                    (ngModelChange)="ordenarColunas($event)"
-                                    dataKey="index"
-                                    [maxSelectedLabels]="colunasOptions.length">
-                            </p-multiSelect>
-                        </div>
-                    </div>
-
                     <div>
                         <app-memory-datatable
-                                [disableDelete]="!isEdit"
-                                [disableEdit]="!isEdit"
-                                [disableClone]="!isEdit"
+                                [disableDelete]="!this.isEdit"
+                                [disableEdit]="!this.isEdit"
+                                [disableClone]="!this.isEdit"
                                 [value]="funcoesDados"
                                 (buttonClick)="datatableClick($event)"
                                 [responsive]="true"

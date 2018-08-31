@@ -407,14 +407,14 @@
             [disabled]="disableAba"
             header="Funções de Dados"
             *ngIf="isEdicao">
-        <app-analise-funcao-dados></app-analise-funcao-dados>
+        <app-analise-funcao-dados [isEdit]="this.isEdicao"></app-analise-funcao-dados>
     </p-tabPanel>
 
     <p-tabPanel
             [disabled]="!disableFuncaoTrasacao"
             header="Funções de Transação"
             *ngIf="isEdicao">
-        <app-analise-funcao-transacao></app-analise-funcao-transacao>
+        <app-analise-funcao-transacao [isEdit]="this.isEdicao"></app-analise-funcao-transacao>
     </p-tabPanel>
 
     <p-tabPanel

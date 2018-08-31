@@ -3,8 +3,8 @@
         <div class="ui-g ui-fluid">
             <div class="ui-g-12">
                 <div class="card card-w-title">
-                    <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
-                        <div class="ui-g" *ngIf="isEdicao">
+                    <form name="editForm" role="form" novalidate #editForm="ngForm">
+                        <div class="ui-g" *ngIf="isEdicao || isView">
                             <fieldset class="ui-g-12 ui-md-12 ui-sm-12">
                                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
                                     <label>Organização</label>
@@ -64,7 +64,6 @@
                                                 name="identificadorAnalise"
                                                 [disabled]="this.isView"
                                                 [(ngModel)]="analise.identificadorAnalise"
-                                                (change)="save()"
                                                 pInputText/>
                                         <label>Identificador da Analise *</label>
                                     </span>
@@ -97,8 +96,7 @@
                                             [disabled]="this.isView"
                                             [options]="metodosContagem"
                                             [(ngModel)]="analise.metodoContagem"
-                                            [autoWidth]="false"
-                                            (onChange)="save()">
+                                            [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
 
@@ -112,8 +110,7 @@
                                             placeholder="Selecione..."
                                             [options]="tiposAnalise"
                                             [(ngModel)]="analise.tipoAnalise"
-                                            [autoWidth]="false"
-                                            (onChange)="save()">
+                                            [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
 
@@ -127,8 +124,7 @@
                                             [disabled]="this.isView"
                                             [options]="fatoresAjuste"
                                             [(ngModel)]="analise.fatorAjuste"
-                                            [autoWidth]="false"
-                                            (onChange)="save()">
+                                            [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
 
@@ -153,7 +149,6 @@
                                                 pInputTextarea
                                                 name="propositoContagem"
                                                 [disabled]="this.isView"
-                                                (change)="save()"
                                                 [(ngModel)]="analise.propositoContagem">
                                         </textarea>
                                     </span>
@@ -166,7 +161,6 @@
                                                 pInputTextarea
                                                 name="escopo"
                                                 [disabled]="this.isView"
-                                                (change)="save()"
                                                 [(ngModel)]="analise.escopo">
                                         </textarea>
                                     </span>
@@ -179,7 +173,6 @@
                                                 pInputTextarea
                                                 name="fronteiras"
                                                 [disabled]="this.isView"
-                                                (change)="save()"
                                                 [(ngModel)]="analise.fronteiras">
                                         </textarea>
                                     </span>
@@ -193,7 +186,6 @@
                                                 pInputTextarea
                                                 name="documentacao"
                                                 [disabled]="this.isView"
-                                                (change)="save()"
                                                 [(ngModel)]="analise.documentacao">
                                         </textarea>
                                     </span>
@@ -212,8 +204,7 @@
                                                 [disabled]="this.isView"
                                                 label="Sim"
                                                 [value]="true"
-                                                [(ngModel)]="analise.baselineImediatamente"
-                                                (onClick)="save()">
+                                                [(ngModel)]="analise.baselineImediatamente">
                                         </p-radioButton>
                                     </div>
 
@@ -223,8 +214,7 @@
                                                 [disabled]="this.isView"
                                                 label="Não"
                                                 [value]="false"
-                                                [(ngModel)]="analise.baselineImediatamente"
-                                                (onClick)="save()">
+                                                [(ngModel)]="analise.baselineImediatamente">
                                         </p-radioButton>
                                     </div>
 
@@ -236,8 +226,7 @@
                                                 name="dataHomol"
                                                 [disabled]="this.isView"
                                                 [(ngModel)]="analise.dataHomologacao"
-                                                dateFormat="dd/mm/yy"
-                                                (onSelect)="save()">
+                                                dateFormat="dd/mm/yy">
                                         </p-calendar>
                                         <label>Data da homologação (software) {{analise.baselineImediatamente ? " *" : null}}</label>
                                     </span>
@@ -255,9 +244,6 @@
                                             emptyMessage="Selecione um Contrato para escolher Fases"
                                             [value]="esforcoFases"
                                             [(selection)]="analise.esforcoFases"
-                                            (onHeaderCheckboxToggle)="save()"
-                                            (onRowSelect)="save()"
-                                            (onRowUnselect)="save()"
                                             [headerCheckboxToggleAllPages]="true">
 
                                         <p-header>Fases</p-header>
@@ -289,7 +275,6 @@
                                                 pInputTextarea
                                                 name="observacoes"
                                                 [disabled]="this.isView"
-                                                (change)="save()"
                                                 [(ngModel)]="analise.observacoes">
                                         </textarea>
                                     </span>
@@ -314,21 +299,21 @@
     <p-tabPanel
             [disabled]="disableAba"
             header="Funções de Dados"
-            *ngIf="isEdicao">
+            *ngIf="isEdicao || isView">
         <app-analise-funcao-dados></app-analise-funcao-dados>
     </p-tabPanel>
 
     <p-tabPanel
-            [disabled]="!disableFuncaoTrasacao"
+            [disabled]="disableAba"
             header="Funções de Transação"
-            *ngIf="isEdicao">
+            *ngIf="isEdicao || isView">
         <app-analise-funcao-transacao></app-analise-funcao-transacao>
     </p-tabPanel>
 
     <p-tabPanel
             [disabled]="disableAba"
             header="Resumo"
-            *ngIf="isEdicao">
+            *ngIf="isEdicao || isView">
         <app-analise-resumo></app-analise-resumo>
     </p-tabPanel>
 </p-tabView>

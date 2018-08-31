@@ -53,7 +53,6 @@ export class SistemaService {
      */
     findAllSystemOrg(orgId: number): Observable<ResponseWrapper> {
         const url = `${this.findByOrganizacaoUrl}/${orgId}`;
-        console.log("url ", url);
         return this.http.get(url)
             .map((res: Response) => this.convertResponse(res));
     }

@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectorRef, OnDestroy} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, OnDestroy, Input} from '@angular/core';
 import {AnaliseSharedDataService, PageNotificationService} from '../shared';
 import {FuncaoDados} from './funcao-dados.model';
 import {Analise, AnaliseService} from '../analise';
@@ -30,7 +30,7 @@ import {Modulo} from '../modulo';
 export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     textHeader: string;
-    isEdit;
+    @Input() isEdit: boolean;
     nomeInvalido;
     classInvalida;
     impactoInvalido: boolean;

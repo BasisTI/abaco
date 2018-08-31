@@ -1,5 +1,5 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 
 import {Analise} from './analise.model';
@@ -26,7 +26,7 @@ import {Response} from '@angular/http';
 export class AnaliseViewComponent implements OnInit, OnDestroy {
 
     isEdicao: boolean;
-    isView = true;
+    isView: boolean;
     disableFuncaoTrasacao: boolean;
     disableAba: boolean;
 
@@ -67,6 +67,8 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     ];
 
     private routeSub: Subscription;
+    private urlSub: Subscription;
+    private url: string;
     public hideShowSelectEquipe: boolean;
 
     constructor(
@@ -79,26 +81,40 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         private analiseSharedDataService: AnaliseSharedDataService,
         private equipeService: TipoEquipeService,
         private pageNotificationService: PageNotificationService,
-    ) {
-    }
+    ) { }
 
     ngOnInit() {
-        this.disableAba = true;
-        this.validacaoCampos = true;
+        this.disableAba = false;
+        this.validacaoCampos = false;
         this.hideShowSelectEquipe = true;
         this.analiseSharedDataService.init();
         this.isEdicao = false;
+        this.isView = true;
         this.isSaving = false;
         this.dataHomol = new Date();
         this.habilitarCamposIniciais();
         this.listOrganizacoes();
         this.getAnalise();
+        //this.recuperarUrl();
+        if (this.url) {
+
+        }
     }
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
+        //this.urlSub.unsubscribe();
     }
-
+/*
+    private recuperarUrl() {
+        this.urlSub = this.route.url.subscribe((res: UrlSegment[]) => {
+          this.url = res.toString();
+          for (let i = 0; i < res.length; i++) {
+            console.log(`Segmento[${i}]: ${res[i].path}, parametros: ${res[i].parameters.}`);
+        }
+        });
+      }
+*/
     /**
      * Obtêm uma análise através do ID
      */
@@ -113,7 +129,6 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
                     this.dataAnalise = this.analise;
                     this.setDataHomologacao();
                     this.diasGarantia = this.getGarantia();
-                    this.save();
                 });
             } else {
                 this.analise.esforcoFases = [];
@@ -146,7 +161,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     listOrganizacoes() {
         this.organizacaoService.searchActiveOrganizations().subscribe((res: ResponseWrapper) => {
             this.organizacoes = res.json;
-        },(error: Response) => {
+        }, (error: Response) => {
             this.pageNotificationService.addErrorMsg('Ops! Ocorreu algum erro');
         });
     }
@@ -190,7 +205,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         this.contratos = org.contracts;
         this.equipeService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
             this.equipeResponsavel = res.json;
-            if(this.equipeResponsavel !== null){
+            if (this.equipeResponsavel !== null) {
                 this.hideShowSelectEquipe = false;
             }
         });
@@ -336,64 +351,6 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
      */
     contratoSelected(contrato: Contrato) {
         this.setManual(contrato);
-        this.save();
-    }
-
-    /**
-     * Método responsável por persistir as informações das análises na edição.
-     **/
-    save() {
-        this.validaCamposObrigatorios();
-        if (this.verificarCamposObrigatorios()) {
-            this.analiseService.update(this.analise);
-            this.diasGarantia = this.analise.contrato.diasDeGarantia;
-        }
-    }
-
-    private validaCamposObrigatorios(){
-        const validacaoIdentificadorAnalise = this.analise.identificadorAnalise !== undefined;
-        const validacaoContrato = this.analise.contrato !== undefined;
-        const validacaoMetodoContagem = this.analise.metodoContagem !== null;
-        const validacaoTipoAnallise = this.analise.tipoAnalise !== null;
-
-        this.validacaoCampos = !(validacaoIdentificadorAnalise === true
-            &&  validacaoContrato === true
-            && validacaoMetodoContagem  === true
-            && validacaoTipoAnallise === true );
-
-        this.enableDisableAba();
-    }
-
-    enableDisableAba(){
-        if (this.validacaoCampos === false){
-            this.disableAba = false;
-            this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
-        }
-    }
-
-    /**
-     * Método responsável por validar campos obrigatórios na persistência.
-     **/
-    private verificarCamposObrigatorios(): boolean {
-        const isValid = true;
-
-        if (!this.analise.identificadorAnalise) {
-            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_IDENTIFICADOR);
-            return isValid;
-        }
-        if (!this.analise.contrato) {
-            this.pageNotificationService.addInfoMsg(MessageUtil.SELECIONE_CONTRATO_CONTINUAR);
-            return isValid;
-        }
-        if (!this.analise.metodoContagem) {
-            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_METODO_CONTAGEM);
-            return isValid;
-        }
-        if (!this.analise.tipoAnalise) {
-            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_TIPO_CONTAGEM);
-            return isValid;
-        }
-        return isValid;
     }
 
     /**
