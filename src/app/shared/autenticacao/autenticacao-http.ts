@@ -4,9 +4,9 @@ import { Observable } from "rxjs/Rx";
 import { JwtHelper, AuthConfigConsts } from "angular2-jwt";
 import { AuthConfig } from '@basis/angular-components';
 
+import 'rxjs/add/observable/empty';
+
 declare var window: any;
-declare var localStorage: any;
-declare var config: any;
 
 @Injectable()
 export class AutenticacaoHttp extends Http {
@@ -40,6 +40,7 @@ export class AutenticacaoHttp extends Http {
             this.config.userStorage.removeItem(this.config.userStorageIndex);
             document.cookie = "";
             window.location.href = this.config.logoutUrl;
+            return Observable.empty<Response>();
         } else {
             return super.request(url, options);
         }
