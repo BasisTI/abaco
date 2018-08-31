@@ -6,6 +6,7 @@ export const environment = {
     loginUrl: '/#/login',
     logoutUrl: '/',
     userStorage: localStorage,
-    userStorageIndex: 'user'
+    userStorageIndex: 'user',
+    publicUrls: ['/api/authenticate'],
   }
 };
