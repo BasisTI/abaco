@@ -30,6 +30,7 @@ import {
   AnaliseComponent,
   AnaliseDetailComponent,
   AnaliseFormComponent,
+  AnaliseViewComponent,
   analiseRoute
 } from './';
 
@@ -71,6 +72,7 @@ import { UtilModule } from '../util/util.module';
     AnaliseComponent,
     AnaliseDetailComponent,
     AnaliseFormComponent,
+    AnaliseViewComponent,
   ],
   providers: [
     AnaliseService,

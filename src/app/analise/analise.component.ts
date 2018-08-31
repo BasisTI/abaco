@@ -6,7 +6,7 @@ import { OrganizacaoService } from './../organizacao/organizacao.service';
 import { TipoEquipe } from './../tipo-equipe/tipo-equipe.model';
 import { Organizacao } from './../organizacao/organizacao.model';
 import { StringConcatService } from './../shared/string-concat.service';
-import {Component, ViewChild, OnInit} from '@angular/core';
+import {Component, ViewChild, OnInit, AfterViewInit} from '@angular/core';
 import {Router} from '@angular/router';
 import { ConfirmationService, SelectItem } from 'primeng/primeng';
 import {DatatableComponent, DatatableClickEvent} from '@basis/angular-components';
@@ -20,7 +20,7 @@ import {MessageUtil} from '../util/message.util';
     selector: 'jhi-analise',
     templateUrl: './analise.component.html'
 })
-export class AnaliseComponent implements OnInit {
+export class AnaliseComponent implements OnInit, AfterViewInit {
 
     @BlockUI() blockUI: NgBlockUI;
 
@@ -42,10 +42,10 @@ export class AnaliseComponent implements OnInit {
         nomeSistema: undefined,
         metContagem: undefined,
         organizacao: undefined,
-        team:undefined
+        team: undefined
       };
 
-      metsContagens =[
+      metsContagens = [
         { value: '', text: ''},
         { value: 'DETALHADA', text: 'DETALHADA'},
         { value: 'INDICATIVA', text: 'INDICATIVA'},
@@ -92,8 +92,8 @@ export class AnaliseComponent implements OnInit {
         });
       }
 
-      recuperarSistema(){
-          this.sistemaService.query().subscribe(response =>{
+      recuperarSistema() {
+          this.sistemaService.query().subscribe(response => {
             this.nomeSistemas = response.json;
             let emptySystem = new Sistema();
             emptySystem.nome = '';
@@ -131,7 +131,7 @@ export class AnaliseComponent implements OnInit {
                 this.router.navigate(['/analise', event.selection.id, 'edit']);
                 break;
             case 'view':
-                this.router.navigate(['/analise', event.selection.id]);
+                this.router.navigate(['/analise', event.selection.id, 'view']);
                 break;
             case 'delete':
                 this.confirmDelete(event.selection);
@@ -155,15 +155,15 @@ export class AnaliseComponent implements OnInit {
     }
 
     public onRowDblclick(event) {
-    
+
         if (event.target.nodeName === 'TD') {
           this.abrirEditar();
         }else if (event.target.parentNode.nodeName === 'TD') {
           this.abrirEditar();
         }
     }
-    
-    abrirEditar(){
+
+    abrirEditar() {
       this.router.navigate(['/analise', this.analiseSelecionada.id, 'edit']);
     }
 
@@ -292,16 +292,16 @@ export class AnaliseComponent implements OnInit {
         (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)) : (this);
         (this.searchParams.organizacao !== undefined) ? ((this.searchParams.organizacao.nome === '') ? (this.searchParams.organizacao.nome = undefined) : (console.log('Caiu no false'))) : (this);
       }
-    
+
       private createStringParamsArray(): Array<string> {
         let stringParamsArray: Array<string> = [];
-    
+
         (this.searchParams.identificador !== undefined) ? (stringParamsArray.push(this.searchParams.identificador)) : (this);
         (this.searchParams.nomeSistema !== undefined) ? ((this.searchParams.nomeSistema.nome !== undefined) ? (stringParamsArray.push(this.searchParams.nomeSistema.nome)) : (this)) : (this);
         (this.searchParams.metContagem !== undefined) ? ((this.searchParams.metContagem.text !== undefined) ? (stringParamsArray.push(this.searchParams.metContagem.text)) : (this)) : (this);
         (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (stringParamsArray.push(this.searchParams.team.nome)) : (this)) : (this);
         (this.searchParams.organizacao !== undefined) ? ((this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push(this.searchParams.organizacao.nome)) : (this)) : (this);
-    
+
         return stringParamsArray;
       }
 
@@ -310,8 +310,6 @@ export class AnaliseComponent implements OnInit {
         this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
         this.recarregarDataTable();
       }
-
-      
 
     /**
      * Desabilita botão relatório
@@ -361,5 +359,3 @@ export class AnaliseComponent implements OnInit {
         });
     }
 }
-
- 
