@@ -1,12 +1,12 @@
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {HttpModule, BrowserXhr} from '@angular/http';
+import {HttpModule, BrowserXhr, Http, RequestOptions, XHRBackend} from '@angular/http';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {NgProgressModule, NgProgressBrowserXhr} from 'ngx-progressbar';
-import {AuthHttp} from 'angular2-jwt';
+import {AuthHttp, JwtHelper} from 'angular2-jwt';
 import {ConfirmationService} from 'primeng/primeng';
 import {MessageService} from 'primeng/components/common/messageservice';
 import {PRIMENG_IMPORTS} from './primeng-imports';
@@ -61,6 +61,7 @@ import {HttpClient} from '@angular/common/http';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {AbacoElasticSearchModule} from './elasticsearch/elasticsearch.module';
+import {autenticacaoHttpFactory} from './shared/autenticacao/autenticacao-http';
 
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
@@ -136,9 +137,10 @@ export function createTranslateLoader(http: HttpClient) {
         UploadService,
         MenuItemsService,
         AdminGuard,
+        JwtHelper,
         {provide: AUTH_CONFIG, useValue: environment.auth},
-        {provide: AuthService, deps: [HttpService, AUTH_CONFIG], useFactory: authServiceFactory}
-
+        {provide: AuthService, deps: [HttpService, AUTH_CONFIG], useFactory: authServiceFactory},
+        {provide: Http, useFactory: autenticacaoHttpFactory, deps: [XHRBackend, RequestOptions, JwtHelper, AUTH_CONFIG] },
     ],
     bootstrap: [AppComponent]
 })
