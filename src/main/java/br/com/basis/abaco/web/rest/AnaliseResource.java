@@ -59,7 +59,6 @@ import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
-import br.com.basis.abaco.reports.rest.RelatorioBaselineRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
@@ -88,8 +87,6 @@ public class AnaliseResource {
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
     private RelatorioAnaliseRest relatorioAnaliseRest;
-
-    private RelatorioBaselineRest relatorioBaselineRest;
 
     private DynamicExportsService dynamicExportsService;
 
@@ -150,14 +147,6 @@ public class AnaliseResource {
      */
     private Analise recuperarAnalise(Long id) {
         return analiseRepository.findOne(id);
-    }
-
-    /**
-     *
-     * @return
-     */
-    private List<Analise> recuperarTodasAnalises() {
-        return analiseRepository.findAll();
     }
 
     /**

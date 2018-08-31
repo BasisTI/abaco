@@ -5,8 +5,6 @@
 /target/www/**
 /src/test/javascript/coverage/
 /src/test/javascript/PhantomJS*/
-src/main/resources/reports/analise/analise_detalhada.jasper
-src/main/resources/reports/analise/baseline.jasper
 ######################
 # Node
 ######################
@@ -147,4 +145,3 @@ backend_start.sh
 ######################
 .eslintcache
 /.apt_generated/
-src/main/resources/reports/analise/analise_detalhada.jasper
