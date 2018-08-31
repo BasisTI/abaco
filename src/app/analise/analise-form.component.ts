@@ -145,7 +145,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     listOrganizacoes() {
         this.organizacaoService.searchActiveOrganizations().subscribe((res: ResponseWrapper) => {
             this.organizacoes = res.json;
-        },(error: Response) => {
+        }, (error: Response) => {
             this.pageNotificationService.addErrorMsg('Ops! Ocorreu algum erro');
         });
     }
@@ -189,7 +189,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.contratos = org.contracts;
         this.equipeService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
             this.equipeResponsavel = res.json;
-            if(this.equipeResponsavel !== null){
+            if (this.equipeResponsavel !== null){
                 this.hideShowSelectEquipe = false;
             }
         });
@@ -344,6 +344,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     save() {
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
+            console.log(this.analise);
             this.analiseService.update(this.analise);
             this.diasGarantia = this.analise.contrato.diasDeGarantia;
         }

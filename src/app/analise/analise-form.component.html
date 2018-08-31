@@ -293,6 +293,33 @@
 
                                 </div>
 
+                                <div class="ui-g-4 ui-md-6 ui-sm-12" [hidden]="validacaoCampos">
+
+                                    <div class="ui-g-6 ui-md-6 ui-sm-12">
+                                        Enviar para Baseline?
+                                    </div>
+                                    <div class="ui-g-3 ui-md-2 ui-sm-12" >
+                                        <p-radioButton
+                                                name="baseline_enviar_baseline"
+                                                label="Sim"
+                                                [value]="true"
+                                                [(ngModel)]="analise.enviarBaseline"
+                                                (onClick)="save()">
+                                        </p-radioButton>
+                                    </div>
+
+                                    <div class="ui-g-3 ui-md-2 ui-sm-12">
+                                        <p-radioButton
+                                                name="baseline_enviar_baseline"
+                                                label="Não"
+                                                [value]="false"
+                                                [(ngModel)]="analise.enviarBaseline"
+                                                (onClick)="save()">
+                                        </p-radioButton>
+                                    </div>
+
+                                </div>
+
                                 <div class="ui-g-4 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px" [hidden]="validacaoCampos">
                                     <span class="md-inputfield">
                                         <p-calendar

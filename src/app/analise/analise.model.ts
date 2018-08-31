@@ -51,6 +51,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
         public tipoAnalise?: TipoContagem,
         public propositoContagem?: string,
         public sistema?: Sistema,
+        public enviarBaseline?: boolean,
         public funcaoDados?: FuncaoDados[],
         public funcaoTransacaos?: FuncaoTransacao[],
         public organizacao?: Organizacao,
@@ -281,6 +282,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
             this.tipoAnalise,
             this.propositoContagem,
             this.sistema,
+            this.enviarBaseline,
             this.funcaoDados,
             this.funcaoTransacaos,
             this.organizacao,
@@ -294,7 +296,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
             this.createdBy,
             this.createdOn,
             this.updatedOn,
-            this.bloqueiaAnalise,);
+            this.bloqueiaAnalise);
     }
 
 }
@@ -337,6 +339,7 @@ class AnaliseCopyFromJSON {
         this._analiseConverted.fronteiras = this._json.fronteiras;
         this._analiseConverted.documentacao = this._json.documentacao;
         this._analiseConverted.tipoAnalise = this._json.tipoAnalise;
+        this._analiseConverted.enviarBaseline = this._json.enviarBaseline;
         this._analiseConverted.propositoContagem = this._json.propositoContagem;
         this._analiseConverted.observacoes = this._json.observacoes;
         this._analiseConverted.baselineImediatamente = this._json.baselineImediatamente;
