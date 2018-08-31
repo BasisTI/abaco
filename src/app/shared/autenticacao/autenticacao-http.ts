@@ -3,13 +3,15 @@ import { ConnectionBackend, Headers, Http, Request, RequestOptions, RequestOptio
 import { Observable } from "rxjs/Rx";
 import { JwtHelper, AuthConfigConsts } from "angular2-jwt";
 import { AuthConfig } from '@basis/angular-components';
+import { environment } from '../../../environments/environment';
+
+import 'rxjs/add/observable/empty';
 
 declare var window: any;
-declare var localStorage: any;
-declare var config: any;
 
 @Injectable()
 export class AutenticacaoHttp extends Http {
+
     constructor(
         backend: ConnectionBackend, 
         defaultOptions: RequestOptions, 
@@ -30,18 +32,19 @@ export class AutenticacaoHttp extends Http {
                 return c.substring(nome.length, c.length);
             }
         }
-        return "";
+        return null;
     }
 
     public request(url: any, options?: RequestOptionsArgs): Observable<any | Response> {
         let token: string = this.getCookie("Authentication");
-        if (url !== "/api/logout" && url.url !== "/api/authenticate" && token && this.jwtHelper.isTokenExpired(token)) {
+        if (environment.auth.publicUrls.includes(url.url) || (token && !this.jwtHelper.isTokenExpired(token))) {
+            return super.request(url, options);
+        } else {
             this.config.userStorage.removeItem(AuthConfigConsts.DEFAULT_TOKEN_NAME);
             this.config.userStorage.removeItem(this.config.userStorageIndex);
             document.cookie = "";
             window.location.href = this.config.logoutUrl;
-        } else {
-            return super.request(url, options);
+            return Observable.empty<Response>();
         }
     }
 
