@@ -140,7 +140,6 @@
                                                 maxlength="100"
                                                 name="identificadorAnalise"
                                                 [(ngModel)]="analise.identificadorAnalise"
-                                                (change)="save()"
                                                 pInputText/>
                                         <label>Identificador da Analise *</label>
                                     </span>
@@ -171,8 +170,7 @@
                                             name="metodoContagem"
                                             [options]="metodosContagem"
                                             [(ngModel)]="analise.metodoContagem"
-                                            [autoWidth]="false"
-                                            (onChange)="save()">
+                                            [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
 
@@ -185,8 +183,7 @@
                                             placeholder="Selecione..."
                                             [options]="tiposAnalise"
                                             [(ngModel)]="analise.tipoAnalise"
-                                            [autoWidth]="false"
-                                            (onChange)="save()">
+                                            [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
 
@@ -200,8 +197,7 @@
                                             name="fatorAjuste"
                                             [options]="fatoresAjuste"
                                             [(ngModel)]="analise.fatorAjuste"
-                                            [autoWidth]="false"
-                                            (onChange)="save()">
+                                            [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
 
@@ -224,7 +220,6 @@
                                     <span class="md-inputfield">
                                         <textarea
                                                 pInputTextarea name="propositoContagem"
-                                                (change)="save()"
                                                 [(ngModel)]="analise.propositoContagem">
                                         </textarea>
                                     </span>
@@ -235,7 +230,6 @@
                                     <span class="md-inputfield">
                                         <textarea
                                                 pInputTextarea name="escopo"
-                                                (change)="save()"
                                                 [(ngModel)]="analise.escopo">
                                         </textarea>
                                     </span>
@@ -246,7 +240,6 @@
                                     <span class="md-inputfield">
                                         <textarea
                                                 pInputTextarea name="fronteiras"
-                                                (change)="save()"
                                                 [(ngModel)]="analise.fronteiras">
                                         </textarea>
                                     </span>
@@ -258,7 +251,6 @@
                                         <textarea
                                                 required
                                                 pInputTextarea name="documentacao"
-                                                (change)="save()"
                                                 [(ngModel)]="analise.documentacao">
                                         </textarea>
                                     </span>
@@ -276,8 +268,7 @@
                                                 name="baseline_imediatamente"
                                                 label="Sim"
                                                 [value]="true"
-                                                [(ngModel)]="analise.baselineImediatamente"
-                                                (onClick)="save()">
+                                                [(ngModel)]="analise.baselineImediatamente">
                                         </p-radioButton>
                                     </div>
 
@@ -286,8 +277,7 @@
                                                 name="baseline_imediatamente"
                                                 label="Não"
                                                 [value]="false"
-                                                [(ngModel)]="analise.baselineImediatamente"
-                                                (onClick)="save()">
+                                                [(ngModel)]="analise.baselineImediatamente">
                                         </p-radioButton>
                                     </div>
 
@@ -325,8 +315,7 @@
                                         <p-calendar
                                                 name="dataHomol"
                                                 [(ngModel)]="analise.dataHomologacao"
-                                                dateFormat="dd/mm/yy"
-                                                (onSelect)="save()">
+                                                dateFormat="dd/mm/yy">
                                         </p-calendar>
                                         <label>Data da homologação (software) {{analise.baselineImediatamente ? " *" : null}}</label>
                                     </span>
@@ -381,7 +370,6 @@
                                                 [cols]="180"
                                                 autoResize=true
                                                 pInputTextarea name="observacoes"
-                                                (change)="save()"
                                                 [(ngModel)]="analise.observacoes">
                                         </textarea>
                                     </span>
@@ -393,7 +381,13 @@
                                         buttonLabel="Voltar"
                                         routerLink="/analise">
                                 </app-white-button>
-
+                            </div>
+                            <div class="ui-g-2 ui-md-2 ui-sm-12" style="margin-bottom: 25px">    
+                                <app-green-button 
+                                    type="submit" 
+                                    buttonLabel="Salvar"
+                                    (click)="save()">
+                                </app-green-button>
                             </div>
 
                         </div>
@@ -408,6 +402,10 @@
             header="Funções de Dados"
             *ngIf="isEdicao">
         <app-analise-funcao-dados [isEdit]="this.isEdicao"></app-analise-funcao-dados>
+        <app-white-button
+            buttonLabel="Voltar"
+            routerLink="/analise">
+        </app-white-button>
     </p-tabPanel>
 
     <p-tabPanel
@@ -415,6 +413,10 @@
             header="Funções de Transação"
             *ngIf="isEdicao">
         <app-analise-funcao-transacao [isEdit]="this.isEdicao"></app-analise-funcao-transacao>
+        <app-white-button
+            buttonLabel="Voltar"
+            routerLink="/analise">
+        </app-white-button>
     </p-tabPanel>
 
     <p-tabPanel
@@ -422,6 +424,14 @@
             header="Resumo"
             *ngIf="isEdicao">
         <app-analise-resumo></app-analise-resumo>
+        <app-white-button
+            buttonLabel="Voltar"
+            routerLink="/analise">
+        </app-white-button>
+        <app-gray-button
+            buttonLabel="Gerar Relatório"
+            (click)="geraRelatorioPdfDetalhadoBrowser()">
+        </app-gray-button>
     </p-tabPanel>
 </p-tabView>
 
