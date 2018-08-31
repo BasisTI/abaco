@@ -166,6 +166,9 @@ public class Analise implements Serializable, ReportObject {
     @Column(name = "bloqueado")
     private boolean bloqueiaAnalise;
 
+    @Column(name = "enviar_baseline")
+    private boolean enviarBaseline;
+
     @ManyToOne
     private TipoEquipe equipeResponsavel;
 
@@ -532,7 +535,23 @@ public class Analise implements Serializable, ReportObject {
 
     public void setUpdatedOn(ZonedDateTime updatedOn) { audit.setUpdatedOn(updatedOn); }
 
-	@Override
+    public boolean isBloqueiaAnalise() {
+        return bloqueiaAnalise;
+    }
+
+    public void setBloqueiaAnalise(boolean bloqueiaAnalise) {
+        this.bloqueiaAnalise = bloqueiaAnalise;
+    }
+
+    public boolean isEnviarBaseline() {
+        return enviarBaseline;
+    }
+
+    public void setEnviarBaseline(boolean enviarBaseline) {
+        this.enviarBaseline = enviarBaseline;
+    }
+
+    @Override
     public String toString() {
         // // @formatter:off
         return "Analise{" +
