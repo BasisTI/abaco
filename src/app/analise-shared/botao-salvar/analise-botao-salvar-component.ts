@@ -117,7 +117,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   }
 
   private definirValorPadrao() {
-    this.analise.baselineImediatamente = true;
+    this.analise.baselineImediatamente = false;
  }
 
 }

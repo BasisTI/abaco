@@ -112,7 +112,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                     this.dataAnalise = this.analise;
                     this.setDataHomologacao();
                     this.diasGarantia = this.getGarantia();
-                    this.save();
+                    this.update();
                 });
             } else {
                 this.analise.esforcoFases = [];
@@ -296,6 +296,14 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Gera o relatório detalhado PDF.
+     * @param analise 
+     */
+    public geraRelatorioPdfDetalhadoBrowser() {
+        this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.analise.id);
+}
+
+    /**
      * Atuva ou desativa o Dropdown de sistema (html)
      * */
     disabledSistemaDropdown() {
@@ -335,7 +343,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     contratoSelected(contrato: Contrato) {
         this.setManual(contrato);
-        this.save();
+        this.diasGarantia = this.analise.contrato.diasDeGarantia;
     }
 
     /**
@@ -344,7 +352,16 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     save() {
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
-            console.log(this.analise);
+            this.analiseService.update(this.analise).subscribe(()=> {
+                this.pageNotificationService.addSuccessMsg("Dados salvos com sucesso!")
+                this.diasGarantia = this.analise.contrato.diasDeGarantia;
+            })
+        }
+    }
+
+    update() {
+        this.validaCamposObrigatorios();
+        if (this.verificarCamposObrigatorios()) {
             this.analiseService.update(this.analise);
             this.diasGarantia = this.analise.contrato.diasDeGarantia;
         }
