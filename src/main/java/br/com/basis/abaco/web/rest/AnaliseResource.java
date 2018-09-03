@@ -5,7 +5,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -132,6 +132,7 @@ public class AnaliseResource {
                     HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
         }
         analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+        analise = this.salvaNovaData(analise);
         linkFuncoesToAnalise(analise);
         Analise result = analiseRepository.save(analise);
         unlinkAnaliseFromFuncoes(result);
@@ -249,12 +250,24 @@ public class AnaliseResource {
                 HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
         }
         analise.setCreatedOn(analiseRepository.findOneById(analise.getId()).get().getCreatedOn());
+        analise = this.salvaNovaData(analise);
         linkFuncoesToAnalise(analise);
         Analise result = analiseRepository.save(analise);
         unlinkAnaliseFromFuncoes(result);
         analiseSearchRepository.save(result);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
                 .body(result);
+    }
+
+    private Analise salvaNovaData(Analise analise){
+        if(analise.getDataHomologacao() != null){
+            Timestamp dataDeHoje = new Timestamp(System.currentTimeMillis());
+            Timestamp dataParam = analise.getDataHomologacao();
+            dataParam.setHours(dataDeHoje.getHours());
+            dataParam.setMinutes(dataDeHoje.getMinutes());
+            dataParam.setSeconds(dataDeHoje.getSeconds());
+        }
+        return analise;
     }
 
     @PutMapping("/analises/{id}/block")
@@ -353,7 +366,6 @@ public class AnaliseResource {
 
     /**
      * Método responsável por requisitar a geração do relatório de Análise.
-     * @param analise
      * @throws URISyntaxException
      * @throws JRException
      * @throws IOException
@@ -369,7 +381,6 @@ public class AnaliseResource {
 
     /**
      * Método responsável por requisitar a geração do relatório de Análise.
-     * @param analise
      * @throws URISyntaxException
      * @throws JRException
      * @throws IOException
@@ -385,7 +396,6 @@ public class AnaliseResource {
 
     /**
      * Método responsável por requisitar a geração do relatório de Análise.
-     * @param analise
      * @throws URISyntaxException
      * @throws JRException
      * @throws IOException

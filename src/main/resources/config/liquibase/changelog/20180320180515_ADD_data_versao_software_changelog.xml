@@ -5,7 +5,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
    <changeSet author="dudu (generated)" id="1521570385629-1">
       <addColumn tableName="analise">
-         <column name="data_homologacao_software" type="date"/>
+         <column name="data_homologacao_software" type="TIMESTAMP WITH TIMEZONE"/>
       </addColumn>
    </changeSet>
 </databaseChangeLog>
