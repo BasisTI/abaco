@@ -132,11 +132,11 @@ public class AnaliseResource {
                     HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
         }
         analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
-        analise = this.salvaNovaData(analise);
-        linkFuncoesToAnalise(analise);
-        Analise result = analiseRepository.save(analise);
+        Analise analiseData = this.salvaNovaData(analise);
+        linkFuncoesToAnalise(analiseData);
+        Analise result = analiseRepository.save(analiseData);
         unlinkAnaliseFromFuncoes(result);
-        analiseSearchRepository.save(result);
+        analiseSearchRepository.save(analiseData);
         return ResponseEntity.created(new URI("/api/analises/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
@@ -250,12 +250,12 @@ public class AnaliseResource {
                 HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
         }
         analise.setCreatedOn(analiseRepository.findOneById(analise.getId()).get().getCreatedOn());
-        analise = this.salvaNovaData(analise);
-        linkFuncoesToAnalise(analise);
-        Analise result = analiseRepository.save(analise);
+        Analise analiseData = this.salvaNovaData(analise);
+        linkFuncoesToAnalise(analiseData);
+        Analise result = analiseRepository.save(analiseData);
         unlinkAnaliseFromFuncoes(result);
         analiseSearchRepository.save(result);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analiseData.getId().toString()))
                 .body(result);
     }
 
