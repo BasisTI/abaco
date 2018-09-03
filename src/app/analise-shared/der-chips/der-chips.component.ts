@@ -104,6 +104,7 @@ export class DerChipsComponent implements OnChanges {
     }
 
     adicionarMultiplos() {
+        console.log(this.addMultiplosTexto);
         if (this.verificaMultiplosDuplicados(this.addMultiplosTexto)) {
             this.values = this.values.concat(this.converteMultiplos());
             this.valuesChanged();
@@ -119,6 +120,10 @@ export class DerChipsComponent implements OnChanges {
     }
 
     private verificaMultiplosDuplicados(texto: string): boolean {
+        console.log(this.values);
+        if (this.values === undefined){
+            this.values = [];
+        }
         const valores: string[] = this.values.map(chipItem => chipItem.text);
         const index = valores.indexOf(texto);
         return index === -1;
