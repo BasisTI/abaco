@@ -5,7 +5,7 @@
             <div class="ui-g">
                 <div class="ui-g-12">
                     <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
-                        <div class="ui-md-2" *ngIf="isEdit">
+                        <div class="ui-md-2" *ngIf="!isView">
                             <app-green-button
                                     buttonLabel="Novo"
                                     buttonIcon="ui-icon-add"
@@ -16,9 +16,9 @@
 
                     <div>
                         <app-memory-datatable
-                                [disableDelete]="!this.isEdit"
-                                [disableEdit]="!this.isEdit"
-                                [disableClone]="!this.isEdit"
+                                [disableDelete]="this.isView"
+                                [disableEdit]="this.isView"
+                                [disableClone]="this.isView"
                                 [value]="funcoesDados"
                                 (buttonClick)="datatableClick($event)"
                                 [responsive]="true"

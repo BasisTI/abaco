@@ -29,7 +29,8 @@ import {Der} from '../der/der.model';
 export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     textHeader: string;
-    @Input() isEdit: boolean;
+    @Input() isView: boolean;
+    isEdit: boolean;
     nomeInvalido;
     classInvalida;
     impactoInvalido: boolean;

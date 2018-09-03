@@ -189,7 +189,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.contratos = org.contracts;
         this.equipeService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
             this.equipeResponsavel = res.json;
-            if (this.equipeResponsavel !== null){
+            if (this.equipeResponsavel !== null) {
                 this.hideShowSelectEquipe = false;
             }
         });
@@ -297,7 +297,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     /**
      * Gera o relatório detalhado PDF.
-     * @param analise 
+     * @param analise
      */
     public geraRelatorioPdfDetalhadoBrowser() {
         this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.analise.id);
@@ -352,10 +352,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     save() {
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
-            this.analiseService.update(this.analise).subscribe(()=> {
-                this.pageNotificationService.addSuccessMsg("Dados salvos com sucesso!")
+            this.analiseService.update(this.analise).subscribe(() => {
+                this.pageNotificationService.addSuccessMsg('Dados salvos com sucesso!');
                 this.diasGarantia = this.analise.contrato.diasDeGarantia;
-            })
+            });
         }
     }
 
@@ -367,7 +367,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    private validaCamposObrigatorios(){
+    private validaCamposObrigatorios() {
         const validacaoIdentificadorAnalise = this.analise.identificadorAnalise !== undefined;
         const validacaoContrato = this.analise.contrato !== undefined;
         const validacaoMetodoContagem = this.analise.metodoContagem !== null;
@@ -381,8 +381,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.enableDisableAba();
     }
 
-    enableDisableAba(){
-        if (this.validacaoCampos === false){
+    enableDisableAba() {
+        if (this.validacaoCampos === false) {
             this.disableAba = false;
             this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
         }

@@ -401,7 +401,7 @@
             [disabled]="disableAba"
             header="Funções de Dados"
             *ngIf="isEdicao">
-        <app-analise-funcao-dados [isEdit]="this.isEdicao"></app-analise-funcao-dados>
+        <app-analise-funcao-dados [isView]="!this.isEdicao"></app-analise-funcao-dados>
         <app-white-button
             buttonLabel="Voltar"
             routerLink="/analise">
@@ -412,7 +412,7 @@
             [disabled]="!disableFuncaoTrasacao"
             header="Funções de Transação"
             *ngIf="isEdicao">
-        <app-analise-funcao-transacao [isEdit]="this.isEdicao"></app-analise-funcao-transacao>
+        <app-analise-funcao-transacao [isView]="!this.isEdicao"></app-analise-funcao-transacao>
         <app-white-button
             buttonLabel="Voltar"
             routerLink="/analise">

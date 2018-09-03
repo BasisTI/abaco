@@ -30,7 +30,8 @@ import {Modulo} from '../modulo';
 export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     textHeader: string;
-    @Input() isEdit: boolean;
+    @Input() isView: boolean;
+    isEdit: boolean;
     nomeInvalido;
     classInvalida;
     impactoInvalido: boolean;
@@ -517,6 +518,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     openDialog(param: boolean) {
+        console.log(`openDialog(param)\n -> this.isEdit: ${this.isEdit}\n -> param: ${param}`);
         this.isEdit = param;
         this.hideShowQuantidade = true;
         this.disableTRDER();
