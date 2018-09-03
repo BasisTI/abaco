@@ -37,7 +37,7 @@ AND A.ID NOT IN (SELECT A2.ID FROM ANALISE A2
                  WHERE A2.BASELINE_IMEDIATAMENTE = TRUE
                  AND current_timestamp <= DATA_HOMOLOGACAO_SOFTWARE::date + (SELECT DIAS_DE_GARANTIA FROM CONTRATO WHERE ID = A2.CONTRATO_ID)
                  )
-and (UPPER(A.metodo_contagem) = 'DETALHADA' or (A.enviar_baseline = true and UPPER(A.metodo_contagem) = 'ESTIMADA'))
+AND (UPPER(A.metodo_contagem) = 'DETALHADA' or (A.enviar_baseline = true and UPPER(A.metodo_contagem) = 'ESTIMADA'))
 AND A.BLOQUEADO = TRUE
 UNION
 SELECT 'ft' as tipo,C.TIPO as CLASSIFICACAO, C.IMPACTO, C.ANALISE_ID, A.DATA_HOMOLOGACAO_SOFTWARE, B.ID as ID_SISTEMA,  B.NOME, B.SIGLA, C.NAME, C.PF, C.ID as ID_FUNCAO_DADOS, C.COMPLEXIDADE, F.NOME as nome_equipe, A.EQUIPE_RESPONSAVEL_ID,
