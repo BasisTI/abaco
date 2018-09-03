@@ -307,7 +307,7 @@
             [disabled]="disableAba"
             header="Funções de Transação"
             *ngIf="isEdicao || isView">
-        <app-analise-funcao-transacao [isView]="!this.isView"></app-analise-funcao-transacao>
+        <app-analise-funcao-transacao [isView]="this.isView"></app-analise-funcao-transacao>
     </p-tabPanel>
 
     <p-tabPanel

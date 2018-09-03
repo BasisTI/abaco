@@ -170,7 +170,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
      * Carrega os dados da analise, organização e manual
      */
     private inicializaValoresAposCarregamento(analiseCarregada: Analise) {
-        if (analiseCarregada.bloqueiaAnalise) {
+        if (!this.isView && analiseCarregada.bloqueiaAnalise) {
             this.pageNotificationService.addErrorMsg(MessageUtil.EDITAR_ANALISE_BLOQUEADA);
             this.router.navigate(['/analise']);
         }
