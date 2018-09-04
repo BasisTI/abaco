@@ -326,6 +326,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             this.pageNotificationService.addErrorMsg(MessageUtil.REGISTRO_ESTA_BLOQUEADO);
             return;
         }
+        console.log(this.analiseSelecionada);
         this.confirmationService.confirm({
             message: MessageUtil.CONFIRMAR_BLOQUEIO.concat(this.analiseSelecionada.identificadorAnalise).concat('?'),
             accept: () => {

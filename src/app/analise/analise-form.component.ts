@@ -8,7 +8,7 @@ import {ResponseWrapper,  AnaliseSharedDataService, PageNotificationService} fro
 import {Organizacao, OrganizacaoService} from '../organizacao';
 import {Contrato, ContratoService} from '../contrato';
 import {Sistema, SistemaService} from '../sistema';
-import {SelectItem} from 'primeng/primeng';
+import {SelectItem, ConfirmationService} from 'primeng/primeng';
 
 import * as _ from 'lodash';
 import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
@@ -69,6 +69,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     public hideShowSelectEquipe: boolean;
 
     constructor(
+        private confirmationService: ConfirmationService,
         private router: Router,
         private route: ActivatedRoute,
         private analiseService: AnaliseService,
@@ -301,7 +302,26 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     public geraRelatorioPdfDetalhadoBrowser() {
         this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.analise.id);
-}
+    }
+
+    /**
+     * Bloqueia a análise aberta atualmente.
+     * 
+     */
+    public bloqueiaAnalise() {
+        this.confirmationService.confirm({
+            message: MessageUtil.CONFIRMAR_BLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
+            accept: () => {
+                const copy = this.analise.toJSONState();
+                console.log(" AAAAAAAAAA " , copy)
+                    this.analiseService.block(copy).subscribe(() => {
+                    this.pageNotificationService.addBlockMsgWithName(this.analise.identificadorAnalise);
+                    this.router.navigate(['/analise']);
+                });
+            }
+        });
+    }
+    
 
     /**
      * Atuva ou desativa o Dropdown de sistema (html)
