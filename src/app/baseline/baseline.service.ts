@@ -7,6 +7,7 @@ import {Observable} from '../../../node_modules/rxjs';
 import {BaselineSintetico} from './baseline-sintetico.model';
 import {BaselineAnalitico} from './baseline-analitico.model';
 import {Sistema} from '../sistema/sistema.model';
+import {FuncaoDados} from '../funcao-dados';
 
 
 @Injectable()
@@ -44,7 +45,7 @@ export class BaselineService {
 
     analiticosFuncaoDados(id: number): Observable<ResponseWrapper> {
         return this.http.get(`${this.analiticosFuncaoDadosUrl}${id}`).map((res: Response) => {
-            return this.convertResponseAnalitico(res);
+            return this.convertResponseFuncaoDados(res);
         });
     }
 
@@ -63,6 +64,10 @@ export class BaselineService {
         return new ResponseWrapper(res.headers, result, res.status);
     }
 
+    private convertItemFuncaoDados(json: any): FuncaoDados {
+        return FuncaoDados.convertJsonToObject(json);
+    }
+
     private convertItemSintetico(json: any): BaselineSintetico {
         return BaselineSintetico.convertJsonToObject(json);
     }
@@ -70,6 +75,15 @@ export class BaselineService {
     private convertJsonToSintetico(json: any): BaselineSintetico {
         const entity: BaselineSintetico = BaselineSintetico.convertJsonToObject(json);
         return entity;
+    }
+
+    private convertResponseFuncaoDados(res: Response): ResponseWrapper {
+        const jsonResponse = res.json();
+        const result = [];
+        for (let i = 0; i < jsonResponse.length; i++) {
+            result.push(this.convertItemFuncaoDados(jsonResponse[i]));
+        }
+        return new ResponseWrapper(res.headers, result, res.status);
     }
 
     private convertResponseAnalitico(res: Response): ResponseWrapper {
