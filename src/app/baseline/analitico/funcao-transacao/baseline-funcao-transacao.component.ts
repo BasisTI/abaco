@@ -14,6 +14,8 @@ export class BaselineFuncaoTransacaoComponent implements OnInit, OnDestroy {
 
     private routeSub: Subscription;
     public idSistema: number;
+    public idEquipe: number;
+
     rowsPerPageOptionsFT: number[] = [5, 10, 20];
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
@@ -30,12 +32,13 @@ export class BaselineFuncaoTransacaoComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.routeSub = this.route.params.subscribe(params => {
             this.idSistema = params['id'];
+            this.idEquipe = params['equipe'];
         });
         this.carregarDataTable();
     }
 
     public carregarDataTable() {
-        this.baselineService.baselineAnaliticoFT(this.idSistema).subscribe((res: ResponseWrapper) => {
+        this.baselineService.baselineAnaliticoFTEquipe(this.idSistema, this.idEquipe).subscribe((res: ResponseWrapper) => {
             this.datatable.value = res.json;
         });
     }

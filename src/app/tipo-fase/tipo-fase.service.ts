@@ -5,7 +5,7 @@ import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 
 import { TipoFase } from './tipo-fase.model';
-import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
+import {ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService} from '../shared';
 
 @Injectable()
 export class TipoFaseService {
@@ -14,13 +14,18 @@ export class TipoFaseService {
 
   searchUrl = environment.apiUrl + '/_search/fases';
 
-  constructor(private http: HttpService) {}
+  constructor(private http: HttpService, private pageNotificationService: PageNotificationService) {}
 
   create(tipoFase: TipoFase): Observable<TipoFase> {
     const copy = this.convert(tipoFase);
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
+    }).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
     });
   }
 
@@ -29,6 +34,11 @@ export class TipoFaseService {
     return this.http.put(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
+    }).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
     });
   }
 
@@ -36,17 +46,32 @@ export class TipoFaseService {
     return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
+    }).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
     });
   }
 
   query(req?: any): Observable<ResponseWrapper> {
     const options = createRequestOption(req);
     return this.http.get(this.resourceUrl, options)
-      .map((res: Response) => this.convertResponse(res));
+      .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                return Observable.throw(new Error(error.status));
+            }
+        });
   }
 
   delete(id: number): Observable<Response> {
-    return this.http.delete(`${this.resourceUrl}/${id}`);
+    return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
+    });
   }
 
   private convertResponse(res: Response): ResponseWrapper {

@@ -36,6 +36,12 @@ export class BaselineService {
             return this.convertJsonToSintetico(jsonResponse);
         });
     }
+    getSistemaSinteticoEquipe(id: number, idEquipe: number): Observable<BaselineSintetico> {
+        return this.http.get(`${this.sinteticosUrl}${id}/equipe/${idEquipe}`).map((res: Response) => {
+            const jsonResponse = res.json();
+            return this.convertJsonToSintetico(jsonResponse);
+        });
+    }
 
     baselineAnaliticoFD(id: number): Observable<ResponseWrapper> {
         return this.http.get(`${this.analiticosFDUrl}${id}`).map((res: Response) => {
@@ -51,6 +57,21 @@ export class BaselineService {
 
     baselineAnaliticoFT(id: number): Observable<ResponseWrapper> {
         return this.http.get(`${this.analiticosFTUrl}${id}`).map((res: Response) => {
+            return this.convertResponseAnalitico(res);
+        });
+    }
+
+
+    // POR EQUIPE
+
+    baselineAnaliticoFDEquipe(id: number, idEquipe: number): Observable<ResponseWrapper> {
+        return this.http.get(`${this.analiticosFDUrl}${id}/equipe/${idEquipe}`).map((res: Response) => {
+            return this.convertResponseAnalitico(res);
+        });
+    }
+
+    baselineAnaliticoFTEquipe(id: number, idEquipe: number): Observable<ResponseWrapper> {
+        return this.http.get(`${this.analiticosFTUrl}${id}/equipe/${idEquipe}`).map((res: Response) => {
             return this.convertResponseAnalitico(res);
         });
     }

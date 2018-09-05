@@ -14,9 +14,12 @@ export class BaselineFuncaoDadosComponent implements OnInit, OnDestroy {
 
     private routeSub: Subscription;
     public idSistema: number;
+    public idEquipe: number;
+
     rowsPerPageOptionsFD: number[] = [5, 10, 20];
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
     searchUrlFD: string = this.baselineService.analiticosFDUrl;
+
 
     constructor (
         private route: ActivatedRoute,
@@ -31,6 +34,7 @@ export class BaselineFuncaoDadosComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.routeSub = this.route.params.subscribe(params => {
             this.idSistema = params['id'];
+            this.idEquipe = params['equipe'];
         });
         this.searchUrlFD += this.idSistema;
         this.carregarDataTable();
@@ -38,7 +42,7 @@ export class BaselineFuncaoDadosComponent implements OnInit, OnDestroy {
 
 
     public carregarDataTable() {
-        this.baselineService.baselineAnaliticoFD(this.idSistema).subscribe((res: ResponseWrapper) => {
+        this.baselineService.baselineAnaliticoFDEquipe(this.idSistema, this.idEquipe).subscribe((res: ResponseWrapper) => {
             this.datatable.value = res.json;
         });
     }

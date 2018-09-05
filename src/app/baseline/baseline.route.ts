@@ -12,7 +12,7 @@ export const baselineRoute: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'baseline/:id',
+    path: 'baseline/:id/:equipe',
     component: BaselineViewComponent,
     canActivate: [AuthGuard]
   }

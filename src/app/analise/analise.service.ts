@@ -5,7 +5,7 @@ import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 
 import { Analise } from './analise.model';
-import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
+import {ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService} from '../shared';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Injectable()
@@ -27,7 +27,7 @@ export class AnaliseService {
 
   @BlockUI() blockUI: NgBlockUI;
 
-  constructor(private http: HttpService) {}
+    constructor(private http: HttpService, private pageNotificationService: PageNotificationService) {}
 
   /**
    *
@@ -37,7 +37,12 @@ export class AnaliseService {
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
-    });
+    }).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
+    });;
   }
 
   /**
@@ -48,7 +53,12 @@ export class AnaliseService {
     return this.http.put(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
-    });
+    }).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
+    });;
   }
 
   /**
@@ -59,7 +69,12 @@ export class AnaliseService {
     return this.http.put(`${this.resourceUrl}/${copy.id}/block`, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
-    });
+    }).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
+    });;
   }
 
   /**
@@ -70,7 +85,12 @@ export class AnaliseService {
     return this.http.put(`${this.resourceUrl}/${copy.id}/unblock`, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
-    });
+    }).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
+    });;
   }
 
   /**
@@ -155,7 +175,7 @@ export class AnaliseService {
   public find(id: number): Observable<Analise> {
     return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
       const jsonResponse = res.json();
-      let analiseJson = this.convertItemFromServer(jsonResponse);
+      const analiseJson = this.convertItemFromServer(jsonResponse);
       analiseJson.createdBy = jsonResponse.createdBy;
       return analiseJson;
     });
@@ -173,14 +193,24 @@ export class AnaliseService {
   public query(req?: any): Observable<ResponseWrapper> {
     const options = createRequestOption(req);
     return this.http.get(this.resourceUrl, options)
-    .map((res: Response) => this.convertResponse(res));
+    .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                return Observable.throw(new Error(error.status));
+            }
+        });;
   }
 
   /**
    *
    */
   public delete(id: number): Observable<Response> {
-    return this.http.delete(`${this.resourceUrl}/${id}`);
+    return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
+    });;
   }
 
   /**
