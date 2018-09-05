@@ -5,3 +5,4 @@ user_id;authority_name
 3;ROLE_USER
 4;ROLE_USER
 5;ROLE_VIEW
+6;ROLE_ANALISTA
