@@ -54,7 +54,7 @@ public class BaseLineSinteticoResource {
     @Timed
     public List<BaseLineSintetico> getAllBaseLineSinteticos() {
         log.debug("REST request to get all BaseLineSinteticos");
-        return baseLineSinteticoRepository.findAll();
+        return baseLineSinteticoRepository.getBaseLineSintetico();
     }
 
     @GetMapping("/baseline-sinteticos/{id}")
@@ -62,6 +62,15 @@ public class BaseLineSinteticoResource {
     public ResponseEntity<BaseLineSintetico> getBaseLineSintetico(@PathVariable Long id) {
         log.debug("REST request to get all BaseLineSinteticos: {}", id);
         BaseLineSintetico funcaoDados = baseLineSinteticoRepository.getBaseLineSinteticoId(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDados));
+    }
+
+    @GetMapping("/baseline-sinteticos/{id}/equipe/{idEquipe}")
+    @Timed
+    public ResponseEntity<BaseLineSintetico> getBaseLineSinteticoEquipe(
+        @PathVariable Long id,@PathVariable Long idEquipe) {
+        log.debug("REST request to get all BaseLineSinteticos: {}", id);
+        BaseLineSintetico funcaoDados = baseLineSinteticoRepository.getBaseLineSinteticoIdEquipe(id,idEquipe);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDados));
     }
 

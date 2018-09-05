@@ -2,10 +2,7 @@ package br.com.basis.abaco.domain;
 
 import br.com.basis.dynamicexports.pojo.ReportObject;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -20,6 +17,7 @@ public class BaseLineSintetico implements Serializable, ReportObject {
     @Column(name = "id_sistema")
     private Long idsistema;
 
+    @Id
     @Column(name = "equipe_responsavel_id")
     private Long equipeResponsavelId;
 
