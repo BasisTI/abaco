@@ -17,7 +17,6 @@ public class BaseLineSintetico implements Serializable, ReportObject {
     @Column(name = "id_sistema")
     private Long idsistema;
 
-    @Id
     @Column(name = "equipe_responsavel_id")
     private Long equipeResponsavelId;
 
