@@ -9,6 +9,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +59,7 @@ public class FuncionalidadeResource {
      */
     @PostMapping("/funcionalidades")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Funcionalidade> createFuncionalidade(@Valid @RequestBody Funcionalidade funcionalidade) throws URISyntaxException {
         log.debug("REST request to save Funcionalidade : {}", funcionalidade);
         if (funcionalidade.getId() != null) {
@@ -81,6 +83,7 @@ public class FuncionalidadeResource {
      */
     @PutMapping("/funcionalidades")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Funcionalidade> updateFuncionalidade(@Valid @RequestBody Funcionalidade funcionalidade) throws URISyntaxException {
         log.debug("REST request to update Funcionalidade : {}", funcionalidade);
         if (funcionalidade.getId() == null) {
@@ -128,6 +131,7 @@ public class FuncionalidadeResource {
      */
     @DeleteMapping("/funcionalidades/{id}")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Void> deleteFuncionalidade(@PathVariable Long id) {
         log.debug("REST request to delete Funcionalidade : {}", id);
         funcionalidadeRepository.delete(id);

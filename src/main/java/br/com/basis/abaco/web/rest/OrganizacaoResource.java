@@ -33,6 +33,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -127,6 +128,7 @@ public class OrganizacaoResource {
      */
     @PostMapping("/organizacaos")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Organizacao> createOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
         int i;
         log.debug("REST request to save Organizacao : {}", organizacao);
@@ -155,6 +157,7 @@ public class OrganizacaoResource {
      */
     @PutMapping("/organizacaos")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Organizacao> updateOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
         int i;
         log.debug("REST request to update Organizacao : {}", organizacao);
@@ -221,6 +224,7 @@ public class OrganizacaoResource {
      */
     @DeleteMapping("/organizacaos/{id}")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Void> deleteOrganizacao(@PathVariable Long id) {
         log.debug("REST request to delete Organizacao : {}", id);
         organizacaoRepository.delete(id);

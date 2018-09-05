@@ -12,6 +12,7 @@ import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +60,7 @@ public class FuncaoTransacaoResource {
      */
     @PostMapping("/funcao-transacaos")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<FuncaoTransacao> createFuncaoTransacao(@RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
         log.debug("REST request to save FuncaoTransacao : {}", funcaoTransacao);
         if (funcaoTransacao.getId() != null) {
@@ -82,6 +84,7 @@ public class FuncaoTransacaoResource {
      */
     @PutMapping("/funcao-transacaos")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<FuncaoTransacao> updateFuncaoTransacao(@RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
         log.debug("REST request to update FuncaoTransacao : {}", funcaoTransacao);
         if (funcaoTransacao.getId() == null) {
@@ -143,6 +146,7 @@ public class FuncaoTransacaoResource {
      */
     @DeleteMapping("/funcao-transacaos/{id}")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Void> deleteFuncaoTransacao(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoTransacao : {}", id);
         funcaoTransacaoRepository.delete(id);

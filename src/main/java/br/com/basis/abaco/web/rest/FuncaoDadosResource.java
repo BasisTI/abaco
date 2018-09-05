@@ -9,6 +9,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +59,7 @@ public class FuncaoDadosResource {
      */
     @PostMapping("/funcao-dados")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<FuncaoDados> createFuncaoDados(@RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
 
         FuncaoDados f = funcaoDadosRepository.findName(2101l, funcaoDados.getName());
@@ -87,6 +89,7 @@ public class FuncaoDadosResource {
      */
     @PutMapping("/funcao-dados")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<FuncaoDados> updateFuncaoDados(@RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
         log.debug("REST request to update FuncaoDados : {}", funcaoDados);
         if (funcaoDados.getId() == null) {
@@ -163,6 +166,7 @@ public class FuncaoDadosResource {
      */
     @DeleteMapping("/funcao-dados/{id}")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Void> deleteFuncaoDados(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoDados : {}", id);
         funcaoDadosRepository.delete(id);
