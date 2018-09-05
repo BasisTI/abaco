@@ -318,17 +318,17 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                     this.router.navigate(['/analise']);
                 }, (error: Response) => {
                     switch (error.status) {
-                        case 400: {   
+                        case 400: {
                             if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
                             this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
-                            } 
+                            }
                         }
                     }
                     });
             }
         });
     }
-    
+
 
     /**
      * Atuva ou desativa o Dropdown de sistema (html)
