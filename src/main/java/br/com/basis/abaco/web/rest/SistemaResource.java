@@ -34,6 +34,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -105,6 +106,7 @@ public class SistemaResource {
 	 */
 	@PostMapping("/sistemas")
 	@Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
 	public ResponseEntity<Sistema> createSistema(@Valid @RequestBody Sistema sistema) throws URISyntaxException {
 		log.debug("REST request to save Sistema : {}", sistema);
 		if (sistema.getId() != null) {
@@ -151,6 +153,7 @@ public class SistemaResource {
 	 */
 	@PutMapping("/sistemas")
 	@Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
 	public ResponseEntity<Sistema> updateSistema(@Valid @RequestBody Sistema sistema) throws URISyntaxException {
 		log.debug("REST request to update Sistema : {}", sistema);
 		if (sistema.getId() == null) {
@@ -168,6 +171,7 @@ public class SistemaResource {
 	 */
 	@PostMapping("/sistemas/organizations")
 	@Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
 	public List<Sistema> getAllSistemasByOrganization(@Valid @RequestBody Organizacao organization) {
 		log.debug("REST request to get all Sistemas");
 		List<Sistema> sistemas = sistemaRepository.findAllByOrganizacao(organization);
@@ -234,6 +238,7 @@ public class SistemaResource {
 	 */
 	@DeleteMapping("/sistemas/{id}")
 	@Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
 	public ResponseEntity<Void> deleteSistema(@PathVariable Long id) {
 		log.debug("REST request to delete Sistema : {}", id);
 		if (sistemaRepository.quantidadeSistema(id) > 0) {

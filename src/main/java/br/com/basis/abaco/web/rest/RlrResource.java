@@ -9,6 +9,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +59,7 @@ public class RlrResource {
      */
     @PostMapping("/rlrs")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Rlr> createRlr(@Valid @RequestBody Rlr rlr) throws URISyntaxException {
         log.debug("REST request to save Rlr : {}", rlr);
         if (rlr.getId() != null) {
@@ -81,6 +83,7 @@ public class RlrResource {
      */
     @PutMapping("/rlrs")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Rlr> updateRlr(@Valid @RequestBody Rlr rlr) throws URISyntaxException {
         log.debug("REST request to update Rlr : {}", rlr);
         if (rlr.getId() == null) {
@@ -128,6 +131,7 @@ public class RlrResource {
      */
     @DeleteMapping("/rlrs/{id}")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Void> deleteRlr(@PathVariable Long id) {
         log.debug("REST request to delete Rlr : {}", id);
         rlrRepository.delete(id);

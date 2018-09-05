@@ -1,3 +1,4 @@
 name;description
 ROLE_ADMIN;Administrador
-ROLE_USER;Usuário
+ROLE_USER;Analista
+ROLE_VIEW;Observador
