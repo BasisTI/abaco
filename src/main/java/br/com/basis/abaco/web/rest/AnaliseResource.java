@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.basis.abaco.domain.Authority;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.security.SecurityUtils;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,8 @@ import br.com.basis.abaco.utils.PageUtils;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import java.io.ByteArrayOutputStream;
+import java.util.Set;
+
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -150,6 +153,21 @@ public class AnaliseResource {
         return analiseRepository.findOne(id);
     }
 
+
+    /**
+     *
+     * @return
+     */
+    private boolean verificarAuthority () {
+        Set<Authority> listAuth = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).get().getAuthorities();
+        for(Authority a : listAuth){
+            if (a.getName().equals("ROLE_ADMIN")){
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      *
      * @param analise
@@ -274,6 +292,10 @@ public class AnaliseResource {
     @Timed
     public ResponseEntity<Analise> blockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", analise);
+        if (!this.verificarAuthority()){
+            return ResponseEntity.badRequest().headers(
+                HeaderUtil.createFailureAlert(ENTITY_NAME, "notadmin", "Only admin users can block/unblock análises")).body(null);
+        }
         linkFuncoesToAnalise(analise);
         analise.setbloqueiaAnalise(true);
         Analise result = analiseRepository.save(analise);
@@ -287,6 +309,10 @@ public class AnaliseResource {
     @Timed
     public ResponseEntity<Analise> unblockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", analise);
+        if (!this.verificarAuthority()){
+            return ResponseEntity.badRequest().headers(
+                HeaderUtil.createFailureAlert(ENTITY_NAME, "notadmin", "Only admin users can block/unblock análises")).body(null);
+        }
         linkFuncoesToAnalise(analise);
         analise.setbloqueiaAnalise(false);
         Analise result = analiseRepository.save(analise);
