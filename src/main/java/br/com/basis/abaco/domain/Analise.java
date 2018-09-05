@@ -135,6 +135,9 @@ public class Analise implements Serializable, ReportObject {
     @JoinColumn
     private User editedBy;
 
+    @OneToMany(mappedBy = "analises", fetch = FetchType.EAGER)
+    private Set<Compartilhada> compartilhadas = new HashSet<>();
+
     @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonManagedReference

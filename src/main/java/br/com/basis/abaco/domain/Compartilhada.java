@@ -7,8 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 
 @Entity
@@ -30,6 +35,11 @@ public class Compartilhada implements Serializable {
 
     @Column(name = "view_only")
     private boolean viewOnly;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "analise_id", insertable = false, updatable = false)
+    private Analise analises;
 
     public Long getId() {
         return id;
