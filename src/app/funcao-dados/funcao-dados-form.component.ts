@@ -1,27 +1,31 @@
+import { EntityToJSON } from './../shared/entity-to-json';
 import {Component, OnInit, ChangeDetectorRef, OnDestroy, Input} from '@angular/core';
-import {AnaliseSharedDataService, PageNotificationService} from '../shared';
 import {FuncaoDados} from './funcao-dados.model';
-import {Analise, AnaliseService} from '../analise';
 import {FatorAjuste} from '../fator-ajuste';
+import { FuncaoAnalise } from './../analise-shared/funcao-analise';
+import { BaselineAnalitico } from './../baseline/baseline-analitico.model';
+import { BaselineService } from './../baseline/baseline.service';
+import { AnaliseSharedDataService, PageNotificationService, ResponseWrapper } from '../shared';
+import { Analise, AnaliseService } from '../analise';
 
 import * as _ from 'lodash';
-import {Funcionalidade} from '../funcionalidade/index';
-import {SelectItem} from 'primeng/primeng';
-import {Calculadora} from '../analise-shared/calculadora';
-import {DatatableClickEvent} from '@basis/angular-components';
-import {ConfirmationService} from 'primeng/primeng';
-import {ResumoFuncoes} from '../analise-shared/resumo-funcoes';
-import {AfterViewInit, AfterContentInit} from '@angular/core/src/metadata/lifecycle_hooks';
-import {Subscription} from 'rxjs/Subscription';
+import { Funcionalidade } from '../funcionalidade/index';
+import { SelectItem } from 'primeng/primeng';
+import { Calculadora } from '../analise-shared/calculadora';
+import { DatatableClickEvent } from '@basis/angular-components';
+import { ConfirmationService } from 'primeng/primeng';
+import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
+import { AfterViewInit, AfterContentInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { Subscription } from 'rxjs/Subscription';
 
-import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
-import {DerChipItem} from '../analise-shared/der-chips/der-chip-item';
-import {DerChipConverter} from '../analise-shared/der-chips/der-chip-converter';
-import {AnaliseReferenciavel} from '../analise-shared/analise-referenciavel';
-import {FuncaoDadosService} from './funcao-dados.service';
-import {AnaliseSharedUtils} from '../analise-shared/analise-shared-utils';
-import {Manual} from '../manual';
-import {Modulo} from '../modulo';
+import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
+import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
+import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
+import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
+import { FuncaoDadosService } from './funcao-dados.service';
+import { AnaliseSharedUtils } from '../analise-shared/analise-shared-utils';
+import { Manual } from '../manual';
+import { Modulo } from '../modulo';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -39,6 +43,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     hideShowQuantidade: boolean;
     showDialog = false;
     sugestoesAutoComplete: string[] = [];
+
     windowHeightDialog: any;
     windowWidthDialog: any;
 
@@ -49,21 +54,24 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     fatoresAjuste: SelectItem[] = [];
     colunasOptions: SelectItem[];
     colunasAMostrar = [];
+    dadosBaselineFD: BaselineAnalitico[] = [];
+    results: string[];
+    currentFuncaoDadosasdf: FuncaoAnalise;
 
     impacto: SelectItem[] = [
-        {label: 'Inclusão', value: 'INCLUSAO'},
-        {label: 'Alteração', value: 'ALTERACAO'},
-        {label: 'Exclusão', value: 'EXCLUSAO'},
-        {label: 'Conversão', value: 'CONVERSAO'},
-        {label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS'}
+        { label: 'Inclusão', value: 'INCLUSAO' },
+        { label: 'Alteração', value: 'ALTERACAO' },
+        { label: 'Exclusão', value: 'EXCLUSAO' },
+        { label: 'Conversão', value: 'CONVERSAO' },
+        { label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS' }
     ];
 
     classificacoes: SelectItem[] = [
-        {label: 'ALI - Arquivo Lógico Interno', value: 'ALI'},
-        {label: 'AIE - Arquivo de Interface Externa', value: 'AIE'}
+        { label: 'ALI - Arquivo Lógico Interno', value: 'ALI' },
+        { label: 'AIE - Arquivo de Interface Externa', value: 'AIE' }
     ];
 
-    private fatorAjusteNenhumSelectItem = {label: 'Nenhum', value: undefined};
+    private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
     private analiseCarregadaSubscription: Subscription;
     private subscriptionSistemaSelecionado: Subscription;
     private nomeDasFuncoesDoSistema: string[] = [];
@@ -71,6 +79,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     public erroTD: boolean;
     public erroUnitario: boolean;
     public erroDeflator: boolean;
+    
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -78,20 +87,21 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         private pageNotificationService: PageNotificationService,
         private changeDetectorRef: ChangeDetectorRef,
         private funcaoDadosService: FuncaoDadosService,
-        private analiseService: AnaliseService
+        private analiseService: AnaliseService,
+        private baselineService: BaselineService
     ) {
         const colunas = [
-            {header: 'Nome', field: 'name'},
-            {header: 'Deflator'},
-            {header: 'Impacto', field: 'impacto'},
-            {header: 'Módulo'},
-            {header: 'Funcionalidade'},
-            {header: 'Classificação', field: 'tipo'},
-            {header: 'DER (TD)'},
-            {header: 'RLR (TR)'},
-            {header: 'Complexidade', field: 'complexidade'},
-            {header: 'PF - Total'},
-            {header: 'PF - Ajustado'}
+            { header: 'Nome', field: 'name' },
+            { header: 'Deflator' },
+            { header: 'Impacto', field: 'impacto' },
+            { header: 'Módulo' },
+            { header: 'Funcionalidade' },
+            { header: 'Classificação', field: 'tipo' },
+            { header: 'DER (TD)' },
+            { header: 'RLR (TR)' },
+            { header: 'Complexidade', field: 'complexidade' },
+            { header: 'PF - Total' },
+            { header: 'PF - Ajustado' }
         ];
 
         this.colunasOptions = colunas.map((col, index) => {
@@ -132,6 +142,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         });
     }
 
+    public carregarDadosBaseline() {
+        this.baselineService.baselineAnaliticoFD(this.analise.sistema.id).subscribe((res: ResponseWrapper) => {
+            this.dadosBaselineFD = res.json
+            console.log('aquiii', res)
+        });
+    }
+
+
     private atualizaResumo() {
         this.resumo = this.analise.resumoFuncaoDados;
         this.changeDetectorRef.detectChanges();
@@ -144,6 +162,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             });
     }
 
+    baselineResults: any[] = [];
+
+    searchBaseline(event): void {
+        console.log(event)
+        this.baselineResults = this.dadosBaselineFD.filter(c => c.name.startsWith(event.query));
+        console.log(this.baselineResults)
+    }
+
     // Carrega nome das funçeõs de dados
     private loadDataFunctionsName() {
         const sistemaId: number = this.analiseSharedDataService.analise.sistema.id;
@@ -151,14 +177,16 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             nomes => {
                 this.nomeDasFuncoesDoSistema = nomes;
                 this.sugestoesAutoComplete = nomes.slice();
+
             });
     }
 
     autoCompleteNomes(event) {
-        const query = event.query;
+
         // TODO qual melhor método? inclues? startsWith ignore case?
         this.sugestoesAutoComplete = this.nomeDasFuncoesDoSistema
-            .filter(nomeFuncao => nomeFuncao.includes(query));
+
+            .filter(nomeFuncao => nomeFuncao.startsWith(event.query));
     }
 
     getTextDialog() {
@@ -330,7 +358,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.desconverterChips();
         this.verificarModulo();
 
-        console.log("currentFuncaoDados ",this.currentFuncaoDados.quantidade);
 
         const funcaoDadosCalculada = Calculadora.calcular(
             this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual
@@ -398,13 +425,24 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
      * Método responsável por recuperar o nome selecionado no combo.
      * @param nome
      */
-    recuperarNomeSelecionado(nome: any) {
-        this.funcaoDadosService.recuperarFuncaoDadosPorIdNome(this.analise.sistema.id, nome);
+    recuperarNomeSelecionado(baselineAnalitico: BaselineAnalitico) {
 
-        this.funcaoDadosService.recuperarFuncaoDadosPorIdNome(this.analise.sistema.id, nome).subscribe(
-            fd => {
-                this.prepararParaEdicao(fd);
-            });
+        this.funcaoDadosService.getFuncaoDadosBaseline(baselineAnalitico.idfuncaodados)
+        .subscribe((res: FuncaoDados) => {
+            res.name = this.currentFuncaoDados.name
+
+                if(res.fatorAjuste===null){res.fatorAjuste = undefined}
+                res.id = undefined;
+                    res.ders.forEach(Ders => {
+                        Ders.id = undefined;
+                    });
+                    res.rlrs.forEach(rlrs => {
+                        rlrs.id = undefined;
+                    });
+
+            this.prepararParaEdicao(res);
+        });
+
     }
 
     datatableClick(event: DatatableClickEvent) {
@@ -458,7 +496,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
         this.inicializaFatoresAjuste(this.manual);
         if (funcaoSelecionada.fatorAjuste !== undefined) {
-            funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, {value: {'id': funcaoSelecionada.fatorAjuste.id}}).value;
+            funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, { value: { 'id': funcaoSelecionada.fatorAjuste.id } }).value;
         }
 
     }
@@ -473,7 +511,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     // Carregar Referencial
     private loadReference(referenciaveis: AnaliseReferenciavel[],
-                          strValues: string[]): DerChipItem[] {
+        strValues: string[]): DerChipItem[] {
 
         if (referenciaveis) {
             if (referenciaveis.length > 0) {
@@ -519,6 +557,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     openDialog(param: boolean) {
         console.log(`openDialog(param)\n -> this.isEdit: ${this.isEdit}\n -> param: ${param}`);
+        this.carregarDadosBaseline();
         this.isEdit = param;
         this.hideShowQuantidade = true;
         this.disableTRDER();
@@ -538,7 +577,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.fatoresAjuste =
             faS.map(fa => {
                 const label = FatorAjusteLabelGenerator.generate(fa);
-                return {label: label, value: fa};
+                return { label: label, value: fa };
             });
         this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
     }

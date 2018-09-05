@@ -130,9 +130,10 @@
                         <label>Nome *</label>
                         <p-autoComplete
                                 [(ngModel)]="currentFuncaoDados.name"
-                                [suggestions]="sugestoesAutoComplete"
-                                (completeMethod)="autoCompleteNomes($event)"
-                                (onSelect)="recuperarNomeSelecionado($event.value)">
+                                [suggestions]="baselineResults"
+                                (completeMethod)="searchBaseline($event)"
+                                field="name"
+                                (onSelect)="recuperarNomeSelecionado($event)">
                         </p-autoComplete>
                         <div *ngIf="nomeInvalido"
                              class="ui-message ui-messages-error">

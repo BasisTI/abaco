@@ -1,3 +1,4 @@
+import { FuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
 import { BaseEntity, JSONable } from '../shared';
 import { Funcionalidade } from '../funcionalidade/index';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
@@ -116,6 +117,7 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, 
         return Object.assign(sintetico, json, {
             created: new Date(json.created)
         });
+
     }
 }
 

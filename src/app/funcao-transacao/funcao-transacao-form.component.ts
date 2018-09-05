@@ -1,5 +1,8 @@
+import { BaselineService } from './../baseline/baseline.service';
+import { FuncaoDadosService } from './../funcao-dados/funcao-dados.service';
+import { BaselineAnalitico } from './../baseline/baseline-analitico.model';
 import {Component, OnInit, ChangeDetectorRef, OnDestroy, Input} from '@angular/core';
-import {AnaliseSharedDataService, PageNotificationService} from '../shared';
+import {AnaliseSharedDataService, PageNotificationService, ResponseWrapper} from '../shared';
 import {Analise, AnaliseService} from '../analise';
 import {FatorAjuste} from '../fator-ajuste';
 
@@ -18,7 +21,6 @@ import {AnaliseReferenciavel} from '../analise-shared/analise-referenciavel';
 import {Manual} from '../manual';
 import {Modulo} from '../modulo';
 import {CalculadoraTransacao} from '../analise-shared';
-import {FuncaoDadosService} from '../funcao-dados/funcao-dados.service';
 import {FuncaoTransacao, TipoFuncaoTransacao} from './funcao-transacao.model';
 import {Der} from '../der/der.model';
 
@@ -46,6 +48,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     alrsChips: DerChipItem[];
     resumo: ResumoFuncoes;
     fatoresAjuste: SelectItem[] = [];
+    dadosBaselineFT: BaselineAnalitico[] = [];
+    dadosserviceBL: BaselineService[]=[];
 
     impacto: SelectItem[] = [
         {label: 'Inclusão', value: 'INCLUSAO'},
@@ -72,7 +76,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         private pageNotificationService: PageNotificationService,
         private changeDetectorRef: ChangeDetectorRef,
         private funcaoDadosService: FuncaoDadosService,
-        private analiseService: AnaliseService
+        private analiseService: AnaliseService,
+        private baselineService: BaselineService
     ) {
     }
 
@@ -174,6 +179,41 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         } else {
             return `Selecione um Contrato na aba 'Geral' para carregar os Deflatores`;
         }
+    }
+
+    public carregarDadosBaseline() {
+        this.baselineService.baselineAnaliticoFT(this.analise.sistema.id).subscribe((res: ResponseWrapper) => {
+            this.dadosBaselineFT = res.json
+            console.log(res)
+        });
+    }
+
+    recuperarNomeSelecionado(baselineAnalitico: BaselineAnalitico) {
+
+        this.funcaoDadosService.getFuncaoTransacaoBaseline(baselineAnalitico.idfuncaodados)
+        .subscribe((res: FuncaoTransacao) => {
+            res.name = this.currentFuncaoTransacao.name
+
+                if(res.fatorAjuste===null){res.fatorAjuste = undefined}
+                res.id = undefined;
+                res.ders.forEach(ders => {
+                    ders.id = undefined;
+                });
+                res.alrs.forEach(alrs => {
+                    alrs.id = undefined;
+                });
+
+            this.prepararParaEdicao(res);
+        });
+
+    }
+
+    baselineResultados: any[] = [];
+
+    searchBaseline(event): void {
+        console.log(event)
+        this.baselineResultados = this.dadosBaselineFT.filter(c => c.name.startsWith(event.query));
+        console.log(this.baselineResultados)
     }
 
     // Funcionalidade Selecionada
@@ -462,6 +502,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     openDialog(param: boolean) {
+        this.carregarDadosBaseline();
         this.isEdit = param;
         this.hideShowQuantidade = true;
         this.disableTRDER();
