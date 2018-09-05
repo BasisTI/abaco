@@ -1,6 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
+import { Response } from '@angular/http';
 
 import {Analise} from './analise.model';
 import {AnaliseService} from './analise.service';
@@ -17,7 +18,6 @@ import {MessageUtil} from '../util/message.util';
 import {FatorAjuste} from '../fator-ajuste';
 import {EsforcoFase} from '../esforco-fase';
 import {Manual} from '../manual';
-import {Response} from '@angular/http';
 
 @Component({
     selector: 'jhi-analise-form',
@@ -308,16 +308,23 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Bloqueia a análise aberta atualmente.
      * 
      */
-    public bloqueiaAnalise() {
+    public bloquearAnalise() {
         this.confirmationService.confirm({
             message: MessageUtil.CONFIRMAR_BLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
             accept: () => {
                 const copy = this.analise.toJSONState();
-                console.log(" AAAAAAAAAA " , copy)
                     this.analiseService.block(copy).subscribe(() => {
                     this.pageNotificationService.addBlockMsgWithName(this.analise.identificadorAnalise);
                     this.router.navigate(['/analise']);
-                });
+                }, (error: Response) => {
+                    switch (error.status) {
+                        case 400: {   
+                            if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
+                            this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                            } 
+                        }
+                    }
+                    });
             }
         });
     }

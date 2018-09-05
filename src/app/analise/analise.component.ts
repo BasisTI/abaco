@@ -15,6 +15,7 @@ import { Analise, MetodoContagem } from './analise.model';
 import {AnaliseService} from './analise.service';
 import {ElasticQuery, PageNotificationService} from '../shared';
 import {MessageUtil} from '../util/message.util';
+import { Response } from '@angular/http';
 
 @Component({
     selector: 'jhi-analise',
@@ -334,7 +335,15 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                     this.pageNotificationService.addBlockMsgWithName(this.analiseSelecionada.identificadorAnalise);
                     this.recarregarDataTable();
                     this.blocked = !this.blocked;
-                });
+                }, (error: Response) => {
+                    switch (error.status) {
+                        case 400: {   
+                            if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
+                            this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                            } 
+                        }
+                    }
+                    });
             }
         });
     }
@@ -355,7 +364,15 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                     this.pageNotificationService.addUnblockMsgWithName(this.analiseSelecionada.identificadorAnalise);
                     this.recarregarDataTable();
                     this.blocked = !this.blocked;
-                });
+                }, (error: Response) => {
+                    switch (error.status) {
+                        case 400: {   
+                            if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
+                            this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                            } 
+                        }
+                    }
+                    });
             }
         });
     }

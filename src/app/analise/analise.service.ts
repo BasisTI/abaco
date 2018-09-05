@@ -54,6 +54,28 @@ export class AnaliseService {
   /**
    *
    */
+  public block(analise: Analise): Observable<Analise> {
+    const copy = analise;
+    return this.http.put(`${this.resourceUrl}/${copy.id}/block`, copy).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
+    });
+  }
+
+  /**
+   *
+   */
+  public unblock(analise: Analise): Observable<Analise> {
+    const copy = analise;
+    return this.http.put(`${this.resourceUrl}/${copy.id}/unblock`, copy).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
+    });
+  }
+
+  /**
+   *
+   */
   public gerarRelatorioPdfArquivo(id: number) {
     window.open(`${this.relatorioAnaliseUrl}/${id}`);
   }
@@ -159,26 +181,6 @@ export class AnaliseService {
    */
   public delete(id: number): Observable<Response> {
     return this.http.delete(`${this.resourceUrl}/${id}`);
-  }
-
-  /**
-   *
-   */
-  public block(analise: Analise): Observable<Analise> {
-    const copy = analise;
-    return this.http.put(`${this.resourceUrl}/${copy.id}/block`, copy).map((res: Response) => {
-      return this.convertItemFromServer(copy);
-    });
-  }
-
-  /**
-   *
-   */
-  public unblock(analise: Analise): Observable<Analise> {
-    const copy = analise;
-    return this.http.put(`${this.resourceUrl}/${copy.id}/unblock`, copy).map((res: Response) => {
-      return this.convertItemFromServer(copy);
-    });
   }
 
   /**
