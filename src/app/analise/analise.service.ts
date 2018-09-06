@@ -23,6 +23,16 @@ export class AnaliseService {
 
   searchUrl = environment.apiUrl + '/_search/analises';
 
+  fieldSearchIdentificadorUrl = environment.apiUrl + '/_searchIdentificador/analises';
+
+  fieldSearchSistemaUrl = environment.apiUrl + '/_searchSistema/analises';
+
+  fieldSearchMetodoContagemUrl = environment.apiUrl + '/_searchMetodoContagem/analises';
+
+  fieldSearchOrganizacaoUrl = environment.apiUrl + '/_searchOrganizacao/analises';
+
+  fieldSearchEquipeUrl = environment.apiUrl + '/_searchEquipe/analises';
+
   relatoriosBaselineUrl = environment.apiUrl + '/downloadPdfBaselineBrowser';
 
   @BlockUI() blockUI: NgBlockUI;

@@ -110,7 +110,9 @@
             [value]="sistema.modulos"
             [editEventName]="editModuloEventName"
             [deleteEventName]="deleteModuloEventName"
-            (buttonClick)="datatableClick($event)">
+            (buttonClick)="datatableClick($event)"
+            disableClone="true"
+            >
             <p-column header="Código"
               [style]="{width: '25%'}">
               <ng-template let-codigo="rowData.id" pTemplate="body">
@@ -145,7 +147,8 @@
             [value]="sistema.funcionalidades"
             [editEventName]="editFuncionalidadeEventName"
             [deleteEventName]="deleteFuncionalidadeEventName"
-            (buttonClick)="datatableClick($event)">
+            (buttonClick)="datatableClick($event)"
+            disableClone="true">
             <p-column header="Módulo" field="modulo.nome"></p-column>
             <p-column header="Nome" field="nome"></p-column>
           </app-memory-datatable>

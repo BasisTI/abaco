@@ -43,7 +43,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         nomeSistema: undefined,
         metContagem: undefined,
         organizacao: undefined,
-        team: undefined
+        team: undefined,
+        descricao: undefined
       };
 
       metsContagens = [
@@ -235,6 +236,105 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         });
     }
 
+    public switchUrlIdentificador() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+
+                this.searchUrl = this.analiseService.fieldSearchIdentificadorUrl;
+                
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+               
+            }
+            console.log(this.searchUrl);
+    }
+
+    public switchUrlSistema() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema !== '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+
+                this.searchUrl = this.analiseService.fieldSearchSistemaUrl;
+                
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+                
+            }
+            console.log(this.searchUrl);
+    }
+
+    public switchUrlMetodoContagem() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem !== '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+
+                this.searchUrl = this.analiseService.fieldSearchMetodoContagemUrl;
+                
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+                
+            }
+            console.log(this.searchUrl);
+    }
+
+    public switchUrlOrganizacao() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao !== '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+
+                this.searchUrl = this.analiseService.fieldSearchOrganizacaoUrl;
+                
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+                
+            }
+            console.log(this.searchUrl);
+    }
+
+    public switchUrlEquipe() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team !== '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+
+                this.searchUrl = this.analiseService.fieldSearchEquipeUrl;
+                
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+                
+            }
+            console.log(this.searchUrl);
+    }
+
+    public switchUrlDescricao() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+                
+                this.searchUrl = this.analiseService.searchUrl;
+    } else {
+        this.searchUrl = this.analiseService.searchUrl;
+        }
+        console.log(this.searchUrl);
+    }
     /**
      * Limpa a pesquisa e recarrega a tabela
      */
@@ -246,6 +346,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.searchParams.nomeSistema = undefined;
         this.searchParams.metContagem = undefined;
         this.searchParams.team = undefined;
+        this.searchParams.descricao = undefined;
     }
 
     /**
@@ -292,6 +393,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         (this.searchParams.metContagem !== undefined) ? ((this.searchParams.metContagem.text === '') ? (this.searchParams.metContagem.text = undefined) : (this)) : (this);
         (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)) : (this);
         (this.searchParams.organizacao !== undefined) ? ((this.searchParams.organizacao.nome === '') ? (this.searchParams.organizacao.nome = undefined) : (console.log('Caiu no false'))) : (this);
+        (this.searchParams.descricao === '') ? (this.searchParams.descricao = undefined) : (this);
       }
 
       private createStringParamsArray(): Array<string> {
@@ -302,11 +404,15 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         (this.searchParams.metContagem !== undefined) ? ((this.searchParams.metContagem.text !== undefined) ? (stringParamsArray.push(this.searchParams.metContagem.text)) : (this)) : (this);
         (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (stringParamsArray.push(this.searchParams.team.nome)) : (this)) : (this);
         (this.searchParams.organizacao !== undefined) ? ((this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push(this.searchParams.organizacao.nome)) : (this)) : (this);
-
+        (this.searchParams.descricao !== undefined) ? (stringParamsArray.push(this.searchParams.descricao)) : (this);
+        
         return stringParamsArray;
+        
       }
 
       public performSearch() {
+
+        this.searchUrl = this.analiseService.searchUrl;
         this.checkUndefinedParams();
         this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
         this.recarregarDataTable();
