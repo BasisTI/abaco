@@ -10,6 +10,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+
 import java.io.ByteArrayOutputStream;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioSistemaColunas;
@@ -18,6 +20,8 @@ import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.http.MediaType;
@@ -84,7 +88,7 @@ public class SistemaResource {
 	private final DynamicExportsService dynamicExportsService;
 
 	public SistemaResource(
-			SistemaRepository sistemaRepository, 
+			SistemaRepository sistemaRepository,
 			SistemaSearchRepository sistemaSearchRepository,
 			FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
 			FuncaoDadosRepository funcaoDadosRepository, DynamicExportsService dynamicExportsService) {
@@ -99,8 +103,8 @@ public class SistemaResource {
 	/**
 	 * POST /sistemas : Create a new sistema.
 	 * @param sistema the sistema to create
-	 * @return the ResponseEntity with status 201 (Created) 
-	 * and with body the new sistema, or with status 400 (Bad Request) 
+	 * @return the ResponseEntity with status 201 (Created)
+	 * and with body the new sistema, or with status 400 (Bad Request)
 	 * if the sistema has already an ID
 	 * @throws URISyntaxException if the Location URI syntax is incorrect
 	 */
@@ -145,7 +149,7 @@ public class SistemaResource {
 	/**
 	 * PUT /sistemas : Updates an existing sistema.
 	 * @param sistema the sistema to update
-	 * @return the ResponseEntity with status 200 (OK) and with body the updated 
+	 * @return the ResponseEntity with status 200 (OK) and with body the updated
 	 * sistema, or with status 400 (Bad Request) if the sistema is not
 	 * valid, or with status 500 (Internal Server Error) if the sistema
 	 * couldnt be updated
@@ -200,7 +204,7 @@ public class SistemaResource {
 	/**
 	 * GET /sistemas/:id : get the "id" sistema.
 	 * @param id the id of the sistema to retrieve
-	 * @return the ResponseEntity with status 200 (OK) and with body 
+	 * @return the ResponseEntity with status 200 (OK) and with body
 	 * the sistema, or with status 404 (Not Found)
 	 */
 	@GetMapping("/sistemas/{id}")
@@ -227,7 +231,7 @@ public class SistemaResource {
 			FuncaoDadosVersionavel fdv = funcaoDadosVersionavelOptional.get();
 			return funcaoDadosRepository.findFirstByFuncaoDadosVersionavelIdOrderByAuditUpdatedOnDesc(fdv.getId()).get();
 		}
-		
+
 		return null;
 	}
 
@@ -250,7 +254,7 @@ public class SistemaResource {
 		sistemaRepository.delete(id);
 		sistemaSearchRepository.delete(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-		
+
 	}
 
 	/**
@@ -259,19 +263,69 @@ public class SistemaResource {
 	 * @return the result of the search
 	 * @throws URISyntaxException
 	 */
-	@GetMapping("/_search/sistemas")
-	@Timed
-	public ResponseEntity<List<Sistema>> searchSistemas(@RequestParam(defaultValue = "*") String query,
-			@RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
-			@RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-		log.debug("REST request to search Sistemas for query {}", query);
-		Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-		Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
-		Page<Sistema> page = sistemaSearchRepository.search(queryStringQuery(query), newPageable);
-		HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/sistemas");
-		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-	}
+    @GetMapping("/_search/sistemas")
+    @Timed
+    public ResponseEntity<List<Sistema>> searchSistemas(@RequestParam(defaultValue = "*") String query,
+                                                        @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
+                                                        @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
+        log.debug("REST request to search Sistemas for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        Page<Sistema> page = sistemaSearchRepository.search(queryStringQuery(query), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/sistemas");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/_searchSigla/sistemas")
+    @Timed
+    public ResponseEntity<List<Sistema>> searchSiglaSistemas(@RequestParam(defaultValue = "*") String query,
+                                                        @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
+                                                        @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
+        log.debug("REST request to search Sistemas for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        QueryBuilder qb = QueryBuilders.matchQuery("sigla", query);
+
+        Page<Sistema> page = sistemaSearchRepository.search((qb), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchSigla/sistemas");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_searchSistema/sistemas")
+    @Timed
+    public ResponseEntity<List<Sistema>> searchNomeSistemas(@RequestParam(defaultValue = "*") String query,
+                                                        @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
+                                                        @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
+        log.debug("REST request to search Sistemas for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        QueryBuilder qb = QueryBuilders.matchQuery("nome", query);
+
+        Page<Sistema> page = sistemaSearchRepository.search((qb), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchSistema/sistemas");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_searchOrganizacao/sistemas")
+    @Timed
+    public ResponseEntity<List<Sistema>> searchOrganizacaoSistemas(@RequestParam(defaultValue = "*") String query,
+                                                            @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
+                                                            @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
+        log.debug("REST request to search Sistemas for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        QueryBuilder qb = QueryBuilders.matchQuery("organizacao.nome", query);
+
+        Page<Sistema> page = sistemaSearchRepository.search((qb), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchOrganizacao/sistemas");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/sistema/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed

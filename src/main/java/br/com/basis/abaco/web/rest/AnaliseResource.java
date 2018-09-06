@@ -12,11 +12,15 @@ import java.util.Optional;
 import br.com.basis.abaco.domain.Authority;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.security.SecurityUtils;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import br.com.basis.abaco.utils.PageUtils;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+
 import java.io.ByteArrayOutputStream;
 import java.util.Set;
 
@@ -395,6 +399,82 @@ public class AnaliseResource {
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
+
+    @GetMapping("/_searchIdentificador/analises")
+    @Timed
+    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
+    public ResponseEntity<List<Analise>> searchIdentificadorAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+        log.debug("REST request to search for a page of Analises for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        QueryBuilder qb = QueryBuilders.matchQuery("identificadorAnalise", query);
+
+        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchIdentificador/analises");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_searchSistema/analises")
+    @Timed
+    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
+    public ResponseEntity<List<Analise>> searchSistemaAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+        log.debug("REST request to search for a page of Analises for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        QueryBuilder qb = QueryBuilders.matchQuery("nomeSistema", query);
+
+        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchSistema/analises");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_searchMetodoContagem/analises")
+    @Timed
+    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
+    public ResponseEntity<List<Analise>> searchMetodoContagemAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+        log.debug("REST request to search for a page of Analises for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        QueryBuilder qb = QueryBuilders.matchQuery("metodoContagemString", query);
+
+        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchMetodoContagem/analises");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_searchOrganizacao/analises")
+    @Timed
+    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
+    public ResponseEntity<List<Analise>> searchOrganizacaoAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+        log.debug("REST request to search for a page of Analises for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        QueryBuilder qb = QueryBuilders.matchQuery("organizacao.nome", query);
+
+        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchOrganizacao/analises");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_searchEquipe/analises")
+    @Timed
+    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
+    public ResponseEntity<List<Analise>> searchEquipeAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+        log.debug("REST request to search for a page of Analises for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        QueryBuilder qb = QueryBuilders.matchQuery("equipeResponsavel.nome", query);
+
+        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchEquipe/analises");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
 
     /**
      * Método responsável por requisitar a geração do relatório de Análise.
