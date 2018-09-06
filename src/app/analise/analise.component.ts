@@ -250,7 +250,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 this.searchUrl = this.analiseService.searchUrl;
                
             }
-            console.log(this.searchUrl);
     }
 
     public switchUrlSistema() {
@@ -267,7 +266,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 this.searchUrl = this.analiseService.searchUrl;
                 
             }
-            console.log(this.searchUrl);
     }
 
     public switchUrlMetodoContagem() {
@@ -284,7 +282,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 this.searchUrl = this.analiseService.searchUrl;
                 
             }
-            console.log(this.searchUrl);
     }
 
     public switchUrlOrganizacao() {
@@ -301,7 +298,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 this.searchUrl = this.analiseService.searchUrl;
                 
             }
-            console.log(this.searchUrl);
     }
 
     public switchUrlEquipe() {
@@ -318,7 +314,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 this.searchUrl = this.analiseService.searchUrl;
                 
             }
-            console.log(this.searchUrl);
     }
 
     public switchUrlDescricao() {
@@ -333,7 +328,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     } else {
         this.searchUrl = this.analiseService.searchUrl;
         }
-        console.log(this.searchUrl);
     }
     /**
      * Limpa a pesquisa e recarrega a tabela

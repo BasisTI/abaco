@@ -145,7 +145,6 @@ public switchUrlSigla() {
       this.searchUrl = this.sistemaService.searchUrl;
     }
 
-  console.log(this.searchUrl);
 }
 
 public switchUrlNomeSistema() {
@@ -160,7 +159,6 @@ public switchUrlNomeSistema() {
          this.searchUrl = this.sistemaService.searchUrl;
         }
 
-  console.log(this.searchUrl);
 }
 
 public switchUrlOrganizacao() {
@@ -174,9 +172,6 @@ public switchUrlOrganizacao() {
   } else {
       this.searchUrl = this.sistemaService.searchUrl;
     }
-  
-
-  console.log(this.searchUrl);
  
 }
 
