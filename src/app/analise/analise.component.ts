@@ -1,20 +1,17 @@
 import { Manual } from './../manual/manual.model';
-import { SistemaService } from './../sistema/sistema.service';
-import { Sistema } from './../sistema/sistema.model';
-import { TipoEquipeService } from './../tipo-equipe/tipo-equipe.service';
-import { OrganizacaoService } from './../organizacao/organizacao.service';
-import { TipoEquipe } from './../tipo-equipe/tipo-equipe.model';
-import { Organizacao } from './../organizacao/organizacao.model';
+import { Sistema, SistemaService } from './../sistema';
+import { TipoEquipe, TipoEquipeService } from './../tipo-equipe';
+import { Organizacao, OrganizacaoService } from './../organizacao';
+import { User, UserService } from '../user';
 import { StringConcatService } from './../shared/string-concat.service';
-import {Component, ViewChild, OnInit, AfterViewInit} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConfirmationService, SelectItem } from 'primeng/primeng';
-import {DatatableComponent, DatatableClickEvent} from '@basis/angular-components';
-import {BlockUI, NgBlockUI} from 'ng-block-ui';
-import { Analise, MetodoContagem } from './analise.model';
-import {AnaliseService} from './analise.service';
-import {ElasticQuery, PageNotificationService} from '../shared';
-import {MessageUtil} from '../util/message.util';
+import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { Analise, AnaliseService, MetodoContagem } from './';
+import { ElasticQuery, PageNotificationService } from '../shared';
+import { MessageUtil } from '../util/message.util';
 
 @Component({
     selector: 'jhi-analise',
@@ -27,6 +24,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
     searchUrl: string = this.analiseService.searchUrl;
+
+    userAnaliseUrl: string;
 
     elasticQuery: ElasticQuery = new ElasticQuery();
 
@@ -54,6 +53,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
 
     blocked: boolean;
 
+    private userId: number;         // Usado para carregar apenas os organizações e equipes referentes ao usuário logado
+
     constructor(
         private router: Router,
         private confirmationService: ConfirmationService,
@@ -62,11 +63,13 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         private tipoEquipeService: TipoEquipeService,
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
-        private stringConcatService: StringConcatService
+        private stringConcatService: StringConcatService,
+        private userService: UserService
     ) {}
 
     public ngOnInit() {
 
+        this.recuperarAnalisesUsuario();
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
         this.recuperarSistema();
@@ -83,6 +86,20 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         });
     }
 
+    recuperarAnalisesUsuario() {
+        const userSub = this.userService.findCurrentUser().subscribe(res => {
+          this.userId = res.id;
+          this.userAnaliseUrl = `${this.analiseService.resourceUrl}/user/${this.userId}`;
+          this.buscarAnalises(this.userId);
+        });
+      }
+
+    buscarAnalises(idUser: number) {
+        const analiseSub = this.analiseService.findAnalisesUsuario(this.userId).subscribe(res => {
+            console.log(res);
+        });
+    }
+
     recuperarOrganizacoes() {
         this.organizacaoService.query().subscribe(response => {
           this.organizations = response.json;
@@ -92,27 +109,27 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         });
       }
 
-      recuperarSistema() {
-          this.sistemaService.query().subscribe(response => {
-            this.nomeSistemas = response.json;
-            let emptySystem = new Sistema();
-            emptySystem.nome = '';
-            this.nomeSistemas.unshift(emptySystem);
-          });
-      }
-
-      recuperarEquipe() {
-        this.tipoEquipeService.query().subscribe(response => {
-          this.teams = response.json;
-          let emptyTeam = new TipoEquipe();
-          emptyTeam.nome = '';
-          this.teams.unshift(emptyTeam);
+    recuperarSistema() {
+        this.sistemaService.query().subscribe(response => {
+        this.nomeSistemas = response.json;
+        let emptySystem = new Sistema();
+        emptySystem.nome = '';
+        this.nomeSistemas.unshift(emptySystem);
         });
-      }
+    }
 
-      ngAfterViewInit() {
-        this.recarregarDataTable();
-      }
+    recuperarEquipe() {
+    this.tipoEquipeService.query().subscribe(response => {
+        this.teams = response.json;
+        let emptyTeam = new TipoEquipe();
+        emptyTeam.nome = '';
+        this.teams.unshift(emptyTeam);
+    });
+    }
+
+    ngAfterViewInit() {
+    this.recarregarDataTable();
+    }
 
     /**
      * Clique na tabela análise

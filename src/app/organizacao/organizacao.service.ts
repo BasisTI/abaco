@@ -54,11 +54,11 @@ export class OrganizacaoService {
           .map((res: Response) => this.convertResponseToResponseWrapper(res));
   }
 
-    searchActiveOrganizations(req?: any): Observable<ResponseWrapper> {
-        const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl + '/ativas', options)
-            .map((res: Response) => this.convertResponseToResponseWrapper(res));
-    }
+  searchActiveOrganizations(req?: any): Observable<ResponseWrapper> {
+      const options = createRequestOption(req);
+      return this.http.get(this.resourceUrl + '/ativas', options)
+          .map((res: Response) => this.convertResponseToResponseWrapper(res));
+  }
 
   delete(id: number): Observable<Response> {
     return this.http.delete(`${this.resourceUrl}/${id}`);
