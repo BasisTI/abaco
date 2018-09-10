@@ -89,6 +89,8 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/api")
 public class AnaliseResource {
 
+    private static final String QUERY_MSG_CONST = "REST request to search for a page of Analises for query {}";
+
     private final Logger log = LoggerFactory.getLogger(AnaliseResource.class);
 
     private static final String ENTITY_NAME = "analise";
@@ -428,12 +430,10 @@ public class AnaliseResource {
     public ResponseEntity<List<Analise>> searchAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         Long idUser;
         List<Long> idEquipes, idOrganizacoes;
-
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-
-        log.debug("REST request to search for a page of Analises for query {}", query);
-        if (query == "*") {
+        log.debug(QUERY_MSG_CONST, query);
+        if (query.equals("*")) {
             log.warn("searchAnalises({}): buscando o id do usuario", query);
             idUser = this.getUserId();
             log.warn("====>> Found user_id: {}", idUser);
@@ -452,8 +452,6 @@ public class AnaliseResource {
             else {
                 log.error("====>> Erro: idUser não encontrado.");
             }
-
-
         }
         Page<Analise> page = analiseSearchRepository.search(queryStringQuery(query), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/analises");
@@ -479,7 +477,7 @@ public class AnaliseResource {
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
     public ResponseEntity<List<Analise>> searchSistemaAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
-        log.debug("REST request to search for a page of Analises for query {}", query);
+        log.debug(QUERY_MSG_CONST, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
@@ -494,7 +492,7 @@ public class AnaliseResource {
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
     public ResponseEntity<List<Analise>> searchMetodoContagemAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
-        log.debug("REST request to search for a page of Analises for query {}", query);
+        log.debug(QUERY_MSG_CONST, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
@@ -509,7 +507,7 @@ public class AnaliseResource {
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
     public ResponseEntity<List<Analise>> searchOrganizacaoAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
-        log.debug("REST request to search for a page of Analises for query {}", query);
+        log.debug(QUERY_MSG_CONST, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
@@ -524,7 +522,7 @@ public class AnaliseResource {
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
     public ResponseEntity<List<Analise>> searchEquipeAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
-        log.debug("REST request to search for a page of Analises for query {}", query);
+        log.debug(QUERY_MSG_CONST, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
@@ -544,10 +542,12 @@ public class AnaliseResource {
     private Long getUserId(){        // Pegando id do usuário logado
         String login = SecurityUtils.getCurrentUserLogin();
         User user = userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
-        if (user != null)
+        if (user != null) {
             return user.getId();
-        else
+        }
+        else {
             return Long.valueOf("-1");
+        }
     }
 
     /**
@@ -564,18 +564,18 @@ public class AnaliseResource {
     List<Long> geraListaOrganizacoes(List<Long> idEquipes){
         int listSize = idEquipes.size();
 
-        if (listSize > 0)
+        if (listSize > 0) {
             return this.equipeSearchRepository.findAllOrganizacaoIdById(idEquipes);
-        else
+        }
+
+        else {
             return Collections.<Long>emptyList();
+        }
     }
 
     /**
      * Método responsável por requisitar a geração do relatório de Análise.
-<<<<<<< HEAD
      * @param id
-=======
->>>>>>> a4c4791fb5f7822f93374d8951e04912677cfa5b
      * @throws URISyntaxException
      * @throws JRException
      * @throws IOException

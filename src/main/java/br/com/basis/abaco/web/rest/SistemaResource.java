@@ -77,6 +77,8 @@ public class SistemaResource {
 
 	private static final String ENTITY_NAME = "sistema";
 
+    private static final String DBG_MSG_SIS = "REST request to search Sistemas for query {}";
+
 	private final SistemaRepository sistemaRepository;
 
 	private final SistemaSearchRepository sistemaSearchRepository;
@@ -269,7 +271,7 @@ public class SistemaResource {
     public ResponseEntity<List<Sistema>> searchSistemas(@RequestParam(defaultValue = "*") String query,
                                                         @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
                                                         @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug("REST request to search Sistemas for query {}", query);
+        log.debug(DBG_MSG_SIS, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
@@ -284,7 +286,7 @@ public class SistemaResource {
     public ResponseEntity<List<Sistema>> searchSiglaSistemas(@RequestParam(defaultValue = "*") String query,
                                                         @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
                                                         @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug("REST request to search Sistemas for query {}", query);
+        log.debug(DBG_MSG_SIS, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
@@ -300,7 +302,7 @@ public class SistemaResource {
     public ResponseEntity<List<Sistema>> searchNomeSistemas(@RequestParam(defaultValue = "*") String query,
                                                         @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
                                                         @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug("REST request to search Sistemas for query {}", query);
+        log.debug(DBG_MSG_SIS, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
@@ -316,7 +318,7 @@ public class SistemaResource {
     public ResponseEntity<List<Sistema>> searchOrganizacaoSistemas(@RequestParam(defaultValue = "*") String query,
                                                             @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
                                                             @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug("REST request to search Sistemas for query {}", query);
+        log.debug(DBG_MSG_SIS, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 

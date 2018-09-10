@@ -44,6 +44,8 @@ public class BaseLineAnaliticoResource {
 
     private RelatorioBaselineRest relatorioBaselineRest;
 
+    private static final String DBG_MSG_FD = "REST request to get FD BaseLineAnalitico : {}";
+
     @Autowired
     private HttpServletRequest request;
 
@@ -78,7 +80,7 @@ public class BaseLineAnaliticoResource {
     @GetMapping("/baseline-analiticos/fd/{id}")
     @Timed
     public List<BaseLineAnalitico> getBaseLineAnaliticoFD(@PathVariable Long id) {
-        log.debug("REST request to get FD BaseLineAnalitico : {}", id);
+        log.debug(DBG_MSG_FD, id);
         return baseLineAnaliticoRepository.getAllAnaliticosFD(id);
     }
 
@@ -92,7 +94,7 @@ public class BaseLineAnaliticoResource {
     @GetMapping("/baseline-analiticos/funcao-dados/{id}")
     @Timed
     public List<FuncaoDados> getFDBaseline(@PathVariable Long id) {
-        log.debug("REST request to get FD BaseLineAnalitico : {}", id);
+        log.debug(DBG_MSG_FD, id);
         List<BaseLineAnalitico> integerList = baseLineAnaliticoRepository.getAllAnaliticosFD(id);
         List<FuncaoDados> fds = new ArrayList<>();
 
@@ -124,7 +126,7 @@ public class BaseLineAnaliticoResource {
     @GetMapping("/baseline-analiticos/fd/{id}/equipe/{idEquipe}")
     @Timed
     public List<BaseLineAnalitico> getBaseLineAnaliticoFDEquipe(@PathVariable Long id,@PathVariable Long idEquipe) {
-        log.debug("REST request to get FD BaseLineAnalitico : {}", id);
+        log.debug(DBG_MSG_FD, id);
         return baseLineAnaliticoRepository.getAllAnaliticosFDEquipe(id,idEquipe);
     }
 
