@@ -24,6 +24,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/management")
 public class LogsResource {
 
+    private final String ROLE_ADMIN_CONST = "ROLE_ADMIN";
+
+    private final String ROLE_USER_CONST = "ROLE_USER";
+
     @GetMapping("/logs")
     @Timed
     public List<LoggerVM> getList() {
@@ -37,7 +41,7 @@ public class LogsResource {
     @PutMapping("/logs")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({ROLE_ADMIN_CONST, ROLE_USER_CONST})
     public void changeLevel(@RequestBody LoggerVM jsonLogger) {
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
         context.getLogger(jsonLogger.getName()).setLevel(Level.valueOf(jsonLogger.getLevel()));
