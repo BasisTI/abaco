@@ -462,7 +462,7 @@ public class AnaliseResource {
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
     public ResponseEntity<List<Analise>> searchIdentificadorAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
-        log.debug("REST request to search for a page of Analises for query {}", query);
+        log.debug(QUERY_MSG_CONST, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
