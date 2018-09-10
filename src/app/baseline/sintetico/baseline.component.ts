@@ -44,7 +44,7 @@ export class BaselineComponent implements OnInit {
 
     public carregarDataTable() {
         this.baselineService.allBaselineSintetico().subscribe((res: ResponseWrapper) => {
-            this.datatable.value = res.json
+            this.datatable.value = res.json;
         });
     }
 
@@ -54,7 +54,7 @@ export class BaselineComponent implements OnInit {
         }
         switch (event.button) {
             case 'view':
-                this.router.navigate(['/baseline', event.selection.idsistema]);
+                this.router.navigate(['/baseline', event.selection.idsistema, event.selection.equipeResponsavelId]);
                 break;
             case 'geraBaselinePdfBrowser' :
                 this.geraBaselinePdfBrowser(event.selection.idsistema);

@@ -7,11 +7,12 @@ import { StringConcatService } from './../shared/string-concat.service';
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, SelectItem } from 'primeng/primeng';
+import { Analise, AnaliseService, MetodoContagem } from './';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Analise, AnaliseService, MetodoContagem } from './';
 import { ElasticQuery, PageNotificationService } from '../shared';
 import { MessageUtil } from '../util/message.util';
+import { Response } from '@angular/http';
 
 @Component({
     selector: 'jhi-analise',
@@ -41,7 +42,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         nomeSistema: undefined,
         metContagem: undefined,
         organizacao: undefined,
-        team: undefined
+        team: undefined,
+        descricao: undefined
       };
 
       metsContagens = [
@@ -251,6 +253,99 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         });
     }
 
+    public switchUrlIdentificador() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+
+                this.searchUrl = this.analiseService.fieldSearchIdentificadorUrl;
+                
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+               
+            }
+    }
+
+    public switchUrlSistema() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema !== '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+
+                this.searchUrl = this.analiseService.fieldSearchSistemaUrl;
+                
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+                
+            }
+    }
+
+    public switchUrlMetodoContagem() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem !== '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+
+                this.searchUrl = this.analiseService.fieldSearchMetodoContagemUrl;
+                
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+                
+            }
+    }
+
+    public switchUrlOrganizacao() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao !== '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+
+                this.searchUrl = this.analiseService.fieldSearchOrganizacaoUrl;
+                
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+                
+            }
+    }
+
+    public switchUrlEquipe() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team !== '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+
+                this.searchUrl = this.analiseService.fieldSearchEquipeUrl;
+                
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+                
+            }
+    }
+
+    public switchUrlDescricao() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+                
+                this.searchUrl = this.analiseService.searchUrl;
+    } else {
+        this.searchUrl = this.analiseService.searchUrl;
+        }
+    }
     /**
      * Limpa a pesquisa e recarrega a tabela
      */
@@ -262,6 +357,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.searchParams.nomeSistema = undefined;
         this.searchParams.metContagem = undefined;
         this.searchParams.team = undefined;
+        this.searchParams.descricao = undefined;
     }
 
     /**
@@ -308,6 +404,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         (this.searchParams.metContagem !== undefined) ? ((this.searchParams.metContagem.text === '') ? (this.searchParams.metContagem.text = undefined) : (this)) : (this);
         (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)) : (this);
         (this.searchParams.organizacao !== undefined) ? ((this.searchParams.organizacao.nome === '') ? (this.searchParams.organizacao.nome = undefined) : (console.log('Caiu no false'))) : (this);
+        (this.searchParams.descricao === '') ? (this.searchParams.descricao = undefined) : (this);
       }
 
       private createStringParamsArray(): Array<string> {
@@ -318,11 +415,15 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         (this.searchParams.metContagem !== undefined) ? ((this.searchParams.metContagem.text !== undefined) ? (stringParamsArray.push(this.searchParams.metContagem.text)) : (this)) : (this);
         (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (stringParamsArray.push(this.searchParams.team.nome)) : (this)) : (this);
         (this.searchParams.organizacao !== undefined) ? ((this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push(this.searchParams.organizacao.nome)) : (this)) : (this);
-
+        (this.searchParams.descricao !== undefined) ? (stringParamsArray.push(this.searchParams.descricao)) : (this);
+        
         return stringParamsArray;
+        
       }
 
       public performSearch() {
+
+        this.searchUrl = this.analiseService.searchUrl;
         this.checkUndefinedParams();
         this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
         this.recarregarDataTable();
@@ -343,6 +444,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             this.pageNotificationService.addErrorMsg(MessageUtil.REGISTRO_ESTA_BLOQUEADO);
             return;
         }
+        console.log(this.analiseSelecionada);
         this.confirmationService.confirm({
             message: MessageUtil.CONFIRMAR_BLOQUEIO.concat(this.analiseSelecionada.identificadorAnalise).concat('?'),
             accept: () => {
@@ -350,7 +452,15 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                     this.pageNotificationService.addBlockMsgWithName(this.analiseSelecionada.identificadorAnalise);
                     this.recarregarDataTable();
                     this.blocked = !this.blocked;
-                });
+                }, (error: Response) => {
+                    switch (error.status) {
+                        case 400: {   
+                            if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
+                            this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                            } 
+                        }
+                    }
+                    });
             }
         });
     }
@@ -371,7 +481,15 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                     this.pageNotificationService.addUnblockMsgWithName(this.analiseSelecionada.identificadorAnalise);
                     this.recarregarDataTable();
                     this.blocked = !this.blocked;
-                });
+                }, (error: Response) => {
+                    switch (error.status) {
+                        case 400: {   
+                            if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
+                            this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                            } 
+                        }
+                    }
+                    });
             }
         });
     }

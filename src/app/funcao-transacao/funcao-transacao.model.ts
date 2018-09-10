@@ -104,6 +104,13 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
       this.name, this.sustantation, this.der, this.ftr, this.grossPF,
       this.derValues, this.ftrValues, this.ders, this.impacto, this.quantidade);
   }
+
+  static convertTransacaoJsonToObject(json: any) {
+    const sintetico = Object.create(FuncaoTransacao.prototype);
+    return Object.assign(sintetico, json, {
+        created: new Date(json.created)
+    });
+  }
 }
 
 // TODO bem duplicado com FuncaoDados

@@ -10,7 +10,8 @@
                 <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <span class="md-inputfield">
                       <input 
-                        type="text" 
+                        type="text"
+                        (click)="switchUrlIdentificador()" 
                         pInputText class="ui-inputtext"
                         [(ngModel)]="searchParams.identificador"
                         (keyup.enter)="performSearch()"
@@ -23,9 +24,9 @@
                   <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <p-dropdown 
                       [filter]="true"
-                      (click)="performSearch()"
+                      (click)=" switchUrlSistema()"
                       [options]="nomeSistemas" 
-                      optionLabel="sigla" 
+                      optionLabel="nome" 
                       [(ngModel)]="searchParams.nomeSistema" 
                       [autoWidth]="false" 
                       placeholder="Sistema">
@@ -35,7 +36,7 @@
                   <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <p-dropdown 
                       [filter]="true"
-                      (click)="performSearch()"
+                      (click)="switchUrlMetodoContagem()"
                       [options]="metsContagens" 
                       optionLabel="text" 
                       [(ngModel)]="searchParams.metContagem" 
@@ -49,7 +50,7 @@
             <div class="ui-g-4 ui-md-6 ui-sm-12">
               <p-dropdown 
                 [filter]="true"
-                (click)="performSearch()"
+                (click)="switchUrlOrganizacao()"
                 [options]="organizations" 
                 optionLabel="nome" 
                 [(ngModel)]="searchParams.organizacao" 
@@ -62,7 +63,7 @@
               <p-dropdown 
                 [filter]="true"
                 [options]="teams" 
-                (click)="performSearch()"
+                (click)="switchUrlEquipe()"
                 optionLabel="nome" 
                 [autoWidth]="false" 
                 [(ngModel)]="searchParams.team" 
@@ -74,8 +75,9 @@
                         <span class="md-inputfield">
                             <input 
                                 type="text"
+                                (click)="switchUrlDescricao()"
                                 pInputText class="ui-inputtext"
-                                [(ngModel)]="elasticQuery.value"
+                                [(ngModel)]="searchParams.descricao"
                                 (keyup.enter)="performSearch()"
                                 #filter/>
                             <label>Descrição</label>

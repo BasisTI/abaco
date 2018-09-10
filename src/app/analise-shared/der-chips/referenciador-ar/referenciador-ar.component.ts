@@ -31,6 +31,8 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
     funcoesDados: FuncaoDados[] = [];
 
+    funcoesDadosCache: FuncaoDados[] = [];
+
     ders: Der[] = [];
 
     idAnalise: number;
@@ -59,9 +61,22 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
         this.subscriptionAnaliseCarregada = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
             this.idAnalise = this.analiseSharedDataService.analise.id;
 
+            this.funcoesDadosCache = this.analiseSharedDataService.analise.funcaoDados;
+
             this.baselineService.analiticosFuncaoDados(
                 this.analiseSharedDataService.analise.sistema.id).subscribe((res: ResponseWrapper) => {
                 this.funcoesDados = res.json;
+
+                this.funcoesDados.concat(this.funcoesDadosCache);
+                if (this.funcoesDados.length !== 0) {
+                    for (const funcoes of this.funcoesDadosCache) {
+                        if (this.funcoesDados.indexOf(funcoes) === -1) {
+                            this.funcoesDados.push(funcoes);
+                        }
+                    }
+                } else {
+                    this.funcoesDados = this.funcoesDadosCache;
+                }
             });
         });
     }

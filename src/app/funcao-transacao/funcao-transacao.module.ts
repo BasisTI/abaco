@@ -20,7 +20,8 @@ import {
   ConfirmationService,
   TabViewModule,
   InputTextareaModule,
-  DialogModule
+  DialogModule,
+  AutoCompleteModule
 } from 'primeng/primeng';
 
 import {
@@ -50,7 +51,8 @@ import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.modul
     AbacoAnaliseSharedModule,
     MemoryDataTableModule,
     AbacoAnaliseBotaoSalvarModule,
-    AbacoDerChipsModule
+    AbacoDerChipsModule,
+    AutoCompleteModule
   ],
   declarations: [
     FuncaoTransacaoFormComponent

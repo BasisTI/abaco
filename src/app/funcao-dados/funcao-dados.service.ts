@@ -1,3 +1,4 @@
+import { FuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
 import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
 import {Observable} from 'rxjs/Rx';
@@ -15,6 +16,8 @@ import {BaselineSintetico} from '../baseline/baseline-sintetico.model';
 export class FuncaoDadosService {
 
     sistemaResourceUrl = environment.apiUrl + '/funcao-dados';
+
+    funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
 
     constructor(private http: HttpService) {
     }
@@ -34,8 +37,34 @@ export class FuncaoDadosService {
     public getFuncaoDadosAnalise(id: number): Observable<ResponseWrapper> {
         const url = `${this.sistemaResourceUrl}/analise/${id}`;
         return this.http.get(url).map((res: Response) => {
-            return this.convertResponse(res);
+            return this.convertResponseFuncaoDados(res);
         });
+    }
+
+    getFuncaoDadosBaseline(id: number): Observable<FuncaoDados> {
+        console.log(this.sistemaResourceUrl);
+        return this.http.get(`${this.sistemaResourceUrl}/${id}`).map((res: Response) => {
+            const resposta = this.convertJsonToSintetico(res.json());
+            return resposta;
+        });
+    }
+
+    getFuncaoTransacaoBaseline(id: number): Observable<FuncaoTransacao> {
+        return this.http.get(`${this.funcaoTransacaoResourceUrl}/${id}`).map((res: Response) => {
+            const resposta = this.convertJsonToSinteticoTransacao(res.json());
+            return resposta;
+        });
+    }
+
+  
+    private convertJsonToSintetico(json: any): FuncaoDados {
+        const entity: FuncaoDados = FuncaoDados.convertJsonToObject(json);
+        return entity;
+    }
+
+    private convertJsonToSinteticoTransacao(json: any): FuncaoTransacao {
+        const entity: FuncaoTransacao = FuncaoTransacao.convertTransacaoJsonToObject(json);
+        return entity;
     }
 
     public delete(id: number): Observable<Response> {
@@ -51,8 +80,18 @@ export class FuncaoDadosService {
         return new ResponseWrapper(res.headers, result, res.status);
     }
 
-    private convertItem(json: any): BaselineSintetico {
+    private convertItem(json: any): FuncaoDados {
+        
         return FuncaoDados.convertJsonToObject(json);
+    }
+
+    private convertResponseFuncaoDados(res: Response): ResponseWrapper {
+        const jsonResponse = res.json();
+        const result = [];
+        for (let i = 0; i < jsonResponse.length; i++) {
+            result.push(this.convertItem(jsonResponse[i]));
+        }
+        return new ResponseWrapper(res.headers, result, res.status);
     }
 
 

@@ -1,6 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
+import { Response } from '@angular/http';
 
 import {Analise} from './analise.model';
 import {AnaliseService} from './analise.service';
@@ -8,7 +9,7 @@ import {ResponseWrapper,  AnaliseSharedDataService, PageNotificationService} fro
 import {Organizacao, OrganizacaoService} from '../organizacao';
 import {Contrato, ContratoService} from '../contrato';
 import {Sistema, SistemaService} from '../sistema';
-import {SelectItem} from 'primeng/primeng';
+import {SelectItem, ConfirmationService} from 'primeng/primeng';
 
 import * as _ from 'lodash';
 import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
@@ -17,7 +18,6 @@ import {MessageUtil} from '../util/message.util';
 import {FatorAjuste} from '../fator-ajuste';
 import {EsforcoFase} from '../esforco-fase';
 import {Manual} from '../manual';
-import {Response} from '@angular/http';
 
 @Component({
     selector: 'jhi-analise-form',
@@ -69,6 +69,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     public hideShowSelectEquipe: boolean;
 
     constructor(
+        private confirmationService: ConfirmationService,
         private router: Router,
         private route: ActivatedRoute,
         private analiseService: AnaliseService,
@@ -301,7 +302,33 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     public geraRelatorioPdfDetalhadoBrowser() {
         this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.analise.id);
-}
+    }
+
+    /**
+     * Bloqueia a análise aberta atualmente.
+     * 
+     */
+    public bloquearAnalise() {
+        this.confirmationService.confirm({
+            message: MessageUtil.CONFIRMAR_BLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
+            accept: () => {
+                const copy = this.analise.toJSONState();
+                    this.analiseService.block(copy).subscribe(() => {
+                    this.pageNotificationService.addBlockMsgWithName(this.analise.identificadorAnalise);
+                    this.router.navigate(['/analise']);
+                }, (error: Response) => {
+                    switch (error.status) {
+                        case 400: {
+                            if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
+                            this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                            }
+                        }
+                    }
+                    });
+            }
+        });
+    }
+
 
     /**
      * Atuva ou desativa o Dropdown de sistema (html)

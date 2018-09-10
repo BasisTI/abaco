@@ -13,6 +13,7 @@ import {PRIMENG_IMPORTS} from './primeng-imports';
 import 'rxjs/add/operator/toPromise';
 import {NgxMaskModule} from 'ngx-mask';
 
+
 import {
     DatatableModule,
     SharedModule,
@@ -62,6 +63,9 @@ import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {AbacoElasticSearchModule} from './elasticsearch/elasticsearch.module';
 import {autenticacaoHttpFactory} from './shared/autenticacao/autenticacao-http';
+import {AnalistaGuard} from './analista.guard';
+import {UserGuard} from './user.guard';
+import {ObservadorGuard} from './observador.guard';
 
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
@@ -137,6 +141,9 @@ export function createTranslateLoader(http: HttpClient) {
         UploadService,
         MenuItemsService,
         AdminGuard,
+        AnalistaGuard,
+        UserGuard,
+        ObservadorGuard,
         JwtHelper,
         {provide: AUTH_CONFIG, useValue: environment.auth},
         {provide: AuthService, deps: [HttpService, AUTH_CONFIG], useFactory: authServiceFactory},

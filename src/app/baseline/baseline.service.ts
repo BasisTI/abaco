@@ -7,6 +7,7 @@ import {Observable} from '../../../node_modules/rxjs';
 import {BaselineSintetico} from './baseline-sintetico.model';
 import {BaselineAnalitico} from './baseline-analitico.model';
 import {Sistema} from '../sistema/sistema.model';
+import {FuncaoDados} from '../funcao-dados';
 
 
 @Injectable()
@@ -35,6 +36,12 @@ export class BaselineService {
             return this.convertJsonToSintetico(jsonResponse);
         });
     }
+    getSistemaSinteticoEquipe(id: number, idEquipe: number): Observable<BaselineSintetico> {
+        return this.http.get(`${this.sinteticosUrl}${id}/equipe/${idEquipe}`).map((res: Response) => {
+            const jsonResponse = res.json();
+            return this.convertJsonToSintetico(jsonResponse);
+        });
+    }
 
     baselineAnaliticoFD(id: number): Observable<ResponseWrapper> {
         return this.http.get(`${this.analiticosFDUrl}${id}`).map((res: Response) => {
@@ -44,12 +51,27 @@ export class BaselineService {
 
     analiticosFuncaoDados(id: number): Observable<ResponseWrapper> {
         return this.http.get(`${this.analiticosFuncaoDadosUrl}${id}`).map((res: Response) => {
-            return this.convertResponseAnalitico(res);
+            return this.convertResponseFuncaoDados(res);
         });
     }
 
     baselineAnaliticoFT(id: number): Observable<ResponseWrapper> {
         return this.http.get(`${this.analiticosFTUrl}${id}`).map((res: Response) => {
+            return this.convertResponseAnalitico(res);
+        });
+    }
+
+
+    // POR EQUIPE
+
+    baselineAnaliticoFDEquipe(id: number, idEquipe: number): Observable<ResponseWrapper> {
+        return this.http.get(`${this.analiticosFDUrl}${id}/equipe/${idEquipe}`).map((res: Response) => {
+            return this.convertResponseAnalitico(res);
+        });
+    }
+
+    baselineAnaliticoFTEquipe(id: number, idEquipe: number): Observable<ResponseWrapper> {
+        return this.http.get(`${this.analiticosFTUrl}${id}/equipe/${idEquipe}`).map((res: Response) => {
             return this.convertResponseAnalitico(res);
         });
     }
@@ -63,6 +85,10 @@ export class BaselineService {
         return new ResponseWrapper(res.headers, result, res.status);
     }
 
+    private convertItemFuncaoDados(json: any): FuncaoDados {
+        return FuncaoDados.convertJsonToObject(json);
+    }
+
     private convertItemSintetico(json: any): BaselineSintetico {
         return BaselineSintetico.convertJsonToObject(json);
     }
@@ -70,6 +96,15 @@ export class BaselineService {
     private convertJsonToSintetico(json: any): BaselineSintetico {
         const entity: BaselineSintetico = BaselineSintetico.convertJsonToObject(json);
         return entity;
+    }
+
+    private convertResponseFuncaoDados(res: Response): ResponseWrapper {
+        const jsonResponse = res.json();
+        const result = [];
+        for (let i = 0; i < jsonResponse.length; i++) {
+            result.push(this.convertItemFuncaoDados(jsonResponse[i]));
+        }
+        return new ResponseWrapper(res.headers, result, res.status);
     }
 
     private convertResponseAnalitico(res: Response): ResponseWrapper {
