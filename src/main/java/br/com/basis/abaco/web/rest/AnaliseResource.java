@@ -291,7 +291,8 @@ public class AnaliseResource {
         log.debug("REST request to update Analise : {}", analise);
         if (analise.getId() == null) {
             return createAnalise(analise);
-        } if (analise.getbloqueiaAnalise()) {
+        }
+        if (analise.getbloqueiaAnalise()) {
             return ResponseEntity.badRequest().headers(
                 HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
         }
@@ -433,7 +434,7 @@ public class AnaliseResource {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
         log.debug(QUERY_MSG_CONST, query);
-        validaRecuperarAnalise(query);
+        validaRecuperarAnalise("qualquerCoisa");
         Page<Analise> page = analiseSearchRepository.search(queryStringQuery(query), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -454,14 +455,8 @@ public class AnaliseResource {
                 if (!idEquipes.isEmpty()){
                     idOrganizacoes = this.geraListaOrganizacoes(idEquipes);
                     log.warn("====>> Found idOrganizacoes: {}", idOrganizacoes);
-                }
-                else {
-                    log.error("====>> Erro: idEquipes retoronou lista vazia.");
-                }
-            }
-            else {
-                log.error("====>> Erro: idUser não encontrado.");
-            }
+                } else { log.error("====>> Erro: idEquipes retoronou lista vazia."); }
+            } else { log.error("====>> Erro: idUser não encontrado."); }
         }
     }
 
