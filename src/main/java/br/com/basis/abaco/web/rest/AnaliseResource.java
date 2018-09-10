@@ -95,6 +95,12 @@ public class AnaliseResource {
 
     private static final String ENTITY_NAME = "analise";
 
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
+
+    private static final String ROLE_USER = "ROLE_USER";
+
+    private static final String PAGE = "page";
+
     private final AnaliseRepository analiseRepository;
 
     private final UserRepository userRepository;
@@ -152,7 +158,7 @@ public class AnaliseResource {
      */
     @PostMapping("/analises")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<Analise> createAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to save Analise : {}", analise);
         if (analise.getId() != null) {
@@ -186,7 +192,7 @@ public class AnaliseResource {
     private boolean verificarAuthority () {
         Set<Authority> listAuth = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).get().getAuthorities();
         for(Authority a : listAuth){
-            if (a.getName().equals("ROLE_ADMIN")){
+            if (a.getName().equals(ROLE_ADMIN)){
                 return true;
             }
         }
@@ -284,7 +290,7 @@ public class AnaliseResource {
      */
     @PutMapping("/analises")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<Analise> updateAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to update Analise : {}", analise);
         if (analise.getId() == null) {
@@ -316,7 +322,7 @@ public class AnaliseResource {
 
     @PutMapping("/analises/{id}/block")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<Analise> blockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", analise);
         if (!this.verificarAuthority()){
@@ -334,7 +340,7 @@ public class AnaliseResource {
 
     @PutMapping("/analises/{id}/unblock")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<Analise> unblockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", analise);
         if (!this.verificarAuthority()){
@@ -407,7 +413,7 @@ public class AnaliseResource {
      */
     @DeleteMapping("/analises/{id}")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<Void> deleteAnalise(@PathVariable Long id) {
         log.debug("REST request to delete Analise : {}", id);
         analiseRepository.delete(id);
@@ -427,7 +433,7 @@ public class AnaliseResource {
     @GetMapping("/_search/analises")
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+    public ResponseEntity<List<Analise>> searchAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name=PAGE) int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         Long idUser;
         List<Long> idEquipes, idOrganizacoes;
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
@@ -461,7 +467,7 @@ public class AnaliseResource {
     @GetMapping("/_searchIdentificador/analises")
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchIdentificadorAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+    public ResponseEntity<List<Analise>> searchIdentificadorAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name=PAGE) int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         log.debug(QUERY_MSG_CONST, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
@@ -476,7 +482,7 @@ public class AnaliseResource {
     @GetMapping("/_searchSistema/analises")
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchSistemaAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+    public ResponseEntity<List<Analise>> searchSistemaAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name=PAGE) int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         log.debug(QUERY_MSG_CONST, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
@@ -491,7 +497,7 @@ public class AnaliseResource {
     @GetMapping("/_searchMetodoContagem/analises")
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchMetodoContagemAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+    public ResponseEntity<List<Analise>> searchMetodoContagemAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name=PAGE) int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         log.debug(QUERY_MSG_CONST, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
@@ -506,7 +512,7 @@ public class AnaliseResource {
     @GetMapping("/_searchOrganizacao/analises")
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchOrganizacaoAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+    public ResponseEntity<List<Analise>> searchOrganizacaoAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name=PAGE) int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         log.debug(QUERY_MSG_CONST, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
@@ -521,7 +527,7 @@ public class AnaliseResource {
     @GetMapping("/_searchEquipe/analises")
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchEquipeAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+    public ResponseEntity<List<Analise>> searchEquipeAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name=PAGE) int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         log.debug(QUERY_MSG_CONST, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
