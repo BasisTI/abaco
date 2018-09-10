@@ -193,7 +193,8 @@ public class UserResource {
 	@PutMapping("/users")
 	@Timed
 	@Secured(AuthoritiesConstants.USER)
-	public ResponseEntity<User> updateUser(@RequestBody User user) {
+	public ResponseEntity<User> updateUser(@RequestBody User user2) {
+	    User user = user2;
 		log.debug("REST request to update User : {}", user);
 		// Verificação de consistência - Não pode haver dois usuários com e-mails iguais
 		Optional<User> existingUser = userRepository.findOneByEmail(user.getEmail());
