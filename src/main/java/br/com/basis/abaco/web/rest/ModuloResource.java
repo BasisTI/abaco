@@ -45,9 +45,9 @@ public class ModuloResource {
 
     private final ModuloSearchRepository moduloSearchRepository;
 
-    private final String ROLE_ADMIN_CONST = "ROLE_ADMIN";
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
-    private final String ROLE_USER_CONST = "ROLE_USER";
+    private static final String ROLE_USER = "ROLE_USER";
 
     public ModuloResource(ModuloRepository moduloRepository, ModuloSearchRepository moduloSearchRepository) {
         this.moduloRepository = moduloRepository;
@@ -63,7 +63,7 @@ public class ModuloResource {
      */
     @PostMapping("/modulos")
     @Timed
-    @Secured({ROLE_ADMIN_CONST, ROLE_USER_CONST})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<Modulo> createModulo(@Valid @RequestBody Modulo modulo) throws URISyntaxException {
         log.debug("REST request to save Modulo : {}", modulo);
         if (modulo.getId() != null) {
@@ -87,7 +87,7 @@ public class ModuloResource {
      */
     @PutMapping("/modulos")
     @Timed
-    @Secured({ROLE_ADMIN_CONST, ROLE_USER_CONST})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<Modulo> updateModulo(@Valid @RequestBody Modulo modulo) throws URISyntaxException {
         log.debug("REST request to update Modulo : {}", modulo);
         if (modulo.getId() == null) {
@@ -135,7 +135,7 @@ public class ModuloResource {
      */
     @DeleteMapping("/modulos/{id}")
     @Timed
-    @Secured({ROLE_ADMIN_CONST, ROLE_USER_CONST})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<Void> deleteModulo(@PathVariable Long id) {
         log.debug("REST request to delete Modulo : {}", id);
         moduloRepository.delete(id);

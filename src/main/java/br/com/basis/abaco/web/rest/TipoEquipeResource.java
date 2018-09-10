@@ -72,9 +72,9 @@ public class TipoEquipeResource {
 
     private final DynamicExportsService dynamicExportsService;
 
-    private final String ROLE_ADMIN_CONST = "ROLE_ADMIN";
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
-    private final String ROLE_USER_CONST = "ROLE_USER";
+    private static final String ROLE_USER = "ROLE_USER";
 
 
     public TipoEquipeResource(TipoEquipeRepository tipoEquipeRepository,
@@ -96,7 +96,7 @@ public class TipoEquipeResource {
      */
     @PostMapping("/tipo-equipes")
     @Timed
-    @Secured({ROLE_ADMIN_CONST, ROLE_USER_CONST})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<TipoEquipe> createTipoEquipe(@Valid @RequestBody TipoEquipe tipoEquipe)
             throws URISyntaxException {
         log.debug("REST request to save TipoEquipe : {}", tipoEquipe);
@@ -122,7 +122,7 @@ public class TipoEquipeResource {
      */
     @PutMapping("/tipo-equipes")
     @Timed
-    @Secured({ROLE_ADMIN_CONST, ROLE_USER_CONST})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<TipoEquipe> updateTipoEquipe(@Valid @RequestBody TipoEquipe tipoEquipe)
             throws URISyntaxException {
         log.debug("REST request to update TipoEquipe : {}", tipoEquipe);
@@ -198,7 +198,7 @@ public class TipoEquipeResource {
      */
     @DeleteMapping("/tipo-equipes/{id}")
     @Timed
-    @Secured({ROLE_ADMIN_CONST, ROLE_USER_CONST})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<Void> deleteTipoEquipe(@PathVariable Long id) {
         log.debug("REST request to delete TipoEquipe : {}", id);
 

@@ -74,9 +74,9 @@ public class OrganizacaoResource {
 
     private final DynamicExportsService dynamicExportsService;
 
-    private final String ROLE_ADMIN_CONST = "ROLE_ADMIN";
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
-    private final String ROLE_USER_CONST = "ROLE_USER";
+    private static final String ROLE_USER = "ROLE_USER";
 
     public OrganizacaoResource(OrganizacaoRepository organizacaoRepository, OrganizacaoSearchRepository organizacaoSearchRepository, DynamicExportsService dynamicExportsService) {
         this.organizacaoRepository = organizacaoRepository;
@@ -132,7 +132,7 @@ public class OrganizacaoResource {
      */
     @PostMapping("/organizacaos")
     @Timed
-    @Secured({ROLE_ADMIN_CONST, ROLE_USER_CONST})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<Organizacao> createOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
         int i;
         log.debug("REST request to save Organizacao : {}", organizacao);
@@ -161,7 +161,7 @@ public class OrganizacaoResource {
      */
     @PutMapping("/organizacaos")
     @Timed
-    @Secured({ROLE_ADMIN_CONST, ROLE_USER_CONST})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<Organizacao> updateOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
         int i;
         log.debug("REST request to update Organizacao : {}", organizacao);
@@ -228,7 +228,7 @@ public class OrganizacaoResource {
      */
     @DeleteMapping("/organizacaos/{id}")
     @Timed
-    @Secured({ROLE_ADMIN_CONST, ROLE_USER_CONST})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<Void> deleteOrganizacao(@PathVariable Long id) {
         log.debug("REST request to delete Organizacao : {}", id);
         organizacaoRepository.delete(id);
