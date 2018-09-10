@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 import java.io.ByteArrayOutputStream;
 import br.com.basis.abaco.service.exception.RelatorioException;
@@ -58,7 +57,6 @@ import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
-import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.utils.PageUtils;
@@ -92,6 +90,8 @@ public class SistemaResource {
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     private static final String ROLE_USER = "ROLE_USER";
+
+    private static  final String PAGE = "page";
 
 	public SistemaResource(
 			SistemaRepository sistemaRepository,
@@ -273,7 +273,7 @@ public class SistemaResource {
     @GetMapping("/_search/sistemas")
     @Timed
     public ResponseEntity<List<Sistema>> searchSistemas(@RequestParam(defaultValue = "*") String query,
-                                                        @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
+                                                        @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size,
                                                         @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
         log.debug(DBG_MSG_SIS, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
@@ -288,7 +288,7 @@ public class SistemaResource {
     @GetMapping("/_searchSigla/sistemas")
     @Timed
     public ResponseEntity<List<Sistema>> searchSiglaSistemas(@RequestParam(defaultValue = "*") String query,
-                                                        @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
+                                                        @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size,
                                                         @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
         log.debug(DBG_MSG_SIS, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
@@ -304,7 +304,7 @@ public class SistemaResource {
     @GetMapping("/_searchSistema/sistemas")
     @Timed
     public ResponseEntity<List<Sistema>> searchNomeSistemas(@RequestParam(defaultValue = "*") String query,
-                                                        @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
+                                                        @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size,
                                                         @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
         log.debug(DBG_MSG_SIS, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
@@ -320,7 +320,7 @@ public class SistemaResource {
     @GetMapping("/_searchOrganizacao/sistemas")
     @Timed
     public ResponseEntity<List<Sistema>> searchOrganizacaoSistemas(@RequestParam(defaultValue = "*") String query,
-                                                            @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size,
+                                                            @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size,
                                                             @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
         log.debug(DBG_MSG_SIS, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
