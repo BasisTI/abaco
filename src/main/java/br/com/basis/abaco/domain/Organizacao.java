@@ -68,7 +68,6 @@ public class Organizacao implements Serializable, ReportObject {
 	private Boolean ativo;
 
 	@Column(name = "numero_ocorrencia")
-    @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
 	private String numeroOcorrencia;
 
 	@OneToMany(mappedBy = "organizacao", fetch = FetchType.EAGER)

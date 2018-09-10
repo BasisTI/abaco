@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,6 +70,7 @@ public class EsforcoFaseResource {
      */
     @PostMapping("/esforco-fases")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<EsforcoFase> createEsforcoFase(@RequestBody EsforcoFase esforcoFase)
             throws URISyntaxException {
         log.debug("REST request to save EsforcoFase : {}", esforcoFase);
@@ -96,6 +98,7 @@ public class EsforcoFaseResource {
      */
     @PutMapping("/esforco-fases")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<EsforcoFase> updateEsforcoFase(@RequestBody EsforcoFase esforcoFase)
             throws URISyntaxException {
         log.debug("REST request to update EsforcoFase : {}", esforcoFase);
@@ -153,6 +156,7 @@ public class EsforcoFaseResource {
      */
     @DeleteMapping("/esforco-fases/{id}")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Void> deleteEsforcoFase(@PathVariable Long id) {
         log.debug("REST request to delete EsforcoFase : {}", id);
         esforcoFaseRepository.delete(id);

@@ -34,6 +34,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -91,6 +92,7 @@ public class TipoEquipeResource {
      */
     @PostMapping("/tipo-equipes")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<TipoEquipe> createTipoEquipe(@Valid @RequestBody TipoEquipe tipoEquipe)
             throws URISyntaxException {
         log.debug("REST request to save TipoEquipe : {}", tipoEquipe);
@@ -116,6 +118,7 @@ public class TipoEquipeResource {
      */
     @PutMapping("/tipo-equipes")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<TipoEquipe> updateTipoEquipe(@Valid @RequestBody TipoEquipe tipoEquipe)
             throws URISyntaxException {
         log.debug("REST request to update TipoEquipe : {}", tipoEquipe);
@@ -131,7 +134,6 @@ public class TipoEquipeResource {
     /**
      * GET /tipo-equipes : get all the tipoEquipes.
      *
-     * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of
      * tipoEquipes in body
      */
@@ -192,6 +194,7 @@ public class TipoEquipeResource {
      */
     @DeleteMapping("/tipo-equipes/{id}")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Void> deleteTipoEquipe(@PathVariable Long id) {
         log.debug("REST request to delete TipoEquipe : {}", id);
 
@@ -205,7 +208,6 @@ public class TipoEquipeResource {
      * corresponding to the query.
      *
      * @param query the query of the tipoEquipe search
-     * @param pageable the pagination information
      * @return the result of the search
      * @throws URISyntaxException
      */
@@ -224,7 +226,6 @@ public class TipoEquipeResource {
 
     @GetMapping(value = "/tipoEquipe/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
-
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {

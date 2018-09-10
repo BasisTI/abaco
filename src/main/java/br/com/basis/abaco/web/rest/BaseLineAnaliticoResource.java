@@ -117,4 +117,22 @@ public class BaseLineAnaliticoResource {
         return relatorioBaselineRest.downloadPdfBaselineBrowser(recuperarBaselinePorSistema(id), getBaseLineAnaliticoFD(id), getBaseLineAnaliticoFT(id));
     }
 
+    /*
+    POR EQUIPE
+    */
+
+    @GetMapping("/baseline-analiticos/fd/{id}/equipe/{idEquipe}")
+    @Timed
+    public List<BaseLineAnalitico> getBaseLineAnaliticoFDEquipe(@PathVariable Long id,@PathVariable Long idEquipe) {
+        log.debug("REST request to get FD BaseLineAnalitico : {}", id);
+        return baseLineAnaliticoRepository.getAllAnaliticosFDEquipe(id,idEquipe);
+    }
+
+    @GetMapping("/baseline-analiticos/ft/{id}/equipe/{idEquipe}")
+    @Timed
+    public List<BaseLineAnalitico> getBaseLineAnaliticoFTEquipe(@PathVariable Long id,@PathVariable Long idEquipe) {
+        log.debug("REST request to get FT BaseLineAnalitico : {}", id);
+        return baseLineAnaliticoRepository.getAllAnaliticosFTEquipe(id,idEquipe);
+    }
+
 }

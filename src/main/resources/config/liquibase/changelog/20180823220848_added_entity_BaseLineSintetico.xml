@@ -22,47 +22,83 @@
                     schemaName="public"
                     viewName="baseline_sintetico">
             <![CDATA[
-         SELECT W.ID_SISTEMA,  W.SIGLA, W.NOME, W.NUMERO_OCORRENCIA, SUM(W.PF), W.EQUIPE_RESPONSAVEL_ID, W.NOME_EQUIPE
-FROM (
-SELECT 'fd' as tipo, C.IMPACTO, C.TIPO, C.ANALISE_ID, A.DATA_HOMOLOGACAO_SOFTWARE, B.ID AS ID_SISTEMA, B.NOME, B.SIGLA, C.NAME, C.PF, C.ID AS ID_DADOS_TRANS, C.COMPLEXIDADE, B.NUMERO_OCORRENCIA, F.nome as nome_equipe, A.EQUIPE_RESPONSAVEL_ID,
-(SELECT COUNT(ID) FROM DER D WHERE D.FUNCAO_DADOS_ID = C.ID) AS DER,
-(SELECT COUNT(ID) FROM RLR E WHERE E.FUNCAO_DADOS_ID = C.ID) AS RLR_ALR
-FROM ANALISE A
-INNER JOIN SISTEMA B ON A.SISTEMA_ID = B.ID
-INNER JOIN FUNCAO_DADOS C ON C.ANALISE_ID = A.ID
-INNER JOIN TIPO_EQUIPE F ON A.EQUIPE_RESPONSAVEL_ID = F.ID
-LEFT JOIN DER D ON D.FUNCAO_DADOS_ID = C.ID
-LEFT JOIN RLR E ON E.FUNCAO_DADOS_ID = C.ID
-WHERE  A.DATA_HOMOLOGACAO_SOFTWARE IS NOT NULL
-AND A.DATA_HOMOLOGACAO_SOFTWARE = (SELECT  MAX(A1.DATA_HOMOLOGACAO_SOFTWARE)
-				   FROM ANALISE A1
-				   INNER JOIN FUNCAO_DADOS C1 ON C1.ANALISE_ID = A1.ID AND C1.NAME = C.NAME)
-AND A.ID NOT IN (SELECT A2.ID FROM ANALISE A2
-                 WHERE A2.BASELINE_IMEDIATAMENTE = TRUE
-                 AND current_timestamp <= DATA_HOMOLOGACAO_SOFTWARE::date + (SELECT DIAS_DE_GARANTIA FROM CONTRATO WHERE ID = A2.CONTRATO_ID)
-                 )
-and (UPPER(A.metodo_contagem) = 'DETALHADA' or (A.enviar_baseline = true and UPPER(A.metodo_contagem) = 'ESTIMADA'))
-UNION
-SELECT 'ft' as tipo, C.IMPACTO, C.TIPO, C.ANALISE_ID, A.DATA_HOMOLOGACAO_SOFTWARE, B.ID AS ID_SISTEMA, B.NOME, B.SIGLA, C.NAME, C.PF, C.ID AS ID_DADOS_TRANS, C.COMPLEXIDADE, B.NUMERO_OCORRENCIA, F.nome as nome_equipe, A.EQUIPE_RESPONSAVEL_ID,
-(SELECT COUNT(ID) FROM DER D WHERE D.FUNCAO_TRANSACAO_ID = C.ID) AS DER,
-(SELECT COUNT(ID) FROM ALR E WHERE E.FUNCAO_TRANSACAO_ID = C.ID) AS RLR_ALR
-FROM ANALISE A
-INNER JOIN SISTEMA B ON A.SISTEMA_ID = B.ID
-INNER JOIN FUNCAO_TRANSACAO C ON C.ANALISE_ID = A.ID
-INNER JOIN TIPO_EQUIPE F ON A.EQUIPE_RESPONSAVEL_ID = F.ID
-WHERE  A.DATA_HOMOLOGACAO_SOFTWARE IS NOT NULL
-AND A.DATA_HOMOLOGACAO_SOFTWARE = (SELECT  MAX(A1.DATA_HOMOLOGACAO_SOFTWARE)
-				  FROM ANALISE A1
-				  INNER JOIN FUNCAO_TRANSACAO C1 ON C1.ANALISE_ID = A1.ID AND C1.NAME = C.NAME)
-AND A.ID NOT IN (SELECT A2.ID FROM ANALISE A2
-                 WHERE A2.BASELINE_IMEDIATAMENTE = TRUE
-                 AND current_timestamp <= DATA_HOMOLOGACAO_SOFTWARE::date + (SELECT DIAS_DE_GARANTIA FROM CONTRATO WHERE ID = A2.CONTRATO_ID)
-                 )
-AND (UPPER(A.METODO_CONTAGEM) = 'DETALHADA' OR (A.ENVIAR_BASELINE = TRUE AND UPPER(A.METODO_CONTAGEM) = 'ESTIMADA'))
-AND A.BLOQUEADO = TRUE
-) W
-GROUP BY ID_SISTEMA,  SIGLA, NOME, NUMERO_OCORRENCIA, EQUIPE_RESPONSAVEL_ID, NOME_EQUIPE
-
+ SELECT w.id_sistema,
+    w.sigla,
+    w.nome,
+    w.numero_ocorrencia,
+    sum(w.pf) AS sum,
+    w.equipe_responsavel_id,
+    w.nome_equipe
+   FROM ( SELECT 'fd'::text AS tipo,
+            c.impacto,
+            c.tipo,
+            c.analise_id,
+            a.data_homologacao_software,
+            b.id AS id_sistema,
+            b.nome,
+            b.sigla,
+            c.name,
+            c.grosspf as pf,
+            c.id AS id_dados_trans,
+            c.complexidade,
+            b.numero_ocorrencia,
+            f.nome AS nome_equipe,
+            a.equipe_responsavel_id,
+            ( SELECT count(d_1.id) AS count
+                   FROM der d_1
+                  WHERE d_1.funcao_dados_id = c.id) AS der,
+            ( SELECT count(e_1.id) AS count
+                   FROM rlr e_1
+                  WHERE e_1.funcao_dados_id = c.id) AS rlr_alr
+           FROM analise a
+             JOIN sistema b ON a.sistema_id = b.id
+             JOIN funcao_dados c ON c.analise_id = a.id
+             JOIN tipo_equipe f ON a.equipe_responsavel_id = f.id
+             LEFT JOIN der d ON d.funcao_dados_id = c.id
+             LEFT JOIN rlr e ON e.funcao_dados_id = c.id
+          WHERE c.grosspf > 0 and a.data_homologacao_software IS NOT NULL AND a.data_homologacao_software = (( SELECT max(a1.data_homologacao_software) AS max
+                   FROM analise a1
+                     JOIN funcao_dados c1 ON c1.analise_id = a1.id AND c1.name::text = c.name::text
+                  WHERE a1.bloqueado = true)) AND NOT (a.id IN ( SELECT a2.id
+                   FROM analise a2
+                  WHERE a2.baseline_imediatamente = true AND now() <= (a2.data_homologacao_software::date + (( SELECT contrato.dias_de_garantia
+                           FROM contrato
+                          WHERE contrato.id = a2.contrato_id))))) AND (upper(a.metodo_contagem::text) = 'DETALHADA'::text OR a.enviar_baseline = true AND upper(a.metodo_contagem::text) = 'ESTIMADA'::text) AND a.bloqueado = true
+        UNION
+         SELECT 'ft'::text AS tipo,
+            c.impacto,
+            c.tipo,
+            c.analise_id,
+            a.data_homologacao_software,
+            b.id AS id_sistema,
+            b.nome,
+            b.sigla,
+            c.name,
+            c.grosspf as pf,
+            c.id AS id_dados_trans,
+            c.complexidade,
+            b.numero_ocorrencia,
+            f.nome AS nome_equipe,
+            a.equipe_responsavel_id,
+            ( SELECT count(d.id) AS count
+                   FROM der d
+                  WHERE d.funcao_transacao_id = c.id) AS der,
+            ( SELECT count(e.id) AS count
+                   FROM alr e
+                  WHERE e.funcao_transacao_id = c.id) AS rlr_alr
+           FROM analise a
+             JOIN sistema b ON a.sistema_id = b.id
+             JOIN funcao_transacao c ON c.analise_id = a.id
+             JOIN tipo_equipe f ON a.equipe_responsavel_id = f.id
+          WHERE c.grosspf > 0 and a.data_homologacao_software IS NOT NULL AND a.data_homologacao_software = (( SELECT max(a1.data_homologacao_software) AS max
+                   FROM analise a1
+                     JOIN funcao_transacao c1 ON c1.analise_id = a1.id AND c1.name::text = c.name::text
+                  WHERE a1.bloqueado = true)) AND NOT (a.id IN ( SELECT a2.id
+                   FROM analise a2
+                  WHERE a2.baseline_imediatamente = true AND now() <= (a2.data_homologacao_software::date + (( SELECT contrato.dias_de_garantia
+                           FROM contrato
+                          WHERE contrato.id = a2.contrato_id))))) AND (upper(a.metodo_contagem::text) = 'DETALHADA'::text OR a.enviar_baseline = true AND upper(a.metodo_contagem::text) = 'ESTIMADA'::text) AND a.bloqueado = true) w(tipo, impacto, tipo_1, analise_id, data_homologacao_software, id_sistema, nome, sigla, name, pf, id_dados_trans, complexidade, numero_ocorrencia, nome_equipe, equipe_responsavel_id, der, rlr_alr)
+  GROUP BY w.id_sistema, w.sigla, w.nome, w.numero_ocorrencia, w.equipe_responsavel_id, w.nome_equipe;
              ]]>
         </createView>
 

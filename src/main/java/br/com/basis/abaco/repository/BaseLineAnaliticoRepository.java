@@ -26,4 +26,10 @@ public interface BaseLineAnaliticoRepository extends JpaRepository<BaseLineAnali
     @Query( value = "select * from baseline_analitico", nativeQuery = true)
     Set<BaseLineAnalitico> getAllAnaliticos();
 
+    @Query( value = "SELECT * FROM baseline_analitico where id_sistema = ?1 AND tipo = 'ft' AND equipe_responsavel_id = ?2", nativeQuery = true)
+    List<BaseLineAnalitico> getAllAnaliticosFTEquipe(Long id, Long idEquipe);
+
+    @Query( value = "SELECT * FROM baseline_analitico where id_sistema = ?1 AND tipo = 'fd' AND equipe_responsavel_id = ?2", nativeQuery = true)
+    List<BaseLineAnalitico> getAllAnaliticosFDEquipe(Long id, Long idEquipe);
+
 }

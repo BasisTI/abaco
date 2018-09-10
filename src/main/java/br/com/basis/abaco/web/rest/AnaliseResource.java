@@ -6,20 +6,35 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-import br.com.basis.abaco.domain.*;
+import br.com.basis.abaco.domain.Authority;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
+import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
 import org.springframework.core.convert.converter.Converter;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import br.com.basis.abaco.utils.PageUtils;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+
 import java.io.ByteArrayOutputStream;
+import java.util.Set;
+
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -43,6 +58,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -134,6 +150,7 @@ public class AnaliseResource {
      */
     @PostMapping("/analises")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Analise> createAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to save Analise : {}", analise);
         if (analise.getId() != null) {
@@ -141,10 +158,11 @@ public class AnaliseResource {
                     HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
         }
         analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
-        linkFuncoesToAnalise(analise);
-        Analise result = analiseRepository.save(analise);
+        Analise analiseData = this.salvaNovaData(analise);
+        linkFuncoesToAnalise(analiseData);
+        Analise result = analiseRepository.save(analiseData);
         unlinkAnaliseFromFuncoes(result);
-        analiseSearchRepository.save(result);
+        analiseSearchRepository.save(analiseData);
         return ResponseEntity.created(new URI("/api/analises/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
@@ -156,6 +174,21 @@ public class AnaliseResource {
      */
     private Analise recuperarAnalise(Long id) {
         return analiseRepository.findOne(id);
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    private boolean verificarAuthority () {
+        Set<Authority> listAuth = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).get().getAuthorities();
+        for(Authority a : listAuth){
+            if (a.getName().equals("ROLE_ADMIN")){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -249,6 +282,7 @@ public class AnaliseResource {
      */
     @PutMapping("/analises")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Analise> updateAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to update Analise : {}", analise);
         if (analise.getId() == null) {
@@ -258,18 +292,35 @@ public class AnaliseResource {
                 HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
         }
         analise.setCreatedOn(analiseRepository.findOneById(analise.getId()).get().getCreatedOn());
-        linkFuncoesToAnalise(analise);
-        Analise result = analiseRepository.save(analise);
+        Analise analiseData = this.salvaNovaData(analise);
+        linkFuncoesToAnalise(analiseData);
+        Analise result = analiseRepository.save(analiseData);
         unlinkAnaliseFromFuncoes(result);
         analiseSearchRepository.save(result);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analiseData.getId().toString()))
                 .body(result);
+    }
+
+    private Analise salvaNovaData(Analise analise){
+        if(analise.getDataHomologacao() != null){
+            Timestamp dataDeHoje = new Timestamp(System.currentTimeMillis());
+            Timestamp dataParam = analise.getDataHomologacao();
+            dataParam.setHours(dataDeHoje.getHours());
+            dataParam.setMinutes(dataDeHoje.getMinutes());
+            dataParam.setSeconds(dataDeHoje.getSeconds());
+        }
+        return analise;
     }
 
     @PutMapping("/analises/{id}/block")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Analise> blockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", analise);
+        if (!this.verificarAuthority()){
+            return ResponseEntity.badRequest().headers(
+                HeaderUtil.createFailureAlert(ENTITY_NAME, "notadmin", "Only admin users can block/unblock análises")).body(null);
+        }
         linkFuncoesToAnalise(analise);
         analise.setbloqueiaAnalise(true);
         Analise result = analiseRepository.save(analise);
@@ -281,8 +332,13 @@ public class AnaliseResource {
 
     @PutMapping("/analises/{id}/unblock")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Analise> unblockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", analise);
+        if (!this.verificarAuthority()){
+            return ResponseEntity.badRequest().headers(
+                HeaderUtil.createFailureAlert(ENTITY_NAME, "notadmin", "Only admin users can block/unblock análises")).body(null);
+        }
         linkFuncoesToAnalise(analise);
         analise.setbloqueiaAnalise(false);
         Analise result = analiseRepository.save(analise);
@@ -349,6 +405,7 @@ public class AnaliseResource {
      */
     @DeleteMapping("/analises/{id}")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Void> deleteAnalise(@PathVariable Long id) {
         log.debug("REST request to delete Analise : {}", id);
         analiseRepository.delete(id);
@@ -403,6 +460,82 @@ public class AnaliseResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+    @GetMapping("/_searchIdentificador/analises")
+    @Timed
+    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
+    public ResponseEntity<List<Analise>> searchIdentificadorAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+        log.debug("REST request to search for a page of Analises for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        QueryBuilder qb = QueryBuilders.matchQuery("identificadorAnalise", query);
+
+        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchIdentificador/analises");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_searchSistema/analises")
+    @Timed
+    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
+    public ResponseEntity<List<Analise>> searchSistemaAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+        log.debug("REST request to search for a page of Analises for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        QueryBuilder qb = QueryBuilders.matchQuery("nomeSistema", query);
+
+        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchSistema/analises");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_searchMetodoContagem/analises")
+    @Timed
+    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
+    public ResponseEntity<List<Analise>> searchMetodoContagemAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+        log.debug("REST request to search for a page of Analises for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        QueryBuilder qb = QueryBuilders.matchQuery("metodoContagemString", query);
+
+        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchMetodoContagem/analises");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_searchOrganizacao/analises")
+    @Timed
+    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
+    public ResponseEntity<List<Analise>> searchOrganizacaoAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+        log.debug("REST request to search for a page of Analises for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        QueryBuilder qb = QueryBuilders.matchQuery("organizacao.nome", query);
+
+        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchOrganizacao/analises");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_searchEquipe/analises")
+    @Timed
+    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
+    public ResponseEntity<List<Analise>> searchEquipeAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+        log.debug("REST request to search for a page of Analises for query {}", query);
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+
+        QueryBuilder qb = QueryBuilders.matchQuery("equipeResponsavel.nome", query);
+
+        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchEquipe/analises");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+
     /**
      * Função para receber o id do usuário logado
      *
@@ -439,7 +572,10 @@ public class AnaliseResource {
 
     /**
      * Método responsável por requisitar a geração do relatório de Análise.
+<<<<<<< HEAD
      * @param id
+=======
+>>>>>>> a4c4791fb5f7822f93374d8951e04912677cfa5b
      * @throws URISyntaxException
      * @throws JRException
      * @throws IOException
@@ -455,7 +591,6 @@ public class AnaliseResource {
 
     /**
      * Método responsável por requisitar a geração do relatório de Análise.
-     * @param analise
      * @throws URISyntaxException
      * @throws JRException
      * @throws IOException
@@ -471,7 +606,6 @@ public class AnaliseResource {
 
     /**
      * Método responsável por requisitar a geração do relatório de Análise.
-     * @param analise
      * @throws URISyntaxException
      * @throws JRException
      * @throws IOException
