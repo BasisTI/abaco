@@ -169,7 +169,14 @@ public class UserResource {
 		}
 	}
 
-	private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
+    /**
+     * Função para construir reposta do tipo Bad Request informando o erro ocorrido.
+     * @param errorKey Chave de erro que será incluída na resposta
+     * @param defaultMessage Mensagem padrão que será incluída no log
+     * @return ResponseEntity com uma Bad Request personalizada
+     */
+
+    private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
 		return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
 				.body(null);
 	}
@@ -263,7 +270,7 @@ public class UserResource {
 	}
 
     /**
-     * GET /users/current : get the current logged user data.
+     * GET /users/logged : get the current logged user data.
      *
      * @return a User object containing user's data, or with status 404 (Not Found)
      */
@@ -273,7 +280,6 @@ public class UserResource {
     public User getLoggedUser() {
         log.debug("REST request to get current logged user");
         String login = SecurityUtils.getCurrentUserLogin();
-        log.debug("====> User returned: {}", login);
         return userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
     }
 

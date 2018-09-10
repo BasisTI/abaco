@@ -3,14 +3,17 @@ package br.com.basis.abaco.web.rest;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import br.com.basis.abaco.domain.*;
 import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
+import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import br.com.basis.abaco.utils.PageUtils;
@@ -53,10 +56,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
-import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
@@ -84,6 +83,10 @@ public class AnaliseResource {
 
     private final AnaliseSearchRepository analiseSearchRepository;
 
+    private final UserSearchRepository userSearchRepository;
+
+    private final TipoEquipeSearchRepository equipeSearchRepository;
+
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
     private RelatorioAnaliseRest relatorioAnaliseRest;
@@ -105,12 +108,18 @@ public class AnaliseResource {
     public AnaliseResource(
              AnaliseRepository analiseRepository
             ,AnaliseSearchRepository analiseSearchRepository
-            ,FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository, DynamicExportsService dynamicExportsService, UserRepository userRepository) {
+            ,FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository
+            , DynamicExportsService dynamicExportsService
+            , UserRepository userRepository
+            , UserSearchRepository userSearchRepository
+            , TipoEquipeSearchRepository equipeSearchRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.dynamicExportsService = dynamicExportsService;
         this.userRepository = userRepository;
+        this.userSearchRepository = userSearchRepository;
+        this.equipeSearchRepository = equipeSearchRepository;
     }
 
     /**
@@ -300,6 +309,24 @@ public class AnaliseResource {
     }
 
     /**
+     * GET /analises/user/:userId : get all the analises for a particular user id.
+     * @param userId the user id to search for
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of analises in body
+     * @throws URISyntaxException
+     * if there is an error to generate the pagination HTTP headers
+     */
+    @GetMapping("/analises/user/{userId}")
+    @Timed
+    public ResponseEntity<List<Analise>> getAllAnalisesByUserId(@PathVariable Long userId, @ApiParam Pageable pageable) throws URISyntaxException {
+        log.debug("REST request to get a page of Analises for user {}", userId);
+
+        Page<Analise> page = analiseRepository.findAnaliseIdByUserId(userId, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
      * GET /analises/:id : get the "id" analise.
      * @param id
      * the id of the analise to retrieve
@@ -342,18 +369,77 @@ public class AnaliseResource {
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
     public ResponseEntity<List<Analise>> searchAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+        Long idUser;
+        List<Long> idEquipes, idOrganizacoes;
+
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
         log.debug("REST request to search for a page of Analises for query {}", query);
+        if (query == "*") {
+            log.warn("searchAnalises({}): buscando o id do usuario", query);
+            idUser = this.getUserId();
+            log.warn("====>> Found user_id: {}", idUser);
+            if (idUser > 0) {
+                // Recebendo lista de equipes do usuário
+                idEquipes = userSearchRepository.findTipoEquipesById(idUser);
+                log.warn("====>> Found idEquipes: {}", idEquipes);
+                if (!idEquipes.isEmpty()){
+                    idOrganizacoes = this.geraListaOrganizacoes(idEquipes);
+                    log.warn("====>> Found idOrganizacoes: {}", idOrganizacoes);
+                }
+                else {
+                    log.error("====>> Erro: idEquipes retoronou lista vazia.");
+                }
+            }
+            else {
+                log.error("====>> Erro: idUser não encontrado.");
+            }
+
+
+        }
         Page<Analise> page = analiseSearchRepository.search(queryStringQuery(query), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**
+     * Função para receber o id do usuário logado
+     *
+     * @return id do usuário ou -1 se não encontrar usuário
+     */
+    private Long getUserId(){        // Pegando id do usuário logado
+        String login = SecurityUtils.getCurrentUserLogin();
+        User user = userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
+        if (user != null)
+            return user.getId();
+        else
+            return Long.valueOf("-1");
+    }
+
+    /**
+     * Função para construir reposta do tipo Bad Request informando o erro ocorrido.
+     * @param errorKey Chave de erro que será incluída na resposta
+     * @param defaultMessage Mensagem padrão que será incluída no log
+     * @return ResponseEntity com uma Bad Request personalizada
+     */
+    private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
+        return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
+            .body(null);
+    }
+
+    List<Long> geraListaOrganizacoes(List<Long> idEquipes){
+        int listSize = idEquipes.size();
+
+        if (listSize > 0)
+            return this.equipeSearchRepository.findAllOrganizacaoIdById(idEquipes);
+        else
+            return Collections.<Long>emptyList();
+    }
+
+    /**
      * Método responsável por requisitar a geração do relatório de Análise.
-     * @param analise
+     * @param id
      * @throws URISyntaxException
      * @throws JRException
      * @throws IOException

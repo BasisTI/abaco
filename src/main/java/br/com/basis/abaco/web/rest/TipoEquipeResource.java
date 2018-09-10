@@ -158,6 +158,21 @@ public class TipoEquipeResource {
     }
 
     /**
+     * GET /tipo-equipes/:idUser : get the "id" tipoEquipe.
+     *
+     * @param idUser the id of the user to search for tipoEquipe
+     * @return the ResponseEntity with status 200 (OK) and with body the
+     * tipoEquipe, or with status 404 (Not Found)
+     */
+    @GetMapping("/tipo-equipes/user/{idUser}")
+    @Timed
+    public ResponseEntity<List<Long>> getTipoEquipeByUser(@PathVariable Long idUser) {
+        log.debug("REST request to get TipoEquipe : {}", idUser);
+        List<Long> idTipoEquipe = tipoEquipeRepository.findAllByUserId(idUser);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(idTipoEquipe));
+    }
+
+    /**
      *
      * @param idOrganizacao
      * @return
