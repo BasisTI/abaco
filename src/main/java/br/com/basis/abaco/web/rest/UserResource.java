@@ -219,11 +219,12 @@ public class UserResource {
 		adminAuth.setName(AuthoritiesConstants.ADMIN);
 		adminAuth.setDescription("Administrador");
 		// Restringindo os campos que o usuário comum pode alterar.
-        if (!user.getAuthorities().contains(adminAuth) && userRepository.findOneById(user.getId()).isPresent()) {
+        Optional<User> oldUserdata = userRepository.findOneById(user.getId());
+        if (!user.getAuthorities().contains(adminAuth) && oldUserdata.isPresent()) {
             String newFirstName = user.getFirstName();
             String newLastName = user.getLastName();
             String newEmail = user.getEmail();
-            user = userRepository.findOneById(user.getId()).get();
+            user = oldUserdata.get();
             user.setFirstName(newFirstName);
             user.setLastName(newLastName);
             user.setEmail(newEmail);

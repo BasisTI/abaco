@@ -3,11 +3,9 @@ package br.com.basis.abaco.web.rest;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +20,6 @@ import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
-import org.springframework.core.convert.converter.Converter;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +27,6 @@ import org.springframework.data.domain.Sort;
 import br.com.basis.abaco.utils.PageUtils;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Set;
@@ -433,12 +429,20 @@ public class AnaliseResource {
     @GetMapping("/_search/analises")
     @Timed
     // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name=PAGE) int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
-        Long idUser;
-        List<Long> idEquipes, idOrganizacoes;
+    public ResponseEntity<List<Analise>> searchAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
         log.debug(QUERY_MSG_CONST, query);
+        validaRecuperarAnalise(query);
+        Page<Analise> page = analiseSearchRepository.search(queryStringQuery(query), newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/analises");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    private void validaRecuperarAnalise(@RequestParam(defaultValue = "*") String query) {
+        Long idUser;
+        List<Long> idEquipes;
+        List<Long> idOrganizacoes;
         if (query.equals("*")) {
             log.warn("searchAnalises({}): buscando o id do usuario", query);
             idUser = this.getUserId();
@@ -459,9 +463,6 @@ public class AnaliseResource {
                 log.error("====>> Erro: idUser não encontrado.");
             }
         }
-        Page<Analise> page = analiseSearchRepository.search(queryStringQuery(query), newPageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/analises");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     @GetMapping("/_searchIdentificador/analises")
@@ -554,17 +555,6 @@ public class AnaliseResource {
         else {
             return Long.valueOf("-1");
         }
-    }
-
-    /**
-     * Função para construir reposta do tipo Bad Request informando o erro ocorrido.
-     * @param errorKey Chave de erro que será incluída na resposta
-     * @param defaultMessage Mensagem padrão que será incluída no log
-     * @return ResponseEntity com uma Bad Request personalizada
-     */
-    private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
-        return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
-            .body(null);
     }
 
     List<Long> geraListaOrganizacoes(List<Long> idEquipes){
