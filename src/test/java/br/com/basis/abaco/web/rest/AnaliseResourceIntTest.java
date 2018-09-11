@@ -3,10 +3,7 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.AbacoApp;
 
 import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
-import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.*;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
@@ -97,6 +94,9 @@ public class AnaliseResourceIntTest {
     private FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
     @Autowired
+    private CompartilhadaRepository compartilhadaRepository;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -118,8 +118,14 @@ public class AnaliseResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        AnaliseResource analiseResource = new AnaliseResource(analiseRepository, analiseSearchRepository,
-                funcaoDadosVersionavelRepository, dynamicExportsService, userRepository, userSearchRepository, tipoEquipeSearchRepository);
+        AnaliseResource analiseResource = new AnaliseResource(analiseRepository,
+                                                              analiseSearchRepository,
+                                                              funcaoDadosVersionavelRepository,
+                                                              dynamicExportsService,
+                                                              userRepository,
+                                                              userSearchRepository,
+                                                              tipoEquipeSearchRepository,
+                                                              compartilhadaRepository);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();
