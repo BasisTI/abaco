@@ -371,6 +371,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     contratoSelected(contrato: Contrato) {
         this.setManual(contrato);
         this.diasGarantia = this.analise.contrato.diasDeGarantia;
+        this.analise.esforcoFases = _.cloneDeep(contrato.manual.esforcoFases);
     }
 
     /**
