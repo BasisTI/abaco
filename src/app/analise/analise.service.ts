@@ -197,7 +197,7 @@ export class AnaliseService {
       .map((res: Response) => this.convertResponse(res));
   }
 
-  /** Encontra todas as análises referentes às equipes e organizações do usuário.
+  /** Encontra todas as análises referentes às equipes do usuário.
    *
    * @param idUsuario Id do usuário que está fazendo a requisição
    */

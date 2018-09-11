@@ -71,7 +71,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
 
     public ngOnInit() {
 
-        this.recuperarAnalisesUsuario();
+        this.recuperarAnalisesUsuario();            // Filtrando as análises que o usuário pode ver
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
         this.recuperarSistema();
@@ -88,17 +88,25 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         });
     }
 
+    /**
+     * Função para recuperar análises da equipe do usuário
+     */
     recuperarAnalisesUsuario() {
         const userSub = this.userService.findCurrentUser().subscribe(res => {
-          this.userId = res.id;
-          this.userAnaliseUrl = `${this.analiseService.resourceUrl}/user/${this.userId}`;
-          this.buscarAnalises(this.userId);
+          this.userId = res.id;                 // Pegando id do usuário logado
+          this.userAnaliseUrl = `${this.analiseService.resourceUrl}/user/${this.userId}`;       // Construindo URL para busca de análises
+          this.buscarAnalises(this.userId);     // Buscando as benditas análises
         });
       }
 
+      /**
+       * Função que faz requisição das análises das equipes do usuário
+       * @param idUser id do usuário logado
+       */
     buscarAnalises(idUser: number) {
         const analiseSub = this.analiseService.findAnalisesUsuario(this.userId).subscribe(res => {
-            console.log(res);
+            this.datatable.pDatatableComponent.value = res;             // Atribuindo valores das análises para a datatable
+            this.datatable.pDatatableComponent.dataToRender = res;      // Renderizando valores das análises na datatable
         });
     }
 
@@ -324,9 +332,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
             ((this.searchParams.team === undefined) || (this.searchParams.team !== '')) &&
             ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-
                 this.searchUrl = this.analiseService.fieldSearchEquipeUrl;
-                
             } else {
                 this.searchUrl = this.analiseService.searchUrl;
                 
@@ -340,7 +346,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
             ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
             ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-                
                 this.searchUrl = this.analiseService.searchUrl;
     } else {
         this.searchUrl = this.analiseService.searchUrl;
