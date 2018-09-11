@@ -256,15 +256,15 @@ export class UserFormComponent implements OnInit, OnDestroy {
                     const EXISTING_FULLNAME = 'error.fullnameexists';
 
                     if (error.headers.toJSON()['x-abacoapp-error'][0] === EXISTING_USER) {
-                        this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
+                        this.pageNotificationService.addErrorMsg('Usuário já cadastrado!');
                         document.getElementById('login').setAttribute('style', 'border-color: red;');
                     } else {
                         if (error.headers.toJSON()['x-abacoapp-error'][0] === EXISTING_MAIL) {
-                            this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
+                            this.pageNotificationService.addErrorMsg('E-mail já cadastrado!');
                             document.getElementById('email').setAttribute('style', 'border-color: red;');
                         } else {
                             if (error.headers.toJSON()['x-abacoapp-error'][0] === EXISTING_FULLNAME) {
-                                this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
+                                this.pageNotificationService.addErrorMsg('Usuário já cadastrado!');
                                 document.getElementById('firstName').setAttribute('style', 'border-color: red;');
                                 document.getElementById('lastName').setAttribute('style', 'border-color: red;');
                             }
