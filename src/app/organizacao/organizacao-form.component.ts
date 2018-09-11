@@ -247,31 +247,58 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
       }
     }
-    if (this.organizacao.id !== undefined) {
-      this.organizacaoService.find(this.organizacao.id).subscribe(response => {
 
-        if (this.logo !== undefined) {
-          this.uploadService.uploadFile(this.logo).subscribe(response => {
-            this.organizacao.logoId = JSON.parse(response['_body']).id;
-            this.isEdit = true;
-            this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
+   this.organizacaoService.query().subscribe(response => {
+     const todasOrganizacoes = response;
+
+     if(!this.checkIfOrganizacaoAlreadyExists(todasOrganizacoes.json)) {
+       if (this.organizacao.id !== undefined) {
+         this.editar();
+       } else {
+         this.novo();
+       }
+     }
+   })
+   
+  }
+
+ editar() {
+    this.organizacaoService.find(this.organizacao.id).subscribe(response => {
+
+      if (this.logo !== undefined) {
+        this.uploadService.uploadFile(this.logo).subscribe(response => {
+          this.organizacao.logoId = JSON.parse(response['_body']).id;
+          this.isEdit = true;
+          this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
+        });
+      } else {
+          this.isEdit = true;
+          this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
+      }
+    });
+  }
+
+  novo() {
+      if (this.logo !== undefined) {
+        this.uploadService.uploadFile(this.logo).subscribe(response => {
+          this.organizacao.logoId = JSON.parse(response['_body']).id;
+          this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
           });
-        } else {
-            this.isEdit = true;
-            this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
+      } else {
+        this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
+        }
+    }
+
+  checkIfOrganizacaoAlreadyExists(organizacoesRegistradas: Array<Organizacao>): boolean {
+      let isAlreadyRegistered: boolean = false;
+      organizacoesRegistradas.forEach(each => {
+        if (each.nome.toUpperCase() === this.organizacao.nome.toUpperCase() && each.id !== this.organizacao.id) {
+          isAlreadyRegistered = true;
+          this.pageNotificationService.addErrorMsg('Já existe uma Organização registrada com este nome!');
         }
       });
-    } else {
-        if (this.logo !== undefined) {
-          this.uploadService.uploadFile(this.logo).subscribe(response => {
-            this.organizacao.logoId = JSON.parse(response['_body']).id;
-            this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
-            });
-        } else {
-          this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
-          }
-      }
-  }
+      return isAlreadyRegistered;
+    }
 
   /**
   * Método responsável por recuperar as organizações pelo id.
