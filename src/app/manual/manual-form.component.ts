@@ -93,13 +93,31 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         }
 
         this.isSaving = true;
+        this.manualService.query().subscribe(response => {
+            const todosManuais = response;
+
+            if (!this.checkIfManualAlreadyExists(todosManuais.json)) {
+                if (this.manual.id !== undefined) {
+                    this.editar();
+                } else {
+                    this.novo();
+                }
+            }
+        })
         
-        if (this.manual.id !== undefined) {
-            this.editar();
-        } else {
-            this.novo();
-        }
+        
     }
+
+    private checkIfManualAlreadyExists(registeredPhases: Array<TipoFase>): boolean {
+        let isAlreadyRegistered: boolean = false;
+        registeredPhases.forEach(each => {
+          if (each.nome.toUpperCase() === this.manual.nome.toUpperCase() && each.id !== this.manual.id) {
+            isAlreadyRegistered = true;
+            this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+          }
+        });
+        return isAlreadyRegistered;
+      }
 
     private editar() {
         this.manualService.find(this.manual.id).subscribe(response => {
@@ -215,7 +233,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         (error: Response) => {
             this.isSaving = false;
       
-            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.manualexists') {
+            if (error.headers.toJSON()['X-abacoapp-error'][0] === 'error.manualexists') {
                 this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
                 document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
                 }              
