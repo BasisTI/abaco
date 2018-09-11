@@ -12,16 +12,4 @@ import java.util.List;
  */
 public interface TipoEquipeSearchRepository extends ElasticsearchRepository<TipoEquipe, Long> {
 
-    @Query(value = "{" +
-                    "   \"sort\": [" +
-                    "       {\"id\": \"asc\"}" +
-                    "   ]," +
-                    "   \"_source\": [\"organizacoes.id\"]," +
-                    "   \"filter\": {" +
-                    "       \"ids\": {" +
-                    "           \"values\": [?1]" +
-                    "       }" +
-                    "   }" +
-                    "}")
-    List<Long> findAllOrganizacaoIdById(List<Long> idEquipes);
 }

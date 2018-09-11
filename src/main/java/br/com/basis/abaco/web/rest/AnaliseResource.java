@@ -3,19 +3,14 @@ package br.com.basis.abaco.web.rest;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import br.com.basis.abaco.domain.Authority;
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
-import br.com.basis.abaco.domain.Sistema;
-import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.domain.*;
+import br.com.basis.abaco.repository.CompartilhadaRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
@@ -29,7 +24,6 @@ import br.com.basis.abaco.utils.PageUtils;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Set;
 
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
@@ -101,6 +95,8 @@ public class AnaliseResource {
 
     private final UserRepository userRepository;
 
+    private final CompartilhadaRepository compartilhadaRepository;
+
     private final AnaliseSearchRepository analiseSearchRepository;
 
     private final UserSearchRepository userSearchRepository;
@@ -125,14 +121,14 @@ public class AnaliseResource {
      * @param analiseSearchRepository
      * @param funcaoDadosVersionavelRepository
      */
-    public AnaliseResource(
-             AnaliseRepository analiseRepository
-            ,AnaliseSearchRepository analiseSearchRepository
-            ,FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository
-            , DynamicExportsService dynamicExportsService
-            , UserRepository userRepository
-            , UserSearchRepository userSearchRepository
-            , TipoEquipeSearchRepository equipeSearchRepository) {
+    public AnaliseResource(AnaliseRepository analiseRepository,
+                           AnaliseSearchRepository analiseSearchRepository,
+                           FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
+                           DynamicExportsService dynamicExportsService,
+                           UserRepository userRepository,
+                           UserSearchRepository userSearchRepository,
+                           TipoEquipeSearchRepository equipeSearchRepository,
+                           CompartilhadaRepository compartilhadaRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
@@ -140,6 +136,7 @@ public class AnaliseResource {
         this.userRepository = userRepository;
         this.userSearchRepository = userSearchRepository;
         this.equipeSearchRepository = equipeSearchRepository;
+        this.compartilhadaRepository = compartilhadaRepository;
     }
 
     /**
@@ -370,7 +367,7 @@ public class AnaliseResource {
     }
 
     /**
-     * GET /analises/user/:userId : get all the analises for a particular user id.
+     * GET /analises/user/:userId : get all the analises for a particular user id and shared analises for its tipo_equipe.
      * @param userId the user id to search for
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of analises in body
@@ -379,12 +376,51 @@ public class AnaliseResource {
      */
     @GetMapping("/analises/user/{userId}")
     @Timed
-    public ResponseEntity<List<Analise>> getAllAnalisesByUserId(@PathVariable Long userId, @ApiParam Pageable pageable) throws URISyntaxException {
-        log.debug("REST request to get a page of Analises for user {}", userId);
+    public ResponseEntity getAllAnalisesByUserId(@PathVariable Long userId, @ApiParam Pageable pageable) throws URISyntaxException {
+        List<Long> equipes = new ArrayList<>();
+        List<Long> analises;
 
-        Page<Analise> page = analiseRepository.findAnaliseIdByUserId(userId, pageable);
+        log.debug("REST request to get a page of Analises for user {}", userId);
+        Optional<User> foundUser = userRepository.findOneById(userId);  // Recuperando dados do usuário logado
+        if (foundUser.isPresent()) {                                    // Se conseguir recuperar os dados de usuário...
+            for (TipoEquipe eqp : foundUser.get().getTipoEquipes()) {   // Cria lista de equipes do usuário
+                equipes.add(eqp.getId());
+            }
+        }
+        else {
+            return this.createBadRequest("userNotFound", "User not found in database");   // Se não encontrou dados do usuário logado é sinal que a coisa tá feia...
+        }
+        analises = this.converteListaBigIntLong(analiseRepository.findAllByTipoEquipesId(equipes));             // Lista de Id's das análises da equipe do usuário
+        analises.addAll(this.converteListaBigIntLong(this.compartilhadaRepository.findByEquipeId(equipes)));    // Adicionando a lista de Id's de análises compartilhadas com as equipes do usuário
+        Page<Analise> page = analiseRepository.findById(analises, pageable);                                    // Requisitando uma página de análises com base na lista de Id's
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * Função para converter lista de BigInteger em lista de Long sem alterar a lista original
+     * @param listaBig a lista de BigInterger a ser convertida
+     * @return Retorna uma lista de Long
+     */
+    private List<Long> converteListaBigIntLong(List<BigInteger> listaBig) {
+        List<Long> listaLong = new ArrayList<>();
+
+        for (BigInteger elementoBig : listaBig) {
+            listaLong.add(elementoBig.longValue());
+        }
+        return listaLong;
+    }
+
+    /**
+     * Função para construir reposta do tipo Bad Request informando o erro ocorrido.
+     * @param errorKey Chave de erro que será incluída na resposta
+     * @param defaultMessage Mensagem padrão que será incluída no log
+     * @return ResponseEntity com uma Bad Request personalizada
+     */
+
+    private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
+        return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
+            .body(null);
     }
 
     /**
@@ -434,29 +470,38 @@ public class AnaliseResource {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
         log.debug(QUERY_MSG_CONST, query);
-        validaRecuperarAnalise("qualquerCoisa");
+        validaRecuperarAnalise(query);
         Page<Analise> page = analiseSearchRepository.search(queryStringQuery(query), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
-    private void validaRecuperarAnalise(@RequestParam(defaultValue = "*") String query) {
+    /**
+     * INCOMPLETA - Função pra criar query ElasticSearch que filtra as análises visualizadas pelo usuário. Caso esta função
+     * receba o valor default para o endpoint "/_search/analises" ("*") será gerada uma query que irá buscar apenas as
+     * @param query A query ElasticSearch para ser verificada.
+     */
+    private void validaRecuperarAnalise(String query) {
         Long idUser;
         List<Long> idEquipes;
-        List<Long> idOrganizacoes;
+        User userData;
+        String login;
+
         if (query.equals("*")) {
-            log.warn("searchAnalises({}): buscando o id do usuario", query);
-            idUser = this.getUserId();
-            log.warn("====>> Found user_id: {}", idUser);
-            if (idUser > 0) {
-                // Recebendo lista de equipes do usuário
-                idEquipes = userSearchRepository.findTipoEquipesById(idUser);
+            login = SecurityUtils.getCurrentUserLogin();                                          // Descobrindo quem está logado
+            userData = userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);    // Carregando dados do usuário logado
+            if (userData != null) {                                                               // Se conseguiu carregar os dados do usuário...
+                idUser = userData.getId();                                                        // Pega id do usuário
+                log.warn("====>> Found user_id: {}", idUser);
+                idEquipes = userSearchRepository.findTipoEquipesById(idUser);                     // Recebe lista de equipes do usuário
                 log.warn("====>> Found idEquipes: {}", idEquipes);
-                if (!idEquipes.isEmpty()){
-                    idOrganizacoes = this.geraListaOrganizacoes(idEquipes);
-                    log.warn("====>> Found idOrganizacoes: {}", idOrganizacoes);
-                } else { log.error("====>> Erro: idEquipes retoronou lista vazia."); }
-            } else { log.error("====>> Erro: idUser não encontrado."); }
+                if (!idEquipes.isEmpty()){                                                        // Se a lista de equipes não estiver vazia...
+                    // Busca id's das analises da equipe
+                    // Busca id's das analises compartilhadas com a equipe do usuário
+                    // Junta as duas listas
+                    // Monta a query de busca das analises
+                } else { log.warn("====>> Erro: idEquipes retoronou lista vazia."); }
+            } else { log.error("====>> Erro: idUser não encontrado."); }    // Deu ruim geral. Não encontrou os dados do usuário logado.
         }
     }
 
@@ -533,35 +578,6 @@ public class AnaliseResource {
         Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchEquipe/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-
-
-    /**
-     * Função para receber o id do usuário logado
-     *
-     * @return id do usuário ou -1 se não encontrar usuário
-     */
-    private Long getUserId(){        // Pegando id do usuário logado
-        String login = SecurityUtils.getCurrentUserLogin();
-        User user = userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
-        if (user != null) {
-            return user.getId();
-        }
-        else {
-            return Long.valueOf("-1");
-        }
-    }
-
-    List<Long> geraListaOrganizacoes(List<Long> idEquipes){
-        int listSize = idEquipes.size();
-
-        if (listSize > 0) {
-            return this.equipeSearchRepository.findAllOrganizacaoIdById(idEquipes);
-        }
-
-        else {
-            return Collections.<Long>emptyList();
-        }
     }
 
     /**

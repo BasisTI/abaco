@@ -12,6 +12,7 @@ import java.util.List;
  */
 public interface UserSearchRepository extends ElasticsearchRepository<User, Long> {
 
+    // Query para encontrar os id's das equipes do usuário
     @Query (value = "{" +
                     "   \"sort\": [" +
                     "       {\"id\": \"asc\"}" +
