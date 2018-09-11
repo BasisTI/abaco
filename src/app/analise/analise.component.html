@@ -124,41 +124,40 @@
                             [showPaginationFooter]="true"
                             #datatable>
 
-                        <button *ngIf="blocked"
-                                pButton
-                                type="button"
+                        <basis-datatable-button 
+                                *ngIf="blocked"
                                 name="desbloquear"
-                                pTooltip="Desbloquear"
-                                icon="ui-icon-block"
+                                tooltip="Desbloquear"
+                                icon="block"
                                 (click)="desbloqueiaRelatorio()"
-                                class="ui-button-success">
-                        </button>
-                        <p></p>
-                        <button *ngIf="!blocked"
-                                pButton
-                                type="button"
+                                class="ui-button-success"
+                                [disabled]="desabilitarBotaoRelatorio()">
+                        </basis-datatable-button>
+
+                        <basis-datatable-button 
+                                *ngIf="!blocked"
                                 name="bloquear"
-                                pTooltip="Bloquear"
                                 tooltip="Bloquear"
-                                icon="ui-icon-block"
+                                icon="block"
                                 (click)="bloqueiaRelatorio()"
                                 class="ui-button-danger"
                                 [disabled]="desabilitarBotaoRelatorio()">
-                        </button>
+                        </basis-datatable-button>
 
+                        <basis-datatable-button
+                                name="compartilhar"
+                                tooltip="Compartilhar Análise"
+                                icon="share"
+                                class="ui-button-info"
+                                [disabled]="desabilitarBotaoRelatorio()">
+                        </basis-datatable-button>
+                        
                         <basis-datatable-button
                                 name="clone"
                                 tooltip="Clonar"
                                 icon="content-copy"
                                 [disabled]="desabilitarBotaoRelatorio()">
                         </basis-datatable-button>
-
-                        <!-- <basis-datatable-button
-                          name="geraBaselinePdfBrowser"
-                          tooltip="Relatório Baseline"
-                          icon="description"
-                          disabled="desabilitarBotaoRelatorio()">
-                        </basis-datatable-button> -->
 
                         <basis-datatable-button
                                 name="relatorioBrowserDetalhado"
