@@ -1,52 +1,48 @@
 package br.com.basis.abaco.web.rest;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
-import java.io.IOException;
-import java.math.BigInteger;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.Timestamp;
-import java.util.*;
-
-import br.com.basis.abaco.domain.*;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Authority;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
+import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.domain.TipoEquipe;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
+import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
+import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
+import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
+import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import br.com.basis.abaco.utils.PageUtils;
-
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-
-import java.io.ByteArrayOutputStream;
-
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
+import com.codahale.metrics.annotation.Timed;
+import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.http.MediaType;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,17 +56,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codahale.metrics.annotation.Timed;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
-import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
-import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
-import io.swagger.annotations.ApiParam;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing Analise.
@@ -101,8 +102,6 @@ public class AnaliseResource {
 
     private final UserSearchRepository userSearchRepository;
 
-    private final TipoEquipeSearchRepository equipeSearchRepository;
-
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
     private RelatorioAnaliseRest relatorioAnaliseRest;
@@ -127,7 +126,6 @@ public class AnaliseResource {
                            DynamicExportsService dynamicExportsService,
                            UserRepository userRepository,
                            UserSearchRepository userSearchRepository,
-                           TipoEquipeSearchRepository equipeSearchRepository,
                            CompartilhadaRepository compartilhadaRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
@@ -135,7 +133,6 @@ public class AnaliseResource {
         this.dynamicExportsService = dynamicExportsService;
         this.userRepository = userRepository;
         this.userSearchRepository = userSearchRepository;
-        this.equipeSearchRepository = equipeSearchRepository;
         this.compartilhadaRepository = compartilhadaRepository;
     }
 
@@ -495,12 +492,6 @@ public class AnaliseResource {
                 log.warn("====>> Found user_id: {}", idUser);
                 idEquipes = userSearchRepository.findTipoEquipesById(idUser);                     // Recebe lista de equipes do usuário
                 log.warn("====>> Found idEquipes: {}", idEquipes);
-                if (!idEquipes.isEmpty()){                                                        // Se a lista de equipes não estiver vazia...
-                    // Busca id's das analises da equipe
-                    // Busca id's das analises compartilhadas com a equipe do usuário
-                    // Junta as duas listas
-                    // Monta a query de busca das analises
-                } else { log.warn("====>> Erro: idEquipes retoronou lista vazia."); }
             } else { log.error("====>> Erro: idUser não encontrado."); }    // Deu ruim geral. Não encontrou os dados do usuário logado.
         }
     }

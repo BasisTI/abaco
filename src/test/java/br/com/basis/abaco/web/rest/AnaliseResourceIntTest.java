@@ -124,7 +124,6 @@ public class AnaliseResourceIntTest {
                                                               dynamicExportsService,
                                                               userRepository,
                                                               userSearchRepository,
-                                                              tipoEquipeSearchRepository,
                                                               compartilhadaRepository);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
