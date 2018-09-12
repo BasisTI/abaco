@@ -198,7 +198,7 @@
                         </p-column>
 
                         <p-column header="Data Criação" [sortable]="true" [style]="{'font-size': '1.0vw'}">
-                            <ng-template let-col let-createdOn="rowData.audit.createdOn" pTemplate="body">
+                            <ng-template let-col let-createdOn="rowData.createdOn" pTemplate="body">
                                 {{ createdOn | date: 'dd/MM/y - HH:mm' }}
                             </ng-template>
                         </p-column>
