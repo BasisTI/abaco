@@ -138,7 +138,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-    this.recarregarDataTable();
+        this.recarregarDataTable();
     }
 
     /**
@@ -268,12 +268,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
             ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
             ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-
                 this.searchUrl = this.analiseService.fieldSearchIdentificadorUrl;
-                
             } else {
                 this.searchUrl = this.analiseService.searchUrl;
-               
             }
     }
 
@@ -284,12 +281,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
             ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
             ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-
                 this.searchUrl = this.analiseService.fieldSearchSistemaUrl;
-                
             } else {
                 this.searchUrl = this.analiseService.searchUrl;
-                
             }
     }
 
@@ -300,12 +294,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
             ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
             ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-
                 this.searchUrl = this.analiseService.fieldSearchMetodoContagemUrl;
-                
             } else {
                 this.searchUrl = this.analiseService.searchUrl;
-                
             }
     }
 
@@ -316,12 +307,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao !== '')) &&
             ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
             ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-
                 this.searchUrl = this.analiseService.fieldSearchOrganizacaoUrl;
-                
             } else {
                 this.searchUrl = this.analiseService.searchUrl;
-                
             }
     }
 
@@ -335,7 +323,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 this.searchUrl = this.analiseService.fieldSearchEquipeUrl;
             } else {
                 this.searchUrl = this.analiseService.searchUrl;
-                
             }
     }
 
