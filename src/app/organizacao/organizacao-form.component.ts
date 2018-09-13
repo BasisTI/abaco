@@ -30,7 +30,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
   contratos: Contrato[] = [];
   organizacao: Organizacao;
-  isSaving; manualInvalido; isEdit: boolean;
+  isSaving; manualInvalido; numeroContratoInvalido; isEdit: boolean;
   cnpjValido: boolean;
   manuais: Manual[];
   uploadUrl = environment.apiUrl + '/upload';
@@ -83,6 +83,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   abrirDialogCadastroContrato() {
     this.mostrarDialogCadastroContrato = true;
     this.novoContrato.ativo = true;
+    this.numeroContratoInvalido = false;
   }
 
   /**
@@ -97,7 +98,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
    * */
   validarManual() {
     this.manualInvalido = false;
+    this.numeroContratoInvalido = false;
   }
+  // validarNumeroContrato(){
+  //   this.numeroContratoInvalido = false;
+  // }
 
   validarDataInicio() {
     if (!(this.novoContrato.dataInicioValida()) || !(this.contratoEmEdicao.dataInicioValida())){
@@ -152,6 +157,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       this.pageNotificationService.addErrorMsg('Selecione um manual');
       return;
     }
+      if(this.novoContrato.numeroContrato === null || this.novoContrato.numeroContrato === undefined) {
+        this.numeroContratoInvalido = true;
+        this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+        return;
+      }
     if (!(this.novoContrato.dataInicioValida())) {
       this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
       //document.getElementById('login').setAttribute('style', 'border-color: red;');
@@ -163,6 +173,13 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
   }
+
+  // validarNumeroContrato(){
+  //   if (this.novoContrato.numeroContrato === null || this.novoContrato.numeroContrato === undefined) {
+  //     this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+  //     return;
+  //   }
+  // }
 
   /**
    *
@@ -203,6 +220,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   editarContrato() {
     this.organizacao.updateContrato(this.contratoEmEdicao);
     this.fecharDialogEditarContrato();
+    this.novoContrato.diasDeGarantia = undefined;
   }
 
   /**

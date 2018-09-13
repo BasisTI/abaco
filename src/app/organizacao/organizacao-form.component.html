@@ -192,10 +192,15 @@
                 <input 
                   type="text" 
                   name="numeroContrato" 
-                  maxlength="100"
+                  maxlength="100" 
                   [(ngModel)]="novoContrato.numeroContrato" 
+                  (onChange)="validarManual()"
                   pInputText/>
                 <label>Número do Contrato</label>
+                <div *ngIf="numeroContratoInvalido" 
+                class="ui-messages-error">
+                Campo obrigatório.
+              </div>
               </span>
             </div>
               

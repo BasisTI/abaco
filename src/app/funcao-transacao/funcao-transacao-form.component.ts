@@ -23,6 +23,7 @@ import {Modulo} from '../modulo';
 import {CalculadoraTransacao} from '../analise-shared';
 import {FuncaoTransacao, TipoFuncaoTransacao} from './funcao-transacao.model';
 import {Der} from '../der/der.model';
+import { Impacto } from '../analise-shared/impacto-enum';
 
 @Component({
     selector: 'app-analise-funcao-transacao',
@@ -446,6 +447,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 this.prepareToClone(funcaoTransacaoSelecionada);
                 this.currentFuncaoTransacao.id = undefined;
                 this.currentFuncaoTransacao.artificialId = undefined;
+                this.currentFuncaoTransacao.impacto = Impacto.ALTERACAO;
         }
     }
 

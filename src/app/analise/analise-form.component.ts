@@ -315,7 +315,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 const copy = this.analise.toJSONState();
                     this.analiseService.block(copy).subscribe(() => {
                     this.pageNotificationService.addBlockMsgWithName(this.analise.identificadorAnalise);
-                    this.router.navigate(['/analise']);
+                    this.router.navigate(['analise/:id/view']);
                 }, (error: Response) => {
                     switch (error.status) {
                         case 400: {
