@@ -82,12 +82,20 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.estadoInicial();
         this.hideShowQuantidade = true;
         this.currentFuncaoTransacao = new FuncaoTransacao();
         this.subscribeToAnaliseCarregada();
         this.initClassificacoes();
         //  this.subscribeToSistemaSelecionado();
 
+    }
+
+    estadoInicial(){
+        this.analiseSharedDataService.funcaoAnaliseDescarregada();
+        this.currentFuncaoTransacao = new FuncaoTransacao();
+        this.dersChips = [];
+        this.alrsChips = [];
     }
 
     private initClassificacoes() {
