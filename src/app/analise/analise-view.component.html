@@ -286,7 +286,6 @@
                                         buttonLabel="Voltar"
                                         routerLink="/analise">
                                 </app-white-button>
-
                             </div>
 
                         </div>
@@ -301,6 +300,10 @@
             header="Funções de Dados"
             *ngIf="isEdicao || isView">
         <app-analise-funcao-dados [isView]="this.isView"></app-analise-funcao-dados>
+        <app-white-button
+            buttonLabel="Voltar"
+            routerLink="/analise">
+        </app-white-button>
     </p-tabPanel>
 
     <p-tabPanel
@@ -308,6 +311,10 @@
             header="Funções de Transação"
             *ngIf="isEdicao || isView">
         <app-analise-funcao-transacao [isView]="this.isView"></app-analise-funcao-transacao>
+        <app-white-button
+            buttonLabel="Voltar"
+            routerLink="/analise">
+        </app-white-button>
     </p-tabPanel>
 
     <p-tabPanel
@@ -315,6 +322,23 @@
             header="Resumo"
             *ngIf="isEdicao || isView">
         <app-analise-resumo></app-analise-resumo>
+
+        <app-white-button
+            buttonLabel="Voltar"
+            routerLink="/analise">
+        </app-white-button>
+        <app-gray-button
+            buttonLabel="Gerar Relatório"
+            (click)="geraRelatorioPdfDetalhadoBrowser()">
+        </app-gray-button>
+        <app-green-button
+            buttonLabel="Desbloquear Análise"
+            (click)="desbloquearAnalise()">
+        </app-green-button>
+        <app-blue-button
+            buttonLabel="Compartilhar Análise"
+            (click)="bloquearAnalise()">
+        </app-blue-button>
     </p-tabPanel>
 </p-tabView>
 

@@ -10,7 +10,8 @@
                 <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <span class="md-inputfield">
                       <input 
-                        type="text" 
+                        type="text"
+                        (click)="switchUrlIdentificador()" 
                         pInputText class="ui-inputtext"
                         [(ngModel)]="searchParams.identificador"
                         (keyup.enter)="performSearch()"
@@ -23,9 +24,9 @@
                   <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <p-dropdown 
                       [filter]="true"
-                      (click)="performSearch()"
+                      (click)=" switchUrlSistema()"
                       [options]="nomeSistemas" 
-                      optionLabel="sigla" 
+                      optionLabel="nome" 
                       [(ngModel)]="searchParams.nomeSistema" 
                       [autoWidth]="false" 
                       placeholder="Sistema">
@@ -35,7 +36,7 @@
                   <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <p-dropdown 
                       [filter]="true"
-                      (click)="performSearch()"
+                      (click)="switchUrlMetodoContagem()"
                       [options]="metsContagens" 
                       optionLabel="text" 
                       [(ngModel)]="searchParams.metContagem" 
@@ -49,7 +50,7 @@
             <div class="ui-g-4 ui-md-6 ui-sm-12">
               <p-dropdown 
                 [filter]="true"
-                (click)="performSearch()"
+                (click)="switchUrlOrganizacao()"
                 [options]="organizations" 
                 optionLabel="nome" 
                 [(ngModel)]="searchParams.organizacao" 
@@ -62,7 +63,7 @@
               <p-dropdown 
                 [filter]="true"
                 [options]="teams" 
-                (click)="performSearch()"
+                (click)="switchUrlEquipe()"
                 optionLabel="nome" 
                 [autoWidth]="false" 
                 [(ngModel)]="searchParams.team" 
@@ -74,8 +75,9 @@
                         <span class="md-inputfield">
                             <input 
                                 type="text"
+                                (click)="switchUrlDescricao()"
                                 pInputText class="ui-inputtext"
-                                [(ngModel)]="elasticQuery.value"
+                                [(ngModel)]="searchParams.descricao"
                                 (keyup.enter)="performSearch()"
                                 #filter/>
                             <label>Descrição</label>
@@ -114,7 +116,7 @@
                     </div>
 
                     <basis-datatable
-                            [url]="searchUrl"
+                            [url]="userAnaliseUrl"
                             (dblclick)="onRowDblclick($event)"
                             (buttonClick)="datatableClick($event)"
                             [rows]="20"
@@ -122,41 +124,40 @@
                             [showPaginationFooter]="true"
                             #datatable>
 
-                        <button *ngIf="blocked"
-                                pButton
-                                type="button"
+                        <basis-datatable-button 
+                                *ngIf="blocked"
                                 name="desbloquear"
-                                pTooltip="Desbloquear"
-                                icon="ui-icon-block"
+                                tooltip="Desbloquear"
+                                icon="block"
                                 (click)="desbloqueiaRelatorio()"
-                                class="ui-button-success">
-                        </button>
-                        <p></p>
-                        <button *ngIf="!blocked"
-                                pButton
-                                type="button"
+                                class="ui-button-success"
+                                [disabled]="desabilitarBotaoRelatorio()">
+                        </basis-datatable-button>
+
+                        <basis-datatable-button 
+                                *ngIf="!blocked"
                                 name="bloquear"
-                                pTooltip="Bloquear"
                                 tooltip="Bloquear"
-                                icon="ui-icon-block"
+                                icon="block"
                                 (click)="bloqueiaRelatorio()"
                                 class="ui-button-danger"
                                 [disabled]="desabilitarBotaoRelatorio()">
-                        </button>
+                        </basis-datatable-button>
 
+                        <basis-datatable-button
+                                name="compartilhar"
+                                tooltip="Compartilhar Análise"
+                                icon="share"
+                                class="ui-button-info"
+                                [disabled]="desabilitarBotaoRelatorio()">
+                        </basis-datatable-button>
+                        
                         <basis-datatable-button
                                 name="clone"
                                 tooltip="Clonar"
                                 icon="content-copy"
                                 [disabled]="desabilitarBotaoRelatorio()">
                         </basis-datatable-button>
-
-                        <!-- <basis-datatable-button
-                          name="geraBaselinePdfBrowser"
-                          tooltip="Relatório Baseline"
-                          icon="description"
-                          disabled="desabilitarBotaoRelatorio()">
-                        </basis-datatable-button> -->
 
                         <basis-datatable-button
                                 name="relatorioBrowserDetalhado"
@@ -197,7 +198,7 @@
                         </p-column>
 
                         <p-column header="Data Criação" [sortable]="true" [style]="{'font-size': '1.0vw'}">
-                            <ng-template let-col let-createdOn="rowData.audit.createdOn" pTemplate="body">
+                            <ng-template let-col let-createdOn="rowData.createdOn" pTemplate="body">
                                 {{ createdOn | date: 'dd/MM/y - HH:mm' }}
                             </ng-template>
                         </p-column>

@@ -8,7 +8,7 @@ import {ResponseWrapper,  AnaliseSharedDataService, PageNotificationService} fro
 import {Organizacao, OrganizacaoService} from '../organizacao';
 import {Contrato, ContratoService} from '../contrato';
 import {Sistema, SistemaService} from '../sistema';
-import {SelectItem} from 'primeng/primeng';
+import {SelectItem, ConfirmationService} from 'primeng/primeng';
 
 import * as _ from 'lodash';
 import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
@@ -72,6 +72,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     public hideShowSelectEquipe: boolean;
 
     constructor(
+        private confirmationService: ConfirmationService,
         private router: Router,
         private route: ActivatedRoute,
         private analiseService: AnaliseService,
@@ -374,6 +375,39 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
 
     set analise(analise: Analise) {
         this.analiseSharedDataService.analise = analise;
+    }
+
+    /**
+     * Gera o relatório detalhado PDF.
+     * @param analise
+     */
+    public geraRelatorioPdfDetalhadoBrowser() {
+        this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.analise.id);
+    }
+
+     /**
+     * Desbloqueia a análise aberta atualmente.
+     * 
+     */
+    public desbloquearAnalise() {
+        this.confirmationService.confirm({
+            message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
+            accept: () => {
+                const copy = this.analise.toJSONState();
+                    this.analiseService.unblock(copy).subscribe(() => {
+                    this.pageNotificationService.addUnblockMsgWithName(this.analise.identificadorAnalise);
+                    this.router.navigate(['/analise']);
+                }, (error: Response) => {
+                    switch (error.status) {
+                        case 400: {
+                            if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
+                            this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                            }
+                        }
+                    }
+                    });
+            }
+        });
     }
 
 }

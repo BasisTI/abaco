@@ -4,7 +4,7 @@ export class MessageUtil {
     public static ERROR_DELETE_REGISTRO = 'Falha ao excluir registro';
     public static EXCLUINDO_REGISTRO = 'Excluindo...';
     public static CONFIRMAR_BLOQUEIO = 'Tem certeza que deseja bloquear o registro ';
-    public static CONFIRMAR_DESBLOQUEIO = 'Tem certeza que deseja desbloquear o registro';
+    public static CONFIRMAR_DESBLOQUEIO = 'Tem certeza que deseja desbloquear o registro ';
     public static CONFIRMAR_CLONE = 'Tem certeza que deseja clonar o registro ';
     public static ANALISE = 'Análise';
     public static ERROR_SALVAR_REGISTRO = 'Falha ao salvar registro';

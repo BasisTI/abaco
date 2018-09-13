@@ -63,7 +63,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
     registeredPhases.forEach(each => {
       if (each.nome.toUpperCase() === this.tipoFase.nome.toUpperCase() && each.id !== this.tipoFase.id) {
         isAlreadyRegistered = true;
-        this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
+        this.pageNotificationService.addErrorMsg('Já existe um Tipo de Fase cadastrado com esse nome!');
       }
     });
     return isAlreadyRegistered;

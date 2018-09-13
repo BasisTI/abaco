@@ -23,6 +23,16 @@ export class AnaliseService {
 
   searchUrl = environment.apiUrl + '/_search/analises';
 
+  fieldSearchIdentificadorUrl = environment.apiUrl + '/_searchIdentificador/analises';
+
+  fieldSearchSistemaUrl = environment.apiUrl + '/_searchSistema/analises';
+
+  fieldSearchMetodoContagemUrl = environment.apiUrl + '/_searchMetodoContagem/analises';
+
+  fieldSearchOrganizacaoUrl = environment.apiUrl + '/_searchOrganizacao/analises';
+
+  fieldSearchEquipeUrl = environment.apiUrl + '/_searchEquipe/analises';
+
   relatoriosBaselineUrl = environment.apiUrl + '/downloadPdfBaselineBrowser';
 
   @BlockUI() blockUI: NgBlockUI;
@@ -187,6 +197,23 @@ export class AnaliseService {
       .map((res: Response) => this.convertResponse(res));
   }
 
+  /** Encontra todas as análises referentes às equipes do usuário.
+   *
+   * @param idUsuario Id do usuário que está fazendo a requisição
+   */
+  findAnalisesUsuario(idUsuario: number): Observable<Analise[]> {
+    const url = `${this.resourceUrl}/user/${idUsuario}`;
+    return this.http.get(url)
+      .map(
+        (res: Response) => this.convertJsonToAnalise(res),
+        (error) => this.tratarErro(error.toString(), idUsuario)
+      );
+  }
+
+  tratarErro(erro: string, id: number) {
+    console.log(`Deu ruim! erro em findAnalisUsuario(${id})`);
+    console.log(erro);
+  }
   /**
    *
    */
@@ -232,6 +259,14 @@ export class AnaliseService {
     return new Analise().copyFromJSON(json);
   }
 
+  convertJsonToAnalise (res: Response): Analise[] {
+    const jsonResponse = res.json();
+    let result = [];
+    for (let i = 0; i < jsonResponse.length; i++) {
+      result.push(this.convertItemFromServer(jsonResponse[i]));
+    }
+    return result;
+  }
   /**
    * Convert a Analise to a JSON which can be sent to the server.
    */
