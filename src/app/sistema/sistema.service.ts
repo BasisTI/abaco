@@ -16,6 +16,12 @@ export class SistemaService {
 
     searchUrl = environment.apiUrl + '/_search/sistemas';
 
+    fieldSearchSiglaUrl = environment.apiUrl + '/_searchSigla/sistemas';
+
+    fieldSearchSistemaUrl = environment.apiUrl + '/_searchSistema/sistemas';
+
+    fieldSearchOrganizacaoUrl = environment.apiUrl + '/_searchOrganizacao/sistemas';
+
     constructor(private http: HttpService, private pageNotificationService: PageNotificationService) {}
 
     create(sistema: Sistema): Observable<Sistema> {

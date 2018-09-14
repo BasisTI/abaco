@@ -37,6 +37,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     @Input() isView: boolean;
     isEdit: boolean;
     nomeInvalido;
+    isSaving: boolean;
+    listaFD: string[];
     classInvalida;
     impactoInvalido: boolean;
     hideElementTDTR: boolean;
@@ -114,6 +116,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.isSaving = false;
         this.hideShowQuantidade = true;
         this.currentFuncaoDados = new FuncaoDados();
         this.subscribeToAnaliseCarregada();
@@ -123,11 +126,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     public buttonSaveEdit() {
-        if (this.isEdit) {
-            this.editar();
-        } else {
-            this.adicionar();
-        }
+
+            if (this.isEdit) {
+                this.editar();
+            } else {
+                this.adicionar();
+            }
     }
 
     disableTRDER() {
@@ -145,10 +149,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     public carregarDadosBaseline() {
         this.baselineService.baselineAnaliticoFD(this.analise.sistema.id).subscribe((res: ResponseWrapper) => {
             this.dadosBaselineFD = res.json
-            console.log('aquiii', res)
         });
     }
-
 
     private atualizaResumo() {
         this.resumo = this.analise.resumoFuncaoDados;
@@ -165,9 +167,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     baselineResults: any[] = [];
 
     searchBaseline(event): void {
-        console.log(event)
         this.baselineResults = this.dadosBaselineFD.filter(c => c.name.startsWith(event.query));
-        console.log(this.baselineResults)
     }
 
     // Carrega nome das funçeõs de dados
@@ -257,23 +257,46 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     adicionar() {
+
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
             return;
+        } else {
+            this.desconverterChips();
+            this.verificarModulo();
+            const funcaoDadosCalculada = Calculadora.calcular(
+                this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
+            this.validarNameFuncaoDados(this.currentFuncaoDados.name).then( resolve => {
+               if (resolve){
+                   this.salvarAnalise();
+                   this.fecharDialog();
+                   this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
+                   this.analise.addFuncaoDados(funcaoDadosCalculada);
+                   this.atualizaResumo();
+                   this.resetarEstadoPosSalvar();
+               } else {
+                   this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
+               }
+            });
         }
-        this.desconverterChips();
-        this.verificarModulo();
-        const funcaoDadosCalculada = Calculadora.calcular(
-            this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
+    }
 
-        this.analise.addFuncaoDados(funcaoDadosCalculada);
-        this.atualizaResumo();
-        this.resetarEstadoPosSalvar();
-
-        this.salvarAnalise();
-        this.fecharDialog();
-        this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
+    validarNameFuncaoDados(nome: string) {
+        const that = this;
+        return new Promise( resolve => {
+            if (that.analise.funcaoDados.length === 0) {
+                return resolve(true);
+            }
+            that.analise.funcaoDados.forEach( (data, index) => {
+                if (data.name === nome) {
+                    return resolve(false);
+                }
+                if (!that.analise.funcaoDados[index + 1]){
+                    return resolve(true);
+                }
+            });
+        });
     }
 
     private verifyDataRequire(): boolean {
@@ -350,27 +373,29 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private editar() {
+
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
             return;
-        }
-        this.desconverterChips();
-        this.verificarModulo();
-
-
-        const funcaoDadosCalculada = Calculadora.calcular(
-            this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual
-        );
-
-        this.analise.updateFuncaoDados(funcaoDadosCalculada);
-        this.atualizaResumo();
-        this.resetarEstadoPosSalvar();
-
-        this.salvarAnalise();
-        this.fecharDialog();
-        this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
-
+        } else {
+            this.desconverterChips();
+            this.verificarModulo();
+            const funcaoDadosCalculada = Calculadora.calcular(
+                this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
+                this.validarNameFuncaoDados(this.currentFuncaoDados.name).then( resolve => {
+                    if (resolve){
+                        this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
+                        this.analise.updateFuncaoDados(funcaoDadosCalculada);
+                        this.atualizaResumo();
+                        this.resetarEstadoPosSalvar();
+                        this.salvarAnalise();
+                        this.fecharDialog();
+                    } else {
+                        this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
+                    }
+                 });
+        } 
     }
 
     fecharDialog() {
@@ -557,6 +582,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     openDialog(param: boolean) {
         console.log(`openDialog(param)\n -> this.isEdit: ${this.isEdit}\n -> param: ${param}`);
+        this.subscribeToAnaliseCarregada();
         this.carregarDadosBaseline();
         this.isEdit = param;
         this.hideShowQuantidade = true;

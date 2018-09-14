@@ -51,7 +51,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     /**
      *
-    */
+     */
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -85,7 +85,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     /**
      *
-    */
+     */
     save(form: any) {
         if (!this.checkRequiredFields()) {
             this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
@@ -93,12 +93,30 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         }
 
         this.isSaving = true;
+        this.manualService.query().subscribe(response => {
+            const todosManuais = response;
 
-        if (this.manual.id !== undefined) {
-            this.editar();
-        } else {
-            this.novo();
-        }
+            if (!this.checkIfManualAlreadyExists(todosManuais.json)) {
+                if (this.manual.id !== undefined) {
+                    this.editar();
+                } else {
+                    this.novo();
+                }
+            }
+        })
+
+
+    }
+
+    private checkIfManualAlreadyExists(registeredPhases: Array<TipoFase>): boolean {
+        let isAlreadyRegistered: boolean = false;
+        registeredPhases.forEach(each => {
+            if (each.nome.toUpperCase() === this.manual.nome.toUpperCase() && each.id !== this.manual.id) {
+                isAlreadyRegistered = true;
+                this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+            }
+        });
+        return isAlreadyRegistered;
     }
 
     private editar() {
@@ -127,12 +145,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
                     this.manual.arquivoManualId = JSON.parse(response['_body']).id;
                     this.subscribeToSaveResponse(this.manualService.create(this.manual));
-                    });
+                });
             } else {
                 this.privateExibirMensagemCamposInvalidos(1);
             }
         } else if (this.checkRequiredFields()) {
-                this.subscribeToSaveResponse(this.manualService.create(this.manual));
+            this.subscribeToSaveResponse(this.manualService.create(this.manual));
         } else {
             this.privateExibirMensagemCamposInvalidos(1);
         }

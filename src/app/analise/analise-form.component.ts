@@ -315,7 +315,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 const copy = this.analise.toJSONState();
                     this.analiseService.block(copy).subscribe(() => {
                     this.pageNotificationService.addBlockMsgWithName(this.analise.identificadorAnalise);
-                    this.router.navigate(['/analise']);
+                    this.router.navigate(['analise/:id/view']);
                 }, (error: Response) => {
                     switch (error.status) {
                         case 400: {
@@ -371,6 +371,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     contratoSelected(contrato: Contrato) {
         this.setManual(contrato);
         this.diasGarantia = this.analise.contrato.diasDeGarantia;
+        this.analise.esforcoFases = _.cloneDeep(contrato.manual.esforcoFases);
     }
 
     /**

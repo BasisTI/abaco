@@ -23,6 +23,7 @@ import {Modulo} from '../modulo';
 import {CalculadoraTransacao} from '../analise-shared';
 import {FuncaoTransacao, TipoFuncaoTransacao} from './funcao-transacao.model';
 import {Der} from '../der/der.model';
+import { Impacto } from '../analise-shared/impacto-enum';
 
 @Component({
     selector: 'app-analise-funcao-transacao',
@@ -87,8 +88,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoTransacao = new FuncaoTransacao();
         this.subscribeToAnaliseCarregada();
         this.initClassificacoes();
-        //  this.subscribeToSistemaSelecionado();
-
     }
 
     estadoInicial(){
@@ -97,6 +96,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.dersChips = [];
         this.alrsChips = [];
     }
+
 
     private initClassificacoes() {
         const classificacoes = Object.keys(TipoFuncaoTransacao).map(k => TipoFuncaoTransacao[k as any]);
@@ -238,19 +238,44 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         if (!retorno) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
             return;
-        }
+        } else {
         this.desconverterChips();
         this.verificarModulo();
         const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
             this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
 
-        this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
-        this.atualizaResumo();
-        this.resetarEstadoPosSalvar();
+            this.validarNameFuncaoTransacaos(this.currentFuncaoTransacao.name).then( resolve => {
+                if (resolve){
+                    this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
+                    this.atualizaResumo();
+                    this.resetarEstadoPosSalvar();
+                    this.salvarAnalise();
+                    this.fecharDialog();
+                    this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
+                    this.atualizaResumo();
+                    this.resetarEstadoPosSalvar();
+                } else {
+                    this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
+                }
+             });
+    }
+}
 
-        this.salvarAnalise();
-        this.fecharDialog();
-        this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
+    validarNameFuncaoTransacaos(nome: string) {
+        const that = this;
+        return new Promise( resolve => {
+            if (that.analise.funcaoTransacaos.length === 0) {
+                return resolve(true);
+            }
+            that.analise.funcaoTransacaos.forEach( (data, index) => {
+                if (data.name === nome) {
+                    return resolve(false);
+                }
+                if (!that.analise.funcaoTransacaos[index + 1]){
+                    return resolve(true);
+                }
+            });
+        });
     }
 
     private verifyDataRequire(): boolean {
@@ -338,22 +363,26 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         if (!retorno) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
             return;
-        }
+        } else {
         this.desconverterChips();
         this.verificarModulo();
-
         const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
-            this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual
-        );
-
-        this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
-        this.atualizaResumo();
-        this.resetarEstadoPosSalvar();
-
-        this.salvarAnalise();
-        this.fecharDialog();
-        this.pageNotificationService.addSuccessMsg(`Função de Transação '${funcaoTransacaoCalculada.name}' alterada com sucesso`);
-
+            this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
+            this.validarNameFuncaoTransacaos(this.currentFuncaoTransacao.name).then( resolve => {
+                if (resolve){
+                    this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
+                    this.atualizaResumo();
+                    this.resetarEstadoPosSalvar();
+                    this.salvarAnalise();
+                    this.fecharDialog();
+                    this.pageNotificationService.addSuccessMsg(`Função de Transação '${funcaoTransacaoCalculada.name}' alterada com sucesso`);
+                    this.atualizaResumo();
+                    this.resetarEstadoPosSalvar();
+                } else {
+                    this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
+                }
+             });
+        }
     }
 
     fecharDialog() {
@@ -425,6 +454,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 this.prepareToClone(funcaoTransacaoSelecionada);
                 this.currentFuncaoTransacao.id = undefined;
                 this.currentFuncaoTransacao.artificialId = undefined;
+                this.currentFuncaoTransacao.impacto = Impacto.ALTERACAO;
         }
     }
 

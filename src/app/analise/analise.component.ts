@@ -1,20 +1,17 @@
 import { Manual } from './../manual/manual.model';
-import { SistemaService } from './../sistema/sistema.service';
-import { Sistema } from './../sistema/sistema.model';
-import { TipoEquipeService } from './../tipo-equipe/tipo-equipe.service';
-import { OrganizacaoService } from './../organizacao/organizacao.service';
-import { TipoEquipe } from './../tipo-equipe/tipo-equipe.model';
-import { Organizacao } from './../organizacao/organizacao.model';
+import { Sistema, SistemaService } from './../sistema';
+import { TipoEquipe, TipoEquipeService } from './../tipo-equipe';
+import { Organizacao, OrganizacaoService } from './../organizacao';
+import { User, UserService } from '../user';
 import { StringConcatService } from './../shared/string-concat.service';
-import {Component, ViewChild, OnInit, AfterViewInit} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConfirmationService, SelectItem } from 'primeng/primeng';
-import {DatatableComponent, DatatableClickEvent} from '@basis/angular-components';
-import {BlockUI, NgBlockUI} from 'ng-block-ui';
-import { Analise, MetodoContagem } from './analise.model';
-import {AnaliseService} from './analise.service';
-import {ElasticQuery, PageNotificationService} from '../shared';
-import {MessageUtil} from '../util/message.util';
+import { Analise, AnaliseService, MetodoContagem } from './';
+import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { ElasticQuery, PageNotificationService } from '../shared';
+import { MessageUtil } from '../util/message.util';
 import { Response } from '@angular/http';
 
 @Component({
@@ -28,6 +25,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
     searchUrl: string = this.analiseService.searchUrl;
+
+    userAnaliseUrl: string;
 
     elasticQuery: ElasticQuery = new ElasticQuery();
 
@@ -43,7 +42,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         nomeSistema: undefined,
         metContagem: undefined,
         organizacao: undefined,
-        team: undefined
+        team: undefined,
+        descricao: undefined
       };
 
       metsContagens = [
@@ -55,6 +55,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
 
     blocked: boolean;
 
+    private userId: number;         // Usado para carregar apenas os organizações e equipes referentes ao usuário logado
+
     constructor(
         private router: Router,
         private confirmationService: ConfirmationService,
@@ -63,11 +65,13 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         private tipoEquipeService: TipoEquipeService,
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
-        private stringConcatService: StringConcatService
+        private stringConcatService: StringConcatService,
+        private userService: UserService
     ) {}
 
     public ngOnInit() {
 
+        this.recuperarAnalisesUsuario();            // Filtrando as análises que o usuário pode ver
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
         this.recuperarSistema();
@@ -84,6 +88,28 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         });
     }
 
+    /**
+     * Função para recuperar análises da equipe do usuário
+     */
+    recuperarAnalisesUsuario() {
+        const userSub = this.userService.findCurrentUser().subscribe(res => {
+          this.userId = res.id;                 // Pegando id do usuário logado
+          this.userAnaliseUrl = `${this.analiseService.resourceUrl}/user/${this.userId}`;       // Construindo URL para busca de análises
+          this.buscarAnalises(this.userId);     // Buscando as benditas análises
+        });
+      }
+
+      /**
+       * Função que faz requisição das análises das equipes do usuário
+       * @param idUser id do usuário logado
+       */
+    buscarAnalises(idUser: number) {
+        const analiseSub = this.analiseService.findAnalisesUsuario(this.userId).subscribe(res => {
+            this.datatable.pDatatableComponent.value = res;             // Atribuindo valores das análises para a datatable
+            this.datatable.pDatatableComponent.dataToRender = res;      // Renderizando valores das análises na datatable
+        });
+    }
+
     recuperarOrganizacoes() {
         this.organizacaoService.query().subscribe(response => {
           this.organizations = response.json;
@@ -93,27 +119,27 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         });
       }
 
-      recuperarSistema() {
-          this.sistemaService.query().subscribe(response => {
-            this.nomeSistemas = response.json;
-            let emptySystem = new Sistema();
-            emptySystem.nome = '';
-            this.nomeSistemas.unshift(emptySystem);
-          });
-      }
-
-      recuperarEquipe() {
-        this.tipoEquipeService.query().subscribe(response => {
-          this.teams = response.json;
-          let emptyTeam = new TipoEquipe();
-          emptyTeam.nome = '';
-          this.teams.unshift(emptyTeam);
+    recuperarSistema() {
+        this.sistemaService.query().subscribe(response => {
+        this.nomeSistemas = response.json;
+        let emptySystem = new Sistema();
+        emptySystem.nome = '';
+        this.nomeSistemas.unshift(emptySystem);
         });
-      }
+    }
 
-      ngAfterViewInit() {
+    recuperarEquipe() {
+    this.tipoEquipeService.query().subscribe(response => {
+        this.teams = response.json;
+        let emptyTeam = new TipoEquipe();
+        emptyTeam.nome = '';
+        this.teams.unshift(emptyTeam);
+    });
+    }
+
+    ngAfterViewInit() {
         this.recarregarDataTable();
-      }
+    }
 
     /**
      * Clique na tabela análise
@@ -235,6 +261,83 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         });
     }
 
+    public switchUrlIdentificador() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+                this.searchUrl = this.analiseService.fieldSearchIdentificadorUrl;
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+            }
+    }
+
+    public switchUrlSistema() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema !== '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+                this.searchUrl = this.analiseService.fieldSearchSistemaUrl;
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+            }
+    }
+
+    public switchUrlMetodoContagem() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem !== '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+                this.searchUrl = this.analiseService.fieldSearchMetodoContagemUrl;
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+            }
+    }
+
+    public switchUrlOrganizacao() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao !== '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+                this.searchUrl = this.analiseService.fieldSearchOrganizacaoUrl;
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+            }
+    }
+
+    public switchUrlEquipe() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team !== '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+                this.searchUrl = this.analiseService.fieldSearchEquipeUrl;
+            } else {
+                this.searchUrl = this.analiseService.searchUrl;
+            }
+    }
+
+    public switchUrlDescricao() {
+        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
+            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
+            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
+            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
+            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
+                this.searchUrl = this.analiseService.searchUrl;
+    } else {
+        this.searchUrl = this.analiseService.searchUrl;
+        }
+    }
     /**
      * Limpa a pesquisa e recarrega a tabela
      */
@@ -246,6 +349,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.searchParams.nomeSistema = undefined;
         this.searchParams.metContagem = undefined;
         this.searchParams.team = undefined;
+        this.searchParams.descricao = undefined;
     }
 
     /**
@@ -292,6 +396,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         (this.searchParams.metContagem !== undefined) ? ((this.searchParams.metContagem.text === '') ? (this.searchParams.metContagem.text = undefined) : (this)) : (this);
         (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)) : (this);
         (this.searchParams.organizacao !== undefined) ? ((this.searchParams.organizacao.nome === '') ? (this.searchParams.organizacao.nome = undefined) : (console.log('Caiu no false'))) : (this);
+        (this.searchParams.descricao === '') ? (this.searchParams.descricao = undefined) : (this);
       }
 
       private createStringParamsArray(): Array<string> {
@@ -302,11 +407,15 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         (this.searchParams.metContagem !== undefined) ? ((this.searchParams.metContagem.text !== undefined) ? (stringParamsArray.push(this.searchParams.metContagem.text)) : (this)) : (this);
         (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (stringParamsArray.push(this.searchParams.team.nome)) : (this)) : (this);
         (this.searchParams.organizacao !== undefined) ? ((this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push(this.searchParams.organizacao.nome)) : (this)) : (this);
-
+        (this.searchParams.descricao !== undefined) ? (stringParamsArray.push(this.searchParams.descricao)) : (this);
+        
         return stringParamsArray;
+        
       }
 
       public performSearch() {
+
+        this.searchUrl = this.analiseService.searchUrl;
         this.checkUndefinedParams();
         this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
         this.recarregarDataTable();
