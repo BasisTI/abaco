@@ -51,7 +51,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     /**
      *
-    */
+     */
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -85,7 +85,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     /**
      *
-    */
+     */
     save(form: any) {
         if (!this.checkRequiredFields()) {
             this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
@@ -104,20 +104,20 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 }
             }
         })
-        
-        
+
+
     }
 
     private checkIfManualAlreadyExists(registeredPhases: Array<TipoFase>): boolean {
         let isAlreadyRegistered: boolean = false;
         registeredPhases.forEach(each => {
-          if (each.nome.toUpperCase() === this.manual.nome.toUpperCase() && each.id !== this.manual.id) {
-            isAlreadyRegistered = true;
-            this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
-          }
+            if (each.nome.toUpperCase() === this.manual.nome.toUpperCase() && each.id !== this.manual.id) {
+                isAlreadyRegistered = true;
+                this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+            }
         });
         return isAlreadyRegistered;
-      }
+    }
 
     private editar() {
         this.manualService.find(this.manual.id).subscribe(response => {
@@ -145,12 +145,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
                     this.manual.arquivoManualId = JSON.parse(response['_body']).id;
                     this.subscribeToSaveResponse(this.manualService.create(this.manual));
-                    });
+                });
             } else {
                 this.privateExibirMensagemCamposInvalidos(1);
             }
         } else if (this.checkRequiredFields()) {
-                this.subscribeToSaveResponse(this.manualService.create(this.manual));
+            this.subscribeToSaveResponse(this.manualService.create(this.manual));
         } else {
             this.privateExibirMensagemCamposInvalidos(1);
         }
@@ -226,18 +226,18 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     private subscribeToSaveResponse(result: Observable<Manual>) {
         result.subscribe((res: Manual) => {
-            this.isSaving = false;
-            this.router.navigate(['/manual']);
-            this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg();
-        }, 
-        (error: Response) => {
-            this.isSaving = false;
-      
-            if (error.headers.toJSON()['X-abacoapp-error'][0] === 'error.manualexists') {
-                this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
-                document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
-                }              
-        });
+                this.isSaving = false;
+                this.router.navigate(['/manual']);
+                this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg();
+            },
+            (error: Response) => {
+                this.isSaving = false;
+
+                if (error.headers.toJSON()['X-abacoapp-error'][0] === 'error.manualexists') {
+                    this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+                    document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
+                }
+            });
     }
 
     ngOnDestroy() {
