@@ -52,6 +52,13 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
     }
   }
 
+  static convertTransacaoJsonToObject(json: any) {
+    const sintetico = Object.create(FuncaoTransacao.prototype);
+    return Object.assign(sintetico, json, {
+        created: new Date(json.created)
+    });
+  }
+
   static tipos(): string[] {
     return Object.keys(TipoFuncaoTransacao).map(k => TipoFuncaoTransacao[k as any]);
   }
@@ -105,12 +112,6 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
       this.derValues, this.ftrValues, this.ders, this.impacto, this.quantidade);
   }
 
-  static convertTransacaoJsonToObject(json: any) {
-    const sintetico = Object.create(FuncaoTransacao.prototype);
-    return Object.assign(sintetico, json, {
-        created: new Date(json.created)
-    });
-  }
 }
 
 // TODO bem duplicado com FuncaoDados

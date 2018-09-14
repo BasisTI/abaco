@@ -65,68 +65,51 @@ export class Manual implements BaseEntity, JSONable<Manual> {
     }
 
     get valorVariacaoIndicativaFormatado(): number {
-        return this.formatGetPercentage(this.valorVariacaoIndicativa);
+        return this.valorVariacaoIndicativa;
     }
 
     set valorVariacaoIndicativaFormatado(valor: number) {
-        this.valorVariacaoIndicativa = this.formatSetPercentage(valor);
+        this.valorVariacaoIndicativa = valor;
     }
 
     get valorVariacaoEstimadaFormatado(): number {
-        return this.formatGetPercentage(this.valorVariacaoEstimada);
+        return this.valorVariacaoEstimada;
     }
 
     set valorVariacaoEstimadaFormatado(valor: number) {
-        this.valorVariacaoEstimada = this.formatSetPercentage(valor);
+        this.valorVariacaoEstimada = valor;
     }
 
     get parametroInclusaoFormatado(): number {
-        return this.formatGetPercentage(this.parametroInclusao);
+        return this.parametroInclusao;
     }
 
     set parametroInclusaoFormatado(valor: number) {
-        this.parametroInclusao = this.formatSetPercentage(valor);
+        this.parametroInclusao = valor;
     }
 
     get parametroAlteracaoFormatado(): number {
-        return this.formatGetPercentage(this.parametroAlteracao);
+        return this.parametroAlteracao;
     }
 
     set parametroAlteracaoFormatado(valor: number) {
-        this.parametroAlteracao = this.formatSetPercentage(valor);
+        this.parametroAlteracao = valor;
     }
 
     get parametroExclusaoFormatado(): number {
-        return this.formatGetPercentage(this.parametroExclusao);
+        return this.parametroExclusao;
     }
 
     set parametroExclusaoFormatado(valor: number) {
-        this.parametroExclusao = this.formatSetPercentage(valor);
+        this.parametroExclusao = valor;
     }
 
     get parametroConversaoFormatado(): number {
-        return this.formatGetPercentage(this.parametroConversao);
+        return this.parametroConversao;
     }
 
     set parametroConversaoFormatado(valor: number) {
-        this.parametroConversao = this.formatSetPercentage(valor);
-    }
-
-    formatSetPercentage(valor: number): number {
-        valor = valor / 100;
-        let valorString: string = valor.toString().slice(0, 6);
-        
-
-        return Number(valorString);
-    }
-
-    formatGetPercentage(valor: number): number {
-        valor = valor * 100;
-        let valorString: string = valor.toString().slice(0, 6);
-
-        if (valor) {
-            return Number(valorString);
-        }
+        this.parametroConversao = valor;
     }
 
     addEsforcoFases(esforcoFase: EsforcoFase) {

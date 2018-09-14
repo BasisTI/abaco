@@ -53,6 +53,14 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, 
     }
   }
 
+  static convertJsonToObject(json: any) {
+    const sintetico = Object.create(FuncaoDados.prototype);
+    return Object.assign(sintetico, json, {
+        created: new Date(json.created)
+    });
+
+}
+
   static tipos(): string[] {
     return Object.keys(TipoFuncaoDados).map(k => TipoFuncaoDados[k as any]);
   }
@@ -112,13 +120,6 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, 
       this.quantidade);
   }
 
-    static convertJsonToObject(json: any) {
-        const sintetico = Object.create(FuncaoDados.prototype);
-        return Object.assign(sintetico, json, {
-            created: new Date(json.created)
-        });
-
-    }
 }
 
 class FuncaoDadosCopyFromJSON {

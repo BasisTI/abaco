@@ -93,7 +93,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         }
 
         this.isSaving = true;
-        
+
         if (this.manual.id !== undefined) {
             this.editar();
         } else {
@@ -211,14 +211,14 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.isSaving = false;
             this.router.navigate(['/manual']);
             this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg();
-        }, 
+        },
         (error: Response) => {
             this.isSaving = false;
-      
+
             if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.manualexists') {
                 this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
                 document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
-                }              
+                }
         });
     }
 

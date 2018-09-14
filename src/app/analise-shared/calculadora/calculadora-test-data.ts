@@ -24,7 +24,7 @@ export class CalculadoraTestData {
   static criaFatorAjustePercentual50(): FatorAjuste {
     const fa: FatorAjuste = new FatorAjuste();
     fa.nome = 'percentual';
-    fa.fator = 0.5;
+    fa.fator = 50;                   // Linha alterada. Original: fa.fator = 0.5;
     fa.tipoAjuste = TipoFatorAjuste.PERCENTUAL;
     return fa;
   }

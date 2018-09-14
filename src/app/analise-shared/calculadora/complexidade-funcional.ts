@@ -46,17 +46,20 @@ export abstract class ComplexidadeFuncional {
 
 }
 
+/**
+ * Classe para calculo de complexidade funcional de ALI e AIE
+ */
 export class ComplexidadeFuncionalALIeAIE extends ComplexidadeFuncional {
     isPrimeiraColuna(): boolean {
-        return this.der < 5;
+        return this.der < 20;
     }
 
     isSegundaColuna(): boolean {
-        return this.der >= 5 && this.der <= 15;
+        return this.der >= 20 && this.der <= 50;
     }
 
     isTerceiraColuna(): boolean {
-        return this.der > 15;
+        return this.der > 50;
     }
 
     isPrimeiraLinha(): boolean {
@@ -64,11 +67,11 @@ export class ComplexidadeFuncionalALIeAIE extends ComplexidadeFuncional {
     }
 
     isSegundaLinha(): boolean {
-        return this.nonDer === 2;
+        return this.nonDer >= 2 && this.nonDer <= 5;
     }
 
     isTerceiraLinha(): boolean {
-        return this.nonDer > 2;
+        return this.nonDer > 5;
     }
 
 }

@@ -337,10 +337,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                     this.blocked = !this.blocked;
                 }, (error: Response) => {
                     switch (error.status) {
-                        case 400: {   
+                        case 400: {
                             if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
                             this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
-                            } 
+                            }
                         }
                     }
                     });
@@ -366,10 +366,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                     this.blocked = !this.blocked;
                 }, (error: Response) => {
                     switch (error.status) {
-                        case 400: {   
+                        case 400: {
                             if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
                             this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
-                            } 
+                            }
                         }
                     }
                     });

@@ -59,20 +59,18 @@ export class Calculadora {
         this.funcaoDadosCalculada.rlr = '0';
         this.funcaoDadosCalculada.complexidade = Complexidade.SEM;
 
-
         if (this.funcaoDados.quantidade === undefined) {
             this.definePFIndicativaDeAcordoComGrupoDadosLogicos();
         } else {
             this.definePFIndicativaDeAcordoComAQuantidade();
 
         }
-
     }
 
     private static definePFIndicativaDeAcordoComAQuantidade() {
 
         if (this.funcaoDados.fatorAjuste !== undefined) {
-            const fator: number = this.funcaoDados.fatorAjuste.fator * 100;
+            const fator: number = this.funcaoDados.fatorAjuste.fator;  // Cáculo modificado
             this.funcaoDadosCalculada.pf = fator * this.funcaoDados.quantidade;
         }
         this.definePFIndicativaDeAcordoComGrupoDadosLogicos();
