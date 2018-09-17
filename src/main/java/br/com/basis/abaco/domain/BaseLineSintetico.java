@@ -17,6 +17,9 @@ import java.math.BigDecimal;
 public class BaseLineSintetico implements Serializable, ReportObject {
 
     @Id
+    @Column(name = "row_number")
+    private Long id;
+
     @Column(name = "id_sistema")
     private Long idsistema;
 
@@ -35,8 +38,16 @@ public class BaseLineSintetico implements Serializable, ReportObject {
     @Column(name = "numero_ocorrencia")
     private String numeroocorrencia;
 
-    @Column(name = "sum", precision=10, scale=2)
+    @Column(name = "sum", precision = 10, scale = 2)
     private BigDecimal sum;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getIdsistema() {
         return idsistema;

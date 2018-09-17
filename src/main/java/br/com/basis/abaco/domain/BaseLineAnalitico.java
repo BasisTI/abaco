@@ -1,6 +1,7 @@
 package br.com.basis.abaco.domain;
 
 import org.springframework.data.elasticsearch.annotations.Document;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,6 +18,9 @@ import java.math.BigDecimal;
 public class BaseLineAnalitico implements Serializable {
 
     @Id
+    @Column(name = "row_number")
+    private Long id;
+
     @Column(name = "id_funcao_dados")
     private Long idfuncaodados;
 
@@ -64,6 +68,14 @@ public class BaseLineAnalitico implements Serializable {
 
     @Column(name = "rlr_alr")
     private BigDecimal rlralr;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getIdfuncaodados() {
         return idfuncaodados;
