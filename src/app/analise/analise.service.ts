@@ -77,8 +77,7 @@ export class AnaliseService {
   public block(analise: Analise): Observable<Analise> {
     const copy = analise;
     return this.http.put(`${this.resourceUrl}/${copy.id}/block`, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
+      return null;
     }).catch((error: any) => {
         if (error.status === 403) {
             this.pageNotificationService.addErrorMsg('Você não possui permissão!');

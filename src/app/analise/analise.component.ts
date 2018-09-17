@@ -428,31 +428,24 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         return !this.analiseSelecionada;
     }
 
-    /**
-     * Bloqueia relatório
-     */
     public bloqueiaRelatorio() {
-        if (this.analiseSelecionada.bloqueiaAnalise) {
-            this.pageNotificationService.addErrorMsg(MessageUtil.REGISTRO_ESTA_BLOQUEADO);
-            return;
-        }
-        console.log(this.analiseSelecionada);
         this.confirmationService.confirm({
-            message: MessageUtil.CONFIRMAR_BLOQUEIO.concat(this.analiseSelecionada.identificadorAnalise).concat('?'),
+            message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat(this.analiseSelecionada).concat('?'),
             accept: () => {
-                this.analiseService.block(this.analiseSelecionada).subscribe(() => {
-                    this.pageNotificationService.addBlockMsgWithName(this.analiseSelecionada.identificadorAnalise);
-                    this.recarregarDataTable();
-                    this.blocked = !this.blocked;
+                const copy = this.analiseSelecionada.toJSONState();
+                copy.bloqueiaAnalise = true;
+                this.analiseService.block(copy).subscribe(() => {
+                    window.location.reload();
+                    this.pageNotificationService.addUnblockMsgWithName(this.analiseSelecionada);
                 }, (error: Response) => {
                     switch (error.status) {
                         case 400: {
                             if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
-                            this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                                this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
                             }
                         }
                     }
-                    });
+                });
             }
         });
     }
@@ -461,27 +454,23 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      * Desbloquear relatório
      */
     public desbloqueiaRelatorio() {
-        if (!this.analiseSelecionada.bloqueiaAnalise) {
-            this.pageNotificationService.addErrorMsg(MessageUtil.REGISTRO_ESTA_BLOQUEADO);
-            return;
-        }
         this.confirmationService.confirm({
-            message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat(' ').
-            concat(this.analiseSelecionada.identificadorAnalise).concat('?'),
+            message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat(this.analiseSelecionada.name).concat('?'),
             accept: () => {
-                this.analiseService.unblock(this.analiseSelecionada).subscribe(() => {
-                    this.pageNotificationService.addUnblockMsgWithName(this.analiseSelecionada.identificadorAnalise);
-                    this.recarregarDataTable();
-                    this.blocked = !this.blocked;
+                const copy = this.analiseSelecionada.toJSONState();
+                copy.bloqueiaAnalise = false;
+                this.analiseService.unblock(copy).subscribe(() => {
+                    window.location.reload();
+                    this.pageNotificationService.addUnblockMsgWithName(this.analiseSelecionada);
                 }, (error: Response) => {
                     switch (error.status) {
                         case 400: {
                             if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
-                            this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                                this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
                             }
                         }
                     }
-                    });
+                });
             }
         });
     }
