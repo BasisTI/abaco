@@ -68,7 +68,7 @@ export class AnaliseService {
             this.pageNotificationService.addErrorMsg('Você não possui permissão!');
             return Observable.throw(new Error(error.status));
         }
-    });;
+    });
   }
 
   /**

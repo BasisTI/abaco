@@ -34,7 +34,7 @@ export class ManualComponent implements OnInit {
   mostrarDialogClonar = false;
 
   rowsPerPageOptions: number[] = [5, 10, 20];
-  
+
   constructor(
     private router: Router,
     private manualService: ManualService,
@@ -43,7 +43,6 @@ export class ManualComponent implements OnInit {
   ) { }
 
   public ngOnInit() {
-      
     this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
       this.manualSelecionado = new Manual().copyFromJSON(event.data);
     });
@@ -80,17 +79,16 @@ export class ManualComponent implements OnInit {
   }
 
   public onRowDblclick(event) {
-    
     if (event.target.nodeName === 'TD') {
       this.abrirEditar();
     }else if (event.target.parentNode.nodeName === 'TD') {
       this.abrirEditar();
     }
-}
+  }
 
-abrirEditar(){
-  this.router.navigate(['/manual', this.manualSelecionado.id, 'edit']);
-}
+  abrirEditar() {
+    this.router.navigate(['/manual', this.manualSelecionado.id, 'edit']);
+  }
 
   public fecharDialogClonar() {
     this.nomeDoManualClonado = '';
@@ -133,13 +131,14 @@ abrirEditar(){
         this.manualService.delete(id).subscribe(() => {
           this.recarregarDataTable();
           this.blockUI.stop();
-        }, (error: Response) => {
+          }, (error: Response) => {
 
-          if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.contratoexists') {
-              this.pageNotificationService.addErrorMsg('Manual '+this.manualSelecionado.nome+' está vinculado a um Contrato e não pode ser excluído!');
-              }
-        }
-      );
+            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.contratoexists') {
+              this.pageNotificationService.addErrorMsg('Manual ' + this.manualSelecionado.nome +
+                                                       ' está vinculado a um Contrato e não pode ser excluído!');
+            }
+          }
+        );
       }
     });
   }

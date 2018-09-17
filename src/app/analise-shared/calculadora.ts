@@ -71,7 +71,7 @@ export class Calculadora {
 
         if (this.funcaoDados.fatorAjuste !== undefined) {
             const fator: number = this.funcaoDados.fatorAjuste.fator;  // Cáculo modificado
-            this.funcaoDadosCalculada.pf = fator * this.funcaoDados.quantidade;
+            this.funcaoDadosCalculada.pf = (fator * this.funcaoDados.quantidade) / 100;
         }
         this.definePFIndicativaDeAcordoComGrupoDadosLogicos();
     }

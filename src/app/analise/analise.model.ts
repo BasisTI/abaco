@@ -119,11 +119,13 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     }
 
     /**
+     * VERIFICAR CÁLCULO - Cálculo modificado par arefletir a nova forma de salvar
+     * Porcentagens no banco
      * Renomenando método de "calcularPfTotalAjustado()"
      * para "aplicaTotalEsforco()" por motivo de legibilidade e clareza
      */
     private aplicaTotalEsforco(pf: number): number {
-        return pf * this.totalEsforcoFases();
+        return (pf * this.totalEsforcoFases()) / 100;
     }
 
     /**

@@ -103,13 +103,11 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                     this.novo();
                 }
             }
-        })
-
-
+        });
     }
 
     private checkIfManualAlreadyExists(registeredPhases: Array<TipoFase>): boolean {
-        let isAlreadyRegistered: boolean = false;
+        let isAlreadyRegistered = false;
         registeredPhases.forEach(each => {
             if (each.nome.toUpperCase() === this.manual.nome.toUpperCase() && each.id !== this.manual.id) {
                 isAlreadyRegistered = true;
@@ -206,7 +204,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             case 2:
                 this.pageNotificationService.addErrorMsg('Campo Arquivo Manual está inválido!');
                 return;
-
         }
     }
 
@@ -281,7 +278,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     isPercentualEnum(value: TipoFatorAjuste) {
-
         return (value !== undefined) ? (value.toString() === 'PERCENTUAL') : (false);
     }
 

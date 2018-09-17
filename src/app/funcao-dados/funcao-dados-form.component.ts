@@ -59,6 +59,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     dadosBaselineFD: BaselineAnalitico[] = [];
     results: string[];
     currentFuncaoDadosasdf: FuncaoAnalise;
+    baselineResults: any[] = [];
 
     impacto: SelectItem[] = [
         { label: 'Inclusão', value: 'INCLUSAO' },
@@ -81,7 +82,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     public erroTD: boolean;
     public erroUnitario: boolean;
     public erroDeflator: boolean;
-    
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
@@ -148,7 +148,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     public carregarDadosBaseline() {
         this.baselineService.baselineAnaliticoFD(this.analise.sistema.id).subscribe((res: ResponseWrapper) => {
-            this.dadosBaselineFD = res.json
+            this.dadosBaselineFD = res.json;
         });
     }
 
@@ -163,8 +163,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 this.loadDataFunctionsName();
             });
     }
-
-    baselineResults: any[] = [];
 
     searchBaseline(event): void {
         this.baselineResults = this.dadosBaselineFD.filter(c => c.name.startsWith(event.query));
@@ -268,7 +266,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
             this.validarNameFuncaoDados(this.currentFuncaoDados.name).then( resolve => {
-               if (resolve){
+               if (resolve) {
                    this.salvarAnalise();
                    this.fecharDialog();
                    this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
@@ -282,6 +280,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         }
     }
 
+    /* Verificar esta promisse */
     validarNameFuncaoDados(nome: string) {
         const that = this;
         return new Promise( resolve => {
@@ -292,7 +291,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 if (data.name === nome) {
                     return resolve(false);
                 }
-                if (!that.analise.funcaoDados[index + 1]){
+                if (!that.analise.funcaoDados[index + 1]) {
                     return resolve(true);
                 }
             });
@@ -384,7 +383,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
                 this.validarNameFuncaoDados(this.currentFuncaoDados.name).then( resolve => {
-                    if (resolve){
+                    if (resolve) {
                         this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
                         this.analise.updateFuncaoDados(funcaoDadosCalculada);
                         this.atualizaResumo();
@@ -395,7 +394,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                         this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
                     }
                  });
-        } 
+        }
     }
 
     fecharDialog() {
@@ -454,9 +453,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
         this.funcaoDadosService.getFuncaoDadosBaseline(baselineAnalitico.idfuncaodados)
         .subscribe((res: FuncaoDados) => {
-            res.name = this.currentFuncaoDados.name
+            res.name = this.currentFuncaoDados.name;
 
-                if(res.fatorAjuste===null){res.fatorAjuste = undefined}
+                if (res.fatorAjuste === null) {res.fatorAjuste = undefined; }
                 res.id = undefined;
                     res.ders.forEach(Ders => {
                         Ders.id = undefined;

@@ -402,7 +402,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         const validacaoTipoAnallise = this.analise.tipoAnalise !== null;
 
         this.validacaoCampos = !(validacaoIdentificadorAnalise === true
-            &&  validacaoContrato === true
+            && validacaoContrato === true
             && validacaoMetodoContagem  === true
             && validacaoTipoAnallise === true );
 
