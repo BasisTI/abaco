@@ -70,7 +70,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     ) {}
 
     public ngOnInit() {
+       this.estadoInicial();
+    }
 
+    estadoInicial(){
         this.recuperarAnalisesUsuario();            // Filtrando as análises que o usuário pode ver
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
@@ -430,13 +433,15 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
 
     public bloqueiaRelatorio() {
         this.confirmationService.confirm({
-            message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat(this.analiseSelecionada).concat('?'),
+            message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat('?'),
             accept: () => {
                 const copy = this.analiseSelecionada.toJSONState();
                 copy.bloqueiaAnalise = true;
                 this.analiseService.block(copy).subscribe(() => {
-                    window.location.reload();
-                    this.pageNotificationService.addUnblockMsgWithName(this.analiseSelecionada);
+                    this.estadoInicial();
+                    const nome = this.analiseSelecionada.name;
+                    this.analiseSelecionada = undefined;
+                    this.blocked = false;
                 }, (error: Response) => {
                     switch (error.status) {
                         case 400: {
@@ -455,13 +460,15 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      */
     public desbloqueiaRelatorio() {
         this.confirmationService.confirm({
-            message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat(this.analiseSelecionada.name).concat('?'),
+            message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat('?'),
             accept: () => {
                 const copy = this.analiseSelecionada.toJSONState();
                 copy.bloqueiaAnalise = false;
                 this.analiseService.unblock(copy).subscribe(() => {
-                    window.location.reload();
-                    this.pageNotificationService.addUnblockMsgWithName(this.analiseSelecionada);
+                    this.estadoInicial();
+                    const nome = copy.name;
+                    this.blocked = true;
+                    this.analiseSelecionada = undefined;
                 }, (error: Response) => {
                     switch (error.status) {
                         case 400: {
