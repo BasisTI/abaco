@@ -442,6 +442,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                     const nome = this.analiseSelecionada.name;
                     this.analiseSelecionada = undefined;
                     this.blocked = false;
+                    this.pageNotificationService.addBlockMsgWithName(nome);
                 }, (error: Response) => {
                     switch (error.status) {
                         case 400: {
@@ -469,6 +470,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                     const nome = copy.name;
                     this.blocked = true;
                     this.analiseSelecionada = undefined;
+                    this.pageNotificationService.addUnblockMsgWithName(nome);
                 }, (error: Response) => {
                     switch (error.status) {
                         case 400: {
