@@ -756,10 +756,10 @@ public class RelatorioAnaliseRest {
      * @return
      */
     private String funcao(String valor) {
-        if (valor.equals("INCLUSAO")){ return Integer.toString(analise.getContrato().getManual().getParametroInclusao().multiply(new BigDecimal(100)).intValue()) + "%"; }
-        if (valor.equals("ALTERACAO")){ return Integer.toString(analise.getContrato().getManual().getParametroAlteracao().multiply(new BigDecimal(100)).intValue()) + "%"; }
-        if (valor.equals("EXCLUSAO")){ return Integer.toString(analise.getContrato().getManual().getParametroExclusao().multiply(new BigDecimal(100)).intValue()) + "%"; }
-        if (valor.equals("CONVERSAO")){ return Integer.toString(analise.getContrato().getManual().getParametroConversao().multiply(new BigDecimal(100)).intValue()) + "%"; }
+        if (valor.equals("INCLUSAO")){ return Integer.toString(analise.getContrato().getManual().getParametroInclusao().intValue()) + "%"; }
+        if (valor.equals("ALTERACAO")){ return Integer.toString(analise.getContrato().getManual().getParametroAlteracao().intValue()) + "%"; }
+        if (valor.equals("EXCLUSAO")){ return Integer.toString(analise.getContrato().getManual().getParametroExclusao().intValue()) + "%"; }
+        if (valor.equals("CONVERSAO")){ return Integer.toString(analise.getContrato().getManual().getParametroConversao().intValue()) + "%"; }
         return null;
     }
 

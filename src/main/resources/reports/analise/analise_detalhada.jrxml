@@ -176,7 +176,7 @@
 		</queryString>
 		<field name="nomeRlrFdDto" class="java.lang.String"/>
 		<field name="rlrDto" class="java.lang.String"/>
-		<group name="GroupRlrFd">
+		<group name="Group1">
 			<groupExpression><![CDATA[$F{nomeRlrFdDto}]]></groupExpression>
 		</group>
 	</subDataset>
@@ -186,7 +186,7 @@
 		</queryString>
 		<field name="nomeFd" class="java.lang.String"/>
 		<field name="nome" class="java.lang.String"/>
-		<group name="GroupDerFd">
+		<group name="Group1">
 			<groupExpression><![CDATA[$F{nomeFd}]]></groupExpression>
 		</group>
 	</subDataset>
@@ -197,7 +197,7 @@
 		</queryString>
 		<field name="nomeAlrFtDto" class="java.lang.String"/>
 		<field name="nomeAlrDto" class="java.lang.String"/>
-		<group name="GroupAlrFt">
+		<group name="Group1">
 			<groupExpression><![CDATA[$F{nomeAlrFtDto}]]></groupExpression>
 		</group>
 	</subDataset>
@@ -208,7 +208,7 @@
 		</queryString>
 		<field name="nomeFt" class="java.lang.String"/>
 		<field name="nome" class="java.lang.String"/>
-		<group name="GroupDerFt">
+		<group name="Group1">
 			<groupExpression><![CDATA[$F{nomeFt}]]></groupExpression>
 		</group>
 	</subDataset>
@@ -1890,7 +1890,7 @@
 				<staticText>
 					<reportElement x="3" y="25" width="552" height="19" uuid="b6fc13ec-3814-4694-824b-6a59e0ce502f"/>
 					<textElement verticalAlignment="Middle">
-						<font size="10" isBold="true"/>
+						<font size="12" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Funções de Dados]]></text>
 				</staticText>
@@ -1911,8 +1911,8 @@
 								<jr:cell style="Table 3_CH" height="30" rowSpan="1">
 									<textField>
 										<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="4f73380e-d7d4-4132-808d-1b72c2149133"/>
-										<textElement verticalAlignment="Middle" markup="none">
-											<font isBold="true"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+											<font size="12" isBold="true"/>
 										</textElement>
 										<textFieldExpression><![CDATA[$F{nomeRlrFdDto}]]></textFieldExpression>
 									</textField>
@@ -1960,8 +1960,8 @@
 								<jr:cell style="Table 4_CH" height="30" rowSpan="1">
 									<textField>
 										<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="bc8e3286-dcf3-4182-b309-dd94652d6d4b"/>
-										<textElement verticalAlignment="Middle" markup="none">
-											<font isBold="true"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+											<font size="12" isBold="true"/>
 										</textElement>
 										<textFieldExpression><![CDATA[$F{nomeFd}]]></textFieldExpression>
 									</textField>
@@ -1994,7 +1994,7 @@
 				<staticText>
 					<reportElement x="3" y="5" width="552" height="19" uuid="5e5f493d-48e2-404d-95c1-773ba8433630"/>
 					<textElement verticalAlignment="Middle">
-						<font size="10" isBold="true"/>
+						<font size="12" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Funções de Transação]]></text>
 				</staticText>
@@ -2015,8 +2015,8 @@
 								<jr:cell style="Table 3_CH" height="30" rowSpan="1">
 									<textField>
 										<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="ba1d33a3-2499-48c7-8679-5c84ba74cfc5"/>
-										<textElement verticalAlignment="Middle">
-											<font isBold="true"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font size="12" isBold="true"/>
 										</textElement>
 										<textFieldExpression><![CDATA[$F{nomeAlrFtDto}]]></textFieldExpression>
 									</textField>
@@ -2064,8 +2064,8 @@
 								<jr:cell style="Table 4_CH" height="30" rowSpan="1">
 									<textField>
 										<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="21082535-4ac6-4ac0-b779-246884d49ca2"/>
-										<textElement verticalAlignment="Middle">
-											<font isBold="true"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font size="12" isBold="true"/>
 										</textElement>
 										<textFieldExpression><![CDATA[$F{nomeFt}]]></textFieldExpression>
 									</textField>
