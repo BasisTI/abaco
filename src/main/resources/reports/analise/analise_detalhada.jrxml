@@ -176,6 +176,9 @@
 		</queryString>
 		<field name="nomeRlrFdDto" class="java.lang.String"/>
 		<field name="rlrDto" class="java.lang.String"/>
+		<group name="GroupRlrFd">
+			<groupExpression><![CDATA[$F{nomeRlrFdDto}]]></groupExpression>
+		</group>
 	</subDataset>
 	<subDataset name="DSDerFD" uuid="73c4a83a-5b67-4d8e-8ecd-2bfd0ce14d12">
 		<queryString>
@@ -183,6 +186,9 @@
 		</queryString>
 		<field name="nomeFd" class="java.lang.String"/>
 		<field name="nome" class="java.lang.String"/>
+		<group name="GroupDerFd">
+			<groupExpression><![CDATA[$F{nomeFd}]]></groupExpression>
+		</group>
 	</subDataset>
 	<subDataset name="DSAlrFT" uuid="ce7e0f2e-12db-4bee-98f7-2d2df384d37d">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
@@ -191,6 +197,9 @@
 		</queryString>
 		<field name="nomeAlrFtDto" class="java.lang.String"/>
 		<field name="nomeAlrDto" class="java.lang.String"/>
+		<group name="GroupAlrFt">
+			<groupExpression><![CDATA[$F{nomeAlrFtDto}]]></groupExpression>
+		</group>
 	</subDataset>
 	<subDataset name="DSDerFt" uuid="ce7e0f2e-12db-4bee-98f7-2d2df384d37d">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
@@ -199,6 +208,9 @@
 		</queryString>
 		<field name="nomeFt" class="java.lang.String"/>
 		<field name="nome" class="java.lang.String"/>
+		<group name="GroupDerFt">
+			<groupExpression><![CDATA[$F{nomeFt}]]></groupExpression>
+		</group>
 	</subDataset>
 	<parameter name="PROPOSITO" class="java.lang.String"/>
 	<parameter name="ESCOPO" class="java.lang.String"/>
@@ -1895,15 +1907,17 @@
 						</datasetRun>
 						<jr:column width="551" uuid="cc4d7da8-6f8d-43d7-8a93-e7c6700ff64a">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-							<jr:tableHeader style="Table 3_TH" height="30" rowSpan="1">
-								<textField>
-									<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="4f73380e-d7d4-4132-808d-1b72c2149133"/>
-									<textElement verticalAlignment="Middle" markup="none">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{nomeRlrFdDto}]]></textFieldExpression>
-								</textField>
-							</jr:tableHeader>
+							<jr:groupHeader groupName="Group1">
+								<jr:cell style="Table 3_CH" height="30" rowSpan="1">
+									<textField>
+										<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="4f73380e-d7d4-4132-808d-1b72c2149133"/>
+										<textElement verticalAlignment="Middle" markup="none">
+											<font isBold="true"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{nomeRlrFdDto}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupHeader>
 							<jr:columnHeader style="Table 3_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement key="" style="Table_TD" x="0" y="0" width="551" height="30" uuid="1deda87f-3fa0-47ca-bff3-ca1e079aeafb"/>
@@ -1942,15 +1956,17 @@
 						</datasetRun>
 						<jr:column width="551" uuid="dcd58754-219d-4cd6-839c-842e263ee4fe">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-							<jr:tableHeader style="Table 4_TH" height="30" rowSpan="1">
-								<textField>
-									<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="bc8e3286-dcf3-4182-b309-dd94652d6d4b"/>
-									<textElement verticalAlignment="Middle" markup="none">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{nomeFd}]]></textFieldExpression>
-								</textField>
-							</jr:tableHeader>
+							<jr:groupHeader groupName="Group1">
+								<jr:cell style="Table 4_CH" height="30" rowSpan="1">
+									<textField>
+										<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="bc8e3286-dcf3-4182-b309-dd94652d6d4b"/>
+										<textElement verticalAlignment="Middle" markup="none">
+											<font isBold="true"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{nomeFd}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupHeader>
 							<jr:columnHeader style="Table 4_CH" height="30">
 								<staticText>
 									<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="94a2ec31-8ab9-488e-a989-0c393613e10b"/>
@@ -1995,15 +2011,17 @@
 						</datasetRun>
 						<jr:column width="551" uuid="cbd75ba1-a863-4eb3-95cc-cf212436738e">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-							<jr:tableHeader style="Table 3_TH" height="30" rowSpan="1">
-								<textField>
-									<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="ba1d33a3-2499-48c7-8679-5c84ba74cfc5"/>
-									<textElement verticalAlignment="Middle">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{nomeAlrFtDto}]]></textFieldExpression>
-								</textField>
-							</jr:tableHeader>
+							<jr:groupHeader groupName="Group1">
+								<jr:cell style="Table 3_CH" height="30" rowSpan="1">
+									<textField>
+										<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="ba1d33a3-2499-48c7-8679-5c84ba74cfc5"/>
+										<textElement verticalAlignment="Middle">
+											<font isBold="true"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{nomeAlrFtDto}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupHeader>
 							<jr:columnHeader style="Table 3_CH" height="30">
 								<staticText>
 									<reportElement key="" style="Table_TD" x="0" y="0" width="551" height="30" uuid="ff8f5e68-1e8e-4400-a0b1-e8d1db98137c"/>
@@ -2042,16 +2060,18 @@
 						</datasetRun>
 						<jr:column width="551" uuid="eed3e007-c10b-4cb9-935e-c7b240975d80">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-							<jr:tableHeader style="Table 4_TH" height="30" rowSpan="1">
-								<textField>
-									<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="21082535-4ac6-4ac0-b779-246884d49ca2"/>
-									<textElement verticalAlignment="Middle">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{nomeFt}]]></textFieldExpression>
-								</textField>
-							</jr:tableHeader>
-							<jr:columnHeader style="Table 4_CH" height="30">
+							<jr:groupHeader groupName="Group1">
+								<jr:cell style="Table 4_CH" height="30" rowSpan="1">
+									<textField>
+										<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="21082535-4ac6-4ac0-b779-246884d49ca2"/>
+										<textElement verticalAlignment="Middle">
+											<font isBold="true"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{nomeFt}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupHeader>
+							<jr:columnHeader style="Table 4_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement style="Table_TD" x="0" y="0" width="551" height="30" uuid="8d5f131a-533c-48a9-bb84-a9945ba7a18e"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
