@@ -1,5 +1,5 @@
 import {EntityToJSON} from './../shared/entity-to-json';
-import {Component, OnInit, ChangeDetectorRef, OnDestroy, Input} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import {FuncaoDados} from './funcao-dados.model';
 import {FatorAjuste} from '../fator-ajuste';
 import {FuncaoAnalise} from './../analise-shared/funcao-analise';
@@ -26,12 +26,21 @@ import {FuncaoDadosService} from './funcao-dados.service';
 import {AnaliseSharedUtils} from '../analise-shared/analise-shared-utils';
 import {Manual} from '../manual';
 import {Modulo} from '../modulo';
+import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
+import {forEach} from '../../../node_modules/@angular/router/src/utils/collection';
 
 @Component({
     selector: 'app-analise-funcao-dados',
     templateUrl: './funcao-dados-form.component.html'
 })
 export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
+
+    @Output()
+    valueChange: EventEmitter<string> = new EventEmitter<string>();
+    parseResult: ParseResult;
+    text: string;
+    @Input()
+    label: string;
 
     textHeader: string;
     @Input() isView: boolean;
@@ -44,6 +53,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     hideElementTDTR: boolean;
     hideShowQuantidade: boolean;
     showDialog = false;
+    showMultiplos = false;
     sugestoesAutoComplete: string[] = [];
 
     windowHeightDialog: any;
@@ -132,7 +142,15 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         if (this.isEdit) {
             this.editar();
         } else {
-            this.adicionar();
+            if (this.showMultiplos) {
+                for (const nome of this.parseResult.textos) {
+                    this.currentFuncaoDados.name = nome;
+                    this.adicionar();
+                }
+            } else {
+                this.adicionar();
+            }
+            this.fecharDialog();
         }
     }
 
@@ -276,7 +294,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                     this.estadoInicial();
 
                     this.salvarAnalise();
-                    this.fecharDialog();
                 } else {
                     this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
                 }
@@ -611,6 +628,15 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 return {label: label, value: fa};
             });
         this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+    }
+
+    textChanged() {
+        this.valueChange.emit(this.text);
+        this.parseResult = DerTextParser.parse(this.text);
+    }
+
+    buttonMultiplos() {
+        this.showMultiplos = !this.showMultiplos;
     }
 
 }
