@@ -1,7 +1,7 @@
 import { BaselineService } from './../baseline/baseline.service';
 import { FuncaoDadosService } from './../funcao-dados/funcao-dados.service';
 import { BaselineAnalitico } from './../baseline/baseline-analitico.model';
-import {Component, OnInit, ChangeDetectorRef, OnDestroy, Input} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import {AnaliseSharedDataService, PageNotificationService, ResponseWrapper} from '../shared';
 import {Analise, AnaliseService} from '../analise';
 import {FatorAjuste} from '../fator-ajuste';
@@ -24,6 +24,7 @@ import {CalculadoraTransacao} from '../analise-shared';
 import {FuncaoTransacao, TipoFuncaoTransacao} from './funcao-transacao.model';
 import {Der} from '../der/der.model';
 import { Impacto } from '../analise-shared/impacto-enum';
+import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
 
 @Component({
     selector: 'app-analise-funcao-transacao',
@@ -61,6 +62,14 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     ];
 
     classificacoes: SelectItem[] = [];
+
+    @Output()
+    valueChange: EventEmitter<string> = new EventEmitter<string>();
+    parseResult: ParseResult;
+    text: string;
+    @Input()
+    label: string;
+    showMultiplos = false;
 
     private fatorAjusteNenhumSelectItem = {label: 'Nenhum', value: undefined};
     private analiseCarregadaSubscription: Subscription;
@@ -107,10 +116,19 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     public buttonSaveEdit() {
+
         if (this.isEdit) {
             this.editar();
         } else {
-            this.adicionar();
+            if (this.showMultiplos) {
+                for (const nome of this.parseResult.textos) {
+                    this.currentFuncaoTransacao.name = nome;
+                    this.adicionar();
+                }
+            } else {
+                this.adicionar();
+            }
+            this.fecharDialog();
         }
     }
 
@@ -250,9 +268,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     this.atualizaResumo();
                     this.resetarEstadoPosSalvar();
                     this.salvarAnalise();
-                    this.fecharDialog();
                     this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
-                    this.atualizaResumo();
                     this.resetarEstadoPosSalvar();
                 } else {
                     this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
@@ -563,6 +579,15 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 return {label: label, value: fa};
             });
         this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+    }
+
+    textChanged() {
+        this.valueChange.emit(this.text);
+        this.parseResult = DerTextParser.parse(this.text);
+    }
+
+    buttonMultiplos() {
+        this.showMultiplos = !this.showMultiplos;
     }
 
 }

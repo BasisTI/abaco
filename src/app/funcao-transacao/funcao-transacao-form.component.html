@@ -136,8 +136,8 @@
                     [contentStyle]="{'height': ['windowHeightDialog']}"
                     [width]="[windowWidthDialog]">
 
-                <div class="ui-g">
-                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                <div class="ui-g" *ngIf="!showMultiplos">
+                    <div class="ui-g-9">
                         <label>Nome do Processo Elementar *</label>
                         <p-autoComplete
                                 [(ngModel)]="currentFuncaoTransacao.name"
@@ -151,7 +151,37 @@
                             Campo obrigatório.
                         </div>
                     </div>
+                    <div class="ui-g-3">
+                        <app-blue-button
+                                buttonLabel="Múltiplos"
+                                (click)="buttonMultiplos()">
+                        </app-blue-button>
+                    </div>
                 </div>
+
+                <div class="ui-g" *ngIf="showMultiplos">
+                    <div class="ui-g-9">
+                        <label>Nome *</label>
+                        <textarea pInputTextarea
+                                  [(ngModel)]="text"
+                                  style="white-space: nowrap; overflow: auto;"
+                                  [autoResize]="false"
+                                  (keyup.enter)="textChanged()"
+                                  (keyup.backspace)="textChanged()"
+                                  (keyup.delete)="textChanged()"
+                                  (change)="textChanged()"
+                                  [rows]="6" [cols]="180"
+                                  name="{{ label }}">
+                         </textarea>
+                    </div>
+                    <div class="ui-g-3">
+                        <app-blue-button
+                                buttonLabel="Unitário"
+                                (click)="buttonMultiplos()">
+                        </app-blue-button>
+                    </div>
+                </div>
+
 
                 <app-analise-modulo-funcionalidade
                         [isFuncaoDados]="false"
