@@ -27,6 +27,12 @@
                                 scrollWidth="100%">
 
                             <p-column
+                                    field="name"
+                                    header="Nome"
+                                    [style]="{'width': '200px'}">
+                            </p-column>
+
+                            <p-column
                                     header="Deflator"
                                     [style]="{'width': '200px'}">
                                 <ng-template
@@ -60,12 +66,6 @@
                                         pTemplate="body">
                                     {{ funcionalidade.nome }}
                                 </ng-template>
-                            </p-column>
-
-                            <p-column
-                                    field="name"
-                                    header="Nome"
-                                    [style]="{'width': '200px'}">
                             </p-column>
 
                             <p-column
