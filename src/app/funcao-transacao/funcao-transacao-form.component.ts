@@ -264,12 +264,13 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
             this.validarNameFuncaoTransacaos(this.currentFuncaoTransacao.name).then( resolve => {
                 if (resolve){
+                    this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
                     this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
                     this.atualizaResumo();
                     this.resetarEstadoPosSalvar();
+                    this.estadoInicial();
+
                     this.salvarAnalise();
-                    this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
-                    this.resetarEstadoPosSalvar();
                 } else {
                     this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
                 }
