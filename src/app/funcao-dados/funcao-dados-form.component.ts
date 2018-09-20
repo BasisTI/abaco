@@ -139,17 +139,23 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     public buttonSaveEdit() {
 
+        let retorno = true;
         if (this.isEdit) {
             this.editar();
         } else {
             if (this.showMultiplos) {
                 for (const nome of this.parseResult.textos) {
                     this.currentFuncaoDados.name = nome;
-                    this.adicionar();
+                    if (!this.adicionar()){
+                        retorno = false;
+                        break;
+                    }
                 }
             } else {
-                this.adicionar();
+                retorno = this.adicionar();
             }
+        }
+        if (retorno){
             this.fecharDialog();
         }
     }
@@ -274,12 +280,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoDados.funcionalidade = funcionalidade;
     }
 
-    adicionar() {
+    adicionar(): boolean {
 
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
-            return;
+            return false;
         } else {
             this.desconverterChips();
             this.verificarModulo();
@@ -298,6 +304,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                     this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
                 }
             });
+            return true;
         }
     }
 
@@ -357,17 +364,17 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         }
 
         if (this.analiseSharedDataService.analise.metodoContagem === 'DETALHADA') {
-            if (this.rlrsChips === undefined || this.rlrsChips === null) {
+
+            if (this.dersChips  === undefined ) {
                 this.erroTR = true;
                 retorno = false;
             } else {
                 this.erroTR = false;
             }
-            if (this.dersChips === undefined || this.dersChips === null) {
-                // if (this.manual) {
+
+            if (this.dersChips  === undefined ) {
                 this.erroTD = true;
                 retorno = false;
-                // }
             } else {
                 this.erroTD = false;
             }
@@ -419,6 +426,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     fecharDialog() {
+        this.text = undefined;
         this.limparMensagensErros();
         this.showDialog = false;
         this.analiseSharedDataService.funcaoAnaliseDescarregada();

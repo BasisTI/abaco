@@ -51,7 +51,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     resumo: ResumoFuncoes;
     fatoresAjuste: SelectItem[] = [];
     dadosBaselineFT: BaselineAnalitico[] = [];
-    dadosserviceBL: BaselineService[]=[];
+    dadosserviceBL: BaselineService[]= [];
 
     impacto: SelectItem[] = [
         {label: 'Inclusão', value: 'INCLUSAO'},
@@ -117,17 +117,23 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     public buttonSaveEdit() {
 
+        let retorno = true;
         if (this.isEdit) {
             this.editar();
         } else {
             if (this.showMultiplos) {
                 for (const nome of this.parseResult.textos) {
                     this.currentFuncaoTransacao.name = nome;
-                    this.adicionar();
+                    if (!this.adicionar()){
+                        retorno = false;
+                        break;
+                    }
                 }
             } else {
-                this.adicionar();
+               retorno = this.adicionar();
             }
+        }
+        if (retorno){
             this.fecharDialog();
         }
     }
@@ -209,8 +215,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     public carregarDadosBaseline() {
         this.baselineService.baselineAnaliticoFT(this.analise.sistema.id).subscribe((res: ResponseWrapper) => {
-            this.dadosBaselineFT = res.json
-            console.log(res)
+            this.dadosBaselineFT = res.json;
+            console.log(res);
         });
     }
 
@@ -218,9 +224,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
         this.funcaoDadosService.getFuncaoTransacaoBaseline(baselineAnalitico.idfuncaodados)
         .subscribe((res: FuncaoTransacao) => {
-            res.name = this.currentFuncaoTransacao.name
+            res.name = this.currentFuncaoTransacao.name;
 
-                if(res.fatorAjuste===null){res.fatorAjuste = undefined}
+                if (res.fatorAjuste === null){res.fatorAjuste = undefined; }
                 res.id = undefined;
                 res.ders.forEach(ders => {
                     ders.id = undefined;
@@ -237,9 +243,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     baselineResultados: any[] = [];
 
     searchBaseline(event): void {
-        console.log(event)
+        console.log(event);
         this.baselineResultados = this.dadosBaselineFT.filter(c => c.name.startsWith(event.query));
-        console.log(this.baselineResultados)
+        console.log(this.baselineResultados);
     }
 
     // Funcionalidade Selecionada
@@ -251,11 +257,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoTransacao.funcionalidade = funcionalidade;
     }
 
-    adicionar() {
+    adicionar(): boolean{
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
-            return;
+            return false;
         } else {
         this.desconverterChips();
         this.verificarModulo();
@@ -275,6 +281,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
                 }
              });
+
+            return true;
     }
 }
 
@@ -333,17 +341,17 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
 
         if (this.analiseSharedDataService.analise.metodoContagem === 'DETALHADA') {
-            if (this.dersChips === undefined || this.alrsChips === null) {
+
+            if (this.alrsChips.length === 0) {
                 this.erroTR = true;
                 retorno = false;
             } else {
                 this.erroTR = false;
             }
-            if (this.dersChips === undefined || this.alrsChips === null) {
-                // if (this.manual) {
+
+            if (this.dersChips.length === 0) {
                 this.erroTD = true;
                 retorno = false;
-                // }
             } else {
                 this.erroTD = false;
             }
@@ -403,6 +411,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     fecharDialog() {
+        this.text = undefined;
         this.limparMensagensErros();
         this.showDialog = false;
         this.analiseSharedDataService.funcaoAnaliseDescarregada();
