@@ -28,6 +28,7 @@ import {Manual} from '../manual';
 import {Modulo} from '../modulo';
 import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
 import {forEach} from '../../../node_modules/@angular/router/src/utils/collection';
+import { Impacto } from '../analise-shared/impacto-enum';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -521,6 +522,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 this.prepareToClone(funcaoDadosSelecionada);
                 this.currentFuncaoDados.id = undefined;
                 this.currentFuncaoDados.artificialId = undefined;
+                this.currentFuncaoDados.impacto = Impacto.ALTERACAO;
         }
     }
 

@@ -71,6 +71,14 @@
       <app-analise-der-text 
         [(value)]="addMultiplosTexto">
       </app-analise-der-text>
+        <div *ngIf="validaMultiplos"
+          class="ui-message ui-messages-error">
+            O campo possui valores duplicado!
+        </div>
+        <div *ngIf="validaMultiplosRegistrados"
+          class="ui-message ui-messages-error">
+            Registro já cadastrado!
+        </div>
     </div>
 
     <div class="ui-g ui-md-12" style="justify-content: flex-end">
@@ -89,7 +97,7 @@
           pButton
           type="button"
           class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Adicionar" 
+          label="Adicionar"
           (click)="adicionarMultiplos()">
         </button>
       </div>
