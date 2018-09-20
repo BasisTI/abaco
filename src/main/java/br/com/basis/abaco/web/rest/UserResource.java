@@ -144,7 +144,7 @@ public class UserResource {
 	 */
 	@PostMapping("/users")
 	@Timed
-	@Secured(AuthoritiesConstants.ADMIN)
+	@Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
 	public ResponseEntity createUser(@RequestBody User user) throws URISyntaxException {
 		log.debug("REST request to save User : {}", user);
 
@@ -192,7 +192,7 @@ public class UserResource {
 	 */
 	@PutMapping("/users")
 	@Timed
-	@Secured(AuthoritiesConstants.USER)
+	@Secured({AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR})
 	public ResponseEntity<User> updateUser(@RequestBody User user2) {
 	    User user = user2;
 		log.debug("REST request to update User : {}", user);
@@ -249,7 +249,7 @@ public class UserResource {
 	 */
 	@GetMapping("/users")
 	@Timed
-	@Secured(AuthoritiesConstants.ADMIN)
+	@Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
 	public ResponseEntity<List<UserDTO>> getAllUsers(@ApiParam Pageable pageable) throws URISyntaxException {
 		final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
@@ -265,7 +265,7 @@ public class UserResource {
 	 */
 	@GetMapping("/users/{id}")
 	@Timed
-	@Secured(AuthoritiesConstants.ADMIN)
+	@Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
 	public User getUser(@PathVariable Long id) {
 		log.debug("REST request to get User : {}", id);
 		return userService.getUserWithAuthorities(id);
@@ -300,7 +300,7 @@ public class UserResource {
 	 */
 	@DeleteMapping("/users/{id}")
 	@Timed
-	@Secured(AuthoritiesConstants.ADMIN)
+	@Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
 	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
 		log.debug("REST request to delete User: {}", id);
         if (id == 3l) {
@@ -324,7 +324,7 @@ public class UserResource {
 	 */
 	@GetMapping("/_search/users")
 	@Timed
-	@Secured(AuthoritiesConstants.ADMIN)
+	@Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
 	public ResponseEntity<List<User>> search(@RequestParam(defaultValue = "*") String query, @RequestParam String order,
 			@RequestParam(name = "page") int pageNumber, @RequestParam int size,
 			@RequestParam(defaultValue = "id") String sort) throws URISyntaxException {

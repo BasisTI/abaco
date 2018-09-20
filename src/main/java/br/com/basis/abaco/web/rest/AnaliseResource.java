@@ -65,10 +65,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -89,6 +86,8 @@ public class AnaliseResource {
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     private static final String ROLE_USER = "ROLE_USER";
+
+    private static final String ROLE_GESTOR = "ROLE_GESTOR";
 
     private static final String PAGE = "page";
 
@@ -148,7 +147,7 @@ public class AnaliseResource {
      */
     @PostMapping("/analises")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
     public ResponseEntity<Analise> createAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to save Analise : {}", analise);
         if (analise.getId() != null) {
@@ -176,17 +175,21 @@ public class AnaliseResource {
 
 
     /**
-     *
-     * @return
+     * Verifica se o usuário logado tem permissões de admin ou gestor
+     * @return Retorna verdadeiro se tem permissões de admin ou gestor. Retorna falso em qualquer outro caso
      */
     private boolean verificarAuthority () {
-        Set<Authority> listAuth = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).get().getAuthorities();
-        for(Authority a : listAuth){
-            if (a.getName().equals(ROLE_ADMIN)){
-                return true;
+        boolean temResposta = false;
+        Optional<User> opt = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
+
+        if (opt.isPresent()){
+            Iterator<Authority> i = opt.get().getAuthorities().iterator();
+            while (i.hasNext() && !temResposta) {
+                Authority a = i.next();
+                temResposta = (a.equals(ROLE_ADMIN) || a.equals(ROLE_GESTOR));
             }
         }
-        return false;
+        return temResposta;
     }
 
     /**
@@ -280,7 +283,7 @@ public class AnaliseResource {
      */
     @PutMapping("/analises")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
     public ResponseEntity<Analise> updateAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to update Analise : {}", analise);
         if (analise.getId() == null) {
@@ -313,7 +316,7 @@ public class AnaliseResource {
 
     @PutMapping("/analises/{id}/block")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
     public ResponseEntity<Analise> blockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", analise);
         if (!this.verificarAuthority()){
@@ -331,7 +334,7 @@ public class AnaliseResource {
 
     @PutMapping("/analises/{id}/unblock")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
     public ResponseEntity<Analise> unblockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", analise);
         if (!this.verificarAuthority()){
@@ -365,6 +368,7 @@ public class AnaliseResource {
 
     /**
      * GET /analises/user/:userId : get all the analises for a particular user id and shared analises for its tipo_equipe.
+     * If the user is a GESTOR or ADMIN, all analises are returned.
      * @param userId the user id to search for
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of analises in body
@@ -373,27 +377,47 @@ public class AnaliseResource {
      */
     @GetMapping("/analises/user/{userId}")
     @Timed
-    public ResponseEntity getAllAnalisesByUserId(@PathVariable Long userId, @ApiParam Pageable pageable) throws URISyntaxException {
-        List<Long> equipes = new ArrayList<>();
+    public ResponseEntity getAllAnalisesByUserId(@PathVariable Long userId,
+                                                 @ApiParam Pageable pageable) throws URISyntaxException {
         List<Long> analises;
+        Page<Analise> page;
 
         log.debug("REST request to get a page of Analises for user {}", userId);
-        Optional<User> foundUser = userRepository.findOneById(userId);  // Recuperando dados do usuário logado
-        if (foundUser.isPresent()) {                                    // Se conseguir recuperar os dados de usuário...
-            for (TipoEquipe eqp : foundUser.get().getTipoEquipes()) {   // Cria lista de equipes do usuário
-                equipes.add(eqp.getId());
+        User foundUser = userRepository.findOneWithAuthoritiesById(userId); // Recuperando dados do usuário logado
+        if (foundUser != null) {                                            // Se conseguir recuperar os dados de usuário...
+            if (!verificarAuthority()) {                                    // Se o usuário logado é comum, filtra a lista de análises pelas equipes do mesmo
+                analises = filtrarListaAnalises(foundUser);
+                page = analiseRepository.findById(analises, pageable);      // Requisitando uma página de análises com base na lista de Id's
+            }
+            else {                                                          // Do contrário manda todas as análises
+                page = analiseRepository.findAll(pageable);                 // Requisitando uma página de análises sem filtro
             }
         }
-        else {
-            return this.createBadRequest("userNotFound", "User not found in database");   // Se não encontrou dados do usuário logado é sinal que a coisa tá feia...
+        else {                                                              // Se não encontrou dados do usuário logado é sinal que a coisa tá feia...
+            return this.createBadRequest("userNotFound", "User not found in database");
         }
-        analises = this.converteListaBigIntLong(analiseRepository.findAllByTipoEquipesId(equipes));             // Lista de Id's das análises da equipe do usuário
-        analises.addAll(this.converteListaBigIntLong(this.compartilhadaRepository.findByEquipeId(equipes)));    // Adicionando a lista de Id's de análises compartilhadas com as equipes do usuário
-        Page<Analise> page = analiseRepository.findById(analises, pageable);                                    // Requisitando uma página de análises com base na lista de Id's
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+    /**
+     * Função que filtra a lista de análises de acordo com o perfil do usuário logado
+     * @param usuario Dados dos usuário logado
+     * @return Retorna uma lista contendo apenas id's de análises das equipes do usuário e compartilhadas com o mesmo
+     */
+    private List<Long> filtrarListaAnalises (User usuario){
+        List<Long> equipes = new ArrayList<>();
+        List<Long> analises;
+
+        for (TipoEquipe eqp : usuario.getTipoEquipes()) {   // Cria lista de equipes do usuário
+            equipes.add(eqp.getId());
+        }
+                                                            // Lista de Id's das análises da equipe do usuário
+        analises = this.converteListaBigIntLong(analiseRepository.findAllByTipoEquipesId(equipes));
+                                                            // Adicionando a lista de Id's de análises compartilhadas com as equipes do usuário
+        analises.addAll(this.converteListaBigIntLong(this.compartilhadaRepository.findByEquipeId(equipes)));
+        return analises;
+    }
     /**
      * Função para converter lista de BigInteger em lista de Long sem alterar a lista original
      * @param listaBig a lista de BigInterger a ser convertida
@@ -443,7 +467,7 @@ public class AnaliseResource {
      */
     @DeleteMapping("/analises/{id}")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
     public ResponseEntity<Void> deleteAnalise(@PathVariable Long id) {
         log.debug("REST request to delete Analise : {}", id);
         analiseRepository.delete(id);

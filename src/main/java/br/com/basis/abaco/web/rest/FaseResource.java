@@ -81,7 +81,7 @@ public class FaseResource {
      */
     @PostMapping("/fases")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Fase> createFase(@RequestBody Fase fase) throws URISyntaxException {
         log.debug("REST request to save Fase : {}", fase);
         if (fase.getId() != null) {
@@ -105,7 +105,7 @@ public class FaseResource {
      */
     @PutMapping("/fases")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Fase> updateFase(@RequestBody Fase fase) throws URISyntaxException {
         log.debug("REST request to update Fase : {}", fase);
         if (fase.getId() == null) {
@@ -153,7 +153,7 @@ public class FaseResource {
      */
     @DeleteMapping("/fases/{id}")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Void> deleteFase(@PathVariable Long id) {
         log.debug("REST request to delete Fase : {}", id);
         faseRepository.delete(id);

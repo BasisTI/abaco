@@ -70,7 +70,7 @@ public class EsforcoFaseResource {
      */
     @PostMapping("/esforco-fases")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<EsforcoFase> createEsforcoFase(@RequestBody EsforcoFase esforcoFase)
             throws URISyntaxException {
         log.debug("REST request to save EsforcoFase : {}", esforcoFase);
@@ -98,7 +98,7 @@ public class EsforcoFaseResource {
      */
     @PutMapping("/esforco-fases")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<EsforcoFase> updateEsforcoFase(@RequestBody EsforcoFase esforcoFase)
             throws URISyntaxException {
         log.debug("REST request to update EsforcoFase : {}", esforcoFase);
@@ -156,7 +156,7 @@ public class EsforcoFaseResource {
      */
     @DeleteMapping("/esforco-fases/{id}")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Void> deleteEsforcoFase(@PathVariable Long id) {
         log.debug("REST request to delete EsforcoFase : {}", id);
         esforcoFaseRepository.delete(id);

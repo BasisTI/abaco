@@ -53,7 +53,7 @@ public class UploadController {
     ServletContext context;
 
     @PostMapping("/upload")
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<UploadedFile> singleFileUpload(@RequestParam("file") MultipartFile file,
             HttpServletRequest request,
             RedirectAttributes redirectAttributes) {

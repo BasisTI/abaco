@@ -91,6 +91,8 @@ public class SistemaResource {
 
     private static final String ROLE_USER = "ROLE_USER";
 
+    private static final String ROLE_GESTOR = "ROLE_GESTOR";
+
     private static  final String PAGE = "page";
 
 	public SistemaResource(
@@ -116,7 +118,7 @@ public class SistemaResource {
 	 */
 	@PostMapping("/sistemas")
 	@Timed
-    @Secured({ROLE_ADMIN, ROLE_USER})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
 	public ResponseEntity<Sistema> createSistema(@Valid @RequestBody Sistema sistema) throws URISyntaxException {
 		log.debug("REST request to save Sistema : {}", sistema);
 		if (sistema.getId() != null) {
@@ -163,7 +165,7 @@ public class SistemaResource {
 	 */
 	@PutMapping("/sistemas")
 	@Timed
-    @Secured({ROLE_ADMIN, ROLE_USER})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
 	public ResponseEntity<Sistema> updateSistema(@Valid @RequestBody Sistema sistema) throws URISyntaxException {
 		log.debug("REST request to update Sistema : {}", sistema);
 		if (sistema.getId() == null) {
@@ -181,7 +183,7 @@ public class SistemaResource {
 	 */
 	@PostMapping("/sistemas/organizations")
 	@Timed
-    @Secured({ROLE_ADMIN, ROLE_USER})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
 	public List<Sistema> getAllSistemasByOrganization(@Valid @RequestBody Organizacao organization) {
 		log.debug("REST request to get all Sistemas");
 		List<Sistema> sistemas = sistemaRepository.findAllByOrganizacao(organization);
@@ -248,7 +250,7 @@ public class SistemaResource {
 	 */
 	@DeleteMapping("/sistemas/{id}")
 	@Timed
-    @Secured({ROLE_ADMIN, ROLE_USER})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
 	public ResponseEntity<Void> deleteSistema(@PathVariable Long id) {
 		log.debug("REST request to delete Sistema : {}", id);
 		if (sistemaRepository.quantidadeSistema(id) > 0) {

@@ -59,7 +59,7 @@ public class FuncaoDadosResource {
      */
     @PostMapping("/funcao-dados")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<FuncaoDados> createFuncaoDados(@RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
 
         FuncaoDados f = funcaoDadosRepository.findName(2101l, funcaoDados.getName());
@@ -89,7 +89,7 @@ public class FuncaoDadosResource {
      */
     @PutMapping("/funcao-dados")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<FuncaoDados> updateFuncaoDados(@RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
         log.debug("REST request to update FuncaoDados : {}", funcaoDados);
         if (funcaoDados.getId() == null) {
@@ -166,7 +166,7 @@ public class FuncaoDadosResource {
      */
     @DeleteMapping("/funcao-dados/{id}")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Void> deleteFuncaoDados(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoDados : {}", id);
         funcaoDadosRepository.delete(id);

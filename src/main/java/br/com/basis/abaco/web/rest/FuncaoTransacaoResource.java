@@ -60,7 +60,7 @@ public class FuncaoTransacaoResource {
      */
     @PostMapping("/funcao-transacaos")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<FuncaoTransacao> createFuncaoTransacao(@RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
         log.debug("REST request to save FuncaoTransacao : {}", funcaoTransacao);
         if (funcaoTransacao.getId() != null) {
@@ -84,7 +84,7 @@ public class FuncaoTransacaoResource {
      */
     @PutMapping("/funcao-transacaos")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<FuncaoTransacao> updateFuncaoTransacao(@RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
         log.debug("REST request to update FuncaoTransacao : {}", funcaoTransacao);
         if (funcaoTransacao.getId() == null) {
@@ -146,7 +146,7 @@ public class FuncaoTransacaoResource {
      */
     @DeleteMapping("/funcao-transacaos/{id}")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Void> deleteFuncaoTransacao(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoTransacao : {}", id);
         funcaoTransacaoRepository.delete(id);
