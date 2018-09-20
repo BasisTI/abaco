@@ -73,7 +73,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
        this.estadoInicial();
     }
 
-    estadoInicial(){
+    estadoInicial() {
         this.recuperarAnalisesUsuario();            // Filtrando as análises que o usuário pode ver
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
@@ -395,10 +395,18 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
 }
     private checkUndefinedParams() {
         (this.searchParams.identificador === '') ? (this.searchParams.identificador = undefined) : (this);
-        (this.searchParams.nomeSistema !== undefined) ? ((this.searchParams.nomeSistema.nome === '') ? (this.searchParams.nomeSistema.nome = undefined) : (this)) : (this);
-        (this.searchParams.metContagem !== undefined) ? ((this.searchParams.metContagem.text === '') ? (this.searchParams.metContagem.text = undefined) : (this)) : (this);
-        (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)) : (this);
-        (this.searchParams.organizacao !== undefined) ? ((this.searchParams.organizacao.nome === '') ? (this.searchParams.organizacao.nome = undefined) : (console.log('Caiu no false'))) : (this);
+        (this.searchParams.nomeSistema !== undefined) ? (
+            (this.searchParams.nomeSistema.nome === '') ? (this.searchParams.nomeSistema.nome = undefined) : (this)
+        ) : (this);
+        (this.searchParams.metContagem !== undefined) ? (
+            (this.searchParams.metContagem.text === '') ? (this.searchParams.metContagem.text = undefined) : (this)
+        ) : (this);
+        (this.searchParams.team !== undefined) ? (
+            (this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)
+        ) : (this);
+        (this.searchParams.organizacao !== undefined) ? (
+            (this.searchParams.organizacao.nome === '') ? (this.searchParams.organizacao.nome = undefined) : (console.log('Caiu no false'))
+        ) : (this);
         (this.searchParams.descricao === '') ? (this.searchParams.descricao = undefined) : (this);
       }
 
@@ -406,14 +414,21 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         let stringParamsArray: Array<string> = [];
 
         (this.searchParams.identificador !== undefined) ? (stringParamsArray.push(this.searchParams.identificador)) : (this);
-        (this.searchParams.nomeSistema !== undefined) ? ((this.searchParams.nomeSistema.nome !== undefined) ? (stringParamsArray.push(this.searchParams.nomeSistema.nome)) : (this)) : (this);
-        (this.searchParams.metContagem !== undefined) ? ((this.searchParams.metContagem.text !== undefined) ? (stringParamsArray.push(this.searchParams.metContagem.text)) : (this)) : (this);
-        (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (stringParamsArray.push(this.searchParams.team.nome)) : (this)) : (this);
-        (this.searchParams.organizacao !== undefined) ? ((this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push(this.searchParams.organizacao.nome)) : (this)) : (this);
+        (this.searchParams.nomeSistema !== undefined) ? (
+            (this.searchParams.nomeSistema.nome !== undefined) ? (stringParamsArray.push(this.searchParams.nomeSistema.nome)) : (this)
+        ) : (this);
+        (this.searchParams.metContagem !== undefined) ? (
+            (this.searchParams.metContagem.text !== undefined) ? (stringParamsArray.push(this.searchParams.metContagem.text)) : (this)
+        ) : (this);
+        (this.searchParams.team !== undefined) ? (
+            (this.searchParams.team.nome !== undefined) ? (stringParamsArray.push(this.searchParams.team.nome)) : (this)
+        ) : (this);
+        (this.searchParams.organizacao !== undefined) ? (
+            (this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push(this.searchParams.organizacao.nome)) : (this)
+            ) : (this);
         (this.searchParams.descricao !== undefined) ? (stringParamsArray.push(this.searchParams.descricao)) : (this);
-        
+
         return stringParamsArray;
-        
       }
 
       public performSearch() {
@@ -446,7 +461,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 }, (error: Response) => {
                     switch (error.status) {
                         case 400: {
-                            if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
+                            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
                                 this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
                             }
                         }
@@ -474,7 +489,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 }, (error: Response) => {
                     switch (error.status) {
                         case 400: {
-                            if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
+                            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
                                 this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
                             }
                         }

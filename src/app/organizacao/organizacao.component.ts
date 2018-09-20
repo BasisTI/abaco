@@ -8,14 +8,14 @@ import { Organizacao } from './organizacao.model';
 import { OrganizacaoService } from './organizacao.service';
 import { ElasticQuery } from '../shared';
 import { PageNotificationService } from '../shared/page-notification.service';
-import {NgxMaskModule} from 'ngx-mask';
+import { NgxMaskModule } from 'ngx-mask';
 
 
 @Component({
   selector: 'jhi-organizacao',
   templateUrl: './organizacao.component.html'
 })
-export class OrganizacaoComponent implements AfterViewInit {
+export class OrganizacaoComponent implements AfterViewInit, OnInit {
 
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
@@ -36,7 +36,7 @@ export class OrganizacaoComponent implements AfterViewInit {
     private pageNotificationService: PageNotificationService
   ) {}
 
-  public ngOnInit(){
+  public ngOnInit() {
     this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
       this.organizacaoSelecionada = event.data;
     });
@@ -50,7 +50,7 @@ export class OrganizacaoComponent implements AfterViewInit {
   }
 
   datatableClick(event: DatatableClickEvent) {
-    console.log(event)
+    console.log(event);
     if (!event.selection) {
       return;
     }
@@ -68,7 +68,7 @@ export class OrganizacaoComponent implements AfterViewInit {
   }
 
   public onRowDblclick(event) {
-    
+
     if (event.target.nodeName === 'TD') {
       this.abrirEditar();
     }else if (event.target.parentNode.nodeName === 'TD') {
@@ -76,7 +76,7 @@ export class OrganizacaoComponent implements AfterViewInit {
     }
 }
 
-abrirEditar(){
+abrirEditar() {
   this.router.navigate(['/organizacao', this.organizacaoSelecionada.id, 'edit']);
 }
 
@@ -89,7 +89,8 @@ abrirEditar(){
           this.recarregarDataTable();
         }, error => {
           if (error.status === 500) {
-            this.pageNotificationService.addErrorMsg('A organização não pode ser deletada pois está associada a um contrato, equipe ou análise!');
+            this.pageNotificationService
+                .addErrorMsg('A organização não pode ser deletada pois está associada a um contrato, equipe ou análise!');
           }
         });
       }

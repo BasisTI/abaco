@@ -66,6 +66,7 @@ import {autenticacaoHttpFactory} from './shared/autenticacao/autenticacao-http';
 import {AnalistaGuard} from './analista.guard';
 import {UserGuard} from './user.guard';
 import {ObservadorGuard} from './observador.guard';
+import {GestorGuard} from './gestor.guard';
 
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
@@ -144,6 +145,7 @@ export function createTranslateLoader(http: HttpClient) {
         AnalistaGuard,
         UserGuard,
         ObservadorGuard,
+        GestorGuard,
         JwtHelper,
         {provide: AUTH_CONFIG, useValue: environment.auth},
         {provide: AuthService, deps: [HttpService, AUTH_CONFIG], useFactory: authServiceFactory},
