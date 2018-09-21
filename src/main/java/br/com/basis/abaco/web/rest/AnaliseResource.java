@@ -319,7 +319,8 @@ public class AnaliseResource {
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
     public ResponseEntity<Analise> blockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", analise);
-        if (!this.verificarAuthority()){
+        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
+        if (logged.isPresent() && !logged.get().verificarAuthority()){
             return ResponseEntity.badRequest().headers(
                 HeaderUtil.createFailureAlert(ENTITY_NAME, "notadmin", "Only admin users can block/unblock análises")).body(null);
         }
@@ -337,7 +338,8 @@ public class AnaliseResource {
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
     public ResponseEntity<Analise> unblockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", analise);
-        if (!this.verificarAuthority()){
+        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
+        if (logged.isPresent() && !logged.get().verificarAuthority()){
             return ResponseEntity.badRequest().headers(
                 HeaderUtil.createFailureAlert(ENTITY_NAME, "notadmin", "Only admin users can block/unblock análises")).body(null);
         }
@@ -383,14 +385,21 @@ public class AnaliseResource {
         Page<Analise> page;
 
         log.debug("REST request to get a page of Analises for user {}", userId);
-        User foundUser = userRepository.findOneWithAuthoritiesById(userId); // Recuperando dados do usuário logado
-        if (foundUser != null) {                                            // Se conseguir recuperar os dados de usuário...
-            if (!verificarAuthority()) {                                    // Se o usuário logado é comum, filtra a lista de análises pelas equipes do mesmo
-                analises = filtrarListaAnalises(foundUser);
-                page = analiseRepository.findById(analises, pageable);      // Requisitando uma página de análises com base na lista de Id's
+        User foundUser = userRepository.findOneWithAuthoritiesById(userId);     // Recuperando dados do usuário logado
+        if (foundUser != null) {                                                // Se conseguir recuperar os dados de usuário...
+            Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
+                                                                                // Verificando se o usuário está tentando acessar dados de outro usuário
+            if (logged.isPresent() && logged.get().getId().equals(foundUser.getId())) {
+                if (!logged.get().verificarAuthority()){                        // Se o usuário logado é comum, filtra a lista de análises pelas equipes do mesmo
+                    analises = filtrarListaAnalises(foundUser);
+                    page = analiseRepository.findById(analises, pageable);      // Requisitando uma página de análises com base na lista de Id's
+                }
+                else {                                                          // Do contrário manda todas as análises
+                    page = analiseRepository.findAll(pageable);                 // Requisitando uma página de análises sem filtro
+                }
             }
-            else {                                                          // Do contrário manda todas as análises
-                page = analiseRepository.findAll(pageable);                 // Requisitando uma página de análises sem filtro
+            else {
+                return this.createBadRequest("userSecurityBreak", "You are not allowed to access other user's data.");
             }
         }
         else {                                                              // Se não encontrou dados do usuário logado é sinal que a coisa tá feia...
