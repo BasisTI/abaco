@@ -9,7 +9,7 @@
                          [hidden]="!manual.id" 
                          style="margin-bottom: 25px">
                         <span class="md-inputfield">
-                            <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="manual.id" readonly/>
+                            <input type="text" id="idIdFormManual"class="ui-inputtext" name="id" pInputText [(ngModel)]="manual.id" readonly/>
                                    <label>ID</label>
                         </span>
                     </div>
@@ -45,7 +45,8 @@
                             required
                             min="0" 
                             step="0.010" 
-                            type="number" 
+                            type="number"
+                            id="idValorVariacaoEstimadaFormManual"
                             maxlength="5"
                             name="valorVariacaoEstimada"
                             [(ngModel)]="manual.valorVariacaoEstimadaFormatado"
@@ -70,6 +71,7 @@
                         step="0.010" 
                         type="number" 
                         maxlength="5"
+                        id="idValorVariacaoIndicativoFormManual"
                         name="valorVariacaoIndicativa"
                         #valorVariacaoIndicativa='ngModel'
                         [(ngModel)]="manual.valorVariacaoIndicativaFormatado"
@@ -97,6 +99,7 @@
                 class="ui-g-12 ui-md-12 ui-sm-12"
                 pInputTextarea
                 name="descricao"
+                id="idObservacaoFormManual"
                 maxlength="4000"
                 [rows]="5" 
                 [cols]="180" 
@@ -112,7 +115,8 @@
                 <p-fileUpload 
                     #fileInput 
                     chooseLabel="Selecionar arquivo" 
-                    [showUploadButton]="false" 
+                    [showUploadButton]="false"
+                    id="idArquivoManualFormManual"
                     [showCancelButton]="false" 
                     name="arquivoManual" 
                     (onSelect)="uploadFile($event)"
@@ -135,7 +139,8 @@
                         required
                         min="0" 
                         step="0.010" 
-                        type="number" 
+                        type="number"
+                        id="idInclusaoFormManual"
                         maxlength="5"
                         name="parametroInclusao"
                         [(ngModel)]="manual.parametroInclusaoFormatado"
@@ -157,7 +162,8 @@
                     required
                     min="0" 
                     step="0.010" 
-                    type="number" 
+                    type="number"
+                    id="idAlteracaoFormManual"
                     maxlength="5"
                     name="parametroAlteracao"
                     [(ngModel)]="manual.parametroAlteracaoFormatado"
@@ -180,6 +186,7 @@
                 min="0" 
                 step="0.010" 
                 type="number" 
+                id="idExclusaoFormManual"
                 maxlength="5"
                 name="parametroExclusao"
                 [(ngModel)]="manual.parametroExclusaoFormatado"
@@ -203,6 +210,7 @@
             step="0.010" 
             type="number" 
             maxlength="5"
+            id="idConvercaoFormManual"
             name="parametroConversao"
             [(ngModel)]="manual.parametroConversaoFormatado"
             #parametroConversao='ngModel'
@@ -228,6 +236,7 @@
         <p-radioButton 
             name="versaoCPM" 
             label="4.2.1"
+            id="idVersaoCPM421FormManual"
             [value]="421"
             [(ngModel)]="manual.versaoCPM">
         </p-radioButton>
@@ -237,6 +246,7 @@
         <p-radioButton 
             name="versaoCPM" 
             label="4.3.1"
+            id="idVersaoCPM431FormManual"
             [value]="431"
             [(ngModel)]="manual.versaoCPM">
         </p-radioButton>
@@ -252,7 +262,8 @@
         <div class="ui-g-3 ui-md-3 ui-sm-12">
             <app-blue-button 
                 buttonLabel="Novo Esforço Fase"
-                buttonIcon="ui-icon-add" 
+                buttonIcon="ui-icon-add"
+                id="idBtnNovoEsforcoFaseFormManual"
                 (click)="openDialogPhaseEffort()">
             </app-blue-button>
         </div>
@@ -261,7 +272,7 @@
 
 <div class="ui-g">
     <div class="ui-g-12 ui-md-12 ui-sm-12" id="tabela-tipo-fase">
-        <app-memory-datatable [value]="manual.esforcoFases" (buttonClick)="datatableClick($event)" disableClone="true">
+        <app-memory-datatable [value]="manual.esforcoFases" id="idTabelaEsforcoFaseFormManual"(buttonClick)="datatableClick($event)" disableClone="true">
             <p-column header="Tipo de Fase" field="fase.nome">
             </p-column>
             <p-column header="Percentual (%)" field="esforcoFormatado">
@@ -281,7 +292,8 @@
         <div class="ui-g-3 ui-md-3 ui-sm-12">
             <app-blue-button 
                 buttonLabel="Novo Deflator" 
-                buttonIcon="ui-icon-add" 
+                buttonIcon="ui-icon-add"
+                id="idBtnNovoDeflatorFormManual"
                 (click)="openDialogCreateAdjustFactor()">
             </app-blue-button>
         </div>
@@ -290,7 +302,7 @@
 
 <div class="ui-g">
     <div class="ui-g-12 ui-md-12 ui-sm-12" id="tabela-deflator">
-        <app-memory-datatable [value]="manual.fatoresAjuste" (buttonClick)="adjustFactorDatatableClick($event)" disableClone="true">
+        <app-memory-datatable [value]="manual.fatoresAjuste" id="idTabelaDeflatorFormManual"(buttonClick)="adjustFactorDatatableClick($event)" disableClone="true">
             <p-column header="Código" field="codigo">
             </p-column>
             <p-column header="Nome" field="nome">
@@ -310,10 +322,10 @@
 
 <div class="ui-g" style="justify-content: center; margin-top: 25px;">
     <div class="ui-g-2 ui-md-2 ui-sm-12">
-        <app-white-button buttonLabel="Cancelar" routerLink="/manual"></app-white-button>
+        <app-white-button buttonLabel="Cancelar" id="idBtnCancelarFormManual" routerLink="/manual"></app-white-button>
     </div>
     <div class="ui-g-2 ui-md-2 ui-sm-12">
-        <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+        <app-submit-button buttonLabel="Salvar" id="idBtnSalvarFormManual"[disabled]="editForm.form.invalid || isSaving"></app-submit-button>
     </div>
 </div>
 
@@ -342,7 +354,8 @@
             <input 
                 required
                 min="0" 
-                step="0.010" 
+                step="0.010"
+                id="idEsforcoSaveFormManual"
                 type="number" 
                 maxlength="5"
                 name="esforco"
@@ -355,14 +368,16 @@
         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
             <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-white-button 
-                    buttonLabel="Cancelar" 
+                    buttonLabel="Cancelar"
+                    id="idBtnCAncelarSaveEsforcoFormManual"
                     (click)="closeDialogPhaseEffort()">
                 </app-white-button>
             </div>
 
             <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-green-button 
-                    buttonLabel="Salvar" 
+                    buttonLabel="Salvar"
+                    id="idBtnSalvarSaveEsforcoFormManual"
                     buttonIcon="ui-icon-add" 
                     (click)="addPhaseEffort()">
                 </app-green-button>
@@ -402,7 +417,8 @@
                 required
                 min="0" 
                 step="0.010" 
-                type="number" 
+                type="number"
+                id="idEsforcoEditFormManual"
                 maxlength="5"
                 name="esforco"
                 [(ngModel)]="editedPhaseEffort.esforcoFormatado" 
@@ -414,7 +430,8 @@
         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
             <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-white-button 
-                    buttonLabel="Cancelar" 
+                    buttonLabel="Cancelar"
+                    id="idBtnCancelarEditFormManual"
                     (click)="closeDialogEditPhaseEffort()">
                 </app-white-button>
             </div>
@@ -422,6 +439,7 @@
             <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-green-button 
                     buttonLabel="Salvar" 
+                    id="idBtnSalvarEditFormManual"
                     buttonIcon="ui-icon-add" 
                     (click)="editPhaseEffort()">
                 </app-green-button>
@@ -474,6 +492,7 @@
                 id="valor_fator"
                 size="3" 
                 name="fator"
+                id="idDeflatorDeflatorFormManual"
                 [disabled]="habilitarDeflator()" 
                 [(ngModel)]="newAdjustFactor.fatorFormatado"
                 pInputText/>
@@ -488,6 +507,7 @@
             <textarea 
                 [rows]="5" 
                 [cols]="90" 
+                id="idDescricaoSaveFormManual"
                 pInputTextarea
                 name="descricaoFatorAjuste" 
                 [(ngModel)]="newAdjustFactor.descricao">
@@ -521,6 +541,7 @@
             <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-white-button 
                     buttonLabel="Cancelar" 
+                    id="idBtnCancelarDeflatorSaveFormManual"
                     (click)="closeDialogCreateAdjustFactor()">
                 </app-white-button>
             </div>
@@ -528,6 +549,7 @@
             <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-green-button 
                     buttonLabel="Salvar" 
+                    id="idBtnSalvarDeflatorSaveFormManual"
                     buttonIcon="ui-icon-add" 
                     (click)="addAdjustFactor()">
                 </app-green-button>
@@ -592,6 +614,7 @@
             <textarea 
                 [rows]="5" 
                 [cols]="90" 
+                id="idDescricaoEditFormManual"
                 pInputTextarea 
                 name="descricaoEdicaoFatorAjuste" 
                 [(ngModel)]="editedAdjustFactor.descricao">
@@ -627,6 +650,7 @@
             <div class="ui-g-3 ui-md-3 ui-sm-12">
                 <app-white-button 
                     buttonLabel="Cancelar" 
+                    id="idBtnCancelarEditFormManual"
                     (click)="closeDialogEditAdjustFactor()">
                 </app-white-button>
             </div>
@@ -634,6 +658,7 @@
             <div class="ui-g-3 ui-md-3 ui-sm-12">
                 <app-green-button 
                     buttonLabel="Salvar" 
+                    id="idBtnSalvarEditFormManual"
                     buttonIcon="ui-icon-add" 
                     (click)="editAdjustFactor()">
                 </app-green-button>
@@ -645,8 +670,8 @@
 
 <p-confirmDialog header="Confirmação" #dialog>
     <p-footer>
-        <app-white-button buttonLabel="Não" buttonIcon="fa-close" (click)="dialog.reject()"></app-white-button>
-        <app-green-button buttonLabel="Sim" buttonIcon="fa-check" (click)="dialog.accept()"></app-green-button>
+        <app-white-button buttonLabel="Não" id="idBtnNaoFormManual" buttonIcon="fa-close" (click)="dialog.reject()"></app-white-button>
+        <app-green-button buttonLabel="Sim" id="idBtnSimFormManual" buttonIcon="fa-check" (click)="dialog.accept()"></app-green-button>
     </p-footer>
 </p-confirmDialog>
 </form>

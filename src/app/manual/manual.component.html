@@ -20,7 +20,8 @@
         <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
           <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-white-button 
-                buttonLabel="Limpar Pesquisa" 
+                buttonLabel="Limpar Pesquisa"
+                id="idBtnLimparPesquisaComponentManual"
                 buttonIcon="ui-icon-clear-all" 
                 (click)="limparPesquisa()">
               </app-white-button>
@@ -28,6 +29,7 @@
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-blue-button 
               buttonLabel="Pesquisar" 
+              id="idBtnPesquisarComponentManual"
               buttonIcon="ui-icon-search" 
               (click)="datatable.refresh(elasticQuery.query)">
             </app-blue-button>
@@ -36,6 +38,7 @@
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-green-button 
               buttonLabel="Novo" 
+              id="idBtnNovoComponentManual"
               buttonIcon="ui-icon-add" 
               routerLink="/manual/new">
             </app-green-button>
@@ -48,6 +51,7 @@
           (dblclick)="onRowDblclick($event)"
           (buttonClick)="datatableClick($event)" 
           [rows]="20"
+          id="idTabelaComponentManual"
           [rowsPerPageOptions]="rowsPerPageOptions"
           [showPaginationFooter]="true"
           #datatable>
@@ -55,6 +59,7 @@
           <basis-datatable-button
             name="clone"
             icon="content-copy"
+            id="idTabelaCloneComponentManual"
             tooltip="Clonar"
             disabled="desabilitarBotaoClonar()">
           </basis-datatable-button>
@@ -104,7 +109,7 @@
         </basis-datatable>
 
         <div class="ui-g-12 ui-md-2">
-          <app-botoes-exportacao resourceName="manuals" >
+          <app-botoes-exportacao resourceName="manuals" id="idBtnExportarComponentManual" >
           </app-botoes-exportacao>
         </div>
 
@@ -114,8 +119,8 @@
 </div>
 <p-confirmDialog header="Confirmação" #dialog>
   <p-footer>
-    <app-white-button buttonLabel="Não" buttonIcon="fa-close" (click)="dialog.reject()"></app-white-button>
-    <app-green-button buttonLabel="Sim" buttonIcon="fa-check" (click)="dialog.accept()"></app-green-button>
+    <app-white-button buttonLabel="Não" id="idBtnNaoComponentManual" buttonIcon="fa-close" (click)="dialog.reject()"></app-white-button>
+    <app-green-button buttonLabel="Sim" id="idBtnSimComponentManual" buttonIcon="fa-check" (click)="dialog.accept()"></app-green-button>
   </p-footer>
 </p-confirmDialog>
 
@@ -138,8 +143,8 @@
 
   <div class="ui-g ui-md-12" style="justify-content: flex-end">
     <div>
-      <app-white-button buttonLabel="Cancelar" buttonIcon="fa-close" (click)="fecharDialogClonar()"></app-white-button>
-      <app-green-button buttonLabel="Salvar" buttonIcon="ui-icon-save" (click)="clonar()"></app-green-button>
+      <app-white-button buttonLabel="Cancelar" id="idBtnCancelarCloneComponentManual" buttonIcon="fa-close" (click)="fecharDialogClonar()"></app-white-button>
+      <app-green-button buttonLabel="Salvar" id="idBtnSalvarCloneComponentManual" buttonIcon="ui-icon-save" (click)="clonar()"></app-green-button>
     </div>
   </div>
 
