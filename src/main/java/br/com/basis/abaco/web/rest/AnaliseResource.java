@@ -364,30 +364,24 @@ public class AnaliseResource {
      */
     @GetMapping("/analises/user/{userId}")
     @Timed
-    public ResponseEntity getAllAnalisesByUserId(@PathVariable Long userId,
-                                                 @ApiParam Pageable pageable) throws URISyntaxException {
+    public ResponseEntity getAllAnalisesByUserId(@PathVariable Long userId, @ApiParam Pageable pageable) throws URISyntaxException {
         List<Long> analises;
         Page<Analise> page;
-
         log.debug("REST request to get a page of Analises for user {}", userId);
         User foundUser = userRepository.findOneWithAuthoritiesById(userId);     // Recuperando dados do usuário logado
         if (foundUser != null) {                                                // Se conseguir recuperar os dados de usuário...
             Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
-                                                                                // Verificando se o usuário está tentando acessar dados de outro usuário
-            if (logged.isPresent() && logged.get().getId().equals(foundUser.getId())) {
+            if (logged.isPresent() && logged.get().getId().equals(foundUser.getId())) { // Verificando se o usuário está tentando acessar dados de outro usuário
                 if (!logged.get().verificarAuthority()){                        // Se o usuário logado é comum, filtra a lista de análises pelas equipes do mesmo
                     analises = filtrarListaAnalises(foundUser);
                     page = analiseRepository.findById(analises, pageable);      // Requisitando uma página de análises com base na lista de Id's
-                }
-                else {                                                          // Do contrário manda todas as análises
+                } else {                                                        // Do contrário manda todas as análises
                     page = analiseRepository.findAll(pageable);                 // Requisitando uma página de análises sem filtro
                 }
-            }
-            else {
+            } else {
                 return this.createBadRequest("userSecurityBreak", "You are not allowed to access other user's data.");
             }
-        }
-        else {                                                              // Se não encontrou dados do usuário logado é sinal que a coisa tá feia...
+        } else {                                                                // Se não encontrou dados do usuário logado é sinal que a coisa tá feia...
             return this.createBadRequest("userNotFound", "User not found in database");
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises");

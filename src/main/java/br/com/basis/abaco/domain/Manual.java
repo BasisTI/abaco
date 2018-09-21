@@ -42,6 +42,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class Manual implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
+    private static final String MINPERCENT = "0";
+    private static final String MAXPERCENT = "100";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -57,14 +59,14 @@ public class Manual implements Serializable, ReportObject {
     private String observacao;
 
     @NotNull
-    @DecimalMin(value = "0")
-    @DecimalMax(value = "100")
+    @DecimalMin(value = MINPERCENT)
+    @DecimalMax(value = MAXPERCENT)
     @Column(name = "valor_variacao_estimada", precision = 10, scale = 4, nullable = false)
     private BigDecimal valorVariacaoEstimada;
 
     @NotNull
-    @DecimalMin(value = "0")
-    @DecimalMax(value = "100")
+    @DecimalMin(value = MINPERCENT)
+    @DecimalMax(value = MAXPERCENT)
     @Column(name = "valor_variacao_indicativa", precision = 10, scale = 4, nullable = false)
     private BigDecimal valorVariacaoIndicativa;
 
@@ -79,23 +81,23 @@ public class Manual implements Serializable, ReportObject {
     @JsonManagedReference
     private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
 
-    @DecimalMin(value = "0")
-    @DecimalMax(value = "100")
+    @DecimalMin(value = MINPERCENT)
+    @DecimalMax(value = MAXPERCENT)
     @Column(name = "parametro_inclusao")
     private BigDecimal parametroInclusao;
 
-    @DecimalMin(value = "0")
-    @DecimalMax(value = "100")
+    @DecimalMin(value = MINPERCENT)
+    @DecimalMax(value = MAXPERCENT)
     @Column(name = "parametro_alteracao")
     private BigDecimal parametroAlteracao;
 
-    @DecimalMin(value = "0")
-    @DecimalMax(value = "100")
+    @DecimalMin(value = MINPERCENT)
+    @DecimalMax(value = MAXPERCENT)
     @Column(name = "parametro_exclusao")
     private BigDecimal parametroExclusao;
     
-    @DecimalMin(value = "0")
-    @DecimalMax(value = "100")
+    @DecimalMin(value = MINPERCENT)
+    @DecimalMax(value = MAXPERCENT)
     @Column(name = "parametro_conversao")
     private BigDecimal parametroConversao;
     
