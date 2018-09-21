@@ -1,10 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
-
+import {Routes } from '@angular/router';
 import { TipoFaseComponent } from './tipo-fase.component';
 import { TipoFaseDetailComponent } from './tipo-fase-detail.component';
 import { TipoFaseFormComponent } from './tipo-fase-form.component';
-
 import { AuthGuard } from '@basis/angular-components';
 
 export const tipoFaseRoute: Routes = [

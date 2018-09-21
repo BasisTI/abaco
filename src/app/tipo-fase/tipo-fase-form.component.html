@@ -1,45 +1,45 @@
 <div class="ui-g ui-fluid">
-  <div class="ui-g-12">
-    <div class="card card-w-title">
-      <h1>{{ tipoFase.id ? 'Editar Tipo de Fase' : 'Cadastrar Tipo de Fase' }}</h1>
-      <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
-        
-        <div class="ui-g" style="margin-bottom: 25px; margin-top: 25px">
+    <div class="ui-g-12">
+        <div class="card card-w-title">
+            <h1>{{ tipoFase.id ? 'Editar Tipo de Fase' : 'Cadastrar Tipo de Fase' }}</h1>
 
-          <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+            <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
+                <div class="ui-g" style="margin-bottom: 25px; margin-top: 25px">
+
+                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input 
-                type="text" 
-                name="nomeTipoFase" 
-                [(ngModel)]="tipoFase.nome" 
-                [maxlength]="250"
-                #nomeTipoFase='ngModel'
-                pInputText
-                id="idNomeTipoFase"
-                required/>
+              <input
+                      type="text"
+                      name="nomeTipoFase"
+                      [(ngModel)]="tipoFase.nome"
+                      [maxlength]="250"
+                      #nomeTipoFase='ngModel'
+                      pInputText
+                      id="idNomeTipoFase"
+                      required/>
               <label>Nome</label>
               <div *ngIf="editForm.controls['nomeTipoFase'] 
                 && !editForm.controls['nomeTipoFase'].valid 
                 && (editForm.controls['nomeTipoFase'].touched 
-                || editForm.submitted)" 
-                class="ui-message ui-messages-error">
+                || editForm.submitted)"
+                   class="ui-message ui-messages-error">
                 Campo obrigatório.
               </div>
             </span>
-          </div>
-        </div>
+                    </div>
+                </div>
 
-        <div class="ui-g ui-md-12" style="justify-content: center">
-          <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-white-button buttonLabel="Cancelar" routerLink="/tipoFase" id="idBtnCancelarFormTipoFase"></app-white-button>
-            <!-- <button pButton type="button" label="Cancelar" routerLink="/tipoFase"></button> -->
-          </div>
-          <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving" id="idBtnSalvarFormTipoFase"></app-submit-button>
-            <!-- <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button> -->
-          </div>
+                <div class="ui-g ui-md-12" style="justify-content: center">
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-white-button buttonLabel="Cancelar" routerLink="/tipoFase"
+                                          id="idBtnCancelarFormTipoFase"></app-white-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"
+                                           id="idBtnSalvarFormTipoFase"></app-submit-button>
+                    </div>
+                </div>
+            </form>
         </div>
-      </form>
     </div>
-  </div>
 </div>
