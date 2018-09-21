@@ -22,7 +22,7 @@
         </div>
         <div class="ui-g-12 ui-md-12 ui-sm-12">
           <label>CNPJ: </label>
-          <input type="text" name="cnpj" mask="99.999.999/9999-99" [ngModel]="organizacao.cnpj" style="border-style: none" readonly/>
+          <input id="idCNPJDetailOrganizacao" type="text" name="cnpj" mask="99.999.999/9999-99" [ngModel]="organizacao.cnpj" style="border-style: none" readonly/>
         </div>
         <div class="ui-g-12 ui-md-12 ui-sm-12">
           <label>Número ocorrência: {{ organizacao.numeroOcorrencia }}</label>
@@ -38,6 +38,7 @@
           <p-dataTable 
             [value]="organizacao.contracts"
             [immutable]="false" 
+            id="idTabelaOrganizacaoDetailOrganizacao"
             #contratosDataTable>
             
             <p-column 
@@ -87,7 +88,7 @@
         </div>
       <div class="ui-g">
         <div class="ui-g-2">
-          <button pButton type="button" label="Voltar" routerLink="/organizacao"></button>
+          <button pButton type="button" id="idBtnVoltarDetailOrganizacao" label="Voltar" routerLink="/organizacao"></button>
         </div>
       </div>
     </div>
