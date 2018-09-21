@@ -110,6 +110,19 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         const analiseSub = this.analiseService.findAnalisesUsuario(this.userId).subscribe(res => {
             this.datatable.pDatatableComponent.value = res;             // Atribuindo valores das análises para a datatable
             this.datatable.pDatatableComponent.dataToRender = res;      // Renderizando valores das análises na datatable
+        }, error => {
+            if (error.status === 400) {
+                switch (error.headers.toJSON()['x-abacoapp-error'][0]) {
+                    case 'userSecurityBreak': {
+                        this.pageNotificationService.addErrorMsg('Você não possui permissão para acessar dados de outro usuário.');
+                        break;
+                    }
+                    case 'userNotFound': {
+                        this.pageNotificationService.addErrorMsg('Você não é um usuário cadastrado para este sistema.');
+                        break;
+                    }
+                }
+            }
         });
     }
 

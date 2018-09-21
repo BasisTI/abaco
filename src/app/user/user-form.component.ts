@@ -136,6 +136,11 @@ export class UserFormComponent implements OnInit, OnDestroy {
                     authority.description = 'Analista';
                     break;
                 }
+
+                case 4: {
+                    authority.description = 'Gestor';
+                    break;
+                }
             }
         });
     }
@@ -168,6 +173,12 @@ export class UserFormComponent implements OnInit, OnDestroy {
                     authority.artificialId = 3;
                     break;
                 }
+                case 'ROLE_GESTOR': {
+                    authority.description = 'Gestor';
+                    authority.artificialId = 4;
+                    break;
+                }
+
             }
         });
     }
@@ -180,6 +191,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMsg('Favor preencher os campos Obrigatórios!');
             return;
         }
+        console.log(this.user);
         if (this.user.id !== undefined) {
             this.isEdit = true;
             this.subscribeToSaveResponse(this.userService.update(this.user));
@@ -285,20 +297,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
     loadCurrentUser() {
         this.userService.findCurrentUser().subscribe((res: User) => {
             this.user = res;
-            this.user.authorities.forEach((authority, index) => {
-                authority.artificialId = index;
-                switch (index) {
-                    case 0: {
-                        authority.description = 'Administrador';
-                        break;
-                    }
-
-                    case 1: {
-                        authority.description = 'Usuário';
-                        break;
-                    }
-                }
-            });
+            this.populateUserAuthoritiesWithArtificialId();
         });
     }
 
