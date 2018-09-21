@@ -2,7 +2,6 @@ import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Response} from '@angular/http';
 import {Observable, Subscription} from 'rxjs/Rx';
-import {SelectItem} from 'primeng/primeng';
 
 import {Manual} from './manual.model';
 import {ManualService} from './manual.service';
@@ -24,7 +23,8 @@ import {FileUpload} from 'primeng/primeng';
 })
 export class ManualFormComponent implements OnInit, OnDestroy {
     manual: Manual;
-    isSaving; isEdit: boolean;
+    isSaving;
+    isEdit: boolean;
     loading: boolean;
     private routeSub: Subscription;
     arquivoManual: File;
@@ -41,8 +41,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     editedAdjustFactor: FatorAjuste = new FatorAjuste();
 
     adjustTypes: Array<any> = [
-        {label: 'Percentual', value: 'PERCENTUAL', },
-        {label: 'Unitário', value: 'UNITARIO', },
+        {label: 'Percentual', value: 'PERCENTUAL',},
+        {label: 'Unitário', value: 'UNITARIO',},
     ];
 
     invalidFields: Array<string> = [];
@@ -61,7 +61,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         private confirmationService: ConfirmationService,
         private pageNotificationService: PageNotificationService,
         private uploadService: UploadService
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         this.isSaving = false;
@@ -118,7 +119,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     private editar() {
-        this.manualService.find(this.manual.id).subscribe(response => {
+        this.manualService.find(this.manual.id).subscribe(() => {
             if (this.checkRequiredFields()) {
                 if (this.arquivoManual !== undefined) {
                     this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
@@ -180,12 +181,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.invalidFields.push('Conversão');
         }
 
-        if (this.manual.esforcoFases.length == 0 || this.manual.esforcoFases == undefined) {
+        if (this.manual.esforcoFases.length === 0 || this.manual.esforcoFases === undefined) {
             document.getElementById('tabela-tipo-fase').setAttribute('style', 'border: 1px dotted red;');
             this.invalidFields.push('Esforço de Fases');
         }
 
-        if (this.manual.fatoresAjuste.length == 0 || this.manual.fatoresAjuste == undefined) {
+        if (this.manual.fatoresAjuste.length === 0 || this.manual.fatoresAjuste === undefined) {
             document.getElementById('tabela-deflator').setAttribute('style', 'border: 1px dotted red;');
             this.invalidFields.push('Deflator');
         }
@@ -223,18 +224,18 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     private subscribeToSaveResponse(result: Observable<Manual>) {
         result.subscribe((res: Manual) => {
-            this.isSaving = false;
-            this.router.navigate(['/manual']);
-            this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg();
-        },
-        (error: Response) => {
-            this.isSaving = false;
+                this.isSaving = false;
+                this.router.navigate(['/manual']);
+                this.isEdit ? this.pageNotificationService.addUpdateMsg() : this.pageNotificationService.addCreateMsg();
+            },
+            (error: Response) => {
+                this.isSaving = false;
 
-            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.manualexists') {
-                this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
-                document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
+                if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.manualexists') {
+                    this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+                    document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
                 }
-        });
+            });
     }
 
     ngOnDestroy() {

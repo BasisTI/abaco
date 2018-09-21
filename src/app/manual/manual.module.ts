@@ -17,8 +17,6 @@ import {
   DialogModule,
   ConfirmDialogModule,
   ConfirmationService,
-  InputTextareaModule,
-  SelectButtonModule,
   FileUploadModule
 } from 'primeng/primeng';
 
@@ -33,7 +31,7 @@ import {
 import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
 import { ActiveBooleanPipe } from '../shared/active-boolean.pipe';
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
-import {HttpClientModule, HttpClient} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 

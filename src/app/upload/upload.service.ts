@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpRequest, HttpClient } from '@angular/common/http';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
+import {Observable} from '../../../node_modules/rxjs';
 
 @Injectable()
 export class UploadService {
@@ -44,7 +45,10 @@ export class UploadService {
         id: id
       }
     }).map(response => {
+      console.log(response);
       return response.json();
+    }).catch(function () {
+        return Observable.throw('Não possui Arquivo Manual');
     });
   }
 
