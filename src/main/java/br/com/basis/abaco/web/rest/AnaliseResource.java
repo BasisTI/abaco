@@ -65,7 +65,11 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.List;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.ArrayList;
+
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -171,25 +175,6 @@ public class AnaliseResource {
      */
     private Analise recuperarAnalise(Long id) {
         return analiseRepository.findOne(id);
-    }
-
-
-    /**
-     * Verifica se o usuário logado tem permissões de admin ou gestor
-     * @return Retorna verdadeiro se tem permissões de admin ou gestor. Retorna falso em qualquer outro caso
-     */
-    private boolean verificarAuthority () {
-        boolean temResposta = false;
-        Optional<User> opt = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
-
-        if (opt.isPresent()){
-            Iterator<Authority> i = opt.get().getAuthorities().iterator();
-            while (i.hasNext() && !temResposta) {
-                Authority a = i.next();
-                temResposta = (a.equals(ROLE_ADMIN) || a.equals(ROLE_GESTOR));
-            }
-        }
-        return temResposta;
     }
 
     /**

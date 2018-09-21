@@ -2,7 +2,10 @@ package br.com.basis.abaco.domain;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -312,7 +315,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
             Iterator<Authority> i = this.getAuthorities().iterator();
             while (i.hasNext() && !temResposta) {
                 Authority a = i.next();
-                temResposta = (a.equals(AuthoritiesConstants.ADMIN) || a.equals(AuthoritiesConstants.GESTOR));
+                temResposta = (a.contain(AuthoritiesConstants.ADMIN) || a.contain(AuthoritiesConstants.GESTOR));
         }
         return temResposta;
     }

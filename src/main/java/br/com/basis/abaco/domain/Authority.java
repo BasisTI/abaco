@@ -57,7 +57,7 @@ public class Authority implements Serializable {
             Objects.equals(description, authority.description);
     }
 
-    public boolean equals(String s) {
+    public boolean contain(String s) {
         return (this.name.equals(s));
     }
 
