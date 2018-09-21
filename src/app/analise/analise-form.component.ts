@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import { Response } from '@angular/http';
 
-import {Analise} from './analise.model';
+import { Analise } from './analise.model';
 import {AnaliseService} from './analise.service';
 import {ResponseWrapper,  AnaliseSharedDataService, PageNotificationService} from '../shared';
 import {Organizacao, OrganizacaoService} from '../organizacao';
@@ -34,6 +34,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     dataHomol: any;
     diasGarantia: number;
     public validacaoCampos: boolean;
+    aguardarGarantia: boolean;
+    enviarParaBaseLine: boolean;
 
     organizacoes: Organizacao[];
 
@@ -111,6 +113,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                     this.inicializaValoresAposCarregamento(analise);
                     this.analiseSharedDataService.analiseCarregada();
                     this.dataAnalise = this.analise;
+                    this.aguardarGarantia = this.analise.baselineImediatamente;
+                    this.enviarParaBaseLine = this.analise.enviarBaseline;
                     this.setDataHomologacao();
                     this.diasGarantia = this.getGarantia();
                     this.update();
@@ -372,12 +376,20 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.setManual(contrato);
         this.diasGarantia = this.analise.contrato.diasDeGarantia;
         this.analise.esforcoFases = _.cloneDeep(contrato.manual.esforcoFases);
+        this.analise.baselineImediatamente = true;
+        this.analise.enviarBaseline = true;
     }
 
     /**
      * Método responsável por persistir as informações das análises na edição.
      **/
     save() {
+        if(this.aguardarGarantia === undefined){
+            this.analise.baselineImediatamente = true;
+        }
+        if(this.enviarParaBaseLine === undefined){
+            this.analise.enviarBaseline = true;
+        }
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
             this.analiseService.update(this.analise).subscribe(() => {
