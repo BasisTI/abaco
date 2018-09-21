@@ -12,6 +12,7 @@
               chooseLabel="Selecionar arquivo" 
               (onSelect)="fileUpload($event)" 
               accept="image/*" 
+              id="idLogoOrganizacaoFormOrganizacao"
               [showUploadButton]="false" 
               [showCancelButton]="false">
             </p-fileUpload>
@@ -27,6 +28,7 @@
                   type="text"
                   name="nomeOrganizacao"
                   maxlength="80"
+                  id="idNomeFormOrganizacao"
                   required
                   [(ngModel)]="organizacao.nome" 
                   pInputText
@@ -47,6 +49,7 @@
               <input 
                 type="text" 
                 name="siglaOrganizacao" 
+                id="idSiglaFormOrganizacao"
                 [(ngModel)]="organizacao.sigla" 
                 pInputText
                 maxlength="10"/>
@@ -58,6 +61,7 @@
             <span class="md-inputfield">
               <input 
                 type="text" 
+                id="idCNPJFormOrganizacao"
                 name="cnpjOrganizacao"
                 maxlength="18" 
                 minlength="14"
@@ -77,6 +81,7 @@
               <input 
                 type="text"
                 maxlength="250"
+                id="idNumeroOcorrenciaFormOrganizacao"
                 name="numeroOcorrencia" 
                 [(ngModel)]="organizacao.numeroOcorrencia" 
                 pInputText/>
@@ -90,11 +95,11 @@
                 <label>Ativo:</label>
               </div>
               <div class="ui-g-1 ui-md-1 ui-sm-12">
-                <p-radioButton name="org_ativo" [value]="true" label="Sim"
+                <p-radioButton name="org_ativo" id="idAtivoSimFormOrganizacao"[value]="true" label="Sim"
                   [(ngModel)]="organizacao.ativo"></p-radioButton>
               </div>
               <div class="ui-g-1 ui-md-1 ui-sm-12">
-                <p-radioButton name="org_ativo" [value]="false" label="Não"
+                <p-radioButton name="org_ativo" id="idAtivoNaoFormOrganizacao" [value]="false" label="Não"
                   [(ngModel)]="organizacao.ativo"></p-radioButton>
               </div>
             </div>
@@ -110,6 +115,7 @@
                 <app-blue-button 
                   buttonLabel="Novo Contrato" 
                   buttonIcon="ui-icon-add" 
+                  id="idBtnNovoContratoFormOrganizacao"
                   (click)="abrirDialogCadastroContrato()">
                 </app-blue-button>
               </div>
@@ -167,6 +173,7 @@
           <div class="ui-g-2">
             <app-white-button 
               buttonLabel="Cancelar" 
+              id="idBtnCancelarFormOrganizacao"
               routerLink="/organizacao">
             </app-white-button>
           </div>
@@ -191,6 +198,7 @@
               <span class="md-inputfield">
                 <input 
                   type="text" 
+                  id="idNumeroContratoContratoSaveFormOrganizacao"
                   name="numeroContrato" 
                   maxlength="100" 
                   [(ngModel)]="novoContrato.numeroContrato" 
@@ -209,6 +217,7 @@
                   [filter]="true"
                   [options]="manuais" 
                   optionLabel="nome" 
+                  id="idManualContratoSaveFormOrganizacao"
                   placeholder="Manual *"
                   name="manualDropdown" 
                   [(ngModel)]="novoContrato.manual"
@@ -228,6 +237,7 @@
                   name="dataInicioVigenciaContrato"
                   dateFormat="dd/mm/yy"
                   yearRange="2000:2050"
+                  id="idDataInicioVigenciaContratoSaveFormOrganizacao"
                   [(ngModel)]="novoContrato.dataInicioVigencia"
                   [monthNavigator]="true" 
                   [yearNavigator]="true">
@@ -242,6 +252,7 @@
                 name="dataFimVigenciaContrato"
                 yearRange="2000:2050"
                 dateFormat="dd/mm/yy"
+                id="idDataFinalVigenciaContratoSaveFormOrganizacao"
                 [(ngModel)]="novoContrato.dataFimVigencia"
                 [monthNavigator]="true" 
                 [yearNavigator]="true">
@@ -256,6 +267,7 @@
                   type="number" 
                   name="diasDeGarantia"
                   mask="999"
+                  id="idDiasGarantiaContratoSaveFormOrganizacao"
                   [(ngModel)]="novoContrato.diasDeGarantia" 
                   pInputText/>
                 <label>Dias de garantia</label>
@@ -273,6 +285,7 @@
                   <p-radioButton name="contrato_ativo" 
                     [(ngModel)]="novoContrato.ativo"
                     [value]="true" 
+                    id="idAtivoSimContratoSaveFormOrganizacao"
                     label="Sim">
                   </p-radioButton>
                 </div>
@@ -281,6 +294,7 @@
                   <p-radioButton name="contrato_ativo" 
                     [value]="false" 
                     label="Não"
+                    id="idAtivoNaoContratoSaveFormOrganizacao"
                     [(ngModel)]="novoContrato.ativo">
                   </p-radioButton>
                 </div>
@@ -293,13 +307,15 @@
             <div class="ui-g-2">
               <app-white-button 
                 buttonLabel="Cancelar" 
+                id="idBtnCancelarContratoSaveFormOrganizacao"
                 (click)="fecharDialogCadastroContrato()">
               </app-white-button>
             </div>
 
             <div class="ui-g-2">
               <app-green-button 
-                buttonLabel="Salvar" 
+                buttonLabel="Salvar"
+                id="idBtnSalvarContratoSaveFormOrganizacao" 
                 (click)="adicionarContrato()">
               </app-green-button>
             </div>
@@ -317,6 +333,7 @@
                 <input 
                   type="text" 
                   maxlength="100"
+                  id="idNumeroContratoContratoEditFormOrganizacao"
                   name="numeroContrato" 
                   [(ngModel)]="contratoEmEdicao.numeroContrato" 
                   pInputText/>
@@ -329,6 +346,7 @@
                 [filter]="true"
                 [options]="manuais" 
                 optionLabel="nome" 
+                id="idManualContratoEditFormOrganizacao"
                 placeholder="Manual"
                 name="manualDropdown" 
                 [(ngModel)]="contratoEmEdicao.manual"
@@ -343,6 +361,7 @@
                   [(ngModel)]="contratoEmEdicao.dataInicioVigencia" 
                   name="dataInicioVigenciaContrato"
                   [monthNavigator]="true" 
+                  id="idDataInicioVigenciaContratoEditFormOrganizacao"
                   [yearNavigator]="true"
                   dateFormat="dd/mm/yy" 
                   yearRange="2000:2050">
@@ -357,6 +376,7 @@
                 [(ngModel)]="contratoEmEdicao.dataFimVigencia"
                 [monthNavigator]="true" 
                 [yearNavigator]="true" 
+                id="idDataFinalVigenciaContratoEditFormOrganizacao"
                 name="dataFimVigenciaContrato"
                 dateFormat="dd/mm/yy" 
                 yearRange="2000:2050">
@@ -371,6 +391,7 @@
                   type="number" 
                   mask="999"
                   name="diasDeGarantia"
+                  id="idDiasGarantiaContratoEditFormOrganizacao"
                   [(ngModel)]="contratoEmEdicao.diasDeGarantia" 
                   pInputText/>
                 <label>Dias de garantia</label>
@@ -383,7 +404,7 @@
                   <label>Ativo</label>
                 </div>
 
-                <p-checkbox name="contrato_ativo" binary="true"
+                <p-checkbox name="contrato_ativo" id="idAtivoContratoEditFormOrganizacao" binary="true"
                   [(ngModel)]="contratoEmEdicao.ativo"></p-checkbox>
                 <!-- BUG no Primeng com radiobutton dentro de dialog -->
                 <!-- <div class="ui-g-12 ui-md-1">
@@ -402,6 +423,7 @@
             <div class="ui-g-2">
               <app-white-button 
                 buttonLabel="Cancelar" 
+                id="idBtnCancelarContratoEditFormOrganizacao"
                 (click)="fecharDialogEditarContrato()"
                 buttonIcon="ui-arrow-back">
               </app-white-button>
@@ -412,6 +434,7 @@
             <div class="ui-g-2">
               <app-green-button 
                 buttonLabel="Salvar" 
+                id="idBtnSalvarContratoEditFormOrganizacao"
                 (click)="editarContrato()">
               </app-green-button>
               <!-- <button pButton type="button" label="Salvar"
@@ -423,8 +446,8 @@
         <!-- Dialog confirmação deleção -->
         <p-confirmDialog header="Confirmação" #dialog>
           <p-footer>
-            <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-            <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+            <button type="button" id="idBtnNaoDeleteFormOrganizacao" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
+            <button type="button" id="idBtnSimDeleteFormOrganizacao" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
           </p-footer>
         </p-confirmDialog>
 
