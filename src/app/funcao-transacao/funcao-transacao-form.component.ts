@@ -394,7 +394,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
             this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
             this.validarNameFuncaoTransacaos(this.currentFuncaoTransacao.name).then( resolve => {
-                if (resolve){
                     this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
                     this.atualizaResumo();
                     this.resetarEstadoPosSalvar();
@@ -403,9 +402,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     this.pageNotificationService.addSuccessMsg(`Função de Transação '${funcaoTransacaoCalculada.name}' alterada com sucesso`);
                     this.atualizaResumo();
                     this.resetarEstadoPosSalvar();
-                } else {
-                    this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
-                }
              });
         }
     }

@@ -412,16 +412,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
             this.validarNameFuncaoDados(this.currentFuncaoDados.name).then(resolve => {
-                if (resolve) {
                     this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
                     this.analise.updateFuncaoDados(funcaoDadosCalculada);
                     this.atualizaResumo();
                     this.resetarEstadoPosSalvar();
                     this.salvarAnalise();
                     this.fecharDialog();
-                } else {
-                    this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
-                }
             });
         }
     }
