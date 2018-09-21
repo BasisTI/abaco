@@ -9,6 +9,7 @@
                 <input type="text" pInputText class="ui-inputtext"
                   name="filtroTipoFase"
                   [(ngModel)]="elasticQuery.value"
+                  id="idDescricaoComponentTipoFase"
                   (keyup.enter)="datatable.refresh(elasticQuery.query)"
                   #filter />
                 <label>Descrição</label>
@@ -20,20 +21,23 @@
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-white-button 
                 buttonLabel="Limpar Pesquisa" 
-                buttonIcon="ui-icon-clear-all" 
+                buttonIcon="ui-icon-clear-all"
+                id="idBtnLimparComponentTipoFase" 
                 (click)="limparPesquisa()">
               </app-white-button>
             </div>
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-blue-button 
                 buttonLabel="Pesquisar" 
-                buttonIcon="ui-icon-search" 
+                buttonIcon="ui-icon-search"
+                id="idBtnPesquisarComponentTipoFase" 
                 (click)="datatable.refresh(elasticQuery.query)">
               </app-blue-button>
             </div>
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-green-button 
-                buttonLabel="Novo" 
+                buttonLabel="Novo"
+                id="idBtnNovoComponentTipoFase" 
                 routerLink="/tipoFase/new" 
                 buttonIcon="ui-icon-add">
               </app-green-button>
@@ -46,14 +50,15 @@
           (buttonClick)="datatableClick($event)" 
           [rows]="20"
           [rowsPerPageOptions]="rowsPerPageOptions"
+          id="idTabelaComponentTipoFase"
           [showPaginationFooter]="true"
           #datatable>
-          <p-column header="Código" field="id" [sortable]="true"></p-column>
-          <p-column header="Nome" field="nome" [sortable]="true"></p-column>
+          <p-column header="Código" field="id" id="idCodigoTabelaComponentTipoFase"[sortable]="true"></p-column>
+          <p-column header="Nome" field="nome" id="idNomeTabelComponentTipoFase"[sortable]="true"></p-column>
         </basis-datatable>
 
         <div class="ui-g-12 ui-md-2">
-          <app-botoes-exportacao resourceName="tipoFase" >
+          <app-botoes-exportacao resourceName="tipoFase" id="idBtnExportacaoComponentTipoFase" >
           </app-botoes-exportacao>
       </div>
 
@@ -63,7 +68,7 @@
 </div>
 <p-confirmDialog header="Confirmação" #dialog>
   <p-footer>
-    <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-    <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()" id="idBtnNaoComponentTipoFase"></button>
+    <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()" id="idBtnSimComponentTipoFase"></button>
   </p-footer>
 </p-confirmDialog>
