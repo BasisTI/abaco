@@ -157,7 +157,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       this.pageNotificationService.addErrorMsg('Selecione um manual');
       return;
     }
-      if(this.novoContrato.numeroContrato === null || this.novoContrato.numeroContrato === undefined) {
+      if (this.novoContrato.numeroContrato === null || this.novoContrato.numeroContrato === undefined) {
         this.numeroContratoInvalido = true;
         this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
         return;
@@ -269,15 +269,14 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
    this.organizacaoService.query().subscribe(response => {
      const todasOrganizacoes = response;
 
-     if(!this.checkIfOrganizacaoAlreadyExists(todasOrganizacoes.json)) {
+     if (!this.checkIfOrganizacaoAlreadyExists(todasOrganizacoes.json)) {
        if (this.organizacao.id !== undefined) {
          this.editar();
        } else {
          this.novo();
        }
      }
-   })
-   
+   });
   }
 
  editar() {
@@ -308,7 +307,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
   checkIfOrganizacaoAlreadyExists(organizacoesRegistradas: Array<Organizacao>): boolean {
-      let isAlreadyRegistered: boolean = false;
+      let isAlreadyRegistered = false;
       organizacoesRegistradas.forEach(each => {
         if (each.nome.toUpperCase() === this.organizacao.nome.toUpperCase() && each.id !== this.organizacao.id) {
           isAlreadyRegistered = true;
@@ -357,22 +356,26 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
         switch (errorType) {
           case 'error.orgNomeInvalido' : {
-            this.pageNotificationService.addErrorMsg('O campo "Nome" possui carcteres inválidos! Verifique se há espaços no início, no final ou mais de um espaço entre palavras.');
+            this.pageNotificationService.addErrorMsg('O campo "Nome" possui carcteres inválidos! '
+                + 'Verifique se há espaços no início, no final ou mais de um espaço entre palavras.');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
             break;
           }
           case 'error.orgCnpjInvalido' : {
-            this.pageNotificationService.addErrorMsg('O campo "CNPJ" possui carcteres inválidos! Verifique se há espaços no início ou no final.');
+            this.pageNotificationService.addErrorMsg('O campo "CNPJ" possui carcteres inválidos! '
+                + 'Verifique se há espaços no início ou no final.');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
             break;
           }
           case 'error.orgSiglaInvalido' : {
-            this.pageNotificationService.addErrorMsg('O campo "Sigla" possui carcteres inválidos! Verifique se há espaços no início ou no final.');
+            this.pageNotificationService.addErrorMsg('O campo "Sigla" possui carcteres inválidos! '
+                + 'Verifique se há espaços no início ou no final.');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
             break;
           }
           case 'error.orgNumOcorInvalido' : {
-            this.pageNotificationService.addErrorMsg('O campo "Número da Ocorrência" possui carcteres inválidos! Verifique se há espaços no início ou no final.');
+            this.pageNotificationService.addErrorMsg('O campo "Número da Ocorrência" possui carcteres inválidos! '
+                + 'Verifique se há espaços no início ou no final.');
             //document.getElementById('login').setAttribute('style', 'border-color: red;');
             break;
           }

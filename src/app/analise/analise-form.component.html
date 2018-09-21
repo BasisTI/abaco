@@ -250,7 +250,7 @@
                                     <span class="md-inputfield">
                                         <textarea
                                                 required
-                                                pInputTextarea name="documentacao"
+                                                pInputTextarea name="documentacao"                                          pInputTextarea name="documentacao"
                                                 [(ngModel)]="analise.documentacao">
                                         </textarea>
                                     </span>
@@ -268,7 +268,7 @@
                                                 name="baseline_imediatamente"
                                                 label="Sim"
                                                 [value]="true"
-                                                [(ngModel)]="analise.baselineImediatamente">
+                                                [(ngModel)]="aguardarGarantia">
                                         </p-radioButton>
                                     </div>
 
@@ -319,11 +319,10 @@
                                         </p-calendar>
                                         <label>Data da homologação (software) {{analise.baselineImediatamente ? " *" : null}}</label>
                                     </span>
-
-                                    <div *ngIf="analise.baselineImediatamente && !(analise.dataHomologacao)"
+                                    <!-- <div *ngIf="analise.dataHomologacao"
                                          class="ui-message ui-messages-error">
                                         Campo Obrigatório!
-                                    </div>
+                                    </div> -->
 
                                 </div>
 

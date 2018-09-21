@@ -69,7 +69,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
         this.inicializaResumos();
-
+        
         // TODO
         if (!baselineImediatamente) {
             this.baselineImediatamente = false;
