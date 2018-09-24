@@ -8,6 +8,7 @@
                         <div class="ui-md-2" *ngIf="!isView">
                             <app-green-button
                                     buttonLabel="Novo"
+                                    id="idNovoFormFuncaoDados"
                                     buttonIcon="ui-icon-add"
                                     (click)="openDialog(false)">
                             </app-green-button>
@@ -20,6 +21,7 @@
                                 [disableEdit]="this.isView"
                                 [disableClone]="this.isView"
                                 [value]="funcoesDados"
+                                id="idTabelaFuncaoDados"
                                 (buttonClick)="datatableClick($event)"
                                 [responsive]="true"
                                 scrollable="true"
@@ -132,6 +134,7 @@
                             <p-autoComplete
                                     [(ngModel)]="currentFuncaoDados.name"
                                     [suggestions]="baselineResults"
+                                    id="idNomeFormFuncaoDados"
                                     (completeMethod)="searchBaseline($event)"
                                     field="name"
                                     (onSelect)="recuperarNomeSelecionado($event)">
@@ -144,6 +147,7 @@
                         <div class="ui-g-3">
                             <app-blue-button
                                     buttonLabel="Múltiplos"
+                                    id="idBtnMultiplosFormFuncaoDados"
                                     (click)="buttonMultiplos()">
                             </app-blue-button>
                         </div>
@@ -157,6 +161,7 @@
                                       [(ngModel)]="text"
                                       style="white-space: nowrap; overflow: auto;"
                                       [autoResize]="false"
+                                      id="idNomesFormFuncaoDados"
                                       (keyup.enter)="textChanged()"
                                       (keyup.backspace)="textChanged()"
                                       (keyup.delete)="textChanged()"
@@ -168,6 +173,7 @@
                         <div class="ui-g-3">
                             <app-blue-button
                                     buttonLabel="Unitário"
+                                    id="idBtnUnitarioFormFuncaoDados"
                                     (click)="buttonMultiplos()">
                             </app-blue-button>
                         </div>
@@ -179,6 +185,7 @@
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                             <label>Nomes *</label>
                             <input type="text" class="ui-inputtext"
+                                    id="idNomesEditFormFuncaoDados"
                                    [(ngModel)]="currentFuncaoDados.name">
                         </div>
                     </div>
@@ -197,6 +204,7 @@
                         <p-dropdown
                                 [filter]="true"
                                 [options]="classificacoes"
+                                id="idClassificacoesFormFuncaoDados"
                                 [(ngModel)]="currentFuncaoDados.tipo"
                                 placeholder="Selecione uma Classificação"
                                 name="classificacao"
@@ -214,6 +222,7 @@
                         <p-dropdown
                                 [filter]="true"
                                 [options]="impacto"
+                                id="idImpactoFormFuncaoDados"
                                 [(ngModel)]="currentFuncaoDados.impacto"
                                 placeholder="Selecione..."
                                 name="impacto"
@@ -235,6 +244,7 @@
                                 [options]="fatoresAjuste"
                                 [(ngModel)]="currentFuncaoDados.fatorAjuste"
                                 [disabled]="!isContratoSelected()"
+                                id="idDeflatorFormFuncaoDados"
                                 [placeholder]="fatoresAjusteDropdownPlaceholder()"
                                 (onChange)="contratoSelecionado()"
                                 name="fatorAjuste"
@@ -250,7 +260,8 @@
                     <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
                         <label>Quantidade</label>
                         <input type="number" class="ui-inputtext" min="1"
-                               [(ngModel)]="currentFuncaoDados.quantidade">
+                               [(ngModel)]="currentFuncaoDados.quantidade"
+                               id="idQuantidadeFormFuncaoDados">
                         <div *ngIf="erroUnitario"
                              class="ui-message ui-messages-error">
                             Campo obrigatório.
@@ -264,7 +275,8 @@
                     <h2>RLR (TR)</h2>
                     <app-analise-der-chips
                             [(values)]="rlrsChips"
-                            (onChange)="adicionar()">
+                            (onChange)="adicionar()"
+                            id="idRLRFormFuncaoDados">
                     </app-analise-der-chips>
                     <div *ngIf="erroTR"
                          class="ui-message ui-messages-error">
@@ -277,6 +289,7 @@
                     <h2>DER (TD)</h2>
                     <app-analise-der-chips
                             [(values)]="dersChips"
+                            id="idDERFormFuncaoDados"
                             (onChange)="adicionar()">
                     </app-analise-der-chips>
                     <div *ngIf="erroTD"
@@ -290,6 +303,7 @@
                     <span class="md-inputfield">
                 <textarea
                         [rows]="3"
+                        id="idFundamentacaoFormFuncaoDados"
                         [cols]="180"
                         pInputTextarea name="funcaoDadosSustentacao"
                         [(ngModel)]="currentFuncaoDados.sustantation">
@@ -301,6 +315,7 @@
                     <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
                         <app-white-button
                                 buttonLabel="Cancelar"
+                                id="idBtmCancelarFormFuncaoDados"
                                 (click)="cancelar()">
                         </app-white-button>
                     </div>
@@ -308,6 +323,7 @@
                     <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
                         <app-white-button
                                 buttonLabel="Fechar"
+                                id="idBtnFecharFormFuncaoDados"
                                 (click)="cancelar()">
                         </app-white-button>
                     </div>
@@ -315,6 +331,7 @@
                     <div class="ui-md-3 ui-sm-12">
                         <app-blue-button
                                 buttonLabel="Salvar"
+                                id="idSalvarFormFuncaoDados"
                                 buttonIcon="ui-icon-add"
                                 (click)="buttonSaveEdit()">
                         </app-blue-button>
