@@ -25,6 +25,7 @@
         <p-dataTable 
           [value]="sistema.modulos"
           [immutable]="false" 
+          id="idTabelaModuloDetailSistema"
           #modulosDataTable>
           <p-column header="Código"
             [style]="{width: '25%'}" 
@@ -39,7 +40,8 @@
 
           <p-dataTable 
             [value]="sistema.funcionalidades"
-            [immutable]="false" 
+            [immutable]="false"
+            id="idTabelaFuncionalidadesDetailSistema"
             #funcionalidadesDataTable>
             <p-column header="Módulo" field="modulo.nome"></p-column>
             <p-column header="Nome" field="nome"></p-column>
@@ -49,7 +51,8 @@
       <div class="ui-g">
         <div class="ui-g-2">
           <button 
-            pButton type="button" 
+            pButton type="button"
+            id="idBtnVoltarDetailSistema" 
             label="Voltar" 
             routerLink="/sistema">
           </button>

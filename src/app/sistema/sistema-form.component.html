@@ -54,6 +54,7 @@
             <span class="md-inputfield">
               <input 
                 type="text" 
+                id="idNumeoOcorrenciaFormSistema"
                 name="numeroOcorrenciaSistema" 
                 maxlength="100"
                 [(ngModel)]="sistema.numeroOcorrencia" 
@@ -99,6 +100,7 @@
               <app-blue-button 
                 buttonLabel="Novo Módulo" 
                 buttonIcon="ui-icon-add" 
+                id="idBtnNovoModuloFormSistema"
                 (click)="abrirDialogModulo()">
               </app-blue-button>
             </div>
@@ -109,6 +111,7 @@
             disableClone="true"
             [value]="sistema.modulos"
             [editEventName]="editModuloEventName"
+            id="idTabelaModuloFormSistema"
             [deleteEventName]="deleteModuloEventName"
             (buttonClick)="datatableClick($event)"
             disableClone="true"
@@ -135,6 +138,7 @@
               <app-blue-button 
                 buttonLabel="Novo Submódulo"
                 buttonIcon="ui-icon-add" 
+                id="idBtnNovoSubmoduloFormSistema"
                 (click)="abrirDialogFuncionalidade()"
                 [isDisabled]="deveDesabilitarBotaoNovaFuncionalidade()">
               </app-blue-button>
@@ -148,6 +152,7 @@
             [editEventName]="editFuncionalidadeEventName"
             [deleteEventName]="deleteFuncionalidadeEventName"
             (buttonClick)="datatableClick($event)"
+            id="idTabelaFuncionalidadesFormSistema"
             disableClone="true">
             <p-column header="Módulo" field="modulo.nome"></p-column>
             <p-column header="Nome" field="nome"></p-column>
@@ -157,10 +162,10 @@
         <!-- Botões salvar e cancelar do fim da página -->
         <div class="ui-g" style="justify-content: center; padding-top: 25px;">
           <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-white-button buttonLabel="Cancelar" routerLink="/sistema"></app-white-button>
+            <app-white-button buttonLabel="Cancelar" id="idBtnCancelarFormSistema" routerLink="/sistema"></app-white-button>
           </div>
           <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+            <app-submit-button buttonLabel="Salvar" id="idBtnSalvarFormSistema"[disabled]="editForm.form.invalid || isSaving"></app-submit-button>
           </div>
         </div>
 
@@ -177,6 +182,7 @@
                   name="nomeModulo"
                   maxlength="100"
                   [(ngModel)]="novoModulo.nome"
+                  id="idNomeModuloSaveFormSistema"
                   pInputText 
                   (keydown.enter)="adicionarModulo()"
                   #nomeModulo='ngModel'
@@ -198,12 +204,14 @@
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-white-button 
                 buttonLabel="Cancelar" 
+                id="idBtnCancelarModuloSaveFormSistema"
                 (click)="fecharDialogModulo()">
               </app-white-button>
             </div>
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-green-button 
                 buttonLabel="Salvar" 
+                id="idBtnSalvarModuloSaveFormSistema"
                 (click)="adicionarModulo()">
               </app-green-button>
             </div>
@@ -224,6 +232,7 @@
                   name="EditnomeModulo"
                   maxlength="100"
                   [(ngModel)]="moduloEmEdicao.nome"
+                  id="idNomeModuloEditFormSistema"
                   pInputText 
                   (keydown.enter)="editarModulo()"/>
                 <label>Nome do Módulo</label>
@@ -243,6 +252,7 @@
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-white-button 
                 buttonLabel="Cancelar" 
+                id="idBtnCancelarModuloEditFormSistema"
                 (click)="fecharDialogEditarModulo()">
               </app-white-button>
             </div>
@@ -250,6 +260,7 @@
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-green-button 
                 buttonLabel="Salvar" 
+                id="idBtnSalvarModuloEditFormSistema"
                 (click)="editarModulo()">
               </app-green-button>
             </div>
@@ -260,8 +271,8 @@
         <!-- Dialog confirmação deleção -->
         <p-confirmDialog header="Confirmação" #dialog>
           <p-footer>
-            <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-            <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+            <button type="button" id="idNaoDelteFormSistema" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
+            <button type="button" id="idSimDelteFormSistema" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
           </p-footer>
         </p-confirmDialog>
 
@@ -277,6 +288,7 @@
                   type="text" 
                   name="nomeFuncionalidade"
                   maxlength="100"
+                  id="idNomeFuncionalidadeSaveFormSistema"
                   [(ngModel)]="novaFuncionalidade.nome" 
                   pInputText
                   required
@@ -299,6 +311,7 @@
                   [filter]="true"
                   [options]="sistema.modulos"
                   optionLabel="nome"
+                  id="idModuloFuncionalidadeSaveFormSistema"
                   placeholder="Módulo *"
                   name="funcionalidadeModulo"
                   [(ngModel)]="novaFuncionalidade.modulo"
@@ -321,7 +334,8 @@
 
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-white-button 
-                buttonLabel="Cancelar" 
+                buttonLabel="Cancelar"
+                id="idBtnCancelarFuncionalidadeSaveFormSistema" 
                 (click)="fecharDialogFuncionalidade()">
               </app-white-button>
             </div>
@@ -329,6 +343,7 @@
             <div class="ui-g-2">
               <app-green-button 
                 buttonLabel="Salvar" 
+                id="idSalvarFuncionalidadeSaveFormSistema"
                 (click)="adicionarFuncionalidade()">
               </app-green-button>
             </div>
@@ -349,6 +364,7 @@
                   maxlength="100"
                   [(ngModel)]="funcionalidadeEmEdicao.nome" 
                   pInputText
+                  id="idNomeFuncionalidadeEditFormSistema"
                   required
                   #nomeFuncionalidade='ngModel'
                   (keydown.enter)="editarFuncionalidade()"/>
@@ -369,6 +385,7 @@
                   [filter]="true"
                   [options]="sistema.modulos" 
                   optionLabel="nome"
+                  id="idModuloFuncionalidadeEditFormSistema"
                   placeholder="Módulo *" 
                   name="funcionalidadeModulo"
                   [(ngModel)]="funcionalidadeEmEdicao.modulo" 
@@ -392,6 +409,7 @@
             <div class="ui-g-2">
               <app-white-button 
                 buttonLabel="Cancelar" 
+                id="idBtnCancelarFuncionalidadeEditFormSistema"
                 (click)="fecharDialogEditarFuncionalidade()">
               </app-white-button>
             </div>
@@ -399,6 +417,7 @@
             <div class="ui-g-2">
               <app-green-button 
                 buttonLabel="Salvar" 
+                id="idBtnSalvarFuncionalidadeEditFormSistema"
                 (click)="editarFuncionalidade()">
               </app-green-button>
             </div>
