@@ -13,6 +13,7 @@
                                             name="organizacao"
                                             optionLabel="nome"
                                             placeholder="Selecione..."
+                                            id="idOrganizacaoViewAnalise"
                                             [filter]="true"
                                             [disabled]="this.isEdicao || this.isView"
                                             [options]="organizacoes"
@@ -27,6 +28,7 @@
                                             [filter]="true"
                                             dataKey="id"
                                             name="equipeResponsavel"
+                                            id="idEquipeResponsavelViewAnalise"
                                             optionLabel="nome"
                                             placeholder="Selecione..."
                                             [disabled]="this.isEdicao || this.isView"
@@ -41,6 +43,7 @@
                                     <p-dropdown
                                             [filter]="true"
                                             dataKey="id"
+                                            id="idSistemaViewAnalise"
                                             optionLabel="sigla"
                                             [disabled]="this.isEdicao || this.isView"
                                             placeholder="{{ sistemaDropdownPlaceholder() }}"
@@ -61,6 +64,7 @@
                                                 required
                                                 type="text"
                                                 maxlength="100"
+                                                id="idIdentificarAnaliseViewAnalise"
                                                 name="identificadorAnalise"
                                                 [disabled]="this.isView"
                                                 [(ngModel)]="analise.identificadorAnalise"
@@ -75,6 +79,7 @@
                                             [filter]="true"
                                             required
                                             dataKey="id"
+                                            id="idContratoViewAnalise"
                                             optionLabel="numeroContrato"
                                             placeholder="Selecione..."
                                             (onChange)="contratoSelected($event.value)"
@@ -91,6 +96,7 @@
                                     <p-dropdown
                                             [filter]="true"
                                             required
+                                            id="idMetodoContagemViewAnalise"
                                             placeholder="{{ needContratoDropdownPlaceholder() }}"
                                             name="metodoContagem"
                                             [disabled]="this.isView"
@@ -106,6 +112,7 @@
                                             [filter]="true"
                                             required
                                             name="tiposAnalise"
+                                            id="idTipoContagemViewAnalise"
                                             [disabled]="this.isView"
                                             placeholder="Selecione..."
                                             [options]="tiposAnalise"
@@ -121,6 +128,7 @@
                                             required
                                             placeholder="{{ needContratoDropdownPlaceholder() }}"
                                             name="fatorAjuste"
+                                            id="idDeflatorViewAnalise"
                                             [disabled]="this.isView"
                                             [options]="fatoresAjuste"
                                             [(ngModel)]="analise.fatorAjuste"
@@ -134,6 +142,7 @@
                                                 required
                                                 type="text"
                                                 maxlength="100"
+                                                id="idManualViewAnalise"
                                                 name="manualContrato"
                                                 [disabled]="this.isView"
                                                 [(ngModel)]="nomeManual"
@@ -148,6 +157,7 @@
                                         <textarea
                                                 pInputTextarea
                                                 name="propositoContagem"
+                                                id="idPropositoContagemViewAnalise"
                                                 [disabled]="this.isView"
                                                 [(ngModel)]="analise.propositoContagem">
                                         </textarea>
@@ -160,6 +170,7 @@
                                         <textarea
                                                 pInputTextarea
                                                 name="escopo"
+                                                id="idEscopoViewAnalise"
                                                 [disabled]="this.isView"
                                                 [(ngModel)]="analise.escopo">
                                         </textarea>
@@ -172,6 +183,7 @@
                                         <textarea
                                                 pInputTextarea
                                                 name="fronteiras"
+                                                id="idFronteiraViewAnalise"
                                                 [disabled]="this.isView"
                                                 [(ngModel)]="analise.fronteiras">
                                         </textarea>
@@ -184,6 +196,7 @@
                                         <textarea
                                                 required
                                                 pInputTextarea
+                                                id="idDocumentacaoViewAnalise"
                                                 name="documentacao"
                                                 [disabled]="this.isView"
                                                 [(ngModel)]="analise.documentacao">
@@ -203,6 +216,7 @@
                                                 name="baseline_imediatamente"
                                                 [disabled]="this.isView"
                                                 label="Sim"
+                                                id="idAguardarPrazoGarantiaSimViewAnalise"
                                                 [value]="true"
                                                 [(ngModel)]="analise.baselineImediatamente">
                                         </p-radioButton>
@@ -213,6 +227,7 @@
                                                 name="baseline_imediatamente"
                                                 [disabled]="this.isView"
                                                 label="Não"
+                                                id="idAguardarPrazoGarantiaNaoViewAnalise"
                                                 [value]="false"
                                                 [(ngModel)]="analise.baselineImediatamente">
                                         </p-radioButton>
@@ -225,6 +240,7 @@
                                         <p-calendar
                                                 name="dataHomol"
                                                 [disabled]="this.isView"
+                                                id="idDataHomologacaoViewAnalise"
                                                 [(ngModel)]="analise.dataHomologacao"
                                                 dateFormat="dd/mm/yy">
                                         </p-calendar>
@@ -243,6 +259,7 @@
                                             dataKey="id"
                                             emptyMessage="Selecione um Contrato para escolher Fases"
                                             [value]="esforcoFases"
+                                            id="idTabelaFasesViewAnalise"
                                             [(selection)]="analise.esforcoFases"
                                             [headerCheckboxToggleAllPages]="true">
 
@@ -271,6 +288,7 @@
                                         <textarea
                                                 [rows]="3"
                                                 [cols]="180"
+                                                id="idObservacoesViewAnalise"
                                                 autoResize=true
                                                 pInputTextarea
                                                 name="observacoes"
@@ -284,6 +302,7 @@
                             <div class="ui-g-2 ui-md-2 ui-sm-12" style="margin-bottom: 25px">
                                 <app-white-button
                                         buttonLabel="Voltar"
+                                        id="idBtnVoltarViewAnalise"
                                         routerLink="/analise">
                                 </app-white-button>
                             </div>
@@ -296,6 +315,7 @@
     </p-tabPanel>
 
     <p-tabPanel
+            id="idTabelaFuncaoDadosViewAnalise"
             [disabled]="disableAba"
             header="Funções de Dados"
             *ngIf="isEdicao || isView">
@@ -307,6 +327,7 @@
     </p-tabPanel>
 
     <p-tabPanel
+            id="idTabelaFuncaoTransacaoViewAnalise"
             [disabled]="disableAba"
             header="Funções de Transação"
             *ngIf="isEdicao || isView">
@@ -318,20 +339,24 @@
     </p-tabPanel>
 
     <p-tabPanel
+            id="idTabelaResumoViewAnalise"
             [disabled]="disableAba"
             header="Resumo"
             *ngIf="isEdicao || isView">
         <app-analise-resumo></app-analise-resumo>
 
         <app-white-button
+            id="idBtnVoltar2ViewAnalise"
             buttonLabel="Voltar"
             routerLink="/analise">
         </app-white-button>
         <app-gray-button
             buttonLabel="Gerar Relatório"
+            id="idBtnGeraRelatorioViewAnalise"
             (click)="geraRelatorioPdfDetalhadoBrowser()">
         </app-gray-button>
         <app-green-button
+            id="idBtnDesbloquearAnaliseViewAnalise"
             buttonLabel="Desbloquear Análise"
             (click)="desbloquearAnalise()">
         </app-green-button>
@@ -345,8 +370,8 @@
 <!-- Dialog confirmação deleção -->
 <p-confirmDialog header="Confirmação" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-        <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+        <button type="button" id="idBtnNaoDeleteViewAnalise" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
+        <button type="button" id="idBtnSimDeleteViewAnalise" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>
 
