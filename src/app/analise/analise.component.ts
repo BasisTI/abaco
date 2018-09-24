@@ -7,7 +7,7 @@ import { StringConcatService } from './../shared/string-concat.service';
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, SelectItem } from 'primeng/primeng';
-import { Analise, AnaliseService, MetodoContagem } from './';
+import { Analise, AnaliseService, MetodoContagem, AnaliseShareEquipe } from './';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ElasticQuery, PageNotificationService } from '../shared';
@@ -32,11 +32,14 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
 
     rowsPerPageOptions: number[] = [5, 10, 20, 50, 100];
 
-    analiseSelecionada;
+    analiseSelecionada: any = new Analise;
     analiseReadyToClone: Analise;
     nomeSistemas: Array<Sistema>;
     organizations: Array<Organizacao>;
     teams: Array<TipoEquipe>;
+    equipeShare; analiseShared: Array<AnaliseShareEquipe> = [];
+    selectedEquipes: Array<AnaliseShareEquipe>;
+    selectedToDelete: AnaliseShareEquipe;
     searchParams: any = {
         identidicador: undefined,
         nomeSistema: undefined,
@@ -54,6 +57,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         ];
 
     blocked: boolean;
+    mostrarDialog: boolean = false;
 
     private userId: number;         // Usado para carregar apenas os organizações e equipes referentes ao usuário logado
 
@@ -194,6 +198,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             case 'geraBaselinePdfBrowser' :
                 this.geraBaselinePdfBrowser();
                 break;
+            case 'compartilhar':
+                this.openCompartilharDialog();
+                break;
         }
     }
 
@@ -221,6 +228,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 analiseClonada.id = undefined;
                 analiseClonada.identificadorAnalise += MessageUtil.CONCAT_COPIA;
                 analiseClonada.bloqueiaAnalise = false;
+                analiseClonada.compartilhadas = undefined;
 
                 analiseClonada.funcaoDados.forEach(FuncaoDados => {
                     FuncaoDados.id = undefined;
@@ -510,5 +518,57 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 });
             }
         });
+    }
+
+    public openCompartilharDialog(){
+        this.equipeShare = [];
+        this.tipoEquipeService.findAllCompartilhaveis(this.analiseSelecionada.organizacao.id, this.analiseSelecionada.id, this.analiseSelecionada.equipeResponsavel.id).subscribe((equipes) => {
+            equipes.json.forEach((equipe) => {
+                const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(), {id: undefined, equipeId: equipe.id, analiseId: this.analiseSelecionada.id, viewOnly: false, nomeEquipe: equipe.nome });
+                this.equipeShare.push(entity);
+            });
+        });
+
+        this.analiseService.findAllCompartilhadaByAnalise(this.analiseSelecionada.id).subscribe((shared) => {
+            this.analiseShared = shared.json;
+        });
+        this.mostrarDialog = true;
+    }
+
+    public salvarCompartilhar(){
+        if(this.selectedEquipes && this.selectedEquipes.length !== 0){
+            this.analiseService.salvarCompartilhar(this.selectedEquipes).subscribe((res) => {
+                this.mostrarDialog = false;
+                this.pageNotificationService.addSuccessMsg("Análise compartilhada com sucesso!");
+                this.limparSelecaoCompartilhar();
+            })
+        } else {
+            this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder adicionar ou clique no X para sair!');
+        }
+        
+    }
+
+    public deletarCompartilhar(){
+        if(this.selectedToDelete && this.selectedToDelete !== null){
+            this.analiseService.deletarCompartilhar(this.selectedToDelete.id).subscribe((res) => {
+                this.mostrarDialog = false;
+                this.pageNotificationService.addSuccessMsg("Compartilhamento removido com sucesso!");
+                this.limparSelecaoCompartilhar();
+            })
+        } else {
+            this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder remover ou clique no X para sair!');
+        }
+    }
+
+    public limparSelecaoCompartilhar(){
+        this.recarregarDataTable();
+        this.selectedEquipes = undefined;
+        this.selectedToDelete = undefined;
+    }
+
+    public updateViewOnly(){
+       setTimeout(() => { this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
+           this.pageNotificationService.addSuccessMsg("Registro atualizado com sucesso!");
+       }); }, 250)
     }
 }

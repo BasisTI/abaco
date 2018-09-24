@@ -5,3 +5,4 @@ export * from './analise-view.component';
 export * from './analise-detail.component';
 export * from './analise.component';
 export * from './analise.route';
+export * from './analise-share-equipe.model';

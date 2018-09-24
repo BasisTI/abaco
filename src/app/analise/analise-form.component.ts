@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import { Response } from '@angular/http';
 
-import { Analise } from './analise.model';
+import { Analise, AnaliseShareEquipe } from './';
 import {AnaliseService} from './analise.service';
 import {ResponseWrapper,  AnaliseSharedDataService, PageNotificationService} from '../shared';
 import {Organizacao, OrganizacaoService} from '../organizacao';
@@ -28,6 +28,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     isEdicao: boolean;
     disableFuncaoTrasacao: boolean;
     disableAba: boolean;
+    equipeShare; analiseShared: Array<AnaliseShareEquipe> = [];
+    selectedEquipes: Array<AnaliseShareEquipe>;
+    selectedToDelete: AnaliseShareEquipe;
+    mostrarDialog: boolean = false;
 
     isSaving: boolean;
     dataAnalise: any;
@@ -476,5 +480,56 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.analiseSharedDataService.analise = analise;
     }
 
+    public openCompartilharDialog(){
+        this.equipeShare = [];
+        this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id, this.analise.id, this.analise.equipeResponsavel.id).subscribe((equipes) => {
+            equipes.json.forEach((equipe) => {
+                const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(), {id: undefined, equipeId: equipe.id, analiseId: this.analise.id, viewOnly: false, nomeEquipe: equipe.nome });
+                this.equipeShare.push(entity);
+            });
+        });
+
+        this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {
+            this.analiseShared = shared.json;
+        });
+        this.mostrarDialog = true;
+    }
+
+    public salvarCompartilhar(){
+        if(this.selectedEquipes && this.selectedEquipes.length !== 0){
+            this.analiseService.salvarCompartilhar(this.selectedEquipes).subscribe((res) => {
+                this.mostrarDialog = false;
+                this.pageNotificationService.addSuccessMsg("Análise compartilhada com sucesso!");
+                this.limparSelecaoCompartilhar();
+            })
+        } else {
+            this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder adicionar ou clique no X para sair!');
+        }
+        
+    }
+
+    public deletarCompartilhar(){
+        if(this.selectedToDelete && this.selectedToDelete !== null){
+            this.analiseService.deletarCompartilhar(this.selectedToDelete.id).subscribe((res) => {
+                this.mostrarDialog = false;
+                this.pageNotificationService.addSuccessMsg("Compartilhamento removido com sucesso!");
+                this.limparSelecaoCompartilhar();
+            })
+        } else {
+            this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder remover ou clique no X para sair!');
+        }
+    }
+
+    public limparSelecaoCompartilhar(){
+        this.getAnalise();
+        this.selectedEquipes = undefined;
+        this.selectedToDelete = undefined;
+    }
+
+    public updateViewOnly(){
+        setTimeout(() => { this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
+            this.pageNotificationService.addSuccessMsg("Registro atualizado com sucesso!");
+        }); }, 250)
+     }
 }
 

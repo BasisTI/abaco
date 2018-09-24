@@ -11,6 +11,7 @@ import {FuncaoAnalise} from '../analise-shared/funcao-analise';
 import {Organizacao} from '../organizacao';
 import {TipoEquipe} from '../tipo-equipe';
 import { User } from '../user';
+import { AnaliseShareEquipe } from './analise-share-equipe.model';
 
 export enum MetodoContagem {
     'DETALHADA' = 'DETALHADA',
@@ -66,6 +67,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
         public createdOn?: Date,
         public updatedOn?: Date,
         public bloqueiaAnalise?: boolean,
+        public compartilhadas?: AnaliseShareEquipe[],
     ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
         this.inicializaResumos();
@@ -298,7 +300,8 @@ export class Analise implements BaseEntity, JSONable<Analise> {
             this.createdBy,
             this.createdOn,
             this.updatedOn,
-            this.bloqueiaAnalise);
+            this.bloqueiaAnalise,
+            this.compartilhadas);
     }
 
 }
@@ -353,6 +356,7 @@ class AnaliseCopyFromJSON {
             this._analiseConverted.updatedOn = this._json.audit.updatedOn;
         } 
         this._analiseConverted.bloqueiaAnalise = this._json.bloqueiaAnalise;
+        this._analiseConverted.compartilhadas = this._json.compartilhadas;
 
         if (!this._analiseConverted.baselineImediatamente) {
             this._analiseConverted.baselineImediatamente = false;
