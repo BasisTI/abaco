@@ -555,6 +555,10 @@ public class Analise implements Serializable, ReportObject {
         this.enviarBaseline = enviarBaseline;
     }
 
+    public Set<Compartilhada> getCompartilhadas() { return compartilhadas; }
+
+    public void setCompartilhadas(Set<Compartilhada> compartilhadas) { this.compartilhadas = compartilhadas; }
+
     @Override
     public String toString() {
         // // @formatter:off

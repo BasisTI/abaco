@@ -36,6 +36,9 @@ public class Compartilhada implements Serializable {
     @Column(name = "view_only")
     private boolean viewOnly;
 
+    @Column(name = "equipe_nome")
+    private String nomeEquipe;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "analise_id", insertable = false, updatable = false)
@@ -72,6 +75,10 @@ public class Compartilhada implements Serializable {
     public void setViewOnly(boolean viewOnly) {
         this.viewOnly = viewOnly;
     }
+
+    public String getNomeEquipe() { return nomeEquipe; }
+
+    public void setNomeEquipe(String nomeEquipe) { this.nomeEquipe = nomeEquipe; }
 
     @Override
     public String toString() {

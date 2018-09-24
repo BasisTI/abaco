@@ -2,6 +2,7 @@ package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Authority;
+import br.com.basis.abaco.domain.Compartilhada;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import br.com.basis.abaco.domain.Sistema;
@@ -65,11 +66,9 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Iterator;
-import java.util.Optional;
 import java.util.ArrayList;
-
+import java.util.List;
+import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -506,6 +505,61 @@ public class AnaliseResource {
                 log.warn("====>> Found idEquipes: {}", idEquipes);
             } else { log.error("====>> Erro: idUser não encontrado."); }    // Deu ruim geral. Não encontrou os dados do usuário logado.
         }
+    }
+
+    /**Retorna uma lista com todas as equipes que têm acesso àquela análise
+     *
+     * @param idAnalise
+     * @return
+     */
+    @GetMapping("/compartilhada/{idAnalise}")
+    @Timed
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    public List<Compartilhada> getAllCompartilhadaByAnalise(@PathVariable Long idAnalise) {
+        log.debug("REST request to get all Compartilhadas by Análise");
+        return compartilhadaRepository.findAllByAnaliseId(idAnalise);
+    }
+
+    /**Salva uma lista com todas as equipes que têm acesso àquela análise
+     *
+     * @return
+     */
+    @PostMapping("/analises/compartilhar")
+    @Timed
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    public ResponseEntity<List<Compartilhada>> popularCompartilhar(@Valid @RequestBody List<Compartilhada> compartilhadaList) throws URISyntaxException {
+        log.debug("REST request to save a list of shared análises : {}", compartilhadaList);
+        List<Compartilhada> result = compartilhadaRepository.save(compartilhadaList);
+        return ResponseEntity.created(new URI("/api/analises/compartilhar"))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, "created")).body(result);
+    }
+
+    /**Deleta um ou mais compartilhamentos de análise.
+     *
+     * @return
+     */
+    @DeleteMapping("/analises/compartilhar/delete/{id}")
+    @Timed
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    public ResponseEntity<Void> deleteCompartilharAnalise(@PathVariable Long id) {
+        log.debug("REST request to remove a shared análise : {}", id);
+        compartilhadaRepository.delete(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+    /**Atualiza um compartilhamento para "Somente visualizar ou Editar"
+     *
+     *
+     *
+     */
+    @PutMapping("/analises/compartilhar/viewonly/{id}")
+    @Timed
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    public ResponseEntity<Compartilhada> viewOnly(@Valid @RequestBody Compartilhada compartilhada) throws URISyntaxException {
+        log.debug("REST request to update viewOnly in Compartilhada : {}", compartilhada);
+        Compartilhada result = compartilhadaRepository.save(compartilhada);
+        return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, compartilhada.getId().toString()))
+            .body(result);
     }
 
     @GetMapping("/_searchIdentificador/analises")

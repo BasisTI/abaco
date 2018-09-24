@@ -192,6 +192,13 @@ public class TipoEquipeResource {
         return tipoEquipeRepository.findAllByOrganizacoes_Id(idOrganizacao);
     }
 
+    @GetMapping("/tipo-equipes/compartilhar/{idOrganizacao}/{idAnalise}/{idEquipe}")
+    @Timed
+    public List<TipoEquipe> getAllTipoEquipeCompartilhavel(@PathVariable Long idOrganizacao, @PathVariable Long idAnalise, @PathVariable Long idEquipe) {
+        log.debug("REST request to get all TipoEquipes");
+        return tipoEquipeRepository.findAllEquipesCompartilhaveis(idOrganizacao, idEquipe, idAnalise);
+    }
+
     /**
      * DELETE /tipo-equipes/:id : delete the "id" tipoEquipe.
      *
