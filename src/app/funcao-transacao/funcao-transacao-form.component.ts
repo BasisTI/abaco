@@ -131,6 +131,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                         break;
                     }
                 }
+                this.salvarAnalise();
             } else {
                retorno = this.adicionar();
             }

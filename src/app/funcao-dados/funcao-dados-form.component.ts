@@ -147,7 +147,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             if (this.showMultiplos) {
                 for (const nome of this.parseResult.textos) {
                     this.currentFuncaoDados.name = nome;
-                    if (!this.adicionar()){
+                    if (!this.adicionar()) {
                         retorno = false;
                         break;
                     }
@@ -157,7 +157,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 retorno = this.adicionar();
             }
         }
-        if (retorno){
+        if (retorno) {
             this.fecharDialog();
         }
     }
