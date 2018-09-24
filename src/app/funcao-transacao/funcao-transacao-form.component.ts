@@ -61,6 +61,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         {label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS'}
     ];
 
+    baselineResultados: any[] = [];
+
     classificacoes: SelectItem[] = [];
 
     @Output()
@@ -99,7 +101,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.initClassificacoes();
     }
 
-    estadoInicial(){
+    estadoInicial() {
         this.analiseSharedDataService.funcaoAnaliseDescarregada();
         this.currentFuncaoTransacao = new FuncaoTransacao();
         this.dersChips = [];
@@ -124,7 +126,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             if (this.showMultiplos) {
                 for (const nome of this.parseResult.textos) {
                     this.currentFuncaoTransacao.name = nome;
-                    if (!this.adicionar()){
+                    if (!this.adicionar()) {
                         retorno = false;
                         break;
                     }
@@ -133,7 +135,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                retorno = this.adicionar();
             }
         }
-        if (retorno){
+        if (retorno) {
             this.fecharDialog();
         }
     }
@@ -226,7 +228,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         .subscribe((res: FuncaoTransacao) => {
             res.name = this.currentFuncaoTransacao.name;
 
-                if (res.fatorAjuste === null){res.fatorAjuste = undefined; }
+                if (res.fatorAjuste === null) {res.fatorAjuste = undefined; }
                 res.id = undefined;
                 res.ders.forEach(ders => {
                     ders.id = undefined;
@@ -239,8 +241,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         });
 
     }
-
-    baselineResultados: any[] = [];
 
     searchBaseline(event): void {
         console.log(event);
@@ -257,7 +257,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoTransacao.funcionalidade = funcionalidade;
     }
 
-    adicionar(): boolean{
+    adicionar(): boolean {
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
@@ -269,7 +269,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
 
             this.validarNameFuncaoTransacaos(this.currentFuncaoTransacao.name).then( resolve => {
-                if (resolve){
+                if (resolve) {
                     this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
                     this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
                     this.atualizaResumo();
@@ -296,7 +296,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 if (data.name === nome) {
                     return resolve(false);
                 }
-                if (!that.analise.funcaoTransacaos[index + 1]){
+                if (!that.analise.funcaoTransacaos[index + 1]) {
                     return resolve(true);
                 }
             });
@@ -379,7 +379,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     dersReferenciados(ders: Der[]) {
         const dersReferenciadosChips: DerChipItem[] = DerChipConverter.converterReferenciaveis(ders);
         // if(this.dersChips !== undefined){
-        this.dersChips = dersReferenciadosChips;
+        this.dersChips = this.dersChips.concat(dersReferenciadosChips);
         // }
     }
 
@@ -399,7 +399,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     this.resetarEstadoPosSalvar();
                     this.salvarAnalise();
                     this.fecharDialog();
-                    this.pageNotificationService.addSuccessMsg(`Função de Transação '${funcaoTransacaoCalculada.name}' alterada com sucesso`);
+                    this.pageNotificationService
+                        .addSuccessMsg(`Função de Transação '${funcaoTransacaoCalculada.name}' alterada com sucesso`);
                     this.atualizaResumo();
                     this.resetarEstadoPosSalvar();
              });
