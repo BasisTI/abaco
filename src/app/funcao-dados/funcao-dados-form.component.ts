@@ -152,6 +152,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                         break;
                     }
                 }
+                this.salvarAnalise();
             } else {
                 retorno = this.adicionar();
             }
@@ -300,7 +301,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                     this.resetarEstadoPosSalvar();
                     this.estadoInicial();
 
-                    this.salvarAnalise();
+
                 } else {
                     this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
                 }
