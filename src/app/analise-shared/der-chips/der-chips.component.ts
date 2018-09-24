@@ -110,19 +110,19 @@ export class DerChipsComponent implements OnChanges {
 
     adicionarMultiplos() {
         this.validaMultiplos = false;
-        this.validaMultiplosRegistrados = false
+        this.validaMultiplosRegistrados = false;
 
-         if(this.verificaMultiplosDuplicados(this.addMultiplosTexto)){
-             if(this.verificaMultiplosCadastrados(this.addMultiplosTexto)){
+         if (this.verificaMultiplosDuplicados(this.addMultiplosTexto)) {
+             if (this.verificaMultiplosCadastrados(this.addMultiplosTexto)) {
                 this.values = this.values.concat(this.converteMultiplos());
                 this.valuesChanged();
                 this.fecharDialogAddMultiplos();
                 this.validaMultiplos = false;
-                this.validaMultiplosRegistrados = false
-             }else{
+                this.validaMultiplosRegistrados = false;
+             } else {
                 this.validaMultiplosRegistrados = true;
              }
-         }else{
+         } else {
             this.validaMultiplos = true;
          }
     }
@@ -135,45 +135,45 @@ export class DerChipsComponent implements OnChanges {
     }
 
     private verificaMultiplosDuplicados(texto: string): boolean {
-        if (this.values === undefined){
+        if (this.values === undefined) {
             this.values = [];
         }
 
-        var splitString:string[] = texto.split("\n");
-        var recebeSplit = {};
-        var result = [];
+        let splitString: string[] = texto.split('\n');
+        let recebeSplit = {};
+        let result = [];
 
         splitString.forEach(item => {
-            if(!recebeSplit[item])
-              recebeSplit[item] = 0;
+            if (!recebeSplit[item]) {
+                recebeSplit[item] = 0;
+            }
             recebeSplit[item] += 1;
-             
         });
 
-        for(var prop in recebeSplit){
-            if(recebeSplit[prop] >= 2){
+        for (let prop in recebeSplit) {
+            if (recebeSplit[prop] >= 2) {
                 result.push(prop);
             }
         }
 
-        if(!result.length){
+        if (!result.length) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     verificaMultiplosCadastrados(nome: string): boolean {
-        if (this.values === undefined){
+        if (this.values === undefined) {
             this.values = [];
         }
 
-        var splitString:string[] = nome.split("\n")
-        var controle: boolean = true;
-        
+        let splitString: string[] = nome.split('\n');
+        let controle = true;
+
         for (let indexValues = 0; indexValues < this.values.length; indexValues++) {
             for (let indexSplitString = 0; indexSplitString < splitString.length; indexSplitString++) {
-                if(this.values[indexValues].text === splitString[indexSplitString]){
+                if (this.values[indexValues].text === splitString[indexSplitString]) {
                     controle = false;
                 }
             }
@@ -192,7 +192,7 @@ export class DerChipsComponent implements OnChanges {
 
     fecharDialogAddMultiplos() {
         this.validaMultiplos = false;
-        this.validaMultiplosRegistrados = false
+        this.validaMultiplosRegistrados = false;
         this.mostrarDialogAddMultiplos = false;
         this.addMultiplosTexto = '';
     }

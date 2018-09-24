@@ -16,6 +16,7 @@
                         [(ngModel)]="searchParams.identificador"
                         (keyup.enter)="performSearch()"
                         #filter
+                        id="idIdentificadorComponentAnalise"
                         maxlength="50">
                       <label>Identificador</label>
                     </span>
@@ -27,6 +28,7 @@
                       (click)=" switchUrlSistema()"
                       [options]="nomeSistemas" 
                       optionLabel="nome" 
+                      id="idNomeSistemaComponentAnalise"
                       [(ngModel)]="searchParams.nomeSistema" 
                       [autoWidth]="false" 
                       placeholder="Sistema">
@@ -39,6 +41,7 @@
                       (click)="switchUrlMetodoContagem()"
                       [options]="metsContagens" 
                       optionLabel="text" 
+                      id="idMetodoContagemComponentAnalise"
                       [(ngModel)]="searchParams.metContagem" 
                       [autoWidth]="false" 
                       placeholder="Metodo de Contagem">
@@ -53,6 +56,7 @@
                 (click)="switchUrlOrganizacao()"
                 [options]="organizations" 
                 optionLabel="nome" 
+                id="idOrganizacaoComponentAnalise"
                 [(ngModel)]="searchParams.organizacao" 
                 [autoWidth]="false" 
                 placeholder="Organização">
@@ -64,7 +68,8 @@
                 [filter]="true"
                 [options]="teams" 
                 (click)="switchUrlEquipe()"
-                optionLabel="nome" 
+                optionLabel="nome"
+                id="idTimeComponentAnalise" 
                 [autoWidth]="false" 
                 [(ngModel)]="searchParams.team" 
                 placeholder="Equipe">
@@ -77,6 +82,7 @@
                                 type="text"
                                 (click)="switchUrlDescricao()"
                                 pInputText class="ui-inputtext"
+                                id="idDescricaoComponentAnalise"
                                 [(ngModel)]="searchParams.descricao"
                                 (keyup.enter)="performSearch()"
                                 #filter/>
@@ -92,6 +98,7 @@
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-white-button
                                     buttonLabel="Limpar Pesquisa"
+                                    id="idBtnLimparPesquisaComponentAnalise"
                                     buttonIcon="ui-icon-clear-all"
                                     (click)="limparPesquisa()">
                             </app-white-button>
@@ -100,6 +107,7 @@
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-blue-button
                                     buttonLabel="Pesquisar"
+                                    id="idBtnPesquisarComponentAnalise"
                                     buttonIcon="ui-icon-search"
                                     (click)="performSearch()">
                             </app-blue-button>
@@ -108,6 +116,7 @@
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-green-button
                                     buttonLabel="Novo"
+                                    id="idBtnNovoComponentAnalise"
                                     buttonIcon="ui-icon-add"
                                     routerLink="/analise/new">
                             </app-green-button>
@@ -120,6 +129,7 @@
                             (dblclick)="onRowDblclick($event)"
                             (buttonClick)="datatableClick($event)"
                             [rows]="20"
+                            id="idTabelaComponentAnalise"
                             [rowsPerPageOptions]="rowsPerPageOptions"
                             [showPaginationFooter]="true"
                             #datatable>
@@ -219,7 +229,7 @@
                     </basis-datatable>
 
                     <div class="ui-g-12 ui-md-2">
-                        <app-botoes-exportacao resourceName="analise" >
+                        <app-botoes-exportacao resourceName="analise" id="idBtnExportacaoComponentAnalise">
                         </app-botoes-exportacao>
                     </div>
 

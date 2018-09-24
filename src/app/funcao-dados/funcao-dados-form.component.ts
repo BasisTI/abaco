@@ -147,16 +147,17 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             if (this.showMultiplos) {
                 for (const nome of this.parseResult.textos) {
                     this.currentFuncaoDados.name = nome;
-                    if (!this.adicionar()){
+                    if (!this.adicionar()) {
                         retorno = false;
                         break;
                     }
                 }
+                this.salvarAnalise();
             } else {
                 retorno = this.adicionar();
             }
         }
-        if (retorno){
+        if (retorno) {
             this.fecharDialog();
         }
     }
@@ -300,7 +301,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                     this.resetarEstadoPosSalvar();
                     this.estadoInicial();
 
-                    this.salvarAnalise();
+
                 } else {
                     this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
                 }
