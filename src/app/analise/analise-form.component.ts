@@ -357,7 +357,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     /**
      * Bloqueia a análise aberta atualmente.
-     * 
+     *
      */
     public bloquearAnalise() {
         this.confirmationService.confirm({
@@ -372,14 +372,15 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                         case 400: {
                             if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
                             this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                            } else {
+                                this.pageNotificationService
+                                    .addErrorMsg('Somente membros da equipe responsável podem bloquear esta análise!');
                             }
                         }
-                        });
-                }
-            });
-        } else {
-            this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem bloquear esta análise!");
-        }
+                    }
+                });
+            }
+        });
     }
 
 
