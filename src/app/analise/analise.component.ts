@@ -39,6 +39,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     equipeShare; analiseShared: Array<AnaliseShareEquipe> = [];
     selectedEquipes: Array<AnaliseShareEquipe>;
     selectedToDelete: AnaliseShareEquipe;
+    loggedUser: User;
     searchParams: any = {
         identidicador: undefined,
         nomeSistema: undefined,
@@ -77,6 +78,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     }
 
     estadoInicial() {
+        this.getLoggedUser();
         this.recuperarAnalisesUsuario();            // Filtrando as análises que o usuário pode ver
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
@@ -86,6 +88,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
             this.analiseReadyToClone = new Analise().copyFromJSON(event.data);
             this.analiseSelecionada = event.data;
+            console.log("Analise selecionada", this.analiseSelecionada);
             this.blocked = event.data.bloqueiaAnalise;
         });
         this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
@@ -93,7 +96,15 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             this.analiseReadyToClone = undefined;
         });
     }
-
+    /**
+     * Função para recuperar os dados do usuário logado no momento
+     */
+    getLoggedUser() {
+        this.userService.findCurrentUser().subscribe(res =>{
+            this.loggedUser = res;
+            console.log("Usuário logado???" , this.loggedUser);
+        });
+    }
     /**
      * Função para recuperar análises da equipe do usuário
      */
@@ -175,6 +186,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                     this.pageNotificationService.addErrorMsg(
                         MessageUtil.ERRO_EXCLUSAO_ANALISE_BLOQUEADA);
                     return;
+                } 
+                if(!this.checkIfUserCanEdit() && !this.checkUserAnaliseEquipes()){
+                    this.pageNotificationService.addErrorMsg("Você não tem permissão para editar esta análise!")
+                    return;
                 }
                 this.router.navigate(['/analise', event.selection.id, 'edit']);
                 break;
@@ -200,9 +215,40 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 this.geraBaselinePdfBrowser();
                 break;
             case 'compartilhar':
-                this.openCompartilharDialog();
+                if(this.checkUserAnaliseEquipes()){
+                    this.openCompartilharDialog();
+                } else {
+                    this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem compartilhar esta análise!");
+                }
                 break;
         }
+    }
+    checkUserAnaliseEquipes(){
+        let retorno: boolean = false;
+        this.loggedUser.tipoEquipes.forEach(equipe => {
+            if (equipe.id === this.analiseSelecionada.equipeResponsavel.id){
+                retorno = true;
+            }
+        });
+        return retorno;
+    }
+    
+    /**
+     * Checa se o usuário tem permissão para editar a Análise!
+     */
+    checkIfUserCanEdit(){
+        let retorno: boolean = false;
+        this.loggedUser.tipoEquipes.forEach(equipe => {
+            this.analiseSelecionada.compartilhadas.forEach(compartilhada => {
+                if(equipe.id === compartilhada.equipeId){
+                    if(!compartilhada.viewOnly){
+                        retorno = true;
+                    }
+                }
+            });
+        });
+        console.log("retornou");
+        return retorno;
     }
 
     public onRowDblclick(event) {
@@ -271,6 +317,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     public confirmDelete(analise: Analise) {
         if (this.analiseSelecionada.bloqueiaAnalise) {
             this.pageNotificationService.addErrorMsg(MessageUtil.ERRO_EXCLUSAO_ANALISE_BLOQUEADA);
+            return;
+        }
+        if (this.analiseSelecionada.compartilhadas.length > 0){
+            this.pageNotificationService.addErrorMsg("Você não pode excluir uma análise compartilhada com outras equipes!");
             return;
         }
         this.confirmationService.confirm({
@@ -468,57 +518,60 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         return !this.analiseSelecionada;
     }
 
+    /**
+     * Bloquear Análise
+     */
     public bloqueiaRelatorio() {
-        this.confirmationService.confirm({
-            message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat('?'),
-            accept: () => {
-                const copy = this.analiseSelecionada.toJSONState();
-                copy.bloqueiaAnalise = true;
-                this.analiseService.block(copy).subscribe(() => {
-                    this.estadoInicial();
-                    const nome = this.analiseSelecionada.name;
-                    this.analiseSelecionada = undefined;
-                    this.blocked = false;
-                    this.pageNotificationService.addBlockMsgWithName(nome);
-                }, (error: Response) => {
-                    switch (error.status) {
-                        case 400: {
-                            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
-                                this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
-                            }
-                        }
-                    }
-                });
-            }
-        });
+        if(this.checkUserAnaliseEquipes()){
+            this.confirmationService.confirm({
+                message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat('?'),
+                accept: () => {
+                    const copy = this.analiseSelecionada.toJSONState();
+                    copy.bloqueiaAnalise = true;
+                    this.analiseService.block(copy).subscribe(() => {
+                        this.estadoInicial();
+                        const nome = this.analiseSelecionada.name;
+                        this.analiseSelecionada = undefined;
+                        this.blocked = false;
+                        this.pageNotificationService.addBlockMsgWithName(nome);
+                    });
+                }
+            });
+        } else {
+            this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem bloquear esta análise!");
+        }
     }
 
     /**
-     * Desbloquear relatório
+     * Desbloquear Análise
      */
     public desbloqueiaRelatorio() {
-        this.confirmationService.confirm({
-            message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat('?'),
-            accept: () => {
-                const copy = this.analiseSelecionada.toJSONState();
-                copy.bloqueiaAnalise = false;
-                this.analiseService.unblock(copy).subscribe(() => {
-                    this.estadoInicial();
-                    const nome = copy.name;
-                    this.blocked = true;
-                    this.analiseSelecionada = undefined;
-                    this.pageNotificationService.addUnblockMsgWithName(nome);
-                }, (error: Response) => {
-                    switch (error.status) {
-                        case 400: {
-                            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
-                                this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+        if(this.checkUserAnaliseEquipes()){
+            this.confirmationService.confirm({
+                message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat('?'),
+                accept: () => {
+                    const copy = this.analiseSelecionada.toJSONState();
+                    copy.bloqueiaAnalise = false;
+                    this.analiseService.unblock(copy).subscribe(() => {
+                        this.estadoInicial();
+                        const nome = copy.name;
+                        this.blocked = true;
+                        this.analiseSelecionada = undefined;
+                        this.pageNotificationService.addUnblockMsgWithName(nome);
+                    }, (error: Response) => {
+                        switch (error.status) {
+                            case 400: {
+                                if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
+                                    this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                                }
                             }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        } else {
+            this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem desbloquear esta análise!");
+        }
     }
 
     public openCompartilharDialog() {

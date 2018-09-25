@@ -5,6 +5,7 @@ import { Response } from '@angular/http';
 
 import { Analise, AnaliseShareEquipe } from './';
 import {AnaliseService} from './analise.service';
+import { User, UserService } from '../user';
 import {ResponseWrapper,  AnaliseSharedDataService, PageNotificationService} from '../shared';
 import {Organizacao, OrganizacaoService} from '../organizacao';
 import {Contrato, ContratoService} from '../contrato';
@@ -37,6 +38,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     isSaving: boolean;
     dataAnalise: any;
     dataHomol: any;
+    loggedUser: User;
     diasGarantia: number;
     public validacaoCampos: boolean;
     aguardarGarantia: boolean;
@@ -88,6 +90,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         private analiseSharedDataService: AnaliseSharedDataService,
         private equipeService: TipoEquipeService,
         private pageNotificationService: PageNotificationService,
+        private userService: UserService,
     ) {
     }
 
@@ -99,6 +102,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.isEdicao = false;
         this.isSaving = false;
         this.dataHomol = new Date();
+        this.getLoggedUser();
         this.habilitarCamposIniciais();
         this.listOrganizacoes();
         this.getAnalise();
@@ -108,6 +112,38 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.routeSub.unsubscribe();
     }
 
+    /**
+     * Função para recuperar os dados do usuário logado no momento
+     */
+    getLoggedUser() {
+        this.userService.findCurrentUser().subscribe(res =>{
+            this.loggedUser = res;
+        });
+    }
+
+    checkUserAnaliseEquipes(){
+        let retorno: boolean = false;
+        this.loggedUser.tipoEquipes.forEach(equipe => {
+            if (equipe.id === this.analise.equipeResponsavel.id){
+                retorno = true;
+            }
+        });
+        return retorno;
+    }
+
+    checkIfUserCanEdit(){
+        let retorno: boolean = false;
+        this.loggedUser.tipoEquipes.forEach(equipe => {
+            this.analise.compartilhadas.forEach(compartilhada => {
+                if(equipe.id === compartilhada.equipeId){
+                    if(!compartilhada.viewOnly){
+                        retorno = true;
+                    }
+                }
+            });
+        });
+        return retorno;
+    }
     /**
      * Obtêm uma análise através do ID
      */
@@ -171,6 +207,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.router.navigate(['/analise']);
         }
         this.analise = analiseCarregada;
+        if(!this.checkIfUserCanEdit() && !this.checkUserAnaliseEquipes()){
+            this.pageNotificationService.addErrorMsg("Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...");
+            this.router.navigate([`/analise/${analiseCarregada.id}/view`]);
+        }
         this.setSistamaOrganizacao(analiseCarregada.organizacao);
         this.setManual(analiseCarregada.contrato);
         this.carregaFatorAjusteNaEdicao();
@@ -334,10 +374,12 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                             this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
                             }
                         }
-                    }
-                    });
-            }
-        });
+                        });
+                }
+            });
+        } else {
+            this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem bloquear esta análise!");
+        }
     }
 
 
@@ -484,18 +526,22 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     public openCompartilharDialog(){
-        this.equipeShare = [];
-        this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id, this.analise.id, this.analise.equipeResponsavel.id).subscribe((equipes) => {
-            equipes.json.forEach((equipe) => {
-                const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(), {id: undefined, equipeId: equipe.id, analiseId: this.analise.id, viewOnly: false, nomeEquipe: equipe.nome });
-                this.equipeShare.push(entity);
+        if(this.checkUserAnaliseEquipes()){
+            this.equipeShare = [];
+            this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id, this.analise.id, this.analise.equipeResponsavel.id).subscribe((equipes) => {
+                equipes.json.forEach((equipe) => {
+                    const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(), {id: undefined, equipeId: equipe.id, analiseId: this.analise.id, viewOnly: false, nomeEquipe: equipe.nome });
+                    this.equipeShare.push(entity);
+                });
             });
-        });
-
-        this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {
-            this.analiseShared = shared.json;
-        });
-        this.mostrarDialog = true;
+    
+            this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {
+                this.analiseShared = shared.json;
+            });
+            this.mostrarDialog = true;
+        } else {
+            this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem compartilhar esta análise!");
+        }
     }
 
     public salvarCompartilhar() {
