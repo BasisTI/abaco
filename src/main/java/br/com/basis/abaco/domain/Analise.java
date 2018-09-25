@@ -543,10 +543,6 @@ public class Analise implements Serializable, ReportObject {
         return bloqueiaAnalise;
     }
 
-    public void setBloqueiaAnalise(boolean bloqueiaAnalise) {
-        this.bloqueiaAnalise = bloqueiaAnalise;
-    }
-
     public boolean isEnviarBaseline() {
         return enviarBaseline;
     }

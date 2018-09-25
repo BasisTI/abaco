@@ -1881,14 +1881,18 @@
 			<frame>
 				<reportElement x="0" y="0" width="555" height="240" uuid="ad4e7daf-e204-4525-8e2b-f99bc07baddc"/>
 				<staticText>
-					<reportElement x="3" y="3" width="552" height="19" uuid="c59c3a68-16a2-4cf6-9770-51b2a878bf69"/>
+					<reportElement x="3" y="3" width="552" height="19" uuid="c59c3a68-16a2-4cf6-9770-51b2a878bf69">
+						<printWhenExpression><![CDATA[$P{LISTARLRFD}.size() != 0 || $P{LISTADERFD}.size() != 0 || $P{LISTAARLFT}.size() != 0 || $P{LISTADERFT}.size() != 0]]></printWhenExpression>
+					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font size="12" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Listagem Nominal de ALRs, RLRs e DERs]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="3" y="25" width="552" height="19" uuid="b6fc13ec-3814-4694-824b-6a59e0ce502f"/>
+					<reportElement isPrintRepeatedValues="false" x="3" y="25" width="552" height="19" uuid="b6fc13ec-3814-4694-824b-6a59e0ce502f">
+						<printWhenExpression><![CDATA[$P{LISTARLRFD}.size() != 0]]></printWhenExpression>
+					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font size="12" isBold="true"/>
 					</textElement>
@@ -1992,7 +1996,9 @@
 			<frame>
 				<reportElement x="0" y="0" width="555" height="220" uuid="92ed7c55-4cdc-4fa4-ad16-1c0843d7ed0a"/>
 				<staticText>
-					<reportElement x="3" y="5" width="552" height="19" uuid="5e5f493d-48e2-404d-95c1-773ba8433630"/>
+					<reportElement x="3" y="5" width="552" height="19" uuid="5e5f493d-48e2-404d-95c1-773ba8433630">
+						<printWhenExpression><![CDATA[$P{LISTAARLFT}.size() != 0]]></printWhenExpression>
+					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font size="12" isBold="true"/>
 					</textElement>

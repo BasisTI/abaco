@@ -2,7 +2,6 @@ package br.com.basis.abaco.reports.rest;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

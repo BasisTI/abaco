@@ -1,7 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Authority;
 import br.com.basis.abaco.domain.Compartilhada;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
