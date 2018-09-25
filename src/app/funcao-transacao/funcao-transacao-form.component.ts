@@ -112,16 +112,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.alrsChips = [];
     }
 
-    private bloqueia(mensagem?: string) {
-        this.blockUI.start(mensagem);
-        console.log('Bloqueou UI!');
-    }
-
-    private desbloqueia() {
-        this.blockUI.stop();
-        console.log('Desbloqueou UI!');
-    }
-
     private initClassificacoes() {
         const classificacoes = Object.keys(TipoFuncaoTransacao).map(k => TipoFuncaoTransacao[k as any]);
         // TODO pipe generico?
@@ -132,7 +122,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     public buttonSaveEdit() {
 
-        this.bloqueia('Espera um cadinho, por favor.')
         let retorno = true;
         if (this.isEdit) {
             this.editar();
@@ -153,7 +142,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         if (retorno) {
             this.fecharDialog();
         }
-        this.desbloqueia();
     }
 
     disableTRDER() {
@@ -382,7 +370,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     salvarAnalise() {
-        this.analiseService.update(this.analise);
+        this.analiseService.atualizaAnalise(this.analise);
     }
 
     private desconverterChips() {

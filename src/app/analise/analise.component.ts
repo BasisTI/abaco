@@ -9,10 +9,10 @@ import { Router } from '@angular/router';
 import { ConfirmationService, SelectItem } from 'primeng/primeng';
 import { Analise, AnaliseService, MetodoContagem, AnaliseShareEquipe } from './';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ElasticQuery, PageNotificationService } from '../shared';
 import { MessageUtil } from '../util/message.util';
 import { Response } from '@angular/http';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
     selector: 'jhi-analise',
@@ -20,9 +20,8 @@ import { Response } from '@angular/http';
 })
 export class AnaliseComponent implements OnInit, AfterViewInit {
 
-    @BlockUI() blockUI: NgBlockUI;
-
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
+    @BlockUI() blockUI: NgBlockUI;
 
     searchUrl: string = this.analiseService.searchUrl;
 
@@ -57,7 +56,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         ];
 
     blocked: boolean;
-    mostrarDialog: boolean = false;
+    mostrarDialog = false;
 
     private userId: number;         // Usado para carregar apenas os organizações e equipes referentes ao usuário logado
 
@@ -99,6 +98,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      * Função para recuperar análises da equipe do usuário
      */
     recuperarAnalisesUsuario() {
+        this.blockUI.start('Carregando análises...');
         const userSub = this.userService.findCurrentUser().subscribe(res => {
           this.userId = res.id;                 // Pegando id do usuário logado
           this.userAnaliseUrl = `${this.analiseService.resourceUrl}/user/${this.userId}`;       // Construindo URL para busca de análises
@@ -114,10 +114,11 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         const analiseSub = this.analiseService.findAnalisesUsuario(this.userId).subscribe(res => {
             this.datatable.pDatatableComponent.value = res;             // Atribuindo valores das análises para a datatable
             this.datatable.pDatatableComponent.dataToRender = res;      // Renderizando valores das análises na datatable
+            this.blockUI.stop();
         }, error => {
             if (error.status === 400) {
                 switch (error.headers.toJSON()['x-abacoapp-error'][0]) {
-                    case 'userSecurityBreak': {
+                    case 'userSecurityBreachAtempt': {
                         this.pageNotificationService.addErrorMsg('Você não possui permissão para acessar dados de outro usuário.');
                         break;
                     }
@@ -520,11 +521,19 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         });
     }
 
-    public openCompartilharDialog(){
+    public openCompartilharDialog() {
         this.equipeShare = [];
-        this.tipoEquipeService.findAllCompartilhaveis(this.analiseSelecionada.organizacao.id, this.analiseSelecionada.id, this.analiseSelecionada.equipeResponsavel.id).subscribe((equipes) => {
+        this.tipoEquipeService
+            .findAllCompartilhaveis(this.analiseSelecionada.organizacao.id,
+                                    this.analiseSelecionada.id,
+                                    this.analiseSelecionada.equipeResponsavel.id)
+                .subscribe((equipes) => {
             equipes.json.forEach((equipe) => {
-                const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(), {id: undefined, equipeId: equipe.id, analiseId: this.analiseSelecionada.id, viewOnly: false, nomeEquipe: equipe.nome });
+                const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
+                                                                    {id: undefined,
+                                                                     equipeId: equipe.id,
+                                                                     analiseId: this.analiseSelecionada.id,
+                                                                     viewOnly: false, nomeEquipe: equipe.nome });
                 this.equipeShare.push(entity);
             });
         });
@@ -535,40 +544,39 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.mostrarDialog = true;
     }
 
-    public salvarCompartilhar(){
-        if(this.selectedEquipes && this.selectedEquipes.length !== 0){
+    public salvarCompartilhar() {
+        if (this.selectedEquipes && this.selectedEquipes.length !== 0) {
             this.analiseService.salvarCompartilhar(this.selectedEquipes).subscribe((res) => {
                 this.mostrarDialog = false;
-                this.pageNotificationService.addSuccessMsg("Análise compartilhada com sucesso!");
+                this.pageNotificationService.addSuccessMsg('Análise compartilhada com sucesso!');
                 this.limparSelecaoCompartilhar();
-            })
+            });
         } else {
             this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder adicionar ou clique no X para sair!');
         }
-        
     }
 
-    public deletarCompartilhar(){
-        if(this.selectedToDelete && this.selectedToDelete !== null){
+    public deletarCompartilhar() {
+        if (this.selectedToDelete && this.selectedToDelete !== null) {
             this.analiseService.deletarCompartilhar(this.selectedToDelete.id).subscribe((res) => {
                 this.mostrarDialog = false;
-                this.pageNotificationService.addSuccessMsg("Compartilhamento removido com sucesso!");
+                this.pageNotificationService.addSuccessMsg('Compartilhamento removido com sucesso!');
                 this.limparSelecaoCompartilhar();
-            })
+            });
         } else {
             this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder remover ou clique no X para sair!');
         }
     }
 
-    public limparSelecaoCompartilhar(){
+    public limparSelecaoCompartilhar() {
         this.recarregarDataTable();
         this.selectedEquipes = undefined;
         this.selectedToDelete = undefined;
     }
 
-    public updateViewOnly(){
+    public updateViewOnly() {
        setTimeout(() => { this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
-           this.pageNotificationService.addSuccessMsg("Registro atualizado com sucesso!");
-       }); }, 250)
+           this.pageNotificationService.addSuccessMsg('Registro atualizado com sucesso!');
+       }); }, 250);
     }
 }

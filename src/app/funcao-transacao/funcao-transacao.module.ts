@@ -1,5 +1,4 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { BlockUIModule } from 'ng-block-ui';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
@@ -53,8 +52,7 @@ import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.modul
     MemoryDataTableModule,
     AbacoAnaliseBotaoSalvarModule,
     AbacoDerChipsModule,
-    AutoCompleteModule,
-    BlockUIModule.forRoot()
+    AutoCompleteModule
   ],
   declarations: [
     FuncaoTransacaoFormComponent

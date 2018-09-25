@@ -10,6 +10,7 @@ import {Organizacao, OrganizacaoService} from '../organizacao';
 import {Contrato, ContratoService} from '../contrato';
 import {Sistema, SistemaService} from '../sistema';
 import {SelectItem, ConfirmationService} from 'primeng/primeng';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 import * as _ from 'lodash';
 import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
@@ -31,7 +32,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     equipeShare; analiseShared: Array<AnaliseShareEquipe> = [];
     selectedEquipes: Array<AnaliseShareEquipe>;
     selectedToDelete: AnaliseShareEquipe;
-    mostrarDialog: boolean = false;
+    mostrarDialog = false;
 
     isSaving: boolean;
     dataAnalise: any;
@@ -56,6 +57,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     equipeResponsavel: SelectItem[] = [];
 
     nomeManual = MessageUtil.SELECIONE_CONTRATO;
+
+    @BlockUI() blockUI: NgBlockUI;
 
     private fatorAjusteNenhumSelectItem = {label: MessageUtil.NENHUM, value: undefined};
 
@@ -327,7 +330,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 }, (error: Response) => {
                     switch (error.status) {
                         case 400: {
-                            if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
+                            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
                             this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
                             }
                         }
@@ -388,10 +391,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por persistir as informações das análises na edição.
      **/
     save() {
-        if(this.aguardarGarantia === undefined){
+        if (this.aguardarGarantia === undefined) {
             this.analise.baselineImediatamente = true;
         }
-        if(this.enviarParaBaseLine === undefined){
+        if (this.enviarParaBaseLine === undefined) {
             this.analise.enviarBaseline = true;
         }
         this.validaCamposObrigatorios();
@@ -406,7 +409,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     update() {
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
-            this.analiseService.update(this.analise);
+            this.analiseService.update(this.analise).subscribe();
             this.diasGarantia = this.analise.contrato.diasDeGarantia;
         }
     }
@@ -495,41 +498,41 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.mostrarDialog = true;
     }
 
-    public salvarCompartilhar(){
-        if(this.selectedEquipes && this.selectedEquipes.length !== 0){
+    public salvarCompartilhar() {
+        if (this.selectedEquipes && this.selectedEquipes.length !== 0) {
             this.analiseService.salvarCompartilhar(this.selectedEquipes).subscribe((res) => {
                 this.mostrarDialog = false;
-                this.pageNotificationService.addSuccessMsg("Análise compartilhada com sucesso!");
+                this.pageNotificationService.addSuccessMsg('Análise compartilhada com sucesso!');
                 this.limparSelecaoCompartilhar();
-            })
+            });
         } else {
             this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder adicionar ou clique no X para sair!');
         }
-        
+
     }
 
-    public deletarCompartilhar(){
-        if(this.selectedToDelete && this.selectedToDelete !== null){
+    public deletarCompartilhar() {
+        if (this.selectedToDelete && this.selectedToDelete !== null) {
             this.analiseService.deletarCompartilhar(this.selectedToDelete.id).subscribe((res) => {
                 this.mostrarDialog = false;
-                this.pageNotificationService.addSuccessMsg("Compartilhamento removido com sucesso!");
+                this.pageNotificationService.addSuccessMsg('Compartilhamento removido com sucesso!');
                 this.limparSelecaoCompartilhar();
-            })
+            });
         } else {
             this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder remover ou clique no X para sair!');
         }
     }
 
-    public limparSelecaoCompartilhar(){
+    public limparSelecaoCompartilhar() {
         this.getAnalise();
         this.selectedEquipes = undefined;
         this.selectedToDelete = undefined;
     }
 
-    public updateViewOnly(){
+    public updateViewOnly() {
         setTimeout(() => { this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
-            this.pageNotificationService.addSuccessMsg("Registro atualizado com sucesso!");
-        }); }, 250)
+            this.pageNotificationService.addSuccessMsg('Registro atualizado com sucesso!');
+        }); }, 250);
      }
 }
 
