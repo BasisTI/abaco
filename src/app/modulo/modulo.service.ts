@@ -27,7 +27,7 @@ export class ModuloService {
             this.pageNotificationService.addErrorMsg('Você não possui permissão!');
             return Observable.throw(new Error(error.status));
         }
-    });
+    }) .delay(1000);
   }
 
   private linkToSistema(modulo: Modulo, sistemaId: number) {
