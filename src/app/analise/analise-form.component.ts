@@ -116,27 +116,27 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Função para recuperar os dados do usuário logado no momento
      */
     getLoggedUser() {
-        this.userService.findCurrentUser().subscribe(res =>{
+        this.userService.findCurrentUser().subscribe(res => {
             this.loggedUser = res;
         });
     }
 
-    checkUserAnaliseEquipes(){
-        let retorno: boolean = false;
+    checkUserAnaliseEquipes() {
+        let retorno = false;
         this.loggedUser.tipoEquipes.forEach(equipe => {
-            if (equipe.id === this.analise.equipeResponsavel.id){
+            if (equipe.id === this.analise.equipeResponsavel.id) {
                 retorno = true;
             }
         });
         return retorno;
     }
 
-    checkIfUserCanEdit(){
-        let retorno: boolean = false;
+    checkIfUserCanEdit() {
+        let retorno = false;
         this.loggedUser.tipoEquipes.forEach(equipe => {
             this.analise.compartilhadas.forEach(compartilhada => {
-                if(equipe.id === compartilhada.equipeId){
-                    if(!compartilhada.viewOnly){
+                if (equipe.id === compartilhada.equipeId) {
+                    if (!compartilhada.viewOnly) {
                         retorno = true;
                     }
                 }
@@ -207,8 +207,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.router.navigate(['/analise']);
         }
         this.analise = analiseCarregada;
-        if(!this.checkIfUserCanEdit() && !this.checkUserAnaliseEquipes()){
-            this.pageNotificationService.addErrorMsg("Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...");
+        if (!this.checkIfUserCanEdit() && !this.checkUserAnaliseEquipes()) {
+            this.pageNotificationService
+                .addErrorMsg('Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...');
             this.router.navigate([`/analise/${analiseCarregada.id}/view`]);
         }
         this.setSistamaOrganizacao(analiseCarregada.organizacao);
@@ -526,22 +527,28 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.analiseSharedDataService.analise = analise;
     }
 
-    public openCompartilharDialog(){
-        if(this.checkUserAnaliseEquipes()){
+    public openCompartilharDialog() {
+        if (this.checkUserAnaliseEquipes()) {
             this.equipeShare = [];
-            this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id, this.analise.id, this.analise.equipeResponsavel.id).subscribe((equipes) => {
+            this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id,
+                                                      this.analise.id,
+                                                      this.analise.equipeResponsavel.id).subscribe((equipes) => {
                 equipes.json.forEach((equipe) => {
-                    const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(), {id: undefined, equipeId: equipe.id, analiseId: this.analise.id, viewOnly: false, nomeEquipe: equipe.nome });
+                    const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
+                                                                     {id: undefined,
+                                                                      equipeId: equipe.id,
+                                                                      analiseId: this.analise.id,
+                                                                      viewOnly: false,
+                                                                      nomeEquipe: equipe.nome });
                     this.equipeShare.push(entity);
                 });
             });
-    
             this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {
                 this.analiseShared = shared.json;
             });
             this.mostrarDialog = true;
         } else {
-            this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem compartilhar esta análise!");
+            this.pageNotificationService.addErrorMsg('Somente membros da equipe responsável podem compartilhar esta análise!');
         }
     }
 
