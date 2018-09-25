@@ -364,27 +364,35 @@ public class AnaliseResource {
     @GetMapping("/analises/user/{userId}")
     @Timed
     public ResponseEntity getAllAnalisesByUserId(@PathVariable Long userId, @ApiParam Pageable pageable) throws URISyntaxException {
-        List<Long> analises;
         Page<Analise> page;
         log.debug("REST request to get a page of Analises for user {}", userId);
-        User foundUser = userRepository.findOneWithAuthoritiesById(userId);     // Recuperando dados do usuário logado
-        if (foundUser != null) {                                                // Se conseguir recuperar os dados de usuário...
-            Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
-            if (logged.isPresent() && logged.get().getId().equals(foundUser.getId())) { // Verificando se o usuário está tentando acessar dados de outro usuário
-                if (!logged.get().verificarAuthority()){                        // Se o usuário logado é comum, filtra a lista de análises pelas equipes do mesmo
-                    analises = filtrarListaAnalises(foundUser);
-                    page = analiseRepository.findById(analises, pageable);      // Requisitando uma página de análises com base na lista de Id's
-                } else {                                                        // Do contrário manda todas as análises
-                    page = analiseRepository.findAll(pageable);                 // Requisitando uma página de análises sem filtro
-                }
-            } else {
-                return this.createBadRequest("userSecurityBreak", "You are not allowed to access other user's data.");
-            }
-        } else {                                                                // Se não encontrou dados do usuário logado é sinal que a coisa tá feia...
+        User foundUser = userRepository.findOneWithAuthoritiesById(userId);     // Recuperando dados do usuário recebido pela URL
+        if (foundUser == null) {                                                // Se não encontrou dados do usuário logado é sinal que a coisa tá feia...
             return this.createBadRequest("userNotFound", "User not found in database");
+        }                                                                       // Recuperando dados do usuário logado de fato para verificação de segurança
+        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
+        if (!logged.isPresent() || !logged.get().getId().equals(foundUser.getId())) { // Verificando se o usuário está tentando acessar dados de outro usuário
+            return this.createBadRequest("userSecurityBreachAtempt", "You are not allowed to access other user's data.");
         }
+        page = this.gerarPage(logged.get(), pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * Função que gera uma página de análises filtrada de acordo com o perfil do usuário logado.
+     * @param user Usuário cujo perfil será utilizado para filtrar a busca
+     * @param pageable Parâmetro de paginação para geração da página
+     * @return Retorna uma página de objetos Analise
+     */
+    private Page<Analise> gerarPage(User user, Pageable pageable) {
+        if (!user.verificarAuthority()){                    // Se o usuário logado é comum, filtra a lista de análises pelas equipes do mesmo
+                                                            // Requisitando uma página de análises com base na lista de Id's
+            return analiseRepository.findById(filtrarListaAnalises(user), pageable);
+        } else {                                            // Do contrário manda todas as análises
+            return analiseRepository.findAll(pageable);     // Requisitando uma página de análises sem filtro
+        }
+
     }
 
     /**
