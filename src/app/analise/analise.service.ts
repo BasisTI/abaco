@@ -81,10 +81,20 @@ export class AnaliseService {
     return this.http.put(`${this.resourceUrl}/${copy.id}/block`, copy).map((res: Response) => {
       return null;
     }).catch((error: any) => {
-        if (error.status === 403) {
+        switch (error.status) {
+          case 400: {
+            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
+                console.log("entrou no if");
+                this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+            }
+            break;
+          }
+          case 403: {
             this.pageNotificationService.addErrorMsg('Você não possui permissão!');
-            return Observable.throw(new Error(error.status));
+            break;
+          }
         }
+        return Observable.throw(new Error(error.status));
     });
   }
 
