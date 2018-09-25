@@ -1,5 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,8 +11,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Optional;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.*;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.io.FilenameUtils;
@@ -22,11 +25,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -48,32 +47,32 @@ public class UploadController {
 
     @Autowired
     private UploadedFilesRepository filesRepository;
-    
+
     @Autowired
     ServletContext context;
 
-    @PostMapping("/upload")
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+   private byte[] bytes;
+
+    @PostMapping("/uploadFile")
     public ResponseEntity<UploadedFile> singleFileUpload(@RequestParam("file") MultipartFile file,
-            HttpServletRequest request,
-            RedirectAttributes redirectAttributes) {
+                                                         HttpServletRequest request,
+                                                         RedirectAttributes redirectAttributes) {
 
         UploadedFile uploadedFile = new UploadedFile();
         try {
-            // Get the file and save it somewhere
             byte[] bytes = file.getBytes();
-            
+
             String classPathString = this.getClass().getClassLoader().getResource("").toString();
             Path classPath = Paths.get(classPathString).toAbsolutePath();
             String folderPathString = classPath.toString();
-            
+
             File directory = new File(folderPathString);
             if (!directory.exists()) {
                 directory.mkdirs();
             }
 
             byte[] bytesFileName = (file.getOriginalFilename() + String.valueOf(System.currentTimeMillis()))
-                    .getBytes("UTF-8");
+                .getBytes("UTF-8");
             String filename = DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(bytesFileName));
             String ext = FilenameUtils.getExtension(file.getOriginalFilename());
             filename += "." + ext;
@@ -92,6 +91,8 @@ public class UploadController {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(uploadedFile));
     }
 
+
+
     @GetMapping("/uploadStatus")
     public String uploadStatus() {
         return "uploadStatus";
@@ -109,15 +110,61 @@ public class UploadController {
         Resource file = new FileSystemResource(folderPath + "/" + uploadedFile.getFilename());
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-                .body(file);
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+            .body(file);
 
     }
 
-    @GetMapping("/getFile/info")
-    public UploadedFile getFileInfo(@RequestParam Long id) {
+    @GetMapping("/getFile/info/{id}")
+    public UploadedFile getFileInfo(@PathVariable Long id) {
         UploadedFile uploadedFile = filesRepository.findOne(id);
-        
+
         return uploadedFile;
     }
+
+    @GetMapping("/getLogo/{id}")
+    public UploadedFile getLogo(@PathVariable Long id) {
+        UploadedFile uploadedFile = filesRepository.findOne(id);
+
+        return uploadedFile;
+    }
+
+    @PostMapping("/upload")
+     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+     public UploadedFile singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+         bytes = file.getBytes();
+         UploadedFile uploadedFile = new UploadedFile();
+
+
+         uploadedFile.setLogo(bytes);
+       
+         return uploadedFile;
+     }
+
+
+
+
+      @PostMapping("/saveFile")
+         @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+         public UploadedFile saveFile(@PathVariable("file") MultipartFile file) throws IOException {
+
+             UploadedFile uploadedFile = new UploadedFile();
+
+
+             uploadedFile.setLogo(bytes);
+             uploadedFile.setDateOf(new Date());
+
+
+             filesRepository.save(uploadedFile);
+             
+             return uploadedFile;
+         }
+
+
+
+
+
+
+
+
 }

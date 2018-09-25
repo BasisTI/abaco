@@ -8,6 +8,7 @@
          <column autoIncrement="true" name="id" type="BIGINT">
             <constraints primaryKey="true" primaryKeyName="filesPK"/>
          </column>
+          <column name="logo" type="LONGBLOB"/>
          <column name="date_of" type="TIMESTAMP WITHOUT TIME ZONE"/>
          <column name="filename" type="VARCHAR(255)"/>
          <column name="original_name" type="VARCHAR(255)"/>
