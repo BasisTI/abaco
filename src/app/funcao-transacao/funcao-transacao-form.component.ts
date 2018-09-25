@@ -9,6 +9,7 @@ import {FatorAjuste} from '../fator-ajuste';
 import * as _ from 'lodash';
 import {Funcionalidade} from '../funcionalidade/index';
 import {SelectItem} from 'primeng/primeng';
+import {  BlockUI, NgBlockUI } from 'ng-block-ui';
 import {DatatableClickEvent} from '@basis/angular-components';
 import {ConfirmationService} from 'primeng/primeng';
 import {ResumoFuncoes} from '../analise-shared/resumo-funcoes';
@@ -25,12 +26,15 @@ import {FuncaoTransacao, TipoFuncaoTransacao} from './funcao-transacao.model';
 import {Der} from '../der/der.model';
 import { Impacto } from '../analise-shared/impacto-enum';
 import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
+import { loginRoute } from '../login';
 
 @Component({
     selector: 'app-analise-funcao-transacao',
     templateUrl: './funcao-transacao-form.component.html'
 })
 export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
+
+    @BlockUI() blockUI: NgBlockUI;      // Usado para bloquear o sistema enquanto aguarda resolução das requisições do backend
 
     textHeader: string;
     @Input() isView: boolean;
@@ -108,6 +112,15 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.alrsChips = [];
     }
 
+    private bloqueia(mensagem?: string) {
+        this.blockUI.start(mensagem);
+        console.log('Bloqueou UI!');
+    }
+
+    private desbloqueia() {
+        this.blockUI.stop();
+        console.log('Desbloqueou UI!');
+    }
 
     private initClassificacoes() {
         const classificacoes = Object.keys(TipoFuncaoTransacao).map(k => TipoFuncaoTransacao[k as any]);
@@ -119,6 +132,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     public buttonSaveEdit() {
 
+        this.bloqueia('Espera um cadinho, por favor.')
         let retorno = true;
         if (this.isEdit) {
             this.editar();
@@ -139,6 +153,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         if (retorno) {
             this.fecharDialog();
         }
+        this.desbloqueia();
     }
 
     disableTRDER() {
