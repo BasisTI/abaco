@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 
-import { Analise } from './analise.model';
+import { Analise , AnaliseShareEquipe} from './';
 import {ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService} from '../shared';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
@@ -16,6 +16,8 @@ export class AnaliseService {
   relatoriosUrl = environment.apiUrl + '/relatorioPdfBrowser';
 
   findByOrganizacaoUrl = this.resourceUrl + '/organizacao';
+
+  findCompartilhadaByAnaliseUrl = environment.apiUrl + '/compartilhada';
 
   relatorioAnaliseUrl = environment.apiUrl + '/relatorioPdfArquivo';
 
@@ -271,5 +273,57 @@ export class AnaliseService {
    */
   private convert(analise: Analise): Analise {
     return analise.toJSONState();
+  }
+
+  // PARTE RESPONSÁVEL PELO "COMPARTILHAR"
+
+   /** Encontra todas as equipes que têm acesso àquela análise
+   * 
+   * 
+   */
+  findAllCompartilhadaByAnalise(analiseId: number): Observable<ResponseWrapper> {
+    const url = `${this.findCompartilhadaByAnaliseUrl}/${analiseId}`;
+    return this.http.get(url)
+      .map((res: Response) => this.convertResponse(res));
+  }
+
+   /** Salva as equipes que têm acesso àquela análise
+   * 
+   * 
+   */
+  salvarCompartilhar(listaCompartilhada: Array<AnaliseShareEquipe>){
+    return this.http.post(`${this.resourceUrl}/compartilhar`, listaCompartilhada).map((res: Response) => {
+      const jsonResponse = res.json();
+      return jsonResponse;
+    });
+  }
+
+   /** Deletas as equipes que têm acesso àquela análise
+   * 
+   * 
+   */
+  deletarCompartilhar(id: number): Observable<Response> {
+    return this.http.delete(`${this.resourceUrl}/compartilhar/delete/${id}`).catch((error: any) => {
+      if (error.status === 403) {
+          this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+          return Observable.throw(new Error(error.status));
+      }
+    });
+  }
+
+   /**Atualiza um compartilhamento para "Somente visualizar ou Editar"
+   *
+   *
+   */
+  atualizarCompartilhar(compartilhada){
+    const copy = compartilhada;
+    return this.http.put(`${this.resourceUrl}/compartilhar/viewonly/${copy.id}`, copy).map((res: Response) => {
+      return null;
+    }).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
+    });
   }
 }

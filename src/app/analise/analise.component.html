@@ -141,7 +141,7 @@
                                 icon="block"
                                 (click)="desbloqueiaRelatorio()"
                                 class="ui-button-success"
-                                [disabled]="desabilitarBotaoRelatorio()">
+                                disabled="desabilitarBotaoRelatorio()">
                         </basis-datatable-button>
 
                         <basis-datatable-button 
@@ -151,22 +151,22 @@
                                 icon="block"
                                 (click)="bloqueiaRelatorio()"
                                 class="ui-button-danger"
-                                [disabled]="desabilitarBotaoRelatorio()">
+                                disabled="desabilitarBotaoRelatorio()">
                         </basis-datatable-button>
 
-                        <!--<basis-datatable-button-->
-                                <!--name="compartilhar"-->
-                                <!--tooltip="Compartilhar Análise"-->
-                                <!--icon="share"-->
-                                <!--class="ui-button-info"-->
-                                <!--[disabled]="desabilitarBotaoRelatorio()">-->
-                        <!--</basis-datatable-button>-->
+                        <basis-datatable-button
+                                name="compartilhar"
+                                tooltip="Compartilhar Análise"
+                                icon="share"
+                                class="ui-button-info"
+                                disabled="desabilitarBotaoRelatorio()">
+                        </basis-datatable-button>
                         
                         <basis-datatable-button
                                 name="clone"
                                 tooltip="Clonar"
                                 icon="content-copy"
-                                [disabled]="desabilitarBotaoRelatorio()">
+                                disabled="desabilitarBotaoRelatorio()">
                         </basis-datatable-button>
 
                         <basis-datatable-button
@@ -236,7 +236,6 @@
                 </div>
 
         </div>
-
     </div>
 
 </div>
@@ -247,3 +246,60 @@
         <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>
+
+<p-dialog header="Compartilhar Análise" [(visible)]="mostrarDialog" [width]="800" [modal]="true" (onHide)="limparSelecaoCompartilhar()">
+        <p-dataTable
+        [(value)]="equipeShare"
+        [headerCheckboxToggleAllPages]="true"
+        [(selection)]="selectedEquipes"
+        dataKey="equipeId">
+
+            <p-column
+                selectionMode="multiple"
+                [style]="{'width':'10%'}">
+            </p-column>
+
+            <p-column
+                header="Equipe"
+                field="nomeEquipe">
+            </p-column>
+
+            <p-column
+                header="Somente visualizar?"
+                field="viewOnly"
+                [style]="{'width':'15%'}">
+                <ng-template let-col let-equipeShare="rowData" pTemplate="body">
+                    <p-toggleButton [(ngModel)]="equipeShare.viewOnly" onLabel="Sim" offLabel="Não"></p-toggleButton>
+                </ng-template>
+            </p-column>
+        </p-dataTable>
+
+        <app-green-button buttonLabel="Adicionar" (click)="salvarCompartilhar()" style="float:right; margin-top: 5px"></app-green-button>
+        <br/>
+        <br/>
+
+        <hr/>
+        <h3>Compartilhada com:</h3>
+        <p-dataTable
+        [(value)]="analiseSelecionada.compartilhadas"
+        selectionMode="single"
+        [(selection)]="selectedToDelete"
+        dataKey="equipeId">
+            <p-column
+                header="Equipe"
+                field="nomeEquipe">
+            </p-column>
+
+            <p-column
+                header="Somente visualizar?"
+                field="viewOnly"
+                [style]="{'width':'15%'}">
+                <ng-template let-col let-analiseTemp="rowData" pTemplate="body">
+                    <p-toggleButton [(ngModel)]="analiseTemp.viewOnly" onLabel="Sim" offLabel="Não" (onChange)="updateViewOnly()"></p-toggleButton>
+                </ng-template>
+            </p-column>
+        </p-dataTable>
+
+        <app-red-button buttonLabel="Remover" (click)="deletarCompartilhar()" style="float:right; margin-top: 5px"></app-red-button>
+
+</p-dialog>

@@ -13,6 +13,7 @@ export class TipoEquipeService {
   resourceUrl = environment.apiUrl + '/tipo-equipes';
 
   findByOrganizacaoUrl = this.resourceUrl + '/organizacoes';
+  findAllCompartilhaveisUrl = this.resourceUrl + '/compartilhar';
 
   searchUrl = environment.apiUrl + '/_search/tipo-equipes';
 
@@ -62,6 +63,20 @@ export class TipoEquipeService {
    */
   findAllByOrganizacaoId(orgId: number): Observable<ResponseWrapper> {
     const url = `${this.findByOrganizacaoUrl}/${orgId}`;
+    return this.http.get(url).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
+    });
+  }
+
+  /**
+   * Método responsável por recuperar todas as equipes compartilhaveis ID da organização, analise e equipe.
+   * @param orgId
+   */
+  findAllCompartilhaveis(orgId, analiseId, equipeId: number): Observable<ResponseWrapper> {
+    const url = `${this.findAllCompartilhaveisUrl}/${orgId}/${analiseId}/${equipeId}`;
     return this.http.get(url).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
         if (error.status === 403) {
             this.pageNotificationService.addErrorMsg('Você não possui permissão!');
