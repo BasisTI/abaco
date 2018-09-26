@@ -315,7 +315,10 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
 
     disableEquipeDropdown(){
-        return (this.user.organizacoes.length < 1 || this.user.organizacoes == null || this.user.organizacoes == []);
+        if(this.user.organizacoes != null || this.user.organizacoes != undefined){
+            return this.user.organizacoes.length < 1;
+        }
+        return true;
     }
 
     /**
