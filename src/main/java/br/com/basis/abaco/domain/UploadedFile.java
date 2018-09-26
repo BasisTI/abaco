@@ -127,11 +127,12 @@ public class UploadedFile {
     }
 
     public byte[] getLogo() {
-        return logo;
+        return logo.clone();
     }
 
     public void setLogo(byte[] logo) {
-        this.logo = logo;
+        byte[] logo2 = logo.clone();
+        this.logo = logo2;
     }
 
 }
