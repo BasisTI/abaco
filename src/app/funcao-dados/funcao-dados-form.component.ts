@@ -167,6 +167,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 }
             }
         }
+        if (this.blockUI.isActive) {
+            this.blockUI.stop();
+        }
     }
 
     disableTRDER() {
