@@ -184,7 +184,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular os dias de garantia do contrato
      */
     getGarantia(): any {
-        this.diasGarantia !== undefined ? this.diasGarantia = this.analise.contrato.diasDeGarantia : undefined;
+        this.diasGarantia = this.diasGarantia !== undefined ? this.analise.contrato.diasDeGarantia : undefined;
     }
 
     /**
