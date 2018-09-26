@@ -17,6 +17,7 @@ import {ADMIN_ROLE} from '../shared/constants';
 import * as _ from 'lodash';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { MessageUtil } from '../util/message.util';
+import { element } from 'protractor';
 
 @Component({
     selector: 'jhi-user-form',
@@ -64,16 +65,9 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.isSaving = false;
-        this.recuperarListaEquipe();
         this.recuperarListaOrganizacao();
         this.recuperarListaPerfis();
         this.recuperarUsuarioPeloId();
-    }
-
-    private recuperarListaEquipe() {
-        this.tipoEquipeService.query().subscribe((res: ResponseWrapper) => {
-            this.tipoEquipes = res.json;
-        });
     }
 
     private recuperarListaOrganizacao() {
@@ -321,6 +315,21 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
 
     disableEquipeDropdown(){
-        return this.user.organizacoes == undefined;
+        return (this.user.organizacoes.length < 1 || this.user.organizacoes == null || this.user.organizacoes == []);
+    }
+
+    /**
+     * Método responsável por popular a equipe responsavel da organização
+     */
+    setEquipeOrganizacao(org: Organizacao[]) {
+        console.log(org);
+        this.tipoEquipes = [];
+        org.forEach(element => {
+            this.tipoEquipeService.findAllByOrganizacaoId(element.id).subscribe((res: ResponseWrapper) => {
+                this.tipoEquipes = this.tipoEquipes.concat(res.json);
+                console.log("res,json" , res.json);
+                console.log("Equipes" , this.tipoEquipes);
+            });
+        });
     }
 }

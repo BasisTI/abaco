@@ -149,6 +149,7 @@
             <span>
               <h3 class="first">Organização *</h3>
               <p-multiSelect 
+                (onChange)="setEquipeOrganizacao($event.value)"
                 [disabled]="this.desabilitado()"
                 name="organizacoesMultiSelect" 
                 [options]="organizacoes"
@@ -177,7 +178,7 @@
             <p-multiSelect 
               [disabled]="this.disableEquipeDropdown()"
               name="equipesMultiSelect" 
-              [options]="tipoEquipes"
+              [(options)]="tipoEquipes"
               [(ngModel)]="user.tipoEquipes" 
               dataKey="id"
               defaultLabel="Selecione ao menos uma equipe" 
