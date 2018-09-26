@@ -188,7 +188,7 @@
               required>
             </p-multiSelect>
             <div *ngIf="editForm.controls['equipesMultiSelect'] 
-              && !this.desabilitado() 
+              && !this.desabilitado() && !this.disableEquipeDropdown()
               && !editForm.controls['equipesMultiSelect'].valid 
               && (editForm.controls['equipesMultiSelect'].touched 
               || editForm.submitted)" 
