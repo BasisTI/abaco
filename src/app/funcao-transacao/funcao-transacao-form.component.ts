@@ -56,6 +56,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     fatoresAjuste: SelectItem[] = [];
     dadosBaselineFT: BaselineAnalitico[] = [];
     dadosserviceBL: BaselineService[]= [];
+    funcoesTransacaoList: FuncaoTransacao[] = [];
 
     impacto: SelectItem[] = [
         {label: 'Inclusão', value: 'INCLUSAO'},
@@ -122,25 +123,51 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     public buttonSaveEdit() {
 
-        let retorno = true;
         if (this.isEdit) {
             this.editar();
         } else {
             if (this.showMultiplos) {
+                let retorno = true;
                 for (const nome of this.parseResult.textos) {
                     this.currentFuncaoTransacao.name = nome;
-                    if (!this.adicionar()) {
+                    if (!this.multiplos()) {
                         retorno = false;
                         break;
                     }
                 }
-                this.salvarAnalise();
+                if (retorno) {
+                    this.analise.funcaoTransacaos.concat(this.funcoesTransacaoList);
+                    this.salvarAnalise();
+                    this.subscribeToAnaliseCarregada();
+                    this.fecharDialog();
+                }
             } else {
-               retorno = this.adicionar();
+                if (this.adicionar()) {
+                    this.fecharDialog();
+                }
             }
         }
-        if (retorno) {
-            this.fecharDialog();
+        if (this.blockUI.isActive) {
+            this.blockUI.stop();
+        }
+    }
+
+    multiplos(): boolean {
+        const retorno: boolean = this.verifyDataRequire();
+        if (!retorno) {
+            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            return false;
+        } else {
+            this.desconverterChips();
+            this.verificarModulo();
+            const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem,
+                                                                           this.currentFuncaoTransacao,
+                                                                           this.analise.contrato.manual);
+            this.funcoesTransacaoList.push(funcaoTransacaoCalculada);
+            this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
+            this.atualizaResumo();
+            this.resetarEstadoPosSalvar();
+            return true;
         }
     }
 
@@ -269,8 +296,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         } else {
         this.desconverterChips();
         this.verificarModulo();
-        const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
-            this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
+        const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem,
+                                                                       this.currentFuncaoTransacao,
+                                                                       this.analise.contrato.manual);
 
             this.validarNameFuncaoTransacaos(this.currentFuncaoTransacao.name).then( resolve => {
                 if (resolve) {
@@ -279,16 +307,14 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     this.atualizaResumo();
                     this.resetarEstadoPosSalvar();
                     this.estadoInicial();
-
-                    this.salvarAnalise();
                 } else {
                     this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
                 }
              });
-
-            return true;
+        }
+        return retorno;
     }
-}
+
 
     validarNameFuncaoTransacaos(nome: string) {
         const that = this;
