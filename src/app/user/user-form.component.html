@@ -175,7 +175,7 @@
           <span>
             <h3 class="first">Equipe *</h3>
             <p-multiSelect 
-              [disabled]="this.desabilitado()"
+              [disabled]="this.disableEquipeDropdown()"
               name="equipesMultiSelect" 
               [options]="tipoEquipes"
               [(ngModel)]="user.tipoEquipes" 
