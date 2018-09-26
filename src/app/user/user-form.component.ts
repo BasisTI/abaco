@@ -15,6 +15,8 @@ import {PageNotificationService} from '../shared/page-notification.service';
 import {ADMIN_ROLE} from '../shared/constants';
 
 import * as _ from 'lodash';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { MessageUtil } from '../util/message.util';
 
 @Component({
     selector: 'jhi-user-form',
@@ -315,5 +317,10 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
     desabilitado(): boolean {
         return !this.isAdmin;
+    }
+
+
+    disableEquipeDropdown(){
+        return this.user.organizacoes == undefined;
     }
 }

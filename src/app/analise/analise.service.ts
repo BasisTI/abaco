@@ -245,10 +245,7 @@ export class AnaliseService {
       );
   }
 
-  tratarErro(erro: string, id: number) {
-    console.log(`Deu ruim! erro em findAnalisUsuario(${id})`);
-    console.log(erro);
-  }
+  tratarErro(erro: string, id: number) {}
   /**
    *
    */

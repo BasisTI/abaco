@@ -477,7 +477,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             (this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)
         ) : (this);
         (this.searchParams.organizacao !== undefined) ? (
-            (this.searchParams.organizacao.nome === '') ? (this.searchParams.organizacao.nome = undefined) : (console.log('Caiu no false'))
+            (this.searchParams.organizacao.nome === '') ? (this.searchParams.organizacao.nome = undefined) : (console.log(''))
         ) : (this);
         (this.searchParams.descricao === '') ? (this.searchParams.descricao = undefined) : (this);
       }

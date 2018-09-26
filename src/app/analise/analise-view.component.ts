@@ -104,15 +104,10 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         this.habilitarCamposIniciais();
         this.listOrganizacoes();
         this.getAnalise();
-        //this.recuperarUrl();
-        if (this.url) {
-
-        }
     }
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
-        //this.urlSub.unsubscribe();
     }
 
     /**
@@ -123,16 +118,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
             this.loggedUser = res;
         });
     }
-/*
-    private recuperarUrl() {
-        this.urlSub = this.route.url.subscribe((res: UrlSegment[]) => {
-          this.url = res.toString();
-          for (let i = 0; i < res.length; i++) {
-            console.log(`Segmento[${i}]: ${res[i].path}, parametros: ${res[i].parameters.}`);
-        }
-        });
-      }
-*/
+
     /**
      * Obtêm uma análise através do ID
      */
@@ -335,13 +321,6 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     disabledSistemaDropdown() {
         return this.sistemas && this.sistemas.length > 0;
     }
-
-    /**
-     * Atuva ou desativa a tab Funcao de Transação
-     */
-    // disabledFuncaoTransacao() {
-    //     this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
-    // }
 
     /**
      * Verifica se algum contrato foi selecioando
