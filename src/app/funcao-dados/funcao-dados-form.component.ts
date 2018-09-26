@@ -11,7 +11,7 @@ import {Analise, AnaliseService} from '../analise';
 import * as _ from 'lodash';
 import {Funcionalidade} from '../funcionalidade/index';
 import {SelectItem} from 'primeng/primeng';
-import {  BlockUI, NgBlockUI } from 'ng-block-ui';
+import {BlockUI, NgBlockUI} from 'ng-block-ui';
 import {Calculadora} from '../analise-shared/calculadora';
 import {DatatableClickEvent} from '@basis/angular-components';
 import {ConfirmationService} from 'primeng/primeng';
@@ -29,7 +29,7 @@ import {Manual} from '../manual';
 import {Modulo} from '../modulo';
 import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
 import {forEach} from '../../../node_modules/@angular/router/src/utils/collection';
-import { Impacto } from '../analise-shared/impacto-enum';
+import {Impacto} from '../analise-shared/impacto-enum';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -73,6 +73,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     results: string[];
     currentFuncaoDadosasdf: FuncaoAnalise;
     baselineResults: any[] = [];
+    funcoesDadosList: FuncaoDados[] = [];
 
     impacto: SelectItem[] = [
         {label: 'Inclusão', value: 'INCLUSAO'},
@@ -142,25 +143,29 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     public buttonSaveEdit() {
 
-        let retorno = true;
         if (this.isEdit) {
             this.editar();
         } else {
             if (this.showMultiplos) {
+                let retorno = true;
                 for (const nome of this.parseResult.textos) {
                     this.currentFuncaoDados.name = nome;
-                    if (!this.adicionar()) {
+                    if (!this.multiplos()) {
                         retorno = false;
                         break;
                     }
                 }
-                this.salvarAnalise();
+                if (retorno) {
+                    this.analise.funcaoDados.concat(this.funcoesDadosList);
+                    this.salvarAnalise();
+                    this.subscribeToAnaliseCarregada();
+                    this.fecharDialog();
+                }
             } else {
-                retorno = this.adicionar();
+                if (this.adicionar()) {
+                    this.fecharDialog();
+                }
             }
-        }
-        if (retorno) {
-            this.fecharDialog();
         }
     }
 
@@ -284,12 +289,30 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoDados.funcionalidade = funcionalidade;
     }
 
+    multiplos(): boolean {
+        const retorno: boolean = this.verifyDataRequire();
+        if (!retorno) {
+            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            return false;
+        } else {
+            this.desconverterChips();
+            this.verificarModulo();
+            const funcaoDadosCalculada = Calculadora.calcular(
+                this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
+            this.funcoesDadosList.push(funcaoDadosCalculada);
+            this.analise.addFuncaoDados(funcaoDadosCalculada);
+            this.atualizaResumo();
+            this.resetarEstadoPosSalvar();
+            return true;
+        }
+    }
+
     adicionar(): boolean {
 
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
-            return false;
+            return retorno;
         } else {
             this.desconverterChips();
             this.verificarModulo();
@@ -307,8 +330,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                     this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
                 }
             });
-            return true;
         }
+        return retorno;
     }
 
     /* Verificar esta promisse */
@@ -368,14 +391,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
         if (this.analiseSharedDataService.analise.metodoContagem === 'DETALHADA') {
 
-            if (this.dersChips  === undefined ) {
+            if (this.dersChips === undefined) {
                 this.erroTR = true;
                 retorno = false;
             } else {
                 this.erroTR = false;
             }
 
-            if (this.dersChips  === undefined ) {
+            if (this.dersChips === undefined) {
                 this.erroTD = true;
                 retorno = false;
             } else {
@@ -414,12 +437,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
             this.validarNameFuncaoDados(this.currentFuncaoDados.name).then(resolve => {
-                    this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
-                    this.analise.updateFuncaoDados(funcaoDadosCalculada);
-                    this.atualizaResumo();
-                    this.resetarEstadoPosSalvar();
-                    this.salvarAnalise();
-                    this.fecharDialog();
+                this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
+                this.analise.updateFuncaoDados(funcaoDadosCalculada);
+                this.atualizaResumo();
+                this.resetarEstadoPosSalvar();
+                this.salvarAnalise();
+                this.fecharDialog();
             });
         }
     }
