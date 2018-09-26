@@ -10,6 +10,7 @@ import {Organizacao, OrganizacaoService} from '../organizacao';
 import {Contrato, ContratoService} from '../contrato';
 import {Sistema, SistemaService} from '../sistema';
 import {SelectItem, ConfirmationService} from 'primeng/primeng';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 import * as _ from 'lodash';
 import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
@@ -59,6 +60,8 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     nomeManual = MessageUtil.SELECIONE_CONTRATO;
 
     private fatorAjusteNenhumSelectItem = {label: MessageUtil.NENHUM, value: undefined};
+
+    @BlockUI() blockUI: NgBlockUI;
 
     tiposAnalise: SelectItem[] = [
         {label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO},
@@ -428,8 +431,8 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
                     const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(), {id: undefined, equipeId: equipe.id, analiseId: this.analise.id, viewOnly: false, nomeEquipe: equipe.nome });
                     this.equipeShare.push(entity);
                 });
+                this.blockUI.stop();
             });
-    
             this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {
                 this.analiseShared = shared.json;
             });
