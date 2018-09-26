@@ -106,16 +106,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         this.routeSub.unsubscribe();
         //this.urlSub.unsubscribe();
     }
-/*
-    private recuperarUrl() {
-        this.urlSub = this.route.url.subscribe((res: UrlSegment[]) => {
-          this.url = res.toString();
-          for (let i = 0; i < res.length; i++) {
-            console.log(`Segmento[${i}]: ${res[i].path}, parametros: ${res[i].parameters.}`);
-        }
-        });
-      }
-*/
+
     /**
      * Obtêm uma análise através do ID
      */

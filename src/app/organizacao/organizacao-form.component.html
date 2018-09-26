@@ -8,19 +8,24 @@
           <div class="ui-g-12" style="margin-bottom: 25px">
             <label>Logo da Organização</label>
             <p-fileUpload 
-              #fileInput 
-              chooseLabel="Selecionar arquivo" 
-              (onSelect)="fileUpload($event)" 
-              accept="image/*" 
-              id="idLogoOrganizacaoFormOrganizacao"
-              [showUploadButton]="false" 
-              [showCancelButton]="false">
-            </p-fileUpload>
-          </div>
-
-          <div *ngIf="imageUrl !== undefined || imageUrl !== null" class="ui-g-12">
-            <img [src]="imageUrl" alt="">
-          </div>
+            #fileInput
+            maxFileSize="1048576"
+            chooseLabel="Selecionar arquivo"
+            (onSelect)="fileUpload($event)" 
+            accept="image/*" 
+            id="idLogoOrganizacaoFormOrganizacao"
+            [showUploadButton]="false"
+            [showCancelButton]="false"
+            name="logo"
+            accept="image/*" >
+      </p-fileUpload>
+    </div>
+    
+        <div class="ui-g-12 ui-md-3" *ngIf="logo != null" >
+          <span class="md-inputfield">
+            <img src = "data:image/png;base64,{{logo}}"  style="max-width: 75px; max-height: 75px; margin-top: 10%;">
+          </span>
+      </div>
 
           <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
               <span class="md-inputfield" >
@@ -200,9 +205,9 @@
                   type="text" 
                   id="idNumeroContratoContratoSaveFormOrganizacao"
                   name="numeroContrato" 
-                  maxlength="100" 
-                  [(ngModel)]="novoContrato.numeroContrato" 
-                  (onChange)="validarManual()"
+                  maxlength="100"
+                  [(ngModel)]="novoContrato.numeroContrato"
+                  (onChange)="validarManual()" 
                   pInputText/>
                 <label>Número do Contrato</label>
                 <div *ngIf="numeroContratoInvalido" 
@@ -306,15 +311,15 @@
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2">
               <app-white-button 
-                buttonLabel="Cancelar" 
-                id="idBtnCancelarContratoSaveFormOrganizacao"
+                buttonLabel="Cancelar"
+                id="idBtnCancelarContratoSaveFormOrganizacao" 
                 (click)="fecharDialogCadastroContrato()">
               </app-white-button>
             </div>
 
             <div class="ui-g-2">
               <app-green-button 
-                buttonLabel="Salvar"
+                buttonLabel="Salvar" 
                 id="idBtnSalvarContratoSaveFormOrganizacao" 
                 (click)="adicionarContrato()">
               </app-green-button>
@@ -391,7 +396,7 @@
                   type="number" 
                   mask="999"
                   name="diasDeGarantia"
-                  id="idDiasGarantiaContratoEditFormOrganizacao"
+                   id="idDiasGarantiaContratoEditFormOrganizacao"
                   [(ngModel)]="contratoEmEdicao.diasDeGarantia" 
                   pInputText/>
                 <label>Dias de garantia</label>

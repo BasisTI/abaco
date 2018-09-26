@@ -18,6 +18,7 @@ import {FileUpload} from 'primeng/primeng';
 import {NgxMaskModule} from 'ngx-mask';
 import { ValidacaoUtil } from '../util/validacao.util';
 import { ValueTransformer } from '@angular/compiler/src/util';
+import { Upload } from '../upload/upload.model';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -41,6 +42,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   contratoEmEdicao: Contrato = new Contrato();
   invalidFields: Array<string> = [];
   imageUrl: any;
+  upload: Upload;
 
   @ViewChild('fileInput') fileInput: FileUpload;
 
@@ -68,8 +70,12 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     this.routeSub = this.route.params.subscribe(params => {
       this.organizacao = new Organizacao();
       if (params['id']) {
+       
         this.organizacaoService.find(params['id']).subscribe(organizacao => {
           this.organizacao = organizacao;
+         this.uploadService.getLogo(organizacao.logoId).subscribe(response => {
+           this.logo = response.logo
+         })
           // this.getFile();
         });
       }
@@ -100,9 +106,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     this.manualInvalido = false;
     this.numeroContratoInvalido = false;
   }
-  // validarNumeroContrato(){
-  //   this.numeroContratoInvalido = false;
-  // }
 
   validarDataInicio() {
     if (!(this.novoContrato.dataInicioValida()) || !(this.contratoEmEdicao.dataInicioValida())){
@@ -174,13 +177,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
   }
 
-  // validarNumeroContrato(){
-  //   if (this.novoContrato.numeroContrato === null || this.novoContrato.numeroContrato === undefined) {
-  //     this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
-  //     return;
-  //   }
-  // }
-
   /**
    *
    * */
@@ -249,73 +245,77 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
     if (this.organizacao.sigla === '' || this.organizacao.sigla === undefined || this.organizacao.sigla === null) {
       return this.pageNotificationService.addErrorMsg('O campo Sigla é obrigatório!');
-    }
+       }
 
     this.isSaving = true;
     if (this.organizacao.cnpj === '') {
       this.organizacao.cnpj = undefined;
     }
 
-    if (this.organizacao.cnpj !== undefined && this.organizacao.cnpj !== ' ') {
+     if (this.organizacao.cnpj !== undefined && this.organizacao.cnpj !== ' ') {
       if (this.organizacao.cnpj) {
-        if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
-          this.cnpjValido = true;
-          this.pageNotificationService.addErrorMsg('CNPJ inválido');
-          return;
-        }
+      if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
+        this.cnpjValido = true;
+        this.pageNotificationService.addErrorMsg('CNPJ inválido');
+        return;
       }
     }
+  }
 
-   this.organizacaoService.query().subscribe(response => {
-     const todasOrganizacoes = response;
+  this.organizacaoService.query().subscribe(response => {
+    const todasOrganizacoes = response;
 
-     if (!this.checkIfOrganizacaoAlreadyExists(todasOrganizacoes.json)) {
-       if (this.organizacao.id !== undefined) {
-         this.editar();
-       } else {
-         this.novo();
-       }
+    if (!this.checkIfOrganizacaoAlreadyExists(todasOrganizacoes.json)) {
+      if (this.organizacao.id !== undefined) {
+        this.editar();
+      } else {
+        this.novo();
+      }
+    }
+  });
+ }
+
+editar() {
+   this.organizacaoService.find(this.organizacao.id).subscribe(response => {
+     this.uploadService.getLogo(response.logoId).subscribe(response => {
+      this.logo = response.logo;
+
+     if (this.logo !== undefined) {
+       this.uploadService.saveFile(this.logo).subscribe(response => {
+
+         this.organizacao.logoId = response.id;
+         this.isEdit = true;
+         this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
+       });
+     } else {
+         this.isEdit = true;
+         this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
      }
-   });
-  }
-
- editar() {
-    this.organizacaoService.find(this.organizacao.id).subscribe(response => {
-
-      if (this.logo !== undefined) {
-        this.uploadService.uploadFile(this.logo).subscribe(response => {
-          this.organizacao.logoId = JSON.parse(response['_body']).id;
-          this.isEdit = true;
-          this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
-        });
-      } else {
-          this.isEdit = true;
-          this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
-      }
     });
+   });
+ }
+
+ novo() {
+     if (this.logo !== undefined) {
+       this.uploadService.saveFile(this.logo).subscribe(response => {
+        this.organizacao.logoId = response.id;
+         this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
+         });
+     } else {
+       this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
+       }
+   }
+
+      checkIfOrganizacaoAlreadyExists(organizacoesRegistradas: Array<Organizacao>): boolean {
+        let isAlreadyRegistered = false;
+        organizacoesRegistradas.forEach(each => {
+          if (each.nome.toUpperCase() === this.organizacao.nome.toUpperCase() && each.id !== this.organizacao.id) {
+            isAlreadyRegistered = true;
+            this.pageNotificationService.addErrorMsg('Já existe uma Organização registrada com este nome!');
+          }
+        });
+        return isAlreadyRegistered;
   }
-
-  novo() {
-      if (this.logo !== undefined) {
-        this.uploadService.uploadFile(this.logo).subscribe(response => {
-          this.organizacao.logoId = JSON.parse(response['_body']).id;
-          this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
-          });
-      } else {
-        this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
-        }
-    }
-
-  checkIfOrganizacaoAlreadyExists(organizacoesRegistradas: Array<Organizacao>): boolean {
-      let isAlreadyRegistered = false;
-      organizacoesRegistradas.forEach(each => {
-        if (each.nome.toUpperCase() === this.organizacao.nome.toUpperCase() && each.id !== this.organizacao.id) {
-          isAlreadyRegistered = true;
-          this.pageNotificationService.addErrorMsg('Já existe uma Organização registrada com este nome!');
-        }
-      });
-      return isAlreadyRegistered;
-    }
 
   /**
   * Método responsável por recuperar as organizações pelo id.
@@ -411,26 +411,21 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
+   *Método de upload de foto 
    * */
   fileUpload(event: any) {
     this.logo = event.files[0];
+
+    this.uploadService.uploadFile(this.logo).subscribe((response: any) => {
+      this.logo = response.logo;
+     
+    });
   }
 
   /**
    *
    * */
-  // getFile() {
-  //   this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
 
-  //     let fileInfo;
-  //     this.uploadService.getFileInfo(this.organizacao.logoId).subscribe(response => {
-  //       fileInfo = response;
-
-  //       this.fileInput.files.push(new File([response['_body']], fileInfo['originalName']));
-  //     });
-  //   });
-  // }
 
   /**
    *

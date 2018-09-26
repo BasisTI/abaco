@@ -73,7 +73,7 @@ export class ContratoFormComponent implements OnInit, OnDestroy {
 
         switch(errorType){
           case "error.beggindateGTenddate" : {
-            console.log("Entrei no case pelo contrato-form.components");
+            
             this.pageNotificationService.addErrorMsg('"Início Vigência" não pode ser posterior a "Final Vigência"');
             document.getElementById('login').setAttribute('style', 'border-color: red;');
           }
