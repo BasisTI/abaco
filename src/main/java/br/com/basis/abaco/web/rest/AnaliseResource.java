@@ -379,10 +379,10 @@ public class AnaliseResource {
     }
 
     /**
-     * Função que gera uma página de análises filtrada de acordo com o perfil do usuário logado.
+     * Função que gera uma página de análises filtradas de acordo com o perfil do usuário logado.
      * @param user Usuário cujo perfil será utilizado para filtrar a busca
      * @param pageable Parâmetro de paginação para geração da página
-     * @return Retorna uma página de objetos Analise
+     * @return Retorna uma página de objetos Analise devidamente filtrada
      */
     private Page<Analise> gerarPage(User user, Pageable pageable) {
         if (!user.verificarAuthority()){                    // Se o usuário logado é comum, filtra a lista de análises pelas equipes do mesmo
