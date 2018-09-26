@@ -76,6 +76,8 @@ public class OrganizacaoResource {
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
+    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
+
     private static final String ROLE_USER = "ROLE_USER";
 
     private static final String ROLE_GESTOR = "ROLE_GESTOR";
@@ -134,7 +136,7 @@ public class OrganizacaoResource {
      */
     @PostMapping("/organizacaos")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Organizacao> createOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
         int i;
         log.debug("REST request to save Organizacao : {}", organizacao);
@@ -163,7 +165,7 @@ public class OrganizacaoResource {
      */
     @PutMapping("/organizacaos")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Organizacao> updateOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
         int i;
         log.debug("REST request to update Organizacao : {}", organizacao);
@@ -230,7 +232,7 @@ public class OrganizacaoResource {
      */
     @DeleteMapping("/organizacaos/{id}")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Void> deleteOrganizacao(@PathVariable Long id) {
         log.debug("REST request to delete Organizacao : {}", id);
         organizacaoRepository.delete(id);

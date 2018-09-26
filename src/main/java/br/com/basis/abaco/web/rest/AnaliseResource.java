@@ -85,6 +85,8 @@ public class AnaliseResource {
 
     private static final String ENTITY_NAME = "analise";
 
+    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
+
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     private static final String ROLE_USER = "ROLE_USER";
@@ -149,7 +151,7 @@ public class AnaliseResource {
      */
     @PostMapping("/analises")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Analise> createAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to save Analise : {}", analise);
         if (analise.getId() != null) {
@@ -266,7 +268,7 @@ public class AnaliseResource {
      */
     @PutMapping("/analises")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Analise> updateAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to update Analise : {}", analise);
         if (analise.getId() == null) {
@@ -299,7 +301,7 @@ public class AnaliseResource {
 
     @PutMapping("/analises/{id}/block")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Analise> blockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", analise);
         Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
@@ -318,7 +320,7 @@ public class AnaliseResource {
 
     @PutMapping("/analises/{id}/unblock")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Analise> unblockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", analise);
         Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
@@ -461,7 +463,7 @@ public class AnaliseResource {
      */
     @DeleteMapping("/analises/{id}")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Void> deleteAnalise(@PathVariable Long id) {
         log.debug("REST request to delete Analise : {}", id);
         analiseRepository.delete(id);
@@ -521,7 +523,7 @@ public class AnaliseResource {
      */
     @GetMapping("/compartilhada/{idAnalise}")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public List<Compartilhada> getAllCompartilhadaByAnalise(@PathVariable Long idAnalise) {
         log.debug("REST request to get all Compartilhadas by Análise");
         return compartilhadaRepository.findAllByAnaliseId(idAnalise);
@@ -533,7 +535,7 @@ public class AnaliseResource {
      */
     @PostMapping("/analises/compartilhar")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<List<Compartilhada>> popularCompartilhar(@Valid @RequestBody List<Compartilhada> compartilhadaList) throws URISyntaxException {
         log.debug("REST request to save a list of shared análises : {}", compartilhadaList);
         List<Compartilhada> result = compartilhadaRepository.save(compartilhadaList);
@@ -547,7 +549,7 @@ public class AnaliseResource {
      */
     @DeleteMapping("/analises/compartilhar/delete/{id}")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Void> deleteCompartilharAnalise(@PathVariable Long id) {
         log.debug("REST request to remove a shared análise : {}", id);
         compartilhadaRepository.delete(id);
@@ -561,7 +563,7 @@ public class AnaliseResource {
      */
     @PutMapping("/analises/compartilhar/viewonly/{id}")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Compartilhada> viewOnly(@Valid @RequestBody Compartilhada compartilhada) throws URISyntaxException {
         log.debug("REST request to update viewOnly in Compartilhada : {}", compartilhada);
         Compartilhada result = compartilhadaRepository.save(compartilhada);

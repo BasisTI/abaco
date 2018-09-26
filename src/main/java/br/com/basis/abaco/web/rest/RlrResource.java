@@ -45,6 +45,8 @@ public class RlrResource {
 
     private final RlrSearchRepository rlrSearchRepository;
 
+    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
+
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     private static final String ROLE_USER = "ROLE_USER";
@@ -65,7 +67,7 @@ public class RlrResource {
      */
     @PostMapping("/rlrs")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Rlr> createRlr(@Valid @RequestBody Rlr rlr) throws URISyntaxException {
         log.debug("REST request to save Rlr : {}", rlr);
         if (rlr.getId() != null) {
@@ -89,7 +91,7 @@ public class RlrResource {
      */
     @PutMapping("/rlrs")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Rlr> updateRlr(@Valid @RequestBody Rlr rlr) throws URISyntaxException {
         log.debug("REST request to update Rlr : {}", rlr);
         if (rlr.getId() == null) {
@@ -137,7 +139,7 @@ public class RlrResource {
      */
     @DeleteMapping("/rlrs/{id}")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Void> deleteRlr(@PathVariable Long id) {
         log.debug("REST request to delete Rlr : {}", id);
         rlrRepository.delete(id);

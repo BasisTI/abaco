@@ -45,6 +45,8 @@ public class FuncionalidadeResource {
 
     private final FuncionalidadeSearchRepository funcionalidadeSearchRepository;
 
+    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
+
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     private static final String ROLE_USER = "ROLE_USER";
@@ -65,7 +67,7 @@ public class FuncionalidadeResource {
      */
     @PostMapping("/funcionalidades")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Funcionalidade> createFuncionalidade(@Valid @RequestBody Funcionalidade funcionalidade) throws URISyntaxException {
         log.debug("REST request to save Funcionalidade : {}", funcionalidade);
         if (funcionalidade.getId() != null) {
@@ -89,7 +91,7 @@ public class FuncionalidadeResource {
      */
     @PutMapping("/funcionalidades")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Funcionalidade> updateFuncionalidade(@Valid @RequestBody Funcionalidade funcionalidade) throws URISyntaxException {
         log.debug("REST request to update Funcionalidade : {}", funcionalidade);
         if (funcionalidade.getId() == null) {
@@ -137,7 +139,7 @@ public class FuncionalidadeResource {
      */
     @DeleteMapping("/funcionalidades/{id}")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Void> deleteFuncionalidade(@PathVariable Long id) {
         log.debug("REST request to delete Funcionalidade : {}", id);
         funcionalidadeRepository.delete(id);

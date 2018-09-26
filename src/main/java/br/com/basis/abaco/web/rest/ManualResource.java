@@ -69,6 +69,8 @@ public class ManualResource {
 
     private final DynamicExportsService dynamicExportsService;
 
+    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
+
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     private static final String ROLE_USER = "ROLE_USER";
@@ -94,7 +96,7 @@ public class ManualResource {
      */
     @PostMapping("/manuals")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Manual> createManual(@Valid @RequestBody Manual manual) throws URISyntaxException {
         log.debug("REST request to save Manual : {}", manual);
         if (manual.getId() != null) {
@@ -144,7 +146,7 @@ public class ManualResource {
      */
     @PutMapping("/manuals")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Manual> updateManual(@Valid @RequestBody Manual manual) throws URISyntaxException {
         log.debug("REST request to update Manual : {}", manual);
         if (manual.getId() == null) {
@@ -203,7 +205,7 @@ public class ManualResource {
      */
     @DeleteMapping("/manuals/{id}")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR})
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Void> deleteManual(@PathVariable Long id) {
         log.debug("REST request to delete Manual : {}", id);
 
