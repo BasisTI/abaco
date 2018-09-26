@@ -589,6 +589,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                                                                      viewOnly: false, nomeEquipe: equipe.nome });
                 this.equipeShare.push(entity);
             });
+            this.blockUI.stop();
         });
 
         this.analiseService.findAllCompartilhadaByAnalise(this.analiseSelecionada.id).subscribe((shared) => {
