@@ -10,6 +10,7 @@ import {AuthHttp, JwtHelper} from 'angular2-jwt';
 import {ConfirmationService} from 'primeng/primeng';
 import {MessageService} from 'primeng/components/common/messageservice';
 import {PRIMENG_IMPORTS} from './primeng-imports';
+import { BlockUIModule } from 'ng-block-ui';
 import 'rxjs/add/operator/toPromise';
 import {NgxMaskModule} from 'ngx-mask';
 
@@ -116,7 +117,8 @@ export function createTranslateLoader(http: HttpClient) {
                 deps: [HttpClient]
             }
         }),
-        VersionTagModule.forRoot()
+        VersionTagModule.forRoot(),
+        BlockUIModule.forRoot()
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [

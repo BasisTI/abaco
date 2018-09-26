@@ -247,11 +247,6 @@
                                         <label>Data da homologação (software) {{analise.baselineImediatamente ? " *" : null}}</label>
                                     </span>
 
-                                    <div *ngIf="analise.baselineImediatamente && !(analise.dataHomologacao)"
-                                         class="ui-message ui-messages-error">
-                                        Campo Obrigatório!
-                                    </div>
-
                                 </div>
 
                                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
@@ -362,9 +357,66 @@
         </app-green-button>
         <app-blue-button
             buttonLabel="Compartilhar Análise"
-            (click)="bloquearAnalise()">
+            (click)="openCompartilharDialog()">
         </app-blue-button>
     </p-tabPanel>
+
+    <p-dialog header="Compartilhar Análise" [(visible)]="mostrarDialog" [width]="800" [modal]="true" (onHide)="limparSelecaoCompartilhar()">
+        <p-dataTable
+        [(value)]="equipeShare"
+        [headerCheckboxToggleAllPages]="true"
+        [(selection)]="selectedEquipes"
+        dataKey="equipeId">
+
+            <p-column
+                selectionMode="multiple"
+                [style]="{'width':'10%'}">
+            </p-column>
+
+            <p-column
+                header="Equipe"
+                field="nomeEquipe">
+            </p-column>
+
+            <p-column
+                header="Somente visualizar?"
+                field="viewOnly"
+                [style]="{'width':'12%'}">
+                <ng-template let-col let-equipeShare="rowData" pTemplate="body">
+                    <p-toggleButton [(ngModel)]="equipeShare.viewOnly" onLabel="Sim" offLabel="Não"></p-toggleButton>
+                </ng-template>
+            </p-column>
+        </p-dataTable>
+
+        <app-green-button buttonLabel="Adicionar" (click)="salvarCompartilhar()" style="float:right; margin-top: 5px"></app-green-button>
+        <br/>
+        <br/>
+
+        <hr/>
+        <h3>Compartilhada com:</h3>
+        <p-dataTable
+        [(value)]="analise.compartilhadas"
+        selectionMode="single"
+        [(selection)]="selectedToDelete"
+        dataKey="equipeId">
+            <p-column
+                header="Equipe"
+                field="nomeEquipe">
+            </p-column>
+
+            <p-column
+                header="Somente visualizar?"
+                field="viewOnly"
+                [style]="{'width':'12%'}">
+                <ng-template let-col let-analiseTemp="rowData" pTemplate="body">
+                    <p-toggleButton [(ngModel)]="analiseTemp.viewOnly" onLabel="Sim" offLabel="Não" (onChange)="updateViewOnly()"></p-toggleButton>
+                </ng-template>
+            </p-column>
+        </p-dataTable>
+
+        <app-red-button buttonLabel="Remover" (click)="deletarCompartilhar()" style="float:right; margin-top: 5px"></app-red-button>
+
+    </p-dialog>
 </p-tabView>
 
 <!-- Dialog confirmação deleção -->

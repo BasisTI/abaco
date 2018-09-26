@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { Analise , AnaliseShareEquipe} from './';
 import {ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService} from '../shared';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { loginRoute } from '../login';
 
 @Injectable()
 export class AnaliseService {
@@ -45,9 +46,11 @@ export class AnaliseService {
    *
    */
   public create(analise: Analise): Observable<Analise> {
+    this.blockUI.start('Criando análise...');
     const copy = this.convert(analise);
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
+      this.blockUI.stop();
       return this.convertItemFromServer(jsonResponse);
     }).catch((error: any) => {
         if (error.status === 403) {
@@ -58,14 +61,27 @@ export class AnaliseService {
   }
 
   /**
+   * atualizaAnalise
+   */
+  public atualizaAnalise(analise: Analise) {
+    this.update(analise).subscribe((res) => {
+      console.log(res);
+    });
+  }
+
+
+  /**
    *
    */
   public update(analise: Analise): Observable<Analise> {
+    this.blockUI.start('Atualizando análise...');
     const copy = this.convert(analise);
     return this.http.put(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
+      this.blockUI.stop();
       return this.convertItemFromServer(jsonResponse);
     }).catch((error: any) => {
+        console.log(error);
         if (error.status === 403) {
             this.pageNotificationService.addErrorMsg('Você não possui permissão!');
             return Observable.throw(new Error(error.status));
@@ -77,14 +93,26 @@ export class AnaliseService {
    *
    */
   public block(analise: Analise): Observable<Analise> {
+    this.blockUI.start('Bloqueando análise...');
     const copy = analise;
     return this.http.put(`${this.resourceUrl}/${copy.id}/block`, copy).map((res: Response) => {
+      this.blockUI.stop();
       return null;
     }).catch((error: any) => {
-        if (error.status === 403) {
+        switch (error.status) {
+          case 400: {
+            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
+                console.log("entrou no if");
+                this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+            }
+            break;
+          }
+          case 403: {
             this.pageNotificationService.addErrorMsg('Você não possui permissão!');
-            return Observable.throw(new Error(error.status));
+            break;
+          }
         }
+        return Observable.throw(new Error(error.status));
     });
   }
 
@@ -92,9 +120,11 @@ export class AnaliseService {
    *
    */
   public unblock(analise: Analise): Observable<Analise> {
+    this.blockUI.start('Desbloqueando análise...');
     const copy = analise;
     return this.http.put(`${this.resourceUrl}/${copy.id}/unblock`, copy).map((res: Response) => {
       const jsonResponse = res.json();
+      this.blockUI.stop();
       return this.convertItemFromServer(jsonResponse);
     }).catch((error: any) => {
         if (error.status === 403) {
@@ -184,10 +214,12 @@ export class AnaliseService {
    *
    */
   public find(id: number): Observable<Analise> {
+    this.blockUI.start('Procurando análise...');
     return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
       const jsonResponse = res.json();
       const analiseJson = this.convertItemFromServer(jsonResponse);
       analiseJson.createdBy = jsonResponse.createdBy;
+      this.blockUI.stop();
       return analiseJson;
     });
   }
@@ -203,6 +235,7 @@ export class AnaliseService {
    * @param idUsuario Id do usuário que está fazendo a requisição
    */
   findAnalisesUsuario(idUsuario: number): Observable<Analise[]> {
+    this.blockUI.start('Filtrando análises...');
     const url = `${this.resourceUrl}/user/${idUsuario}`;
     return this.http.get(url)
       .map(
@@ -216,6 +249,7 @@ export class AnaliseService {
    *
    */
   public query(req?: any): Observable<ResponseWrapper> {
+    this.blockUI.start('Aguenta um cadinho aí...')
     const options = createRequestOption(req);
     return this.http.get(this.resourceUrl, options)
     .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
@@ -247,6 +281,7 @@ export class AnaliseService {
     for (let i = 0; i < jsonResponse.length; i++) {
       result.push(this.convertItemFromServer(jsonResponse[i]));
     }
+    this.blockUI.stop();
     return new ResponseWrapper(res.headers, result, res.status);
   }
 
@@ -263,6 +298,7 @@ export class AnaliseService {
     for (let i = 0; i < jsonResponse.length; i++) {
       result.push(this.convertItemFromServer(jsonResponse[i]));
     }
+    this.blockUI.stop();
     return result;
   }
   /**
@@ -275,29 +311,32 @@ export class AnaliseService {
   // PARTE RESPONSÁVEL PELO "COMPARTILHAR"
 
    /** Encontra todas as equipes que têm acesso àquela análise
-   * 
-   * 
+   *
+   *
    */
   findAllCompartilhadaByAnalise(analiseId: number): Observable<ResponseWrapper> {
+    this.blockUI.start('Buscando análises...')
     const url = `${this.findCompartilhadaByAnaliseUrl}/${analiseId}`;
     return this.http.get(url)
       .map((res: Response) => this.convertResponse(res));
   }
 
    /** Salva as equipes que têm acesso àquela análise
-   * 
-   * 
+   *
+   *
    */
-  salvarCompartilhar(listaCompartilhada: Array<AnaliseShareEquipe>){
+  salvarCompartilhar(listaCompartilhada: Array<AnaliseShareEquipe>) {
+    this.blockUI.start('Compartilhando análise...');
     return this.http.post(`${this.resourceUrl}/compartilhar`, listaCompartilhada).map((res: Response) => {
       const jsonResponse = res.json();
+      this.blockUI.stop();
       return jsonResponse;
     });
   }
 
    /** Deletas as equipes que têm acesso àquela análise
-   * 
-   * 
+   *
+   *
    */
   deletarCompartilhar(id: number): Observable<Response> {
     return this.http.delete(`${this.resourceUrl}/compartilhar/delete/${id}`).catch((error: any) => {
@@ -312,9 +351,11 @@ export class AnaliseService {
    *
    *
    */
-  atualizarCompartilhar(compartilhada){
+  atualizarCompartilhar(compartilhada) {
+    this.blockUI.start('Atualizando compartilhamento...');
     const copy = compartilhada;
     return this.http.put(`${this.resourceUrl}/compartilhar/viewonly/${copy.id}`, copy).map((res: Response) => {
+      this.blockUI.stop();
       return null;
     }).catch((error: any) => {
         if (error.status === 403) {

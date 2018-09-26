@@ -2,8 +2,9 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 
-import {Analise} from './analise.model';
+import { Analise, AnaliseShareEquipe } from './';
 import {AnaliseService} from './analise.service';
+import { User, UserService } from '../user';
 import {ResponseWrapper,  AnaliseSharedDataService, PageNotificationService} from '../shared';
 import {Organizacao, OrganizacaoService} from '../organizacao';
 import {Contrato, ContratoService} from '../contrato';
@@ -35,6 +36,11 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     dataHomol: any;
     diasGarantia: number;
     public validacaoCampos: boolean;
+    equipeShare; analiseShared: Array<AnaliseShareEquipe> = [];
+    selectedEquipes: Array<AnaliseShareEquipe>;
+    selectedToDelete: AnaliseShareEquipe;
+    mostrarDialog: boolean = false;
+    loggedUser: User;
 
     organizacoes: Organizacao[];
 
@@ -82,6 +88,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         private analiseSharedDataService: AnaliseSharedDataService,
         private equipeService: TipoEquipeService,
         private pageNotificationService: PageNotificationService,
+        private userService: UserService,
     ) { }
 
     ngOnInit() {
@@ -93,18 +100,23 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         this.isView = true;
         this.isSaving = false;
         this.dataHomol = new Date();
+        this.getLoggedUser();
         this.habilitarCamposIniciais();
         this.listOrganizacoes();
         this.getAnalise();
-        //this.recuperarUrl();
-        if (this.url) {
-
-        }
     }
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
-        //this.urlSub.unsubscribe();
+    }
+
+    /**
+     * Função para recuperar os dados do usuário logado no momento
+     */
+    getLoggedUser() {
+        this.userService.findCurrentUser().subscribe(res =>{
+            this.loggedUser = res;
+        });
     }
 
     /**
@@ -311,13 +323,6 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Atuva ou desativa a tab Funcao de Transação
-     */
-    // disabledFuncaoTransacao() {
-    //     this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
-    // }
-
-    /**
      * Verifica se algum contrato foi selecioando
      *
      */
@@ -381,24 +386,94 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
      * 
      */
     public desbloquearAnalise() {
-        this.confirmationService.confirm({
-            message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
-            accept: () => {
-                const copy = this.analise.toJSONState();
-                    this.analiseService.unblock(copy).subscribe(() => {
-                    this.pageNotificationService.addUnblockMsgWithName(this.analise.identificadorAnalise);
-                    this.router.navigate(['/analise']);
-                }, (error: Response) => {
-                    switch (error.status) {
-                        case 400: {
-                            if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
-                            this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+        if(this.checkUserAnaliseEquipes()){
+            this.confirmationService.confirm({
+                message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
+                accept: () => {
+                    const copy = this.analise.toJSONState();
+                        this.analiseService.unblock(copy).subscribe(() => {
+                        this.pageNotificationService.addUnblockMsgWithName(this.analise.identificadorAnalise);
+                        this.router.navigate(['/analise']);
+                    }, (error: Response) => {
+                        switch (error.status) {
+                            case 400: {
+                                if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
+                                this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                                }
                             }
                         }
-                    }
-                    });
+                        });
+                }
+            });
+        } else {
+            this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem desbloquear esta análise!");
+        }
+    }
+
+    checkUserAnaliseEquipes(){
+        let retorno: boolean = false;
+        this.loggedUser.tipoEquipes.forEach(equipe => {
+            if (equipe.id === this.analise.equipeResponsavel.id){
+                retorno = true;
             }
         });
+        return retorno;
+    }
+
+    public openCompartilharDialog(){
+        if(this.checkUserAnaliseEquipes()){
+            this.equipeShare = [];
+            this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id, this.analise.id, this.analise.equipeResponsavel.id).subscribe((equipes) => {
+                equipes.json.forEach((equipe) => {
+                    const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(), {id: undefined, equipeId: equipe.id, analiseId: this.analise.id, viewOnly: false, nomeEquipe: equipe.nome });
+                    this.equipeShare.push(entity);
+                });
+            });
+    
+            this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {
+                this.analiseShared = shared.json;
+            });
+            this.mostrarDialog = true;
+        } else {
+            this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem compartilhar esta análise!");
+        }
+    }
+
+    public limparSelecaoCompartilhar(){
+        this.getAnalise();
+        this.selectedEquipes = undefined;
+        this.selectedToDelete = undefined;
+    }
+
+    public salvarCompartilhar(){
+        if(this.selectedEquipes && this.selectedEquipes.length !== 0){
+            this.analiseService.salvarCompartilhar(this.selectedEquipes).subscribe((res) => {
+                this.mostrarDialog = false;
+                this.pageNotificationService.addSuccessMsg("Análise compartilhada com sucesso!");
+                this.limparSelecaoCompartilhar();
+            })
+        } else {
+            this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder adicionar ou clique no X para sair!');
+        }
+        
+    }
+
+    public deletarCompartilhar(){
+        if(this.selectedToDelete && this.selectedToDelete !== null){
+            this.analiseService.deletarCompartilhar(this.selectedToDelete.id).subscribe((res) => {
+                this.mostrarDialog = false;
+                this.pageNotificationService.addSuccessMsg("Compartilhamento removido com sucesso!");
+                this.limparSelecaoCompartilhar();
+            })
+        } else {
+            this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder remover ou clique no X para sair!');
+        }
+    }
+
+    public updateViewOnly(){
+        setTimeout(() => { this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
+            this.pageNotificationService.addSuccessMsg("Registro atualizado com sucesso!");
+        }); }, 250)
     }
 
 }

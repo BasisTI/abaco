@@ -11,6 +11,7 @@ import {Analise, AnaliseService} from '../analise';
 import * as _ from 'lodash';
 import {Funcionalidade} from '../funcionalidade/index';
 import {SelectItem} from 'primeng/primeng';
+import {  BlockUI, NgBlockUI } from 'ng-block-ui';
 import {Calculadora} from '../analise-shared/calculadora';
 import {DatatableClickEvent} from '@basis/angular-components';
 import {ConfirmationService} from 'primeng/primeng';
@@ -45,6 +46,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     textHeader: string;
     @Input() isView: boolean;
+    @BlockUI() blockUI: NgBlockUI;      // Usado para bloquear o sistema enquanto aguarda resolução das requisições do backend
     isEdit: boolean;
     nomeInvalido;
     isSaving: boolean;
@@ -300,8 +302,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                     this.atualizaResumo();
                     this.resetarEstadoPosSalvar();
                     this.estadoInicial();
-
-
                 } else {
                     this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
                 }
@@ -391,7 +391,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     salvarAnalise() {
-        this.analiseService.update(this.analise);
+        this.analiseService.atualizaAnalise(this.analise);
     }
 
     private desconverterChips() {
