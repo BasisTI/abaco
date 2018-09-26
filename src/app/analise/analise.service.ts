@@ -64,7 +64,8 @@ export class AnaliseService {
    * atualizaAnalise
    */
   public atualizaAnalise(analise: Analise) {
-    this.update(analise).subscribe((res) => {
+    this.update(analise)
+        .subscribe((res) => {
       console.log(res);
     });
   }
