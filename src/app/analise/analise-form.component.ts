@@ -542,6 +542,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                                                                       nomeEquipe: equipe.nome });
                     this.equipeShare.push(entity);
                 });
+                this.blockUI.stop();
             });
             this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {
                 this.analiseShared = shared.json;
