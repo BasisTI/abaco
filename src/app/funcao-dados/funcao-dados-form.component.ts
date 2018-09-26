@@ -293,8 +293,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         } else {
             this.desconverterChips();
             this.verificarModulo();
-            const funcaoDadosCalculada = Calculadora.calcular(
-                this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
+            const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem,
+                                                              this.currentFuncaoDados,
+                                                              this.analise.contrato.manual);
             this.validarNameFuncaoDados(this.currentFuncaoDados.name).then(resolve => {
                 if (resolve) {
                     this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);

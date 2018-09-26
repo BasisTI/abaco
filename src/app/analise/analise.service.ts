@@ -102,7 +102,7 @@ export class AnaliseService {
         switch (error.status) {
           case 400: {
             if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
-                console.log("entrou no if");
+                console.log('entrou no if');
                 this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
             }
             break;
@@ -249,7 +249,7 @@ export class AnaliseService {
    *
    */
   public query(req?: any): Observable<ResponseWrapper> {
-    this.blockUI.start('Aguenta um cadinho aí...')
+    this.blockUI.start('Aguenta um cadinho aí...');
     const options = createRequestOption(req);
     return this.http.get(this.resourceUrl, options)
     .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
@@ -315,7 +315,7 @@ export class AnaliseService {
    *
    */
   findAllCompartilhadaByAnalise(analiseId: number): Observable<ResponseWrapper> {
-    this.blockUI.start('Buscando análises...')
+    this.blockUI.start('Buscando análises...');
     const url = `${this.findCompartilhadaByAnaliseUrl}/${analiseId}`;
     return this.http.get(url)
       .map((res: Response) => this.convertResponse(res));

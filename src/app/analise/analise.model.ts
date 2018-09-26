@@ -71,7 +71,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
         this.inicializaResumos();
-        
+
         // TODO
         if (!baselineImediatamente) {
             this.baselineImediatamente = false;
@@ -354,7 +354,7 @@ class AnaliseCopyFromJSON {
         if (this._json.audit) {
             this._analiseConverted.createdOn = this._json.audit.createdOn;
             this._analiseConverted.updatedOn = this._json.audit.updatedOn;
-        } 
+        }
         this._analiseConverted.bloqueiaAnalise = this._json.bloqueiaAnalise;
         this._analiseConverted.compartilhadas = this._json.compartilhadas;
 
