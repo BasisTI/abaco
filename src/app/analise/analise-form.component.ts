@@ -44,7 +44,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     aguardarGarantia: boolean;
     enviarParaBaseLine: boolean;
 
-    organizacoes: Organizacao[];
+    organizacoes;
 
     contratos: Contrato[];
 
@@ -104,7 +104,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.dataHomol = new Date();
         this.getLoggedUser();
         this.habilitarCamposIniciais();
-        this.listOrganizacoes();
         this.getAnalise();
     }
 
@@ -118,6 +117,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     getLoggedUser() {
         this.userService.findCurrentUser().subscribe(res => {
             this.loggedUser = res;
+            this.organizacoes = res.organizacoes;
+
         });
     }
 
@@ -185,17 +186,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     getGarantia(): any {
         this.diasGarantia = this.diasGarantia !== undefined ? this.analise.contrato.diasDeGarantia : undefined;
-    }
-
-    /**
-     * Método responsável por popular a lista de organizações.
-     */
-    listOrganizacoes() {
-        this.organizacaoService.searchActiveOrganizations().subscribe((res: ResponseWrapper) => {
-            this.organizacoes = res.json;
-        }, (error: Response) => {
-            this.pageNotificationService.addErrorMsg('Ops! Ocorreu algum erro');
-        });
     }
 
     /**
