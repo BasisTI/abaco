@@ -39,10 +39,12 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   mostrarDialogEdicaoContrato = false;
   novoContrato: Contrato = new Contrato();
   logo: File;
+  newLogo: File;
   contratoEmEdicao: Contrato = new Contrato();
   invalidFields: Array<string> = [];
   imageUrl: any;
   upload: Upload;
+  alterouLogo: boolean;
 
   @ViewChild('fileInput') fileInput: FileUpload;
 
@@ -73,8 +75,9 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
        
         this.organizacaoService.find(params['id']).subscribe(organizacao => {
           this.organizacao = organizacao;
-         this.uploadService.getLogo(organizacao.logoId).subscribe(response => {
-           this.logo = response.logo
+          if (this.organizacao.logoId != undefined && this.organizacao.logoId != null)
+            this.uploadService.getLogo(organizacao.logoId).subscribe(response => {
+            this.logo = response.logo
          })
           // this.getFile();
         });
@@ -275,31 +278,37 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   });
  }
 
+mudouLogo(imagem: File): boolean {
+  this.alterouLogo = this.logo != imagem;
+  return this.alterouLogo;
+}
+
 editar() {
    this.organizacaoService.find(this.organizacao.id).subscribe(response => {
-     this.uploadService.getLogo(response.logoId).subscribe(response => {
-      this.logo = response.logo;
+    if (this.alterouLogo) {
+      this.uploadService.uploadLogo(this.newLogo).subscribe((response: any) => {
+        this.organizacao.logoId = response.id;
+        this.logo = response.logo;
+        this.isEdit = true;
+        this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));      
 
-     if (this.logo !== undefined) {
-       this.uploadService.saveFile(this.logo).subscribe(response => {
+      });  
 
-         this.organizacao.logoId = response.id;
-         this.isEdit = true;
-         this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
-       });
-     } else {
-         this.isEdit = true;
-         this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
-     }
-    });
+      this.uploadService.saveFile(this.newLogo).subscribe(response => {
+        });
+    } else {
+      this.isEdit = true;
+      this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
+    }
    });
  }
 
  novo() {
-     if (this.logo !== undefined) {
-       this.uploadService.saveFile(this.logo).subscribe(response => {
+     if (this.newLogo != undefined && this.newLogo != null) {
+
+      this.uploadService.uploadLogo(this.newLogo).subscribe((response: any) => {
         this.organizacao.logoId = response.id;
-         this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
+       this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
          });
      } else {
        this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
@@ -414,12 +423,10 @@ editar() {
    *Método de upload de foto 
    * */
   fileUpload(event: any) {
-    this.logo = event.files[0];
-
-    this.uploadService.uploadFile(this.logo).subscribe((response: any) => {
-      this.logo = response.logo;
-     
-    });
+    let imagem = event.files[0];
+    if (this.mudouLogo(imagem)) {
+      this.newLogo = imagem;
+    }
   }
 
   /**
