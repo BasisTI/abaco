@@ -1,83 +1,90 @@
 <div class="ui-g ui-fluid" *ngIf="manual">
-  <div class="ui-g-12">
-    <div class="card card-w-title">
-      <h1>Visualizar Manual</h1>
-      <div class="ui-g">
-        <div class="ui-g-6">
-          <label>ID: {{ manual.id }}</label>
-        </div>
-        <div class="ui-g-6">
-          <label>Nome: {{ manual.nome }}</label>
-        </div>
-        <div class="ui-g-6">
-          <label>Observação: {{ manual.observacao }}</label>
-        </div>
-        <div class="ui-g-6">
-          <label>Valor Variação Estimada: {{ manual.valorVariacaoEstimada }}</label>
-        </div>
-        <div class="ui-g-6">
-          <label>Valor Variação Indicativa: {{ manual.valorVariacaoIndicativa }}</label>
-        </div>
-        <div class="ui-g-6">
-          <label>Arquivo Manual: {{ fileName }}</label>
-        </div>
-      </div>
+    <div class="ui-g-12">
+        <div class="card card-w-title">
+            <h1>Visualizar Manual</h1>
+            <div class="ui-g">
+                <div class="ui-g-6">
+                    <label>ID: {{ manual.id }}</label>
+                </div>
+                <div class="ui-g-6">
+                    <label>Nome: {{ manual.nome }}</label>
+                </div>
+                <div class="ui-g-6">
+                    <label>Observação: {{ manual.observacao }}</label>
+                </div>
+                <div class="ui-g-6">
+                    <label>Valor Variação Estimada: {{ manual.valorVariacaoEstimada }}</label>
+                </div>
+                <div class="ui-g-6">
+                    <label>Valor Variação Indicativa: {{ manual.valorVariacaoIndicativa }}</label>
+                </div>
+                <div class="ui-g-6">
+                    <label>Arquivo Manual: {{ fileName }}</label>
+                </div>
+            </div>
 
-      <div class="ui-g">
-        <h1>Impacto</h1>
-        <div class="ui-g-12">
-          <app-memory-datatable [value]="manualArray" (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true" disableDelete="true" disableClone="true">
-            <p-column header="Inclusão(%)" field="parametroInclusaoFormatado">
-            </p-column>
-            <p-column header="Alteração(%)" field="parametroAlteracaoFormatado">
-            </p-column>
-            <p-column header="Exclusão(%)" field="parametroExclusaoFormatado">
-            </p-column>
-            <p-column header="Conversão(%)" field="parametroConversaoFormatado">
-            </p-column>
-            <p-column header="Versão CPM" field="versaoCPM">
-            </p-column>
-          </app-memory-datatable>
-        </div>
-      </div>
+            <div class="ui-g">
+                <h1>Impacto</h1>
+                <div class="ui-g-12">
+                    <app-memory-datatable [value]="manualArray" id="idTabelaImpactoDetailManual"
+                                          (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true"
+                                          disableDelete="true" disableClone="true">
+                        <p-column header="Inclusão(%)" field="parametroInclusaoFormatado">
+                        </p-column>
+                        <p-column header="Alteração(%)" field="parametroAlteracaoFormatado">
+                        </p-column>
+                        <p-column header="Exclusão(%)" field="parametroExclusaoFormatado">
+                        </p-column>
+                        <p-column header="Conversão(%)" field="parametroConversaoFormatado">
+                        </p-column>
+                        <p-column header="Versão CPM" field="versaoCPM">
+                        </p-column>
+                    </app-memory-datatable>
+                </div>
+            </div>
 
-      <div class="ui-g">
-        <h1>Esforços por Fase</h1>
-        <div class="ui-g-12">
-          <app-memory-datatable [value]="manual.esforcoFases" (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true" disableDelete="true" disableClone="true">
-            <p-column header="Tipo de fase" field="fase.nome">
-            </p-column>
-            <p-column header="Percentual (%)" field="esforcoFormatado">
-            </p-column>
-          </app-memory-datatable>
-        </div>
-      </div>
+            <div class="ui-g">
+                <h1>Esforços por Fase</h1>
+                <div class="ui-g-12">
+                    <app-memory-datatable [value]="manual.esforcoFases" id="idTabelaEsforcoFaseDetailManual"
+                                          (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true"
+                                          disableDelete="true" disableClone="true">
+                        <p-column header="Tipo de fase" field="fase.nome">
+                        </p-column>
+                        <p-column header="Percentual (%)" field="esforcoFormatado">
+                        </p-column>
+                    </app-memory-datatable>
+                </div>
+            </div>
 
-      <div class="ui-g">
-        <div class="ui-g-12">
-          <h1>Fatores de Ajuste</h1>
-          <app-memory-datatable [value]="manual.fatoresAjuste" (buttonClick)="adjustFactorDatatableClick($event)" disableEdit="true" disableView="true" disableDelete="true" disableClone="true">
-            <p-column header="Codigo" field="codigo">
-            </p-column>
-            <p-column header="Nome" field="nome">
-            </p-column>
-            <p-column header="Fator" field="fatorFormatado">
-            </p-column>
-            <p-column header="Tipo Ajuste" field="tipoAjuste">
-            </p-column>
-            <p-column header="Ativo" field="ativo">
-              <ng-template let-col let-ativo="rowData" pTemplate="body">
-                {{ ativo[col.field] | activeBoolean }}
-              </ng-template>
-            </p-column>
-          </app-memory-datatable>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <h1>Fatores de Ajuste</h1>
+                    <app-memory-datatable [value]="manual.fatoresAjuste" id="idTabelaFatorAjusteDetailManual"
+                                          (buttonClick)="adjustFactorDatatableClick($event)" disableEdit="true"
+                                          disableView="true" disableDelete="true" disableClone="true">
+                        <p-column header="Codigo" field="codigo">
+                        </p-column>
+                        <p-column header="Nome" field="nome">
+                        </p-column>
+                        <p-column header="Fator" field="fatorFormatado">
+                        </p-column>
+                        <p-column header="Tipo Ajuste" field="tipoAjuste">
+                        </p-column>
+                        <p-column header="Ativo" field="ativo">
+                            <ng-template let-col let-ativo="rowData" pTemplate="body">
+                                {{ ativo[col.field] | activeBoolean }}
+                            </ng-template>
+                        </p-column>
+                    </app-memory-datatable>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-2">
+                    <button pButton type="button" label="Voltar" id="idBtnVoltarDetailManual"
+                            routerLink="/manual"></button>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="ui-g">
-        <div class="ui-g-2">
-          <button pButton type="button" label="Voltar" routerLink="/manual"></button>
-        </div>
-      </div>
     </div>
-  </div>
 </div>

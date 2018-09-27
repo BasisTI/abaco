@@ -20,7 +20,7 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
   esforcoFases: EsforcoFase[];
 
   private analiseCarregadaSubscription: Subscription;
-  
+
   constructor(
     private analiseSharedDataService: AnaliseSharedDataService,
     private changeDetectorRef: ChangeDetectorRef,

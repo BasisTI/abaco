@@ -1,68 +1,77 @@
 <div class="ui-g ui-fluid">
-  <div class="ui-g-12 ui-md-12 ui-sm-12">
-    <div class="card card-w-title">
-      <h1>Tipo de Fase</h1>
-      <div class="ui-g">
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
+        <div class="card card-w-title">
+            <h1>Tipo de Fase</h1>
+            <div class="ui-g">
 
-          <div class="ui-g-12 ui-md-12 ui-sm-12">
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
               <span class="md-inputfield">
                 <input type="text" pInputText class="ui-inputtext"
-                  name="filtroTipoFase"
-                  [(ngModel)]="elasticQuery.value"
-                  (keyup.enter)="datatable.refresh(elasticQuery.query)"
-                  #filter />
+                       name="filtroTipoFase"
+                       [(ngModel)]="elasticQuery.value"
+                       id="idDescricaoComponentTipoFase"
+                       (keyup.enter)="datatable.refresh(elasticQuery.query)"
+                       #filter/>
                 <label>Descrição</label>
               </span>
+                </div>
             </div>
-          </div>
-      <div class="ui-g">
-        <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
-            <div class="ui-g-2 ui-md-2 ui-sm-12">
-              <app-white-button 
-                buttonLabel="Limpar Pesquisa" 
-                buttonIcon="ui-icon-clear-all" 
-                (click)="limparPesquisa()">
-              </app-white-button>
-            </div>
-            <div class="ui-g-2 ui-md-2 ui-sm-12">
-              <app-blue-button 
-                buttonLabel="Pesquisar" 
-                buttonIcon="ui-icon-search" 
-                (click)="datatable.refresh(elasticQuery.query)">
-              </app-blue-button>
-            </div>
-            <div class="ui-g-2 ui-md-2 ui-sm-12">
-              <app-green-button 
-                buttonLabel="Novo" 
-                routerLink="/tipoFase/new" 
-                buttonIcon="ui-icon-add">
-              </app-green-button>
+            <div class="ui-g">
+                <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-white-button
+                                buttonLabel="Limpar Pesquisa"
+                                buttonIcon="ui-icon-clear-all"
+                                id="idBtnLimparComponentTipoFase"
+                                (click)="limparPesquisa()">
+                        </app-white-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-blue-button
+                                buttonLabel="Pesquisar"
+                                buttonIcon="ui-icon-search"
+                                id="idBtnPesquisarComponentTipoFase"
+                                (click)="datatable.refresh(elasticQuery.query)">
+                        </app-blue-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-green-button
+                                buttonLabel="Novo"
+                                id="idBtnNovoComponentTipoFase"
+                                routerLink="/tipoFase/new"
+                                buttonIcon="ui-icon-add">
+                        </app-green-button>
+                    </div>
+                </div>
+
+                <basis-datatable
+                        [url]="searchUrl"
+                        (dblclick)="onRowDblclick($event)"
+                        (buttonClick)="datatableClick($event)"
+                        [rows]="20"
+                        [rowsPerPageOptions]="rowsPerPageOptions"
+                        id="idTabelaComponentTipoFase"
+                        [showPaginationFooter]="true"
+                        #datatable>
+                    <p-column header="Código" field="id" id="idCodigoTabelaComponentTipoFase"
+                              [sortable]="true"></p-column>
+                    <p-column header="Nome" field="nome" id="idNomeTabelComponentTipoFase" [sortable]="true"></p-column>
+                </basis-datatable>
+
+                <div class="ui-g-12 ui-md-2">
+                    <app-botoes-exportacao resourceName="tipoFase" id="idBtnExportacaoComponentTipoFase">
+                    </app-botoes-exportacao>
+                </div>
+
             </div>
         </div>
-
-        <basis-datatable 
-          [url]="searchUrl"
-          (buttonClick)="datatableClick($event)" 
-          [rows]="20"
-          [rowsPerPageOptions]="rowsPerPageOptions"
-          [showPaginationFooter]="true"
-          #datatable>
-          <p-column header="Código" field="id" [sortable]="true"></p-column>
-          <p-column header="Nome" field="nome" [sortable]="true"></p-column>
-        </basis-datatable>
-
-        <div class="ui-g-12 ui-md-2">
-          <app-botoes-exportacao resourceName="tipoFase" >
-          </app-botoes-exportacao>
-      </div>
-
-      </div>
     </div>
-  </div>
 </div>
 <p-confirmDialog header="Confirmação" #dialog>
-  <p-footer>
-    <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-    <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
-  </p-footer>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"
+                id="idBtnNaoComponentTipoFase"></button>
+        <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"
+                id="idBtnSimComponentTipoFase"></button>
+    </p-footer>
 </p-confirmDialog>

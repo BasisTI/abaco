@@ -14,7 +14,7 @@ export class OrganizacaoDetailComponent implements OnInit, OnDestroy {
 
   organizacao: Organizacao;
   private subscription: Subscription;
-  public logo: Blob;
+  public logo: File;
 
   constructor(
     private organizacaoService: OrganizacaoService,
@@ -31,9 +31,12 @@ export class OrganizacaoDetailComponent implements OnInit, OnDestroy {
   load(id) {
     this.organizacaoService.find(id).subscribe((organizacao) => {
       this.organizacao = organizacao;
-      // this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
-        
-      // })
+
+
+      this.uploadService.getLogo(organizacao.logoId).subscribe(response => {
+        this.logo = response.logo;
+       
+      })
     });
   }
 

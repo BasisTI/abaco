@@ -12,6 +12,6 @@ export const environment = {
     logoutUrl: '/',
     userStorage: localStorage,
     userStorageIndex: 'user',
-    publicUrls: ['/api/authenticate'],
+    publicUrls: ['/api/authenticate']
   }
 };

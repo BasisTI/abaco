@@ -5,33 +5,23 @@
             <div class="ui-g">
                 <div class="ui-g-12">
                     <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
-                        <div class="ui-md-2">
+                        <div class="ui-md-2" *ngIf="!isView">
                             <app-green-button
                                     buttonLabel="Novo"
+                                    id="idNovoFormFuncaoDados"
                                     buttonIcon="ui-icon-add"
                                     (click)="openDialog(false)">
                             </app-green-button>
                         </div>
                     </div>
 
-                    <!-- TABELA DE FUNÇÕES ADICIONADOAS  -->
-                    <div class="ui-g" *ngIf="funcoesDados.length > 0">
-                        <hr>
-                        <div class="ui-g-12">
-                            <label>Colunas:</label>
-                            <p-multiSelect
-                                    [options]="colunasOptions"
-                                    [ngModel]="colunasAMostrar"
-                                    (ngModelChange)="ordenarColunas($event)"
-                                    dataKey="index"
-                                    [maxSelectedLabels]="colunasOptions.length">
-                            </p-multiSelect>
-                        </div>
-                    </div>
-
                     <div>
                         <app-memory-datatable
+                                [disableDelete]="this.isView"
+                                [disableEdit]="this.isView"
+                                [disableClone]="this.isView"
                                 [value]="funcoesDados"
+                                id="idTabelaFuncaoDados"
                                 (buttonClick)="datatableClick($event)"
                                 [responsive]="true"
                                 scrollable="true"
@@ -137,21 +127,70 @@
                     [contentStyle]="{'height': ['windowHeightDialog']}"
                     [width]="[windowWidthDialog]">
 
-                <div class="ui-g">
-                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                        <label>Nome *</label>
-                        <p-autoComplete
-                                [(ngModel)]="currentFuncaoDados.name"
-                                [suggestions]="sugestoesAutoComplete"
-                                (completeMethod)="autoCompleteNomes($event)"
-                                (onSelect)="recuperarNomeSelecionado($event.value)">
-                        </p-autoComplete>
-                        <div *ngIf="nomeInvalido"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
+                <div *ngIf="!isEdit">
+                    <div class="ui-g" *ngIf="!showMultiplos">
+                        <div class="ui-g-9">
+                            <label>Nome *</label>
+                            <p-autoComplete
+                                    [(ngModel)]="currentFuncaoDados.name"
+                                    [suggestions]="baselineResults"
+                                    id="idNomeFormFuncaoDados"
+                                    (completeMethod)="searchBaseline($event)"
+                                    field="name"
+                                    (onSelect)="recuperarNomeSelecionado($event)">
+                            </p-autoComplete>
+                            <div *ngIf="nomeInvalido"
+                                 class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </div>
+                        <div class="ui-g-3">
+                            <app-blue-button
+                                    buttonLabel="Múltiplos"
+                                    id="idBtnMultiplosFormFuncaoDados"
+                                    (click)="buttonMultiplos()">
+                            </app-blue-button>
+                        </div>
+                    </div>
+
+
+                    <div class="ui-g" *ngIf="showMultiplos">
+                        <div class="ui-g-9">
+                            <label>Nomes *</label>
+                            <textarea pInputTextarea
+                                      [(ngModel)]="text"
+                                      style="white-space: nowrap; overflow: auto;"
+                                      [autoResize]="false"
+                                      id="idNomesFormFuncaoDados"
+                                      (keyup.enter)="textChanged()"
+                                      (keyup.backspace)="textChanged()"
+                                      (keyup.delete)="textChanged()"
+                                      (change)="textChanged()"
+                                      [rows]="6" [cols]="180"
+                                      name="{{ label }}">
+                         </textarea>
+                        </div>
+                        <div class="ui-g-3">
+                            <app-blue-button
+                                    buttonLabel="Unitário"
+                                    id="idBtnUnitarioFormFuncaoDados"
+                                    (click)="buttonMultiplos()">
+                            </app-blue-button>
                         </div>
                     </div>
                 </div>
+
+                <div *ngIf="isEdit">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                            <label>Nomes *</label>
+                            <input type="text" class="ui-inputtext"
+                                    id="idNomesEditFormFuncaoDados"
+                                   [(ngModel)]="currentFuncaoDados.name">
+                        </div>
+                    </div>
+                </div>
+
 
                 <app-analise-modulo-funcionalidade
                         [isFuncaoDados]="true"
@@ -165,6 +204,7 @@
                         <p-dropdown
                                 [filter]="true"
                                 [options]="classificacoes"
+                                id="idClassificacoesFormFuncaoDados"
                                 [(ngModel)]="currentFuncaoDados.tipo"
                                 placeholder="Selecione uma Classificação"
                                 name="classificacao"
@@ -182,6 +222,7 @@
                         <p-dropdown
                                 [filter]="true"
                                 [options]="impacto"
+                                id="idImpactoFormFuncaoDados"
                                 [(ngModel)]="currentFuncaoDados.impacto"
                                 placeholder="Selecione..."
                                 name="impacto"
@@ -203,6 +244,7 @@
                                 [options]="fatoresAjuste"
                                 [(ngModel)]="currentFuncaoDados.fatorAjuste"
                                 [disabled]="!isContratoSelected()"
+                                id="idDeflatorFormFuncaoDados"
                                 [placeholder]="fatoresAjusteDropdownPlaceholder()"
                                 (onChange)="contratoSelecionado()"
                                 name="fatorAjuste"
@@ -218,7 +260,8 @@
                     <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
                         <label>Quantidade</label>
                         <input type="number" class="ui-inputtext" min="1"
-                               [(ngModel)]="currentFuncaoDados.quantidade">
+                               [(ngModel)]="currentFuncaoDados.quantidade"
+                               id="idQuantidadeFormFuncaoDados">
                         <div *ngIf="erroUnitario"
                              class="ui-message ui-messages-error">
                             Campo obrigatório.
@@ -232,7 +275,8 @@
                     <h2>RLR (TR)</h2>
                     <app-analise-der-chips
                             [(values)]="rlrsChips"
-                            (onChange)="adicionar()">
+                            (onChange)="adicionar()"
+                            id="idRLRFormFuncaoDados">
                     </app-analise-der-chips>
                     <div *ngIf="erroTR"
                          class="ui-message ui-messages-error">
@@ -245,6 +289,7 @@
                     <h2>DER (TD)</h2>
                     <app-analise-der-chips
                             [(values)]="dersChips"
+                            id="idDERFormFuncaoDados"
                             (onChange)="adicionar()">
                     </app-analise-der-chips>
                     <div *ngIf="erroTD"
@@ -258,6 +303,7 @@
                     <span class="md-inputfield">
                 <textarea
                         [rows]="3"
+                        id="idFundamentacaoFormFuncaoDados"
                         [cols]="180"
                         pInputTextarea name="funcaoDadosSustentacao"
                         [(ngModel)]="currentFuncaoDados.sustantation">
@@ -269,6 +315,7 @@
                     <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
                         <app-white-button
                                 buttonLabel="Cancelar"
+                                id="idBtmCancelarFormFuncaoDados"
                                 (click)="cancelar()">
                         </app-white-button>
                     </div>
@@ -276,6 +323,7 @@
                     <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
                         <app-white-button
                                 buttonLabel="Fechar"
+                                id="idBtnFecharFormFuncaoDados"
                                 (click)="cancelar()">
                         </app-white-button>
                     </div>
@@ -283,6 +331,7 @@
                     <div class="ui-md-3 ui-sm-12">
                         <app-blue-button
                                 buttonLabel="Salvar"
+                                id="idSalvarFormFuncaoDados"
                                 buttonIcon="ui-icon-add"
                                 (click)="buttonSaveEdit()">
                         </app-blue-button>

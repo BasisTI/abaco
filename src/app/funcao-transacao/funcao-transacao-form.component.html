@@ -5,9 +5,10 @@
             <div class="ui-g">
                 <div class="ui-g-12">
                     <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
-                        <div class="ui-md-2">
+                        <div class="ui-md-2" *ngIf="!isView">
                             <app-green-button
                                     buttonLabel="Novo"
+                                    id="idBtnNovoFormFuncaoTransacao"
                                     buttonIcon="ui-icon-add"
                                     (click)="openDialog(false)">
                             </app-green-button>
@@ -17,11 +18,21 @@
                     <!-- Inicio da tabela -->
                     <div>
                         <app-memory-datatable
+                                [disableDelete]="this.isView"
+                                [disableEdit]="this.isView"
+                                [disableClone]="this.isView"
+                                id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
                                 [value]="funcoesTransacoes"
                                 (buttonClick)="datatableClick($event)"
                                 [responsive]="true"
                                 scrollable="true"
                                 scrollWidth="100%">
+
+                            <p-column
+                                    field="name"
+                                    header="Nome"
+                                    [style]="{'width': '200px'}">
+                            </p-column>
 
                             <p-column
                                     header="Deflator"
@@ -57,12 +68,6 @@
                                         pTemplate="body">
                                     {{ funcionalidade.nome }}
                                 </ng-template>
-                            </p-column>
-
-                            <p-column
-                                    field="name"
-                                    header="Nome"
-                                    [style]="{'width': '200px'}">
                             </p-column>
 
                             <p-column
@@ -133,20 +138,69 @@
                     [contentStyle]="{'height': ['windowHeightDialog']}"
                     [width]="[windowWidthDialog]">
 
-                <div class="ui-g">
-                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                        <label>Nome do Processo Elementar *</label>
-                        <input
-                                type="text"
-                                name="nomeFuncaoTransacao"
-                                [(ngModel)]="currentFuncaoTransacao.name"
-                                pInputText/>
-                        <div *ngIf="nomeInvalido"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
+                <div *ngIf="!isEdit">
+                    <div class="ui-g" *ngIf="!showMultiplos">
+                        <div class="ui-g-9">
+                            <label>Nome do Processo Elementar *</label>
+                            <p-autoComplete
+                                    [(ngModel)]="currentFuncaoTransacao.name"
+                                    [suggestions]="baselineResultados"
+                                    id="idNomeProcessoElementarFormFuncaoTransacao"
+                                    (completeMethod)="searchBaseline($event)"
+                                    field="name"
+                                    (onSelect)="recuperarNomeSelecionado($event)">
+                            </p-autoComplete>
+                            <div *ngIf="nomeInvalido"
+                                 class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </div>
+                        <div class="ui-g-3">
+                            <app-blue-button
+                                    buttonLabel="Múltiplos"
+                                    id="idBtnMultiplosFormFuncaoTransacao"
+                                    (click)="buttonMultiplos()">
+                            </app-blue-button>
+                        </div>
+                    </div>
+
+                    <div class="ui-g" *ngIf="showMultiplos">
+                        <div class="ui-g-9">
+                            <label>Nomes *</label>
+                            <textarea pInputTextarea
+                                      [(ngModel)]="text"
+                                      style="white-space: nowrap; overflow: auto;"
+                                      [autoResize]="false"
+                                      (keyup.enter)="textChanged()"
+                                      id="idNomesFormFuncaoTransacao"
+                                      (keyup.backspace)="textChanged()"
+                                      (keyup.delete)="textChanged()"
+                                      (change)="textChanged()"
+                                      [rows]="6" [cols]="180"
+                                      name="{{ label }}">
+                         </textarea>
+                        </div>
+                        <div class="ui-g-3">
+                            <app-blue-button
+                                    buttonLabel="Unitário"
+                                    id="idUnitarioFormFuncaoTransacao"
+                                    (click)="buttonMultiplos()">
+                            </app-blue-button>
                         </div>
                     </div>
                 </div>
+
+                <div *ngIf="isEdit">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                            <label>Nomes *</label>
+                            <input type="text" class="ui-inputtext"
+                                   id="idNomesFormFuncaoTransacao"
+                                   [(ngModel)]="currentFuncaoTransacao.name">
+                        </div>
+                    </div>
+                </div>
+
 
                 <app-analise-modulo-funcionalidade
                         [isFuncaoDados]="false"
@@ -160,6 +214,7 @@
                         <p-dropdown
                                 [filter]="true"
                                 [options]="classificacoes"
+                                id="idClassificacoesFormFuncaoTransacao"
                                 [(ngModel)]="currentFuncaoTransacao.tipo"
                                 placeholder="Selecione uma Classificação"
                                 name="classificacao"
@@ -180,6 +235,7 @@
                                 [(ngModel)]="currentFuncaoTransacao.impacto"
                                 placeholder="Selecione..."
                                 name="impacto"
+                                id="idImpactoFormFuncaoTransacao"
                                 [autoWidth]="false"
                                 (onChange)="impactoValido()">
                         </p-dropdown>
@@ -196,6 +252,7 @@
                         <p-dropdown
                                 [filter]="true"
                                 [options]="fatoresAjuste"
+                                id="idDeflatorFormFuncaoTransacao"
                                 [(ngModel)]="currentFuncaoTransacao.fatorAjuste"
                                 [disabled]="!isContratoSelected()"
                                 [placeholder]="fatoresAjusteDropdownPlaceholder()"
@@ -213,6 +270,7 @@
                     <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
                         <label>Quantidade</label>
                         <input type="number" class="ui-inputtext" min="1"
+                                id="idQuantidadeFormFuncaoTransacao"
                                [(ngModel)]="currentFuncaoTransacao.quantidade">
                         <div *ngIf="erroUnitario"
                              class="ui-message ui-messages-error">
@@ -227,6 +285,7 @@
                     <h2>FTR (AR)</h2>
                     <app-analise-der-chips
                             [(values)]="alrsChips"
+                            id="idFTRFormFuncaoTransacao"
                             [relacionarDers]="true"
                             (dersReferenciadosEvent)="dersReferenciados($event)">
                     </app-analise-der-chips>
@@ -239,7 +298,7 @@
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
                     <h2>DER (TD)</h2>
-                    <app-analise-der-chips [(values)]="dersChips"></app-analise-der-chips>
+                    <app-analise-der-chips id="idDERFormFuncaoTransacao"[(values)]="dersChips"></app-analise-der-chips>
                     <div *ngIf="erroTD"
                          class="ui-message ui-messages-error">
                         Campo obrigatório.
@@ -251,6 +310,7 @@
                     <span class="md-inputfield">
                 <textarea
                         [rows]="3"
+                        id="idFundamentacaoFormFuncaoTransacao"
                         [cols]="180"
                         pInputTextarea name="funcaoDadosSustentacao"
                         [(ngModel)]="currentFuncaoTransacao.sustantation">
@@ -262,6 +322,7 @@
                     <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
                         <app-white-button
                                 buttonLabel="Cancelar"
+                                id="idBtnCancelarFormFuncaoTransacao"
                                 (click)="cancelar()">
                         </app-white-button>
                     </div>
@@ -269,6 +330,7 @@
                     <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
                         <app-white-button
                                 buttonLabel="Fechar"
+                                id="idBtnFecharFormFuncaoTransacao"
                                 (click)="cancelar()">
                         </app-white-button>
                     </div>
@@ -276,6 +338,7 @@
                     <div class="ui-md-3 ui-sm-12">
                         <app-blue-button
                                 buttonLabel="Salvar"
+                                id="idBtnSalvarFormFuncaoTransacao"
                                 buttonIcon="ui-icon-add"
                                 (click)="buttonSaveEdit()">
                         </app-blue-button>

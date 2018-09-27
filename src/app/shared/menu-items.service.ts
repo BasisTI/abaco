@@ -2,7 +2,8 @@ import {MenuItem} from 'primeng/primeng';
 import {Injectable} from '@angular/core';
 import {AuthService} from '@basis/angular-components';
 import {User} from '../user';
-import {ADMIN_ROLE} from './constants';
+import {SenhaComponent} from '../senha';
+import {ADMIN_ROLE, ROLE_ANALISTA, ROLE_USER, ROLE_VIEW} from './constants';
 
 @Injectable()
 export class MenuItemsService {
@@ -23,7 +24,7 @@ export class MenuItemsService {
             },
             {
                 label: 'Cadastros Básicos', icon: 'description',
-                visible: this.authService.isAuthenticated(),
+                visible: this.isLoggedCadastrosBasicos(),
                 items: [
                     {label: 'Tipo de Fase', routerLink: 'tipoFase', icon: 'beenhere'},
                     {label: 'Manual', routerLink: 'manual', icon: 'description'},
@@ -41,19 +42,26 @@ export class MenuItemsService {
                     // { label: 'Validação' }
                 ]
             },
-            // {
-            // label: 'Configuração', icon: 'settings',
-            // visible: this.authService.isAuthenticated(),
-            // items: [
-            // {label: 'Reindexar', routerLink: 'elasticsearch', icon: 'refresh' },
-            // {label: 'Alterar Senha', routerLink: '' }
-            // ]
-            // }
+            {
+                label: 'Configuração', icon: 'settings',
+                visible: this.authService.isAuthenticated(),
+                items: [
+                    // {label: 'Reindexar', routerLink: 'elasticsearch', icon: 'refresh' },
+                    {label: 'Editar usuário', routerLink: `usuario/edit`, icon: 'tag_faces'},
+                    {label: 'Alterar Senha', routerLink: `senha`, icon: 'security'}
+                ]
+            }
         ];
     }
 
     private isLoggedAdmin(): boolean {
         return this.authService.isAuthenticated && this.authService.hasRole(ADMIN_ROLE);
+    }
+
+    private isLoggedCadastrosBasicos(): boolean {
+        return this.authService.hasRole(ADMIN_ROLE)
+            || this.authService.hasRole(ROLE_USER)
+            || this.authService.hasRole(ROLE_VIEW);
     }
 
 }

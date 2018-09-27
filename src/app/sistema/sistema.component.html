@@ -10,9 +10,11 @@
         <div class="ui-g-4 ui-md-4 ui-sm-12">
           <span class="md-inputfield">
             <input 
-              type="text" 
+              type="text"
+              (click)="switchUrlSigla()" 
               pInputText class="ui-inputtext" 
               [(ngModel)]="searchParams.sigla"
+              id="idSiglaComponentSistema"
               (keyup.enter)="performSearch()"
               #filter />
             <label>Sigla</label>
@@ -22,8 +24,10 @@
         <div class="ui-g-4 ui-md-4 ui-sm-12">
           <span class="md-inputfield">
             <input 
-              type="text" 
+              type="text"
+              (click)="switchUrlNomeSistema()"
               pInputText class="ui-inputtext" 
+              id="idNomeSistemaComponentSistema"
               [(ngModel)]="searchParams.nomeSistema"
               (keyup.enter)="performSearch()"
               #filter />
@@ -34,7 +38,9 @@
         <div class="ui-g-4 ui-md-4 ui-sm-12">
           <p-dropdown 
             [filter]="true"
+            (click)="switchUrlOrganizacao()"
             [options]="organizations" 
+            id="idOrganizacaoComponentSistema"
             optionLabel="nome" 
             [(ngModel)]="searchParams.organizacao" 
             [autoWidth]="false" 
@@ -49,7 +55,8 @@
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-white-button 
               buttonLabel="Limpar Pesquisa" 
-              buttonIcon="ui-icon-clear-all" 
+              id="idBtnLimparPesquisaComponentSistema"
+              buttonIcon="ui-icon-clear-all"
               (click)="limparPesquisa()">
             </app-white-button>
           </div>
@@ -57,6 +64,7 @@
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-blue-button 
               buttonLabel="Pesquisar" 
+              id="idBtnPesquisarComponentSistema"
               buttonIcon="ui-icon-search" 
               (click)="performSearch()">
             </app-blue-button>
@@ -65,6 +73,7 @@
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-green-button 
               buttonLabel="Novo" 
+              id="idBtnNovoComponentSistema"
               routerLink="/sistema/new" 
               buttonIcon="ui-icon-add">
             </app-green-button>
@@ -73,7 +82,9 @@
 
         <basis-datatable 
           [url]="searchUrl"
+          (dblclick)="onRowDblclick($event)"
           (buttonClick)="datatableClick($event)"
+          id="idTabelaComponentSistema"
           [rows]="20"
           [rowsPerPageOptions]="rowsPerPageOptions"
           [showPaginationFooter]="true"
@@ -85,7 +96,7 @@
         </basis-datatable>
         
         <div class="ui-g-12 ui-md-2">
-          <app-botoes-exportacao resourceName="sistema" >
+          <app-botoes-exportacao resourceName="sistema" id="idBtnExportacaoComponentSistema">
           </app-botoes-exportacao>
         </div>
 
@@ -99,7 +110,7 @@
 
 <p-confirmDialog header="Confirmação" #dialog>
   <p-footer>
-    <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-    <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+    <button type="button" id="idNaoDeleteComponentSistema" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
+    <button type="button" id="idSimDeleteComponentSistema" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
   </p-footer>
 </p-confirmDialog>

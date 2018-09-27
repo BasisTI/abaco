@@ -1,3 +1,4 @@
+import { FuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
 import { BaseEntity, JSONable } from '../shared';
 import { Funcionalidade } from '../funcionalidade/index';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
@@ -51,6 +52,14 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, 
       this.grossPF = 0;
     }
   }
+
+  static convertJsonToObject(json: any) {
+    const sintetico = Object.create(FuncaoDados.prototype);
+    return Object.assign(sintetico, json, {
+        created: new Date(json.created)
+    });
+
+}
 
   static tipos(): string[] {
     return Object.keys(TipoFuncaoDados).map(k => TipoFuncaoDados[k as any]);

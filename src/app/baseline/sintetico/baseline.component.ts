@@ -22,6 +22,8 @@ export class BaselineComponent implements OnInit {
     elasticQuery: ElasticQuery = new ElasticQuery();
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
     rowsPerPageOptions: number[] = [5, 10, 20];
+    public urlBaseLineSintetico;
+    selecionada : boolean;
 
     constructor (
         private router: Router,
@@ -30,7 +32,14 @@ export class BaselineComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.urlBaseLineSintetico = this.baselineService.sinteticosUrl;
         this.carregarDataTable();
+        this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
+            this.selecionada = false;
+        });
+        this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
+            this.selecionada = true;
+        });
     }
 
     public carregarDataTable() {
@@ -45,9 +54,16 @@ export class BaselineComponent implements OnInit {
         }
         switch (event.button) {
             case 'view':
-                this.router.navigate(['/baseline', event.selection.idsistema]);
+                this.router.navigate(['/baseline', event.selection.idsistema, event.selection.equipeResponsavelId]);
+                break;
+            case 'geraBaselinePdfBrowser' :
+                this.geraBaselinePdfBrowser(event.selection.idsistema);
                 break;
         }
+    }
+
+    public geraBaselinePdfBrowser(id) {
+        this.baselineService.geraBaselinePdfBrowser(id);
     }
 
 

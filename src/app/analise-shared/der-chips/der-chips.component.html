@@ -31,6 +31,7 @@
     <button 
       pButton 
       type="button"
+      id="idBtnAdicionarMultiplosComponentDerChips"
       class="blue-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
       label="Adicionar Múltiplos"
       (click)="abrirDialogAddMultiplos()">
@@ -41,6 +42,7 @@
     <button 
       pButton 
       type="button"
+      id="idBtnLimparMultiplosComponentDerChips"
       label="Limpar"
       (click)="limparMultiplos()">
     </button>
@@ -63,14 +65,24 @@
 <p-dialog 
   header="Adicionar múltiplos"
   [(visible)]="mostrarDialogAddMultiplos"
+  id="idAdicionarMultiplosComponentDerChips"
   [contentStyle]="{'overflow': 'visible'}"
   [width]="800">
 
   <div class="ui-g">
     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
       <app-analise-der-text 
-        [(value)]="addMultiplosTexto">
+        [(value)]="addMultiplosTexto"
+        id="idAddMultiplosComponentDerChips">
       </app-analise-der-text>
+        <div *ngIf="validaMultiplos"
+          class="ui-message ui-messages-error">
+            O campo possui valores duplicado!
+        </div>
+        <div *ngIf="validaMultiplosRegistrados"
+          class="ui-message ui-messages-error">
+            Registro já cadastrado!
+        </div>
     </div>
 
     <div class="ui-g ui-md-12" style="justify-content: flex-end">
@@ -78,6 +90,7 @@
         <button
           pButton
           type="button"
+          id="idBtnCancelarComponentDerChips"
           class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
           label="Cancelar" 
           (click)="fecharDialogAddMultiplos()">
@@ -88,8 +101,9 @@
         <button
           pButton
           type="button"
+          id="idBtnAdicionarComponentDerChips"
           class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Adicionar" 
+          label="Adicionar"
           (click)="adicionarMultiplos()">
         </button>
       </div>
@@ -108,6 +122,7 @@
     <textarea 
       pInputTextarea
       [(ngModel)]="textoEdicao"
+      id="idTextoEdicaoComponentDerChips"
       style="white-space: nowrap; overflow: auto;"
       [rows]="1" 
       [cols]="180">
@@ -118,6 +133,7 @@
         <button 
           pButton 
           type="button"
+          id="idBtnCancelarDialogComponentDerChips"
           class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
           label="Cancelar" 
           (click)="fecharDialogEdicao()">
@@ -129,7 +145,8 @@
           pButton
           type="button"
           class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Editar" 
+          label="Editar"
+          id="idBtnEditarComponentDerChips" 
           (click)="editarChip()">
         </button>
       </div>

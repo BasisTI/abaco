@@ -14,6 +14,7 @@
                                     <p-dropdown
                                             [filter]="true"
                                             dataKey="id"
+                                            id="idOrganizacaoSaveFormAnalise"
                                             name="organizacao"
                                             optionLabel="nome"
                                             placeholder="Selecione..."
@@ -29,6 +30,7 @@
                                     <p-dropdown
                                             [filter]="true"
                                             dataKey="id"
+                                            id="idSistemaSaveFormAnalise"
                                             optionLabel="sigla"
                                             disabled="{{ !disabledSistemaDropdown() }}"
                                             placeholder="{{ sistemaDropdownPlaceholder() }}"
@@ -45,6 +47,7 @@
                                     <p-dropdown
                                             [filter]="true"
                                             dataKey="id"
+                                            id="idEquipeResponsavelSaveFormAnalise"
                                             name="equipeResponsavel"
                                             optionLabel="nome"
                                             placeholder="Selecione..."
@@ -60,6 +63,7 @@
 
                                         <app-white-button
                                                 buttonLabel="Cancelar"
+                                                id="idBtnCancelarSaveFormAnalise"
                                                 routerLink="/analise">
                                         </app-white-button>
 
@@ -81,6 +85,7 @@
                                         <p-dropdown
                                                 [filter]="true"
                                                 dataKey="id"
+                                                id="idOrganizacaoEditFormAnalise"
                                                 name="organizacao"
                                                 optionLabel="nome"
                                                 placeholder="Selecione..."
@@ -96,6 +101,7 @@
                                         <p-dropdown
                                                 [filter]="true"
                                                 dataKey="id"
+                                                id="idEquipeResponsavelEditFormAnalise"
                                                 name="equipeResponsavel"
                                                 optionLabel="nome"
                                                 placeholder="Selecione..."
@@ -114,6 +120,7 @@
                                                 dataKey="id"
                                                 optionLabel="sigla"
                                                 disabled="true"
+                                                id="idSistemaEditFormAnalise"
                                                 placeholder="{{ sistemaDropdownPlaceholder() }}"
                                                 (onChange)="getSistemaSelecionado()"
                                                 name="sistema"
@@ -138,9 +145,9 @@
                                                 required
                                                 type="text"
                                                 maxlength="100"
+                                                id="idIdentificadorAnaliseFormAnalise"
                                                 name="identificadorAnalise"
                                                 [(ngModel)]="analise.identificadorAnalise"
-                                                (change)="save()"
                                                 pInputText/>
                                         <label>Identificador da Analise *</label>
                                     </span>
@@ -151,6 +158,7 @@
                                     <p-dropdown
                                             [filter]="true"
                                             required
+                                            id="idContratoFormAnalise"
                                             dataKey="id"
                                             optionLabel="numeroContrato"
                                             placeholder="Selecione..."
@@ -167,13 +175,12 @@
                                     <p-dropdown
                                             [filter]="true"
                                             required
-                                            (click)="!disabledFuncaoTransacao()"
+                                            id="idMetodoContagemFormAnalise"
                                             placeholder="{{ needContratoDropdownPlaceholder() }}"
                                             name="metodoContagem"
                                             [options]="metodosContagem"
                                             [(ngModel)]="analise.metodoContagem"
-                                            [autoWidth]="false"
-                                            (onChange)="save()">
+                                            [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
 
@@ -182,12 +189,12 @@
                                     <p-dropdown
                                             [filter]="true"
                                             required
+                                            id="idTipoContagemFormAnalise"
                                             name="tiposAnalise"
                                             placeholder="Selecione..."
                                             [options]="tiposAnalise"
                                             [(ngModel)]="analise.tipoAnalise"
-                                            [autoWidth]="false"
-                                            (onChange)="save()">
+                                            [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
 
@@ -196,13 +203,13 @@
                                     <p-dropdown
                                             [filter]="true"
                                             required
+                                            id="idDeflatorFormAnalise"
                                             disabled="{{ !isContratoSelected() }}"
                                             placeholder="{{ needContratoDropdownPlaceholder() }}"
                                             name="fatorAjuste"
                                             [options]="fatoresAjuste"
                                             [(ngModel)]="analise.fatorAjuste"
-                                            [autoWidth]="false"
-                                            (onChange)="save()">
+                                            [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
 
@@ -211,6 +218,7 @@
                                         <input
                                                 required
                                                 type="text"
+                                                id="idManual"
                                                 maxlength="100"
                                                 name="manualContrato"
                                                 disabled="true"
@@ -225,7 +233,7 @@
                                     <span class="md-inputfield">
                                         <textarea
                                                 pInputTextarea name="propositoContagem"
-                                                (change)="save()"
+                                                id="idPropositoContagemFormAnalise"
                                                 [(ngModel)]="analise.propositoContagem">
                                         </textarea>
                                     </span>
@@ -236,7 +244,7 @@
                                     <span class="md-inputfield">
                                         <textarea
                                                 pInputTextarea name="escopo"
-                                                (change)="save()"
+                                                id="idEscopoContagemFormAnalise"
                                                 [(ngModel)]="analise.escopo">
                                         </textarea>
                                     </span>
@@ -247,7 +255,7 @@
                                     <span class="md-inputfield">
                                         <textarea
                                                 pInputTextarea name="fronteiras"
-                                                (change)="save()"
+                                                id="idFronteirasFormAnalise"
                                                 [(ngModel)]="analise.fronteiras">
                                         </textarea>
                                     </span>
@@ -258,8 +266,8 @@
                                     <span class="md-inputfield">
                                         <textarea
                                                 required
-                                                pInputTextarea name="documentacao"
-                                                (change)="save()"
+                                                pInputTextarea name="documentacao"                                          pInputTextarea name="documentacao"
+                                                id="idDocumentacaoFormAnalise"
                                                 [(ngModel)]="analise.documentacao">
                                         </textarea>
                                     </span>
@@ -276,9 +284,9 @@
                                         <p-radioButton
                                                 name="baseline_imediatamente"
                                                 label="Sim"
+                                                id="idAguardarPrazoGarantiaSimFormAnalise"
                                                 [value]="true"
-                                                [(ngModel)]="analise.baselineImediatamente"
-                                                (onClick)="save()">
+                                                [(ngModel)]="aguardarGarantia">
                                         </p-radioButton>
                                     </div>
 
@@ -286,8 +294,37 @@
                                         <p-radioButton
                                                 name="baseline_imediatamente"
                                                 label="Não"
+                                                id="idAguardarPrazoGarantiaNaoFormAnalise"
                                                 [value]="false"
-                                                [(ngModel)]="analise.baselineImediatamente"
+                                                [(ngModel)]="analise.baselineImediatamente">
+                                        </p-radioButton>
+                                    </div>
+
+                                </div>
+
+                                <div class="ui-g-4 ui-md-6 ui-sm-12" [hidden]="validacaoCampos">
+
+                                    <div class="ui-g-6 ui-md-6 ui-sm-12">
+                                        Enviar para Baseline?
+                                    </div>
+                                    <div class="ui-g-3 ui-md-2 ui-sm-12" >
+                                        <p-radioButton
+                                                name="baseline_enviar_baseline"
+                                                label="Sim"
+                                                id="idEnviarBaselineSimFormAnalise"
+                                                [value]="true"
+                                                [(ngModel)]="analise.enviarBaseline"
+                                                (onClick)="save()">
+                                        </p-radioButton>
+                                    </div>
+
+                                    <div class="ui-g-3 ui-md-2 ui-sm-12">
+                                        <p-radioButton
+                                                name="baseline_enviar_baseline"
+                                                label="Não"
+                                                id="idEnviarBaselineNaoFormAnalise"
+                                                [value]="false"
+                                                [(ngModel)]="analise.enviarBaseline"
                                                 (onClick)="save()">
                                         </p-radioButton>
                                     </div>
@@ -299,16 +336,15 @@
                                         <p-calendar
                                                 name="dataHomol"
                                                 [(ngModel)]="analise.dataHomologacao"
-                                                dateFormat="dd/mm/yy"
-                                                (onSelect)="save()">
+                                                id="idDataHomolagacaoFormAnalise"
+                                                dateFormat="dd/mm/yy">
                                         </p-calendar>
                                         <label>Data da homologação (software) {{analise.baselineImediatamente ? " *" : null}}</label>
                                     </span>
-
-                                    <div *ngIf="analise.baselineImediatamente && !(analise.dataHomologacao)"
+                                    <!-- <div *ngIf="analise.dataHomologacao"
                                          class="ui-message ui-messages-error">
                                         Campo Obrigatório!
-                                    </div>
+                                    </div> -->
 
                                 </div>
 
@@ -317,6 +353,7 @@
                                             dataKey="id"
                                             emptyMessage="Selecione um Contrato para escolher Fases"
                                             [value]="esforcoFases"
+                                            id="idTabelaFases"
                                             [(selection)]="analise.esforcoFases"
                                             (onHeaderCheckboxToggle)="save()"
                                             (onRowSelect)="save()"
@@ -352,10 +389,10 @@
                                     <span class="md-inputfield">
                                         <textarea
                                                 [rows]="3"
+                                                id="idObservacoesFormAnalise"
                                                 [cols]="180"
                                                 autoResize=true
                                                 pInputTextarea name="observacoes"
-                                                (change)="save()"
                                                 [(ngModel)]="analise.observacoes">
                                         </textarea>
                                     </span>
@@ -365,9 +402,17 @@
                             <div class="ui-g-2 ui-md-2 ui-sm-12" style="margin-bottom: 25px">
                                 <app-white-button
                                         buttonLabel="Voltar"
+                                        id="idBtnVoltarFormAnalise"
                                         routerLink="/analise">
                                 </app-white-button>
-
+                            </div>
+                            <div class="ui-g-2 ui-md-2 ui-sm-12" style="margin-bottom: 25px">    
+                                <app-green-button 
+                                    type="submit" 
+                                    id="idBtnSalvarFormAnalise"
+                                    buttonLabel="Salvar"
+                                    (click)="save()">
+                                </app-green-button>
                             </div>
 
                         </div>
@@ -378,23 +423,107 @@
     </p-tabPanel>
 
     <p-tabPanel
+            [disabled]="disableAba"
             header="Funções de Dados"
             *ngIf="isEdicao">
-        <app-analise-funcao-dados></app-analise-funcao-dados>
+        <app-analise-funcao-dados [isView]="!this.isEdicao"></app-analise-funcao-dados>
+        <app-white-button
+            buttonLabel="Voltar"
+            routerLink="/analise">
+        </app-white-button>
     </p-tabPanel>
 
     <p-tabPanel
             [disabled]="!disableFuncaoTrasacao"
             header="Funções de Transação"
             *ngIf="isEdicao">
-        <app-analise-funcao-transacao></app-analise-funcao-transacao>
+        <app-analise-funcao-transacao [isView]="!this.isEdicao"></app-analise-funcao-transacao>
+        <app-white-button
+            buttonLabel="Voltar"
+            routerLink="/analise">
+        </app-white-button>
     </p-tabPanel>
 
     <p-tabPanel
+            [disabled]="disableAba"
             header="Resumo"
             *ngIf="isEdicao">
         <app-analise-resumo></app-analise-resumo>
+        <app-white-button
+            buttonLabel="Voltar"
+            routerLink="/analise">
+        </app-white-button>
+        <app-gray-button
+            buttonLabel="Gerar Relatório"
+            (click)="geraRelatorioPdfDetalhadoBrowser()">
+        </app-gray-button>
+        <app-red-button
+            buttonLabel="Bloquear Análise"
+            (click)="bloquearAnalise()">
+        </app-red-button>
+        <app-blue-button
+            buttonLabel="Compartilhar Análise"
+            (click)="openCompartilharDialog()">
+        </app-blue-button>
     </p-tabPanel>
+
+    <p-dialog header="Compartilhar Análise" [(visible)]="mostrarDialog" [width]="800" [modal]="true" (onHide)="limparSelecaoCompartilhar()">
+        <p-dataTable
+        [(value)]="equipeShare"
+        [headerCheckboxToggleAllPages]="true"
+        [(selection)]="selectedEquipes"
+        dataKey="equipeId">
+
+            <p-column
+                selectionMode="multiple"
+                [style]="{'width':'10%'}">
+            </p-column>
+
+            <p-column
+                header="Equipe"
+                field="nomeEquipe">
+            </p-column>
+
+            <p-column
+                header="Somente visualizar?"
+                field="viewOnly"
+                [style]="{'width':'12%'}">
+                <ng-template let-col let-equipeShare="rowData" pTemplate="body">
+                    <p-toggleButton [(ngModel)]="equipeShare.viewOnly" onLabel="Sim" offLabel="Não"></p-toggleButton>
+                </ng-template>
+            </p-column>
+        </p-dataTable>
+
+        <app-green-button buttonLabel="Adicionar" (click)="salvarCompartilhar()" style="float:right; margin-top: 5px"></app-green-button>
+        <br/>
+        <br/>
+
+        <hr/>
+        <h3>Compartilhada com:</h3>
+        <p-dataTable
+        [(value)]="analise.compartilhadas"
+        selectionMode="single"
+        [(selection)]="selectedToDelete"
+        dataKey="equipeId">
+            <p-column
+                header="Equipe"
+                field="nomeEquipe">
+            </p-column>
+
+            <p-column
+                header="Somente visualizar?"
+                field="viewOnly"
+                [style]="{'width':'12%'}">
+                <ng-template let-col let-analiseTemp="rowData" pTemplate="body">
+                    <p-toggleButton [(ngModel)]="analiseTemp.viewOnly" onLabel="Sim" offLabel="Não" (onChange)="updateViewOnly()"></p-toggleButton>
+                </ng-template>
+            </p-column>
+        </p-dataTable>
+
+        <app-red-button buttonLabel="Remover" (click)="deletarCompartilhar()" style="float:right; margin-top: 5px"></app-red-button>
+
+    </p-dialog>
+
 </p-tabView>
 
 <!-- Dialog confirmação deleção -->

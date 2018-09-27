@@ -1,12 +1,17 @@
-import {Component, OnInit, ChangeDetectorRef, OnDestroy} from '@angular/core';
-import {AnaliseSharedDataService, PageNotificationService} from '../shared';
+import {EntityToJSON} from './../shared/entity-to-json';
+import {Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import {FuncaoDados} from './funcao-dados.model';
-import {Analise, AnaliseService} from '../analise';
 import {FatorAjuste} from '../fator-ajuste';
+import {FuncaoAnalise} from './../analise-shared/funcao-analise';
+import {BaselineAnalitico} from './../baseline/baseline-analitico.model';
+import {BaselineService} from './../baseline/baseline.service';
+import {AnaliseSharedDataService, PageNotificationService, ResponseWrapper} from '../shared';
+import {Analise, AnaliseService} from '../analise';
 
 import * as _ from 'lodash';
 import {Funcionalidade} from '../funcionalidade/index';
 import {SelectItem} from 'primeng/primeng';
+import {BlockUI, NgBlockUI} from 'ng-block-ui';
 import {Calculadora} from '../analise-shared/calculadora';
 import {DatatableClickEvent} from '@basis/angular-components';
 import {ConfirmationService} from 'primeng/primeng';
@@ -22,6 +27,9 @@ import {FuncaoDadosService} from './funcao-dados.service';
 import {AnaliseSharedUtils} from '../analise-shared/analise-shared-utils';
 import {Manual} from '../manual';
 import {Modulo} from '../modulo';
+import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
+import {forEach} from '../../../node_modules/@angular/router/src/utils/collection';
+import {Impacto} from '../analise-shared/impacto-enum';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -29,15 +37,28 @@ import {Modulo} from '../modulo';
 })
 export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
+    @Output()
+    valueChange: EventEmitter<string> = new EventEmitter<string>();
+    parseResult: ParseResult;
+    text: string;
+    @Input()
+    label: string;
+
     textHeader: string;
-    isEdit;
+    @Input() isView: boolean;
+    @BlockUI() blockUI: NgBlockUI;      // Usado para bloquear o sistema enquanto aguarda resolução das requisições do backend
+    isEdit: boolean;
     nomeInvalido;
+    isSaving: boolean;
+    listaFD: string[];
     classInvalida;
     impactoInvalido: boolean;
     hideElementTDTR: boolean;
     hideShowQuantidade: boolean;
     showDialog = false;
+    showMultiplos = false;
     sugestoesAutoComplete: string[] = [];
+
     windowHeightDialog: any;
     windowWidthDialog: any;
 
@@ -48,6 +69,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     fatoresAjuste: SelectItem[] = [];
     colunasOptions: SelectItem[];
     colunasAMostrar = [];
+    dadosBaselineFD: BaselineAnalitico[] = [];
+    results: string[];
+    currentFuncaoDadosasdf: FuncaoAnalise;
+    baselineResults: any[] = [];
+    funcoesDadosList: FuncaoDados[] = [];
 
     impacto: SelectItem[] = [
         {label: 'Inclusão', value: 'INCLUSAO'},
@@ -77,7 +103,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         private pageNotificationService: PageNotificationService,
         private changeDetectorRef: ChangeDetectorRef,
         private funcaoDadosService: FuncaoDadosService,
-        private analiseService: AnaliseService
+        private analiseService: AnaliseService,
+        private baselineService: BaselineService
     ) {
         const colunas = [
             {header: 'Nome', field: 'name'},
@@ -103,19 +130,45 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.estadoInicial();
+    }
+
+    estadoInicial() {
+        this.isSaving = false;
         this.hideShowQuantidade = true;
         this.currentFuncaoDados = new FuncaoDados();
         this.subscribeToAnaliseCarregada();
         this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
-        //  this.subscribeToSistemaSelecionado();
-
     }
 
     public buttonSaveEdit() {
+
         if (this.isEdit) {
             this.editar();
         } else {
-            this.adicionar();
+            if (this.showMultiplos) {
+                let retorno = true;
+                for (const nome of this.parseResult.textos) {
+                    this.currentFuncaoDados.name = nome;
+                    if (!this.multiplos()) {
+                        retorno = false;
+                        break;
+                    }
+                }
+                if (retorno) {
+                    this.analise.funcaoDados.concat(this.funcoesDadosList);
+                    this.salvarAnalise();
+                    this.subscribeToAnaliseCarregada();
+                    this.fecharDialog();
+                }
+            } else {
+                if (this.adicionar()) {
+                    this.fecharDialog();
+                }
+            }
+        }
+        if (this.blockUI.isActive) {
+            this.blockUI.stop();
         }
     }
 
@@ -131,6 +184,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         });
     }
 
+    public carregarDadosBaseline() {
+        this.baselineService.baselineAnaliticoFD(this.analise.sistema.id).subscribe((res: ResponseWrapper) => {
+            this.dadosBaselineFD = res.json;
+        });
+    }
+
     private atualizaResumo() {
         this.resumo = this.analise.resumoFuncaoDados;
         this.changeDetectorRef.detectChanges();
@@ -143,6 +202,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             });
     }
 
+    searchBaseline(event): void {
+        this.baselineResults = this.dadosBaselineFD.filter(c => c.name.startsWith(event.query));
+    }
+
     // Carrega nome das funçeõs de dados
     private loadDataFunctionsName() {
         const sistemaId: number = this.analiseSharedDataService.analise.sistema.id;
@@ -150,14 +213,16 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             nomes => {
                 this.nomeDasFuncoesDoSistema = nomes;
                 this.sugestoesAutoComplete = nomes.slice();
+
             });
     }
 
     autoCompleteNomes(event) {
-        const query = event.query;
+
         // TODO qual melhor método? inclues? startsWith ignore case?
         this.sugestoesAutoComplete = this.nomeDasFuncoesDoSistema
-            .filter(nomeFuncao => nomeFuncao.includes(query));
+
+            .filter(nomeFuncao => nomeFuncao.startsWith(event.query));
     }
 
     getTextDialog() {
@@ -227,24 +292,67 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoDados.funcionalidade = funcionalidade;
     }
 
-    adicionar() {
+    multiplos(): boolean {
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
-            return;
+            return false;
+        } else {
+            this.desconverterChips();
+            this.verificarModulo();
+            const funcaoDadosCalculada = Calculadora.calcular(
+                this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
+            this.funcoesDadosList.push(funcaoDadosCalculada);
+            this.analise.addFuncaoDados(funcaoDadosCalculada);
+            this.atualizaResumo();
+            this.resetarEstadoPosSalvar();
+            return true;
         }
-        this.desconverterChips();
-        this.verificarModulo();
-        const funcaoDadosCalculada = Calculadora.calcular(
-            this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
+    }
 
-        this.analise.addFuncaoDados(funcaoDadosCalculada);
-        this.atualizaResumo();
-        this.resetarEstadoPosSalvar();
+    adicionar(): boolean {
 
-        this.salvarAnalise();
-        this.fecharDialog();
-        this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
+        const retorno: boolean = this.verifyDataRequire();
+        if (!retorno) {
+            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            return retorno;
+        } else {
+            this.desconverterChips();
+            this.verificarModulo();
+            const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem,
+                                                              this.currentFuncaoDados,
+                                                              this.analise.contrato.manual);
+            this.validarNameFuncaoDados(this.currentFuncaoDados.name).then(resolve => {
+                if (resolve) {
+                    this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
+                    this.analise.addFuncaoDados(funcaoDadosCalculada);
+                    this.atualizaResumo();
+                    this.resetarEstadoPosSalvar();
+                    this.estadoInicial();
+                } else {
+                    this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
+                }
+            });
+        }
+        return retorno;
+    }
+
+    /* Verificar esta promisse */
+    validarNameFuncaoDados(nome: string) {
+        const that = this;
+        return new Promise(resolve => {
+            if (that.analise.funcaoDados.length === 0) {
+                return resolve(true);
+            }
+            that.analise.funcaoDados.forEach((data, index) => {
+                if (data.name === nome) {
+                    return resolve(false);
+                }
+                if (!that.analise.funcaoDados[index + 1]) {
+                    return resolve(true);
+                }
+            });
+        });
     }
 
     private verifyDataRequire(): boolean {
@@ -285,17 +393,17 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         }
 
         if (this.analiseSharedDataService.analise.metodoContagem === 'DETALHADA') {
-            if (this.rlrsChips === undefined || this.rlrsChips === null) {
+
+            if (this.dersChips === undefined) {
                 this.erroTR = true;
                 retorno = false;
             } else {
                 this.erroTR = false;
             }
-            if (this.dersChips === undefined || this.dersChips === null) {
-                // if (this.manual) {
+
+            if (this.dersChips === undefined) {
                 this.erroTD = true;
                 retorno = false;
-                // }
             } else {
                 this.erroTD = false;
             }
@@ -310,7 +418,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     salvarAnalise() {
-        this.analiseService.update(this.analise);
+        this.analiseService.atualizaAnalise(this.analise);
     }
 
     private desconverterChips() {
@@ -321,31 +429,29 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private editar() {
+
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
             return;
+        } else {
+            this.desconverterChips();
+            this.verificarModulo();
+            const funcaoDadosCalculada = Calculadora.calcular(
+                this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
+            this.validarNameFuncaoDados(this.currentFuncaoDados.name).then(resolve => {
+                this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
+                this.analise.updateFuncaoDados(funcaoDadosCalculada);
+                this.atualizaResumo();
+                this.resetarEstadoPosSalvar();
+                this.salvarAnalise();
+                this.fecharDialog();
+            });
         }
-        this.desconverterChips();
-        this.verificarModulo();
-
-        console.log("currentFuncaoDados ",this.currentFuncaoDados.quantidade);
-
-        const funcaoDadosCalculada = Calculadora.calcular(
-            this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual
-        );
-
-        this.analise.updateFuncaoDados(funcaoDadosCalculada);
-        this.atualizaResumo();
-        this.resetarEstadoPosSalvar();
-
-        this.salvarAnalise();
-        this.fecharDialog();
-        this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
-
     }
 
     fecharDialog() {
+        this.text = undefined;
         this.limparMensagensErros();
         this.showDialog = false;
         this.analiseSharedDataService.funcaoAnaliseDescarregada();
@@ -397,13 +503,26 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
      * Método responsável por recuperar o nome selecionado no combo.
      * @param nome
      */
-    recuperarNomeSelecionado(nome: any) {
-        this.funcaoDadosService.recuperarFuncaoDadosPorIdNome(this.analise.sistema.id, nome);
+    recuperarNomeSelecionado(baselineAnalitico: BaselineAnalitico) {
 
-        this.funcaoDadosService.recuperarFuncaoDadosPorIdNome(this.analise.sistema.id, nome).subscribe(
-            fd => {
-                this.prepararParaEdicao(fd);
+        this.funcaoDadosService.getFuncaoDadosBaseline(baselineAnalitico.idfuncaodados)
+            .subscribe((res: FuncaoDados) => {
+                res.name = this.currentFuncaoDados.name;
+
+                if (res.fatorAjuste === null) {
+                    res.fatorAjuste = undefined;
+                }
+                res.id = undefined;
+                res.ders.forEach(Ders => {
+                    Ders.id = undefined;
+                });
+                res.rlrs.forEach(rlrs => {
+                    rlrs.id = undefined;
+                });
+
+                this.prepararParaEdicao(res);
             });
+
     }
 
     datatableClick(event: DatatableClickEvent) {
@@ -427,6 +546,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 this.prepareToClone(funcaoDadosSelecionada);
                 this.currentFuncaoDados.id = undefined;
                 this.currentFuncaoDados.artificialId = undefined;
+                this.currentFuncaoDados.impacto = Impacto.ALTERACAO;
         }
     }
 
@@ -517,6 +637,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     openDialog(param: boolean) {
+        console.log(`openDialog(param)\n -> this.isEdit: ${this.isEdit}\n -> param: ${param}`);
+        this.subscribeToAnaliseCarregada();
+        this.carregarDadosBaseline();
         this.isEdit = param;
         this.hideShowQuantidade = true;
         this.disableTRDER();
@@ -539,6 +662,15 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 return {label: label, value: fa};
             });
         this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+    }
+
+    textChanged() {
+        this.valueChange.emit(this.text);
+        this.parseResult = DerTextParser.parse(this.text);
+    }
+
+    buttonMultiplos() {
+        this.showMultiplos = !this.showMultiplos;
     }
 
 }

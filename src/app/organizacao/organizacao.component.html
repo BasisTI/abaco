@@ -18,6 +18,7 @@
               <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-white-button 
                   buttonLabel="Limpar Pesquisa" 
+                  id="idBtnLimparPesquisaComponentOrganizacao"
                   buttonIcon="ui-icon-clear-all" 
                   (click)="limparPesquisa()">
                 </app-white-button>
@@ -26,12 +27,14 @@
                 <app-blue-button 
                   buttonLabel="Pesquisar" 
                   buttonIcon="ui-icon-search" 
+                  id="idBtnPesquisarComponentOrganizacao"
                   (click)="datatable.refresh(elasticQuery.query)">
                 </app-blue-button>
               </div>
               <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-green-button 
                   buttonLabel="Novo" 
+                  id="idBtnNovoComponentOrganizacao"
                   buttonIcon="ui-icon-add" 
                   routerLink="/organizacao/new"
                 ></app-green-button>
@@ -40,12 +43,14 @@
 
         <basis-datatable 
           [url]="searchUrl"
+          (dblclick)="onRowDblclick($event)"
           (buttonClick)="datatableClick($event)"
           [rows]="20"
           [rowsPerPageOptions]="rowsPerPageOptions"
           [showPaginationFooter]="true"
+          id="idTabelaComponentOrganizacao"
           #datatable>
-          <p-column header="Sigla" field="sigla" [sortable]="true"></p-column>
+          <p-column header="Sigla" field="sigla" [sortable]="true" ></p-column>
           <p-column header="Nome" field="nome" [sortable]="true"></p-column>
           <p-column header="CNPJ" field="cnpj" [sortable]="true">
             <ng-template  let-col let-item="rowData" pTemplate="body">
@@ -71,7 +76,7 @@
 </div>
 <p-confirmDialog header="Confirmação" #dialog>
   <p-footer>
-    <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-    <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+    <button type="button" id="idBtnNaoDeleteComponentOrganizacao" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
+    <button type="button" id="idBtnSimDeleteComponentOrganizacao" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
   </p-footer>
 </p-confirmDialog>

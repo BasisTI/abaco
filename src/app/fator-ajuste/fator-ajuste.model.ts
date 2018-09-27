@@ -49,32 +49,14 @@ export class FatorAjuste implements BaseEntity {
   }
 
   get fatorFormatado(): number {
-    return this.fatorVisualizavel();
+    return this.fator;
   }
 
   set fatorFormatado(fator: number) {
     if (typeof fator === 'string') {
       fator = Number(fator);
     }
-
-    if (this.isPercentual()) {
-      this.fator = fator / 100;
-    } else {
       this.fator = fator;
-    }
-  }
-
-  fatorVisualizavel(): number {
-    if (this.fator) {
-      return this.calculaFatorVisualizavel();
-    }
-  }
-
-  private calculaFatorVisualizavel(): number {
-    if (this.isPercentual()) {
-      return this.fator * 100;
-    }
-    return this.fator;
   }
 
   isPercentual(): boolean {
@@ -85,6 +67,10 @@ export class FatorAjuste implements BaseEntity {
     return this.tipoAjuste === TipoFatorAjuste.UNITARIO;
   }
 
+  /**
+   * VERIFICAR CALCULO - Função que aplica o fator de ajuste
+   * @param pf Pontos de Função a receber fator de ajuste
+   */
   aplicarFator(pf: number): number {
     if (this.isUnitario()) {
       return this.fator;

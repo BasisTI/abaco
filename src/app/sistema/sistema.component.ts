@@ -27,6 +27,8 @@ export class SistemaComponent implements AfterViewInit {
 
   searchUrl: string = this.sistemaService.searchUrl;
 
+  sistemaSelecionado: Sistema;
+
   rowsPerPageOptions: number[] = [5, 10, 20];
 
   paginationParams = { contentIndex: null };
@@ -39,6 +41,8 @@ export class SistemaComponent implements AfterViewInit {
       nome: undefined
     }
   };
+
+  fieldName: string;
 
   constructor (
     private router: Router,
@@ -57,11 +61,21 @@ export class SistemaComponent implements AfterViewInit {
     });
   }
 
+  public ngOnInit(){
+    this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
+      this.sistemaSelecionado = event.data;
+    });
+  this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
+    this.sistemaSelecionado = undefined;
+  });
+  }
+
   /**
    *
    */
   public ngAfterViewInit() {
     this.recarregarDataTable();
+    
   }
 
   /**
@@ -84,6 +98,19 @@ export class SistemaComponent implements AfterViewInit {
     }
   }
 
+  public onRowDblclick(event) {
+    
+    if (event.target.nodeName === 'TD') {
+      this.abrirEditar();
+    }else if (event.target.parentNode.nodeName === 'TD') {
+      this.abrirEditar();
+    }
+}
+
+abrirEditar(){
+  this.router.navigate(['/sistema', this.sistemaSelecionado.id, 'edit']);
+}
+
   /**
    *
    * @param id
@@ -94,7 +121,7 @@ export class SistemaComponent implements AfterViewInit {
       accept: () => {
         this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
         this.sistemaService.delete(id).subscribe(() => {
-          this.recarregarDataTable();
+          this.limparPesquisa();
           this.pageNotificationService.addDeleteMsg();
           this.blockUI.stop();
         }, (error: Response) => {
@@ -106,6 +133,53 @@ export class SistemaComponent implements AfterViewInit {
       }
     });
   }
+
+public switchUrlSigla() {
+
+  if (((this.searchParams.sigla === undefined) || (this.searchParams.sigla === '')) && 
+      ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) && 
+      ((this.searchParams.organizacao.nome === undefined) || (this.searchParams.organizacao.nome === ''))) {
+
+    this.searchUrl = this.sistemaService.fieldSearchSiglaUrl;
+    } else {
+      this.searchUrl = this.sistemaService.searchUrl;
+    }
+
+}
+
+public switchUrlNomeSistema() {
+  if (((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) && 
+      ((this.searchParams.sigla === undefined) || (this.searchParams.sigla === '')) && 
+      ((this.searchParams.organizacao.nome === undefined) || (this.searchParams.organizacao.nome === ''))){
+    
+    this.searchUrl = this.sistemaService.fieldSearchSistemaUrl;
+
+  } else {
+
+         this.searchUrl = this.sistemaService.searchUrl;
+        }
+
+}
+
+public switchUrlOrganizacao() {
+
+  if (((this.searchParams.organizacao.nome === undefined) || (this.searchParams.organizacao.nome !== '')) && 
+      ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) && 
+      ((this.searchParams.sigla === undefined) || (this.searchParams.sigla === ''))) {
+
+    this.searchUrl = this.sistemaService.fieldSearchOrganizacaoUrl;
+    
+  } else {
+      this.searchUrl = this.sistemaService.searchUrl;
+    }
+ 
+}
+
+// public switchSearchUrl() {
+//   if (this.searchParams.sigla !== undefined && ((this.searchParams.nomeSistema !== undefined) || (this.searchParams.organizacao.nome !== undefined))) {
+//     this.searchUrl = this.sistemaService.searchUrl;
+//   }
+// }
 
   /**
    *
@@ -120,11 +194,14 @@ export class SistemaComponent implements AfterViewInit {
    *
    */
   public performSearch() {
+  
+    this.searchUrl = this.sistemaService.searchUrl;
     this.checkUndefinedParams();
     this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
     this.recarregarDataTable();
-  }
 
+  }
+  
   /**
    *
    */
@@ -139,6 +216,25 @@ export class SistemaComponent implements AfterViewInit {
   }
 
   /**
+   * 
+   */
+  private checkFields(): void {
+    
+      if ((this.searchParams.nomeSistema === undefined) && ((this.searchParams.organizacao.nome === undefined) || (this.searchParams.organizacao.nome === ''))) {
+        this.searchUrl = this.sistemaService.fieldSearchSiglaUrl;
+
+      } else if ((this.searchParams.sigla === undefined) && ((this.searchParams.organizacao.nome === undefined) || (this.searchParams.organizacao.nome === ''))) {
+        this.searchUrl = this.sistemaService.fieldSearchSistemaUrl;
+
+      } else if ((this.searchParams.sigla === undefined) && (this.searchParams.nomeSistema === undefined)) {
+        this.searchParams.organizacao.nome = this.sistemaService.searchUrl;
+      }
+
+      this.recarregarDataTable();
+      
+  }
+
+  /**
    *
    */
   public limparPesquisa() {
@@ -146,7 +242,9 @@ export class SistemaComponent implements AfterViewInit {
     this.searchParams.organizacao = '';
     this.searchParams.nomeSistema = '';
     this.elasticQuery.reset();
+    this.searchUrl = this.sistemaService.searchUrl;
     this.recarregarDataTable();
+    
   }
 
   /**

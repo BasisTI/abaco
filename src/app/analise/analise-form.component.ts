@@ -1,14 +1,17 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
+import { Response } from '@angular/http';
 
-import {Analise} from './analise.model';
+import { Analise, AnaliseShareEquipe } from './';
 import {AnaliseService} from './analise.service';
+import { User, UserService } from '../user';
 import {ResponseWrapper,  AnaliseSharedDataService, PageNotificationService} from '../shared';
 import {Organizacao, OrganizacaoService} from '../organizacao';
 import {Contrato, ContratoService} from '../contrato';
 import {Sistema, SistemaService} from '../sistema';
-import {SelectItem} from 'primeng/primeng';
+import {SelectItem, ConfirmationService} from 'primeng/primeng';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 import * as _ from 'lodash';
 import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
@@ -17,7 +20,6 @@ import {MessageUtil} from '../util/message.util';
 import {FatorAjuste} from '../fator-ajuste';
 import {EsforcoFase} from '../esforco-fase';
 import {Manual} from '../manual';
-import {Response} from '@angular/http';
 
 @Component({
     selector: 'jhi-analise-form',
@@ -27,14 +29,22 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     isEdicao: boolean;
     disableFuncaoTrasacao: boolean;
+    disableAba: boolean;
+    equipeShare; analiseShared: Array<AnaliseShareEquipe> = [];
+    selectedEquipes: Array<AnaliseShareEquipe>;
+    selectedToDelete: AnaliseShareEquipe;
+    mostrarDialog = false;
 
     isSaving: boolean;
     dataAnalise: any;
     dataHomol: any;
+    loggedUser: User;
     diasGarantia: number;
     public validacaoCampos: boolean;
+    aguardarGarantia: boolean;
+    enviarParaBaseLine: boolean;
 
-    organizacoes: Organizacao[];
+    organizacoes;
 
     contratos: Contrato[];
 
@@ -49,6 +59,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     equipeResponsavel: SelectItem[] = [];
 
     nomeManual = MessageUtil.SELECIONE_CONTRATO;
+
+    @BlockUI() blockUI: NgBlockUI;
 
     private fatorAjusteNenhumSelectItem = {label: MessageUtil.NENHUM, value: undefined};
 
@@ -68,6 +80,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     public hideShowSelectEquipe: boolean;
 
     constructor(
+        private confirmationService: ConfirmationService,
         private router: Router,
         private route: ActivatedRoute,
         private analiseService: AnaliseService,
@@ -77,26 +90,61 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         private analiseSharedDataService: AnaliseSharedDataService,
         private equipeService: TipoEquipeService,
         private pageNotificationService: PageNotificationService,
+        private userService: UserService,
     ) {
     }
 
     ngOnInit() {
+        this.disableAba = true;
         this.validacaoCampos = true;
         this.hideShowSelectEquipe = true;
         this.analiseSharedDataService.init();
         this.isEdicao = false;
         this.isSaving = false;
         this.dataHomol = new Date();
+        this.getLoggedUser();
         this.habilitarCamposIniciais();
-        this.listOrganizacoes();
         this.getAnalise();
-        this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
     }
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
     }
 
+    /**
+     * Função para recuperar os dados do usuário logado no momento
+     */
+    getLoggedUser() {
+        this.userService.findCurrentUser().subscribe(res => {
+            this.loggedUser = res;
+            this.organizacoes = res.organizacoes;
+
+        });
+    }
+
+    checkUserAnaliseEquipes() {
+        let retorno = false;
+        this.loggedUser.tipoEquipes.forEach(equipe => {
+            if (equipe.id === this.analise.equipeResponsavel.id) {
+                retorno = true;
+            }
+        });
+        return retorno;
+    }
+
+    checkIfUserCanEdit() {
+        let retorno = false;
+        this.loggedUser.tipoEquipes.forEach(equipe => {
+            this.analise.compartilhadas.forEach(compartilhada => {
+                if (equipe.id === compartilhada.equipeId) {
+                    if (!compartilhada.viewOnly) {
+                        retorno = true;
+                    }
+                }
+            });
+        });
+        return retorno;
+    }
     /**
      * Obtêm uma análise através do ID
      */
@@ -109,9 +157,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                     this.inicializaValoresAposCarregamento(analise);
                     this.analiseSharedDataService.analiseCarregada();
                     this.dataAnalise = this.analise;
+                    this.aguardarGarantia = this.analise.baselineImediatamente;
+                    this.enviarParaBaseLine = this.analise.enviarBaseline;
                     this.setDataHomologacao();
                     this.diasGarantia = this.getGarantia();
-                    this.save();
+                    this.update();
                 });
             } else {
                 this.analise.esforcoFases = [];
@@ -135,18 +185,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular os dias de garantia do contrato
      */
     getGarantia(): any {
-        this.diasGarantia !== undefined ? this.diasGarantia = this.analise.contrato.diasDeGarantia : undefined;
-    }
-
-    /**
-     * Método responsável por popular a lista de organizações.
-     */
-    listOrganizacoes() {
-        this.organizacaoService.searchActiveOrganizations().subscribe((res: ResponseWrapper) => {
-            this.organizacoes = res.json;
-        },(error: Response) => {
-            this.pageNotificationService.addErrorMsg('Ops! Ocorreu algum erro');
-        });
+        this.diasGarantia = this.diasGarantia !== undefined ? this.analise.contrato.diasDeGarantia : undefined;
     }
 
     /**
@@ -158,6 +197,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.router.navigate(['/analise']);
         }
         this.analise = analiseCarregada;
+        if (!this.checkIfUserCanEdit() && !this.checkUserAnaliseEquipes()) {
+            this.pageNotificationService
+                .addErrorMsg('Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...');
+            this.router.navigate([`/analise/${analiseCarregada.id}/view`]);
+        }
         this.setSistamaOrganizacao(analiseCarregada.organizacao);
         this.setManual(analiseCarregada.contrato);
         this.carregaFatorAjusteNaEdicao();
@@ -188,7 +232,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.contratos = org.contracts;
         this.equipeService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
             this.equipeResponsavel = res.json;
-            if(this.equipeResponsavel !== null){
+            if (this.equipeResponsavel !== null) {
                 this.hideShowSelectEquipe = false;
             }
         });
@@ -295,6 +339,43 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Gera o relatório detalhado PDF.
+     * @param analise
+     */
+    public geraRelatorioPdfDetalhadoBrowser() {
+        this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.analise.id);
+    }
+
+    /**
+     * Bloqueia a análise aberta atualmente.
+     *
+     */
+    public bloquearAnalise() {
+        this.confirmationService.confirm({
+            message: MessageUtil.CONFIRMAR_BLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
+            accept: () => {
+                const copy = this.analise.toJSONState();
+                    this.analiseService.block(copy).subscribe(() => {
+                    this.pageNotificationService.addBlockMsgWithName(this.analise.identificadorAnalise);
+                    this.router.navigate(['analise/:id/view']);
+                }, (error: Response) => {
+                    switch (error.status) {
+                        case 400: {
+                            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
+                            this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                            } else {
+                                this.pageNotificationService
+                                    .addErrorMsg('Somente membros da equipe responsável podem bloquear esta análise!');
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+    /**
      * Atuva ou desativa o Dropdown de sistema (html)
      * */
     disabledSistemaDropdown() {
@@ -304,9 +385,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     /**
      * Atuva ou desativa a tab Funcao de Transação
      */
-    disabledFuncaoTransacao() {
-        this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
-    }
+    // disabledFuncaoTransacao() {
+    //     this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
+    // }
 
     /**
      * Verifica se algum contrato foi selecioando
@@ -334,31 +415,58 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     contratoSelected(contrato: Contrato) {
         this.setManual(contrato);
-        this.save();
+        this.diasGarantia = this.analise.contrato.diasDeGarantia;
+        this.analise.esforcoFases = _.cloneDeep(contrato.manual.esforcoFases);
+        this.analise.baselineImediatamente = true;
+        this.analise.enviarBaseline = true;
     }
 
     /**
      * Método responsável por persistir as informações das análises na edição.
      **/
     save() {
+        if (this.aguardarGarantia === undefined) {
+            this.analise.baselineImediatamente = true;
+        }
+        if (this.enviarParaBaseLine === undefined) {
+            this.analise.enviarBaseline = true;
+        }
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
-            this.analiseService.update(this.analise);
+            this.analiseService.update(this.analise).subscribe(() => {
+                this.pageNotificationService.addSuccessMsg('Dados salvos com sucesso!');
+                this.diasGarantia = this.analise.contrato.diasDeGarantia;
+            });
+        }
+    }
+
+    update() {
+        this.validaCamposObrigatorios();
+        if (this.verificarCamposObrigatorios()) {
+            this.analiseService.update(this.analise).subscribe();
             this.diasGarantia = this.analise.contrato.diasDeGarantia;
         }
     }
 
-    private validaCamposObrigatorios(){
+    private validaCamposObrigatorios() {
         const validacaoIdentificadorAnalise = this.analise.identificadorAnalise !== undefined;
         const validacaoContrato = this.analise.contrato !== undefined;
         const validacaoMetodoContagem = this.analise.metodoContagem !== null;
         const validacaoTipoAnallise = this.analise.tipoAnalise !== null;
 
         this.validacaoCampos = !(validacaoIdentificadorAnalise === true
-            &&  validacaoContrato === true
+            && validacaoContrato === true
             && validacaoMetodoContagem  === true
             && validacaoTipoAnallise === true );
 
+        this.enableDisableAba();
+    }
+
+    enableDisableAba() {
+        if (this.validacaoCampos === false) {
+            this.disableAba = false;
+            this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
+        }
     }
 
     /**
@@ -409,5 +517,67 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.analiseSharedDataService.analise = analise;
     }
 
+    public openCompartilharDialog() {
+        if (this.checkUserAnaliseEquipes()) {
+            this.equipeShare = [];
+            this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id,
+                                                      this.analise.id,
+                                                      this.analise.equipeResponsavel.id).subscribe((equipes) => {
+                equipes.json.forEach((equipe) => {
+                    const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
+                                                                     {id: undefined,
+                                                                      equipeId: equipe.id,
+                                                                      analiseId: this.analise.id,
+                                                                      viewOnly: false,
+                                                                      nomeEquipe: equipe.nome });
+                    this.equipeShare.push(entity);
+                });
+                this.blockUI.stop();
+            });
+            this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {
+                this.analiseShared = shared.json;
+            });
+            this.mostrarDialog = true;
+        } else {
+            this.pageNotificationService.addErrorMsg('Somente membros da equipe responsável podem compartilhar esta análise!');
+        }
+    }
+
+    public salvarCompartilhar() {
+        if (this.selectedEquipes && this.selectedEquipes.length !== 0) {
+            this.analiseService.salvarCompartilhar(this.selectedEquipes).subscribe((res) => {
+                this.mostrarDialog = false;
+                this.pageNotificationService.addSuccessMsg('Análise compartilhada com sucesso!');
+                this.limparSelecaoCompartilhar();
+            });
+        } else {
+            this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder adicionar ou clique no X para sair!');
+        }
+
+    }
+
+    public deletarCompartilhar() {
+        if (this.selectedToDelete && this.selectedToDelete !== null) {
+            this.analiseService.deletarCompartilhar(this.selectedToDelete.id).subscribe((res) => {
+                this.mostrarDialog = false;
+                this.pageNotificationService.addSuccessMsg('Compartilhamento removido com sucesso!');
+                this.limparSelecaoCompartilhar();
+            });
+        } else {
+            this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder remover ou clique no X para sair!');
+        }
+    }
+
+    public limparSelecaoCompartilhar() {
+        this.getAnalise();
+        this.selectedEquipes = undefined;
+        this.selectedToDelete = undefined;
+    }
+
+    public updateViewOnly() {
+        setTimeout(() => { this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
+            this.pageNotificationService.addSuccessMsg('Registro atualizado com sucesso!');
+        }); }, 250);
+     }
 }
 

@@ -21,14 +21,11 @@ export class EsforcoFase implements BaseEntity, JSONable<EsforcoFase> {
   }
 
   get esforcoFormatado(): number {
-    const esforco: number = this.esforco;
-    if (esforco) {
-      return this.esforco * 100;
-    }
+      return this.esforco;
   }
 
   set esforcoFormatado(esforco: number) {
-    this.esforco = esforco / 100;
+    this.esforco = esforco;
   }
 
   clone(): EsforcoFase {

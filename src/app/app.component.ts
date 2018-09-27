@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 
 import { Message } from 'primeng/components/common/api';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 enum MenuOrientation {
   STATIC,
@@ -24,6 +25,8 @@ declare var jQuery: any;
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
+
+  @BlockUI() blockUI: NgBlockUI;
 
   layoutCompact: boolean = true;
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
@@ -8,18 +8,20 @@ import { Organizacao } from './organizacao.model';
 import { OrganizacaoService } from './organizacao.service';
 import { ElasticQuery } from '../shared';
 import { PageNotificationService } from '../shared/page-notification.service';
-import {NgxMaskModule} from 'ngx-mask';
+import { NgxMaskModule } from 'ngx-mask';
 
 
 @Component({
   selector: 'jhi-organizacao',
   templateUrl: './organizacao.component.html'
 })
-export class OrganizacaoComponent implements AfterViewInit {
+export class OrganizacaoComponent implements AfterViewInit, OnInit {
 
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
   searchUrl: string = this.organizacaoService.searchUrl;
+
+  organizacaoSelecionada: Organizacao;
 
   paginationParams = { contentIndex: null };
 
@@ -34,12 +36,23 @@ export class OrganizacaoComponent implements AfterViewInit {
     private pageNotificationService: PageNotificationService
   ) {}
 
+  public ngOnInit() {
+    this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
+      this.organizacaoSelecionada = event.data;
+    });
+  this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
+    this.organizacaoSelecionada = undefined;
+  });
+  }
+
   ngAfterViewInit() {
     this.recarregarDataTable();
   }
 
   datatableClick(event: DatatableClickEvent) {
+    console.log(event.selection);
     if (!event.selection) {
+      
       return;
     }
     switch (event.button) {
@@ -55,6 +68,19 @@ export class OrganizacaoComponent implements AfterViewInit {
     }
   }
 
+  public onRowDblclick(event) {
+
+    if (event.target.nodeName === 'TD') {
+      this.abrirEditar();
+    }else if (event.target.parentNode.nodeName === 'TD') {
+      this.abrirEditar();
+    }
+}
+
+abrirEditar() {
+  this.router.navigate(['/organizacao', this.organizacaoSelecionada.id, 'edit']);
+}
+
   confirmDelete(id: any) {
     this.confirmationService.confirm({
       message: 'Tem certeza que deseja excluir o registro?',
@@ -64,7 +90,8 @@ export class OrganizacaoComponent implements AfterViewInit {
           this.recarregarDataTable();
         }, error => {
           if (error.status === 500) {
-            this.pageNotificationService.addErrorMsg('A organização não pode ser deletada pois está associada a um contrato, equipe ou análise!');
+            this.pageNotificationService
+                .addErrorMsg('A organização não pode ser deletada pois está associada a um contrato, equipe ou análise!');
           }
         });
       }

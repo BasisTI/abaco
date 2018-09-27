@@ -26,6 +26,8 @@ export class UserComponent implements AfterViewInit, OnInit {
 
   searchUrl: string = this.userService.searchUrl;
 
+  usuarioSelecionado: User;
+
   paginationParams = { contentIndex: null };
 
   elasticQuery: ElasticQuery = new ElasticQuery();
@@ -59,6 +61,13 @@ export class UserComponent implements AfterViewInit, OnInit {
     this.recuperarOrganizacoes();
     this.recuperarAutorizacoes();
     this.recuperarEquipe();
+
+    this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
+      this.usuarioSelecionado = event.data;
+    });
+  this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
+    this.usuarioSelecionado = undefined;
+  });
   }
 
   /**
@@ -117,6 +126,19 @@ export class UserComponent implements AfterViewInit, OnInit {
     }
   }
 
+  public onRowDblclick(event) {
+    
+    if (event.target.nodeName === 'TD') {
+      this.abrirEditar();
+    }else if (event.target.parentNode.nodeName === 'TD') {
+      this.abrirEditar();
+    }
+}
+
+abrirEditar(){
+  this.router.navigate(['/admin/user', this.usuarioSelecionado.id, 'edit']);
+}
+
   confirmDelete(user: User) {
     this.confirmationService.confirm({
       message: 'Tem certeza que deseja excluir o registro?',
@@ -125,17 +147,17 @@ export class UserComponent implements AfterViewInit, OnInit {
           this.datatable.refresh(this.elasticQuery.query);
           this.pageNotificationService.addDeleteMsg();
 
-        },(error: Response) => {
-          if(error.status === 400){
-            let errorType : string = error.headers.toJSON()['x-abacoapp-error'][0];
+        }, (error: Response) => {
+          if (error.status === 400) {
+            const errorType: string = error.headers.toJSON()['x-abacoapp-error'][0];
 
-            switch(errorType){
-              case "error.userexists" : {
+            switch (errorType) {
+              case 'error.userexists' : {
                 this.pageNotificationService.addErrorMsg('Você não pode excluir o Administrador!');
                 break;
               }
 
-              case "error.analiseexists" : {
+              case 'error.analiseexists' : {
                 this.pageNotificationService.addErrorMsg('Você não pode excluir o usuário porque ele é dono de alguma Análise!');
                 break;
               }

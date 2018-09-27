@@ -52,6 +52,13 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
     }
   }
 
+  static convertTransacaoJsonToObject(json: any) {
+    const sintetico = Object.create(FuncaoTransacao.prototype);
+    return Object.assign(sintetico, json, {
+        created: new Date(json.created)
+    });
+  }
+
   static tipos(): string[] {
     return Object.keys(TipoFuncaoTransacao).map(k => TipoFuncaoTransacao[k as any]);
   }
@@ -65,8 +72,8 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
 
     copy.funcionalidade = Funcionalidade.toNonCircularJson(copy.funcionalidade);
 
-    copy.ders = this.ders.map(der => der.toJSONState());
-    copy.alrs = this.alrs.map(alr => alr.toJSONState());
+    if (this.der) { copy.ders = this.ders.map(der => der.toJSONState()); }
+    if (this.alrs) { copy.alrs = this.alrs.map(alr => alr.toJSONState()); }
 
     return copy;
   }
@@ -104,6 +111,7 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
       this.name, this.sustantation, this.der, this.ftr, this.grossPF,
       this.derValues, this.ftrValues, this.ders, this.impacto, this.quantidade);
   }
+
 }
 
 // TODO bem duplicado com FuncaoDados

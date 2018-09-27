@@ -50,6 +50,7 @@
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input 
+                [disabled]="this.desabilitado()"
                 type="text" 
                 name="loginUser" 
                 maxlength="99" 
@@ -57,10 +58,11 @@
                 #loginUser='ngModel'
                 pInputText required/>
               <label>Login *</label>
-              <div *ngIf="editForm.controls['loginUser'] 
+              <div *ngIf= "editForm.controls['loginUser'] 
+                  && !this.desabilitado() 
                   && !editForm.controls['loginUser'].valid 
                   && (editForm.controls['loginUser'].touched 
-                  || editForm.submitted)" 
+                  || editForm.submitted)"
                   class="ui-message ui-messages-error">
                 Campo obrigatório.
               </div>
@@ -79,6 +81,7 @@
                 required/>
               <label>E-mail *</label>
               <div *ngIf="editForm.controls['email'] 
+                  && !this.desabilitado() 
                   && !editForm.controls['email'].valid 
                   && (editForm.controls['email'].touched 
                   || editForm.submitted)" 
@@ -95,7 +98,8 @@
               </div>
 
               <div class="ui-g-12 ui-md-4">
-                <p-radioButton name="user_ativo" 
+                <p-radioButton name="user_ativo"
+                  [disabled]="this.desabilitado()"
                   [value]="true"
                   label="Sim"
                   [(ngModel)]="user.activated">
@@ -103,8 +107,8 @@
               </div>
 
               <div class="ui-g-12 ui-md-4">
-                <p-radioButton 
-                  name="user_ativo"
+                <p-radioButton name="user_ativo"
+                  [disabled]="this.desabilitado()"
                   [value]="false"
                   label="Não"
                   [(ngModel)]="user.activated">
@@ -118,6 +122,7 @@
             <span>
               <h3 class="first">Perfil *</h3>
               <p-multiSelect 
+                [disabled]="this.desabilitado()"
                 name="authoritiesMultiselect"
                 defaultLabel="Selecione ao menos um perfil"
                 [options]="authorities"
@@ -130,6 +135,7 @@
               </p-multiSelect>
 
               <div *ngIf="editForm.controls['authoritiesMultiselect'] 
+                && !this.desabilitado() 
                 && !editForm.controls['authoritiesMultiselect'].valid 
                 && (editForm.controls['authoritiesMultiselect'].touched 
                 || editForm.submitted)" 
@@ -143,6 +149,8 @@
             <span>
               <h3 class="first">Organização *</h3>
               <p-multiSelect 
+                (onChange)="setEquipeOrganizacao($event.value)"
+                [disabled]="this.desabilitado()"
                 name="organizacoesMultiSelect" 
                 [options]="organizacoes"
                 [(ngModel)]="user.organizacoes" 
@@ -154,6 +162,7 @@
                 required>
               </p-multiSelect>
               <div *ngIf="editForm.controls['organizacoesMultiSelect'] 
+                && !this.desabilitado() 
                 && !editForm.controls['organizacoesMultiSelect'].valid 
                 && (editForm.controls['organizacoesMultiSelect'].touched 
                 || editForm.submitted)" 
@@ -167,8 +176,9 @@
           <span>
             <h3 class="first">Equipe *</h3>
             <p-multiSelect 
+              [disabled]="this.disableEquipeDropdown()"
               name="equipesMultiSelect" 
-              [options]="tipoEquipes"
+              [(options)]="tipoEquipes"
               [(ngModel)]="user.tipoEquipes" 
               dataKey="id"
               defaultLabel="Selecione ao menos uma equipe" 
@@ -178,12 +188,13 @@
               required>
             </p-multiSelect>
             <div *ngIf="editForm.controls['equipesMultiSelect'] 
-            && !editForm.controls['equipesMultiSelect'].valid 
-            && (editForm.controls['equipesMultiSelect'].touched 
-            || editForm.submitted)" 
-            class="ui-message ui-messages-error">
-            Campo obrigatório.
-          </div>
+              && !this.desabilitado() && !this.disableEquipeDropdown()
+              && !editForm.controls['equipesMultiSelect'].valid 
+              && (editForm.controls['equipesMultiSelect'].touched 
+              || editForm.submitted)" 
+              class="ui-message ui-messages-error">
+              Campo obrigatório.
+            </div>
           </span>
         </div>
 

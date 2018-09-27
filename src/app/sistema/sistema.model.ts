@@ -23,7 +23,10 @@ export class Sistema implements BaseEntity {
   }
 
   static fromJSON(json: any): Sistema {
-    const modulos = json.modulos.map(m => Modulo.fromJSON(m));
+    let modulos;
+    if (json){
+      modulos = json.modulos.map(m => Modulo.fromJSON(m));
+    }
     const newSistema = new Sistema(json.id, json.sigla,
       json.nome, json.numeroOcorrencia, json.organizacao,
       modulos);

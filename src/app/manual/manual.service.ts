@@ -6,31 +6,36 @@ import {environment} from '../../environments/environment';
 import {UploadService} from '../upload/upload.service';
 
 import {Manual} from './manual.model';
-import {ResponseWrapper, createRequestOption, JhiDateUtils, JSONable} from '../shared';
-import {EsforcoFase} from '../esforco-fase/esforco-fase.model';
-import {FatorAjuste} from '../fator-ajuste/fator-ajuste.model';
+import {ResponseWrapper, createRequestOption, JSONable, PageNotificationService} from '../shared';
 
 @Injectable()
 export class ManualService {
 
     resourceName = '/manuals';
-
     resourceUrl = environment.apiUrl + this.resourceName;
-
     searchUrl = environment.apiUrl + '/_search/manuals';
-
-    findActive = environment.apiUrl + this.resourceName;
 
     constructor(
         private http: HttpService,
-        private uploadService: UploadService
-    ) {}
+        private uploadService: UploadService,
+        private pageNotificationService: PageNotificationService
+    ) {
+    }
 
     create(manual: Manual): Observable<any> {
         const copy = this.convert(manual);
         return this.http.post(this.resourceUrl, copy).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertItemFromServer(jsonResponse);
+        }).catch((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                return Observable.throw(new Error(error.status));
+            }
+            if (error.status === 400) {
+                this.pageNotificationService.addErrorMsg(`O nome digitado já existe!`);
+                return Observable.throw(new Error(error.status));
+            }
         });
     }
 
@@ -39,6 +44,11 @@ export class ManualService {
         return this.http.put(this.resourceUrl, copy).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertItemFromServer(jsonResponse);
+        }).catch((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                return Observable.throw(new Error(error.status));
+            }
         });
     }
 
@@ -46,17 +56,32 @@ export class ManualService {
         return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertItemFromServer(jsonResponse);
+        }).catch((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                return Observable.throw(new Error(error.status));
+            }
         });
     }
 
     query(req?: any): Observable<ResponseWrapper> {
         const options = createRequestOption(req);
         return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+            .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+                if (error.status === 403) {
+                    this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                    return Observable.throw(new Error(error.status));
+                }
+            });
     }
 
     delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+        return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                return Observable.throw(new Error(error.status));
+            }
+        });
     }
 
     private convertResponse(res: Response): ResponseWrapper {
@@ -83,14 +108,4 @@ export class ManualService {
         const copy: Manual = manual.toJSONState();
         return copy;
     }
-
-    /**
-     * Método responsável por recuperar os manuais.
-    */
-    findActiveManuais() {
-        return this.http.get(this.findActive).map((response: Response) => {
-            return response.json();
-        });
-    }
-
 }

@@ -59,12 +59,12 @@ export class PageNotificationService {
     }
 
     addBlockMsgWithName(name: string, title?: string) {
-        const msg = `Registro '${name}' bloqueado com sucesso!`;
+        const msg = `Registro bloqueado com sucesso!`;
         this.addMsg(this.successSeverity, msg, title);
     }
 
-    addUnblockMsgWithName(name: string, title?: string) {
-        const msg = `Registro '${name}' desbloqueado com sucesso!`;
+    addUnblockMsgWithName(title?: string) {
+        const msg = `Registro  desbloqueado com sucesso!`;
         this.addMsg(this.successSeverity, msg, title);
     }
 

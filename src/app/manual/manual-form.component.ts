@@ -2,7 +2,6 @@ import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Response} from '@angular/http';
 import {Observable, Subscription} from 'rxjs/Rx';
-import {SelectItem} from 'primeng/primeng';
 
 import {Manual} from './manual.model';
 import {ManualService} from './manual.service';
@@ -24,7 +23,8 @@ import {FileUpload} from 'primeng/primeng';
 })
 export class ManualFormComponent implements OnInit, OnDestroy {
     manual: Manual;
-    isSaving; isEdit: boolean;
+    isSaving;
+    isEdit: boolean;
     loading: boolean;
     private routeSub: Subscription;
     arquivoManual: File;
@@ -41,8 +41,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     editedAdjustFactor: FatorAjuste = new FatorAjuste();
 
     adjustTypes: Array<any> = [
-        {label: 'Percentual', value: 'PERCENTUAL', },
-        {label: 'Unitário', value: 'UNITARIO', },
+        {label: 'Percentual', value: 'PERCENTUAL',},
+        {label: 'Unitário', value: 'UNITARIO',},
     ];
 
     invalidFields: Array<string> = [];
@@ -51,7 +51,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     /**
      *
-    */
+     */
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -61,7 +61,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         private confirmationService: ConfirmationService,
         private pageNotificationService: PageNotificationService,
         private uploadService: UploadService
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         this.isSaving = false;
@@ -85,7 +86,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     /**
      *
-    */
+     */
     save(form: any) {
         if (!this.checkRequiredFields()) {
             this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
@@ -93,16 +94,32 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         }
 
         this.isSaving = true;
-        
-        if (this.manual.id !== undefined) {
-            this.editar();
-        } else {
-            this.novo();
-        }
+        this.manualService.query().subscribe(response => {
+            const todosManuais = response;
+
+            if (!this.checkIfManualAlreadyExists(todosManuais.json)) {
+                if (this.manual.id !== undefined) {
+                    this.editar();
+                } else {
+                    this.novo();
+                }
+            }
+        });
+    }
+
+    private checkIfManualAlreadyExists(registeredPhases: Array<TipoFase>): boolean {
+        let isAlreadyRegistered = false;
+        registeredPhases.forEach(each => {
+            if (each.nome.toUpperCase() === this.manual.nome.toUpperCase() && each.id !== this.manual.id) {
+                isAlreadyRegistered = true;
+                this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+            }
+        });
+        return isAlreadyRegistered;
     }
 
     private editar() {
-        this.manualService.find(this.manual.id).subscribe(response => {
+        this.manualService.find(this.manual.id).subscribe(() => {
             if (this.checkRequiredFields()) {
                 if (this.arquivoManual !== undefined) {
                     this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
@@ -127,12 +144,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
                     this.manual.arquivoManualId = JSON.parse(response['_body']).id;
                     this.subscribeToSaveResponse(this.manualService.create(this.manual));
-                    });
+                });
             } else {
                 this.privateExibirMensagemCamposInvalidos(1);
             }
         } else if (this.checkRequiredFields()) {
-                this.subscribeToSaveResponse(this.manualService.create(this.manual));
+            this.subscribeToSaveResponse(this.manualService.create(this.manual));
         } else {
             this.privateExibirMensagemCamposInvalidos(1);
         }
@@ -164,12 +181,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.invalidFields.push('Conversão');
         }
 
-        if (this.manual.esforcoFases.length == 0 || this.manual.esforcoFases == undefined) {
+        if (this.manual.esforcoFases.length === 0 || this.manual.esforcoFases === undefined) {
             document.getElementById('tabela-tipo-fase').setAttribute('style', 'border: 1px dotted red;');
             this.invalidFields.push('Esforço de Fases');
         }
 
-        if (this.manual.fatoresAjuste.length == 0 || this.manual.fatoresAjuste == undefined) {
+        if (this.manual.fatoresAjuste.length === 0 || this.manual.fatoresAjuste === undefined) {
             document.getElementById('tabela-deflator').setAttribute('style', 'border: 1px dotted red;');
             this.invalidFields.push('Deflator');
         }
@@ -188,7 +205,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             case 2:
                 this.pageNotificationService.addErrorMsg('Campo Arquivo Manual está inválido!');
                 return;
-
         }
     }
 
@@ -208,18 +224,18 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     private subscribeToSaveResponse(result: Observable<Manual>) {
         result.subscribe((res: Manual) => {
-            this.isSaving = false;
-            this.router.navigate(['/manual']);
-            this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg();
-        }, 
-        (error: Response) => {
-            this.isSaving = false;
-      
-            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.manualexists') {
-                this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
-                document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
-                }              
-        });
+                this.isSaving = false;
+                this.router.navigate(['/manual']);
+                this.isEdit ? this.pageNotificationService.addUpdateMsg() : this.pageNotificationService.addCreateMsg();
+            },
+            (error: Response) => {
+                this.isSaving = false;
+
+                if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.manualexists') {
+                    this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+                    document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
+                }
+            });
     }
 
     ngOnDestroy() {
@@ -263,7 +279,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     isPercentualEnum(value: TipoFatorAjuste) {
-
         return (value !== undefined) ? (value.toString() === 'PERCENTUAL') : (false);
     }
 

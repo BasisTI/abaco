@@ -4,6 +4,7 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@a
 import { AnaliseComponent } from './analise.component';
 import { AnaliseDetailComponent } from './analise-detail.component';
 import { AnaliseFormComponent } from './analise-form.component';
+import { AnaliseViewComponent } from './analise-view.component';
 
 export const analiseRoute: Routes = [
   {
@@ -21,5 +22,9 @@ export const analiseRoute: Routes = [
   {
     path: 'analise/:id',
     component: AnaliseDetailComponent
+  },
+  {
+    path: 'analise/:id/view',
+    component: AnaliseViewComponent
   },
 ];

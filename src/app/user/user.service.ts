@@ -42,6 +42,16 @@ export class UserService {
     });
   }
 
+  /**
+   * Função que retorna dados do usuário logado
+   */
+  findCurrentUser(): Observable<User> {
+    return this.http.get(`${this.resourceUrl}/logged`).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
+    });
+  }
+
   query(req?: any): Observable<ResponseWrapper> {
     const options = createRequestOption(req);
     return this.http.get(this.resourceUrl, options)

@@ -11,6 +11,7 @@ import {FuncaoAnalise} from '../analise-shared/funcao-analise';
 import {Organizacao} from '../organizacao';
 import {TipoEquipe} from '../tipo-equipe';
 import { User } from '../user';
+import { AnaliseShareEquipe } from './analise-share-equipe.model';
 
 export enum MetodoContagem {
     'DETALHADA' = 'DETALHADA',
@@ -51,6 +52,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
         public tipoAnalise?: TipoContagem,
         public propositoContagem?: string,
         public sistema?: Sistema,
+        public enviarBaseline?: boolean,
         public funcaoDados?: FuncaoDados[],
         public funcaoTransacaos?: FuncaoTransacao[],
         public organizacao?: Organizacao,
@@ -65,6 +67,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
         public createdOn?: Date,
         public updatedOn?: Date,
         public bloqueiaAnalise?: boolean,
+        public compartilhadas?: AnaliseShareEquipe[],
     ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
         this.inicializaResumos();
@@ -118,11 +121,13 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     }
 
     /**
+     * VERIFICAR CÁLCULO - Cálculo modificado par arefletir a nova forma de salvar
+     * Porcentagens no banco
      * Renomenando método de "calcularPfTotalAjustado()"
      * para "aplicaTotalEsforco()" por motivo de legibilidade e clareza
      */
     private aplicaTotalEsforco(pf: number): number {
-        return pf * this.totalEsforcoFases();
+        return (pf * this.totalEsforcoFases()) / 100;
     }
 
     /**
@@ -281,6 +286,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
             this.tipoAnalise,
             this.propositoContagem,
             this.sistema,
+            this.enviarBaseline,
             this.funcaoDados,
             this.funcaoTransacaos,
             this.organizacao,
@@ -294,7 +300,8 @@ export class Analise implements BaseEntity, JSONable<Analise> {
             this.createdBy,
             this.createdOn,
             this.updatedOn,
-            this.bloqueiaAnalise,);
+            this.bloqueiaAnalise,
+            this.compartilhadas);
     }
 
 }
@@ -337,15 +344,19 @@ class AnaliseCopyFromJSON {
         this._analiseConverted.fronteiras = this._json.fronteiras;
         this._analiseConverted.documentacao = this._json.documentacao;
         this._analiseConverted.tipoAnalise = this._json.tipoAnalise;
+        this._analiseConverted.enviarBaseline = this._json.enviarBaseline;
         this._analiseConverted.propositoContagem = this._json.propositoContagem;
         this._analiseConverted.observacoes = this._json.observacoes;
         this._analiseConverted.baselineImediatamente = this._json.baselineImediatamente;
         this._analiseConverted.dataHomologacao = this._json.dataHomologacao;
         this._analiseConverted.identificadorAnalise = this._json.identificadorAnalise;
         this._analiseConverted.equipeResponsavel = this._json.equipeResponsavel;
-        this._analiseConverted.createdOn = this._json.audit.createdOn;
-        this._analiseConverted.updatedOn = this._json.audit.updatedOn;
+        if (this._json.audit) {
+            this._analiseConverted.createdOn = this._json.audit.createdOn;
+            this._analiseConverted.updatedOn = this._json.audit.updatedOn;
+        }
         this._analiseConverted.bloqueiaAnalise = this._json.bloqueiaAnalise;
+        this._analiseConverted.compartilhadas = this._json.compartilhadas;
 
         if (!this._analiseConverted.baselineImediatamente) {
             this._analiseConverted.baselineImediatamente = false;

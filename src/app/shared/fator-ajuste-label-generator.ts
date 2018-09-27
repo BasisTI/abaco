@@ -16,7 +16,7 @@ export class FatorAjusteLabelGenerator {
     const fa: FatorAjuste = this._fatorAjuste;
     const prefix = this.generatePrefix();
     const fatorSuffix = this.generateFatorSuffix();
-    this._label = `${prefix} ${fa.nome} - ${fa.fatorVisualizavel()}${fatorSuffix}`;
+    this._label = `${prefix} ${fa.nome} - ${fa.fatorFormatado}${fatorSuffix}`;
   }
 
   private static generatePrefix(): string {

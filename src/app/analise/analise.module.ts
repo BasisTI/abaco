@@ -19,6 +19,9 @@ import {
   DropdownModule,
   RadioButtonModule,
   ConfirmDialogModule,
+  ToggleButtonModule,
+  DialogModule,
+  CheckboxModule,
   DataTableModule,
   ConfirmationService,
   TabViewModule,
@@ -30,6 +33,7 @@ import {
   AnaliseComponent,
   AnaliseDetailComponent,
   AnaliseFormComponent,
+  AnaliseViewComponent,
   analiseRoute
 } from './';
 
@@ -55,6 +59,9 @@ import { UtilModule } from '../util/util.module';
     InputTextModule,
     DataTableModule,
     ConfirmDialogModule,
+    DialogModule,
+    ToggleButtonModule,
+    CheckboxModule,
     AbacoButtonsModule,
     TabViewModule,
     InputTextareaModule,
@@ -71,6 +78,7 @@ import { UtilModule } from '../util/util.module';
     AnaliseComponent,
     AnaliseDetailComponent,
     AnaliseFormComponent,
+    AnaliseViewComponent,
   ],
   providers: [
     AnaliseService,
