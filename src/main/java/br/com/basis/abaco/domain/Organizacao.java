@@ -89,7 +89,7 @@ public class Organizacao implements Serializable, ReportObject {
 	private String sigla;
 
 	@Column(name="logo_id")
-	private int logoId;
+	private Long logoId;
 
 	public Long getId() {
 		return id;
@@ -219,11 +219,11 @@ public class Organizacao implements Serializable, ReportObject {
 		this.contracts = contracts;
 	}
 
-	public int getLogoId() {
+	public Long getLogoId() {
 		return logoId;
 	}
 
-	public void setLogoId(int logoId) {
+	public void setLogoId(Long logoId) {
 		this.logoId = logoId;
 	}
 

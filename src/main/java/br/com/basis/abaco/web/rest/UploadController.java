@@ -14,6 +14,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,7 +119,7 @@ public class UploadController {
 
     }
 
-    @GetMapping("/getFile/info/{id}")
+    @GetMapping("/getLogo/info/{id}")
     public UploadedFile getFileInfo(@PathVariable Long id) {
         UploadedFile uploadedFile = filesRepository.findOne(id);
 
@@ -127,47 +128,24 @@ public class UploadController {
 
     @GetMapping("/getLogo/{id}")
     public UploadedFile getLogo(@PathVariable Long id) {
-        UploadedFile uploadedFile = filesRepository.findOne(id);
 
+        UploadedFile uploadedFile = filesRepository.findOne(id);
         return uploadedFile;
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/uploadLogo")
      @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
-     public UploadedFile singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
-         bytes = file.getBytes();
+     public ResponseEntity<UploadedFile> singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+         this.bytes = file.getBytes();
+
          UploadedFile uploadedFile = new UploadedFile();
 
-
          uploadedFile.setLogo(bytes);
-       
-         return uploadedFile;
+         uploadedFile.setDateOf(new Date());
+         uploadedFile = filesRepository.save(uploadedFile);
+
+         return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "/saveFile")
+            .body(uploadedFile);
      }
-
-
-
-
-      @PostMapping("/saveFile")
-         @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
-         public UploadedFile saveFile(@PathVariable("file") MultipartFile file) throws IOException {
-
-             UploadedFile uploadedFile = new UploadedFile();
-
-
-             uploadedFile.setLogo(bytes);
-             uploadedFile.setDateOf(new Date());
-
-
-             filesRepository.save(uploadedFile);
-             
-             return uploadedFile;
-         }
-
-
-
-
-
-
-
-
 }
