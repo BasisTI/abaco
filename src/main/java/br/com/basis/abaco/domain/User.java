@@ -2,9 +2,10 @@ package br.com.basis.abaco.domain;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +22,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import br.com.basis.abaco.security.AuthoritiesConstants;
+import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
@@ -301,4 +304,20 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 				+ '\'' + ", email='" + email + '\'' + ", imageUrl='" + imageUrl + '\'' + ", activated='" + activated
 				+ '\'' + ", langKey='" + langKey + '\'' + ", activationKey='" + activationKey + '\'' + "}";
 	}
+
+    /**
+     * Verifica se o usuário logado tem permissões de admin ou gestor
+     * @return Retorna verdadeiro se tem permissões de admin ou gestor. Retorna falso em qualquer outro caso
+     */
+    public boolean verificarAuthority() {
+        boolean temResposta = false;
+
+            Iterator<Authority> i = this.getAuthorities().iterator();
+            while (i.hasNext() && !temResposta) {
+                Authority a = i.next();
+                temResposta = (a.contain(AuthoritiesConstants.ADMIN) || a.contain(AuthoritiesConstants.GESTOR));
+        }
+        return temResposta;
+    }
+
 }

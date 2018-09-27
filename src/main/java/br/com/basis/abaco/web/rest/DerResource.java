@@ -9,6 +9,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +59,7 @@ public class DerResource {
      */
     @PostMapping("/ders")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Der> createDer(@Valid @RequestBody Der der) throws URISyntaxException {
         log.debug("REST request to save Der : {}", der);
         if (der.getId() != null) {
@@ -81,6 +83,7 @@ public class DerResource {
      */
     @PutMapping("/ders")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Der> updateDer(@Valid @RequestBody Der der) throws URISyntaxException {
         log.debug("REST request to update Der : {}", der);
         if (der.getId() == null) {
@@ -128,6 +131,7 @@ public class DerResource {
      */
     @DeleteMapping("/ders/{id}")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Void> deleteDer(@PathVariable Long id) {
         log.debug("REST request to delete Der : {}", id);
         derRepository.delete(id);

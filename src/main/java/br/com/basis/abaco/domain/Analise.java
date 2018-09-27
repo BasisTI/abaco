@@ -2,6 +2,7 @@ package br.com.basis.abaco.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
@@ -134,6 +135,9 @@ public class Analise implements Serializable, ReportObject {
     @JoinColumn
     private User editedBy;
 
+    @OneToMany(mappedBy = "analises", fetch = FetchType.EAGER)
+    private Set<Compartilhada> compartilhadas = new HashSet<>();
+
     @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonManagedReference
@@ -158,13 +162,16 @@ public class Analise implements Serializable, ReportObject {
     private Boolean baselineImediatamente;
 
     @Column(name = "data_homologacao_software")
-    private Date dataHomologacao;
+    private Timestamp dataHomologacao;
 
     @Column(name = "identificador_analise", length = 100)
     private String identificadorAnalise;
 
     @Column(name = "bloqueado")
     private boolean bloqueiaAnalise;
+
+    @Column(name = "enviar_baseline")
+    private boolean enviarBaseline;
 
     @ManyToOne
     private TipoEquipe equipeResponsavel;
@@ -486,11 +493,11 @@ public class Analise implements Serializable, ReportObject {
         return this;
     }
 
-	public Date getDataHomologacao() {
+	public Timestamp getDataHomologacao() {
 		return dataHomologacao;
 	}
 
-	public void setDataHomologacao(Date dataHomologacao) {
+	public void setDataHomologacao(Timestamp dataHomologacao) {
 		this.dataHomologacao = dataHomologacao;
 	}
 
@@ -532,7 +539,23 @@ public class Analise implements Serializable, ReportObject {
 
     public void setUpdatedOn(ZonedDateTime updatedOn) { audit.setUpdatedOn(updatedOn); }
 
-	@Override
+    public boolean isBloqueiaAnalise() {
+        return bloqueiaAnalise;
+    }
+
+    public boolean isEnviarBaseline() {
+        return enviarBaseline;
+    }
+
+    public void setEnviarBaseline(boolean enviarBaseline) {
+        this.enviarBaseline = enviarBaseline;
+    }
+
+    public Set<Compartilhada> getCompartilhadas() { return compartilhadas; }
+
+    public void setCompartilhadas(Set<Compartilhada> compartilhadas) { this.compartilhadas = compartilhadas; }
+
+    @Override
     public String toString() {
         // // @formatter:off
         return "Analise{" +

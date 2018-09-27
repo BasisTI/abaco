@@ -31,6 +31,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,6 +69,14 @@ public class ManualResource {
 
     private final DynamicExportsService dynamicExportsService;
 
+    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
+
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
+
+    private static final String ROLE_USER = "ROLE_USER";
+
+    private static final String ROLE_GESTOR = "ROLE_GESTOR";
+
     public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository, DynamicExportsService dynamicExportsService) {
         this.manualRepository = manualRepository;
         this.manualSearchRepository = manualSearchRepository;
@@ -87,6 +96,7 @@ public class ManualResource {
      */
     @PostMapping("/manuals")
     @Timed
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Manual> createManual(@Valid @RequestBody Manual manual) throws URISyntaxException {
         log.debug("REST request to save Manual : {}", manual);
         if (manual.getId() != null) {
@@ -136,6 +146,7 @@ public class ManualResource {
      */
     @PutMapping("/manuals")
     @Timed
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Manual> updateManual(@Valid @RequestBody Manual manual) throws URISyntaxException {
         log.debug("REST request to update Manual : {}", manual);
         if (manual.getId() == null) {
@@ -194,6 +205,7 @@ public class ManualResource {
      */
     @DeleteMapping("/manuals/{id}")
     @Timed
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Void> deleteManual(@PathVariable Long id) {
         log.debug("REST request to delete Manual : {}", id);
 

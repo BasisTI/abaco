@@ -31,9 +31,6 @@ public class RelatorioUtil {
 
     private HttpServletRequest request;
 
-    public RelatorioUtil() {
-    }
-
     public RelatorioUtil(HttpServletResponse response, HttpServletRequest request) {
         this.response = response;
         this.request = request;

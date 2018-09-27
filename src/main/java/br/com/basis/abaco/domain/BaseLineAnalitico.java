@@ -1,13 +1,13 @@
 package br.com.basis.abaco.domain;
 
 import org.springframework.data.elasticsearch.annotations.Document;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * A BaseLineAnalitico.
@@ -18,11 +18,17 @@ import java.util.Date;
 public class BaseLineAnalitico implements Serializable {
 
     @Id
+    @Column(name = "row_number")
+    private Long id;
+
     @Column(name = "id_funcao_dados")
     private Long idfuncaodados;
 
     @Column(name = "id_sistema")
     private Long idsistema;
+
+    @Column(name = "equipe_responsavel_id")
+    private Long equipeResponsavelId;
 
     @Column(name = "tipo")
     private String tipo;
@@ -42,6 +48,9 @@ public class BaseLineAnalitico implements Serializable {
     @Column(name = "nome")
     private String nome;
 
+    @Column(name = "nome_equipe")
+    private String nomeEquipe;
+
     @Column(name = "sigla")
     private String sigla;
 
@@ -60,6 +69,14 @@ public class BaseLineAnalitico implements Serializable {
     @Column(name = "rlr_alr")
     private BigDecimal rlralr;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getIdfuncaodados() {
         return idfuncaodados;
     }
@@ -74,6 +91,14 @@ public class BaseLineAnalitico implements Serializable {
 
     public void setIdsistema(Long idsistema) {
         this.idsistema = idsistema;
+    }
+
+    public Long getEquipeResponsavelId() {
+        return equipeResponsavelId;
+    }
+
+    public void setEquipeResponsavelId(Long equipeResponsavelId) {
+        this.equipeResponsavelId = equipeResponsavelId;
     }
 
     public String getTipo() {
@@ -122,6 +147,14 @@ public class BaseLineAnalitico implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getNomeEquipe() {
+        return nomeEquipe;
+    }
+
+    public void setNomeEquipe(String nomeEquipe) {
+        this.nomeEquipe = nomeEquipe;
     }
 
     public String getSigla() {

@@ -43,6 +43,8 @@ public class AccountResource {
 
     private final MailService mailService;
 
+    private static final String ENTITY_NAME = "account";
+
     public AccountResource(UserRepository userRepository, UserService userService,
                            MailService mailService) {
 
@@ -155,7 +157,7 @@ public class AccountResource {
     @Timed
     public ResponseEntity changePassword(@RequestBody String password) {
         if (!checkPasswordLength(password)) {
-            return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_REQUEST);
+            return this.createBadRequest("badPasswdLimits", "To short or to long password");
         }
         userService.changePassword(password);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -202,4 +204,10 @@ public class AccountResource {
             password.length() >= ManagedUserVM.PASSWORD_MIN_LENGTH &&
             password.length() <= ManagedUserVM.PASSWORD_MAX_LENGTH;
     }
+
+    private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
+        return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
+            .body(null);
+    }
+
 }

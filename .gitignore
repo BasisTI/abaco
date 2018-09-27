@@ -5,7 +5,6 @@
 /target/www/**
 /src/test/javascript/coverage/
 /src/test/javascript/PhantomJS*/
-
 ######################
 # Node
 ######################
@@ -111,6 +110,7 @@ Desktop.ini
 # Linux
 ######################
 backend_start.sh
+scripts.sh
 
 ######################
 # Directories
@@ -146,3 +146,4 @@ backend_start.sh
 ######################
 .eslintcache
 /.apt_generated/
+scripts.sh

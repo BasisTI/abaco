@@ -39,7 +39,7 @@ public class EsforcoFase implements Serializable {
 
     @Column(name = "esforco", precision = 10, scale = 4)
     @DecimalMin(value = "0")
-    @DecimalMax(value = "1")
+    @DecimalMax(value = "100")
     private BigDecimal esforco;
 
     @ManyToOne

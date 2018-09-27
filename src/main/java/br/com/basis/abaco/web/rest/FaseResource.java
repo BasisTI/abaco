@@ -28,6 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -80,6 +81,7 @@ public class FaseResource {
      */
     @PostMapping("/fases")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Fase> createFase(@RequestBody Fase fase) throws URISyntaxException {
         log.debug("REST request to save Fase : {}", fase);
         if (fase.getId() != null) {
@@ -103,6 +105,7 @@ public class FaseResource {
      */
     @PutMapping("/fases")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Fase> updateFase(@RequestBody Fase fase) throws URISyntaxException {
         log.debug("REST request to update Fase : {}", fase);
         if (fase.getId() == null) {
@@ -150,6 +153,7 @@ public class FaseResource {
      */
     @DeleteMapping("/fases/{id}")
     @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Void> deleteFase(@PathVariable Long id) {
         log.debug("REST request to delete Fase : {}", id);
         faseRepository.delete(id);

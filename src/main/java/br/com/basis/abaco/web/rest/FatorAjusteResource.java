@@ -11,6 +11,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,14 @@ public class FatorAjusteResource {
     private final Logger log = LoggerFactory.getLogger(FatorAjusteResource.class);
 
     private static final String ENTITY_NAME = "fatorAjuste";
+    
+    private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
+
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
+
+    private static final String ROLE_USER = "ROLE_USER";
+
+    private static final String ROLE_GESTOR = "ROLE_GESTOR";
 
     private final FatorAjusteRepository fatorAjusteRepository;
 
@@ -61,6 +70,7 @@ public class FatorAjusteResource {
      */
     @PostMapping("/fator-ajustes")
     @Timed
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<FatorAjuste> createFatorAjuste(@Valid @RequestBody FatorAjuste fatorAjuste) throws URISyntaxException {
         log.debug("REST request to save FatorAjuste : {}", fatorAjuste);
         if (fatorAjuste.getId() != null) {
@@ -84,6 +94,7 @@ public class FatorAjusteResource {
      */
     @PutMapping("/fator-ajustes")
     @Timed
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<FatorAjuste> updateFatorAjuste(@Valid @RequestBody FatorAjuste fatorAjuste) throws URISyntaxException {
         log.debug("REST request to update FatorAjuste : {}", fatorAjuste);
         if (fatorAjuste.getId() == null) {
@@ -104,6 +115,7 @@ public class FatorAjusteResource {
      */
     @PostMapping("/fator-ajustes/manual")
     @Timed
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public List<FatorAjuste> getAllContratoesByOrganization(@RequestBody Manual manual) {
         log.debug("REST request to get all percentual factors by manual");
         List<FatorAjuste> factors = this.fatorAjusteRepository.findAllByManualAndTipoAjuste(manual, TipoFatorAjuste.PERCENTUAL);
@@ -146,6 +158,7 @@ public class FatorAjusteResource {
      */
     @DeleteMapping("/fator-ajustes/{id}")
     @Timed
+    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Void> deleteFatorAjuste(@PathVariable Long id) {
         log.debug("REST request to delete FatorAjuste : {}", id);
         fatorAjusteRepository.delete(id);
