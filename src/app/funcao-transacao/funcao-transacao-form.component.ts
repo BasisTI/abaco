@@ -249,7 +249,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     public carregarDadosBaseline() {
         this.baselineService.baselineAnaliticoFT(this.analise.sistema.id).subscribe((res: ResponseWrapper) => {
             this.dadosBaselineFT = res.json;
-            console.log(res);
         });
     }
 
@@ -257,8 +256,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
         this.funcaoDadosService.getFuncaoTransacaoBaseline(baselineAnalitico.idfuncaodados)
         .subscribe((res: FuncaoTransacao) => {
-            res.name = this.currentFuncaoTransacao.name;
-
                 if (res.fatorAjuste === null) {res.fatorAjuste = undefined; }
                 res.id = undefined;
                 res.ders.forEach(ders => {
@@ -274,9 +271,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     searchBaseline(event): void {
-        console.log(event);
-        this.baselineResultados = this.dadosBaselineFT.filter(c => c.name.startsWith(event.query));
-        console.log(this.baselineResultados);
+        this.baselineResultados = this.dadosBaselineFT.filter(c => c.name.includes(event.query));
     }
 
     // Funcionalidade Selecionada
@@ -306,6 +301,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
                     this.atualizaResumo();
                     this.resetarEstadoPosSalvar();
+                    this.salvarAnalise();
                     this.estadoInicial();
                 } else {
                     this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
@@ -516,7 +512,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.disableTRDER();
         this.configurarDialog();
 
-        this.analiseSharedDataService.currentFuncaoTransacao = funcaoTransacaoSelecionada;
+        this.currentFuncaoTransacao = funcaoTransacaoSelecionada;
         this.carregarValoresNaPaginaParaEdicao(funcaoTransacaoSelecionada);
         this.pageNotificationService.addInfoMsg(`Alterando Função de Transação '${funcaoTransacaoSelecionada.name}'`);
     }

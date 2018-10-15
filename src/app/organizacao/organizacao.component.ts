@@ -50,7 +50,6 @@ export class OrganizacaoComponent implements AfterViewInit, OnInit {
   }
 
   datatableClick(event: DatatableClickEvent) {
-    console.log(event.selection);
     if (!event.selection) {
       
       return;

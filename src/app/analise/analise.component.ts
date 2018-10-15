@@ -56,7 +56,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         { value: 'ESTIMADA', text: 'ESTIMADA'}
         ];
 
-    blocked: boolean;
+    blocked; inicial: boolean;
     mostrarDialog = false;
 
     private userId: number;         // Usado para carregar apenas os organizações e equipes referentes ao usuário logado
@@ -83,13 +83,13 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
         this.recuperarSistema();
+        this.inicial=false;
 
-        this.blocked = false;
         this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
             this.analiseReadyToClone = new Analise().copyFromJSON(event.data);
             this.analiseSelecionada = event.data;
-            console.log("Analise selecionada", this.analiseSelecionada);
             this.blocked = event.data.bloqueiaAnalise;
+            this.inicial = true;
         });
         this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
             this.analiseSelecionada = undefined;
@@ -102,7 +102,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     getLoggedUser() {
         this.userService.findCurrentUser().subscribe(res =>{
             this.loggedUser = res;
-            console.log("Usuário logado???" , this.loggedUser);
         });
     }
     /**
@@ -247,7 +246,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 }
             });
         });
-        console.log("retornou");
         return retorno;
     }
 
@@ -531,7 +529,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                     this.analiseService.block(copy).subscribe(() => {
                         this.estadoInicial();
                         const nome = this.analiseSelecionada.name;
-                        this.analiseSelecionada = undefined;
                         this.blocked = false;
                         this.pageNotificationService.addBlockMsgWithName(nome);
                     });
@@ -556,7 +553,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                         this.estadoInicial();
                         const nome = copy.name;
                         this.blocked = true;
-                        this.analiseSelecionada = undefined;
                         this.pageNotificationService.addUnblockMsgWithName(nome);
                     }, (error: Response) => {
                         switch (error.status) {

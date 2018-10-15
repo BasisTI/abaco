@@ -140,18 +140,16 @@
                                 tooltip="Desbloquear"
                                 icon="block"
                                 (click)="desbloqueiaRelatorio()"
-                                class="ui-button-success"
-                                disabled="desabilitarBotaoRelatorio()">
+                                class="ui-button-success">
                         </basis-datatable-button>
 
                         <basis-datatable-button 
-                                *ngIf="!blocked"
+                                *ngIf="!blocked && inicial"
                                 name="bloquear"
                                 tooltip="Bloquear"
                                 icon="block"
                                 (click)="bloqueiaRelatorio()"
-                                class="ui-button-danger"
-                                disabled="desabilitarBotaoRelatorio()">
+                                class="ui-button-danger">
                         </basis-datatable-button>
 
                         <basis-datatable-button

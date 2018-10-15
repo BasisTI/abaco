@@ -203,7 +203,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     searchBaseline(event): void {
-        this.baselineResults = this.dadosBaselineFD.filter(c => c.name.startsWith(event.query));
+        this.baselineResults = this.dadosBaselineFD.filter(c => c.name.includes(event.query));
     }
 
     // Carrega nome das funçeõs de dados
@@ -328,6 +328,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                     this.analise.addFuncaoDados(funcaoDadosCalculada);
                     this.atualizaResumo();
                     this.resetarEstadoPosSalvar();
+                    this.salvarAnalise();
                     this.estadoInicial();
                 } else {
                     this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
@@ -507,8 +508,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
         this.funcaoDadosService.getFuncaoDadosBaseline(baselineAnalitico.idfuncaodados)
             .subscribe((res: FuncaoDados) => {
-                res.name = this.currentFuncaoDados.name;
-
+                console.log(this.currentFuncaoDados);
                 if (res.fatorAjuste === null) {
                     res.fatorAjuste = undefined;
                 }
@@ -555,7 +555,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.disableTRDER();
         this.configurarDialog();
 
-        this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
+        this.currentFuncaoDados = funcaoDadosSelecionada;
         this.carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada);
         this.pageNotificationService.addInfoMsg(`Alterando Função de Dados '${funcaoDadosSelecionada.name}'`);
     }

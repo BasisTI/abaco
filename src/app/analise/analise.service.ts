@@ -103,7 +103,6 @@ export class AnaliseService {
         switch (error.status) {
           case 400: {
             if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
-                console.log('entrou no if');
                 this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
             }
             break;

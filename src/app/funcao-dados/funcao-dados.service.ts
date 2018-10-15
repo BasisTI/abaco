@@ -42,7 +42,6 @@ export class FuncaoDadosService {
     }
 
     getFuncaoDadosBaseline(id: number): Observable<FuncaoDados> {
-        console.log(this.sistemaResourceUrl);
         return this.http.get(`${this.sistemaResourceUrl}/${id}`).map((res: Response) => {
             const resposta = this.convertJsonToSintetico(res.json());
             return resposta;

@@ -60,7 +60,6 @@ export class SenhaFormComponent implements OnInit, OnDestroy {
         this.senhaService.changePassword(this.newPassword).subscribe(() => {
           const msg = 'Senha alterada com sucesso para o usuário ' + this.login + '!';
           this.pageNotificationService.addSuccessMsg(msg);
-          console.log(msg);
         }, error => {
           if (error.status === 400) {
             this.verificaErro(error.headers.toJSON()['x-abacoapp-error'][0]);

@@ -187,7 +187,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMsg('Favor preencher os campos Obrigatórios!');
             return;
         }
-        console.log(this.user);
         if (this.user.id !== undefined) {
             this.isEdit = true;
             this.subscribeToSaveResponse(this.userService.update(this.user));
@@ -325,13 +324,10 @@ export class UserFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular a equipe responsavel da organização
      */
     setEquipeOrganizacao(org: Organizacao[]) {
-        console.log(org);
         this.tipoEquipes = [];
         org.forEach(element => {
             this.tipoEquipeService.findAllByOrganizacaoId(element.id).subscribe((res: ResponseWrapper) => {
                 this.tipoEquipes = this.tipoEquipes.concat(res.json);
-                console.log("res,json" , res.json);
-                console.log("Equipes" , this.tipoEquipes);
             });
         });
     }

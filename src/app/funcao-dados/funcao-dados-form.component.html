@@ -132,6 +132,7 @@
                         <div class="ui-g-9">
                             <label>Nome *</label>
                             <p-autoComplete
+                                    [ngModelOptions]="{standalone: true}"
                                     [(ngModel)]="currentFuncaoDados.name"
                                     [suggestions]="baselineResults"
                                     id="idNomeFormFuncaoDados"
