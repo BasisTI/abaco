@@ -319,11 +319,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.showDialogEditPhaseEffort = true;
     }
 
-    editPhaseEffort(form) {
-        if (!form.valid) {
-            this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
-            return;
-        }
+    editPhaseEffort() {
         if (this.checkPhaseEffortRequiredFields(this.editedPhaseEffort)) {
             this.manual.updateEsforcoFases(this.editedPhaseEffort);
             //            this.pageNotificationService.addUpdateMsg();
