@@ -169,14 +169,14 @@ public class OrganizacaoResource {
     public ResponseEntity<Organizacao> updateOrganizacao(@Valid @RequestBody Organizacao organizacao) throws URISyntaxException {
         int i;
         log.debug("REST request to update Organizacao : {}", organizacao);
-        if (organizacao.getId() == null) {
-            return createOrganizacao(organizacao);
-        }
-
-        i = validaCamposOrganizacao(organizacao);
-        if (i >= 0) {
-            return this.createBadRequest(this.erro[i], this.mensagem[i]);
-        }
+//        if (organizacao.getId() == null) {
+//            return createOrganizacao(organizacao);
+//        }
+//
+//        i = validaCamposOrganizacao(organizacao);
+//        if (i >= 0) {
+//            return this.createBadRequest(this.erro[i], this.mensagem[i]);
+//        }
 
         Organizacao result = organizacaoRepository.save(organizacao);
         organizacaoSearchRepository.save(result);
