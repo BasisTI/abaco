@@ -121,16 +121,12 @@ public class UploadController {
 
     @GetMapping("/getLogo/info/{id}")
     public UploadedFile getFileInfo(@PathVariable Long id) {
-        UploadedFile uploadedFile = filesRepository.findOne(id);
-
-        return uploadedFile;
+        return filesRepository.findOne(id);
     }
 
     @GetMapping("/getLogo/{id}")
     public UploadedFile getLogo(@PathVariable Long id) {
-
-        UploadedFile uploadedFile = filesRepository.findOne(id);
-        return uploadedFile;
+        return filesRepository.findOne(id);
     }
 
     @PostMapping("/uploadLogo")
