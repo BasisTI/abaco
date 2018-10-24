@@ -48,6 +48,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     invalidFields: Array<string> = [];
 
     @ViewChild('fileInput') fileInput: FileUpload;
+    tipoFaseValid = false;
+    esforcoValid = false;
 
     /**
      *
@@ -317,7 +319,11 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.showDialogEditPhaseEffort = true;
     }
 
-    editPhaseEffort() {
+    editPhaseEffort(form) {
+        if (!form.valid) {
+            this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
+            return;
+        }
         if (this.checkPhaseEffortRequiredFields(this.editedPhaseEffort)) {
             this.manual.updateEsforcoFases(this.editedPhaseEffort);
             //            this.pageNotificationService.addUpdateMsg();
@@ -368,14 +374,18 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
         if (phaseEffort.fase !== undefined) {
             isPhaseNameValid = true;
+            this.tipoFaseValid = false;
         } else {
+            this.tipoFaseValid = true;
             isPhaseNameValid = false;
         }
 
         if (phaseEffort.esforco !== undefined && phaseEffort.esforco !== 0) {
             isEffortValid = true;
+            this.esforcoValid = false;
         } else {
             isEffortValid = false;
+            this.esforcoValid = true;
         }
 
         (isPhaseNameValid && isEffortValid) ? (isPhaseEffortValid = true) : (isPhaseEffortValid = false);
