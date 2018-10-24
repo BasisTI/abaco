@@ -66,7 +66,7 @@ public class Analise implements Serializable, ReportObject {
     private Long id;
 
     @Column(name = "numero_os")
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String numeroOs;
 
     @Enumerated(EnumType.STRING)
@@ -77,26 +77,26 @@ public class Analise implements Serializable, ReportObject {
     private BigDecimal valorAjuste;
 
     @Column(name = "pf_total")
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String pfTotal;
 
     @Column(name = "pf_total_adjust")
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String adjustPFTotal;
 
     @Size(max = 4000)
     @Column(name = "escopo", length = 4000)
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String escopo;
 
     @Size(max = 4000)
     @Column(name = "fronteiras", length = 4000)
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String fronteiras;
 
     @Size(max = 4000)
     @Column(name = "documentacao", length = 4000)
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String documentacao;
 
     @Enumerated(EnumType.STRING)
@@ -292,7 +292,9 @@ public class Analise implements Serializable, ReportObject {
         return sistema;
     }
 
-    public String getNomeSistema() { return sistema.getNome(); }
+    public String getNomeSistema() {
+        return sistema.getNome();
+    }
 
     public Analise sistema(Sistema sistema) {
         this.sistema = sistema;
@@ -358,12 +360,14 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Long getGarantiaRestante() throws ParseException {
-        if (contrato == null || dataHomologacao == null){ return 0l; }
+        if (contrato == null || dataHomologacao == null) {
+            return 0l;
+        }
         Integer garantia = contrato.getDiasDeGarantia();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date dateWithoutTime = sdf.parse(sdf.format(new Date()));
         Long diferenca = dateWithoutTime.getTime() - dataHomologacao.getTime();
-        if (garantia - (diferenca / 86400000) < 0){
+        if (garantia - (diferenca / 86400000) < 0) {
             return 0l;
         }
         return garantia - (diferenca / 86400000);
@@ -377,7 +381,9 @@ public class Analise implements Serializable, ReportObject {
         return organizacao;
     }
 
-    public String getNomeOrg(){ return organizacao.getNome(); }
+    public String getNomeOrg() {
+        return organizacao.getNome();
+    }
 
     public void setOrganizacao(Organizacao organizacao) {
         this.organizacao = organizacao;
@@ -466,7 +472,8 @@ public class Analise implements Serializable, ReportObject {
     public String getBloqueiaString() {
         if (bloqueiaAnalise) {
             return "Sim";
-        } return "Não";
+        }
+        return "Não";
     }
 
     public void setbloqueiaAnalise(Boolean bloqueiaAnalise) {
@@ -474,70 +481,76 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public MetodoContagem getMetodoContagem() {
-		return metodoContagem;
-	}
+        return metodoContagem;
+    }
 
-	public  String getMetodoContagemString() {
+    public String getMetodoContagemString() {
         if (metodoContagem == null) {
             return "";
         }
         return metodoContagem.toString();
     }
 
-	public void setMetodoContagem(MetodoContagem metodoContagem) {
-		this.metodoContagem = metodoContagem;
-	}
+    public void setMetodoContagem(MetodoContagem metodoContagem) {
+        this.metodoContagem = metodoContagem;
+    }
 
     public Analise metodoContagem(MetodoContagem metodoContagem) {
         this.metodoContagem = metodoContagem;
         return this;
     }
 
-	public Timestamp getDataHomologacao() {
-		return dataHomologacao;
-	}
+    public Timestamp getDataHomologacao() {
+        return dataHomologacao;
+    }
 
-	public void setDataHomologacao(Timestamp dataHomologacao) {
-		this.dataHomologacao = dataHomologacao;
-	}
+    public void setDataHomologacao(Timestamp dataHomologacao) {
+        this.dataHomologacao = dataHomologacao;
+    }
 
-	public String getIdentificadorAnalise() {
-		return identificadorAnalise;
-	}
+    public String getIdentificadorAnalise() {
+        return identificadorAnalise;
+    }
 
-	public void setIdentificadorAnalise(String identificadorAnalise) {
-		this.identificadorAnalise = identificadorAnalise;
-	}
+    public void setIdentificadorAnalise(String identificadorAnalise) {
+        this.identificadorAnalise = identificadorAnalise;
+    }
 
-	public TipoEquipe getEquipeResponsavel() {
-		return equipeResponsavel;
-	}
+    public TipoEquipe getEquipeResponsavel() {
+        return equipeResponsavel;
+    }
 
-	public String getNomeEquipe() { return equipeResponsavel.getNome(); }
+    public String getNomeEquipe() {
+        return equipeResponsavel.getNome();
+    }
 
-	public void setEquipeResponsavel(TipoEquipe equipeResponsavel) {
-		this.equipeResponsavel = equipeResponsavel;
-	}
+    public void setEquipeResponsavel(TipoEquipe equipeResponsavel) {
+        this.equipeResponsavel = equipeResponsavel;
+    }
 
-	public AbacoAudit getAudit() {
-		return audit;
-	}
+    public AbacoAudit getAudit() {
+        return audit;
+    }
 
-	public void setAudit(AbacoAudit audit) {
-		this.audit = audit;
-	}
+    public void setAudit(AbacoAudit audit) {
+        this.audit = audit;
+    }
 
     public ZonedDateTime getCreatedOn() {
         return audit.getCreatedOn();
     }
 
-    public void setCreatedOn(ZonedDateTime createdOn) { audit.setCreatedOn(createdOn); }
+    public void setCreatedOn(ZonedDateTime createdOn) {
+        audit.setCreatedOn(createdOn);
+    }
 
     public ZonedDateTime getUpdatedOn() {
         return audit.getUpdatedOn();
     }
 
-    public void setUpdatedOn(ZonedDateTime updatedOn) { audit.setUpdatedOn(updatedOn); }
+    public void setUpdatedOn(ZonedDateTime updatedOn) {
+        audit.setUpdatedOn(updatedOn);
+    }
 
     public boolean isBloqueiaAnalise() {
         return bloqueiaAnalise;
@@ -551,27 +564,13 @@ public class Analise implements Serializable, ReportObject {
         this.enviarBaseline = enviarBaseline;
     }
 
-    public Set<Compartilhada> getCompartilhadas() { return compartilhadas; }
-
-    public void setCompartilhadas(Set<Compartilhada> compartilhadas) { this.compartilhadas = compartilhadas; }
-
-    @Override
-    public String toString() {
-        // // @formatter:off
-        return "Analise{" +
-            "id=" + id +
-            ", numeroOs='" + numeroOs + "'" +
-            ", tipoContagem='" + metodoContagem + "'" +
-            ", dataHomologacao='" + dataHomologacao + "'" +
-            ", valorAjuste='" + valorAjuste + "'" +
-            ", pfTotal='" + pfTotal + "'" +
-            ", escopo='" + escopo + "'" +
-            ", fronteiras='" + fronteiras + "'" +
-            ", documentacao='" + documentacao + "'" +
-            ", tipoAnalise='" + tipoAnalise + "'" +
-            ", propositoContagem='" + propositoContagem + "'" +
-            '}';
-        // @formatter:on
+    public Set<Compartilhada> getCompartilhadas() {
+        return compartilhadas;
     }
+
+    public void setCompartilhadas(Set<Compartilhada> compartilhadas) {
+        this.compartilhadas = compartilhadas;
+    }
+
 
 }

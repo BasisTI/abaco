@@ -162,11 +162,6 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
         this.derValues = new HashSet<String>(derValues);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
-    }
-
     public AbacoAudit getAudit() {
         return audit;
     }
