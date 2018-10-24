@@ -98,12 +98,10 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
       this.isSaving = false;
       this.router.navigate(['/admin/tipoEquipe']) ;
 
-      alert(this.tipoEquipe.id );
       if(this.tipoEquipe.id === undefined){
           this.pageNotificationService.addCreateMsg();
       }else{
           this.pageNotificationService.addSuccessMsg('Registro incluído com sucesso!');
-          this.pageNotificationService.addUpdateMsg();
       }
     }, (error: Response) => {
       this.isSaving = false;
