@@ -45,7 +45,7 @@ public class RelatorioAnaliseRest {
 
     private static String caminhoAnaliseDetalhada = "reports/analise/analise_detalhada.jasper";
 
-    private static String caminhoImagem = "reports/img/fnde_logo.png";
+    private static String caminhoImagem = "reports/img/abaco.png";
 
     private HttpServletRequest request;
 

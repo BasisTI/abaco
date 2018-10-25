@@ -22,7 +22,7 @@ public class RelatorioBaselineRest {
 
     private static String caminhoRelatorioBaseline = "reports/analise/baseline.jasper";
 
-    private static String caminhoImagem = "reports/img/fnde_logo.png";
+    private static String caminhoImagem = "reports/img/abaco.png";
 
     private HttpServletRequest request;
 
