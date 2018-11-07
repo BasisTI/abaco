@@ -41,16 +41,16 @@ public class CustomSocialConnectionRepository implements ConnectionRepository {
         List<Connection<?>> connections = socialUserConnectionsToConnections(socialUserConnections);
         MultiValueMap<String, Connection<?>> connectionsByProviderId = new LinkedMultiValueMap<>();
         Set<String> registeredProviderIds = connectionFactoryLocator.registeredProviderIds();
-        registeredProviderIds.forEach((registeredProviderId) -> {
+        for (String registeredProviderId : registeredProviderIds) {
             connectionsByProviderId.put(registeredProviderId, Collections.emptyList());
-        });
-        connections.forEach((Connection<?> connection) -> {
+        }
+        for (Connection<?> connection : connections) {
             String providerId = connection.getKey().getProviderId();
-            if (connectionsByProviderId.get(providerId).isEmpty()) {
+            if (connectionsByProviderId.get(providerId).size() == 0) {
                 connectionsByProviderId.put(providerId, new LinkedList<>());
             }
             connectionsByProviderId.add(providerId, connection);
-        });
+        }
         return connectionsByProviderId;
     }
 
