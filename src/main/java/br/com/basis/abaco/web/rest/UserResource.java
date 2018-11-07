@@ -209,12 +209,10 @@ public class UserResource {
 					.body(null);
 		}
         // Verificação de consistência - Não pode haver dois usuários com nome completo iguais
-		if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
-            if (!userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId().equals(user.getId())) {
-                return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use"))
-                    .body(null);
-            }
-        }
+		if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent() && !userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId().equals(user.getId())) {
+                    return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use"))
+                            .body(null);
+                }
         // Verificando qual a autoridade do usuário logado
         Authority adminAuth = new Authority();
 		adminAuth.setName(AuthoritiesConstants.ADMIN);
