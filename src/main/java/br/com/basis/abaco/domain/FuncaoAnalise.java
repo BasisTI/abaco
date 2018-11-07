@@ -3,7 +3,6 @@ package br.com.basis.abaco.domain;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -159,18 +158,15 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     }
 
     public void setDerValues(Set<String> derValues) {
-        this.derValues = new HashSet<String>(derValues);
+        this.derValues = new HashSet<>(derValues);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
-    }
-
     public AbacoAudit getAudit() {
         return audit;
     }
 
+    @Override
     public void setAudit(AbacoAudit audit) {
         this.audit = audit;
     }
