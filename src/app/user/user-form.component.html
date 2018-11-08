@@ -187,14 +187,14 @@
               #equipesMultiSelect='ngModel'
               required>
             </p-multiSelect>
-              <div *ngIf="editForm.controls['equipesMultiSelect']
-                && !this.desabilitado()
-                && !editForm.controls['equipesMultiSelect'].valid
-                && (editForm.controls['equipesMultiSelect'].touched
-                || editForm.submitted)"
-                   class="ui-message ui-messages-error">
-                Campo obrigatório.
-              </div>
+            <div *ngIf="editForm.controls['equipesMultiSelect'] 
+              && !this.desabilitado() && !this.disableEquipeDropdown()
+              && !editForm.controls['equipesMultiSelect'].valid 
+              && (editForm.controls['equipesMultiSelect'].touched 
+              || editForm.submitted)" 
+              class="ui-message ui-messages-error">
+              Campo obrigatório.
+            </div>
           </span>
         </div>
 

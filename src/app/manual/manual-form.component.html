@@ -351,10 +351,6 @@
                                     name="fase"
                                     optionLabel="nome">
                             </p-dropdown>
-                            <div *ngIf="tipoFaseValid"
-                                 class="ui-message ui-messages-error">
-                                Campo obrigatório.
-                            </div>
                         </div>
                     </div>
 
@@ -371,11 +367,6 @@
                                     name="esforco"
                                     [(ngModel)]="newPhaseEffort.esforcoFormatado"
                                     pInputText/>
-
-                            <div *ngIf="esforcoValid"
-                                 class="ui-message ui-messages-error">
-                                Campo obrigatório.
-                            </div>
                         </div>
                     </div>
 

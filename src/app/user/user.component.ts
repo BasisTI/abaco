@@ -197,7 +197,6 @@ abrirEditar(){
   }
 
   limparPesquisa() {
-    this.searchParams = {};
     this.elasticQuery.reset();
     this.recarregarDataTable();
   }

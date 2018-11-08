@@ -81,6 +81,11 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     return isAlreadyRegistered;
   }
 
+  private resetMarkFields() {
+    document.getElementById('nome_tipo_equipe').setAttribute('style', 'border-color: #bdbdbd');
+    document.getElementById('org_tipo_equipe').setAttribute('style', 'border-color: #bdbdbd');
+  }
+
   private checkFieldsMaxLength() {
     let isValid = false;
 
@@ -96,13 +101,9 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
   private subscribeToSaveResponse(result: Observable<TipoEquipe>) {
     result.subscribe((res: TipoEquipe) => {
       this.isSaving = false;
-      this.router.navigate(['/admin/tipoEquipe']) ;
+      this.router.navigate(['/admin/tipoEquipe']);
+      (this.tipoEquipe.id === null) ? (this.pageNotificationService.addCreateMsg()) : (this.pageNotificationService.addUpdateMsg());
 
-      if(this.tipoEquipe.id === undefined){
-          this.pageNotificationService.addCreateMsg();
-      }else{
-          this.pageNotificationService.addSuccessMsg('Registro incluído com sucesso!');
-      }
     }, (error: Response) => {
       this.isSaving = false;
       switch (error.status) {
@@ -119,4 +120,17 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.routeSub.unsubscribe();
   }
+
+  public informarNome(): string {
+    if (!this.tipoEquipe.nome) {
+      return 'Campo obrigatório.';
+    }
+  }
+
+  public informarOrganizacao(): string {
+    if (!this.tipoEquipe.organizacoes) {
+      return 'Campo obrigatório.';
+    }
+  }
+
 }
