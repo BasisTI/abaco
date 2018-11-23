@@ -259,6 +259,5 @@ public class ElasticsearchIndexService {
                 elasticsearchRepository.save(jpaRepository.findAll());
             }
         }
-        log.info("Elasticsearch: Indexed all rows for " + entityClass.getSimpleName());
     }
 }
