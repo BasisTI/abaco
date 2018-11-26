@@ -101,6 +101,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
             if (params['id']) {
                 this.userService.find(params['id']).subscribe(user => {
                     this.user = user;
+                    this.setEquipeOrganizacao(this.user.organizacoes);
+                    console.log("user.tipoEquipe ", user.tipoEquipe);
                     this.populateUserAuthoritiesWithArtificialId();
                 });
             }
@@ -292,6 +294,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
     loadCurrentUser() {
         this.userService.findCurrentUser().subscribe((res: User) => {
             this.user = res;
+            console.log("res.tipoEquipe ",res.tipoEquipe);
+            this.tipoEquipes = this.tipoEquipes.concat(res.tipoEquipe);
             this.populateUserAuthoritiesWithArtificialId();
         });
     }
