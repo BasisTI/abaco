@@ -100,8 +100,13 @@ abrirEditar(){
           this.pageNotificationService.addDeleteMsg();
           this.blockUI.stop();
         }, error => {
+          if (error.status === 403) {
+            this.pageNotificationService.addErrorMessage('Você não possui permissão!');
+            this.blockUI.stop();
+        }
           if (error.status === 500) {
-            this.pageNotificationService.addErrorMessage(MessageUtil.ERROR_DELETE_REGISTRO);
+            this.pageNotificationService.addErrorMessage("Falha ao excluir registro, verifique se a equipe não está vinculada a algum usuário!");
+            this.blockUI.stop();
           }
         });
       }

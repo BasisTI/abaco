@@ -141,6 +141,14 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         });
     }
 
+    clonarTooltip() {
+        if (!this.analiseSelecionada.id){
+            return "Selecione um registro para clonar"
+        }
+
+        return "Clonar"
+    }
+
     recuperarOrganizacoes() {
         this.organizacaoService.query().subscribe(response => {
           this.organizations = response.json;
@@ -198,20 +206,11 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             case 'delete':
                 this.confirmDelete(event.selection);
                 break;
-            case 'relatorioBrowser':
-                this.geraRelatorioPdfBrowser(event.selection);
-                break;
-            case 'relatorioArquivo' :
-                this.gerarRelatorioPdfArquivo(event.selection);
-                break;
             case 'relatorioBrowserDetalhado' :
                 this.geraRelatorioPdfDetalhadoBrowser(event.selection);
                 break;
             case 'clone' :
                 this.clonar(this.analiseReadyToClone);
-                break;
-            case 'geraBaselinePdfBrowser' :
-                this.geraBaselinePdfBrowser();
                 break;
             case 'compartilhar':
                 if(this.checkUserAnaliseEquipes()){
@@ -435,18 +434,18 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     /**
      * Método responsável por gerar o relatório diretamente sem a apresentação do relatório no browser.
      * @param analise
-     */
+     
     public gerarRelatorioPdfArquivo(analise: Analise) {
         this.analiseService.gerarRelatorioPdfArquivo(analise.id);
-    }
+    }*/
 
     /**
      * Método responsável pela a apresentação do relatório no browser.
      * @param analise
-     */
+     
     public geraRelatorioPdfBrowser(analise: Analise) {
         this.analiseService.geraRelatorioPdfBrowser(analise.id);
-    }
+    }*/
 
     /**
      * Método responsável por gerar o relatório detalhado da analise.
@@ -459,10 +458,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      /**
      * Método responsável por gerar o relatório da baseline.
      * @param analise
-     */
+     
     public geraBaselinePdfBrowser() {
         this.analiseService.geraBaselinePdfBrowser();
-}
+}*/
     private checkUndefinedParams() {
         (this.searchParams.identificador === '') ? (this.searchParams.identificador = undefined) : (this);
         (this.searchParams.nomeSistema !== undefined) ? (

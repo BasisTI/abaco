@@ -162,7 +162,7 @@
                         
                         <basis-datatable-button
                                 name="clone"
-                                tooltip="Clonar"
+                                [tooltip]="clonarTooltip()"
                                 icon="content-copy"
                                 disabled="desabilitarBotaoRelatorio()">
                         </basis-datatable-button>
@@ -250,7 +250,8 @@
         [(value)]="equipeShare"
         [headerCheckboxToggleAllPages]="true"
         [(selection)]="selectedEquipes"
-        dataKey="equipeId">
+        dataKey="equipeId"
+        emptyMessage="Nenhuma outra equipe na sua organização pode ter acesso à essa análise">
 
             <p-column
                 selectionMode="multiple"
@@ -282,7 +283,8 @@
         [(value)]="analiseSelecionada.compartilhadas"
         selectionMode="single"
         [(selection)]="selectedToDelete"
-        dataKey="equipeId">
+        dataKey="equipeId"
+        emptyMessage="Nenhuma outra equipe tem acesso à essa análise">
             <p-column
                 header="Equipe"
                 field="nomeEquipe">

@@ -199,6 +199,14 @@ abrirEditar(){
   limparPesquisa() {
     this.elasticQuery.reset();
     this.recarregarDataTable();
+    this.searchParams = {
+      fullName: undefined,
+      login: undefined,
+      email: undefined,
+      organization: undefined,
+      profile: undefined,
+      team: undefined,
+    };
   }
 
   recarregarDataTable() {

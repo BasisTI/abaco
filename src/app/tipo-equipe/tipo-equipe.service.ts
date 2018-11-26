@@ -96,12 +96,7 @@ export class TipoEquipeService {
   }
 
   delete(id: number): Observable<Response> {
-    return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
-        if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
-            return Observable.throw(new Error(error.status));
-        }
-    });
+    return this.http.delete(`${this.resourceUrl}/${id}`);
   }
 
   private convertResponse(res: Response): ResponseWrapper {
