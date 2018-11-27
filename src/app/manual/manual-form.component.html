@@ -5,13 +5,11 @@
             <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
 
                 <div class="ui-g">
-                    <div class="ui-g-12 ui-md-12 ui-sm-12"
-                         [hidden]="!manual.id"
-                         style="margin-bottom: 25px">
+                    <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="!manual.id" style="margin-bottom: 25px">
                         <span class="md-inputfield">
                             <input type="text" id="idIdFormManual" class="ui-inputtext" name="id" pInputText
-                                   [(ngModel)]="manual.id" readonly/>
-                                   <label>ID</label>
+                                [(ngModel)]="manual.id" readonly />
+                            <label>ID</label>
                         </span>
                     </div>
                 </div>
@@ -19,73 +17,50 @@
                 <div class="ui-g">
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
                         <span class="md-inputfield">
-                            <input
-                                    id="nome_manual"
-                                    type="text"
-                                    name="nome"
-                                    maxlength="250"
-                                    [(ngModel)]="manual.nome"
-                                    pInputText
-                                    #nome='ngModel'
-                                    required/>
-                                <label>{{ 'Nome *' | translate }}</label>
+                            <input id="nome_manual" type="text" name="nome" maxlength="250" [(ngModel)]="manual.nome"
+                                pInputText #nome='ngModel' required />
+                            <label>{{ 'Nome *' | translate }}</label>
                             <div *ngIf="editForm.controls['nome'] 
                                 && !editForm.controls['nome'].valid 
                                 && (editForm.controls['nome'].touched 
                                 || editForm.submitted)"
-                                 class="ui-message ui-messages-error">
+                                class="ui-message ui-messages-error">
                                 Campo obrigatório.
-                        </div>
-                    </span>
+                            </div>
+                        </span>
 
                     </div>
 
                     <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-                    <span class="md-inputfield">
-                        <input
-                                required
-                                min="0"
-                                step="0.010"
-                                type="number"
-                                id="idValorVariacaoEstimadaFormManual"
-                                maxlength="5"
-                                name="valorVariacaoEstimada"
-                                [(ngModel)]="manual.valorVariacaoEstimadaFormatado"
-                                #valorVariacaoEstimada='ngModel'
-                                pInputText/>
-                        <label>Valor Variação Estimada (%) *</label>
-                        <div *ngIf="editForm.controls['valorVariacaoEstimada'] 
-                            && !editForm.controls['valorVariacaoEstimada'].valid 
-                            && (editForm.controls['valorVariacaoEstimada'].touched 
-                            || editForm.submitted)"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                    </div>
-                </span>
+                        <span class="md-inputfield">
+                            <input required min="0" step="0.010" type="number" id="idValorVariacaoEstimadaFormManual"
+                                maxlength="5" name="valorVariacaoEstimada" [(ngModel)]="manual.valorVariacaoEstimadaFormatado"
+                                #valorVariacaoEstimada='ngModel' pInputText />
+                            <label>Valor Variação Estimada (%) *</label>
+                            <div *ngIf="editForm.controls['valorVariacaoEstimada'] 
+                                        && !editForm.controls['valorVariacaoEstimada'].valid 
+                                        && (editForm.controls['valorVariacaoEstimada'].touched 
+                                        || editForm.submitted)"
+                                class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
                     </div>
 
                     <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-                <span class="md-inputfield">
-                    <input
-                            required
-                            min="0"
-                            step="0.010"
-                            type="number"
-                            maxlength="5"
-                            id="idValorVariacaoIndicativoFormManual"
-                            name="valorVariacaoIndicativa"
-                            #valorVariacaoIndicativa='ngModel'
-                            [(ngModel)]="manual.valorVariacaoIndicativaFormatado"
-                            pInputText/>
-                    <label>Valor Variação Indicativa (%) *</label>
-                    <div *ngIf="editForm.controls['valorVariacaoIndicativa'] 
-                        && !editForm.controls['valorVariacaoIndicativa'].valid 
-                        && (editForm.controls['valorVariacaoIndicativa'].touched 
-                        || editForm.submitted)"
-                         class="ui-message ui-messages-error">
-                        Campo obrigatório.
-                </div>
-            </span>
+                        <span class="md-inputfield">
+                            <input required min="0" step="0.010" type="number" maxlength="5" id="idValorVariacaoIndicativoFormManual"
+                                name="valorVariacaoIndicativa" #valorVariacaoIndicativa='ngModel' [(ngModel)]="manual.valorVariacaoIndicativaFormatado"
+                                pInputText />
+                            <label>Valor Variação Indicativa (%) *</label>
+                            <div *ngIf="editForm.controls['valorVariacaoIndicativa'] 
+                                        && !editForm.controls['valorVariacaoIndicativa'].valid 
+                                        && (editForm.controls['valorVariacaoIndicativa'].touched 
+                                        || editForm.submitted)"
+                                class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
                     </div>
 
                 </div>
@@ -96,15 +71,8 @@
                     </div>
 
                     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-            <textarea
-                    class="ui-g-12 ui-md-12 ui-sm-12"
-                    pInputTextarea
-                    name="descricao"
-                    id="idObservacaoFormManual"
-                    maxlength="4000"
-                    [rows]="5"
-                    [cols]="180"
-                    [(ngModel)]="manual.observacao">
+                        <textarea class="ui-g-12 ui-md-12 ui-sm-12" pInputTextarea name="descricao" id="idObservacaoFormManual"
+                            maxlength="4000" [rows]="5" [cols]="180" [(ngModel)]="manual.observacao">
             </textarea>
                     </div>
                 </div>
@@ -113,17 +81,10 @@
                     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                         <label>Arquivo Manual</label>
                         <span class="md-inputfield">
-                <p-fileUpload
-                        #fileInput
-                        chooseLabel="Selecionar arquivo"
-                        [showUploadButton]="false"
-                        id="idArquivoManualFormManual"
-                        [showCancelButton]="false"
-                        name="arquivoManual"
-                        (onSelect)="uploadFile($event)"
-                        accept=".pdf,.odt,.doc,.docx">
-                </p-fileUpload>
-            </span>
+                            <p-fileUpload #fileInput chooseLabel="Selecionar arquivo" [showUploadButton]="false" id="idArquivoManualFormManual"
+                                [showCancelButton]="false" name="arquivoManual" (onSelect)="uploadFile($event)" accept=".pdf,.odt,.doc,.docx">
+                            </p-fileUpload>
+                        </span>
                     </div>
                 </div>
 
@@ -135,96 +96,64 @@
                         </div>
 
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-                <span class="md-inputfield">
-                    <input
-                            required
-                            min="0"
-                            step="0.010"
-                            type="number"
-                            id="idInclusaoFormManual"
-                            maxlength="5"
-                            name="parametroInclusao"
-                            [(ngModel)]="manual.parametroInclusaoFormatado"
-                            #parametroInclusao='ngModel'
-                            pInputText/>
-                    <label>Inclusão (%) *</label>
-                    <div *ngIf="editForm.controls['parametroInclusao'] 
-                        && !editForm.controls['parametroInclusao'].valid 
-                        && (editForm.controls['parametroInclusao'].touched 
-                        || editForm.submitted)"
-                         class="ui-message ui-messages-error">
-                        Campo obrigatório.
-                </div>
-            </span>
+                            <span class="md-inputfield">
+                                <input required min="0" step="0.010" type="number" id="idInclusaoFormManual" maxlength="5"
+                                    name="parametroInclusao" [(ngModel)]="manual.parametroInclusaoFormatado"
+                                    #parametroInclusao='ngModel' pInputText />
+                                <label>Inclusão (%) *</label>
+                                <div *ngIf="editForm.controls['parametroInclusao'] 
+                                            && !editForm.controls['parametroInclusao'].valid 
+                                            && (editForm.controls['parametroInclusao'].touched 
+                                            || editForm.submitted)"
+                                    class="ui-message ui-messages-error">
+                                    Campo obrigatório.
+                                </div>
+                            </span>
                         </div>
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-            <span class="md-inputfield">
-                <input
-                        required
-                        min="0"
-                        step="0.010"
-                        type="number"
-                        id="idAlteracaoFormManual"
-                        maxlength="5"
-                        name="parametroAlteracao"
-                        [(ngModel)]="manual.parametroAlteracaoFormatado"
-                        #parametroAlteracao='ngModel'
-                        pInputText/>
-                <label>Alteração (%) *</label>
-                <div *ngIf="editForm.controls['parametroAlteracao'] 
-                    && !editForm.controls['parametroAlteracao'].valid 
-                    && (editForm.controls['parametroAlteracao'].touched 
-                    || editForm.submitted)"
-                     class="ui-message ui-messages-error">
-                    Campo obrigatório.
-            </div>
-        </span>
+                            <span class="md-inputfield">
+                                <input required min="0" step="0.010" type="number" id="idAlteracaoFormManual" maxlength="5"
+                                    name="parametroAlteracao" [(ngModel)]="manual.parametroAlteracaoFormatado"
+                                    #parametroAlteracao='ngModel' pInputText />
+                                <label>Alteração (%) *</label>
+                                <div *ngIf="editForm.controls['parametroAlteracao'] 
+                                            && !editForm.controls['parametroAlteracao'].valid 
+                                            && (editForm.controls['parametroAlteracao'].touched 
+                                            || editForm.submitted)"
+                                    class="ui-message ui-messages-error">
+                                    Campo obrigatório.
+                                </div>
+                            </span>
                         </div>
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-        <span class="md-inputfield">
-            <input
-                    required
-                    min="0"
-                    step="0.010"
-                    type="number"
-                    id="idExclusaoFormManual"
-                    maxlength="5"
-                    name="parametroExclusao"
-                    [(ngModel)]="manual.parametroExclusaoFormatado"
-                    #parametroExclusao='ngModel'
-                    pInputText/>
-            <label>Exclusão (%) *</label>
-            <div *ngIf="editForm.controls['parametroExclusao'] 
-                && !editForm.controls['parametroExclusao'].valid 
-                && (editForm.controls['parametroExclusao'].touched 
-                || editForm.submitted)"
-                 class="ui-message ui-messages-error">
-                Campo obrigatório.
-        </div>
-    </span>
+                            <span class="md-inputfield">
+                                <input required min="0" step="0.010" type="number" id="idExclusaoFormManual" maxlength="5"
+                                    name="parametroExclusao" [(ngModel)]="manual.parametroExclusaoFormatado"
+                                    #parametroExclusao='ngModel' pInputText />
+                                <label>Exclusão (%) *</label>
+                                <div *ngIf="editForm.controls['parametroExclusao'] 
+                                            && !editForm.controls['parametroExclusao'].valid 
+                                            && (editForm.controls['parametroExclusao'].touched 
+                                            || editForm.submitted)"
+                                    class="ui-message ui-messages-error">
+                                    Campo obrigatório.
+                                </div>
+                            </span>
                         </div>
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
-    <span class="md-inputfield">
-        <input
-                required
-                min="0"
-                step="0.010"
-                type="number"
-                maxlength="5"
-                id="idConvercaoFormManual"
-                name="parametroConversao"
-                [(ngModel)]="manual.parametroConversaoFormatado"
-                #parametroConversao='ngModel'
-                pInputText/>
-        <label>Conversão (%) *</label>
-        <div *ngIf="editForm.controls['parametroConversao'] 
-            && !editForm.controls['parametroConversao'].valid 
-            && (editForm.controls['parametroConversao'].touched 
-            || editForm.submitted)"
-             class="ui-message ui-messages-error">
-            Campo obrigatório.
-    </div>
-</span>
+                            <span class="md-inputfield">
+                                <input required min="0" step="0.010" type="number" maxlength="5" id="idConvercaoFormManual"
+                                    name="parametroConversao" [(ngModel)]="manual.parametroConversaoFormatado"
+                                    #parametroConversao='ngModel' pInputText />
+                                <label>Conversão (%) *</label>
+                                <div *ngIf="editForm.controls['parametroConversao'] 
+                                            && !editForm.controls['parametroConversao'].valid 
+                                            && (editForm.controls['parametroConversao'].touched 
+                                            || editForm.submitted)"
+                                    class="ui-message ui-messages-error">
+                                    Campo obrigatório.
+                                </div>
+                            </span>
                         </div>
 
                         <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-top: 25px; margin-bottom: 25px">
@@ -234,22 +163,14 @@
                             </div>
 
                             <div class="ui-g-2 ui-md-4 ui-sm-12">
-                                <p-radioButton
-                                        name="versaoCPM"
-                                        label="4.2.1"
-                                        id="idVersaoCPM421FormManual"
-                                        [value]="421"
-                                        [(ngModel)]="manual.versaoCPM">
+                                <p-radioButton name="versaoCPM" label="4.2.1" id="idVersaoCPM421FormManual" [value]="421"
+                                    [(ngModel)]="manual.versaoCPM">
                                 </p-radioButton>
                             </div>
 
                             <div class="ui-g-4 ui-md-4 ui-sm-12">
-                                <p-radioButton
-                                        name="versaoCPM"
-                                        label="4.3.1"
-                                        id="idVersaoCPM431FormManual"
-                                        [value]="431"
-                                        [(ngModel)]="manual.versaoCPM">
+                                <p-radioButton name="versaoCPM" label="4.3.1" id="idVersaoCPM431FormManual" [value]="431"
+                                    [(ngModel)]="manual.versaoCPM">
                                 </p-radioButton>
                             </div>
 
@@ -261,11 +182,8 @@
                 <div class="ui-g">
                     <div class="ui-g ui-md-12" style="justify-content: flex-end">
                         <div class="ui-g-3 ui-md-3 ui-sm-12">
-                            <app-blue-button
-                                    buttonLabel="Novo Esforço Fase"
-                                    buttonIcon="ui-icon-add"
-                                    id="idBtnNovoEsforcoFaseFormManual"
-                                    (click)="openDialogPhaseEffort()">
+                            <app-blue-button buttonLabel="Novo Esforço Fase" buttonIcon="ui-icon-add" id="idBtnNovoEsforcoFaseFormManual"
+                                (click)="openDialogPhaseEffort()">
                             </app-blue-button>
                         </div>
                     </div>
@@ -274,7 +192,7 @@
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-12 ui-sm-12" id="tabela-tipo-fase">
                         <app-memory-datatable [value]="manual.esforcoFases" id="idTabelaEsforcoFaseFormManual"
-                                              (buttonClick)="datatableClick($event)" disableClone="true">
+                            (buttonClick)="datatableClick($event)" disableClone="true">
                             <p-column header="Tipo de Fase" field="fase.nome">
                             </p-column>
                             <p-column header="Percentual (%)" field="esforcoFormatado">
@@ -292,11 +210,8 @@
                 <div class="ui-g">
                     <div class="ui-g ui-md-12" style="justify-content: flex-end">
                         <div class="ui-g-3 ui-md-3 ui-sm-12">
-                            <app-blue-button
-                                    buttonLabel="Novo Deflator"
-                                    buttonIcon="ui-icon-add"
-                                    id="idBtnNovoDeflatorFormManual"
-                                    (click)="openDialogCreateAdjustFactor()">
+                            <app-blue-button buttonLabel="Novo Deflator" buttonIcon="ui-icon-add" id="idBtnNovoDeflatorFormManual"
+                                (click)="openDialogCreateAdjustFactor()">
                             </app-blue-button>
                         </div>
                     </div>
@@ -305,7 +220,7 @@
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-12 ui-sm-12" id="tabela-deflator">
                         <app-memory-datatable [value]="manual.fatoresAjuste" id="idTabelaDeflatorFormManual"
-                                              (buttonClick)="adjustFactorDatatableClick($event)" disableClone="true">
+                            (buttonClick)="adjustFactorDatatableClick($event)" disableClone="true">
                             <p-column header="Código" field="codigo">
                             </p-column>
                             <p-column header="Nome" field="nome">
@@ -325,31 +240,22 @@
 
                 <div class="ui-g" style="justify-content: center; margin-top: 25px;">
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-white-button buttonLabel="Cancelar" id="idBtnCancelarFormManual"
-                                          routerLink="/manual"></app-white-button>
+                        <app-white-button buttonLabel="Cancelar" id="idBtnCancelarFormManual" routerLink="/manual"></app-white-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-submit-button buttonLabel="Salvar" id="idBtnSalvarFormManual"
-                                           [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+                        <app-submit-button buttonLabel="Salvar" id="idBtnSalvarFormManual" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
                     </div>
                 </div>
 
                 <!-- Dialog Registro Esforco Fase -->
-                <p-dialog header="Esforço por Fase" [(visible)]="showDialogPhaseEffort"
-                          [contentStyle]="{'overflow':'visible'}" [width]="800">
+                <p-dialog header="Esforço por Fase" [(visible)]="showDialogPhaseEffort" [contentStyle]="{'overflow':'visible'}"
+                    [width]="800">
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
                             <label>Tipo de Fase *</label>
-                            <p-dropdown
-                                    [filter]="true"
-                                    id="nome_fase"
-                                    autofocus="true"
-                                    [options]="tipoFases"
-                                    [(ngModel)]="newPhaseEffort.fase"
-                                    placeholder="Tipo de Fase"
-                                    [autoWidth]="false"
-                                    name="fase"
-                                    optionLabel="nome">
+                            <p-dropdown [filter]="true" id="nome_fase" autofocus="true" [options]="tipoFases"
+                                [(ngModel)]="newPhaseEffort.fase" placeholder="Tipo de Fase" [autoWidth]="false" name="fase"
+                                optionLabel="nome">
                             </p-dropdown>
                         </div>
                     </div>
@@ -357,35 +263,22 @@
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
                             <label>Esforço (%) *</label>
-                            <input
-                                    required
-                                    min="0"
-                                    step="0.010"
-                                    id="idEsforcoSaveFormManual"
-                                    type="number"
-                                    maxlength="5"
-                                    name="esforco"
-                                    [(ngModel)]="newPhaseEffort.esforcoFormatado"
-                                    pInputText/>
+                            <input required min="0" step="0.010" id="idEsforcoSaveFormManual" type="number" maxlength="5"
+                                name="esforco" [(ngModel)]="newPhaseEffort.esforcoFormatado" pInputText />
                         </div>
                     </div>
 
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-white-button
-                                        buttonLabel="Cancelar"
-                                        id="idBtnCAncelarSaveEsforcoFormManual"
-                                        (click)="closeDialogPhaseEffort()">
+                                <app-white-button buttonLabel="Cancelar" id="idBtnCAncelarSaveEsforcoFormManual"
+                                    (click)="closeDialogPhaseEffort()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-green-button
-                                        buttonLabel="Salvar"
-                                        id="idBtnSalvarSaveEsforcoFormManual"
-                                        buttonIcon="ui-icon-add"
-                                        (click)="addPhaseEffort()">
+                                <app-green-button buttonLabel="Salvar" id="idBtnSalvarSaveEsforcoFormManual" buttonIcon="ui-icon-add"
+                                    (click)="addPhaseEffort()">
                                 </app-green-button>
                             </div>
                         </div>
@@ -393,25 +286,14 @@
                 </p-dialog>
 
                 <!-- Dialog Edit  Esforco Fase -->
-                <p-dialog
-                        header="Esforço por Fase"
-                        [(visible)]="showDialogEditPhaseEffort"
-                        [contentStyle]="{'overflow':'visible'}"
-                        [width]="800">
+                <p-dialog header="Esforço por Fase" [(visible)]="showDialogEditPhaseEffort" [contentStyle]="{'overflow':'visible'}"
+                    [width]="800">
 
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
                             <label>Tipo de Fase*</label>
-                            <p-dropdown
-                                    [filter]="true"
-                                    id="nome_fase_edit"
-                                    [options]="tipoFases"
-                                    [(ngModel)]="editedPhaseEffort.fase"
-                                    optionLabel="nome"
-                                    placeholder="Tipo de Fase"
-                                    name="fase"
-                                    dataKey="id"
-                                    [autoWidth]="false">
+                            <p-dropdown [filter]="true" id="nome_fase_edit" [options]="tipoFases" [(ngModel)]="editedPhaseEffort.fase"
+                                optionLabel="nome" placeholder="Tipo de Fase" name="fase" dataKey="id" [autoWidth]="false">
                             </p-dropdown>
                         </div>
                     </div>
@@ -419,35 +301,21 @@
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
                             <label>Esforço (%)*</label>
-                            <input
-                                    required
-                                    min="0"
-                                    step="0.010"
-                                    type="number"
-                                    id="idEsforcoEditFormManual"
-                                    maxlength="5"
-                                    name="esforco"
-                                    [(ngModel)]="editedPhaseEffort.esforcoFormatado"
-                                    pInputText/>
+                            <input required min="0" step="0.010" type="number" id="idEsforcoEditFormManual" maxlength="5"
+                                name="esforco" [(ngModel)]="editedPhaseEffort.esforcoFormatado" pInputText />
                         </div>
                     </div>
 
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-white-button
-                                        buttonLabel="Cancelar"
-                                        id="idBtnCancelarEditFormManual"
-                                        (click)="closeDialogEditPhaseEffort()">
+                                <app-white-button buttonLabel="Cancelar" id="idBtnCancelarEditFormManual" (click)="closeDialogEditPhaseEffort()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-green-button
-                                        buttonLabel="Salvar"
-                                        id="idBtnSalvarEditFormManual"
-                                        buttonIcon="ui-icon-add"
-                                        (click)="editPhaseEffort()">
+                                <app-green-button buttonLabel="Salvar" id="idBtnSalvarEditFormManual" buttonIcon="ui-icon-add"
+                                    (click)="editPhaseEffort()">
                                 </app-green-button>
                             </div>
                         </div>
@@ -457,35 +325,20 @@
                 <!-- Fim Dialog Edit  Esforco Fase -->
 
                 <!-- Inicio Dialog Novo Deflator -->
-                <p-dialog
-                        header="Deflator"
-                        [(visible)]="showDialogCreateAdjustFactor"
-                        [contentStyle]="{'overflow':'visible'}"
-                        [width]="800">
+                <p-dialog header="Deflator" [(visible)]="showDialogCreateAdjustFactor" [contentStyle]="{'overflow':'visible'}"
+                    [width]="800">
                     <div class="ui-g">
 
                         <div class="ui-g-6 ui-md-6 ui-sm-12" style="padding-top: 25px">
                             <label>Nome *</label>
-                            <input
-                                    id="nome_fator_ajuste"
-                                    type="text"
-                                    name="nomeFatorAjuste"
-                                    [(ngModel)]="newAdjustFactor.nome"
-                                    pInputText/>
+                            <input id="nome_fator_ajuste" type="text" name="nomeFatorAjuste" [(ngModel)]="newAdjustFactor.nome"
+                                pInputText />
                         </div>
 
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
                             <label>Tipo Deflator *</label><br>
-                            <p-dropdown
-                                    [filter]="true"
-                                    #dd
-                                    id="tipo_ajuste"
-                                    [options]="adjustTypes"
-                                    name="tipoAjuste"
-                                    [(ngModel)]="newAdjustFactor.tipoAjuste"
-                                    filter="true"
-                                    [autoWidth]="false"
-                                    placeholder="Tipo Ajuste">
+                            <p-dropdown [filter]="true" #dd id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste"
+                                [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false" placeholder="Tipo Ajuste">
                             </p-dropdown>
                         </div>
 
@@ -494,14 +347,8 @@
                             <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)">Deflator (PF) *</label>
                             <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Deflator *</label>
 
-                            <input
-                                    id="valor_fator"
-                                    size="3"
-                                    name="fator"
-                                    id="idDeflatorDeflatorFormManual"
-                                    [disabled]="habilitarDeflator()"
-                                    [(ngModel)]="newAdjustFactor.fatorFormatado"
-                                    pInputText/>
+                            <input id="valor_fator" size="3" name="fator" id="idDeflatorDeflatorFormManual" [disabled]="habilitarDeflator()"
+                                [(ngModel)]="newAdjustFactor.fatorFormatado" pInputText />
 
                         </div>
 
@@ -510,13 +357,8 @@
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
                             <label>Descrição</label>
-                            <textarea
-                                    [rows]="5"
-                                    [cols]="90"
-                                    id="idDescricaoSaveFormManual"
-                                    pInputTextarea
-                                    name="descricaoFatorAjuste"
-                                    [(ngModel)]="newAdjustFactor.descricao">
+                            <textarea [rows]="5" [cols]="90" id="idDescricaoSaveFormManual" pInputTextarea name="descricaoFatorAjuste"
+                                [(ngModel)]="newAdjustFactor.descricao">
             </textarea>
                         </div>
                     </div>
@@ -524,40 +366,28 @@
                     <div class="ui-g">
                         <div class="ui-g-5 ui-md-5 ui-sm-12" style="padding-top: 25px">
                             <label>Codigo</label>
-                            <input
-                                    id="codigo_fator"
-                                    type="text"
-                                    name="codigo"
-                                    [(ngModel)]="newAdjustFactor.codigo"
-                                    pInputText/>
+                            <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="newAdjustFactor.codigo"
+                                pInputText />
                         </div>
 
                         <div class="ui-g-7 ui-md-7 ui-sm-12" style="padding-top: 25px">
                             <label>Origem</label>
-                            <input id="origem_fator"
-                                   type="text"
-                                   name="origem"
-                                   [(ngModel)]="newAdjustFactor.origem"
-                                   pInputText/>
+                            <input id="origem_fator" type="text" name="origem" [(ngModel)]="newAdjustFactor.origem"
+                                pInputText />
                         </div>
                     </div>
 
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-white-button
-                                        buttonLabel="Cancelar"
-                                        id="idBtnCancelarDeflatorSaveFormManual"
-                                        (click)="closeDialogCreateAdjustFactor()">
+                                <app-white-button buttonLabel="Cancelar" id="idBtnCancelarDeflatorSaveFormManual"
+                                    (click)="closeDialogCreateAdjustFactor()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-green-button
-                                        buttonLabel="Salvar"
-                                        id="idBtnSalvarDeflatorSaveFormManual"
-                                        buttonIcon="ui-icon-add"
-                                        (click)="addAdjustFactor()">
+                                <app-green-button buttonLabel="Salvar" id="idBtnSalvarDeflatorSaveFormManual"
+                                    buttonIcon="ui-icon-add" (click)="addAdjustFactor()">
                                 </app-green-button>
                             </div>
                         </div>
@@ -567,33 +397,20 @@
                 <!-- Fim Dialog Novo Deflator -->
 
                 <!-- Inicio Dialog Edit Fator Ajuste -->
-                <p-dialog
-                        header="Fator de Ajuste"
-                        [(visible)]="showDialogEditAdjustFactor"
-                        [contentStyle]="{'overflow':'visible'}"
-                        [width]="800">
+                <p-dialog header="Fator de Ajuste" [(visible)]="showDialogEditAdjustFactor" [contentStyle]="{'overflow':'visible'}"
+                    [width]="800">
 
                     <div class="ui-g">
                         <div class="ui-g-6 ui-md-6 ui-sm-12" style="padding-top: 25px">
                             <label>Nome *</label>
-                            <input
-                                    id="nome_fator_ajuste"
-                                    type="text"
-                                    name="nomeEdicaoFatorAjuste"
-                                    [(ngModel)]="editedAdjustFactor.nome"
-                                    pInputText/>
+                            <input id="nome_fator_ajuste" type="text" name="nomeEdicaoFatorAjuste" [(ngModel)]="editedAdjustFactor.nome"
+                                pInputText />
                         </div>
 
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
                             <label>Tipo Ajuste *</label><br>
-                            <p-dropdown
-                                    [filter]="true"
-                                    id="tipo_ajuste"
-                                    [options]="adjustTypes"
-                                    name="tipoAjuste"
-                                    [(ngModel)]="editedAdjustFactor.tipoAjuste"
-                                    filter="true"
-                                    [autoWidth]="false">
+                            <p-dropdown [filter]="true" id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste"
+                                [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false">
                             </p-dropdown>
                         </div>
 
@@ -602,13 +419,8 @@
                             <label *ngIf="isUnitaryEnum(editedAdjustFactor.tipoAjuste)">Deflator (PF) *</label>
                             <label *ngIf="editedAdjustFactor.tipoAjuste === undefined">Deflator *</label>
 
-                            <input
-                                    id="valor_fator"
-                                    size="3"
-                                    name="fator"
-                                    [disabled]="habilitarDeflator()"
-                                    [(ngModel)]="editedAdjustFactor.fatorFormatado"
-                                    pInputText/>
+                            <input id="valor_fator" size="3" name="fator" [disabled]="habilitarDeflator()" [(ngModel)]="editedAdjustFactor.fatorFormatado"
+                                pInputText />
 
                         </div>
 
@@ -617,13 +429,8 @@
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
                             <label>Descrição</label>
-                            <textarea
-                                    [rows]="5"
-                                    [cols]="90"
-                                    id="idDescricaoEditFormManual"
-                                    pInputTextarea
-                                    name="descricaoEdicaoFatorAjuste"
-                                    [(ngModel)]="editedAdjustFactor.descricao">
+                            <textarea [rows]="5" [cols]="90" id="idDescricaoEditFormManual" pInputTextarea name="descricaoEdicaoFatorAjuste"
+                                [(ngModel)]="editedAdjustFactor.descricao">
             </textarea>
                         </div>
                     </div>
@@ -631,22 +438,14 @@
                     <div class="ui-g">
                         <div class="ui-g-5 ui-md-5 ui-sm-12" style="padding-top: 25px">
                             <label>Código</label>
-                            <input
-                                    id="codigo_fator"
-                                    type="text"
-                                    name="codigo"
-                                    [(ngModel)]="editedAdjustFactor.codigo"
-                                    pInputText/>
+                            <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="editedAdjustFactor.codigo"
+                                pInputText />
                         </div>
 
                         <div class="ui-g-7 ui-md-7 ui-sm-12" style="padding-top: 25px">
                             <label>Origem</label>
-                            <input
-                                    id="origem_fator"
-                                    type="text"
-                                    name="origem"
-                                    [(ngModel)]="editedAdjustFactor.origem"
-                                    pInputText/>
+                            <input id="origem_fator" type="text" name="origem" [(ngModel)]="editedAdjustFactor.origem"
+                                pInputText />
                         </div>
 
                     </div>
@@ -654,19 +453,13 @@
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
                             <div class="ui-g-3 ui-md-3 ui-sm-12">
-                                <app-white-button
-                                        buttonLabel="Cancelar"
-                                        id="idBtnCancelarEditFormManual"
-                                        (click)="closeDialogEditAdjustFactor()">
+                                <app-white-button buttonLabel="Cancelar" id="idBtnCancelarEditFormManual" (click)="closeDialogEditAdjustFactor()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-3 ui-md-3 ui-sm-12">
-                                <app-green-button
-                                        buttonLabel="Salvar"
-                                        id="idBtnSalvarEditFormManual"
-                                        buttonIcon="ui-icon-add"
-                                        (click)="editAdjustFactor()">
+                                <app-green-button buttonLabel="Salvar" id="idBtnSalvarEditFormManual" buttonIcon="ui-icon-add"
+                                    (click)="editAdjustFactor()">
                                 </app-green-button>
                             </div>
                         </div>
@@ -676,10 +469,8 @@
 
                 <p-confirmDialog header="Confirmação" #dialog>
                     <p-footer>
-                        <app-white-button buttonLabel="Não" id="idBtnNaoFormManual" buttonIcon="fa-close"
-                                          (click)="dialog.reject()"></app-white-button>
-                        <app-green-button buttonLabel="Sim" id="idBtnSimFormManual" buttonIcon="fa-check"
-                                          (click)="dialog.accept()"></app-green-button>
+                        <app-white-button buttonLabel="Não" id="idBtnNaoFormManual" buttonIcon="fa-close" (click)="dialog.reject()"></app-white-button>
+                        <app-green-button buttonLabel="Sim" id="idBtnSimFormManual" buttonIcon="fa-check" (click)="dialog.accept()"></app-green-button>
                     </p-footer>
                 </p-confirmDialog>
             </form>

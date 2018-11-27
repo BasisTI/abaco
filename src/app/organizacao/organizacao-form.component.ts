@@ -170,10 +170,10 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       }
     if (!(this.novoContrato.dataInicioValida())) {
       this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
-      //document.getElementById('login').setAttribute('style', 'border-color: red;');
       return;
     }
     if (this.validaCamposContrato(this.novoContrato)) {
+      document.getElementById('tabela-contrato').removeAttribute('style');
       this.organizacao.addContrato(this.novoContrato);
       this.doFecharDialogCadastroContrato();
     }
@@ -246,7 +246,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.organizacao.sigla === '' || this.organizacao.sigla === undefined || this.organizacao.sigla === null) {
+    if (!this.organizacao.sigla) {
       return this.pageNotificationService.addErrorMsg('O campo Sigla é obrigatório!');
        }
 
@@ -263,6 +263,12 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         return;
       }
     }
+  }
+
+  if (this.organizacao.contracts.length === 0 || this.organizacao.contracts === undefined) {
+    document.getElementById('tabela-contrato').setAttribute('style', 'border: 1px dotted red;');
+    this.pageNotificationService.addErrorMsg('Pelo menos 1 contrato é obrigatório por organização.');
+    return;
   }
 
   this.organizacaoService.query().subscribe(response => {
