@@ -459,10 +459,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     /**
      * Método responsável por gerar o relatório da baseline.
      * @param analise
-     
     public geraBaselinePdfBrowser() {
         this.analiseService.geraBaselinePdfBrowser();
     }
+    */
 
     private checkUndefinedParams() {
         (this.searchParams.identificador === '') ? (this.searchParams.identificador = undefined) : (this);
@@ -505,7 +505,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     public performSearch() {
 
         this.searchUrl = this.analiseService.searchUrl;
-        this.checkUndefinedParams();
         this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
         this.recarregarDataTable();
     }

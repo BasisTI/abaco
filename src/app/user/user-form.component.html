@@ -164,48 +164,41 @@
                 && !this.desabilitado() 
                 && !editForm.controls['organizacoesMultiSelect'].valid 
                 && (editForm.controls['organizacoesMultiSelect'].touched 
-                || editForm.submitted)">
-                <span style="color: red">Campo obrigatório.</span>
+                || editForm.submitted)"
+                   class="ui-message ui-messages-error">
+                Campo obrigatório.
               </div>
             </span>
-          </div>
+                    </div>
 
-        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
-          <span>
-            <h3 class="first">Equipe *</h3>
-            <p-multiSelect 
-              [disabled]="this.disableEquipeDropdown()"
-              name="equipesMultiSelect" 
-              [(options)]="tipoEquipes"
-              [(ngModel)]="user.tipoEquipes" 
-              dataKey="id"
-              defaultLabel="Selecione ao menos uma equipe" 
-              optionLabel="nome"
-              selectedItemsLabel="{0} equipes selecionadas"
-              #equipesMultiSelect='ngModel'
-              required>
-            </p-multiSelect>
-            <div *ngIf="editForm.controls['equipesMultiSelect'] 
-              && !this.desabilitado() && !this.disableEquipeDropdown()
-              && !editForm.controls['equipesMultiSelect'].valid 
-              && (editForm.controls['equipesMultiSelect'].touched 
-              || editForm.submitted)">
-               <span style="color: red">Campo obrigatório.</span>
-            </div>
-          </span>
-        </div>
+                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                        <h3 class="first">Equipe *</h3>
+                        <p-dropdown
+                                [options]="tipoEquipes"
+                                optionLabel="nome"
+                                id="idEquipe"
+                                [(ngModel)]="user.tipoEquipe"
+                                placeholder="Selecione uma Equipe"
+                                name="tipoEquipe"
+                                [autoWidth]="false">
+                        </p-dropdown>
+                    </div>
 
-      </div>
+                </div>
 
-        <div class="ui-g" style="justify-content: center; margin-top: 25px;">
-          <div class="ui-g-2">
-            <app-white-button buttonLabel="Cancelar" routerLink="/admin/user"></app-white-button>
-            <!-- <button pButton type="button" label="Cancelar" routerLink="/admin/user"></button> -->
-          </div>
-          <div class="ui-g-2">
-            <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
-            <!-- <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button> -->
-          </div>
+                <div class="ui-g" style="justify-content: center; margin-top: 25px;">
+                    <div class="ui-g-2">
+                        <app-white-button buttonLabel="Cancelar" routerLink="/admin/user"></app-white-button>
+                        <!-- <button pButton type="button" label="Cancelar" routerLink="/admin/user"></button> -->
+                    </div>
+                    <div class="ui-g-2">
+                        <app-submit-button buttonLabel="Salvar"
+                                           [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+                        <!-- <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button> -->
+                    </div>
+                </div>
+
+            </form>
         </div>
     </div>
 </div>
