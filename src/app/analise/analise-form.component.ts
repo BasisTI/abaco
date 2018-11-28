@@ -124,25 +124,21 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     checkUserAnaliseEquipes() {
         let retorno = false;
-        this.loggedUser.tipoEquipes.forEach(equipe => {
-            if (equipe.id === this.analise.equipeResponsavel.id) {
+            if (this.loggedUser.id === this.analise.equipeResponsavel.id) {
                 retorno = true;
             }
-        });
         return retorno;
     }
 
     checkIfUserCanEdit() {
         let retorno = false;
-        this.loggedUser.tipoEquipes.forEach(equipe => {
             this.analise.compartilhadas.forEach(compartilhada => {
-                if (equipe.id === compartilhada.equipeId) {
+                if (this.loggedUser.id === compartilhada.equipeId) {
                     if (!compartilhada.viewOnly) {
                         retorno = true;
                     }
                 }
             });
-        });
         return retorno;
     }
     /**

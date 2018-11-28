@@ -1,18 +1,18 @@
-import { Manual } from './../manual/manual.model';
-import { Sistema, SistemaService } from './../sistema';
-import { TipoEquipe, TipoEquipeService } from './../tipo-equipe';
-import { Organizacao, OrganizacaoService } from './../organizacao';
-import { User, UserService } from '../user';
-import { StringConcatService } from './../shared/string-concat.service';
-import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ConfirmationService, SelectItem } from 'primeng/primeng';
-import { Analise, AnaliseService, MetodoContagem, AnaliseShareEquipe } from './';
-import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
-import { ElasticQuery, PageNotificationService } from '../shared';
-import { MessageUtil } from '../util/message.util';
-import { Response } from '@angular/http';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import {Manual} from './../manual/manual.model';
+import {Sistema, SistemaService} from './../sistema';
+import {TipoEquipe, TipoEquipeService} from './../tipo-equipe';
+import {Organizacao, OrganizacaoService} from './../organizacao';
+import {User, UserService} from '../user';
+import {StringConcatService} from './../shared/string-concat.service';
+import {Component, ViewChild, OnInit, AfterViewInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {ConfirmationService, SelectItem} from 'primeng/primeng';
+import {Analise, AnaliseService, MetodoContagem, AnaliseShareEquipe} from './';
+import {DatatableComponent, DatatableClickEvent} from '@basis/angular-components';
+import {ElasticQuery, PageNotificationService} from '../shared';
+import {MessageUtil} from '../util/message.util';
+import {Response} from '@angular/http';
+import {BlockUI, NgBlockUI} from 'ng-block-ui';
 
 @Component({
     selector: 'jhi-analise',
@@ -21,7 +21,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 export class AnaliseComponent implements OnInit, AfterViewInit {
 
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
-    @BlockUI() blockUI: NgBlockUI;
+    // @BlockUI() blockUI: NgBlockUI;
 
     searchUrl: string = this.analiseService.searchUrl;
 
@@ -36,7 +36,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     nomeSistemas: Array<Sistema>;
     organizations: Array<Organizacao>;
     teams: Array<TipoEquipe>;
-    equipeShare; analiseShared: Array<AnaliseShareEquipe> = [];
+    equipeShare;
+    analiseShared: Array<AnaliseShareEquipe> = [];
     selectedEquipes: Array<AnaliseShareEquipe>;
     selectedToDelete: AnaliseShareEquipe;
     loggedUser: User;
@@ -47,16 +48,17 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         organizacao: undefined,
         team: undefined,
         descricao: undefined
-      };
+    };
 
-      metsContagens = [
-        { value: '', text: ''},
-        { value: 'DETALHADA', text: 'DETALHADA'},
-        { value: 'INDICATIVA', text: 'INDICATIVA'},
-        { value: 'ESTIMADA', text: 'ESTIMADA'}
-        ];
+    metsContagens = [
+        {value: '', text: ''},
+        {value: 'DETALHADA', text: 'DETALHADA'},
+        {value: 'INDICATIVA', text: 'INDICATIVA'},
+        {value: 'ESTIMADA', text: 'ESTIMADA'}
+    ];
 
-    blocked; inicial: boolean;
+    blocked;
+    inicial: boolean;
     mostrarDialog = false;
 
     private userId: number;         // Usado para carregar apenas os organizações e equipes referentes ao usuário logado
@@ -71,10 +73,11 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         private pageNotificationService: PageNotificationService,
         private stringConcatService: StringConcatService,
         private userService: UserService
-    ) {}
+    ) {
+    }
 
     public ngOnInit() {
-       this.estadoInicial();
+        this.estadoInicial();
     }
 
     estadoInicial() {
@@ -83,7 +86,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
         this.recuperarSistema();
-        this.inicial=false;
+        this.inicial = false;
 
         this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
             this.analiseReadyToClone = new Analise().copyFromJSON(event.data);
@@ -96,35 +99,37 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             this.analiseReadyToClone = undefined;
         });
     }
+
     /**
      * Função para recuperar os dados do usuário logado no momento
      */
     getLoggedUser() {
-        this.userService.findCurrentUser().subscribe(res =>{
+        this.userService.findCurrentUser().subscribe(res => {
             this.loggedUser = res;
         });
     }
+
     /**
      * Função para recuperar análises da equipe do usuário
      */
     recuperarAnalisesUsuario() {
-        this.blockUI.start('Carregando análises...');
+        // this.blockUI.start('Carregando análises...');
         const userSub = this.userService.findCurrentUser().subscribe(res => {
-          this.userId = res.id;                 // Pegando id do usuário logado
-          this.userAnaliseUrl = `${this.analiseService.resourceUrl}/user/${this.userId}`;       // Construindo URL para busca de análises
-          this.buscarAnalises(this.userId);     // Buscando as benditas análises
+            this.userId = res.id;                 // Pegando id do usuário logado
+            this.userAnaliseUrl = `${this.analiseService.resourceUrl}/user/${this.userId}`;       // Construindo URL para busca de análises
+            this.buscarAnalises(this.userId);     // Buscando as benditas análises
         });
-      }
+    }
 
-      /**
-       * Função que faz requisição das análises das equipes do usuário
-       * @param idUser id do usuário logado
-       */
+    /**
+     * Função que faz requisição das análises das equipes do usuário
+     * @param idUser id do usuário logado
+     */
     buscarAnalises(idUser: number) {
         const analiseSub = this.analiseService.findAnalisesUsuario(this.userId).subscribe(res => {
             this.datatable.pDatatableComponent.value = res;             // Atribuindo valores das análises para a datatable
             this.datatable.pDatatableComponent.dataToRender = res;      // Renderizando valores das análises na datatable
-            this.blockUI.stop();
+            // this.blockUI.stop();
         }, error => {
             if (error.status === 400) {
                 switch (error.headers.toJSON()['x-abacoapp-error'][0]) {
@@ -151,29 +156,29 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
 
     recuperarOrganizacoes() {
         this.organizacaoService.query().subscribe(response => {
-          this.organizations = response.json;
-          let emptyOrg = new Organizacao();
-          emptyOrg.nome = '';
-          this.organizations.unshift(emptyOrg);
+            this.organizations = response.json;
+            let emptyOrg = new Organizacao();
+            emptyOrg.nome = '';
+            this.organizations.unshift(emptyOrg);
         });
-      }
+    }
 
     recuperarSistema() {
         this.sistemaService.query().subscribe(response => {
-        this.nomeSistemas = response.json;
-        let emptySystem = new Sistema();
-        emptySystem.nome = '';
-        this.nomeSistemas.unshift(emptySystem);
+            this.nomeSistemas = response.json;
+            let emptySystem = new Sistema();
+            emptySystem.nome = '';
+            this.nomeSistemas.unshift(emptySystem);
         });
     }
 
     recuperarEquipe() {
-    this.tipoEquipeService.query().subscribe(response => {
-        this.teams = response.json;
-        let emptyTeam = new TipoEquipe();
-        emptyTeam.nome = '';
-        this.teams.unshift(emptyTeam);
-    });
+        this.tipoEquipeService.query().subscribe(response => {
+            this.teams = response.json;
+            const emptyTeam = new TipoEquipe();
+            emptyTeam.nome = '';
+            this.teams.unshift(emptyTeam);
+        });
     }
 
     ngAfterViewInit() {
@@ -193,9 +198,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                     this.pageNotificationService.addErrorMsg(
                         MessageUtil.ERRO_EXCLUSAO_ANALISE_BLOQUEADA);
                     return;
-                } 
-                if(!this.checkIfUserCanEdit() && !this.checkUserAnaliseEquipes()){
-                    this.pageNotificationService.addErrorMsg("Você não tem permissão para editar esta análise!")
+                }
+                if (!this.checkIfUserCanEdit() && !this.checkUserAnaliseEquipes()) {
+                    this.pageNotificationService.addErrorMsg('Você não tem permissão para editar esta análise!');
                     return;
                 }
                 this.router.navigate(['/analise', event.selection.id, 'edit']);
@@ -213,37 +218,34 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 this.clonar(this.analiseReadyToClone);
                 break;
             case 'compartilhar':
-                if(this.checkUserAnaliseEquipes()){
+                if (this.checkUserAnaliseEquipes()) {
                     this.openCompartilharDialog();
                 } else {
-                    this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem compartilhar esta análise!");
+                    this.pageNotificationService.addErrorMsg('Somente membros da equipe responsável podem compartilhar esta análise!');
                 }
                 break;
         }
     }
-    checkUserAnaliseEquipes(){
+
+    checkUserAnaliseEquipes() {
         let retorno: boolean = false;
-        this.loggedUser.tipoEquipes.forEach(equipe => {
-            if (equipe.id === this.analiseSelecionada.equipeResponsavel.id){
-                retorno = true;
-            }
-        });
+        if (this.loggedUser.tipoEquipe.id === this.analiseSelecionada.equipeResponsavel.id) {
+            retorno = true;
+        }
         return retorno;
     }
-    
+
     /**
      * Checa se o usuário tem permissão para editar a Análise!
      */
-    checkIfUserCanEdit(){
-        let retorno: boolean = false;
-        this.loggedUser.tipoEquipes.forEach(equipe => {
-            this.analiseSelecionada.compartilhadas.forEach(compartilhada => {
-                if(equipe.id === compartilhada.equipeId){
-                    if(!compartilhada.viewOnly){
-                        retorno = true;
-                    }
+    checkIfUserCanEdit() {
+        let retorno = false;
+        this.analiseSelecionada.compartilhadas.forEach(compartilhada => {
+            if (this.loggedUser.tipoEquipe.id === compartilhada.equipeId) {
+                if (!compartilhada.viewOnly) {
+                    retorno = true;
                 }
-            });
+            }
         });
         return retorno;
     }
@@ -251,14 +253,14 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     public onRowDblclick(event) {
 
         if (event.target.nodeName === 'TD') {
-          this.abrirEditar();
-        }else if (event.target.parentNode.nodeName === 'TD') {
-          this.abrirEditar();
+            this.abrirEditar();
+        } else if (event.target.parentNode.nodeName === 'TD') {
+            this.abrirEditar();
         }
     }
 
     abrirEditar() {
-      this.router.navigate(['/analise', this.analiseSelecionada.id, 'edit']);
+        this.router.navigate(['/analise', this.analiseSelecionada.id, 'edit']);
     }
 
     /**
@@ -295,9 +297,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 });
 
                 this.analiseService.create(analiseClonada).subscribe((res: any) => {
-                    const menssagem: string = MessageUtil.ANALISE.concat(' ').
-                    concat(this.analiseSelecionada.identificadorAnalise).
-                    concat(MessageUtil.CLONAGEM_SUCESSO);
+                    const menssagem: string = MessageUtil.ANALISE.concat(' ').concat(this.analiseSelecionada.identificadorAnalise).concat(MessageUtil.CLONAGEM_SUCESSO);
 
                     this.pageNotificationService.addSuccessMsg(menssagem);
                     this.recarregarDataTable();
@@ -316,17 +316,17 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             this.pageNotificationService.addErrorMsg(MessageUtil.ERRO_EXCLUSAO_ANALISE_BLOQUEADA);
             return;
         }
-        if (this.analiseSelecionada.compartilhadas.length > 0){
-            this.pageNotificationService.addErrorMsg("Você não pode excluir uma análise compartilhada com outras equipes!");
+        if (this.analiseSelecionada.compartilhadas.length > 0) {
+            this.pageNotificationService.addErrorMsg('Você não pode excluir uma análise compartilhada com outras equipes!');
             return;
         }
         this.confirmationService.confirm({
             message: MessageUtil.CONFIRMAR_EXCLUSAO.concat(analise.identificadorAnalise).concat('?'),
             accept: () => {
-                this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
+                // this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
                 this.analiseService.delete(analise.id).subscribe(() => {
                     this.recarregarDataTable();
-                    this.blockUI.stop();
+                    // this.blockUI.stop();
                     this.pageNotificationService.addDeleteMsgWithName(analise.identificadorAnalise);
                 });
             }
@@ -340,10 +340,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
             ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
             ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-                this.searchUrl = this.analiseService.fieldSearchIdentificadorUrl;
-            } else {
-                this.searchUrl = this.analiseService.searchUrl;
-            }
+            this.searchUrl = this.analiseService.fieldSearchIdentificadorUrl;
+        } else {
+            this.searchUrl = this.analiseService.searchUrl;
+        }
     }
 
     public switchUrlSistema() {
@@ -353,10 +353,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
             ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
             ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-                this.searchUrl = this.analiseService.fieldSearchSistemaUrl;
-            } else {
-                this.searchUrl = this.analiseService.searchUrl;
-            }
+            this.searchUrl = this.analiseService.fieldSearchSistemaUrl;
+        } else {
+            this.searchUrl = this.analiseService.searchUrl;
+        }
     }
 
     public switchUrlMetodoContagem() {
@@ -366,10 +366,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
             ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
             ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-                this.searchUrl = this.analiseService.fieldSearchMetodoContagemUrl;
-            } else {
-                this.searchUrl = this.analiseService.searchUrl;
-            }
+            this.searchUrl = this.analiseService.fieldSearchMetodoContagemUrl;
+        } else {
+            this.searchUrl = this.analiseService.searchUrl;
+        }
     }
 
     public switchUrlOrganizacao() {
@@ -379,10 +379,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao !== '')) &&
             ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
             ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-                this.searchUrl = this.analiseService.fieldSearchOrganizacaoUrl;
-            } else {
-                this.searchUrl = this.analiseService.searchUrl;
-            }
+            this.searchUrl = this.analiseService.fieldSearchOrganizacaoUrl;
+        } else {
+            this.searchUrl = this.analiseService.searchUrl;
+        }
     }
 
     public switchUrlEquipe() {
@@ -392,10 +392,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
             ((this.searchParams.team === undefined) || (this.searchParams.team !== '')) &&
             ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-                this.searchUrl = this.analiseService.fieldSearchEquipeUrl;
-            } else {
-                this.searchUrl = this.analiseService.searchUrl;
-            }
+            this.searchUrl = this.analiseService.fieldSearchEquipeUrl;
+        } else {
+            this.searchUrl = this.analiseService.searchUrl;
+        }
     }
 
     public switchUrlDescricao() {
@@ -405,11 +405,12 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
             ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
             ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-                this.searchUrl = this.analiseService.searchUrl;
-    } else {
-        this.searchUrl = this.analiseService.searchUrl;
+            this.searchUrl = this.analiseService.searchUrl;
+        } else {
+            this.searchUrl = this.analiseService.searchUrl;
         }
     }
+
     /**
      * Limpa a pesquisa e recarrega a tabela
      */
@@ -429,7 +430,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      */
     public recarregarDataTable() {
         this.datatable.refresh(this.elasticQuery.query);
-      }
+    }
 
     /**
      * Método responsável por gerar o relatório diretamente sem a apresentação do relatório no browser.
@@ -452,16 +453,17 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      * @param analise
      */
     public geraRelatorioPdfDetalhadoBrowser(analise: Analise) {
-            this.analiseService.geraRelatorioPdfDetalhadoBrowser(analise.id);
+        this.analiseService.geraRelatorioPdfDetalhadoBrowser(analise.id);
     }
 
-     /**
+    /**
      * Método responsável por gerar o relatório da baseline.
      * @param analise
-     
     public geraBaselinePdfBrowser() {
         this.analiseService.geraBaselinePdfBrowser();
-}*/
+    }
+    */
+
     private checkUndefinedParams() {
         (this.searchParams.identificador === '') ? (this.searchParams.identificador = undefined) : (this);
         (this.searchParams.nomeSistema !== undefined) ? (
@@ -477,10 +479,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             (this.searchParams.organizacao.nome === '') ? (this.searchParams.organizacao.nome = undefined) : (console.log(''))
         ) : (this);
         (this.searchParams.descricao === '') ? (this.searchParams.descricao = undefined) : (this);
-      }
+    }
 
-      private createStringParamsArray(): Array<string> {
-        let stringParamsArray: Array<string> = [];
+    private createStringParamsArray(): Array<string> {
+        const stringParamsArray: Array<string> = [];
 
         (this.searchParams.identificador !== undefined) ? (stringParamsArray.push(this.searchParams.identificador)) : (this);
         (this.searchParams.nomeSistema !== undefined) ? (
@@ -494,19 +496,18 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         ) : (this);
         (this.searchParams.organizacao !== undefined) ? (
             (this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push(this.searchParams.organizacao.nome)) : (this)
-            ) : (this);
+        ) : (this);
         (this.searchParams.descricao !== undefined) ? (stringParamsArray.push(this.searchParams.descricao)) : (this);
 
         return stringParamsArray;
-      }
+    }
 
-      public performSearch() {
+    public performSearch() {
 
         this.searchUrl = this.analiseService.searchUrl;
-        this.checkUndefinedParams();
         this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
         this.recarregarDataTable();
-      }
+    }
 
     /**
      * Desabilita botão relatório
@@ -519,7 +520,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      * Bloquear Análise
      */
     public bloqueiaRelatorio() {
-        if(this.checkUserAnaliseEquipes()){
+        if (this.checkUserAnaliseEquipes()) {
             this.confirmationService.confirm({
                 message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat('?'),
                 accept: () => {
@@ -534,7 +535,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 }
             });
         } else {
-            this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem bloquear esta análise!");
+            this.pageNotificationService.addErrorMsg('Somente membros da equipe responsável podem bloquear esta análise!');
         }
     }
 
@@ -542,7 +543,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      * Desbloquear Análise
      */
     public desbloqueiaRelatorio() {
-        if(this.checkUserAnaliseEquipes()){
+        if (this.checkUserAnaliseEquipes()) {
             this.confirmationService.confirm({
                 message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat('?'),
                 accept: () => {
@@ -565,7 +566,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 }
             });
         } else {
-            this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem desbloquear esta análise!");
+            this.pageNotificationService.addErrorMsg('Somente membros da equipe responsável podem desbloquear esta análise!');
         }
     }
 
@@ -573,19 +574,21 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.equipeShare = [];
         this.tipoEquipeService
             .findAllCompartilhaveis(this.analiseSelecionada.organizacao.id,
-                                    this.analiseSelecionada.id,
-                                    this.analiseSelecionada.equipeResponsavel.id)
-                .subscribe((equipes) => {
-            equipes.json.forEach((equipe) => {
-                const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
-                                                                    {id: undefined,
-                                                                     equipeId: equipe.id,
-                                                                     analiseId: this.analiseSelecionada.id,
-                                                                     viewOnly: false, nomeEquipe: equipe.nome });
-                this.equipeShare.push(entity);
+                this.analiseSelecionada.id,
+                this.analiseSelecionada.equipeResponsavel.id)
+            .subscribe((equipes) => {
+                equipes.json.forEach((equipe) => {
+                    const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
+                        {
+                            id: undefined,
+                            equipeId: equipe.id,
+                            analiseId: this.analiseSelecionada.id,
+                            viewOnly: false, nomeEquipe: equipe.nome
+                        });
+                    this.equipeShare.push(entity);
+                });
+                // this.blockUI.stop();
             });
-            this.blockUI.stop();
-        });
 
         this.analiseService.findAllCompartilhadaByAnalise(this.analiseSelecionada.id).subscribe((shared) => {
             this.analiseShared = shared.json;
@@ -624,8 +627,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     }
 
     public updateViewOnly() {
-       setTimeout(() => { this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
-           this.pageNotificationService.addSuccessMsg('Registro atualizado com sucesso!');
-       }); }, 250);
+        setTimeout(() => {
+            this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
+                this.pageNotificationService.addSuccessMsg('Registro atualizado com sucesso!');
+            });
+        }, 250);
     }
 }
