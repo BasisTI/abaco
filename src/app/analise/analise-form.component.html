@@ -181,7 +181,8 @@
                                             [options]="metodosContagem"
                                             [disabled]="!this.analise.contrato"
                                             [(ngModel)]="analise.metodoContagem"
-                                            [autoWidth]="false">
+                                            [autoWidth]="false"
+                                            [disabled]="!this.analise.contrato">
                                     </p-dropdown>
                                 </div>
 
