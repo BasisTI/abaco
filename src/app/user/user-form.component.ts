@@ -101,6 +101,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
             if (params['id']) {
                 this.userService.find(params['id']).subscribe(user => {
                     this.user = user;
+                    this.setEquipeOrganizacao(this.user.organizacoes);
                     this.populateUserAuthoritiesWithArtificialId();
                 });
             }

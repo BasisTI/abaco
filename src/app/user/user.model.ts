@@ -1,6 +1,7 @@
 import { BaseEntity } from '../shared';
 import { User as BasisUser } from '@basis/angular-components';
 import { Authority } from './authority.model';
+import { Organizacao } from '../organizacao';
 
 
 export class User implements BaseEntity, BasisUser {
@@ -15,7 +16,7 @@ export class User implements BaseEntity, BasisUser {
     public imageUrl?: string,
     public tipoEquipes?: BaseEntity[],
     public authorities?: Authority[],
-    public organizacoes?: BaseEntity[]
+    public organizacoes?: Organizacao[],
   ) { }
 
 
