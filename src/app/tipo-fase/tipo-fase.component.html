@@ -11,7 +11,7 @@
                        [(ngModel)]="elasticQuery.value"
                        id="idDescricaoComponentTipoFase"
                        (keyup.enter)="datatable.refresh(elasticQuery.query)"
-                       #filter/>
+                       #filter maxlength="100" />
                 <label>Descrição</label>
               </span>
                 </div>
