@@ -16,6 +16,7 @@
               [(ngModel)]="searchParams.sigla"
               id="idSiglaComponentSistema"
               (keyup.enter)="performSearch()"
+              maxlength="20"
               #filter />
             <label>Sigla</label>
           </span>
@@ -30,6 +31,7 @@
               id="idNomeSistemaComponentSistema"
               [(ngModel)]="searchParams.nomeSistema"
               (keyup.enter)="performSearch()"
+              maxlength="100"
               #filter />
             <label>Nome do Sistema</label>
           </span>
