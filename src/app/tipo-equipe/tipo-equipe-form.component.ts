@@ -102,7 +102,7 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     result.subscribe((res: TipoEquipe) => {
       this.isSaving = false;
       this.router.navigate(['/admin/tipoEquipe']);
-      (this.tipoEquipe.id === null) ? (this.pageNotificationService.addCreateMsg()) : (this.pageNotificationService.addUpdateMsg());
+      (this.tipoEquipe.id == null) ? (this.pageNotificationService.addCreateMsg()) : (this.pageNotificationService.addUpdateMsg());
 
     }, (error: Response) => {
       this.isSaving = false;
