@@ -26,6 +26,6 @@ public interface AnaliseRepository extends JpaRepository<Analise,Long> {
     @Query( value = "SELECT a FROM Analise a WHERE a.id IN :idAnalise")
     Page<Analise> findById (@Param("idAnalise") List<Long> idAnalises, Pageable pageable);
 
-    @Query( value = "SELECT a.id FROM analise a WHERE a.equipe_responsavel_id IN :equipes", nativeQuery = true)
-    List<BigInteger> findAllByTipoEquipesId (@Param("equipes") List<Long> equipes);
+//    @Query( value = "SELECT a.id FROM analise a WHERE a.equipe_responsavel_id IN :equipeId", nativeQuery = true)
+//    List<Analise> findAllByTipoEquipesId (@Param("equipes") Long equipeId);
 }

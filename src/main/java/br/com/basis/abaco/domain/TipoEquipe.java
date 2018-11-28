@@ -5,22 +5,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.CascadeType;
+import javax.persistence.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.basis.dynamicexports.pojo.ReportObject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -52,6 +42,10 @@ public class TipoEquipe implements Serializable, ReportObject {
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinTable(name = "tipoequipe_organizacao", joinColumns = @JoinColumn(name = "tipoequipe_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
     private Set<Organizacao> organizacoes = new HashSet<>();
+
+    @OneToMany(mappedBy = "tipoEquipe")
+    @JsonIgnore
+    private Set<User> usuarios = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not
     // remove
@@ -97,7 +91,30 @@ public class TipoEquipe implements Serializable, ReportObject {
         return nomeOrg;
     }
 
+    public Set<User> getUsuarios() {
+        return usuarios;
+    }
 
+    public TipoEquipe usuarios(Set<User> usuarios) {
+        this.usuarios = usuarios;
+        return this;
+    }
+
+    public TipoEquipe addUsuario(User usuario) {
+        this.usuarios.add(usuario);
+        usuario.setTipoEquipe(this);
+        return this;
+    }
+
+    public TipoEquipe removeUsuario(User usuario) {
+        this.usuarios.remove(usuario);
+        usuario.setTipoEquipe(null);
+        return this;
+    }
+
+    public void setUsuarios(Set<User> usuarios) {
+        this.usuarios = usuarios;
+    }
 
     @Override
     public boolean equals(Object obj) {
