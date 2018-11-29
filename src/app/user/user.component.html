@@ -119,7 +119,7 @@
                             [showPaginationFooter]="true"
                             #datatable>
 
-                        <p-column header="Nome" field="nome" [style]="{width:'15%'}">
+                        <p-column header="Nome" field="firstName" [style]="{width:'15%'}" [sortable]="true">
                             <ng-template let-user="rowData" pTemplate="body">
                                 {{ user.firstName + ' ' + user.lastName }}
                             </ng-template>
@@ -155,7 +155,7 @@
                             </ng-template>
                         </p-column>
 
-                        <p-column header="Equipe" field="nome" [style]="{width:'15%'}">
+                        <p-column header="Equipe" [style]="{width:'15%'}" [sortable]="true">
                             <ng-template let-user="rowData" pTemplate="body">
                                 {{ user.tipoEquipe?.nome }}
                             </ng-template>
