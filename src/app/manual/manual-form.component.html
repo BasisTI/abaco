@@ -21,9 +21,9 @@
                                    pInputText #nome='ngModel' required/>
                             <label>{{ 'Nome *' | translate }}</label>
                              <div *ngIf="editForm.controls['nome']
-                  && !editForm.controls['nome'].valid
-                  && (editForm.controls['nome'].touched
-                  || editForm.submitted)"
+                                     && !editForm.controls['nome'].valid
+                                     && (editForm.controls['nome'].touched
+                                     || editForm.submitted)"
                                   class="ui-message ui-messages-error">
                 Campo obrigatório.
               </div>
@@ -33,10 +33,13 @@
 
                     <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                         <span class="md-inputfield">
-                            <input required min="0" step="0.010" type="number" id="idValorVariacaoEstimadaFormManual"
-                                   maxlength="5" name="valorVariacaoEstimada"
+                            <p-spinner required step="0.010"
+                                   maxlength="10"
+                                   id="idValorVariacaoEstimadaFormManual"
+                                   name="valorVariacaoEstimada"
                                    [(ngModel)]="manual.valorVariacaoEstimadaFormatado"
-                                   #valorVariacaoEstimada='ngModel' pInputText/>
+                                       #valorVariacaoEstimada='ngModel'>
+                            </p-spinner>
                             <label>Valor Variação Estimada (%) *</label>
                             <div *ngIf="editForm.controls['valorVariacaoEstimada'] 
                                         && !editForm.controls['valorVariacaoEstimada'].valid 
@@ -50,11 +53,11 @@
 
                     <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                         <span class="md-inputfield">
-                            <input required min="0" step="0.010" type="number" maxlength="5"
+                            <p-spinner required step="0.010"
+                                   maxlength="10"
                                    id="idValorVariacaoIndicativoFormManual"
                                    name="valorVariacaoIndicativa" #valorVariacaoIndicativa='ngModel'
-                                   [(ngModel)]="manual.valorVariacaoIndicativaFormatado"
-                                   pInputText/>
+                                   [(ngModel)]="manual.valorVariacaoIndicativaFormatado"></p-spinner>
                             <label>Valor Variação Indicativa (%) *</label>
                             <div *ngIf="editForm.controls['valorVariacaoIndicativa'] 
                                         && !editForm.controls['valorVariacaoIndicativa'].valid 
@@ -103,10 +106,12 @@
 
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                             <span class="md-inputfield">
-                                <input required min="0" step="0.010" type="number" id="idInclusaoFormManual"
-                                       maxlength="5"
-                                       name="parametroInclusao" [(ngModel)]="manual.parametroInclusaoFormatado"
-                                       #parametroInclusao='ngModel' pInputText/>
+                                <p-spinner required min="0" step="0.010" id="idInclusaoFormManual"
+                                           maxlength="5"
+                                           name="parametroInclusao"
+                                           [(ngModel)]="manual.parametroInclusaoFormatado"
+                                           #parametroInclusao='ngModel'>
+                                </p-spinner>
                                 <label>Inclusão (%) *</label>
                                 <div *ngIf="editForm.controls['parametroInclusao'] 
                                             && !editForm.controls['parametroInclusao'].valid 
@@ -119,10 +124,13 @@
                         </div>
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                             <span class="md-inputfield">
-                                <input required min="0" step="0.010" type="number" id="idAlteracaoFormManual"
-                                       maxlength="5"
-                                       name="parametroAlteracao" [(ngModel)]="manual.parametroAlteracaoFormatado"
-                                       #parametroAlteracao='ngModel' pInputText/>
+                                <p-spinner required min="0" step="0.010"
+                                           id="idAlteracaoFormManual"
+                                           maxlength="5"
+                                           name="parametroAlteracao"
+                                           [(ngModel)]="manual.parametroAlteracaoFormatado"
+                                           #parametroAlteracao='ngModel'>
+                                </p-spinner>
                                 <label>Alteração (%) *</label>
                                 <div *ngIf="editForm.controls['parametroAlteracao'] 
                                             && !editForm.controls['parametroAlteracao'].valid 
@@ -135,10 +143,13 @@
                         </div>
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                             <span class="md-inputfield">
-                                <input required min="0" step="0.010" type="number" id="idExclusaoFormManual"
-                                       maxlength="5"
-                                       name="parametroExclusao" [(ngModel)]="manual.parametroExclusaoFormatado"
-                                       #parametroExclusao='ngModel' pInputText/>
+                                <p-spinner required min="0" step="0.010"
+                                           id="idExclusaoFormManual"
+                                           maxlength="5"
+                                           name="parametroExclusao"
+                                           [(ngModel)]="manual.parametroExclusaoFormatado"
+                                           #parametroExclusao='ngModel'>
+                                </p-spinner>
                                 <label>Exclusão (%) *</label>
                                 <div *ngIf="editForm.controls['parametroExclusao'] 
                                             && !editForm.controls['parametroExclusao'].valid 
@@ -151,10 +162,11 @@
                         </div>
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                             <span class="md-inputfield">
-                                <input required min="0" step="0.010" type="number" maxlength="5"
+                                <p-spinner required min="0" step="0.010" maxlength="5"
                                        id="idConvercaoFormManual"
                                        name="parametroConversao" [(ngModel)]="manual.parametroConversaoFormatado"
-                                       #parametroConversao='ngModel' pInputText/>
+                                           #parametroConversao='ngModel'>
+                                </p-spinner>
                                 <label>Conversão (%) *</label>
                                 <div *ngIf="editForm.controls['parametroConversao'] 
                                             && !editForm.controls['parametroConversao'].valid 
