@@ -1,26 +1,33 @@
 package br.com.basis.abaco.web.rest;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-
+import br.com.basis.abaco.domain.Authority;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.elastic.SearchQueryBuilder;
 import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.AuthorityRepository;
+import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.search.UserSearchRepository;
+import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.service.MailService;
+import br.com.basis.abaco.service.UserService;
+import br.com.basis.abaco.service.dto.UserDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioUserColunas;
 import br.com.basis.abaco.service.util.RandomUtil;
 import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
+import com.codahale.metrics.annotation.Timed;
+import io.swagger.annotations.ApiParam;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,31 +39,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.codahale.metrics.annotation.Timed;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
-import br.com.basis.abaco.domain.Authority;
-import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.repository.AuthorityRepository;
-import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.search.UserSearchRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
-import br.com.basis.abaco.service.MailService;
-import br.com.basis.abaco.service.UserService;
-import br.com.basis.abaco.service.dto.UserDTO;
-import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import io.swagger.annotations.ApiParam;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing users.
@@ -96,78 +89,81 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/api")
 public class UserResource {
 
-	private final Logger log = LoggerFactory.getLogger(UserResource.class);
+    private final Logger log = LoggerFactory.getLogger(UserResource.class);
 
-	private static final String ENTITY_NAME = "userManagement";
+    private static final String ENTITY_NAME = "userManagement";
 
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
     private final AnaliseRepository analiseRepository;
 
-	private final MailService mailService;
+    private final MailService mailService;
 
-	private final UserService userService;
+    private final UserService userService;
 
-	private final UserSearchRepository userSearchRepository;
+    private final UserSearchRepository userSearchRepository;
 
-	private final AuthorityRepository authorityRepository;
+    private final AuthorityRepository authorityRepository;
 
     private final DynamicExportsService dynamicExportsService;
 
     private String userexists = "userexists";
 
+    @Autowired
+    private SearchQueryBuilder searchQueryBuilder;
+
     public UserResource(UserRepository userRepository, MailService mailService, UserService userService,
-			UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository, DynamicExportsService dynamicExportsService, AnaliseRepository analiseRepository) {
+                        UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository, DynamicExportsService dynamicExportsService, AnaliseRepository analiseRepository) {
 
         this.analiseRepository = analiseRepository;
-		this.userRepository = userRepository;
-		this.mailService = mailService;
-		this.userService = userService;
-		this.userSearchRepository = userSearchRepository;
-		this.authorityRepository = authorityRepository;
+        this.userRepository = userRepository;
+        this.mailService = mailService;
+        this.userService = userService;
+        this.userSearchRepository = userSearchRepository;
+        this.authorityRepository = authorityRepository;
         this.dynamicExportsService = dynamicExportsService;
 
     }
 
-	/**
-	 * POST /users : Creates a new user.
-	 * <p>
-	 * Creates a new user if the login and email are not already used, and sends an
-	 * mail with an activation link. The user needs to be activated on creation.
-	 * </p>
-	 *
-	 * @param user the user to create
-	 * @return the ResponseEntity with status 201 (Created) and with body the new
-	 *         user, or with status 400 (Bad Request) if the login or email is
-	 *         already in use
-	 * @throws URISyntaxException if the Location URI syntax is incorrect
-	 */
-	@PostMapping("/users")
-	@Timed
-	@Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
-	public ResponseEntity createUser(@RequestBody User user) throws URISyntaxException {
-		log.debug("REST request to save User : {}", user);
+    /**
+     * POST /users : Creates a new user.
+     * <p>
+     * Creates a new user if the login and email are not already used, and sends an
+     * mail with an activation link. The user needs to be activated on creation.
+     * </p>
+     *
+     * @param user the user to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new
+     *         user, or with status 400 (Bad Request) if the login or email is
+     *         already in use
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @PostMapping("/users")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+    public ResponseEntity createUser(@RequestBody User user) throws URISyntaxException {
+        log.debug("REST request to save User : {}", user);
 
-		// Lowercase the user login before comparing with database
-		if (userRepository.findOneByLogin(user.getLogin().toLowerCase()).isPresent()) {
-			return this.createBadRequest(userexists, "Login already in use");
-		} else if (userRepository.findOneByEmail(user.getEmail()).isPresent()) {
-			return this.createBadRequest("emailexists", "Email already in use");
-		} else if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
-			return this.createBadRequest("fullnameexists", "Full Name already in use");
-		} else {
+        // Lowercase the user login before comparing with database
+        if (userRepository.findOneByLogin(user.getLogin().toLowerCase()).isPresent()) {
+            return this.createBadRequest(userexists, "Login already in use");
+        } else if (userRepository.findOneByEmail(user.getEmail()).isPresent()) {
+            return this.createBadRequest("emailexists", "Email already in use");
+        } else if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()) {
+            return this.createBadRequest("fullnameexists", "Full Name already in use");
+        } else {
 
             user.setLangKey("pt_BR");
             user.setPassword(RandomUtil.generatePassword());
-			mailService.sendCreationEmail(user);
-			User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
-			User newUser = userRepository.save(userReadyToBeSaved);
-			userSearchRepository.save(newUser);
-			log.debug("Created Information for User: {}", user);
-			return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
-					.headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin())).body(newUser);
-		}
-	}
+            mailService.sendCreationEmail(user);
+            User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
+            User newUser = userRepository.save(userReadyToBeSaved);
+            userSearchRepository.save(newUser);
+            log.debug("Created Information for User: {}", user);
+            return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
+                .headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin())).body(newUser);
+        }
+    }
 
     /**
      * Função para construir reposta do tipo Bad Request informando o erro ocorrido.
@@ -177,47 +173,47 @@ public class UserResource {
      */
 
     private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
-		return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
-				.body(null);
-	}
+        return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
+            .body(null);
+    }
 
-	/**
-	 * PUT /users : Updates an existing User.
-	 *
-	 * @param user2 the user to update
-	 * @return the ResponseEntity with status 200 (OK) and with body the updated
-	 *         user, or with status 400 (Bad Request) if the login or email is
-	 *         already in use, or with status 500 (Internal Server Error) if the
-	 *         user couldn't be updated
-	 */
-	@PutMapping("/users")
-	@Timed
-	@Secured({AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR})
-	public ResponseEntity<User> updateUser(@RequestBody User user2) {
-	    User user = user2;
-		log.debug("REST request to update User : {}", user);
-		// Verificação de consistência - Não pode haver dois usuários com e-mails iguais
-		Optional<User> existingUser = userRepository.findOneByEmail(user.getEmail());
-		if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
-			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "emailexists", "E-mail already in use"))
-					.body(null);
-		}
-		// Verificação de consistência - Não pode haver dois usuários com logins iguais
-		existingUser = userRepository.findOneByLogin(user.getLogin().toLowerCase());
-		if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
-			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, userexists, "Login already in use"))
-					.body(null);
-		}
+    /**
+     * PUT /users : Updates an existing User.
+     *
+     * @param user2 the user to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated
+     *         user, or with status 400 (Bad Request) if the login or email is
+     *         already in use, or with status 500 (Internal Server Error) if the
+     *         user couldn't be updated
+     */
+    @PutMapping("/users")
+    @Timed
+    @Secured({AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR})
+    public ResponseEntity<User> updateUser(@RequestBody User user2) {
+        User user = user2;
+        log.debug("REST request to update User : {}", user);
+        // Verificação de consistência - Não pode haver dois usuários com e-mails iguais
+        Optional<User> existingUser = userRepository.findOneByEmail(user.getEmail());
+        if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "emailexists", "E-mail already in use"))
+                .body(null);
+        }
+        // Verificação de consistência - Não pode haver dois usuários com logins iguais
+        existingUser = userRepository.findOneByLogin(user.getLogin().toLowerCase());
+        if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, userexists, "Login already in use"))
+                .body(null);
+        }
         // Verificação de consistência - Não pode haver dois usuários com nome completo iguais
-		if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent() && !userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId().equals(user.getId())) {
-                    return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use"))
-                            .body(null);
-                }
+        if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent() && !userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId().equals(user.getId())) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use"))
+                .body(null);
+        }
         // Verificando qual a autoridade do usuário logado
         Authority adminAuth = new Authority();
-		adminAuth.setName(AuthoritiesConstants.ADMIN);
-		adminAuth.setDescription("Administrador");
-		// Restringindo os campos que o usuário comum pode alterar.
+        adminAuth.setName(AuthoritiesConstants.ADMIN);
+        adminAuth.setDescription("Administrador");
+        // Restringindo os campos que o usuário comum pode alterar.
         Optional<User> oldUserdata = userRepository.findOneById(user.getId());
         User loggedUser = this.getLoggedUser();
         if (!loggedUser.verificarAuthority() && oldUserdata.isPresent()) {
@@ -237,7 +233,7 @@ public class UserResource {
 
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString()))
             .body(updatedUser);
-	}
+    }
 
 	/**
 	 * GET /users : get all users.
@@ -313,27 +309,27 @@ public class UserResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 	}
 
-	/**
-	 * SEARCH /_search/users/:query : search for the User corresponding to the
-	 * query.
-	 *
-	 * @param query the query to search
-	 * @return the result of the search
-	 * @throws URISyntaxException
-	 */
-	@GetMapping("/_search/users")
-	@Timed
-	@Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
-	public ResponseEntity<List<User>> search(@RequestParam(defaultValue = "*") String query, @RequestParam String order,
-			@RequestParam(name = "page") int pageNumber, @RequestParam int size,
-			@RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-		Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-		Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
+    /**
+     * SEARCH /_search/users/:query : search for the User corresponding to the
+     * query.
+     *
+     * @param query the query to search
+     * @return the result of the search
+     * @throws URISyntaxException
+     */
+    @GetMapping("/_search/users")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+    public ResponseEntity<List<User>> search(@RequestParam(defaultValue = "*") String query, @RequestParam String order,
+                                             @RequestParam(name = "page") int pageNumber, @RequestParam int size,
+                                             @RequestParam(defaultValue = "id") String sort) throws URISyntaxException, IOException {
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
-		Page<User> page = userSearchRepository.search(queryStringQuery(query), newPageable);
-		HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/users");
-		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-	}
+        Page<User> page = searchQueryBuilder.user(query, newPageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/users");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/users/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
