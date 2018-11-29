@@ -364,15 +364,15 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         let isPhaseEffortValid = false;
         let isEffortValid = false;
 
-        (phaseEffort.fase !== undefined) ? (isPhaseNameValid = true) : (isPhaseNameValid = false);
+        (phaseEffort.fase) ? (isPhaseNameValid = true) : (isPhaseNameValid = false);
 
-        if (phaseEffort.fase !== undefined) {
+        if (phaseEffort.fase) {
             isPhaseNameValid = true;
         } else {
             isPhaseNameValid = false;
         }
 
-        if (phaseEffort.esforco !== undefined && phaseEffort.esforco !== 0) {
+        if (phaseEffort.esforco && phaseEffort.esforco !== 0) {
             isEffortValid = true;
         } else {
             isEffortValid = false;
