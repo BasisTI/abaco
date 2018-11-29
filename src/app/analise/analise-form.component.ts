@@ -124,7 +124,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     checkUserAnaliseEquipes() {
         let retorno = false;
-            if (this.loggedUser.id === this.analise.equipeResponsavel.id) {
+            if (this.loggedUser.tipoEquipe.id === this.analise.equipeResponsavel.id) {
                 retorno = true;
             }
         return retorno;
@@ -133,7 +133,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     checkIfUserCanEdit() {
         let retorno = false;
             this.analise.compartilhadas.forEach(compartilhada => {
-                if (this.loggedUser.id === compartilhada.equipeId) {
+                if (this.loggedUser.tipoEquipe.id === compartilhada.equipeId) {
                     if (!compartilhada.viewOnly) {
                         retorno = true;
                     }
