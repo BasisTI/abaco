@@ -187,14 +187,19 @@
                 </div>
 
                 <div class="ui-g" style="justify-content: center; margin-top: 25px;">
-                    <div class="ui-g-2">
-                        <app-white-button buttonLabel="Cancelar" routerLink="/admin/user"></app-white-button>
-                        <!-- <button pButton type="button" label="Cancelar" routerLink="/admin/user"></button> -->
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-white-button
+                                buttonLabel="Cancelar"
+                                routerLink="/admin/user">
+                        </app-white-button>
                     </div>
-                    <div class="ui-g-2">
-                        <app-submit-button buttonLabel="Salvar"
-                                           [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
-                        <!-- <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button> -->
+
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-submit-button
+                                (click)="editForm.submit"
+                                buttonLabel="Salvar"
+                                [disabled]="editForm.form.invalid || isSaving">
+                        </app-submit-button>
                     </div>
                 </div>
 
