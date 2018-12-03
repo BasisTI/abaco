@@ -78,7 +78,6 @@ export class UserComponent implements AfterViewInit, OnInit {
         this.organizacaoService.query().subscribe(response => {
             this.organizations = response.json;
             const emptyOrg = new Organizacao();
-            emptyOrg.nome = '';
             this.organizations.unshift(emptyOrg);
         });
     }
@@ -91,6 +90,7 @@ export class UserComponent implements AfterViewInit, OnInit {
             this.authorities = response;
             const emptyProfile = new Authority();
             this.authorities.unshift(emptyProfile);
+            this.popularNomesAuthorities();
         });
     }
 
@@ -101,8 +101,38 @@ export class UserComponent implements AfterViewInit, OnInit {
         this.tipoEquipeService.query().subscribe(response => {
             this.teams = response.json;
             const emptyTeam = new TipoEquipe();
-            emptyTeam.nome = '';
             this.teams.unshift(emptyTeam);
+        });
+    }
+
+    popularNomesAuthorities() {
+        this.authorities.forEach((authority) => {
+            switch (authority.name) {
+                case 'ROLE_ADMIN': {
+                    authority.description = 'Administrador';
+                    break;
+                }
+
+                case 'ROLE_USER': {
+                    authority.description = 'Usuário';
+                    break;
+                }
+
+                case 'ROLE_VIEW': {
+                    authority.description = 'Observador';
+                    break;
+                }
+
+                case 'ROLE_ANALISTA': {
+                    authority.description = 'Analista';
+                    break;
+                }
+
+                case 'ROLE_GESTOR': {
+                    authority.description = 'Gestor';
+                    break;
+                }
+            }
         });
     }
 
@@ -198,6 +228,14 @@ export class UserComponent implements AfterViewInit, OnInit {
     }
 
     limparPesquisa() {
+        this.searchParams = {
+            fullName: undefined,
+            login: undefined,
+            email: undefined,
+            organization: undefined,
+            profile: undefined,
+            team: undefined,
+        };
         this.elasticQuery.reset();
         this.recarregarDataTable();
     }

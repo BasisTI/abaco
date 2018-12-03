@@ -241,8 +241,8 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
    * */
   save(form) {
     this.cnpjValido = false;
-    if (!form.valid) {
-      this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+    if (!this.organizacao.nome) {
+      this.pageNotificationService.addErrorMsg('O campo Nome é obrigatório!');
       return;
     }
 

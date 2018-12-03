@@ -40,8 +40,15 @@
                     <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input type="text" name="siglaOrganizacao" id="idSiglaFormOrganizacao" [(ngModel)]="organizacao.sigla"
-                     pInputText maxlength="10"/>
+                     pInputText maxlength="10" #siglaOrganizacao='ngModel' required/>
               <label>Sigla*</label>
+              <div *ngIf="editForm.controls['siglaOrganizacao'] 
+                  && !editForm.controls['siglaOrganizacao'].valid 
+                  && (editForm.controls['siglaOrganizacao'].touched 
+                  || editForm.submitted)"
+                   class="ui-message ui-messages-error">
+                Campo obrigatório.
+              </div>
             </span>
                     </div>
 
