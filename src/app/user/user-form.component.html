@@ -72,19 +72,28 @@
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input
-                      type="text"
+                      type="email"
                       name="email"
                       [(ngModel)]="user.email"
                       pInputText
                       maxlength="100"
                       #email='ngModel'
-                      required/>
+                      required email/>
               <label>E-mail *</label>
-              <div *ngIf="editForm.controls['email'] 
-                  && !this.desabilitado() 
-                  && !editForm.controls['email'].valid 
-                  && (editForm.controls['email'].touched 
-                  || editForm.submitted)"
+                <div *ngIf="editForm.controls['email']
+                            && !editForm.controls['email'].valid
+                            && this.user.email
+                            && (editForm.controls['email'].touched
+                            || editForm.submitted)"
+                            class="ui-message ui-messages-error">
+                            Email Inválido
+                </div>
+              <div *ngIf="editForm.controls['email']
+                   && !this.desabilitado()
+                   && !editForm.controls['email'].valid
+                   && !this.user.email
+                   && (editForm.controls['email'].touched
+                   || editForm.submitted)"
                    class="ui-message ui-messages-error">
                 Campo obrigatório.
               </div>
@@ -164,9 +173,8 @@
                 && !this.desabilitado() 
                 && !editForm.controls['organizacoesMultiSelect'].valid 
                 && (editForm.controls['organizacoesMultiSelect'].touched 
-                || editForm.submitted)"
-                   class="ui-message ui-messages-error">
-                Campo obrigatório.
+                || editForm.submitted)">
+                <span style="color: red">Campo obrigatório.</span>
               </div>
             </span>
                     </div>
