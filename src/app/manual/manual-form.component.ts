@@ -24,8 +24,7 @@ import {FileUpload} from 'primeng/primeng';
 export class ManualFormComponent implements OnInit, OnDestroy {
     manual: Manual;
     isSaving;
-    isEdit: boolean;
-    loading: boolean;
+    isEdit; newUpload: boolean;
     private routeSub: Subscription;
     arquivoManual: File;
     esforcoFases: Array<EsforcoFase>;
@@ -65,6 +64,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.newUpload = false;
         this.isSaving = false;
         this.routeSub = this.route.params.subscribe(params => {
             this.manual = new Manual();
@@ -73,7 +73,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             if (params['id']) {
                 this.manualService.find(params['id']).subscribe(manual => {
                     this.manual = manual;
-                    this.getFile();
+                    this.isEdit = true;
+                    if (this.manual.arquivoManualId){
+                        this.getFile();
+                    }
                 });
             }
         });
@@ -120,11 +123,13 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     private editar() {
         this.manualService.find(this.manual.id).subscribe(() => {
+            let oldId = this.manual.arquivoManualId;
             if (this.checkRequiredFields()) {
                 if (this.arquivoManual !== undefined) {
                     this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
-                        this.manual.arquivoManualId = JSON.parse(response['_body']).id;
+                        this.manual.arquivoManualId = response.id;
                         this.isEdit = true;
+                        this.uploadService.deleteFile(oldId);
                         this.subscribeToSaveResponse(this.manualService.update(this.manual));
                     });
                 } else {
@@ -142,7 +147,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         if (this.arquivoManual !== undefined) {
             if (this.checkRequiredFields()) {
                 this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
-                    this.manual.arquivoManualId = JSON.parse(response['_body']).id;
+                    this.manual.arquivoManualId = response.id;
                     this.subscribeToSaveResponse(this.manualService.create(this.manual));
                 });
             } else {
@@ -244,6 +249,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     uploadFile(event: any) {
         this.arquivoManual = event.files[0];
+        this.newUpload = true;
     }
 
     datatableClick(event: DatatableClickEvent) {
@@ -443,16 +449,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     getFile() {
-        this.loading = true;
         this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
-
-            let fileInfo;
-            this.uploadService.getFileInfo(this.manual.arquivoManualId).subscribe(response => {
-                fileInfo = response;
-
-                this.fileInput.files.push(new File([response['_body']], fileInfo['originalName']));
-                this.loading = false;
-            });
+            this.arquivoManual = response;
         });
     }
 

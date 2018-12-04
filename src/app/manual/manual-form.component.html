@@ -92,6 +92,11 @@
                                           id="idArquivoManualFormManual"
                                           [showCancelButton]="false" name="arquivoManual"
                                           (onSelect)="uploadFile($event)" accept=".pdf,.odt,.doc,.docx">
+                                <ng-template pTemplate="content">
+                                    <ul *ngIf="arquivoManual && !newUpload">
+                                        <li>{{arquivoManual.originalName}} - {{arquivoManual.sizeOf}} bytes</li>
+                                    </ul>
+                                </ng-template>
                             </p-fileUpload>
                         </span>
                     </div>

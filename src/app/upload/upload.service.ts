@@ -12,6 +12,7 @@ export class UploadService {
   resources = {
     upload: environment.apiUrl + '/uploadFile',
     uploadLogo: environment.apiUrl + '/uploadLogo',
+    getArquivoManual: environment.apiUrl + '/getFile',
     getFile: environment.apiUrl + '/getLogo',
     getFileInfo: environment.apiUrl + '/getLogo/info',
     saveFile: environment.apiUrl + '/saveFile'
@@ -26,6 +27,10 @@ export class UploadService {
     return this.http.post(this.resources.upload, body).map(response => {
       return response.json();
     });
+  }
+
+  deleteFile(id: number){
+    this.http.delete(environment.apiUrl + '/deleteFile/' + id);
   }
 
   uploadLogo(file: File) {
@@ -66,12 +71,8 @@ export class UploadService {
 
 
   getFile(id: number) {
-    return this.http.get(this.resources.getFile, {
-      params: {
-        id: id
-      }
-    }).map(response => {
-      return response;
+    return this.http.get(this.resources.getArquivoManual + '/' + id).map(response => {
+      return response.json();
     });
   }
 
