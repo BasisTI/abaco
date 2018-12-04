@@ -214,6 +214,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular a lista de sistemas da organização selecionada.
      */
     setSistamaOrganizacao(org: Organizacao) {
+        if(!this.isEdicao){
+            this.analise.sistema = undefined;
+            this.analise.equipeResponsavel = undefined;
+        };
         this.contratos = org.contracts;
         this.sistemaService.findAllSystemOrg(org.id).subscribe((res: ResponseWrapper) => {
             this.sistemas = res.json;
