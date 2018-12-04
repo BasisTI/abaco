@@ -103,11 +103,15 @@ public class TipoEquipe implements Serializable, ReportObject {
     }
 
     public Set<User> getUsuarios() {
-        return usuarios;
+        Set<User> userAux;
+        userAux = usuarios;
+        return userAux;
     }
 
     public TipoEquipe usuarios(Set<User> usuarios) {
-        this.usuarios = usuarios;
+        Set<User> userAux;
+        userAux = usuarios;
+        this.usuarios = userAux;
         return this;
     }
 
@@ -124,7 +128,9 @@ public class TipoEquipe implements Serializable, ReportObject {
     }
 
     public void setUsuarios(Set<User> usuarios) {
-        this.usuarios = usuarios;
+        Set<User> userAux;
+        userAux = usuarios;
+        this.usuarios = userAux;
     }
 
     @Override
