@@ -1,7 +1,9 @@
 package br.com.basis.abaco.config;
 
-import javax.annotation.PostConstruct;
-
+import br.com.basis.abaco.security.AuthoritiesConstants;
+import br.com.basis.abaco.security.jwt.JWTConfigurer;
+import br.com.basis.abaco.security.jwt.TokenProvider;
+import io.github.jhipster.security.Http401UnauthorizedEntryPoint;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,10 +22,7 @@ import org.springframework.security.data.repository.query.SecurityEvaluationCont
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
-import br.com.basis.abaco.security.AuthoritiesConstants;
-import br.com.basis.abaco.security.jwt.JWTConfigurer;
-import br.com.basis.abaco.security.jwt.TokenProvider;
-import io.github.jhipster.security.Http401UnauthorizedEntryPoint;
+import javax.annotation.PostConstruct;
 
 @Configuration
 @EnableWebSecurity

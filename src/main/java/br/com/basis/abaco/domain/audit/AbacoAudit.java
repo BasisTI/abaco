@@ -1,13 +1,12 @@
 package br.com.basis.abaco.domain.audit;
 
-import java.time.ZonedDateTime;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import java.time.ZonedDateTime;
 
 @Embeddable
 public class AbacoAudit {

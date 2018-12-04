@@ -1,9 +1,10 @@
 package br.com.basis.abaco.domain;
 
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import br.com.basis.abaco.domain.audit.AbacoAudit;
+import br.com.basis.abaco.domain.audit.AbacoAuditListener;
+import br.com.basis.abaco.domain.audit.AbacoAuditable;
+import br.com.basis.abaco.domain.enumeration.Complexidade;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -18,13 +19,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import br.com.basis.abaco.domain.audit.AbacoAudit;
-import br.com.basis.abaco.domain.audit.AbacoAuditListener;
-import br.com.basis.abaco.domain.audit.AbacoAuditable;
-import br.com.basis.abaco.domain.enumeration.Complexidade;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @MappedSuperclass
 @EntityListeners(AbacoAuditListener.class)
