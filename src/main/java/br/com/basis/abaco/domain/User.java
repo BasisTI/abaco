@@ -103,7 +103,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     @Column(name = "reset_date")
     private ZonedDateTime resetDate = null;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "jhi_user_authority", joinColumns = {
         @JoinColumn(name = "user_id", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "authority_name", referencedColumnName = "name")})
