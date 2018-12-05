@@ -52,9 +52,8 @@ export class SistemaComponent implements AfterViewInit {
     private stringConcatService: StringConcatService,
     private pageNotificationService: PageNotificationService
   ) {
-    let emptyOrganization = new Organizacao();
+    const emptyOrganization = new Organizacao();
 
-    emptyOrganization.nome = '';
     this.organizacaoService.query().subscribe(response => {
       this.organizations = response.json;
       this.organizations.unshift(emptyOrganization);
@@ -75,7 +74,7 @@ export class SistemaComponent implements AfterViewInit {
    */
   public ngAfterViewInit() {
     this.recarregarDataTable();
-    
+
   }
 
   /**
@@ -99,7 +98,7 @@ export class SistemaComponent implements AfterViewInit {
   }
 
   public onRowDblclick(event) {
-    
+
     if (event.target.nodeName === 'TD') {
       this.abrirEditar();
     }else if (event.target.parentNode.nodeName === 'TD') {
@@ -136,8 +135,8 @@ abrirEditar(){
 
 public switchUrlSigla() {
 
-  if (((this.searchParams.sigla === undefined) || (this.searchParams.sigla === '')) && 
-      ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) && 
+  if (((this.searchParams.sigla === undefined) || (this.searchParams.sigla === '')) &&
+      ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
       ((this.searchParams.organizacao.nome === undefined) || (this.searchParams.organizacao.nome === ''))) {
 
     this.searchUrl = this.sistemaService.fieldSearchSiglaUrl;
@@ -148,10 +147,10 @@ public switchUrlSigla() {
 }
 
 public switchUrlNomeSistema() {
-  if (((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) && 
-      ((this.searchParams.sigla === undefined) || (this.searchParams.sigla === '')) && 
+  if (((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
+      ((this.searchParams.sigla === undefined) || (this.searchParams.sigla === '')) &&
       ((this.searchParams.organizacao.nome === undefined) || (this.searchParams.organizacao.nome === ''))){
-    
+
     this.searchUrl = this.sistemaService.fieldSearchSistemaUrl;
 
   } else {
@@ -163,16 +162,16 @@ public switchUrlNomeSistema() {
 
 public switchUrlOrganizacao() {
 
-  if (((this.searchParams.organizacao.nome === undefined) || (this.searchParams.organizacao.nome !== '')) && 
-      ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) && 
+  if (((this.searchParams.organizacao.nome === undefined) || (this.searchParams.organizacao.nome !== '')) &&
+      ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
       ((this.searchParams.sigla === undefined) || (this.searchParams.sigla === ''))) {
 
     this.searchUrl = this.sistemaService.fieldSearchOrganizacaoUrl;
-    
+
   } else {
       this.searchUrl = this.sistemaService.searchUrl;
     }
- 
+
 }
 
 // public switchSearchUrl() {
@@ -194,14 +193,14 @@ public switchUrlOrganizacao() {
    *
    */
   public performSearch() {
-  
+
     this.searchUrl = this.sistemaService.searchUrl;
     this.checkUndefinedParams();
     this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
     this.recarregarDataTable();
 
   }
-  
+
   /**
    *
    */
@@ -216,10 +215,10 @@ public switchUrlOrganizacao() {
   }
 
   /**
-   * 
+   *
    */
   private checkFields(): void {
-    
+
       if ((this.searchParams.nomeSistema === undefined) && ((this.searchParams.organizacao.nome === undefined) || (this.searchParams.organizacao.nome === ''))) {
         this.searchUrl = this.sistemaService.fieldSearchSiglaUrl;
 
@@ -231,7 +230,7 @@ public switchUrlOrganizacao() {
       }
 
       this.recarregarDataTable();
-      
+
   }
 
   /**
@@ -244,7 +243,6 @@ public switchUrlOrganizacao() {
     this.elasticQuery.reset();
     this.searchUrl = this.sistemaService.searchUrl;
     this.recarregarDataTable();
-    
   }
 
   /**
