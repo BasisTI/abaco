@@ -136,14 +136,14 @@ export class AnaliseService {
 
   /**
    *
-   
+   */
   public gerarRelatorioPdfArquivo(id: number) {
     window.open(`${this.relatorioAnaliseUrl}/${id}`);
-  }*/
+  }
 
   /**
    *
-  
+   */
   public geraRelatorioPdfBrowser(id: number): Observable<string> {
     this.blockUI.start('GERANDO RELATORIO...');
     this.http.get(`${this.relatoriosUrl}/${id}`, {
@@ -162,7 +162,7 @@ export class AnaliseService {
         return null;
       });
       return null;
-  } */
+  }
 
     /**
    *
@@ -172,16 +172,8 @@ export class AnaliseService {
     this.http.get(`${this.relatoriosDetalhadoUrl}/${id}`, {
     method: RequestMethod.Get,
     responseType: ResponseContentType.Blob,
-  }).catch((error: any) => {
-    console.log("ENTROU NO ERRO");
-    if (error.status === 500) {
-        this.pageNotificationService.addErrorMsg('Erro ao gerar relatório, verifique se a análise possui FDs/FTs cadastradas');
-        this.blockUI.stop();
-        return Observable.throw(new Error(error.status));
-    }
-}).subscribe(
+  }).subscribe(
       (response) => {
-        console.log("ENTROU NA RESPONSE");
         const mediaType = 'application/pdf';
         const blob = new Blob([response.blob()], {type: mediaType});
         const fileURL = window.URL.createObjectURL(blob);
@@ -197,7 +189,7 @@ export class AnaliseService {
 
   /**
    *
-   
+   */
   public geraBaselinePdfBrowser(): Observable<string> {
     this.blockUI.start('GERANDO RELATORIO...');
     this.http.get(`${this.relatoriosBaselineUrl}`, {
@@ -216,7 +208,7 @@ export class AnaliseService {
         return null;
       });
       return null;
-  }*/
+  }
 
   /**
    *

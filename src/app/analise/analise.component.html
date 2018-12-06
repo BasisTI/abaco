@@ -85,7 +85,6 @@
                                 id="idDescricaoComponentAnalise"
                                 [(ngModel)]="searchParams.descricao"
                                 (keyup.enter)="performSearch()"
-                                maxlength="100"
                                 #filter/>
                             <label>Descrição</label>
                         </span>
@@ -163,7 +162,7 @@
                         
                         <basis-datatable-button
                                 name="clone"
-                                [tooltip]="clonarTooltip()"
+                                tooltip="Clonar"
                                 icon="content-copy"
                                 disabled="desabilitarBotaoRelatorio()">
                         </basis-datatable-button>
@@ -187,26 +186,26 @@
                         <p-column header="Método de Contagem" field="metodoContagem" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}"></p-column>
 
-                        <p-column header="PF Total" field="pfTotal" [sortable]="true" [style]="{'font-size': '1.0vw'}">
+                        <p-column header="PF Total" [sortable]="true" [style]="{'font-size': '1.0vw'}">
                             <ng-template let-col let-pfTotal="rowData.pfTotal" pTemplate="body">
                                 {{ pfTotal > 0 ? pfTotal : 0 | number: '00.00'}}
                             </ng-template>
                         </p-column>
 
-                        <p-column header="PF Ajustado" field="adjustPFTotal" [sortable]="true" [style]="{'font-size': '1.0vw'}">
+                        <p-column header="PF Ajustado" [sortable]="true" [style]="{'font-size': '1.0vw'}">
                             <ng-template let-col let-adjustPFTotal="rowData.adjustPFTotal" pTemplate="body">
                                 {{ adjustPFTotal > 0 ? adjustPFTotal : 0 | number: '00.00'}}
                             </ng-template>
                         </p-column>
 
-                        <p-column header="Dias restantes em Garantia" field="dado" [sortable]="true"
+                        <p-column header="Dias restantes em Garantia" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}">
                             <ng-template let-dado="rowData" pTemplate="body">
                                 {{ dado | datePipe }}
                             </ng-template>
                         </p-column>
 
-                        <p-column header="Data Criação" field="createdOn" [sortable]="true" [style]="{'font-size': '1.0vw'}">
+                        <p-column header="Data Criação" [sortable]="true" [style]="{'font-size': '1.0vw'}">
                             <ng-template let-col let-createdOn="rowData.createdOn" pTemplate="body">
                                 {{ createdOn | date: 'dd/MM/y - HH:mm' }}
                             </ng-template>
@@ -251,8 +250,7 @@
         [(value)]="equipeShare"
         [headerCheckboxToggleAllPages]="true"
         [(selection)]="selectedEquipes"
-        dataKey="equipeId"
-        emptyMessage="Nenhuma outra equipe na sua organização pode ter acesso à essa análise">
+        dataKey="equipeId">
 
             <p-column
                 selectionMode="multiple"
@@ -284,8 +282,7 @@
         [(value)]="analiseSelecionada.compartilhadas"
         selectionMode="single"
         [(selection)]="selectedToDelete"
-        dataKey="equipeId"
-        emptyMessage="Nenhuma outra equipe tem acesso à essa análise">
+        dataKey="equipeId">
             <p-column
                 header="Equipe"
                 field="nomeEquipe">

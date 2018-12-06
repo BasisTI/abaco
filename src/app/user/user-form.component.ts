@@ -15,9 +15,9 @@ import {PageNotificationService} from '../shared/page-notification.service';
 import {ADMIN_ROLE} from '../shared/constants';
 
 import * as _ from 'lodash';
-import {Message} from '@angular/compiler/src/i18n/i18n_ast';
-import {MessageUtil} from '../util/message.util';
-import {element} from 'protractor';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { MessageUtil } from '../util/message.util';
+import { element } from 'protractor';
 
 @Component({
     selector: 'jhi-user-form',
@@ -45,7 +45,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
     // URL ativa - utilizado para verificar se o componente foi ativado pelo menu de administração ou de edição de usuário
     private url: string;
-    emaild: any;
 
     constructor(
         private authService: AuthService<User>,
@@ -102,7 +101,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
             if (params['id']) {
                 this.userService.find(params['id']).subscribe(user => {
                     this.user = user;
-                    this.setEquipeOrganizacao(this.user.organizacoes);
                     this.populateUserAuthoritiesWithArtificialId();
                 });
             }
@@ -187,12 +185,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
     save(form) {
         if (!form.valid) {
             this.pageNotificationService.addErrorMsg('Favor preencher os campos Obrigatórios!');
-            if (!form.controls.email.valid && this.user.email) {
-                this.pageNotificationService.addErrorMsg('E-mail Inválido');
-            }
             return;
         }
-
         if (this.user.id !== undefined) {
             this.isEdit = true;
             this.subscribeToSaveResponse(this.userService.update(this.user));
@@ -298,8 +292,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
     loadCurrentUser() {
         this.userService.findCurrentUser().subscribe((res: User) => {
             this.user = res;
-            console.log('res.tipoEquipe ', res.tipoEquipe);
-            this.tipoEquipes = this.tipoEquipes.concat(res.tipoEquipe);
             this.populateUserAuthoritiesWithArtificialId();
         });
     }
@@ -320,8 +312,9 @@ export class UserFormComponent implements OnInit, OnDestroy {
         return !this.isAdmin;
     }
 
-    disableEquipeDropdown() {
-        if (this.user.organizacoes != null || this.user.organizacoes != undefined) {
+
+    disableEquipeDropdown(){
+        if(this.user.organizacoes != null || this.user.organizacoes != undefined){
             return this.user.organizacoes.length < 1;
         }
         return true;
