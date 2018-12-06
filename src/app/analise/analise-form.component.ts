@@ -218,6 +218,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular a lista de sistemas da organização selecionada.
      */
     setSistamaOrganizacao(org: Organizacao) {
+        if(!this.isEdicao){
+            this.analise.sistema = undefined;
+            this.analise.equipeResponsavel = undefined;
+        };
         this.contratos = org.contracts;
         this.sistemaService.findAllSystemOrg(org.id).subscribe((res: ResponseWrapper) => {
             this.sistemas = res.json;
@@ -434,7 +438,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
             this.analiseService.update(this.analise).subscribe(() => {
-                this.pageNotificationService.addSuccessMsg('Dados salvos com sucesso!');
+                this.pageNotificationService.addSuccessMsg('Dados alterados com sucesso!');
                 this.diasGarantia = this.analise.contrato.diasDeGarantia;
             });
         }
