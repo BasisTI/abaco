@@ -156,13 +156,6 @@
                                            #parametroExclusao='ngModel'>
                                 </p-spinner>
                                 <label>Exclusão (%) *</label>
-                                <div *ngIf="editForm.controls['parametroExclusao'] 
-                                            && !editForm.controls['parametroExclusao'].valid 
-                                            && (editForm.controls['parametroExclusao'].touched 
-                                            || editForm.submitted)"
-                                     class="ui-message ui-messages-error">
-                                    Campo obrigatório.
-                                </div>
                             </span>
                         </div>
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
@@ -287,20 +280,45 @@
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
                             <label>Tipo de Fase *</label>
-                            <p-dropdown [filter]="true" id="nome_fase" autofocus="true" [options]="tipoFases"
-                                        [(ngModel)]="newPhaseEffort.fase" placeholder="Tipo de Fase" [autoWidth]="false"
-                                        name="fase"
+                            <p-dropdown required
+                                        [filter]="true"
+                                        id="nome_fase"
+                                        autofocus="true"
+                                        [options]="tipoFases"
+                                        [(ngModel)]="newPhaseEffort.fase"
+                                        placeholder="Tipo de Fase"
+                                        [autoWidth]="false"
+                                        name="tipoFase"
                                         optionLabel="nome">
                             </p-dropdown>
+                            <div *ngIf="editForm.controls['tipoFase']
+                                        && !editForm.controls['tipoFase'].valid
+                                        && (editForm.controls['tipoFase'].touched
+                                        || editForm.submitted)">
+                                <span style="color: red">Campo obrigatório.</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
                             <label>Esforço (%) *</label>
-                            <input required min="0" step="0.010" id="idEsforcoSaveFormManual" type="number"
+                            <p-spinner
+                                   required
+                                   step="0.010"
+                                   id="idEsforcoSaveFormManual"
                                    maxlength="5"
-                                   name="esforco" [(ngModel)]="newPhaseEffort.esforcoFormatado" pInputText/>
+                                   name="esfocoFase"
+                                   #esfocoFase='ngModel'
+                                   [(ngModel)]="newPhaseEffort.esforcoFormatado">
+                            </p-spinner>
+                            <div *ngIf="editForm.controls['esfocoFase']
+                                        && !newPhaseEffort.esforcoFormatado
+                                        && !editForm.controls['esfocoFase'].valid
+                                        && (editForm.controls['esfocoFase'].touched
+                                        || editForm.submitted)">
+                                <span style="color: red">Campo obrigatório.</span>
+                            </div>
                         </div>
                     </div>
 
@@ -330,20 +348,43 @@
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
                             <label>Tipo de Fase*</label>
-                            <p-dropdown [filter]="true" id="nome_fase_edit" [options]="tipoFases"
+                            <p-dropdown [filter]="true"
+                                        id="nome_fase_edit"
+                                        [options]="tipoFases"
                                         [(ngModel)]="editedPhaseEffort.fase"
-                                        optionLabel="nome" placeholder="Tipo de Fase" name="fase" dataKey="id"
+                                        optionLabel="nome"
+                                        placeholder="Tipo de Fase"
+                                        name="fase"
+                                        dataKey="id"
                                         [autoWidth]="false">
                             </p-dropdown>
+                            <div *ngIf="editForm.controls['fase']
+                                        && !editForm.controls['fase'].valid
+                                        && (editForm.controls['fase'].touched
+                                        || editForm.submitted)">
+                                <span style="color: red">Campo obrigatório.</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
                             <label>Esforço (%)*</label>
-                            <input required min="0" step="0.010" type="number" id="idEsforcoEditFormManual"
-                                   maxlength="5"
-                                   name="esforco" [(ngModel)]="editedPhaseEffort.esforcoFormatado" pInputText/>
+                            <p-spinner
+                                    required
+                                    step="0.010"
+                                    id="idEsforcoEditFormManual"
+                                    maxlength="5"
+                                    name="esforco"
+                                    #esforco='ngModel'
+                                    [(ngModel)]="editedPhaseEffort.esforcoFormatado">
+                            </p-spinner>
+                            <div *ngIf="editForm.controls['esforco']
+                                        && !editForm.controls['esforco'].valid
+                                        && (editForm.controls['esforco'].touched
+                                        || editForm.submitted)">
+                                <span style="color: red">Campo obrigatório.</span>
+                            </div>
                         </div>
                     </div>
 

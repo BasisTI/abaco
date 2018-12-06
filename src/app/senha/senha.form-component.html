@@ -5,19 +5,20 @@
       style="margin: 0px auto 0 auto; min-height: 400px;"
       *ngIf="authenticated">
         <div class="ui-g" style="justify-content: center;">
-          <div class="ui-g-4 ui-md-4 ui-sm-6">      
+          <div class="ui-g-4 ui-md-4 ui-sm-9">
             <form
               name="passwordForm" 
               role="form" 
               (ngSubmit)="senha()">
 
-                <h1>Trocar Senha</h1>
+                <h1>Alterar Senha</h1>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px;">
                   <span class="md-inputfield">
-                    <input 
+                    <input
                       required
-                      pPassword 
+                      pPassword
+                      maxlength="20"
                       type="password" 
                       name="oldPassword" 
                       [(ngModel)]="this.oldPassword" 
@@ -30,8 +31,9 @@
                   <span class="md-inputfield">
                     <input
                       required
-                      pPassword 
-                      type="password" 
+                      maxlength="20"
+                      pPassword
+                      type="password"
                       name="newPassword" 
                       [(ngModel)]="this.newPassword" 
                       [feedback]="false" />
@@ -43,6 +45,7 @@
                   <span class="md-inputfield">
                     <input
                       required
+                      maxlength="20"
                       pPassword 
                       type="password" 
                       name="newPasswordConfirm" 

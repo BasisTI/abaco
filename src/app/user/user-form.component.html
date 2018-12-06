@@ -183,15 +183,23 @@
                         <h3 class="first">Equipe *</h3>
                         <p-dropdown
                                 [options]="tipoEquipes"
+                                [disabled]="this.desabilitado()"
                                 optionLabel="nome"
                                 id="idEquipe"
                                 [(ngModel)]="user.tipoEquipe"
                                 placeholder="Selecione uma Equipe"
                                 name="tipoEquipe"
-                                [autoWidth]="false">
+                                [autoWidth]="false"
+                                required>
                         </p-dropdown>
+                        <div *ngIf="editForm.controls['tipoEquipe']
+                                    && !this.desabilitado()
+                                    && !editForm.controls['tipoEquipe'].valid
+                                    && (editForm.controls['tipoEquipe'].touched
+                                    || editForm.submitted)">
+                            <span style="color: red">Campo obrigatório.</span>
+                        </div>
                     </div>
-
                 </div>
 
                 <div class="ui-g" style="justify-content: center; margin-top: 25px;">
