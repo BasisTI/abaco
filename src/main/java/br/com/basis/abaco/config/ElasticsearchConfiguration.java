@@ -21,7 +21,7 @@ public class ElasticsearchConfiguration {
 
     public class CustomEntityMapper implements EntityMapper {
 
-        private ObjectMapper objectMapper;
+        private final ObjectMapper objectMapper;
 
         public CustomEntityMapper(ObjectMapper objectMapper) {
             this.objectMapper = objectMapper;

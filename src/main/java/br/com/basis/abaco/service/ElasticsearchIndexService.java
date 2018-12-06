@@ -63,6 +63,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -240,7 +241,7 @@ public class ElasticsearchIndexService {
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    private <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
+    public <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
                                                               ElasticsearchRepository<T, ID> elasticsearchRepository) {
         elasticsearchTemplate.deleteIndex(entityClass);
         try {
@@ -253,7 +254,7 @@ public class ElasticsearchIndexService {
             try {
                 Method m = jpaRepository.getClass().getMethod("findAllWithEagerRelationships");
                 elasticsearchRepository.save((List<T>) m.invoke(jpaRepository));
-            } catch (Exception e) {
+            } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
                 elasticsearchRepository.save(jpaRepository.findAll());
             }
         }
