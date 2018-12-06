@@ -1,12 +1,15 @@
 package br.com.basis.abaco.web.rest;
 
-import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.Collections;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.security.AuthenticationConstants;
+import br.com.basis.abaco.security.BasisUserDetails;
+import br.com.basis.abaco.security.CookieUtil;
+import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.security.jwt.JWTConfigurer;
+import br.com.basis.abaco.security.jwt.TokenProvider;
+import br.com.basis.abaco.service.UserService;
+import br.com.basis.abaco.web.rest.vm.LoginVM;
+import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,17 +27,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codahale.metrics.annotation.Timed;
-
-import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.security.AuthenticationConstants;
-import br.com.basis.abaco.security.BasisUserDetails;
-import br.com.basis.abaco.security.CookieUtil;
-import br.com.basis.abaco.security.SecurityUtils;
-import br.com.basis.abaco.security.jwt.JWTConfigurer;
-import br.com.basis.abaco.security.jwt.TokenProvider;
-import br.com.basis.abaco.service.UserService;
-import br.com.basis.abaco.web.rest.vm.LoginVM;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api")

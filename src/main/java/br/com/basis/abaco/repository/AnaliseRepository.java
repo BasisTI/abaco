@@ -1,8 +1,6 @@
 package br.com.basis.abaco.repository;
 
 import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.TipoEquipe;
-import br.com.basis.abaco.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,9 +1,5 @@
 package br.com.basis.abaco.reports.rest;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
@@ -14,6 +10,10 @@ import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 import br.com.basis.abaco.service.dto.ComplexidadeDTO;
 import br.com.basis.abaco.service.dto.FuncoesDTO;
 import br.com.basis.abaco.service.dto.ImpactoDTO;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author eduardo.andrade

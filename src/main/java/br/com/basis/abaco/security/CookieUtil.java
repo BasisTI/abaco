@@ -1,11 +1,11 @@
 package br.com.basis.abaco.security;
 
+import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.stereotype.Component;
-import org.springframework.web.util.WebUtils;
 
 @Component
 // FIXME (diego.marcilio) Funcionando somente para desenvolvimento

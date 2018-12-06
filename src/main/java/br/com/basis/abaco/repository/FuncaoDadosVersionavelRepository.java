@@ -1,11 +1,10 @@
 package br.com.basis.abaco.repository;
 
-import java.util.Optional;
-import java.util.Set;
-
+import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
+import java.util.Optional;
+import java.util.Set;
 
 public interface FuncaoDadosVersionavelRepository extends JpaRepository<FuncaoDadosVersionavel, Long> {
 

@@ -1,15 +1,14 @@
 package br.com.basis.abaco.domain;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-
+import br.com.basis.abaco.utils.BigDecimalUtils;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
-import br.com.basis.abaco.utils.BigDecimalUtils;
+import java.io.IOException;
+import java.math.BigDecimal;
 
 public class BigDecimalSerializer extends JsonDeserializer<BigDecimal> {
 

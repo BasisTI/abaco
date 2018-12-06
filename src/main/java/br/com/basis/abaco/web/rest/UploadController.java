@@ -1,20 +1,10 @@
 package br.com.basis.abaco.web.rest;
 
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.Optional;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
-
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.repository.UploadedFilesRepository;
+import br.com.basis.abaco.web.rest.errors.UploadException;
+import com.google.common.net.HttpHeaders;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +13,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,12 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.google.common.net.HttpHeaders;
-
-import br.com.basis.abaco.domain.UploadedFile;
-import br.com.basis.abaco.repository.UploadedFilesRepository;
-import br.com.basis.abaco.web.rest.errors.UploadException;
-import io.github.jhipster.web.util.ResponseUtil;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -55,12 +50,11 @@ public class UploadController {
     @Autowired
     ServletContext context;
 
-   private byte[] bytes;
+    private byte[] bytes;
 
     @PostMapping("/uploadFile")
     public ResponseEntity<UploadedFile> singleFileUpload(@RequestParam("file") MultipartFile file,
-                                                         HttpServletRequest request,
-                                                         RedirectAttributes redirectAttributes) {
+            HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
         UploadedFile uploadedFile = new UploadedFile();
         try {
@@ -76,7 +70,7 @@ public class UploadController {
             }
 
             byte[] bytesFileName = (file.getOriginalFilename() + String.valueOf(System.currentTimeMillis()))
-                .getBytes("UTF-8");
+                    .getBytes("UTF-8");
             String filename = DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(bytesFileName));
             String ext = FilenameUtils.getExtension(file.getOriginalFilename());
             filename += "." + ext;
@@ -95,8 +89,6 @@ public class UploadController {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(uploadedFile));
     }
 
-
-
     @GetMapping("/uploadStatus")
     public String uploadStatus() {
         return "uploadStatus";
@@ -114,8 +106,8 @@ public class UploadController {
         Resource file = new FileSystemResource(folderPath + "/" + uploadedFile.getFilename());
 
         return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-            .body(file);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .body(file);
 
     }
 
@@ -130,18 +122,16 @@ public class UploadController {
     }
 
     @PostMapping("/uploadLogo")
-     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
-     public ResponseEntity<UploadedFile> singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
-         this.bytes = file.getBytes();
+    @Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR" })
+    public ResponseEntity<UploadedFile> singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+        this.bytes = file.getBytes();
 
-         UploadedFile uploadedFile = new UploadedFile();
+        UploadedFile uploadedFile = new UploadedFile();
 
-         uploadedFile.setLogo(bytes);
-         uploadedFile.setDateOf(new Date());
-         uploadedFile = filesRepository.save(uploadedFile);
+        uploadedFile.setLogo(bytes);
+        uploadedFile.setDateOf(new Date());
+        uploadedFile = filesRepository.save(uploadedFile);
 
-         return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "/saveFile")
-            .body(uploadedFile);
-     }
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "/saveFile").body(uploadedFile);
+    }
 }
