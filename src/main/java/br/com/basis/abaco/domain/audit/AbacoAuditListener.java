@@ -1,8 +1,9 @@
 package br.com.basis.abaco.domain.audit;
 
+import java.time.ZonedDateTime;
+
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import java.time.ZonedDateTime;
 
 public class AbacoAuditListener {
 

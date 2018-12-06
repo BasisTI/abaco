@@ -1,10 +1,11 @@
 package br.com.basis.abaco.repository;
 
-import br.com.basis.abaco.domain.EsforcoFase;
-import br.com.basis.abaco.domain.Manual;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import br.com.basis.abaco.domain.EsforcoFase;
+import br.com.basis.abaco.domain.Manual;
 
 /**
  * Spring Data JPA repository for the EsforcoFase entity.

@@ -1,13 +1,14 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.BaseLineAnalitico;
-import br.com.basis.abaco.domain.BaseLineSintetico;
 import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.domain.BaseLineSintetico;
 import br.com.basis.abaco.reports.rest.RelatorioBaselineRest;
+import com.codahale.metrics.annotation.Timed;
+import br.com.basis.abaco.domain.BaseLineAnalitico;
+
 import br.com.basis.abaco.repository.BaseLineAnaliticoRepository;
 import br.com.basis.abaco.repository.BaseLineSinteticoRepository;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import com.codahale.metrics.annotation.Timed;
 import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 

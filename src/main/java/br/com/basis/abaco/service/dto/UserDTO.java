@@ -2,7 +2,6 @@ package br.com.basis.abaco.service.dto;
 
 import br.com.basis.abaco.config.Constants;
 import br.com.basis.abaco.domain.Authority;
-import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
 import org.hibernate.validator.constraints.Email;
 
@@ -51,8 +50,6 @@ public class UserDTO {
 
     private Set<String> authorities;
 
-    private TipoEquipe tipoEquipe;
-
     public UserDTO() {
         // Empty constructor needed for MapStruct.
     }
@@ -62,8 +59,7 @@ public class UserDTO {
             user.getEmail(), user.getActivated(), user.getImageUrl(), user.getLangKey(),
             user.getCreatedBy(), user.getCreatedDate(), user.getLastModifiedBy(), user.getLastModifiedDate(),
             user.getAuthorities().stream().map(Authority::getName)
-                .collect(Collectors.toSet())
-        );
+                .collect(Collectors.toSet()));
     }
 
     public UserDTO(Long id, String login, String firstName, String lastName,
@@ -148,14 +144,6 @@ public class UserDTO {
 
     public Set<String> getAuthorities() {
         return authorities;
-    }
-
-    public TipoEquipe getTipoEquipe() {
-        return tipoEquipe;
-    }
-
-    public void setTipoEquipe(TipoEquipe tipoEquipe) {
-        this.tipoEquipe = tipoEquipe;
     }
 
     @Override

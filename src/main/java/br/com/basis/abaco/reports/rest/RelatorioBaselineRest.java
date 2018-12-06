@@ -1,20 +1,22 @@
 package br.com.basis.abaco.reports.rest;
 
-import br.com.basis.abaco.domain.BaseLineAnalitico;
-import br.com.basis.abaco.domain.BaseLineSintetico;
-import br.com.basis.abaco.reports.util.RelatorioUtil;
-import br.com.basis.abaco.service.dto.BaselineDTO;
-import net.sf.jasperreports.engine.JRException;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import br.com.basis.abaco.domain.BaseLineAnalitico;
+import br.com.basis.abaco.domain.BaseLineSintetico;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import br.com.basis.abaco.reports.util.RelatorioUtil;
+import br.com.basis.abaco.service.dto.BaselineDTO;
+import net.sf.jasperreports.engine.JRException;
 
 public class RelatorioBaselineRest {
 

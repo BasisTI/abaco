@@ -1,15 +1,12 @@
 package br.com.basis.abaco.domain;
 
-import br.com.basis.dynamicexports.pojo.ReportObject;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldIndex;
-import org.springframework.data.elasticsearch.annotations.FieldType;
-
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import javax.persistence.CascadeType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,15 +16,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+
+import br.com.basis.dynamicexports.pojo.ReportObject;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
 
 /**
  * A TipoEquipe.
@@ -53,10 +52,6 @@ public class TipoEquipe implements Serializable, ReportObject {
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinTable(name = "tipoequipe_organizacao", joinColumns = @JoinColumn(name = "tipoequipe_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
     private Set<Organizacao> organizacoes = new HashSet<>();
-
-    @OneToMany(mappedBy = "tipoEquipe")
-    @JsonIgnore
-    private Set<User> usuarios = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not
     // remove
@@ -102,36 +97,7 @@ public class TipoEquipe implements Serializable, ReportObject {
         return nomeOrg;
     }
 
-    public Set<User> getUsuarios() {
-        Set<User> userAux;
-        userAux = usuarios;
-        return userAux;
-    }
 
-    public TipoEquipe usuarios(Set<User> usuarios) {
-        Set<User> userAux;
-        userAux = usuarios;
-        this.usuarios = userAux;
-        return this;
-    }
-
-    public TipoEquipe addUsuario(User usuario) {
-        this.usuarios.add(usuario);
-        usuario.setTipoEquipe(this);
-        return this;
-    }
-
-    public TipoEquipe removeUsuario(User usuario) {
-        this.usuarios.remove(usuario);
-        usuario.setTipoEquipe(null);
-        return this;
-    }
-
-    public void setUsuarios(Set<User> usuarios) {
-        Set<User> userAux;
-        userAux = usuarios;
-        this.usuarios = userAux;
-    }
 
     @Override
     public boolean equals(Object obj) {

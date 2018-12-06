@@ -1,34 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
 
-import br.com.basis.abaco.domain.UploadedFile;
-import br.com.basis.abaco.repository.UploadedFilesRepository;
-import br.com.basis.abaco.web.rest.errors.UploadException;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-
-import com.google.common.net.HttpHeaders;
-import io.github.jhipster.web.util.ResponseUtil;
-import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,6 +10,35 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Optional;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
+
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.google.common.net.HttpHeaders;
+
+import br.com.basis.abaco.domain.UploadedFile;
+import br.com.basis.abaco.repository.UploadedFilesRepository;
+import br.com.basis.abaco.web.rest.errors.UploadException;
+import io.github.jhipster.web.util.ResponseUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -65,22 +66,33 @@ public class UploadController {
         try {
             byte[] bytes = file.getBytes();
 
+            String classPathString = this.getClass().getClassLoader().getResource("").toString();
+            Path classPath = Paths.get(classPathString).toAbsolutePath();
+            String folderPathString = classPath.toString();
+
+            File directory = new File(folderPathString);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
             byte[] bytesFileName = (file.getOriginalFilename() + String.valueOf(System.currentTimeMillis()))
                 .getBytes("UTF-8");
             String filename = DatatypeConverter.printHexBinary(MessageDigest.getInstance("MD5").digest(bytesFileName));
             String ext = FilenameUtils.getExtension(file.getOriginalFilename());
             filename += "." + ext;
+            Path path = Paths.get(folderPathString + "/" + filename);
+            System.out.println(path);
+            Files.write(path, bytes);
 
-            uploadedFile.setLogo(bytes);
             uploadedFile.setDateOf(new Date());
             uploadedFile.setOriginalName(file.getOriginalFilename());
             uploadedFile.setFilename(filename);
             uploadedFile.setSizeOf(bytes.length);
-            uploadedFile = filesRepository.save(uploadedFile);
+            filesRepository.save(uploadedFile);
         } catch (IOException | NoSuchAlgorithmException e) {
             throw new UploadException("Erro ao efetuar o upload do arquivo", e);
         }
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "/saveFile").body(uploadedFile);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(uploadedFile));
     }
 
 
@@ -90,17 +102,20 @@ public class UploadController {
         return "uploadStatus";
     }
 
-    @GetMapping("/getFile/{id}")
-    public UploadedFile getUploadedFile(@PathVariable Long id) throws IOException {
-       return filesRepository.findOne(id);
-    }
+    @GetMapping("/getFile")
+    public ResponseEntity<Resource> getUploadedFile(@RequestParam Long id) throws IOException {
 
-    @DeleteMapping("/deleteFile/{id}")
-    public ResponseEntity<Void> deleteFile(@PathVariable Long id){
-        log.debug("REST request to delete Manual : {}", id);
+        UploadedFile uploadedFile = filesRepository.findOne(id);
 
-        filesRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("UploadedFile", id.toString())).build();
+        String classPathString = this.getClass().getClassLoader().getResource("").toString();
+        Path classPath = Paths.get(classPathString).toAbsolutePath();
+        String folderPath = classPath.toString();
+
+        Resource file = new FileSystemResource(folderPath + "/" + uploadedFile.getFilename());
+
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+            .body(file);
 
     }
 

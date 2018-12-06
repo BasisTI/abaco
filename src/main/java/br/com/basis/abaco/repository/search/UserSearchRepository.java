@@ -3,6 +3,7 @@ package br.com.basis.abaco.repository.search;
 import br.com.basis.abaco.domain.User;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 

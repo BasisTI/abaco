@@ -184,7 +184,7 @@ public class UserService {
 		copy.setResetKey(user.getResetKey());
 		copy.setResetDate(user.getResetDate());
 		copy.setAuthorities(user.getAuthorities());
-		copy.setTipoEquipe(user.getTipoEquipe());
+		copy.setTipoEquipes(user.getTipoEquipes());
 		copy.setOrganizacoes(user.getOrganizacoes());
 		return copy;
 	}
@@ -242,8 +242,8 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<User> getAllManagedUsers(Pageable pageable) {
-		return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER);
+	public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
+		return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map(UserDTO::new);
 	}
 
 	@Transactional(readOnly = true)
