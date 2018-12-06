@@ -24,7 +24,7 @@ import {FileUpload} from 'primeng/primeng';
 export class ManualFormComponent implements OnInit, OnDestroy {
     manual: Manual;
     isSaving;
-    isEdit; newUpload: boolean;
+    isEdit; newUpload; validaEsforco; validaTipoFase: boolean;
     private routeSub: Subscription;
     arquivoManual: File;
     esforcoFases: Array<EsforcoFase>;
@@ -375,12 +375,14 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         if (phaseEffort.fase) {
             isPhaseNameValid = true;
         } else {
+            this.validaTipoFase = true;
             isPhaseNameValid = false;
         }
 
         if (phaseEffort.esforco && phaseEffort.esforco !== 0) {
             isEffortValid = true;
         } else {
+            this.validaEsforco = true;
             isEffortValid = false;
         }
 
@@ -443,7 +445,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     private checkRequiredField(field: any) {
         let isValid = false;
 
-        (field !== undefined && field !== '' && field !== null) ? (isValid = true) : (isValid = false);
+        (field) ? (isValid = true) : (isValid = false);
 
         return isValid;
     }
