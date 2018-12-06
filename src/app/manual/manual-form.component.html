@@ -362,11 +362,11 @@
                                         name="fase"
                                         dataKey="id"
                                         [autoWidth]="false">
+
                             </p-dropdown>
                             <div *ngIf="editForm.controls['fase']
                                         && !editForm.controls['fase'].valid
-                                        && (editForm.controls['fase'].touched
-                                        || editForm.submitted)">
+                                        && (editForm.controls['fase'].touched)">
                                 <span style="color: red">Campo obrigatório.</span>
                             </div>
                         </div>
@@ -424,11 +424,11 @@
 
                             <input id="nome_fator_ajuste" type="text" name="nomeFatorAjuste"
                                    [(ngModel)]="newAdjustFactor.nome"
-                                   pInputText required/>
-                            <div *ngIf="editForm.controls['nomeFatorAjuste']
+                                   pInputText required
+                                   (onFocus)= "this.validaNomeDeflator = false"/>
+                            <div *ngIf="this.validaNomeDeflator || (editForm.controls['nomeFatorAjuste']
                                     && !editForm.controls['nomeFatorAjuste'].valid
-                                    && (editForm.controls['nomeFatorAjuste'].touched
-                                    || editForm.submitted)">
+                                    && editForm.controls['nomeFatorAjuste'].touched)">
                                 <span style="color: red">Campo obrigatório.</span>
                             </div>
                         </div>
@@ -437,12 +437,12 @@
                             <label>Tipo Deflator *</label><br>
                             <p-dropdown [filter]="true" #dd id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste"
                                         [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"
-                                        placeholder="Tipo Ajuste" required>
+                                        placeholder="Tipo Ajuste" required
+                                        (onFocus)= "this.validaTipoDeflator = false">
                             </p-dropdown>
-                            <div *ngIf="editForm.controls['tipoAjuste']
+                            <div *ngIf="this.validaTipoDeflator||(editForm.controls['tipoAjuste']
                                         && !editForm.controls['tipoAjuste'].valid
-                                        && (editForm.controls['tipoAjuste'].touched
-                                        || editForm.submitted)">
+                                        && editForm.controls['tipoAjuste'].touched)">
                                 <span style="color: red">Campo obrigatório.</span>
                             </div>
                         </div>
@@ -454,11 +454,11 @@
 
                             <input id="valor_fator" size="3" name="fator" id="idDeflatorDeflatorFormManual"
                                    [disabled]="habilitarDeflator()"
-                                   [(ngModel)]="newAdjustFactor.fatorFormatado" pInputText required/>
-                            <div *ngIf="editForm.controls['fator']
+                                   [(ngModel)]="newAdjustFactor.fatorFormatado" pInputText required
+                                   (onFocus)= "this.validaDeflator = false"/>
+                            <div *ngIf="this.validaDeflator || (editForm.controls['fator']
                                         && !editForm.controls['fator'].valid
-                                        && (editForm.controls['fator'].touched
-                                        || editForm.submitted)">
+                                        && editForm.controls['fator'].touched)">
                                 <span style="color: red">Campo obrigatório.</span>
                             </div>
                         </div>

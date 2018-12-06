@@ -24,7 +24,7 @@ import {FileUpload} from 'primeng/primeng';
 export class ManualFormComponent implements OnInit, OnDestroy {
     manual: Manual;
     isSaving;
-    isEdit; newUpload; validaEsforco; validaTipoFase: boolean;
+    isEdit; newUpload; validaEsforco; validaTipoFase; validaNomeDeflator; validaTipoDeflator; validaDeflator: boolean;
     private routeSub: Subscription;
     arquivoManual: File;
     esforcoFases: Array<EsforcoFase>;
@@ -40,8 +40,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     editedAdjustFactor: FatorAjuste = new FatorAjuste();
 
     adjustTypes: Array<any> = [
-        {label: 'Percentual', value: 'PERCENTUAL',},
-        {label: 'Unitário', value: 'UNITARIO',},
+        {label: 'Percentual', value: 'PERCENTUAL', },
+        {label: 'Unitário', value: 'UNITARIO', },
     ];
 
     invalidFields: Array<string> = [];
@@ -123,7 +123,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     private editar() {
         this.manualService.find(this.manual.id).subscribe(() => {
-            let oldId = this.manual.arquivoManualId;
+            const oldId = this.manual.arquivoManualId;
             if (this.checkRequiredFields()) {
                 if (this.arquivoManual !== undefined) {
                     this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
@@ -434,12 +434,34 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         let isNameValid = false;
         let isAdjustTypeValid = false;
         let isFactorValid = false;
+        let isAdjustFactorValid = false;
 
-        isNameValid = this.checkRequiredField(adjustFactor.nome);
-        isAdjustTypeValid = this.checkRequiredField(adjustFactor.tipoAjuste);
-        isFactorValid = this.checkRequiredField(adjustFactor.fator);
+        (adjustFactor.nome) ? (isNameValid = true) : (isNameValid = false);
 
-        return (isNameValid && isAdjustTypeValid && isFactorValid);
+        if (adjustFactor.nome) {
+            isNameValid = true;
+        } else {
+            isNameValid = false;
+            this.validaNomeDeflator = true;
+        }
+
+        if (adjustFactor.tipoAjuste){
+            isAdjustTypeValid = true;
+        } else {
+            isAdjustTypeValid = false;
+            this.validaTipoDeflator = true;
+        }
+
+        if (adjustFactor.fator) {
+            isFactorValid = true;
+        } else {
+            isFactorValid = false;
+            this.validaDeflator = true;
+        }
+
+        (isNameValid && isAdjustTypeValid && isFactorValid) ? (isAdjustFactorValid = true) : (isAdjustFactorValid = false);
+
+        return isAdjustFactorValid;
     }
 
     private checkRequiredField(field: any) {
