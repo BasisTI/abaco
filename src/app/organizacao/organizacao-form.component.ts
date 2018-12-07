@@ -72,13 +72,13 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     this.routeSub = this.route.params.subscribe(params => {
       this.organizacao = new Organizacao();
       if (params['id']) {
-       
+
         this.organizacaoService.find(params['id']).subscribe(organizacao => {
           this.organizacao = organizacao;
           if (this.organizacao.logoId != undefined && this.organizacao.logoId != null)
             this.uploadService.getLogo(organizacao.logoId).subscribe(response => {
-            this.logo = response.logo
-         })
+            this.logo = response.logo;
+         });
           // this.getFile();
         });
       }
@@ -274,11 +274,13 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   this.organizacaoService.query().subscribe(response => {
     const todasOrganizacoes = response;
 
-    if (!this.checkIfOrganizacaoAlreadyExists(todasOrganizacoes.json)) {
-      if (this.organizacao.id !== undefined) {
-        this.editar();
-      } else {
-        this.novo();
+    if (!this.checkIfOrganizacaoAlreadyExists(todasOrganizacoes.json)
+        && !this.checkIfCnpjAlreadyExists(todasOrganizacoes.json)) {
+
+        if (this.organizacao.id !== undefined) {
+            this.editar();
+        } else {
+            this.novo();
       }
     }
   });
@@ -296,9 +298,9 @@ editar() {
         this.organizacao.logoId = response.id;
         this.logo = response.logo;
         this.isEdit = true;
-        this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));      
+        this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
 
-      });  
+      });
 
       this.uploadService.saveFile(this.newLogo).subscribe(response => {
         });
@@ -331,6 +333,16 @@ editar() {
         });
         return isAlreadyRegistered;
   }
+    checkIfCnpjAlreadyExists(organizacoesRegistradas: Array<Organizacao>): boolean {
+        let isAlreadyRegistered = false;
+        organizacoesRegistradas.forEach(each => {
+            if (each.cnpj.toUpperCase() === this.organizacao.cnpj.toUpperCase() && each.id !== this.organizacao.id) {
+                isAlreadyRegistered = true;
+                this.pageNotificationService.addErrorMsg('Já existe uma Organização registrada com este CNPJ!');
+            }
+        });
+        return isAlreadyRegistered;
+    }
 
   /**
   * Método responsável por recuperar as organizações pelo id.
@@ -426,10 +438,10 @@ editar() {
   }
 
   /**
-   *Método de upload de foto 
+   *Método de upload de foto
    * */
   fileUpload(event: any) {
-    let imagem = event.files[0];
+    const imagem = event.files[0];
     if (this.mudouLogo(imagem)) {
       this.newLogo = imagem;
     }
