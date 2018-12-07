@@ -141,6 +141,13 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         });
     }
 
+    clonarTooltip() {
+        if (!this.analiseSelecionada.id){
+            return "Selecione um registro para clonar";
+        }
+        return "Clonar";
+    }
+
     recuperarOrganizacoes() {
         this.organizacaoService.query().subscribe(response => {
           this.organizations = response.json;

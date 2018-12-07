@@ -172,7 +172,13 @@ export class AnaliseService {
     this.http.get(`${this.relatoriosDetalhadoUrl}/${id}`, {
     method: RequestMethod.Get,
     responseType: ResponseContentType.Blob,
-  }).subscribe(
+  }).catch((error: any) => {
+    if (error.status === 500) {
+        this.pageNotificationService.addErrorMsg('Erro ao gerar relatório, verifique se a análise possui FDs/FTs cadastradas');
+        this.blockUI.stop();
+        return Observable.throw(new Error(error.status));
+    }
+}).subscribe(
       (response) => {
         const mediaType = 'application/pdf';
         const blob = new Blob([response.blob()], {type: mediaType});

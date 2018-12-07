@@ -71,21 +71,30 @@
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
-              <input 
-                type="text" 
-                name="email" 
-                [(ngModel)]="user.email" 
-                pInputText 
-                maxlength="100"
-                #email='ngModel'
-                required/>
+              <input
+                      type="email"
+                      name="email"
+                      [(ngModel)]="user.email"
+                      pInputText
+                      maxlength="100"
+                      #email='ngModel'
+                      required email/>
               <label>E-mail *</label>
-              <div *ngIf="editForm.controls['email'] 
-                  && !this.desabilitado() 
-                  && !editForm.controls['email'].valid 
-                  && (editForm.controls['email'].touched 
-                  || editForm.submitted)" 
-                  class="ui-message ui-messages-error">
+                <div *ngIf="editForm.controls['email']
+                            && !editForm.controls['email'].valid
+                            && this.user.email
+                            && (editForm.controls['email'].touched
+                            || editForm.submitted)"
+                            class="ui-message ui-messages-error">
+                            Email Inválido
+                </div>
+              <div *ngIf="editForm.controls['email']
+                   && !this.desabilitado()
+                   && !editForm.controls['email'].valid
+                   && !this.user.email
+                   && (editForm.controls['email'].touched
+                   || editForm.submitted)"
+                   class="ui-message ui-messages-error">
                 Campo obrigatório.
               </div>
             </span>
@@ -138,9 +147,8 @@
                 && !this.desabilitado() 
                 && !editForm.controls['authoritiesMultiselect'].valid 
                 && (editForm.controls['authoritiesMultiselect'].touched 
-                || editForm.submitted)" 
-                class="ui-message ui-messages-error">
-                Campo obrigatório.
+                || editForm.submitted)">
+                 <span style="color: red">Campo obrigatório.</span>
               </div>
             </span>
           </div>
@@ -165,9 +173,8 @@
                 && !this.desabilitado() 
                 && !editForm.controls['organizacoesMultiSelect'].valid 
                 && (editForm.controls['organizacoesMultiSelect'].touched 
-                || editForm.submitted)" 
-                class="ui-message ui-messages-error">
-                Campo obrigatório.
+                || editForm.submitted)">
+                <span style="color: red">Campo obrigatório.</span>
               </div>
             </span>
           </div>
@@ -191,9 +198,8 @@
               && !this.desabilitado() && !this.disableEquipeDropdown()
               && !editForm.controls['equipesMultiSelect'].valid 
               && (editForm.controls['equipesMultiSelect'].touched 
-              || editForm.submitted)" 
-              class="ui-message ui-messages-error">
-              Campo obrigatório.
+              || editForm.submitted)">
+              <span style="color: red">Campo obrigatório.</span>
             </div>
           </span>
         </div>
