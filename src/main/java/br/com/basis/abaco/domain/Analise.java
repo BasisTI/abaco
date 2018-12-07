@@ -562,8 +562,7 @@ public class Analise implements Serializable, ReportObject {
         return compartilhadas;
     }
 
-    public void setCompartilhadas(Set<Compartilhada> compartilhadas) {
-        Set<Compartilhada> compartilhadaSet = compartilhadas;
+    public void setCompartilhadas(Set<Compartilhada> compartilhadaSet) {
         this.compartilhadas = compartilhadaSet;
     }
 

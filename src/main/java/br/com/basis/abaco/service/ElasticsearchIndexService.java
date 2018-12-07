@@ -1,21 +1,5 @@
 package br.com.basis.abaco.service;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.List;
-
-import org.elasticsearch.indices.IndexAlreadyExistsException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.codahale.metrics.annotation.Timed;
-
 import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Contrato;
@@ -67,6 +51,20 @@ import br.com.basis.abaco.repository.search.RlrSearchRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
+import com.codahale.metrics.annotation.Timed;
+import org.elasticsearch.indices.IndexAlreadyExistsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.List;
 
 @Service
 public class ElasticsearchIndexService {
@@ -240,8 +238,8 @@ public class ElasticsearchIndexService {
         log.info("Elasticsearch: Successfully performed reindexing");
     }
 
-    public <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
-                                                      ElasticsearchRepository<T, ID> elasticsearchRepository) {
+    private <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
+                                                              ElasticsearchRepository<T, ID> elasticsearchRepository) {
         elasticsearchTemplate.deleteIndex(entityClass);
         try {
             elasticsearchTemplate.createIndex(entityClass);
@@ -257,6 +255,5 @@ public class ElasticsearchIndexService {
                 elasticsearchRepository.save(jpaRepository.findAll());
             }
         }
-        log.info("Elasticsearch: Indexed all rows for ".concat(entityClass.getSimpleName()));
     }
 }
