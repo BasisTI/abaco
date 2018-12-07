@@ -242,8 +242,8 @@ public class ElasticsearchIndexService {
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    private <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
-                                                              ElasticsearchRepository<T, ID> elasticsearchRepository) {
+    <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
+                                                      ElasticsearchRepository<T, ID> elasticsearchRepository) {
         elasticsearchTemplate.deleteIndex(entityClass);
         try {
             elasticsearchTemplate.createIndex(entityClass);
@@ -259,6 +259,6 @@ public class ElasticsearchIndexService {
                 elasticsearchRepository.save(jpaRepository.findAll());
             }
         }
-        log.info("Elasticsearch: Indexed all rows for " + entityClass.getSimpleName());
+        log.info("Elasticsearch: Indexed all rows for ".concat(entityClass.getSimpleName()));
     }
 }
