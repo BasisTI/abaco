@@ -231,7 +231,8 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 	}
 
 	public Set<TipoEquipe> getTipoEquipes() {
-		return tipoEquipes;
+        Set<TipoEquipe> equipes = tipoEquipes;
+        return equipes;
 	}
 
     public String getNomeEquipe(){
@@ -248,7 +249,8 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
 	public void setTipoEquipes(Set<TipoEquipe> tipoEquipes) {
-		this.tipoEquipes = tipoEquipes;
+        Set<TipoEquipe> equipes = tipoEquipes;
+		this.tipoEquipes = equipes;
 	}
 
 	public Set<Organizacao> getOrganizacoes() {
