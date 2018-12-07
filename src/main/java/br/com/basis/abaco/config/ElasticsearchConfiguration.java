@@ -23,7 +23,7 @@ public class ElasticsearchConfiguration {
 
         private final ObjectMapper objectMapper;
 
-        public CustomEntityMapper(ObjectMapper objectMapper) {
+        private CustomEntityMapper(ObjectMapper objectMapper) {
             this.objectMapper = objectMapper;
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);

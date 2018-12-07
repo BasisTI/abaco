@@ -240,9 +240,7 @@ public class ElasticsearchIndexService {
         log.info("Elasticsearch: Successfully performed reindexing");
     }
 
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
-    <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
+    public <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
                                                       ElasticsearchRepository<T, ID> elasticsearchRepository) {
         elasticsearchTemplate.deleteIndex(entityClass);
         try {
