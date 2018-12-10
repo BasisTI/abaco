@@ -140,7 +140,7 @@ public class ElasticsearchIndexService {
     private final TipoEquipeSearchRepository tipoEquipeSearchRepository;
 
     private final ElasticsearchTemplate elasticsearchTemplate;
-    
+
 
     public ElasticsearchIndexService(
         UserRepository userRepository,
@@ -235,14 +235,12 @@ public class ElasticsearchIndexService {
         reindexForClass(Sistema.class, sistemaRepository, sistemaSearchRepository);
         reindexForClass(User.class, userRepository, userSearchRepository);
         reindexForClass(TipoEquipe.class, tipoEquipeRepository, tipoEquipeSearchRepository);
-        
+
         log.info("Elasticsearch: Successfully performed reindexing");
     }
 
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
-    public <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
-                                                              ElasticsearchRepository<T, ID> elasticsearchRepository) {
+    private <T, Id extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, Id> jpaRepository,
+                                                              ElasticsearchRepository<T, Id> elasticsearchRepository) {
         elasticsearchTemplate.deleteIndex(entityClass);
         try {
             elasticsearchTemplate.createIndex(entityClass);

@@ -39,6 +39,8 @@ spring:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:postgresql://localhost:5432/abaco
+        # username: abaco
+        # password: abaco
         username: postgres
         password: 1
     jpa:

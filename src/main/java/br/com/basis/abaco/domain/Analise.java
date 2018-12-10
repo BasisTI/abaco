@@ -559,13 +559,17 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<Compartilhada> getCompartilhadas() {
-        return compartilhadas;
+        Set<Compartilhada> compAux;
+        compAux = compartilhadas;
+        return compAux;
     }
 
-    public void setCompartilhadas(Set<Compartilhada> compartilhadas) {
-        this.compartilhadas = compartilhadas;
+    public void setCompartilhadas(Set<Compartilhada> compartilhadaSet) {
+        Set<Compartilhada> compAux;
+        compAux = compartilhadaSet;
+        this.compartilhadas = compAux;
     }
-    
+
     @Override
     public String toString() {
         // // @formatter:off
