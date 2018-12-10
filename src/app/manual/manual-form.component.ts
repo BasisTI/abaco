@@ -339,7 +339,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addUpdateMsg();
             this.closeDialogEditAdjustFactor();
         } else {
-
+            this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios!');
         }
     }
 
@@ -401,19 +401,31 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     openDialogCreateAdjustFactor() {
+        this.validaTipoDeflator = false;
+        this.validaDeflator = false;
+        this.validaNomeDeflator = false;
         this.showDialogCreateAdjustFactor = true;
     }
 
     closeDialogCreateAdjustFactor() {
+        this.validaTipoDeflator = false;
+        this.validaDeflator = false;
+        this.validaNomeDeflator = false;
         this.showDialogCreateAdjustFactor = false;
         this.newAdjustFactor = new FatorAjuste();
     }
 
     openDialogEditAdjustFactor() {
+        this.validaTipoDeflator = false;
+        this.validaDeflator = false;
+        this.validaNomeDeflator = false;
         this.showDialogEditAdjustFactor = true;
     }
 
     closeDialogEditAdjustFactor() {
+        this.validaTipoDeflator = false;
+        this.validaDeflator = false;
+        this.validaNomeDeflator = false;
         this.showDialogEditAdjustFactor = false;
         this.editedAdjustFactor = new FatorAjuste();
     }
