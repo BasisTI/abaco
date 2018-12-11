@@ -113,7 +113,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
           this.userId = res.id;                 // Pegando id do usuário logado
           this.userAnaliseUrl = `${this.analiseService.resourceUrl}/user/${this.userId}`;       // Construindo URL para busca de análises
           this.buscarAnalises(this.userId);     // Buscando as benditas análises
+          this.blockUI.stop();
         });
+        this.blockUI.stop();
       }
 
       /**
