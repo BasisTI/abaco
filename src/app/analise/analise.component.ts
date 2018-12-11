@@ -7,9 +7,9 @@ import { StringConcatService } from './../shared/string-concat.service';
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, SelectItem } from 'primeng/primeng';
-import { Analise, AnaliseService, MetodoContagem, AnaliseShareEquipe } from './';
+import {Analise, AnaliseService, MetodoContagem, AnaliseShareEquipe, GrupoService} from './';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
-import { ElasticQuery, PageNotificationService } from '../shared';
+import {ElasticQuery, PageNotificationService, ResponseWrapper} from '../shared';
 import { MessageUtil } from '../util/message.util';
 import { Response } from '@angular/http';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
@@ -23,9 +23,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
     @BlockUI() blockUI: NgBlockUI;
 
-    searchUrl: string = this.analiseService.searchUrl;
+    searchUrl: string = this.grupoService.grupoUrl;
 
-    userAnaliseUrl: string;
+    userAnaliseUrl: string  = this.grupoService.grupoUrl;
 
     elasticQuery: ElasticQuery = new ElasticQuery();
 
@@ -70,7 +70,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
         private stringConcatService: StringConcatService,
-        private userService: UserService
+        private userService: UserService,
+        private grupoService: GrupoService
     ) {}
 
     public ngOnInit() {
@@ -109,37 +110,19 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      */
     recuperarAnalisesUsuario() {
         // this.blockUI.start('Carregando análises...');
-        const userSub = this.userService.findCurrentUser().subscribe(res => {
-          this.userId = res.id;                 // Pegando id do usuário logado
-          this.userAnaliseUrl = `${this.analiseService.resourceUrl}/user/${this.userId}`;       // Construindo URL para busca de análises
-          this.buscarAnalises(this.userId);     // Buscando as benditas análises
-        });
+         // this.carregarDataTable();     // Buscando as benditas análises
       }
 
       /**
        * Função que faz requisição das análises das equipes do usuário
        * @param idUser id do usuário logado
        */
-    buscarAnalises(idUser: number) {
-        const analiseSub = this.analiseService.findAnalisesUsuario(this.userId).subscribe(res => {
-            this.datatable.pDatatableComponent.value = res;             // Atribuindo valores das análises para a datatable
-            this.datatable.pDatatableComponent.dataToRender = res;      // Renderizando valores das análises na datatable
-            // this.blockUI.stop();
-        }, error => {
-            if (error.status === 400) {
-                switch (error.headers.toJSON()['x-abacoapp-error'][0]) {
-                    case 'userSecurityBreachAtempt': {
-                        this.pageNotificationService.addErrorMsg('Você não possui permissão para acessar dados de outro usuário.');
-                        break;
-                    }
-                    case 'userNotFound': {
-                        this.pageNotificationService.addErrorMsg('Você não é um usuário cadastrado para este sistema.');
-                        break;
-                    }
-                }
-            }
-        });
-    }
+
+      public carregarDataTable() {
+          this.grupoService.all().subscribe((res: ResponseWrapper) => {
+              this.datatable.value = res.json;
+          });
+      }
 
     clonarTooltip() {
         if (!this.analiseSelecionada.id){
