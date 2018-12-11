@@ -12,7 +12,6 @@ import { DatatableComponent, DatatableClickEvent } from '@basis/angular-componen
 import { ElasticQuery, PageNotificationService } from '../shared';
 import { MessageUtil } from '../util/message.util';
 import { Response } from '@angular/http';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
     selector: 'jhi-analise',
@@ -21,7 +20,6 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 export class AnaliseComponent implements OnInit, AfterViewInit {
 
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
-    @BlockUI() blockUI: NgBlockUI;
 
     searchUrl: string = this.analiseService.searchUrl;
 

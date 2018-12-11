@@ -6,7 +6,6 @@ import { environment } from '../../environments/environment';
 
 import { Analise , AnaliseShareEquipe} from './';
 import {ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService} from '../shared';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { loginRoute } from '../login';
 
 @Injectable()
@@ -37,8 +36,6 @@ export class AnaliseService {
   fieldSearchEquipeUrl = environment.apiUrl + '/_searchEquipe/analises';
 
   relatoriosBaselineUrl = environment.apiUrl + '/downloadPdfBaselineBrowser';
-
-  @BlockUI() blockUI: NgBlockUI;
 
     constructor(private http: HttpService, private pageNotificationService: PageNotificationService) {}
 
