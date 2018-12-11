@@ -314,10 +314,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.confirmationService.confirm({
             message: MessageUtil.CONFIRMAR_EXCLUSAO.concat(analise.identificadorAnalise).concat('?'),
             accept: () => {
-                // this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
+                this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
                 this.analiseService.delete(analise.id).subscribe(() => {
                     this.recarregarDataTable();
-                    // this.blockUI.stop();
+                    this.blockUI.stop();
                     this.pageNotificationService.addDeleteMsgWithName(analise.identificadorAnalise);
                 });
             }
@@ -575,7 +575,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                                                                      viewOnly: false, nomeEquipe: equipe.nome });
                 this.equipeShare.push(entity);
             });
-            // this.blockUI.stop();
+            this.blockUI.stop();
         });
 
         this.analiseService.findAllCompartilhadaByAnalise(this.analiseSelecionada.id).subscribe((shared) => {
