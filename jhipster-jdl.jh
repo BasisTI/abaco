@@ -1,0 +1,15 @@
+
+
+entity Grupo {
+	idAnalise Long,
+    organizacao String,
+    identificadorAnalise String,
+    equipe Long,
+    sistema String,
+    metodoContagem String,
+    pfTotal String,
+    pfAjustado String,
+    diasDeGarantia Integer,
+    dataHomologacao LocalDate,
+    bloqueado Boolean
+}

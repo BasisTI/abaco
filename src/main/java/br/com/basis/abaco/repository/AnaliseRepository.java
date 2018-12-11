@@ -1,6 +1,7 @@
 package br.com.basis.abaco.repository;
 
 import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Grupo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +27,11 @@ public interface AnaliseRepository extends JpaRepository<Analise,Long> {
 
     @Query( value = "SELECT a.id FROM analise a WHERE a.equipe_responsavel_id IN :equipes", nativeQuery = true)
     List<BigInteger> findAllByTipoEquipesId (@Param("equipes") List<Long> equipes);
+
+    @Query(value = "SELECT a FROM Analise a WHERE a.id IN :idAnalise")
+    Page<Analise> findByIds(@Param("idAnalise") List<BigInteger> idAnalise, Pageable pageable);
+
+    @Query(value = "SELECT a.id FROM analise a WHERE a.equipe_responsavel_id IN :equipes UNION ALL " +
+        "SELECT ac.analise_id FROM analise_compartilhada ac WHERE ac.equipe_id IN :equipes", nativeQuery = true)
+    List<BigInteger> listAnalisesEquipe(@Param("equipes") List<Long> equipes);
 }
