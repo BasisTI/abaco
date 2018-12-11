@@ -108,7 +108,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      * Função para recuperar análises da equipe do usuário
      */
     recuperarAnalisesUsuario() {
-        this.blockUI.start('Carregando análises...');
+        // this.blockUI.start('Carregando análises...');
         const userSub = this.userService.findCurrentUser().subscribe(res => {
           this.userId = res.id;                 // Pegando id do usuário logado
           this.userAnaliseUrl = `${this.analiseService.resourceUrl}/user/${this.userId}`;       // Construindo URL para busca de análises
@@ -124,7 +124,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         const analiseSub = this.analiseService.findAnalisesUsuario(this.userId).subscribe(res => {
             this.datatable.pDatatableComponent.value = res;             // Atribuindo valores das análises para a datatable
             this.datatable.pDatatableComponent.dataToRender = res;      // Renderizando valores das análises na datatable
-            this.blockUI.stop();
+            // this.blockUI.stop();
         }, error => {
             if (error.status === 400) {
                 switch (error.headers.toJSON()['x-abacoapp-error'][0]) {
@@ -331,10 +331,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.confirmationService.confirm({
             message: MessageUtil.CONFIRMAR_EXCLUSAO.concat(analise.identificadorAnalise).concat('?'),
             accept: () => {
-                this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
+                // this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
                 this.analiseService.delete(analise.id).subscribe(() => {
                     this.recarregarDataTable();
-                    this.blockUI.stop();
+                    // this.blockUI.stop();
                     this.pageNotificationService.addDeleteMsgWithName(analise.identificadorAnalise);
                 });
             }
@@ -592,7 +592,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                                                                      viewOnly: false, nomeEquipe: equipe.nome });
                 this.equipeShare.push(entity);
             });
-            this.blockUI.stop();
+            // this.blockUI.stop();
         });
 
         this.analiseService.findAllCompartilhadaByAnalise(this.analiseSelecionada.id).subscribe((shared) => {
