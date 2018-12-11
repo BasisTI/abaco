@@ -246,11 +246,7 @@ export class AnaliseService {
     return this.http.get(url)
       .map(
         (res: Response) => this.convertJsonToAnalise(res),
-        (error) => {
-          this.blockUI.stop();
-          this.tratarErro(error.toString(), idUsuario)
-          
-        }
+        (error) => this.tratarErro(error.toString(), idUsuario)
       );
   }
 
@@ -303,7 +299,6 @@ export class AnaliseService {
   }
 
   convertJsonToAnalise (res: Response): Analise[] {
-    this.blockUI.stop();
     const jsonResponse = res.json();
     let result = [];
     for (let i = 0; i < jsonResponse.length; i++) {
