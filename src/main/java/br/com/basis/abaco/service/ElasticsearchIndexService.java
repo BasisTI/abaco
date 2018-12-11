@@ -238,8 +238,8 @@ public class ElasticsearchIndexService {
         log.info("Elasticsearch: Successfully performed reindexing");
     }
 
-    private <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
-                                                              ElasticsearchRepository<T, ID> elasticsearchRepository) {
+    private <T, Id extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, Id> jpaRepository,
+                                                              ElasticsearchRepository<T, Id> elasticsearchRepository) {
         elasticsearchTemplate.deleteIndex(entityClass);
         try {
             elasticsearchTemplate.createIndex(entityClass);
