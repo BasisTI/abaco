@@ -17,11 +17,8 @@ import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
-import io.swagger.annotations.ApiParam;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,16 +33,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,8 +57,6 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 @RestController
 @RequestMapping("/api")
 public class AnaliseResource {
-
-    private static final String QUERY_MSG_CONST = "REST request to search for a page of Analises for query {}";
 
     private final Logger log = LoggerFactory.getLogger(AnaliseResource.class);
 
@@ -136,7 +122,7 @@ public class AnaliseResource {
     }
 
     /**
-     * POST /analises : Create a new analise.
+     * POST /analises : CRIAR UMA ANÁLISE
      *
      * @param analise the analise to create
      * @return the ResponseEntity with status 201 (Created) and with body the new
@@ -162,87 +148,9 @@ public class AnaliseResource {
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
 
-    /**
-     * @param id
-     * @return
-     */
-    private Analise recuperarAnalise(Long id) {
-        return analiseRepository.findOne(id);
-    }
 
     /**
-     * @param analise
-     */
-    private void linkFuncoesToAnalise(Analise analise) {
-        linkAnaliseToFuncaoDados(analise);
-        linkAnaliseToFuncaoTransacaos(analise);
-    }
-
-    /**
-     * @param analise
-     */
-    private void linkAnaliseToFuncaoDados(Analise analise) {
-        analise.getFuncaoDados().forEach(funcaoDados -> {
-            funcaoDados.setAnalise(analise);
-            linkFuncaoDadosRelationships(funcaoDados);
-            handleVersionFuncaoDados(funcaoDados, analise.getSistema());
-        });
-    }
-
-    /**
-     * @param funcaoDados
-     */
-    private void linkFuncaoDadosRelationships(FuncaoDados funcaoDados) {
-        funcaoDados.getFiles().forEach(file -> file.setFuncaoDados(funcaoDados));
-        funcaoDados.getDers().forEach(der -> der.setFuncaoDados(funcaoDados));
-        funcaoDados.getRlrs().forEach(rlr -> rlr.setFuncaoDados(funcaoDados));
-    }
-
-    /**
-     * @param funcaoDados
-     * @param sistema
-     */
-    private void handleVersionFuncaoDados(FuncaoDados funcaoDados, Sistema sistema) {
-        String nome = funcaoDados.getName();
-        Optional<FuncaoDadosVersionavel> funcaoDadosVersionavel =
-            funcaoDadosVersionavelRepository.findOneByNomeIgnoreCaseAndSistemaId(nome, sistema.getId());
-        if (funcaoDadosVersionavel.isPresent()) {
-            funcaoDados.setFuncaoDadosVersionavel(funcaoDadosVersionavel.get());
-        } else {
-            FuncaoDadosVersionavel novaFDVersionavel = new FuncaoDadosVersionavel();
-            novaFDVersionavel.setNome(funcaoDados.getName());
-            novaFDVersionavel.setSistema(sistema);
-            FuncaoDadosVersionavel result = funcaoDadosVersionavelRepository.save(novaFDVersionavel);
-            funcaoDados.setFuncaoDadosVersionavel(result);
-        }
-    }
-
-    /**
-     * @param analise
-     */
-    private void linkAnaliseToFuncaoTransacaos(Analise analise) {
-        analise.getFuncaoTransacaos().forEach(funcaoTransacao -> {
-            funcaoTransacao.setAnalise(analise);
-            funcaoTransacao.getFiles().forEach(file -> file.setFuncaoTransacao(funcaoTransacao));
-            funcaoTransacao.getDers().forEach(der -> der.setFuncaoTransacao(funcaoTransacao));
-            funcaoTransacao.getAlrs().forEach(alr -> alr.setFuncaoTransacao(funcaoTransacao));
-        });
-    }
-
-    /**
-     * @param result
-     */
-    private void unlinkAnaliseFromFuncoes(Analise result) {
-        result.getFuncaoDados().forEach(entry -> {
-            entry.setAnalise(null);
-        });
-        result.getFuncaoTransacaos().forEach(entry -> {
-            entry.setAnalise(null);
-        });
-    }
-
-    /**
-     * PUT /analises : Updates an existing analise.
+     * PUT /analises : ATUALIZAR ANÁLISE
      *
      * @param analise the analise to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated
@@ -284,6 +192,10 @@ public class AnaliseResource {
         return analise;
     }
 
+
+    /**
+     * PUT /analises : BLOQUEAR ANÁLISE
+     */
     @PutMapping("/analises/{id}/block")
     @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
@@ -303,6 +215,9 @@ public class AnaliseResource {
             .body(result);
     }
 
+    /**
+     * PUT /analises : DESBLOQUEAR ANÁLISE
+     */
     @PutMapping("/analises/{id}/unblock")
     @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
@@ -323,115 +238,7 @@ public class AnaliseResource {
     }
 
     /**
-     * GET /analises : get all the analises.
-     *
-     * @param pageable the pagination information
-     * @return the ResponseEntity with status 200 (OK) and the list of analises in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
-     */
-    @GetMapping("/analises")
-    @Timed
-    public ResponseEntity<List<Analise>> getAllAnalises(@ApiParam Pageable pageable) throws URISyntaxException {
-        log.debug("REST request to get a page of Analises");
-        Page<Analise> page = analiseRepository.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-
-    /**
-     * GET /analises/user/:userId : get all the analises for a particular user id and shared analises for its tipo_equipe.
-     * If the user is a GESTOR or ADMIN, all analises are returned.
-     *
-     * @param userId   the user id to search for
-     * @param pageable the pagination information
-     * @return the ResponseEntity with status 200 (OK) and the list of analises in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
-     */
-    @GetMapping("/analises/user/{userId}")
-    @Timed
-    public ResponseEntity getAllAnalisesByUserId(@PathVariable Long userId, @ApiParam Pageable pageable) throws URISyntaxException {
-        Page<Analise> page;
-        log.debug("REST request to get a page of Analises for user {}", userId);
-        User foundUser = userRepository.findOneWithAuthoritiesById(userId);     // Recuperando dados do usuário recebido pela URL
-        if (foundUser == null) {                                                // Se não encontrou dados do usuário logado é sinal que a coisa tá feia...
-            return this.createBadRequest("userNotFound", "User not found in database");
-        }                                                                       // Recuperando dados do usuário logado de fato para verificação de segurança
-        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
-        if (!logged.isPresent() || !logged.get().getId().equals(foundUser.getId())) { // Verificando se o usuário está tentando acessar dados de outro usuário
-            return this.createBadRequest("userSecurityBreachAtempt", "You are not allowed to access other user's data.");
-        }
-        page = this.gerarPage(logged.get(), pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-
-    /**
-     * Função que gera uma página de análises filtradas de acordo com o perfil do usuário logado.
-     *
-     * @param user     Usuário cujo perfil será utilizado para filtrar a busca
-     * @param pageable Parâmetro de paginação para geração da página
-     * @return Retorna uma página de objetos Analise devidamente filtrada
-     */
-    private Page<Analise> gerarPage(User user, Pageable pageable) {
-        if (!user.verificarAuthority()) {                    // Se o usuário logado é comum, filtra a lista de análises pelas equipes do mesmo
-            // Requisitando uma página de análises com base na lista de Id's
-            return analiseRepository.findById(filtrarListaAnalises(user), pageable);
-        } else {                                            // Do contrário manda todas as análises
-            return analiseRepository.findAll(pageable);     // Requisitando uma página de análises sem filtro
-        }
-
-    }
-
-    /**
-     * Função que filtra a lista de análises de acordo com o perfil do usuário logado
-     *
-     * @param usuario Dados dos usuário logado
-     * @return Retorna uma lista contendo apenas id's de análises das equipes do usuário e compartilhadas com o mesmo
-     */
-    private List<Long> filtrarListaAnalises(User usuario) {
-        List<Long> equipes = new ArrayList<>();
-        List<Long> analises;
-
-        for (TipoEquipe eqp : usuario.getTipoEquipes()) {   // Cria lista de equipes do usuário
-            equipes.add(eqp.getId());
-        }
-        // Lista de Id's das análises da equipe do usuário
-        analises = this.converteListaBigIntLong(analiseRepository.findAllByTipoEquipesId(equipes));
-        // Adicionando a lista de Id's de análises compartilhadas com as equipes do usuário
-        analises.addAll(this.converteListaBigIntLong(this.compartilhadaRepository.findByEquipeId(equipes)));
-        return analises;
-    }
-
-    /**
-     * Função para converter lista de BigInteger em lista de Long sem alterar a lista original
-     *
-     * @param listaBig a lista de BigInterger a ser convertida
-     * @return Retorna uma lista de Long
-     */
-    private List<Long> converteListaBigIntLong(List<BigInteger> listaBig) {
-        List<Long> listaLong = new ArrayList<>();
-
-        for (BigInteger elementoBig : listaBig) {
-            listaLong.add(elementoBig.longValue());
-        }
-        return listaLong;
-    }
-
-    /**
-     * Função para construir reposta do tipo Bad Request informando o erro ocorrido.
-     *
-     * @param errorKey       Chave de erro que será incluída na resposta
-     * @param defaultMessage Mensagem padrão que será incluída no log
-     * @return ResponseEntity com uma Bad Request personalizada
-     */
-
-    private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
-        return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
-            .body(null);
-    }
-
-    /**
-     * GET /analises/:id : get the "id" analise.
+     * GET /analises/:id : BUSCAR ANÁLISE POR ID CASO O USUÁRIO POSSUA PERMISSÃO
      *
      * @param id the id of the analise to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the analise, or
@@ -442,11 +249,19 @@ public class AnaliseResource {
     public ResponseEntity<Analise> getAnalise(@PathVariable Long id) {
         log.debug("REST request to get Analise : {}", id);
         Analise analise = recuperarAnalise(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
+
+        if (analise != null) {
+            return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
+        } else {
+            return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new Analise());
+        }
+
     }
 
     /**
-     * DELETE /analises/:id : delete the "id" analise.
+     * DELETE /analises/:id : DELETAR ANÁLISE CASO O USUÁRIO POSSUA PERMISSÃO
      *
      * @param id the id of the analise to delete
      * @return the ResponseEntity with status 200 (OK)
@@ -456,60 +271,24 @@ public class AnaliseResource {
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public ResponseEntity<Void> deleteAnalise(@PathVariable Long id) {
         log.debug("REST request to delete Analise : {}", id);
-        analiseRepository.delete(id);
-        analiseSearchRepository.delete(id);
+
+        Analise analise = recuperarAnalise(id);
+
+        if (analise != null) {
+            analiseRepository.delete(id);
+            analiseSearchRepository.delete(id);
+        } else {
+            return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(null);
+        }
+
+
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
     /**
-     * SEARCH /_search/analises?query=:query : search for the analise corresponding to the query.
-     *
-     * @param query the query of the analise search
-     *              the pagination information
-     * @return the result of the search
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
-     */
-    @GetMapping("/_search/analises")
-    @Timed
-    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name = "page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-        log.debug(QUERY_MSG_CONST, query);
-        validaRecuperarAnalise(query);
-        Page<Analise> page = analiseSearchRepository.search(queryStringQuery(query), newPageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/analises");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-
-    /**
-     * INCOMPLETA - Função pra criar query ElasticSearch que filtra as análises visualizadas pelo usuário. Caso esta função
-     * receba o valor default para o endpoint "/_search/analises" ("*") será gerada uma query que irá buscar apenas as
-     *
-     * @param query A query ElasticSearch para ser verificada.
-     */
-    private void validaRecuperarAnalise(String query) {
-        Long idUser;
-        List<Long> idEquipes;
-        User userData;
-        String login;
-
-        if (query.equals("*")) {
-            login = SecurityUtils.getCurrentUserLogin();                                          // Descobrindo quem está logado
-            userData = userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);    // Carregando dados do usuário logado
-            if (userData != null) {                                                               // Se conseguiu carregar os dados do usuário...
-                idUser = userData.getId();                                                        // Pega id do usuário
-                log.warn("====>> Found user_id: {}", idUser);
-                idEquipes = userSearchRepository.findTipoEquipesById(idUser);                     // Recebe lista de equipes do usuário
-                log.warn("====>> Found idEquipes: {}", idEquipes);
-            } else {
-                log.error("====>> Erro: idUser não encontrado.");
-            }    // Deu ruim geral. Não encontrou os dados do usuário logado.
-        }
-    }
-
-    /**
-     * Retorna uma lista com todas as equipes que têm acesso àquela análise
+     * RETORNA UMA LISTA COM TODAS AS EQUIPES QUE TENHAM ACESSOS DAQUELA ANÁLISE
      *
      * @param idAnalise
      * @return
@@ -523,7 +302,7 @@ public class AnaliseResource {
     }
 
     /**
-     * Salva uma lista com todas as equipes que têm acesso àquela análise
+     * SALVA UMA LISTA CONTENDO TODAS AS EQUIPES DA ANÁLISE
      *
      * @return
      */
@@ -538,7 +317,7 @@ public class AnaliseResource {
     }
 
     /**
-     * Deleta um ou mais compartilhamentos de análise.
+     * DELETA UMA OU MAIS ANÁLISES COMPARTILHADAS
      *
      * @return
      */
@@ -564,80 +343,6 @@ public class AnaliseResource {
             .body(result);
     }
 
-    @GetMapping("/_searchIdentificador/analises")
-    @Timed
-    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchIdentificadorAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size, @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug(QUERY_MSG_CONST, query);
-        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-
-        QueryBuilder qb = QueryBuilders.matchQuery("identificadorAnalise", query);
-
-        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchIdentificador/analises");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-
-    @GetMapping("/_searchSistema/analises")
-    @Timed
-    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchSistemaAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size, @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug(QUERY_MSG_CONST, query);
-        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-
-        QueryBuilder qb = QueryBuilders.matchQuery("nomeSistema", query);
-
-        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchSistema/analises");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-
-    @GetMapping("/_searchMetodoContagem/analises")
-    @Timed
-    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchMetodoContagemAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size, @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug(QUERY_MSG_CONST, query);
-        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-
-        QueryBuilder qb = QueryBuilders.matchQuery("metodoContagemString", query);
-
-        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchMetodoContagem/analises");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-
-    @GetMapping("/_searchOrganizacao/analises")
-    @Timed
-    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchOrganizacaoAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size, @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug(QUERY_MSG_CONST, query);
-        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-
-        QueryBuilder qb = QueryBuilders.matchQuery("organizacao.nome", query);
-
-        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchOrganizacao/analises");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-
-    @GetMapping("/_searchEquipe/analises")
-    @Timed
-    // TODO todos os endpoint elastic poderiam ter o defaultValue impacta na paginacao do frontend
-    public ResponseEntity<List<Analise>> searchEquipeAnalises(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size, @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug(QUERY_MSG_CONST, query);
-        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-
-        QueryBuilder qb = QueryBuilders.matchQuery("equipeResponsavel.nome", query);
-
-        Page<Analise> page = analiseSearchRepository.search((qb), newPageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchEquipe/analises");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
 
     /**
      * Método responsável por requisitar a geração do relatório de Análise.
@@ -713,23 +418,23 @@ public class AnaliseResource {
     }
 
     /**
-     * GET /analisesEquipes : get all the analises.findByIdAnalises
+     * GET /analisesEquipes : LISTAR TODAS AS ANALISES POR EQUIPE
      *
      * @return the ResponseEntity with status 200 (OK) and the list of analises in body
      * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
-    @GetMapping("/analises/grupos")
+    @GetMapping("/analises")
     @Timed
     public ResponseEntity<List<Grupo>> getAllAnalisesEquipes(
-        @RequestParam(defaultValue = "asc")  String order,
+        @RequestParam(defaultValue = "asc") String order,
         @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
-        @RequestParam(defaultValue = "20")  int size,
+        @RequestParam(defaultValue = "20") int size,
         @RequestParam(defaultValue = "id") String sort,
-        @RequestParam(value="identificador") Optional<String> identificador,
-        @RequestParam(value="sistema") Optional<String> sistema,
-        @RequestParam(value="metodo") Optional<String> metodo,
-        @RequestParam(value="organizacao") Optional<String> organizacao,
-        @RequestParam(value="equipe") Optional<String> equipe)
+        @RequestParam(value = "identificador") Optional<String> identificador,
+        @RequestParam(value = "sistema") Optional<String> sistema,
+        @RequestParam(value = "metodo") Optional<String> metodo,
+        @RequestParam(value = "organizacao") Optional<String> organizacao,
+        @RequestParam(value = "equipe") Optional<String> equipe)
 
         throws URISyntaxException {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
@@ -746,40 +451,117 @@ public class AnaliseResource {
             if (idsAnalises.size() != 0) {
                 Page<Grupo> page = grupoRepository.findByIdAnalises(this.converteListaBigIntLong(idsAnalises),
                     identificador.orElse(null), sistema.orElse(null), metodo.orElse(null),
-                    organizacao.orElse(null),equipe.orElse(null), pageable);
+                    organizacao.orElse(null), equipe.orElse(null), pageable);
                 HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/equipes");
                 return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
             }
         }
 
 
-
         return new ResponseEntity<>(new ArrayList<Grupo>(), null, HttpStatus.OK);
-
 
 
     }
 
 
     /**
-     * GET /analises/:id : get the "id" analise.
+     * Função para converter lista de BigInteger em lista de Long sem alterar a lista original
      *
-     * @param id the id of the analise to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the analise, or
-     * with status 404 (Not Found)
+     * @param listaBig a lista de BigInterger a ser convertida
+     * @return Retorna uma lista de Long
      */
-    @GetMapping("/analises/permissao/{id}")
-    @Timed
-    public ResponseEntity<Analise> getAnalisePermissao(@PathVariable Long id) {
-        log.debug("REST request to get Analise : {}", id);
-        Analise analise = analiseRepository.findOne(id);
+    private List<Long> converteListaBigIntLong(List<BigInteger> listaBig) {
+        List<Long> listaLong = new ArrayList<>();
 
-        for (Compartilhada compartilhada : analise.getCompartilhadas()){
-            compartilhada.getEquipeId();
+        for (BigInteger elementoBig : listaBig) {
+            listaLong.add(elementoBig.longValue());
+        }
+        return listaLong;
+    }
+
+
+    private Boolean checarPermissao(Long idAnalise) {
+        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()); // Busca o usuário
+        List<Long> equipesIds = userRepository.findUserEquipes(logged.get().getId()); // Traz as equipes do usuário
+        Integer analiseDaEquipe = analiseRepository.analiseEquipe(idAnalise, equipesIds); // Traz as
+
+        if (analiseDaEquipe == 0) { // Verifica se a analise faz parte de sua equipe
+            return this.verificaCompartilhada(idAnalise);
+        } else {
+            return true;
         }
 
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
     }
+
+    private Boolean verificaCompartilhada(Long idAnalise) {
+        return analiseRepository.analiseCompartilhada(idAnalise);
+
+    }
+
+    private Analise recuperarAnalise(Long id) {
+
+        boolean retorno = checarPermissao(id);
+
+        if (retorno) {
+            return analiseRepository.findOne(id);
+        } else {
+            return null;
+        }
+    }
+
+    private void linkFuncoesToAnalise(Analise analise) {
+        linkAnaliseToFuncaoDados(analise);
+        linkAnaliseToFuncaoTransacaos(analise);
+    }
+
+    private void linkAnaliseToFuncaoDados(Analise analise) {
+        analise.getFuncaoDados().forEach(funcaoDados -> {
+            funcaoDados.setAnalise(analise);
+            linkFuncaoDadosRelationships(funcaoDados);
+            handleVersionFuncaoDados(funcaoDados, analise.getSistema());
+        });
+    }
+
+    private void linkFuncaoDadosRelationships(FuncaoDados funcaoDados) {
+        funcaoDados.getFiles().forEach(file -> file.setFuncaoDados(funcaoDados));
+        funcaoDados.getDers().forEach(der -> der.setFuncaoDados(funcaoDados));
+        funcaoDados.getRlrs().forEach(rlr -> rlr.setFuncaoDados(funcaoDados));
+    }
+
+    private void handleVersionFuncaoDados(FuncaoDados funcaoDados, Sistema sistema) {
+        String nome = funcaoDados.getName();
+        Optional<FuncaoDadosVersionavel> funcaoDadosVersionavel =
+            funcaoDadosVersionavelRepository.findOneByNomeIgnoreCaseAndSistemaId(nome, sistema.getId());
+        if (funcaoDadosVersionavel.isPresent()) {
+            funcaoDados.setFuncaoDadosVersionavel(funcaoDadosVersionavel.get());
+        } else {
+            FuncaoDadosVersionavel novaFDVersionavel = new FuncaoDadosVersionavel();
+            novaFDVersionavel.setNome(funcaoDados.getName());
+            novaFDVersionavel.setSistema(sistema);
+            FuncaoDadosVersionavel result = funcaoDadosVersionavelRepository.save(novaFDVersionavel);
+            funcaoDados.setFuncaoDadosVersionavel(result);
+        }
+    }
+
+    private void linkAnaliseToFuncaoTransacaos(Analise analise) {
+        analise.getFuncaoTransacaos().forEach(funcaoTransacao -> {
+            funcaoTransacao.setAnalise(analise);
+            funcaoTransacao.getFiles().forEach(file -> file.setFuncaoTransacao(funcaoTransacao));
+            funcaoTransacao.getDers().forEach(der -> der.setFuncaoTransacao(funcaoTransacao));
+            funcaoTransacao.getAlrs().forEach(alr -> alr.setFuncaoTransacao(funcaoTransacao));
+        });
+    }
+
+    private void unlinkAnaliseFromFuncoes(Analise result) {
+        result.getFuncaoDados().forEach(entry -> {
+            entry.setAnalise(null);
+        });
+        result.getFuncaoTransacaos().forEach(entry -> {
+            entry.setAnalise(null);
+        });
+    }
+
+
 }
 
 
