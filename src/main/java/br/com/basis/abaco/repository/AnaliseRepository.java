@@ -1,7 +1,6 @@
 package br.com.basis.abaco.repository;
 
 import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Compartilhada;
 import br.com.basis.abaco.domain.Grupo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,12 +34,4 @@ public interface AnaliseRepository extends JpaRepository<Analise,Long> {
     @Query(value = "SELECT a.id FROM analise a WHERE a.equipe_responsavel_id IN :equipes UNION ALL " +
         "SELECT ac.analise_id FROM analise_compartilhada ac WHERE ac.equipe_id IN :equipes", nativeQuery = true)
     List<BigInteger> listAnalisesEquipe(@Param("equipes") List<Long> equipes);
-
-    @Query(value = "SELECT count(*) FROM analise a WHERE a.equipe_responsavel_id IN :equipes AND a.id = :idAnalise", nativeQuery = true)
-    Integer analiseEquipe(@Param("idAnalise") Long idAnalise, @Param("equipes") List<Long> equipes);
-
-
-    @Query( value = "SELECT view_only FROM analise_compartilhada WHERE analise_id = ?1", nativeQuery = true)
-    Boolean analiseCompartilhada (Long analiseId);
-
 }

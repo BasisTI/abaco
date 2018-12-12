@@ -18,7 +18,6 @@ import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.swagger.annotations.ApiParam;
-import io.swagger.models.auth.In;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -168,14 +167,7 @@ public class AnaliseResource {
      * @return
      */
     private Analise recuperarAnalise(Long id) {
-
-        boolean retorno = checarPermissao(id);
-
-        if (retorno) {
-            return analiseRepository.findOne(id);
-        } else {
-            return null;
-        }
+        return analiseRepository.findOne(id);
     }
 
     /**
@@ -450,15 +442,7 @@ public class AnaliseResource {
     public ResponseEntity<Analise> getAnalise(@PathVariable Long id) {
         log.debug("REST request to get Analise : {}", id);
         Analise analise = recuperarAnalise(id);
-
-        if(analise != null){
-            return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
-        }else{
-            return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(new Analise());
-        }
-
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
     }
 
     /**
@@ -737,15 +721,15 @@ public class AnaliseResource {
     @GetMapping("/analises/grupos")
     @Timed
     public ResponseEntity<List<Grupo>> getAllAnalisesEquipes(
-        @RequestParam(defaultValue = "asc") String order,
+        @RequestParam(defaultValue = "asc")  String order,
         @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
-        @RequestParam(defaultValue = "20") int size,
+        @RequestParam(defaultValue = "20")  int size,
         @RequestParam(defaultValue = "id") String sort,
-        @RequestParam(value = "identificador") Optional<String> identificador,
-        @RequestParam(value = "sistema") Optional<String> sistema,
-        @RequestParam(value = "metodo") Optional<String> metodo,
-        @RequestParam(value = "organizacao") Optional<String> organizacao,
-        @RequestParam(value = "equipe") Optional<String> equipe)
+        @RequestParam(value="identificador") Optional<String> identificador,
+        @RequestParam(value="sistema") Optional<String> sistema,
+        @RequestParam(value="metodo") Optional<String> metodo,
+        @RequestParam(value="organizacao") Optional<String> organizacao,
+        @RequestParam(value="equipe") Optional<String> equipe)
 
         throws URISyntaxException {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
@@ -762,38 +746,40 @@ public class AnaliseResource {
             if (idsAnalises.size() != 0) {
                 Page<Grupo> page = grupoRepository.findByIdAnalises(this.converteListaBigIntLong(idsAnalises),
                     identificador.orElse(null), sistema.orElse(null), metodo.orElse(null),
-                    organizacao.orElse(null), equipe.orElse(null), pageable);
+                    organizacao.orElse(null),equipe.orElse(null), pageable);
                 HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/equipes");
                 return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
             }
         }
 
 
+
         return new ResponseEntity<>(new ArrayList<Grupo>(), null, HttpStatus.OK);
 
 
+
     }
 
 
-    private Boolean checarPermissao(Long idAnalise) {
-        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()); // Busca o usuário
-        List<Long> equipesIds = userRepository.findUserEquipes(logged.get().getId()); // Traz as equipes do usuário
-        Integer analiseDaEquipe = analiseRepository.analiseEquipe(idAnalise, equipesIds); // Traz as
+    /**
+     * GET /analises/:id : get the "id" analise.
+     *
+     * @param id the id of the analise to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the analise, or
+     * with status 404 (Not Found)
+     */
+    @GetMapping("/analises/permissao/{id}")
+    @Timed
+    public ResponseEntity<Analise> getAnalisePermissao(@PathVariable Long id) {
+        log.debug("REST request to get Analise : {}", id);
+        Analise analise = analiseRepository.findOne(id);
 
-        if (analiseDaEquipe == 0) { // Verifica se a analise faz parte de sua equipe
-            return this.verificaCompartilhada(idAnalise);
-        } else {
-            return true;
+        for (Compartilhada compartilhada : analise.getCompartilhadas()){
+            compartilhada.getEquipeId();
         }
 
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
     }
-
-    private Boolean verificaCompartilhada(Long idAnalise) {
-        return analiseRepository.analiseCompartilhada(idAnalise);
-
-    }
-
-
 }
 
 

@@ -1,6 +1,7 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.config.DefaultProfileUtil;
+import br.com.basis.abaco.web.rest.vm.ProfileInfoVM;
 import io.github.jhipster.config.JHipsterProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,23 +48,4 @@ public class ProfileInfoResource {
         return null;
     }
 
-    class ProfileInfoVM {
-
-        private final String[] activeProfiles;
-
-        private final String ribbonEnv;
-
-        ProfileInfoVM(String[] active, String ribbon) {
-            this.activeProfiles = active;
-            this.ribbonEnv = ribbon;
-        }
-
-        public String[] getActiveProfiles() {
-            return activeProfiles;
-        }
-
-        public String getRibbonEnv() {
-            return ribbonEnv;
-        }
-    }
 }

@@ -1,0 +1,32 @@
+{
+  "abacoApp": {
+    "grupo": {
+      "home": {
+        "title": "Grupos",
+        "createLabel": "Créer un nouveau Grupo",
+        "createOrEditLabel": "Créer ou éditer un Grupo",
+        "search": "Recherche pour Grupo"
+      },
+      "created": "Un nouveau Grupo a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Grupo avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Grupo avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Grupo {{ id }} ?"
+      },
+      "detail": {
+        "title": "Grupo"
+      },
+      "idAnalise": "Id Analise",
+      "organizacao": "Organizacao",
+      "identificadorAnalise": "Identificador Analise",
+      "equipe": "Equipe",
+      "sistema": "Sistema",
+      "metodoContagem": "Metodo Contagem",
+      "pfTotal": "Pf Total",
+      "pfAjustado": "Pf Ajustado",
+      "diasDeGarantia": "Dias De Garantia",
+      "dataHomologacao": "Data Homologacao",
+      "bloqueado": "Bloqueado"
+    }
+  }
+}
