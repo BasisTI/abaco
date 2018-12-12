@@ -1,15 +1,13 @@
-import { Manual } from './../manual/manual.model';
 import { Sistema, SistemaService } from './../sistema';
 import { TipoEquipe, TipoEquipeService } from './../tipo-equipe';
 import { Organizacao, OrganizacaoService } from './../organizacao';
 import { User, UserService } from '../user';
-import { StringConcatService } from './../shared/string-concat.service';
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, SelectItem } from 'primeng/primeng';
-import {Analise, AnaliseService, MetodoContagem, AnaliseShareEquipe, GrupoService} from './';
+import { Analise, AnaliseService, AnaliseShareEquipe, GrupoService} from './';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
-import {ElasticQuery, PageNotificationService, ResponseWrapper} from '../shared';
+import { PageNotificationService, ResponseWrapper} from '../shared';
 import { MessageUtil } from '../util/message.util';
 import { Response } from '@angular/http';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
@@ -39,10 +37,11 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     equipeShare; analiseShared: Array<AnaliseShareEquipe> = [];
     selectedEquipes: Array<AnaliseShareEquipe>;
     selectedToDelete: AnaliseShareEquipe;
+    analiseTemp: Analise = new Analise();
     loggedUser: User;
 
       metsContagens = [
-        { label: '', value: ''},
+        { label: undefined, value: undefined},
         { label: 'DETALHADA', value: 'DETALHADA'},
         { label: 'INDICATIVA', value: 'INDICATIVA'},
         { label: 'ESTIMADA', value: 'ESTIMADA'}
@@ -59,12 +58,12 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         private tipoEquipeService: TipoEquipeService,
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
-        private stringConcatService: StringConcatService,
         private userService: UserService,
         private grupoService: GrupoService
     ) {}
 
     public ngOnInit() {
+        this.blockUI.stop();
         this.userAnaliseUrl = this.changeUrl();
         this.estadoInicial();
     }
@@ -78,9 +77,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.inicial=false;
 
         this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
-            this.analiseReadyToClone = new Analise().copyFromJSON(event.data);
             this.analiseSelecionada = event.data;
-            this.blocked = event.data.bloqueiaAnalise;
+            this.blocked = event.data.bloqueado;
             this.inicial = true;
         });
         this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
@@ -116,12 +114,25 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
       }
 
     clonarTooltip() {
-        if (!this.analiseSelecionada.id){
+        if (!this.analiseSelecionada.idAnalise){
             return "Selecione um registro para clonar";
         }
         return "Clonar";
     }
+    compartilharTooltip() {
+        if (!this.analiseSelecionada.idAnalise){
+            return "Selecione um registro para compartilhar";
+        }
+        return "Compartilhar Análise";
+    }
 
+    relatorioTooltip() {
+        if (!this.analiseSelecionada.idAnalise){
+            return "Selecione um registro para gerar o relatório";
+        }
+        return "Relatório Detalhado";
+    }
+    
     recuperarOrganizacoes() {
         this.organizacaoService.query().subscribe(response => {
           this.organizations = response.json;
@@ -159,19 +170,15 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         }
         switch (event.button) {
             case 'edit':
-                if (event.selection.bloqueiaAnalise) {
+                if (event.selection.bloqueado) {
                     this.pageNotificationService.addErrorMsg(
                         MessageUtil.ERRO_EXCLUSAO_ANALISE_BLOQUEADA);
                     return;
                 } 
-                if(!this.checkIfUserCanEdit() && !this.checkUserAnaliseEquipes()){
-                    this.pageNotificationService.addErrorMsg("Você não tem permissão para editar esta análise!")
-                    return;
-                }
-                this.router.navigate(['/analise', event.selection.id, 'edit']);
+                this.router.navigate(['/analise', event.selection.idAnalise, 'edit']);
                 break;
             case 'view':
-                this.router.navigate(['/analise', event.selection.id, 'view']);
+                this.router.navigate(['/analise', event.selection.idAnalise, 'view']);
                 break;
             case 'delete':
                 this.confirmDelete(event.selection);
@@ -202,12 +209,16 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     }
     checkUserAnaliseEquipes(){
         let retorno: boolean = false;
-        this.loggedUser.tipoEquipes.forEach(equipe => {
-            if (equipe.id === this.analiseSelecionada.equipeResponsavel.id){
-                retorno = true;
-            }
+        return this.analiseService.find(this.analiseSelecionada.idAnalise).subscribe((res: any) => {
+                    this.analiseTemp = res;
+                    this.loggedUser.tipoEquipes.forEach(equipe => {
+                    if (equipe.id === this.analiseTemp.equipeResponsavel.id){
+                    retorno = true;
+                    }
+                });
+            return retorno;
         });
-        return retorno;
+
     }
     
     /**
@@ -237,7 +248,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     }
 
     abrirEditar() {
-      this.router.navigate(['/analise', this.analiseSelecionada.id, 'edit']);
+        this.router.navigate(['/analise', this.analiseSelecionada.idAnalise, 'edit']);
     }
 
     /**
@@ -290,20 +301,17 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     /**
      * Confirmar deleção de uma análise
      */
-    public confirmDelete(analise: Analise) {
-        if (this.analiseSelecionada.bloqueiaAnalise) {
+    public confirmDelete(analise: Grupo) {
+        if (this.analiseSelecionada.bloqueado) {
             this.pageNotificationService.addErrorMsg(MessageUtil.ERRO_EXCLUSAO_ANALISE_BLOQUEADA);
             return;
         }
-        if (this.analiseSelecionada.compartilhadas.length > 0){
-            this.pageNotificationService.addErrorMsg("Você não pode excluir uma análise compartilhada com outras equipes!");
-            return;
-        }
+        
         this.confirmationService.confirm({
             message: MessageUtil.CONFIRMAR_EXCLUSAO.concat(analise.identificadorAnalise).concat('?'),
             accept: () => {
                 this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
-                this.analiseService.delete(analise.id).subscribe(() => {
+                this.analiseService.delete(analise.idAnalise).subscribe(() => {
                     this.recarregarDataTable();
                     this.blockUI.stop();
                     this.pageNotificationService.addDeleteMsgWithName(analise.identificadorAnalise);
@@ -353,8 +361,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      * Método responsável por gerar o relatório detalhado da analise.
      * @param analise
      */
-    public geraRelatorioPdfDetalhadoBrowser(analise: Analise) {
-            this.analiseService.geraRelatorioPdfDetalhadoBrowser(analise.id);
+    public geraRelatorioPdfDetalhadoBrowser(analise: Grupo) {
+            this.analiseService.geraRelatorioPdfDetalhadoBrowser(analise.idAnalise);
     }
 
      /**
@@ -394,18 +402,18 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     /**
      * Bloquear Análise
      */
-    public bloqueiaRelatorio() {
+    public bloqueiaAnalise() {
         if(this.checkUserAnaliseEquipes()){
             this.confirmationService.confirm({
-                message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat('?'),
+                message: MessageUtil.CONFIRMAR_BLOQUEIO.concat('?'),
                 accept: () => {
-                    const copy = this.analiseSelecionada.toJSONState();
+                    const copy = this.analiseTemp.toJSONState();
                     copy.bloqueiaAnalise = true;
                     this.analiseService.block(copy).subscribe(() => {
-                        this.estadoInicial();
-                        const nome = this.analiseSelecionada.name;
+                        const nome = this.analiseTemp.identificadorAnalise;
                         this.blocked = false;
                         this.pageNotificationService.addBlockMsgWithName(nome);
+                        this.recarregarDataTable();
                     });
                 }
             });
@@ -417,18 +425,18 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     /**
      * Desbloquear Análise
      */
-    public desbloqueiaRelatorio() {
+    public desbloqueiaAnalise() {
         if(this.checkUserAnaliseEquipes()){
             this.confirmationService.confirm({
                 message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat('?'),
                 accept: () => {
-                    const copy = this.analiseSelecionada.toJSONState();
+                    const copy = this.analiseTemp.toJSONState();
                     copy.bloqueiaAnalise = false;
                     this.analiseService.unblock(copy).subscribe(() => {
-                        this.estadoInicial();
-                        const nome = copy.name;
+                        const nome = copy.identificadorAnalise;
                         this.blocked = true;
                         this.pageNotificationService.addUnblockMsgWithName(nome);
+                        this.recarregarDataTable();
                     }, (error: Response) => {
                         switch (error.status) {
                             case 400: {
@@ -447,23 +455,22 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
 
     public openCompartilharDialog() {
         this.equipeShare = [];
-        this.tipoEquipeService
-            .findAllCompartilhaveis(this.analiseSelecionada.organizacao.id,
-                                    this.analiseSelecionada.id,
-                                    this.analiseSelecionada.equipeResponsavel.id)
-                .subscribe((equipes) => {
+        this.analiseService.find(this.analiseSelecionada.idAnalise).subscribe((res: any) => {
+            this.analiseTemp = res;
+            this.tipoEquipeService.findAllCompartilhaveis(this.analiseTemp.organizacao.id, this.analiseSelecionada.idAnalise, this.analiseTemp.equipeResponsavel.id).subscribe((equipes) => {
             equipes.json.forEach((equipe) => {
                 const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
                                                                     {id: undefined,
                                                                      equipeId: equipe.id,
-                                                                     analiseId: this.analiseSelecionada.id,
+                                                                     analiseId: this.analiseSelecionada.idAnalise,
                                                                      viewOnly: false, nomeEquipe: equipe.nome });
                 this.equipeShare.push(entity);
             });
             this.blockUI.stop();
+            });
         });
 
-        this.analiseService.findAllCompartilhadaByAnalise(this.analiseSelecionada.id).subscribe((shared) => {
+        this.analiseService.findAllCompartilhadaByAnalise(this.analiseSelecionada.idAnalise).subscribe((shared) => {
             this.analiseShared = shared.json;
         });
         this.mostrarDialog = true;

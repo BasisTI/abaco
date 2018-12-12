@@ -118,7 +118,7 @@
                                 name="desbloquear"
                                 tooltip="Desbloquear"
                                 icon="block"
-                                (click)="desbloqueiaRelatorio()"
+                                (click)="desbloqueiaAnalise()"
                                 class="ui-button-success">
                         </basis-datatable-button>
 
@@ -127,13 +127,13 @@
                                 name="bloquear"
                                 tooltip="Bloquear"
                                 icon="block"
-                                (click)="bloqueiaRelatorio()"
+                                (click)="bloqueiaAnalise()"
                                 class="ui-button-danger">
                         </basis-datatable-button>
 
                         <basis-datatable-button
                                 name="compartilhar"
-                                tooltip="Compartilhar Análise"
+                                [tooltip]="compartilharTooltip()"
                                 icon="share"
                                 class="ui-button-info"
                                 disabled="desabilitarBotaoRelatorio()">
@@ -148,7 +148,7 @@
 
                         <basis-datatable-button
                                 name="relatorioBrowserDetalhado"
-                                tooltip="Relatório Detalhado"
+                                [tooltip]="relatorioTooltip()"
                                 icon="description"
                                 disabled="desabilitarBotaoRelatorio()">
                         </basis-datatable-button>
@@ -172,20 +172,20 @@
                         </p-column>
 
                         <p-column header="PF Ajustado" field="pfAjustado" [sortable]="true" [style]="{'font-size': '1.0vw'}">
-                            <ng-template let-col let-pfAjustado="rowData.adjustPFTotal" pTemplate="body">
+                            <ng-template let-col let-pfAjustado="rowData.pfAjustado" pTemplate="body">
                                 {{ pfAjustado > 0 ? pfAjustado : 0 | number: '00.00'}}
                             </ng-template>
                         </p-column>
 
-                        <p-column header="Dias restantes em Garantia" field="dado" [sortable]="true"
+                        <!-- <p-column header="Dias restantes em Garantia" field="dado" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}">
                             <ng-template let-dado="rowData" pTemplate="body">
                                 {{ dado | datePipe }}
                             </ng-template>
-                        </p-column>
+                        </p-column> -->
 
                         <p-column header="Data Criação" field="dataCriacao" [sortable]="true" [style]="{'font-size': '1.0vw'}">
-                            <ng-template let-col let-dataCriacao="rowData.createdOn" pTemplate="body">
+                            <ng-template let-col let-dataCriacao="rowData.dataCriacao" pTemplate="body">
                                 {{ dataCriacao | date: 'dd/MM/y - HH:mm' }}
                             </ng-template>
                         </p-column>
@@ -259,7 +259,7 @@
         <hr/>
         <h3>Compartilhada com:</h3>
         <p-dataTable
-        [(value)]="analiseSelecionada.compartilhadas"
+        [(value)]="analiseTemp.compartilhadas"
         selectionMode="single"
         [(selection)]="selectedToDelete"
         dataKey="equipeId"
