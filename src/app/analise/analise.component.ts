@@ -13,6 +13,7 @@ import {ElasticQuery, PageNotificationService, ResponseWrapper} from '../shared'
 import { MessageUtil } from '../util/message.util';
 import { Response } from '@angular/http';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { Grupo, SearchGroup } from './grupo/grupo.model';
 
 @Component({
     selector: 'jhi-analise',
@@ -25,14 +26,13 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
 
     searchUrl: string = this.grupoService.grupoUrl;
 
-    userAnaliseUrl: string  = this.grupoService.grupoUrl;
-
-    elasticQuery: ElasticQuery = new ElasticQuery();
+    userAnaliseUrl: string  = this.searchUrl;
 
     rowsPerPageOptions: number[] = [5, 10, 20, 50, 100];
 
-    analiseSelecionada: any = new Analise;
+    analiseSelecionada: any = new Grupo();
     analiseReadyToClone: Analise;
+    searchGroup: SearchGroup = new SearchGroup();
     nomeSistemas: Array<Sistema>;
     organizations: Array<Organizacao>;
     teams: Array<TipoEquipe>;
@@ -40,26 +40,16 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     selectedEquipes: Array<AnaliseShareEquipe>;
     selectedToDelete: AnaliseShareEquipe;
     loggedUser: User;
-    searchParams: any = {
-        identidicador: undefined,
-        nomeSistema: undefined,
-        metContagem: undefined,
-        organizacao: undefined,
-        team: undefined,
-        descricao: undefined
-      };
 
       metsContagens = [
-        { value: '', text: ''},
-        { value: 'DETALHADA', text: 'DETALHADA'},
-        { value: 'INDICATIVA', text: 'INDICATIVA'},
-        { value: 'ESTIMADA', text: 'ESTIMADA'}
+        { label: '', value: ''},
+        { label: 'DETALHADA', value: 'DETALHADA'},
+        { label: 'INDICATIVA', value: 'INDICATIVA'},
+        { label: 'ESTIMADA', value: 'ESTIMADA'}
         ];
 
     blocked; inicial: boolean;
     mostrarDialog = false;
-
-    private userId: number;         // Usado para carregar apenas os organizações e equipes referentes ao usuário logado
 
     constructor(
         private router: Router,
@@ -75,7 +65,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     ) {}
 
     public ngOnInit() {
-       this.estadoInicial();
+        this.userAnaliseUrl = this.changeUrl();
+        this.estadoInicial();
     }
 
     estadoInicial() {
@@ -135,7 +126,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.organizacaoService.query().subscribe(response => {
           this.organizations = response.json;
           let emptyOrg = new Organizacao();
-          emptyOrg.nome = '';
           this.organizations.unshift(emptyOrg);
         });
       }
@@ -144,7 +134,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.sistemaService.query().subscribe(response => {
         this.nomeSistemas = response.json;
         let emptySystem = new Sistema();
-        emptySystem.nome = '';
         this.nomeSistemas.unshift(emptySystem);
         });
     }
@@ -153,7 +142,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     this.tipoEquipeService.query().subscribe(response => {
         this.teams = response.json;
         let emptyTeam = new TipoEquipe();
-        emptyTeam.nome = '';
         this.teams.unshift(emptyTeam);
     });
     }
@@ -324,102 +312,25 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         });
     }
 
-    public switchUrlIdentificador() {
-        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
-            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
-            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
-            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
-            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
-            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-                this.searchUrl = this.analiseService.fieldSearchIdentificadorUrl;
-            } else {
-                this.searchUrl = this.analiseService.searchUrl;
-            }
-    }
-
-    public switchUrlSistema() {
-        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
-            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema !== '')) &&
-            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
-            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
-            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
-            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-                this.searchUrl = this.analiseService.fieldSearchSistemaUrl;
-            } else {
-                this.searchUrl = this.analiseService.searchUrl;
-            }
-    }
-
-    public switchUrlMetodoContagem() {
-        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
-            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
-            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem !== '')) &&
-            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
-            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
-            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-                this.searchUrl = this.analiseService.fieldSearchMetodoContagemUrl;
-            } else {
-                this.searchUrl = this.analiseService.searchUrl;
-            }
-    }
-
-    public switchUrlOrganizacao() {
-        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
-            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
-            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
-            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao !== '')) &&
-            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
-            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-                this.searchUrl = this.analiseService.fieldSearchOrganizacaoUrl;
-            } else {
-                this.searchUrl = this.analiseService.searchUrl;
-            }
-    }
-
-    public switchUrlEquipe() {
-        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
-            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
-            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
-            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
-            ((this.searchParams.team === undefined) || (this.searchParams.team !== '')) &&
-            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-                this.searchUrl = this.analiseService.fieldSearchEquipeUrl;
-            } else {
-                this.searchUrl = this.analiseService.searchUrl;
-            }
-    }
-
-    public switchUrlDescricao() {
-        if (((this.searchParams.identificadorAnalise === undefined) || (this.searchParams.identificadorAnalise === '')) &&
-            ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
-            ((this.searchParams.metContagem === undefined) || (this.searchParams.metContagem === '')) &&
-            ((this.searchParams.organizacao === undefined) || (this.searchParams.organizacao === '')) &&
-            ((this.searchParams.team === undefined) || (this.searchParams.team === '')) &&
-            ((this.searchParams.descricao === undefined) || (this.searchParams.descricao === ''))) {
-                this.searchUrl = this.analiseService.searchUrl;
-    } else {
-        this.searchUrl = this.analiseService.searchUrl;
-        }
-    }
     /**
      * Limpa a pesquisa e recarrega a tabela
      */
     public limparPesquisa() {
-        this.elasticQuery.reset();
+        this.searchGroup.organizacao = undefined;
+        this.searchGroup.identificadorAnalise = undefined;
+        this.searchGroup.sistema = undefined;
+        this.searchGroup.metodoContagem = undefined;
+        this.searchGroup.equipe = undefined;
+        this.userAnaliseUrl = this.changeUrl();
         this.recarregarDataTable();
-        this.searchParams.organizacao = undefined;
-        this.searchParams.identificador = undefined;
-        this.searchParams.nomeSistema = undefined;
-        this.searchParams.metContagem = undefined;
-        this.searchParams.team = undefined;
-        this.searchParams.descricao = undefined;
     }
 
     /**
      * Recarrega a tabela de análise
      */
     public recarregarDataTable() {
-        this.datatable.refresh(this.elasticQuery.query);
+        this.datatable.url = this.userAnaliseUrl;
+        this.datatable.reset();
       }
 
     /**
@@ -452,52 +363,26 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      */
     public geraBaselinePdfBrowser() {
         this.analiseService.geraBaselinePdfBrowser();
-}
-    private checkUndefinedParams() {
-        (this.searchParams.identificador === '') ? (this.searchParams.identificador = undefined) : (this);
-        (this.searchParams.nomeSistema !== undefined) ? (
-            (this.searchParams.nomeSistema.nome === '') ? (this.searchParams.nomeSistema.nome = undefined) : (this)
-        ) : (this);
-        (this.searchParams.metContagem !== undefined) ? (
-            (this.searchParams.metContagem.text === '') ? (this.searchParams.metContagem.text = undefined) : (this)
-        ) : (this);
-        (this.searchParams.team !== undefined) ? (
-            (this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)
-        ) : (this);
-        (this.searchParams.organizacao !== undefined) ? (
-            (this.searchParams.organizacao.nome === '') ? (this.searchParams.organizacao.nome = undefined) : (console.log(''))
-        ) : (this);
-        (this.searchParams.descricao === '') ? (this.searchParams.descricao = undefined) : (this);
-      }
+    }
 
-      private createStringParamsArray(): Array<string> {
-        let stringParamsArray: Array<string> = [];
+    public changeUrl(){
 
-        (this.searchParams.identificador !== undefined) ? (stringParamsArray.push(this.searchParams.identificador)) : (this);
-        (this.searchParams.nomeSistema !== undefined) ? (
-            (this.searchParams.nomeSistema.nome !== undefined) ? (stringParamsArray.push(this.searchParams.nomeSistema.nome)) : (this)
-        ) : (this);
-        (this.searchParams.metContagem !== undefined) ? (
-            (this.searchParams.metContagem.text !== undefined) ? (stringParamsArray.push(this.searchParams.metContagem.text)) : (this)
-        ) : (this);
-        (this.searchParams.team !== undefined) ? (
-            (this.searchParams.team.nome !== undefined) ? (stringParamsArray.push(this.searchParams.team.nome)) : (this)
-        ) : (this);
-        (this.searchParams.organizacao !== undefined) ? (
-            (this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push(this.searchParams.organizacao.nome)) : (this)
-            ) : (this);
-        (this.searchParams.descricao !== undefined) ? (stringParamsArray.push(this.searchParams.descricao)) : (this);
+        let querySearch = '?identificador=';
+        querySearch = querySearch.concat((this.searchGroup.identificadorAnalise) ? this.searchGroup.identificadorAnalise + '&' : '&' );
+        querySearch = querySearch.concat((this.searchGroup.sistema && this.searchGroup.sistema.nome) ? 'sistema=' + this.searchGroup.sistema.nome + '&' : '' );
+        querySearch = querySearch.concat((this.searchGroup.metodoContagem) ? 'metodo=' + this.searchGroup.metodoContagem + '&' : '' );
+        querySearch = querySearch.concat((this.searchGroup.organizacao && this.searchGroup.organizacao.nome) ? 'organizacao=' + this.searchGroup.organizacao.nome + '&' : '' );
+        querySearch = querySearch.concat((this.searchGroup.equipe && this.searchGroup.equipe.nome) ? 'equipe=' + this.searchGroup.equipe.nome : '' );
+        querySearch = (querySearch === '?') ? '' : querySearch;
+        querySearch = (querySearch.endsWith('&')) ? querySearch.slice(0, -1) : querySearch;;
 
-        return stringParamsArray;
-      }
+        return this.grupoService.grupoUrl + querySearch;
+    }
 
-      public performSearch() {
-
-        this.searchUrl = this.analiseService.searchUrl;
-        this.checkUndefinedParams();
-        this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
+    public performSearch() {
+        this.userAnaliseUrl = this.changeUrl();
         this.recarregarDataTable();
-      }
+    }
 
     /**
      * Desabilita botão relatório

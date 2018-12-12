@@ -11,7 +11,7 @@ import {Grupo} from './grupo.model';
 export class GrupoService {
 
     resourceUrl = environment.apiUrl + '/';
-    grupoUrl = this.resourceUrl + 'analises/grupos';
+    grupoUrl = this.resourceUrl + 'analises';
 
     constructor(private http: HttpService) {
     }
