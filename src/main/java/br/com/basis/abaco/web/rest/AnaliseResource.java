@@ -19,6 +19,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
+import org.apache.regexp.RE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -199,42 +200,62 @@ public class AnaliseResource {
     @PutMapping("/analises/{id}/block")
     @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-    public ResponseEntity<Analise> blockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
-        log.debug("REST request to block Analise : {}", analise);
-        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
-        if (logged.isPresent() && !logged.get().verificarAuthority()) {
-            return ResponseEntity.badRequest().headers(
-                HeaderUtil.createFailureAlert(ENTITY_NAME, "notadmin", "Only admin users can block/unblock análises")).body(null);
+    public ResponseEntity<Analise> blockUnblockAnalise(@PathVariable Long id) throws URISyntaxException {
+        log.debug("REST request to block Analise : {}", id);
+
+        Analise analise = recuperarAnalise(id);
+
+        if (analise != null) {
+            linkFuncoesToAnalise(analise);
+            if (analise.getbloqueiaAnalise()) {
+                analise.setbloqueiaAnalise(false);
+            } else {
+                analise.setbloqueiaAnalise(true);
+            }
+
+            Analise result = analiseRepository.save(analise);
+            unlinkAnaliseFromFuncoes(result);
+            analiseSearchRepository.save(result);
+            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
+                .body(result);
+        } else {
+            return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new Analise());
         }
-        linkFuncoesToAnalise(analise);
-        analise.setbloqueiaAnalise(true);
-        Analise result = analiseRepository.save(analise);
-        unlinkAnaliseFromFuncoes(result);
-        analiseSearchRepository.save(result);
-        return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
-            .body(result);
+
+
     }
 
     /**
-     * PUT /analises : DESBLOQUEAR ANÁLISE
+     * POST /analises : BLOQUEAR ANÁLISE
      */
-    @PutMapping("/analises/{id}/unblock")
+    @PostMapping("/analises/clonar/{id}")
     @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-    public ResponseEntity<Analise> unblockAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
-        log.debug("REST request to block Analise : {}", analise);
-        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
-        if (logged.isPresent() && !logged.get().verificarAuthority()) {
-            return ResponseEntity.badRequest().headers(
-                HeaderUtil.createFailureAlert(ENTITY_NAME, "notadmin", "Only admin users can block/unblock análises")).body(null);
+    public ResponseEntity<Analise> cloneAnalise(@PathVariable Long id) {
+        log.debug("REST request to block Analise : {}", id);
+
+        Analise analise = recuperarAnalise(id);
+
+        if (analise != null) {
+            Analise analiseCopia = new Analise(analise.getIdentificadorAnalise(),
+                analise.getPfTotal(), analise.getAdjustPFTotal(), analise.getSistema(),
+                analise.getOrganizacao(),analise.getBaselineImediatamente(), analise.getEquipeResponsavel());
+
+            Analise analiseCopiaSalva = analiseRepository.save(analiseCopia);
+            analiseSearchRepository.save(analiseCopiaSalva);
+
+            Analise analiseRetorno = unlinkAnaliseFDFT(analise);
+            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseRetorno.getId().toString()))
+                .body(analiseRetorno);
+        } else {
+            return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new Analise());
         }
-        linkFuncoesToAnalise(analise);
-        analise.setbloqueiaAnalise(false);
-        Analise result = analiseRepository.save(analise);
-        unlinkAnaliseFromFuncoes(result);
-        analiseSearchRepository.save(result);
-        return ResponseEntity.ok().headers(HeaderUtil.unblockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
-            .body(result);
+
+
     }
 
     /**
@@ -559,6 +580,28 @@ public class AnaliseResource {
         result.getFuncaoTransacaos().forEach(entry -> {
             entry.setAnalise(null);
         });
+    }
+
+
+    private Analise unlinkAnaliseFDFT(Analise result) {
+
+        result.getFuncaoDados().forEach(fd -> {
+            fd.setAnalise(null);
+            fd.getAlr().setId(null);
+            fd.getRlrs().forEach(rlr -> rlr.setId(null));
+            fd.getDers().forEach(ders -> ders.setId(null));
+        });
+
+        result.getFuncaoTransacaos().forEach(ft -> {
+            ft.setAnalise(null);
+            ft.getAlrs().forEach(rlr -> rlr.setId(null));
+            ft.getDers().forEach(ders -> ders.setId(null));
+        });
+
+        Analise analiseCopiaSalva = analiseRepository.save(result);
+        analiseSearchRepository.save(result);
+
+        return analiseCopiaSalva;
     }
 
 

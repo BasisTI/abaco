@@ -187,6 +187,22 @@ public class Analise implements Serializable, ReportObject {
         return this;
     }
 
+    public Analise() {
+    }
+
+    public Analise(String identificadorAnalise, String pfTotal, String adjustPFTotal,
+                   Sistema sistema, Organizacao organizacao, Boolean baselineImediatamente,
+                   TipoEquipe equipeResponsavel) {
+        this.id = null;
+        this.identificadorAnalise = identificadorAnalise.concat(" - CÓPIA");
+        this.pfTotal = pfTotal;
+        this.adjustPFTotal = adjustPFTotal;
+        this.sistema = sistema;
+        this.organizacao = organizacao;
+        this.baselineImediatamente = baselineImediatamente;
+        this.equipeResponsavel = equipeResponsavel;
+    }
+
     public void setNumeroOs(String numeroOs) {
         this.numeroOs = numeroOs;
     }
@@ -574,18 +590,18 @@ public class Analise implements Serializable, ReportObject {
     public String toString() {
         // // @formatter:off
         return "Analise{"
-                + "id=" + id
-                + ", numeroOs='" + numeroOs + "'"
-                + ", tipoContagem='" + metodoContagem + "'"
-                + ", dataHomologacao='" + dataHomologacao + "'"
-                + ", valorAjuste='" + valorAjuste + "'"
-                + ", pfTotal='" + pfTotal + "'"
-                + ", escopo='" + escopo + "'"
-                + ", fronteiras='" + fronteiras + "'"
-                + ", documentacao='" + documentacao + "'"
-                + ", tipoAnalise='" + tipoAnalise + "'"
-                + ", propositoContagem='" + propositoContagem + "'"
-                + '}';
+            + "id=" + id
+            + ", numeroOs='" + numeroOs + "'"
+            + ", tipoContagem='" + metodoContagem + "'"
+            + ", dataHomologacao='" + dataHomologacao + "'"
+            + ", valorAjuste='" + valorAjuste + "'"
+            + ", pfTotal='" + pfTotal + "'"
+            + ", escopo='" + escopo + "'"
+            + ", fronteiras='" + fronteiras + "'"
+            + ", documentacao='" + documentacao + "'"
+            + ", tipoAnalise='" + tipoAnalise + "'"
+            + ", propositoContagem='" + propositoContagem + "'"
+            + '}';
         // @formatter:on
     }
 
