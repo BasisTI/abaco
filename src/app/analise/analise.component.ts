@@ -411,7 +411,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                     const copy = this.analiseTemp.toJSONState();
                     this.analiseService.block(copy).subscribe(() => {
                         const nome = this.analiseTemp.identificadorAnalise;
-                        const bloqueado = !this.analiseTemp.bloqueiaAnalise;
+                        const bloqueado = this.analiseTemp.bloqueiaAnalise;
                         this.mensagemAnaliseBloqueada(bloqueado, nome);
                         this.recarregarDataTable();
                     });

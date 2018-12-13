@@ -84,7 +84,7 @@ export class AnaliseService {
    *
    */
   public block(analise: Analise): Observable<Analise> {
-    this.blockUI.start('Bloqueando análise...');
+    this.blockUI.start('Bloqueando/Desbloqueando análise...');
     const copy = analise;
     return this.http.put(`${this.resourceUrl}/${copy.id}/block`, copy).map((res: Response) => {
       this.blockUI.stop();
@@ -106,23 +106,7 @@ export class AnaliseService {
     });
   }
 
-  /**
-   *
-   */
-  public unblock(analise: Analise): Observable<Analise> {
-    this.blockUI.start('Desbloqueando análise...');
-    const copy = analise;
-    return this.http.put(`${this.resourceUrl}/${copy.id}/unblock`, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      this.blockUI.stop();
-      return this.convertItemFromServer(jsonResponse);
-    }).catch((error: any) => {
-        if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
-            return Observable.throw(new Error(error.status));
-        }
-    });
-  }
+
 
   /**
    *
