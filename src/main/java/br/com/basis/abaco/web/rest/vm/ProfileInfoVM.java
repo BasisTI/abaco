@@ -2,17 +2,21 @@ package br.com.basis.abaco.web.rest.vm;
 
 public final class ProfileInfoVM {
 
-    private static String[] activeProfiles;
+    private String[] activeProfiles;
 
-    private static String ribbonEnv;
+    private String ribbonEnv;
 
     public ProfileInfoVM(String[] activeProfiles, String ribbonEnv) {
-        this.activeProfiles = activeProfiles;
+        String[] profileAux;
+        profileAux = activeProfiles;
+        this.activeProfiles = profileAux;
         this.ribbonEnv = ribbonEnv;
     }
 
-    private static String[] getActiveProfiles() {
-        return activeProfiles;
+    public String[] getActiveProfiles() {
+        String[] profileAux;
+        profileAux = activeProfiles;
+        return profileAux;
     }
 
     public String getRibbonEnv() {

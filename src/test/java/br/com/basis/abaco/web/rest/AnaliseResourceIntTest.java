@@ -79,9 +79,6 @@ public class AnaliseResourceIntTest {
     private AnaliseSearchRepository analiseSearchRepository;
 
     @Autowired
-    private UserSearchRepository userSearchRepository;
-
-    @Autowired
     private TipoEquipeSearchRepository tipoEquipeSearchRepository;
 
     @Autowired
@@ -126,7 +123,6 @@ public class AnaliseResourceIntTest {
                                                               funcaoDadosVersionavelRepository,
                                                               dynamicExportsService,
                                                               userRepository,
-                                                              userSearchRepository,
                                                               compartilhadaRepository, grupoRepository);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)

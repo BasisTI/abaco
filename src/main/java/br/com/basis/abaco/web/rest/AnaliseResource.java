@@ -101,8 +101,6 @@ public class AnaliseResource {
 
     private final AnaliseSearchRepository analiseSearchRepository;
 
-    private final UserSearchRepository userSearchRepository;
-
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
     private RelatorioAnaliseRest relatorioAnaliseRest;
@@ -127,7 +125,6 @@ public class AnaliseResource {
                            FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
                            DynamicExportsService dynamicExportsService,
                            UserRepository userRepository,
-                           UserSearchRepository userSearchRepository,
                            CompartilhadaRepository compartilhadaRepository,
                            GrupoRepository grupoRepository) {
         this.analiseRepository = analiseRepository;
@@ -135,7 +132,6 @@ public class AnaliseResource {
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.dynamicExportsService = dynamicExportsService;
         this.userRepository = userRepository;
-        this.userSearchRepository = userSearchRepository;
         this.compartilhadaRepository = compartilhadaRepository;
         this.grupoRepository = grupoRepository;
     }
@@ -237,9 +233,7 @@ public class AnaliseResource {
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
                 .body(result);
         } else {
-            return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(new Analise());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Analise());
         }
 
 

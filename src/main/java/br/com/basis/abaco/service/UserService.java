@@ -277,8 +277,4 @@ public class UserService {
             userSearchRepository.delete(user);
         }
     }
-
-    private List<Long> findAllEquipes(Long id) {
-        return userRepository.findUserEquipes(id);
-    }
 }

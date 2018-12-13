@@ -24,10 +24,7 @@ public class GrupoResource {
 
     private final Logger log = LoggerFactory.getLogger(GrupoResource.class);
 
-    private static final String ENTITY_NAME = "grupo";
-
     private final GrupoRepository grupoRepository;
-
 
     public GrupoResource(GrupoRepository grupoRepository) {
         this.grupoRepository = grupoRepository;
