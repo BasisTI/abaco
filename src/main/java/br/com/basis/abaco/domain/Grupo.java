@@ -171,9 +171,7 @@ public class  Grupo implements Serializable {
     }
 
     public Timestamp getDataHomologacao() {
-        Timestamp timeAux;
-        timeAux = dataHomologacao;
-        return timeAux;
+        return this.dataHomologacao;
     }
 
     public Grupo dataHomologacao(Timestamp dataHomologacao) {
@@ -184,9 +182,7 @@ public class  Grupo implements Serializable {
     }
 
     public void setDataHomologacao(Timestamp dataHomologacao) {
-        Timestamp timeAux;
-        timeAux = dataHomologacao;
-        this.dataHomologacao = timeAux;
+        this.dataHomologacao = dataHomologacao;
     }
 
     public Boolean isBloqueado() {
@@ -203,14 +199,10 @@ public class  Grupo implements Serializable {
     }
 
     public Timestamp getDataCriacao() {
-        Timestamp timeAux;
-        timeAux = dataCriacao;
-        return timeAux;
+        return this.dataCriacao;
     }
 
     public void setDataCriacao(Timestamp dataCriacao) {
-        Timestamp timeAux;
-        timeAux = dataCriacao;
-        this.dataCriacao = timeAux;
+        this.dataCriacao = dataCriacao;
     }
 }
