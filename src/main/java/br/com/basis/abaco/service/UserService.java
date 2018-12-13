@@ -2,7 +2,6 @@ package br.com.basis.abaco.service;
 
 import br.com.basis.abaco.config.Constants;
 import br.com.basis.abaco.domain.Authority;
-import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.AuthorityRepository;
 import br.com.basis.abaco.repository.UserRepository;
