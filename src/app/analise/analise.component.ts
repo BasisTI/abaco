@@ -378,55 +378,32 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      * Bloquear Análise
      */
     public bloqueiaAnalise() {
-        if(this.checkUserAnaliseEquipes()){
+        if (this.checkUserAnaliseEquipes()) {
             this.confirmationService.confirm({
                 message: MessageUtil.CONFIRMAR_BLOQUEIO.concat('?'),
                 accept: () => {
                     const copy = this.analiseTemp.toJSONState();
-                    copy.bloqueiaAnalise = true;
                     this.analiseService.block(copy).subscribe(() => {
                         const nome = this.analiseTemp.identificadorAnalise;
-                        this.blocked = false;
-                        this.pageNotificationService.addBlockMsgWithName(nome);
+                        const bloqueado = !this.analiseTemp.bloqueiaAnalise;
+                        this.mensagemAnaliseBloqueada(bloqueado, nome);
                         this.recarregarDataTable();
                     });
                 }
             });
         } else {
-            this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem bloquear esta análise!");
+            this.pageNotificationService.addErrorMsg('Somente membros da equipe responsável podem bloquear esta análise!');
         }
     }
 
-    /**
-     * Desbloquear Análise
-     */
-    public desbloqueiaAnalise() {
-        if(this.checkUserAnaliseEquipes()){
-            this.confirmationService.confirm({
-                message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat('?'),
-                accept: () => {
-                    const copy = this.analiseTemp.toJSONState();
-                    copy.bloqueiaAnalise = false;
-                    this.analiseService.unblock(copy).subscribe(() => {
-                        const nome = copy.identificadorAnalise;
-                        this.blocked = true;
-                        this.pageNotificationService.addUnblockMsgWithName(nome);
-                        this.recarregarDataTable();
-                    }, (error: Response) => {
-                        switch (error.status) {
-                            case 400: {
-                                if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
-                                    this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        } else {
-            this.pageNotificationService.addErrorMsg("Somente membros da equipe responsável podem desbloquear esta análise!");
-        }
+    private mensagemAnaliseBloqueada(retorno: boolean, nome: string) {
+        if (retorno) {
+            this.pageNotificationService.addBlockMsgWithName(nome);
+        }else {
+            this.pageNotificationService.addUnblockMsgWithName(nome);
+        }        
     }
+
 
     public openCompartilharDialog() {
         this.equipeShare = [];
