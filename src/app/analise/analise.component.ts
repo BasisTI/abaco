@@ -193,7 +193,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 this.geraRelatorioPdfDetalhadoBrowser(event.selection);
                 break;
             case 'clone' :
-                this.clonar(event.selection.idAnalise);
+                this.clonar(this.analiseReadyToClone);
                 break;
             case 'geraBaselinePdfBrowser' :
                 this.geraBaselinePdfBrowser();
@@ -254,12 +254,37 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     /**
      * Clonar análise
      */
-    public clonar(id: number) {
-        console.log(id);
+    public clonar(analise: Analise) {
+        const analiseClonada = analise.clone();
         this.confirmationService.confirm({
             message: MessageUtil.CONFIRMAR_CLONE.concat(this.analiseSelecionada.identificadorAnalise).concat('?'),
             accept: () => {
-                this.analiseService.clonar(id).subscribe((res: any) => {
+                analiseClonada.id = undefined;
+                analiseClonada.identificadorAnalise += MessageUtil.CONCAT_COPIA;
+                analiseClonada.bloqueiaAnalise = false;
+                analiseClonada.compartilhadas = undefined;
+
+                analiseClonada.funcaoDados.forEach(FuncaoDados => {
+                    FuncaoDados.id = undefined;
+                    FuncaoDados.ders.forEach(Ders => {
+                        Ders.id = undefined;
+                    });
+                    FuncaoDados.rlrs.forEach(rlrs => {
+                        rlrs.id = undefined;
+                    });
+                });
+
+                analiseClonada.funcaoTransacaos.forEach(funcaoTransacaos => {
+                    funcaoTransacaos.id = undefined;
+                    funcaoTransacaos.ders.forEach(ders => {
+                        ders.id = undefined;
+                    });
+                    funcaoTransacaos.alrs.forEach(alrs => {
+                        alrs.id = undefined;
+                    });
+                });
+
+                this.analiseService.create(analiseClonada).subscribe((res: any) => {
                     const menssagem: string = MessageUtil.ANALISE.concat(' ').
                     concat(this.analiseSelecionada.identificadorAnalise).
                     concat(MessageUtil.CLONAGEM_SUCESSO);

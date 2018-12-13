@@ -14,8 +14,6 @@ export class AnaliseService {
 
   resourceUrl = environment.apiUrl + '/analises';
 
-  resourceClonarUrl = environment.apiUrl + '/analises/clonar';
-
   relatoriosUrl = environment.apiUrl + '/relatorioPdfBrowser';
 
   findByOrganizacaoUrl = this.resourceUrl + '/organizacao';
@@ -27,6 +25,16 @@ export class AnaliseService {
   relatoriosDetalhadoUrl = environment.apiUrl + '/downloadPdfDetalhadoBrowser';
 
   searchUrl = environment.apiUrl + '/_search/analises';
+
+  fieldSearchIdentificadorUrl = environment.apiUrl + '/_searchIdentificador/analises';
+
+  fieldSearchSistemaUrl = environment.apiUrl + '/_searchSistema/analises';
+
+  fieldSearchMetodoContagemUrl = environment.apiUrl + '/_searchMetodoContagem/analises';
+
+  fieldSearchOrganizacaoUrl = environment.apiUrl + '/_searchOrganizacao/analises';
+
+  fieldSearchEquipeUrl = environment.apiUrl + '/_searchEquipe/analises';
 
   relatoriosBaselineUrl = environment.apiUrl + '/downloadPdfBaselineBrowser';
 
@@ -51,16 +59,6 @@ export class AnaliseService {
         }
     });
   }
-
-
-    public clonar(id: number): Observable<Response> {
-        return this.http.post(`${this.resourceClonarUrl}/${id}`, id).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg('Você não possui permissão!');
-                return Observable.throw(new Error(error.status));
-            }
-        });
-    }
 
   /**
    * atualizaAnalise
