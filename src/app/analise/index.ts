@@ -6,3 +6,5 @@ export * from './analise-detail.component';
 export * from './analise.component';
 export * from './analise.route';
 export * from './analise-share-equipe.model';
+export * from './grupo/grupo.model';
+export * from './grupo/grupo.service';

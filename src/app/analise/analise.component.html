@@ -11,11 +11,9 @@
                     <span class="md-inputfield">
                       <input 
                         type="text"
-                        (click)="switchUrlIdentificador()" 
                         pInputText class="ui-inputtext"
-                        [(ngModel)]="searchParams.identificador"
+                        [(ngModel)]="searchGroup.identificadorAnalise"
                         (keyup.enter)="performSearch()"
-                        #filter
                         id="idIdentificadorComponentAnalise"
                         maxlength="50">
                       <label>Identificador</label>
@@ -25,11 +23,10 @@
                   <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <p-dropdown 
                       [filter]="true"
-                      (click)=" switchUrlSistema()"
                       [options]="nomeSistemas" 
                       optionLabel="nome" 
                       id="idNomeSistemaComponentAnalise"
-                      [(ngModel)]="searchParams.nomeSistema" 
+                      [(ngModel)]="searchGroup.sistema" 
                       [autoWidth]="false" 
                       placeholder="Sistema">
                     </p-dropdown>
@@ -38,11 +35,9 @@
                   <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <p-dropdown 
                       [filter]="true"
-                      (click)="switchUrlMetodoContagem()"
                       [options]="metsContagens" 
-                      optionLabel="text" 
                       id="idMetodoContagemComponentAnalise"
-                      [(ngModel)]="searchParams.metContagem" 
+                      [(ngModel)]="searchGroup.metodoContagem" 
                       [autoWidth]="false" 
                       placeholder="Metodo de Contagem">
                     </p-dropdown>
@@ -53,11 +48,10 @@
             <div class="ui-g-4 ui-md-6 ui-sm-12">
               <p-dropdown 
                 [filter]="true"
-                (click)="switchUrlOrganizacao()"
                 [options]="organizations" 
                 optionLabel="nome" 
                 id="idOrganizacaoComponentAnalise"
-                [(ngModel)]="searchParams.organizacao" 
+                [(ngModel)]="searchGroup.organizacao" 
                 [autoWidth]="false" 
                 placeholder="Organização">
               </p-dropdown>
@@ -67,29 +61,13 @@
               <p-dropdown 
                 [filter]="true"
                 [options]="teams" 
-                (click)="switchUrlEquipe()"
                 optionLabel="nome"
                 id="idTimeComponentAnalise" 
                 [autoWidth]="false" 
-                [(ngModel)]="searchParams.team" 
+                [(ngModel)]="searchGroup.equipe" 
                 placeholder="Equipe">
               </p-dropdown>
             </div>
-                <div class="ui-g-12 ui-md-12 ui-sm-12"></div>
-                    <div class="ui-g-4 ui-md-12 ui-sm-12">
-                        <span class="md-inputfield">
-                            <input 
-                                type="text"
-                                (click)="switchUrlDescricao()"
-                                pInputText class="ui-inputtext"
-                                id="idDescricaoComponentAnalise"
-                                [(ngModel)]="searchParams.descricao"
-                                (keyup.enter)="performSearch()"
-                                maxlength="100"
-                                #filter/>
-                            <label>Descrição</label>
-                        </span>
-                    </div>
         </div>
 
             <div class="ui-g">
@@ -140,7 +118,7 @@
                                 name="desbloquear"
                                 tooltip="Desbloquear"
                                 icon="block"
-                                (click)="desbloqueiaRelatorio()"
+                                (click)="[bloqueiaAnalise(blocked)]"
                                 class="ui-button-success">
                         </basis-datatable-button>
 
@@ -149,13 +127,13 @@
                                 name="bloquear"
                                 tooltip="Bloquear"
                                 icon="block"
-                                (click)="bloqueiaRelatorio()"
+                                (click)="[bloqueiaAnalise(blocked)]"
                                 class="ui-button-danger">
                         </basis-datatable-button>
 
                         <basis-datatable-button
                                 name="compartilhar"
-                                tooltip="Compartilhar Análise"
+                                [tooltip]="compartilharTooltip()"
                                 icon="share"
                                 class="ui-button-info"
                                 disabled="desabilitarBotaoRelatorio()">
@@ -170,19 +148,19 @@
 
                         <basis-datatable-button
                                 name="relatorioBrowserDetalhado"
-                                tooltip="Relatório Detalhado"
+                                [tooltip]="relatorioTooltip()"
                                 icon="description"
                                 disabled="desabilitarBotaoRelatorio()">
                         </basis-datatable-button>
 
-                        <p-column header="Organização" field="organizacao.sigla" [sortable]="true"
+                        <p-column header="Organização" field="organizacao" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}"></p-column>
 
                         <p-column header="Identificador Análise" field="identificadorAnalise" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}"></p-column>
-                        <p-column header="Equipe" field="equipeResponsavel.nome" [sortable]="true"
+                        <p-column header="Equipe" field="equipe" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}"></p-column>
-                        <p-column header="Sistema" field="sistema.sigla" [sortable]="true"
+                        <p-column header="Sistema" field="sistema" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}"></p-column>
                         <p-column header="Método de Contagem" field="metodoContagem" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}"></p-column>
@@ -193,22 +171,22 @@
                             </ng-template>
                         </p-column>
 
-                        <p-column header="PF Ajustado" field="adjustPFTotal" [sortable]="true" [style]="{'font-size': '1.0vw'}">
-                            <ng-template let-col let-adjustPFTotal="rowData.adjustPFTotal" pTemplate="body">
-                                {{ adjustPFTotal > 0 ? adjustPFTotal : 0 | number: '00.00'}}
+                        <p-column header="PF Ajustado" field="pfAjustado" [sortable]="true" [style]="{'font-size': '1.0vw'}">
+                            <ng-template let-col let-pfAjustado="rowData.pfAjustado" pTemplate="body">
+                                {{ pfAjustado > 0 ? pfAjustado : 0 | number: '00.00'}}
                             </ng-template>
                         </p-column>
 
-                        <p-column header="Dias restantes em Garantia" field="dado" [sortable]="true"
+                        <!-- <p-column header="Dias restantes em Garantia" field="dado" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}">
                             <ng-template let-dado="rowData" pTemplate="body">
                                 {{ dado | datePipe }}
                             </ng-template>
-                        </p-column>
+                        </p-column> -->
 
-                        <p-column header="Data Criação" field="createdOn" [sortable]="true" [style]="{'font-size': '1.0vw'}">
-                            <ng-template let-col let-createdOn="rowData.createdOn" pTemplate="body">
-                                {{ createdOn | date: 'dd/MM/y - HH:mm' }}
+                        <p-column header="Data Criação" field="dataCriacao" [sortable]="true" [style]="{'font-size': '1.0vw'}">
+                            <ng-template let-col let-dataCriacao="rowData.dataCriacao" pTemplate="body">
+                                {{ dataCriacao | date: 'dd/MM/y - HH:mm' }}
                             </ng-template>
                         </p-column>
 
@@ -218,10 +196,10 @@
                           </ng-template>
                         </p-column> -->
 
-                        <p-column header="Bloqueado" field="bloqueiaAnalise" [sortable]="true"
+                        <p-column header="Bloqueado" field="bloqueado" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}">
-                            <ng-template let-col let-bloqueiaAnalise="rowData" pTemplate="body">
-                                {{ bloqueiaAnalise[col.field] ? 'Sim' : 'Não' }}
+                            <ng-template let-col let-bloqueado="rowData" pTemplate="body">
+                                {{ bloqueado[col.field] ? 'Sim' : 'Não' }}
                             </ng-template>
                         </p-column>
 
@@ -281,7 +259,7 @@
         <hr/>
         <h3>Compartilhada com:</h3>
         <p-dataTable
-        [(value)]="analiseSelecionada.compartilhadas"
+        [(value)]="analiseTemp.compartilhadas"
         selectionMode="single"
         [(selection)]="selectedToDelete"
         dataKey="equipeId"
