@@ -377,10 +377,10 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     /**
      * Bloquear Análise
      */
-    public bloqueiaAnalise() {
+    public bloqueiaAnalise(bloquear: boolean) {
         if (this.checkUserAnaliseEquipes()) {
             this.confirmationService.confirm({
-                message: MessageUtil.CONFIRMAR_BLOQUEIO.concat('?'),
+                message: this.mensagemDialogBloquear(bloquear),
                 accept: () => {
                     const copy = this.analiseTemp.toJSONState();
                     this.analiseService.block(copy).subscribe(() => {
@@ -396,11 +396,19 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         }
     }
 
+    private mensagemDialogBloquear(retorno: boolean) {
+        if (retorno) {
+            return MessageUtil.CONFIRMAR_DESBLOQUEIO.concat('?');
+        }else {
+            return MessageUtil.CONFIRMAR_BLOQUEIO.concat('?');
+        }
+    }
+
     private mensagemAnaliseBloqueada(retorno: boolean, nome: string) {
         if (retorno) {
-            this.pageNotificationService.addBlockMsgWithName(nome);
-        }else {
             this.pageNotificationService.addUnblockMsgWithName(nome);
+        }else {
+            this.pageNotificationService.addBlockMsgWithName(nome);
         }        
     }
 
