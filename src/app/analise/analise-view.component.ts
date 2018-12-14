@@ -394,7 +394,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
                 message: MessageUtil.CONFIRMAR_DESBLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
                 accept: () => {
                     const copy = this.analise.toJSONState();
-                        this.analiseService.unblock(copy).subscribe(() => {
+                        this.analiseService.block(copy).subscribe(() => {
                         this.pageNotificationService.addUnblockMsgWithName(this.analise.identificadorAnalise);
                         this.router.navigate(['/analise']);
                     }, (error: Response) => {
