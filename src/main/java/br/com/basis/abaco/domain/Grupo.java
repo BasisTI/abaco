@@ -171,16 +171,16 @@ public class  Grupo implements Serializable {
     }
 
     public Timestamp getDataHomologacao() {
-        return this.dataHomologacao == null ? this.dataHomologacao : new Timestamp(this.dataHomologacao.getTime());
+        return this.dataHomologacao == null ? null : new Timestamp(this.dataHomologacao.getTime());
     }
 
     public Grupo dataHomologacao(Timestamp dataHomologacao) {
-        this.dataHomologacao = dataHomologacao == null ? dataHomologacao : new Timestamp(dataHomologacao.getTime());
+        this.dataHomologacao = dataHomologacao == null ? null : new Timestamp(dataHomologacao.getTime());
         return this;
     }
 
     public void setDataHomologacao(Timestamp dataHomologacao) {
-        this.dataHomologacao = dataHomologacao == null ? dataHomologacao : new Timestamp(dataHomologacao.getTime());
+        this.dataHomologacao = dataHomologacao == null ? null : new Timestamp(dataHomologacao.getTime());
     }
 
     public Boolean isBloqueado() {
@@ -197,12 +197,12 @@ public class  Grupo implements Serializable {
     }
 
     public Timestamp getDataCriacao() {
-        return this.dataCriacao == null ? this.dataCriacao : new Timestamp(this.dataCriacao.getTime());
+        return this.dataCriacao == null ? null : new Timestamp(this.dataCriacao.getTime());
     }
 
     public void setDataCriacao(Timestamp dataCriacao) {
         Timestamp timeAux;
-        timeAux = dataCriacao == null ? dataCriacao : new Timestamp(dataCriacao.getTime());
+        timeAux = dataCriacao == null ? null : new Timestamp(dataCriacao.getTime());
         this.dataCriacao = timeAux;
     }
 }
