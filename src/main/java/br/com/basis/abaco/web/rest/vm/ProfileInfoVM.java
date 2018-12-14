@@ -7,9 +7,7 @@ public final class ProfileInfoVM {
     private String ribbonEnv;
 
     public ProfileInfoVM(String[] activeProfiles, String ribbonEnv) {
-        String[] profileAux;
-        profileAux = activeProfiles;
-        this.activeProfiles = profileAux;
+        this.activeProfiles = activeProfiles.clone();
         this.ribbonEnv = ribbonEnv;
     }
 
