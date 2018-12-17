@@ -57,7 +57,7 @@
               <input type="text" id="idCNPJFormOrganizacao" name="cnpjOrganizacao" maxlength="18" minlength="14"
                      mask="99.999.999/9999-99"
                      pattern="[0-9]+$" [(ngModel)]="organizacao.cnpj" pInputText required/>
-              <label>CNPJ</label>
+              <label>CNPJ*</label>
               <div *ngIf="editForm.controls['cnpjOrganizacao'] 
               && !editForm.controls['cnpjOrganizacao'].valid 
               && (editForm.controls['cnpjOrganizacao'].touched 
