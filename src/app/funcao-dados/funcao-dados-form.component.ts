@@ -138,6 +138,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.hideShowQuantidade = true;
         this.currentFuncaoDados = new FuncaoDados();
         this.subscribeToAnaliseCarregada();
+        this.colunasAMostrar = [];
         this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
     }
 

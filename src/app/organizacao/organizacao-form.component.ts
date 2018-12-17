@@ -247,22 +247,23 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     if (!this.organizacao.sigla) {
-      return this.pageNotificationService.addErrorMsg('O campo Sigla é obrigatório!');
+      this.pageNotificationService.addErrorMsg('O campo Sigla é obrigatório!');
+      return;
        }
 
     this.isSaving = true;
-    if (this.organizacao.cnpj === '') {
-      this.organizacao.cnpj = undefined;
+    if (!this.organizacao.cnpj) {
+      this.cnpjValido = true;
+      this.pageNotificationService.addErrorMsg('O campo CNPJ é obrigatório!');
+      return;
     }
 
-     if (this.organizacao.cnpj !== undefined && this.organizacao.cnpj !== ' ') {
-      if (this.organizacao.cnpj) {
+     if (this.organizacao.cnpj !== ' ') {
       if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
         this.cnpjValido = true;
         this.pageNotificationService.addErrorMsg('CNPJ inválido');
         return;
       }
-    }
   }
 
   if (this.organizacao.contracts.length === 0 || this.organizacao.contracts === undefined) {
