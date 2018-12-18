@@ -139,7 +139,7 @@
                                     field="name"
                                     (onSelect)="recuperarNomeSelecionado($event)">
                             </p-autoComplete>
-                            <div *ngIf="nomeInvalido"
+                            <div *ngIf="nomeInvalido && !currentFuncaoDados.name"
                                  class="ui-message ui-messages-error">
                                 Campo obrigatório.
                             </div>
@@ -272,13 +272,13 @@
 
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
-                    <h2>RLR (TR)</h2>
+                    <h2>RLR (TR) *</h2>
                     <app-analise-der-chips
                             [(values)]="rlrsChips"
                             (onChange)="adicionar()"
                             id="idRLRFormFuncaoDados">
                     </app-analise-der-chips>
-                    <div *ngIf="erroTR"
+                    <div *ngIf="erroTR && rlrsChips.length == 0"
                          class="ui-message ui-messages-error">
                         Campo obrigatório.
                     </div>
@@ -286,13 +286,13 @@
                 </div>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
-                    <h2>DER (TD)</h2>
+                    <h2>DER (TD) *</h2>
                     <app-analise-der-chips
                             [(values)]="dersChips"
                             id="idDERFormFuncaoDados"
                             (onChange)="adicionar()">
                     </app-analise-der-chips>
-                    <div *ngIf="erroTD"
+                    <div *ngIf="erroTD && dersChips.length == 0"
                          class="ui-message ui-messages-error">
                         Campo obrigatório.
                     </div>

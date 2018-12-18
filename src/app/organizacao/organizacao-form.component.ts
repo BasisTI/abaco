@@ -337,7 +337,7 @@ editar() {
     checkIfCnpjAlreadyExists(organizacoesRegistradas: Array<Organizacao>): boolean {
         let isAlreadyRegistered = false;
         organizacoesRegistradas.forEach(each => {
-            if (each.cnpj.toUpperCase() === this.organizacao.cnpj.toUpperCase() && each.id !== this.organizacao.id) {
+            if (each.cnpj === this.organizacao.cnpj && each.id !== this.organizacao.id) {
                 isAlreadyRegistered = true;
                 this.pageNotificationService.addErrorMsg('Já existe uma Organização registrada com este CNPJ!');
             }

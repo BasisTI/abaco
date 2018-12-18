@@ -429,10 +429,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por persistir as informações das análises na edição.
      **/
     save() {
-        // if (this.aguardarGarantia === undefined) {
+        // if (!this.aguardarGarantia) {
         //     this.analise.baselineImediatamente = true;
         // }
-        if (this.enviarParaBaseLine === undefined) {
+        if (!this.enviarParaBaseLine) {
             this.analise.enviarBaseline = true;
         }
         this.validaCamposObrigatorios();
@@ -453,10 +453,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     private validaCamposObrigatorios() {
-        const validacaoIdentificadorAnalise = this.analise.identificadorAnalise !== undefined;
-        const validacaoContrato = this.analise.contrato !== undefined;
-        const validacaoMetodoContagem = this.analise.metodoContagem !== null;
-        const validacaoTipoAnallise = this.analise.tipoAnalise !== null;
+        const validacaoIdentificadorAnalise = this.analise.identificadorAnalise ? true : false;
+        const validacaoContrato = this.analise.contrato ? true : false;
+        const validacaoMetodoContagem = this.analise.metodoContagem ? true : false;
+        const validacaoTipoAnallise = this.analise.tipoAnalise ? true : false;
 
         this.validacaoCampos = !(validacaoIdentificadorAnalise === true
             && validacaoContrato === true
@@ -481,18 +481,22 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
         if (!this.analise.identificadorAnalise) {
             this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_IDENTIFICADOR);
+            isValid = false;
             return isValid;
         }
         if (!this.analise.contrato) {
             this.pageNotificationService.addInfoMsg(MessageUtil.SELECIONE_CONTRATO_CONTINUAR);
+            isValid = false;
             return isValid;
         }
         if (!this.analise.metodoContagem) {
             this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_METODO_CONTAGEM);
+            isValid = false;
             return isValid;
         }
         if (!this.analise.tipoAnalise) {
             this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_TIPO_CONTAGEM);
+            isValid = false;
             return isValid;
         }
         if (this.analise.baselineImediatamente && !this.analise.dataHomologacao) {
