@@ -429,9 +429,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por persistir as informações das análises na edição.
      **/
     save() {
-        if (this.aguardarGarantia === undefined) {
-            this.analise.baselineImediatamente = true;
-        }
+        // if (this.aguardarGarantia === undefined) {
+        //     this.analise.baselineImediatamente = true;
+        // }
         if (this.enviarParaBaseLine === undefined) {
             this.analise.enviarBaseline = true;
         }
@@ -477,7 +477,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por validar campos obrigatórios na persistência.
      **/
     private verificarCamposObrigatorios(): boolean {
-        const isValid = true;
+        let isValid = true;
 
         if (!this.analise.identificadorAnalise) {
             this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_IDENTIFICADOR);
@@ -495,7 +495,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_TIPO_CONTAGEM);
             return isValid;
         }
-        if (this.analise.baselineImediatamente) {
+        if (this.analise.baselineImediatamente && !this.analise.dataHomologacao) {
             this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_DATA_HOMOLOGACAO);
             isValid = false;
             return isValid;
