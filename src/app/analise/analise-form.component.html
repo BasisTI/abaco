@@ -336,6 +336,7 @@
                                 <div class="ui-g-4 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px" [hidden]="validacaoCampos">
                                     <span class="md-inputfield">
                                         <p-calendar
+                                                [required] = analise.baselineImediatamente
                                                 name="dataHomol"
                                                 [(ngModel)]="analise.dataHomologacao"
                                                 id="idDataHomolagacaoFormAnalise"
