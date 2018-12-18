@@ -56,9 +56,12 @@
             <span class="md-inputfield">
               <input type="text" id="idCNPJFormOrganizacao" name="cnpjOrganizacao" maxlength="18" minlength="14"
                      mask="99.999.999/9999-99"
-                     pattern="[0-9]+$" [(ngModel)]="organizacao.cnpj" pInputText/>
-              <label>CNPJ</label>
-              <div *ngIf="(cnpjValido && editForm.submitted)" class="ui-message ui-messages-error">
+                     pattern="[0-9]+$" [(ngModel)]="organizacao.cnpj" pInputText required/>
+              <label>CNPJ*</label>
+              <div *ngIf="editForm.controls['cnpjOrganizacao'] 
+              && !editForm.controls['cnpjOrganizacao'].valid 
+              && (editForm.controls['cnpjOrganizacao'].touched 
+              || editForm.submitted)" class="ui-message ui-messages-error">
                 CNPJ Inválido!
               </div>
             </span>

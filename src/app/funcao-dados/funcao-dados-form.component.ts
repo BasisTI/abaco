@@ -63,8 +63,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     windowWidthDialog: any;
 
     moduloCache: Funcionalidade;
-    dersChips: DerChipItem[];
-    rlrsChips: DerChipItem[];
+    dersChips: DerChipItem[] = [];
+    rlrsChips: DerChipItem[] = [];
     resumo: ResumoFuncoes;
     fatoresAjuste: SelectItem[] = [];
     colunasOptions: SelectItem[];
@@ -138,6 +138,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.hideShowQuantidade = true;
         this.currentFuncaoDados = new FuncaoDados();
         this.subscribeToAnaliseCarregada();
+        this.colunasAMostrar = [];
         this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
     }
 
@@ -311,7 +312,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     adicionar(): boolean {
-
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
@@ -359,31 +359,39 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private verifyDataRequire(): boolean {
         let retorno = true;
 
-        if (this.currentFuncaoDados.name === undefined) {
+        if (!this.currentFuncaoDados.name) {
             this.nomeInvalido = true;
             retorno = false;
         } else {
             this.nomeInvalido = false;
         }
 
-        if (this.currentFuncaoDados.impacto === undefined) {
+        if(!this.currentFuncaoDados.tipo){
+            this.classInvalida = true;
+            retorno = false;
+        } else {
+            this.classInvalida = false;
+        }
+
+        if (!this.currentFuncaoDados.impacto) {
             this.impactoInvalido = true;
             retorno = false;
         } else {
             this.impactoInvalido = false;
         }
 
-        if (this.currentFuncaoDados.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0
-            && this.currentFuncaoDados.fatorAjuste === undefined) {
-            this.erroDeflator = true;
-            retorno = false;
-            this.pageNotificationService.addErrorMsg('Selecione um Deflator');
-        } else {
+        if(this.currentFuncaoDados.impacto){
+            if (this.currentFuncaoDados.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0 && this.currentFuncaoDados.fatorAjuste === undefined) {
+                this.erroDeflator = true;
+                retorno = false;
+                this.pageNotificationService.addErrorMsg('Selecione um Deflator');
+            }
+        }
+        else {
             this.erroDeflator = false;
         }
 
-        this.classInvalida = this.currentFuncaoDados.tipo === undefined;
-        if (this.currentFuncaoDados.fatorAjuste !== undefined) {
+        if (this.currentFuncaoDados.fatorAjuste) {
             if (this.currentFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' &&
                 this.currentFuncaoDados.quantidade === undefined) {
                 this.erroUnitario = true;
@@ -395,14 +403,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
         if (this.analiseSharedDataService.analise.metodoContagem === 'DETALHADA') {
 
-            if (this.dersChips === undefined) {
+            if (!this.rlrsChips || this.rlrsChips.length < 1) {
                 this.erroTR = true;
                 retorno = false;
             } else {
                 this.erroTR = false;
             }
 
-            if (this.dersChips === undefined) {
+            if (!this.dersChips || this.dersChips.length < 1) {
                 this.erroTD = true;
                 retorno = false;
             } else {
