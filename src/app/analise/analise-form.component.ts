@@ -495,6 +495,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_TIPO_CONTAGEM);
             return isValid;
         }
+        if (this.analise.baselineImediatamente) {
+            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_DATA_HOMOLOGACAO);
+            isValid = false;
+            return isValid;
+        }
         return isValid;
     }
 
