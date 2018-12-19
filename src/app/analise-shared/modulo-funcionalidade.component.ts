@@ -133,6 +133,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
     private selecionarModulo(moduloId: number) {
+        console.log(this.modulos, "MODULOS!!!!!!");
         this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
         this.moduloSelected(this.moduloSelecionado);
     }
@@ -235,8 +236,10 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     private deselecionaFuncionalidadeSeModuloSelecionadoForDiferente() {
-        if (this.moduloSelecionado.id !== this.oldModuloSelectedId) {
-            this.funcionalidadeSelecionada = undefined;
+        if (this.moduloSelecionado){
+            if (this.moduloSelecionado.id !== this.oldModuloSelectedId) {
+                this.funcionalidadeSelecionada = undefined;
+            }
         }
     }
 
@@ -251,7 +254,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
             this.estadoinicial();
             this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
                 this.recarregarSistema(sistemaRecarregado);
-                this.selecionarModulo(moduloCriado.id);
+                setTimeout(() => {this.selecionarModulo(moduloCriado.id);} , 10000);
                 this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, sistemaRecarregado.nome);
             });
         });
@@ -301,13 +304,13 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     adicionarFuncionalidade() {
-        if (this.novaFuncionalidade.nome === undefined) {
+        if (!this.novaFuncionalidade.nome) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
             return;
         }
         const moduloId = this.moduloSelecionado.id;
         const sistemaId = this.sistema.id;
-        // TODO inserir um spinner
+        // TODO inserir um spinner   
         this.funcionalidadeService.create(this.novaFuncionalidade, moduloId)
             .subscribe((funcionalidadeCriada: Funcionalidade) => {
                 this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
