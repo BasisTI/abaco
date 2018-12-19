@@ -555,6 +555,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 this.currentFuncaoDados.id = undefined;
                 this.currentFuncaoDados.artificialId = undefined;
                 this.currentFuncaoDados.impacto = Impacto.ALTERACAO;
+                this.textHeader = 'Clonar Função de Dados'
         }
     }
 
