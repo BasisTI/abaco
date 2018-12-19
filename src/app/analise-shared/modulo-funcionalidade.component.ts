@@ -255,7 +255,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
                 this.recarregarSistema(sistemaRecarregado);
                 this.selecionarModulo(moduloCriado.id);
                 this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, sistemaRecarregado.nome);
-            });} , 10000);
+            });} , 30000);
         });
 
         this.fecharDialogModulo();
