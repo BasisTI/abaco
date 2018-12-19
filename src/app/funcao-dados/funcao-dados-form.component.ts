@@ -92,6 +92,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private analiseCarregadaSubscription: Subscription;
     private subscriptionSistemaSelecionado: Subscription;
     private nomeDasFuncoesDoSistema: string[] = [];
+    public erroModulo: boolean;
     public erroTR: boolean;
     public erroTD: boolean;
     public erroUnitario: boolean;
@@ -382,13 +383,13 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
         if(this.currentFuncaoDados.impacto){
             if (this.currentFuncaoDados.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0 && this.currentFuncaoDados.fatorAjuste === undefined) {
-                this.erroDeflator = true;
+                this.erroDeflator = false;
                 retorno = false;
                 this.pageNotificationService.addErrorMsg('Selecione um Deflator');
             }
         }
         else {
-            this.erroDeflator = false;
+            this.erroDeflator = true;
         }
 
         if (this.currentFuncaoDados.fatorAjuste) {
@@ -474,6 +475,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.nomeInvalido = false;
         this.classInvalida = false;
         this.impactoInvalido = false;
+        this.erroModulo = false;
         this.erroUnitario = false;
         this.erroTR = false;
         this.erroTD = false;

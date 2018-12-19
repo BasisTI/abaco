@@ -438,7 +438,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
             this.analiseService.update(this.analise).subscribe(() => {
-                this.pageNotificationService.addSuccessMsg('Dados alterados com sucesso!');
+                this.pageNotificationService.addSuccessMsg('Registro Salvo com Sucesso!');
                 this.diasGarantia = this.analise.contrato.diasDeGarantia;
             });
         }
