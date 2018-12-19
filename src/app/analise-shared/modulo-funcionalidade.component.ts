@@ -251,12 +251,11 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         const sistemaId = this.sistema.id;
         // TODO inserir um spinner, talvez bloquear a UI
         this.moduloService.create(this.novoModulo, sistemaId).subscribe((moduloCriado: Modulo) => {
-            this.estadoinicial();
-            this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
+            setTimeout(() => {this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
                 this.recarregarSistema(sistemaRecarregado);
-                setTimeout(() => {this.selecionarModulo(moduloCriado.id);} , 10000);
+                this.selecionarModulo(moduloCriado.id);
                 this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, sistemaRecarregado.nome);
-            });
+            });} , 10000);
         });
 
         this.fecharDialogModulo();
