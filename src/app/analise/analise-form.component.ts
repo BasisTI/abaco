@@ -34,6 +34,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     selectedEquipes: Array<AnaliseShareEquipe>;
     selectedToDelete: AnaliseShareEquipe;
     mostrarDialog = false;
+    isEdit: boolean;
 
     isSaving: boolean;
     dataAnalise: any;
@@ -205,6 +206,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.setSistamaOrganizacao(analiseCarregada.organizacao);
         this.setManual(analiseCarregada.contrato);
         this.carregaFatorAjusteNaEdicao();
+        this.isEdit = this.analise.identificadorAnalise == undefined ? true: false;
     }
 
     /**
@@ -438,7 +440,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
             this.analiseService.update(this.analise).subscribe(() => {
-                this.pageNotificationService.addSuccessMsg(this.isEdicao ? 'Registro  com Sucesso!' : 'sada');
+                this.pageNotificationService.addSuccessMsg(this.isEdit ? 'Registro salvo com sucesso!' : 'Dados alterados com sucesso!');
                 this.diasGarantia = this.analise.contrato.diasDeGarantia;
             });
         }
