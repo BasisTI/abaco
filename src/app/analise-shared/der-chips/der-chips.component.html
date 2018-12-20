@@ -16,8 +16,13 @@
           {{ item.text }}
         </span>
       </ng-template>
-
     </p-chips>
+
+    <div *ngIf="tamanhoChip"
+          class="ui-message ui-messages-error">
+          Limite de caracteres excedido (255)
+    </div>
+    
   </div>
 
   <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="relacionarDers">

@@ -132,6 +132,7 @@
                         <div class="ui-g-9">
                             <label>Nome *</label>
                             <p-autoComplete
+                                    maxlength = "2000"
                                     [(ngModel)]="currentFuncaoDados.name"
                                     [suggestions]="baselineResults"
                                     id="idNomeFormFuncaoDados"
@@ -158,6 +159,7 @@
                         <div class="ui-g-9">
                             <label>Nomes *</label>
                             <textarea pInputTextarea
+                                      maxlength = "2000"
                                       [(ngModel)]="text"
                                       style="white-space: nowrap; overflow: auto;"
                                       [autoResize]="false"
@@ -184,7 +186,9 @@
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                             <label>Nomes *</label>
-                            <input type="text" class="ui-inputtext"
+                            <input 
+                                    maxlength = "2000"
+                                    type="text" class="ui-inputtext"
                                     id="idNomesEditFormFuncaoDados"
                                    [(ngModel)]="currentFuncaoDados.name">
                         </div>
@@ -301,6 +305,7 @@
                     <label>Fundamentação</label>
                     <span class="md-inputfield">
                 <textarea
+                        maxlength="5000"
                         [rows]="3"
                         id="idFundamentacaoFormFuncaoDados"
                         [cols]="180"
