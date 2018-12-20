@@ -34,6 +34,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     selectedEquipes: Array<AnaliseShareEquipe>;
     selectedToDelete: AnaliseShareEquipe;
     mostrarDialog = false;
+    isEdit: boolean;
 
     isSaving: boolean;
     dataAnalise: any;
@@ -205,6 +206,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.setSistamaOrganizacao(analiseCarregada.organizacao);
         this.setManual(analiseCarregada.contrato);
         this.carregaFatorAjusteNaEdicao();
+        this.isEdit = this.analise.identificadorAnalise == undefined ? true: false;
     }
 
     /**
@@ -429,16 +431,16 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por persistir as informações das análises na edição.
      **/
     save() {
-        if (this.aguardarGarantia === undefined) {
-            this.analise.baselineImediatamente = true;
-        }
-        if (this.enviarParaBaseLine === undefined) {
+        // if (!this.aguardarGarantia) {
+        //     this.analise.baselineImediatamente = true;
+        // }
+        if (!this.enviarParaBaseLine) {
             this.analise.enviarBaseline = true;
         }
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
             this.analiseService.update(this.analise).subscribe(() => {
-                this.pageNotificationService.addSuccessMsg('Dados alterados com sucesso!');
+                this.pageNotificationService.addSuccessMsg(this.isEdit ? 'Registro salvo com sucesso!' : 'Dados alterados com sucesso!');
                 this.diasGarantia = this.analise.contrato.diasDeGarantia;
             });
         }
@@ -453,10 +455,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     private validaCamposObrigatorios() {
-        const validacaoIdentificadorAnalise = this.analise.identificadorAnalise !== undefined;
-        const validacaoContrato = this.analise.contrato !== undefined;
-        const validacaoMetodoContagem = this.analise.metodoContagem !== null;
-        const validacaoTipoAnallise = this.analise.tipoAnalise !== null;
+        const validacaoIdentificadorAnalise = this.analise.identificadorAnalise ? true : false;
+        const validacaoContrato = this.analise.contrato ? true : false;
+        const validacaoMetodoContagem = this.analise.metodoContagem ? true : false;
+        const validacaoTipoAnallise = this.analise.tipoAnalise ? true : false;
 
         this.validacaoCampos = !(validacaoIdentificadorAnalise === true
             && validacaoContrato === true
@@ -477,22 +479,31 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por validar campos obrigatórios na persistência.
      **/
     private verificarCamposObrigatorios(): boolean {
-        const isValid = true;
+        let isValid = true;
 
         if (!this.analise.identificadorAnalise) {
             this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_IDENTIFICADOR);
+            isValid = false;
             return isValid;
         }
         if (!this.analise.contrato) {
             this.pageNotificationService.addInfoMsg(MessageUtil.SELECIONE_CONTRATO_CONTINUAR);
+            isValid = false;
             return isValid;
         }
         if (!this.analise.metodoContagem) {
             this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_METODO_CONTAGEM);
+            isValid = false;
             return isValid;
         }
         if (!this.analise.tipoAnalise) {
             this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_TIPO_CONTAGEM);
+            isValid = false;
+            return isValid;
+        }
+        if (this.analise.baselineImediatamente && !this.analise.dataHomologacao) {
+            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_DATA_HOMOLOGACAO);
+            isValid = false;
             return isValid;
         }
         return isValid;

@@ -63,8 +63,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     windowWidthDialog: any;
 
     moduloCache: Funcionalidade;
-    dersChips: DerChipItem[];
-    rlrsChips: DerChipItem[];
+    dersChips: DerChipItem[] = [];
+    rlrsChips: DerChipItem[] = [];
     resumo: ResumoFuncoes;
     fatoresAjuste: SelectItem[] = [];
     colunasOptions: SelectItem[];
@@ -92,6 +92,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private analiseCarregadaSubscription: Subscription;
     private subscriptionSistemaSelecionado: Subscription;
     private nomeDasFuncoesDoSistema: string[] = [];
+    public erroModulo: boolean;
     public erroTR: boolean;
     public erroTD: boolean;
     public erroUnitario: boolean;
@@ -312,7 +313,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     adicionar(): boolean {
-
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
@@ -360,31 +360,39 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private verifyDataRequire(): boolean {
         let retorno = true;
 
-        if (this.currentFuncaoDados.name === undefined) {
+        if (!this.currentFuncaoDados.name) {
             this.nomeInvalido = true;
             retorno = false;
         } else {
             this.nomeInvalido = false;
         }
 
-        if (this.currentFuncaoDados.impacto === undefined) {
+        if(!this.currentFuncaoDados.tipo){
+            this.classInvalida = true;
+            retorno = false;
+        } else {
+            this.classInvalida = false;
+        }
+
+        if (!this.currentFuncaoDados.impacto) {
             this.impactoInvalido = true;
             retorno = false;
         } else {
             this.impactoInvalido = false;
         }
 
-        if (this.currentFuncaoDados.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0
-            && this.currentFuncaoDados.fatorAjuste === undefined) {
+        if(this.currentFuncaoDados.impacto){
+            if (this.currentFuncaoDados.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0 && this.currentFuncaoDados.fatorAjuste === undefined) {
+                this.erroDeflator = false;
+                retorno = false;
+                this.pageNotificationService.addErrorMsg('Selecione um Deflator');
+            }
+        }
+        else {
             this.erroDeflator = true;
-            retorno = false;
-            this.pageNotificationService.addErrorMsg('Selecione um Deflator');
-        } else {
-            this.erroDeflator = false;
         }
 
-        this.classInvalida = this.currentFuncaoDados.tipo === undefined;
-        if (this.currentFuncaoDados.fatorAjuste !== undefined) {
+        if (this.currentFuncaoDados.fatorAjuste) {
             if (this.currentFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' &&
                 this.currentFuncaoDados.quantidade === undefined) {
                 this.erroUnitario = true;
@@ -396,14 +404,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
         if (this.analiseSharedDataService.analise.metodoContagem === 'DETALHADA') {
 
-            if (this.dersChips === undefined) {
+            if (!this.rlrsChips || this.rlrsChips.length < 1) {
                 this.erroTR = true;
                 retorno = false;
             } else {
                 this.erroTR = false;
             }
 
-            if (this.dersChips === undefined) {
+            if (!this.dersChips || this.dersChips.length < 1) {
                 this.erroTD = true;
                 retorno = false;
             } else {
@@ -467,6 +475,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.nomeInvalido = false;
         this.classInvalida = false;
         this.impactoInvalido = false;
+        this.erroModulo = false;
         this.erroUnitario = false;
         this.erroTR = false;
         this.erroTD = false;
@@ -548,6 +557,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 this.currentFuncaoDados.id = undefined;
                 this.currentFuncaoDados.artificialId = undefined;
                 this.currentFuncaoDados.impacto = Impacto.ALTERACAO;
+                this.textHeader = 'Clonar Função de Dados'
         }
     }
 

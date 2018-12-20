@@ -58,7 +58,8 @@
                         </div>
                         <div style="margin-bottom: 25px; margin-top: 25px" *ngIf="isEdicao">
                             <div class="ui-g">
-                                <div class="ui-g-6 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 18px">
+                                <div class="ui-g-6 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Identificador da Analise *</label>
                                     <span class="md-inputfield">
                                         <input
                                                 required
@@ -69,7 +70,6 @@
                                                 [disabled]="this.isView"
                                                 [(ngModel)]="analise.identificadorAnalise"
                                                 pInputText/>
-                                        <label>Identificador da Analise *</label>
                                     </span>
                                 </div>
 
@@ -136,7 +136,8 @@
                                     </p-dropdown>
                                 </div>
 
-                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 17px" [hidden]="validacaoCampos">
+                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px3" [hidden]="validacaoCampos">
+                                    <label>Manual</label>
                                     <span class="md-inputfield">
                                         <input
                                                 required
@@ -147,7 +148,6 @@
                                                 [disabled]="this.isView"
                                                 [(ngModel)]="nomeManual"
                                                 pInputText/>
-                                        <label>Manual</label>
                                     </span>
                                 </div>
 
@@ -288,7 +288,8 @@
                                                 pInputTextarea
                                                 name="observacoes"
                                                 [disabled]="this.isView"
-                                                [(ngModel)]="analise.observacoes">
+                                                [(ngModel)]="analise.observacoes"
+                                                maxlength="4000">
                                         </textarea>
                                     </span>
                                 </div>
