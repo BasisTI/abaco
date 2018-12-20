@@ -36,7 +36,7 @@ export class MessageUtil {
     public static INFORME_DATA_HOMOLOGACAO = 'Informe a data de homolagação para continuar';
 
     public static CONCAT_COPIA = ' - CÓPIA';
-    public static ERRO_EXCLUSAO_ANALISE_BLOQUEADA = 'Você não pode editar uma análise bloqueada';
+    public static ERRO_EXCLUSAO_ANALISE_BLOQUEADA = 'Você não pode excluir uma análise bloqueada';
     public static CLONAGEM_SUCESSO = ' clonada com sucesso!';
     public static ERRO_PDF_RELATORIO_CAMPOS = 'Preencha os campos Funções de Dados e/ou Função de Transação para gerar um relatório';
     public static REGISTRO_ESTA_BLOQUEADO = 'Registro já está bloqueado';
