@@ -504,6 +504,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 this.currentFuncaoTransacao.id = undefined;
                 this.currentFuncaoTransacao.artificialId = undefined;
                 this.currentFuncaoTransacao.impacto = Impacto.ALTERACAO;
+                this.textHeader = 'Clonar Função de Transação';
         }
     }
 
