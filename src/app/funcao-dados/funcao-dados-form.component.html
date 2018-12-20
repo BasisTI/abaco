@@ -93,8 +93,19 @@
                     <div class="ui-g" *ngIf="!showMultiplos">
                         <div class="ui-g-9">
                             <label>Nome *</label>
+<<<<<<< HEAD
                             <p-autoComplete [(ngModel)]="currentFuncaoDados.name" [suggestions]="baselineResults" id="idNomeFormFuncaoDados"
                                 (completeMethod)="searchBaseline($event)" field="name" (onSelect)="recuperarNomeSelecionado($event)">
+=======
+                            <p-autoComplete
+                                    maxlength = "2000"
+                                    [(ngModel)]="currentFuncaoDados.name"
+                                    [suggestions]="baselineResults"
+                                    id="idNomeFormFuncaoDados"
+                                    (completeMethod)="searchBaseline($event)"
+                                    field="name"
+                                    (onSelect)="recuperarNomeSelecionado($event)">
+>>>>>>> 803a0a598202493217bb4d886751969322d675a8
                             </p-autoComplete>
                             <span class="md-inputfield">
                                 <div *ngIf="nomeInvalido && !currentFuncaoDados.name" class="ui-message ui-messages-error">
@@ -111,10 +122,25 @@
                     <div class="ui-g" *ngIf="showMultiplos">
                         <div class="ui-g-9">
                             <label>Nomes *</label>
+<<<<<<< HEAD
                             <textarea pInputTextarea [(ngModel)]="text" style="white-space: nowrap; overflow: auto;"
                                 [autoResize]="false" id="idNomesFormFuncaoDados" (keyup.enter)="textChanged()"
                                 (keyup.backspace)="textChanged()" (keyup.delete)="textChanged()" (change)="textChanged()"
                                 [rows]="6" [cols]="180" name="{{ label }}">
+=======
+                            <textarea pInputTextarea
+                                      maxlength = "2000"
+                                      [(ngModel)]="text"
+                                      style="white-space: nowrap; overflow: auto;"
+                                      [autoResize]="false"
+                                      id="idNomesFormFuncaoDados"
+                                      (keyup.enter)="textChanged()"
+                                      (keyup.backspace)="textChanged()"
+                                      (keyup.delete)="textChanged()"
+                                      (change)="textChanged()"
+                                      [rows]="6" [cols]="180"
+                                      name="{{ label }}">
+>>>>>>> 803a0a598202493217bb4d886751969322d675a8
                          </textarea>
                         </div>
                         <div class="ui-g-3">
@@ -128,7 +154,15 @@
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                             <label>Nomes *</label>
+<<<<<<< HEAD
                             <input type="text" class="ui-inputtext" id="idNomesEditFormFuncaoDados" [(ngModel)]="currentFuncaoDados.name">
+=======
+                            <input 
+                                    maxlength = "2000"
+                                    type="text" class="ui-inputtext"
+                                    id="idNomesEditFormFuncaoDados"
+                                   [(ngModel)]="currentFuncaoDados.name">
+>>>>>>> 803a0a598202493217bb4d886751969322d675a8
                         </div>
                     </div>
                 </div>
@@ -216,8 +250,18 @@
                 <div class="ui-g-12 ui-md-12 ui-sm-12">
                     <label>Fundamentação</label>
                     <span class="md-inputfield">
+<<<<<<< HEAD
                         <textarea [rows]="3" id="idFundamentacaoFormFuncaoDados" [cols]="180" pInputTextarea name="funcaoDadosSustentacao"
                             [(ngModel)]="currentFuncaoDados.sustantation">
+=======
+                <textarea
+                        maxlength="5000"
+                        [rows]="3"
+                        id="idFundamentacaoFormFuncaoDados"
+                        [cols]="180"
+                        pInputTextarea name="funcaoDadosSustentacao"
+                        [(ngModel)]="currentFuncaoDados.sustantation">
+>>>>>>> 803a0a598202493217bb4d886751969322d675a8
                 </textarea>
                     </span>
                 </div>
