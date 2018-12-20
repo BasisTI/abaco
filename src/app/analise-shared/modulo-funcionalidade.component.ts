@@ -46,6 +46,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     mostrarDialogModulo = false;
     novoModulo: Modulo = new Modulo();
     moduloSelecionado: Modulo;
+    @Input() erroModulo: boolean;
 
     funcionalidades: Funcionalidade[];
     mostrarDialogFuncionalidade = false;
