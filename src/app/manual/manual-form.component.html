@@ -425,7 +425,7 @@
                             <input id="nome_fator_ajuste" type="text" name="nomeFatorAjuste"
                                    [(ngModel)]="newAdjustFactor.nome"
                                    pInputText required
-                                   (onFocus)= "this.validaNomeDeflator = false"/>
+                                   (keyup)= "this.validaNomeDeflator = false"/>
                             <div *ngIf="this.validaNomeDeflator || (editForm.controls['nomeFatorAjuste']
                                     && !editForm.controls['nomeFatorAjuste'].valid
                                     && editForm.controls['nomeFatorAjuste'].touched)">
@@ -438,9 +438,9 @@
                             <p-dropdown [filter]="true" #dd id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste"
                                         [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"
                                         placeholder="Tipo Ajuste" required
-                                        (onFocus)= "this.validaTipoDeflator = false">
+                                        (onClick)= "this.validaTipoDeflator = false">
                             </p-dropdown>
-                            <div *ngIf="this.validaTipoDeflator||(editForm.controls['tipoAjuste']
+                            <div *ngIf="this.validaTipoDeflator || (editForm.controls['tipoAjuste']
                                         && !editForm.controls['tipoAjuste'].valid
                                         && editForm.controls['tipoAjuste'].touched)">
                                 <span style="color: red">Campo obrigatório.</span>
@@ -452,10 +452,17 @@
                             <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)">Deflator (PF) *</label>
                             <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Deflator *</label>
 
-                            <input id="valor_fator" size="3" name="fator" id="idDeflatorDeflatorFormManual"
-                                   [disabled]="habilitarDeflator()"
-                                   [(ngModel)]="newAdjustFactor.fatorFormatado" pInputText required
-                                   (onFocus)= "this.validaDeflator = false"/>
+                            <p-spinner 
+                                id="idDeflatorDeflatorFormManual" 
+                                maxlength="3" 
+                                name="fator"
+                                step="0.1"
+                                [disabled]="habilitarDeflator()"
+                                required
+                                [(ngModel)]="newAdjustFactor.fatorFormatado"
+                                (onFocus)= "this.validaDeflator = false">
+                            </p-spinner>
+                    
                             <div *ngIf="this.validaDeflator || (editForm.controls['fator']
                                         && !editForm.controls['fator'].valid
                                         && editForm.controls['fator'].touched)">
@@ -518,14 +525,26 @@
                             <label>Nome *</label>
                             <input id="nome_fator_ajuste" type="text" name="nomeEdicaoFatorAjuste"
                                    [(ngModel)]="editedAdjustFactor.nome"
-                                   pInputText/>
+                                   pInputText required
+                                   (keyup)= "this.validaNomeDeflator = false"/>
+                            <div *ngIf="this.validaNomeDeflator || (editForm.controls['nomeEdicaoFatorAjuste']
+                                    && !editForm.controls['nomeEdicaoFatorAjuste'].valid
+                                    && editForm.controls['nomeEdicaoFatorAjuste'].touched)">
+                                <span style="color: red">Campo obrigatório.</span>
+                            </div>                        
                         </div>
 
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
                             <label>Tipo Ajuste *</label><br>
-                            <p-dropdown [filter]="true" id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste"
-                                        [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false">
+                            <p-dropdown [filter]="true" id="tipo_ajuste" [options]="adjustTypes" name="tipoAjusteEdit"
+                                        [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false" required>
                             </p-dropdown>
+
+                            <div *ngIf="this.validaTipoDeflator || (editForm.controls['tipoAjusteEdit']
+                                        && !editForm.controls['tipoAjusteEdit'].valid
+                                        && editForm.controls['tipoAjusteEdit'].touched)">
+                                <span style="color: red">Campo obrigatório.</span>
+                            </div>
                         </div>
 
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
@@ -533,9 +552,23 @@
                             <label *ngIf="isUnitaryEnum(editedAdjustFactor.tipoAjuste)">Deflator (PF) *</label>
                             <label *ngIf="editedAdjustFactor.tipoAjuste === undefined">Deflator *</label>
 
-                            <input id="valor_fator" size="3" name="fator" [disabled]="habilitarDeflator()"
-                                   [(ngModel)]="editedAdjustFactor.fatorFormatado"
-                                   pInputText/>
+                            <p-spinner 
+                                step="0.1"
+                                [disabled]="habilitarDeflator()"
+                                required
+                                (onFocus)= "this.validaDeflator = false"
+                                id="valor_fator" 
+                                maxlength="3" 
+                                name="fatorEdit"
+                                [disabled]="habilitarDeflator()"
+                                [(ngModel)]="editedAdjustFactor.fatorFormatado">
+                            </p-spinner>
+
+                            <div *ngIf="this.validaDeflator || (editForm.controls['fatorEdit']
+                                        && !editForm.controls['fatorEdit'].valid
+                                        && editForm.controls['fatorEdit'].touched)">
+                                <span style="color: red">Campo obrigatório.</span>
+                            </div>
 
                         </div>
 
