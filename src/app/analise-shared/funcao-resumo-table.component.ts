@@ -32,7 +32,6 @@ export class FuncaoResumoTableComponent implements OnInit {
         return 'INM';
       case 'BAIXA':
         return 'BAIXA';
-      break;
       }
   }
 
@@ -46,7 +45,6 @@ export class FuncaoResumoTableComponent implements OnInit {
         return 'EXCLUSÃO';
       case 'CONVERSAO' :
         return 'CONVERSÃO';
-      break;
       }
   }
 

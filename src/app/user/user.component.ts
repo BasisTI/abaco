@@ -223,7 +223,7 @@ export class UserComponent implements AfterViewInit, OnInit {
 
     performSearch() {
         this.checkUndefinedParams();
-        this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
+        this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray()).toUpperCase();
         this.recarregarDataTable();
     }
 
@@ -241,6 +241,7 @@ export class UserComponent implements AfterViewInit, OnInit {
     }
 
     recarregarDataTable() {
+        console.log(this.elasticQuery.value);
         this.datatable.refresh(this.elasticQuery.query);
     }
 
