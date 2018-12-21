@@ -133,14 +133,17 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     // Para selecionar o módulo recem criado.
     selecionarModuloRecemCriado(modulo: Modulo) {
+        modulo = Modulo.toNonCircularJson(modulo)
+        console.log(modulo, "EPA EPA EPA");
+        console.log(this.modulos , "ANTES!!!");
         this.modulos.push(modulo);
+        console.log(this.modulos , "DEPOIS!!!")
         this.moduloSelecionado = modulo;
-        this.moduloSelected(this.moduloSelecionado);
+        this.moduloSelected(modulo);
     }
 
     // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
     private selecionarModulo(moduloId: number) {
-        console.log(this.modulos, "MODULOS!!!!!!");
         this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
         this.moduloSelected(this.moduloSelecionado);
     }
@@ -263,7 +266,6 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
             // this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
             //     this.recarregarSistema(sistemaRecarregado);
-            //     this.selecionarModuloRecemCriado(moduloCriado);
             //     this.selecionarModulo(moduloCriado.id);
             //     this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, sistemaRecarregado.nome);
             // });
