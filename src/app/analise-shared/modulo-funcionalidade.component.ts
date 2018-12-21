@@ -135,6 +135,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     selecionarModuloRecemCriado(modulo: Modulo) {
         this.moduloSelecionado = modulo;
         this.moduloSelected(this.moduloSelecionado);
+        this.modulos.push(modulo);
     }
 
     // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
@@ -257,12 +258,15 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         const sistemaId = this.sistema.id;
         // TODO inserir um spinner, talvez bloquear a UI
         this.moduloService.create(this.novoModulo, sistemaId).subscribe((moduloCriado: Modulo) => {
-            this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
-                this.recarregarSistema(sistemaRecarregado);
-                this.selecionarModuloRecemCriado(moduloCriado);
-                // this.selecionarModulo(moduloCriado.id);
-                this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, sistemaRecarregado.nome);
-            });
+            this.selecionarModuloRecemCriado(moduloCriado);
+            this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, this.analiseSharedDataService.analise.sistema.nome);
+
+            // this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
+            //     this.recarregarSistema(sistemaRecarregado);
+            //     this.selecionarModuloRecemCriado(moduloCriado);
+            //     this.selecionarModulo(moduloCriado.id);
+            //     this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, sistemaRecarregado.nome);
+            // });
         });
 
         this.fecharDialogModulo();
@@ -319,13 +323,17 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         // TODO inserir um spinner   
         this.funcionalidadeService.create(this.novaFuncionalidade, moduloId)
             .subscribe((funcionalidadeCriada: Funcionalidade) => {
-                this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
-                    this.recarregarSistema(sistemaRecarregado);
-                    //this.selecionarModulo(moduloId);
-                    this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
-                    this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome,
-                        this.moduloSelecionado.nome, sistemaRecarregado.nome);
-                });
+                this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
+                this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome, this.moduloSelecionado.nome, 
+                    this.analiseSharedDataService.analise.sistema.nome);
+
+                // this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
+                //     this.recarregarSistema(sistemaRecarregado);
+                //     //this.selecionarModulo(moduloId);
+                //     this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
+                //     this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome,
+                //         this.moduloSelecionado.nome, sistemaRecarregado.nome);
+                // });
             });
 
         this.fecharDialogFuncionalidade();
