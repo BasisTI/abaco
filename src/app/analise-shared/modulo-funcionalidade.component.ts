@@ -131,16 +131,6 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         }
     }
 
-    // Para selecionar o módulo recem criado.
-    selecionarModuloRecemCriado(modulo: Modulo) {
-        console.log(modulo, "EPA EPA EPA");
-        console.log(this.modulos , "ANTES!!!");
-        //this.modulos.push(modulo);
-        console.log(this.modulos , "DEPOIS!!!")
-       // this.moduloSelecionado = modulo;
-        this.moduloSelected(modulo);
-    }
-
     // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
     private selecionarModulo(moduloId: number) {
         this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
@@ -245,10 +235,8 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     private deselecionaFuncionalidadeSeModuloSelecionadoForDiferente() {
-        if (this.moduloSelecionado){
-            if (this.moduloSelecionado.id !== this.oldModuloSelectedId) {
-                this.funcionalidadeSelecionada = undefined;
-            }
+        if (this.moduloSelecionado.id !== this.oldModuloSelectedId) {
+            this.funcionalidadeSelecionada = undefined;
         }
     }
 
@@ -260,12 +248,10 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         const sistemaId = this.sistema.id;
         // TODO inserir um spinner, talvez bloquear a UI
         this.moduloService.create(this.novoModulo, sistemaId).subscribe((moduloCriado: Modulo) => {
-            moduloCriado = Modulo.toNonCircularJson(moduloCriado);
-            // this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, this.analiseSharedDataService.analise.sistema.nome);
+            this.estadoinicial();
             this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
-                this.recarregarSistema(sistemaRecarregado, moduloCriado);
-                this.selecionarModuloRecemCriado(moduloCriado);
-                // this.selecionarModulo(moduloCriado.id);
+                this.recarregarSistema(sistemaRecarregado);
+                this.selecionarModulo(moduloCriado.id);
                 this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, sistemaRecarregado.nome);
             });
         });
@@ -273,10 +259,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.fecharDialogModulo();
     }
 
-    private recarregarSistema(sistemaRecarregado: Sistema , modulo?: Modulo) {
-        if (modulo){
-            sistemaRecarregado.modulos.push(modulo);
-        }
+    private recarregarSistema(sistemaRecarregado: Sistema) {
         this.analiseSharedDataService.analise.sistema = sistemaRecarregado;
         this.modulos = sistemaRecarregado.modulos;
     }
@@ -318,26 +301,22 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     adicionarFuncionalidade() {
-        if (!this.novaFuncionalidade.nome) {
+        if (this.novaFuncionalidade.nome === undefined) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
             return;
         }
         const moduloId = this.moduloSelecionado.id;
-        // const sistemaId = this.sistema.id;
-        // TODO inserir um spinner   
+        const sistemaId = this.sistema.id;
+        // TODO inserir um spinner
         this.funcionalidadeService.create(this.novaFuncionalidade, moduloId)
             .subscribe((funcionalidadeCriada: Funcionalidade) => {
-                this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada, moduloId);
-                this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome, this.moduloSelecionado.nome, 
-                    this.analiseSharedDataService.analise.sistema.nome);
-
-                // this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
-                //     this.recarregarSistema(sistemaRecarregado);
-                //     this.selecionarModulo(moduloId);
-                //     this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
-                //     this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome,
-                //         this.moduloSelecionado.nome, sistemaRecarregado.nome);
-                // });
+                this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
+                    this.recarregarSistema(sistemaRecarregado);
+                    this.selecionarModulo(moduloId);
+                    this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
+                    this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome,
+                        this.moduloSelecionado.nome, sistemaRecarregado.nome);
+                });
             });
 
         this.fecharDialogFuncionalidade();
@@ -347,12 +326,9 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.funcionalidadeSelectedEvent.emit(funcionalidade);
     }
 
-    private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade, moduloId: number) {
-        this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
-        this.moduloSelecionado.addFuncionalidade(funcionalidadeCriada);
-        this.funcionalidades = this.moduloSelecionado.funcionalidades;
-        this.funcionalidadeSelecionada = funcionalidadeCriada;
-        this.moduloSelectedEvent.emit(this.moduloSelecionado);
+    private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade) {
+        this.funcionalidadeSelecionada = _.find(this.moduloSelecionado.funcionalidades,
+            {'id': funcionalidadeCriada.id});
         this.funcionalidadeSelected(this.funcionalidadeSelecionada);
     }
 
