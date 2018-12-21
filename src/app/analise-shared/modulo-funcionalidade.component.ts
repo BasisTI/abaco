@@ -133,9 +133,9 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     // Para selecionar o módulo recem criado.
     selecionarModuloRecemCriado(modulo: Modulo) {
+        this.modulos.push(modulo);
         this.moduloSelecionado = modulo;
         this.moduloSelected(this.moduloSelecionado);
-        this.modulos.push(modulo);
     }
 
     // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
@@ -319,17 +319,17 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
             return;
         }
         const moduloId = this.moduloSelecionado.id;
-        const sistemaId = this.sistema.id;
+        // const sistemaId = this.sistema.id;
         // TODO inserir um spinner   
         this.funcionalidadeService.create(this.novaFuncionalidade, moduloId)
             .subscribe((funcionalidadeCriada: Funcionalidade) => {
-                this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
+                this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada, moduloId);
                 this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome, this.moduloSelecionado.nome, 
                     this.analiseSharedDataService.analise.sistema.nome);
 
                 // this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
                 //     this.recarregarSistema(sistemaRecarregado);
-                //     //this.selecionarModulo(moduloId);
+                //     this.selecionarModulo(moduloId);
                 //     this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
                 //     this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome,
                 //         this.moduloSelecionado.nome, sistemaRecarregado.nome);
@@ -343,8 +343,12 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.funcionalidadeSelectedEvent.emit(funcionalidade);
     }
 
-    private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade) {
+    private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade, moduloId: number) {
+        this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
+        this.moduloSelecionado.addFuncionalidade(funcionalidadeCriada);
+        this.funcionalidades = this.moduloSelecionado.funcionalidades;
         this.funcionalidadeSelecionada = funcionalidadeCriada;
+        this.moduloSelectedEvent.emit(this.moduloSelecionado);
         this.funcionalidadeSelected(this.funcionalidadeSelecionada);
     }
 
