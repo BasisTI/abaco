@@ -133,12 +133,11 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     // Para selecionar o módulo recem criado.
     selecionarModuloRecemCriado(modulo: Modulo) {
-        modulo = Modulo.toNonCircularJson(modulo)
         console.log(modulo, "EPA EPA EPA");
         console.log(this.modulos , "ANTES!!!");
-        this.modulos.push(modulo);
+        //this.modulos.push(modulo);
         console.log(this.modulos , "DEPOIS!!!")
-        this.moduloSelecionado = modulo;
+       // this.moduloSelecionado = modulo;
         this.moduloSelected(modulo);
     }
 
@@ -261,20 +260,23 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         const sistemaId = this.sistema.id;
         // TODO inserir um spinner, talvez bloquear a UI
         this.moduloService.create(this.novoModulo, sistemaId).subscribe((moduloCriado: Modulo) => {
-            this.selecionarModuloRecemCriado(moduloCriado);
-            this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, this.analiseSharedDataService.analise.sistema.nome);
-
-            // this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
-            //     this.recarregarSistema(sistemaRecarregado);
-            //     this.selecionarModulo(moduloCriado.id);
-            //     this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, sistemaRecarregado.nome);
-            // });
+            moduloCriado = Modulo.toNonCircularJson(moduloCriado);
+            // this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, this.analiseSharedDataService.analise.sistema.nome);
+            this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
+                this.recarregarSistema(sistemaRecarregado, moduloCriado);
+                this.selecionarModuloRecemCriado(moduloCriado);
+                // this.selecionarModulo(moduloCriado.id);
+                this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, sistemaRecarregado.nome);
+            });
         });
 
         this.fecharDialogModulo();
     }
 
-    private recarregarSistema(sistemaRecarregado: Sistema) {
+    private recarregarSistema(sistemaRecarregado: Sistema , modulo?: Modulo) {
+        if (modulo){
+            sistemaRecarregado.modulos.push(modulo);
+        }
         this.analiseSharedDataService.analise.sistema = sistemaRecarregado;
         this.modulos = sistemaRecarregado.modulos;
     }
