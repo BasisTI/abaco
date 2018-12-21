@@ -162,9 +162,13 @@
 
                         <div class="ui-g-12" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="number" id="idNumeroContratoContratoSaveFormOrganizacao" name="numeroContrato"
-                       maxlength="100"
-                       [(ngModel)]="novoContrato.numeroContrato" (onChange)="validarManual()" pInputText required/>
+                <p-spinner type="number" 
+                            id="idNumeroContratoContratoSaveFormOrganizacao" 
+                            name="numeroContrato"
+                            maxlength="100"
+                            [(ngModel)]="novoContrato.numeroContrato" 
+                            (onChange)="validarManual()" >
+                </p-spinner>
                 <label>Número do Contrato *</label>
                 <div *ngIf="editForm.controls['numeroContrato']
                             && !editForm.controls['numeroContrato'].valid
@@ -225,8 +229,12 @@
 
                         <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="text" name="diasDeGarantia" mask="999" id="idDiasGarantiaContratoSaveFormOrganizacao"
-                       [(ngModel)]="novoContrato.diasDeGarantia" pInputText required/>
+                <input type="text" 
+                        name="diasDeGarantia" 
+                        maxlength="3" 
+                        id="idDiasGarantiaContratoSaveFormOrganizacao"
+                       [(ngModel)]="novoContrato.diasDeGarantia" 
+                       pInputText required/>
                 <label>Dias de garantia *</label>
                   <div *ngIf="editForm.controls['diasDeGarantia']
                             && !editForm.controls['diasDeGarantia'].valid
@@ -234,7 +242,7 @@
                             || editForm.submitted)">
                                 <span style="color: red">Campo obrigatório.</span>
                             </div>
-              </span>
+                </span>
                         </div>
 
                         <div class="ui-g-12" style="margin-bottom: 25px">
