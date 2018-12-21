@@ -131,6 +131,12 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         }
     }
 
+    // Para selecionar o módulo recem criado.
+    selecionarModuloRecemCriado(modulo: Modulo) {
+        this.moduloSelecionado = modulo;
+        this.moduloSelected(this.moduloSelecionado);
+    }
+
     // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
     private selecionarModulo(moduloId: number) {
         console.log(this.modulos, "MODULOS!!!!!!");
@@ -251,11 +257,12 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         const sistemaId = this.sistema.id;
         // TODO inserir um spinner, talvez bloquear a UI
         this.moduloService.create(this.novoModulo, sistemaId).subscribe((moduloCriado: Modulo) => {
-            setTimeout(() => {this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
+            this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
                 this.recarregarSistema(sistemaRecarregado);
-                this.selecionarModulo(moduloCriado.id);
+                this.selecionarModuloRecemCriado(moduloCriado);
+                // this.selecionarModulo(moduloCriado.id);
                 this.criarMensagemDeSucessoDaCriacaoDoModulo(moduloCriado.nome, sistemaRecarregado.nome);
-            });} , 30000);
+            });
         });
 
         this.fecharDialogModulo();
@@ -314,7 +321,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
             .subscribe((funcionalidadeCriada: Funcionalidade) => {
                 this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
                     this.recarregarSistema(sistemaRecarregado);
-                    this.selecionarModulo(moduloId);
+                    //this.selecionarModulo(moduloId);
                     this.selecionarFuncionalidadeRecemCriada(funcionalidadeCriada);
                     this.criarMensagemDeSucessoDaCriacaoDaFuncionalidade(funcionalidadeCriada.nome,
                         this.moduloSelecionado.nome, sistemaRecarregado.nome);
@@ -329,8 +336,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade) {
-        this.funcionalidadeSelecionada = _.find(this.moduloSelecionado.funcionalidades,
-            {'id': funcionalidadeCriada.id});
+        this.funcionalidadeSelecionada = funcionalidadeCriada;
         this.funcionalidadeSelected(this.funcionalidadeSelecionada);
     }
 

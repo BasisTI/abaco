@@ -185,11 +185,13 @@ export class UserFormComponent implements OnInit, OnDestroy {
      *
      * */
     save(form) {
+        if (!form.controls.email.valid && this.user.email) {
+            this.pageNotificationService.addErrorMsg('E-mail Inválido');
+            return;
+        }
+
         if (!form.valid) {
             this.pageNotificationService.addErrorMsg('Favor preencher os campos Obrigatórios!');
-            if (!form.controls.email.valid && this.user.email) {
-                this.pageNotificationService.addErrorMsg('E-mail Inválido');
-            }
             return;
         }
 
