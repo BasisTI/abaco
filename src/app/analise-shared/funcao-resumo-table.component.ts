@@ -33,7 +33,10 @@ export class FuncaoResumoTableComponent implements OnInit {
       case 'BAIXA':
         return 'BAIXA';
 <<<<<<< HEAD
+<<<<<<< HEAD
       //break;
+=======
+>>>>>>> 644f8e6a8980cb69cd57523a18830946938ba450
 =======
 >>>>>>> 644f8e6a8980cb69cd57523a18830946938ba450
       }
@@ -50,7 +53,10 @@ export class FuncaoResumoTableComponent implements OnInit {
       case 'CONVERSAO' :
         return 'CONVERSÃO';
 <<<<<<< HEAD
+<<<<<<< HEAD
       //break;
+=======
+>>>>>>> 644f8e6a8980cb69cd57523a18830946938ba450
 =======
 >>>>>>> 644f8e6a8980cb69cd57523a18830946938ba450
       }
