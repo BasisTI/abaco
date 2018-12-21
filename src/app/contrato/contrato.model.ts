@@ -5,7 +5,7 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
 
   constructor(
     public id?: number,
-    public numeroContrato?: string,
+    public numeroContrato?: String,
     public dataInicioVigencia?: Date,
     public dataFimVigencia?: Date,
     public manual?: Manual,
