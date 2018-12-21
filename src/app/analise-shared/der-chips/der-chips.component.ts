@@ -21,6 +21,7 @@ import { element } from 'protractor';
 import { PageNotificationService } from '../../shared/';
 import { FuncaoTransacao } from '../../funcao-transacao';
 
+
 @Component({
     selector: 'app-analise-der-chips',
     templateUrl: './der-chips.component.html'
@@ -46,6 +47,7 @@ export class DerChipsComponent implements OnChanges {
     validaMultiplos = false;
     validaMultiplosRegistrados = false;
     funcaoTransacao: FuncaoTransacao;
+    tamanhoChip: boolean = false;
 
     mostrarDialogEdicao = false;
     textoEdicao = '';
@@ -64,9 +66,12 @@ export class DerChipsComponent implements OnChanges {
 
         if (this.values !== undefined) {
             const valores: string[] = this.values.map(chipItem => chipItem.text);
-            if (valores.indexOf(derChipItem.text) === -1) {
+            if (valores.indexOf(derChipItem.text) === -1 && derChipItem.text.length<=255) {
                 this.values.push(derChipItem);
                 this.valuesChanged();
+                this.tamanhoChip = false;
+            }else{
+                this.tamanhoChip = true;
             }
         }
     }

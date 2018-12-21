@@ -20,5 +20,34 @@ export class FuncaoResumoTableComponent implements OnInit {
     this.complexidades = AnaliseSharedUtils.complexidades;
     this.impactos = AnaliseSharedUtils.impactos;
   }
+  updateNameComplexidade(complexidade: string) {
+    switch(complexidade) {
+      case 'MEDIA':
+        return 'MÉDIA';
+      case 'SEM':
+        return 'SEM';
+      case 'ALTA':
+        return 'ALTA';
+      case 'INM':
+        return 'INM';
+      case 'BAIXA':
+        return 'BAIXA';
+      break;
+      }
+  }
+
+  updateNameImpacto(impacto: string) {
+    switch(impacto) {
+      case 'INCLUSAO':
+        return 'INCLUSÃO';
+      case 'ALTERACAO':
+        return 'ALTERAÇÃO';
+      case 'EXCLUSAO':
+        return 'EXCLUSÃO';
+      case 'CONVERSAO' :
+        return 'CONVERSÃO';
+      break;
+      }
+  }
 
 }

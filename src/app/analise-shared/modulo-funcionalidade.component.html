@@ -17,6 +17,12 @@
                         (onChange)="moduloSelected($event.value)"
                         [autoWidth]="false">
                 </p-dropdown>
+                <span class="md-inputfield">
+                    <div *ngIf="erroModulo"
+                    class="ui-message ui-messages-error">
+                        Campo Obrigatório.
+                    </div>
+                </span>
             </div>
 
             <div class="ui-g ui-md-12" style="justify-content: flex-end">
@@ -43,6 +49,12 @@
                         [disabled]="!isModuloSelected()"
                         [autoWidth]="false">
                 </p-dropdown>
+                <span class="md-inputfield">
+                    <div *ngIf="erroModulo"
+                    class="ui-message ui-messages-error">
+                        Campo Obrigatório.
+                    </div>
+                </span>
             </div>
 
             <div class="ui-g ui-md-12" style="justify-content: flex-end">

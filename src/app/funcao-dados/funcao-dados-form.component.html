@@ -6,94 +6,61 @@
                 <div class="ui-g-12">
                     <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
                         <div class="ui-md-2" *ngIf="!isView">
-                            <app-green-button
-                                    buttonLabel="Novo"
-                                    id="idNovoFormFuncaoDados"
-                                    buttonIcon="ui-icon-add"
-                                    (click)="openDialog(false)">
+                            <app-green-button buttonLabel="Novo" id="idNovoFormFuncaoDados" buttonIcon="ui-icon-add"
+                                (click)="openDialog(false)">
                             </app-green-button>
                         </div>
                     </div>
 
                     <div>
-                        <app-memory-datatable
-                                [disableDelete]="this.isView"
-                                [disableEdit]="this.isView"
-                                [disableClone]="this.isView"
-                                [value]="funcoesDados"
-                                id="idTabelaFuncaoDados"
-                                (buttonClick)="datatableClick($event)"
-                                [responsive]="true"
-                                scrollable="true"
-                                scrollWidth="100%">
+                        <app-memory-datatable [disableDelete]="this.isView" [disableEdit]="this.isView" [disableClone]="this.isView"
+                            [value]="funcoesDados" id="idTabelaFuncaoDados" (buttonClick)="datatableClick($event)"
+                            [responsive]="true" scrollable="true" scrollWidth="100%">
 
                             <div *ngFor="let col of colunasAMostrar">
                                 <div *ngIf="col.field; else template_column">
-                                    <p-column
-                                            [field]="col.field"
-                                            [header]="col.header"
-                                            [style]="{'width': '200px'}">
+                                    <p-column [field]="col.field" [header]="col.header" [style]="{'width': '200px'}">
                                     </p-column>
                                 </div>
 
                                 <ng-template #template_column>
-                                    <p-column
-                                            [header]="col.header"
-                                            [style]="{'width': '200px'}">
-                                        <ng-template
-                                                *ngIf="col.header === 'Deflator'"
-                                                let-fatorAjuste="rowData.fatorAjuste"
-                                                pTemplate="body">
-                                            <app-ellipsis-tooltip
-                                                    [value]="formataFatorAjuste(fatorAjuste)">
+                                    <p-column [header]="col.header" [style]="{'width': '200px'}">
+                                        <ng-template *ngIf="col.header === 'Deflator'" let-fatorAjuste="rowData.fatorAjuste"
+                                            pTemplate="body">
+                                            <app-ellipsis-tooltip [value]="formataFatorAjuste(fatorAjuste)">
                                             </app-ellipsis-tooltip>
                                         </ng-template>
 
-                                        <ng-template
-                                                *ngIf="col.header === 'Módulo'"
-                                                let-modulo="rowData.funcionalidade.modulo"
-                                                pTemplate="body">
-                                            <app-ellipsis-tooltip
-                                                    [value]="modulo.nome">
+                                        <ng-template *ngIf="col.header === 'Módulo'" let-modulo="rowData.funcionalidade.modulo"
+                                            pTemplate="body">
+                                            <app-ellipsis-tooltip [value]="modulo.nome">
                                             </app-ellipsis-tooltip>
                                         </ng-template>
 
-                                        <ng-template
-                                                *ngIf="col.header === 'Funcionalidade'"
-                                                let-funcionalidade="rowData.funcionalidade"
-                                                pTemplate="body">
-                                            <app-ellipsis-tooltip
-                                                    [value]="funcionalidade.nome">
+                                        <ng-template *ngIf="col.header === 'Funcionalidade'" let-funcionalidade="rowData.funcionalidade"
+                                            pTemplate="body">
+                                            <app-ellipsis-tooltip [value]="funcionalidade.nome">
                                             </app-ellipsis-tooltip>
                                         </ng-template>
 
-                                        <ng-template
-                                                *ngIf="col.header === 'DER (TD)'"
-                                                let-funcaoDados="rowData"
-                                                pTemplate="body">
-                                            <app-ellipsis-tooltip
-                                                    [value]="funcaoDados.derValue()">
+                                        <ng-template *ngIf="col.header === 'DER (TD)'" let-funcaoDados="rowData"
+                                            pTemplate="body">
+                                            <app-ellipsis-tooltip [value]="funcaoDados.derValue()">
                                             </app-ellipsis-tooltip>
                                         </ng-template>
 
-                                        <ng-template
-
-                                                *ngIf="col.header === 'RLR (TR)'"
-                                                let-funcaoDados="rowData"
-                                                pTemplate="body">
-                                            <app-ellipsis-tooltip
-                                                    [value]="funcaoDados.rlrValue()">
+                                        <ng-template *ngIf="col.header === 'RLR (TR)'" let-funcaoDados="rowData"
+                                            pTemplate="body">
+                                            <app-ellipsis-tooltip [value]="funcaoDados.rlrValue()">
                                             </app-ellipsis-tooltip>
                                         </ng-template>
 
-                                        <ng-template
-                                                *ngIf="col.header === 'PF - Total'"
-                                                let-grossPF="rowData.grossPF"
-                                                pTemplate="body">
+                                        <ng-template *ngIf="col.header === 'PF - Total'" let-grossPF="rowData.grossPF"
+                                            pTemplate="body">
                                             {{ grossPF | number }}
                                         </ng-template>
-                                        <ng-template *ngIf="col.header === 'PF - Ajustado'"
-                                                     let-pf="rowData.pf" pTemplate="body">
+                                        <ng-template *ngIf="col.header === 'PF - Ajustado'" let-pf="rowData.pf"
+                                            pTemplate="body">
                                             {{ pf | number }}
                                         </ng-template>
 
@@ -111,8 +78,7 @@
                 <div class="ui-g" *ngIf="funcoesDados.length > 0">
                     <hr>
                     <div class="ui-g-12">
-                        <app-analise-funcao-resumo-table
-                                [linhasResumo]="resumo.all">
+                        <app-analise-funcao-resumo-table [linhasResumo]="resumo.all">
                         </app-analise-funcao-resumo-table>
                     </div>
                 </div>
@@ -120,18 +86,15 @@
 
 
             <!-- DIALOG: ADICIONAR E EDITAR FUNÇÃO DE DADOS -->
-            <p-dialog
-                    [closable]="false"
-                    [(visible)]="showDialog"
-                    [(header)]="textHeader"
-                    [contentStyle]="{'height': ['windowHeightDialog']}"
-                    [width]="[windowWidthDialog]">
+            <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader" [contentStyle]="{'height': ['windowHeightDialog']}"
+                [width]="[windowWidthDialog]">
 
                 <div *ngIf="!isEdit">
                     <div class="ui-g" *ngIf="!showMultiplos">
                         <div class="ui-g-9">
                             <label>Nome *</label>
                             <p-autoComplete
+                                    maxlength = "2000"
                                     [(ngModel)]="currentFuncaoDados.name"
                                     [suggestions]="baselineResults"
                                     id="idNomeFormFuncaoDados"
@@ -139,25 +102,23 @@
                                     field="name"
                                     (onSelect)="recuperarNomeSelecionado($event)">
                             </p-autoComplete>
-                            <div *ngIf="nomeInvalido && !currentFuncaoDados.name"
-                                 class="ui-message ui-messages-error">
-                                Campo obrigatório.
-                            </div>
+                            <span class="md-inputfield">
+                                <div *ngIf="nomeInvalido && !currentFuncaoDados.name" class="ui-message ui-messages-error">
+                                    Campo obrigatório.
+                                </div>
+                            </span>
                         </div>
                         <div class="ui-g-3">
-                            <app-blue-button
-                                    buttonLabel="Múltiplos"
-                                    id="idBtnMultiplosFormFuncaoDados"
-                                    (click)="buttonMultiplos()">
+                            <app-blue-button buttonLabel="Múltiplos" id="idBtnMultiplosFormFuncaoDados" (click)="buttonMultiplos()">
                             </app-blue-button>
                         </div>
                     </div>
-
 
                     <div class="ui-g" *ngIf="showMultiplos">
                         <div class="ui-g-9">
                             <label>Nomes *</label>
                             <textarea pInputTextarea
+                                      maxlength = "2000"
                                       [(ngModel)]="text"
                                       style="white-space: nowrap; overflow: auto;"
                                       [autoResize]="false"
@@ -171,10 +132,7 @@
                          </textarea>
                         </div>
                         <div class="ui-g-3">
-                            <app-blue-button
-                                    buttonLabel="Unitário"
-                                    id="idBtnUnitarioFormFuncaoDados"
-                                    (click)="buttonMultiplos()">
+                            <app-blue-button buttonLabel="Unitário" id="idBtnUnitarioFormFuncaoDados" (click)="buttonMultiplos()">
                             </app-blue-button>
                         </div>
                     </div>
@@ -184,155 +142,123 @@
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                             <label>Nomes *</label>
-                            <input type="text" class="ui-inputtext"
+                            <input 
+                                    maxlength = "2000"
+                                    type="text" class="ui-inputtext"
                                     id="idNomesEditFormFuncaoDados"
                                    [(ngModel)]="currentFuncaoDados.name">
                         </div>
                     </div>
                 </div>
 
-                <app-analise-modulo-funcionalidade
-                        [isFuncaoDados]="true"
-                        (moduloSelectedEvent)="moduloSelected($event)"
-                        (funcionalidadeSelectedEvent)="functionalitySelected($event)">
+                <app-analise-modulo-funcionalidade [erroModulo]="erroModulo" [isFuncaoDados]="true" (moduloSelectedEvent)="moduloSelected($event)"
+                    (funcionalidadeSelectedEvent)="functionalitySelected($event)">
                 </app-analise-modulo-funcionalidade>
 
                 <div class="ui-g">
                     <div class="ui-g-3 ui-md-6 ui-sm-12">
                         <label>Classificação *</label>
-                        <p-dropdown
-                                [filter]="true"
-                                [options]="classificacoes"
-                                id="idClassificacoesFormFuncaoDados"
-                                [(ngModel)]="currentFuncaoDados.tipo"
-                                placeholder="Selecione uma Classificação"
-                                name="classificacao"
-                                [autoWidth]="false"
-                                (onChange)="classValida()">
+                        <p-dropdown [filter]="true" [options]="classificacoes" id="idClassificacoesFormFuncaoDados"
+                            [(ngModel)]="currentFuncaoDados.tipo" placeholder="Selecione uma Classificação" name="classificacao"
+                            [autoWidth]="false" (onChange)="classValida()">
                         </p-dropdown>
-                        <div *ngIf="classInvalida"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                        </div>
+                        <span class="md-inputfield">
+                            <div *ngIf="classInvalida" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
                     </div>
 
                     <div class="ui-g-3 ui-md-6 ui-sm-12">
                         <label>Impacto *</label>
-                        <p-dropdown
-                                [filter]="true"
-                                [options]="impacto"
-                                id="idImpactoFormFuncaoDados"
-                                [(ngModel)]="currentFuncaoDados.impacto"
-                                placeholder="Selecione..."
-                                name="impacto"
-                                [autoWidth]="false"
-                                (onChange)="impactoValido()">
+                        <p-dropdown [filter]="true" [options]="impacto" id="idImpactoFormFuncaoDados" [(ngModel)]="currentFuncaoDados.impacto"
+                            placeholder="Selecione..." name="impacto" [autoWidth]="false" (onChange)="impactoValido()">
                         </p-dropdown>
-                        <div *ngIf="impactoInvalido"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                        </div>
+                        <span class="md-inputfield">
+                            <div *ngIf="impactoInvalido" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
                     </div>
-
                 </div>
+                
                 <div class="ui-g">
                     <div class="ui-g-3 ui-md-6 ui-sm-12">
                         <label>Deflator</label>
-                        <p-dropdown
-                                [filter]="true"
-                                [options]="fatoresAjuste"
-                                [(ngModel)]="currentFuncaoDados.fatorAjuste"
-                                [disabled]="!isContratoSelected()"
-                                id="idDeflatorFormFuncaoDados"
-                                [placeholder]="fatoresAjusteDropdownPlaceholder()"
-                                (onChange)="contratoSelecionado()"
-                                name="fatorAjuste"
-                                [autoWidth]="false">
+                        <p-dropdown [filter]="true" [options]="fatoresAjuste" [(ngModel)]="currentFuncaoDados.fatorAjuste"
+                            [disabled]="!isContratoSelected()" id="idDeflatorFormFuncaoDados" [placeholder]="fatoresAjusteDropdownPlaceholder()"
+                            (onChange)="contratoSelecionado()" name="fatorAjuste" [autoWidth]="false">
                         </p-dropdown>
-                        <div *ngIf="erroDeflator"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                        </div>
+                        <span class="md-inputfield">
+                            <div *ngIf="erroDeflator" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
                     </div>
 
 
                     <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
                         <label>Quantidade</label>
-                        <input type="number" class="ui-inputtext" min="1"
-                               [(ngModel)]="currentFuncaoDados.quantidade"
-                               id="idQuantidadeFormFuncaoDados">
-                        <div *ngIf="erroUnitario"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                        </div>
+                        <input type="number" class="ui-inputtext" min="1" [(ngModel)]="currentFuncaoDados.quantidade"
+                            id="idQuantidadeFormFuncaoDados">
+                        <span class="md-inputfield">
+                            <div *ngIf="erroUnitario" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
                     </div>
-
                 </div>
-
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
                     <h2>RLR (TR) *</h2>
-                    <app-analise-der-chips
-                            [(values)]="rlrsChips"
-                            (onChange)="adicionar()"
-                            id="idRLRFormFuncaoDados">
+                    <app-analise-der-chips [(values)]="rlrsChips" (onChange)="adicionar()" id="idRLRFormFuncaoDados">
                     </app-analise-der-chips>
-                    <div *ngIf="erroTR && rlrsChips.length == 0"
-                         class="ui-message ui-messages-error">
-                        Campo obrigatório.
-                    </div>
-
+                    <span class="md-inputfield">
+                        <div *ngIf="erroTR && rlrsChips.length == 0" class="ui-message ui-messages-error">
+                            Campo obrigatório.
+                        </div>
+                    </span>
                 </div>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
                     <h2>DER (TD) *</h2>
-                    <app-analise-der-chips
-                            [(values)]="dersChips"
-                            id="idDERFormFuncaoDados"
-                            (onChange)="adicionar()">
+                    <app-analise-der-chips [(values)]="dersChips" id="idDERFormFuncaoDados" (onChange)="adicionar()">
                     </app-analise-der-chips>
-                    <div *ngIf="erroTD && dersChips.length == 0"
-                         class="ui-message ui-messages-error">
-                        Campo obrigatório.
-                    </div>
+                    <span class="md-inputfield">
+                        <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error">
+                            Campo obrigatório.
+                        </div>
+                    </span>
                 </div>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12">
                     <label>Fundamentação</label>
                     <span class="md-inputfield">
                 <textarea
+                        maxlength="5000"
                         [rows]="3"
                         id="idFundamentacaoFormFuncaoDados"
                         [cols]="180"
                         pInputTextarea name="funcaoDadosSustentacao"
                         [(ngModel)]="currentFuncaoDados.sustantation">
                 </textarea>
-            </span>
+                    </span>
                 </div>
 
                 <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                     <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
-                        <app-white-button
-                                buttonLabel="Cancelar"
-                                id="idBtmCancelarFormFuncaoDados"
-                                (click)="cancelar()">
+                        <app-white-button buttonLabel="Cancelar" id="idBtmCancelarFormFuncaoDados" (click)="cancelar()">
                         </app-white-button>
                     </div>
 
                     <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
-                        <app-white-button
-                                buttonLabel="Fechar"
-                                id="idBtnFecharFormFuncaoDados"
-                                (click)="cancelar()">
+                        <app-white-button buttonLabel="Fechar" id="idBtnFecharFormFuncaoDados" (click)="cancelar()">
                         </app-white-button>
                     </div>
 
                     <div class="ui-md-3 ui-sm-12">
-                        <app-blue-button
-                                buttonLabel="Salvar"
-                                id="idSalvarFormFuncaoDados"
-                                buttonIcon="ui-icon-add"
-                                (click)="buttonSaveEdit()">
+                        <app-blue-button buttonLabel="Salvar" id="idSalvarFormFuncaoDados" buttonIcon="ui-icon-add"
+                            (click)="buttonSaveEdit()">
                         </app-blue-button>
                     </div>
                 </div>

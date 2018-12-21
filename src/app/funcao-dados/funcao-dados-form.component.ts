@@ -421,7 +421,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
         if (this.currentFuncaoDados.funcionalidade === undefined) {
             this.pageNotificationService.addErrorMsg('Selecione um Módulo e Submódulo');
+            this.erroModulo = true;
             retorno = false;
+        }
+        else{
+            this.erroModulo = false;
         }
 
         return retorno;
