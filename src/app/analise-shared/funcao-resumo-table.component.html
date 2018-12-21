@@ -7,7 +7,7 @@
   <p-column field="label"></p-column>
 
   <div *ngFor="let complexidade of complexidades">
-    <p-column [header]="complexidade">
+    <p-column [header]="updateNameComplexidade(complexidade)">
       <ng-template let-linhaResumo="rowData" pTemplate="body">
         {{ linhaResumo.totalPorComplexidade(complexidade) }}
       </ng-template>
@@ -44,7 +44,7 @@
   <p-column field="label"></p-column>
 
   <div *ngFor="let impacto of impactos">
-      <p-column [header]="impacto">
+      <p-column [header]="updateNameImpacto(impacto)">
         <ng-template let-linhaResumo="rowData" pTemplate="body">
           {{ linhaResumo.totalPorImpacto(impacto) }}
         </ng-template>
