@@ -119,7 +119,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.dersChips = [];
         this.alrsChips = [];
     }
-    private updateImpacto(impacto: string){
+     updateImpacto(impacto: string){
         switch(impacto) {
             case 'INCLUSAO':
               return 'INCLUSÃO';
@@ -129,8 +129,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
               return 'EXCLUSÃO';
             case 'CONVERSAO' :
               return 'CONVERSÃO';
-           // break
-      
+           default: return 'Nenhum';
             }
     }
 
