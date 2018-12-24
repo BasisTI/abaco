@@ -58,6 +58,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     showDialog = false;
     showMultiplos = false;
     sugestoesAutoComplete: string[] = [];
+    impactos: string[];
 
     windowHeightDialog: any;
     windowWidthDialog: any;
@@ -132,6 +133,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.estadoInicial();
+        this.impactos = AnaliseSharedUtils.impactos;
+        
     }
 
     estadoInicial() {
@@ -141,7 +144,23 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.subscribeToAnaliseCarregada();
         this.colunasAMostrar = [];
         this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
+        console.log(this.currentFuncaoDados);
+        console.log(this.colunasOptions);
     }
+    updateNameImpacto(impacto: string) {
+        switch(impacto) {
+          case 'INCLUSAO':
+            return 'INCLUSÃO';
+          case 'ALTERACAO':
+            return 'ALTERAÇÃO';
+          case 'EXCLUSAO':
+            return 'EXCLUSÃO';
+          case 'CONVERSAO' :
+            return 'CONVERSÃO';
+          //break;
+    
+          }
+      }
 
     public buttonSaveEdit() {
 

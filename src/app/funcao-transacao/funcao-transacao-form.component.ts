@@ -1,3 +1,4 @@
+import { AnaliseSharedUtils } from './../analise-shared/analise-shared-utils';
 import { BaselineService } from './../baseline/baseline.service';
 import { FuncaoDadosService } from './../funcao-dados/funcao-dados.service';
 import { BaselineAnalitico } from './../baseline/baseline-analitico.model';
@@ -28,6 +29,8 @@ import { Impacto } from '../analise-shared/impacto-enum';
 import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
 import { loginRoute } from '../login';
 
+
+
 @Component({
     selector: 'app-analise-funcao-transacao',
     templateUrl: './funcao-transacao-form.component.html'
@@ -48,6 +51,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     sugestoesAutoComplete: string[] = [];
     windowHeightDialog: any;
     windowWidthDialog: any;
+    impactos: string[];
+
 
     moduloCache: Funcionalidade;
     dersChips: DerChipItem[];
@@ -87,6 +92,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     public erroUnitario: boolean;
     public erroDeflator: boolean;
 
+
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
         private confirmationService: ConfirmationService,
@@ -104,6 +110,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoTransacao = new FuncaoTransacao();
         this.subscribeToAnaliseCarregada();
         this.initClassificacoes();
+        this.impactos = AnaliseSharedUtils.impactos;
     }
 
     estadoInicial() {
@@ -111,6 +118,20 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoTransacao = new FuncaoTransacao();
         this.dersChips = [];
         this.alrsChips = [];
+    }
+    private updateImpacto(impacto: string){
+        switch(impacto) {
+            case 'INCLUSAO':
+              return 'INCLUSÃO';
+            case 'ALTERACAO':
+              return 'ALTERAÇÃO';
+            case 'EXCLUSAO':
+              return 'EXCLUSÃO';
+            case 'CONVERSAO' :
+              return 'CONVERSÃO';
+           // break
+      
+            }
     }
 
     private initClassificacoes() {
@@ -623,6 +644,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     buttonMultiplos() {
         this.showMultiplos = !this.showMultiplos;
     }
+
 
 }
 

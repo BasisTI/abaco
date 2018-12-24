@@ -20,6 +20,12 @@
                             <div *ngFor="let col of colunasAMostrar">
                                 <div *ngIf="col.field; else template_column">
                                     <p-column [field]="col.field" [header]="col.header" [style]="{'width': '200px'}">
+                                            <ng-template *ngIf="col.header === 'Impacto'" let-impacto="rowData.impacto"
+                                            pTemplate="body">
+                                            <app-ellipsis-tooltip [value]="updateNameImpacto(impacto)">
+                                                
+                                            </app-ellipsis-tooltip>
+                                        </ng-template>
                                     </p-column>
                                 </div>
 
@@ -28,6 +34,7 @@
                                         <ng-template *ngIf="col.header === 'Deflator'" let-fatorAjuste="rowData.fatorAjuste"
                                             pTemplate="body">
                                             <app-ellipsis-tooltip [value]="formataFatorAjuste(fatorAjuste)">
+                                        
                                             </app-ellipsis-tooltip>
                                         </ng-template>
 
