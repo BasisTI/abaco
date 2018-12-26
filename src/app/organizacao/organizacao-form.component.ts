@@ -93,6 +93,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     this.mostrarDialogCadastroContrato = true;
     this.novoContrato.ativo = true;
     this.numeroContratoInvalido = false;
+    this.novoContrato.diasDeGarantia = null;
   }
 
   /**
@@ -126,58 +127,50 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
   }
 
   validaCamposContrato(contrato: Contrato) {
-    const regra: RegExp = /^\S+(\s{1}\S+)*$/;
-    if (!regra.test(contrato.numeroContrato)) {
-      this.pageNotificationService.addErrorMsg('Número do Contrato contém espaços! Favor verificar.');
-      //document.getElementById('login').setAttribute('style', 'border-color: red;');
-      return false;
-    }
-    if (contrato.dataInicioVigencia != null) {
-      if (!regra.test(contrato.dataInicioVigencia.toString())) {
-        this.pageNotificationService.addErrorMsg('Data de Início da Vigência não contém uma data válida! Favor verificar.');
-        //document.getElementById('login').setAttribute('style', 'border-color: red;');
-        return false;
+    
+    let a : boolean = true;
+
+    if (this.novoContrato.numeroContrato === null || this.novoContrato.numeroContrato === undefined) {
+        this.numeroContratoInvalido = true;
+        this.pageNotificationService.addErrorMsg('Favor preencher o número do contrato');
+        a = false;
       }
+    if (this.novoContrato.manual === null || this.novoContrato.manual === undefined) {
+        this.manualInvalido = true;
+        this.pageNotificationService.addErrorMsg('Selecione um manual');
+        a = false;
     }
-    if (contrato.dataFimVigencia != null) {
-      if (!regra.test(contrato.dataFimVigencia.toString())) {
-        this.pageNotificationService.addErrorMsg('Data Final da Vigência não contém uma data válida! Favor verificar.');
-        //document.getElementById('login').setAttribute('style', 'border-color: red;');
-        return false;
-      }
+    if (!(this.novoContrato.dataInicioValida()) && (this.novoContrato.dataInicioVigencia != null || this.novoContrato.dataInicioVigencia != undefined)
+        && (this.novoContrato.dataFimVigencia != null || this.novoContrato.dataFimVigencia != undefined)) {
+      this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
+      a = false;
     }
-    if (isNaN(contrato.diasDeGarantia)) {
-      this.pageNotificationService.addErrorMsg('Dias de garantia deve conter apenas dígitos!');
-      //document.getElementById('login').setAttribute('style', 'border-color: red;');
-      return false;
+    if (this.novoContrato.dataInicioVigencia === null || this.novoContrato.dataInicioVigencia === undefined){
+      this.pageNotificationService.addErrorMsg('Preencher data de início da vigência');
+      a = false;
     }
-    return true;
+    if (this.novoContrato.dataFimVigencia === null || this.novoContrato.dataFimVigencia === undefined){
+      this.pageNotificationService.addErrorMsg('Preencher data de fim da vigência');
+      a = false;
+    }
+    if(this.novoContrato.diasDeGarantia === null || this.novoContrato.diasDeGarantia === undefined){
+      this.pageNotificationService.addErrorMsg('Preencher dias de garantia')
+       a = false;
+    }
+    
+    return a;
   }
 
-  /**
-   *
-   * */
+
   adicionarContrato() {
-    if (this.novoContrato.manual === null || this.novoContrato.manual === undefined) {
-      this.manualInvalido = true;
-      this.pageNotificationService.addErrorMsg('Selecione um manual');
-      return;
-    }
-      if (this.novoContrato.numeroContrato === null || this.novoContrato.numeroContrato === undefined) {
-        this.numeroContratoInvalido = true;
-        this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
-        return;
-      }
-    if (!(this.novoContrato.dataInicioValida())) {
-      this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
-      return;
-    }
+    
     if (this.validaCamposContrato(this.novoContrato)) {
       document.getElementById('tabela-contrato').removeAttribute('style');
       this.organizacao.addContrato(this.novoContrato);
       this.doFecharDialogCadastroContrato();
     }
 
+    
   }
 
   /**
