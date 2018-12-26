@@ -211,19 +211,19 @@ export class UserComponent implements AfterViewInit, OnInit {
     private createStringParamsArray(): Array<string> {
         const arrayParams: Array<string> = [];
 
-        (this.searchParams.fullName !== undefined) ? (arrayParams.push(this.searchParams.fullName)) : (this);
-        (this.searchParams.login !== undefined) ? (arrayParams.push(this.searchParams.login)) : (this);
-        (this.searchParams.email !== undefined) ? (arrayParams.push(this.searchParams.email)) : (this);
-        (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome !== undefined) ? (arrayParams.push(this.searchParams.organization.nome)) : (this)) : (this);
-        (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name !== undefined) ? (arrayParams.push(this.searchParams.profile.name)) : (this)) : (this);
-        (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (arrayParams.push(this.searchParams.team.nome)) : (this)) : (this);
+        (this.searchParams.fullName !== undefined) ? (arrayParams.push("+firstName:" + this.searchParams.fullName)) : (this);
+        (this.searchParams.login !== undefined) ? (arrayParams.push("+login:" + "*" + this.searchParams.login + "*")) : (this);
+        (this.searchParams.email !== undefined) ? (arrayParams.push("+email:" + "*" + this.searchParams.email + "*")) : (this);
+        (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome !== undefined) ? (arrayParams.push("+organizacoes.nome:" + this.searchParams.organization.nome)) : (this)) : (this);
+        (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name !== undefined) ? (arrayParams.push("+authorities.name:" + this.searchParams.profile.name)) : (this)) : (this);
+        (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (arrayParams.push("+tipoEquipes.nome:" + this.searchParams.team.nome)) : (this)) : (this);
 
         return arrayParams;
     }
 
     performSearch() {
         this.checkUndefinedParams();
-        this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray()).toUpperCase();
+        this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray()).slice(1);
         this.recarregarDataTable();
     }
 
@@ -241,7 +241,6 @@ export class UserComponent implements AfterViewInit, OnInit {
     }
 
     recarregarDataTable() {
-        console.log(this.elasticQuery.value);
         this.datatable.refresh(this.elasticQuery.query);
     }
 
