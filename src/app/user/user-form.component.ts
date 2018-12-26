@@ -185,11 +185,13 @@ export class UserFormComponent implements OnInit, OnDestroy {
      *
      * */
     save(form) {
+        if (!form.controls.email.valid && this.user.email) {
+            this.pageNotificationService.addErrorMsg('E-mail Inválido');
+            return;
+        }
+
         if (!form.valid) {
             this.pageNotificationService.addErrorMsg('Favor preencher os campos Obrigatórios!');
-            if (!form.controls.email.valid && this.user.email) {
-                this.pageNotificationService.addErrorMsg('E-mail Inválido');
-            }
             return;
         }
 
@@ -298,7 +300,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
     loadCurrentUser() {
         this.userService.findCurrentUser().subscribe((res: User) => {
             this.user = res;
-            this.tipoEquipes = this.tipoEquipes.concat(res.tipoEquipes);
+            this.setEquipeOrganizacao(this.user.organizacoes);
             this.populateUserAuthoritiesWithArtificialId();
         });
     }
@@ -324,6 +326,11 @@ export class UserFormComponent implements OnInit, OnDestroy {
             return this.user.organizacoes.length < 1;
         }
         return true;
+    }
+
+    setOrganizacao(org: Organizacao[]){
+        this.user.tipoEquipes = [];
+        this.setEquipeOrganizacao(org);
     }
 
     /**

@@ -36,6 +36,11 @@ export class AutenticacaoHttp extends Http {
     }
 
     public request(url: any, options?: RequestOptionsArgs): Observable<any | Response> {
+
+        if (!url) {
+            return Observable.empty<Response>();
+        }
+
         let token: string = this.getCookie('Authentication');
         if (environment.auth.publicUrls.includes(url.url) || (token && !this.jwtHelper.isTokenExpired(token))) {
             return super.request(url, options);

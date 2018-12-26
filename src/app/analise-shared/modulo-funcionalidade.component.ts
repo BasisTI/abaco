@@ -242,7 +242,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     adicionarModulo() {
-        if (this.novoModulo.nome === undefined) {
+        if (!this.novoModulo.nome) {
             this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
             return;
         }
@@ -262,7 +262,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     private recarregarSistema(sistemaRecarregado: Sistema) {
         this.analiseSharedDataService.analise.sistema = sistemaRecarregado;
-        this.modulos = this.sistema.modulos;
+        this.modulos = sistemaRecarregado.modulos;
     }
 
     private criarMensagemDeSucessoDaCriacaoDoModulo(nomeModulo: string, nomeSistema: string) {

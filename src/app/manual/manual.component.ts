@@ -20,7 +20,7 @@ export class ManualComponent implements OnInit {
 
     searchUrl: string = this.manualService.searchUrl;
     elasticQuery: ElasticQuery = new ElasticQuery();
-    manualSelecionado: Manual;
+    manualSelecionado: Manual = new Manual();
     nomeDoManualClonado: string;
     mostrarDialogClonar = false;
     rowsPerPageOptions: number[] = [5, 10, 20];
@@ -67,6 +67,13 @@ export class ManualComponent implements OnInit {
         } else if (event.target.parentNode.nodeName === 'TD') {
             this.abrirEditar();
         }
+    }
+
+    clonarTooltip() {
+        if (!this.manualSelecionado.id){
+            return "Selecione um registro para clonar";
+        }
+        return "Clonar";
     }
 
     abrirEditar() {
