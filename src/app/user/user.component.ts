@@ -206,36 +206,20 @@ export class UserComponent implements AfterViewInit, OnInit {
     private createStringParamsArray(): Array<string> {
       const arrayParams: Array<string> = [];
 
-<<<<<<< HEAD
         (this.searchParams.fullName !== undefined) ? (arrayParams.push("+firstName:" + this.searchParams.fullName)) : (this);
         (this.searchParams.login !== undefined) ? (arrayParams.push("+login:" + "*" + this.searchParams.login + "*")) : (this);
         (this.searchParams.email !== undefined) ? (arrayParams.push("+email:" + "*" + this.searchParams.email + "*")) : (this);
         (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome !== undefined) ? (arrayParams.push("+organizacoes.nome:" + this.searchParams.organization.nome)) : (this)) : (this);
         (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name !== undefined) ? (arrayParams.push("+authorities.name:" + this.searchParams.profile.name)) : (this)) : (this);
         (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (arrayParams.push("+tipoEquipes.nome:" + this.searchParams.team.nome)) : (this)) : (this);
-=======
-      (this.searchParams.fullName !== undefined) ? (arrayParams.push(this.searchParams.fullName)) : (this);
-      (this.searchParams.login !== undefined) ? (arrayParams.push(this.searchParams.login)) : (this);
-      (this.searchParams.email !== undefined) ? (arrayParams.push(this.searchParams.email)) : (this);
-      (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome !== undefined) ? (arrayParams.push(this.searchParams.organization.nome)) : (this)) : (this);
-      (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name !== undefined) ? (arrayParams.push(this.searchParams.profile.name)) : (this)) : (this);
-      (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (arrayParams.push(this.searchParams.team.nome)) : (this)) : (this);
->>>>>>> b8e0dc378a587f86df0786952020da2e387af323
 
       return arrayParams;
     }
 
     performSearch() {
-<<<<<<< HEAD
         this.checkUndefinedParams();
         this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray()).slice(1);
         this.recarregarDataTable();
-=======
-      this.checkUndefinedParams();
-      this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray());
-      console.log(this.stringConcatService.concatResults(this.createStringParamsArray()));
-      this.recarregarDataTable();
->>>>>>> b8e0dc378a587f86df0786952020da2e387af323
     }
 
     limparPesquisa() {
@@ -252,11 +236,7 @@ export class UserComponent implements AfterViewInit, OnInit {
     }
 
     recarregarDataTable() {
-<<<<<<< HEAD
         this.datatable.refresh(this.elasticQuery.query);
-=======
-      this.datatable.refresh(this.elasticQuery.query);
->>>>>>> b8e0dc378a587f86df0786952020da2e387af323
     }
 
 }
