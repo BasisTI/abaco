@@ -22,7 +22,7 @@ export class ManualComponent implements OnInit {
     elasticQuery: ElasticQuery = new ElasticQuery();
     manualSelecionado: Manual = new Manual();
     nomeDoManualClonado: string;
-    mostrarDialogClonar = false;
+    mostrarDialogClonar: boolean;
     rowsPerPageOptions: number[] = [5, 10, 20];
 
     constructor(
@@ -34,6 +34,7 @@ export class ManualComponent implements OnInit {
     }
 
     public ngOnInit() {
+        this.mostrarDialogClonar = false;
         this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
             this.manualSelecionado = new Manual().copyFromJSON(event.data);
         });
@@ -57,6 +58,7 @@ export class ManualComponent implements OnInit {
                 this.router.navigate(['/manual', event.selection.id]);
                 break;
             case 'clone':
+                this.manualSelecionado.id = event.selection.id;
                 this.mostrarDialogClonar = true;
         }
     }
@@ -81,9 +83,8 @@ export class ManualComponent implements OnInit {
     }
 
     public fecharDialogClonar() {
-        this.nomeDoManualClonado = '';
-        this.manualSelecionado = undefined;
         this.mostrarDialogClonar = false;
+        this.nomeDoManualClonado = '';
     }
 
     public clonar() {
