@@ -113,7 +113,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     private checkIfManualAlreadyExists(registeredPhases: Array<TipoFase>): boolean {
         let isAlreadyRegistered = false;
         registeredPhases.forEach(each => {
-            if (each.nome.toUpperCase() === this.manual.nome.toUpperCase() && each.id !== this.manual.id) {
+            if (each.nome === this.manual.nome && each.id !== this.manual.id) {
                 isAlreadyRegistered = true;
                 this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
             }
