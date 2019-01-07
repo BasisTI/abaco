@@ -115,6 +115,8 @@ export class ManualComponent implements OnInit {
                 this.manualService.delete(id).subscribe(() => {
                         this.recarregarDataTable();
                         this.blockUI.stop();
+                    this.pageNotificationService
+                        .addSuccessMsg('Registro excluído com sucesso!');
                     }, (error: Response) => {
 
                         if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.contratoexists') {
