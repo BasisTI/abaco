@@ -64,9 +64,9 @@ export class DerChipsComponent implements OnChanges {
 
     private addItem(derChipItem: DerChipItem) {
 
-        if (this.values !== undefined) {
+        if (this.values !== undefined && this.values.length <= 255) {
             const valores: string[] = this.values.map(chipItem => chipItem.text);
-            if (valores.indexOf(derChipItem.text) === -1 && derChipItem.text.length<=255) {
+            if (valores.indexOf(derChipItem.text) === -1 && derChipItem.text.length <= 50) {
                 this.values.push(derChipItem);
                 this.valuesChanged();
                 this.tamanhoChip = false;
