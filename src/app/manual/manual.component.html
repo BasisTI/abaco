@@ -138,6 +138,9 @@
                 pInputText
                 size="90"
                 maxlength="250"/>
+            <div *ngIf="nomeValido">
+                                <span style="color: red">Campo obrigatório.</span>
+                            </div>
         <label>Nome</label>
       </span>
         </div>
