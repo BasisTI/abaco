@@ -361,14 +361,14 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             message: MessageUtil.CONFIRMAR_BLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
             accept: () => {
                 const copy = this.analise.toJSONState();
-                    this.analiseService.block(copy).subscribe(() => {
+                this.analiseService.block(copy).subscribe(() => {
                     this.pageNotificationService.addBlockMsgWithName(this.analise.identificadorAnalise);
                     this.router.navigate(['analise/']);
                 }, (error: Response) => {
                     switch (error.status) {
                         case 400: {
                             if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
-                            this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                                this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
                             } else {
                                 this.pageNotificationService
                                     .addErrorMsg('Somente membros da equipe responsável podem bloquear esta análise!');
@@ -536,15 +536,15 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         if (this.checkUserAnaliseEquipes()) {
             this.equipeShare = [];
             this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id,
-                                                      this.analise.id,
-                                                      this.analise.equipeResponsavel.id).subscribe((equipes) => {
+                this.analise.id,
+                this.analise.equipeResponsavel.id).subscribe((equipes) => {
                 equipes.json.forEach((equipe) => {
                     const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
-                                                                     {id: undefined,
-                                                                      equipeId: equipe.id,
-                                                                      analiseId: this.analise.id,
-                                                                      viewOnly: false,
-                                                                      nomeEquipe: equipe.nome });
+                        {id: undefined,
+                            equipeId: equipe.id,
+                            analiseId: this.analise.id,
+                            viewOnly: false,
+                            nomeEquipe: equipe.nome });
                     this.equipeShare.push(entity);
                 });
                 this.blockUI.stop();
@@ -593,6 +593,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         setTimeout(() => { this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
             this.pageNotificationService.addSuccessMsg('Registro atualizado com sucesso!');
         }); }, 250);
-     }
+    }
 }
 
