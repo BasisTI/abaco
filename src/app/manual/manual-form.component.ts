@@ -347,6 +347,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         document.getElementById('tabela-tipo-fase').removeAttribute('style');
         this.newPhaseEffort = new EsforcoFase();
         this.showDialogPhaseEffort = false;
+        this.validaEsforco = false;
+        this.validaTipoFase = false;
     }
 
     closeDialogEditPhaseEffort() {
@@ -379,7 +381,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             isPhaseNameValid = false;
         }
 
-        if (phaseEffort.esforco && phaseEffort.esforco !== 0) {
+        if (phaseEffort.esforco) {
             isEffortValid = true;
         } else {
             this.validaEsforco = true;
@@ -506,4 +508,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         return true;
     }
 
+    fecharEsforcoFase() {
+        this.newPhaseEffort = new EsforcoFase();
+        this.showDialogPhaseEffort = false;
+        this.validaEsforco = false;
+        this.validaTipoFase = false;
+    }
 }

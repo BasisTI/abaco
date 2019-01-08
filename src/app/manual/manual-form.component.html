@@ -282,6 +282,7 @@
 
                 <!-- Dialog Registro Esforco Fase -->
                 <p-dialog header="Esforço por Fase" [(visible)]="showDialogPhaseEffort"
+                          (onHide)="fecharEsforcoFase()"
                           [contentStyle]="{'overflow':'visible'}"
                           [width]="800">
                     <div class="ui-g">
