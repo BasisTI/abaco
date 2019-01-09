@@ -162,21 +162,18 @@
 
                         <div class="ui-g-12" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input
-                        type="number"
-                        id="idNumeroContratoContratoSaveFormOrganizacao"
-                        name="numeroContrato"
-                        [(ngModel)]="novoContrato.numeroContrato"
-                        (onChange)="validarManual()"
-                        pInputText>
-
+                <input type="number"
+                       name="numeroContrato"
+                       id="idNumeroContratoContratoSaveFormOrganizacao"
+                       [(ngModel)]="novoContrato.numeroContrato"
+                       pInputText required/>
                 <label>Número do Contrato *</label>
-                <div *ngIf="editForm.controls['numeroContrato']
+                  <div *ngIf="editForm.controls['numeroContrato']
                             && !editForm.controls['numeroContrato'].valid
                             && (editForm.controls['numeroContrato'].touched
                             || editForm.submitted)">
-              <span style="color: red">Campo obrigatório.</span>
-                </div>
+                                <span style="color: red">Campo obrigatório.</span>
+                            </div>
               </span>
                         </div>
 
