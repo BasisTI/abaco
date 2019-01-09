@@ -8,6 +8,7 @@ import {ElasticQuery, PageNotificationService} from '../shared';
 import {BlockUI, NgBlockUI} from 'ng-block-ui';
 import {MessageUtil} from '../util/message.util';
 import {Response} from '@angular/http';
+import {FormGroup} from '@angular/forms';
 
 @Component({
     selector: 'jhi-manual',
@@ -22,8 +23,10 @@ export class ManualComponent implements OnInit {
     elasticQuery: ElasticQuery = new ElasticQuery();
     manualSelecionado: Manual = new Manual();
     nomeDoManualClonado: string;
-    mostrarDialogClonar = false;
+    mostrarDialogClonar: boolean;
     rowsPerPageOptions: number[] = [5, 10, 20];
+    myform: FormGroup;
+    nomeValido: boolean = false;
 
     constructor(
         private router: Router,
@@ -34,6 +37,7 @@ export class ManualComponent implements OnInit {
     }
 
     public ngOnInit() {
+        this.mostrarDialogClonar = false;
         this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
             this.manualSelecionado = new Manual().copyFromJSON(event.data);
         });
@@ -57,6 +61,7 @@ export class ManualComponent implements OnInit {
                 this.router.navigate(['/manual', event.selection.id]);
                 break;
             case 'clone':
+                this.manualSelecionado.id = event.selection.id;
                 this.mostrarDialogClonar = true;
         }
     }
@@ -70,10 +75,10 @@ export class ManualComponent implements OnInit {
     }
 
     clonarTooltip() {
-        if (!this.manualSelecionado.id){
-            return "Selecione um registro para clonar";
+        if (!this.manualSelecionado.id) {
+            return 'Selecione um registro para clonar';
         }
-        return "Clonar";
+        return 'Clonar';
     }
 
     abrirEditar() {
@@ -81,24 +86,28 @@ export class ManualComponent implements OnInit {
     }
 
     public fecharDialogClonar() {
-        this.nomeDoManualClonado = '';
-        this.manualSelecionado = undefined;
         this.mostrarDialogClonar = false;
+        this.nomeDoManualClonado = '';
     }
 
     public clonar() {
-        const manualClonado: Manual = this.manualSelecionado.clone();
-        manualClonado.id = undefined;
-        manualClonado.nome = this.nomeDoManualClonado;
-        manualClonado.esforcoFases.forEach(ef => ef.id = undefined);
-        manualClonado.fatoresAjuste.forEach(fa => fa.id = undefined);
+        if (this.nomeDoManualClonado !== undefined) {
+            this.nomeValido = false;
+            const manualClonado: Manual = this.manualSelecionado.clone();
+            manualClonado.id = undefined;
+            manualClonado.nome = this.nomeDoManualClonado;
+            manualClonado.esforcoFases.forEach(ef => ef.id = undefined);
+            manualClonado.fatoresAjuste.forEach(fa => fa.id = undefined);
 
-        this.manualService.create(manualClonado).subscribe((manualSalvo: Manual) => {
-            this.pageNotificationService
-                .addSuccessMsg(`Manual '${manualSalvo.nome}' clonado a partir do manual '${this.manualSelecionado.nome}' com sucesso!`);
-            this.fecharDialogClonar();
-            this.recarregarDataTable();
-        });
+            this.manualService.create(manualClonado).subscribe((manualSalvo: Manual) => {
+                this.pageNotificationService
+                    .addSuccessMsg(`Manual '${manualSalvo.nome}' clonado a partir do manual '${this.manualSelecionado.nome}' com sucesso!`);
+                this.fecharDialogClonar();
+                this.recarregarDataTable();
+            });
+        }else{
+            this.nomeValido = true;
+        }
     }
 
     public limparPesquisa() {
@@ -114,6 +123,8 @@ export class ManualComponent implements OnInit {
                 this.manualService.delete(id).subscribe(() => {
                         this.recarregarDataTable();
                         this.blockUI.stop();
+                        this.pageNotificationService
+                            .addSuccessMsg('Registro excluído com sucesso!');
                     }, (error: Response) => {
 
                         if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.contratoexists') {

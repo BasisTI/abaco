@@ -23,7 +23,7 @@ export class BaselineComponent implements OnInit {
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
     rowsPerPageOptions: number[] = [5, 10, 20];
     public urlBaseLineSintetico;
-    selecionada : boolean;
+    selecionada: boolean;
 
     constructor (
         private router: Router,

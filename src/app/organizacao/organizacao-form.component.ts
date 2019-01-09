@@ -306,7 +306,7 @@ editar() {
  }
 
  novo() {
-     if (this.newLogo != undefined && this.newLogo != null) {
+     if (this.newLogo !== undefined && this.newLogo != null) {
 
       this.uploadService.uploadLogo(this.newLogo).subscribe((response: any) => {
         this.organizacao.logoId = response.id;
