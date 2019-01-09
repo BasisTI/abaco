@@ -141,13 +141,13 @@
                 </div>
 
                 <div class="ui-g" style="justify-content: center; margin-top: 25px;">
-                    <div class="ui-g-2">
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-white-button buttonLabel="Cancelar" id="idBtnCancelarFormOrganizacao"
                                           routerLink="/organizacao">
                         </app-white-button>
                     </div>
 
-                    <div class="ui-g-2">
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving">
                         </app-submit-button>
                     </div>
@@ -162,11 +162,11 @@
 
                         <div class="ui-g-12" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <p-spinner type="number" 
+                <p-spinner type="number"
                             id="idNumeroContratoContratoSaveFormOrganizacao" 
                             name="numeroContrato"
                             maxlength="100"
-                            [(ngModel)]="novoContrato.numeroContrato" 
+                            [(ngModel)]="novoContrato.numeroContrato"
                             (onChange)="validarManual()" >
                 </p-spinner>
                 <label>Número do Contrato *</label>
