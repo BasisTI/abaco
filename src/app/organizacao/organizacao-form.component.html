@@ -162,13 +162,14 @@
 
                         <div class="ui-g-12" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <p-spinner type="number" 
-                            id="idNumeroContratoContratoSaveFormOrganizacao" 
-                            name="numeroContrato"
-                            maxlength="100"
-                            [(ngModel)]="novoContrato.numeroContrato" 
-                            (onChange)="validarManual()" >
-                </p-spinner>
+                <input
+                        type="number"
+                        id="idNumeroContratoContratoSaveFormOrganizacao"
+                        name="numeroContrato"
+                        [(ngModel)]="novoContrato.numeroContrato"
+                        (onChange)="validarManual()"
+                        pInputText>
+
                 <label>Número do Contrato *</label>
                 <div *ngIf="editForm.controls['numeroContrato']
                             && !editForm.controls['numeroContrato'].valid
@@ -215,7 +216,8 @@
               <span class="md-inputfield">
                 <p-calendar name="dataFimVigenciaContrato" yearRange="2000:2050" dateFormat="dd/mm/yy"
                             id="idDataFinalVigenciaContratoSaveFormOrganizacao"
-                            [(ngModel)]="novoContrato.dataFimVigencia" [monthNavigator]="true" [yearNavigator]="true" required>
+                            [(ngModel)]="novoContrato.dataFimVigencia" [monthNavigator]="true" [yearNavigator]="true"
+                            required>
                 </p-calendar>
                 <label>Data Final da Vigência *</label>
                    <div *ngIf="editForm.controls['dataFimVigenciaContrato']
@@ -229,11 +231,11 @@
 
                         <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="text" 
-                        name="diasDeGarantia" 
-                        maxlength="3" 
-                        id="idDiasGarantiaContratoSaveFormOrganizacao"
-                       [(ngModel)]="novoContrato.diasDeGarantia" 
+                <input type="number"
+                       name="diasDeGarantia"
+                       mask="999"
+                       id="idDiasGarantiaContratoSaveFormOrganizacao"
+                       [(ngModel)]="novoContrato.diasDeGarantia"
                        pInputText required/>
                 <label>Dias de garantia *</label>
                   <div *ngIf="editForm.controls['diasDeGarantia']
