@@ -161,6 +161,7 @@
                           [contentStyle]="{'overflow':'visible'}"
                           [width]="900">
 
+<<<<<<< HEAD
                 <div class="ui-g">
                     <div class="ui-g-12" style="margin-bottom: 25px">
                         <span class="md-inputfield">
@@ -176,6 +177,38 @@
                                         && !editForm.controls['numeroContrato'].valid
                                         && (editForm.controls['numeroContrato'].touched
                                         || editForm.submitted)">
+=======
+                    <div class="ui-g">
+
+                        <div class="ui-g-12" style="margin-bottom: 25px">
+              <span class="md-inputfield">
+                <input type="number"
+                       name="numeroContrato"
+                       id="idNumeroContratoContratoSaveFormOrganizacao"
+                       [(ngModel)]="novoContrato.numeroContrato"
+                       pInputText required/>
+                <label>Número do Contrato *</label>
+                  <div *ngIf="editForm.controls['numeroContrato']
+                            && !editForm.controls['numeroContrato'].valid
+                            && (editForm.controls['numeroContrato'].touched
+                            || editForm.submitted)">
+                                <span style="color: red">Campo obrigatório.</span>
+                            </div>
+              </span>
+                        </div>
+
+                        <div class="ui-g-12" style="margin-bottom: 25px">
+                            <p-dropdown [filter]="true" [options]="manuais" optionLabel="nome"
+                                        id="idManualContratoSaveFormOrganizacao"
+                                        placeholder="Manual *" name="manualDropdown" [(ngModel)]="novoContrato.manual"
+                                        [autoWidth]="false"
+                                        (onChange)="validarManual()" dataKey="id" required>
+                            </p-dropdown>
+                            <div *ngIf="editForm.controls['manualDropdown']
+                            && !editForm.controls['manualDropdown'].valid
+                            && (editForm.controls['manualDropdown'].touched
+                            || editForm.submitted)">
+>>>>>>> 2373c8ad73f465782ac122282f786259a0cdf8cc
                                 <span style="color: red">Campo obrigatório.</span>
                             </div>
                         </span>
@@ -291,7 +324,7 @@
                     <div class="ui-g">
                         <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="text" maxlength="100" id="idNumeroContratoContratoEditFormOrganizacao"
+                <input type="number" id="idNumeroContratoContratoEditFormOrganizacao"
                        name="numeroContrato"
                        [(ngModel)]="contratoEmEdicao.numeroContrato" pInputText/>
                 <label>Número do Contrato</label>
