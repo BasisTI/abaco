@@ -43,7 +43,7 @@ export class MemoryDatatableComponent implements AfterViewInit {
   disableClone: boolean;
 
   @Input()
-  responsive = false;
+  responsive = true;
 
   @Input()
   scrollable = false;
