@@ -103,6 +103,13 @@ abrirEditar() {
   }
 
   recarregarDataTable() {
+    //Se descrição == CNPJ remove caracteres . - / para fazer pesquisa. 
+    if(this.elasticQuery.value.length == 18 && this.elasticQuery.value[2] == "."){
+      this.elasticQuery.value = this.elasticQuery.value.replace(".", "");
+      this.elasticQuery.value = this.elasticQuery.value.replace(".", "");
+      this.elasticQuery.value = this.elasticQuery.value.replace("/", "");
+      this.elasticQuery.value = this.elasticQuery.value.replace("-", "");
+    }
     this.datatable.refresh(this.elasticQuery.query);
   }
 
