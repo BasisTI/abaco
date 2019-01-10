@@ -19,6 +19,7 @@ import {NgxMaskModule} from 'ngx-mask';
 import {ValidacaoUtil} from '../util/validacao.util';
 import {ValueTransformer} from '@angular/compiler/src/util';
 import {Upload} from '../upload/upload.model';
+import {EsforcoFase} from '../esforco-fase';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -34,7 +35,8 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     isSaving;
     manualInvalido;
     numeroContratoInvalido;
-    isEdit: boolean;
+    isEdit; validaNumeroContrato; validaManual; validaDataInicio; validaDataFinal; validaDiasGarantia: boolean;
+    showDialogContrato = false;
     cnpjValido: boolean;
     manuais: Manual[];
     uploadUrl = environment.apiUrl + '/upload';
@@ -458,5 +460,15 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         return this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
             return response;
         });
+    }
+
+    fecharContrato() {
+        this.novoContrato = new Contrato();
+        this.showDialogContrato = false;
+        this.validaNumeroContrato = false;
+        this.validaManual = false;
+        this.validaDataInicio = false;
+        this.validaDataFinal = false;
+        this.validaDiasGarantia = false;
     }
 }
