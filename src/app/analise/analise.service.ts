@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Response, RequestMethod, ResponseContentType } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 
@@ -8,6 +6,8 @@ import { Analise , AnaliseShareEquipe} from './';
 import {ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService} from '../shared';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { loginRoute } from '../login';
+import { Observable } from 'rxjs';
+import { RequestMethod, ResponseContentType } from '@angular/http';
 
 @Injectable()
 export class AnaliseService {
@@ -38,10 +38,10 @@ export class AnaliseService {
   public create(analise: Analise): Observable<Analise> {
     this.blockUI.start('Criando análise...');
     const copy = this.convert(analise);
-    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
+    return this.http.post(this.resourceUrl, copy).map((res: any) => {
       const jsonResponse = res.json();
       this.blockUI.stop();
-      return this.convertItemFromServer(jsonResponse);
+      return jsonResponse;
     }).catch((error: any) => {
         if (error.status === 403) {
             this.pageNotificationService.addErrorMsg('Você não possui permissão!');
@@ -67,7 +67,7 @@ export class AnaliseService {
   public update(analise: Analise): Observable<Analise> {
     this.blockUI.start('Atualizando análise...');
     const copy = this.convert(analise);
-    return this.http.put(this.resourceUrl, copy).map((res: Response) => {
+    return this.http.put(this.resourceUrl, copy).map((res: ResponseWrapper) => {
       const jsonResponse = res.json();
       this.blockUI.stop();
       return this.convertItemFromServer(jsonResponse);
@@ -86,7 +86,7 @@ export class AnaliseService {
   public block(analise: Analise): Observable<Analise> {
     this.blockUI.start('Bloqueando/Desbloqueando análise...');
     const copy = analise;
-    return this.http.put(`${this.resourceUrl}/${copy.id}/block`, copy).map((res: Response) => {
+    return this.http.put(`${this.resourceUrl}/${copy.id}/block`, copy).map((res: ResponseWrapper) => {
       this.blockUI.stop();
       return null;
     }).catch((error: any) => {
@@ -195,7 +195,7 @@ export class AnaliseService {
    */
   public find(id: number): Observable<Analise> {
     this.blockUI.start('Procurando análise...');
-    return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
+    return this.http.get(`${this.resourceUrl}/${id}`).map((res: ResponseWrapper) => {
       const jsonResponse = res.json();
       const analiseJson = this.convertItemFromServer(jsonResponse);
       analiseJson.createdBy = jsonResponse.createdBy;
@@ -207,7 +207,7 @@ export class AnaliseService {
   findAllByOrganizacaoId(orgId: number): Observable<ResponseWrapper> {
     const url = `${this.findByOrganizacaoUrl}/${orgId}`;
     return this.http.get(url)
-      .map((res: Response) => this.convertResponse(res));
+      .map((res: ResponseWrapper) => this.convertResponse(res.json()));
   }
 
   /** Encontra todas as análises referentes às equipes do usuário.
@@ -219,7 +219,7 @@ export class AnaliseService {
     const url = `${this.resourceUrl}/user/${idUsuario}`;
     return this.http.get(url)
       .map(
-        (res: Response) => this.convertJsonToAnalise(res),
+        (res: ResponseWrapper) => this.convertJsonToAnalise(res.json),
         (error) => this.tratarErro(error.toString(), idUsuario)
       );
   }
@@ -232,7 +232,7 @@ export class AnaliseService {
     this.blockUI.start('Aguenta um cadinho aí...');
     const options = createRequestOption(req);
     return this.http.get(this.resourceUrl, options)
-    .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+    .map((res: ResponseWrapper) => this.convertResponse(res.json())).catch((error: any) => {
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMsg('Você não possui permissão!');
                 return Observable.throw(new Error(error.status));
@@ -255,7 +255,7 @@ export class AnaliseService {
   /**
    *
    */
-  private convertResponse(res: Response): ResponseWrapper {
+  private convertResponse(res: ResponseWrapper): ResponseWrapper {
     const jsonResponse = res.json();
     const result = [];
     for (let i = 0; i < jsonResponse.length; i++) {
@@ -272,7 +272,7 @@ export class AnaliseService {
     return new Analise().copyFromJSON(json);
   }
 
-  convertJsonToAnalise (res: Response): Analise[] {
+  convertJsonToAnalise (res: ResponseWrapper): Analise[] {
     const jsonResponse = res.json();
     let result = [];
     for (let i = 0; i < jsonResponse.length; i++) {
@@ -298,7 +298,7 @@ export class AnaliseService {
     this.blockUI.start('Buscando análises...');
     const url = `${this.findCompartilhadaByAnaliseUrl}/${analiseId}`;
     return this.http.get(url)
-      .map((res: Response) => this.convertResponse(res));
+      .map((res: ResponseWrapper) => this.convertResponse(res.json()));
   }
 
    /** Salva as equipes que têm acesso àquela análise
@@ -307,7 +307,7 @@ export class AnaliseService {
    */
   salvarCompartilhar(listaCompartilhada: Array<AnaliseShareEquipe>) {
     this.blockUI.start('Compartilhando análise...');
-    return this.http.post(`${this.resourceUrl}/compartilhar`, listaCompartilhada).map((res: Response) => {
+    return this.http.post(`${this.resourceUrl}/compartilhar`, listaCompartilhada).map((res: ResponseWrapper) => {
       const jsonResponse = res.json();
       this.blockUI.stop();
       return jsonResponse;
@@ -334,7 +334,7 @@ export class AnaliseService {
   atualizarCompartilhar(compartilhada) {
     this.blockUI.start('Atualizando compartilhamento...');
     const copy = compartilhada;
-    return this.http.put(`${this.resourceUrl}/compartilhar/viewonly/${copy.id}`, copy).map((res: Response) => {
+    return this.http.put(`${this.resourceUrl}/compartilhar/viewonly/${copy.id}`, copy).map((res: ResponseWrapper) => {
       this.blockUI.stop();
       return null;
     }).catch((error: any) => {
