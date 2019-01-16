@@ -100,7 +100,7 @@
                             <div class="ui-md-2">
                                 <app-blue-button buttonLabel="Novo Contrato" buttonIcon="ui-icon-add"
                                                  id="idBtnNovoContratoFormOrganizacao"
-                                                 (click)="abrirDialogCadastroContrato()">
+                                                 (click)="abrirDialogCadastroContrato(editForm1.resetForm())">
                                 </app-blue-button>
                             </div>
                         </div>
@@ -157,10 +157,13 @@
                 <!-- Dialog confirmação deleção -->
 
             </form>
+            <form name="editForm1" role="form" novalidate (ngSubmit)="save(editForm1)" #editForm1="ngForm">
+
             <p-dialog header="Contrato" [(visible)]="mostrarDialogCadastroContrato"
-                      (onHide)="fecharContrato()"
+                      (onHide)="fecharContrato(editForm1.resetForm())"
                       [contentStyle]="{'overflow':'visible'}"
-                      [width]="900">
+                      [width]="900" >
+
 
 
                 <div class="ui-g">
@@ -171,12 +174,13 @@
                        name="numeroContrato"
                        id="idNumeroContratoContratoSaveFormOrganizacao"
                        [(ngModel)]="novoContrato.numeroContrato"
-                       pInputText />
+                       pInputText required autofocus="" />
                 <label>Número do Contrato *</label>
-                 <div *ngIf="this.validaNumeroContrato || (editForm.controls['numeroContrato']
-                                        && !editForm.controls['numeroContrato'].valid
-                                        && editForm.controls['numeroContrato'].touched)">
-                                <span style="color: red">Campo obrigatório.</span>
+                 <div *ngIf="this.validaNumeroContrato || (editForm1.controls['numeroContrato']
+                                        && !editForm1.controls['numeroContrato'].valid
+                                        && (editForm1.controls['numeroContrato'].touched
+                                        || editForm1.submitted))" class="ui-message ui-messages-error">
+                                Campo obrigatório.
                             </div>
               </span>
                     </div>
@@ -186,13 +190,15 @@
                                     id="idManualContratoSaveFormOrganizacao"
                                     placeholder="Manual *" name="manualDropdown" [(ngModel)]="novoContrato.manual"
                                     [autoWidth]="false"
-                                    (onChange)="validarManual()" dataKey="id" >
+                                    (onChange)="validarManual()" dataKey="id" required [resetFilterOnHide]="false"
+                                    #ctrl="ngModel">
 
                         </p-dropdown>
-                        <div *ngIf="this.validaManual || (editForm.controls['manualDropdown']
-                                        && !editForm.controls['manualDropdown'].valid
-                                        && editForm.controls['manualDropdown'].touched)">
-                            <span style="color: red">Campo obrigatório.</span>
+                        <div *ngIf="this.validaManual || (editForm1.controls['manualDropdown']
+                        && !editForm1.controls['manualDropdown'].valid
+                        && (editForm1.controls['manualDropdown'].touched
+                        || editForm1.submitted))" class="ui-message ui-messages-error" >
+                            Campo obrigatório.
                         </div>
 
                     </div>
@@ -205,10 +211,11 @@
                                         [yearNavigator]="true" required>
                             </p-calendar>
                             <label>Data de Início da Vigência *</label>
-                            <div *ngIf="this.validaDataInicio || (editForm.controls['dataInicioVigenciaContrato']
-                                        && !editForm.controls['dataInicioVigenciaContrato'].valid
-                                        && editForm.controls['dataInicioVigenciaContrato'].touched)">
-                            <span style="color: red">Campo obrigatório.</span>
+                            <div *ngIf="this.validaDataInicio || (editForm1.controls['dataInicioVigenciaContrato']
+                                        && !editForm1.controls['dataInicioVigenciaContrato'].valid
+                                        && (editForm1.controls['dataInicioVigenciaContrato'].touched
+                                        || editForm1.submitted))"  class="ui-message ui-messages-error">
+                                Campo obrigatório.
                         </div>
                         </span>
                     </div>
@@ -222,10 +229,11 @@
                                         required>
                             </p-calendar>
                             <label>Data Final da Vigência *</label>
-                            <div *ngIf="this.validaDataFinal || (editForm.controls['dataFimVigenciaContrato']
-                                        && !editForm.controls['dataFimVigenciaContrato'].valid
-                                        && editForm.controls['dataFimVigenciaContrato'].touched)">
-                            <span style="color: red">Campo obrigatório.</span>
+                            <div *ngIf="this.validaDataFinal || (editForm1.controls['dataFimVigenciaContrato']
+                                        && !editForm1.controls['dataFimVigenciaContrato'].valid
+                                        && (editForm1.controls['dataFimVigenciaContrato'].touched
+                                        || editForm1.submitted))"  class="ui-message ui-messages-error">
+                            Campo obrigatório.
                         </div>
                         </span>
                     </div>
@@ -237,12 +245,13 @@
                                    mask="999"
                                    id="idDiasGarantiaContratoSaveFormOrganizacao"
                                    [(ngModel)]="novoContrato.diasDeGarantia"
-                                   pInputText />
+                                   pInputText required/>
                             <label>Dias de garantia *</label>
-                           <div *ngIf="this.validaDiasGarantia || (editForm.controls['diasDeGarantia']
-                                        && !editForm.controls['diasDeGarantia'].valid
-                                        && editForm.controls['diasDeGarantia'].touched)">
-                            <span style="color: red">Campo obrigatório.</span>
+                           <div *ngIf="this.validaDiasGarantia || (editForm1.controls['diasDeGarantia']
+                                        && !editForm1.controls['diasDeGarantia'].valid
+                                        && (editForm1.controls['diasDeGarantia'].touched
+                                        || editForm1.submitted))"  class="ui-message ui-messages-error">
+                            Campo obrigatório.
                         </div>
                         </span>
                     </div>
@@ -272,16 +281,18 @@
                 <div class="ui-g ui-md-12" style="justify-content: flex-end">
                     <div class="ui-g-2">
                         <app-white-button buttonLabel="Cancelar" id="idBtnCancelarContratoSaveFormOrganizacao"
-                                          (click)="fecharDialogCadastroContrato()">
+                                          (click)="fecharDialogCadastroContrato()"  >
+
                         </app-white-button>
                     </div>
                     <div class="ui-g-2">
-                        <app-green-button buttonLabel="Salvar" id="idBtnSalvarContratoSaveFormOrganizacao"
-                                          (click)="adicionarContrato()">
-                        </app-green-button>
+                        <app-submit-button buttonLabel="Salvar" id="idBtnSalvarContratoSaveFormOrganizacao"
+                                          (click)="adicionarContrato()" >
+                        </app-submit-button>
                     </div>
                 </div>
             </p-dialog>
+            </form>
             <p-dialog header="Contrato" [(visible)]="mostrarDialogEdicaoContrato"
                       [contentStyle]="{'overflow':'visible'}"
                       [width]="800">
