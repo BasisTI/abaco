@@ -95,7 +95,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     /**
      *
      * */
-    abrirDialogCadastroContrato() {
+    abrirDialogCadastroContrato(editForm1) {
         this.mostrarDialogCadastroContrato = true;
         this.novoContrato.ativo = true;
         this.numeroContratoInvalido = false;
@@ -462,7 +462,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    fecharContrato() {
+    fecharContrato(editForm1) {
         this.novoContrato = new Contrato();
         this.showDialogContrato = false;
         this.validaNumeroContrato = false;

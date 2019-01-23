@@ -59,7 +59,7 @@ export class ContratoFormComponent implements OnInit, OnDestroy {
       this.subscribeToSaveResponse(this.contratoService.create(this.contrato));
     }
   }
-
+z
   private subscribeToSaveResponse(result: Observable<Contrato>) {
     result.subscribe((res: Contrato) => {
       this.isSaving = false;
