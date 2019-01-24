@@ -44,6 +44,7 @@ import {AbacoFuncaoTransacaoModule} from '../funcao-transacao/funcao-transacao.m
 import {AbacoAnaliseResumoModule} from './resumo/analise-resumo.module';
 import {AbacoAnaliseBotaoSalvarModule} from '../analise-shared/botao-salvar/analise-botao-salvar.module';
 import {UtilModule} from '../util/util.module';
+import { GenericService } from '../util/service/generic.service';
 
 @NgModule({
     imports: [
@@ -84,7 +85,8 @@ import {UtilModule} from '../util/util.module';
     providers: [
         AnaliseService,
         GrupoService,
-        ConfirmationService
+        ConfirmationService,
+        GenericService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

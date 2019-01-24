@@ -22,6 +22,7 @@ import {
   ContratoFormComponent,
   contratoRoute
 } from './';
+import { GenericService } from '../util/service/generic.service';
 
 @NgModule({
   imports: [
@@ -45,7 +46,8 @@ import {
   ],
   providers: [
     ContratoService,
-    ConfirmationService
+    ConfirmationService,
+    GenericService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

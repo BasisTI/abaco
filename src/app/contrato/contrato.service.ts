@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 
 import { Contrato } from './contrato.model';
 import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
+import { GenericService } from '../util/service/generic.service';
 
 @Injectable()
 export class ContratoService {
@@ -14,7 +15,7 @@ export class ContratoService {
 
   searchUrl = environment.apiUrl + '/_search/contratoes';
 
-  constructor(private http: HttpService, private dateUtils: JhiDateUtils) {}
+  constructor(private http: HttpService, private dateUtils: JhiDateUtils, private genericService: GenericService) {}
 
   create(contrato: Contrato): Observable<Contrato> {
     const copy = this.convert(contrato);
@@ -62,7 +63,7 @@ export class ContratoService {
    * Convert a returned JSON object to Contrato.
    */
   private convertItemFromServer(json: any): Contrato {
-    return new Contrato().copyFromJSON(json);
+    return this.genericService.convertJsonToObject(json, new Contrato());
   }
 
   /**

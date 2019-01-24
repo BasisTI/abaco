@@ -8,6 +8,7 @@ import { Analise , AnaliseShareEquipe} from './';
 import {ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService} from '../shared';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { loginRoute } from '../login';
+import { GenericService } from '../util/service/generic.service';
 
 @Injectable()
 export class AnaliseService {
@@ -30,7 +31,7 @@ export class AnaliseService {
 
   @BlockUI() blockUI: NgBlockUI;
 
-    constructor(private http: HttpService, private pageNotificationService: PageNotificationService) {}
+    constructor(private http: HttpService, private pageNotificationService: PageNotificationService, private genericService : GenericService) {}
 
   /**
    *
@@ -41,7 +42,7 @@ export class AnaliseService {
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       this.blockUI.stop();
-      return this.convertItemFromServer(jsonResponse);
+      return this.genericService.convertJsonToObject(res.json(), new Analise())
     }).catch((error: any) => {
         if (error.status === 403) {
             this.pageNotificationService.addErrorMsg('Você não possui permissão!');

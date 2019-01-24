@@ -85,8 +85,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private analiseService: AnaliseService,
-        private organizacaoService: OrganizacaoService,
-        private contratoService: ContratoService,
         private sistemaService: SistemaService,
         private analiseSharedDataService: AnaliseSharedDataService,
         private equipeService: TipoEquipeService,
