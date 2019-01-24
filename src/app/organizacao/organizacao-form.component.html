@@ -140,15 +140,15 @@
                     </div>
                 </div>
 
-                <div class="ui-g" style="justify-content: center; margin-top: 25px;">
-                    <div class="ui-g-2">
+                <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-white-button buttonLabel="Cancelar" id="idBtnCancelarFormOrganizacao"
                                           routerLink="/organizacao">
                         </app-white-button>
                     </div>
 
-                    <div class="ui-g-2">
-                        <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving">
+                    <div class="ui-g-2 ui-md-2 ui-sm-12" >
+                        <app-submit-button buttonLabel="Salvar" (click)="novo()" >
                         </app-submit-button>
                     </div>
                 </div>
