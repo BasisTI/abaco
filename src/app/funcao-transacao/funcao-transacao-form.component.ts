@@ -87,6 +87,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     private analiseCarregadaSubscription: Subscription;
     private subscriptionSistemaSelecionado: Subscription;
     private nomeDasFuncoesDoSistema: string[] = [];
+    public erroModulo: boolean;
     public erroTR: boolean;
     public erroTD: boolean;
     public erroUnitario: boolean;

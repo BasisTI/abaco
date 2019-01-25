@@ -45,12 +45,12 @@
                             </p-column>
 
                             <p-column
-                                header="Impacto"
-                                [style]="{'width': '200px'}"
-                                field="updateImpacto(impacto)">
+                                    header="Impacto"
+                                    [style]="{'width': '200px'}"
+                                    field="updateImpacto(impacto)">
                                 <ng-template
-                                    let-impacto="rowData.impacto"
-                                    pTemplate="body">
+                                        let-impacto="rowData.impacto"
+                                        pTemplate="body">
                                     {{ impacto ? updateImpacto(impacto) : 'Nenhum' }}
                                 </ng-template>
                             </p-column>
@@ -155,10 +155,12 @@
                                     field="name"
                                     (onSelect)="recuperarNomeSelecionado($event)">
                             </p-autoComplete>
-                            <div *ngIf="nomeInvalido"
-                                 class="ui-message ui-messages-error">
-                                Campo obrigatório.
-                            </div>
+                            <span class="md-inputfield">
+                                <div *ngIf="nomeInvalido && !currentFuncaoTransacao.name"
+                                     class="ui-message ui-messages-error">
+                                    Campo obrigatório.
+                                </div>
+                            </span>
                         </div>
                         <div class="ui-g-12 ui-md-3 ui-lg-3">
                             <app-blue-button
@@ -208,7 +210,7 @@
 
 
                 <app-analise-modulo-funcionalidade
-                        [isFuncaoDados]="false"
+                        [erroModulo]="erroModulo" [isFuncaoDados]="false"
                         (moduloSelectedEvent)="moduloSelected($event)"
                         (funcionalidadeSelectedEvent)="functionalitySelected($event)">
                 </app-analise-modulo-funcionalidade>
@@ -226,10 +228,11 @@
                                 [autoWidth]="false"
                                 (onChange)="classValida()">
                         </p-dropdown>
-                        <div *ngIf="classInvalida"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                        </div>
+                        <span class="md-inputfield">
+                            <div *ngIf="classInvalida" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
                     </div>
 
                     <div class="ui-g-3 ui-md-6 ui-sm-12">
@@ -244,16 +247,17 @@
                                 [autoWidth]="false"
                                 (onChange)="impactoValido()">
                         </p-dropdown>
-                        <div *ngIf="impactoInvalido"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                        </div>
+                        <span class="md-inputfield">
+                            <div *ngIf="impactoInvalido" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
                     </div>
 
                 </div>
                 <div class="ui-g">
                     <div class="ui-g-3 ui-md-6 ui-sm-12">
-                        <label>Deflator</label>
+                        <label>Deflator *</label>
                         <p-dropdown
                                 [filter]="true"
                                 [options]="fatoresAjuste"
@@ -265,17 +269,18 @@
                                 name="fatorAjuste"
                                 [autoWidth]="false">
                         </p-dropdown>
-                        <div *ngIf="erroDeflator"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
-                        </div>
+                        <span class="md-inputfield">
+                            <div *ngIf="erroDeflator" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+                            </div>
+                        </span>
                     </div>
 
 
                     <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
                         <label>Quantidade</label>
                         <input type="number" class="ui-inputtext" min="1"
-                                id="idQuantidadeFormFuncaoTransacao"
+                               id="idQuantidadeFormFuncaoTransacao"
                                [(ngModel)]="currentFuncaoTransacao.quantidade">
                         <div *ngIf="erroUnitario"
                              class="ui-message ui-messages-error">
@@ -294,20 +299,22 @@
                             [relacionarDers]="true"
                             (dersReferenciadosEvent)="dersReferenciados($event)">
                     </app-analise-der-chips>
-                    <div *ngIf="erroTR"
-                         class="ui-message ui-messages-error">
-                        Campo obrigatório.
-                    </div>
 
+                    <span class="md-inputfield">
+                        <div *ngIf="erroTR && alrsChips.length == 0" class="ui-message ui-messages-error">
+                            Campo obrigatório.
+                        </div>
+                    </span>
                 </div>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
                     <h2>DER (TD)</h2>
-                    <app-analise-der-chips id="idDERFormFuncaoTransacao"[(values)]="dersChips"></app-analise-der-chips>
-                    <div *ngIf="erroTD"
-                         class="ui-message ui-messages-error">
-                        Campo obrigatório.
-                    </div>
+                    <app-analise-der-chips id="idDERFormFuncaoTransacao" [(values)]="dersChips"></app-analise-der-chips>
+                    <span class="md-inputfield">
+                        <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error">
+                            Campo obrigatório.
+                        </div>
+                    </span>
                 </div>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12">
