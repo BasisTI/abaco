@@ -340,8 +340,25 @@ export class UserFormComponent implements OnInit, OnDestroy {
         this.tipoEquipes = [];
         org.forEach(element => {
             this.tipoEquipeService.findAllByOrganizacaoId(element.id).subscribe((res: ResponseWrapper) => {
-                this.tipoEquipes = this.tipoEquipes.concat(res.json);
+
+                this.tipoEquipes = this.tipoEquipes.concat(this.TipoEquipeSemRepeticao(res.json));
             });
+        });
+    }
+
+    private TipoEquipeSemRepeticao(listaTipoEquipe: TipoEquipe[]): TipoEquipe[] {
+
+        return listaTipoEquipe.filter(tipoEquipeComparacao => {
+
+            for (const tipoEquipe of this.tipoEquipes) {
+
+                if (tipoEquipe.id === tipoEquipeComparacao.id) {
+
+                    return false;
+                }
+            }
+
+            return true;
         });
     }
 }
