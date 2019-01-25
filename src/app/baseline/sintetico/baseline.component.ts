@@ -22,7 +22,7 @@ export class BaselineComponent implements OnInit {
     elasticQuery: ElasticQuery = new ElasticQuery();
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
     rowsPerPageOptions: number[] = [5, 10, 20];
-    public urlBaseLineSintetico;
+    public urlBaseLineSintetico = this.baselineService.sinteticosUrl;
     selecionada: boolean;
 
     constructor (
@@ -32,7 +32,6 @@ export class BaselineComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.urlBaseLineSintetico = this.baselineService.sinteticosUrl;
         this.carregarDataTable();
         this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
             this.selecionada = false;
@@ -45,6 +44,7 @@ export class BaselineComponent implements OnInit {
     public carregarDataTable() {
         this.baselineService.allBaselineSintetico().subscribe((res: ResponseWrapper) => {
             this.datatable.value = res.json;
+            this.datatable.reset;
         });
     }
 

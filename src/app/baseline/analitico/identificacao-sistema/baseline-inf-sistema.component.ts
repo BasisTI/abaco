@@ -14,11 +14,10 @@ import {Sistema} from '../../../sistema';
 })
 export class BaselineInfSistemaComponent implements OnInit, OnDestroy {
 
-    private routeSub: Subscription;
     public idSistema: number;
     public idEquipe: number;
 
-    public sistema: BaselineSintetico;
+    public sistema: BaselineSintetico = new BaselineSintetico();
 
     constructor(
         private route: ActivatedRoute,
@@ -31,11 +30,11 @@ export class BaselineInfSistemaComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.routeSub = this.route.params.subscribe(params => {
+        this.route.params.subscribe(params => {
             this.idSistema = params['id'];
             this.idEquipe = params['equipe'];
+            this.carregarDataTable();
         });
-        this.carregarDataTable();
     }
 
     public carregarDataTable() {

@@ -6,14 +6,14 @@
             <div class="ui-g">
                 <div class="ui-g">
                     <basis-datatable
-                            [url]="urlBaseLineSintetico"
+                            type="memory"
                             (buttonClick)="datatableClick($event)"
                             [rows]="20"
                             [disableDelete]="true"
                             [disableEdit]="true"
                             [rowsPerPageOptions]="rowsPerPageOptions"
                             [showPaginationFooter]="true"
-                            #datatable>
+                            #memory>
 
                         <basis-datatable-button
                           name="geraBaselinePdfBrowser"

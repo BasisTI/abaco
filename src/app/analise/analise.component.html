@@ -153,6 +153,14 @@
                                 disabled="desabilitarBotaoRelatorio()">
                         </basis-datatable-button>
 
+                        <basis-datatable-button
+                                name="relatorioCsvDetalhado"
+                                [tooltip]="relatorioTooltip()"
+                                icon="description"
+                                disabled="desabilitarBotaoRelatorio()"
+                                class="ui-button-success">
+                        </basis-datatable-button>
+
                         <p-column header="Organização" field="organizacao" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}"></p-column>
 
