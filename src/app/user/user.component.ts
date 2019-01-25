@@ -198,7 +198,7 @@ export class UserComponent implements AfterViewInit, OnInit {
       (this.searchParams.fullName === '') ? (this.searchParams.fullName = undefined) : (this);
       (this.searchParams.login === '') ? (this.searchParams.login = undefined) : (this);
       (this.searchParams.email === '') ? (this.searchParams.email = undefined) : (this);
-      (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome === '') ? (this.searchParams.organization.nome = undefined) : (console.log('Caiu no false'))) : (this);
+      (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome === '') ? (this.searchParams.organization.nome = undefined) : (null)) : (this);
       (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name === '') ? (this.searchParams.profile.nome = undefined) : (this)) : (this);
       (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)) : (this);
     }

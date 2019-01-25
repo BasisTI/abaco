@@ -137,11 +137,18 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     private ajustarPfTotal(): number {
         const pfTotalAjustado = this._resumoTotal.getTotalPf();
         if (this.fatorAjuste) {
-            return this.fatorAjuste.aplicarFator(pfTotalAjustado);
+            return this.aplicarFator(pfTotalAjustado);
         }
         return pfTotalAjustado;
     }
 
+    aplicarFator(pf: number): number {
+        if (this.fatorAjuste.tipoAjuste === 'UNITARIO') {
+          return this.fatorAjuste.fator;
+        } else {
+          return pf * this.fatorAjuste.fator;
+        }
+      }
     /**
      *
      */
@@ -176,11 +183,6 @@ export class Analise implements BaseEntity, JSONable<Analise> {
         if (copy.fatorAjuste) {
             copy.valorAjuste = copy.fatorAjuste.fator;
         }
-
-        if (copy.esforcoFases) {
-            copy.esforcoFases = copy.esforcoFases.map(ef => ef.toJSONState());
-        }
-
         return copy;
     }
 

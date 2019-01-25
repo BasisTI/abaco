@@ -16,7 +16,7 @@ export class FatorAjusteLabelGenerator {
     const fa: FatorAjuste = this._fatorAjuste;
     const prefix = this.generatePrefix();
     const fatorSuffix = this.generateFatorSuffix();
-    this._label = `${prefix} ${fa.nome} - ${fa.fatorFormatado}${fatorSuffix}`;
+    this._label = `${prefix} ${fa.nome} - ${fa.fator}${fatorSuffix}`;
   }
 
   private static generatePrefix(): string {
@@ -39,9 +39,9 @@ export class FatorAjusteLabelGenerator {
   }
 
   private static generateFatorSuffix(): string {
-    if (this._fatorAjuste.isPercentual()) {
+    if ( this._fatorAjuste.tipoAjuste === 'PERCENTUAL') {
       return '%';
-    } else if (this._fatorAjuste.isUnitario()) {
+    } else {
       return ' PF';
     }
   }

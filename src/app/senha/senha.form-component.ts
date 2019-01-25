@@ -79,7 +79,6 @@ export class SenhaFormComponent implements OnInit, OnDestroy {
   private verificaErro(tipoErro: string) {
     let msgErro: string;
 
-    console.log(`Erro encontrado: ${tipoErro}`);
     switch (tipoErro) {
       case 'error.passwdNotEqual': {
         msgErro = 'Senha nova senha não confere com a confirmação!';

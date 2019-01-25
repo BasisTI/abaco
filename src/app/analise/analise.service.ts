@@ -56,9 +56,7 @@ export class AnaliseService {
    */
   public atualizaAnalise(analise: Analise) {
     this.update(analise)
-        .subscribe((res) => {
-      console.log(res);
-    });
+        .subscribe();
   }
 
 
@@ -73,7 +71,6 @@ export class AnaliseService {
       this.blockUI.stop();
       return this.convertItemFromServer(jsonResponse);
     }).catch((error: any) => {
-        console.log(error);
         if (error.status === 403) {
             this.pageNotificationService.addErrorMsg('Você não possui permissão!');
             return Observable.throw(new Error(error.status));

@@ -144,8 +144,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.subscribeToAnaliseCarregada();
         this.colunasAMostrar = [];
         this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
-        console.log(this.currentFuncaoDados);
-        console.log(this.colunasOptions);
     }
     updateNameImpacto(impacto: string) {
         switch(impacto) {
@@ -541,7 +539,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
         this.funcaoDadosService.getFuncaoDadosBaseline(baselineAnalitico.idfuncaodados)
             .subscribe((res: FuncaoDados) => {
-                console.log(this.currentFuncaoDados);
                 if (res.fatorAjuste === null) {
                     res.fatorAjuste = undefined;
                 }

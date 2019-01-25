@@ -10,7 +10,7 @@ export class CalculadoraFator {
      */
     public static aplicarFator(pf: number, fatorAjuste: FatorAjuste, quantidade: number): number {
 
-        if (fatorAjuste.isPercentual()) {
+        if (fatorAjuste.tipoAjuste === 'PERCENTUAL') {
             return (pf * fatorAjuste.fator) / 100;
         } else { // UNITÁRIO
             return fatorAjuste.fator * quantidade;

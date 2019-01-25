@@ -92,7 +92,7 @@ export class Calculadora {
 
     private static definirComplexidade() {
         // FIXME é isso aqui mesmo? funcao de dados sempre vai ter fatorAjuste?
-        if (this._fatorAjuste.isUnitario()) {
+        if (this._fatorAjuste.tipoAjuste === 'UNITARIO') {
             this.funcaoDadosCalculada.complexidade = Complexidade.SEM;
         } else {
             this.definirComplexidadePercentual();

@@ -18,7 +18,6 @@ export class GrupoService {
 
     all(): Observable<ResponseWrapper> {
         return this.http.get(`${this.grupoUrl}`).map((res: Response) => {
-            console.log(res);
             return this.convertResponse(res);
         });
     }

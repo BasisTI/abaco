@@ -251,7 +251,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.nomeManual = manual.nome;
             this.carregarEsforcoFases(manual);
             this.carregarMetodosContagem(manual);
-            this.inicializaFatoresAjuste(manual);
+            this.inicializaFatoresAjuste(manual);            
         }
     }
 

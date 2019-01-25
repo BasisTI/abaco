@@ -42,7 +42,7 @@ export class CalculadoraTransacao {
   }
 
   private static definirComplexidade() {
-    if (this._fatorAjuste.isUnitario()) {
+    if (this._fatorAjuste.tipoAjuste === 'UNITARIO') {
       this.funcaoTransacaoCalculada.complexidade = Complexidade.SEM;
     } else {
       this.definirComplexidadePercentual();
