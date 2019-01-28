@@ -45,7 +45,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     aguardarGarantia: boolean;
     enviarParaBaseLine: boolean;
 
-    organizacoes;
+    organizacoes: Organizacao[];
 
     contratos: Contrato[];
 
@@ -88,6 +88,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         private sistemaService: SistemaService,
         private analiseSharedDataService: AnaliseSharedDataService,
         private equipeService: TipoEquipeService,
+        private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
         private userService: UserService,
     ) {
@@ -116,8 +117,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     getLoggedUser() {
         this.userService.findCurrentUser().subscribe(res => {
             this.loggedUser = res;
-            this.organizacoes = res.organizacoes;
 
+                this.organizacaoService.findActiveOrganizations().subscribe((org) => {
+                    this.organizacoes = org;
+                });
         });
     }
 

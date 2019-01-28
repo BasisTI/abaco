@@ -170,7 +170,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             case 'edit':
                 if (event.selection.bloqueado) {
                     this.pageNotificationService.addErrorMsg(
-                        MessageUtil.ERRO_EXCLUSAO_ANALISE_BLOQUEADA);
+                        MessageUtil.EDITAR_ANALISE_BLOQUEADA);
                     return;
                 } 
                 this.router.navigate(['/analise', event.selection.idAnalise, 'edit']);
@@ -210,8 +210,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         return this.analiseService.find(this.analiseSelecionada.idAnalise).subscribe((res: any) => {
                     this.analiseTemp = res;
                     this.loggedUser.tipoEquipes.forEach(equipe => {
-                    if (equipe.id === this.analiseTemp.equipeResponsavel.id){
-                    retorno = true;
+                        if (equipe.id === this.analiseTemp.equipeResponsavel.id){
+                        retorno = true;
                     }
                 });
             return retorno;
