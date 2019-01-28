@@ -314,7 +314,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    openDialogPhaseEffort() {
+    openDialogPhaseEffort(editForm1) {
         this.newPhaseEffort = new EsforcoFase();
         this.showDialogPhaseEffort = true;
     }
@@ -402,7 +402,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         return total;
     }
 
-    openDialogCreateAdjustFactor() {
+    openDialogCreateAdjustFactor(editForm2) {
         this.newAdjustFactor = new FatorAjuste();
         this.validaTipoDeflator = false;
         this.validaDeflator = false;
