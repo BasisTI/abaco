@@ -35,7 +35,12 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     isSaving;
     manualInvalido;
     numeroContratoInvalido;
-    isEdit; validaNumeroContrato; validaManual; validaDataInicio; validaDataFinal; validaDiasGarantia: boolean;
+    isEdit;
+    validaNumeroContrato;
+    validaManual;
+    validaDataInicio;
+    validaDataFinal;
+    validaDiasGarantia: boolean;
     showDialogContrato = false;
     cnpjValido: boolean;
     manuais: Manual[];
@@ -316,7 +321,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
             this.uploadService.uploadLogo(this.newLogo).subscribe((response: any) => {
                 this.organizacao.logoId = response.id;
-                this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
             });
         } else {
             this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
