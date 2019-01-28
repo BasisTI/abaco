@@ -403,6 +403,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     openDialogCreateAdjustFactor() {
+        this.newAdjustFactor = new FatorAjuste();
         this.validaTipoDeflator = false;
         this.validaDeflator = false;
         this.validaNomeDeflator = false;

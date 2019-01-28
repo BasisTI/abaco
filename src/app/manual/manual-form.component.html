@@ -213,7 +213,7 @@
                         <div class="ui-g-3 ui-md-3 ui-sm-12">
                             <app-blue-button buttonLabel="Novo Esforço Fase" buttonIcon="ui-icon-add"
                                              id="idBtnNovoEsforcoFaseFormManual"
-                                             (click)="openDialogPhaseEffort()">
+                                             (click)="openDialogPhaseEffort(editForm1.resetForm())">
                             </app-blue-button>
                         </div>
                     </div>
@@ -242,7 +242,7 @@
                         <div class="ui-g-3 ui-md-3 ui-sm-12">
                             <app-blue-button buttonLabel="Novo Deflator" buttonIcon="ui-icon-add"
                                              id="idBtnNovoDeflatorFormManual"
-                                             (click)="openDialogCreateAdjustFactor()">
+                                             (click)="openDialogCreateAdjustFactor(editForm2.resetForm())">
                             </app-blue-button>
                         </div>
                     </div>
@@ -280,9 +280,14 @@
                     </div>
                 </div>
 
+            </form>
+
+            <form name="editForm1" role="form" novalidate (ngSubmit)="save(editForm1)" #editForm1="ngForm">
+
                 <!-- Dialog Registro Esforco Fase -->
                 <p-dialog header="Esforço por Fase" [(visible)]="showDialogPhaseEffort"
                           (onHide)="fecharEsforcoFase()"
+                          onreset="esforcoFases"
                           [contentStyle]="{'overflow':'visible'}"
                           [width]="800">
                     <div class="ui-g">
@@ -345,6 +350,8 @@
                         </div>
                     </div>
                 </p-dialog>
+
+            </form>
 
                 <!-- Dialog Edit  Esforco Fase -->
                 <p-dialog header="Esforço por Fase" [(visible)]="showDialogEditPhaseEffort"
@@ -415,7 +422,12 @@
                 <!-- Fim Dialog Edit  Esforco Fase -->
 
                 <!-- Inicio Dialog Novo Deflator -->
+
+            <form name="editForm2" role="form" novalidate (ngSubmit)="save(editForm2)" #editForm2="ngForm">
+
+
                 <p-dialog header="Deflator" [(visible)]="showDialogCreateAdjustFactor"
+                          (onHide)="closeDialogCreateAdjustFactor()"
                           [contentStyle]="{'overflow':'visible'}"
                           [width]="800">
                     <div class="ui-g">
@@ -428,9 +440,9 @@
                                    pInputText required
                                    maxlength="255"
                                    (keyup)= "this.validaNomeDeflator = false"/>
-                            <div *ngIf="this.validaNomeDeflator || (editForm.controls['nomeFatorAjuste']
-                                    && !editForm.controls['nomeFatorAjuste'].valid
-                                    && editForm.controls['nomeFatorAjuste'].touched)">
+                            <div *ngIf="this.validaNomeDeflator || (editForm2.controls['nomeFatorAjuste']
+                                    && !editForm2.controls['nomeFatorAjuste'].valid
+                                    && editForm2.controls['nomeFatorAjuste'].touched)">
                                 <span style="color: red">Campo obrigatório.</span>
                             </div>
                         </div>
@@ -442,9 +454,9 @@
                                         placeholder="Tipo Ajuste" required
                                         (onClick)= "this.validaTipoDeflator = false">
                             </p-dropdown>
-                            <div *ngIf="this.validaTipoDeflator || (editForm.controls['tipoAjuste']
-                                        && !editForm.controls['tipoAjuste'].valid
-                                        && editForm.controls['tipoAjuste'].touched)">
+                            <div *ngIf="this.validaTipoDeflator || (editForm2.controls['tipoAjuste']
+                                        && !editForm2.controls['tipoAjuste'].valid
+                                        && editForm2.controls['tipoAjuste'].touched)">
                                 <span style="color: red">Campo obrigatório.</span>
                             </div>
                         </div>
@@ -465,9 +477,9 @@
                                 (onFocus)= "this.validaDeflator = false">
                             </p-spinner>
                     
-                            <div *ngIf="this.validaDeflator || (editForm.controls['fator']
-                                        && !editForm.controls['fator'].valid
-                                        && editForm.controls['fator'].touched)">
+                            <div *ngIf="this.validaDeflator || (editForm2.controls['fator']
+                                        && !editForm2.controls['fator'].valid
+                                        && editForm2.controls['fator'].touched)">
                                 <span style="color: red">Campo obrigatório.</span>
                             </div>
                         </div>
@@ -515,6 +527,8 @@
                     </div>
 
                 </p-dialog>
+
+        </form>
                 <!-- Fim Dialog Novo Deflator -->
 
                 <!-- Inicio Dialog Edit Fator Ajuste -->
@@ -628,7 +642,7 @@
                                           (click)="dialog.accept()"></app-green-button>
                     </p-footer>
                 </p-confirmDialog>
-            </form>
+
         </div>
     </div>
 </div>
