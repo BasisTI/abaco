@@ -12,6 +12,8 @@ import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -123,16 +125,16 @@ public class BaseLineAnaliticoResource {
 
     @GetMapping("/baseline-analiticos/fd/{id}/equipe/{idEquipe}")
     @Timed
-    public List<BaseLineAnalitico> getBaseLineAnaliticoFDEquipe(@PathVariable Long id,@PathVariable Long idEquipe) {
+    public Page<BaseLineAnalitico> getBaseLineAnaliticoFDEquipe(@PathVariable Long id,@PathVariable Long idEquipe, Pageable pageable) {
         log.debug(DBG_MSG_FD, id);
-        return baseLineAnaliticoRepository.getAllAnaliticosFDEquipe(id,idEquipe);
+        return baseLineAnaliticoRepository.getAllByIdsistemaAndEquipeResponsavelIdAndTipo(id,idEquipe, "fd", pageable);
     }
 
     @GetMapping("/baseline-analiticos/ft/{id}/equipe/{idEquipe}")
     @Timed
-    public List<BaseLineAnalitico> getBaseLineAnaliticoFTEquipe(@PathVariable Long id,@PathVariable Long idEquipe) {
+    public Page<BaseLineAnalitico> getBaseLineAnaliticoFTEquipe(@PathVariable Long id, @PathVariable Long idEquipe, Pageable pageable) {
         log.debug("REST request to get FT BaseLineAnalitico : {}", id);
-        return baseLineAnaliticoRepository.getAllAnaliticosFTEquipe(id,idEquipe);
+        return baseLineAnaliticoRepository.getAllByIdsistemaAndEquipeResponsavelIdAndTipo(id,idEquipe, "ft", pageable);
     }
 
 }
