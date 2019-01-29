@@ -226,6 +226,19 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 		return authorities; 
 	}
 
+    public String getAuthDescription(){
+
+        String ponto = ". ";
+        String perfil = "";
+
+        for(Authority authority : authorities){
+            perfil = perfil.concat(authority.getDescription()).concat(ponto);
+        }
+
+        return perfil;
+
+    }
+
 	public void setAuthorities(Set<Authority> authorities) {
 		this.authorities = authorities;
 	}
