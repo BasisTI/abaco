@@ -113,7 +113,8 @@
                                     id="idNomeFormFuncaoDados"
                                     (completeMethod)="searchBaseline($event)"
                                     field="name"
-                                    (onSelect)="recuperarNomeSelecionado($event)">
+                                    (onSelect)="recuperarNomeSelecionado($event)"
+                                    datakey="id">
                             </p-autoComplete>
                             <span class="md-inputfield">
                                 <div *ngIf="nomeInvalido && !currentFuncaoDados.name"

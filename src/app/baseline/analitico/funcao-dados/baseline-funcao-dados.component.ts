@@ -1,9 +1,7 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import {ResponseWrapper} from '../../../shared/index';
-import {ActivatedRoute, Router} from '@angular/router';
-import {BaselineService} from '../../baseline.service';
-import {Subscription} from '../../../../../node_modules/rxjs/Rx';
 import {DatatableComponent} from '@basis/angular-components';
+import { ActivatedRoute } from '@angular/router';
+import { BaselineService } from '../..';
 
 
 @Component({
@@ -12,18 +10,15 @@ import {DatatableComponent} from '@basis/angular-components';
 })
 export class BaselineFuncaoDadosComponent implements OnInit, OnDestroy {
 
-    private routeSub: Subscription;
-    public idSistema: number;
-    public idEquipe: number;
-
     rowsPerPageOptionsFD: number[] = [5, 10, 20];
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
-    searchUrlFD: string = this.baselineService.analiticosFDUrl;
-
+    
+    public idSistema: number;
+    public idEquipe: number;
+    public urlFd: String;
 
     constructor (
         private route: ActivatedRoute,
-        private router: Router,
         private baselineService: BaselineService,
     ) {
     }
@@ -32,19 +27,11 @@ export class BaselineFuncaoDadosComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.routeSub = this.route.params.subscribe(params => {
+        this.route.params.subscribe(params => {
             this.idSistema = params['id'];
             this.idEquipe = params['equipe'];
         });
-        this.searchUrlFD += this.idSistema;
-        this.carregarDataTable();
-    }
-
-
-    public carregarDataTable() {
-        this.baselineService.baselineAnaliticoFDEquipe(this.idSistema, this.idEquipe).subscribe((res: ResponseWrapper) => {
-            this.datatable.value = res.json;
-        });
+        this.urlFd = `${this.baselineService.analiticosFDUrl}${this.idSistema}/equipe/${this.idEquipe}`;
     }
 
 }
