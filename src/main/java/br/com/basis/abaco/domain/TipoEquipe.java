@@ -52,6 +52,9 @@ public class TipoEquipe implements Serializable, ReportObject {
     @JoinTable(name = "tipoequipe_organizacao", joinColumns = @JoinColumn(name = "tipoequipe_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
     private Set<Organizacao> organizacoes = new HashSet<>();
 
+    @ManyToMany(mappedBy = "tipoEquipes")
+    private Set<User> usuarios = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not
     // remove
     public Long getId() {
@@ -83,6 +86,14 @@ public class TipoEquipe implements Serializable, ReportObject {
 
     public void setOrganizacoes(Set<Organizacao> orgs) {
         this.organizacoes = new HashSet<>(orgs);
+    }
+
+    public Set<User> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(Set<User> usuarios) {
+        this.usuarios = usuarios;
     }
 
     public String getNomeOrg(){

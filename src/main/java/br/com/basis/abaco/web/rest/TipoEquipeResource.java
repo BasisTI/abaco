@@ -3,6 +3,7 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
+import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioEquipeColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -184,7 +185,7 @@ public class TipoEquipeResource {
     @Timed
     public List<TipoEquipe> getAllTipoEquipeByOrganizacao(@PathVariable Long idOrganizacao) {
         log.debug("REST request to get all TipoEquipes");
-        return tipoEquipeRepository.findAllByOrganizacoes_Id(idOrganizacao);
+        return tipoEquipeRepository.findAllByOrganizacaoAndUsuario(SecurityUtils.getCurrentUserLogin(), idOrganizacao);
     }
 
     @GetMapping("/tipo-equipes/compartilhar/{idOrganizacao}/{idAnalise}/{idEquipe}")
