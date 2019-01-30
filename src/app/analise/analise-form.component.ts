@@ -103,6 +103,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.isSaving = false;
         this.dataHomol = new Date();
         this.getLoggedUser();
+        // this.populateOrgs();
         this.habilitarCamposIniciais();
         this.getAnalise();
     }
@@ -117,12 +118,19 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     getLoggedUser() {
         this.userService.findCurrentUser().subscribe(res => {
             this.loggedUser = res;
-
-                this.organizacaoService.findActiveOrganizations().subscribe((org) => {
-                    this.organizacoes = org;
-                });
+            res.organizacoes.forEach(org => {
+                if (org.ativo){
+                    this.organizacoes.push(org);
+                }
+            });
         });
     }
+
+    // populateOrgs(){
+    //     this.userService.findCurrentUserActiveOrgs().subscribe(res => {
+    //         this.organizacoes = res;
+    //     });
+    // }
 
     checkUserAnaliseEquipes() {
         let retorno = false;
