@@ -115,13 +115,14 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Função para recuperar os dados do usuário logado no momento
      */
     getLoggedUser() {
-        this.userService.findCurrentUser().subscribe(res => {
+        this.userService.findCurrentUserActiveOrgs().subscribe(res => {
             this.loggedUser = res;
-
-                this.organizacaoService.findActiveOrganizations().subscribe((org) => {
-                    this.organizacoes = org;
-                });
+            this.populateOrgs(res.organizacoes);
         });
+    }
+
+    populateOrgs(orgs){
+            this.organizacoes = orgs;
     }
 
     checkUserAnaliseEquipes() {
