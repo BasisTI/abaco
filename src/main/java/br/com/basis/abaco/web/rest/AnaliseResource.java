@@ -516,13 +516,15 @@ public class AnaliseResource {
 
     private Boolean checarPermissao(Long idAnalise) {
         Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()); // Busca o usuário
-        log.debug(logged.toString());
+        log.info(logged.toString());
         List<Long> equipesIds = userRepository.findUserEquipes(logged.get().getId()); // Traz as equipes do usuário
-        log.debug(equipesIds.toString());
+        log.info(equipesIds.toString());
         Integer analiseDaEquipe = analiseRepository.analiseEquipe(idAnalise, equipesIds); // Traz as
-        log.debug(analiseDaEquipe.toString());
+        log.info(analiseDaEquipe.toString());
 
-        if (analiseDaEquipe == 0) { // Verifica se a analise faz parte de sua equipe
+        if (analiseDaEquipe.intValue() == 0) { // Verifica se a analise faz parte de sua equipe
+            log.info(idAnalise.toString());
+            log.info(this.verificaCompartilhada(idAnalise).toString());
             return this.verificaCompartilhada(idAnalise);
         } else {
             return true;
@@ -540,10 +542,10 @@ public class AnaliseResource {
         boolean retorno = checarPermissao(id);
 
         if (retorno) {
-            log.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             return analiseRepository.findOne(id);
         } else {
-            log.debug("*******************************************");
+            log.info("*******************************************");
             return null;
         }
     }
