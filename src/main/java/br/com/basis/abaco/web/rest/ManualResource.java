@@ -225,7 +225,7 @@ public class ManualResource {
      * @return the result of the search
      * @throws URISyntaxException
      */
-    @GetMapping("/_search/manuals")
+    @GetMapping("/_search/manual")
     @Timed
     public ResponseEntity<List<Manual>> searchManuals(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
         log.debug("REST request to search Manuals for query {}", query);
@@ -234,11 +234,11 @@ public class ManualResource {
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
         Page<Manual> page = manualSearchRepository.search(queryStringQuery(query), newPageable);
 
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/manuals");
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/manual");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/manuals/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "/manual/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
