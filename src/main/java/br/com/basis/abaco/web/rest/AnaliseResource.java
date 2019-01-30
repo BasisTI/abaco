@@ -428,22 +428,6 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
     }
 
-    /**
-     * Método responsável por requisitar a geração do relatório de Análise para excel.
-     *
-     * @throws URISyntaxException
-     * @throws JRException
-     * @throws IOException
-     */
-    @GetMapping("/downloadRelatorioExcel/{id}")
-    @Timed
-    public @ResponseBody
-    byte[] downloadExcelAnalise(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
-        Analise analise = recuperarAnalise(id);
-        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
-        log.debug("REST request to generate a xml Analise report: {}", analise);
-        return relatorioAnaliseRest.downloadExcel(analise);
-    }
 
     /**
      * Método responsável pela exportação da pesquisa.
