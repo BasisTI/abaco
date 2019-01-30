@@ -429,6 +429,23 @@ public class AnaliseResource {
     }
 
     /**
+     * Método responsável por requisitar a geração do relatório de Análise para excel.
+     *
+     * @throws URISyntaxException
+     * @throws JRException
+     * @throws IOException
+     */
+    @GetMapping("/downloadRelatorioExcel/{id}")
+    @Timed
+    public @ResponseBody
+    byte[] downloadExcelAnalise(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
+        Analise analise = recuperarAnalise(id);
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
+        log.debug("REST request to generate a xml Analise report: {}", analise);
+        return relatorioAnaliseRest.downloadExcel(analise);
+    }
+
+    /**
      * Método responsável pela exportação da pesquisa.
      *
      * @param tipoRelatorio
@@ -515,8 +532,11 @@ public class AnaliseResource {
 
     private Boolean checarPermissao(Long idAnalise) {
         Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()); // Busca o usuário
+        log.debug(logged.toString());
         List<Long> equipesIds = userRepository.findUserEquipes(logged.get().getId()); // Traz as equipes do usuário
+        log.debug(equipesIds.toString());
         Integer analiseDaEquipe = analiseRepository.analiseEquipe(idAnalise, equipesIds); // Traz as
+        log.debug(analiseDaEquipe.toString());
 
         if (analiseDaEquipe == 0) { // Verifica se a analise faz parte de sua equipe
             return this.verificaCompartilhada(idAnalise);
@@ -536,8 +556,10 @@ public class AnaliseResource {
         boolean retorno = checarPermissao(id);
 
         if (retorno) {
+            log.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             return analiseRepository.findOne(id);
         } else {
+            log.debug("*******************************************");
             return null;
         }
     }
