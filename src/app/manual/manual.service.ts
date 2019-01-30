@@ -11,9 +11,9 @@ import {ResponseWrapper, createRequestOption, JSONable, PageNotificationService}
 @Injectable()
 export class ManualService {
 
-    resourceName = '/manuals';
+    resourceName = '/manual';
     resourceUrl = environment.apiUrl + this.resourceName;
-    searchUrl = environment.apiUrl + '/_search/manuals';
+    searchUrl = environment.apiUrl + '/_search/manual';
 
     constructor(
         private http: HttpService,
