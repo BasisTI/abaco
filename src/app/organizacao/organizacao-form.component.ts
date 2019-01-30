@@ -304,7 +304,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
                     this.logo = response.logo;
                     this.isEdit = true;
                     this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
-
                 });
 
                 this.uploadService.saveFile(this.newLogo).subscribe(response => {
@@ -318,9 +317,9 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
     novo() {
         if (this.newLogo !== undefined && this.newLogo != null) {
-
             this.uploadService.uploadLogo(this.newLogo).subscribe((response: any) => {
                 this.organizacao.logoId = response.id;
+                this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
             });
         } else {
             this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
