@@ -1,8 +1,9 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {ResponseWrapper} from '../../shared';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BaselineService} from '../baseline.service';
 import {Subscription} from '../../../../node_modules/rxjs';
-import { BaselineSintetico } from '..';
+import {DatatableComponent} from '@basis/angular-components';
 
 
 @Component({
@@ -13,9 +14,9 @@ export class BaselineViewComponent implements OnInit, OnDestroy {
 
     private routeSub: Subscription;
     public idSistema: number;
-    public idEquipe: number;
 
-    public sistema: BaselineSintetico = new BaselineSintetico();
+    searchUrlFD: string = this.baselineService.analiticosFDUrl;
+    searchUrlFT: string = this.baselineService.analiticosFTUrl;
 
     constructor (
         private route: ActivatedRoute,
@@ -30,16 +31,8 @@ export class BaselineViewComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.routeSub = this.route.params.subscribe(params => {
             this.idSistema = params['id'];
-            this.idEquipe = params['equipe'];
-            this.carregarSistema();
         });
 
-    }
-
-    public carregarSistema() {
-        this.baselineService.getSistemaSinteticoEquipe(this.idSistema, this.idEquipe).subscribe((res: BaselineSintetico) => {
-            this.sistema = res;
-        });
     }
 
 }

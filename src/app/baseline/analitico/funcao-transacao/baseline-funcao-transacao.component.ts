@@ -1,4 +1,5 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {ResponseWrapper} from '../../../shared/index';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BaselineService} from '../../baseline.service';
 import {Subscription} from '../../../../../node_modules/rxjs/Rx';
@@ -14,13 +15,13 @@ export class BaselineFuncaoTransacaoComponent implements OnInit, OnDestroy {
     private routeSub: Subscription;
     public idSistema: number;
     public idEquipe: number;
-    public urlFt: String;
 
     rowsPerPageOptionsFT: number[] = [5, 10, 20];
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
     constructor (
         private route: ActivatedRoute,
+        private router: Router,
         private baselineService: BaselineService,
     ) {
     }
@@ -33,7 +34,13 @@ export class BaselineFuncaoTransacaoComponent implements OnInit, OnDestroy {
             this.idSistema = params['id'];
             this.idEquipe = params['equipe'];
         });
-        this.urlFt = `${this.baselineService.analiticosFTUrl}${this.idSistema}/equipe/${this.idEquipe}`;
+        this.carregarDataTable();
+    }
+
+    public carregarDataTable() {
+        this.baselineService.baselineAnaliticoFTEquipe(this.idSistema, this.idEquipe).subscribe((res: ResponseWrapper) => {
+            this.datatable.value = res.json;
+        });
     }
 
 }
