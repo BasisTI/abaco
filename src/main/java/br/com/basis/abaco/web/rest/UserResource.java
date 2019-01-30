@@ -289,9 +289,7 @@ public class UserResource {
     @GetMapping("/users/activeorgs")
     @Timed
     public User getLoggedUserActiveOrgs() {
-        String login = SecurityUtils.getCurrentUserLogin();
-        User user = userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
-        return userRepository.findUserWithActiveOrgs(user.getId());
+        return userRepository.findUserWithActiveOrgs(SecurityUtils.getCurrentUserLogin());
     }
 
 	@GetMapping("/users/authorities")
