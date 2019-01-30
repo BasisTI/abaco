@@ -428,6 +428,7 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
     }
 
+
     /**
      * Método responsável pela exportação da pesquisa.
      *
@@ -518,7 +519,7 @@ public class AnaliseResource {
         List<Long> equipesIds = userRepository.findUserEquipes(logged.get().getId()); // Traz as equipes do usuário
         Integer analiseDaEquipe = analiseRepository.analiseEquipe(idAnalise, equipesIds); // Traz as
 
-        if (analiseDaEquipe == 0) { // Verifica se a analise faz parte de sua equipe
+        if (analiseDaEquipe.intValue() == 0) { // Verifica se a analise faz parte de sua equipe
             return this.verificaCompartilhada(idAnalise);
         } else {
             return true;
@@ -527,6 +528,9 @@ public class AnaliseResource {
     }
 
     private Boolean verificaCompartilhada(Long idAnalise) {
+        if (analiseRepository.analiseCompartilhada(idAnalise) == null) {
+            return false;
+        }
         return analiseRepository.analiseCompartilhada(idAnalise);
 
     }

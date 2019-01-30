@@ -41,4 +41,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "select tipo_equipe_id from user_tipo_equipe where user_id = :idUser", nativeQuery = true)
     List<Long> findUserEquipes(@Param("idUser") Long idUser);
+
+    @Query(value = "select u from User u join fetch u.organizacoes o where u.id=?1 and o.ativo=true")
+    User findUserWithActiveOrgs(Long idUser);
 }
