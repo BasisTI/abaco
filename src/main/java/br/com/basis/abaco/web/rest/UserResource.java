@@ -281,6 +281,19 @@ public class UserResource {
         return userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
     }
 
+    /**
+     * GET  get the current logged user active organizations
+     *
+     * @return a list of active organizations, or with status 404 (Not Found)
+     */
+    @GetMapping("/users/activeorgs")
+    @Timed
+    public User getLoggedUserActiveOrgs() {
+        String login = SecurityUtils.getCurrentUserLogin();
+        User user = userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
+        return userRepository.findUserWithActiveOrgs(user.getId());
+    }
+
 	@GetMapping("/users/authorities")
 	@Timed
 	public ResponseEntity<List<Authority>> getAllAuthorities(@ApiParam Pageable pageable) throws URISyntaxException {
