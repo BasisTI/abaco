@@ -72,7 +72,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     colunasAMostrar = [];
     dadosBaselineFD: BaselineAnalitico[] = [];
     results: string[];
-    currentFuncaoDadosasdf: FuncaoAnalise;
     baselineResults: any[] = [];
     funcoesDadosList: FuncaoDados[] = [];
 
