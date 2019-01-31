@@ -382,10 +382,8 @@
                                         </p-column>
 
                                         <p-column
-                                                header="Esforço %">
-                                                <ng-template let-col let-item="rowData" pTemplate="body">
-                                                    {{ item[col.esforco].toLocaleString() }}%
-                                                </ng-template>
+                                                header="Esforço %"
+                                                field="esforco">
                                         </p-column>
 
                                         <p-footer
