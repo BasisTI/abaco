@@ -39,6 +39,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
+    if (!this.username || !this.password){
+      this.pageNotificationService.addErrorMsg("Preencha os campos obrigatórios!");
+      return;
+    }
     this.loginService.login(this.username, this.password).subscribe(() => {
       // this.authService.loginSuccess();
 
