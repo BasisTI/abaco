@@ -24,7 +24,7 @@
                 [(ngModel)]="username" 
                 pInputText />
               <label>Usuário*</label>
-              <div *ngIf="this.username || (loginForm.controls['username']
+              <div *ngIf="(loginForm.controls['username']
                                         && !loginForm.controls['username'].valid
                                         && (loginForm.controls['username'].touched
                                         || loginForm.submitted))" class="ui-message ui-messages-error">
@@ -43,7 +43,7 @@
                 [(ngModel)]="password" 
                 [feedback]="false" />
               <label>Senha*</label>
-              <div *ngIf="this.password || (loginForm.controls['password']
+              <div *ngIf="(loginForm.controls['password']
                                         && !loginForm.controls['password'].valid
                                         && (loginForm.controls['password'].touched
                                         || loginForm.submitted))" class="ui-message ui-messages-error">
