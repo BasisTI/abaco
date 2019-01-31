@@ -25,6 +25,8 @@ export class AnaliseService {
 
   relatoriosDetalhadoUrl = environment.apiUrl + '/downloadPdfDetalhadoBrowser';
 
+  relatorioExcelUrl = environment.apiUrl + '/downloadRelatorioExcel';
+
   searchUrl = environment.apiUrl + '/_search/analises';
 
   relatoriosBaselineUrl = environment.apiUrl + '/downloadPdfBaselineBrowser';
@@ -159,6 +161,37 @@ export class AnaliseService {
         anchor.download = 'analise.pdf';
         anchor.href = fileURL;
         window.open(fileURL, '_blank', '');
+        this.blockUI.stop();
+        return null;
+      });
+      return null;
+  }
+
+  /**
+   *
+   */
+  public gerarRelatorioExcel(id: number): Observable<string> {
+    this.blockUI.start('GERANDO RELATORIO...');
+    this.http.get(`${this.relatorioExcelUrl}/${id}`, {
+    method: RequestMethod.Get,
+    responseType: ResponseContentType.Blob,
+  }).catch((error: any) => {
+    this.blockUI.stop();
+    if (error.status === 500) {
+        this.pageNotificationService.addErrorMsg('Erro ao gerar relatório, verifique se a análise possui FDs/FTs cadastradas');
+        this.blockUI.stop();
+        return Observable.throw(new Error(error.status));
+    }
+}).subscribe(
+      (response) => {
+        const mediaType = 'application/vnd.ms-excel';
+        const blob = new Blob([response.blob()], {type: mediaType});
+        const fileURL = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.download = 'analise.xls';
+        anchor.href = fileURL;
+        document.body.appendChild(anchor);
+        anchor.click();
         this.blockUI.stop();
         return null;
       });

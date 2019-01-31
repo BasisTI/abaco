@@ -130,6 +130,13 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         }
         return "Relatório Detalhado";
     }
+
+    relatorioExcelTooltip() {
+        if (!this.analiseSelecionada.idAnalise){
+            return "Selecione um registro para gerar o relatório";
+        }
+        return "Relatório Excel";
+    }
     
     recuperarOrganizacoes() {
         this.organizacaoService.query().subscribe(response => {
@@ -189,6 +196,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 break;
             case 'relatorioBrowserDetalhado' :
                 this.geraRelatorioPdfDetalhadoBrowser(event.selection);
+                break;
+            case 'relatorioExcelDetalhado' :
+                this.gerarRelatorioExcel(event.selection);
                 break;
             case 'clone' :
                 this.clonar(event.selection.idAnalise);
@@ -364,6 +374,14 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      */
     public geraRelatorioPdfDetalhadoBrowser(analise: Grupo) {
             this.analiseService.geraRelatorioPdfDetalhadoBrowser(analise.idAnalise);
+    }
+
+    /**
+     * Método responsável por gerar o relatório da analise em excel.
+     * @param analise
+     */
+    public gerarRelatorioExcel(analise: Grupo) {
+        this.analiseService.gerarRelatorioExcel(analise.idAnalise);
     }
 
      /**
