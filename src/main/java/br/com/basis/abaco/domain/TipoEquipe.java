@@ -89,11 +89,15 @@ public class TipoEquipe implements Serializable, ReportObject {
     }
 
     public Set<User> getUsuarios() {
-        return usuarios;
+        Set<User> userAux;
+        userAux = usuarios;
+        return userAux;
     }
 
     public void setUsuarios(Set<User> usuarios) {
-        this.usuarios = usuarios;
+        Set<User> userAux;
+        userAux = usuarios;
+        this.usuarios = userAux;
     }
 
     public String getNomeOrg(){
