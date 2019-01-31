@@ -307,11 +307,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             },
             {
                 value: MessageUtil.INDICATIVA,
-                label: this.getLabelValorVariacao(MessageUtil.INDICATIVA_NESMA, manual.valorVariacaoIndicativaFormatado)
+                label: this.getLabelValorVariacao(MessageUtil.INDICATIVA_NESMA, manual.valorVariacaoIndicativa)
             },
             {
                 value: MessageUtil.ESTIMADA,
-                label: this.getLabelValorVariacao(MessageUtil.ESTIMADA_NESMA, manual.valorVariacaoEstimadaFormatado)
+                label: this.getLabelValorVariacao(MessageUtil.ESTIMADA_NESMA, manual.valorVariacaoEstimada)
             }
         ];
     }
@@ -320,7 +320,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Atribui o rótulo para o valor de Variação
      */
     private getLabelValorVariacao(label: string, valorVariacao: number): string {
-        return label + ' - ' + valorVariacao + '%';
+        return label + ' - ' + valorVariacao.toLocaleString() + '%';
     }
 
     /**
