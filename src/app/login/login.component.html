@@ -6,7 +6,7 @@
       style="margin: 0px auto 0 auto; min-height: 400px;"
       *ngIf="!authenticated">
       
-      <form
+      <form novalidate #loginForm="ngForm"
         name="loginForm" 
         role="form" 
         (ngSubmit)="login()">
@@ -23,7 +23,13 @@
                 name="username" 
                 [(ngModel)]="username" 
                 pInputText />
-              <label>Usuário *</label>
+              <label>Usuário*</label>
+              <div *ngIf="this.username || (loginForm.controls['username']
+                                        && !loginForm.controls['username'].valid
+                                        && (loginForm.controls['username'].touched
+                                        || loginForm.submitted))" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+              </div>
             </span>
           </div>
 
@@ -36,7 +42,13 @@
                 name="password" 
                 [(ngModel)]="password" 
                 [feedback]="false" />
-              <label>Senha *</label>
+              <label>Senha*</label>
+              <div *ngIf="this.password || (loginForm.controls['password']
+                                        && !loginForm.controls['password'].valid
+                                        && (loginForm.controls['password'].touched
+                                        || loginForm.submitted))" class="ui-message ui-messages-error">
+                                Campo obrigatório.
+              </div>
             </span>
           </div>
 
@@ -57,6 +69,5 @@
       <i class="material-icons" style="font-size: 200px; color: #618849;">blur_linear</i>
     </div>
     <!-- Fim Após a autenticação exibir o campo abaixo-->
-
   </div>
 </div>
