@@ -42,6 +42,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (!this.username || !this.password){
       this.pageNotificationService.addErrorMsg("Preencha os campos obrigatórios!");
       return;
+    } 
+    if (this.password.length > 4){
+      this.pageNotificationService.addErrorMsg("A senha precisa ter no mínimo 4 caracteres!");
+      return;
     }
     this.loginService.login(this.username, this.password).subscribe(() => {
       // this.authService.loginSuccess();
@@ -57,6 +61,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     }, error => {
       switch (error.status) {
         case 401: {
+          this.pageNotificationService.addErrorMsg('Usuário ou senha inválidos!');
+        } break;
+        case 400: {
           this.pageNotificationService.addErrorMsg('Usuário ou senha inválidos!');
         } break;
       }
