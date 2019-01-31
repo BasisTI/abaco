@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.pageNotificationService.addErrorMsg("Preencha os campos obrigatórios!");
       return;
     } 
-    if (this.password.length > 4){
+    if (this.password.length < 4){
       this.pageNotificationService.addErrorMsg("A senha precisa ter no mínimo 4 caracteres!");
       return;
     }
