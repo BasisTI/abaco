@@ -43,6 +43,8 @@ public class RelatorioAnaliseRest {
 
     private static String caminhoAnaliseDetalhada = "reports/analise/analise_detalhada.jasper";
 
+    private static String caminhoAnaliseExcel = "reports/analise/analise_excel.jasper";
+
     private static String caminhoImagem = "reports/img/fnde_logo.png";
 
     private HttpServletRequest request;
@@ -118,6 +120,19 @@ public class RelatorioAnaliseRest {
             return relatorio.downloadPdfBrowser(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
         }
         return null;
+    }
+
+    /**Gera o relatório para excel
+     *
+     * @param analise
+     * @throws FileNotFoundException
+     * @throws JRException
+     */
+    public @ResponseBody byte[] downloadExcel(Analise analise) throws FileNotFoundException, JRException {
+        init();
+        popularObjeto(analise);
+
+        return relatorio.downloadExcel(analise, caminhoAnaliseExcel, popularParametroAnalise());
     }
 
 
