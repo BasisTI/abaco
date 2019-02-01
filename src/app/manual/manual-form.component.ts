@@ -125,7 +125,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.manualService.find(this.manual.id).subscribe(() => {
             const oldId = this.manual.arquivoManualId;
             if (this.checkRequiredFields()) {
-                if (this.arquivoManual !== undefined) {
+                if (this.newUpload) {
                     this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
                         this.manual.arquivoManualId = response.id;
                         this.isEdit = true;
@@ -144,7 +144,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     private novo() {
 
-        if (this.arquivoManual !== undefined) {
+        if (this.arquivoManual) {
             if (this.checkRequiredFields()) {
                 this.uploadService.uploadFile(this.arquivoManual).subscribe(response => {
                     this.manual.arquivoManualId = response.id;
