@@ -56,7 +56,7 @@ public class RelatorioFuncoes {
 
     /**
      * Método responsável por popular o objeto FuncoesDTO com as informações da função de transação.
-     * @param analise
+     * @param f
      */
     private void popularFuncaoTransacao(FuncaoTransacao f) {
         this.init();
@@ -109,11 +109,12 @@ public class RelatorioFuncoes {
     private void popularObjetoFt(FuncaoTransacao f) {
         funcoes.setIdFt(f.getId());
         funcoes.setFatorAjusteFt(f.getFatorAjuste() == null ? dash : f.getFatorAjuste().getNome());
+        funcoes.setFatorAjusteValor(f.getFatorAjuste() == null ? dash : f.getFatorAjuste().getFator().stripTrailingZeros().toPlainString().concat(f.getFatorAjuste().getTipoAjuste().toString() == "PERCENTUAL" ? "%": " PF" ));
         funcoes.setFuncionalidadeFt(f.getFuncionalidade() == null ? dash : f.getFuncionalidade().getNome());
         funcoes.setTipoFt(f.getTipo() == null ? dash : f.getTipo().toString());
         funcoes.setComplexidadeFt(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
-        funcoes.setPfTotalFt(f.getGrossPF().toString());
-        funcoes.setPfAjustadoFt(f.getPf().toString());
+        funcoes.setPfTotalFt(f.getGrossPF() == null ? dash : f.getGrossPF().stripTrailingZeros().toPlainString());
+        funcoes.setPfAjustadoFt(f.getPf() == null ? dash : f.getGrossPF().stripTrailingZeros().toPlainString());
     }
 
     /**
@@ -145,7 +146,7 @@ public class RelatorioFuncoes {
 
     /**
      *
-     * @param f
+     * @param analise
      */
     public FuncoesDTO recuperarCountsFt(Analise analise) {
         for(FuncaoTransacao f : analise.getFuncaoTransacaos()) {
@@ -341,18 +342,19 @@ public class RelatorioFuncoes {
     private void popularObjetoFd(FuncaoDados f) {
         funcoes.setIdFd(f.getId());
         funcoes.setFatorAjusteFd(f.getFatorAjuste() == null ? dash : f.getFatorAjuste().getNome());
+        funcoes.setFatorAjusteValor(f.getFatorAjuste() == null ? dash : f.getFatorAjuste().getFator().stripTrailingZeros().toPlainString().concat(f.getFatorAjuste().getTipoAjuste().toString() == "PERCENTUAL" ? "%": " PF" ));
         funcoes.setFuncionalidadeFd(f.getFuncionalidade() == null ? dash : f.getFuncionalidade().getNome());
         funcoes.setTipoFd(f.getTipo() == null ? dash : f.getTipo().toString());
         funcoes.setComplexidadeFd(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
         funcoes.setNomeFd(f.getName() == null ? dash : f.getName());
         funcoes.setImpactoFd(f.getImpacto().toString());
         if (f.getGrossPF() != null){
-            funcoes.setPfTotalFd(f.getGrossPF().toString());
+            funcoes.setPfTotalFd(f.getGrossPF().stripTrailingZeros().toPlainString());
         } else {
             funcoes.setPfTotalFd("0");
         }
         if (f.getPf() != null){
-            funcoes.setPfAjustadoFd(f.getPf().toString());
+            funcoes.setPfAjustadoFd(f.getPf().stripTrailingZeros().toPlainString());
         } else {
             funcoes.setPfAjustadoFd("0");
         }
@@ -390,7 +392,7 @@ public class RelatorioFuncoes {
 
     /**
      *
-     * @param f
+     * @param analise
      */
     public FuncoesDTO recuperarCountsFd(Analise analise) {
 

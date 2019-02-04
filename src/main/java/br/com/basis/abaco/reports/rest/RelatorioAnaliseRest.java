@@ -47,6 +47,8 @@ public class RelatorioAnaliseRest {
 
     private static String caminhoImagem = "reports/img/fnde_logo.png";
 
+    private static String caminhoImagemBasis = "reports/img/logo_basis.gif";
+
     private HttpServletRequest request;
 
     private HttpServletResponse response;
@@ -176,7 +178,7 @@ public class RelatorioAnaliseRest {
      * Método responsável por acessar o caminho da imagem da logo do relatório e popular o parâmetro.
     */
     private void popularImagemRelatorio() {
-        InputStream reportStream = getClass().getClassLoader().getResourceAsStream(caminhoImagem);
+        InputStream reportStream = getClass().getClassLoader().getResourceAsStream(caminhoImagemBasis);
         parametro.put("IMAGEMLOGO", reportStream);
     }
 
@@ -358,37 +360,6 @@ public class RelatorioAnaliseRest {
         this.popularListaArlFt();
         this.popularListaDerFd();
         this.popularListaRlrFd();
-        this.popularListaFuncaoTransacao();
-        this.popularListaFuncaoDados();
-
-    }
-
-    /**
-     *
-     */
-    private void popularListaFuncaoTransacao() {
-        List<FuncaoTransacaoDTO> listFuncaoFT = new ArrayList<>();
-
-        for(FuncoesDTO f : listFuncoes) {
-            if(f.getNomeFt() != null) {
-                listFuncaoFT.add(popularObjetoFt(f));
-            }
-        }
-        parametro.put("LISTAFUNCAOFT", listFuncaoFT);
-    }
-
-    /**
-     *
-     */
-    private void popularListaFuncaoDados() {
-        List<FuncaoDadosDTO> listFuncaoFD = new ArrayList<>();
-
-        for(FuncoesDTO f : listFuncoes) {
-            if(f.getNomeFd() != null) {
-                listFuncaoFD.add(popularObjetoFd(f));
-            }
-        }
-        parametro.put("LISTAFUNCAOFD", listFuncaoFD);
     }
 
     /**
@@ -485,16 +456,15 @@ public class RelatorioAnaliseRest {
         fd.setNomeFd(f.getNomeFd());
         fd.setClassificacaoFd(f.getTipoFd());
         fd.setImpactoFd(f.getImpactoFd());
-        fd.setRlrFd(f.getRlrFd());
-        fd.setDerFd(f.getDerFd());
         fd.setComplexidadeFd(f.getComplexidadeFd());
         fd.setPfTotalFd(f.getPfTotalFd());
         fd.setPfAjustadoFd(f.getPfAjustadoFd());
         fd.setDerFd(Integer.toString(this.countQuantidadeDerFd(f.getIdFd())));
         fd.setRlrFd(Integer.toString(this.countQuantidadeRlrFd(f.getIdFd())));
-        fd.setPfTotalFd(f.getPfTotalFd());
-        fd.setPfAjustadoFd(f.getPfAjustadoFd());
         fd.setFatorAjusteFd(f.getFatorAjusteFd());
+        fd.setFatorAjusteValor(f.getFatorAjusteValor());
+        fd.setModulo(f.getModuloFd());
+        fd.setSubmodulo(f.getFuncionalidadeFd());
         return fd;
     }
 
@@ -508,16 +478,15 @@ public class RelatorioAnaliseRest {
         ft.setNomeFt(f.getNomeFt());
         ft.setClassificacaoFt(f.getTipoFt());
         ft.setImpactoFt(f.getImpactoFt());
-        ft.setFtrFt(f.getFtrFt());
-        ft.setDerFt(f.getDerFt());
         ft.setComplexidadeFt(f.getComplexidadeFt());
         ft.setPfTotalFt(f.getPfTotalFt());
         ft.setPfAjustadoFt(f.getPfAjustadoFt());
         ft.setDerFt(Integer.toString(this.countQuantidadeDerFt(f.getIdFt())));
         ft.setFtrFt(Integer.toString(this.countQuantidadeFtrFt(f.getIdFt())));
-        ft.setPfTotalFt(f.getPfTotalFt());
-        ft.setPfAjustadoFt(f.getPfAjustadoFt());
         ft.setFatorAjusteFt(f.getFatorAjusteFt());
+        ft.setFatorAjusteValor(f.getFatorAjusteValor());
+        ft.setModulo(f.getModuloFt());
+        ft.setSubmodulo(f.getFuncionalidadeFt());
         return ft;
     }
 
@@ -777,7 +746,7 @@ public class RelatorioAnaliseRest {
 
     /**
      *
-     * @param ft
+     * @param
      */
     private Integer somaQuantidades(Integer sem, Integer baixa, Integer media, Integer alta) {
         Integer sem2 = sem, baixa2 = baixa, media2 = media, alta2 = alta;

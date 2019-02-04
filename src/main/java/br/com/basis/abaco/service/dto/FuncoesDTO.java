@@ -11,6 +11,8 @@ public class FuncoesDTO {
     private Long idFt;
     
     private String fatorAjusteFd;
+
+    private String fatorAjusteValor;
     
     private String impactoFd;
     
@@ -69,6 +71,14 @@ public class FuncoesDTO {
     private String pfTotalFt;
     
     private String pfAjustadoFt;
+
+    public String getFatorAjusteValor() {
+        return fatorAjusteValor;
+    }
+
+    public void setFatorAjusteValor(String fatorAjusteValor) {
+        this.fatorAjusteValor = fatorAjusteValor;
+    }
 
     public String getFatorAjusteFd() {
         return fatorAjusteFd;

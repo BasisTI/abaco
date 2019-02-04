@@ -25,6 +25,36 @@ public class FuncaoDadosDTO {
 
     private String fatorAjusteFd;
 
+    private String fatorAjusteValor;
+
+    private String modulo;
+
+    private String submodulo;
+
+    public String getFatorAjusteValor() {
+        return fatorAjusteValor;
+    }
+
+    public void setFatorAjusteValor(String fatorAjusteValor) {
+        this.fatorAjusteValor = fatorAjusteValor;
+    }
+
+    public String getModulo() {
+        return modulo;
+    }
+
+    public void setModulo(String modulo) {
+        this.modulo = modulo;
+    }
+
+    public String getSubmodulo() {
+        return submodulo;
+    }
+
+    public void setSubmodulo(String submodulo) {
+        this.submodulo = submodulo;
+    }
+
     public String getFatorAjusteFd() { return fatorAjusteFd; }
 
     public void setFatorAjusteFd(String fatorAjusteFd) { this.fatorAjusteFd = fatorAjusteFd; }

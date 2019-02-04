@@ -3,12 +3,13 @@ package br.com.basis.abaco.reports.util;
 import br.com.basis.abaco.domain.Analise;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -120,14 +121,18 @@ public class RelatorioUtil {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         JRXlsExporter exporter = new JRXlsExporter();
-        exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
-        exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM,outputStream);
-        //we set the one page per sheet parameter here
-        exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
-        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-        exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, analise.getIdentificadorAnalise().concat(".xls"));
+        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+
+        SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+        configuration.setOnePagePerSheet(false);
+        configuration.setDetectCellType(true);
+        configuration.setCollapseRowSpan(false);
+        configuration.setWhitePageBackground(true);
+        configuration.setRemoveEmptySpaceBetweenRows(true);
+        configuration.setIgnoreCellBackground(true);
+        exporter.setConfiguration(configuration);
+
         exporter.exportReport();
 
         response.setContentType("application/vnd.ms-excel");
