@@ -109,7 +109,7 @@ public class RelatorioFuncoes {
     private void popularObjetoFt(FuncaoTransacao f) {
         funcoes.setIdFt(f.getId());
         funcoes.setFatorAjusteFt(f.getFatorAjuste() == null ? dash : f.getFatorAjuste().getNome());
-        funcoes.setFatorAjusteValor(f.getFatorAjuste() == null ? dash : f.getFatorAjuste().getFator().stripTrailingZeros().toPlainString().concat(f.getFatorAjuste().getTipoAjuste().toString() == "PERCENTUAL" ? "%": " PF" ));
+        funcoes.setFatorAjusteValor(f.getFatorAjuste() == null  ? dash : f.getFatorAjuste().getFator().stripTrailingZeros().toPlainString().concat(f.getFatorAjuste().getTipoAjuste().toString().equals("PERCENTUAL") ? "%": " PF" ));
         funcoes.setFuncionalidadeFt(f.getFuncionalidade() == null ? dash : f.getFuncionalidade().getNome());
         funcoes.setTipoFt(f.getTipo() == null ? dash : f.getTipo().toString());
         funcoes.setComplexidadeFt(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
@@ -342,7 +342,7 @@ public class RelatorioFuncoes {
     private void popularObjetoFd(FuncaoDados f) {
         funcoes.setIdFd(f.getId());
         funcoes.setFatorAjusteFd(f.getFatorAjuste() == null ? dash : f.getFatorAjuste().getNome());
-        funcoes.setFatorAjusteValor(f.getFatorAjuste() == null ? dash : f.getFatorAjuste().getFator().stripTrailingZeros().toPlainString().concat(f.getFatorAjuste().getTipoAjuste().toString() == "PERCENTUAL" ? "%": " PF" ));
+        funcoes.setFatorAjusteValor(f.getFatorAjuste() == null ? dash : f.getFatorAjuste().getFator().stripTrailingZeros().toPlainString().concat(f.getFatorAjuste().getTipoAjuste().toString().equals("PERCENTUAL") ? "%": " PF" ));
         funcoes.setFuncionalidadeFd(f.getFuncionalidade() == null ? dash : f.getFuncionalidade().getNome());
         funcoes.setTipoFd(f.getTipo() == null ? dash : f.getTipo().toString());
         funcoes.setComplexidadeFd(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
