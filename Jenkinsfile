@@ -13,8 +13,7 @@ pipelineBuildFrontendJavascript {
     agentLabel = 'docker-engine'
 
     builderImageInfo = [
-        registry: 'basis-registry.basis.com.br',
-        name: 'basis/builder-image',
+        name: 'basisti/build-frontend-npm',
         tag: 'node-8.9.3',
         buildScriptPath: 'docker/nginx/build.sh'
     ]
