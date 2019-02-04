@@ -8,6 +8,7 @@ def _rancherConfigName = rancherConfigName
 def _rancherEnvironment = rancherEnvironment
 def _rancherStack = rancherStack
 def _rancherService = rancherService
+def _jenkinsId = jenkinsId
 
 pipelineBuildFrontendJavascript {
     agentLabel = 'docker-engine'
@@ -39,5 +40,7 @@ pipelineBuildFrontendJavascript {
         recipientList: '',
         sendSuccessNotification: false
     ]
+    
+    jenkinsId = _jenkinsId
 }
 
