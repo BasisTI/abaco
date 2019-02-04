@@ -8,13 +8,13 @@ def _rancherConfigName = rancherConfigName
 def _rancherEnvironment = rancherEnvironment
 def _rancherStack = rancherStack
 def _rancherService = rancherService
+def _jenkinsId = jenkinsId
 
 pipelineBuildFrontendJavascript {
     agentLabel = 'docker-engine'
 
     builderImageInfo = [
-        registry: 'basis-registry.basis.com.br',
-        name: 'basis/builder-image',
+        name: 'basisti/build-frontend-npm',
         tag: 'node-8.9.3',
         buildScriptPath: 'docker/nginx/build.sh'
     ]
@@ -40,5 +40,7 @@ pipelineBuildFrontendJavascript {
         recipientList: '',
         sendSuccessNotification: false
     ]
+    
+    jenkinsId = _jenkinsId
 }
 
