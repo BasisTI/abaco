@@ -34,7 +34,7 @@ export class Sistema implements BaseEntity {
       modulos = json.modulos.map(m => Modulo.fromJSON(m));
     }
     const newSistema = new Sistema(json.id, json.sigla,
-      json.nome, json.numeroOcorrencia, json.organizacao,
+      json.nome, json.tipoSistema, json.numeroOcorrencia, json.organizacao,
       modulos);
     return newSistema;
   }
