@@ -1,5 +1,6 @@
 package br.com.basis.abaco.domain;
 
+import br.com.basis.abaco.domain.enumeration.TipoSistema;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
@@ -12,6 +13,8 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -52,6 +55,10 @@ public class Sistema implements Serializable, ReportObject {
 	@Column(name = "nome", nullable = false)
     @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String nome;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_sistema")
+    private TipoSistema tipoSistema;
 
 	@Column(name = "numero_ocorrencia")
     @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
@@ -99,7 +106,15 @@ public class Sistema implements Serializable, ReportObject {
 		this.nome = nome;
 	}
 
-	public String getNumeroOcorrencia() {
+    public TipoSistema getTipoSistema() {
+        return tipoSistema;
+    }
+
+    public void setTipoSistema(TipoSistema tipoSistema) {
+        this.tipoSistema = tipoSistema;
+    }
+
+    public String getNumeroOcorrencia() {
 		return numeroOcorrencia;
 	}
 
