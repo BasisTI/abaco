@@ -89,11 +89,10 @@
     <include file="classpath:config/liquibase/changelog/201809059385651_CREATE_table_compartilhado_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/201809219385651_ADD_nomeEquipe_in_compartilhado_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/201809219385652_ADD_logo_upload_changelog.xml" relativeToChangelogFile="false"/>
-
+    <include file="classpath:config/liquibase/changelog/201902059385654_ADD_tipo_sistema_changelog.xml" relativeToChangelogFile="false"/>
 
 
     <include file="config/liquibase/changelog/20180823220848_added_entity_BaseLineSintetico.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180824144515_added_entity_BaseLineAnalitico.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/201809219385653_added_entity_Grupo.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/201902059385654_ADD_tipo_sistema_changelog.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
