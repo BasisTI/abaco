@@ -145,6 +145,7 @@ public class SistemaResource {
 		copy.setId(sistema.getId());
 		copy.setSigla(sistema.getSigla());
 		copy.setNome(sistema.getNome());
+		copy.setTipoSistema(sistema.getTipoSistema());
 		copy.setNumeroOcorrencia(sistema.getNumeroOcorrencia());
 		copy.setOrganizacao(sistema.getOrganizacao());
 		copy.setModulos(new HashSet<>(sistema.getModulos()));
