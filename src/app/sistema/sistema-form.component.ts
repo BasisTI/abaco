@@ -1,4 +1,4 @@
-import {ConfirmationService} from 'primeng/primeng';
+import {ConfirmationService, SelectItem} from 'primeng/primeng';
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Response} from '@angular/http';
@@ -27,6 +27,11 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     organizacaos: any[];
     sistema: Sistema;
     isSaving; isEdit; boolean;
+
+    tipoSistemaOptions: SelectItem[] = [
+        { label: 'Novo', value: 'NOVO' },
+        { label: 'Legado', value: 'LEGADO' }
+    ];
 
     mostrarDialogModulo = false;
     mostrarDialogEditarModulo = false;
@@ -298,6 +303,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
     private checkRequiredFields() {
         let isNameValid = false;
+        let isTipoValid = false;
         let isInitialsValid = false;
         let isOrganizationValid = false;
         let isRequiredFieldsValid = false;
@@ -316,9 +322,11 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
             document.getElementById('organizacao_sistema').setAttribute('style', 'border-bottom: solid; border-bottom-color: red;');
         }
 
+        (this.sistema.tipoSistema) ? isTipoValid = true : isTipoValid = false;
+
         (isNameValid
             && isInitialsValid
-            && isOrganizationValid)
+            && isOrganizationValid && isTipoValid)
             ? (isRequiredFieldsValid = true)
             : (isRequiredFieldsValid = false);
 

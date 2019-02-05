@@ -51,6 +51,29 @@
           </div>
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+            <span>
+              <p-dropdown
+                [filter]="true"
+                id="tipo_sistema"
+                [options]="tipoSistemaOptions"
+                placeholder="Tipo do Sistema *"
+                name="tipoSistema"
+                [(ngModel)]="sistema.tipoSistema"
+                [autoWidth]="false"
+                required
+                #tipoSistema='ngModel'>
+              </p-dropdown>
+              <div *ngIf="editForm.controls['tipoSistema']
+                && !editForm.controls['tipoSistema'].valid
+                && (editForm.controls['tipoSistema'].touched
+                || editForm.submitted)"
+                   class="ui-message-select ui-messages-error-select">
+                Campo obrigatório.
+              </div>
+            </span>
+          </div>
+
+          <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span class="md-inputfield">
               <input 
                 type="text" 
