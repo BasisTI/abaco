@@ -128,7 +128,7 @@ export class SistemaService {
      * Convert a Sistema to a JSON which can be sent to the server.
      */
     private convert(sistema: Sistema): Sistema {
-        const copy: Sistema = Object.assign({}, sistema);
+        const copy: Sistema = Object.assign(Sistema, sistema);
         return Sistema.toNonCircularJson(copy);
     }
 

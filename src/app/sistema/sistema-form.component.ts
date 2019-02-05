@@ -25,7 +25,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     readonly deleteFuncionalidadeEventName = 'deleteFuncionalidade';
 
     organizacaos: any[];
-    sistema: Sistema;
+    sistema: Sistema = new Sistema();
     isSaving; isEdit; boolean;
 
     tipoSistemaOptions: SelectItem[] = [
