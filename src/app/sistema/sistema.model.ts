@@ -2,6 +2,11 @@ import { BaseEntity, MappableEntities } from '../shared';
 import { Modulo } from '../modulo';
 import { Funcionalidade } from '../funcionalidade';
 
+export enum TipoSistema {
+  'NOVO' = 'NOVO',
+  'LEGADO' = 'LEGADO'
+}
+
 export class Sistema implements BaseEntity {
 
   private mappableModulos: MappableEntities<Modulo>;
@@ -10,6 +15,7 @@ export class Sistema implements BaseEntity {
     public id?: number,
     public sigla?: string,
     public nome?: string,
+    public tipoSistema?: TipoSistema,
     public numeroOcorrencia?: string,
     public organizacao?: BaseEntity,
     public modulos?: Modulo[],
@@ -35,7 +41,7 @@ export class Sistema implements BaseEntity {
 
   static toNonCircularJson(s: Sistema): Sistema {
     const nonCircularModulos = s.modulos.map(m => Modulo.toNonCircularJson(m));
-    return new Sistema(s.id, s.sigla, s.nome, s.numeroOcorrencia,
+    return new Sistema(s.id, s.sigla, s.nome, s.tipoSistema, s.numeroOcorrencia,
       s.organizacao, nonCircularModulos);
   }
 
