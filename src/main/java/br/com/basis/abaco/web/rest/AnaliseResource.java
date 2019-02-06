@@ -288,7 +288,7 @@ public class AnaliseResource {
         } else {
             return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(analise);
+                .body(new Analise());
         }
 
     }
