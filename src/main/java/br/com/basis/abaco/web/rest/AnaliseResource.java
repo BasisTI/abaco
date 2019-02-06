@@ -288,7 +288,7 @@ public class AnaliseResource {
         } else {
             return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new Analise());
+                .body(analise);
         }
 
     }
@@ -538,7 +538,7 @@ public class AnaliseResource {
         Integer analiseDaEquipe = analiseRepository.analiseEquipe(idAnalise, equipesIds); // Traz as
 
         if (analiseDaEquipe.intValue() == 0) { // Verifica se a analise faz parte de sua equipe
-            return this.verificaCompartilhada(idAnalise);
+            return verificaCompartilhada(idAnalise);
         } else {
             return true;
         }

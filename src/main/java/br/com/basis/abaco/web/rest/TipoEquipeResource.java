@@ -185,8 +185,21 @@ public class TipoEquipeResource {
     @Timed
     public List<TipoEquipe> getAllTipoEquipeByOrganizacao(@PathVariable Long idOrganizacao) {
         log.debug("REST request to get all TipoEquipes");
+        return tipoEquipeRepository.findAllEquipesByOrganizacaoId(idOrganizacao);
+    }
+
+    /**
+     *
+     * @param idOrganizacao
+     * @return
+     */
+    @GetMapping("/tipo-equipes/current-user/{idOrganizacao}")
+    @Timed
+    public List<TipoEquipe> getAllTipoEquipeByOrganizacaoAndLoggedUser(@PathVariable Long idOrganizacao) {
+        log.debug("REST request to get all TipoEquipes");
         return tipoEquipeRepository.findAllByOrganizacaoAndUsuario(SecurityUtils.getCurrentUserLogin(), idOrganizacao);
     }
+
 
     @GetMapping("/tipo-equipes/compartilhar/{idOrganizacao}/{idAnalise}/{idEquipe}")
     @Timed
