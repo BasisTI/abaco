@@ -6,12 +6,14 @@ import { environment } from '../../environments/environment';
 
 import { TipoEquipe } from './tipo-equipe.model';
 import {ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService} from '../shared';
+import { BlockUI } from 'ng-block-ui';
 
 @Injectable()
 export class TipoEquipeService {
 
   resourceUrl = environment.apiUrl + '/tipo-equipes';
 
+  findByOrganizacaoAndUserUrl = this.resourceUrl + '/current-user';
   findByOrganizacaoUrl = this.resourceUrl + '/organizacoes';
   findAllCompartilhaveisUrl = this.resourceUrl + '/compartilhar';
 
@@ -63,6 +65,20 @@ export class TipoEquipeService {
    */
   findAllByOrganizacaoId(orgId: number): Observable<ResponseWrapper> {
     const url = `${this.findByOrganizacaoUrl}/${orgId}`;
+    return this.http.get(url).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
+    });
+  }
+
+  /**
+   * Método responsável por recuperar todas as equipes pelo ID da organização.
+   * @param orgId
+   */
+  findAllEquipesByOrganizacaoIdAndLoggedUser(orgId: number): Observable<ResponseWrapper> {
+    const url = `${this.findByOrganizacaoAndUserUrl}/${orgId}`;
     return this.http.get(url).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
         if (error.status === 403) {
             this.pageNotificationService.addErrorMsg('Você não possui permissão!');

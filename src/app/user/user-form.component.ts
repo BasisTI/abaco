@@ -2,7 +2,6 @@ import {Component, OnInit, OnDestroy, OnChanges} from '@angular/core';
 import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
 import {Response} from '@angular/http';
 import {Observable, Subscription} from 'rxjs/Rx';
-import {SelectItem} from 'primeng/primeng';
 
 import {AuthService} from '@basis/angular-components';
 import {User} from './user.model';
@@ -15,9 +14,6 @@ import {PageNotificationService} from '../shared/page-notification.service';
 import {ADMIN_ROLE} from '../shared/constants';
 
 import * as _ from 'lodash';
-import {Message} from '@angular/compiler/src/i18n/i18n_ast';
-import {MessageUtil} from '../util/message.util';
-import {element} from 'protractor';
 
 @Component({
     selector: 'jhi-user-form',

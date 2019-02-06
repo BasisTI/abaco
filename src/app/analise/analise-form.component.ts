@@ -205,7 +205,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 .addErrorMsg('Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...');
             this.router.navigate([`/analise/${analiseCarregada.id}/view`]);
         }
-        this.setSistamaOrganizacao(analiseCarregada.organizacao);
+        this.setSistemaOrganizacao(analiseCarregada.organizacao);
         this.setManual(analiseCarregada.contrato);
         this.carregaFatorAjusteNaEdicao();
         this.isEdit = this.analise.identificadorAnalise == undefined ? true: false;
@@ -221,7 +221,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     /**
      * Método responsável por popular a lista de sistemas da organização selecionada.
      */
-    setSistamaOrganizacao(org: Organizacao) {
+    setSistemaOrganizacao(org: Organizacao) {
         if(!this.isEdicao){
             this.analise.sistema = undefined;
             this.analise.equipeResponsavel = undefined;
@@ -238,7 +238,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     setEquipeOrganizacao(org: Organizacao) {
         this.contratos = org.contracts;
-        this.equipeService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
+        this.equipeService.findAllEquipesByOrganizacaoIdAndLoggedUser(org.id).subscribe((res: ResponseWrapper) => {
             this.equipeResponsavel = res.json;
             if (this.equipeResponsavel !== null) {
                 this.hideShowSelectEquipe = false;
