@@ -364,81 +364,78 @@ public class RelatorioAnaliseRest {
         for(FuncaoDados fd : analise.getFuncaoDados()) {
             ListaFdFtDTO objeto = new ListaFdFtDTO();
             String der = "", alrTr = "";
-            objeto.setNome(fd.getName());
 
             der = popularDersFd(fd, der);
-            objeto.setDer(der);
-
+            objeto.setDer(der); objeto.setNome(fd.getName());
 
             alrTr = popularAlrtrFd(fd, alrTr);
-            objeto.setAlrtr(alrTr);
-            listaFdFt.add(objeto);
+            objeto.setAlrtr(alrTr); listaFdFt.add(objeto);
         }
 
         for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
-
-            String der = "", alrTr = "";
-            ListaFdFtDTO objeto = new ListaFdFtDTO();
+            String der = "", alrTr = ""; ListaFdFtDTO objeto = new ListaFdFtDTO();
             objeto.setNome(ft.getName());
-
 
             alrTr = popularAlrFt(ft, alrTr);
             objeto.setAlrtr(alrTr);
 
-
             der = popularDerFt(ft, der);
-            objeto.setDer(der);
-            listaFdFt.add(objeto);
+            objeto.setDer(der); listaFdFt.add(objeto);
+
         }
         parametro.put("LISTAFDFT", listaFdFt);
     }
 
     private String popularDerFt(FuncaoTransacao ft, String der) {
+        String derAux = der;
         for (Der derFt : ft.getDers()) {
             if (derFt.getNome() != null) {
-                der = der.concat(derFt.getNome() + ", ");
+                derAux = derAux.concat(derFt.getNome() + ", ");
             }
         }
-        if (!der.equals("")) {
-            der = der.substring(0, (der.length() - 2));
+        if (!derAux.equals("")) {
+            derAux = derAux.substring(0, (derAux.length() - 2));
         }
-        return der;
+        return derAux;
     }
 
     private String popularAlrFt(FuncaoTransacao ft, String alrTr) {
+        String alrTrAux = alrTr;
         for (Alr alr : ft.getAlrs()) {
             if (alr.getNome() != null) {
-                alrTr = alrTr.concat(alr.getNome() + ", ");
+                alrTrAux = alrTrAux.concat(alr.getNome() + ", ");
             }
         }
-        if(!alrTr.equals("")){
-            alrTr = alrTr.substring(0, (alrTr.length() - 2));
+        if(!alrTrAux.equals("")){
+            alrTrAux = alrTrAux.substring(0, (alrTrAux.length() - 2));
         }
-        return alrTr;
+        return alrTrAux;
     }
 
     private String popularAlrtrFd(FuncaoDados fd, String alrTr) {
+        String alrTrAux = alrTr;
         for (Rlr rlr : fd.getRlrs()) {
             if (rlr.getNome() != null) {
-                alrTr += (rlr.getNome() + ", ");
+                alrTrAux = alrTrAux.concat(rlr.getNome() + ", ");
             }
         }
-        if(!alrTr.equals("")){
-            alrTr = alrTr.substring(0, (alrTr.length()-2));
+        if(!alrTrAux.equals("")){
+            alrTrAux = alrTrAux.substring(0, (alrTrAux.length()-2));
         }
-        return alrTr;
+        return alrTrAux;
     }
 
     private String popularDersFd(FuncaoDados fd, String der) {
+        String derAux = der;
         for (Der derFd : fd.getDers()) {
             if (derFd.getNome() != null) {
-                der += (derFd.getNome() + ", ");
+                derAux = derAux.concat(derFd.getNome() + ", ");
             }
         }
-        if (!der.equals("")) {
-            der = der.substring(0, (der.length()-2));
+        if (!derAux.equals("")) {
+            derAux = derAux.substring(0, (derAux.length()-2));
         }
-        return der;
+        return derAux;
     }
 
     /**
