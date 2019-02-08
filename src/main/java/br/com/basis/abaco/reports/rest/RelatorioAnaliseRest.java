@@ -10,13 +10,10 @@ import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.util.RelatorioUtil;
-import br.com.basis.abaco.service.dto.AlrFtDTO;
-import br.com.basis.abaco.service.dto.DerFdDTO;
-import br.com.basis.abaco.service.dto.DerFtDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadosDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoDTO;
 import br.com.basis.abaco.service.dto.FuncoesDTO;
-import br.com.basis.abaco.service.dto.RlrFdDTO;
+import br.com.basis.abaco.service.dto.ListaFdFtDTO;
 import net.sf.jasperreports.engine.JRException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -354,94 +351,74 @@ public class RelatorioAnaliseRest {
      * função de transação e função de dados.
      */
     private void popularListas() {
-        this.popularListaDerFt();
-        this.popularListaArlFt();
-        this.popularListaDerFd();
-        this.popularListaRlrFd();
+        this.popularListaFdFt();
     }
 
-    /**
-     * Método responsável por popular a lista RLR função de dados.
-     */
-    private void popularListaRlrFd() {
-        List<RlrFdDTO> listRlrFD = new ArrayList<>();
-
-        for(FuncaoDados fd : analise.getFuncaoDados()) {
-
-            for(Rlr rlr : fd.getRlrs()) {
-                RlrFdDTO objeto = new RlrFdDTO();
-
-                 if(rlr.getNome() != null) {
-                     objeto.setRlrDto(rlr.getNome());
-                     objeto.setNomeRlrFdDto(rlr.getFuncaoDados().getName());
-                     listRlrFD.add(objeto);
-                 }
-            }
-        }
-        parametro.put("LISTARLRFD", listRlrFD);
-    }
 
     /**
-     * Método responsável por popular a lista DER função de dados.
+     * Método responsável por popular a lista função de dados.
      */
-    private void popularListaDerFd() {
-        List<DerFdDTO> listDerFD = new ArrayList<>();
+    private void popularListaFdFt() {
+        List<ListaFdFtDTO> listaFdFt = new ArrayList<>();
 
         for(FuncaoDados fd : analise.getFuncaoDados()) {
+            ListaFdFtDTO objeto = new ListaFdFtDTO();
+            String der = "", alrTr = "";
+            objeto.setNome(fd.getName());
 
-            for(Der der : fd.getDers()) {
-                DerFdDTO objeto = new DerFdDTO();
-
-                if(der.getNome() != null) {
-                    objeto.setNome(der.getNome());
-                    objeto.setNomeFd(der.getFuncaoDados().getName());
-                    listDerFD.add(objeto);
+            for (Der derFd : fd.getDers()) {
+                if (derFd.getNome() != null) {
+                    der += (derFd.getNome() + ", ");
                 }
             }
-        }
-        parametro.put("LISTADERFD", listDerFD);
-    }
+            if (!der.equals("")) {
+                der = der.substring(0, (der.length()-2));
+            }
+            objeto.setDer(der);
 
-    /**
-     * Método responsável por popular a lista ARL função de transação.
-     */
-    private void popularListaArlFt() {
-        List<AlrFtDTO> listArlFT = new ArrayList<>();
+
+            for (Rlr rlr : fd.getRlrs()) {
+                if (rlr.getNome() != null) {
+                    alrTr += (rlr.getNome() + ", ");
+                }
+            }
+            if(!alrTr.equals("")){
+                alrTr = alrTr.substring(0, (alrTr.length()-2));
+            }
+            objeto.setAlrtr(alrTr);
+            listaFdFt.add(objeto);
+        }
 
         for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
 
-            for(Alr alr : ft.getAlrs()) {
-                AlrFtDTO objeto = new AlrFtDTO();
+            String der = "", alrTr = "";
+            ListaFdFtDTO objeto = new ListaFdFtDTO();
+            objeto.setNome(ft.getName());
 
-                 if(alr.getNome() != null) {
-                     objeto.setNomeAlrDto(alr.getNome());
-                     objeto.setNomeAlrFtDto(alr.getFuncaoTransacao().getName());
-                     listArlFT.add(objeto);
-                 }
-            }
-        }
 
-        parametro.put("LISTAARLFT", listArlFT);
-    }
-
-    /**
-     * Método responsável por popular a lista DER função de transação.
-     */
-    private void popularListaDerFt() {
-        List<DerFtDTO> listDerFT = new ArrayList<>();
-
-        for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
-            for(Der der : ft.getDers()) {
-                DerFtDTO objeto = new DerFtDTO();
-
-                if(der.getNome() != null) {
-                    objeto.setNome(der.getNome());
-                    objeto.setNomeFt(der.getFuncaoTransacao().getName());
-                    listDerFT.add(objeto);
+            for (Alr alr : ft.getAlrs()) {
+                if (alr.getNome() != null) {
+                    alrTr += (alr.getNome() + ", ");
                 }
             }
+            if(!alrTr.equals("")){
+                alrTr = alrTr.substring(0, (alrTr.length() - 2));
+            }
+            objeto.setAlrtr(alrTr);
+
+
+            for (Der derFt : ft.getDers()) {
+                if (derFt.getNome() != null) {
+                    der += (derFt.getNome() + ", ");
+                }
+            }
+            if (!der.equals("")) {
+                der = der.substring(0, (der.length() - 2));
+            }
+            objeto.setDer(der);
+            listaFdFt.add(objeto);
         }
-        parametro.put("LISTADERFT", listDerFT);
+        parametro.put("LISTAFDFT", listaFdFt);
     }
 
     /**

@@ -46,8 +46,8 @@ public class Sistema implements Serializable, ReportObject {
 	@SequenceGenerator(name = "sequenceGenerator")
 	private Long id;
 
-	@Size(max = 20)
-	@Column(name = "sigla", length = 20)
+	@Size(max = 255)
+	@Column(name = "sigla", length = 255)
     @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String sigla;
 

@@ -79,7 +79,7 @@ public class Organizacao implements Serializable, ReportObject {
 	@ManyToMany(mappedBy = "organizacoes", fetch = FetchType.EAGER)
 	private Set<TipoEquipe> tipoEquipe = new HashSet<>();
 
-	@Size(max = 10)
+	@Size(max = 255)
 	@Column(name = "sigla")
     @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
 	private String sigla;

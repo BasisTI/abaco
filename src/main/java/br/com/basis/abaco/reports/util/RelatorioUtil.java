@@ -6,9 +6,11 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimplePdfReportConfiguration;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -87,19 +89,27 @@ public class RelatorioUtil {
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
     public @ResponseBody byte[] downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
 
-        InputStream stram = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
 
-        JasperPrint jasperPrint = (JasperPrint)JasperFillManager.fillReport(stram, parametrosJasper, new JREmptyDataSource());
+        JasperPrint jasperPrint = (JasperPrint)JasperFillManager.fillReport(stream, parametrosJasper, new JREmptyDataSource());
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+        JRPdfExporter exporter = new JRPdfExporter();
+        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
 
-        response.setContentType("application/x-pdf");
 
-        response.setHeader(CONTENT_DISP, INLINE_FILENAME + analise.getIdentificadorAnalise().trim() + ".pdf");
+        SimplePdfReportConfiguration configuration = new SimplePdfReportConfiguration();
+        exporter.setConfiguration(configuration);
 
-        return  JasperExportManager.exportReportToPdf(jasperPrint);
+        exporter.exportReport();
+
+        response.setHeader(CONTENT_DISP, INLINE_FILENAME + analise.getIdentificadorAnalise().trim() + ".xls");
+        response.setContentType("application/vnd.ms-excel");
+
+
+        return outputStream.toByteArray();
     }
 
     /**
