@@ -269,7 +269,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         let exceedsMaximumValue = false;
 
         if (this.checkIfIsEmpty(this.sistema.sigla)) {
-            if (this.sistema.sigla.length >= 20) {
+            if (this.sistema.sigla.length >= 255) {
                 exceedsMaximumValue = true;
                 this.pageNotificationService.addErrorMsg('O campo sigla excede o número de caracteres.');
             }
