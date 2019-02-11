@@ -19,6 +19,7 @@ import {ViewChild, ElementRef, AfterViewInit} from '@angular/core';
 
 export class BotoesExportacaoComponent implements OnInit {
     @Input() resourceName: string;
+    @Input() fileName: string;
     @Input() query: string;
     @BlockUI() blockUI: NgBlockUI;
 
@@ -60,7 +61,7 @@ export class BotoesExportacaoComponent implements OnInit {
         ExportacaoUtilService.exportarRelatorio(tipoRelatorio, environment.apiUrl + '/' + this.resourceName, this.http, this.query).subscribe(
             downloadUrl => {
                 ExportacaoUtil.download(downloadUrl,
-                    this.resourceName + ExportacaoUtilService.getExtension(tipoRelatorio));
+                    this.fileName + ExportacaoUtilService.getExtension(tipoRelatorio));
                 this.blockUI.stop();
             },
             err => {
