@@ -251,16 +251,23 @@
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-12 ui-sm-12" id="tabela-deflator">
                         <app-memory-datatable [value]="manual.fatoresAjuste" id="idTabelaDeflatorFormManual"
-                                              (buttonClick)="adjustFactorDatatableClick($event)" disableClone="true">
-                            <p-column header="Código" field="codigo">
+                                              (buttonClick)="adjustFactorDatatableClick($event)" disableClone="true" 
+                                              rows="10" paginator="true">
+                            <p-column header="Código" field="codigo" [sortable]="true">
+                                <ng-template let-col let-codigo="rowData" pTemplate="body">
+                                    {{ codigo[col.field] == null ? '---' : codigo[col.field]}}
+                                </ng-template>
                             </p-column>
-                            <p-column header="Nome" field="nome">
+                            <p-column header="Nome" field="nome" [sortable]="true">
                             </p-column>
-                            <p-column header="Deflator" field="fatorFormatado">
+                            <p-column header="Deflator" field="fatorFormatado" [sortable]="true">
                             </p-column>
-                            <p-column header="Tipo Deflator" field="tipoAjuste">
+                            <p-column header="Tipo Deflator" field="tipoAjuste" [sortable]="true">
+                                <ng-template let-col let-tipoAjuste="rowData" pTemplate="body">
+                                    {{ tipoAjuste[col.field] == 'PERCENTUAL' ? 'Percentual' : 'Unitário'}}
+                                </ng-template>
                             </p-column>
-                            <p-column header="Ativo" field="ativo">
+                            <p-column header="Ativo" field="ativo" [sortable]="true">
                                 <ng-template let-col let-ativo="rowData" pTemplate="body">
                                     {{ ativo[col.field] | activeBoolean }}
                                 </ng-template>
@@ -468,9 +475,11 @@
 
                             <p-spinner 
                                 id="idDeflatorDeflatorFormManual" 
-                                maxlength="3" 
+                                maxlength="8"
+                                [min]="0"
+                                [max]="9999"
                                 name="fator"
-                                step="0.1"
+                                step="0.01"
                                 [disabled]="habilitarDeflator()"
                                 required
                                 [(ngModel)]="newAdjustFactor.fatorFormatado"
