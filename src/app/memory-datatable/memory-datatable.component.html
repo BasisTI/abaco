@@ -6,7 +6,11 @@
     selectionMode="single"
     [responsive]="responsive"
     [scrollable]="scrollable"
-    [scrollWidth]="scrollWidth">
+    [scrollWidth]="scrollWidth"
+    [rows]="rows"
+    [paginator]="paginator"
+    [sortField]="sortF" 
+    (onSort)="changeSort($event)">
   </p-dataTable>
 </div>
   

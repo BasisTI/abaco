@@ -51,6 +51,14 @@ export class MemoryDatatableComponent implements AfterViewInit {
   @Input()
   scrollWidth = '';
 
+  @Input()
+  rows: number;
+
+  @Input()
+  paginator: boolean;
+
+  sortF: string;
+
   @Output()
   buttonClick: EventEmitter<DatatableClickEvent> = new EventEmitter<DatatableClickEvent>();
 
@@ -78,6 +86,10 @@ export class MemoryDatatableComponent implements AfterViewInit {
     if (button === 'delete') {
         this.selectedRow = null;
     }
+  }
+  
+  changeSort(event) {
+    this.sortF = event.field;
   }
 
 }
