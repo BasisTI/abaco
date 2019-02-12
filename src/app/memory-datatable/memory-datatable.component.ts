@@ -52,10 +52,10 @@ export class MemoryDatatableComponent implements AfterViewInit {
   scrollWidth = '';
 
   @Input()
-  rows: number;
+  rows = 10;
 
   @Input()
-  paginator: boolean;
+  paginator = false;
 
   sortF: string;
 

@@ -252,7 +252,7 @@
                     <div class="ui-g-12 ui-md-12 ui-sm-12" id="tabela-deflator">
                         <app-memory-datatable [value]="manual.fatoresAjuste" id="idTabelaDeflatorFormManual"
                                               (buttonClick)="adjustFactorDatatableClick($event)" disableClone="true" 
-                                              rows="10" paginator="true">
+                                              paginator="true">
                             <p-column header="Código" field="codigo" [sortable]="true">
                                 <ng-template let-col let-codigo="rowData" pTemplate="body">
                                     {{ codigo[col.field] == null ? '---' : codigo[col.field]}}
