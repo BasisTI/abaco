@@ -170,9 +170,9 @@
 
                         <div class="ui-g-12" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="number"
-                       mask="99999"
+                <input type="text"
                         name="numeroContrato"
+                        maxlength="30"
                         id="idNumeroContratoContratoSaveFormOrganizacao"
                         [(ngModel)]="novoContrato.numeroContrato"
                         pInputText required autofocus=""/>
@@ -300,7 +300,8 @@
                 <div class="ui-g">
                     <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="number" id="idNumeroContratoContratoEditFormOrganizacao"
+                <input type="text" id="idNumeroContratoContratoEditFormOrganizacao"
+                       maxlength="30"
                        name="numeroContrato"
                        [(ngModel)]="contratoEmEdicao.numeroContrato" pInputText/>
                 <label>Número do Contrato</label>
