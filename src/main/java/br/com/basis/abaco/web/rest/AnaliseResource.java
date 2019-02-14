@@ -6,6 +6,7 @@ import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import br.com.basis.abaco.domain.Grupo;
 import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
@@ -15,7 +16,6 @@ import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.GrupoRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
-import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
@@ -492,12 +492,14 @@ public class AnaliseResource {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
-        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
+        List<TipoEquipe> listaEquipes = userRepository.findAllEquipesByLogin(SecurityUtils.getCurrentUserLogin());
 
-        List<Long> equipesIds;
+        List<Long> equipesIds = new ArrayList<>();
         List<BigInteger> idsAnalises;
 
-        equipesIds = userRepository.findUserEquipes(logged.get().getId());
+        for (TipoEquipe equipes : listaEquipes){
+            equipesIds.add(equipes.getId());
+        }
         if (equipesIds.size() != 0) {
             idsAnalises = analiseRepository.listAnalisesEquipe(equipesIds);
             if (idsAnalises.size() != 0) {

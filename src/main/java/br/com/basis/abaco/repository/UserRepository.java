@@ -1,5 +1,6 @@
 package br.com.basis.abaco.repository;
 
+import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @EntityGraph(attributePaths = "authorities")
     Optional<User> findOneWithAuthoritiesByLogin(String login);
+
+    @Query(value = "SELECT u.tipoEquipes FROM User u WHERE u.login = :login")
+    List<TipoEquipe> findAllEquipesByLogin(@Param("login") String login);
 
     Page<User> findAllByLoginNot(Pageable pageable, String login);
 
