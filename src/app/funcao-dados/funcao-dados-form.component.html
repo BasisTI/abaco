@@ -105,7 +105,7 @@
                 <div *ngIf="!isEdit">
                     <div class="ui-g" *ngIf="!showMultiplos">
                         <div class="ui-g-9">
-                            <label>Nome *</label>
+                            <label>Nome do Processo Elementar *</label>
                             <p-autoComplete
                                     maxlength="2000"
                                     [(ngModel)]="currentFuncaoDados.name"
@@ -132,7 +132,7 @@
 
                     <div class="ui-g" *ngIf="showMultiplos">
                         <div class="ui-g-9">
-                            <label>Nomes *</label>
+                            <label>Nomes dos Processos *</label>
                             <textarea pInputTextarea
                                       maxlength="2000"
                                       [(ngModel)]="text"
@@ -158,7 +158,7 @@
                 <div *ngIf="isEdit">
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                            <label>Nomes *</label>
+                            <label>Nome do Processo Elementar *</label>
                             <input
                                     maxlength="2000"
                                     type="text" class="ui-inputtext"
