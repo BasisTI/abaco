@@ -1,9 +1,8 @@
-<div class="ui-g ui-fluid" style="justify-content: center;">
-  <div class="ui-g-12">
+<div class="ui-g ui-fluid login-template">
+  <div class="ui-g-12 container-login">
 
     <div 
-      class="card card-w-title login-panel" 
-      style="margin: 0px auto 0 auto; min-height: 400px;"
+      class="card card-w-title login-panel"      
       *ngIf="!authenticated">
       
       <form novalidate #loginForm="ngForm"
@@ -11,50 +10,52 @@
         role="form" 
         (ngSubmit)="login()">
 
-        <h1>Login</h1>
+        <span class="logo">
+          <i class="fa ui-icon-landscape">logo</i>
+        </span>
 
-        <div class="ui-g" style="justify-content: center;">
+        <h1 class="title p-b-34 p-t-27">LOGIN</h1>
 
-          <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px;">
-            <span class="md-inputfield">
-              <input 
+        <div class="ui-g"> 
+
+          <div class="ui-g-12 ui-md-12 ui-sm-12 input">
+            <input 
                 required
                 type="text" 
                 name="username" 
-                [(ngModel)]="username" 
+                [(ngModel)]="username"
+                placeholder="Usuário *" 
                 pInputText />
-              <label>Usuário*</label>
-              <div *ngIf="(loginForm.controls['username']
+                <span class="username" data-placeholder=""></span>
+                
+          </div>
+          <div *ngIf="(loginForm.controls['username']
                                         && !loginForm.controls['username'].valid
                                         && (loginForm.controls['username'].touched
                                         || loginForm.submitted))" class="ui-message ui-messages-error">
                                 Campo obrigatório.
-              </div>
-            </span>
-          </div>
-
-          <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px;">
-            <span class="md-inputfield">
-              <input
+                </div>
+          <div class="ui-g-12 ui-md-12 ui-sm-12 input">
+            <input
                 required
                 pPassword 
                 type="password" 
-                name="password" 
+                name="password"
+                placeholder="Senha *"
                 [(ngModel)]="password" 
                 [feedback]="false" />
-              <label>Senha*</label>
-              <div *ngIf="(loginForm.controls['password']
+                <span class="password" data-placeholder=""></span>
+                
+          </div>
+          <div *ngIf="(loginForm.controls['password']
                                         && !loginForm.controls['password'].valid
                                         && (loginForm.controls['password'].touched
                                         || loginForm.submitted))" class="ui-message ui-messages-error">
                                 Campo obrigatório.
-              </div>
-            </span>
-          </div>
-
+                </div>
         </div>
 
-        <div class="ui-g-12" style="justify-content: center">
+        <div class="ui-g-12 login-btn">
             <button pButton type="submit" label="Login"></button>
         </div>
       </form>
