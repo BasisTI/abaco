@@ -30,7 +30,7 @@ export class UserComponent implements AfterViewInit, OnInit {
 
     paginationParams = {contentIndex: null};
 
-    elasticQuery: ElasticQuery = new ElasticQuery();
+    query: String = "*";
 
     rowsPerPageOptions: number[] = [5, 10, 20];
 
@@ -169,7 +169,7 @@ export class UserComponent implements AfterViewInit, OnInit {
             message: 'Tem certeza que deseja excluir o registro?',
             accept: () => {
                 this.userService.delete(user).subscribe(() => {
-                    this.datatable.refresh(this.elasticQuery.query);
+                    this.datatable.refresh(this.query);
                     this.pageNotificationService.addDeleteMsg();
                 }, (error: Response) => {
                     if (error.status === 400) {
@@ -214,7 +214,7 @@ export class UserComponent implements AfterViewInit, OnInit {
 
     performSearch() {
         this.checkUndefinedParams();
-        this.elasticQuery.value = this.stringConcatService.concatResults(this.createStringParamsArray()).slice(1);
+        this.query = this.stringConcatService.concatResults(this.createStringParamsArray()).slice(1);
         this.recarregarDataTable();
     }
 
@@ -227,12 +227,12 @@ export class UserComponent implements AfterViewInit, OnInit {
             profile: undefined,
             team: undefined,
         };
-        this.elasticQuery.reset();
+        this.query = "*";
         this.recarregarDataTable();
     }
 
     recarregarDataTable() {
-        this.datatable.refresh(this.elasticQuery.query);
+        this.datatable.refresh(this.query ? this.query : "*");
     }
 
 }
