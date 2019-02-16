@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone, ElementRef} from '@angular/core';
 import { Response } from '@angular/http';
 import { LoginService } from './login.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private authService: AuthService<User>,
     private http: HttpService,
     private zone: NgZone,
-    private pageNotificationService: PageNotificationService
+    private pageNotificationService: PageNotificationService,
+    private elem: ElementRef
   ) { }
 
   ngOnInit() {
@@ -40,14 +41,23 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    if (!this.username || !this.password){
-      this.pageNotificationService.addErrorMsg("Preencha os campos obrigatórios!");
-      return;
-    } 
-    if (this.password.length < 4){
-      this.pageNotificationService.addErrorMsg("A senha precisa ter no mínimo 4 caracteres!");
+
+    const state = this.elem.nativeElement.querySelectorAll('.state');
+
+    state.innerHTML('Autenticando...');
+
+    if (!this.username || !this.password) {
+      state.innerHTML('Login');
+      this.pageNotificationService.addErrorMsg('Preencha os campos obrigatórios!');
       return;
     }
+
+    if (this.password.length < 4) {]
+      state.innerHTML('Login');
+      this.pageNotificationService.addErrorMsg('A senha precisa ter no mínimo 4 caracteres!');
+      return;
+    }
+
     this.loginService.login(this.username, this.password).subscribe(() => {
       // this.authService.loginSuccess();
 
@@ -56,15 +66,18 @@ export class LoginComponent implements OnInit, OnDestroy {
         const storageKey = environment.auth.userStorageIndex;
         environment.auth.userStorage[`${storageKey}`] = JSON.stringify(response);
         this.zone.runOutsideAngular(() => {
+          state.innerHTML('Bem-Vindo!');
           location.reload();
         });
       });
     }, error => {
       switch (error.status) {
         case 401: {
+          state.innerHTML('Login');
           this.pageNotificationService.addErrorMsg('Usuário ou senha inválidos!');
         } break;
         case 400: {
+          state.innerHTML('Login');
           this.pageNotificationService.addErrorMsg('Usuário ou senha inválidos!');
         } break;
       }
