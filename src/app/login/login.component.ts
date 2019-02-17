@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone, ElementRef} from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone} from '@angular/core';
 import { Response } from '@angular/http';
 import { LoginService } from './login.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { AuthService, HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 import { User } from '../user';
 import { PageNotificationService } from '../shared/page-notification.service';
+
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   username: string;
   password: string;
+  loginStateText = 'Login';
+  loginStateLoading = false;
+  loginStateSuccess = false;
 
   authenticated = false;
 
@@ -29,8 +33,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private authService: AuthService<User>,
     private http: HttpService,
     private zone: NgZone,
-    private pageNotificationService: PageNotificationService,
-    private elem: ElementRef
+    private pageNotificationService: PageNotificationService
   ) { }
 
   ngOnInit() {
@@ -42,18 +45,19 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   login() {
 
-    const state = this.elem.nativeElement.querySelectorAll('.state');
-
-    state.innerHTML('Autenticando...');
+    this.loginStateText = 'Autenticando';
+    this.loginStateLoading = true;
 
     if (!this.username || !this.password) {
-      state.innerHTML('Login');
+      this.loginStateText = 'Login';
+      this.loginStateLoading = false;
       this.pageNotificationService.addErrorMsg('Preencha os campos obrigatórios!');
       return;
     }
 
-    if (this.password.length < 4) {]
-      state.innerHTML('Login');
+    if (this.password.length < 4) {
+      this.loginStateText = 'Login';
+      this.loginStateLoading = false;
       this.pageNotificationService.addErrorMsg('A senha precisa ter no mínimo 4 caracteres!');
       return;
     }
@@ -66,18 +70,22 @@ export class LoginComponent implements OnInit, OnDestroy {
         const storageKey = environment.auth.userStorageIndex;
         environment.auth.userStorage[`${storageKey}`] = JSON.stringify(response);
         this.zone.runOutsideAngular(() => {
-          state.innerHTML('Bem-Vindo!');
+          this.loginStateText = 'Bem-Vindo';
+          this.loginStateLoading = false;
+          this.loginStateSuccess = true;
           location.reload();
         });
       });
     }, error => {
       switch (error.status) {
         case 401: {
-          state.innerHTML('Login');
+          this.loginStateText = 'Login';
+          this.loginStateLoading = false;
           this.pageNotificationService.addErrorMsg('Usuário ou senha inválidos!');
         } break;
         case 400: {
-          state.innerHTML('Login');
+          this.loginStateText = 'Login';
+          this.loginStateLoading = false;
           this.pageNotificationService.addErrorMsg('Usuário ou senha inválidos!');
         } break;
       }

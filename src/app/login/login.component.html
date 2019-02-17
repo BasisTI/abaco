@@ -55,8 +55,10 @@
 
         <div class="ui-g-12 login-btn">
             <button pButton type="submit">
-                <i class="spinner"></i>
-                <span class="state">Login</span>
+                <p-progressSpinner *ngIf="loginStateLoading"
+                                   [style]="{width: '20px', height: '20px'}"
+                                   strokeWidth="6"></p-progressSpinner>
+                <span [ngClass]="('state' + (loginStateLoading ? ' loading' : '')  + (loginStateSuccess ? ' ok' : ''))">{{ loginStateText }}</span>
             </button>
         </div>
       </form>
