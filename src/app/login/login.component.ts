@@ -18,9 +18,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   username: string;
   password: string;
-  loginStateText = 'Login';
-  loginStateLoading = false;
-  loginStateSuccess = false;
 
   authenticated = false;
 
@@ -45,19 +42,12 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   login() {
 
-    this.loginStateText = 'Autenticando';
-    this.loginStateLoading = true;
-
     if (!this.username || !this.password) {
-      this.loginStateText = 'Login';
-      this.loginStateLoading = false;
       this.pageNotificationService.addErrorMsg('Preencha os campos obrigatórios!');
       return;
     }
 
     if (this.password.length < 4) {
-      this.loginStateText = 'Login';
-      this.loginStateLoading = false;
       this.pageNotificationService.addErrorMsg('A senha precisa ter no mínimo 4 caracteres!');
       return;
     }
@@ -70,22 +60,15 @@ export class LoginComponent implements OnInit, OnDestroy {
         const storageKey = environment.auth.userStorageIndex;
         environment.auth.userStorage[`${storageKey}`] = JSON.stringify(response);
         this.zone.runOutsideAngular(() => {
-          this.loginStateText = 'Bem-Vindo';
-          this.loginStateLoading = false;
-          this.loginStateSuccess = true;
           location.reload();
         });
       });
     }, error => {
       switch (error.status) {
         case 401: {
-          this.loginStateText = 'Login';
-          this.loginStateLoading = false;
           this.pageNotificationService.addErrorMsg('Usuário ou senha inválidos!');
         } break;
         case 400: {
-          this.loginStateText = 'Login';
-          this.loginStateLoading = false;
           this.pageNotificationService.addErrorMsg('Usuário ou senha inválidos!');
         } break;
       }
