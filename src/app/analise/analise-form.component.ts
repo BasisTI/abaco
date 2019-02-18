@@ -328,7 +328,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     totalEsforcoFases() {
         const initialValue = 0;
-        return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforco, initialValue);;
+        return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforco, initialValue);
     }
 
     /**
