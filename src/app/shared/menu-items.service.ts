@@ -17,19 +17,17 @@ export class MenuItemsService {
                 label: 'Administração', icon: 'supervisor_account',
                 visible: this.isLoggedAdmin(),
                 items: [
-                    {label: 'Reindexar', routerLink: 'elasticsearch', icon: 'refresh'},
                     {label: 'Tipo de Equipe', routerLink: 'admin/tipoEquipe', icon: 'people'},
                     {label: 'Usuários', routerLink: 'admin/user', icon: 'person'},
                 ]
             },
             {
-                label: 'Cadastros Básicos', icon: 'description',
-                visible: this.isLoggedCadastrosBasicos(),
+                label: 'Configuração', icon: 'settings',
+                visible: this.authService.isAuthenticated(),
                 items: [
-                    {label: 'Tipo de Fase', routerLink: 'tipoFase', icon: 'beenhere'},
-                    {label: 'Manual', routerLink: 'manual', icon: 'description'},
-                    {label: 'Organização', routerLink: 'organizacao', icon: 'business'},
-                    {label: 'Sistema', routerLink: 'sistema', icon: 'laptop'}
+                    {label: 'Reindexar', routerLink: 'elasticsearch', icon: 'refresh'},
+                    {label: 'Editar usuário', routerLink: `usuario/edit`, icon: 'tag_faces'},
+                    {label: 'Alterar Senha', routerLink: `senha`, icon: 'security'}
                 ]
             },
             {
@@ -43,14 +41,16 @@ export class MenuItemsService {
                 ]
             },
             {
-                label: 'Configuração', icon: 'settings',
-                visible: this.authService.isAuthenticated(),
+                label: 'Cadastros Básicos', icon: 'description',
+                visible: this.isLoggedCadastrosBasicos(),
                 items: [
-                    // {label: 'Reindexar', routerLink: 'elasticsearch', icon: 'refresh' },
-                    {label: 'Editar usuário', routerLink: `usuario/edit`, icon: 'tag_faces'},
-                    {label: 'Alterar Senha', routerLink: `senha`, icon: 'security'}
+                    {label: 'Tipo de Fase', routerLink: 'tipoFase', icon: 'beenhere'},
+                    {label: 'Manual', routerLink: 'manual', icon: 'description'},
+                    {label: 'Organização', routerLink: 'organizacao', icon: 'business'},
+                    {label: 'Sistema', routerLink: 'sistema', icon: 'laptop'}
                 ]
             }
+            
         ];
     }
 
