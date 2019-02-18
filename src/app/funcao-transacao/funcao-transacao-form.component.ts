@@ -120,6 +120,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.dersChips = [];
         this.alrsChips = [];
     }
+
      updateImpacto(impacto: string){
         switch(impacto) {
             case 'INCLUSAO':
@@ -271,6 +272,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.baselineService.baselineAnaliticoFT(this.analise.sistema.id).subscribe((res: ResponseWrapper) => {
             this.dadosBaselineFT = res.json;
         });
+        
     }
 
     recuperarNomeSelecionado(baselineAnalitico: BaselineAnalitico) {
@@ -425,9 +427,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     dersReferenciados(ders: Der[]) {
         const dersReferenciadosChips: DerChipItem[] = DerChipConverter.converterReferenciaveis(ders);
-        // if(this.dersChips !== undefined){
         this.dersChips = this.dersChips.concat(dersReferenciadosChips);
-        // }
     }
 
     private editar() {

@@ -132,8 +132,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.estadoInicial();
-        this.impactos = AnaliseSharedUtils.impactos;
-        
+        this.impactos = AnaliseSharedUtils.impactos; 
     }
 
     estadoInicial() {

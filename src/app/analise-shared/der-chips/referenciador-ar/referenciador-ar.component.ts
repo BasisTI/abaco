@@ -57,10 +57,20 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
         this.subscribeAnaliseCarregada();
     }
 
-    private subscribeAnaliseCarregada() {
-        this.subscriptionAnaliseCarregada = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
-            this.idAnalise = this.analiseSharedDataService.analise.id;
+    private getFuncoesDados(): FuncaoDados[] {
+        return this.analise.funcaoDados;
+    }
 
+    private get analise(): Analise {
+        return this.analiseSharedDataService.analise;
+    }
+
+    private subscribeAnaliseCarregada() {
+        
+        this.subscriptionAnaliseCarregada = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
+            
+            this.idAnalise = this.analiseSharedDataService.analise.id;
+            console.log(this.analiseSharedDataService.analise);
             this.funcoesDadosCache = this.analiseSharedDataService.analise.funcaoDados;
 
             this.baselineService.analiticosFuncaoDados(
@@ -87,6 +97,8 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
     }
 
     abrirDialog() {
+        this.funcoesDados = this.getFuncoesDados();
+        
         if (this.habilitarBotaoAbrirDialog()) {
             this.subscribeAnaliseCarregada();
             this.mostrarDialog = true;
