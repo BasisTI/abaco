@@ -359,27 +359,34 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      *
      */
     public bloquearAnalise() {
-        this.confirmationService.confirm({
-            message: MessageUtil.CONFIRMAR_BLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
-            accept: () => {
-                const copy = this.analise.toJSONState();
-                this.analiseService.block(copy).subscribe(() => {
-                    this.pageNotificationService.addBlockMsgWithName(this.analise.identificadorAnalise);
-                    this.router.navigate(['analise/']);
-                }, (error: Response) => {
-                    switch (error.status) {
-                        case 400: {
-                            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
-                                this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
-                            } else {
-                                this.pageNotificationService
-                                    .addErrorMsg('Somente membros da equipe responsável podem bloquear esta análise!');
+        if (!this.analise.dataHomologacao) {
+            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_DATA_HOMOLOGACAO);
+        }
+
+        if (this.analise.dataHomologacao) {
+            this.confirmationService.confirm({
+                message: MessageUtil.CONFIRMAR_BLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
+                accept: () => {
+                    const copy = this.analise.toJSONState();
+                    this.analiseService.block(copy).subscribe(() => {
+                        this.pageNotificationService.addBlockMsgWithName(this.analise.identificadorAnalise);
+                        this.router.navigate(['analise/']);
+                    }, (error: Response) => {
+                        switch (error.status) {
+                            case 400: {
+                                if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
+                                    this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                                } else {
+                                    this.pageNotificationService
+                                        .addErrorMsg('Somente membros da equipe responsável podem bloquear esta análise!');
+                                }
                             }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        }
+        
     }
 
 
@@ -503,11 +510,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             isValid = false;
             return isValid;
         }
-        if (this.analise.baselineImediatamente && !this.analise.dataHomologacao) {
-            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_DATA_HOMOLOGACAO);
-            isValid = false;
-            return isValid;
-        }
+        
         return isValid;
     }
 
