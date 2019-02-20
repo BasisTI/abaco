@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone} from '@angular/core';
 import { Response } from '@angular/http';
 import { LoginService } from './login.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { AuthService, HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 import { User } from '../user';
 import { PageNotificationService } from '../shared/page-notification.service';
+
 
 @Component({
   selector: 'app-login',
@@ -40,14 +41,17 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    if (!this.username || !this.password){
-      this.pageNotificationService.addErrorMsg("Preencha os campos obrigatórios!");
-      return;
-    } 
-    if (this.password.length < 4){
-      this.pageNotificationService.addErrorMsg("A senha precisa ter no mínimo 4 caracteres!");
+
+    if (!this.username || !this.password) {
+      this.pageNotificationService.addErrorMsg('Preencha os campos obrigatórios!');
       return;
     }
+
+    if (this.password.length < 4) {
+      this.pageNotificationService.addErrorMsg('A senha precisa ter no mínimo 4 caracteres!');
+      return;
+    }
+
     this.loginService.login(this.username, this.password).subscribe(() => {
       // this.authService.loginSuccess();
 

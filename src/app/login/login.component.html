@@ -2,30 +2,30 @@
   <div class="ui-g-12 container-login">
 
     <div class="card card-w-title login-panel">
-      
+
       <form novalidate #loginForm="ngForm"
-        name="loginForm" 
-        role="form" 
+        name="loginForm"
+        role="form"
         (ngSubmit)="login()">
 
         <span class="logo">
-          <i class="fa ui-icon-landscape">logo</i>
+          <!--<i class="fa ui-icon-landscape">logo</i>-->
         </span>
 
         <h1 class="title p-b-34 p-t-27">LOGIN</h1>
 
-        <div class="ui-g"> 
+        <div class="ui-g">
 
           <div class="ui-g-12 ui-md-12 ui-sm-12 input">
-            <input 
+            <input
                 required
-                type="text" 
-                name="username" 
+                type="text"
+                name="username"
                 [(ngModel)]="username"
-                placeholder="Usuário *" 
+                placeholder="Usuário *"
                 pInputText />
                 <span class="username" data-placeholder=""></span>
-                
+
           </div>
           <div *ngIf="(loginForm.controls['username']
                                         && !loginForm.controls['username'].valid
@@ -36,14 +36,14 @@
           <div class="ui-g-12 ui-md-12 ui-sm-12 input">
             <input
                 required
-                pPassword 
-                type="password" 
+                pPassword
+                type="password"
                 name="password"
                 placeholder="Senha *"
-                [(ngModel)]="password" 
+                [(ngModel)]="password"
                 [feedback]="false" />
                 <span class="password" data-placeholder=""></span>
-                
+
           </div>
           <div *ngIf="(loginForm.controls['password']
                                         && !loginForm.controls['password'].valid
@@ -54,7 +54,9 @@
         </div>
 
         <div class="ui-g-12 login-btn">
-            <button pButton type="submit" label="Login"></button>
+            <button pButton type="submit">
+                <span>Login</span>
+            </button>
         </div>
       </form>
     </div>

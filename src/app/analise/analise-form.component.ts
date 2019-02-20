@@ -324,11 +324,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Obtem o esforço de fase
+     * Obtem o esforço de fase 
      */
     totalEsforcoFases() {
         const initialValue = 0;
-        return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforcoFormatado, initialValue);
+        return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforco, initialValue);
     }
 
     /**
