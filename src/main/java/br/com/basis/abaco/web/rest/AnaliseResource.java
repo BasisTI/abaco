@@ -294,6 +294,18 @@ public class AnaliseResource {
     }
 
     /**
+     * GET BUSCAR ANÁLISES DA BASELINE
+     *
+     * @param
+     * @return
+     */
+    @GetMapping("/analises/baseline")
+    @Timed
+    public List<Analise> getAllAnalisesBaseline() {
+        return analiseRepository.findAllByBaseline();
+    }
+
+    /**
      * DELETE /analises/:id : DELETAR ANÁLISE CASO O USUÁRIO POSSUA PERMISSÃO
      *
      * @param id the id of the analise to delete
