@@ -9,6 +9,7 @@ import {
 
 import {AnaliseSharedDataService} from '../../../shared/analise-shared-data.service';
 import {Analise} from '../../../analise/analise.model';
+import { AnaliseService } from './../../../analise/analise.service';
 import {FuncaoDados} from '../../../funcao-dados/funcao-dados.model';
 import {Der} from '../../../der/der.model';
 import {Subscription} from 'rxjs/Subscription';
@@ -47,14 +48,15 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
+        private analiseService: AnaliseService,
         private baselineService: BaselineService
     ) {
     }
 
     ngOnInit() {
         // TODO quais eventos observar?
-        // precisa de um evento de funcaoDados adicionada?
-        this.subscribeAnaliseCarregada();
+        // precisa de um evento de funcaoDados adicionada  
+        this.subscribeAnaliseCarregada();     
     }
 
     private getFuncoesDados(): FuncaoDados[] {
@@ -65,12 +67,34 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
         return this.analiseSharedDataService.analise;
     }
 
+    private getAnalisesBaseline() {
+        this.analiseService.findAllBaseline().subscribe(res => {
+            let analises = this.analiseService.convertJsonToAnalise(res);
+            this.carregarFuncaoDadosBaseline(analises);
+        });
+    }
+
+    public carregarFuncaoDadosBaseline(analises: Analise[]) {
+
+        let funcoesDadosBaseline: FuncaoDados[] = [];
+
+        for (let analise of analises) {
+            let fds: FuncaoDados[] = analise.funcaoDados;
+            
+            for (let fd of fds) {
+                funcoesDadosBaseline.push(fd);
+            }
+        }
+
+        this.funcoesDados = this.funcoesDados.concat(funcoesDadosBaseline);
+        //this.funcoesDados = funcoesDadosBaseline;
+
+    }
+
     private subscribeAnaliseCarregada() {
         
         this.subscriptionAnaliseCarregada = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
             
-            this.idAnalise = this.analiseSharedDataService.analise.id;
-            console.log(this.analiseSharedDataService.analise);
             this.funcoesDadosCache = this.analiseSharedDataService.analise.funcaoDados;
 
             this.baselineService.analiticosFuncaoDados(
@@ -97,8 +121,9 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
     }
 
     abrirDialog() {
+        this.funcoesDados = [];
         this.funcoesDados = this.getFuncoesDados();
-        
+        this.getAnalisesBaseline();
         if (this.habilitarBotaoAbrirDialog()) {
             this.subscribeAnaliseCarregada();
             this.mostrarDialog = true;

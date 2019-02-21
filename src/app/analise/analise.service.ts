@@ -331,6 +331,14 @@ export class AnaliseService {
     return this.http.get(url)
       .map((res: Response) => this.convertResponse(res));
   }
+  
+
+
+  findAllBaseline(): Observable<Response> {
+    this.blockUI.start('Buscando análises baseline...');
+    const url = `${this.resourceUrl}/baseline`;
+    return this.http.get(url);
+  }
 
    /** Salva as equipes que têm acesso àquela análise
    *
