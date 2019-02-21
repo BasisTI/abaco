@@ -31,6 +31,16 @@ export class MenuItemsService {
                 ]
             },
             {
+                label: 'Cadastros', icon: 'description',
+                visible: this.isLoggedCadastrosBasicos(),
+                items: [
+                    {label: 'Tipo de Fase', routerLink: 'tipoFase', icon: 'beenhere'},
+                    {label: 'Manual', routerLink: 'manual', icon: 'description'},
+                    {label: 'Organização', routerLink: 'organizacao', icon: 'business'},
+                    {label: 'Sistema', routerLink: 'sistema', icon: 'laptop'}
+                ]
+            },
+            {
                 label: 'Análise', icon: 'insert_chart',
                 visible: this.authService.isAuthenticated(),
                 items: [
@@ -39,17 +49,8 @@ export class MenuItemsService {
                     // { label: 'Compare' }
                     // { label: 'Validação' }
                 ]
-            },
-            {
-                label: 'Cadastros Básicos', icon: 'description',
-                visible: this.isLoggedCadastrosBasicos(),
-                items: [
-                    {label: 'Tipo de Fase', routerLink: 'tipoFase', icon: 'beenhere'},
-                    {label: 'Manual', routerLink: 'manual', icon: 'description'},
-                    {label: 'Organização', routerLink: 'organizacao', icon: 'business'},
-                    {label: 'Sistema', routerLink: 'sistema', icon: 'laptop'}
-                ]
             }
+            
             
         ];
     }
