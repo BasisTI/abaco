@@ -28,6 +28,7 @@ import {Der} from '../der/der.model';
 import { Impacto } from '../analise-shared/impacto-enum';
 import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
 import { loginRoute } from '../login';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 
@@ -53,6 +54,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     windowWidthDialog: any;
     impactos: string[];
 
+    faS: FatorAjuste[];
 
     moduloCache: Funcionalidade;
     dersChips: DerChipItem[];
@@ -616,6 +618,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.hideShowQuantidade = true;
         this.disableTRDER();
         this.configurarDialog();
+        this.currentFuncaoTransacao.fatorAjuste = this.faS[0]
     }
 
     configurarDialog() {
@@ -627,13 +630,22 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
 
     private inicializaFatoresAjuste(manual: Manual) {
-        const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+        this.faS= _.cloneDeep(manual.fatoresAjuste);
+
+        this.faS.sort((n1,n2) => {
+            if (n1.fator < n2.fator) 
+                return 1;   
+            if (n1.fator > n2.fator) 
+                return -1;
+            return 0;
+        });
         this.fatoresAjuste =
-            faS.map(fa => {
+            this.faS.map(fa => {
                 const label = FatorAjusteLabelGenerator.generate(fa);
-                return {label: label, value: fa};
+                return {label: label,  value: fa};
             });
         this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+       ;
     }
 
     textChanged() {
