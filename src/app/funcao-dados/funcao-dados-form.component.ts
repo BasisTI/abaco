@@ -44,6 +44,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     @Input()
     label: string;
 
+    faS: FatorAjuste[];
+
     textHeader: string;
     @Input() isView: boolean;
     @BlockUI() blockUI: NgBlockUI;      // Usado para bloquear o sistema enquanto aguarda resolução das requisições do backend
@@ -673,6 +675,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.hideShowQuantidade = true;
         this.disableTRDER();
         this.configurarDialog();
+        this.currentFuncaoDados.fatorAjuste = this.faS[0];
     }
 
     configurarDialog() {
@@ -682,15 +685,27 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.showDialog = true;
     }
 
-
     private inicializaFatoresAjuste(manual: Manual) {
-        const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+        this.faS = _.cloneDeep(manual.fatoresAjuste);
+
+        this.faS.sort((n1,n2) => {
+            if (n1.fator < n2.fator) 
+                return 1;   
+            if (n1.fator > n2.fator) 
+                return -1;
+            return 0;
+        });
+        
         this.fatoresAjuste =
-            faS.map(fa => {
+            this.faS.map(fa => {
                 const label = FatorAjusteLabelGenerator.generate(fa);
-                return {label: label, value: fa};
+                return {label: label,  value: fa};
             });
+        
         this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+        
+
+
     }
 
     textChanged() {
