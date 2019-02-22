@@ -28,7 +28,6 @@ import {Der} from '../der/der.model';
 import { Impacto } from '../analise-shared/impacto-enum';
 import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
 import { loginRoute } from '../login';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 
@@ -54,7 +53,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     windowWidthDialog: any;
     impactos: string[];
 
-    faS: FatorAjuste[];
 
     moduloCache: Funcionalidade;
     dersChips: DerChipItem[];
@@ -277,8 +275,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         
     }
 
-    recuperarNomeSelecionado(baselineAnalitico: BaselineAnalitico) {
-
+   recuperarNomeSelecionado(baselineAnalitico: BaselineAnalitico) {
+       
         this.funcaoDadosService.getFuncaoTransacaoBaseline(baselineAnalitico.idfuncaodados)
         .subscribe((res: FuncaoTransacao) => {
                 if (res.fatorAjuste === null) {res.fatorAjuste = undefined; }
@@ -296,9 +294,15 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     searchBaseline(event): void {
-        this.baselineResultados = this.dadosBaselineFT.filter(c => c.name.includes(event.query));
+        this.baselineResultados = this.dadosBaselineFT.filter(function (fd) {
+        
+            var teste: string = event.query;
+        
+            return fd.name.toLowerCase().includes(teste.toLowerCase());
+        });
+        
     }
-
+   
     // Funcionalidade Selecionada
     functionalitySelected(funcionalidade: Funcionalidade) {
         if (!funcionalidade) {
@@ -618,7 +622,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.hideShowQuantidade = true;
         this.disableTRDER();
         this.configurarDialog();
-        this.currentFuncaoTransacao.fatorAjuste = this.faS[0]
     }
 
     configurarDialog() {
@@ -630,22 +633,13 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
 
     private inicializaFatoresAjuste(manual: Manual) {
-        this.faS= _.cloneDeep(manual.fatoresAjuste);
-
-        this.faS.sort((n1,n2) => {
-            if (n1.fator < n2.fator) 
-                return 1;   
-            if (n1.fator > n2.fator) 
-                return -1;
-            return 0;
-        });
+        const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
         this.fatoresAjuste =
-            this.faS.map(fa => {
+            faS.map(fa => {
                 const label = FatorAjusteLabelGenerator.generate(fa);
-                return {label: label,  value: fa};
+                return {label: label, value: fa};
             });
         this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
-       ;
     }
 
     textChanged() {

@@ -255,7 +255,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
             this.analise.fatorAjuste = fatorAjusteSelectItem.value;
         }
     }
-
+    
     /**
      *  Método responsável por popular os Esforços de fases
      */

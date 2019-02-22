@@ -64,6 +64,7 @@
                                     {{ modulo.nome }}
                                 </ng-template>
                             </p-column>
+                            
 
                             <p-column
                                     header="Funcionalidade"
@@ -143,6 +144,12 @@
                     [contentStyle]="{'height': ['windowHeightDialog']}"
                     [width]="[windowWidthDialog]">
 
+                <app-analise-modulo-funcionalidade
+                    [erroModulo]="erroModulo" [isFuncaoDados]="false"
+                    (moduloSelectedEvent)="moduloSelected($event)"
+                    (funcionalidadeSelectedEvent)="functionalitySelected($event)">
+                </app-analise-modulo-funcionalidade>
+
                 <div *ngIf="!isEdit">
                     <div class="ui-g" *ngIf="!showMultiplos">
                         <div class="ui-g-9">
@@ -162,6 +169,7 @@
                                 </div>
                             </span>
                         </div>
+                        
                         <div class="ui-g-12 ui-md-3 ui-lg-3">
                             <app-blue-button
                                     buttonLabel="Múltiplos"
@@ -208,12 +216,6 @@
                     </div>
                 </div>
 
-
-                <app-analise-modulo-funcionalidade
-                        [erroModulo]="erroModulo" [isFuncaoDados]="false"
-                        (moduloSelectedEvent)="moduloSelected($event)"
-                        (funcionalidadeSelectedEvent)="functionalitySelected($event)">
-                </app-analise-modulo-funcionalidade>
 
                 <div class="ui-g">
                     <div class="ui-g-3 ui-md-6 ui-sm-12">
