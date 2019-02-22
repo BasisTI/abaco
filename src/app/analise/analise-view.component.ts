@@ -42,6 +42,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     selectedToDelete: AnaliseShareEquipe;
     mostrarDialog: boolean = false;
     loggedUser: User;
+    dataCriacao: any;
 
     organizacoes: Organizacao[];
 
@@ -103,6 +104,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         this.isView = true;
         this.isSaving = false;
         this.dataHomol = new Date();
+        this.dataCriacao = new Date();
         this.getLoggedUser();
         this.habilitarCamposIniciais();
         this.listOrganizacoes();
@@ -135,6 +137,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
                     this.analiseSharedDataService.analiseCarregada();
                     this.dataAnalise = this.analise;
                     this.setDataHomologacao();
+                    this.setDataCriacaoOrdemServico();
                     this.diasGarantia = this.getGarantia();
                 });
             } else {
@@ -155,6 +158,18 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         }
     }
 
+     /**
+     * Método responsável por popular a data de Criacao Ordem Servico
+     */
+    setDataCriacaoOrdemServico(){
+        if (this.dataAnalise.dataCriacaoOrdemServico !== null) {
+            this.dataCriacao.setMonth(Number(this.dataAnalise.dataCriacaoOrdemServico.substring(5, 7)) - 1);
+            this.dataCriacao.setDate(Number(this.dataAnalise.dataCriacaoOrdemServico.substring(8, 10)));
+            this.dataCriacao.setFullYear(Number(this.dataAnalise.dataCriacaoOrdemServico.substring(0, 4)));
+            this.analise.dataCriacaoOrdemServico = this.dataCriacao;
+        }
+    }
+    
     /**
      * Método responsável por popular os dias de garantia do contrato
      */

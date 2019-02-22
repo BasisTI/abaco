@@ -68,7 +68,8 @@ export class Analise implements BaseEntity, JSONable<Analise> {
         public updatedOn?: Date,
         public bloqueiaAnalise?: boolean,
         public compartilhadas?: AnaliseShareEquipe[],
-    ) {
+        public dataCriacaoOrdemServico?: any,
+        ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
         this.inicializaResumos();
 
@@ -303,7 +304,8 @@ export class Analise implements BaseEntity, JSONable<Analise> {
             this.createdOn,
             this.updatedOn,
             this.bloqueiaAnalise,
-            this.compartilhadas);
+            this.compartilhadas,
+            this.dataCriacaoOrdemServico);
     }
 
 }
@@ -351,6 +353,7 @@ class AnaliseCopyFromJSON {
         this._analiseConverted.observacoes = this._json.observacoes;
         this._analiseConverted.baselineImediatamente = this._json.baselineImediatamente;
         this._analiseConverted.dataHomologacao = this._json.dataHomologacao;
+        this._analiseConverted.dataCriacaoOrdemServico = this._json.dataCriacaoOrdemServico;
         this._analiseConverted.identificadorAnalise = this._json.identificadorAnalise;
         this._analiseConverted.equipeResponsavel = this._json.equipeResponsavel;
         if (this._json.audit) {
