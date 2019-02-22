@@ -10,7 +10,7 @@
                             <!-- Inicio dos campos para inclusão -->
                             <div class="ui-g" *ngIf="!isEdicao">
                                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
-                                    <label>Organização</label>
+                                    <label translate>Organização</label>
                                     <p-dropdown
                                             [filter]="true"
                                             dataKey="id"
@@ -26,7 +26,7 @@
                                 </div>
 
                                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
-                                    <label>Sistema</label>
+                                    <label translate>Sistema</label>
                                     <p-dropdown
                                             [filter]="true"
                                             dataKey="id"
@@ -43,7 +43,7 @@
                                 </div>
 
                                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
-                                    <label>Equipe Responsável</label>
+                                    <label translate>Equipe Responsável</label>
                                     <p-dropdown
                                             [filter]="true"
                                             dataKey="id"
@@ -81,7 +81,7 @@
                                 <fieldset class="ui-g-12 ui-md-12 ui-sm-12">
 
                                     <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
-                                        <label>Organização</label>
+                                        <label translate>Organização</label>
                                         <p-dropdown
                                                 [filter]="true"
                                                 dataKey="id"
@@ -97,7 +97,7 @@
                                         </p-dropdown>
                                     </div>
                                     <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
-                                        <label>Equipe Responsável</label>
+                                        <label translate>Equipe Responsável</label>
                                         <p-dropdown
                                                 [filter]="true"
                                                 dataKey="id"
@@ -151,6 +151,20 @@
                                                 [(ngModel)]="analise.identificadorAnalise"
                                                 pInputText/>
                                     </span>
+                                </div>
+                             
+                                <div class="ui-g-6 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                  <label>Data da Criação da Ordem de Serviço *</label>
+                                     <span class="md-inputfield">
+                                        <p-calendar
+                                            required
+                                            name="dataCriacaoOrdemServico"
+                                            [(ngModel)]="analise.dataCriacaoOrdemServico"
+                                            id="idDataCriacaoOrdemServicoFormAnalise"
+                                            dateFormat="dd/mm/yy"
+                                            showIcon="true"
+                                        ></p-calendar>
+                                     </span>
                                 </div>
 
                                 <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
@@ -273,7 +287,7 @@
                                         <textarea
                                                 maxlength="4000"
                                                 required
-                                                pInputTextarea name="documentacao"                                          pInputTextarea name="documentacao"
+                                                pInputTextarea name="documentacao"
                                                 id="idDocumentacaoFormAnalise"
                                                 [(ngModel)]="analise.documentacao">
                                         </textarea>

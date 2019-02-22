@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import { Response } from '@angular/http';
 
+
 import { Analise, AnaliseShareEquipe } from './';
 import {AnaliseService} from './analise.service';
 import { User, UserService } from '../user';
@@ -39,6 +40,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     isSaving: boolean;
     dataAnalise: any;
     dataHomol: any;
+    dataCriacao: any;
     loggedUser: User;
     diasGarantia: number;
     public validacaoCampos: boolean;
@@ -102,6 +104,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.isEdicao = false;
         this.isSaving = false;
         this.dataHomol = new Date();
+        this.dataCriacao = new Date();
         this.getLoggedUser();
         this.habilitarCamposIniciais();
         this.getAnalise();
@@ -163,6 +166,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                     this.aguardarGarantia = this.analise.baselineImediatamente;
                     this.enviarParaBaseLine = this.analise.enviarBaseline;
                     this.setDataHomologacao();
+                    this.setDataOrdemServico();
                     this.diasGarantia = this.getGarantia();
                     this.update();
                 });
@@ -181,6 +185,18 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.dataHomol.setDate(Number(this.dataAnalise.dataHomologacao.substring(8, 10)));
             this.dataHomol.setFullYear(Number(this.dataAnalise.dataHomologacao.substring(0, 4)));
             this.analise.dataHomologacao = this.dataHomol;
+        }
+    }
+
+    /**
+     * Método responsável por popular a data de Ordem de Servico
+     */
+    setDataOrdemServico() {
+        if (this.dataAnalise.dataCriacaoOrdemServico !== null) {
+            this.dataCriacao.setMonth(Number(this.dataAnalise.dataCriacaoOrdemServico.substring(5, 7)) - 1);
+            this.dataCriacao.setDate(Number(this.dataAnalise.dataCriacaoOrdemServico.substring(8, 10)));
+            this.dataCriacao.setFullYear(Number(this.dataAnalise.dataCriacaoOrdemServico.substring(0, 4)));
+            this.analise.dataCriacaoOrdemServico = this.dataCriacao;
         }
     }
 
@@ -497,6 +513,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         }
         if (!this.analise.contrato) {
             this.pageNotificationService.addInfoMsg(MessageUtil.SELECIONE_CONTRATO_CONTINUAR);
+            isValid = false;
+            return isValid;
+        }
+        if(!this.analise.dataCriacaoOrdemServico){
+            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_DATA_ORDEM_SERVICO);
             isValid = false;
             return isValid;
         }
