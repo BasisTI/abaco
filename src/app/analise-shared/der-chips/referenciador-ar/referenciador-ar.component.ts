@@ -124,17 +124,18 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
         this.funcoesDados = [];
         this.funcoesDados = this.getFuncoesDados();
         this.getAnalisesBaseline();
-        if (this.habilitarBotaoAbrirDialog()) {
-            this.subscribeAnaliseCarregada();
-            this.mostrarDialog = true;
-        }
+        //if (this.habilitarBotaoAbrirDialog()) {
+        this.subscribeAnaliseCarregada();
+        this.mostrarDialog = true;
+        //}
     }
 
     habilitarBotaoAbrirDialog(): boolean {
-        if (!this.funcoesDados) {
+        /*if (!this.funcoesDados) {
             return false;
         }
-        return this.funcoesDados.length > 0;
+        return this.funcoesDados.length > 0;*/
+        return true;
     }
 
     funcoesDadosDropdownPlaceholder(): string {
