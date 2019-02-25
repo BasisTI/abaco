@@ -1,6 +1,11 @@
 package br.com.basis.abaco.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import org.hibernate.annotations.Cache;
@@ -10,18 +15,23 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A Contrato.
@@ -51,8 +61,13 @@ public class Contrato implements Serializable {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate dataFimVigencia;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     private Manual manual;
+   
+    @OneToMany(mappedBy="contratos", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonManagedReference
+    private Set<ManualContrato> manualContrato = new HashSet<>();
 
     @ManyToOne
     @JsonBackReference
@@ -111,10 +126,11 @@ public class Contrato implements Serializable {
     public void setDataFimVigencia(LocalDate dataFimVigencia) {
         this.dataFimVigencia = dataFimVigencia;
     }
+    
+    public void setManualContrato(Set<ManualContrato> manualContrato) {
+  		this.manualContrato = manualContrato;
+  	}
 
-    public Manual getManual() {
-        return manual;
-    }
 
     public Contrato manual(Manual manual) {
         this.manual = manual;
@@ -129,7 +145,12 @@ public class Contrato implements Serializable {
         return organization;
     }
 
-    public void setOrganization(Organizacao organization) {
+	public Set<ManualContrato> getManualContrato() {
+		return manualContrato;
+	}
+
+
+	public void setOrganization(Organizacao organization) {
         this.organization = organization;
     }
 
