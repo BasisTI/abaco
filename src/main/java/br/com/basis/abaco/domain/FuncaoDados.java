@@ -53,21 +53,21 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     private Integer quantidade;
 
     @JsonManagedReference(value = "funcaoDados")
-    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Rlr> rlrs = new HashSet<>();
 
     @ManyToOne
     private Alr alr;
 
-    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
 
     @Transient
     private Set<String> rlrValues;
 
     @JsonManagedReference(value = "funcaoDados")
-    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Der> ders = new HashSet<>();
 
     @JsonIgnore

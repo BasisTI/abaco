@@ -102,7 +102,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 	@Column(name = "reset_date")
 	private ZonedDateTime resetDate = null;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "jhi_user_authority", joinColumns = {
 			@JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "authority_name", referencedColumnName = "name") })
@@ -110,11 +110,11 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 	@BatchSize(size = 20)
 	private Set<Authority> authorities = new HashSet<>();
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "user_tipo_equipe", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "tipo_equipe_id", referencedColumnName = "id"))
 	private Set<TipoEquipe> tipoEquipes = new HashSet<>();
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "user_organizacao", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
 	private Set<Organizacao> organizacoes = new HashSet<>();
 

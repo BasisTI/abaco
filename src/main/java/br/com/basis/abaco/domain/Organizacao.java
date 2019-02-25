@@ -66,17 +66,17 @@ public class Organizacao implements Serializable, ReportObject {
 	@Column(name = "numero_ocorrencia")
 	private String numeroOcorrencia;
 
-	@OneToMany(mappedBy = "organizacao", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "organizacao")
 	@JsonIgnore
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Sistema> sistemas = new HashSet<>();
 
-	@OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	private Set<Contrato> contracts = new HashSet<>();
 
 	@JsonIgnore
-	@ManyToMany(mappedBy = "organizacoes", fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "organizacoes")
 	private Set<TipoEquipe> tipoEquipe = new HashSet<>();
 
 	@Size(max = 255)

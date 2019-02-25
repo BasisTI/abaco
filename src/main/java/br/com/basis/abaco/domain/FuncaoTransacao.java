@@ -53,11 +53,11 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
 
     @JsonManagedReference(value = "funcaoTransacao")
-    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Alr> alrs = new HashSet<>();
 
-    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
 
     @Transient
@@ -68,7 +68,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     private ImpactoFatorAjuste impacto;
 
     @JsonManagedReference(value = "funcaoTransacao")
-    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Der> ders = new HashSet<>();
 
     public TipoFuncaoTransacao getTipo() {

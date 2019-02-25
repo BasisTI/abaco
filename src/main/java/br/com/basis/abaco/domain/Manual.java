@@ -70,11 +70,11 @@ public class Manual implements Serializable, ReportObject {
     @Column(name="arquivo_manual_id")
     private int arquivoManualId;
 
-    @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Set<EsforcoFase> esforcoFases = new HashSet<>();
 
-    @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
 

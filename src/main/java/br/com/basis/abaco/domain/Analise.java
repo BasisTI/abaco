@@ -107,7 +107,7 @@ public class Analise implements Serializable, ReportObject {
     @ManyToOne
     private Contrato contrato;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Organizacao organizacao;
 
     @Embedded
@@ -129,15 +129,15 @@ public class Analise implements Serializable, ReportObject {
     @JoinColumn
     private User editedBy;
 
-    @OneToMany(mappedBy = "analises", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "analises")
     private Set<Compartilhada> compartilhadas = new HashSet<>();
 
-    @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonManagedReference
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
 
-    @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonManagedReference
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
@@ -145,7 +145,7 @@ public class Analise implements Serializable, ReportObject {
     @ManyToOne
     private FatorAjuste fatorAjuste;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     private Set<EsforcoFase> esforcoFases;
 
     @Size(max = 4000)

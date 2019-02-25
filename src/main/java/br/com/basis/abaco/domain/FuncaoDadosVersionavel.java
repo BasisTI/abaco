@@ -16,7 +16,7 @@ public class FuncaoDadosVersionavel extends FuncaoAnaliseVersionavel implements 
 
     private static final long serialVersionUID = 1L;
 
-    @OneToMany(mappedBy = "funcaoDadosVersionavel", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "funcaoDadosVersionavel")
     private Set<FuncaoDados> funcoesDados = new HashSet<>();
 
     public Set<FuncaoDados> getFuncoesDados() {
