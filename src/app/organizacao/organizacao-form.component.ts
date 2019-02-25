@@ -20,6 +20,8 @@ import {ValidacaoUtil} from '../util/validacao.util';
 import {ValueTransformer} from '@angular/compiler/src/util';
 import {Upload} from '../upload/upload.model';
 import {EsforcoFase} from '../esforco-fase';
+import { ManualContrato } from './ManualContrato.model';
+
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -55,6 +57,15 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     imageUrl: any;
     upload: Upload;
     alterouLogo: boolean;
+    manuaisAdicionados: ManualContrato [] = [];
+    novoManual: Manual;
+    inicioVigencia;
+    fimVigencia;
+    manualInicioVigencia: Date;
+    manualFimVigencia: Date;
+    garantia;
+    ativo;
+    manualAtivo: boolean;
 
     @ViewChild('fileInput') fileInput: FileUpload;
 
@@ -146,9 +157,10 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMsg('Favor preencher o número do contrato');
             a = false;
         }
-        if (this.novoContrato.manual === null || this.novoContrato.manual === undefined) {
+        if ( (this.novoContrato.manualContrato === null || this.novoContrato.manualContrato === undefined)
+            && (this.novoContrato.manualContrato.length > 0)) {
             this.manualInvalido = true;
-            this.pageNotificationService.addErrorMsg('Selecione um manual');
+            this.pageNotificationService.addErrorMsg('Deve haver ao menos um manual');
             a = false;
         }
         if (!(this.novoContrato.dataInicioValida()) && (this.novoContrato.dataInicioVigencia != null || this.novoContrato.dataInicioVigencia != undefined)
@@ -162,10 +174,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
         if (this.novoContrato.dataFimVigencia === null || this.novoContrato.dataFimVigencia === undefined) {
             this.pageNotificationService.addErrorMsg('Preencher data de fim da vigência');
-            a = false;
-        }
-        if (this.novoContrato.diasDeGarantia === null || this.novoContrato.diasDeGarantia === undefined) {
-            this.pageNotificationService.addErrorMsg('Preencher dias de garantia');
             a = false;
         }
 
@@ -182,6 +190,69 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
 
 
+    }
+
+    validaDadosManual(manualContratoTemp: ManualContrato) {
+        let verificador: boolean;
+        if (manualContratoTemp.ativo === undefined || manualContratoTemp.ativo === null) {
+            this.pageNotificationService.addErrorMsg('Informe se o contrato é ativo ou não');
+            verificador = false;
+        }
+        if (manualContratoTemp.dataFimVigencia === undefined || manualContratoTemp.dataFimVigencia === null) {
+            this.pageNotificationService.addErrorMsg('Preencher data de fim da vigência');
+            verificador = false;
+        }
+        if (manualContratoTemp.dataInicioVigencia === undefined || manualContratoTemp.dataInicioVigencia === null) {
+            this.pageNotificationService.addErrorMsg('Preencher data de início da vigência');
+            verificador = false;
+        }
+        if (manualContratoTemp.manual === undefined || manualContratoTemp.manual === null) {
+            this.pageNotificationService.addErrorMsg('Selecione um manual');
+            verificador = false;
+        }
+        return verificador;
+    }
+
+    adicionarManual() {
+        let manualContratoTemp: ManualContrato = {
+            id: null,
+            manual: null,
+            dataInicioVigencia: null,
+            dataFimVigencia: null,
+            ativo: false,
+            contratos: null
+        };
+        this.setManualContrato(manualContratoTemp, this.novoContrato);
+        if (this.validaDadosManual(manualContratoTemp) ) {
+            this.novoContrato.manualContrato.push(manualContratoTemp);
+            this.novoContrato.manual = manualContratoTemp.manual;
+            this.resetObj(manualContratoTemp);
+            console.log(this.novoContrato.manualContrato);
+        } else {
+            this.resetObj(manualContratoTemp);
+            console.log(this.novoContrato.manualContrato);
+            return;
+        }
+    }
+
+    resetObj(manualContrato: ManualContrato) {
+        manualContrato = {
+            manual: null,
+            dataInicioVigencia: null,
+            dataFimVigencia: null,
+            ativo: false,
+            contratos: null,
+            id: null,
+        };
+    }
+
+    setManualContrato(manualContratoTemp, contrato: Contrato): ManualContrato {
+        manualContratoTemp.ativo = this.manualAtivo;
+        manualContratoTemp.dataFimVigencia = this.manualFimVigencia;
+        manualContratoTemp.dataInicioVigencia = this.manualInicioVigencia;
+        manualContratoTemp.manual = this.novoManual;
+        manualContratoTemp.contratos = contrato;
+        return manualContratoTemp;
     }
 
     /**
@@ -276,15 +347,20 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             return;
         }
 
+        console.log('query');
         this.organizacaoService.query().subscribe(response => {
             const todasOrganizacoes = response;
+            console.log('organizacoes');
+            console.log(todasOrganizacoes);
 
             if (!this.checkIfOrganizacaoAlreadyExists(todasOrganizacoes.json)
                 && !this.checkIfCnpjAlreadyExists(todasOrganizacoes.json)) {
 
                 if (this.organizacao.id !== undefined) {
+                    console.log('edit');
                     this.editar();
                 } else {
+                    console.log('novo');
                     this.novo();
                 }
             }
@@ -316,6 +392,8 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     novo() {
+        console.log('novo: ');
+        console.log(this.organizacao);
         if (this.newLogo !== undefined && this.newLogo != null) {
             this.uploadService.uploadLogo(this.newLogo).subscribe((response: any) => {
                 this.organizacao.logoId = response.id;

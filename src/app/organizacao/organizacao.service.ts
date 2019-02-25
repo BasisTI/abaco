@@ -27,6 +27,8 @@ export class OrganizacaoService {
 
   create(organizacao: Organizacao): Observable<any> {
     const copy = this.convertToJSON(organizacao);
+    console.log('Create');
+    console.log(organizacao);
 
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
@@ -107,6 +109,8 @@ export class OrganizacaoService {
   }
 
   private convertResponseToResponseWrapper(res: Response): ResponseWrapper {
+    console.log('response');
+    console.log(res);
     const jsonResponse = res.json();
     const result = [];
     for (let i = 0; i < jsonResponse.length; i++) {
