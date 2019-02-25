@@ -93,6 +93,7 @@
   "Legado":"Legacy",
   "Limpar":"Clear",
   "Login":"Login",
+  "LOGIN":"LOGINX",
   "Login *":"Login *",
   "Logo da Organização":"Logo of the Organization",
 
@@ -153,6 +154,7 @@
   "Selecione ao menos uma equipe":"Select at least one team",
   "Selecione ao menos uma organização":"Select at least one organization",
   "SEM":"SEM",
+  "Senha *":"Password *",
   "Sigla*":"Initials*",
   "Sigla *":"Initials *",
   "Sigla":"Initials",
