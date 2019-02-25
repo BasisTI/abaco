@@ -227,9 +227,11 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     // inserção/alteração/deleção pode ser feita por elemento
     private generateResumoFuncoesDados() {
         const resumo: ResumoFuncoes = new ResumoFuncoes(FuncaoDados.tipos());
-        this.funcaoDados.forEach(f => {
-            resumo.somaFuncao(f);
-        });
+        if (this.funcaoDados) {
+            this.funcaoDados.forEach(f => {
+                resumo.somaFuncao(f);
+            });
+        }
         this._resumoFuncaoDados = resumo;
     }
 
@@ -256,9 +258,11 @@ export class Analise implements BaseEntity, JSONable<Analise> {
 
     private generateResumoFuncoesTransacao() {
         const resumo: ResumoFuncoes = new ResumoFuncoes(FuncaoTransacao.tipos());
-        this.funcaoTransacaos.forEach(f => {
-            resumo.somaFuncao(f);
-        });
+        if (this.funcaoTransacaos) {
+            this.funcaoTransacaos.forEach(f => {
+                resumo.somaFuncao(f);
+            });
+        }
         this._resumoFuncaoTransacao = resumo;
     }
 

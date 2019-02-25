@@ -43,10 +43,10 @@ export class Manual implements BaseEntity, JSONable<Manual> {
     }
 
     copyFromJSON(json: any) {
-        const fatoresAjuste: FatorAjuste[] = json.fatoresAjuste
-            .map(faJSON => new FatorAjuste().copyFromJSON(faJSON));
-        const esforcoFases: EsforcoFase[] = json.esforcoFases
-            .map(efJSON => new EsforcoFase().copyFromJSON(efJSON));
+        const fatoresAjuste: FatorAjuste[] = json.fatoresAjuste ? json.fatoresAjuste
+            .map(faJSON => new FatorAjuste().copyFromJSON(faJSON)) : [];
+        const esforcoFases: EsforcoFase[] = json.esforcoFases ? json.esforcoFases
+            .map(efJSON => new EsforcoFase().copyFromJSON(efJSON)) : [];
         return new Manual(
             json.id
             , json.nome

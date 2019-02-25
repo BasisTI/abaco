@@ -328,23 +328,27 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
     checkIfOrganizacaoAlreadyExists(organizacoesRegistradas: Array<Organizacao>): boolean {
         let isAlreadyRegistered = false;
-        organizacoesRegistradas.forEach(each => {
-            if (each.nome.toUpperCase() === this.organizacao.nome.toUpperCase() && each.id !== this.organizacao.id) {
-                isAlreadyRegistered = true;
-                this.pageNotificationService.addErrorMsg('Já existe uma Organização registrada com este nome!');
-            }
-        });
+        if (organizacoesRegistradas) {
+            organizacoesRegistradas.forEach(each => {
+                if (each.nome.toUpperCase() === this.organizacao.nome.toUpperCase() && each.id !== this.organizacao.id) {
+                    isAlreadyRegistered = true;
+                    this.pageNotificationService.addErrorMsg('Já existe uma Organização registrada com este nome!');
+                }
+            });
+        }
         return isAlreadyRegistered;
     }
 
     checkIfCnpjAlreadyExists(organizacoesRegistradas: Array<Organizacao>): boolean {
         let isAlreadyRegistered = false;
-        organizacoesRegistradas.forEach(each => {
-            if (each.cnpj === this.organizacao.cnpj && each.id !== this.organizacao.id) {
-                isAlreadyRegistered = true;
-                this.pageNotificationService.addErrorMsg('Já existe uma Organização registrada com este CNPJ!');
-            }
-        });
+        if (organizacoesRegistradas) {
+            organizacoesRegistradas.forEach(each => {
+                if (each.cnpj === this.organizacao.cnpj && each.id !== this.organizacao.id) {
+                    isAlreadyRegistered = true;
+                    this.pageNotificationService.addErrorMsg('Já existe uma Organização registrada com este CNPJ!');
+                }
+            });
+        }
         return isAlreadyRegistered;
     }
 
@@ -360,13 +364,15 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
      * */
     private getInvalidFieldsString(): string {
         let invalidFieldsString = '';
-        this.invalidFields.forEach(invalidField => {
-            if (invalidField === this.invalidFields[this.invalidFields.length - 1]) {
-                invalidFieldsString = invalidFieldsString + invalidField;
-            } else {
-                invalidFieldsString = invalidFieldsString + invalidField + ', ';
-            }
-        });
+        if (this.invalidFields) {
+            this.invalidFields.forEach(invalidField => {
+                if (invalidField === this.invalidFields[this.invalidFields.length - 1]) {
+                    invalidFieldsString = invalidFieldsString + invalidField;
+                } else {
+                    invalidFieldsString = invalidFieldsString + invalidField + ', ';
+                }
+            });
+        }
 
         return invalidFieldsString;
     }

@@ -96,15 +96,19 @@ export class CalculadoraTestData {
     const funcoesDados: FuncaoDados[] = [];
     const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
 
-    valoresDer.forEach(der => {
-      valoresRlr.forEach(rlr => {
-        if (funcaoDentroDoIntervalo(der, rlr)) {
-          const funcao = this.criaFuncaoDadosComValores(tipo, der, rlr);
-          funcao.fatorAjuste = fatorAjustePercentual;
-          funcoesDados.push(funcao);
+    if (valoresDer) {
+      valoresDer.forEach(der => {
+        if (valoresRlr) {
+          valoresRlr.forEach(rlr => {
+            if (funcaoDentroDoIntervalo(der, rlr)) {
+              const funcao = this.criaFuncaoDadosComValores(tipo, der, rlr);
+              funcao.fatorAjuste = fatorAjustePercentual;
+              funcoesDados.push(funcao);
+            }
+          });
         }
       });
-    });
+    }
 
     return funcoesDados;
   }
@@ -177,15 +181,19 @@ export class CalculadoraTestData {
     const funcoesTransacao: FuncaoTransacao[] = [];
     const fatorAjustePercentual: FatorAjuste = this.criaFatorAjustePercentual50();
 
-    valoresDer.forEach(der => {
-      valoresFtr.forEach(ftr => {
-        if (funcaoDentroDoIntervalo(der, ftr)) {
-          const funcao = this.criaFuncaoTransacao(tipo, der, ftr);
-          funcao.fatorAjuste = fatorAjustePercentual;
-          funcoesTransacao.push(funcao);
+    if (valoresDer) {
+      valoresDer.forEach(der => {
+        if (valoresFtr) {
+          valoresFtr.forEach(ftr => {
+            if (funcaoDentroDoIntervalo(der, ftr)) {
+              const funcao = this.criaFuncaoTransacao(tipo, der, ftr);
+              funcao.fatorAjuste = fatorAjustePercentual;
+              funcoesTransacao.push(funcao);
+            }
+          });
         }
       });
-    });
+    }
 
     return funcoesTransacao;
   }

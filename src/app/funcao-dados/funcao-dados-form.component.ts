@@ -362,14 +362,16 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             if (that.analise.funcaoDados.length === 0) {
                 return resolve(true);
             }
-            that.analise.funcaoDados.forEach((data, index) => {
-                if (data.name === nome) {
-                    return resolve(false);
-                }
-                if (!that.analise.funcaoDados[index + 1]) {
-                    return resolve(true);
-                }
-            });
+            if (that.analise.funcaoDados) {
+                that.analise.funcaoDados.forEach((data, index) => {
+                    if (data.name === nome) {
+                        return resolve(false);
+                    }
+                    if (!that.analise.funcaoDados[index + 1]) {
+                        return resolve(true);
+                    }
+                });
+            }
         });
     }
 
@@ -508,7 +510,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoDados.artificialId = undefined;
         this.currentFuncaoDados.id = undefined;
 
-        if (this.dersChips !== undefined && this.rlrsChips) {
+        if (this.dersChips && this.rlrsChips) {
             this.dersChips.forEach(c => c.id = undefined);
             this.rlrsChips.forEach(c => c.id = undefined);
         }
@@ -542,12 +544,16 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                     res.fatorAjuste = undefined;
                 }
                 res.id = undefined;
-                res.ders.forEach(Ders => {
-                    Ders.id = undefined;
-                });
-                res.rlrs.forEach(rlrs => {
-                    rlrs.id = undefined;
-                });
+                if (res.ders) {
+                    res.ders.forEach(Ders => {
+                        Ders.id = undefined;
+                    });
+                }
+                if (res.rlrs) {
+                    res.rlrs.forEach(rlrs => {
+                        rlrs.id = undefined;
+                    });
+                }
 
                 this.prepararParaEdicao(res);
             });

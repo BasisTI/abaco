@@ -118,9 +118,11 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
     }
 
     relacionar() {
-        this.dersReferenciados.forEach(der => {
-            der.id = undefined;
-        });
+        if (this.dersReferenciados) {
+            this.dersReferenciados.forEach(der => {
+                der.id = undefined;
+            });
+        }
         this.dersReferenciadosEvent.emit(this.dersReferenciados);
         // XXX vai precisar relacionar qual funcao de dados foi relacionada?
         this.funcaoDadosReferenciadaEvent.emit(this.funcaoDadosSelecionada.name);

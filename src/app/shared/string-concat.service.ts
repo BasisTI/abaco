@@ -8,9 +8,11 @@ export class StringConcatService {
   concatResults(paramsArray: Array<string>): string {
     let paramsQueue: Array<string> = [];
 
-    paramsArray.forEach(each => {
-      (each !== undefined) ? (paramsQueue.push(each)) : (each);
-    });
+    if (paramsArray) {
+      paramsArray.forEach(each => {
+        (each !== undefined) ? (paramsQueue.push(each)) : (each);
+      });
+    }
 
     let concatResultString = this.createString(paramsQueue);
 

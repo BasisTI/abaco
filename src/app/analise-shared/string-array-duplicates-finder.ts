@@ -34,13 +34,15 @@ export class StringArrayDuplicatesFinder {
   static find(valores: string[]): DuplicatesResult {
     const valoresSet: Set<string> = new Set<string>();
     const duplicados: Set<string> = new Set<string>();
-    valores.forEach(val => {
-      if (!valoresSet.has(val)) {
-        valoresSet.add(val);
-      } else {
-        duplicados.add(val);
-      }
-    });
+    if (valores) {
+      valores.forEach(val => {
+        if (!valoresSet.has(val)) {
+          valoresSet.add(val);
+        } else {
+          duplicados.add(val);
+        }
+      });
+    }
     return new DuplicatesResult(duplicados);
   }
 

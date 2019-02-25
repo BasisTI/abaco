@@ -133,11 +133,13 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     private moduleCanBeDeleted() {
         let isDeletationValid = true;
 
-        this.sistema.funcionalidades.forEach(each => {
-            if (each.modulo.nome === this.moduloEmEdicao.nome) {
-                isDeletationValid = false;
-            }
-        });
+        if (this.sistema.funcionalidades) {
+            this.sistema.funcionalidades.forEach(each => {
+                if (each.modulo.nome === this.moduloEmEdicao.nome) {
+                    isDeletationValid = false;
+                }
+            });
+        }
 
         return isDeletationValid;
     }
@@ -256,12 +258,14 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     private checkDuplicity(sistemas: Array<Sistema>) {
         let isAlreadyRegistered: boolean;
 
-        sistemas.forEach(each => {
-            if (each.nome === this.sistema.nome && each.organizacao.id === this.sistema.organizacao.id && each.id !== this.sistema.id) {
-                isAlreadyRegistered = true;
-                this.pageNotificationService.addErrorMsg('O sistema ' + each.nome + ' já está cadastrado!');
-            }
-        });
+        if (sistemas) {
+            sistemas.forEach(each => {
+                if (each.nome === this.sistema.nome && each.organizacao.id === this.sistema.organizacao.id && each.id !== this.sistema.id) {
+                    isAlreadyRegistered = true;
+                    this.pageNotificationService.addErrorMsg('O sistema ' + each.nome + ' já está cadastrado!');
+                }
+            });
+        }
         return isAlreadyRegistered;
     }
 

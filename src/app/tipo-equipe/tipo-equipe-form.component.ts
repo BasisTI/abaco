@@ -71,12 +71,14 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
   private checkDuplicity(teamTypes: Array<TipoEquipe>) {
     let isAlreadyRegistered = false;
 
-    teamTypes.forEach(each => {
-      if (this.tipoEquipe.nome === each.nome && this.tipoEquipe.id !== each.id) {
-        isAlreadyRegistered = true;
-        this.pageNotificationService.addErrorMsg('Já existe um Tipo de Equipe registrado com este nome!');
-      }
-    });
+    if (teamTypes) {
+      teamTypes.forEach(each => {
+        if (this.tipoEquipe.nome === each.nome && this.tipoEquipe.id !== each.id) {
+          isAlreadyRegistered = true;
+          this.pageNotificationService.addErrorMsg('Já existe um Tipo de Equipe registrado com este nome!');
+        }
+      });
+    }
 
     return isAlreadyRegistered;
   }

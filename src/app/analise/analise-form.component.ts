@@ -127,25 +127,29 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     checkUserAnaliseEquipes() {
         let retorno = false;
-        this.loggedUser.tipoEquipes.forEach(equipe => {
-            if (equipe.id === this.analise.equipeResponsavel.id) {
-                retorno = true;
-            }
-        });
+        if (this.loggedUser.tipoEquipes) {
+            this.loggedUser.tipoEquipes.forEach(equipe => {
+                if (equipe.id === this.analise.equipeResponsavel.id) {
+                    retorno = true;
+                }
+            });
+        }
         return retorno;
     }
 
     checkIfUserCanEdit() {
         let retorno = false;
-        this.loggedUser.tipoEquipes.forEach(equipe => {
-            this.analise.compartilhadas.forEach(compartilhada => {
-                if (equipe.id === compartilhada.equipeId) {
-                    if (!compartilhada.viewOnly) {
-                        retorno = true;
+        if (this.loggedUser.tipoEquipes) {
+            this.loggedUser.tipoEquipes.forEach(equipe => {
+                this.analise.compartilhadas.forEach(compartilhada => {
+                    if (equipe.id === compartilhada.equipeId) {
+                        if (!compartilhada.viewOnly) {
+                            retorno = true;
+                        }
                     }
-                }
+                });
             });
-        });
+        }
         return retorno;
     }
     /**
@@ -540,15 +544,17 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id,
                 this.analise.id,
                 this.analise.equipeResponsavel.id).subscribe((equipes) => {
-                equipes.json.forEach((equipe) => {
-                    const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
-                        {id: undefined,
-                            equipeId: equipe.id,
-                            analiseId: this.analise.id,
-                            viewOnly: false,
-                            nomeEquipe: equipe.nome });
-                    this.equipeShare.push(entity);
-                });
+                if (equipes.json) {
+                    equipes.json.forEach((equipe) => {
+                        const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
+                            {id: undefined,
+                                equipeId: equipe.id,
+                                analiseId: this.analise.id,
+                                viewOnly: false,
+                                nomeEquipe: equipe.nome });
+                        this.equipeShare.push(entity);
+                    });
+                }
                 this.blockUI.stop();
             });
             this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {
