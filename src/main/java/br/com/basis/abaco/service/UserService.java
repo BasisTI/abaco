@@ -10,6 +10,7 @@ import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.UserDTO;
 import br.com.basis.abaco.service.util.RandomUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -128,7 +130,8 @@ public class UserService {
         }
         if (userDTO.getAuthorities() != null) {
             Set<Authority> authorities = new HashSet<>();
-            userDTO.getAuthorities().forEach(authority -> authorities.add(authorityRepository.findOne(authority)));
+            Optional.ofNullable(userDTO.getAuthorities()).orElse(Collections.emptySet())
+                .forEach(authority -> authorities.add(authorityRepository.findOne(authority)));
             user.setAuthorities(authorities);
         }
         String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());

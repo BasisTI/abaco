@@ -15,6 +15,7 @@ import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UserProfile;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Transactional
 public class SocialService {
 
     private final Logger log = LoggerFactory.getLogger(SocialService.class);

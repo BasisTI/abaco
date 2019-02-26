@@ -60,6 +60,7 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -67,6 +68,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 @Service
+@Transactional
 public class ElasticsearchIndexService {
 
     private final Logger log = LoggerFactory.getLogger(ElasticsearchIndexService.class);
@@ -216,7 +218,7 @@ public class ElasticsearchIndexService {
 
     @Async
     @Timed
-    public void reindexAll() {
+    public synchronized void reindexAll() {
         reindexForClass(Alr.class, alrRepository, alrSearchRepository);
         reindexForClass(Analise.class, analiseRepository, analiseSearchRepository);
         reindexForClass(Contrato.class, contratoRepository, contratoSearchRepository);

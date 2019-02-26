@@ -51,6 +51,7 @@ import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -133,10 +134,13 @@ public class SistemaResource {
 	private Sistema linkSistemaToModuleToFunctionalities(Sistema sistema) {
 		Sistema linkedSistema = copySistema(sistema);
 		Set<Modulo> modulos = linkedSistema.getModulos();
-		modulos.forEach(m -> {
-			m.setSistema(linkedSistema);
-			m.getFuncionalidades().parallelStream().forEach(f -> f.setModulo(m));
-		});
+		Optional.ofNullable(modulos).orElse(Collections.emptySet())
+			.forEach(m -> {
+				m.setSistema(linkedSistema);
+				Optional.ofNullable(m.getFuncionalidades())
+					.orElse(Collections.emptySet())
+					.parallelStream().forEach(f -> f.setModulo(m));
+			});
 		return linkedSistema;
 	}
 
