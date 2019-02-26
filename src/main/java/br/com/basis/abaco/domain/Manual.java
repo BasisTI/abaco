@@ -1,6 +1,8 @@
 package br.com.basis.abaco.domain;
 
 import br.com.basis.dynamicexports.pojo.ReportObject;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -71,11 +73,11 @@ public class Manual implements Serializable, ReportObject {
     private int arquivoManualId;
 
     @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonBackReference(value="EsforcoFase")
     private Set<EsforcoFase> esforcoFases = new HashSet<>();
 
     @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonBackReference
     private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
 
     @DecimalMin(value = MINPERCENT)

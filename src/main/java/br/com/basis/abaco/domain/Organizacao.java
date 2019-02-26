@@ -74,7 +74,7 @@ public class Organizacao implements Serializable, ReportObject {
 	private Set<Sistema> sistemas = new HashSet<>();
 
 	@OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	@JsonBackReference
+	@JsonBackReference(value="Contratos")
 	private Set<Contrato> contracts = new HashSet<>();
 
 	@JsonIgnore

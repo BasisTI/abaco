@@ -1,6 +1,8 @@
 package br.com.basis.abaco.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -41,7 +43,7 @@ public class EsforcoFase implements Serializable {
     private BigDecimal esforco;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonManagedReference(value="EsforcoFase")
     private Manual manual;
 
     @ManyToOne

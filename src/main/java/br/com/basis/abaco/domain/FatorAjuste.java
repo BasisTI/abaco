@@ -3,6 +3,7 @@ package br.com.basis.abaco.domain;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -65,7 +66,7 @@ public class FatorAjuste implements Serializable {
     private ImpactoFatorAjuste impacto;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonManagedReference
     private Manual manual;
 
     @Column(name = "descricao")
