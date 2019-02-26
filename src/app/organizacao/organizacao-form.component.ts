@@ -193,7 +193,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     validaDadosManual(manualContratoTemp: ManualContrato) {
-        let verificador: boolean;
+        let verificador = true;
         if (manualContratoTemp.ativo === undefined || manualContratoTemp.ativo === null) {
             this.pageNotificationService.addErrorMsg('Informe se o contrato é ativo ou não');
             verificador = false;
@@ -214,22 +214,19 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     adicionarManual() {
-        let manualContratoTemp: ManualContrato = {
-            id: null,
-            manual: null,
-            dataInicioVigencia: null,
-            dataFimVigencia: null,
-            ativo: false,
-            contratos: null
-        };
-        this.setManualContrato(manualContratoTemp, this.novoContrato);
+        const manualContratoTemp = this.setManualContrato();
         if (this.validaDadosManual(manualContratoTemp) ) {
-            this.novoContrato.manualContrato.push(manualContratoTemp);
+            console.log('manualContrato');
+            console.log(manualContratoTemp);
+            this.novoContrato.addManualContrato(manualContratoTemp);
+            // retirar manual
             this.novoContrato.manual = manualContratoTemp.manual;
-            this.resetObj(manualContratoTemp);
+            // this.resetObj(manualContratoTemp);
+            console.log('validado');
             console.log(this.novoContrato.manualContrato);
         } else {
-            this.resetObj(manualContratoTemp);
+            // this.resetObj(manualContratoTemp);
+            console.log('invalidado');
             console.log(this.novoContrato.manualContrato);
             return;
         }
@@ -246,13 +243,16 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         };
     }
 
-    setManualContrato(manualContratoTemp, contrato: Contrato): ManualContrato {
-        manualContratoTemp.ativo = this.manualAtivo;
+    setManualContrato(/*manualContratoTemp, contrato: Contrato*/): ManualContrato {
+        return new ManualContrato(null, null, this.novoManual,
+            null, this.manualInicioVigencia, this.manualFimVigencia,
+            this.manualAtivo, this.garantia);
+        /*manualContratoTemp.ativo = this.manualAtivo;
         manualContratoTemp.dataFimVigencia = this.manualFimVigencia;
         manualContratoTemp.dataInicioVigencia = this.manualInicioVigencia;
         manualContratoTemp.manual = this.novoManual;
         manualContratoTemp.contratos = contrato;
-        return manualContratoTemp;
+        return manualContratoTemp;*/
     }
 
     /**

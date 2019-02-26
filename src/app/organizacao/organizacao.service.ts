@@ -114,12 +114,15 @@ export class OrganizacaoService {
     const jsonResponse = res.json();
     const result = [];
     for (let i = 0; i < jsonResponse.length; i++) {
+      console.log('for ' + i);
       result.push(this.convertFromJSON(jsonResponse[i]));
     }
     return new ResponseWrapper(res.headers, result, res.status);
   }
 
   private convertFromJSON(json: any): Organizacao {
+    console.log('convertFromJSON Organizacao');
+    console.log(json);
     const entity: JSONable<Organizacao> = new Organizacao();
     return entity.copyFromJSON(json);
   }

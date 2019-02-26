@@ -1,10 +1,9 @@
-import { BaseEntity } from './../shared/base-entity';
-import { JSONable } from './../shared/jsonable';
+import { JSONable, BaseEntity } from './../shared';
 import { Contrato } from './../contrato/contrato.model';
 import { Manual } from './../manual/manual.model';
 
 
-export class ManualContrato implements BaseEntity, JSONable<ManualContrato> {
+export class ManualContrato implements BaseEntity/*, JSONable<ManualContrato>*/ {
 
     constructor(
         public id?: any,
@@ -18,8 +17,7 @@ export class ManualContrato implements BaseEntity, JSONable<ManualContrato> {
     ) { }
 
 
-    /*
-    toJSONState(): ManualContrato {
+    /*toJSONState(): ManualContrato {
         const copy: ManualContrato = Object.assign({}, this);
         return copy;
     }
@@ -28,7 +26,6 @@ export class ManualContrato implements BaseEntity, JSONable<ManualContrato> {
         const newManualContrato = new ManualContrato(json.id, json.manual, json.contratos
             , json.dataInicioVigencia, json.dataFimVigencia, json.ativo, json.garantia);
         return newManualContrato;
-    }
-    */
+    }*/
 
 }

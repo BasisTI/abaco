@@ -5,7 +5,7 @@ import { Manual } from '../manual';
 
 export class Contrato implements BaseEntity, JSONable<Contrato> {
 
-  private mapepableManualContrato: MappableEntities<ManualContrato>;
+  private mappableManualContrato: MappableEntities<ManualContrato>;
 
   constructor(
     public id?: number,
@@ -19,10 +19,11 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
     public manualContrato?: ManualContrato[],
   ) {
     if (manualContrato) {
-      this.mapepableManualContrato = new MappableEntities<ManualContrato>(manualContrato);
+      manualContrato.forEach(m => m.contratos = this);
+      this.mappableManualContrato = new MappableEntities<ManualContrato>(manualContrato);
     } else {
       this.manualContrato = [];
-      this.mapepableManualContrato = new MappableEntities<ManualContrato>();
+      this.mappableManualContrato = new MappableEntities<ManualContrato>();
     }
   }
 
@@ -37,6 +38,11 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
       return new Contrato(json.id, json.numeroContrato, new Date(json.dataInicioVigencia),
         new Date(json.dataFimVigencia), /*json.manual,*/ json.ativo, json.diasDeGarantia, json.manualContrato);
     }
+  }
+
+  addManualContrato(manualContrato: ManualContrato) {
+    this.mappableManualContrato.push(manualContrato);
+    this.manualContrato = this.mappableManualContrato.values();
   }
 
   // TODO extrair modulo? entrar pro jsonable?
