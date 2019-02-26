@@ -34,7 +34,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 @Entity
 @Table(name = "manual_Contrato")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "manualContrato")
 public class ManualContrato implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
