@@ -66,11 +66,11 @@ public class Contrato implements Serializable {
     private Manual manual;
    
     @OneToMany(mappedBy="contratos", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonBackReference(value="manualContrato")
     private Set<ManualContrato> manualContrato = new HashSet<>();
 
     @ManyToOne
-    @JsonBackReference
+    @JsonManagedReference
     private Organizacao organization;
 
     @NotNull

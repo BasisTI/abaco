@@ -47,7 +47,7 @@ public class ManualContrato implements Serializable {
 	private Manual manual;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonBackReference
+	@JsonManagedReference(value="ManualContrato")
 	private Contrato contratos;
 	
     @Column(name = "data_inicio_vigencia")
