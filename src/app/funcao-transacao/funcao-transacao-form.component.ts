@@ -272,11 +272,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.baselineService.baselineAnaliticoFT(this.analise.sistema.id).subscribe((res: ResponseWrapper) => {
             this.dadosBaselineFT = res.json;
         });
-        
+
     }
 
    recuperarNomeSelecionado(baselineAnalitico: BaselineAnalitico) {
-       
+
         this.funcaoDadosService.getFuncaoTransacaoBaseline(baselineAnalitico.idfuncaodados)
         .subscribe((res: FuncaoTransacao) => {
                 if (res.fatorAjuste === null) {res.fatorAjuste = undefined; }
@@ -295,14 +295,14 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     searchBaseline(event): void {
         this.baselineResultados = this.dadosBaselineFT.filter(function (fd) {
-        
+
             var teste: string = event.query;
-        
+
             return fd.name.toLowerCase().includes(teste.toLowerCase());
         });
-        
+
     }
-   
+
     // Funcionalidade Selecionada
     functionalitySelected(funcionalidade: Funcionalidade) {
         if (!funcionalidade) {
@@ -651,7 +651,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.showMultiplos = !this.showMultiplos;
     }
 
-
+    limparDados() {
+        if(this.currentFuncaoTransacao.name == ''){
+            this.estadoInicial();
+        }
+    }
 }
 
 
