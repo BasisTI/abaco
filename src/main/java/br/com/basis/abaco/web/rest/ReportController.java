@@ -418,9 +418,9 @@ public class ReportController {
                 }
                 record.setDer(new JRBeanCollectionDataSource(derList));
                 List<FileRecord> files = new ArrayList<>();
-                List<UploadedFile> files2 = f.getFiles();
-                if (files2 != null) {
-                    for (UploadedFile uploadedFile : files2) {
+                List<UploadedFile> filesData = f.getFiles();
+                if (filesData != null) {
+                    for (UploadedFile uploadedFile : filesData) {
                         FileRecord file = new FileRecord();
                         file.setName(uploadedFile.getFilename());
                         file.setSize(FileUtils.byteCountToDisplaySize(uploadedFile.getSizeOf()));
@@ -468,9 +468,9 @@ public class ReportController {
             }
             record.setDer(new JRBeanCollectionDataSource(derList));
             List<FileRecord> files = new ArrayList<>();
-            List<UploadedFile> files2 = f.getFiles();
-            if (files2 != null) {
-                for (UploadedFile uploadedFile : files2) {
+            List<UploadedFile> filesTran = f.getFiles();
+            if (filesTran != null) {
+                for (UploadedFile uploadedFile : filesTran) {
                     FileRecord file = new FileRecord();
                     file.setName(uploadedFile.getFilename());
                     file.setSize(FileUtils.byteCountToDisplaySize(uploadedFile.getSizeOf()));
