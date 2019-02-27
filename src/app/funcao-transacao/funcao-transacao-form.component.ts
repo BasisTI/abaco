@@ -635,13 +635,15 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
 
     private inicializaFatoresAjuste(manual: Manual) {
-        const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
-        this.fatoresAjuste =
-            faS.map(fa => {
-                const label = FatorAjusteLabelGenerator.generate(fa);
-                return {label: label, value: fa};
-            });
-        this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+        if (manual.fatoresAjuste) {
+            const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+            this.fatoresAjuste =
+                faS.map(fa => {
+                    const label = FatorAjusteLabelGenerator.generate(fa);
+                    return {label: label, value: fa};
+                });
+            this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+        }
     }
 
     textChanged() {

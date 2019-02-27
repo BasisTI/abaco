@@ -23,8 +23,11 @@ export class Modulo implements BaseEntity {
   }
 
   static fromJSON(json: any): Modulo {
-    const funcionalidades = json.funcionalidades.map(
-      f => Funcionalidade.fromJSON(f));
+    let funcionalidades = [];
+    if (json.funcionalidades) {
+      funcionalidades = json.funcionalidades.map(
+        f => Funcionalidade.fromJSON(f));
+    }
     return new Modulo(json.id, json.nome, json.sistema, funcionalidades);
   }
 

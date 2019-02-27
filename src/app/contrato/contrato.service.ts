@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { Contrato } from './contrato.model';
 import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
 import { GenericService } from '../util/service/generic.service';
+import { Organizacao } from '../organizacao';
 
 @Injectable()
 export class ContratoService {
@@ -31,6 +32,11 @@ export class ContratoService {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
     });
+  }
+
+  findAllContratoesByOrganization(org: Organizacao): Observable<Contrato[]> {
+    return this.http.post(`${this.resourceUrl}/organizations`, org)
+      .map((res: Response) => res.json());
   }
 
   find(id: number): Observable<Contrato> {

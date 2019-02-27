@@ -19,7 +19,7 @@ import {TipoEquipeService} from '../tipo-equipe';
 import {MessageUtil} from '../util/message.util';
 import {FatorAjuste} from '../fator-ajuste';
 import {EsforcoFase} from '../esforco-fase';
-import {Manual} from '../manual';
+import {Manual, ManualService} from '../manual';
 
 @Component({
     selector: 'jhi-analise-form',
@@ -91,6 +91,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
         private userService: UserService,
+        private contratoService: ContratoService,
+        private manualService: ManualService,
     ) {
     }
 
@@ -230,7 +232,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.analise.sistema = undefined;
             this.analise.equipeResponsavel = undefined;
         };
-        this.contratos = org.contracts;
+        this.contratoService.findAllContratoesByOrganization(org).subscribe((contracts) => {
+            this.contratos = contracts;
+        })
         this.sistemaService.findAllSystemOrg(org.id).subscribe((res: ResponseWrapper) => {
             this.sistemas = res.json;
         });
@@ -241,7 +245,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular a equipe responsavel da organização
      */
     setEquipeOrganizacao(org: Organizacao) {
-        this.contratos = org.contracts;
         this.equipeService.findAllEquipesByOrganizacaoIdAndLoggedUser(org.id).subscribe((res: ResponseWrapper) => {
             this.equipeResponsavel = res.json;
             if (this.equipeResponsavel !== null) {
@@ -255,11 +258,13 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     setManual(contrato: Contrato) {
         if (contrato && contrato.manual) {
-            const manual: Manual = contrato.manual;
-            this.nomeManual = manual.nome;
-            this.carregarEsforcoFases(manual);
-            this.carregarMetodosContagem(manual);
-            this.inicializaFatoresAjuste(manual);            
+            this.manualService.find(contrato.manual.id).subscribe((manual) => {
+                this.analise.contrato.manual = manual;
+                this.nomeManual = manual.nome;
+                this.carregarEsforcoFases(manual);
+                this.carregarMetodosContagem(manual);
+                this.inicializaFatoresAjuste(manual);
+            });
         }
     }
 
@@ -267,13 +272,16 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular os fatores de ajuste do Manual
      */
     private inicializaFatoresAjuste(manual: Manual) {
-        const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
-        this.fatoresAjuste =
-            faS.map(fa => {
-                const label = FatorAjusteLabelGenerator.generate(fa);
-                return {label: label, value: fa};
-            });
-        this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+        this.fatoresAjuste = [];
+        if (manual.fatoresAjuste) {
+            const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+            this.fatoresAjuste =
+                faS.map(fa => {
+                    const label = FatorAjusteLabelGenerator.generate(fa);
+                    return {label: label, value: fa};
+                });
+            this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+        }
     }
 
     /**
@@ -332,7 +340,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     totalEsforcoFases() {
         const initialValue = 0;
-        return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforcoFormatado, initialValue);
+        if (this.analise.esforcoFases) {
+            return this.analise.esforcoFases
+                .reduce((val, ef) => val + ef.esforcoFormatado, initialValue);
+        }
+        return initialValue;
     }
 
     /**
