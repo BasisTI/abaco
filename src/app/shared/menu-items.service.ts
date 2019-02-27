@@ -14,14 +14,6 @@ export class MenuItemsService {
     get all(): MenuItem[] {
         return [
             {
-                label: 'Administração', icon: 'supervisor_account',
-                visible: this.isLoggedAdmin(),
-                items: [
-                    {label: 'Tipo de Equipe', routerLink: 'admin/tipoEquipe', icon: 'people'},
-                    {label: 'Usuários', routerLink: 'admin/user', icon: 'person'},
-                ]
-            },
-            {
                 label: 'Configuração', icon: 'settings',
                 visible: this.authService.isAuthenticated(),
                 items: [
@@ -37,7 +29,9 @@ export class MenuItemsService {
                     {label: 'Tipo de Fase', routerLink: 'tipoFase', icon: 'beenhere'},
                     {label: 'Manual', routerLink: 'manual', icon: 'description'},
                     {label: 'Organização', routerLink: 'organizacao', icon: 'business'},
-                    {label: 'Sistema', routerLink: 'sistema', icon: 'laptop'}
+                    {label: 'Sistema', routerLink: 'sistema', icon: 'laptop'},
+                    {label: 'Tipo de Equipe', routerLink: 'admin/tipoEquipe', icon: 'people'},
+                    {label: 'Usuários', routerLink: 'admin/user', icon: 'person'}
                 ]
             },
             {
