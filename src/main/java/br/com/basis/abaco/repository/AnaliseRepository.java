@@ -3,6 +3,7 @@ package br.com.basis.abaco.repository;
 import br.com.basis.abaco.domain.Analise;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,8 +38,11 @@ public interface AnaliseRepository extends JpaRepository<Analise,Long> {
     @Query(value = "SELECT count(*) FROM analise a WHERE a.equipe_responsavel_id IN :equipes AND a.id = :idAnalise", nativeQuery = true)
     Integer analiseEquipe(@Param("idAnalise") Long idAnalise, @Param("equipes") List<Long> equipes);
 
-
     @Query( value = "SELECT view_only FROM analise_compartilhada WHERE analise_id = ?1", nativeQuery = true)
     Boolean analiseCompartilhada (Long analiseId);
+
+    @EntityGraph(attributePaths = {"compartilhadas","funcaoDados","funcaoTransacaos","esforcoFases"})
+    Analise findOne(Long id);
+
 
 }
