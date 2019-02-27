@@ -31,6 +31,9 @@ import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-pa
 import {forEach} from '../../../node_modules/@angular/router/src/utils/collection';
 import {Impacto} from '../analise-shared/impacto-enum';
 
+import { FuncaoTransacao, TipoFuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
+import { CalculadoraTransacao } from './../analise-shared/calculadora-transacao';
+
 @Component({
     selector: 'app-analise-funcao-dados',
     templateUrl: './funcao-dados-form.component.html'
@@ -329,6 +332,23 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         }
     }
 
+    validarNameFuncaoTransacaos(nome: string) {
+        const that = this;
+        return new Promise( resolve => {
+            if (that.analise.funcaoTransacaos.length === 0) {
+                return resolve(true);
+            }
+            that.analise.funcaoTransacaos.forEach( (data, index) => {
+                if (data.name === nome) {
+                    return resolve(false);
+                }
+                if (!that.analise.funcaoTransacaos[index + 1]) {
+                    return resolve(true);
+                }
+            });
+        });
+    }
+
     adicionar(): boolean {
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
@@ -578,8 +598,75 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 this.currentFuncaoDados.artificialId = undefined;
                 this.currentFuncaoDados.impacto = Impacto.ALTERACAO;
                 this.textHeader = 'Clonar Função de Dados'
+                break;
+            case 'crud':
+                this.createCrud(funcaoDadosSelecionada);
         }
     }
+
+      inserirCrud(funcaoTransacaoAtual: FuncaoTransacao){
+          
+            this.desconverterChips();
+            this.verificarModulo();
+            
+             var funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem,
+                                                                           funcaoTransacaoAtual,
+                                                                           this.analise.contrato.manual);
+    
+                this.validarNameFuncaoTransacaos(funcaoTransacaoAtual.name).then( resolve => {
+                    if (resolve) {
+                        this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
+                        this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
+                        this.atualizaResumo();
+                        this.resetarEstadoPosSalvar();
+                        this.salvarAnalise();
+                        this.estadoInicial();
+                    } 
+                 }); 
+    }
+
+    private createCrud(funcaoDadosSelecionada: FuncaoDados) {
+
+            var _this = this;
+        
+                let crudExcluir = new FuncaoTransacao;
+                crudExcluir.name = 'Excluir';
+                crudExcluir.funcionalidade = funcaoDadosSelecionada.funcionalidade;
+                crudExcluir.tipo = TipoFuncaoTransacao.EE;
+                crudExcluir.impacto = Impacto.EXCLUSAO;
+                crudExcluir.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
+                this.inserirCrud(crudExcluir);
+
+                let crudEditar = new FuncaoTransacao;
+                crudEditar.name = 'Editar';
+                crudEditar.funcionalidade = funcaoDadosSelecionada.funcionalidade;
+                crudEditar.tipo = TipoFuncaoTransacao.EE;
+                crudEditar.impacto = Impacto.ALTERACAO;
+                crudEditar.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
+                setTimeout(function(){
+                    _this.inserirCrud(crudEditar)
+                }, 1000);
+
+                let crudInserir = new FuncaoTransacao;
+                crudInserir.name = 'Inserir';
+                crudInserir.funcionalidade = funcaoDadosSelecionada.funcionalidade;
+                crudInserir.tipo = TipoFuncaoTransacao.EE;
+                crudInserir.impacto = Impacto.INCLUSAO;
+                crudInserir.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
+                setTimeout(function(){
+                    _this.inserirCrud(crudInserir)
+                }, 2000);
+
+                let crudPesquisar = new FuncaoTransacao;
+                crudPesquisar.name = 'Pesquisar';
+                crudPesquisar.funcionalidade = funcaoDadosSelecionada.funcionalidade;
+                crudPesquisar.tipo = TipoFuncaoTransacao.CE;
+                crudPesquisar.impacto = Impacto.INCLUSAO;
+                crudPesquisar.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
+                setTimeout(function(){
+                    _this.inserirCrud(crudPesquisar)
+                }, 3000);
+        }
 
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
 
