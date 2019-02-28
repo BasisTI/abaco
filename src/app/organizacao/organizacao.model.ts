@@ -32,9 +32,10 @@ export class Organizacao implements BaseEntity, JSONable<Organizacao> {
   }
 
   copyFromJSON(json: any) {
+    console.log('copyFromJSON organizacao', json);
     const contratos: Contrato[] = json.contracts.map(c => new Contrato().copyFromJSON(c));
     const newOrganizacao = new Organizacao(json.id, json.sigla, json.nome,
-      json.cnpj, json.logoId, json.ativo, json.numeroOcorrencia, contratos, json.sistemas);
+      json.cnpj, json.logoId, json.ativo, json.numeroOcorrencia, contratos /*, json.sistemas*/);
     return newOrganizacao;
   }
 

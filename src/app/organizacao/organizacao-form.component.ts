@@ -214,18 +214,14 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     adicionarManual() {
-        const manualContratoTemp = this.setManualContrato();
+        const manualContratoTemp = this.setManualContrato(this.novoContrato);
         if (this.validaDadosManual(manualContratoTemp) ) {
             console.log('manualContrato');
             console.log(manualContratoTemp);
             this.novoContrato.addManualContrato(manualContratoTemp);
-            // retirar manual
-            this.novoContrato.manual = manualContratoTemp.manual;
-            // this.resetObj(manualContratoTemp);
             console.log('validado');
             console.log(this.novoContrato.manualContrato);
         } else {
-            // this.resetObj(manualContratoTemp);
             console.log('invalidado');
             console.log(this.novoContrato.manualContrato);
             return;
@@ -243,16 +239,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         };
     }
 
-    setManualContrato(/*manualContratoTemp, contrato: Contrato*/): ManualContrato {
+    setManualContrato(contrato: Contrato): ManualContrato {
         return new ManualContrato(null, null, this.novoManual,
-            null, this.manualInicioVigencia, this.manualFimVigencia,
+            /**contrato deve ser null para não loop */null,
+            this.manualInicioVigencia, this.manualFimVigencia,
             this.manualAtivo, this.garantia);
-        /*manualContratoTemp.ativo = this.manualAtivo;
-        manualContratoTemp.dataFimVigencia = this.manualFimVigencia;
-        manualContratoTemp.dataInicioVigencia = this.manualInicioVigencia;
-        manualContratoTemp.manual = this.novoManual;
-        manualContratoTemp.contratos = contrato;
-        return manualContratoTemp;*/
     }
 
     /**
@@ -454,6 +445,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
      * */
     private subscribeToSaveResponse(result: Observable<any>) {
         result.subscribe((res: Organizacao) => {
+            console.log('chamada de organizacao');
             this.isSaving = false;
             this.router.navigate(['/organizacao']);
 

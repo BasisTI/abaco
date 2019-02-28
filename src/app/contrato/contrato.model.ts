@@ -34,9 +34,10 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
 
 
   copyFromJSON(json: any) {
-    if (json && json.manual) {
+    console.log('copyFromJSON Contrato ', json);
+    if (json) {
       return new Contrato(json.id, json.numeroContrato, new Date(json.dataInicioVigencia),
-        new Date(json.dataFimVigencia), /*json.manual,*/ json.ativo, json.diasDeGarantia, json.manualContrato);
+        new Date(json.dataFimVigencia), json.ativo, json.diasDeGarantia, json.manualContrato);
     }
   }
 
