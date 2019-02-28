@@ -3,9 +3,12 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
+import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -124,7 +127,7 @@ public class FuncaoTransacaoResource {
      */
     @GetMapping("/funcao-transacaos/{id}")
     @Timed
-    public ResponseEntity<FuncaoTransacao> getFuncaoTransacao(@PathVariable Long id) {
+    public ResponseEntity<FuncaoTransacaoApiDTO> getFuncaoTransacao(@PathVariable Long id) {
         log.debug("REST request to get FuncaoTransacao : {}", id);
         FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
         if (funcaoTransacao.getAnalise().getFuncaoDados() != null) {
@@ -133,7 +136,12 @@ public class FuncaoTransacaoResource {
         if (funcaoTransacao.getAnalise().getFuncaoTransacaos() != null) {
             funcaoTransacao.getAnalise().getFuncaoTransacaos().clear();
         }
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoTransacao));
+
+        ModelMapper modelMapper = new ModelMapper();
+
+        FuncaoTransacaoApiDTO funcaoDadosDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoApiDTO.class);
+
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
     }
 
     /**
