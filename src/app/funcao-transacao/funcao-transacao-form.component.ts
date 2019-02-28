@@ -554,6 +554,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     private carregarValoresNaPaginaParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.funcaoDadosService.mod.next(funcaoTransacaoSelecionada.funcionalidade);
+
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.carregarDerEAlr(funcaoTransacaoSelecionada);
         this.carregarFatorDeAjusteNaEdicao(funcaoTransacaoSelecionada);
