@@ -39,6 +39,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     @BlockUI() blockUI: NgBlockUI;      // Usado para bloquear o sistema enquanto aguarda resolução das requisições do backend
 
+    faS: FatorAjuste[];
+
     textHeader: string;
     @Input() isView: boolean;
     isEdit: boolean;
@@ -287,7 +289,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 res.alrs.forEach(alrs => {
                     alrs.id = undefined;
                 });
-
             this.prepararParaEdicao(res);
         });
 
@@ -624,6 +625,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.hideShowQuantidade = true;
         this.disableTRDER();
         this.configurarDialog();
+        this.currentFuncaoTransacao.fatorAjuste = this.faS[0];
+
     }
 
     configurarDialog() {
@@ -635,13 +638,26 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
 
     private inicializaFatoresAjuste(manual: Manual) {
-        const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+        this.faS = _.cloneDeep(manual.fatoresAjuste);
+
+        this.faS.sort((n1,n2) => {
+            if (n1.fator < n2.fator) 
+                return 1;   
+            if (n1.fator > n2.fator) 
+                return -1;
+            return 0;
+        });
+        
         this.fatoresAjuste =
-            faS.map(fa => {
+            this.faS.map(fa => {
                 const label = FatorAjusteLabelGenerator.generate(fa);
-                return {label: label, value: fa};
+                return {label: label,  value: fa};
             });
+        
         this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+        
+
+
     }
 
     textChanged() {
