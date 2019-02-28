@@ -159,10 +159,14 @@
                                     [suggestions]="baselineResultados"
                                     id="idNomeProcessoElementarFormFuncaoTransacao"
                                     (completeMethod)="searchBaseline($event)"
-                                    field="name"
                                     (keyup.backspace)="limparDados()"
                                     (keyup.delete)="limparDados()"
                                     (onSelect)="recuperarNomeSelecionado($event)">
+                                    <ng-template let-currentFuncaoTransacao pTemplate="name">
+                                        <div class="ui-helper-clearfix" >
+                                            <div style="font-size:15px;float:left;margin:10px 10px 0 0">{{currentFuncaoTransacao.name}}</div>
+                                        </div>
+                                    </ng-template>
                             </p-autoComplete>
                             <span class="md-inputfield">
                                 <div *ngIf="nomeInvalido && !currentFuncaoTransacao.name"

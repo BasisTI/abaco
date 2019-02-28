@@ -1,7 +1,7 @@
 import { FuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
 import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
-import {Observable} from 'rxjs/Rx';
+import {Observable, Subject} from 'rxjs/Rx';
 import {HttpService} from '@basis/angular-components';
 import {environment} from '../../environments/environment';
 
@@ -11,6 +11,7 @@ import {Analise} from '../analise/analise.model';
 import {tap} from 'rxjs/operators';
 import {HttpResponse} from '@angular/common/http';
 import {BaselineSintetico} from '../baseline/baseline-sintetico.model';
+import { Funcionalidade } from '../funcionalidade';
 
 @Injectable()
 export class FuncaoDadosService {
@@ -18,6 +19,13 @@ export class FuncaoDadosService {
     sistemaResourceUrl = environment.apiUrl + '/funcao-dados';
 
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
+    
+    /*
+    Subject criado para Buscar funcionalidade da Baseline.
+    Preencher o Dropdown do componente 'modulo-funcionalidade.component' com modulo e submodulo.
+    */
+    public mod = new Subject<Funcionalidade>();
+    dataModd$ = this.mod.asObservable();
 
     constructor(private http: HttpService) {
     }

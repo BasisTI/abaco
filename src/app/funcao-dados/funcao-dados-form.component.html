@@ -97,7 +97,6 @@
                 </div>
             </div>
 
-
             <!-- DIALOG: ADICIONAR E EDITAR FUNÇÃO DE DADOS -->
             <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader"
                       [contentStyle]="{'height': ['windowHeightDialog']}"
@@ -112,10 +111,14 @@
                                     [(ngModel)]="currentFuncaoDados.name"
                                     [suggestions]="baselineResults"
                                     id="idNomeFormFuncaoDados"
-                                    (completeMethod)="searchBaseline($event)"
-                                    field="name"
+                                    (completeMethod)="searchBaseline($event)"  
                                     (onSelect)="recuperarNomeSelecionado($event)"
                                     datakey="id">
+                                    <ng-template let-currentFuncaoDados pTemplate="name">
+                                        <div class="ui-helper-clearfix" >
+                                            <div style="font-size:15px;float:left;margin:10px 10px 0 0">{{currentFuncaoDados.name}}</div>
+                                        </div>
+                                    </ng-template>
                             </p-autoComplete>
                             <span class="md-inputfield">
                                 <div *ngIf="nomeInvalido && !currentFuncaoDados.name"

@@ -75,7 +75,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     fatoresAjuste: SelectItem[] = [];
     colunasOptions: SelectItem[];
     colunasAMostrar = [];
-    dadosBaselineFD: BaselineAnalitico[] = [];
+     dadosBaselineFD: BaselineAnalitico[] = [];
     results: string[];
     baselineResults: any[] = [];
     funcoesDadosList: FuncaoDados[] = [];
@@ -674,6 +674,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.configurarDialog();
 
         this.currentFuncaoDados = funcaoDadosSelecionada;
+        
         this.carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada);
         this.pageNotificationService.addInfoMsg(`Alterando Função de Dados '${funcaoDadosSelecionada.name}'`);
     }
@@ -687,6 +688,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
+        /* Envia os dados para o componente modulo-funcionalidade-component.ts*/
+        this.funcaoDadosService.mod.next(funcaoDadosSelecionada.funcionalidade);
+        
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.carregarDerERlr(funcaoDadosSelecionada);
         this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
