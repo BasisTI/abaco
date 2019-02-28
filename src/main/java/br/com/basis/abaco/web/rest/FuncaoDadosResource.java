@@ -3,9 +3,11 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
+import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -130,7 +132,7 @@ public class FuncaoDadosResource {
      */
     @GetMapping("/funcao-dados/{id}")
     @Timed
-    public ResponseEntity<FuncaoDados> getFuncaoDados(@PathVariable Long id) {
+    public ResponseEntity<FuncaoDadoApiDTO> getFuncaoDados(@PathVariable Long id) {
         log.debug("REST request to get FuncaoDados : {}", id);
         FuncaoDados funcaoDados = funcaoDadosRepository.findOne(id);
         if (funcaoDados.getAnalise().getFuncaoDados() != null) {
@@ -139,7 +141,12 @@ public class FuncaoDadosResource {
         if (funcaoDados.getAnalise().getFuncaoTransacaos() != null) {
             funcaoDados.getAnalise().getFuncaoTransacaos().clear();
         }
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDados));
+
+        ModelMapper modelMapper = new ModelMapper();
+
+        FuncaoDadoApiDTO funcaoDadosDTO = modelMapper.map(funcaoDados, FuncaoDadoApiDTO.class);
+
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
     }
 
     /**

@@ -3,6 +3,7 @@ package br.com.basis.abaco.domain;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -105,7 +106,7 @@ public class Manual implements Serializable, ReportObject {
     private Long versaoCPM;
     
     @JsonManagedReference(value="manual")
-    @OneToMany(mappedBy="manual", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="manual", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ManualContrato> manualContratos = new LinkedHashSet<>();
     
     public Long getId() {
@@ -250,7 +251,7 @@ public class Manual implements Serializable, ReportObject {
 	}
 	
 	
-
+	@JsonIgnore
 	public Set<ManualContrato> getManualContratos() {
 		return manualContratos;
 	}

@@ -57,7 +57,7 @@ public class ManualContrato implements Serializable {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Manual manual;
 	
-	@JsonBackReference(value = "contratos")
+	@JsonBackReference
 	//@JsonProperty(access = Access.AUTO)
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Contrato contratos;

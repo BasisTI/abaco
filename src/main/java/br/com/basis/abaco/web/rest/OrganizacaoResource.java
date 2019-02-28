@@ -149,7 +149,7 @@ public class OrganizacaoResource {
         
         Organizacao result = organizacaoRepository.save(organizacao);
         
-        Iterator<Contrato> interator = organizacao.getContracts().iterator();
+       /* Iterator<Contrato> interator = organizacao.getContracts().iterator();
     	while(interator.hasNext()) {
     		Contrato contrato = interator.next();
     		Iterator<ManualContrato> itContrato = contrato.getManualContrato().iterator();
@@ -157,7 +157,7 @@ public class OrganizacaoResource {
     			ManualContrato manualContrato = itContrato.next();
     			manualContrato.setContrato(null);
     		}
-    	}
+    	}*/
     	
         organizacaoSearchRepository.save(result);
 

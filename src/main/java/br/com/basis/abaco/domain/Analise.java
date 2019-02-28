@@ -5,6 +5,9 @@ import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.TipoAnalise;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -37,6 +40,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
@@ -142,6 +146,9 @@ public class Analise implements Serializable, ReportObject {
     @JsonManagedReference
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
 
+    @Column(name = "data_criacao_ordem_servico")
+    private Timestamp dataCriacaoOrdemServico;
+
     @ManyToOne
     private FatorAjuste fatorAjuste;
 
@@ -190,9 +197,8 @@ public class Analise implements Serializable, ReportObject {
     public Analise() {
     }
 
-    public Analise(String identificadorAnalise, String pfTotal, String adjustPFTotal,
-                   Sistema sistema, Organizacao organizacao, Boolean baselineImediatamente,
-                   TipoEquipe equipeResponsavel) {
+    public Analise(String identificadorAnalise, String pfTotal, String adjustPFTotal, Sistema sistema,
+            Organizacao organizacao, Boolean baselineImediatamente, TipoEquipe equipeResponsavel) {
         this.id = null;
         this.identificadorAnalise = identificadorAnalise.concat(" - CÓPIA");
         this.pfTotal = pfTotal;
@@ -510,6 +516,14 @@ public class Analise implements Serializable, ReportObject {
         return this;
     }
 
+    public Timestamp getDataCriacaoOrdemServico() {
+        return dataCriacaoOrdemServico;
+    }
+
+    public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
+        this.dataCriacaoOrdemServico = dataCriacaoOrdemServico;
+    }
+
     public Timestamp getDataHomologacao() {
         return dataHomologacao;
     }
@@ -589,20 +603,11 @@ public class Analise implements Serializable, ReportObject {
     @Override
     public String toString() {
         // // @formatter:off
-        return "Analise{"
-            + "id=" + id
-            + ", numeroOs='" + numeroOs + "'"
-            + ", tipoContagem='" + metodoContagem + "'"
-            + ", dataHomologacao='" + dataHomologacao + "'"
-            + ", valorAjuste='" + valorAjuste + "'"
-            + ", pfTotal='" + pfTotal + "'"
-            + ", escopo='" + escopo + "'"
-            + ", fronteiras='" + fronteiras + "'"
-            + ", documentacao='" + documentacao + "'"
-            + ", tipoAnalise='" + tipoAnalise + "'"
-            + ", propositoContagem='" + propositoContagem + "'"
-            + '}';
+        return "Analise{" + "id=" + id + ", numeroOs='" + numeroOs + "'" + ", tipoContagem='" + metodoContagem + "'"
+                + ", dataHomologacao='" + dataHomologacao + "'" + ", dataCriacaoOrdemServico='"
+                + dataCriacaoOrdemServico + "'" + ", valorAjuste='" + valorAjuste + "'" + ", pfTotal='" + pfTotal + "'"
+                + ", escopo='" + escopo + "'" + ", fronteiras='" + fronteiras + "'" + ", documentacao='" + documentacao
+                + "'" + ", tipoAnalise='" + tipoAnalise + "'" + ", propositoContagem='" + propositoContagem + "'" + '}';
         // @formatter:on
     }
-
 }
