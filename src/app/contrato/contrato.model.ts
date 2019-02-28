@@ -1,6 +1,5 @@
 import { ManualContrato } from './../organizacao/ManualContrato.model';
-import { MappableEntities } from './../shared/mappable-entities';
-import { BaseEntity, JSONable } from '../shared';
+import { BaseEntity, JSONable, MappableEntities } from '../shared';
 import { Manual } from '../manual';
 
 export class Contrato implements BaseEntity, JSONable<Contrato> {
@@ -19,7 +18,6 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
     public manualContrato?: ManualContrato[],
   ) {
     if (manualContrato) {
-      manualContrato.forEach(m => m.contratos = this);
       this.mappableManualContrato = new MappableEntities<ManualContrato>(manualContrato);
     } else {
       this.manualContrato = [];
@@ -34,10 +32,12 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
 
 
   copyFromJSON(json: any) {
-    console.log('copyFromJSON Contrato ', json);
     if (json) {
+      const manualContrato: ManualContrato[] = json.manualContrato.map(
+        mc => new ManualContrato().copyFromJSON(mc)
+      );
       return new Contrato(json.id, json.numeroContrato, new Date(json.dataInicioVigencia),
-        new Date(json.dataFimVigencia), json.ativo, json.diasDeGarantia, json.manualContrato);
+        new Date(json.dataFimVigencia), null, json.ativo, json.diasDeGarantia, null, manualContrato);
     }
   }
 

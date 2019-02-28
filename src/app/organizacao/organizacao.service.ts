@@ -27,11 +27,7 @@ export class OrganizacaoService {
 
   create(organizacao: Organizacao): Observable<any> {
     const copy = this.convertToJSON(organizacao);
-    console.log('Create');
-    console.log(organizacao);
-
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-      console.log('restorno', res);
       const jsonResponse = res.json();
       return this.convertFromJSON(jsonResponse);
     }).catch((error: any) => {
@@ -58,6 +54,7 @@ export class OrganizacaoService {
   find(id: number): Observable<Organizacao> {
     return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
       const jsonResponse = res.json();
+      console.log('find', jsonResponse);
       return this.convertFromJSON(jsonResponse);
     }).catch((error: any) => {
         if (error.status === 403) {
@@ -110,20 +107,15 @@ export class OrganizacaoService {
   }
 
   private convertResponseToResponseWrapper(res: Response): ResponseWrapper {
-    console.log('response');
-    console.log(res);
     const jsonResponse = res.json();
     const result = [];
     for (let i = 0; i < jsonResponse.length; i++) {
-      console.log('for ' + i);
       result.push(this.convertFromJSON(jsonResponse[i]));
     }
     return new ResponseWrapper(res.headers, result, res.status);
   }
 
   private convertFromJSON(json: any): Organizacao {
-    console.log('convertFromJSON Organizacao');
-    console.log(json);
     const entity: JSONable<Organizacao> = new Organizacao();
     return entity.copyFromJSON(json);
   }
