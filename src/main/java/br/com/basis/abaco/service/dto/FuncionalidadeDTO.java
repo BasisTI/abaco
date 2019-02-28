@@ -1,12 +1,17 @@
 package br.com.basis.abaco.service.dto;
 
-public class RlrFdDTO {
+/**
+ * @author alexandre.costa
+ * @since 27/02/2019
+ */
+public class FuncionalidadeDTO {
 
     private Long id;
 
     private String nome;
 
-    private Integer valor;
+    private ModuloDTO modulo;
+
 
     public Long getId() {
         return id;
@@ -24,11 +29,11 @@ public class RlrFdDTO {
         this.nome = nome;
     }
 
-    public Integer getValor() {
-        return valor;
+    public ModuloDTO getModulo() {
+        return modulo;
     }
 
-    public void setValor(Integer valor) {
-        this.valor = valor;
+    public void setModulo(ModuloDTO modulo) {
+        this.modulo = modulo;
     }
 }

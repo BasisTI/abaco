@@ -1,12 +1,16 @@
 package br.com.basis.abaco.service.dto;
 
-public class RlrFdDTO {
+import java.util.HashSet;
+import java.util.Set;
+/**
+ * @author alexandre.costa
+ * @since 27/02/2019
+ */
+public class FuncionalidadesDTO {
 
     private Long id;
 
     private String nome;
-
-    private Integer valor;
 
     public Long getId() {
         return id;
@@ -22,13 +26,5 @@ public class RlrFdDTO {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public Integer getValor() {
-        return valor;
-    }
-
-    public void setValor(Integer valor) {
-        this.valor = valor;
     }
 }
