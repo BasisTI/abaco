@@ -33,6 +33,7 @@ import {Impacto} from '../analise-shared/impacto-enum';
 
 import { FuncaoTransacao, TipoFuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
 import { CalculadoraTransacao } from './../analise-shared/calculadora-transacao';
+import { fcall } from 'q';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -225,7 +226,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     searchBaseline(event): void {
-        this.baselineResults = this.dadosBaselineFD.filter(c => c.name.includes(event.query));
+        this.baselineResults = this.dadosBaselineFD.filter(function (fc){
+            var teste: string = event.query;
+            return fc.name.toLowerCase().includes(teste.toLowerCase());
+        });
     }
 
     // Carrega nome das funçeõs de dados
