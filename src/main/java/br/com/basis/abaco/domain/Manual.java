@@ -28,6 +28,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -73,11 +74,11 @@ public class Manual implements Serializable, ReportObject {
     private int arquivoManualId;
 
     @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JsonBackReference(value="EsforcoFase")
+    @JsonManagedReference
     private Set<EsforcoFase> esforcoFases = new HashSet<>();
 
     @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JsonBackReference
+    @JsonManagedReference
     private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
 
     @DecimalMin(value = MINPERCENT)
@@ -102,6 +103,10 @@ public class Manual implements Serializable, ReportObject {
     
     @Column(name="versao_cpm")
     private Long versaoCPM;
+    
+    @JsonManagedReference(value="manual")
+    @OneToMany(mappedBy="manual", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ManualContrato> manualContratos = new LinkedHashSet<>();
     
     public Long getId() {
         return id;
@@ -242,6 +247,16 @@ public class Manual implements Serializable, ReportObject {
 
 	public void setVersaoCPM(Long versaoCPM) {
 		this.versaoCPM = versaoCPM;
+	}
+	
+	
+
+	public Set<ManualContrato> getManualContratos() {
+		return manualContratos;
+	}
+
+	public void setManualContratos(Set<ManualContrato> manualContratos) {
+		this.manualContratos = manualContratos;
 	}
 
 	@Override

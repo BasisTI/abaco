@@ -43,7 +43,7 @@ public class EsforcoFase implements Serializable {
     private BigDecimal esforco;
 
     @ManyToOne
-    @JsonManagedReference(value="EsforcoFase")
+    @JsonBackReference
     private Manual manual;
 
     @ManyToOne

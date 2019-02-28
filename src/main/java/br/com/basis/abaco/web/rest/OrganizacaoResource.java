@@ -1,5 +1,7 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.Contrato;
+import br.com.basis.abaco.domain.ManualContrato;
 import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
@@ -12,6 +14,7 @@ import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
+
 import io.github.jhipster.web.util.ResponseUtil;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
@@ -42,6 +45,7 @@ import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -142,8 +146,19 @@ public class OrganizacaoResource {
         if (i >= 0) {
             return this.createBadRequest(this.erro[i], this.mensagem[i]);
         }
-
+        
         Organizacao result = organizacaoRepository.save(organizacao);
+        
+        Iterator<Contrato> interator = organizacao.getContracts().iterator();
+    	while(interator.hasNext()) {
+    		Contrato contrato = interator.next();
+    		Iterator<ManualContrato> itContrato = contrato.getManualContrato().iterator();
+    		while(itContrato.hasNext()) {
+    			ManualContrato manualContrato = itContrato.next();
+    			manualContrato.setContrato(null);
+    		}
+    	}
+    	
         organizacaoSearchRepository.save(result);
 
         return ResponseEntity.created(new URI("/api/organizacaos/" + result.getId())).headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))

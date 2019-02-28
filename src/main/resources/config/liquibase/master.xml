@@ -92,7 +92,7 @@
     <include file="classpath:config/liquibase/changelog/201902059385654_ADD_tipo_sistema_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/201902069385655_ALTER_sistema_org_contrato_fator_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/added_entity_manual_contrato.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/added_entity_constraints_manual_contrato.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/ALTER_manual_contrato.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/ALTER_contrato.xml" relativeToChangelogFile="false"/>
 
 

@@ -66,7 +66,7 @@ public class FatorAjuste implements Serializable {
     private ImpactoFatorAjuste impacto;
 
     @ManyToOne
-    @JsonManagedReference
+    @JsonBackReference
     private Manual manual;
 
     @Column(name = "descricao")

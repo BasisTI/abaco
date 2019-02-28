@@ -24,16 +24,26 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
+/**
+ * Entidade que que permite a relação entre Contrato e Manual. <p>
+ * Cada Contrato deve poder possui mais de um manual com uma <br>
+ * data de início, fim e se está ativo para o Contrato.
+ * @author davy
+ *
+ */
 @Entity
 @Table(name = "manual_Contrato")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ManualContrato implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -43,11 +53,13 @@ public class ManualContrato implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@JsonBackReference(value="manual")
+	@ManyToOne(fetch=FetchType.EAGER)
 	private Manual manual;
 	
+	@JsonBackReference(value = "contratos")
+	//@JsonProperty(access = Access.AUTO)
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonManagedReference(value="ManualContrato")
 	private Contrato contratos;
 	
     @Column(name = "data_inicio_vigencia")
@@ -78,6 +90,7 @@ public class ManualContrato implements Serializable {
 		this.manual = manual;
 	}
 
+	@JsonIgnore
 	public Contrato getContrato() {
 		return contratos;
 	}
@@ -132,8 +145,8 @@ public class ManualContrato implements Serializable {
 	
 	@Override
     public String toString() {
-		return "ManualContrato{id=" + id + ",dataInicioVigencia=1" + dataInicioVigencia + "',dataFimVigencia='" +
-				dataFimVigencia + "',ativo=" + ativo;
+		return "ManualContrato{id=" + id + ",dataInicioVigencia='" + dataInicioVigencia + "',dataFimVigencia='" +
+				dataFimVigencia + "',ativo='" + ativo + "'";
 	}
     
 

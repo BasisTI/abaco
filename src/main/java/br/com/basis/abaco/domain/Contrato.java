@@ -30,6 +30,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -61,16 +62,16 @@ public class Contrato implements Serializable {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate dataFimVigencia;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    /*@ManyToOne(fetch=FetchType.LAZY)
     @JsonIgnore
-    private Manual manual;
+    private Manual manual;*/
    
+    @JsonManagedReference(value = "contratos")
     @OneToMany(mappedBy="contratos", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference(value="ManualContrato")
-    private Set<ManualContrato> manualContrato = new HashSet<>();
+    private Set<ManualContrato> manualContrato = new LinkedHashSet<>();
 
     @ManyToOne
-    @JsonManagedReference(value="Contratos")
+    @JsonBackReference
     private Organizacao organization;
 
     @NotNull
@@ -132,14 +133,14 @@ public class Contrato implements Serializable {
   	}
 
 
-    public Contrato manual(Manual manual) {
+    /*public Contrato manual(Manual manual) {
         this.manual = manual;
         return this;
     }
 
     public void setManual(Manual manual) {
         this.manual = manual;
-    }
+    }*/
 
     public Organizacao getOrganization() {
         return organization;
