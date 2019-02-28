@@ -206,7 +206,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMsg('Preencher data de início da vigência');
             verificador = false;
         }
-        if (manualContratoTemp.manuais === undefined || manualContratoTemp.manuais === null) {
+        if (manualContratoTemp.manual === undefined || manualContratoTemp.manual === null) {
             this.pageNotificationService.addErrorMsg('Selecione um manual');
             verificador = false;
         }
@@ -230,7 +230,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
     resetObj(manualContrato: ManualContrato) {
         manualContrato = {
-            manuais: null,
+            manual: null,
             dataInicioVigencia: null,
             dataFimVigencia: null,
             ativo: false,
@@ -240,11 +240,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     setManualContrato(contrato: Contrato): ManualContrato {
-        let manualContrato = new ManualContrato(null, null, null,
+        let manualContrato = new ManualContrato(null, null, this.novoManual,
             /**contrato deve ser null para não loop */null,
             this.manualInicioVigencia, this.manualFimVigencia,
             this.manualAtivo, this.garantia);
-        manualContrato.addManual(this.novoManual);
+        // manualContrato.addManual(this.novoManual);
         return manualContrato;
     }
 

@@ -10,25 +10,27 @@ export class ManualContrato implements BaseEntity, JSONable<ManualContrato> {
     constructor(
         public id?: any,
         public artificialId?: number,
-        public manuais?: Manual[],
+        public manual?: Manual,
         public contratos?: Contrato,
         public dataInicioVigencia?: Date,
         public dataFimVigencia?: Date,
         public ativo?: boolean,
         public garantia?: number
     ) {
+        /*
         if (manuais) {
             this.mappablemanual = new MappableEntities<Manual>(manuais);
         } else {
             this.manuais = [];
             this.mappablemanual = new MappableEntities<Manual>();
         }
+        */
      }
 
-    addManual(manual: Manual) {
+    /*addManual(manual: Manual) {
         this.mappablemanual.push(manual);
         this.manuais = this.mappablemanual.values();
-    }
+    }*/
 
     toJSONState(): ManualContrato {
         const copy: ManualContrato = Object.assign({}, this);
@@ -36,8 +38,8 @@ export class ManualContrato implements BaseEntity, JSONable<ManualContrato> {
     }
 
     copyFromJSON(json: any) {
-        const manuais: Manual[] = json.manual.map(m => new Manual().copyFromJSON(m));
-        const newManualContrato = new ManualContrato(json.id, null, manuais, json.contratos
+        // const manuais: Manual[] = json.manual.map(m => new Manual().copyFromJSON(m));
+        const newManualContrato = new ManualContrato(json.id, null, json.manual, json.contratos
             , json.dataInicioVigencia, json.dataFimVigencia, json.ativo, json.garantia);
         return newManualContrato;
     }
