@@ -95,5 +95,10 @@
     <include file="config/liquibase/changelog/20180824144515_added_entity_BaseLineAnalitico.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/201809219385653_added_entity_Grupo.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20190218_ALTER_Analise_added_column_DataCriacaoOrdemServico.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/added_entity_manual_contrato.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/ALTER_manual_contrato.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/ALTER_contrato.xml" relativeToChangelogFile="false"/>
+
+
     
 </databaseChangeLog>
