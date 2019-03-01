@@ -220,13 +220,14 @@
 
                         <div class="ui-g-6" style="margin-bottom: 25px">
                             <span class="md-inputfield">
-                                <input type="number"
+                                <input type="text"
                                     name="diasDeGarantia"
-                                    mask="999"
+                                    pkeyFilter="int"
                                     id="idDiasGarantiaContratoSaveFormOrganizacao"
                                     [(ngModel)]="garantia"
-                                    pInputText required/>
-                                <label>Dias de garantia *</label>
+                                    pInputText 
+                                    placeholder="Dias de garantia *"
+                                    required/>
                                 <div *ngIf="this.validaDiasGarantia || (editForm1.controls['diasDeGarantia']
                                                 && !editForm1.controls['diasDeGarantia'].valid
                                                 && (editForm1.controls['diasDeGarantia'].touched
@@ -258,7 +259,7 @@
                         </div>
                     </div>
 
-                    <p-fieldset legend="Manuais" [toggleable]="true">
+                    <p-fieldset legend="Manuais" [toggleable]="true" [collapsed]="true">
                         <div class="ui-g-12" style="margin-bottom: 25px">
                             <p-dropdown [filter]="true" [options]="manuais" optionLabel="nome"
                                 id="idManuais"
@@ -312,12 +313,12 @@
                         </span>
                         </div>
 
-                        <div class="ui-g-12" style="margin-bottom: 25px">
+                        <div class="ui-g-6" style="margin-bottom: 25px">
                             <div class="ui-g">
-                                <div class="ui-g-12 ui-md-1">
+                                <div class="ui-g-12 ui-md-2">
                                     <label>Ativo:</label>
                                 </div>
-                                <div class="ui-g-12 ui-md-1">
+                                <div class="ui-g-12 ui-md-2">
                                     <p-radioButton name="manual_ativo" 
                                                 [(ngModel)]="manualAtivo" 
                                                 [value]="true"
@@ -334,8 +335,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ui-g ui-md-12" style="justify-content: flex-end">
-                            <div class="ui-md-2">
+                        <div class="ui-g ui-md-6" style="justify-content: flex-end">
+                            <div class="ui-md-6">
                                 <app-blue-button buttonLabel="Novo" buttonIcon="ui-icon-add"
                                                     id="idBtnNovoContratoFormOrganizacao"
                                                     (click)="adicionarManual()">
