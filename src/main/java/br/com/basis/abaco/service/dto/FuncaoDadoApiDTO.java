@@ -88,13 +88,11 @@ public class FuncaoDadoApiDTO {
     }
 
     public Set<DerFdDTO> getDers() {
-        Set<DerFdDTO> ders =  this.ders;
         return ders;
     }
 
     public void setDers(Set<DerFdDTO> ders) {
-        Set<DerFdDTO> derss =  ders;
-        this.ders = derss;
+        this.ders = ders;
     }
 
     public String getDetStr() {
@@ -154,13 +152,11 @@ public class FuncaoDadoApiDTO {
     }
 
     public Set<RlrFdDTO> getRlrs() {
-        Set<RlrFdDTO> rlrs = this.rlrs;
         return rlrs;
     }
 
     public void setRlrs(Set<RlrFdDTO> rlrs) {
-        Set<RlrFdDTO> rlrss = rlrs;
-        this.rlrs = rlrss;
+        this.rlrs = rlrs;
     }
 
     public Alr getAlr() {
