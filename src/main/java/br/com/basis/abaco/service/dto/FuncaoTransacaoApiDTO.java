@@ -140,11 +140,13 @@ public class FuncaoTransacaoApiDTO {
     }
 
     public Set<AlrFtDTO> getAlrs() {
+        Set<AlrFtDTO> alrs = this.alrs;
         return alrs;
     }
 
     public void setAlrs(Set<AlrFtDTO> alrs) {
-        this.alrs = alrs;
+        Set<AlrFtDTO> alrss = alrs;
+        this.alrs = alrss;
     }
 
     public ImpactoFatorAjuste getImpacto() {
@@ -156,10 +158,12 @@ public class FuncaoTransacaoApiDTO {
     }
 
     public Set<DerFtDTO> getDers() {
+        Set<DerFtDTO> ders = this.ders;
         return ders;
     }
 
     public void setDers(Set<DerFtDTO> ders) {
-        this.ders = ders;
+        Set<DerFtDTO> derss = ders;
+        this.ders = derss;
     }
 }

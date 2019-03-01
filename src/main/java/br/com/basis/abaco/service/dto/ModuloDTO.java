@@ -32,10 +32,12 @@ public class ModuloDTO {
     }
 
     public Set<FuncionalidadesDTO> getFuncionalidades() {
+        Set<FuncionalidadesDTO> funcionalidades = this.funcionalidades;
         return funcionalidades;
     }
 
     public void setFuncionalidades(Set<FuncionalidadesDTO> funcionalidades) {
-        this.funcionalidades = funcionalidades;
+        Set<FuncionalidadesDTO> funcionalidadess = funcionalidades;
+        this.funcionalidades = funcionalidadess;
     }
 }

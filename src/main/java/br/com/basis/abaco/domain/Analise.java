@@ -517,6 +517,7 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Timestamp getDataCriacaoOrdemServico() {
+        Timestamp dataCriacaoOrdemServico = this.dataCriacaoOrdemServico;
         return dataCriacaoOrdemServico;
     }
 
