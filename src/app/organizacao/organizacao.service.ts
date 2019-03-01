@@ -27,7 +27,6 @@ export class OrganizacaoService {
 
   create(organizacao: Organizacao): Observable<any> {
     const copy = this.convertToJSON(organizacao);
-
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertFromJSON(jsonResponse);

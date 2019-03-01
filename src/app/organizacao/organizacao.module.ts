@@ -8,6 +8,9 @@ import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.modu
 import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
 import {NgxMaskModule} from 'ngx-mask';
 import { UtilModule } from '../util/util.module';
+import { TableModule } from 'primeng/table';
+import { PanelModule } from 'primeng/panel';
+import { FieldsetModule } from 'primeng/fieldset';
 
 import {
   ButtonModule,
@@ -59,6 +62,9 @@ import { TextMaskModule } from 'angular2-text-mask';
     TextMaskModule,
     BotoesExportacaoModule,
     UtilModule,
+    PanelModule,
+    TableModule,
+    FieldsetModule
   ],
   declarations: [
     OrganizacaoComponent,

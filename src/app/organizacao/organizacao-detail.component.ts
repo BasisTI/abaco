@@ -35,8 +35,7 @@ export class OrganizacaoDetailComponent implements OnInit, OnDestroy {
 
       this.uploadService.getLogo(organizacao.logoId).subscribe(response => {
         this.logo = response.logo;
-       
-      })
+      });
     });
   }
 

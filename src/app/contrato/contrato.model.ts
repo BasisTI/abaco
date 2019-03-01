@@ -1,7 +1,10 @@
-import { BaseEntity, JSONable } from '../shared';
+import { ManualContrato } from './../organizacao/ManualContrato.model';
+import { BaseEntity, JSONable, MappableEntities } from '../shared';
 import { Manual } from '../manual';
 
 export class Contrato implements BaseEntity, JSONable<Contrato> {
+
+  private mappableManualContrato: MappableEntities<ManualContrato>;
 
   constructor(
     public id?: number,
@@ -12,7 +15,15 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
     public ativo?: boolean,
     public diasDeGarantia?: number,
     public artificialId?: number,
-  ) { }
+    public manualContrato?: ManualContrato[],
+  ) {
+    if (manualContrato) {
+      this.mappableManualContrato = new MappableEntities<ManualContrato>(manualContrato);
+    } else {
+      this.manualContrato = [];
+      this.mappableManualContrato = new MappableEntities<ManualContrato>();
+    }
+  }
 
   toJSONState(): Contrato {
     const copy: Contrato = Object.assign({}, this);
@@ -21,16 +32,24 @@ export class Contrato implements BaseEntity, JSONable<Contrato> {
 
 
   copyFromJSON(json: any) {
-    if (json && json.manual) {
+    if (json) {
+      const manualContrato: ManualContrato[] = json.manualContrato.map(
+        mc => new ManualContrato().copyFromJSON(mc)
+      );
       return new Contrato(json.id, json.numeroContrato, new Date(json.dataInicioVigencia),
-        new Date(json.dataFimVigencia), json.manual, json.ativo, json.diasDeGarantia);
+        new Date(json.dataFimVigencia), null, json.ativo, json.diasDeGarantia, null, manualContrato);
     }
+  }
+
+  addManualContrato(manualContrato: ManualContrato) {
+    this.mappableManualContrato.push(manualContrato);
+    this.manualContrato = this.mappableManualContrato.values();
   }
 
   // TODO extrair modulo? entrar pro jsonable?
   clone(): Contrato {
     return new Contrato(this.id, this.numeroContrato, this.dataInicioVigencia,
-      this.dataFimVigencia, this.manual, this.ativo, this.diasDeGarantia, this.artificialId);
+      this.dataFimVigencia, null, this.ativo, this.diasDeGarantia, this.artificialId, this.manualContrato);
   }
 
   dataInicioValida(): boolean {
