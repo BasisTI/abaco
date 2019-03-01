@@ -12,6 +12,7 @@ import {Funcionalidade, FuncionalidadeService} from '../funcionalidade';
 import {Subscription} from 'rxjs/Subscription';
 
 import * as _ from 'lodash';
+import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
 
 @Component({
     selector: 'app-analise-modulo-funcionalidade',
@@ -60,6 +61,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         private funcionalidadeService: FuncionalidadeService,
         private changeDetectorRef: ChangeDetectorRef,
         private pageNotificationService: PageNotificationService,
+        private funcaoDadosService: FuncaoDadosService
     ) {
     }
 
@@ -76,6 +78,15 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.subscribeAnaliseSalva();
         this.subscribeFuncaoAnaliseCarregada();
         this.subscribeFuncaoAnaliseDescarregada();
+        this.subscribeFuncionalideBaseline();
+    }
+
+    private subscribeFuncionalideBaseline(){
+        this.funcaoDadosService.dataModd$.subscribe(
+            (data:Funcionalidade) => {
+                this.funcionalidades = data.modulo.funcionalidades;
+                this.selecionarModuloBaseline(data.modulo.id,data.id);
+            });
     }
 
     private subscribeSistemaSelecionado() {
@@ -136,6 +147,12 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     private selecionarModulo(moduloId: number) {
         this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
         this.moduloSelected(this.moduloSelecionado);
+    }
+
+    /* Seleciona no dropdown o modulo da Baseline recebido do componente funcao-dados-form-component.ts*/
+    private selecionarModuloBaseline(moduloId: number,funcionalideId: number) {
+        this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
+        this.funcionalidadeSelecionada = _.find(this.funcionalidades, {'id': funcionalideId});
     }
 
     private subscribeFuncaoAnaliseCarregada() {

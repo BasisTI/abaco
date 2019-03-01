@@ -34,6 +34,7 @@ export class MessageUtil {
     public static INFORME_METODO_CONTAGEM = 'Informe o Método de Contagem para continuar';
     public static INFORME_TIPO_CONTAGEM = 'Informe o Tipo de Contagem para continuar';
     public static INFORME_DATA_HOMOLOGACAO = 'Informe a data de homolagação para continuar';
+    public static INFORME_DATA_ORDEM_SERVICO = 'Informe a data de criação da ordem de serviço para continuar';
 
     public static CONCAT_COPIA = ' - CÓPIA';
     public static ERRO_EXCLUSAO_ANALISE_BLOQUEADA = 'Você não pode excluir uma análise bloqueada';

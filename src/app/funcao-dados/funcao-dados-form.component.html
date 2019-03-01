@@ -4,7 +4,7 @@
 
             <div class="ui-g">
                 <div class="ui-g-12">
-                    <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
+                    <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 01px; margin-top: 01px">
                         <div class="ui-md-2" *ngIf="!isView">
                             <app-green-button buttonLabel="Novo" id="idNovoFormFuncaoDados" buttonIcon="ui-icon-add"
                                               (click)="openDialog(false)">
@@ -15,6 +15,7 @@
                     <div>
                         <app-memory-datatable [disableDelete]="this.isView" [disableEdit]="this.isView"
                                               [disableClone]="this.isView"
+                                              [showCrud]="true"
                                               [value]="funcoesDados" id="idTabelaFuncaoDados"
                                               (buttonClick)="datatableClick($event)"
                                               [responsive]="true" scrollable="true" scrollWidth="100%">
@@ -96,11 +97,16 @@
                 </div>
             </div>
 
-
             <!-- DIALOG: ADICIONAR E EDITAR FUNÇÃO DE DADOS -->
             <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader"
                       [contentStyle]="{'height': ['windowHeightDialog']}"
                       [width]="[windowWidthDialog]">
+
+
+                <app-analise-modulo-funcionalidade [erroModulo]="erroModulo" [isFuncaoDados]="true"
+                     (moduloSelectedEvent)="moduloSelected($event)"
+                     (funcionalidadeSelectedEvent)="functionalitySelected($event)">
+                </app-analise-modulo-funcionalidade>
 
                 <div *ngIf="!isEdit">
                     <div class="ui-g" *ngIf="!showMultiplos">
@@ -111,10 +117,14 @@
                                     [(ngModel)]="currentFuncaoDados.name"
                                     [suggestions]="baselineResults"
                                     id="idNomeFormFuncaoDados"
-                                    (completeMethod)="searchBaseline($event)"
-                                    field="name"
+                                    (completeMethod)="searchBaseline($event)"  
                                     (onSelect)="recuperarNomeSelecionado($event)"
                                     datakey="id">
+                                    <ng-template let-currentFuncaoDados pTemplate="name">
+                                        <div class="ui-helper-clearfix" >
+                                            <div style="font-size:15px;float:left;margin:10px 10px 0 0">{{currentFuncaoDados.name}}</div>
+                                        </div>
+                                    </ng-template>
                             </p-autoComplete>
                             <span class="md-inputfield">
                                 <div *ngIf="nomeInvalido && !currentFuncaoDados.name"
@@ -157,7 +167,7 @@
 
                 <div *ngIf="isEdit">
                     <div class="ui-g">
-                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 01px">
                             <label>Nome do Processo Elementar *</label>
                             <input
                                     maxlength="2000"
@@ -168,10 +178,6 @@
                     </div>
                 </div>
 
-                <app-analise-modulo-funcionalidade [erroModulo]="erroModulo" [isFuncaoDados]="true"
-                                                   (moduloSelectedEvent)="moduloSelected($event)"
-                                                   (funcionalidadeSelectedEvent)="functionalitySelected($event)">
-                </app-analise-modulo-funcionalidade>
 
                 <div class="ui-g">
                     <div class="ui-g-3 ui-md-6 ui-sm-12">

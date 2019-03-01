@@ -41,4 +41,14 @@
     class="ui-button-dark"
     icon="content-copy">
     </basis-datatable-button>
+
+    <basis-datatable-button
+    *ngIf="!disableCrud && showCrud"
+    [tooltip]="selectedRow != null ? 'Criar Crud' : 'Escolha um registro para criar crud.'" 
+    [disabled]="selectedRow == null"
+    (click)="onClick(crudEventName, $event)"
+    class="ui-button-success"
+    icon="input">
+    </basis-datatable-button>
+
 </div>

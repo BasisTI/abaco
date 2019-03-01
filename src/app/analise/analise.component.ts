@@ -422,22 +422,35 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      * Bloquear Análise
      */
     public bloqueiaAnalise(bloquear: boolean) {
-        if (this.checkUserAnaliseEquipes()) {
-            this.confirmationService.confirm({
-                message: this.mensagemDialogBloquear(bloquear),
-                accept: () => {
-                    const copy = this.analiseTemp.toJSONState();
-                    this.analiseService.block(copy).subscribe(() => {
-                        const nome = this.analiseTemp.identificadorAnalise;
-                        const bloqueado = this.analiseTemp.bloqueiaAnalise;
-                        this.mensagemAnaliseBloqueada(bloqueado, nome);
-                        this.recarregarDataTable();
+        var _this = this;
+
+        _this.analiseService.find(_this.analiseSelecionada.idAnalise).subscribe((res: any) => {
+            _this.analiseTemp = res;
+        });
+        
+        setTimeout(function(){
+            if(!_this.analiseTemp.dataHomologacao){
+                _this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_DATA_HOMOLOGACAO);
+            }else {
+                if (_this.checkUserAnaliseEquipes()) {
+                    _this.confirmationService.confirm({
+                        message: _this.mensagemDialogBloquear(bloquear),
+                        accept: () => {
+                            const copy = _this.analiseTemp.toJSONState();
+                            _this.analiseService.block(copy).subscribe(() => {
+                                const nome = _this.analiseTemp.identificadorAnalise;
+                                const bloqueado = _this.analiseTemp.bloqueiaAnalise;
+                                _this.mensagemAnaliseBloqueada(bloqueado, nome);
+                                _this.recarregarDataTable();
+                            });
+                        }
                     });
+                } else {
+                    _this.pageNotificationService.addErrorMsg('Somente membros da equipe responsável podem bloquear esta análise!');
                 }
-            });
-        } else {
-            this.pageNotificationService.addErrorMsg('Somente membros da equipe responsável podem bloquear esta análise!');
-        }
+            }
+        }, 1000);
+        
     }
 
     private mensagemDialogBloquear(retorno: boolean) {

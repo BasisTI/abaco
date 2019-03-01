@@ -199,7 +199,7 @@ export class UserComponent implements AfterViewInit, OnInit {
         (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)) : (this);
     }
 
-    private createStringParamsArray(): Array<string> {
+   private createStringParamsArray(): Array<string> {
         const arrayParams: Array<string> = [];
 
         (this.searchParams.fullName !== undefined) ? (arrayParams.push('+firstName:' + this.searchParams.fullName)) : (this);
@@ -212,12 +212,13 @@ export class UserComponent implements AfterViewInit, OnInit {
         return arrayParams;
     }
 
+
     performSearch() {
         this.checkUndefinedParams();
         this.query = this.stringConcatService.concatResults(this.createStringParamsArray()).slice(1);
         this.recarregarDataTable();
     }
-
+    
     limparPesquisa() {
         this.searchParams = {
             fullName: undefined,
@@ -232,7 +233,10 @@ export class UserComponent implements AfterViewInit, OnInit {
     }
 
     recarregarDataTable() {
-        this.datatable.refresh(this.query ? this.query : "*");
+        console.log(this.datatable.value);
+        console.log(this.query.valueOf);
+        
+        this.datatable.refresh(this.query.toLocaleLowerCase ? this.query : "*");
     }
 
 }

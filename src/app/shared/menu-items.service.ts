@@ -14,22 +14,24 @@ export class MenuItemsService {
     get all(): MenuItem[] {
         return [
             {
-                label: 'Administração', icon: 'supervisor_account',
-                visible: this.isLoggedAdmin(),
+                label: 'Configuração', icon: 'settings',
+                visible: this.authService.isAuthenticated(),
                 items: [
                     {label: 'Reindexar', routerLink: 'elasticsearch', icon: 'refresh'},
-                    {label: 'Tipo de Equipe', routerLink: 'admin/tipoEquipe', icon: 'people'},
-                    {label: 'Usuários', routerLink: 'admin/user', icon: 'person'},
+                    {label: 'Editar usuário', routerLink: `usuario/edit`, icon: 'tag_faces'},
+                    {label: 'Alterar Senha', routerLink: `senha`, icon: 'security'}
                 ]
             },
             {
-                label: 'Cadastros Básicos', icon: 'description',
+                label: 'Cadastros', icon: 'description',
                 visible: this.isLoggedCadastrosBasicos(),
                 items: [
                     {label: 'Tipo de Fase', routerLink: 'tipoFase', icon: 'beenhere'},
                     {label: 'Manual', routerLink: 'manual', icon: 'description'},
                     {label: 'Organização', routerLink: 'organizacao', icon: 'business'},
-                    {label: 'Sistema', routerLink: 'sistema', icon: 'laptop'}
+                    {label: 'Sistema', routerLink: 'sistema', icon: 'laptop'},
+                    {label: 'Tipo de Equipe', routerLink: 'admin/tipoEquipe', icon: 'people'},
+                    {label: 'Usuários', routerLink: 'admin/user', icon: 'person'}
                 ]
             },
             {
@@ -41,16 +43,9 @@ export class MenuItemsService {
                     // { label: 'Compare' }
                     // { label: 'Validação' }
                 ]
-            },
-            {
-                label: 'Configuração', icon: 'settings',
-                visible: this.authService.isAuthenticated(),
-                items: [
-                    // {label: 'Reindexar', routerLink: 'elasticsearch', icon: 'refresh' },
-                    {label: 'Editar usuário', routerLink: `usuario/edit`, icon: 'tag_faces'},
-                    {label: 'Alterar Senha', routerLink: `senha`, icon: 'security'}
-                ]
             }
+            
+            
         ];
     }
 

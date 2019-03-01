@@ -39,6 +39,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     @BlockUI() blockUI: NgBlockUI;      // Usado para bloquear o sistema enquanto aguarda resolução das requisições do backend
 
+    faS: FatorAjuste[];
+
     textHeader: string;
     @Input() isView: boolean;
     isEdit: boolean;
@@ -120,6 +122,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.dersChips = [];
         this.alrsChips = [];
     }
+
      updateImpacto(impacto: string){
         switch(impacto) {
             case 'INCLUSAO':
@@ -271,9 +274,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.baselineService.baselineAnaliticoFT(this.analise.sistema.id).subscribe((res: ResponseWrapper) => {
             this.dadosBaselineFT = res.json;
         });
+
     }
 
-    recuperarNomeSelecionado(baselineAnalitico: BaselineAnalitico) {
+   recuperarNomeSelecionado(baselineAnalitico: BaselineAnalitico) {
 
         this.funcaoDadosService.getFuncaoTransacaoBaseline(baselineAnalitico.idfuncaodados)
         .subscribe((res: FuncaoTransacao) => {
@@ -285,14 +289,19 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 res.alrs.forEach(alrs => {
                     alrs.id = undefined;
                 });
-
             this.prepararParaEdicao(res);
         });
 
     }
 
     searchBaseline(event): void {
-        this.baselineResultados = this.dadosBaselineFT.filter(c => c.name.includes(event.query));
+        this.baselineResultados = this.dadosBaselineFT.filter(function (fd) {
+
+            var teste: string = event.query;
+
+            return fd.name.toLowerCase().includes(teste.toLowerCase());
+        });
+
     }
 
     // Funcionalidade Selecionada
@@ -425,9 +434,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     dersReferenciados(ders: Der[]) {
         const dersReferenciadosChips: DerChipItem[] = DerChipConverter.converterReferenciaveis(ders);
-        // if(this.dersChips !== undefined){
         this.dersChips = this.dersChips.concat(dersReferenciadosChips);
-        // }
     }
 
     private editar() {
@@ -548,6 +555,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     private carregarValoresNaPaginaParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
+        this.funcaoDadosService.mod.next(funcaoTransacaoSelecionada.funcionalidade);
+
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.carregarDerEAlr(funcaoTransacaoSelecionada);
         this.carregarFatorDeAjusteNaEdicao(funcaoTransacaoSelecionada);
@@ -616,6 +625,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.hideShowQuantidade = true;
         this.disableTRDER();
         this.configurarDialog();
+        this.currentFuncaoTransacao.fatorAjuste = this.faS[0];
+
     }
 
     configurarDialog() {
@@ -627,13 +638,26 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
 
     private inicializaFatoresAjuste(manual: Manual) {
-        const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+        this.faS = _.cloneDeep(manual.fatoresAjuste);
+
+        this.faS.sort((n1,n2) => {
+            if (n1.fator < n2.fator) 
+                return 1;   
+            if (n1.fator > n2.fator) 
+                return -1;
+            return 0;
+        });
+        
         this.fatoresAjuste =
-            faS.map(fa => {
+            this.faS.map(fa => {
                 const label = FatorAjusteLabelGenerator.generate(fa);
-                return {label: label, value: fa};
+                return {label: label,  value: fa};
             });
+        
         this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+        
+
+
     }
 
     textChanged() {
@@ -645,7 +669,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.showMultiplos = !this.showMultiplos;
     }
 
-
+    limparDados() {
+        if(this.currentFuncaoTransacao.name == ''){
+            this.estadoInicial();
+        }
+    }
 }
 
 

@@ -31,6 +31,9 @@ export class MemoryDatatableComponent implements AfterViewInit {
   @Input()
   cloneEventName = 'clone';
 
+  @Input()
+  crudEventName = 'crud';
+
   selectedRow: any;
 
   @Input()
@@ -41,6 +44,12 @@ export class MemoryDatatableComponent implements AfterViewInit {
 
   @Input()
   disableClone: boolean;
+
+  @Input()
+  disableCrud: boolean;
+
+  @Input()
+  showCrud: boolean = false;
 
   @Input()
   responsive = true;

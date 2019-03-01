@@ -4,7 +4,7 @@
 
             <div class="ui-g">
                 <div class="ui-g-12">
-                    <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
+                    <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 01px; margin-top: 01px">
                         <div class="ui-md-2" *ngIf="!isView">
                             <app-green-button
                                     buttonLabel="Novo"
@@ -64,6 +64,7 @@
                                     {{ modulo.nome }}
                                 </ng-template>
                             </p-column>
+
 
                             <p-column
                                     header="Funcionalidade"
@@ -143,6 +144,12 @@
                     [contentStyle]="{'height': ['windowHeightDialog']}"
                     [width]="[windowWidthDialog]">
 
+                <app-analise-modulo-funcionalidade
+                    [erroModulo]="erroModulo" [isFuncaoDados]="false"
+                    (moduloSelectedEvent)="moduloSelected($event)"
+                    (funcionalidadeSelectedEvent)="functionalitySelected($event)">
+                </app-analise-modulo-funcionalidade>
+
                 <div *ngIf="!isEdit">
                     <div class="ui-g" *ngIf="!showMultiplos">
                         <div class="ui-g-9">
@@ -152,8 +159,14 @@
                                     [suggestions]="baselineResultados"
                                     id="idNomeProcessoElementarFormFuncaoTransacao"
                                     (completeMethod)="searchBaseline($event)"
-                                    field="name"
+                                    (keyup.backspace)="limparDados()"
+                                    (keyup.delete)="limparDados()"
                                     (onSelect)="recuperarNomeSelecionado($event)">
+                                    <ng-template let-currentFuncaoTransacao pTemplate="name">
+                                        <div class="ui-helper-clearfix" >
+                                            <div style="font-size:15px;float:left;margin:10px 10px 0 0">{{currentFuncaoTransacao.name}}</div>
+                                        </div>
+                                    </ng-template>
                             </p-autoComplete>
                             <span class="md-inputfield">
                                 <div *ngIf="nomeInvalido && !currentFuncaoTransacao.name"
@@ -162,6 +175,7 @@
                                 </div>
                             </span>
                         </div>
+
                         <div class="ui-g-12 ui-md-3 ui-lg-3">
                             <app-blue-button
                                     buttonLabel="Múltiplos"
@@ -199,7 +213,7 @@
 
                 <div *ngIf="isEdit">
                     <div class="ui-g">
-                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 01px">
                             <label>Nome do Processo Elementar *</label>
                             <input type="text" class="ui-inputtext"
                                    id="idNomesFormFuncaoTransacao"
@@ -208,12 +222,6 @@
                     </div>
                 </div>
 
-
-                <app-analise-modulo-funcionalidade
-                        [erroModulo]="erroModulo" [isFuncaoDados]="false"
-                        (moduloSelectedEvent)="moduloSelected($event)"
-                        (funcionalidadeSelectedEvent)="functionalitySelected($event)">
-                </app-analise-modulo-funcionalidade>
 
                 <div class="ui-g">
                     <div class="ui-g-3 ui-md-6 ui-sm-12">

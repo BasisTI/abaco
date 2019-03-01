@@ -16,7 +16,8 @@ export class Grupo {
         public diasDeGarantia?: number,
         public dataCriacao?: any,
         public dataHomologacao?: any,
-        public bloqueado?: boolean
+        public bloqueado?: boolean,
+        public dataCriacaoOrdemServico?: any
     ) {
     }
 

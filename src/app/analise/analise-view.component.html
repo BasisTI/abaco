@@ -73,6 +73,16 @@
                                     </span>
                                 </div>
 
+                                <div class="ui-g-6 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Data da Criação da Ordem de Serviço *</label>
+                                        <span class="md-inputfield">
+                                        <input type="text"
+                                         name="dataFimVigencia"
+                                         [disabled]="this.isView"
+                                         pInputText [ngModel]="analise.dataCriacaoOrdemServico|date:'dd/MM/y'" readonly/>
+                                    </span>
+                                </div>
+      
                                 <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                                     <label>Contrato *</label>
                                     <p-dropdown
@@ -237,16 +247,15 @@
 
                                 <div class="ui-g-4 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px" [hidden]="validacaoCampos">
                                     <span class="md-inputfield">
-                                        <p-calendar
+                                         <p-calendar
                                                 name="dataHomol"
                                                 [disabled]="this.isView"
                                                 id="idDataHomologacaoViewAnalise"
                                                 [(ngModel)]="analise.dataHomologacao"
                                                 dateFormat="dd/mm/yy">
-                                        </p-calendar>
-                                        <label>Data da homologação (software) {{analise.baselineImediatamente ? " *" : null}}</label>
+                                         </p-calendar>
+                                         <label>Data da homologação (software) {{analise.baselineImediatamente ? " *" : null}}</label>
                                     </span>
-
                                 </div>
 
                                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
@@ -322,7 +331,7 @@
         </app-white-button>
     </p-tabPanel>
 
-    <p-tabPanel
+    <p-tabPanel 
             id="idTabelaFuncaoTransacaoViewAnalise"
             [disabled]="disableAba"
             header="Funções de Transação"

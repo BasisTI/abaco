@@ -31,6 +31,10 @@ import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-pa
 import {forEach} from '../../../node_modules/@angular/router/src/utils/collection';
 import {Impacto} from '../analise-shared/impacto-enum';
 
+import { FuncaoTransacao, TipoFuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
+import { CalculadoraTransacao } from './../analise-shared/calculadora-transacao';
+import { fcall } from 'q';
+
 @Component({
     selector: 'app-analise-funcao-dados',
     templateUrl: './funcao-dados-form.component.html'
@@ -43,6 +47,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     text: string;
     @Input()
     label: string;
+
+    faS: FatorAjuste[];
 
     textHeader: string;
     @Input() isView: boolean;
@@ -70,7 +76,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     fatoresAjuste: SelectItem[] = [];
     colunasOptions: SelectItem[];
     colunasAMostrar = [];
-    dadosBaselineFD: BaselineAnalitico[] = [];
+     dadosBaselineFD: BaselineAnalitico[] = [];
     results: string[];
     baselineResults: any[] = [];
     funcoesDadosList: FuncaoDados[] = [];
@@ -132,8 +138,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.estadoInicial();
-        this.impactos = AnaliseSharedUtils.impactos;
-        
+        this.impactos = AnaliseSharedUtils.impactos; 
     }
 
     estadoInicial() {
@@ -221,7 +226,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     searchBaseline(event): void {
-        this.baselineResults = this.dadosBaselineFD.filter(c => c.name.includes(event.query));
+        this.baselineResults = this.dadosBaselineFD.filter(function (fc){
+            var teste: string = event.query;
+            return fc.name.toLowerCase().includes(teste.toLowerCase());
+        });
     }
 
     // Carrega nome das funçeõs de dados
@@ -326,6 +334,23 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             this.resetarEstadoPosSalvar();
             return true;
         }
+    }
+
+    validarNameFuncaoTransacaos(nome: string) {
+        const that = this;
+        return new Promise( resolve => {
+            if (that.analise.funcaoTransacaos.length === 0) {
+                return resolve(true);
+            }
+            that.analise.funcaoTransacaos.forEach( (data, index) => {
+                if (data.name === nome) {
+                    return resolve(false);
+                }
+                if (!that.analise.funcaoTransacaos[index + 1]) {
+                    return resolve(true);
+                }
+            });
+        });
     }
 
     adicionar(): boolean {
@@ -577,8 +602,75 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 this.currentFuncaoDados.artificialId = undefined;
                 this.currentFuncaoDados.impacto = Impacto.ALTERACAO;
                 this.textHeader = 'Clonar Função de Dados'
+                break;
+            case 'crud':
+                this.createCrud(funcaoDadosSelecionada);
         }
     }
+
+      inserirCrud(funcaoTransacaoAtual: FuncaoTransacao){
+          
+            this.desconverterChips();
+            this.verificarModulo();
+            
+             var funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem,
+                                                                           funcaoTransacaoAtual,
+                                                                           this.analise.contrato.manual);
+    
+                this.validarNameFuncaoTransacaos(funcaoTransacaoAtual.name).then( resolve => {
+                    if (resolve) {
+                        this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
+                        this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
+                        this.atualizaResumo();
+                        this.resetarEstadoPosSalvar();
+                        this.salvarAnalise();
+                        this.estadoInicial();
+                    } 
+                 }); 
+    }
+
+    private createCrud(funcaoDadosSelecionada: FuncaoDados) {
+
+            var _this = this;
+        
+                let crudExcluir = new FuncaoTransacao;
+                crudExcluir.name = 'Excluir';
+                crudExcluir.funcionalidade = funcaoDadosSelecionada.funcionalidade;
+                crudExcluir.tipo = TipoFuncaoTransacao.EE;
+                crudExcluir.impacto = Impacto.EXCLUSAO;
+                crudExcluir.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
+                this.inserirCrud(crudExcluir);
+
+                let crudEditar = new FuncaoTransacao;
+                crudEditar.name = 'Editar';
+                crudEditar.funcionalidade = funcaoDadosSelecionada.funcionalidade;
+                crudEditar.tipo = TipoFuncaoTransacao.EE;
+                crudEditar.impacto = Impacto.ALTERACAO;
+                crudEditar.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
+                setTimeout(function(){
+                    _this.inserirCrud(crudEditar)
+                }, 1000);
+
+                let crudInserir = new FuncaoTransacao;
+                crudInserir.name = 'Inserir';
+                crudInserir.funcionalidade = funcaoDadosSelecionada.funcionalidade;
+                crudInserir.tipo = TipoFuncaoTransacao.EE;
+                crudInserir.impacto = Impacto.INCLUSAO;
+                crudInserir.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
+                setTimeout(function(){
+                    _this.inserirCrud(crudInserir)
+                }, 2000);
+
+                let crudPesquisar = new FuncaoTransacao;
+                crudPesquisar.name = 'Pesquisar';
+                crudPesquisar.funcionalidade = funcaoDadosSelecionada.funcionalidade;
+                crudPesquisar.tipo = TipoFuncaoTransacao.CE;
+                crudPesquisar.impacto = Impacto.INCLUSAO;
+                crudPesquisar.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
+                setTimeout(function(){
+                    _this.inserirCrud(crudPesquisar)
+                }, 3000);
+        }
 
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
 
@@ -586,6 +678,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.configurarDialog();
 
         this.currentFuncaoDados = funcaoDadosSelecionada;
+        
         this.carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada);
         this.pageNotificationService.addInfoMsg(`Alterando Função de Dados '${funcaoDadosSelecionada.name}'`);
     }
@@ -599,6 +692,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
+        /* Envia os dados para o componente modulo-funcionalidade-component.ts*/
+        this.funcaoDadosService.mod.next(funcaoDadosSelecionada.funcionalidade);
+        
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.carregarDerERlr(funcaoDadosSelecionada);
         this.carregarFatorDeAjusteNaEdicao(funcaoDadosSelecionada);
@@ -674,6 +770,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.hideShowQuantidade = true;
         this.disableTRDER();
         this.configurarDialog();
+        this.currentFuncaoDados.fatorAjuste = this.faS[0];
     }
 
     configurarDialog() {
@@ -683,15 +780,27 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.showDialog = true;
     }
 
-
     private inicializaFatoresAjuste(manual: Manual) {
-        const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+        this.faS = _.cloneDeep(manual.fatoresAjuste);
+
+        this.faS.sort((n1,n2) => {
+            if (n1.fator < n2.fator) 
+                return 1;   
+            if (n1.fator > n2.fator) 
+                return -1;
+            return 0;
+        });
+        
         this.fatoresAjuste =
-            faS.map(fa => {
+            this.faS.map(fa => {
                 const label = FatorAjusteLabelGenerator.generate(fa);
-                return {label: label, value: fa};
+                return {label: label,  value: fa};
             });
+        
         this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+        
+
+
     }
 
     textChanged() {

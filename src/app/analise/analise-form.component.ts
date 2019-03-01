@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 import { Response } from '@angular/http';
 
+
 import { Analise, AnaliseShareEquipe } from './';
 import {AnaliseService} from './analise.service';
 import { User, UserService } from '../user';
@@ -39,6 +40,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     isSaving: boolean;
     dataAnalise: any;
     dataHomol: any;
+    dataCriacao: any;
     loggedUser: User;
     diasGarantia: number;
     public validacaoCampos: boolean;
@@ -102,6 +104,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.isEdicao = false;
         this.isSaving = false;
         this.dataHomol = new Date();
+        this.dataCriacao = new Date();
         this.getLoggedUser();
         this.habilitarCamposIniciais();
         this.getAnalise();
@@ -163,6 +166,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                     this.aguardarGarantia = this.analise.baselineImediatamente;
                     this.enviarParaBaseLine = this.analise.enviarBaseline;
                     this.setDataHomologacao();
+                    this.setDataOrdemServico();
                     this.diasGarantia = this.getGarantia();
                     this.update();
                 });
@@ -181,6 +185,18 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.dataHomol.setDate(Number(this.dataAnalise.dataHomologacao.substring(8, 10)));
             this.dataHomol.setFullYear(Number(this.dataAnalise.dataHomologacao.substring(0, 4)));
             this.analise.dataHomologacao = this.dataHomol;
+        }
+    }
+
+    /**
+     * Método responsável por popular a data de Ordem de Servico
+     */
+    setDataOrdemServico() {
+        if (this.dataAnalise.dataCriacaoOrdemServico !== null) {
+            this.dataCriacao.setMonth(Number(this.dataAnalise.dataCriacaoOrdemServico.substring(5, 7)) - 1);
+            this.dataCriacao.setDate(Number(this.dataAnalise.dataCriacaoOrdemServico.substring(8, 10)));
+            this.dataCriacao.setFullYear(Number(this.dataAnalise.dataCriacaoOrdemServico.substring(0, 4)));
+            this.analise.dataCriacaoOrdemServico = this.dataCriacao;
         }
     }
 
@@ -324,11 +340,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Obtem o esforço de fase
+     * Obtem o esforço de fase 
      */
     totalEsforcoFases() {
         const initialValue = 0;
-        return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforcoFormatado, initialValue);
+        return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforco, initialValue);
     }
 
     /**
@@ -359,27 +375,34 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      *
      */
     public bloquearAnalise() {
-        this.confirmationService.confirm({
-            message: MessageUtil.CONFIRMAR_BLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
-            accept: () => {
-                const copy = this.analise.toJSONState();
-                this.analiseService.block(copy).subscribe(() => {
-                    this.pageNotificationService.addBlockMsgWithName(this.analise.identificadorAnalise);
-                    this.router.navigate(['analise/']);
-                }, (error: Response) => {
-                    switch (error.status) {
-                        case 400: {
-                            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
-                                this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
-                            } else {
-                                this.pageNotificationService
-                                    .addErrorMsg('Somente membros da equipe responsável podem bloquear esta análise!');
+        if (!this.analise.dataHomologacao) {
+            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_DATA_HOMOLOGACAO);
+        }
+
+        if (this.analise.dataHomologacao) {
+            this.confirmationService.confirm({
+                message: MessageUtil.CONFIRMAR_BLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
+                accept: () => {
+                    const copy = this.analise.toJSONState();
+                    this.analiseService.block(copy).subscribe(() => {
+                        this.pageNotificationService.addBlockMsgWithName(this.analise.identificadorAnalise);
+                        this.router.navigate(['analise/']);
+                    }, (error: Response) => {
+                        switch (error.status) {
+                            case 400: {
+                                if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
+                                    this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                                } else {
+                                    this.pageNotificationService
+                                        .addErrorMsg('Somente membros da equipe responsável podem bloquear esta análise!');
+                                }
                             }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        }
+        
     }
 
 
@@ -493,6 +516,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             isValid = false;
             return isValid;
         }
+        if(!this.analise.dataCriacaoOrdemServico){
+            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_DATA_ORDEM_SERVICO);
+            isValid = false;
+            return isValid;
+        }
         if (!this.analise.metodoContagem) {
             this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_METODO_CONTAGEM);
             isValid = false;
@@ -503,11 +531,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             isValid = false;
             return isValid;
         }
-        if (this.analise.baselineImediatamente && !this.analise.dataHomologacao) {
-            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_DATA_HOMOLOGACAO);
-            isValid = false;
-            return isValid;
-        }
+        
         return isValid;
     }
 

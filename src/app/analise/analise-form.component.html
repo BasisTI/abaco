@@ -152,6 +152,20 @@
                                                 pInputText/>
                                     </span>
                                 </div>
+                             
+                                <div class="ui-g-6 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                  <label>Data da Criação da Ordem de Serviço *</label>
+                                     <span class="md-inputfield">
+                                        <p-calendar
+                                            required
+                                            name="dataCriacaoOrdemServico"
+                                            [(ngModel)]="analise.dataCriacaoOrdemServico"
+                                            id="idDataCriacaoOrdemServicoFormAnalise"
+                                            dateFormat="dd/mm/yy"
+                                            showIcon="true"
+                                        ></p-calendar>
+                                     </span>
+                                </div>
 
                                 <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                                     <label>Contrato *</label>
@@ -273,7 +287,7 @@
                                         <textarea
                                                 maxlength="4000"
                                                 required
-                                                pInputTextarea name="documentacao"                                          pInputTextarea name="documentacao"
+                                                pInputTextarea name="documentacao"
                                                 id="idDocumentacaoFormAnalise"
                                                 [(ngModel)]="analise.documentacao">
                                         </textarea>
@@ -312,7 +326,7 @@
                                 <div class="ui-g-4 ui-md-6 ui-sm-12" [hidden]="validacaoCampos">
 
                                     <div class="ui-g-6 ui-md-6 ui-sm-12">
-                                        Enviar para Baseline?
+                                        Incorporar a Baseline
                                     </div>
                                     <div class="ui-g-3 ui-md-2 ui-sm-12" >
                                         <p-radioButton

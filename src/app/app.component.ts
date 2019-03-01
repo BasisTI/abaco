@@ -9,6 +9,7 @@ import {
 
 import { Message } from 'primeng/components/common/api';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { TranslateService } from '@ngx-translate/core';
 
 enum MenuOrientation {
   STATIC,
@@ -70,7 +71,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('layoutMenuScroller') layoutMenuScrollerViewChild: ElementRef;
 
-  constructor(public renderer: Renderer) { }
+  constructor(public renderer: Renderer, translate: TranslateService) {
+    translate.setDefaultLang('pt');
+   }
 
   ngAfterViewInit() {
     this.layoutContainer = <HTMLDivElement>this.layourContainerViewChild.nativeElement;

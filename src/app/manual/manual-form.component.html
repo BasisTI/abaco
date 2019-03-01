@@ -5,7 +5,7 @@
             <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
 
                 <div class="ui-g">
-                    <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="!manual.id" style="margin-bottom: 25px">
+                    <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="!manual.id" style="margin-bottom: 01px">
                         <span class="md-inputfield">
                             <input type="text" id="idIdFormManual" class="ui-inputtext" name="id" pInputText
                                    [(ngModel)]="manual.id" readonly/>
@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="ui-g">
-                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
+                    <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 01px">
                         <span class="md-inputfield">
                             <input id="nome_manual" type="text" name="nome" maxlength="250" [(ngModel)]="manual.nome"
                                    pInputText #nome='ngModel' required/>
@@ -31,7 +31,7 @@
 
                     </div>
 
-                    <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+                    <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 01px">
                         <span class="md-inputfield">
                             <p-spinner required step="0.010"
                                    maxlength="5"
@@ -51,7 +51,7 @@
                         </span>
                     </div>
 
-                    <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+                    <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 01px">
                         <span class="md-inputfield">
                             <p-spinner required step="0.010"
                                    maxlength="5"
@@ -76,7 +76,7 @@
                         <label>Observação</label>
                     </div>
 
-                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 01px">
                         <textarea class="ui-g-12 ui-md-12 ui-sm-12" pInputTextarea name="descricao"
                                   id="idObservacaoFormManual"
                                   maxlength="4000" [rows]="5" [cols]="180" [(ngModel)]="manual.observacao">
@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="ui-g">
-                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 01px">
                         <label>Arquivo Manual</label>
                         <span class="md-inputfield">
                             <p-fileUpload #fileInput chooseLabel="Selecionar arquivo" [showUploadButton]="false"
@@ -105,11 +105,11 @@
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-12 ui-sm-12">
 
-                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 01px">
                             <label>Impacto</label>
                         </div>
 
-                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 01px">
                             <span class="md-inputfield">
                                 <p-spinner required min="0" step="0.010" id="idInclusaoFormManual"
                                            maxlength="5"
@@ -127,7 +127,7 @@
                                 </div>
                             </span>
                         </div>
-                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 01px">
                             <span class="md-inputfield">
                                 <p-spinner required min="0" step="0.010"
                                            id="idAlteracaoFormManual"
@@ -146,7 +146,7 @@
                                 </div>
                             </span>
                         </div>
-                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 01px">
                             <span class="md-inputfield">
                                 <p-spinner required min="0" step="0.010"
                                            id="idExclusaoFormManual"
@@ -165,7 +165,7 @@
                                 </div>
                             </span>
                         </div>
-                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
+                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 01px">
                             <span class="md-inputfield">
                                 <p-spinner required min="0" step="0.010" maxlength="5"
                                        id="idConvercaoFormManual"
@@ -183,7 +183,7 @@
                             </span>
                         </div>
 
-                        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-top: 25px; margin-bottom: 25px">
+                        <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-top: 01px; margin-bottom: 01px">
 
                             <div class="ui-g-3 ui-md-4 ui-sm-12">
                                 <label>Versão do CPM</label>
@@ -276,7 +276,7 @@
                     </div>
                 </div>
 
-                <div class="ui-g" style="justify-content: center; margin-top: 25px;">
+                <div class="ui-g" style="justify-content: center; margin-top: 01px;">
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-white-button buttonLabel="Cancelar" id="idBtnCancelarFormManual"
                                           routerLink="/manual"></app-white-button>
@@ -298,7 +298,7 @@
                           [contentStyle]="{'overflow':'visible'}"
                           [width]="800">
                     <div class="ui-g">
-                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 01px">
                             <label>Tipo de Fase *</label>
                             <p-dropdown required
                                         [filter]="true"
@@ -320,7 +320,7 @@
                     </div>
 
                     <div class="ui-g">
-                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 01px">
                             <label>Esforço (%) *</label>
                             <p-spinner
                                    required
@@ -341,7 +341,7 @@
                     </div>
 
                     <div class="ui-g">
-                        <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
+                        <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 01px">
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
                                 <app-white-button buttonLabel="Cancelar" id="idBtnCAncelarSaveEsforcoFormManual"
                                                   (click)="closeDialogPhaseEffort()">
@@ -366,7 +366,7 @@
                           [width]="800">
 
                     <div class="ui-g">
-                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 01px">
                             <label>Tipo de Fase*</label>
                             <p-dropdown [filter]="true"
                                         id="nome_fase_edit"
@@ -388,7 +388,7 @@
                     </div>
 
                     <div class="ui-g">
-                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 01px">
                             <label>Esforço (%)*</label>
                             <p-spinner
                                     required
@@ -409,7 +409,7 @@
                     </div>
 
                     <div class="ui-g">
-                        <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
+                        <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 01px">
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
                                 <app-white-button buttonLabel="Cancelar" id="idBtnCancelarEditFormManual"
                                                   (click)="closeDialogEditPhaseEffort()">
@@ -439,7 +439,7 @@
                           [width]="800">
                     <div class="ui-g">
 
-                        <div class="ui-g-6 ui-md-6 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-6 ui-md-6 ui-sm-12" style="padding-top: 01px">
                             <label>Nome *</label>
 
                             <input id="nome_fator_ajuste" type="text" name="nomeFatorAjuste"
@@ -454,7 +454,7 @@
                             </div>
                         </div>
 
-                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 01px">
                             <label>Tipo Deflator *</label><br>
                             <p-dropdown [filter]="true" #dd id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste"
                                         [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"
@@ -468,7 +468,7 @@
                             </div>
                         </div>
 
-                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 01px">
                             <label *ngIf="isPercentualEnum(newAdjustFactor.tipoAjuste)">Deflator (%) *</label>
                             <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)">Deflator (PF) *</label>
                             <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Deflator *</label>
@@ -496,7 +496,7 @@
                     </div>
 
                     <div class="ui-g">
-                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 01px">
                             <label>Descrição</label>
                             <textarea [rows]="15" [cols]="90" id="idDescricaoSaveFormManual" pInputTextarea
                                       maxlength="2000" name="descricaoFatorAjuste"
@@ -506,13 +506,13 @@
                     </div>
 
                     <div class="ui-g">
-                        <div class="ui-g-5 ui-md-5 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-5 ui-md-5 ui-sm-12" style="padding-top: 01px">
                             <label>Código</label>
                             <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="newAdjustFactor.codigo"
                                    pInputText maxlength="255"/>
                         </div>
 
-                        <div class="ui-g-7 ui-md-7 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-7 ui-md-7 ui-sm-12" style="padding-top: 01px">
                             <label>Origem</label>
                             <input id="origem_fator" type="text" name="origem" [(ngModel)]="newAdjustFactor.origem"
                                    pInputText maxlength="255"/>
@@ -520,7 +520,7 @@
                     </div>
 
                     <div class="ui-g">
-                        <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
+                        <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 01px">
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
                                 <app-white-button buttonLabel="Cancelar" id="idBtnCancelarDeflatorSaveFormManual"
                                                   (click)="closeDialogCreateAdjustFactor()">
@@ -546,7 +546,7 @@
                           [width]="800">
 
                     <div class="ui-g">
-                        <div class="ui-g-6 ui-md-6 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-6 ui-md-6 ui-sm-12" style="padding-top: 01px">
                             <label>Nome *</label>
                             <input id="nome_fator_ajuste" type="text" name="nomeEdicaoFatorAjuste"
                                    [(ngModel)]="editedAdjustFactor.nome"
@@ -559,7 +559,7 @@
                             </div>                        
                         </div>
 
-                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 01px">
                             <label>Tipo Ajuste *</label><br>
                             <p-dropdown [filter]="true" id="tipo_ajuste" [options]="adjustTypes" name="tipoAjusteEdit"
                                         [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false" required>
@@ -572,7 +572,7 @@
                             </div>
                         </div>
 
-                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 01px">
                             <label *ngIf="isPercentualEnum(editedAdjustFactor.tipoAjuste)">Deflator (%) *</label>
                             <label *ngIf="isUnitaryEnum(editedAdjustFactor.tipoAjuste)">Deflator (PF) *</label>
                             <label *ngIf="editedAdjustFactor.tipoAjuste === undefined">Deflator *</label>
@@ -600,7 +600,7 @@
                     </div>
 
                     <div class="ui-g">
-                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 01px">
                             <label>Descrição</label>
                             <textarea [rows]="15" [cols]="90" id="idDescricaoEditFormManual" pInputTextarea
                                       name="descricaoEdicaoFatorAjuste"
@@ -610,13 +610,13 @@
                     </div>
 
                     <div class="ui-g">
-                        <div class="ui-g-5 ui-md-5 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-5 ui-md-5 ui-sm-12" style="padding-top: 01px">
                             <label>Código</label>
                             <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="editedAdjustFactor.codigo"
                                    pInputText maxlength="255"/>
                         </div>
 
-                        <div class="ui-g-7 ui-md-7 ui-sm-12" style="padding-top: 25px">
+                        <div class="ui-g-7 ui-md-7 ui-sm-12" style="padding-top: 01px">
                             <label>Origem</label>
                             <input id="origem_fator" type="text" name="origem" [(ngModel)]="editedAdjustFactor.origem"
                                    pInputText maxlength="255"/>
@@ -625,7 +625,7 @@
                     </div>
 
                     <div class="ui-g">
-                        <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
+                        <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 01px">
                             <div class="ui-g-3 ui-md-3 ui-sm-12">
                                 <app-white-button buttonLabel="Cancelar" id="idBtnCancelarEditFormManual"
                                                   (click)="closeDialogEditAdjustFactor()">
