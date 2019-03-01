@@ -1,11 +1,9 @@
 package br.com.basis.abaco.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import org.hibernate.annotations.Cache;
@@ -30,7 +28,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
+
 import java.util.Objects;
 import java.util.Set;
 
@@ -43,157 +41,142 @@ import java.util.Set;
 @Document(indexName = "contrato")
 public class Contrato implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+	@SequenceGenerator(name = "sequenceGenerator")
+	private Long id;
 
-    @Column(name = "numero_contrato")
-    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
-    private String numeroContrato;
+	@Column(name = "numero_contrato")
+	@Field(index = FieldIndex.not_analyzed, type = FieldType.String)
+	private String numeroContrato;
 
-    @Column(name = "data_inicio_vigencia")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate dataInicioVigencia;
+	@Column(name = "data_inicio_vigencia")
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+	private LocalDate dataInicioVigencia;
 
-    @Column(name = "data_fim_vigencia")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate dataFimVigencia;
+	@Column(name = "data_fim_vigencia")
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+	private LocalDate dataFimVigencia;
 
-    /*@ManyToOne(fetch=FetchType.LAZY)
-    @JsonIgnore
-    private Manual manual;*/
-   
-    @JsonManagedReference
-    @OneToMany(mappedBy="contratos", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ManualContrato> manualContrato = new HashSet<>();
+	@JsonManagedReference
+	@OneToMany(mappedBy = "contratos", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<ManualContrato> manualContrato = new HashSet<>();
 
-    @ManyToOne
-    @JsonBackReference
-    private Organizacao organization;
+	@ManyToOne
+	@JsonBackReference
+	private Organizacao organization;
 
-    @NotNull
-    @Column(name = "ativo", nullable = true)
-    private Boolean ativo;
-    
-    @Column(name = "dias_de_garantia")
-    private Integer diasDeGarantia;
+	@NotNull
+	@Column(name = "ativo", nullable = true)
+	private Boolean ativo;
 
-    public Long getId() {
-        return id;
-    }
+	@Column(name = "dias_de_garantia")
+	private Integer diasDeGarantia;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getNumeroContrato() {
-        return numeroContrato;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Contrato numeroContrato(String numeroContrato) {
-        this.numeroContrato = numeroContrato;
-        return this;
-    }
+	public String getNumeroContrato() {
+		return numeroContrato;
+	}
 
-    public void setNumeroContrato(String numeroContrato) {
-        this.numeroContrato = numeroContrato;
-    }
+	public Contrato numeroContrato(String numeroContrato) {
+		this.numeroContrato = numeroContrato;
+		return this;
+	}
 
-    public LocalDate getDataInicioVigencia() {
-        return dataInicioVigencia;
-    }
+	public void setNumeroContrato(String numeroContrato) {
+		this.numeroContrato = numeroContrato;
+	}
 
-    public Contrato dataInicioVigencia(LocalDate dataInicioVigencia) {
-        this.dataInicioVigencia = dataInicioVigencia;
-        return this;
-    }
+	public LocalDate getDataInicioVigencia() {
+		return dataInicioVigencia;
+	}
 
-    public void setDataInicioVigencia(LocalDate dataInicioVigencia) {
-        this.dataInicioVigencia = dataInicioVigencia;
-    }
+	public Contrato dataInicioVigencia(LocalDate dataInicioVigencia) {
+		this.dataInicioVigencia = dataInicioVigencia;
+		return this;
+	}
 
-    public LocalDate getDataFimVigencia() {
-        return dataFimVigencia;
-    }
+	public void setDataInicioVigencia(LocalDate dataInicioVigencia) {
+		this.dataInicioVigencia = dataInicioVigencia;
+	}
 
-    public Contrato dataFimVigencia(LocalDate dataFimVigencia) {
-        this.dataFimVigencia = dataFimVigencia;
-        return this;
-    }
+	public LocalDate getDataFimVigencia() {
+		return dataFimVigencia;
+	}
 
-    public void setDataFimVigencia(LocalDate dataFimVigencia) {
-        this.dataFimVigencia = dataFimVigencia;
-    }
-    
-    public void setManualContrato(Set<ManualContrato> manualContrato) {
-  		this.manualContrato = manualContrato;
-  	}
+	public Contrato dataFimVigencia(LocalDate dataFimVigencia) {
+		this.dataFimVigencia = dataFimVigencia;
+		return this;
+	}
 
+	public void setDataFimVigencia(LocalDate dataFimVigencia) {
+		this.dataFimVigencia = dataFimVigencia;
+	}
 
-    /*public Contrato manual(Manual manual) {
-        this.manual = manual;
-        return this;
-    }
+	public void setManualContrato(Set<ManualContrato> manualContrato) {
+		this.manualContrato = manualContrato;
+	}
 
-    public void setManual(Manual manual) {
-        this.manual = manual;
-    }*/
-
-    public Organizacao getOrganization() {
-        return organization;
-    }
+	public Organizacao getOrganization() {
+		return organization;
+	}
 
 	public Set<ManualContrato> getManualContrato() {
 		return manualContrato;
 	}
 
-
 	public void setOrganization(Organizacao organization) {
-        this.organization = organization;
-    }
+		this.organization = organization;
+	}
 
-    public Boolean getAtivo() {
-        return ativo;
-    }
+	public Boolean getAtivo() {
+		return ativo;
+	}
 
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
-    }
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
+	}
 
-    public Integer getDiasDeGarantia() {
-        return diasDeGarantia;
-    }
+	public Integer getDiasDeGarantia() {
+		return diasDeGarantia;
+	}
 
-    public void setDiasDeGarantia(Integer diasDeGarantia) {
-        this.diasDeGarantia = diasDeGarantia;
-    }
+	public void setDiasDeGarantia(Integer diasDeGarantia) {
+		this.diasDeGarantia = diasDeGarantia;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Contrato contrato = (Contrato) o;
-        if (contrato.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, contrato.id);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Contrato contrato = (Contrato) o;
+		if (contrato.id == null || id == null) {
+			return false;
+		}
+		return Objects.equals(id, contrato.id);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
 
-    @Override
-    public String toString() {
-        return "Contrato{" + "id=" + id + ", numeroContrato='" + numeroContrato + "'" + ", dataInicioVigencia='"
-                + dataInicioVigencia + "'" + ", dataFimVigencia='" + dataFimVigencia + "'" + '}';
-    }
+	@Override
+	public String toString() {
+		return "Contrato{" + "id=" + id + ", numeroContrato='" + numeroContrato + "'" + ", dataInicioVigencia='"
+				+ dataInicioVigencia + "'" + ", dataFimVigencia='" + dataFimVigencia + "'" + '}';
+	}
 }

@@ -2,7 +2,6 @@ package br.com.basis.abaco.domain;
 
 import br.com.basis.dynamicexports.pojo.ReportObject;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
@@ -42,134 +41,133 @@ import java.util.Set;
 @Document(indexName = "manual")
 public class Manual implements Serializable, ReportObject {
 
-    private static final long serialVersionUID = 1L;
-    private static final String MINPERCENT = "0";
-    private static final String MAXPERCENT = "100";
+	private static final long serialVersionUID = 1L;
+	private static final String MINPERCENT = "0";
+	private static final String MAXPERCENT = "100";
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+	@SequenceGenerator(name = "sequenceGenerator")
+	private Long id;
 
-    @Column(name = "nome")
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
-    private String nome;
+	@Column(name = "nome")
+	@Field(index = FieldIndex.not_analyzed, type = FieldType.String)
+	private String nome;
 
-    @Size(max = 4000)
-    @Column(name = "observacao", length = 4000)
-    private String observacao;
+	@Size(max = 4000)
+	@Column(name = "observacao", length = 4000)
+	private String observacao;
 
-    @NotNull
-    @DecimalMin(value = MINPERCENT)
-    @DecimalMax(value = MAXPERCENT)
-    @Column(name = "valor_variacao_estimada", precision = 10, scale = 4, nullable = false)
-    private BigDecimal valorVariacaoEstimada;
+	@NotNull
+	@DecimalMin(value = MINPERCENT)
+	@DecimalMax(value = MAXPERCENT)
+	@Column(name = "valor_variacao_estimada", precision = 10, scale = 4, nullable = false)
+	private BigDecimal valorVariacaoEstimada;
 
-    @NotNull
-    @DecimalMin(value = MINPERCENT)
-    @DecimalMax(value = MAXPERCENT)
-    @Column(name = "valor_variacao_indicativa", precision = 10, scale = 4, nullable = false)
-    private BigDecimal valorVariacaoIndicativa;
+	@NotNull
+	@DecimalMin(value = MINPERCENT)
+	@DecimalMax(value = MAXPERCENT)
+	@Column(name = "valor_variacao_indicativa", precision = 10, scale = 4, nullable = false)
+	private BigDecimal valorVariacaoIndicativa;
 
-    @Column(name="arquivo_manual_id")
-    private int arquivoManualId;
+	@Column(name = "arquivo_manual_id")
+	private int arquivoManualId;
 
-    @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JsonManagedReference
-    private Set<EsforcoFase> esforcoFases = new HashSet<>();
+	@OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@JsonManagedReference
+	private Set<EsforcoFase> esforcoFases = new HashSet<>();
 
-    @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JsonManagedReference
-    private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
+	@OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@JsonManagedReference
+	private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
 
-    @DecimalMin(value = MINPERCENT)
-    @DecimalMax(value = MAXPERCENT)
-    @Column(name = "parametro_inclusao")
-    private BigDecimal parametroInclusao;
+	@DecimalMin(value = MINPERCENT)
+	@DecimalMax(value = MAXPERCENT)
+	@Column(name = "parametro_inclusao")
+	private BigDecimal parametroInclusao;
 
-    @DecimalMin(value = MINPERCENT)
-    @DecimalMax(value = MAXPERCENT)
-    @Column(name = "parametro_alteracao")
-    private BigDecimal parametroAlteracao;
+	@DecimalMin(value = MINPERCENT)
+	@DecimalMax(value = MAXPERCENT)
+	@Column(name = "parametro_alteracao")
+	private BigDecimal parametroAlteracao;
 
-    @DecimalMin(value = MINPERCENT)
-    @DecimalMax(value = MAXPERCENT)
-    @Column(name = "parametro_exclusao")
-    private BigDecimal parametroExclusao;
-    
-    @DecimalMin(value = MINPERCENT)
-    @DecimalMax(value = MAXPERCENT)
-    @Column(name = "parametro_conversao")
-    private BigDecimal parametroConversao;
-    
-    @Column(name="versao_cpm")
-    private Long versaoCPM;
-    
-    //@JsonBackReference(value = "manualContrato")
-    @OneToMany(mappedBy="manual", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ManualContrato> manualContratos = new LinkedHashSet<>();
-    
-    public Long getId() {
-        return id;
-    }
+	@DecimalMin(value = MINPERCENT)
+	@DecimalMax(value = MAXPERCENT)
+	@Column(name = "parametro_exclusao")
+	private BigDecimal parametroExclusao;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@DecimalMin(value = MINPERCENT)
+	@DecimalMax(value = MAXPERCENT)
+	@Column(name = "parametro_conversao")
+	private BigDecimal parametroConversao;
 
-    public String getNome() {
-        return nome;
-    }
+	@Column(name = "versao_cpm")
+	private Long versaoCPM;
 
-    public Manual nome(String nome) {
-        this.nome = nome;
-        return this;
-    }
+	@OneToMany(mappedBy = "manual", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<ManualContrato> manualContratos = new LinkedHashSet<>();
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getObservacao() {
-        return observacao;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Manual observacao(String observacao) {
-        this.observacao = observacao;
-        return this;
-    }
+	public String getNome() {
+		return nome;
+	}
 
-    public void setObservacao(String observacao) {
-        this.observacao = observacao;
-    }
+	public Manual nome(String nome) {
+		this.nome = nome;
+		return this;
+	}
 
-    public BigDecimal getValorVariacaoEstimada() {
-        return valorVariacaoEstimada;
-    }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-    public Manual valorVariacaoEstimada(BigDecimal valorVariacaoEstimada) {
-        this.valorVariacaoEstimada = valorVariacaoEstimada;
-        return this;
-    }
+	public String getObservacao() {
+		return observacao;
+	}
 
-    public void setValorVariacaoEstimada(BigDecimal valorVariacaoEstimada) {
-        this.valorVariacaoEstimada = valorVariacaoEstimada;
-    }
+	public Manual observacao(String observacao) {
+		this.observacao = observacao;
+		return this;
+	}
 
-    public BigDecimal getValorVariacaoIndicativa() {
-        return valorVariacaoIndicativa;
-    }
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
 
-    public Manual valorVariacaoIndicativa(BigDecimal valorVariacaoIndicativa) {
-        this.valorVariacaoIndicativa = valorVariacaoIndicativa;
-        return this;
-    }
+	public BigDecimal getValorVariacaoEstimada() {
+		return valorVariacaoEstimada;
+	}
 
-    public void setValorVariacaoIndicativa(BigDecimal valorVariacaoIndicativa) {
-        this.valorVariacaoIndicativa = valorVariacaoIndicativa;
-    }
+	public Manual valorVariacaoEstimada(BigDecimal valorVariacaoEstimada) {
+		this.valorVariacaoEstimada = valorVariacaoEstimada;
+		return this;
+	}
 
-    public int getArquivoManualId() {
+	public void setValorVariacaoEstimada(BigDecimal valorVariacaoEstimada) {
+		this.valorVariacaoEstimada = valorVariacaoEstimada;
+	}
+
+	public BigDecimal getValorVariacaoIndicativa() {
+		return valorVariacaoIndicativa;
+	}
+
+	public Manual valorVariacaoIndicativa(BigDecimal valorVariacaoIndicativa) {
+		this.valorVariacaoIndicativa = valorVariacaoIndicativa;
+		return this;
+	}
+
+	public void setValorVariacaoIndicativa(BigDecimal valorVariacaoIndicativa) {
+		this.valorVariacaoIndicativa = valorVariacaoIndicativa;
+	}
+
+	public int getArquivoManualId() {
 		return arquivoManualId;
 	}
 
@@ -178,31 +176,31 @@ public class Manual implements Serializable, ReportObject {
 	}
 
 	public Set<EsforcoFase> getEsforcoFases() {
-        return esforcoFases;
-    }
+		return esforcoFases;
+	}
 
-    public Manual esforcoFases(Set<EsforcoFase> esforcoFases) {
-        this.esforcoFases = esforcoFases;
-        return this;
-    }
+	public Manual esforcoFases(Set<EsforcoFase> esforcoFases) {
+		this.esforcoFases = esforcoFases;
+		return this;
+	}
 
-    public Manual addEsforcoFase(EsforcoFase esforcoFase) {
-        this.esforcoFases.add(esforcoFase);
-        esforcoFase.setManual(this);
-        return this;
-    }
+	public Manual addEsforcoFase(EsforcoFase esforcoFase) {
+		this.esforcoFases.add(esforcoFase);
+		esforcoFase.setManual(this);
+		return this;
+	}
 
-    public Manual removeEsforcoFase(EsforcoFase esforcoFase) {
-        this.esforcoFases.remove(esforcoFase);
-        esforcoFase.setManual(null);
-        return this;
-    }
+	public Manual removeEsforcoFase(EsforcoFase esforcoFase) {
+		this.esforcoFases.remove(esforcoFase);
+		esforcoFase.setManual(null);
+		return this;
+	}
 
-    public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {
-        this.esforcoFases = esforcoFases;
-    }
+	public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {
+		this.esforcoFases = esforcoFases;
+	}
 
-    public Set<FatorAjuste> getFatoresAjuste() {
+	public Set<FatorAjuste> getFatoresAjuste() {
 		return fatoresAjuste;
 	}
 
@@ -249,8 +247,7 @@ public class Manual implements Serializable, ReportObject {
 	public void setVersaoCPM(Long versaoCPM) {
 		this.versaoCPM = versaoCPM;
 	}
-	
-	
+
 	@JsonIgnore
 	public Set<ManualContrato> getManualContratos() {
 		return manualContratos;
@@ -261,34 +258,29 @@ public class Manual implements Serializable, ReportObject {
 	}
 
 	@Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Manual manual = (Manual) o;
-        if (manual.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, manual.id);
-    }
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Manual manual = (Manual) o;
+		if (manual.id == null || id == null) {
+			return false;
+		}
+		return Objects.equals(id, manual.id);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
 
-    @Override
-    public String toString() {
-        return "Manual{" +
-            "id=" + id +
-            ", nome='" + nome + "'" +
-            ", observacao='" + observacao + "'" +
-            ", valorVariacaoEstimada='" + valorVariacaoEstimada + "'" +
-            ", valorVariacaoIndicativa='" + valorVariacaoIndicativa + "'" +
-            ", arquivoManualId='" + arquivoManualId + "'" +
-            '}';
-    }
+	@Override
+	public String toString() {
+		return "Manual{" + "id=" + id + ", nome='" + nome + "'" + ", observacao='" + observacao + "'"
+				+ ", valorVariacaoEstimada='" + valorVariacaoEstimada + "'" + ", valorVariacaoIndicativa='"
+				+ valorVariacaoIndicativa + "'" + ", arquivoManualId='" + arquivoManualId + "'" + '}';
+	}
 }
