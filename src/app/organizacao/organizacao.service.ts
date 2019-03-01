@@ -54,7 +54,6 @@ export class OrganizacaoService {
   find(id: number): Observable<Organizacao> {
     return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
       const jsonResponse = res.json();
-      console.log('find', jsonResponse);
       return this.convertFromJSON(jsonResponse);
     }).catch((error: any) => {
         if (error.status === 403) {

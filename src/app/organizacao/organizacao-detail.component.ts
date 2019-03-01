@@ -31,7 +31,6 @@ export class OrganizacaoDetailComponent implements OnInit, OnDestroy {
   load(id) {
     this.organizacaoService.find(id).subscribe((organizacao) => {
       this.organizacao = organizacao;
-      console.log('load organização detail ', organizacao);
 
 
       /*

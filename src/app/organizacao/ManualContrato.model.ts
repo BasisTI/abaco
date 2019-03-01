@@ -15,7 +15,6 @@ export class ManualContrato implements BaseEntity, JSONable<ManualContrato> {
         public dataInicioVigencia?: Date,
         public dataFimVigencia?: Date,
         public ativo?: boolean,
-        public garantia?: number
     ) {
         /*
         if (manuais) {
@@ -40,7 +39,7 @@ export class ManualContrato implements BaseEntity, JSONable<ManualContrato> {
     copyFromJSON(json: any) {
         // const manuais: Manual[] = json.manual.map(m => new Manual().copyFromJSON(m));
         const newManualContrato = new ManualContrato(json.id, null, json.manual, json.contratos
-            , json.dataInicioVigencia, json.dataFimVigencia, json.ativo, json.garantia);
+            , json.dataInicioVigencia, json.dataFimVigencia, json.ativo);
         return newManualContrato;
     }
 

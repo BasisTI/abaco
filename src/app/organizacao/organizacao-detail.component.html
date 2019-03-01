@@ -7,7 +7,7 @@
       <div class="ui-g">
 
         <div class="ui-g-4">
-          <!--img src="data:image/png;base64,{{logo}}" style="max-width:100%; height:auto;" alt="" -->
+        <!--  <img src="data:image/png;base64,{{logo}}" style="max-width:100%; height:auto;" alt="" > -->
         </div>
 
       </div>
@@ -72,11 +72,9 @@
               header="Manuais" 
               [sorteble]="true">
               <ng-template let-col let-row="rowData" pTemplate="body">
-                <div *ngFor="let manualContrato of row.manualContrato">
-                  <li *ngFor="let manual of manualContrato.manual">
-                    {{ manual }}
-                  </li>
-                </div>
+                <li *ngFor="let manualContrato of row.manualContrato">
+                  {{ manualContrato.manual.nome }}
+                </li>
               </ng-template>
             </p-column>
             

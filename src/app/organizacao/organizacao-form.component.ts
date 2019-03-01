@@ -229,21 +229,14 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     resetObj(manualContrato: ManualContrato) {
-        manualContrato = {
-            manual: null,
-            dataInicioVigencia: null,
-            dataFimVigencia: null,
-            ativo: false,
-            contratos: null,
-            id: null,
-        };
+        manualContrato = new ManualContrato();
     }
 
     setManualContrato(contrato: Contrato): ManualContrato {
         let manualContrato = new ManualContrato(null, null, this.novoManual,
             /**contrato deve ser null para não loop */null,
             this.manualInicioVigencia, this.manualFimVigencia,
-            this.manualAtivo, this.garantia);
+            this.manualAtivo);
         // manualContrato.addManual(this.novoManual);
         return manualContrato;
     }
