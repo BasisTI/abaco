@@ -53,7 +53,7 @@ public class ManualContrato implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 	
-	@JsonBackReference(value="manual")
+	//@JsonManagedReference(value = "manualContrato")
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Manual manual;
 	

@@ -105,7 +105,7 @@ public class Manual implements Serializable, ReportObject {
     @Column(name="versao_cpm")
     private Long versaoCPM;
     
-    @JsonManagedReference(value="manual")
+    //@JsonBackReference(value = "manualContrato")
     @OneToMany(mappedBy="manual", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ManualContrato> manualContratos = new LinkedHashSet<>();
     
