@@ -1,7 +1,7 @@
 package br.com.basis.abaco.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -59,6 +59,10 @@ public class Contrato implements Serializable {
 	@Column(name = "data_fim_vigencia")
 	@JsonDeserialize(using = LocalDateDeserializer.class)
 	private LocalDate dataFimVigencia;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
+    private Manual manual;
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "contratos", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -152,6 +156,15 @@ public class Contrato implements Serializable {
 
 	public void setDiasDeGarantia(Integer diasDeGarantia) {
 		this.diasDeGarantia = diasDeGarantia;
+	}
+
+	public Manual getManual() {
+		Manual m = this.manual;
+		return m;
+	}
+
+	public void setManual(Manual manual) {
+		this.manual = manual;
 	}
 
 	@Override
