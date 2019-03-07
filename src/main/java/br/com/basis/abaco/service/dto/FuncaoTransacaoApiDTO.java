@@ -13,157 +13,157 @@ import java.util.Set;
 
 public class FuncaoTransacaoApiDTO {
 
-    private Long id;
+  private Long id;
 
-    private Complexidade complexidade;
+  private Complexidade complexidade;
 
-    private BigDecimal pf;
+  private BigDecimal pf;
 
-    private BigDecimal grossPF;
+  private BigDecimal grossPF;
 
-    private FuncionalidadeDTO funcionalidade;
+  private FuncionalidadeDTO funcionalidade;
 
-    private String detStr;
+  private String detStr;
 
-    private FatorAjusteDTO fatorAjuste;
+  private FatorAjusteDTO fatorAjuste;
 
-    private String name;
+  private String name;
 
-    private String sustantation;
+  private String sustantation;
 
-    private TipoFuncaoTransacao tipo;
+  private TipoFuncaoTransacao tipo;
 
-    private String ftrStr;
+  private String ftrStr;
 
-    private Integer quantidade;
+  private Integer quantidade;
 
-    private Set<AlrFtDTO> alrs = new HashSet<>();
+  private Set<AlrFtDTO> alrs = new HashSet<>();
 
-    private ImpactoFatorAjuste impacto;
+  private ImpactoFatorAjuste impacto;
 
-    private Set<DerFtDTO> ders = new HashSet<>();
+  private Set<DerFtDTO> ders = new HashSet<>();
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Complexidade getComplexidade() {
-        return complexidade;
-    }
+  public Complexidade getComplexidade() {
+    return complexidade;
+  }
 
-    public void setComplexidade(Complexidade complexidade) {
-        this.complexidade = complexidade;
-    }
+  public void setComplexidade(Complexidade complexidade) {
+    this.complexidade = complexidade;
+  }
 
-    public BigDecimal getPf() {
-        return pf;
-    }
+  public BigDecimal getPf() {
+    return pf;
+  }
 
-    public void setPf(BigDecimal pf) {
-        this.pf = pf;
-    }
+  public void setPf(BigDecimal pf) {
+    this.pf = pf;
+  }
 
-    public BigDecimal getGrossPF() {
-        return grossPF;
-    }
+  public BigDecimal getGrossPF() {
+    return grossPF;
+  }
 
-    public void setGrossPF(BigDecimal grossPF) {
-        this.grossPF = grossPF;
-    }
+  public void setGrossPF(BigDecimal grossPF) {
+    this.grossPF = grossPF;
+  }
 
-    public FuncionalidadeDTO getFuncionalidade() {
-        return funcionalidade;
-    }
+  public FuncionalidadeDTO getFuncionalidade() {
+    return funcionalidade;
+  }
 
-    public void setFuncionalidade(FuncionalidadeDTO funcionalidade) {
-        this.funcionalidade = funcionalidade;
-    }
+  public void setFuncionalidade(FuncionalidadeDTO funcionalidade) {
+    this.funcionalidade = funcionalidade;
+  }
 
-    public String getDetStr() {
-        return detStr;
-    }
+  public String getDetStr() {
+    return detStr;
+  }
 
-    public void setDetStr(String detStr) {
-        this.detStr = detStr;
-    }
+  public void setDetStr(String detStr) {
+    this.detStr = detStr;
+  }
 
-    public FatorAjusteDTO getFatorAjuste() {
-        return fatorAjuste;
-    }
+  public FatorAjusteDTO getFatorAjuste() {
+    return fatorAjuste;
+  }
 
-    public void setFatorAjuste(FatorAjusteDTO fatorAjuste) {
-        this.fatorAjuste = fatorAjuste;
-    }
+  public void setFatorAjuste(FatorAjusteDTO fatorAjuste) {
+    this.fatorAjuste = fatorAjuste;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getSustantation() {
-        return sustantation;
-    }
+  public String getSustantation() {
+    return sustantation;
+  }
 
-    public void setSustantation(String sustantation) {
-        this.sustantation = sustantation;
-    }
+  public void setSustantation(String sustantation) {
+    this.sustantation = sustantation;
+  }
 
-    public TipoFuncaoTransacao getTipo() {
-        return tipo;
-    }
+  public TipoFuncaoTransacao getTipo() {
+    return tipo;
+  }
 
-    public void setTipo(TipoFuncaoTransacao tipo) {
-        this.tipo = tipo;
-    }
+  public void setTipo(TipoFuncaoTransacao tipo) {
+    this.tipo = tipo;
+  }
 
-    public String getFtrStr() {
-        return ftrStr;
-    }
+  public String getFtrStr() {
+    return ftrStr;
+  }
 
-    public void setFtrStr(String ftrStr) {
-        this.ftrStr = ftrStr;
-    }
+  public void setFtrStr(String ftrStr) {
+    this.ftrStr = ftrStr;
+  }
 
-    public Integer getQuantidade() {
-        return quantidade;
-    }
+  public Integer getQuantidade() {
+    return quantidade;
+  }
 
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
+  public void setQuantidade(Integer quantidade) {
+    this.quantidade = quantidade;
+  }
 
-    public Set<AlrFtDTO> getAlrs() {
-        Set<AlrFtDTO> alrs = this.alrs;
-        return alrs;
-    }
+  public Set<AlrFtDTO> getAlrs() {
+    Set<AlrFtDTO> alrs = this.alrs;
+    return alrs;
+  }
 
-    public void setAlrs(Set<AlrFtDTO> alrs) {
-        Set<AlrFtDTO> alrss = alrs;
-        this.alrs = alrss;
-    }
+  public void setAlrs(Set<AlrFtDTO> alrs) {
+    Set<AlrFtDTO> alrss = alrs;
+    this.alrs = alrss;
+  }
 
-    public ImpactoFatorAjuste getImpacto() {
-        return impacto;
-    }
+  public ImpactoFatorAjuste getImpacto() {
+    return impacto;
+  }
 
-    public void setImpacto(ImpactoFatorAjuste impacto) {
-        this.impacto = impacto;
-    }
+  public void setImpacto(ImpactoFatorAjuste impacto) {
+    this.impacto = impacto;
+  }
 
-    public Set<DerFtDTO> getDers() {
-        Set<DerFtDTO> ders = this.ders;
-        return ders;
-    }
+  public Set<DerFtDTO> getDers() {
+    Set<DerFtDTO> ders = this.ders;
+    return ders;
+  }
 
-    public void setDers(Set<DerFtDTO> ders) {
-        Set<DerFtDTO> derss = ders;
-        this.ders = derss;
-    }
+  public void setDers(Set<DerFtDTO> ders) {
+    Set<DerFtDTO> derss = ders;
+    this.ders = derss;
+  }
 }
