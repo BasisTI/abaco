@@ -8,7 +8,6 @@ import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-
 /**
  * @author alexandre.costa
  * @since 27/02/2019
