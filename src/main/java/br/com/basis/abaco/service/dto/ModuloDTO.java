@@ -9,35 +9,35 @@ import java.util.Set;
  */
 public class ModuloDTO {
 
-  private Long id;
+    private Long id;
 
-  private String nome;
+    private String nome;
 
-  private Set<FuncionalidadesDTO> funcionalidades = new HashSet<>();
+    private Set<FuncionalidadesDTO> funcionalidades = new HashSet<>();
 
-  public Long getId() {
-    return id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public String getNome() {
-    return nome;
-  }
+    public String getNome() {
+        return nome;
+    }
 
-  public void setNome(String nome) {
-    this.nome = nome;
-  }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-  public Set<FuncionalidadesDTO> getFuncionalidades() {
-    Set<FuncionalidadesDTO> funcionalidades = this.funcionalidades;
-    return funcionalidades;
-  }
+    public Set<FuncionalidadesDTO> getFuncionalidades() {
+        Set<FuncionalidadesDTO> funcionalidades = this.funcionalidades;
+        return funcionalidades;
+    }
 
-  public void setFuncionalidades(Set<FuncionalidadesDTO> funcionalidades) {
-    Set<FuncionalidadesDTO> funcionalidadess = funcionalidades;
-    this.funcionalidades = funcionalidadess;
-  }
+    public void setFuncionalidades(Set<FuncionalidadesDTO> funcionalidades) {
+        Set<FuncionalidadesDTO> funcionalidadess = funcionalidades;
+        this.funcionalidades = funcionalidadess;
+    }
 }
