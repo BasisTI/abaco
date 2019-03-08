@@ -1,6 +1,7 @@
 package br.com.basis.abaco.service.dto;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -32,10 +33,10 @@ public class ModuloDTO {
     }
 
     public Set<FuncionalidadesDTO> getFuncionalidades() {
-        return funcionalidades;
+        return new LinkedHashSet<FuncionalidadesDTO>(funcionalidades);
     }
 
     public void setFuncionalidades(Set<FuncionalidadesDTO> funcionalidades) {
-        this.funcionalidades = funcionalidades;
+        this.funcionalidades = new LinkedHashSet<FuncionalidadesDTO>(funcionalidades);
     }
 }
