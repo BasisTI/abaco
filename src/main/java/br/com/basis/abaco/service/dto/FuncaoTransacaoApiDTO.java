@@ -9,6 +9,7 @@ import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class FuncaoTransacaoApiDTO {
@@ -140,11 +141,11 @@ public class FuncaoTransacaoApiDTO {
     }
 
     public Set<AlrFtDTO> getAlrs() {
-        return alrs;
+        return new LinkedHashSet<AlrFtDTO>(alrs);
     }
 
     public void setAlrs(Set<AlrFtDTO> alrs) {
-        this.alrs = alrs;
+        this.alrs = new LinkedHashSet<AlrFtDTO>(alrs);
     }
 
     public ImpactoFatorAjuste getImpacto() {
@@ -156,10 +157,11 @@ public class FuncaoTransacaoApiDTO {
     }
 
     public Set<DerFtDTO> getDers() {
-        return ders;
+        return new LinkedHashSet<DerFtDTO>(ders);
+
     }
 
     public void setDers(Set<DerFtDTO> ders) {
-        this.ders = ders;
+        this.ders = new LinkedHashSet<DerFtDTO>(ders);
     }
 }
