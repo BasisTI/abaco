@@ -108,7 +108,7 @@ public class Analise implements Serializable, ReportObject {
     @ManyToOne
     private Sistema sistema;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     private Contrato contrato;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -517,11 +517,11 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Timestamp getDataCriacaoOrdemServico() {
-        return dataCriacaoOrdemServico;
+      return new Timestamp(dataCriacaoOrdemServico.getTime());
     }
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
-        this.dataCriacaoOrdemServico = dataCriacaoOrdemServico;
+        this.dataCriacaoOrdemServico = new Timestamp(dataCriacaoOrdemServico.getTime());;
     }
 
     public Timestamp getDataHomologacao() {
