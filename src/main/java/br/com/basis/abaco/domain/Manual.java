@@ -283,4 +283,23 @@ public class Manual implements Serializable, ReportObject {
         + ", valorVariacaoEstimada='" + valorVariacaoEstimada + "'" + ", valorVariacaoIndicativa='"
         + valorVariacaoIndicativa + "'" + ", arquivoManualId='" + arquivoManualId + "'" + '}';
   }
+  
+  public Manual clone() {
+    Manual manual = new Manual();
+    manual.setArquivoManualId(arquivoManualId);
+    manual.setEsforcoFases(esforcoFases);
+    manual.setFatoresAjuste(fatoresAjuste);
+    manual.setId(id);
+    manual.setManualContratos(manualContratos);
+    manual.setNome(nome);
+    manual.setObservacao(observacao);
+    manual.setParametroAlteracao(parametroAlteracao);
+    manual.setParametroConversao(parametroConversao);
+    manual.setParametroExclusao(parametroExclusao);
+    manual.setParametroInclusao(parametroInclusao);
+    manual.setValorVariacaoEstimada(valorVariacaoEstimada);
+    manual.setValorVariacaoIndicativa(valorVariacaoIndicativa);
+    manual.setVersaoCPM(versaoCPM);
+    return manual;
+  }
 }

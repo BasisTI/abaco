@@ -517,11 +517,11 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Timestamp getDataCriacaoOrdemServico() {
-        return dataCriacaoOrdemServico;
+      return new Timestamp(dataCriacaoOrdemServico.getTime());
     }
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
-        this.dataCriacaoOrdemServico = dataCriacaoOrdemServico;
+        this.dataCriacaoOrdemServico = new Timestamp(dataCriacaoOrdemServico.getTime());;
     }
 
     public Timestamp getDataHomologacao() {

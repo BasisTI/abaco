@@ -159,8 +159,7 @@ public class Contrato implements Serializable {
   }
 
   public Manual getManual() {
-    Manual m = this.manual;
-    return m;
+    return this.manual.clone();
   }
 
   public void setManual(Manual manual) {

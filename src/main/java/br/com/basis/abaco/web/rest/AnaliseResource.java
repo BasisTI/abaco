@@ -509,24 +509,32 @@ public class AnaliseResource {
         List<Long> equipesIds = new ArrayList<>();
         List<BigInteger> idsAnalises;
 
-        for (TipoEquipe equipes : listaEquipes){
+        for (TipoEquipe equipes : listaEquipes)
             equipesIds.add(equipes.getId());
-        }
-        if (equipesIds.size() != 0) {
-            idsAnalises = analiseRepository.listAnalisesEquipe(equipesIds);
-            if (idsAnalises.size() != 0) {
-                Page<Grupo> page = grupoRepository.findByIdAnalises(this.converteListaBigIntLong(idsAnalises),
-                    identificador.orElse(null), sistema.orElse(null), metodo.orElse(null),
-                    organizacao.orElse(null), equipe.orElse(null), pageable);
-                HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/equipes");
-                return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-            }
-        }
+        
+        return verificaEquipe(identificador, sistema, metodo, organizacao, equipe, pageable, equipesIds);
 
 
-        return new ResponseEntity<>(new ArrayList<Grupo>(), null, HttpStatus.OK);
+    }
+
+    private ResponseEntity<List<Grupo>> verificaEquipe(Optional<String> identificador, Optional<String> sistema,
+        Optional<String> metodo, Optional<String> organizacao, Optional<String> equipe, Pageable pageable,
+        List<Long> equipesIds) throws URISyntaxException {
+      
+      List<BigInteger> idsAnalises;
+      if (equipesIds.size() != 0) {
+          idsAnalises = analiseRepository.listAnalisesEquipe(equipesIds);
+          if (idsAnalises.size() != 0) {
+              Page<Grupo> page = grupoRepository.findByIdAnalises(this.converteListaBigIntLong(idsAnalises),
+                  identificador.orElse(null), sistema.orElse(null), metodo.orElse(null),
+                  organizacao.orElse(null), equipe.orElse(null), pageable);
+              HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/equipes");
+              return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+          }
+      }
 
 
+      return new ResponseEntity<>(new ArrayList<Grupo>(), null, HttpStatus.OK);
     }
 
 
