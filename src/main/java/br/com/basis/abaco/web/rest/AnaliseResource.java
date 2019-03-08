@@ -507,7 +507,6 @@ public class AnaliseResource {
         List<TipoEquipe> listaEquipes = userRepository.findAllEquipesByLogin(SecurityUtils.getCurrentUserLogin());
 
         List<Long> equipesIds = new ArrayList<>();
-        List<BigInteger> idsAnalises;
 
         for (TipoEquipe equipes : listaEquipes) {
             equipesIds.add(equipes.getId());
