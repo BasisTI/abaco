@@ -509,8 +509,9 @@ public class AnaliseResource {
         List<Long> equipesIds = new ArrayList<>();
         List<BigInteger> idsAnalises;
 
-        for (TipoEquipe equipes : listaEquipes)
+        for (TipoEquipe equipes : listaEquipes) {
             equipesIds.add(equipes.getId());
+        }
         
         return verificaEquipe(identificador, sistema, metodo, organizacao, equipe, pageable, equipesIds);
 
