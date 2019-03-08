@@ -275,7 +275,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular o manual do contrato
      */
     setManual(manual: Manual) {
-        console.log('manual Selecionado', manual);
         if (manual) {
             this.nomeManual = manual.nome;
             this.carregarEsforcoFases(manual);
@@ -455,6 +454,22 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * @param contrato
      */
     contratoSelected(contrato: Contrato) {
+        this.setManuais(contrato);
+        this.setManual(contrato.manualContrato[0].manual);
+        this.manual = contrato.manualContrato[0].manual;
+        this.diasGarantia = this.analise.contrato.diasDeGarantia;
+        this.analise.baselineImediatamente = true;
+        this.analise.enviarBaseline = true;
+    }
+
+    setManuais(contrato: Contrato) {
+        contrato.manualContrato.sort( (a, b): number => {
+            if (a.dataInicioVigencia < b.dataFimVigencia ) {
+                return 1;
+            }
+            return -1;
+        } );
+        this.resetManuais();
         contrato.manualContrato.forEach( item => {
             this.manuais.push(item.manual);
             this.manuaisCombo.push({
@@ -462,12 +477,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 value: item.manual
             });
         } );
-        console.log('manuais', this.manuais);
-        this.setManual(contrato.manualContrato[0].manual);
-        this.manual = contrato.manualContrato[0].manual;
-        this.diasGarantia = this.analise.contrato.diasDeGarantia;
-        this.analise.baselineImediatamente = true;
-        this.analise.enviarBaseline = true;
+    }
+
+    resetManuais() {
+        this.manuais = [];
+        this.manuaisCombo = [];
     }
 
     manualSelecionado(manual: Manual) {
