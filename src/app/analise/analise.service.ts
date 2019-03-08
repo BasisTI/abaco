@@ -228,6 +228,7 @@ export class AnaliseService {
     this.blockUI.start('Procurando análise...');
     return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
       const jsonResponse = res.json();
+      console.log('ANALISE FROM SERVER', jsonResponse);
       const analiseJson = this.convertItemFromServer(jsonResponse);
       analiseJson.createdBy = jsonResponse.createdBy;
       this.blockUI.stop();

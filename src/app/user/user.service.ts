@@ -58,6 +58,7 @@ export class UserService {
   findCurrentUserActiveOrgs(): Observable<User> {
     return this.http.get(`${this.resourceUrl}/activeorgs`).map((res: Response) => {
       const jsonResponse = res.json();
+      console.log('findCurrentUserActiveOrgs', jsonResponse);
       return this.convertItemFromServer(jsonResponse);
     });
   }

@@ -221,12 +221,12 @@
                         <div class="ui-g-6" style="margin-bottom: 25px">
                             <span class="md-inputfield">
                                 <input type="text"
+                                    pKeyFilter="int"
                                     name="diasDeGarantia"
-                                    pkeyFilter="int"
                                     id="idDiasGarantiaContratoSaveFormOrganizacao"
                                     [(ngModel)]="garantia"
-                                    pInputText 
                                     placeholder="Dias de garantia *"
+                                    pInputText
                                     required/>
                                 <div *ngIf="this.validaDiasGarantia || (editForm1.controls['diasDeGarantia']
                                                 && !editForm1.controls['diasDeGarantia'].valid
@@ -432,8 +432,9 @@
 
                     <div class="ui-g-6" style="margin-bottom: 25px">
               <span class="md-inputfield">
-                <input type="number" mask="999" name="diasDeGarantia" id="idDiasGarantiaContratoEditFormOrganizacao"
-                       [(ngModel)]="contratoEmEdicao.diasDeGarantia" pInputText/>
+                <input type="text" mask="999" name="diasDeGarantia" id="idDiasGarantiaContratoEditFormOrganizacao"
+                       [(ngModel)]="contratoEmEdicao.diasDeGarantia" pInputText
+                       pKeyFilter="int"/>
                 <label>Dias de garantia</label>
               </span>
                     </div>

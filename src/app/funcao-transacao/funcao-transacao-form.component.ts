@@ -237,7 +237,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     private get manual() {
         if (this.analiseSharedDataService.analise.contrato) {
-            return this.analiseSharedDataService.analise.contrato.manual;
+            return this.analiseSharedDataService.analise.contrato.manualContrato[0].manual;
         }
         return undefined;
     }

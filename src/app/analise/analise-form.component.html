@@ -229,20 +229,20 @@
                                     </p-dropdown>
                                 </div>
 
-                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px
-                                " [hidden]="validacaoCampos">
+                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                                     <label>Manual</label>
-                                    <span class="md-inputfield">
-                                        <input
-                                                required
-                                                type="text"
-                                                id="idManual"
-                                                maxlength="100"
-                                                name="manualContrato"
-                                                disabled="true"
-                                                [(ngModel)]="nomeManual"
-                                                pInputText/>
-                                    </span>
+                                    <p-dropdown
+                                        required
+                                        [filter]="true"
+                                        id="idManual"
+                                        name="manualContrato"
+                                        disabled="{{ !isContratoSelected() }}"
+                                        [options]="manuaisCombo"
+                                        (onChange)="setManual($event.value)"
+                                        [(ngModel)]="manual"
+                                        [autoWidth]="false"
+                                        datakey="id">
+                                    </p-dropdown>
                                 </div>
 
                                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
