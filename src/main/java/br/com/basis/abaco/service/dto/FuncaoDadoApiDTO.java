@@ -7,6 +7,7 @@ import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 /**
  * @author alexandre.costa
@@ -88,13 +89,12 @@ public class FuncaoDadoApiDTO {
     }
 
     public Set<DerFdDTO> getDers() {
-        Set<DerFdDTO> ders = this.ders;
-        return ders;
+        return new LinkedHashSet<DerFdDTO>(ders);
+
     }
 
     public void setDers(Set<DerFdDTO> ders) {
-        Set<DerFdDTO> derss = ders;
-        this.ders = derss;
+        this.ders = new LinkedHashSet<DerFdDTO>(ders);
     }
 
     public String getDetStr() {
@@ -154,13 +154,11 @@ public class FuncaoDadoApiDTO {
     }
 
     public Set<RlrFdDTO> getRlrs() {
-        Set<RlrFdDTO> rlrs = this.rlrs;
-        return rlrs;
+        return new LinkedHashSet<RlrFdDTO>(rlrs);
     }
 
     public void setRlrs(Set<RlrFdDTO> rlrs) {
-        Set<RlrFdDTO> rlrss = rlrs;
-        this.rlrs = rlrss;
+        this.rlrs = new LinkedHashSet<RlrFdDTO>(rlrs);
     }
 
     public Alr getAlr() {
