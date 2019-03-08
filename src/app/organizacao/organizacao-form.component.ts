@@ -63,7 +63,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     fimVigencia;
     manualInicioVigencia: Date;
     manualFimVigencia: Date;
-    garantia;
+    garantia: Number;
     ativo;
     manualAtivo: boolean;
 

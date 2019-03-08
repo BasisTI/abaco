@@ -20,7 +20,7 @@ import {TipoEquipeService} from '../tipo-equipe';
 import {MessageUtil} from '../util/message.util';
 import {FatorAjuste} from '../fator-ajuste';
 import {EsforcoFase} from '../esforco-fase';
-import {Manual} from '../manual';
+import {Manual, ManualService} from '../manual';
 
 @Component({
     selector: 'jhi-analise-form',
@@ -62,6 +62,12 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     equipeResponsavel: SelectItem[] = [];
 
     nomeManual = MessageUtil.SELECIONE_CONTRATO;
+
+    manual: Manual;
+
+    manuais: Manual[] = [];
+
+    manuaisCombo: any[] = [];
 
     @BlockUI() blockUI: NgBlockUI;
 
@@ -222,7 +228,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.router.navigate([`/analise/${analiseCarregada.id}/view`]);
         }
         this.setSistemaOrganizacao(analiseCarregada.organizacao);
-        this.setManual(analiseCarregada.contrato);
+        this.setManual(
+            analiseCarregada.contrato.manualContrato[0].manual ?
+                        analiseCarregada.contrato.manualContrato[0].manual :
+                        new Manual());
         this.carregaFatorAjusteNaEdicao();
         this.isEdit = this.analise.identificadorAnalise == undefined ? true: false;
     }
@@ -265,13 +274,13 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     /**
      * Método responsável por popular o manual do contrato
      */
-    setManual(contrato: Contrato) {
-        if (contrato && contrato.manual) {
-            const manual: Manual = contrato.manual;
+    setManual(manual: Manual) {
+        if (manual) {
             this.nomeManual = manual.nome;
             this.carregarEsforcoFases(manual);
             this.carregarMetodosContagem(manual);
-            this.inicializaFatoresAjuste(manual);            
+            this.inicializaFatoresAjuste(manual);
+            this.manualSelecionado(manual);
         }
     }
 
@@ -445,11 +454,38 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * @param contrato
      */
     contratoSelected(contrato: Contrato) {
-        this.setManual(contrato);
+        this.setManuais(contrato);
+        this.setManual(contrato.manualContrato[0].manual);
+        this.manual = contrato.manualContrato[0].manual;
         this.diasGarantia = this.analise.contrato.diasDeGarantia;
-        this.analise.esforcoFases = _.cloneDeep(contrato.manual.esforcoFases);
         this.analise.baselineImediatamente = true;
         this.analise.enviarBaseline = true;
+    }
+
+    setManuais(contrato: Contrato) {
+        contrato.manualContrato.sort( (a, b): number => {
+            if (a.dataInicioVigencia < b.dataFimVigencia ) {
+                return 1;
+            }
+            return -1;
+        } );
+        this.resetManuais();
+        contrato.manualContrato.forEach( item => {
+            this.manuais.push(item.manual);
+            this.manuaisCombo.push({
+                label: item.manual.nome,
+                value: item.manual
+            });
+        } );
+    }
+
+    resetManuais() {
+        this.manuais = [];
+        this.manuaisCombo = [];
+    }
+
+    manualSelecionado(manual: Manual) {
+        this.analise.esforcoFases = _.cloneDeep(manual.esforcoFases);
     }
 
     /**
