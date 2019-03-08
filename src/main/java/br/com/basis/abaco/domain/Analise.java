@@ -108,7 +108,7 @@ public class Analise implements Serializable, ReportObject {
     @ManyToOne
     private Sistema sistema;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     private Contrato contrato;
 
     @ManyToOne(fetch = FetchType.EAGER)

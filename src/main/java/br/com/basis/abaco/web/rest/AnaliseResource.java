@@ -572,7 +572,8 @@ public class AnaliseResource {
         boolean retorno = checarPermissao(id);
 
         if (retorno) {
-            return analiseRepository.findOne(id);
+            Analise analise = analiseRepository.findOne(id);
+            return analise;
         } else {
             return null;
         }
