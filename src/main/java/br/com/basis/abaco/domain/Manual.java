@@ -39,7 +39,7 @@ import java.util.Set;
 @Table(name = "manual")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "manual")
-public class Manual implements Serializable, ReportObject {
+public class Manual implements Serializable, ReportObject, Cloneable {
 
   private static final long serialVersionUID = 1L;
   private static final String MINPERCENT = "0";
@@ -283,7 +283,8 @@ public class Manual implements Serializable, ReportObject {
         + ", valorVariacaoEstimada='" + valorVariacaoEstimada + "'" + ", valorVariacaoIndicativa='"
         + valorVariacaoIndicativa + "'" + ", arquivoManualId='" + arquivoManualId + "'" + '}';
   }
-  
+
+  @Override
   public Manual clone() {
     Manual manual = new Manual();
     manual.setArquivoManualId(arquivoManualId);
