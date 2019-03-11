@@ -283,7 +283,8 @@ public class Manual implements Serializable, ReportObject, Cloneable {
         + ", valorVariacaoEstimada='" + valorVariacaoEstimada + "'" + ", valorVariacaoIndicativa='"
         + valorVariacaoIndicativa + "'" + ", arquivoManualId='" + arquivoManualId + "'" + '}';
   }
-  
+
+  @Override
   public Manual clone() {
     Manual manual = new Manual();
     manual.setArquivoManualId(arquivoManualId);
