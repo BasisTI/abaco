@@ -168,12 +168,13 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 this.analiseService.find(params['id']).subscribe(analise => {
                     this.inicializaValoresAposCarregamento(analise);
                     this.analiseSharedDataService.analiseCarregada();
-                    this.dataAnalise = this.analise;
+                    this.dataAnalise = this.analise;                    
                     this.aguardarGarantia = this.analise.baselineImediatamente;
                     this.enviarParaBaseLine = this.analise.enviarBaseline;
                     this.setDataHomologacao();
                     this.setDataOrdemServico();
                     this.diasGarantia = this.getGarantia();
+                    this.contratoSelected(this.analise.contrato);
                     this.update();
                 });
             } else {
@@ -455,7 +456,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     contratoSelected(contrato: Contrato) {
         this.setManuais(contrato);
-        this.setManual(contrato.manualContrato[0].manual);
+        this.setManual(contrato.manualContrato[0].manual);        
         this.manual = contrato.manualContrato[0].manual;
         this.diasGarantia = this.analise.contrato.diasDeGarantia;
         this.analise.baselineImediatamente = true;
