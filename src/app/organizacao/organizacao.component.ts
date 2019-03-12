@@ -9,6 +9,7 @@ import { OrganizacaoService } from './organizacao.service';
 import { ElasticQuery } from '../shared';
 import { PageNotificationService } from '../shared/page-notification.service';
 import { NgxMaskModule } from 'ngx-mask';
+import {DomSanitizer} from '@angular/platform-browser';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class OrganizacaoComponent implements AfterViewInit, OnInit {
   rowsPerPageOptions: number[] = [5, 10, 20];
 
   constructor(
+    public _DomSanitizer: DomSanitizer,
     private router: Router,
     private organizacaoService: OrganizacaoService,
     private confirmationService: ConfirmationService,

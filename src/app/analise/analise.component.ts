@@ -12,6 +12,7 @@ import { MessageUtil } from '../util/message.util';
 import { Response } from '@angular/http';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Grupo, SearchGroup } from './grupo/grupo.model';
+import {ChangeDetectorRef } from '@angular/core';
 
 @Component({
     selector: 'jhi-analise',
@@ -58,7 +59,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
         private userService: UserService,
-        private grupoService: GrupoService
+        private grupoService: GrupoService,
+        private cdref: ChangeDetectorRef
     ) {}
 
     public ngOnInit() {
@@ -164,6 +166,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         this.recarregarDataTable();
+        this.cdref.detectChanges();
     }
 
     /**

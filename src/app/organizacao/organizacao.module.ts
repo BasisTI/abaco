@@ -77,4 +77,6 @@ import { TextMaskModule } from 'angular2-text-mask';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
+
+
 export class AbacoOrganizacaoModule {}

@@ -231,6 +231,7 @@ export class AnaliseService {
       const analiseJson = this.convertItemFromServer(jsonResponse);
       analiseJson.createdBy = jsonResponse.createdBy;
       this.blockUI.stop();
+      console.log(analiseJson)
       return analiseJson;
     });
   }

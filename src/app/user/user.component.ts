@@ -233,10 +233,7 @@ export class UserComponent implements AfterViewInit, OnInit {
     }
 
     recarregarDataTable() {
-        console.log(this.datatable.value);
-        console.log(this.query.valueOf);
-        
-        this.datatable.refresh(this.query.toLocaleLowerCase ? this.query : "*");
+        this.datatable.refresh(this.query ? this.query : "*");
     }
 
 }

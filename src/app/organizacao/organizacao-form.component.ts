@@ -156,6 +156,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             this.numeroContratoInvalido = true;
             this.pageNotificationService.addErrorMsg('Favor preencher o número do contrato');
             a = false;
+            console.log("entrou")
         }
         if ( (this.novoContrato.manualContrato === null || this.novoContrato.manualContrato === undefined)
             && (this.novoContrato.manualContrato.length > 0)) {
@@ -176,11 +177,15 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMsg('Preencher data de fim da vigência');
             a = false;
         }
+        if (this.novoContrato.diasDeGarantia === null || this.novoContrato.diasDeGarantia === undefined) {
+            this.pageNotificationService.addErrorMsg('Preencher Dias de Garantia!');
+            a = false;
+        }
 
         return a;
     }
 
-
+   
     adicionarContrato() {
 
         if (this.validaCamposContrato(this.novoContrato)) {
