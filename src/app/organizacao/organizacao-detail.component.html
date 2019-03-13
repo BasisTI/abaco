@@ -35,7 +35,7 @@
       <div class="ui-g" style="margin-bottom: 25px">
           <h4>Contratos</h4>
 
-          <basis-datatable
+          <app-memory-datatable
             [value]="organizacao.contracts"
             [immutable]="false" 
             id="idTabelaOrganizacaoDetailOrganizacao"
@@ -88,7 +88,7 @@
                 {{ ativo[col.field] ? 'Sim' : 'Não' }}
               </ng-template>
             </p-column>
-          </basis-datatable>
+          </app-memory-datatable>
 
         </div>
       <div class="ui-g">
