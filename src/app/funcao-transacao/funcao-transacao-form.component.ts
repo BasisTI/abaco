@@ -622,10 +622,14 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     openDialog(param: boolean) {
         this.carregarDadosBaseline();
         this.isEdit = param;
-        this.hideShowQuantidade = true;
         this.disableTRDER();
         this.configurarDialog();
         this.currentFuncaoTransacao.fatorAjuste = this.faS[0];
+        if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0] ) {
+            this.hideShowQuantidade = false;
+        }else{
+            this.hideShowQuantidade = true;
+        }
 
     }
 
@@ -654,10 +658,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 return {label: label,  value: fa};
             });
         
-        this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
-        
-
-
+        //Label "Nenhum" comentada
+        //this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
     }
 
     textChanged() {
