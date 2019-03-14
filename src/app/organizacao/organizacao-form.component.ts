@@ -156,7 +156,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             this.numeroContratoInvalido = true;
             this.pageNotificationService.addErrorMsg('Favor preencher o número do contrato');
             a = false;
-            console.log("entrou")
         }
         if ( (this.novoContrato.manualContrato === null || this.novoContrato.manualContrato === undefined)
             && (this.novoContrato.manualContrato.length > 0)) {
