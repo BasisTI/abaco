@@ -33,7 +33,7 @@ export class ManualDetailComponent implements OnInit, OnDestroy {
   load(id) {
     this.manualService.find(id).subscribe((manual) => {
       this.manual = manual;
-      this.getFileInfo();
+      if (manual.arquivoManualId > 0) this.getFileInfo();
       this.manualArray.push(manual);
     });
   }
