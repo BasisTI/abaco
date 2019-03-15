@@ -232,7 +232,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     adicionarManualEdt() {
-        const manualContratoTemp = this.manualContratoEdt;
+        const manualContratoTemp = this.setManualContrato( this.manualContratoEdt );
         if (this.validaDadosManual(manualContratoTemp) ) {
             this.contratoEmEdicao.addManualContrato(manualContratoTemp);
         } else {
