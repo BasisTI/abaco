@@ -71,7 +71,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     indiceManual: number;
     manuaisEdt: SelectItem[] = [];
     manualEdt: Manual;
-    iseditarManualContratoNovo = true;
 
     @ViewChild('fileInput') fileInput: FileUpload;
 
@@ -193,7 +192,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
     adicionarContrato() {
 
-        this.iseditarManualContratoNovo = true;
         if (this.validaCamposContrato(this.novoContrato)) {
             document.getElementById('tabela-contrato').removeAttribute('style');
             this.organizacao.addContrato(this.novoContrato);
@@ -223,20 +221,38 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     adicionarManual() {
-        const manualContratoTemp = this.setManualContrato(this.manualContratoNovo);
-        if (this.validaDadosManual(manualContratoTemp) ) {
-            this.novoContrato.addManualContrato(manualContratoTemp);
-        } else {
-            return;
+        if (this.validaDadosManual(this.manualContratoNovo) ) {
+            if (
+                this.manualContratoNovo.artificialId !== undefined
+                &&
+                this.manualContratoNovo.artificialId != null
+            ) {
+                const manualContratoTemp = this.manualContratoNovo.clone();
+                this.novoContrato.updateManualContrato( manualContratoTemp );
+            } else {
+                const manualContratoTemp = this.setManualContrato(this.manualContratoNovo);
+                this.novoContrato.addManualContrato(manualContratoTemp);
+            }
+            this.validaManual = false;
+            this.manualContratoNovo = new ManualContrato();
         }
     }
 
     adicionarManualEdt() {
-        const manualContratoTemp = this.setManualContrato( this.manualContratoEdt );
-        if (this.validaDadosManual(manualContratoTemp) ) {
-            this.contratoEmEdicao.addManualContrato(manualContratoTemp);
-        } else {
-            return;
+        if (this.validaDadosManual(this.manualContratoEdt) ) {
+            if (
+                this.manualContratoEdt.id !== undefined
+                &&
+                this.manualContratoEdt.id != null
+            ) {
+                const manualContratoTemp = this.manualContratoEdt.clone();
+                this.contratoEmEdicao.updateManualContrato( manualContratoTemp );
+            } else {
+                const manualContratoTemp = this.setManualContrato( this.manualContratoEdt );
+                this.contratoEmEdicao.addManualContrato(manualContratoTemp);
+            }
+            this.validaManual = false;
+            this.manualContratoEdt = new ManualContrato();
         }
     }
 
@@ -293,7 +309,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
         switch (event.button) {
             case 'edit':
-            this.iseditarManualContratoNovo = false;
             this.manualContratoNovo = event.selection.clone();
             break;
             case 'delete':
@@ -301,13 +316,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             this.comfirmarExcluirManualNovo();
             break;
         }
-    }
-
-    editarManualContratoNovo() {
-        this.novoContrato.updateManualContrato(
-                this.manualContratoNovo.clone()
-            );
-        this.iseditarManualContratoNovo = true;
     }
 
     /**

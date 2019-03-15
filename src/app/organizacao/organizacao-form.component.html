@@ -263,15 +263,15 @@
                         <div class="ui-g-12" style="margin-bottom: 25px">
                             <p-dropdown [filter]="true" [options]="manuais" optionLabel="nome"
                                 id="idManuais"
-                                placeholder="Manual *" name="manualDropdown" [(ngModel)]="manualContratoNovo.manual"
+                                placeholder="Manual *" name="manualDropdownNovo" [(ngModel)]="manualContratoNovo.manual"
                                 [autoWidth]="false"
                                 (onChange)="validarManual()" dataKey="id" required [resetFilterOnHide]="false"
                                 #ctrl="ngModel">
 
                             </p-dropdown>
-                                <div *ngIf="this.validaManual || (editForm1.controls['manualDropdown']
-                                    && !editForm1.controls['manualDropdown'].valid
-                                    && (editForm1.controls['manualDropdown'].touched
+                                <div *ngIf="this.validaManual || (editForm1.controls['manualDropdownNovo']
+                                    && !editForm1.controls['manualDropdownNovo'].valid
+                                    && (editForm1.controls['manualDropdownNovo'].touched
                                     || editForm1.submitted))" class="ui-message ui-messages-error">
                                         Campo obrigatório.
                             </div>
@@ -338,17 +338,11 @@
                         <div class="ui-g-6" style="margin-bottom: 25px">
                             <div class="ui-g">
                             <div class="ui-md-4">
-                                <app-blue-button buttonLabel="Editar" buttonIcon="ui-icon-add"
-                                                    [hidden]="iseditarManualContratoNovo"
-                                                    id="editarContratoManualNovoFormOrganizacao"
-                                                    (click)="editarManualContratoNovo()">
-                                </app-blue-button>
-                            </div>
-                            <div class="ui-md-4">
-                                <app-blue-button buttonLabel="Novo" buttonIcon="ui-icon-add"
-                                                    id="idBtnNovoManualFormOrganizacao"
+                                <app-green-button buttonLabel="Salvar"
+                                                    id="idBtnSalvarManualFormOrganizacao"
+                                                    buttonIcon="ui-icon-save"
                                                     (click)="adicionarManual()">
-                                </app-blue-button>
+                                </app-green-button>
                             </div>
                             </div>
                         </div>
@@ -478,15 +472,15 @@
                     <div class="ui-g-12" style="margin-bottom: 25px">
                         <p-dropdown [filter]="true" [(options)]="manuais" optionLabel="nome"
                             id="idManuais"
-                            placeholder="Manual *" name="manualDropdown" [(ngModel)]="manualContratoEdt.manual"
+                            placeholder="Manual *" name="manualDropdownContratoEdit" [(ngModel)]="manualContratoEdt.manual"
                             [autoWidth]="false"
                             dataKey="id" required [resetFilterOnHide]="false"
                             #ctrl="ngModel">
 
                         </p-dropdown>
-                            <div *ngIf="this.validaManual || (editForm1.controls['manualDropdown']
-                                && !editForm1.controls['manualDropdown'].valid
-                                && (editForm1.controls['manualDropdown'].touched
+                            <div *ngIf="this.validaManual || (editForm1.controls['manualDropdownContratoEdit']
+                                && !editForm1.controls['manualDropdownContratoEdit'].valid
+                                && (editForm1.controls['manualDropdownContratoEdit'].touched
                                 || editForm1.submitted))" class="ui-message ui-messages-error">
                                     Campo obrigatório.
                         </div>
@@ -550,14 +544,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="ui-g ui-md-6" style="justify-content: flex-end">
-                        <div class="ui-md-6">
-                        </div>
-                        <div class="ui-md-6">
-                            <app-blue-button buttonLabel="Novo" buttonIcon="ui-icon-add"
-                                                id="idBtnNovoContratoFormOrganizacaoEdt"
+                    <div class="ui-g-6" style="margin-bottom: 25px">
+                        <div class="ui-g">
+                        <div class="ui-md-4">
+                            <app-green-button buttonLabel="Salvar"
+                                                id="idBtnSalvarManualEdtFormOrganizacao"
+                                                buttonIcon="ui-icon-save"
                                                 (click)="adicionarManualEdt()">
-                            </app-blue-button>
+                            </app-green-button>
+                        </div>
                         </div>
                     </div>
                 </p-fieldset>
@@ -603,6 +598,7 @@
 
                     <div class="ui-g-2">
                         <app-green-button buttonLabel="Salvar" id="idBtnSalvarContratoEditFormOrganizacao"
+                                        buttonIcon="ui-icon-save"
                                           (click)="editarContrato()">
                         </app-green-button>
                         <!-- <button pButton type="button" label="Salvar"
