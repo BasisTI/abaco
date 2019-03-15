@@ -18,40 +18,8 @@ import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.repository.AlrRepository;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.ContratoRepository;
-import br.com.basis.abaco.repository.DerRepository;
-import br.com.basis.abaco.repository.EsforcoFaseRepository;
-import br.com.basis.abaco.repository.FaseRepository;
-import br.com.basis.abaco.repository.FatorAjusteRepository;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.FuncionalidadeRepository;
-import br.com.basis.abaco.repository.ManualRepository;
-import br.com.basis.abaco.repository.ModuloRepository;
-import br.com.basis.abaco.repository.OrganizacaoRepository;
-import br.com.basis.abaco.repository.RlrRepository;
-import br.com.basis.abaco.repository.SistemaRepository;
-import br.com.basis.abaco.repository.TipoEquipeRepository;
-import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.search.AlrSearchRepository;
-import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
-import br.com.basis.abaco.repository.search.ContratoSearchRepository;
-import br.com.basis.abaco.repository.search.DerSearchRepository;
-import br.com.basis.abaco.repository.search.EsforcoFaseSearchRepository;
-import br.com.basis.abaco.repository.search.FaseSearchRepository;
-import br.com.basis.abaco.repository.search.FatorAjusteSearchRepository;
-import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
-import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
-import br.com.basis.abaco.repository.search.FuncionalidadeSearchRepository;
-import br.com.basis.abaco.repository.search.ManualSearchRepository;
-import br.com.basis.abaco.repository.search.ModuloSearchRepository;
-import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
-import br.com.basis.abaco.repository.search.RlrSearchRepository;
-import br.com.basis.abaco.repository.search.SistemaSearchRepository;
-import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
-import br.com.basis.abaco.repository.search.UserSearchRepository;
+import br.com.basis.abaco.repository.*;
+import br.com.basis.abaco.repository.search.*;
 import com.codahale.metrics.annotation.Timed;
 import org.elasticsearch.indices.IndexAlreadyExistsException;
 import org.slf4j.Logger;
@@ -116,6 +84,10 @@ public class ElasticsearchIndexService {
 
     private final ManualSearchRepository manualSearchRepository;
 
+    private final ManualContratoRepository manualContratoRepository;
+
+    private final ManualContratoSearchRepository manualContratoSearchRepository;
+
     private final ModuloRepository moduloRepository;
 
     private final ModuloSearchRepository moduloSearchRepository;
@@ -167,6 +139,8 @@ public class ElasticsearchIndexService {
         FuncionalidadeSearchRepository funcionalidadeSearchRepository,
         ManualRepository manualRepository,
         ManualSearchRepository manualSearchRepository,
+        ManualContratoRepository manualContratoRepository,
+        ManualContratoSearchRepository manualContratoSearchRepository,
         ModuloRepository moduloRepository,
         ModuloSearchRepository moduloSearchRepository,
         OrganizacaoRepository organizacaoRepository,
@@ -202,6 +176,8 @@ public class ElasticsearchIndexService {
         this.funcionalidadeSearchRepository = funcionalidadeSearchRepository;
         this.manualRepository = manualRepository;
         this.manualSearchRepository = manualSearchRepository;
+        this.manualContratoRepository = manualContratoRepository;
+        this.manualContratoSearchRepository = manualContratoSearchRepository;
         this.moduloRepository = moduloRepository;
         this.moduloSearchRepository = moduloSearchRepository;
         this.organizacaoRepository = organizacaoRepository;
@@ -229,6 +205,7 @@ public class ElasticsearchIndexService {
         reindexForClass(FuncaoTransacao.class, funcaoTransacaoRepository, funcaoTransacaoSearchRepository);
         reindexForClass(Funcionalidade.class, funcionalidadeRepository, funcionalidadeSearchRepository);
         reindexForClass(Manual.class, manualRepository, manualSearchRepository);
+        reindexForClass(ManualContrato.class, manualContratoRepository, manualContratoSearchRepository);
         reindexForClass(Modulo.class, moduloRepository, moduloSearchRepository);
         reindexForClass(Organizacao.class, organizacaoRepository, organizacaoSearchRepository);
         reindexForClass(Rlr.class, rlrRepository, rlrSearchRepository);
