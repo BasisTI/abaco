@@ -66,6 +66,12 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     garantia: Number;
     ativo;
     manualAtivo: boolean;
+    manualContratoEdt: ManualContrato = new ManualContrato();
+    manualContratoNovo: ManualContrato = new ManualContrato();
+    indiceManual: number;
+    manuaisEdt: SelectItem[] = [];
+    manualEdt: Manual;
+    iseditarManualContratoNovo = true;
 
     @ViewChild('fileInput') fileInput: FileUpload;
 
@@ -148,35 +154,36 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         this.novoContrato = new Contrato();
     }
 
-    validaCamposContrato(contrato: Contrato) {
+    validaCamposContrato(contrato: Contrato): boolean {
 
-        let a: boolean = true;
+        let a = true;
 
-        if (this.novoContrato.numeroContrato === null || this.novoContrato.numeroContrato === undefined) {
+        if (contrato.numeroContrato === null || contrato.numeroContrato === undefined) {
             this.numeroContratoInvalido = true;
             this.pageNotificationService.addErrorMsg('Favor preencher o número do contrato');
             a = false;
         }
-        if ( (this.novoContrato.manualContrato === null || this.novoContrato.manualContrato === undefined)
-            && (this.novoContrato.manualContrato.length > 0)) {
+        if ( (contrato.manualContrato === null || contrato.manualContrato === undefined)
+            || (contrato.manualContrato.length <= 0)) {
             this.manualInvalido = true;
             this.pageNotificationService.addErrorMsg('Deve haver ao menos um manual');
             a = false;
         }
-        if (!(this.novoContrato.dataInicioValida()) && (this.novoContrato.dataInicioVigencia != null || this.novoContrato.dataInicioVigencia != undefined)
-            && (this.novoContrato.dataFimVigencia != null || this.novoContrato.dataFimVigencia != undefined)) {
+        if (!(contrato.dataInicioValida()) && (contrato.dataInicioVigencia != null
+            || contrato.dataInicioVigencia !== undefined)
+            && (contrato.dataFimVigencia != null || contrato.dataFimVigencia !== undefined)) {
             this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
             a = false;
         }
-        if (this.novoContrato.dataInicioVigencia === null || this.novoContrato.dataInicioVigencia === undefined) {
+        if (contrato.dataInicioVigencia === null || contrato.dataInicioVigencia === undefined) {
             this.pageNotificationService.addErrorMsg('Preencher data de início da vigência');
             a = false;
         }
-        if (this.novoContrato.dataFimVigencia === null || this.novoContrato.dataFimVigencia === undefined) {
+        if (contrato.dataFimVigencia === null || contrato.dataFimVigencia === undefined) {
             this.pageNotificationService.addErrorMsg('Preencher data de fim da vigência');
             a = false;
         }
-        if (this.novoContrato.diasDeGarantia === null || this.novoContrato.diasDeGarantia === undefined) {
+        if (contrato.diasDeGarantia === null || contrato.diasDeGarantia === undefined) {
             this.pageNotificationService.addErrorMsg('Preencher Dias de Garantia!');
             a = false;
         }
@@ -184,30 +191,28 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         return a;
     }
 
-   
     adicionarContrato() {
 
+        this.iseditarManualContratoNovo = true;
         if (this.validaCamposContrato(this.novoContrato)) {
             document.getElementById('tabela-contrato').removeAttribute('style');
             this.organizacao.addContrato(this.novoContrato);
             this.doFecharDialogCadastroContrato();
         }
-
-
     }
 
     validaDadosManual(manualContratoTemp: ManualContrato) {
         let verificador = true;
         if (manualContratoTemp.ativo === undefined || manualContratoTemp.ativo === null) {
-            this.pageNotificationService.addErrorMsg('Informe se o contrato é ativo ou não');
+            this.pageNotificationService.addErrorMsg('Informe se o manual é ativo ou não');
             verificador = false;
         }
         if (manualContratoTemp.dataFimVigencia === undefined || manualContratoTemp.dataFimVigencia === null) {
-            this.pageNotificationService.addErrorMsg('Preencher data de fim da vigência');
+            this.pageNotificationService.addErrorMsg('Preencher data de fim da vigência do manual');
             verificador = false;
         }
         if (manualContratoTemp.dataInicioVigencia === undefined || manualContratoTemp.dataInicioVigencia === null) {
-            this.pageNotificationService.addErrorMsg('Preencher data de início da vigência');
+            this.pageNotificationService.addErrorMsg('Preencher data de início da vigência do manual');
             verificador = false;
         }
         if (manualContratoTemp.manual === undefined || manualContratoTemp.manual === null) {
@@ -218,16 +223,19 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     adicionarManual() {
-        const manualContratoTemp = this.setManualContrato(this.novoContrato);
+        const manualContratoTemp = this.setManualContrato(this.manualContratoNovo);
         if (this.validaDadosManual(manualContratoTemp) ) {
-            console.log('manualContrato');
-            console.log(manualContratoTemp);
             this.novoContrato.addManualContrato(manualContratoTemp);
-            console.log('validado');
-            console.log(this.novoContrato.manualContrato);
         } else {
-            console.log('invalidado');
-            console.log(this.novoContrato.manualContrato);
+            return;
+        }
+    }
+
+    adicionarManualEdt() {
+        const manualContratoTemp = this.manualContratoEdt;
+        if (this.validaDadosManual(manualContratoTemp) ) {
+            this.contratoEmEdicao.addManualContrato(manualContratoTemp);
+        } else {
             return;
         }
     }
@@ -236,13 +244,14 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         manualContrato = new ManualContrato();
     }
 
-    setManualContrato(contrato: Contrato): ManualContrato {
-        let manualContrato = new ManualContrato(null, null, this.novoManual,
+    setManualContrato(manualContrato: ManualContrato): ManualContrato {
+        let manualContratoCopy = new ManualContrato(null, null,
+            manualContrato.manual,
             /**contrato deve ser null para não loop */null,
-            this.manualInicioVigencia, this.manualFimVigencia,
-            this.manualAtivo);
-        // manualContrato.addManual(this.novoManual);
-        return manualContrato;
+            manualContrato.dataInicioVigencia,
+            manualContrato.dataFimVigencia,
+            manualContrato.ativo);
+        return manualContratoCopy;
     }
 
     /**
@@ -261,6 +270,44 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
                 this.contratoEmEdicao = event.selection.clone();
                 this.confirmDeleteContrato();
         }
+    }
+
+    manualContratoTableClick(event: DatatableClickEvent) {
+        if (!event.selection) {
+            return;
+        }
+        switch (event.button) {
+            case 'edit':
+            this.manualContratoEdt = event.selection.clone();
+            break;
+            case 'delete':
+            this.manualContratoEdt = event.selection.clone();
+            this.comfirmarExcluirManual();
+            break;
+        }
+    }
+
+    manualContratoTableClickNovo(event: DatatableClickEvent) {
+        if (!event.selection) {
+            return;
+        }
+        switch (event.button) {
+            case 'edit':
+            this.iseditarManualContratoNovo = false;
+            this.manualContratoNovo = event.selection.clone();
+            break;
+            case 'delete':
+            this.manualContratoNovo = event.selection.clone();
+            this.comfirmarExcluirManualNovo();
+            break;
+        }
+    }
+
+    editarManualContratoNovo() {
+        this.novoContrato.updateManualContrato(
+                this.manualContratoNovo.clone()
+            );
+        this.iseditarManualContratoNovo = true;
     }
 
     /**
@@ -282,9 +329,19 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
      *
      * */
     editarContrato() {
-        this.organizacao.updateContrato(this.contratoEmEdicao);
-        this.fecharDialogEditarContrato();
-        this.novoContrato.diasDeGarantia = undefined;
+        if (!this.manualContratoEdt.id === undefined
+                && (this.manualContratoEdt.manual !== undefined && this.manualContratoEdt.manual !== null)
+            ) {
+                this.contratoEmEdicao.addManualContrato( this.manualContratoEdt.clone() );
+        } else if (this.manualContratoEdt.manual !== undefined && this.manualContratoEdt.manual !== null) {
+            this.contratoEmEdicao.updateManualContrato( this.manualContratoEdt );
+        }
+        if (this.validaCamposContrato(this.contratoEmEdicao) ) {
+            this.manualContratoEdt = new ManualContrato();
+            this.organizacao.updateContrato(this.contratoEmEdicao);
+            this.fecharDialogEditarContrato();
+            this.novoContrato.diasDeGarantia = undefined;
+        }
     }
 
     /**
@@ -297,6 +354,28 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             accept: () => {
                 this.organizacao.deleteContrato(this.contratoEmEdicao);
                 this.contratoEmEdicao = new Contrato();
+            }
+        });
+    }
+
+    comfirmarExcluirManual() {
+        this.confirmationService.confirm({
+            message: `Tem certeza que deseja excluir o manual '${this.manualContratoEdt.manual.nome}'
+        ?`,
+            accept: () => {
+                this.contratoEmEdicao.deleteManualContrato(this.manualContratoEdt);
+                this.manualContratoEdt = new ManualContrato();
+            }
+        });
+    }
+
+    comfirmarExcluirManualNovo() {
+        this.confirmationService.confirm({
+            message: `Tem certeza que deseja excluir o manual '${this.manualContratoNovo.manual.nome}'
+        ?`,
+            accept: () => {
+                this.novoContrato.deleteManualContrato(this.manualContratoNovo);
+                this.manualContratoNovo = new ManualContrato();
             }
         });
     }
@@ -337,20 +416,14 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             return;
         }
 
-        console.log('query');
         this.organizacaoService.query().subscribe(response => {
             const todasOrganizacoes = response;
-            console.log('organizacoes');
-            console.log(todasOrganizacoes);
-
             if (!this.checkIfOrganizacaoAlreadyExists(todasOrganizacoes.json)
                 && !this.checkIfCnpjAlreadyExists(todasOrganizacoes.json)) {
 
                 if (this.organizacao.id !== undefined) {
-                    console.log('edit');
                     this.editar();
                 } else {
-                    console.log('novo');
                     this.novo();
                 }
             }
@@ -382,8 +455,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     novo() {
-        console.log('novo: ');
-        console.log(this.organizacao);
         if (this.newLogo !== undefined && this.newLogo != null) {
             this.uploadService.uploadLogo(this.newLogo).subscribe((response: any) => {
                 this.organizacao.logoId = response.id;
@@ -444,7 +515,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
      * */
     private subscribeToSaveResponse(result: Observable<any>) {
         result.subscribe((res: Organizacao) => {
-            console.log('chamada de organizacao');
             this.isSaving = false;
             this.router.navigate(['/organizacao']);
 
