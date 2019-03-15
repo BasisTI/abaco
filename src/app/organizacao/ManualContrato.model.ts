@@ -23,9 +23,14 @@ export class ManualContrato implements BaseEntity, JSONable<ManualContrato> {
     }
 
     copyFromJSON(json: any) {
-        const newManualContrato = new ManualContrato(json.id, null, json.manual, json.contratos
-            , json.dataInicioVigencia, json.dataFimVigencia, json.ativo);
-        return newManualContrato;
+        const manualContrato = new ManualContrato(json.id, null, json.manual, json.contratos
+            , new Date(json.dataInicioVigencia), new Date(json.dataFimVigencia), json.ativo);
+        return manualContrato;
+    }
+
+    clone(): ManualContrato {
+        return new ManualContrato(this.id, this.artificialId, this.manual,
+            this.contratos, this.dataInicioVigencia, this.dataFimVigencia, this.ativo);
     }
 
 }
