@@ -162,7 +162,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     getAnalise() {
         this.routeSub = this.route.params.subscribe(params => {
-            this.analise = new Analise();
             if (params['id']) {
                 this.isEdicao = true;
                 this.analiseService.find(params['id']).subscribe(analise => {
@@ -178,6 +177,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                     this.update();
                 });
             } else {
+                this.analise = new Analise();
                 this.analise.esforcoFases = [];
             }
         });
