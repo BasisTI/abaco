@@ -229,10 +229,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.router.navigate([`/analise/${analiseCarregada.id}/view`]);
         }
         this.setSistemaOrganizacao(analiseCarregada.organizacao);
-        this.setManual(
-            analiseCarregada.contrato.manualContrato[0].manual ?
-                        analiseCarregada.contrato.manualContrato[0].manual :
-                        new Manual());
+        if (analiseCarregada.contrato != undefined)
+            this.setManual(
+                analiseCarregada.contrato.manualContrato[0].manual ?
+                            analiseCarregada.contrato.manualContrato[0].manual :
+                            new Manual());
         this.carregaFatorAjusteNaEdicao();
         this.isEdit = this.analise.identificadorAnalise == undefined ? true: false;
     }
