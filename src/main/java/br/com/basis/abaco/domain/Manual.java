@@ -2,7 +2,6 @@ package br.com.basis.abaco.domain;
 
 import br.com.basis.dynamicexports.pojo.ReportObject;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -28,7 +27,6 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -103,9 +101,6 @@ public class Manual implements Serializable, ReportObject, Cloneable {
 
   @Column(name = "versao_cpm")
   private Long versaoCPM;
-
-  @OneToMany(mappedBy = "manual", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<ManualContrato> manualContratos = new LinkedHashSet<>();
 
   public Long getId() {
     return id;
@@ -248,15 +243,6 @@ public class Manual implements Serializable, ReportObject, Cloneable {
     this.versaoCPM = versaoCPM;
   }
 
-  @JsonIgnore
-  public Set<ManualContrato> getManualContratos() {
-    return new LinkedHashSet<ManualContrato>(this.manualContratos);
-  }
-
-  public void setManualContratos(Set<ManualContrato> manualContratos) {
-    this.manualContratos = new LinkedHashSet<ManualContrato>(manualContratos);
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -286,21 +272,24 @@ public class Manual implements Serializable, ReportObject, Cloneable {
 
   @Override
   public Manual clone() {
-    Manual manual = new Manual();
-    manual.setArquivoManualId(arquivoManualId);
-    manual.setEsforcoFases(esforcoFases);
-    manual.setFatoresAjuste(fatoresAjuste);
-    manual.setId(id);
-    manual.setManualContratos(manualContratos);
-    manual.setNome(nome);
-    manual.setObservacao(observacao);
-    manual.setParametroAlteracao(parametroAlteracao);
-    manual.setParametroConversao(parametroConversao);
-    manual.setParametroExclusao(parametroExclusao);
-    manual.setParametroInclusao(parametroInclusao);
-    manual.setValorVariacaoEstimada(valorVariacaoEstimada);
-    manual.setValorVariacaoIndicativa(valorVariacaoIndicativa);
-    manual.setVersaoCPM(versaoCPM);
-    return manual;
+      try {
+          return (Manual) super.clone();
+      } catch (CloneNotSupportedException e) {
+          Manual manual = new Manual();
+          manual.setArquivoManualId(arquivoManualId);
+          manual.setEsforcoFases(esforcoFases);
+          manual.setFatoresAjuste(fatoresAjuste);
+          manual.setId(id);
+          manual.setNome(nome);
+          manual.setObservacao(observacao);
+          manual.setParametroAlteracao(parametroAlteracao);
+          manual.setParametroConversao(parametroConversao);
+          manual.setParametroExclusao(parametroExclusao);
+          manual.setParametroInclusao(parametroInclusao);
+          manual.setValorVariacaoEstimada(valorVariacaoEstimada);
+          manual.setValorVariacaoIndicativa(valorVariacaoIndicativa);
+          manual.setVersaoCPM(versaoCPM);
+          return manual;
+      }
   }
 }

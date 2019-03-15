@@ -4,15 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -21,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 /**
  * Entidade que que permite a relação entre Contrato e Manual.
@@ -33,6 +26,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
  */
 @Entity
 @Table(name = "manual_Contrato")
+@Document(indexName = "manualcontrato")
 public class ManualContrato implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -58,7 +52,7 @@ public class ManualContrato implements Serializable {
   private LocalDate dataFimVigencia;
 
   @NotNull
-  @Column(name = "ativo", nullable = true)
+  @Column(name = "ativo")
   private Boolean ativo;
 
   public Long getId() {
@@ -122,12 +116,12 @@ public class ManualContrato implements Serializable {
     if (manualContrato.id == null || id == null) {
       return false;
     }
-    return Objects.equals(id, manualContrato.id);
+    return Objects.equals(getId(), manualContrato.getId());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(id);
+    return super.hashCode();
   }
 
   @Override

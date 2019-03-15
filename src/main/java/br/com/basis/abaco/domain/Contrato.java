@@ -6,8 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.*;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -66,6 +65,7 @@ public class Contrato implements Serializable {
 
   @JsonManagedReference
   @OneToMany(mappedBy = "contratos", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+  @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
   private Set<ManualContrato> manualContrato = new HashSet<>();
 
   @ManyToOne

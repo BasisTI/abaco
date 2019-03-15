@@ -193,7 +193,7 @@ public class OrganizacaoResource {
       return this.createBadRequest(this.erro[i], this.mensagem[i]);
     }
 
-    Organizacao result = organizacaoRepository.save(organizacao);
+    Organizacao result = organizacaoRepository.saveAndFlush(organizacao);
     organizacaoSearchRepository.save(result);
 
     return ResponseEntity.ok()
