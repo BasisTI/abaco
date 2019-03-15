@@ -763,14 +763,18 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     openDialog(param: boolean) {
-        console.log(`openDialog(param)\n -> this.isEdit: ${this.isEdit}\n -> param: ${param}`);
         this.subscribeToAnaliseCarregada();
         this.carregarDadosBaseline();
         this.isEdit = param;
-        this.hideShowQuantidade = true;
         this.disableTRDER();
         this.configurarDialog();
         this.currentFuncaoDados.fatorAjuste = this.faS[0];
+        if (this.currentFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0] ) {
+            this.hideShowQuantidade = false;
+        }else{
+            this.hideShowQuantidade = true;
+        }
+
     }
 
     configurarDialog() {
@@ -797,10 +801,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 return {label: label,  value: fa};
             });
         
-        this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
-        
-
-
+        //Label "Nenhum" comentada
+        //this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
     }
 
     textChanged() {
