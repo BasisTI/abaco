@@ -159,8 +159,12 @@ public class Contrato implements Serializable {
     this.diasDeGarantia = diasDeGarantia;
   }
 
-  public Manual getManual() throws CloneNotSupportedException{
-    return this.manual.clone();
+  public Manual getManual() {
+      try {
+          return (Manual) this.manual.clone();
+      } catch (CloneNotSupportedException e) {
+          return null;
+      }
   }
 
   public void setManual(Manual manual) {
