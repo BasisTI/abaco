@@ -272,24 +272,20 @@ public class Manual implements Serializable, ReportObject, Cloneable {
 
   @Override
   public Manual clone() {
-      try {
-          return (Manual) super.clone();
-      } catch (CloneNotSupportedException e) {
-          Manual manual = new Manual();
-          manual.setArquivoManualId(arquivoManualId);
-          manual.setEsforcoFases(esforcoFases);
-          manual.setFatoresAjuste(fatoresAjuste);
-          manual.setId(id);
-          manual.setNome(nome);
-          manual.setObservacao(observacao);
-          manual.setParametroAlteracao(parametroAlteracao);
-          manual.setParametroConversao(parametroConversao);
-          manual.setParametroExclusao(parametroExclusao);
-          manual.setParametroInclusao(parametroInclusao);
-          manual.setValorVariacaoEstimada(valorVariacaoEstimada);
-          manual.setValorVariacaoIndicativa(valorVariacaoIndicativa);
-          manual.setVersaoCPM(versaoCPM);
-          return manual;
-      }
+      Manual manual = new Manual();
+      manual.setArquivoManualId(arquivoManualId);
+      manual.setEsforcoFases(esforcoFases);
+      manual.setFatoresAjuste(fatoresAjuste);
+      manual.setId(id);
+      manual.setNome(nome);
+      manual.setObservacao(observacao);
+      manual.setParametroAlteracao(parametroAlteracao);
+      manual.setParametroConversao(parametroConversao);
+      manual.setParametroExclusao(parametroExclusao);
+      manual.setParametroInclusao(parametroInclusao);
+      manual.setValorVariacaoEstimada(valorVariacaoEstimada);
+      manual.setValorVariacaoIndicativa(valorVariacaoIndicativa);
+      manual.setVersaoCPM(versaoCPM);
+      return manual;
   }
 }
