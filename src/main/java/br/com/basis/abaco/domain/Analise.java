@@ -11,6 +11,8 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -57,6 +59,8 @@ import java.util.Set;
 public class Analise implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
+
+    private transient final Logger log = LoggerFactory.getLogger(Analise.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -519,7 +523,8 @@ public class Analise implements Serializable, ReportObject {
     public Timestamp getDataCriacaoOrdemServico() {
         try {
             return new Timestamp(dataCriacaoOrdemServico.getTime());
-        }catch (Exception e) {
+        }catch (NullPointerException e) {
+            log.error(e.getMessage(), e);
             return null;
         }
     }
