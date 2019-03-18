@@ -517,7 +517,11 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Timestamp getDataCriacaoOrdemServico() {
-      return dataCriacaoOrdemServico;
+        try {
+            return new Timestamp(dataCriacaoOrdemServico.getTime());
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
