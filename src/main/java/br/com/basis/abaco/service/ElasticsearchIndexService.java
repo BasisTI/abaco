@@ -227,9 +227,36 @@ public class ElasticsearchIndexService {
         this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
+    /**
+     * O conteudo deste método foi separado devido a restrição de 20 linhas do Sonarqube
+     */
     @Async
     @Timed
     public void reindexAll() {
+        reindexPartOne();
+        reindexPartTwo();
+
+        log.info("Elasticsearch: Successfully performed reindexing");
+    }
+
+    /**
+     * Este método foi criados devido ao Sonarqube restringir um método a 20 linhas
+     */
+    private void reindexPartTwo() {
+        reindexForClass(Manual.class, manualRepository, manualSearchRepository);
+        reindexForClass(ManualContrato.class, manualContratoRepository, manualContratoSearchRepository);
+        reindexForClass(Modulo.class, moduloRepository, moduloSearchRepository);
+        reindexForClass(Organizacao.class, organizacaoRepository, organizacaoSearchRepository);
+        reindexForClass(Rlr.class, rlrRepository, rlrSearchRepository);
+        reindexForClass(Sistema.class, sistemaRepository, sistemaSearchRepository);
+        reindexForClass(User.class, userRepository, userSearchRepository);
+        reindexForClass(TipoEquipe.class, tipoEquipeRepository, tipoEquipeSearchRepository);
+    }
+
+    /**
+     * Este método foi criados devido ao Sonarqube restringir um método a 20 linhas
+     */
+    private void reindexPartOne() {
         reindexForClass(Alr.class, alrRepository, alrSearchRepository);
         reindexForClass(Analise.class, analiseRepository, analiseSearchRepository);
         reindexForClass(Contrato.class, contratoRepository, contratoSearchRepository);
@@ -240,16 +267,6 @@ public class ElasticsearchIndexService {
         reindexForClass(FuncaoDados.class, funcaoDadosRepository, funcaoDadosSearchRepository);
         reindexForClass(FuncaoTransacao.class, funcaoTransacaoRepository, funcaoTransacaoSearchRepository);
         reindexForClass(Funcionalidade.class, funcionalidadeRepository, funcionalidadeSearchRepository);
-        reindexForClass(Manual.class, manualRepository, manualSearchRepository);
-        reindexForClass(ManualContrato.class, manualContratoRepository, manualContratoSearchRepository);
-        reindexForClass(Modulo.class, moduloRepository, moduloSearchRepository);
-        reindexForClass(Organizacao.class, organizacaoRepository, organizacaoSearchRepository);
-        reindexForClass(Rlr.class, rlrRepository, rlrSearchRepository);
-        reindexForClass(Sistema.class, sistemaRepository, sistemaSearchRepository);
-        reindexForClass(User.class, userRepository, userSearchRepository);
-        reindexForClass(TipoEquipe.class, tipoEquipeRepository, tipoEquipeSearchRepository);
-
-        log.info("Elasticsearch: Successfully performed reindexing");
     }
 
     private <T, D extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, D> jpaRepository,

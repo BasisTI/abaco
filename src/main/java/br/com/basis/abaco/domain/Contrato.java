@@ -44,7 +44,7 @@ import java.util.Set;
 public class Contrato implements Serializable {
 
   private static final long serialVersionUID = 1L;
-  
+
   private transient final Logger log = LoggerFactory.getLogger(Contrato.class);
 
   @Id

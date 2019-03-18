@@ -60,8 +60,6 @@ public class Analise implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
 
-    private transient final Logger log = LoggerFactory.getLogger(Analise.class);
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
@@ -521,11 +519,10 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Timestamp getDataCriacaoOrdemServico() {
-        try {
-            return new Timestamp(dataCriacaoOrdemServico.getTime());
-        }catch (NullPointerException e) {
-            log.error(e.getMessage(), e);
+        if (dataCriacaoOrdemServico == null) {
             return null;
+        } else {
+            return new Timestamp(dataCriacaoOrdemServico.getTime());
         }
     }
 
