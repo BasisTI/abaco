@@ -36,7 +36,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @Entity
 @Table(name = "manual_Contrato")
 @Document(indexName = "manualcontrato")
-public class ManualContrato implements Serializable {
+public class ManualContrato implements Serializable, Cloneable {
 
   private static final long serialVersionUID = 1L;
 
