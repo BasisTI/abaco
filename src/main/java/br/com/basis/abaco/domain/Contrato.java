@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -42,6 +44,8 @@ import java.util.Set;
 public class Contrato implements Serializable {
 
   private static final long serialVersionUID = 1L;
+  
+  private transient final Logger log = LoggerFactory.getLogger(Contrato.class);
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -163,6 +167,7 @@ public class Contrato implements Serializable {
       try {
           return (Manual) this.manual.clone();
       } catch (CloneNotSupportedException e) {
+          log.error(e.getMessage(), e);
           return null;
       }
   }
