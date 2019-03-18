@@ -271,7 +271,7 @@ public class Manual implements Serializable, ReportObject, Cloneable {
   }
 
   @Override
-  public Manual clone() throws CloneNotSupportedException{
-      return (Manual) super.clone();
+  public Object clone() throws CloneNotSupportedException{
+      return super.clone();
   }
 }
