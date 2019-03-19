@@ -99,6 +99,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
         private userService: UserService,
+        private contratoService: ContratoService,
+        private manualService: ManualService,
     ) {
     }
 
@@ -136,25 +138,29 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     checkUserAnaliseEquipes() {
         let retorno = false;
-        this.loggedUser.tipoEquipes.forEach(equipe => {
-            if (equipe.id === this.analise.equipeResponsavel.id) {
-                retorno = true;
-            }
-        });
+        if (this.loggedUser.tipoEquipes) {
+            this.loggedUser.tipoEquipes.forEach(equipe => {
+                if (equipe.id === this.analise.equipeResponsavel.id) {
+                    retorno = true;
+                }
+            });
+        }
         return retorno;
     }
 
     checkIfUserCanEdit() {
         let retorno = false;
-        this.loggedUser.tipoEquipes.forEach(equipe => {
-            this.analise.compartilhadas.forEach(compartilhada => {
-                if (equipe.id === compartilhada.equipeId) {
-                    if (!compartilhada.viewOnly) {
-                        retorno = true;
+        if (this.loggedUser.tipoEquipes) {
+            this.loggedUser.tipoEquipes.forEach(equipe => {
+                this.analise.compartilhadas.forEach(compartilhada => {
+                    if (equipe.id === compartilhada.equipeId) {
+                        if (!compartilhada.viewOnly) {
+                            retorno = true;
+                        }
                     }
-                }
+                });
             });
-        });
+        }
         return retorno;
     }
     /**
@@ -229,7 +235,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.router.navigate([`/analise/${analiseCarregada.id}/view`]);
         }
         this.setSistemaOrganizacao(analiseCarregada.organizacao);
-        if (analiseCarregada.contrato != undefined)
+        if (analiseCarregada.contrato != undefined && analiseCarregada.contrato.manualContrato)
             this.setManual(
                 analiseCarregada.contrato.manualContrato[0].manual ?
                             analiseCarregada.contrato.manualContrato[0].manual :
@@ -253,7 +259,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.analise.sistema = undefined;
             this.analise.equipeResponsavel = undefined;
         };
-        this.contratos = org.contracts;
+        this.contratoService.findAllContratoesByOrganization(org).subscribe((contracts) => {
+            this.contratos = contracts;
+        })
         this.sistemaService.findAllSystemOrg(org.id).subscribe((res: ResponseWrapper) => {
             this.sistemas = res.json;
         });
@@ -264,7 +272,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular a equipe responsavel da organização
      */
     setEquipeOrganizacao(org: Organizacao) {
-        this.contratos = org.contracts;
         this.equipeService.findAllEquipesByOrganizacaoIdAndLoggedUser(org.id).subscribe((res: ResponseWrapper) => {
             this.equipeResponsavel = res.json;
             if (this.equipeResponsavel !== null) {
@@ -278,11 +285,13 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     setManual(manual: Manual) {
         if (manual) {
-            this.nomeManual = manual.nome;
-            this.carregarEsforcoFases(manual);
-            this.carregarMetodosContagem(manual);
-            this.inicializaFatoresAjuste(manual);
-            this.manualSelecionado(manual);
+            this.manualService.find(manual.id).subscribe((manual) => {
+                this.nomeManual = manual.nome;
+                this.carregarEsforcoFases(manual);
+                this.carregarMetodosContagem(manual);
+                this.inicializaFatoresAjuste(manual);
+                this.manualSelecionado(manual);
+            });
         }
     }
 
@@ -290,13 +299,16 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular os fatores de ajuste do Manual
      */
     private inicializaFatoresAjuste(manual: Manual) {
-        const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
-        this.fatoresAjuste =
-            faS.map(fa => {
-                const label = FatorAjusteLabelGenerator.generate(fa);
-                return {label: label, value: fa};
-            });
-        this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+        this.fatoresAjuste = [];
+        if (manual.fatoresAjuste) {
+            const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+            this.fatoresAjuste =
+                faS.map(fa => {
+                    const label = FatorAjusteLabelGenerator.generate(fa);
+                    return {label: label, value: fa};
+                });
+            this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+        }
     }
 
     /**
@@ -355,7 +367,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     totalEsforcoFases() {
         const initialValue = 0;
-        return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforco, initialValue);
+        if (this.analise.esforcoFases) {
+            return this.analise.esforcoFases
+                .reduce((val, ef) => val + ef.esforco, initialValue);
+        }
+        return initialValue;
     }
 
     /**
@@ -456,29 +472,33 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * @param contrato
      */
     contratoSelected(contrato: Contrato) {
-        this.setManuais(contrato);
-        this.setManual(contrato.manualContrato[0].manual);
-        this.manual = contrato.manualContrato[0].manual;
-        this.diasGarantia = this.analise.contrato.diasDeGarantia;
-        //this.analise.baselineImediatamente = true;
-        //this.analise.enviarBaseline = true;
+        if (contrato.manualContrato) {
+            this.setManuais(contrato);
+            this.setManual(contrato.manualContrato[0].manual);
+            this.manual = contrato.manualContrato[0].manual;
+            this.diasGarantia = this.analise.contrato.diasDeGarantia;
+            //this.analise.baselineImediatamente = true;
+            //this.analise.enviarBaseline = true;
+        }
     }
 
     setManuais(contrato: Contrato) {
-        contrato.manualContrato.sort( (a, b): number => {
-            if (a.dataInicioVigencia < b.dataFimVigencia ) {
-                return 1;
-            }
-            return -1;
-        } );
-        this.resetManuais();
-        contrato.manualContrato.forEach( item => {
-            this.manuais.push(item.manual);
-            this.manuaisCombo.push({
-                label: item.manual.nome,
-                value: item.manual
-            });
-        } );
+        if (contrato.manualContrato) {
+            contrato.manualContrato.sort( (a, b): number => {
+                if (a.dataInicioVigencia < b.dataFimVigencia ) {
+                    return 1;
+                }
+                return -1;
+            } );
+            this.resetManuais();
+            contrato.manualContrato.forEach( item => {
+                this.manuais.push(item.manual);
+                this.manuaisCombo.push({
+                    label: item.manual.nome,
+                    value: item.manual
+                });
+            } );
+        }
     }
 
     resetManuais() {
@@ -602,15 +622,17 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id,
                 this.analise.id,
                 this.analise.equipeResponsavel.id).subscribe((equipes) => {
-                equipes.json.forEach((equipe) => {
-                    const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
-                        {id: undefined,
-                            equipeId: equipe.id,
-                            analiseId: this.analise.id,
-                            viewOnly: false,
-                            nomeEquipe: equipe.nome });
-                    this.equipeShare.push(entity);
-                });
+                if (equipes.json) {
+                    equipes.json.forEach((equipe) => {
+                        const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
+                            {id: undefined,
+                                equipeId: equipe.id,
+                                analiseId: this.analise.id,
+                                viewOnly: false,
+                                nomeEquipe: equipe.nome });
+                        this.equipeShare.push(entity);
+                    });
+                }
                 this.blockUI.stop();
             });
             this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {

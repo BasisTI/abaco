@@ -23,7 +23,7 @@ export class DerChipConverter {
 
         const referenciavel: T[] = [];
 
-        if (chips !== undefined) {
+        if (chips) {
             chips.forEach(chipItem => {
                 const ref = new type();
                 ref.id = chipItem.id;

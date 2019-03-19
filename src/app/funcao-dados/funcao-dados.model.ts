@@ -192,15 +192,19 @@ class FuncaoDadosCopyFromJSON {
   }
 
   private converteDers() {
-    this._funcaoDados.ders = this._json.ders.map(
-      der => new Der().copyFromJSON(der)
-    );
+    if (this._json.ders) {
+      this._funcaoDados.ders = this._json.ders.map(
+        der => new Der().copyFromJSON(der)
+      );
+    }
   }
 
   private converteRlrs() {
-    this._funcaoDados.rlrs = this._json.rlrs.map(
-      rlr => new Rlr().copyFromJSON(rlr)
-    );
+    if (this._json.rlrs) {
+      this._funcaoDados.rlrs = this._json.rlrs.map(
+        rlr => new Rlr().copyFromJSON(rlr)
+      );
+    }
   }
 
 }
