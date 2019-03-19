@@ -25,10 +25,13 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author eduardo.andrade
@@ -292,9 +295,12 @@ public class RelatorioAnaliseRest {
      */
     private int countQuantidadeDerFd(Long id) {
         int total = 0;
-        for(FuncaoDados fd : analise.getFuncaoDados()) {
-            if(fd.getId().equals(id)) {
-                total = fd.getDers().size();
+        Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
+        if (funcaoDados != null) {
+            for(FuncaoDados fd : funcaoDados) {
+                if(fd.getId().equals(id)) {
+                    total = fd.getDers().size();
+                }
             }
         }
         return total;
@@ -306,9 +312,12 @@ public class RelatorioAnaliseRest {
      */
     private int countQuantidadeRlrFd(Long id) {
         int total = 0;
-        for(FuncaoDados fd : analise.getFuncaoDados()) {
-            if(fd.getId().equals(id)) {
-                total = fd.getRlrs().size();
+        Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
+        if (funcaoDados != null) {
+            for(FuncaoDados fd : funcaoDados) {
+                if(fd.getId().equals(id)) {
+                    total = fd.getRlrs().size();
+                }
             }
         }
         return total;
@@ -320,9 +329,12 @@ public class RelatorioAnaliseRest {
      */
     private int countQuantidadeFtrFt(Long id) {
         int total = 0;
-        for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
-            if(ft.getId().equals(id)) {
-                total = ft.getAlrs().size();
+        Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
+        if (funcaoTransacaos != null) {
+            for(FuncaoTransacao ft : funcaoTransacaos) {
+                if(ft.getId().equals(id)) {
+                    total = ft.getAlrs().size();
+                }
             }
         }
         return total;
@@ -334,9 +346,12 @@ public class RelatorioAnaliseRest {
      */
     private int countQuantidadeDerFt(Long id) {
         int total = 0;
-        for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
-            if(ft.getId().equals(id)) {
-                total = ft.getDers().size();
+        Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
+        if (funcaoTransacaos != null) {
+            for(FuncaoTransacao ft : funcaoTransacaos) {
+                if(ft.getId().equals(id)) {
+                    total = ft.getDers().size();
+                }
             }
         }
         return total;
@@ -361,36 +376,45 @@ public class RelatorioAnaliseRest {
     private void popularListaFdFt() {
         List<ListaFdFtDTO> listaFdFt = new ArrayList<>();
 
-        for(FuncaoDados fd : analise.getFuncaoDados()) {
-            ListaFdFtDTO objeto = new ListaFdFtDTO();
-            String der = "", alrTr = "";
+        Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
+        if (funcaoDados != null) {
+            for(FuncaoDados fd : funcaoDados) {
+                ListaFdFtDTO objeto = new ListaFdFtDTO();
+                String der = "", alrTr = "";
 
-            der = popularDersFd(fd, der);
-            objeto.setDer(der); objeto.setNome(fd.getName());
+                der = popularDersFd(fd, der);
+                objeto.setDer(der); objeto.setNome(fd.getName());
 
-            alrTr = popularAlrtrFd(fd, alrTr);
-            objeto.setAlrtr(alrTr); listaFdFt.add(objeto);
+                alrTr = popularAlrtrFd(fd, alrTr);
+                objeto.setAlrtr(alrTr); listaFdFt.add(objeto);
+            }
         }
 
-        for(FuncaoTransacao ft : analise.getFuncaoTransacaos()) {
-            String der = "", alrTr = ""; ListaFdFtDTO objeto = new ListaFdFtDTO();
-            objeto.setNome(ft.getName());
+        Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
+        if (funcaoTransacaos != null) {
+            for(FuncaoTransacao ft : funcaoTransacaos) {
+                String der = "", alrTr = ""; ListaFdFtDTO objeto = new ListaFdFtDTO();
+                objeto.setNome(ft.getName());
 
-            alrTr = popularAlrFt(ft, alrTr);
-            objeto.setAlrtr(alrTr);
+                alrTr = popularAlrFt(ft, alrTr);
+                objeto.setAlrtr(alrTr);
 
-            der = popularDerFt(ft, der);
-            objeto.setDer(der); listaFdFt.add(objeto);
+                der = popularDerFt(ft, der);
+                objeto.setDer(der); listaFdFt.add(objeto);
 
+            }
         }
         parametro.put("LISTAFDFT", listaFdFt);
     }
 
     private String popularDerFt(FuncaoTransacao ft, String der) {
         String derAux = der;
-        for (Der derFt : ft.getDers()) {
-            if (derFt.getNome() != null) {
-                derAux = derAux.concat(derFt.getNome() + ", ");
+        Set<Der> ders = ft.getDers();
+        if (ders != null) {
+            for (Der derFt : ders) {
+                if (derFt.getNome() != null) {
+                    derAux = derAux.concat(derFt.getNome() + ", ");
+                }
             }
         }
         if (!derAux.equals("")) {
@@ -401,9 +425,12 @@ public class RelatorioAnaliseRest {
 
     private String popularAlrFt(FuncaoTransacao ft, String alrTr) {
         String alrTrAux = alrTr;
-        for (Alr alr : ft.getAlrs()) {
-            if (alr.getNome() != null) {
-                alrTrAux = alrTrAux.concat(alr.getNome() + ", ");
+        Set<Alr> alrs = ft.getAlrs();
+        if (alrs != null) {
+            for (Alr alr : alrs) {
+                if (alr.getNome() != null) {
+                    alrTrAux = alrTrAux.concat(alr.getNome() + ", ");
+                }
             }
         }
         if(!alrTrAux.equals("")){
@@ -414,9 +441,12 @@ public class RelatorioAnaliseRest {
 
     private String popularAlrtrFd(FuncaoDados fd, String alrTr) {
         String alrTrAux = alrTr;
-        for (Rlr rlr : fd.getRlrs()) {
-            if (rlr.getNome() != null) {
-                alrTrAux = alrTrAux.concat(rlr.getNome() + ", ");
+        Set<Rlr> rlrs = fd.getRlrs();
+        if (rlrs != null) {
+            for (Rlr rlr : rlrs) {
+                if (rlr.getNome() != null) {
+                    alrTrAux = alrTrAux.concat(rlr.getNome() + ", ");
+                }
             }
         }
         if(!alrTrAux.equals("")){
@@ -427,9 +457,12 @@ public class RelatorioAnaliseRest {
 
     private String popularDersFd(FuncaoDados fd, String der) {
         String derAux = der;
-        for (Der derFd : fd.getDers()) {
-            if (derFd.getNome() != null) {
-                derAux = derAux.concat(derFd.getNome() + ", ");
+        Set<Der> ders = fd.getDers();
+        if (ders != null) {
+            for (Der derFd : ders) {
+                if (derFd.getNome() != null) {
+                    derAux = derAux.concat(derFd.getNome() + ", ");
+                }
             }
         }
         if (!derAux.equals("")) {

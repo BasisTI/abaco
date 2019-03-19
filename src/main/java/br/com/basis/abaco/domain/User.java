@@ -102,7 +102,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 	@Column(name = "reset_date")
 	private ZonedDateTime resetDate = null;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "jhi_user_authority", joinColumns = {
 			@JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "authority_name", referencedColumnName = "name") })
@@ -110,11 +110,11 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 	@BatchSize(size = 20)
 	private Set<Authority> authorities = new HashSet<>();
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "user_tipo_equipe", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "tipo_equipe_id", referencedColumnName = "id"))
 	private Set<TipoEquipe> tipoEquipes = new HashSet<>();
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "user_organizacao", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
 	private Set<Organizacao> organizacoes = new HashSet<>();
 
@@ -231,8 +231,10 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
         String ponto = ". ";
         String perfil = "";
 
-        for(Authority authority : authorities){
-            perfil = perfil.concat(authority.getDescription()).concat(ponto);
+        if (authorities != null) {
+            for (Authority authority : authorities) {
+                perfil = perfil.concat(authority.getDescription()).concat(ponto);
+            }
         }
 
         return perfil;
@@ -254,8 +256,10 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
         String ponto = ". ";
         String nomeEquipe = "";
 
-        for(TipoEquipe equipe : tipoEquipes){
-            nomeEquipe = nomeEquipe.concat(equipe.getNome()).concat(ponto);
+        if (tipoEquipes != null) {
+            for (TipoEquipe equipe : tipoEquipes) {
+                nomeEquipe = nomeEquipe.concat(equipe.getNome()).concat(ponto);
+            }
         }
 
         return nomeEquipe;
@@ -276,8 +280,10 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
         String ponto = ". ";
         String nomeOrg = "";
 
-        for(Organizacao org : organizacoes){
-            nomeOrg = nomeOrg.concat(org.getNome()).concat(ponto);
+        if (organizacoes != null) {
+            for (Organizacao org : organizacoes) {
+                nomeOrg = nomeOrg.concat(org.getNome()).concat(ponto);
+            }
         }
 
         return nomeOrg;
@@ -323,11 +329,10 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
      */
     public boolean verificarAuthority() {
         boolean temResposta = false;
-
-            Iterator<Authority> i = this.getAuthorities().iterator();
-            while (i.hasNext() && !temResposta) {
-                Authority a = i.next();
-                temResposta = (a.contain(AuthoritiesConstants.ADMIN) || a.contain(AuthoritiesConstants.GESTOR));
+		Iterator<Authority> i = this.getAuthorities().iterator();
+		while (i.hasNext() && !temResposta) {
+			Authority a = i.next();
+			temResposta = (a.contain(AuthoritiesConstants.ADMIN) || a.contain(AuthoritiesConstants.GESTOR));
         }
         return temResposta;
     }

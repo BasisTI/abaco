@@ -64,6 +64,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -592,17 +593,21 @@ public class AnaliseResource {
     }
 
     private void linkAnaliseToFuncaoDados(Analise analise) {
-        analise.getFuncaoDados().forEach(funcaoDados -> {
-            funcaoDados.setAnalise(analise);
-            linkFuncaoDadosRelationships(funcaoDados);
-            handleVersionFuncaoDados(funcaoDados, analise.getSistema());
-        });
+        Optional.ofNullable(analise.getFuncaoDados()).orElse(Collections.emptySet())
+            .forEach(funcaoDados -> {
+                funcaoDados.setAnalise(analise);
+                linkFuncaoDadosRelationships(funcaoDados);
+                handleVersionFuncaoDados(funcaoDados, analise.getSistema());
+            });
     }
 
     private void linkFuncaoDadosRelationships(FuncaoDados funcaoDados) {
-        funcaoDados.getFiles().forEach(file -> file.setFuncaoDados(funcaoDados));
-        funcaoDados.getDers().forEach(der -> der.setFuncaoDados(funcaoDados));
-        funcaoDados.getRlrs().forEach(rlr -> rlr.setFuncaoDados(funcaoDados));
+        Optional.ofNullable(funcaoDados.getFiles()).orElse(Collections.emptyList())
+            .forEach(file -> file.setFuncaoDados(funcaoDados));
+        Optional.ofNullable(funcaoDados.getDers()).orElse(Collections.emptySet())
+            .forEach(der -> der.setFuncaoDados(funcaoDados));
+        Optional.ofNullable(funcaoDados.getRlrs()).orElse(Collections.emptySet())
+            .forEach(rlr -> rlr.setFuncaoDados(funcaoDados));
     }
 
     private void handleVersionFuncaoDados(FuncaoDados funcaoDados, Sistema sistema) {
@@ -621,38 +626,50 @@ public class AnaliseResource {
     }
 
     private void linkAnaliseToFuncaoTransacaos(Analise analise) {
-        analise.getFuncaoTransacaos().forEach(funcaoTransacao -> {
-            funcaoTransacao.setAnalise(analise);
-            funcaoTransacao.getFiles().forEach(file -> file.setFuncaoTransacao(funcaoTransacao));
-            funcaoTransacao.getDers().forEach(der -> der.setFuncaoTransacao(funcaoTransacao));
-            funcaoTransacao.getAlrs().forEach(alr -> alr.setFuncaoTransacao(funcaoTransacao));
-        });
+        Optional.ofNullable(analise.getFuncaoTransacaos()).orElse(Collections.emptySet())
+            .forEach(funcaoTransacao -> {
+                funcaoTransacao.setAnalise(analise);
+                Optional.ofNullable(funcaoTransacao.getFiles()).orElse(Collections.emptyList())
+                    .forEach(file -> file.setFuncaoTransacao(funcaoTransacao));
+                Optional.ofNullable(funcaoTransacao.getDers()).orElse(Collections.emptySet())
+                    .forEach(der -> der.setFuncaoTransacao(funcaoTransacao));
+                Optional.ofNullable(funcaoTransacao.getAlrs()).orElse(Collections.emptySet())
+                    .forEach(alr -> alr.setFuncaoTransacao(funcaoTransacao));
+            });
     }
 
     private void unlinkAnaliseFromFuncoes(Analise result) {
-        result.getFuncaoDados().forEach(entry -> {
-            entry.setAnalise(null);
-        });
-        result.getFuncaoTransacaos().forEach(entry -> {
-            entry.setAnalise(null);
-        });
+        Optional.ofNullable(result.getFuncaoDados()).orElse(Collections.emptySet())
+            .forEach(entry -> {
+                entry.setAnalise(null);
+            });
+        Optional.ofNullable(result.getFuncaoTransacaos()).orElse(Collections.emptySet())
+            .forEach(entry -> {
+                entry.setAnalise(null);
+            });
     }
 
 
     private Analise unlinkAnaliseFDFT(Analise result) {
 
-        result.getFuncaoDados().forEach(fd -> {
-            fd.setAnalise(null);
-            fd.getAlr().setId(null);
-            fd.getRlrs().forEach(rlr -> rlr.setId(null));
-            fd.getDers().forEach(ders -> ders.setId(null));
-        });
+        Optional.ofNullable(result.getFuncaoDados()).orElse(Collections.emptySet())
+            .forEach(fd -> {
+                fd.setAnalise(null);
+                fd.getAlr().setId(null);
+                Optional.ofNullable(fd.getRlrs()).orElse(Collections.emptySet())
+                    .forEach(rlr -> rlr.setId(null));
+                Optional.ofNullable(fd.getDers()).orElse(Collections.emptySet())
+                    .forEach(ders -> ders.setId(null));
+            });
 
-        result.getFuncaoTransacaos().forEach(ft -> {
-            ft.setAnalise(null);
-            ft.getAlrs().forEach(rlr -> rlr.setId(null));
-            ft.getDers().forEach(ders -> ders.setId(null));
-        });
+        Optional.ofNullable(result.getFuncaoTransacaos()).orElse(Collections.emptySet())
+            .forEach(ft -> {
+                ft.setAnalise(null);
+                Optional.ofNullable(ft.getAlrs()).orElse(Collections.emptySet())
+                    .forEach(rlr -> rlr.setId(null));
+                Optional.ofNullable(ft.getDers()).orElse(Collections.emptySet())
+                    .forEach(ders -> ders.setId(null));
+            });
 
         Analise analiseCopiaSalva = analiseRepository.save(result);
         analiseSearchRepository.save(result);

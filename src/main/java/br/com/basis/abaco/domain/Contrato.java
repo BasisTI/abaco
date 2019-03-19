@@ -69,8 +69,7 @@ public class Contrato implements Serializable {
   private Manual manual;
 
   @JsonManagedReference
-  @OneToMany(mappedBy = "contratos", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+  @OneToMany(mappedBy = "contratos", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<ManualContrato> manualContrato = new HashSet<>();
 
   @ManyToOne

@@ -42,6 +42,7 @@ import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,11 +118,13 @@ public class ManualResource {
 
     private Manual linkManualToPhaseEffortsAndAdjustFactors(Manual manual) {
 
-        manual.getEsforcoFases().forEach(phaseEffort -> {
+        Optional.ofNullable(manual.getEsforcoFases()).orElse(Collections.emptySet())
+        .forEach(phaseEffort -> {
             phaseEffort.setManual(manual);
         });
 
-        manual.getFatoresAjuste().forEach(adjustFactor -> {
+        Optional.ofNullable(manual.getFatoresAjuste()).orElse(Collections.emptySet())
+        .forEach(adjustFactor -> {
             adjustFactor.setManual(manual);
         });
 

@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -53,11 +54,11 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
 
     @JsonManagedReference(value = "funcaoTransacao")
-    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Alr> alrs = new HashSet<>();
 
-    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
 
     @Transient
@@ -68,7 +69,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     private ImpactoFatorAjuste impacto;
 
     @JsonManagedReference(value = "funcaoTransacao")
-    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Der> ders = new HashSet<>();
 
     public TipoFuncaoTransacao getTipo() {
@@ -147,7 +148,9 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public void setDers(Set<Der> ders) {
-        this.ders = new HashSet<Der>(ders);
+        this.ders = Optional.ofNullable(ders)
+            .map((lista) -> new HashSet<Der>(lista))
+            .orElse(new HashSet<Der>());
     }
 
     @Override
@@ -183,7 +186,9 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public void setFtrValues(Set<String> ftrValues) {
-        this.ftrValues = new HashSet<String>(ftrValues);
+        this.ftrValues = Optional.ofNullable(ftrValues)
+            .map((lista) -> new HashSet<String>(lista))
+            .orElse(new HashSet<String>());
     }
 
     public ImpactoFatorAjuste getImpacto() {

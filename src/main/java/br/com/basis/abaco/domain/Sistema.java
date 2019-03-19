@@ -67,7 +67,7 @@ public class Sistema implements Serializable, ReportObject {
 	@ManyToOne
 	private Organizacao organizacao;
 
-	@OneToMany(mappedBy = "sistema", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "sistema", cascade = CascadeType.ALL, orphanRemoval = true)
 	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@JsonManagedReference
 	private Set<Modulo> modulos = new HashSet<>();

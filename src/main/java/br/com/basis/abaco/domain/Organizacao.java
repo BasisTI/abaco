@@ -15,7 +15,6 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,6 +28,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -66,17 +66,17 @@ public class Organizacao implements Serializable, ReportObject {
   @Column(name = "numero_ocorrencia")
   private String numeroOcorrencia;
 
-  @OneToMany(mappedBy = "organizacao", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "organizacao")
   @JsonIgnore
   @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
   private Set<Sistema> sistemas = new HashSet<>();
 
-  @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+  @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
   private Set<Contrato> contracts = new HashSet<>();
 
   @JsonIgnore
-  @ManyToMany(mappedBy = "organizacoes", fetch = FetchType.EAGER)
+  @ManyToMany(mappedBy = "organizacoes")
   private Set<TipoEquipe> tipoEquipe = new HashSet<>();
 
   @Size(max = 255)
@@ -228,7 +228,9 @@ public class Organizacao implements Serializable, ReportObject {
   }
 
   public void setTipoEquipe(Set<TipoEquipe> tipoEquipe) {
-    this.tipoEquipe = new HashSet<>(tipoEquipe);
+    this.tipoEquipe = Optional.ofNullable(tipoEquipe)
+      .map((lista) -> new HashSet<>(lista))
+      .orElse(new HashSet<>());
   }
 
   @Override

@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -48,7 +49,7 @@ public class TipoEquipe implements Serializable, ReportObject {
     @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "tipoequipe_organizacao", joinColumns = @JoinColumn(name = "tipoequipe_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
     private Set<Organizacao> organizacoes = new HashSet<>();
 
@@ -85,7 +86,9 @@ public class TipoEquipe implements Serializable, ReportObject {
     }
 
     public void setOrganizacoes(Set<Organizacao> orgs) {
-        this.organizacoes = new HashSet<>(orgs);
+        this.organizacoes = Optional.ofNullable(orgs)
+            .map((lista) -> new HashSet<>(lista))
+            .orElse(new HashSet<>());
     }
 
     public Set<User> getUsuarios() {
@@ -104,8 +107,10 @@ public class TipoEquipe implements Serializable, ReportObject {
         String ponto = ". ";
         String nomeOrg = "";
 
-        for(Organizacao org : organizacoes){
-            nomeOrg = nomeOrg.concat(org.getNome()).concat(ponto);
+        if (organizacoes != null) {
+            for(Organizacao org : organizacoes){
+                nomeOrg = nomeOrg.concat(org.getNome()).concat(ponto);
+            }
         }
 
         return nomeOrg;

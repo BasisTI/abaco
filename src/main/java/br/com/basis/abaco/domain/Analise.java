@@ -26,7 +26,6 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,6 +47,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 @ApiModel(description = "<Enter note text here>")
@@ -110,10 +110,10 @@ public class Analise implements Serializable, ReportObject {
     @ManyToOne
     private Sistema sistema;
 
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne
     private Contrato contrato;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Organizacao organizacao;
 
     @Embedded
@@ -135,15 +135,15 @@ public class Analise implements Serializable, ReportObject {
     @JoinColumn
     private User editedBy;
 
-    @OneToMany(mappedBy = "analises", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "analises")
     private Set<Compartilhada> compartilhadas = new HashSet<>();
 
-    @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonManagedReference
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
 
-    @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonManagedReference
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
@@ -154,7 +154,7 @@ public class Analise implements Serializable, ReportObject {
     @ManyToOne
     private FatorAjuste fatorAjuste;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     private Set<EsforcoFase> esforcoFases;
 
     @Size(max = 4000)
@@ -459,7 +459,9 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {
-        this.esforcoFases = new HashSet<EsforcoFase>(esforcoFases);
+        this.esforcoFases = Optional.ofNullable(esforcoFases)
+            .map((lista) -> new HashSet<EsforcoFase>(lista))
+            .orElse(new HashSet<EsforcoFase>());
     }
 
     public String getObservacoes() {

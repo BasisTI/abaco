@@ -48,7 +48,7 @@ spring:
            max-file-size: 15MB
            max-request-size: 15MB
     jpa:
-        open-in-view: false
+        open-in-view: true
         hibernate:
             ddl-auto: none
             naming:

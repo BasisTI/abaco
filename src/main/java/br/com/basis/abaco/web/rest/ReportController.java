@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by roman on 10/24/17.
@@ -44,7 +45,7 @@ public class ReportController {
     @Autowired
     private AnaliseRepository analiseRepository;
 
-    public static class DetailFunctionRecord{
+    public static class DetailFunctionRecord {
 
         private String name;
         private String module;
@@ -138,7 +139,7 @@ public class ReportController {
         }
     }
 
-    public static class StringRecord{
+    public static class StringRecord {
 
         private String value;
         private long type;
@@ -152,8 +153,8 @@ public class ReportController {
         }
 
         public StringRecord(String value, long type) {
-            this.value=value;
-            this.type=type;
+            this.value = value;
+            this.type = type;
         }
 
         public void setValue(String value) {
@@ -202,17 +203,17 @@ public class ReportController {
 
     public static class FunctionRecord {
 
-       private String name;
-       private String adj_factor;
-       private String module;
-       private String functionality;
-       private String classification;
-       private String rlr;
-       private String der;
-       private String complexcity;
-       private BigDecimal gross_fp;
-       private BigDecimal net_fp;
-       private BigDecimal adj_value;
+        private String name;
+        private String adj_factor;
+        private String module;
+        private String functionality;
+        private String classification;
+        private String rlr;
+        private String der;
+        private String complexcity;
+        private BigDecimal gross_fp;
+        private BigDecimal net_fp;
+        private BigDecimal adj_value;
 
         public String getName() {
             return name;
@@ -306,13 +307,13 @@ public class ReportController {
     public static class TotalRecord {
 
         private String title;
-        private int none=0;
-        private int low=0;
-        private int average=0;
-        private int high=0;
-        private int total=0;
-        private BigDecimal net_fp=BigDecimal.ZERO;
-        private BigDecimal gross_fp=BigDecimal.ZERO;
+        private int none = 0;
+        private int low = 0;
+        private int average = 0;
+        private int high = 0;
+        private int total = 0;
+        private BigDecimal net_fp = BigDecimal.ZERO;
+        private BigDecimal gross_fp = BigDecimal.ZERO;
 
         public int getTotal() {
             return total;
@@ -322,8 +323,8 @@ public class ReportController {
             this.total = total;
         }
 
-        public TotalRecord(String title){
-            this.title=title;
+        public TotalRecord(String title) {
+            this.title = title;
         }
 
         public String getTitle() {
@@ -385,45 +386,51 @@ public class ReportController {
 
     private List<DetailFunctionRecord> convertDataFunctions(Analise analise) {
         List<DetailFunctionRecord> list = new ArrayList<>();
-        for(FuncaoDados f:analise.getFuncaoDados()) {
-            DetailFunctionRecord record = new DetailFunctionRecord();
-            record.setName(f.getName());
-            record.setModule((f.getFuncionalidade()==null)?"":f.getFuncionalidade().getModulo().getNome());
-            record.setAdj_factor((f.getFatorAjuste()==null)?"":f.getFatorAjuste().getNome());
-            record.setFunctionality((f.getFuncionalidade()==null)?"":f.getFuncionalidade().getNome());
-            record.setClassification((f.getComplexidade()==null)?"":f.getComplexidade().toString());
-            record.setSustentation((f.getSustantation()==null)?"":f.getSustantation());
-            record.setType(0);
-            List<StringRecord> relList = new ArrayList<>();
-            if (f.getRetStr()!=null && !f.getRetStr().isEmpty()){
-                for(String row:f.getRetStr().split("\n")) {
-                    relList.add(new StringRecord(row,0));
+        Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
+        if (funcaoDados != null) {
+            for (FuncaoDados f : funcaoDados) {
+                DetailFunctionRecord record = new DetailFunctionRecord();
+                record.setName(f.getName());
+                record.setModule((f.getFuncionalidade()==null)?"":f.getFuncionalidade().getModulo().getNome());
+                record.setAdj_factor((f.getFatorAjuste()==null)?"":f.getFatorAjuste().getNome());
+                record.setFunctionality((f.getFuncionalidade()==null)?"":f.getFuncionalidade().getNome());
+                record.setClassification((f.getComplexidade()==null)?"":f.getComplexidade().toString());
+                record.setSustentation((f.getSustantation()==null)?"":f.getSustantation());
+                record.setType(0);
+                List<StringRecord> relList = new ArrayList<>();
+                if (f.getRetStr()!=null && !f.getRetStr().isEmpty()){
+                    for(String row:f.getRetStr().split("\n")) {
+                        relList.add(new StringRecord(row,0));
+                    }
                 }
-            }
-            if (relList.size()==0) {
-                relList.add(new StringRecord("0",0));
-            }
-            record.setRlr(new JRBeanCollectionDataSource(relList));
-            List<StringRecord> derList = new ArrayList<>();
-            if (f.getDetStr()!=null && !f.getDetStr().isEmpty()){
-                for(String row:f.getDetStr().split("\n")) {
-                    derList.add(new StringRecord(row,0));
+                if (relList.size()==0) {
+                    relList.add(new StringRecord("0",0));
                 }
+                record.setRlr(new JRBeanCollectionDataSource(relList));
+                List<StringRecord> derList = new ArrayList<>();
+                if (f.getDetStr()!=null && !f.getDetStr().isEmpty()){
+                    for(String row:f.getDetStr().split("\n")) {
+                        derList.add(new StringRecord(row,0));
+                    }
+                }
+                if (derList.size()==0) {
+                    derList.add(new StringRecord("0",0));
+                }
+                record.setDer(new JRBeanCollectionDataSource(derList));
+                List<FileRecord> files = new ArrayList<>();
+                List<UploadedFile> filesData = f.getFiles();
+                if (filesData != null) {
+                    for (UploadedFile uploadedFile : filesData) {
+                        FileRecord file = new FileRecord();
+                        file.setName(uploadedFile.getFilename());
+                        file.setSize(FileUtils.byteCountToDisplaySize(uploadedFile.getSizeOf()));
+                        file.setFormat(StringUtils.getFormatFile(uploadedFile.getFilename()));
+                        files.add(file);
+                    }
+                }
+                record.setFiles(new JRBeanCollectionDataSource(files));
+                list.add(record);
             }
-            if (derList.size()==0) {
-                derList.add(new StringRecord("0",0));
-            }
-            record.setDer(new JRBeanCollectionDataSource(derList));
-            List<FileRecord> files = new ArrayList<>();
-            for(UploadedFile uploadedFile:f.getFiles()){
-                FileRecord file = new FileRecord();
-                file.setName(uploadedFile.getFilename());
-                file.setSize(FileUtils.byteCountToDisplaySize(uploadedFile.getSizeOf()));
-                file.setFormat(StringUtils.getFormatFile(uploadedFile.getFilename()));
-                files.add(file);
-            }
-            record.setFiles(new JRBeanCollectionDataSource(files));
-            list.add(record);
         }
 
         return list;
@@ -461,12 +468,15 @@ public class ReportController {
             }
             record.setDer(new JRBeanCollectionDataSource(derList));
             List<FileRecord> files = new ArrayList<>();
-            for(UploadedFile uploadedFile:f.getFiles()){
-                FileRecord file = new FileRecord();
-                file.setName(uploadedFile.getFilename());
-                file.setSize(FileUtils.byteCountToDisplaySize(uploadedFile.getSizeOf()));
-                file.setFormat(StringUtils.getFormatFile(uploadedFile.getFilename()));
-                files.add(file);
+            List<UploadedFile> filesTran = f.getFiles();
+            if (filesTran != null) {
+                for (UploadedFile uploadedFile : filesTran) {
+                    FileRecord file = new FileRecord();
+                    file.setName(uploadedFile.getFilename());
+                    file.setSize(FileUtils.byteCountToDisplaySize(uploadedFile.getSizeOf()));
+                    file.setFormat(StringUtils.getFormatFile(uploadedFile.getFilename()));
+                    files.add(file);
+                }
             }
             record.setFiles(new JRBeanCollectionDataSource(files));
             list.add(record);

@@ -32,10 +32,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findOneByFirstNameAndLastName(String firstName, String lastName);
 
-    @EntityGraph(attributePaths = "authorities")
+    @EntityGraph(attributePaths = {"authorities","tipoEquipes","organizacoes"})
     User findOneWithAuthoritiesById(Long id);
 
-    @EntityGraph(attributePaths = "authorities")
+    @EntityGraph(attributePaths = {"authorities","tipoEquipes","organizacoes"})
     Optional<User> findOneWithAuthoritiesByLogin(String login);
 
     @Query(value = "SELECT u.tipoEquipes FROM User u WHERE u.login = :login")
@@ -46,6 +46,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "select tipo_equipe_id from user_tipo_equipe where user_id = :idUser", nativeQuery = true)
     List<Long> findUserEquipes(@Param("idUser") Long idUser);
 
+    @EntityGraph(attributePaths = {"authorities","tipoEquipes","organizacoes"})
     @Query(value = "select u from User u join fetch u.organizacoes o where u.login=?1 and u.activated=true and o.ativo=true")
     User findUserWithActiveOrgs(String login);
+
 }

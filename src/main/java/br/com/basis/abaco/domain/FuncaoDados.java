@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -53,21 +54,21 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     private Integer quantidade;
 
     @JsonManagedReference(value = "funcaoDados")
-    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Rlr> rlrs = new HashSet<>();
 
     @ManyToOne
     private Alr alr;
 
-    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
 
     @Transient
     private Set<String> rlrValues;
 
     @JsonManagedReference(value = "funcaoDados")
-    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Der> ders = new HashSet<>();
 
     @JsonIgnore
@@ -195,7 +196,9 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public void setRlrValues(Set<String> rlrValues) {
-        this.rlrValues = new HashSet<String>(rlrValues);
+        this.rlrValues = Optional.ofNullable(rlrValues)
+            .map((lista) -> new HashSet<String>(lista))
+            .orElse(new HashSet<String>());
     }
 
     public Set<Der> getDers() {
@@ -203,7 +206,9 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public void setDers(Set<Der> ders) {
-        this.ders = new HashSet<Der>(ders);
+        this.ders = Optional.ofNullable(ders)
+        .map((lista) -> new HashSet<Der>(lista))
+        .orElse(new HashSet<Der>());
     }
 
     public FuncaoDadosVersionavel getFuncaoDadosVersionavel() {
