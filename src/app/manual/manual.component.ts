@@ -96,8 +96,12 @@ export class ManualComponent implements OnInit {
             const manualClonado: Manual = this.manualSelecionado.clone();
             manualClonado.id = undefined;
             manualClonado.nome = this.nomeDoManualClonado;
-            manualClonado.esforcoFases.forEach(ef => ef.id = undefined);
-            manualClonado.fatoresAjuste.forEach(fa => fa.id = undefined);
+            if (manualClonado.esforcoFases) {
+                manualClonado.esforcoFases.forEach(ef => ef.id = undefined);
+            }
+            if (manualClonado.fatoresAjuste) {
+                manualClonado.fatoresAjuste.forEach(fa => fa.id = undefined);
+            }
 
             this.manualService.create(manualClonado).subscribe((manualSalvo: Manual) => {
                 this.pageNotificationService

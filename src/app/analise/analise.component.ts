@@ -221,12 +221,13 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     checkUserAnaliseEquipes(){
         let retorno: boolean = false;
         return this.analiseService.find(this.analiseSelecionada.idAnalise).subscribe((res: any) => {
-                    this.analiseTemp = res;
-                    this.loggedUser.tipoEquipes.forEach(equipe => {
-                        if (equipe.id === this.analiseTemp.equipeResponsavel.id){
-                        retorno = true;
-                    }
-                });
+            this.analiseTemp = res;
+            if (this.loggedUser.tipoEquipes) {
+                this.loggedUser.tipoEquipes.forEach(equipe => {
+                    if (equipe.id === this.analiseTemp.equipeResponsavel.id){
+                    retorno = true;
+                }});
+            }
             return retorno;
         });
 
@@ -237,15 +238,19 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      */
     checkIfUserCanEdit(){
         let retorno: boolean = false;
-        this.loggedUser.tipoEquipes.forEach(equipe => {
-            this.analiseSelecionada.compartilhadas.forEach(compartilhada => {
-                if(equipe.id === compartilhada.equipeId){
-                    if(!compartilhada.viewOnly){
-                        retorno = true;
-                    }
+        if (this.loggedUser.tipoEquipes) {
+            this.loggedUser.tipoEquipes.forEach(equipe => {
+                if (this.analiseSelecionada.compartilhadas) {
+                    this.analiseSelecionada.compartilhadas.forEach(compartilhada => {
+                        if(equipe.id === compartilhada.equipeId){
+                            if(!compartilhada.viewOnly){
+                                retorno = true;
+                            }
+                        }
+                    });
                 }
             });
-        });
+        }
         return retorno;
     }
 
@@ -277,25 +282,37 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                     analiseClonada.bloqueiaAnalise = false;
                     analiseClonada.compartilhadas = undefined;
     
-                    analiseClonada.funcaoDados.forEach(FuncaoDados => {
-                        FuncaoDados.id = undefined;
-                        FuncaoDados.ders.forEach(Ders => {
-                            Ders.id = undefined;
+                    if (analiseClonada.funcaoDados) {
+                        analiseClonada.funcaoDados.forEach(FuncaoDados => {
+                            FuncaoDados.id = undefined;
+                            if (FuncaoDados.ders) {
+                                FuncaoDados.ders.forEach(Ders => {
+                                    Ders.id = undefined;
+                                });
+                            }
+                            if (FuncaoDados.rlrs) {
+                                FuncaoDados.rlrs.forEach(rlrs => {
+                                    rlrs.id = undefined;
+                                });
+                            }
                         });
-                        FuncaoDados.rlrs.forEach(rlrs => {
-                            rlrs.id = undefined;
-                        });
-                    });
+                    }
     
-                    analiseClonada.funcaoTransacaos.forEach(funcaoTransacaos => {
-                        funcaoTransacaos.id = undefined;
-                        funcaoTransacaos.ders.forEach(ders => {
-                            ders.id = undefined;
+                    if (analiseClonada.funcaoTransacaos) {
+                        analiseClonada.funcaoTransacaos.forEach(funcaoTransacaos => {
+                            funcaoTransacaos.id = undefined;
+                            if (funcaoTransacaos.ders) {
+                                funcaoTransacaos.ders.forEach(ders => {
+                                    ders.id = undefined;
+                                });
+                            }
+                            if (funcaoTransacaos.alrs) {
+                                funcaoTransacaos.alrs.forEach(alrs => {
+                                    alrs.id = undefined;
+                                });
+                            }
                         });
-                        funcaoTransacaos.alrs.forEach(alrs => {
-                            alrs.id = undefined;
-                        });
-                    });
+                    }
     
                     this.analiseService.create(analiseClonada).subscribe((res: any) => {
                         const menssagem: string = MessageUtil.ANALISE.concat(' ').
@@ -478,15 +495,17 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.analiseService.find(this.analiseSelecionada.idAnalise).subscribe((res: any) => {
             this.analiseTemp = res;
             this.tipoEquipeService.findAllCompartilhaveis(this.analiseTemp.organizacao.id, this.analiseSelecionada.idAnalise, this.analiseTemp.equipeResponsavel.id).subscribe((equipes) => {
-            equipes.json.forEach((equipe) => {
-                const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
-                                                                    {id: undefined,
-                                                                     equipeId: equipe.id,
-                                                                     analiseId: this.analiseSelecionada.idAnalise,
-                                                                     viewOnly: false, nomeEquipe: equipe.nome });
-                this.equipeShare.push(entity);
-            });
-            this.blockUI.stop();
+                if (equipes.json) {
+                    equipes.json.forEach((equipe) => {
+                        const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
+                                                                            {id: undefined,
+                                                                            equipeId: equipe.id,
+                                                                            analiseId: this.analiseSelecionada.idAnalise,
+                                                                            viewOnly: false, nomeEquipe: equipe.nome });
+                        this.equipeShare.push(entity);
+                    });
+                }
+                this.blockUI.stop();
             });
         });
 

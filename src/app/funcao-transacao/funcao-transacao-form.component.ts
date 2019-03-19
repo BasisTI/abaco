@@ -140,9 +140,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     private initClassificacoes() {
         const classificacoes = Object.keys(TipoFuncaoTransacao).map(k => TipoFuncaoTransacao[k as any]);
         // TODO pipe generico?
-        classificacoes.forEach(c => {
-            this.classificacoes.push({label: c, value: c});
-        });
+        if (classificacoes) {
+            classificacoes.forEach(c => {
+                this.classificacoes.push({label: c, value: c});
+            });
+        }
     }
 
     public buttonSaveEdit() {
@@ -236,7 +238,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     private get manual() {
-        if (this.analiseSharedDataService.analise.contrato) {
+        if (this.analiseSharedDataService.analise.contrato &&
+            this.analiseSharedDataService.analise.contrato.manualContrato) {
             return this.analiseSharedDataService.analise.contrato.manualContrato[0].manual;
         }
         return undefined;
@@ -283,12 +286,16 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         .subscribe((res: FuncaoTransacao) => {
                 if (res.fatorAjuste === null) {res.fatorAjuste = undefined; }
                 res.id = undefined;
-                res.ders.forEach(ders => {
-                    ders.id = undefined;
-                });
-                res.alrs.forEach(alrs => {
-                    alrs.id = undefined;
-                });
+                if (res.ders) {
+                    res.ders.forEach(ders => {
+                        ders.id = undefined;
+                    });
+                }
+                if (res.alrs) {
+                    res.alrs.forEach(alrs => {
+                        alrs.id = undefined;
+                    });
+                }
             this.prepararParaEdicao(res);
         });
 
@@ -345,17 +352,19 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     validarNameFuncaoTransacaos(nome: string) {
         const that = this;
         return new Promise( resolve => {
-            if (that.analise.funcaoTransacaos.length === 0) {
-                return resolve(true);
-            }
-            that.analise.funcaoTransacaos.forEach( (data, index) => {
-                if (data.name === nome) {
-                    return resolve(false);
-                }
-                if (!that.analise.funcaoTransacaos[index + 1]) {
+            if (that.analise.funcaoTransacaos) {
+                if (that.analise.funcaoTransacaos.length === 0) {
                     return resolve(true);
                 }
-            });
+                that.analise.funcaoTransacaos.forEach( (data, index) => {
+                    if (data.name === nome) {
+                        return resolve(false);
+                    }
+                    if (!that.analise.funcaoTransacaos[index + 1]) {
+                        return resolve(true);
+                    }
+                });
+            }
         });
     }
 
@@ -488,7 +497,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoTransacao.artificialId = undefined;
         this.currentFuncaoTransacao.id = undefined;
 
-        if (this.dersChips != null && this.alrsChips != null) {
+        if (this.dersChips && this.alrsChips) {
             this.dersChips.forEach(c => c.id = undefined);
             this.alrsChips.forEach(c => c.id = undefined);
         }
@@ -642,24 +651,26 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
 
     private inicializaFatoresAjuste(manual: Manual) {
-        this.faS = _.cloneDeep(manual.fatoresAjuste);
+        if (manual.fatoresAjuste) {
+            this.faS = _.cloneDeep(manual.fatoresAjuste);
 
-        this.faS.sort((n1,n2) => {
-            if (n1.fator < n2.fator) 
-                return 1;   
-            if (n1.fator > n2.fator) 
-                return -1;
-            return 0;
-        });
-        
-        this.fatoresAjuste =
-            this.faS.map(fa => {
-                const label = FatorAjusteLabelGenerator.generate(fa);
-                return {label: label,  value: fa};
+            this.faS.sort((n1,n2) => {
+                if (n1.fator < n2.fator) 
+                    return 1;   
+                if (n1.fator > n2.fator) 
+                    return -1;
+                return 0;
             });
-        
-        //Label "Nenhum" comentada
-        //this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+            
+            this.fatoresAjuste =
+                this.faS.map(fa => {
+                    const label = FatorAjusteLabelGenerator.generate(fa);
+                    return {label: label,  value: fa};
+                });
+            
+            //Label "Nenhum" comentada
+            //this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+        }
     }
 
     textChanged() {

@@ -275,7 +275,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private get manual() {
-        if (this.analiseSharedDataService.analise.contrato) {
+        if (this.analiseSharedDataService.analise.contrato && 
+            this.analiseSharedDataService.analise.contrato.manualContrato) {
             return this.analiseSharedDataService.analise.contrato.manualContrato[0].manual;
         }
         return undefined;
@@ -387,14 +388,16 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             if (that.analise.funcaoDados.length === 0) {
                 return resolve(true);
             }
-            that.analise.funcaoDados.forEach((data, index) => {
-                if (data.name === nome) {
-                    return resolve(false);
-                }
-                if (!that.analise.funcaoDados[index + 1]) {
-                    return resolve(true);
-                }
-            });
+            if (that.analise.funcaoDados) {
+                that.analise.funcaoDados.forEach((data, index) => {
+                    if (data.name === nome) {
+                        return resolve(false);
+                    }
+                    if (!that.analise.funcaoDados[index + 1]) {
+                        return resolve(true);
+                    }
+                });
+            }
         });
     }
 
@@ -533,7 +536,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoDados.artificialId = undefined;
         this.currentFuncaoDados.id = undefined;
 
-        if (this.dersChips !== undefined && this.rlrsChips) {
+        if (this.dersChips && this.rlrsChips) {
             this.dersChips.forEach(c => c.id = undefined);
             this.rlrsChips.forEach(c => c.id = undefined);
         }
@@ -567,12 +570,16 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                     res.fatorAjuste = undefined;
                 }
                 res.id = undefined;
-                res.ders.forEach(Ders => {
-                    Ders.id = undefined;
-                });
-                res.rlrs.forEach(rlrs => {
-                    rlrs.id = undefined;
-                });
+                if (res.ders) {
+                    res.ders.forEach(Ders => {
+                        Ders.id = undefined;
+                    });
+                }
+                if (res.rlrs) {
+                    res.rlrs.forEach(rlrs => {
+                        rlrs.id = undefined;
+                    });
+                }
 
                 this.prepararParaEdicao(res);
             });
@@ -785,24 +792,26 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private inicializaFatoresAjuste(manual: Manual) {
-        this.faS = _.cloneDeep(manual.fatoresAjuste);
+        if (manual.fatoresAjuste) {
+            this.faS = _.cloneDeep(manual.fatoresAjuste);
 
-        this.faS.sort((n1,n2) => {
-            if (n1.fator < n2.fator) 
-                return 1;   
-            if (n1.fator > n2.fator) 
-                return -1;
-            return 0;
-        });
-        
-        this.fatoresAjuste =
-            this.faS.map(fa => {
-                const label = FatorAjusteLabelGenerator.generate(fa);
-                return {label: label,  value: fa};
+            this.faS.sort((n1,n2) => {
+                if (n1.fator < n2.fator) 
+                    return 1;   
+                if (n1.fator > n2.fator) 
+                    return -1;
+                return 0;
             });
-        
-        //Label "Nenhum" comentada
-        //this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+            
+            this.fatoresAjuste =
+                this.faS.map(fa => {
+                    const label = FatorAjusteLabelGenerator.generate(fa);
+                    return {label: label,  value: fa};
+                });
+
+            //Label "Nenhum" comentada
+            //this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+        }
     }
 
     textChanged() {

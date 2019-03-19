@@ -32,9 +32,11 @@ export class ResumoTotal {
   }
 
   private adicionaTodosResumosGrupoLogicoDeCadaResumoFuncoes() {
-    this._resumoFuncoes.forEach(resumo => {
-      this._linhasResumo = this._linhasResumo.concat(resumo.all);
-    });
+    if (this._resumoFuncoes) {
+      this._resumoFuncoes.forEach(resumo => {
+        this._linhasResumo = this._linhasResumo.concat(resumo.all);
+      });
+    }
   }
 
   get all(): LinhaResumo[] {
@@ -64,10 +66,12 @@ export class ResumoFuncoes {
   }
 
   private criaResumoPorGrupoLogico() {
-    this._tipos.forEach(tipo => {
-      const resumo: ResumoGrupoLogico = new ResumoGrupoLogico(tipo);
-      this.tipoGrupoLogicoToResumo.set(tipo, resumo);
-    });
+    if (this._tipos) {
+      this._tipos.forEach(tipo => {
+        const resumo: ResumoGrupoLogico = new ResumoGrupoLogico(tipo);
+        this.tipoGrupoLogicoToResumo.set(tipo, resumo);
+      });
+    }
   }
 
   somaFuncao(funcao: FuncaoResumivel) {
@@ -119,7 +123,9 @@ export class ResumoGrupoLogico implements LinhaResumo {
 
   private inicializaOcorrenciasComoZeroParaComplexidades() {
     const complexidades: string[] = AnaliseSharedUtils.complexidades;
-    complexidades.forEach(c => this.complexidadeToTotal.set(c, 0));
+    if (complexidades) {
+      complexidades.forEach(c => this.complexidadeToTotal.set(c, 0));
+    }
   }
 
   /**
@@ -127,7 +133,9 @@ export class ResumoGrupoLogico implements LinhaResumo {
   */
   private inicializaOcorrenciasComoZeroParaImpacto() {
     const impactos: string[] = AnaliseSharedUtils.impactos;
-    impactos.forEach(c => this.impactoTotal.set(c, 0));
+    if (impactos) {
+      impactos.forEach(c => this.impactoTotal.set(c, 0));
+    }
   }
 
   incrementaTotais(funcao: FuncaoResumivel) {
@@ -208,7 +216,9 @@ class UltimaLinhaTotal implements LinhaResumo {
   private inicializaMapa() {
     this.complexidadeToTotal = new Map<string, number>();
     const complexidades: string[] = AnaliseSharedUtils.complexidades;
-    complexidades.forEach(c => this.complexidadeToTotal.set(c, 0));
+    if (complexidades) {
+      complexidades.forEach(c => this.complexidadeToTotal.set(c, 0));
+    }
   }
 
   /**
@@ -217,22 +227,25 @@ class UltimaLinhaTotal implements LinhaResumo {
   private inicializaMapaImpacto() {
     this.impactoTotal = new Map<string, number>();
     const impactos: string[] = AnaliseSharedUtils.impactos;
-    impactos.forEach(c => this.impactoTotal.set(c, 0));
+    if (impactos) {
+      impactos.forEach(c => this.impactoTotal.set(c, 0));
+    }
   }
 
   /**
    *
   */
   private somaTudo() {
+    if (this._linhasResumo) {
+      this._linhasResumo.forEach(linhaResumo => {
 
-    this._linhasResumo.forEach(linhaResumo => {
-
-      this.somarComplexidade(linhaResumo);
-      this.somarImpacto(linhaResumo);
-      this._totalPf += linhaResumo.getTotalPf();
-      this._totalGrossPF += linhaResumo.getTotalGrossPF();
-      this._quantidadeTotal += linhaResumo.getQuantidadeTotal();
-    });
+        this.somarComplexidade(linhaResumo);
+        this.somarImpacto(linhaResumo);
+        this._totalPf += linhaResumo.getTotalPf();
+        this._totalGrossPF += linhaResumo.getTotalGrossPF();
+        this._quantidadeTotal += linhaResumo.getQuantidadeTotal();
+      });
+    }
   }
 
   /**
@@ -242,11 +255,13 @@ class UltimaLinhaTotal implements LinhaResumo {
   private somarComplexidade(linhaResumo: LinhaResumo) {
     const complexidades: string[] = AnaliseSharedUtils.complexidades;
 
-    complexidades.forEach(complexidade => {
-      const complexidadeEnum: Complexidade = Complexidade[complexidade];
-      const totalDaComplexidade = linhaResumo.totalPorComplexidade(complexidadeEnum);
-      this.incrementaPorComplexidade(complexidadeEnum, totalDaComplexidade);
-    });
+    if (complexidades) {
+      complexidades.forEach(complexidade => {
+        const complexidadeEnum: Complexidade = Complexidade[complexidade];
+        const totalDaComplexidade = linhaResumo.totalPorComplexidade(complexidadeEnum);
+        this.incrementaPorComplexidade(complexidadeEnum, totalDaComplexidade);
+      });
+    }
   }
 
   /**
@@ -256,11 +271,13 @@ class UltimaLinhaTotal implements LinhaResumo {
   private somarImpacto(linhaResumo: LinhaResumo) {
     const impactos: string[] = AnaliseSharedUtils.impactos;
 
-    impactos.forEach(impacto => {
-      const impactoEnum: Impacto = Impacto[impacto];
-      const totalDoImpacto = linhaResumo.totalPorImpacto(impactoEnum);
-      this.incrementarPorImpacto(impactoEnum, totalDoImpacto);
-    });
+    if (impactos) {
+      impactos.forEach(impacto => {
+        const impactoEnum: Impacto = Impacto[impacto];
+        const totalDoImpacto = linhaResumo.totalPorImpacto(impactoEnum);
+        this.incrementarPorImpacto(impactoEnum, totalDoImpacto);
+      });
+    }
   }
 
   /**

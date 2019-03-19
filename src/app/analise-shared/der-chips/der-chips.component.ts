@@ -148,16 +148,18 @@ export class DerChipsComponent implements OnChanges {
         let recebeSplit = {};
         let result = [];
 
-        splitString.forEach(item => {
-            if (!recebeSplit[item]) {
-                recebeSplit[item] = 0;
-            }
-            recebeSplit[item] += 1;
-        });
+        if (splitString) {
+            splitString.forEach(item => {
+                if (!recebeSplit[item]) {
+                    recebeSplit[item] = 0;
+                }
+                recebeSplit[item] += 1;
+            });
 
-        for (let prop in recebeSplit) {
-            if (recebeSplit[prop] >= 2) {
-                result.push(prop);
+            for (let prop in recebeSplit) {
+                if (recebeSplit[prop] >= 2) {
+                    result.push(prop);
+                }
             }
         }
 

@@ -29,30 +29,32 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     load(id) {
         this.userService.find(id).subscribe((user) => {
             this.user = user;
-            this.user.authorities.forEach((authority, index) => {
-                authority.artificialId = index;
-                switch (index) {
-                    case 0: {
-                        authority.description = 'Administrador';
-                        break;
-                    }
+            if (this.user.authorities) {
+                this.user.authorities.forEach((authority, index) => {
+                    authority.artificialId = index;
+                    switch (index) {
+                        case 0: {
+                            authority.description = 'Administrador';
+                            break;
+                        }
 
-                    case 1: {
-                        authority.description = 'Usuário';
-                        break;
-                    }
+                        case 1: {
+                            authority.description = 'Usuário';
+                            break;
+                        }
 
-                    case 2: {
-                        authority.description = 'Observador';
-                        break;
-                    }
+                        case 2: {
+                            authority.description = 'Observador';
+                            break;
+                        }
 
-                    case 3: {
-                        authority.description = 'Analista';
-                        break;
+                        case 3: {
+                            authority.description = 'Analista';
+                            break;
+                        }
                     }
-                }
-            });
+                });
+            }
         });
 
     }

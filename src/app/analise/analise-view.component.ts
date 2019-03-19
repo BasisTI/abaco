@@ -430,11 +430,13 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
 
     checkUserAnaliseEquipes(){
         let retorno: boolean = false;
-        this.loggedUser.tipoEquipes.forEach(equipe => {
-            if (equipe.id === this.analise.equipeResponsavel.id){
-                retorno = true;
-            }
-        });
+        if (this.loggedUser.tipoEquipes) {
+            this.loggedUser.tipoEquipes.forEach(equipe => {
+                if (equipe.id === this.analise.equipeResponsavel.id){
+                    retorno = true;
+                }
+            });
+        }
         return retorno;
     }
 
@@ -442,10 +444,12 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         if(this.checkUserAnaliseEquipes()){
             this.equipeShare = [];
             this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id, this.analise.id, this.analise.equipeResponsavel.id).subscribe((equipes) => {
-                equipes.json.forEach((equipe) => {
-                    const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(), {id: undefined, equipeId: equipe.id, analiseId: this.analise.id, viewOnly: false, nomeEquipe: equipe.nome });
-                    this.equipeShare.push(entity);
-                });
+                if (equipes.json) {
+                    equipes.json.forEach((equipe) => {
+                        const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(), {id: undefined, equipeId: equipe.id, analiseId: this.analise.id, viewOnly: false, nomeEquipe: equipe.nome });
+                        this.equipeShare.push(entity);
+                    });
+                }
                 this.blockUI.stop();
             });
             this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {

@@ -30,7 +30,7 @@ export class Sistema implements BaseEntity {
 
   static fromJSON(json: any): Sistema {
     let modulos;
-    if (json){
+    if (json && json.modulos) {
       modulos = json.modulos.map(m => Modulo.fromJSON(m));
     }
     const newSistema = new Sistema(json.id, json.sigla,
@@ -40,7 +40,7 @@ export class Sistema implements BaseEntity {
   }
 
   static toNonCircularJson(s: Sistema): Sistema {
-    const nonCircularModulos = s.modulos.map(m => Modulo.toNonCircularJson(m));
+    const nonCircularModulos = s.modulos ? s.modulos.map(m => Modulo.toNonCircularJson(m)) : [];
     return new Sistema(s.id, s.sigla, s.nome, s.tipoSistema, s.numeroOcorrencia,
       s.organizacao, nonCircularModulos);
   }
@@ -60,7 +60,9 @@ export class Sistema implements BaseEntity {
 
   private getAllFuncionalidadesAsArrayOfArrays(): Array<Array<Funcionalidade>> {
     const allFuncs = [];
-    this.modulos.forEach(m => allFuncs.push(this.retrieveFuncionalidadesFromModulo(m)));
+    if (this.modulos) {
+      this.modulos.forEach(m => allFuncs.push(this.retrieveFuncionalidadesFromModulo(m)));
+    }
     return allFuncs;
   }
 

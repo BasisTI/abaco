@@ -75,13 +75,15 @@ export class PageNotificationService {
     getInvalidFields(invalidFields: Array<any>) {
       let invalidFieldNamesString = '';
 
-      invalidFields.forEach(each => {
-        if(each === invalidFields[invalidFields.length-1]) {
-          invalidFieldNamesString = invalidFieldNamesString + each.field;
-        } else {
-          invalidFieldNamesString = invalidFieldNamesString + ', ';
-        }
-      });
+      if (invalidFields) {
+        invalidFields.forEach(each => {
+            if(each === invalidFields[invalidFields.length-1]) {
+            invalidFieldNamesString = invalidFieldNamesString + each.field;
+            } else {
+            invalidFieldNamesString = invalidFieldNamesString + ', ';
+            }
+        });
+      }
 
       return invalidFieldNamesString;
     }

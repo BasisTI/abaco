@@ -108,73 +108,77 @@ export class UserFormComponent implements OnInit, OnDestroy {
     // FIXME parte da solução rápida e ruim, porém dinâmica
     // Horrível para muitas permissões
     private populateAuthoritiesArtificialIds() {
-        this.authorities.forEach((authority, index) => {
-            authority.artificialId = index;
-            switch (index) {
-                case 0: {
-                    authority.description = 'Administrador';
-                    break;
-                }
+        if (this.authorities) {
+            this.authorities.forEach((authority, index) => {
+                authority.artificialId = index;
+                switch (index) {
+                    case 0: {
+                        authority.description = 'Administrador';
+                        break;
+                    }
 
-                case 1: {
-                    authority.description = 'Usuário';
-                    break;
-                }
+                    case 1: {
+                        authority.description = 'Usuário';
+                        break;
+                    }
 
-                case 2: {
-                    authority.description = 'Observador';
-                    break;
-                }
+                    case 2: {
+                        authority.description = 'Observador';
+                        break;
+                    }
 
-                case 3: {
-                    authority.description = 'Analista';
-                    break;
-                }
+                    case 3: {
+                        authority.description = 'Analista';
+                        break;
+                    }
 
-                case 4: {
-                    authority.description = 'Gestor';
-                    break;
+                    case 4: {
+                        authority.description = 'Gestor';
+                        break;
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     // FIXME Solução rápida e ruim. O(n^2) no pior caso
     // Funciona para qualquer autoridade que vier no banco
     // Em oposição a uma solução mais simples porém hardcoded.
     private populateUserAuthoritiesWithArtificialId() {
-        this.user.authorities.forEach(authority => {
-            switch (authority.name) {
-                case 'ROLE_ADMIN': {
-                    authority.description = 'Administrador';
-                    authority.artificialId = 0;
-                    break;
-                }
+        if (this.user.authorities) {
+            this.user.authorities.forEach(authority => {
+                switch (authority.name) {
+                    case 'ROLE_ADMIN': {
+                        authority.description = 'Administrador';
+                        authority.artificialId = 0;
+                        break;
+                    }
 
-                case 'ROLE_USER': {
-                    authority.description = 'Usuário';
-                    authority.artificialId = 1;
-                    break;
-                }
+                    case 'ROLE_USER': {
+                        authority.description = 'Usuário';
+                        authority.artificialId = 1;
+                        break;
+                    }
 
-                case 'ROLE_VIEW': {
-                    authority.description = 'Observador';
-                    authority.artificialId = 2;
-                    break;
-                }
-                case 'ROLE_ANALISTA': {
-                    authority.description = 'Analista';
-                    authority.artificialId = 3;
-                    break;
-                }
-                case 'ROLE_GESTOR': {
-                    authority.description = 'Gestor';
-                    authority.artificialId = 4;
-                    break;
-                }
+                    case 'ROLE_VIEW': {
+                        authority.description = 'Observador';
+                        authority.artificialId = 2;
+                        break;
+                    }
+                    case 'ROLE_ANALISTA': {
+                        authority.description = 'Analista';
+                        authority.artificialId = 3;
+                        break;
+                    }
+                    case 'ROLE_GESTOR': {
+                        authority.description = 'Gestor';
+                        authority.artificialId = 4;
+                        break;
+                    }
 
-            }
-        });
+                }
+            });
+        }
     }
 
     /**
@@ -334,12 +338,14 @@ export class UserFormComponent implements OnInit, OnDestroy {
      */
     setEquipeOrganizacao(org: Organizacao[]) {
         this.tipoEquipes = [];
-        org.forEach(element => {
-            this.tipoEquipeService.findAllByOrganizacaoId(element.id).subscribe((res: ResponseWrapper) => {
+        if (org) {
+            org.forEach(element => {
+                this.tipoEquipeService.findAllByOrganizacaoId(element.id).subscribe((res: ResponseWrapper) => {
 
-                this.tipoEquipes = this.tipoEquipes.concat(this.TipoEquipeSemRepeticao(res.json));
+                    this.tipoEquipes = this.tipoEquipes.concat(this.TipoEquipeSemRepeticao(res.json));
+                });
             });
-        });
+        }
     }
 
     private TipoEquipeSemRepeticao(listaTipoEquipe: TipoEquipe[]): TipoEquipe[] {

@@ -105,30 +105,32 @@ export class UserComponent implements AfterViewInit, OnInit {
     }
 
     popularNomesAuthorities() {
-        this.authorities.forEach((authority) => {
-            switch (authority.name) {
-                case 'ROLE_ADMIN': {
-                    authority.description = 'Administrador';
-                    break;
+        if (this.authorities) {
+            this.authorities.forEach((authority) => {
+                switch (authority.name) {
+                    case 'ROLE_ADMIN': {
+                        authority.description = 'Administrador';
+                        break;
+                    }
+                    case 'ROLE_USER': {
+                        authority.description = 'Usuário';
+                        break;
+                    }
+                    case 'ROLE_VIEW': {
+                        authority.description = 'Observador';
+                        break;
+                    }
+                    case 'ROLE_ANALISTA': {
+                        authority.description = 'Analista';
+                        break;
+                    }
+                    case 'ROLE_GESTOR': {
+                        authority.description = 'Gestor';
+                        break;
+                    }
                 }
-                case 'ROLE_USER': {
-                    authority.description = 'Usuário';
-                    break;
-                }
-                case 'ROLE_VIEW': {
-                    authority.description = 'Observador';
-                    break;
-                }
-                case 'ROLE_ANALISTA': {
-                    authority.description = 'Analista';
-                    break;
-                }
-                case 'ROLE_GESTOR': {
-                    authority.description = 'Gestor';
-                    break;
-                }
-            }
-        });
+            });
+        }
     }
 
     ngAfterViewInit() {
