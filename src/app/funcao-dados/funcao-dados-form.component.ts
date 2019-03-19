@@ -54,6 +54,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     @Input() isView: boolean;
     @BlockUI() blockUI: NgBlockUI;      // Usado para bloquear o sistema enquanto aguarda resolução das requisições do backend
     isEdit: boolean;
+    crudExist: boolean = false;
     nomeInvalido;
     isSaving: boolean;
     listaFD: string[];
@@ -632,6 +633,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                         this.resetarEstadoPosSalvar();
                         this.salvarAnalise();
                         this.estadoInicial();
+                    } else {
+                        this.crudExist = true;
                     } 
                  }); 
     }
@@ -644,7 +647,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 crudExcluir.name = 'Excluir';
                 crudExcluir.funcionalidade = funcaoDadosSelecionada.funcionalidade;
                 crudExcluir.tipo = TipoFuncaoTransacao.EE;
-                crudExcluir.impacto = Impacto.EXCLUSAO;
+                crudExcluir.impacto = Impacto.INCLUSAO;
                 crudExcluir.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
                 this.inserirCrud(crudExcluir);
 
@@ -652,7 +655,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 crudEditar.name = 'Editar';
                 crudEditar.funcionalidade = funcaoDadosSelecionada.funcionalidade;
                 crudEditar.tipo = TipoFuncaoTransacao.EE;
-                crudEditar.impacto = Impacto.ALTERACAO;
+                crudEditar.impacto = Impacto.INCLUSAO;
                 crudEditar.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
                 setTimeout(function(){
                     _this.inserirCrud(crudEditar)
@@ -677,6 +680,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 setTimeout(function(){
                     _this.inserirCrud(crudPesquisar)
                 }, 3000);
+
+                if(this.crudExist){
+                    this.pageNotificationService.addErrorMsg('CRUD já cadastrado!');
+                }
         }
 
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {

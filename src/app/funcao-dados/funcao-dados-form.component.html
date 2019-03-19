@@ -14,7 +14,7 @@
 
                     <div>
                         <app-memory-datatable [disableDelete]="this.isView" [disableEdit]="this.isView"
-                                              [disableClone]="this.isView"
+                                              [disableClone]="this.isView" [disableCrud]="this.isView"
                                               [showCrud]="true"
                                               [value]="funcoesDados" id="idTabelaFuncaoDados"
                                               (buttonClick)="datatableClick($event)"
