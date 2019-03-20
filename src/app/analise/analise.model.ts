@@ -1,3 +1,4 @@
+import { Manual } from './../manual/manual.model';
 import {BaseEntity, MappableEntities, JSONable} from '../shared';
 import {Contrato} from '../contrato';
 import {EsforcoFase} from '../esforco-fase/index';
@@ -69,6 +70,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
         public bloqueiaAnalise?: boolean,
         public compartilhadas?: AnaliseShareEquipe[],
         public dataCriacaoOrdemServico?: any,
+        public manual?: Manual,
         ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
         this.inicializaResumos();
@@ -309,7 +311,8 @@ export class Analise implements BaseEntity, JSONable<Analise> {
             this.updatedOn,
             this.bloqueiaAnalise,
             this.compartilhadas,
-            this.dataCriacaoOrdemServico);
+            this.dataCriacaoOrdemServico,
+            this.manual);
     }
 
 }
@@ -332,6 +335,7 @@ class AnaliseCopyFromJSON {
         this.converteOrganizacao();
         this.converteContrato();
         this.converteEsforcoFases();
+        this.converteManual();
         return this._analiseConverted;
     }
 
@@ -417,5 +421,13 @@ class AnaliseCopyFromJSON {
     private converteEsforcoFases() {
         this._analiseConverted.esforcoFases = this._json.esforcoFases
             .map(efJSON => new EsforcoFase().copyFromJSON(efJSON));
+    }
+
+    private converteManual(){
+        if (this._json.contrato !== null) {
+            this._analiseConverted.manual = new Manual().copyFromJSON(this._json.manual);
+        } else {
+            this._analiseConverted.manual = new Manual();
+        }
     }
 }
