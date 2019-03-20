@@ -1,3 +1,5 @@
+import { Manual } from './../manual/manual.model';
+import { ManualContrato } from './../organizacao/ManualContrato.model';
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
@@ -20,7 +22,7 @@ import {TipoEquipeService} from '../tipo-equipe';
 import {MessageUtil} from '../util/message.util';
 import {FatorAjuste} from '../fator-ajuste';
 import {EsforcoFase} from '../esforco-fase';
-import {Manual, ManualService} from '../manual';
+import {ManualService} from '../manual';
 
 @Component({
     selector: 'jhi-analise-form',
@@ -67,7 +69,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     manuais: Manual[] = [];
 
-    manuaisCombo: any[] = [];
+    manuaisCombo: SelectItem[] = [];
 
     @BlockUI() blockUI: NgBlockUI;
 
@@ -237,9 +239,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.setSistemaOrganizacao(analiseCarregada.organizacao);
         if (analiseCarregada.contrato != undefined && analiseCarregada.contrato.manualContrato)
             this.setManual(
-                analiseCarregada.contrato.manualContrato[0].manual ?
-                            analiseCarregada.contrato.manualContrato[0].manual :
-                            new Manual());
+                analiseCarregada.manual ? analiseCarregada.manual : new Manual());
         this.carregaFatorAjusteNaEdicao();
         this.isEdit = this.analise.identificadorAnalise == undefined ? true: false;
     }
@@ -474,8 +474,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     contratoSelected(contrato: Contrato) {
         if (contrato.manualContrato) {
             this.setManuais(contrato);
-            this.setManual(contrato.manualContrato[0].manual);
-            this.manual = contrato.manualContrato[0].manual;
+            this.setManual(this.analise.manual);
+            this.manual = this.analise.manual;
             this.diasGarantia = this.analise.contrato.diasDeGarantia;
             //this.analise.baselineImediatamente = true;
             //this.analise.enviarBaseline = true;
@@ -483,23 +483,42 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     setManuais(contrato: Contrato) {
-        if (contrato.manualContrato) {
-            contrato.manualContrato.sort( (a, b): number => {
-                if (a.dataInicioVigencia < b.dataFimVigencia ) {
-                    return 1;
-                }
+        contrato.manualContrato.forEach(item => {
+            //Método provisorio, deve ser iniciado durante a desserialização
+            item.dataInicioVigencia = new Date (item.dataInicioVigencia)
+            item.dataFimVigencia = new Date (item.dataFimVigencia)
+       });
+
+       contrato.manualContrato = contrato.manualContrato.sort( (a, b): number => {
+       if((a.dataInicioVigencia.getTime() == b.dataInicioVigencia.getTime()) ){
+           if (a.dataFimVigencia.getTime() < b.dataFimVigencia.getTime()){
                 return -1;
-            } );
-            this.resetManuais();
-            contrato.manualContrato.forEach( item => {
-                this.manuais.push(item.manual);
-                this.manuaisCombo.push({
-                    label: item.manual.nome,
-                    value: item.manual
-                });
-            } );
-        }
-    }
+           }else{
+               return 1;
+           }
+       }   
+           if (a.dataInicioVigencia.getTime() < b.dataInicioVigencia.getTime()) {
+               return -1;
+           }
+           return 1;
+       } );
+               
+       
+       this.resetManuais();
+       contrato.manualContrato.forEach( (item : ManualContrato) => {
+           
+        const entity: Manual = new Manual();
+        let m: Manual = entity.copyFromJSON(item.manual);
+
+        this.manuais.push(item.manual);
+        this.manuaisCombo.push({
+            label: m.nome,
+            value: m.id == this.analise.manual.id ? this.analise.manual : m
+        });
+
+       } );
+   }
+
 
     resetManuais() {
         this.manuais = [];
