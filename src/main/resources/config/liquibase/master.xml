@@ -20,7 +20,7 @@
     <include file="classpath:config/liquibase/changelog/20170307193249_added_entity_FuncaoDados.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170307193250_added_entity_FuncaoTransacao.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170307193251_added_entity_Alr.xml" relativeToChangelogFile="false"/>
-
+	
     <include file="config/liquibase/changelog/20171226112345_added_entity_TipoEquipe.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171227105647_added_entity_TipoFase.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
@@ -98,7 +98,7 @@
     <include file="classpath:config/liquibase/changelog/added_entity_manual_contrato.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/ALTER_manual_contrato.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/ALTER_contrato.xml" relativeToChangelogFile="false"/>
-
+	<include file="classpath:config/liquibase/changelog/ALTER_analise_20190314.xml" relativeToChangelogFile="false"/>
 
     
 </databaseChangeLog>
