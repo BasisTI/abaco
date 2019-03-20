@@ -254,7 +254,7 @@ public class AnaliseResource {
         if (analise != null) {
             Analise analiseCopia = new Analise(analise.getIdentificadorAnalise(),
                 analise.getPfTotal(), analise.getAdjustPFTotal(), analise.getSistema(),
-                analise.getOrganizacao(),analise.getBaselineImediatamente(), analise.getEquipeResponsavel());
+                analise.getOrganizacao(),analise.getBaselineImediatamente(), analise.getEquipeResponsavel(), analise.getManual());
 
             Analise analiseCopiaSalva = analiseRepository.save(analiseCopia);
             analiseSearchRepository.save(analiseCopiaSalva);
