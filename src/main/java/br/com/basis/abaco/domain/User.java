@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
+import java.util.LinkedHashSet;
 
 /**
  * A user.
@@ -222,7 +223,9 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
   }
 
   public Set<Authority> getAuthorities() {
-    return authorities;
+      Set<Authority> authoritiesCopy = new LinkedHashSet<>();
+      authoritiesCopy.addAll(authorities);
+    return authoritiesCopy;
   }
 
     public String getAuthDescription(){
@@ -241,7 +244,9 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
   public void setAuthorities(Set<Authority> authorities) {
-    this.authorities = authorities;
+    Set<Authority> copy = new LinkedHashSet<>();
+    copy.addAll(authorities);
+    this.authorities = copy;
   }
 
   public Set<TipoEquipe> getTipoEquipes() {
@@ -272,7 +277,9 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
   }
 
   public Set<Organizacao> getOrganizacoes() {
-    return organizacoes;
+      Set<Organizacao> organizacoesCopy = new LinkedHashSet<>();
+      organizacoesCopy.addAll(organizacoes);
+    return organizacoesCopy;
   }
 
     public String getNomeOrg(){
@@ -289,7 +296,9 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
   public void setOrganizacoes(Set<Organizacao> organizacoes) {
-    this.organizacoes = organizacoes;
+      Set<Organizacao> copy = new LinkedHashSet<>();
+      copy.addAll(organizacoes);
+      this.organizacoes = copy;
   }
 
   @Override
