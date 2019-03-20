@@ -178,8 +178,12 @@ public class Analise implements Serializable, ReportObject {
 
     @ManyToOne
     private TipoEquipe equipeResponsavel;
+    
+    @ManyToOne
+    private Manual manual;
+    
 
-    public Long getId() {
+	public Long getId() {
         return id;
     }
 
@@ -200,7 +204,7 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Analise(String identificadorAnalise, String pfTotal, String adjustPFTotal, Sistema sistema,
-            Organizacao organizacao, Boolean baselineImediatamente, TipoEquipe equipeResponsavel) {
+            Organizacao organizacao, Boolean baselineImediatamente, TipoEquipe equipeResponsavel, Manual manual) {
         this.id = null;
         this.identificadorAnalise = identificadorAnalise.concat(" - CÓPIA");
         this.pfTotal = pfTotal;
@@ -209,6 +213,7 @@ public class Analise implements Serializable, ReportObject {
         this.organizacao = organizacao;
         this.baselineImediatamente = baselineImediatamente;
         this.equipeResponsavel = equipeResponsavel;
+        this.manual = manual;
     }
 
     public void setNumeroOs(String numeroOs) {
@@ -559,7 +564,15 @@ public class Analise implements Serializable, ReportObject {
     public void setEquipeResponsavel(TipoEquipe equipeResponsavel) {
         this.equipeResponsavel = equipeResponsavel;
     }
+    
+    public Manual getManual() {
+		return manual;
+	}
 
+	public void setManual(Manual manual) {
+		this.manual = manual;
+	}
+	
     public AbacoAudit getAudit() {
         return audit;
     }
