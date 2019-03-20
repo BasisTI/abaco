@@ -235,11 +235,11 @@
                                         required
                                         [filter]="true"
                                         id="idManual"
-                                        name="manualContrato"
+                                        name="manual"
                                         disabled="{{ !isContratoSelected() }}"
                                         [options]="manuaisCombo"
                                         (onChange)="setManual($event.value)"
-                                        [(ngModel)]="manual"
+                                        [(ngModel)]="analise.manual"
                                         [autoWidth]="false"
                                         datakey="id">
                                     </p-dropdown>

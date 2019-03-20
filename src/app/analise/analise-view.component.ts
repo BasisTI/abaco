@@ -57,6 +57,8 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     fatoresAjuste: SelectItem[] = [];
 
     equipeResponsavel: SelectItem[] = [];
+    
+    manual: Manual;
 
     nomeManual = MessageUtil.SELECIONE_CONTRATO;
 
@@ -198,7 +200,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         }
         this.analise = analiseCarregada;
         this.setSistamaOrganizacao(analiseCarregada.organizacao);
-        this.setManual(analiseCarregada.contrato);
+        this.setManual(analiseCarregada.manual);
         this.carregaFatorAjusteNaEdicao();
     }
 
@@ -236,9 +238,8 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     /**
      * Método responsável por popular o manual do contrato
      */
-    setManual(contrato: Contrato) {
-        if (contrato && contrato.manual) {
-            const manual: Manual = contrato.manual;
+    setManual(manual: Manual) {
+        if (manual) {
             this.nomeManual = manual.nome;
             this.carregarEsforcoFases(manual);
             this.carregarMetodosContagem(manual);
@@ -365,7 +366,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
      * @param contrato
      */
     contratoSelected(contrato: Contrato) {
-        this.setManual(contrato);
+        this.setManual(this.analise.manual);
     }
 
     /**
