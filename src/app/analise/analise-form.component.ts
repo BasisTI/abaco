@@ -283,9 +283,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     /**
      * Método responsável por popular o manual do contrato
      */
-    setManual(manual: Manual) {
-        if (manual) {
-            this.manualService.find(manual.id).subscribe((manual) => {
+    setManual(manual1: Manual) {
+        if (manual1) {
+            this.manualService.find(manual1.id).subscribe((manual) => {
                 this.nomeManual = manual.nome;
                 this.carregarEsforcoFases(manual);
                 this.carregarMetodosContagem(manual);
@@ -474,10 +474,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     contratoSelected(contrato: Contrato) {
         if (contrato.manualContrato) {
             this.setManuais(contrato);
-            this.setManual(this.analise.manual);
-            this.manual = this.analise.manual;
+            var manualSelected = (typeof this.analise.manual.id !== "undefined") ? this.analise.manual : contrato.manualContrato[0].manual;
+            this.setManual(manualSelected);
+            this.analise.manual = manualSelected;
             this.diasGarantia = this.analise.contrato.diasDeGarantia;
-            this.carregarMetodosContagem(contrato.manualContrato[0].manual)
+            this.carregarMetodosContagem(manualSelected)
             //this.analise.baselineImediatamente = true;
             //this.analise.enviarBaseline = true;
         }
