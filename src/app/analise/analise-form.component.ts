@@ -317,9 +317,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     private carregaFatorAjusteNaEdicao() {
         const fatorAjuste: FatorAjuste = this.analise.fatorAjuste;
         if (fatorAjuste) {
-            const fatorAjusteSelectItem: SelectItem
+            const fatorAjusteSelectItem: SelectItem["value"]
                 = _.find(this.fatoresAjuste, { value: { id: fatorAjuste.id } });
-            this.analise.fatorAjuste = fatorAjusteSelectItem.value;
+            this.analise.fatorAjuste = fatorAjusteSelectItem;
         }
     }
 
