@@ -1,28 +1,28 @@
 import { Manual } from './../manual/manual.model';
 import { ManualContrato } from './../organizacao/ManualContrato.model';
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs/Rx';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs/Rx';
 import { Response } from '@angular/http';
 
 
 import { Analise, AnaliseShareEquipe } from './';
-import {AnaliseService} from './analise.service';
+import { AnaliseService } from './analise.service';
 import { User, UserService } from '../user';
-import {ResponseWrapper,  AnaliseSharedDataService, PageNotificationService} from '../shared';
-import {Organizacao, OrganizacaoService} from '../organizacao';
-import {Contrato, ContratoService} from '../contrato';
-import {Sistema, SistemaService} from '../sistema';
-import {SelectItem, ConfirmationService} from 'primeng/primeng';
+import { ResponseWrapper, AnaliseSharedDataService, PageNotificationService } from '../shared';
+import { Organizacao, OrganizacaoService } from '../organizacao';
+import { Contrato, ContratoService } from '../contrato';
+import { Sistema, SistemaService } from '../sistema';
+import { SelectItem, ConfirmationService } from 'primeng/primeng';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 import * as _ from 'lodash';
-import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
-import {TipoEquipeService} from '../tipo-equipe';
-import {MessageUtil} from '../util/message.util';
-import {FatorAjuste} from '../fator-ajuste';
-import {EsforcoFase} from '../esforco-fase';
-import {ManualService} from '../manual';
+import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
+import { TipoEquipeService } from '../tipo-equipe';
+import { MessageUtil } from '../util/message.util';
+import { FatorAjuste } from '../fator-ajuste';
+import { EsforcoFase } from '../esforco-fase';
+import { ManualService } from '../manual';
 
 @Component({
     selector: 'jhi-analise-form',
@@ -73,18 +73,18 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     @BlockUI() blockUI: NgBlockUI;
 
-    private fatorAjusteNenhumSelectItem = {label: MessageUtil.NENHUM, value: undefined};
+    private fatorAjusteNenhumSelectItem = { label: MessageUtil.NENHUM, value: undefined };
 
     tiposAnalise: SelectItem[] = [
-        {label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO},
-        {label: MessageUtil.PROJETO_MELHORIA, value: MessageUtil.MELHORIA},
-        {label: MessageUtil.CONTAGEM_APLICACAO, value: MessageUtil.APLICACAO}
+        { label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO },
+        { label: MessageUtil.PROJETO_MELHORIA, value: MessageUtil.MELHORIA },
+        { label: MessageUtil.CONTAGEM_APLICACAO, value: MessageUtil.APLICACAO }
     ];
 
     metodoContagem: SelectItem[] = [
-        {label: MessageUtil.DETALHADA_IFPUG, value: MessageUtil.DETALHADA_IFPUG},
-        {label: MessageUtil.INDICATIVA_NESMA, value: MessageUtil.INDICATIVA_NESMA},
-        {label: MessageUtil.ESTIMADA_NESMA, value: MessageUtil.ESTIMADA_NESMA}
+        { label: MessageUtil.DETALHADA_IFPUG, value: MessageUtil.DETALHADA_IFPUG },
+        { label: MessageUtil.INDICATIVA_NESMA, value: MessageUtil.INDICATIVA_NESMA },
+        { label: MessageUtil.ESTIMADA_NESMA, value: MessageUtil.ESTIMADA_NESMA }
     ];
 
     private routeSub: Subscription;
@@ -134,8 +134,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    populateOrgs(orgs){
-            this.organizacoes = orgs;
+    populateOrgs(orgs) {
+        this.organizacoes = orgs;
     }
 
     checkUserAnaliseEquipes() {
@@ -241,7 +241,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.setManual(
                 analiseCarregada.manual ? analiseCarregada.manual : new Manual());
         this.carregaFatorAjusteNaEdicao();
-        this.isEdit = this.analise.identificadorAnalise == undefined ? true: false;
+        this.isEdit = this.analise.identificadorAnalise == undefined ? true : false;
     }
 
     /**
@@ -255,7 +255,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular a lista de sistemas da organização selecionada.
      */
     setSistemaOrganizacao(org: Organizacao) {
-        if(!this.isEdicao){
+        if (!this.isEdicao) {
             this.analise.sistema = undefined;
             this.analise.equipeResponsavel = undefined;
         };
@@ -305,7 +305,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.fatoresAjuste =
                 faS.map(fa => {
                     const label = FatorAjusteLabelGenerator.generate(fa);
-                    return {label: label, value: fa};
+                    return { label: label, value: fa };
                 });
             this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
         }
@@ -318,7 +318,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         const fatorAjuste: FatorAjuste = this.analise.fatorAjuste;
         if (fatorAjuste) {
             const fatorAjusteSelectItem: SelectItem
-                = _.find(this.fatoresAjuste, {value: {id: fatorAjuste.id}});
+                = _.find(this.fatoresAjuste, { value: { id: fatorAjuste.id } });
             this.analise.fatorAjuste = fatorAjusteSelectItem.value;
         }
     }
@@ -477,6 +477,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.setManual(this.analise.manual);
             this.manual = this.analise.manual;
             this.diasGarantia = this.analise.contrato.diasDeGarantia;
+            this.carregarMetodosContagem(contrato.manualContrato[0].manual)
             //this.analise.baselineImediatamente = true;
             //this.analise.enviarBaseline = true;
         }
@@ -485,39 +486,39 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     setManuais(contrato: Contrato) {
         contrato.manualContrato.forEach(item => {
             //Método provisorio, deve ser iniciado durante a desserialização
-            item.dataInicioVigencia = new Date (item.dataInicioVigencia)
-            item.dataFimVigencia = new Date (item.dataFimVigencia)
-       });
-
-       contrato.manualContrato = contrato.manualContrato.sort( (a, b): number => {
-       if((a.dataInicioVigencia.getTime() == b.dataInicioVigencia.getTime()) ){
-           if (a.dataFimVigencia.getTime() < b.dataFimVigencia.getTime()){
-                return -1;
-           }else{
-               return 1;
-           }
-       }   
-           if (a.dataInicioVigencia.getTime() < b.dataInicioVigencia.getTime()) {
-               return -1;
-           }
-           return 1;
-       } );
-               
-       
-       this.resetManuais();
-       contrato.manualContrato.forEach( (item : ManualContrato) => {
-           
-        const entity: Manual = new Manual();
-        let m: Manual = entity.copyFromJSON(item.manual);
-
-        this.manuais.push(item.manual);
-        this.manuaisCombo.push({
-            label: m.nome,
-            value: m.id == this.analise.manual.id ? this.analise.manual : m
+            item.dataInicioVigencia = new Date(item.dataInicioVigencia)
+            item.dataFimVigencia = new Date(item.dataFimVigencia)
         });
 
-       } );
-   }
+        contrato.manualContrato = contrato.manualContrato.sort((a, b): number => {
+            if ((a.dataInicioVigencia.getTime() == b.dataInicioVigencia.getTime())) {
+                if (a.dataFimVigencia.getTime() < b.dataFimVigencia.getTime()) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+            if (a.dataInicioVigencia.getTime() < b.dataInicioVigencia.getTime()) {
+                return -1;
+            }
+            return 1;
+        });
+
+
+        this.resetManuais();
+        contrato.manualContrato.forEach((item: ManualContrato) => {
+
+            const entity: Manual = new Manual();
+            let m: Manual = entity.copyFromJSON(item.manual);
+
+            this.manuais.push(item.manual);
+            this.manuaisCombo.push({
+                label: m.nome,
+                value: m.id == this.analise.manual.id ? this.analise.manual : m
+            });
+
+        });
+    }
 
 
     resetManuais() {
@@ -564,8 +565,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
         this.validacaoCampos = !(validacaoIdentificadorAnalise === true
             && validacaoContrato === true
-            && validacaoMetodoContagem  === true
-            && validacaoTipoAnallise === true );
+            && validacaoMetodoContagem === true
+            && validacaoTipoAnallise === true);
 
         this.enableDisableAba();
     }
@@ -593,7 +594,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             isValid = false;
             return isValid;
         }
-        if(!this.analise.dataCriacaoOrdemServico){
+        if (!this.analise.dataCriacaoOrdemServico) {
             this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_DATA_ORDEM_SERVICO);
             isValid = false;
             return isValid;
@@ -641,19 +642,21 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id,
                 this.analise.id,
                 this.analise.equipeResponsavel.id).subscribe((equipes) => {
-                if (equipes.json) {
-                    equipes.json.forEach((equipe) => {
-                        const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
-                            {id: undefined,
-                                equipeId: equipe.id,
-                                analiseId: this.analise.id,
-                                viewOnly: false,
-                                nomeEquipe: equipe.nome });
-                        this.equipeShare.push(entity);
-                    });
-                }
-                this.blockUI.stop();
-            });
+                    if (equipes.json) {
+                        equipes.json.forEach((equipe) => {
+                            const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
+                                {
+                                    id: undefined,
+                                    equipeId: equipe.id,
+                                    analiseId: this.analise.id,
+                                    viewOnly: false,
+                                    nomeEquipe: equipe.nome
+                                });
+                            this.equipeShare.push(entity);
+                        });
+                    }
+                    this.blockUI.stop();
+                });
             this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {
                 this.analiseShared = shared.json;
             });
@@ -695,9 +698,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     public updateViewOnly() {
-        setTimeout(() => { this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
-            this.pageNotificationService.addSuccessMsg('Registro atualizado com sucesso!');
-        }); }, 250);
+        setTimeout(() => {
+            this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
+                this.pageNotificationService.addSuccessMsg('Registro atualizado com sucesso!');
+            });
+        }, 250);
     }
 }
 

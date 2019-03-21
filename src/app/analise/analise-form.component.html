@@ -185,6 +185,22 @@
                                 </div>
 
                                 <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Manual</label>
+                                    <p-dropdown
+                                        required
+                                        [filter]="true"
+                                        id="idManual"
+                                        name="manual"
+                                        disabled="{{ !isContratoSelected() }}"
+                                        [options]="manuaisCombo"
+                                        (onChange)="setManual($event.value)"
+                                        [(ngModel)]="analise.manual"
+                                        [autoWidth]="false"
+                                        datakey="id">
+                                    </p-dropdown>
+                                </div>
+                                
+                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
                                     <label>Método de Contagem *</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -229,21 +245,7 @@
                                     </p-dropdown>
                                 </div>
 
-                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
-                                    <label>Manual</label>
-                                    <p-dropdown
-                                        required
-                                        [filter]="true"
-                                        id="idManual"
-                                        name="manual"
-                                        disabled="{{ !isContratoSelected() }}"
-                                        [options]="manuaisCombo"
-                                        (onChange)="setManual($event.value)"
-                                        [(ngModel)]="analise.manual"
-                                        [autoWidth]="false"
-                                        datakey="id">
-                                    </p-dropdown>
-                                </div>
+                                
 
                                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
                                     <label>Propósito da Contagem</label>
