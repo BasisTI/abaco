@@ -1,6 +1,5 @@
 package br.com.basis.abaco.repository;
 
-import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.Sistema;
 import org.springframework.data.jpa.repository.EntityGraph;

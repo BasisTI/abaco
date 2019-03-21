@@ -29,45 +29,45 @@ import javax.annotation.PostConstruct;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	private final AuthenticationManagerBuilder authenticationManagerBuilder;
+  private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-	private final UserDetailsService userDetailsService;
+  private final UserDetailsService userDetailsService;
 
-	private final TokenProvider tokenProvider;
+  private final TokenProvider tokenProvider;
 
-	private final CorsFilter corsFilter;
+  private final CorsFilter corsFilter;
 
-	public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder,
-			UserDetailsService userDetailsService, TokenProvider tokenProvider, CorsFilter corsFilter) {
+  public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder,
+      UserDetailsService userDetailsService, TokenProvider tokenProvider, CorsFilter corsFilter) {
 
-		this.authenticationManagerBuilder = authenticationManagerBuilder;
-		this.userDetailsService = userDetailsService;
-		this.tokenProvider = tokenProvider;
-		this.corsFilter = corsFilter;
-	}
+    this.authenticationManagerBuilder = authenticationManagerBuilder;
+    this.userDetailsService = userDetailsService;
+    this.tokenProvider = tokenProvider;
+    this.corsFilter = corsFilter;
+  }
 
-	@PostConstruct
-	public void init() {
-		try {
-			authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-		} catch (Exception e) {
-			throw new BeanInitializationException("Security configuration failed", e);
-		}
-	}
+  @PostConstruct
+  public void init() {
+    try {
+      authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    } catch (Exception e) {
+      throw new BeanInitializationException("Security configuration failed", e);
+    }
+  }
 
-	@Bean
-	public Http401UnauthorizedEntryPoint http401UnauthorizedEntryPoint() {
-		return new Http401UnauthorizedEntryPoint();
-	}
+  @Bean
+  public Http401UnauthorizedEntryPoint http401UnauthorizedEntryPoint() {
+    return new Http401UnauthorizedEntryPoint();
+  }
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		// // @formatter:off
+  @Override
+  public void configure(WebSecurity web) throws Exception {
+    // // @formatter:off
         web.ignoring()
             .antMatchers(HttpMethod.OPTIONS, "/**")
             .antMatchers("/app/**/*.{js,html}")
@@ -77,11 +77,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/swagger-ui/index.html")
             .antMatchers("/test/**");
         // @formatter:on
-	}
+  }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		// @formatter:off
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    // @formatter:off
         http
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling()
@@ -112,14 +112,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .and()
             .apply(securityConfigurerAdapter());
         // @formatter:on
-	}
+  }
 
-	private JWTConfigurer securityConfigurerAdapter() {
-		return new JWTConfigurer(tokenProvider);
-	}
+  private JWTConfigurer securityConfigurerAdapter() {
+    return new JWTConfigurer(tokenProvider);
+  }
 
-	@Bean
-	public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
-		return new SecurityEvaluationContextExtension();
-	}
+  @Bean
+  public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
+    return new SecurityEvaluationContextExtension();
+  }
 }

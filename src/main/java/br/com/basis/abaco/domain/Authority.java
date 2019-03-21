@@ -18,7 +18,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "jhi_authority")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Authority implements Serializable, Cloneable {
+public class Authority implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -73,10 +73,5 @@ public class Authority implements Serializable, Cloneable {
             "name='" + name + '\'' +
             "description=" + description + '\'' +
             "}";
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
     }
 }

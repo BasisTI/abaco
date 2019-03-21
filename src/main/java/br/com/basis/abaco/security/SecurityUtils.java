@@ -38,10 +38,10 @@ public final class SecurityUtils {
     }
     
     public static Collection<? extends GrantedAuthority> getCurrentUserRoles() {
-    	SecurityContext securityContext = SecurityContextHolder.getContext();
+      SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
         if(authentication != null) {
-        	return authentication.getAuthorities();
+          return authentication.getAuthorities();
         }
         return Collections.emptyList();
     }

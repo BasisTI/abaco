@@ -1,7 +1,5 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Contrato;
-import br.com.basis.abaco.domain.ManualContrato;
 import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
@@ -45,7 +43,6 @@ import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
