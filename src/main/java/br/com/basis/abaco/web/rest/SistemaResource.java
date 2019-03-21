@@ -67,23 +67,23 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 @RequestMapping("/api")
 public class SistemaResource {
 
-	private final Logger log = LoggerFactory.getLogger(SistemaResource.class);
+  private final Logger log = LoggerFactory.getLogger(SistemaResource.class);
 
-	private static final String ENTITY_NAME = "sistema";
+  private static final String ENTITY_NAME = "sistema";
 
     private static final String DBG_MSG_SIS = "REST request to search Sistemas for query {}";
 
-	private final SistemaRepository sistemaRepository;
+  private final SistemaRepository sistemaRepository;
 
-	private final SistemaSearchRepository sistemaSearchRepository;
+  private final SistemaSearchRepository sistemaSearchRepository;
 
-	private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
+  private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
-	private final FuncaoDadosRepository funcaoDadosRepository;
+  private final FuncaoDadosRepository funcaoDadosRepository;
 
-	private final DynamicExportsService dynamicExportsService;
+  private final DynamicExportsService dynamicExportsService;
 
-	private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
+  private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
@@ -93,188 +93,188 @@ public class SistemaResource {
 
     private static  final String PAGE = "page";
 
-	public SistemaResource(
-			SistemaRepository sistemaRepository,
-			SistemaSearchRepository sistemaSearchRepository,
-			FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
-			FuncaoDadosRepository funcaoDadosRepository, DynamicExportsService dynamicExportsService) {
+  public SistemaResource(
+      SistemaRepository sistemaRepository,
+      SistemaSearchRepository sistemaSearchRepository,
+      FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
+      FuncaoDadosRepository funcaoDadosRepository, DynamicExportsService dynamicExportsService) {
 
-		this.sistemaRepository = sistemaRepository;
-		this.sistemaSearchRepository = sistemaSearchRepository;
-		this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
-		this.funcaoDadosRepository = funcaoDadosRepository;
-		this.dynamicExportsService = dynamicExportsService;
-	}
+    this.sistemaRepository = sistemaRepository;
+    this.sistemaSearchRepository = sistemaSearchRepository;
+    this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
+    this.funcaoDadosRepository = funcaoDadosRepository;
+    this.dynamicExportsService = dynamicExportsService;
+  }
 
-	/**
-	 * POST /sistemas : Create a new sistema.
-	 * @param sistema the sistema to create
-	 * @return the ResponseEntity with status 201 (Created)
-	 * and with body the new sistema, or with status 400 (Bad Request)
-	 * if the sistema has already an ID
-	 * @throws URISyntaxException if the Location URI syntax is incorrect
-	 */
-	@PostMapping("/sistemas")
-	@Timed
+  /**
+   * POST /sistemas : Create a new sistema.
+   * @param sistema the sistema to create
+   * @return the ResponseEntity with status 201 (Created)
+   * and with body the new sistema, or with status 400 (Bad Request)
+   * if the sistema has already an ID
+   * @throws URISyntaxException if the Location URI syntax is incorrect
+   */
+  @PostMapping("/sistemas")
+  @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-	public ResponseEntity<Sistema> createSistema(@Valid @RequestBody Sistema sistema) throws URISyntaxException {
-		log.debug("REST request to save Sistema : {}", sistema);
-		if (sistema.getId() != null) {
-			return ResponseEntity.badRequest().headers(
-					HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new sistema cannot already have an ID"))
-					.body(null);
-		}
-		Sistema linkedSistema = linkSistemaToModuleToFunctionalities(sistema);
-		Sistema result = sistemaRepository.save(linkedSistema);
-		sistemaSearchRepository.save(result);
-		return ResponseEntity.created(new URI("/api/sistemas/" + result.getId()))
-				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
-	}
+  public ResponseEntity<Sistema> createSistema(@Valid @RequestBody Sistema sistema) throws URISyntaxException {
+    log.debug("REST request to save Sistema : {}", sistema);
+    if (sistema.getId() != null) {
+      return ResponseEntity.badRequest().headers(
+          HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new sistema cannot already have an ID"))
+          .body(null);
+    }
+    Sistema linkedSistema = linkSistemaToModuleToFunctionalities(sistema);
+    Sistema result = sistemaRepository.save(linkedSistema);
+    sistemaSearchRepository.save(result);
+    return ResponseEntity.created(new URI("/api/sistemas/" + result.getId()))
+        .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+  }
 
-	private Sistema linkSistemaToModuleToFunctionalities(Sistema sistema) {
-		Sistema linkedSistema = copySistema(sistema);
-		Set<Modulo> modulos = linkedSistema.getModulos();
-		Optional.ofNullable(modulos).orElse(Collections.emptySet())
-			.forEach(m -> {
-				m.setSistema(linkedSistema);
-				Optional.ofNullable(m.getFuncionalidades())
-					.orElse(Collections.emptySet())
-					.parallelStream().forEach(f -> f.setModulo(m));
-			});
-		return linkedSistema;
-	}
+  private Sistema linkSistemaToModuleToFunctionalities(Sistema sistema) {
+    Sistema linkedSistema = copySistema(sistema);
+    Set<Modulo> modulos = linkedSistema.getModulos();
+    Optional.ofNullable(modulos).orElse(Collections.emptySet())
+      .forEach(m -> {
+        m.setSistema(linkedSistema);
+        Optional.ofNullable(m.getFuncionalidades())
+          .orElse(Collections.emptySet())
+          .parallelStream().forEach(f -> f.setModulo(m));
+      });
+    return linkedSistema;
+  }
 
-	private Sistema copySistema(Sistema sistema) {
-		Sistema copy = new Sistema();
-		copy.setId(sistema.getId());
-		copy.setSigla(sistema.getSigla());
-		copy.setNome(sistema.getNome());
-		copy.setTipoSistema(sistema.getTipoSistema());
-		copy.setNumeroOcorrencia(sistema.getNumeroOcorrencia());
-		copy.setOrganizacao(sistema.getOrganizacao());
-		copy.setModulos(Optional.ofNullable(sistema.getModulos())
-			.map((lista) -> new HashSet<>(lista))
-			.orElse(new HashSet<>()));
-		return copy;
-	}
+  private Sistema copySistema(Sistema sistema) {
+    Sistema copy = new Sistema();
+    copy.setId(sistema.getId());
+    copy.setSigla(sistema.getSigla());
+    copy.setNome(sistema.getNome());
+    copy.setTipoSistema(sistema.getTipoSistema());
+    copy.setNumeroOcorrencia(sistema.getNumeroOcorrencia());
+    copy.setOrganizacao(sistema.getOrganizacao());
+    copy.setModulos(Optional.ofNullable(sistema.getModulos())
+      .map((lista) -> new HashSet<>(lista))
+      .orElse(new HashSet<>()));
+    return copy;
+  }
 
-	/**
-	 * PUT /sistemas : Updates an existing sistema.
-	 * @param sistema the sistema to update
-	 * @return the ResponseEntity with status 200 (OK) and with body the updated
-	 * sistema, or with status 400 (Bad Request) if the sistema is not
-	 * valid, or with status 500 (Internal Server Error) if the sistema
-	 * couldnt be updated
-	 * @throws URISyntaxException if the Location URI syntax is incorrect
-	 */
-	@PutMapping("/sistemas")
-	@Timed
+  /**
+   * PUT /sistemas : Updates an existing sistema.
+   * @param sistema the sistema to update
+   * @return the ResponseEntity with status 200 (OK) and with body the updated
+   * sistema, or with status 400 (Bad Request) if the sistema is not
+   * valid, or with status 500 (Internal Server Error) if the sistema
+   * couldnt be updated
+   * @throws URISyntaxException if the Location URI syntax is incorrect
+   */
+  @PutMapping("/sistemas")
+  @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-	public ResponseEntity<Sistema> updateSistema(@Valid @RequestBody Sistema sistema) throws URISyntaxException {
-		log.debug("REST request to update Sistema : {}", sistema);
-		if (sistema.getId() == null) {
-			return createSistema(sistema);
-		}
-		Sistema linkedSistema = linkSistemaToModuleToFunctionalities(sistema);
-		Sistema result = sistemaRepository.save(linkedSistema);
-		sistemaSearchRepository.save(result);
-		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, sistema.getId().toString())).body(result);
-	}
+  public ResponseEntity<Sistema> updateSistema(@Valid @RequestBody Sistema sistema) throws URISyntaxException {
+    log.debug("REST request to update Sistema : {}", sistema);
+    if (sistema.getId() == null) {
+      return createSistema(sistema);
+    }
+    Sistema linkedSistema = linkSistemaToModuleToFunctionalities(sistema);
+    Sistema result = sistemaRepository.save(linkedSistema);
+    sistemaSearchRepository.save(result);
+    return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, sistema.getId().toString())).body(result);
+  }
 
-	/**
-	 * GET /sistemas : get all the sistemas.
-	 * @return the ResponseEntity with status 200 (OK) and the list of sistemas in body
-	 */
-	@PostMapping("/sistemas/organizations")
-	@Timed
+  /**
+   * GET /sistemas : get all the sistemas.
+   * @return the ResponseEntity with status 200 (OK) and the list of sistemas in body
+   */
+  @PostMapping("/sistemas/organizations")
+  @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-	public List<Sistema> getAllSistemasByOrganization(@Valid @RequestBody Organizacao organization) {
-		log.debug("REST request to get all Sistemas");
-		List<Sistema> sistemas = sistemaRepository.findAllByOrganizacao(organization);
-		return sistemas;
-	}
+  public List<Sistema> getAllSistemasByOrganization(@Valid @RequestBody Organizacao organization) {
+    log.debug("REST request to get all Sistemas");
+    List<Sistema> sistemas = sistemaRepository.findAllByOrganizacao(organization);
+    return sistemas;
+  }
 
-	@GetMapping("/sistemas/organizacao/{idOrganizacao}")
-	@Timed
-	@Transactional
-	public Set<Sistema> findAllSystemOrg(@PathVariable Long idOrganizacao) {
+  @GetMapping("/sistemas/organizacao/{idOrganizacao}")
+  @Timed
+  @Transactional
+  public Set<Sistema> findAllSystemOrg(@PathVariable Long idOrganizacao) {
         log.debug("REST request to get all Sistemas by Organizacao");
-		return sistemaRepository.findAllSystemOrg(idOrganizacao);
-	}
+    return sistemaRepository.findAllSystemOrg(idOrganizacao);
+  }
 
-	/**
-	 * GET /sistemas : get all the sistemas.
-	 * @return the ResponseEntity with status 200 (OK) and the list of sistemas in body
-	 */
-	@GetMapping("/sistemas")
-	@Timed
-	public List<Sistema> getAllSistemas() {
-		log.debug("REST request to get all Sistemas");
-		return sistemaRepository.findAll();
-	}
+  /**
+   * GET /sistemas : get all the sistemas.
+   * @return the ResponseEntity with status 200 (OK) and the list of sistemas in body
+   */
+  @GetMapping("/sistemas")
+  @Timed
+  public List<Sistema> getAllSistemas() {
+    log.debug("REST request to get all Sistemas");
+    return sistemaRepository.findAll();
+  }
 
-	/**
-	 * GET /sistemas/:id : get the "id" sistema.
-	 * @param id the id of the sistema to retrieve
-	 * @return the ResponseEntity with status 200 (OK) and with body
-	 * the sistema, or with status 404 (Not Found)
-	 */
-	@GetMapping("/sistemas/{id}")
-	@Timed
-	public ResponseEntity<Sistema> getSistema(@PathVariable Long id) {
-		log.debug("REST request to get Sistema : {}", id);
-		Sistema sistema = sistemaRepository.findOne(id);
-		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(sistema));
-	}
+  /**
+   * GET /sistemas/:id : get the "id" sistema.
+   * @param id the id of the sistema to retrieve
+   * @return the ResponseEntity with status 200 (OK) and with body
+   * the sistema, or with status 404 (Not Found)
+   */
+  @GetMapping("/sistemas/{id}")
+  @Timed
+  public ResponseEntity<Sistema> getSistema(@PathVariable Long id) {
+    log.debug("REST request to get Sistema : {}", id);
+    Sistema sistema = sistemaRepository.findOne(id);
+    return ResponseUtil.wrapOrNotFound(Optional.ofNullable(sistema));
+  }
 
-	// TODO essa ou nova rota para retornar somente o nome das funcoes
-	@GetMapping("/sistemas/{id}/funcao-dados")
-	public Set<FuncaoDadosVersionavel> getFuncoesDeDadosVersionaveisBySistema(@PathVariable Long id) {
-		return funcaoDadosVersionavelRepository.findAllBySistemaId(id);
-	}
+  // TODO essa ou nova rota para retornar somente o nome das funcoes
+  @GetMapping("/sistemas/{id}/funcao-dados")
+  public Set<FuncaoDadosVersionavel> getFuncoesDeDadosVersionaveisBySistema(@PathVariable Long id) {
+    return funcaoDadosVersionavelRepository.findAllBySistemaId(id);
+  }
 
-	@GetMapping("/sistemas/{id}/funcao-dados-versionavel/{nome}")
-	public FuncaoDados recuperarFuncaoDadosPorIdNome(@PathVariable Long id, @PathVariable String nome) {
+  @GetMapping("/sistemas/{id}/funcao-dados-versionavel/{nome}")
+  public FuncaoDados recuperarFuncaoDadosPorIdNome(@PathVariable Long id, @PathVariable String nome) {
 
-		Optional<FuncaoDadosVersionavel> funcaoDadosVersionavelOptional = funcaoDadosVersionavelRepository
-				.findOneByNomeIgnoreCaseAndSistemaId(nome, id);
+    Optional<FuncaoDadosVersionavel> funcaoDadosVersionavelOptional = funcaoDadosVersionavelRepository
+        .findOneByNomeIgnoreCaseAndSistemaId(nome, id);
 
-		if (funcaoDadosVersionavelOptional.isPresent()) {
-			FuncaoDadosVersionavel fdv = funcaoDadosVersionavelOptional.get();
-			return funcaoDadosRepository.findFirstByFuncaoDadosVersionavelIdOrderByAuditUpdatedOnDesc(fdv.getId()).get();
-		}
+    if (funcaoDadosVersionavelOptional.isPresent()) {
+      FuncaoDadosVersionavel fdv = funcaoDadosVersionavelOptional.get();
+      return funcaoDadosRepository.findFirstByFuncaoDadosVersionavelIdOrderByAuditUpdatedOnDesc(fdv.getId()).get();
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	/**
-	 * DELETE /sistemas/:id : delete the "id" sistema.
-	 * @param id the id of the sistema to delete
-	 * @return the ResponseEntity with status 200 (OK)
-	 */
-	@DeleteMapping("/sistemas/{id}")
-	@Timed
+  /**
+   * DELETE /sistemas/:id : delete the "id" sistema.
+   * @param id the id of the sistema to delete
+   * @return the ResponseEntity with status 200 (OK)
+   */
+  @DeleteMapping("/sistemas/{id}")
+  @Timed
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-	public ResponseEntity<Void> deleteSistema(@PathVariable Long id) {
-		log.debug("REST request to delete Sistema : {}", id);
-		if (sistemaRepository.quantidadeSistema(id) > 0) {
-			return ResponseEntity.badRequest().headers(
+  public ResponseEntity<Void> deleteSistema(@PathVariable Long id) {
+    log.debug("REST request to delete Sistema : {}", id);
+    if (sistemaRepository.quantidadeSistema(id) > 0) {
+      return ResponseEntity.badRequest().headers(
                HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseexists", "This System can not be deleted"))
                .body(null);
-		}
+    }
 
-		sistemaRepository.delete(id);
-		sistemaSearchRepository.delete(id);
-		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    sistemaRepository.delete(id);
+    sistemaSearchRepository.delete(id);
+    return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
 
-	}
+  }
 
-	/**
-	 * SEARCH /_search/sistemas?query=:query : search for the sistema corresponding to the query.
-	 * @param query the query of the sistema search
-	 * @return the result of the search
-	 * @throws URISyntaxException
-	 */
+  /**
+   * SEARCH /_search/sistemas?query=:query : search for the sistema corresponding to the query.
+   * @param query the query of the sistema search
+   * @return the result of the search
+   * @throws URISyntaxException
+   */
 
     @GetMapping("/_search/sistemas")
     @Timed

@@ -243,4 +243,5 @@ public class Organizacao implements Serializable, ReportObject {
     return "Organizacao{" + "id=" + id + ", nome='" + nome + "'" + ", cnpj='" + cnpj + "'" + ", ativo='" + ativo
         + "'" + ", numeroOcorrencia='" + numeroOcorrencia + "'" + '}';
   }
+
 }

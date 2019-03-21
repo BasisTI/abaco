@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Email;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -79,7 +80,9 @@ public class UserDTO {
         this.createdDate = createdDate;
         this.lastModifiedBy = lastModifiedBy;
         this.lastModifiedDate = lastModifiedDate;
-        this.authorities = authorities;
+        Set<String> authoritiesCopy = new LinkedHashSet<>();
+        authoritiesCopy.addAll(authorities);
+        this.authorities = authoritiesCopy;
     }
 
     public Long getId() {
@@ -143,7 +146,9 @@ public class UserDTO {
     }
 
     public Set<String> getAuthorities() {
-        return authorities;
+        Set<String> copy = new LinkedHashSet<>();
+        copy.addAll(authorities);
+        return copy;
     }
 
     @Override
