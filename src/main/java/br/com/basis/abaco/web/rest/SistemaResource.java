@@ -190,8 +190,7 @@ public class SistemaResource {
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
   public List<Sistema> getAllSistemasByOrganization(@Valid @RequestBody Organizacao organization) {
     log.debug("REST request to get all Sistemas");
-    List<Sistema> sistemas = sistemaRepository.findAllByOrganizacao(organization);
-    return sistemas;
+    return sistemaRepository.findAllByOrganizacao(organization);
   }
 
   @GetMapping("/sistemas/organizacao/{idOrganizacao}")

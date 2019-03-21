@@ -1,10 +1,7 @@
 package br.com.basis.abaco.service.dto;
 
-import br.com.basis.abaco.domain.Alr;
-import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
-import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 
 import java.math.BigDecimal;

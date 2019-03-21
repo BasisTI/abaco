@@ -45,7 +45,7 @@ public class Contrato implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private transient final Logger log = LoggerFactory.getLogger(Contrato.class);
+  private final transient Logger log = LoggerFactory.getLogger(Contrato.class);
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")

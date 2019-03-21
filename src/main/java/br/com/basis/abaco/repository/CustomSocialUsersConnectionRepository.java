@@ -32,8 +32,6 @@ public class CustomSocialUsersConnectionRepository implements UsersConnectionRep
             .collect(Collectors.toList());
     }
 
-    ;
-
     @Override
     public Set<String> findUserIdsConnectedTo(String providerId, Set<String> providerUserIds) {
         List<SocialUserConnection> socialUserConnections =
@@ -43,8 +41,6 @@ public class CustomSocialUsersConnectionRepository implements UsersConnectionRep
             .collect(Collectors.toSet());
     }
 
-    ;
-
     @Override
     public ConnectionRepository createConnectionRepository(String userId) {
         if (userId == null) {
@@ -52,6 +48,4 @@ public class CustomSocialUsersConnectionRepository implements UsersConnectionRep
         }
         return new CustomSocialConnectionRepository(userId, socialUserConnectionRepository, connectionFactoryLocator);
     }
-
-    ;
 }

@@ -190,42 +190,23 @@ public class ElasticsearchIndexService {
         TipoEquipeRepository tipoEquipeRepository,
         TipoEquipeSearchRepository tipoEquipeSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate) {
-        this.userRepository = userRepository;
-        this.userSearchRepository = userSearchRepository;
-        this.alrRepository = alrRepository;
+        this.userRepository = userRepository; this.userSearchRepository = userSearchRepository; this.alrRepository = alrRepository;
         this.alrSearchRepository = alrSearchRepository;
-        this.analiseRepository = analiseRepository;
-        this.analiseSearchRepository = analiseSearchRepository;
-        this.contratoRepository = contratoRepository;
-        this.contratoSearchRepository = contratoSearchRepository;
-        this.derRepository = derRepository;
-        this.derSearchRepository = derSearchRepository;
-        this.esforcoFaseRepository = esforcoFaseRepository;
-        this.esforcoFaseSearchRepository = esforcoFaseSearchRepository;
-        this.faseRepository = faseRepository;
-        this.faseSearchRepository = faseSearchRepository;
-        this.fatorAjusteRepository = fatorAjusteRepository;
-        this.fatorAjusteSearchRepository = fatorAjusteSearchRepository;
-        this.funcaoDadosRepository = funcaoDadosRepository;
-        this.funcaoDadosSearchRepository = funcaoDadosSearchRepository;
-        this.funcaoTransacaoRepository = funcaoTransacaoRepository;
-        this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
-        this.funcionalidadeRepository = funcionalidadeRepository;
-        this.funcionalidadeSearchRepository = funcionalidadeSearchRepository;
-        this.manualRepository = manualRepository;
-        this.manualSearchRepository = manualSearchRepository;
-        this.manualContratoRepository = manualContratoRepository;
-        this.manualContratoSearchRepository = manualContratoSearchRepository;
-        this.moduloRepository = moduloRepository;
-        this.moduloSearchRepository = moduloSearchRepository;
-        this.organizacaoRepository = organizacaoRepository;
-        this.organizacaoSearchRepository = organizacaoSearchRepository;
-        this.rlrRepository = rlrRepository;
-        this.rlrSearchRepository = rlrSearchRepository;
-        this.sistemaRepository = sistemaRepository;
-        this.sistemaSearchRepository = sistemaSearchRepository;
-        this.tipoEquipeRepository = tipoEquipeRepository;
-        this.tipoEquipeSearchRepository = tipoEquipeSearchRepository;
+        this.analiseRepository = analiseRepository; this.analiseSearchRepository = analiseSearchRepository;
+        this.contratoRepository = contratoRepository; this.contratoSearchRepository = contratoSearchRepository;
+        this.derRepository = derRepository; this.derSearchRepository = derSearchRepository;
+        this.esforcoFaseRepository = esforcoFaseRepository; this.esforcoFaseSearchRepository = esforcoFaseSearchRepository;
+        this.faseRepository = faseRepository; this.faseSearchRepository = faseSearchRepository;
+        this.fatorAjusteRepository = fatorAjusteRepository; this.fatorAjusteSearchRepository = fatorAjusteSearchRepository;
+        this.funcaoDadosRepository = funcaoDadosRepository; this.funcaoDadosSearchRepository = funcaoDadosSearchRepository;
+        this.funcaoTransacaoRepository = funcaoTransacaoRepository; this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
+        this.funcionalidadeRepository = funcionalidadeRepository; this.funcionalidadeSearchRepository = funcionalidadeSearchRepository;
+        this.manualRepository = manualRepository; this.manualSearchRepository = manualSearchRepository;
+        this.manualContratoRepository = manualContratoRepository; this.manualContratoSearchRepository = manualContratoSearchRepository;
+        this.moduloRepository = moduloRepository; this.moduloSearchRepository = moduloSearchRepository;
+        this.organizacaoRepository = organizacaoRepository; this.organizacaoSearchRepository = organizacaoSearchRepository;
+        this.rlrRepository = rlrRepository; this.rlrSearchRepository = rlrSearchRepository; this.sistemaRepository = sistemaRepository;
+        this.sistemaSearchRepository = sistemaSearchRepository; this.tipoEquipeRepository = tipoEquipeRepository; this.tipoEquipeSearchRepository = tipoEquipeSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
@@ -277,6 +258,8 @@ public class ElasticsearchIndexService {
         try {
             elasticsearchTemplate.createIndex(entityClass);
         } catch (IndexAlreadyExistsException e) {
+            log.error(e.getMessage(), e);
+            log.debug(e.getMessage(), e);
             // Do nothing. Index was already concurrently recreated by some other service.
         }
         elasticsearchTemplate.putMapping(entityClass);
@@ -286,6 +269,8 @@ public class ElasticsearchIndexService {
                 elasticsearchRepository.save((List<T>) m.invoke(jpaRepository));
             } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
                 elasticsearchRepository.save(jpaRepository.findAll());
+                log.error(e.getMessage(), e);
+                log.debug(e.getMessage(), e);
             }
         }
     }

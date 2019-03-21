@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Locale;
 
@@ -64,12 +65,12 @@ public class MailService {
             message.setText(content, isHtml);
             javaMailSender.send(mimeMessage);
             log.debug("Sent e-mail to User '{}'", to);
-        } catch (Exception e) {
+        } catch (MessagingException e) {
             log.warn("E-mail could not be sent to user '{}'", to, e);
         }
     }
 
-    @Async
+        @Async
     public void sendActivationEmail(User user) {
         log.debug("Sending activation e-mail to '{}'", user.getEmail());
         Locale locale = Locale.forLanguageTag(user.getLangKey());

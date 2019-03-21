@@ -101,8 +101,7 @@ public class AlrResource {
     @Timed
     public List<Alr> getAllAlrs() {
         log.debug("REST request to get all Alrs");
-        List<Alr> alrs = alrRepository.findAll();
-        return alrs;
+        return alrRepository.findAll();
     }
 
     /**

@@ -26,6 +26,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -170,11 +171,15 @@ public class Manual implements Serializable, ReportObject, Cloneable {
   }
 
   public Set<EsforcoFase> getEsforcoFases() {
-    return esforcoFases;
+    Set<EsforcoFase> cp = new LinkedHashSet<>();
+    cp.addAll(esforcoFases);
+    return cp;
   }
 
   public Manual esforcoFases(Set<EsforcoFase> esforcoFases) {
-    this.esforcoFases = esforcoFases;
+    Set<EsforcoFase> cp = new LinkedHashSet<>();
+    cp.addAll(esforcoFases);
+    this.esforcoFases = cp;
     return this;
   }
 
@@ -191,15 +196,21 @@ public class Manual implements Serializable, ReportObject, Cloneable {
   }
 
   public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {
-    this.esforcoFases = esforcoFases;
+    Set<EsforcoFase> cp = new LinkedHashSet<>();
+    cp.addAll(esforcoFases);
+    this.esforcoFases = cp;
   }
 
   public Set<FatorAjuste> getFatoresAjuste() {
-    return fatoresAjuste;
+    Set<FatorAjuste> cp = new LinkedHashSet<>();
+    cp.addAll(fatoresAjuste);
+    return cp;
   }
 
   public void setFatoresAjuste(Set<FatorAjuste> fatoresAjuste) {
-    this.fatoresAjuste = fatoresAjuste;
+    Set<FatorAjuste> cp = new LinkedHashSet<>();
+    cp.addAll(fatoresAjuste);
+    this.fatoresAjuste = cp;
   }
 
   public BigDecimal getParametroInclusao() {

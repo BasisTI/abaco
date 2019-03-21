@@ -15,6 +15,8 @@ import java.net.URISyntaxException;
  */
 public final class PaginationUtil {
 
+    private static final String QUERY = "&query=";
+
     private PaginationUtil() {
     }
 
@@ -53,19 +55,19 @@ public final class PaginationUtil {
         headers.add("X-Total-Count", "" + page.getTotalElements());
         String link = "";
         if ((page.getNumber() + 1) < page.getTotalPages()) {
-            link = "<" + generateUri(baseUrl, page.getNumber() + 1, page.getSize()) + "&query=" + query + ">; rel=\"next\",";
+            link = "<" + generateUri(baseUrl, page.getNumber() + 1, page.getSize()) + QUERY + query + ">; rel=\"next\",";
         }
         // prev link
         if ((page.getNumber()) > 0) {
-            link += "<" + generateUri(baseUrl, page.getNumber() - 1, page.getSize()) + "&query=" + query + ">; rel=\"prev\",";
+            link += "<" + generateUri(baseUrl, page.getNumber() - 1, page.getSize()) + QUERY + query + ">; rel=\"prev\",";
         }
         // last and first link
         int lastPage = 0;
         if (page.getTotalPages() > 0) {
             lastPage = page.getTotalPages() - 1;
         }
-        link += "<" + generateUri(baseUrl, lastPage, page.getSize()) + "&query=" + query + ">; rel=\"last\",";
-        link += "<" + generateUri(baseUrl, 0, page.getSize()) + "&query=" + query + ">; rel=\"first\"";
+        link += "<" + generateUri(baseUrl, lastPage, page.getSize()) + QUERY + query + ">; rel=\"last\",";
+        link += "<" + generateUri(baseUrl, 0, page.getSize()) + QUERY + query + ">; rel=\"first\"";
         headers.add(HttpHeaders.LINK, link);
         return headers;
     }

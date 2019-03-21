@@ -175,8 +175,7 @@ public class ManualResource {
     @Timed
     public List<Manual> getAllManuals() {
         log.debug("REST request to get all Manuals");
-        List<Manual> manuals = manualRepository.findAll();
-        return manuals;
+        return manualRepository.findAll();
     }
 
     /**

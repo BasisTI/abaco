@@ -119,8 +119,7 @@ public class EsforcoFaseResource {
     @Timed
     public List<EsforcoFase> getAllEsforcoFases() {
         log.debug("REST request to get all EsforcoFases");
-        List<EsforcoFase> esforcoFases = esforcoFaseRepository.findAll();
-        return esforcoFases;
+        return esforcoFaseRepository.findAll();
     }
 
     /**
@@ -140,9 +139,7 @@ public class EsforcoFaseResource {
     }
 
     public List<EsforcoFase> getAllPhaseEffortsByManual(@RequestBody Manual manual) {
-        List<EsforcoFase> phaseEfforts = this.esforcoFaseRepository.findAllByManual(manual);
-
-        return phaseEfforts;
+        return this.esforcoFaseRepository.findAllByManual(manual);
     }
 
     /**

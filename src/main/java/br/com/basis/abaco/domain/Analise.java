@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -41,6 +43,7 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -54,6 +57,7 @@ import java.util.Set;
 public class Analise implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
+    private final transient Logger log = LoggerFactory.getLogger(FuncaoTransacao.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -178,7 +182,7 @@ public class Analise implements Serializable, ReportObject {
     private Manual manual;
     
 
-	public Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -324,11 +328,15 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<FuncaoDados> getFuncaoDados() {
-        return funcaoDados;
+        Set<FuncaoDados> cp = new LinkedHashSet<>();
+        cp.addAll(funcaoDados);
+        return cp;
     }
 
     public Analise funcaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados = funcaoDados;
+        Set<FuncaoDados> cp = new LinkedHashSet<>();
+        cp.addAll(funcaoDados);
+        this.funcaoDados = cp;
         return this;
     }
 
@@ -345,20 +353,30 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public void setFuncaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados = funcaoDados;
+        Set<FuncaoDados> cp = new LinkedHashSet<>();
+        cp.addAll(funcaoDados);
+        this.funcaoDados = cp;
     }
 
     public Set<FuncaoTransacao> getFuncaoTransacaos() {
-        return funcaoTransacaos;
+        Set<FuncaoTransacao> cp = new LinkedHashSet<>();
+        cp.addAll(funcaoTransacaos);
+        return cp;
     }
 
     public Analise funcaoTransacaos(Set<FuncaoTransacao> funcaoTransacaos) {
-        this.funcaoTransacaos = funcaoTransacaos;
+        Set<FuncaoTransacao> cp = new LinkedHashSet<>();
+        cp.addAll(funcaoTransacaos);
+        this.funcaoTransacaos = cp;
         return this;
     }
 
     public Analise addFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
-        this.funcaoTransacaos.add(funcaoTransacao);
+        try {
+            this.funcaoTransacaos.add((FuncaoTransacao) funcaoTransacao.getClone());
+        } catch (CloneNotSupportedException e) {
+            log.error(e.getMessage(), e);
+        }
         funcaoTransacao.setAnalise(this);
         return this;
     }
@@ -370,7 +388,9 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public void setFuncaoTransacaos(Set<FuncaoTransacao> funcaoTransacaos) {
-        this.funcaoTransacaos = funcaoTransacaos;
+        Set<FuncaoTransacao> cp = new LinkedHashSet<>();
+        cp.addAll(funcaoTransacaos);
+        this.funcaoTransacaos = cp;
     }
 
     public Contrato getContrato() {
@@ -533,11 +553,11 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Timestamp getDataHomologacao() {
-        return dataHomologacao;
+        return (Timestamp) dataHomologacao.clone();
     }
 
     public void setDataHomologacao(Timestamp dataHomologacao) {
-        this.dataHomologacao = dataHomologacao;
+        this.dataHomologacao = (Timestamp) dataHomologacao.clone();
     }
 
     public String getIdentificadorAnalise() {
@@ -561,13 +581,13 @@ public class Analise implements Serializable, ReportObject {
     }
     
     public Manual getManual() {
-		return manual;
-	}
+        return manual;
+    }
 
-	public void setManual(Manual manual) {
-		this.manual = manual;
-	}
-	
+    public void setManual(Manual manual) {
+        this.manual = manual;
+    }
+
     public AbacoAudit getAudit() {
         return audit;
     }

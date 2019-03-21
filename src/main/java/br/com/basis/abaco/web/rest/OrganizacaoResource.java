@@ -207,18 +207,14 @@ public class OrganizacaoResource {
   @Timed
   public List<Organizacao> getAllOrganizacaos() {
     log.debug("REST request to get all Organizacaos");
-    List<Organizacao> organizacaos = organizacaoRepository.findAll();
-
-    return organizacaos;
+    return organizacaoRepository.findAll();
   }
 
   @GetMapping("/organizacaos/ativas")
   @Timed
   public List<Organizacao> searchActiveOrganizations() {
     log.debug("REST request to get all Organizacaos");
-    List<Organizacao> organizacaos = organizacaoRepository.searchActiveOrganizations();
-
-    return organizacaos;
+    return organizacaoRepository.searchActiveOrganizations();
   }
 
   /**
@@ -279,9 +275,7 @@ public class OrganizacaoResource {
 
   @GetMapping("/organizacaos/active")
   public List<Organizacao> getAllOrganizationsActive() {
-    List<Organizacao> activeOrganizations = this.organizacaoRepository.findByAtivoTrue();
-
-    return activeOrganizations;
+    return this.organizacaoRepository.findByAtivoTrue();
   }
 
   @GetMapping(value = "/organizacao/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)

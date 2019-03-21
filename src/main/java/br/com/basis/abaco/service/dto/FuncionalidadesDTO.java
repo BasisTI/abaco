@@ -1,7 +1,5 @@
 package br.com.basis.abaco.service.dto;
 
-import java.util.HashSet;
-import java.util.Set;
 /**
  * @author alexandre.costa
  * @since 27/02/2019

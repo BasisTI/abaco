@@ -113,8 +113,7 @@ public class ModuloResource {
     @Timed
     public List<Modulo> getAllModulos() {
         log.debug("REST request to get all Modulos");
-        List<Modulo> modulos = moduloRepository.findAll();
-        return modulos;
+        return moduloRepository.findAll();
     }
 
     /**

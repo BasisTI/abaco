@@ -5,7 +5,7 @@ import org.apache.commons.io.FilenameUtils;
 /**
  * Created by roman on 10/25/17.
  */
-public class StringUtils {
+public final class StringUtils {
 
     public static final String IMG_FORMAT="IMAGE";
 
@@ -35,11 +35,23 @@ public class StringUtils {
 
     public static String getFormatFile(String filename){
         String ext = FilenameUtils.getExtension(filename).toLowerCase();
-        if (ext.equals("jpg") || ext.equals("png") || ext.equals("bmp")|| ext.equals("gif")) return IMG_FORMAT;
-        if (ext.equals("avi") || ext.equals("mpg") || ext.equals("mpeg")|| ext.equals("mp4")) return VIDEO_FORMAT;
-        if (ext.equals("doc") || ext.equals("docx") || ext.equals("rtf")|| ext.equals("txt")) return DOC_FORMAT;
+        if (validaFormatoImage(ext, "jpg", "png", "bmp", "gif")){ return IMG_FORMAT;}
+        if (validaFormatoVideo(ext, "avi", "mpg", "mpeg", "mp4")) { return VIDEO_FORMAT;}
+        if (validaFormatoDocumento(ext, "doc", "docx", "rtf", "txt")){ return DOC_FORMAT;}
 
         return StringUtils.UNKNOWN_FORMAT;
+    }
+
+    private static boolean validaFormatoDocumento(String ext, String doc, String docx, String rtf, String txt) {
+        return ext.equals(doc) || ext.equals(docx) || ext.equals(rtf) || ext.equals(txt);
+    }
+
+    private static boolean validaFormatoVideo(String ext, String avi, String mpg, String mpeg, String mp4) {
+        return ext.equals(avi) || ext.equals(mpg) || ext.equals(mpeg) || ext.equals(mp4);
+    }
+
+    private static boolean validaFormatoImage(String ext, String jpg, String png, String bmp, String gif) {
+        return ext.equals(jpg) || ext.equals(png) || ext.equals(bmp) || ext.equals(gif);
     }
 
 

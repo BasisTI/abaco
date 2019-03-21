@@ -38,15 +38,15 @@ public class DomainUserDetailsService implements UserDetailsService {
         String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
         Optional<User> userFromDatabase = userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin);
 
-        //User user = userFromDatabase.get();
+        //User user = userFromDatabase.get()
 
         //List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
         //        .map(authority -> new SimpleGrantedAuthority(authority.getName()))
-        //        .collect(Collectors.toList());
+        //        .collect(Collectors.toList())
 
-        //UserDetailsCustom userDetails = new UserDetailsCustom(lowercaseLogin, user.getPassword(), grantedAuthorities, user);
+        //UserDetailsCustom userDetails = new UserDetailsCustom(lowercaseLogin, user.getPassword(), grantedAuthorities, user)
 
-        //return userDetails;
+        //return userDetails
 
         return userFromDatabase.map(user -> {
             if (!user.getActivated()) {

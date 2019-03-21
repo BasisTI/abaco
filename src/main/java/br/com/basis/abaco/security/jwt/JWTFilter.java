@@ -25,67 +25,65 @@ import java.io.IOException;
  */
 public class JWTFilter extends GenericFilterBean {
 
-	private final Logger log = LoggerFactory.getLogger(JWTFilter.class);
+    private final Logger log = LoggerFactory.getLogger(JWTFilter.class);
 
-	private TokenProvider tokenProvider;
+    private TokenProvider tokenProvider;
 
-	// TODO injetar CookieUtil sem construtor?
-	// via construtor implica em 3 classes +- injetando via construtor também
-	// private CookieUtil cookieUtil;
+    // TODO injetar CookieUtil sem construtor?
+    // via construtor implica em 3 classes +- injetando via construtor também
+    // private CookieUtil cookieUtil
 
-	public JWTFilter(TokenProvider tokenProvider) {
-		this.tokenProvider = tokenProvider;
-	}
+    public JWTFilter(TokenProvider tokenProvider) {
+        this.tokenProvider = tokenProvider;
+    }
 
-	@Override
-	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-			throws IOException, ServletException {
-		try {
-			HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-			String jwt = resolveToken(httpServletRequest);
-			if (StringUtils.hasText(jwt) && this.tokenProvider.validateToken(jwt)) {
-				Authentication authentication = this.tokenProvider.getAuthentication(jwt);
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-			}
-			filterChain.doFilter(servletRequest, servletResponse);
-		} catch (ExpiredJwtException eje) {
-			log.info("Security exception for user {} - {}", eje.getClaims().getSubject(), eje.getMessage());
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
+        try {
+            HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+            String jwt = resolveToken(httpServletRequest);
+            if (StringUtils.hasText(jwt) && this.tokenProvider.validateToken(jwt)) {
+                Authentication authentication = this.tokenProvider.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+            filterChain.doFilter(servletRequest, servletResponse);
+        } catch (ExpiredJwtException eje) {
+            log.info("Security exception for user {} - {}", eje.getClaims().getSubject(), eje.getMessage());
 
-			log.trace("Security exception trace: {}", eje);
-			((HttpServletResponse) servletResponse).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		}
-	}
+            log.trace("Security exception trace: {}", eje);
+            ((HttpServletResponse) servletResponse).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+    }
 
-	private String resolveToken(HttpServletRequest request) {
-		try {
-			return doResolveToken(request);
-		} catch (Throwable e) {
-			return null;
-		}
-	}
+    private String resolveToken(HttpServletRequest request) {
+        return doResolveToken(request);
+    }
 
-	private String doResolveToken(HttpServletRequest request) {
-		Cookie cookie = WebUtils.getCookie(request, AuthenticationConstants.TOKEN_NAME);
-		if (requestHasAuthenticationCookie(cookie))
-			return resolveTokenByCookie(cookie);
-		else
-			return resolveTokenByHeader(request);
-	}
+    private String doResolveToken(HttpServletRequest request) {
+        Cookie cookie = WebUtils.getCookie(request, AuthenticationConstants.TOKEN_NAME);
+        if (requestHasAuthenticationCookie(cookie)) {
+            return resolveTokenByCookie(cookie);
+        }
+        else {
+            return resolveTokenByHeader(request);
+        }
+    }
 
-	private boolean requestHasAuthenticationCookie(Cookie cookie) {
-		return cookie != null;
-	}
+    private boolean requestHasAuthenticationCookie(Cookie cookie) {
+        return cookie != null;
+    }
 
-	private String resolveTokenByCookie(Cookie cookie) {
-		return cookie.getValue();
-	}
+    private String resolveTokenByCookie(Cookie cookie) {
+        return cookie.getValue();
+    }
 
-	private String resolveTokenByHeader(HttpServletRequest request) {
-		String bearerToken = request.getHeader(JWTConfigurer.AUTHORIZATION_HEADER);
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-			return bearerToken.substring(7, bearerToken.length());
-		}
-		return null;
-	}
+    private String resolveTokenByHeader(HttpServletRequest request) {
+        String bearerToken = request.getHeader(JWTConfigurer.AUTHORIZATION_HEADER);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7, bearerToken.length());
+        }
+        return null;
+    }
 
 }

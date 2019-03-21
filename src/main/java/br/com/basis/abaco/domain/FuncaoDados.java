@@ -13,7 +13,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -22,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -93,11 +93,15 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Funcionalidade> getFuncionalidades() {
-        return funcionalidades;
+        Set<Funcionalidade> cp = new LinkedHashSet<>();
+        cp.addAll(funcionalidades);
+        return cp;
     }
 
     public FuncaoDados funcionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = funcionalidades;
+        Set<Funcionalidade> cp = new LinkedHashSet<>();
+        cp.addAll(funcionalidades);
+        this.funcionalidades = cp;
         return this;
     }
 
@@ -114,15 +118,21 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = funcionalidades;
+        Set<Funcionalidade> cp = new LinkedHashSet<>();
+        cp.addAll(funcionalidades);
+        this.funcionalidades = cp;
     }
 
     public Set<Rlr> getRlrs() {
-        return rlrs;
+        Set<Rlr> cp = new LinkedHashSet<>();
+        cp.addAll(rlrs);
+        return cp;
     }
 
     public FuncaoDados rlrs(Set<Rlr> rlrs) {
-        this.rlrs = rlrs;
+        Set<Rlr> cp = new LinkedHashSet<>();
+        cp.addAll(rlrs);
+        this.rlrs = cp;
         return this;
     }
 
@@ -139,7 +149,9 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public void setRlrs(Set<Rlr> rlrs) {
-        this.rlrs = rlrs;
+        Set<Rlr> cp = new LinkedHashSet<>();
+        cp.addAll(rlrs);
+        this.rlrs = cp;
     }
 
     public Alr getAlr() {
@@ -184,11 +196,15 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public List<UploadedFile> getFiles() {
-        return files;
+        List<UploadedFile> cp = new ArrayList<>();
+        cp.addAll(files);
+        return cp;
     }
 
     public void setFiles(List<UploadedFile> files) {
-        this.files = files;
+        List<UploadedFile> cp = new ArrayList<>();
+        cp.addAll(files);
+        this.files = cp;
     }
 
     public Set<String> getRlrValues() {
@@ -219,13 +235,13 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
         this.funcaoDadosVersionavel = funcaoDadosVersionavel;
     }
 
-	public ImpactoFatorAjuste getImpacto() {
-		return impacto;
-	}
+    public ImpactoFatorAjuste getImpacto() {
+        return impacto;
+    }
 
-	public void setImpacto(ImpactoFatorAjuste impacto) {
-		this.impacto = impacto;
-	}
+    public void setImpacto(ImpactoFatorAjuste impacto) {
+        this.impacto = impacto;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

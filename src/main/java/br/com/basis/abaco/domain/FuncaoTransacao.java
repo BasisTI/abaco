@@ -13,7 +13,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -21,6 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -86,11 +86,15 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Funcionalidade> getFuncionalidades() {
-        return funcionalidades;
+        Set<Funcionalidade> cp = new LinkedHashSet<>();
+        cp.addAll(funcionalidades);
+        return cp;
     }
 
     public FuncaoTransacao funcionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = funcionalidades;
+        Set<Funcionalidade> cp = new LinkedHashSet<>();
+        cp.addAll(funcionalidades);
+        this.funcionalidades = cp;
         return this;
     }
 
@@ -107,15 +111,21 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = funcionalidades;
+        Set<Funcionalidade> cp = new LinkedHashSet<>();
+        cp.addAll(funcionalidades);
+        this.funcionalidades = cp;
     }
 
     public Set<Alr> getAlrs() {
-        return alrs;
+        Set<Alr> cp = new LinkedHashSet<>();
+        cp.addAll(alrs);
+        return cp;
     }
 
     public FuncaoTransacao alrs(Set<Alr> alrs) {
-        this.alrs = alrs;
+        Set<Alr> cp = new LinkedHashSet<>();
+        cp.addAll(alrs);
+        this.alrs = cp;
         return this;
     }
 
@@ -132,7 +142,9 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public void setAlrs(Set<Alr> alrs) {
-        this.alrs = alrs;
+        Set<Alr> cp = new LinkedHashSet<>();
+        cp.addAll(alrs);
+        this.alrs = cp;
     }
 
     public String getFtrStr() {
@@ -174,11 +186,15 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public List<UploadedFile> getFiles() {
-        return files;
+        List<UploadedFile> cp = new ArrayList<>();
+        cp.addAll(files);
+        return cp;
     }
 
     public void setFiles(List<UploadedFile> files) {
-        this.files = files;
+        List<UploadedFile> cp = new ArrayList<>();
+        cp.addAll(files);
+        this.files = cp;
     }
 
     public Set<String> getFtrValues() {
@@ -209,5 +225,9 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public Object getClone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

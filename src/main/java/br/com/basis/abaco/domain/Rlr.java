@@ -20,6 +20,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -76,11 +77,15 @@ public class Rlr implements Serializable {
     }
 
     public Set<Der> getDers() {
-        return ders;
+        Set<Der> cp = new LinkedHashSet<>();
+        cp.addAll(ders);
+        return cp;
     }
 
     public Rlr ders(Set<Der> ders) {
-        this.ders = ders;
+        Set<Der> cp = new LinkedHashSet<>();
+        cp.addAll(ders);
+        this.ders = cp;
         return this;
     }
 
@@ -97,7 +102,9 @@ public class Rlr implements Serializable {
     }
 
     public void setDers(Set<Der> ders) {
-        this.ders = ders;
+        Set<Der> cp = new LinkedHashSet<>();
+        cp.addAll(ders);
+        this.ders = cp;
     }
 
     public FuncaoDados getFuncaoDados() {

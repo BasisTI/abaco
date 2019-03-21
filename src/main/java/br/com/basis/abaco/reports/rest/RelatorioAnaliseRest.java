@@ -375,20 +375,14 @@ public class RelatorioAnaliseRest {
         List<ListaFdFtDTO> listaFdFt = new ArrayList<>();
 
         Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
-        if (funcaoDados != null) {
-            for(FuncaoDados fd : funcaoDados) {
-                ListaFdFtDTO objeto = new ListaFdFtDTO();
-                String der = "", alrTr = "";
-
-                der = popularDersFd(fd, der);
-                objeto.setDer(der); objeto.setNome(fd.getName());
-
-                alrTr = popularAlrtrFd(fd, alrTr);
-                objeto.setAlrtr(alrTr); listaFdFt.add(objeto);
-            }
-        }
+        verificaFuncaodados(listaFdFt, funcaoDados);
 
         Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
+        verificaFuncaoTransacao(listaFdFt, funcaoTransacaos);
+        parametro.put("LISTAFDFT", listaFdFt);
+    }
+
+    private void verificaFuncaoTransacao(List<ListaFdFtDTO> listaFdFt, Set<FuncaoTransacao> funcaoTransacaos) {
         if (funcaoTransacaos != null) {
             for(FuncaoTransacao ft : funcaoTransacaos) {
                 String der = "", alrTr = ""; ListaFdFtDTO objeto = new ListaFdFtDTO();
@@ -402,7 +396,21 @@ public class RelatorioAnaliseRest {
 
             }
         }
-        parametro.put("LISTAFDFT", listaFdFt);
+    }
+
+    private void verificaFuncaodados(List<ListaFdFtDTO> listaFdFt, Set<FuncaoDados> funcaoDados) {
+        if (funcaoDados != null) {
+            for(FuncaoDados fd : funcaoDados) {
+                ListaFdFtDTO objeto = new ListaFdFtDTO();
+                String der = "", alrTr = "";
+
+                der = popularDersFd(fd, der);
+                objeto.setDer(der); objeto.setNome(fd.getName());
+
+                alrTr = popularAlrtrFd(fd, alrTr);
+                objeto.setAlrtr(alrTr); listaFdFt.add(objeto);
+            }
+        }
     }
 
     private String popularDerFt(FuncaoTransacao ft, String der) {

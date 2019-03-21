@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -144,11 +145,15 @@ public class Sistema implements Serializable, ReportObject {
   }
 
   public Set<Modulo> getModulos() {
-    return modulos;
+      Set<Modulo> cp = new LinkedHashSet<>();
+      cp.addAll(modulos);
+    return cp;
   }
 
   public Sistema modulos(Set<Modulo> modulos) {
-    this.modulos = modulos;
+      Set<Modulo> cp = new LinkedHashSet<>();
+      cp.addAll(modulos);
+    this.modulos = cp;
     return this;
   }
 
@@ -165,7 +170,9 @@ public class Sistema implements Serializable, ReportObject {
   }
 
   public void setModulos(Set<Modulo> modulos) {
-    this.modulos = modulos;
+      Set<Modulo> cp = new LinkedHashSet<>();
+      cp.addAll(modulos);
+    this.modulos = cp;
   }
 
   @Override

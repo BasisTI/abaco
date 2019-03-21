@@ -27,6 +27,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -155,11 +156,15 @@ public class Organizacao implements Serializable, ReportObject {
   }
 
   public Set<Sistema> getSistemas() {
-    return sistemas;
+    Set<Sistema> cp = new LinkedHashSet<>();
+    cp.addAll(sistemas);
+    return cp;
   }
 
   public Organizacao sistemas(Set<Sistema> sistemas) {
-    this.sistemas = sistemas;
+    Set<Sistema> cp = new LinkedHashSet<>();
+    cp.addAll(sistemas);
+    this.sistemas = cp;
     return this;
   }
 
@@ -176,7 +181,9 @@ public class Organizacao implements Serializable, ReportObject {
   }
 
   public void setSistemas(Set<Sistema> sistemas) {
-    this.sistemas = sistemas;
+    Set<Sistema> cp = new LinkedHashSet<>();
+    cp.addAll(sistemas);
+    this.sistemas = cp;
   }
 
   public String getSigla() {
@@ -208,11 +215,15 @@ public class Organizacao implements Serializable, ReportObject {
   }
 
   public Set<Contrato> getContracts() {
-    return contracts;
+    Set<Contrato> cp = new LinkedHashSet<>();
+    cp.addAll(contracts);
+    return cp;
   }
 
   public void setContracts(Set<Contrato> contracts) {
-    this.contracts = contracts;
+    Set<Contrato> cp = new LinkedHashSet<>();
+    cp.addAll(contracts);
+    this.contracts = cp;
   }
 
   public Long getLogoId() {

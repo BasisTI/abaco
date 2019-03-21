@@ -20,6 +20,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -76,11 +77,15 @@ public class Alr implements Serializable {
     }
 
     public Set<FuncaoDados> getFuncaoDados() {
-        return funcaoDados;
+        Set<FuncaoDados> cp = new LinkedHashSet<>();
+        cp.addAll(funcaoDados);
+        return cp;
     }
 
     public Alr funcaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados = funcaoDados;
+        Set<FuncaoDados> cp = new LinkedHashSet<>();
+        cp.addAll(funcaoDados);
+        this.funcaoDados = cp;
         return this;
     }
 
@@ -97,7 +102,9 @@ public class Alr implements Serializable {
     }
 
     public void setFuncaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados = funcaoDados;
+        Set<FuncaoDados> cp = new LinkedHashSet<>();
+        cp.addAll(funcaoDados);
+        this.funcaoDados = cp;
     }
 
     public String getNome() {

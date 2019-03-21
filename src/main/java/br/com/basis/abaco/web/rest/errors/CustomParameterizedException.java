@@ -24,7 +24,7 @@ public class CustomParameterizedException extends RuntimeException {
     public CustomParameterizedException(String message, String... params) {
         super(message);
         this.message = message;
-        this.params = params;
+        this.params = params.clone();
     }
 
     public ParameterizedErrorVM getErrorVM() {
