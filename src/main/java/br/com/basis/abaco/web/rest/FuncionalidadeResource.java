@@ -130,6 +130,18 @@ public class FuncionalidadeResource {
         Funcionalidade funcionalidade = funcionalidadeRepository.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcionalidade));
     }
+    
+    /**
+     * GET  /modulos : get all the modulos.
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of modulos in body
+     */
+    @GetMapping("/funcionalidades/modulos/{id}")
+    @Timed
+    public List<Funcionalidade> getAllFuncionalidadesModulo(@PathVariable Long id) {
+        log.debug("REST request to get all Funcionalidades");
+        return funcionalidadeRepository.findByModulo(id);
+    }
 
     /**
      * DELETE  /funcionalidades/:id : delete the "id" funcionalidade.
