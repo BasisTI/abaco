@@ -1,3 +1,4 @@
+import { Funcionalidade } from './../funcionalidade/funcionalidade.model';
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
