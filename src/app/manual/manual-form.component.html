@@ -5,13 +5,13 @@
             <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
 
                 <div class="ui-g">
-                    <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="!manual.id" style="margin-bottom: 01px">
+                    <!--<div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="!manual.id" style="margin-bottom: 01px">
                         <span class="md-inputfield">
                             <input type="text" id="idIdFormManual" class="ui-inputtext" name="id" pInputText
                                    [(ngModel)]="manual.id" readonly/>
                             <label>ID</label>
                         </span>
-                    </div>
+                    </div>-->
                 </div>
 
                 <div class="ui-g">
@@ -41,9 +41,9 @@
                                        #valorVariacaoEstimada='ngModel'>
                             </p-spinner>
                             <label>Valor Variação Estimada (%) *</label>
-                            <div *ngIf="editForm.controls['valorVariacaoEstimada'] 
-                                        && !editForm.controls['valorVariacaoEstimada'].valid 
-                                        && (editForm.controls['valorVariacaoEstimada'].touched 
+                            <div *ngIf="editForm.controls['valorVariacaoEstimada']
+                                        && !editForm.controls['valorVariacaoEstimada'].valid
+                                        && (editForm.controls['valorVariacaoEstimada'].touched
                                         || editForm.submitted)"
                                  class="ui-message ui-messages-error">
                                 Campo obrigatório.
@@ -59,9 +59,9 @@
                                    name="valorVariacaoIndicativa" #valorVariacaoIndicativa='ngModel'
                                    [(ngModel)]="manual.valorVariacaoIndicativaFormatado"></p-spinner>
                             <label>Valor Variação Indicativa (%) *</label>
-                            <div *ngIf="editForm.controls['valorVariacaoIndicativa'] 
-                                        && !editForm.controls['valorVariacaoIndicativa'].valid 
-                                        && (editForm.controls['valorVariacaoIndicativa'].touched 
+                            <div *ngIf="editForm.controls['valorVariacaoIndicativa']
+                                        && !editForm.controls['valorVariacaoIndicativa'].valid
+                                        && (editForm.controls['valorVariacaoIndicativa'].touched
                                         || editForm.submitted)"
                                  class="ui-message ui-messages-error">
                                 Campo obrigatório.
@@ -118,9 +118,9 @@
                                            #parametroInclusao='ngModel'>
                                 </p-spinner>
                                 <label>Inclusão (%) *</label>
-                                <div *ngIf="editForm.controls['parametroInclusao'] 
-                                            && !editForm.controls['parametroInclusao'].valid 
-                                            && (editForm.controls['parametroInclusao'].touched 
+                                <div *ngIf="editForm.controls['parametroInclusao']
+                                            && !editForm.controls['parametroInclusao'].valid
+                                            && (editForm.controls['parametroInclusao'].touched
                                             || editForm.submitted)"
                                      class="ui-message ui-messages-error">
                                     Campo obrigatório.
@@ -137,9 +137,9 @@
                                            #parametroAlteracao='ngModel'>
                                 </p-spinner>
                                 <label>Alteração (%) *</label>
-                                <div *ngIf="editForm.controls['parametroAlteracao'] 
-                                            && !editForm.controls['parametroAlteracao'].valid 
-                                            && (editForm.controls['parametroAlteracao'].touched 
+                                <div *ngIf="editForm.controls['parametroAlteracao']
+                                            && !editForm.controls['parametroAlteracao'].valid
+                                            && (editForm.controls['parametroAlteracao'].touched
                                             || editForm.submitted)"
                                      class="ui-message ui-messages-error">
                                     Campo obrigatório.
@@ -156,9 +156,9 @@
                                            #parametroExclusao='ngModel'>
                                 </p-spinner>
                                 <label>Exclusão (%) *</label>
-                                <div *ngIf="editForm.controls['parametroExclusao'] 
-                                            && !editForm.controls['parametroExclusao'].valid 
-                                            && (editForm.controls['parametroExclusao'].touched 
+                                <div *ngIf="editForm.controls['parametroExclusao']
+                                            && !editForm.controls['parametroExclusao'].valid
+                                            && (editForm.controls['parametroExclusao'].touched
                                             || editForm.submitted)"
                                      class="ui-message ui-messages-error">
                                     Campo obrigatório.
@@ -173,9 +173,9 @@
                                            #parametroConversao='ngModel'>
                                 </p-spinner>
                                 <label>Conversão (%) *</label>
-                                <div *ngIf="editForm.controls['parametroConversao'] 
-                                            && !editForm.controls['parametroConversao'].valid 
-                                            && (editForm.controls['parametroConversao'].touched 
+                                <div *ngIf="editForm.controls['parametroConversao']
+                                            && !editForm.controls['parametroConversao'].valid
+                                            && (editForm.controls['parametroConversao'].touched
                                             || editForm.submitted)"
                                      class="ui-message ui-messages-error">
                                     Campo obrigatório.
@@ -251,7 +251,7 @@
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-12 ui-sm-12" id="tabela-deflator">
                         <app-memory-datatable [value]="manual.fatoresAjuste" id="idTabelaDeflatorFormManual"
-                                              (buttonClick)="adjustFactorDatatableClick($event)" disableClone="true" 
+                                              (buttonClick)="adjustFactorDatatableClick($event)" disableClone="true"
                                               paginator="true">
                             <p-column header="Código" field="codigo" [sortable]="true">
                                 <ng-template let-col let-codigo="rowData" pTemplate="body">
@@ -473,8 +473,8 @@
                             <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)">Deflator (PF) *</label>
                             <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Deflator *</label>
 
-                            <p-spinner 
-                                id="idDeflatorDeflatorFormManual" 
+                            <p-spinner
+                                id="idDeflatorDeflatorFormManual"
                                 maxlength="8"
                                 [min]="0"
                                 [max]="9999"
@@ -485,7 +485,7 @@
                                 [(ngModel)]="newAdjustFactor.fatorFormatado"
                                 (onFocus)= "this.validaDeflator = false">
                             </p-spinner>
-                    
+
                             <div *ngIf="this.validaDeflator || (editForm2.controls['fator']
                                         && !editForm2.controls['fator'].valid
                                         && editForm2.controls['fator'].touched)">
@@ -505,7 +505,7 @@
                         </div>
                     </div>
 
-                    <div class="ui-g">
+                    <!----><div class="ui-g">
                         <div class="ui-g-5 ui-md-5 ui-sm-12" style="padding-top: 01px">
                             <label>Código</label>
                             <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="newAdjustFactor.codigo"
@@ -556,7 +556,7 @@
                                     && !editForm.controls['nomeEdicaoFatorAjuste'].valid
                                     && editForm.controls['nomeEdicaoFatorAjuste'].touched)">
                                 <span style="color: red">Campo obrigatório.</span>
-                            </div>                        
+                            </div>
                         </div>
 
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 01px">
@@ -577,13 +577,13 @@
                             <label *ngIf="isUnitaryEnum(editedAdjustFactor.tipoAjuste)">Deflator (PF) *</label>
                             <label *ngIf="editedAdjustFactor.tipoAjuste === undefined">Deflator *</label>
 
-                            <p-spinner 
+                            <p-spinner
                                 step="0.1"
                                 [disabled]="habilitarDeflator()"
                                 required
                                 (onFocus)= "this.validaDeflator = false"
-                                id="valor_fator" 
-                                maxlength="3" 
+                                id="valor_fator"
+                                maxlength="3"
                                 name="fatorEdit"
                                 [disabled]="habilitarDeflator()"
                                 [(ngModel)]="editedAdjustFactor.fatorFormatado">
@@ -610,11 +610,11 @@
                     </div>
 
                     <div class="ui-g">
-                        <div class="ui-g-5 ui-md-5 ui-sm-12" style="padding-top: 01px">
+                        <!--<div class="ui-g-5 ui-md-5 ui-sm-12" style="padding-top: 01px">
                             <label>Código</label>
                             <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="editedAdjustFactor.codigo"
                                    pInputText maxlength="255"/>
-                        </div>
+                        </div>-->
 
                         <div class="ui-g-7 ui-md-7 ui-sm-12" style="padding-top: 01px">
                             <label>Origem</label>
