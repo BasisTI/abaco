@@ -251,9 +251,13 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     moduloSelected(modulo: Modulo) {
         this.deselecionaFuncionalidadeSeModuloSelecionadoForDiferente();
-        this.funcionalidades = modulo.funcionalidades;
+        
+        const moduloId = modulo.id;
+        this.funcionalidadeService.findFuncionalidadesByModulo(moduloId).subscribe((funcionalidades: Funcionalidade[]) => {
+            console.log(funcionalidades);
+            this.funcionalidades = funcionalidades;
+        });
         this.moduloSelectedEvent.emit(modulo);
-        this.oldModuloSelectedId = modulo.id;
     }
 
     private deselecionaFuncionalidadeSeModuloSelecionadoForDiferente() {

@@ -7,6 +7,7 @@ import {environment} from '../../environments/environment';
 import {Funcionalidade} from './funcionalidade.model';
 import {ResponseWrapper, createRequestOption, JhiDateUtils, BaseEntity} from '../shared';
 import {Modulo} from '../modulo/index';
+import { DeferObservable } from 'rxjs/observable/DeferObservable';
 
 @Injectable()
 export class FuncionalidadeService {
@@ -49,6 +50,20 @@ export class FuncionalidadeService {
             return this.convertItemFromServer(jsonResponse);
         });
     }
+
+    findFuncionalidadesByModulo(id: number): Observable<Funcionalidade[]> {
+        return this.http.get(`${this.resourceUrl}/modulo/${id}`).map((res: Response) => {
+          console.log(res);
+          
+          const jsonResponse = res.json();
+          debugger;
+          return this.convertItemFromServer(jsonResponse);
+        }).catch((error: any) => {
+            if (error.status === 403) {
+                return Observable.throw(new Error(error.status));
+            }
+        });
+      }
 
     query(req?: any): Observable<ResponseWrapper> {
         const options = createRequestOption(req);
