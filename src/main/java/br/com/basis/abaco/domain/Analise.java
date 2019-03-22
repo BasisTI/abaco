@@ -328,6 +328,9 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<FuncaoDados> getFuncaoDados() {
+        if (funcaoDados == null){
+            return null;
+        }
         Set<FuncaoDados> cp = new LinkedHashSet<>();
         cp.addAll(funcaoDados);
         return cp;
@@ -359,6 +362,9 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<FuncaoTransacao> getFuncaoTransacaos() {
+        if (funcaoTransacaos == null){
+            return null;
+        }
         Set<FuncaoTransacao> cp = new LinkedHashSet<>();
         cp.addAll(funcaoTransacaos);
         return cp;
@@ -372,12 +378,17 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Analise addFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
-        try {
-            this.funcaoTransacaos.add((FuncaoTransacao) funcaoTransacao.getClone());
-        } catch (CloneNotSupportedException e) {
-            log.error(e.getMessage(), e);
+        if (funcaoTransacao == null) {
+            this.funcaoTransacaos = null;
+        } else {
+            try {
+                this.funcaoTransacaos.add((FuncaoTransacao) funcaoTransacao.getClone());
+                funcaoTransacao.setAnalise(this);
+            } catch (CloneNotSupportedException e) {
+                log.error(e.getMessage(), e);
+                this.funcaoTransacaos = null;
+            }
         }
-        funcaoTransacao.setAnalise(this);
         return this;
     }
 
@@ -553,11 +564,18 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Timestamp getDataHomologacao() {
+        if (dataHomologacao == null) {
+            return null;
+        }
         return (Timestamp) dataHomologacao.clone();
     }
 
     public void setDataHomologacao(Timestamp dataHomologacao) {
-        this.dataHomologacao = (Timestamp) dataHomologacao.clone();
+        if (dataHomologacao == null) {
+            this.dataHomologacao = null;
+        } else {
+            this.dataHomologacao = (Timestamp) dataHomologacao.clone();
+        }
     }
 
     public String getIdentificadorAnalise() {
@@ -625,6 +643,9 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<Compartilhada> getCompartilhadas() {
+        if (compartilhadas == null){
+            return null;
+        }
         Set<Compartilhada> compAux;
         compAux = compartilhadas;
         return compAux;
