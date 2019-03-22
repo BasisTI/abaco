@@ -1,3 +1,4 @@
+import { Manual } from './../manual/manual.model';
 import { FuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
 import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
@@ -19,6 +20,8 @@ export class FuncaoDadosService {
     sistemaResourceUrl = environment.apiUrl + '/funcao-dados';
 
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
+
+    manualResourceUrl = environment.apiUrl + '/manuals';
     
     /*
     Subject criado para Buscar funcionalidade da Baseline.
@@ -63,7 +66,13 @@ export class FuncaoDadosService {
         });
     }
 
-  
+    getManualDeAnalise(id: number): Observable<Manual> {
+        return this.http.get(`${this.manualResourceUrl}/${id}`).map((res: Response) => {
+            const resposta = this.convertJsonManual(res.json());
+            return resposta;
+        });
+    }
+
     private convertJsonToSintetico(json: any): FuncaoDados {
         const entity: FuncaoDados = FuncaoDados.convertJsonToObject(json);
         return entity;
@@ -71,6 +80,11 @@ export class FuncaoDadosService {
 
     private convertJsonToSinteticoTransacao(json: any): FuncaoTransacao {
         const entity: FuncaoTransacao = FuncaoTransacao.convertTransacaoJsonToObject(json);
+        return entity;
+    }
+
+    private convertJsonManual(json: any): Manual {
+        const entity: Manual = Manual.convertManualJsonToObject(json);
         return entity;
     }
 
