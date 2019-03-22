@@ -97,7 +97,11 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     private carregarModulosQuandoTiverSistemaDisponivel() {
-        this.modulos = this.sistema.modulos;
+        const sistemaId = this.sistema.id;
+        this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
+            this.recarregarSistema(sistemaRecarregado);
+            this.modulos = sistemaRecarregado.modulos;
+        });
         this.changeDetectorRef.detectChanges();
     }
 
