@@ -133,6 +133,16 @@ public class ModuloResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(modulo));
     }
 
+
+
+    @GetMapping("/modulos/funcionalidade/{id}")
+    @Timed
+    public ResponseEntity<Modulo>getModuloByFuncionalidade(@PathVariable Long id) {
+        log.debug("REST request to get Modulo by Funcionalidade : {}", id);
+        Modulo modulo = moduloRepository.findByFuncionalidade(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(modulo));
+    }
+
     /**
      * DELETE  /modulos/:id : delete the "id" modulo.
      *

@@ -136,7 +136,7 @@ public class FuncionalidadeResource {
      *
      * @return the ResponseEntity with status 200 (OK) and the list of modulos in body
      */
-    @GetMapping("/funcionalidades/modulos/{id}")
+    @GetMapping("/funcionalidades/modulo/{id}")
     @Timed
     public List<Funcionalidade> getAllFuncionalidadesModulo(@PathVariable Long id) {
         log.debug("REST request to get all Funcionalidades");
