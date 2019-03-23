@@ -12,8 +12,8 @@ import org.springframework.data.jpa.repository.Query;
  */
 @SuppressWarnings("unused")
 public interface FuncionalidadeRepository extends JpaRepository<Funcionalidade, Long> {
-	
-	@Query( value = "SELECT * FROM FUNCIONALIDADE WHERE modulo_id = ?1", nativeQuery = true)
+
+    @Query( value = "SELECT * FROM FUNCIONALIDADE WHERE modulo_id = ?1", nativeQuery = true)
     List<Funcionalidade> findByModulo (Long idModulo);
 
 }
