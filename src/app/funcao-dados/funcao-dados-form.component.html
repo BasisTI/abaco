@@ -212,11 +212,16 @@
                 <div class="ui-g">
                     <div class="ui-g-3 ui-md-6 ui-sm-12">
                         <label>Deflator *</label>
-                        <p-dropdown [filter]="true" [options]="fatoresAjuste"
+                        <p-dropdown 
+                                    [filter]="true"
+                                    [options]="fatoresAjuste"
                                     [(ngModel)]="currentFuncaoDados.fatorAjuste"
-                                    [disabled]="!isContratoSelected()" id="idDeflatorFormFuncaoDados"
+                                    [disabled]="!isContratoSelected()"
+                                    id="idDeflatorFormFuncaoDados"
                                     [placeholder]="fatoresAjusteDropdownPlaceholder()"
-                                    (onChange)="contratoSelecionado()" name="fatorAjuste" [autoWidth]="false">
+                                    (onChange)="contratoSelecionado()"
+                                    name="fatorAjuste"
+                                    [autoWidth]="false">
                         </p-dropdown>
                         <span class="md-inputfield">
                             <div *ngIf="erroDeflator" class="ui-message ui-messages-error">

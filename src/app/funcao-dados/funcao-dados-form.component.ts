@@ -48,7 +48,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     @Input()
     label: string;
 
-    faS: FatorAjuste[];
+    faS: FatorAjuste[] = [];
 
     textHeader: string;
     @Input() isView: boolean;
@@ -276,9 +276,15 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private get manual() {
-        if (this.analiseSharedDataService.analise.contrato && 
-            this.analiseSharedDataService.analise.contrato.manualContrato) {
-            return this.analiseSharedDataService.analise.contrato.manualContrato[0].manual;
+        if (this.analiseSharedDataService.analise.manual) {
+            if (this.analiseSharedDataService.analise.manual.fatoresAjuste.length === 0) {
+                    this.funcaoDadosService.getManualDeAnalise(
+                        this.analiseSharedDataService.analise.manual.id
+                    ).subscribe( manual => {
+                        this.analiseSharedDataService.analise.manual = manual;
+                    });
+            }
+            return this.analiseSharedDataService.analise.manual;
         }
         return undefined;
     }
@@ -313,8 +319,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     // Funcionalidade Selecionada
     functionalitySelected(funcionalidade: Funcionalidade) {
-        if (!funcionalidade) {
-        } else {
+        if (funcionalidade) { // necessario?
             this.moduloCache = funcionalidade;
         }
         this.currentFuncaoDados.funcionalidade = funcionalidade;

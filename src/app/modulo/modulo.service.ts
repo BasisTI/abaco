@@ -1,3 +1,4 @@
+import { Funcionalidade } from './../funcionalidade/funcionalidade.model';
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
@@ -75,6 +76,18 @@ export class ModuloService {
 
   delete(id: number): Observable<Response> {
     return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
+    });
+  }
+
+  findByFuncionalidade(id: number): Observable<Modulo> {
+    return this.http.get(`${this.resourceUrl}/funcionalidade/${id}`).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
+    }).catch((error: any) => {
         if (error.status === 403) {
             this.pageNotificationService.addErrorMsg('Você não possui permissão!');
             return Observable.throw(new Error(error.status));
