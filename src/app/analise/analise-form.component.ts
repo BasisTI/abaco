@@ -285,8 +285,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     /**
      * Método responsável por popular o manual do contrato
      */
-    setManual(manual1: Manual) {   
-        console.log(this.analise)
+    setManual(manual1: Manual) {
  
         if (manual1) {
             this.manualService.find(manual1.id).subscribe((manual) => {

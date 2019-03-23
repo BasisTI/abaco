@@ -53,11 +53,8 @@ export class FuncionalidadeService {
 
     findFuncionalidadesByModulo(id: number): Observable<Funcionalidade[]> {
         return this.http.get(`${this.resourceUrl}/modulo/${id}`).map((res: Response) => {
-          console.log(res);
-          
           const jsonResponse = res.json();
-          debugger;
-          return this.convertItemFromServer(jsonResponse);
+          return this.convertListFromServer(jsonResponse);
         }).catch((error: any) => {
             if (error.status === 403) {
                 return Observable.throw(new Error(error.status));
@@ -90,6 +87,15 @@ export class FuncionalidadeService {
     private convertItemFromServer(json: any): Funcionalidade {
         const entity: Funcionalidade = Object.assign(new Funcionalidade(), json);
         return entity;
+    }
+
+    private convertListFromServer(json: any): Funcionalidade[] {
+        const fun: Funcionalidade[] = [];
+        for (let i = 0; i < json.length; i++ ) {
+            const entity: Funcionalidade = Object.assign(new Funcionalidade(), json[i]);
+            fun.push(entity);
+        }
+        return fun;
     }
 
     /**

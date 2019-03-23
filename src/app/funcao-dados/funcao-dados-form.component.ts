@@ -319,8 +319,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     // Funcionalidade Selecionada
     functionalitySelected(funcionalidade: Funcionalidade) {
-        if (!funcionalidade) {
-        } else {
+        if (funcionalidade) { // necessario?
             this.moduloCache = funcionalidade;
         }
         this.currentFuncaoDados.funcionalidade = funcionalidade;

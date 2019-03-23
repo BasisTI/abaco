@@ -254,7 +254,6 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         
         const moduloId = modulo.id;
         this.funcionalidadeService.findFuncionalidadesByModulo(moduloId).subscribe((funcionalidades: Funcionalidade[]) => {
-            console.log(funcionalidades);
             this.funcionalidades = funcionalidades;
         });
         this.moduloSelectedEvent.emit(modulo);
@@ -349,7 +348,14 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     funcionalidadeSelected(funcionalidade: Funcionalidade) {
-        this.funcionalidadeSelectedEvent.emit(funcionalidade);
+        if (funcionalidade.modulo === undefined || funcionalidade == null) {
+            this.moduloService.findByFuncionalidade(funcionalidade.id).subscribe(
+                modulo => {
+                    funcionalidade.modulo = modulo;
+                    this.funcionalidadeSelectedEvent.emit(funcionalidade);
+                }
+            );
+        } else { this.funcionalidadeSelectedEvent.emit(funcionalidade); }
     }
 
     private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade) {

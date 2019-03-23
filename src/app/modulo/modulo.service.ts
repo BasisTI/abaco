@@ -83,6 +83,18 @@ export class ModuloService {
     });
   }
 
+  findByFuncionalidade(id: number): Observable<Modulo> {
+    return this.http.get(`${this.resourceUrl}/funcionalidade/${id}`).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertItemFromServer(jsonResponse);
+    }).catch((error: any) => {
+        if (error.status === 403) {
+            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            return Observable.throw(new Error(error.status));
+        }
+    });
+  }
+
   private convertResponse(res: Response): ResponseWrapper {
     const jsonResponse = res.json();
     const result = [];
