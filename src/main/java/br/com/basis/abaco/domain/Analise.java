@@ -178,7 +178,7 @@ public class Analise implements Serializable, ReportObject {
     private Manual manual;
     
 
-	public Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -561,13 +561,13 @@ public class Analise implements Serializable, ReportObject {
     }
     
     public Manual getManual() {
-		return manual;
-	}
+        return manual;
+    }
 
-	public void setManual(Manual manual) {
-		this.manual = manual;
-	}
-	
+    public void setManual(Manual manual) {
+        this.manual = manual;
+    }
+
     public AbacoAudit getAudit() {
         return audit;
     }
