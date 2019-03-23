@@ -11,6 +11,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,7 +43,7 @@ public class Funcionalidade implements Serializable {
     @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
 	private String nome;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JsonBackReference
 	private Modulo modulo;
 
