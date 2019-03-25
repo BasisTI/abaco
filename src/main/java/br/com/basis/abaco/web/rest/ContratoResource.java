@@ -139,7 +139,7 @@ public class ContratoResource {
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public List<Contrato> getAllContratoesByOrganization(@RequestBody Organizacao organizacao) {
         log.debug("REST request to get all Contratoes");
-        return contratoRepository.findAllByOrganization(organizacao);
+        return contratoRepository.findAllByOrganization(organizacao.getId());
     }
 
 
