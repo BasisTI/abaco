@@ -296,7 +296,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
         if (isContratoSelected) {
             if (this.fatoresAjuste.length === 0) {
-                this.inicializaFatoresAjuste(this.manual);
+                this.inicializaFatoresAjuste(this.analise.manual);
             }
         }
         return isContratoSelected;
@@ -723,7 +723,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
-        this.inicializaFatoresAjuste(this.manual);
+        this.inicializaFatoresAjuste(this.analise.manual);
         if (funcaoSelecionada.fatorAjuste !== undefined) {
             funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, {value: {'id': funcaoSelecionada.fatorAjuste.id}}).value;
         }
@@ -809,7 +809,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     private inicializaFatoresAjuste(manual: Manual) {
         if (manual.fatoresAjuste) {
             this.faS = _.cloneDeep(manual.fatoresAjuste);
-
             this.faS.sort((n1,n2) => {
                 if (n1.fator < n2.fator) 
                     return 1;   
