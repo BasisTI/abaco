@@ -37,6 +37,13 @@ export class Manual implements BaseEntity, JSONable<Manual> {
         }
     }
 
+    static convertManualJsonToObject(json: any) {
+        const sintetico = Object.create(Manual.prototype);
+        return Object.assign(sintetico, json, {
+            created: new Date(json.created)
+        });
+    }
+
     toJSONState(): Manual {
         const copy: Manual = Object.assign({}, this);
         return copy;

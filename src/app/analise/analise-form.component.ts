@@ -60,6 +60,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     metodosContagem: SelectItem[] = [];
 
     fatoresAjuste: SelectItem[] = [];
+    
+    fatorAjuste: FatorAjuste;
 
     equipeResponsavel: SelectItem[] = [];
 
@@ -284,6 +286,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular o manual do contrato
      */
     setManual(manual1: Manual) {
+ 
         if (manual1) {
             this.manualService.find(manual1.id).subscribe((manual) => {
                 this.nomeManual = manual.nome;

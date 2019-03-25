@@ -7,6 +7,7 @@ import {environment} from '../../environments/environment';
 import {Funcionalidade} from './funcionalidade.model';
 import {ResponseWrapper, createRequestOption, JhiDateUtils, BaseEntity} from '../shared';
 import {Modulo} from '../modulo/index';
+import { DeferObservable } from 'rxjs/observable/DeferObservable';
 
 @Injectable()
 export class FuncionalidadeService {
@@ -50,6 +51,17 @@ export class FuncionalidadeService {
         });
     }
 
+    findFuncionalidadesByModulo(id: number): Observable<Funcionalidade[]> {
+        return this.http.get(`${this.resourceUrl}/modulo/${id}`).map((res: Response) => {
+          const jsonResponse = res.json();
+          return this.convertListFromServer(jsonResponse);
+        }).catch((error: any) => {
+            if (error.status === 403) {
+                return Observable.throw(new Error(error.status));
+            }
+        });
+      }
+
     query(req?: any): Observable<ResponseWrapper> {
         const options = createRequestOption(req);
         return this.http.get(this.resourceUrl, options)
@@ -75,6 +87,15 @@ export class FuncionalidadeService {
     private convertItemFromServer(json: any): Funcionalidade {
         const entity: Funcionalidade = Object.assign(new Funcionalidade(), json);
         return entity;
+    }
+
+    private convertListFromServer(json: any): Funcionalidade[] {
+        const fun: Funcionalidade[] = [];
+        for (let i = 0; i < json.length; i++ ) {
+            const entity: Funcionalidade = Object.assign(new Funcionalidade(), json[i]);
+            fun.push(entity);
+        }
+        return fun;
     }
 
     /**
