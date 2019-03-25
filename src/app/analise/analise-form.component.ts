@@ -33,7 +33,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     isEdicao: boolean;
     disableFuncaoTrasacao: boolean;
     disableAba: boolean;
-    equipeShare; analiseShared: Array<AnaliseShareEquipe> = [];
+    equipeShare = [];
+    analiseShared: Array<AnaliseShareEquipe> = [];
     selectedEquipes: Array<AnaliseShareEquipe>;
     selectedToDelete: AnaliseShareEquipe;
     mostrarDialog = false;
@@ -294,6 +295,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 this.carregarMetodosContagem(manual);
                 this.inicializaFatoresAjuste(manual);
                 this.manualSelecionado(manual);
+                this.setManuais(this.analise.contrato);
             });
         }
     }
@@ -475,7 +477,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * @param contrato
      */
     contratoSelected(contrato: Contrato) {
-        if (contrato.manualContrato) {
+        if (contrato && contrato.manualContrato) {
             this.setManuais(contrato);
             var manualSelected = (typeof this.analise.manual.id !== "undefined") ? this.analise.manual : contrato.manualContrato[0].manual;
             this.setManual(manualSelected);
@@ -642,7 +644,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     public openCompartilharDialog() {
         if (this.checkUserAnaliseEquipes()) {
-            this.equipeShare = [];
             this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id,
                 this.analise.id,
                 this.analise.equipeResponsavel.id).subscribe((equipes) => {
