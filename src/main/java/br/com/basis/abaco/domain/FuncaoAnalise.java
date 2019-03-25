@@ -11,6 +11,7 @@ import javax.persistence.Embedded;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,7 +49,7 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     @JsonBackReference
     private Analise analise;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "funcionalidade_id")
     private Funcionalidade funcionalidade;
 

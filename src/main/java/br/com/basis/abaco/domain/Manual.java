@@ -25,7 +25,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -73,11 +72,11 @@ public class Manual implements Serializable, ReportObject, Cloneable {
 
   @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
-  private Set<EsforcoFase> esforcoFases = new HashSet<>();
+  private Set<EsforcoFase> esforcoFases = new LinkedHashSet<>();
 
   @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
-  private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
+  private Set<FatorAjuste> fatoresAjuste = new LinkedHashSet<>();
 
   @DecimalMin(value = MINPERCENT)
   @DecimalMax(value = MAXPERCENT)
@@ -184,27 +183,35 @@ public class Manual implements Serializable, ReportObject, Cloneable {
   }
 
   public Manual addEsforcoFase(EsforcoFase esforcoFase) {
-    this.esforcoFases.add(esforcoFase);
     esforcoFase.setManual(this);
+    this.esforcoFases.add(esforcoFase);
     return this;
   }
 
   public Manual removeEsforcoFase(EsforcoFase esforcoFase) {
-    this.esforcoFases.remove(esforcoFase);
     esforcoFase.setManual(null);
+    this.esforcoFases.remove(esforcoFase);
     return this;
   }
 
   public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {
-    Set<EsforcoFase> cp = new LinkedHashSet<>();
-    cp.addAll(esforcoFases);
-    this.esforcoFases = cp;
+      if (esforcoFases != null) {
+          Set<EsforcoFase> cp = new LinkedHashSet<>();
+          cp.addAll(esforcoFases);
+          this.esforcoFases = cp;
+      } else {
+          this.esforcoFases = null;
+      }
   }
 
   public Set<FatorAjuste> getFatoresAjuste() {
-    Set<FatorAjuste> cp = new LinkedHashSet<>();
-    cp.addAll(fatoresAjuste);
-    return cp;
+    if (fatoresAjuste != null) {
+        Set<FatorAjuste> cp = new LinkedHashSet<>();
+        cp.addAll(fatoresAjuste);
+        return cp;
+    } else {
+        return null;
+    }
   }
 
   public void setFatoresAjuste(Set<FatorAjuste> fatoresAjuste) {

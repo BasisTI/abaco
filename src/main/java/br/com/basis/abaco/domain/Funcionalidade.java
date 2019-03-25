@@ -39,7 +39,7 @@ public class Funcionalidade implements Serializable {
 
     @NotNull
     @Column(name = "nome", nullable = false)
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
     @ManyToOne

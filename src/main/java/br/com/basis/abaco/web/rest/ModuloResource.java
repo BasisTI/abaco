@@ -103,7 +103,7 @@ public class ModuloResource {
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, modulo.getId().toString()))
             .body(result);
     }
-
+    
     /**
      * GET  /modulos : get all the modulos.
      *
@@ -127,6 +127,16 @@ public class ModuloResource {
     public ResponseEntity<Modulo> getModulo(@PathVariable Long id) {
         log.debug("REST request to get Modulo : {}", id);
         Modulo modulo = moduloRepository.findOne(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(modulo));
+    }
+
+
+
+    @GetMapping("/modulos/funcionalidade/{id}")
+    @Timed
+    public ResponseEntity<Modulo>getModuloByFuncionalidade(@PathVariable Long id) {
+        log.debug("REST request to get Modulo by Funcionalidade : {}", id);
+        Modulo modulo = moduloRepository.findByFuncionalidade(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(modulo));
     }
 
