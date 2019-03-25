@@ -277,7 +277,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     private get manual() {
         if (this.analiseSharedDataService.analise.manual) {
-            if (this.analiseSharedDataService.analise.manual.fatoresAjuste.length === 0) {
+            if (
+                 this.analiseSharedDataService.analise.manual.fatoresAjuste &&
+                 this.analiseSharedDataService.analise.manual.fatoresAjuste.length === 0
+                ) {
                     this.funcaoDadosService.getManualDeAnalise(
                         this.analiseSharedDataService.analise.manual.id
                     ).subscribe( manual => {
