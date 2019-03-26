@@ -72,7 +72,11 @@ public class Alr implements Serializable {
 
     public Alr funcaoTransacao(FuncaoTransacao funcaoTransacao) {
         try {
-            this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
+            if(funcaoTransacao == null) {
+                this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
+            } else {
+                this.funcaoTransacao = null;
+            }
         } catch (CloneNotSupportedException e) {
             log.error(e.getMessage(), e);
             this.funcaoTransacao = null;
@@ -82,7 +86,11 @@ public class Alr implements Serializable {
 
     public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
         try {
-            this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
+            if(funcaoTransacao == null) {
+                this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
+            } else {
+                this.funcaoTransacao = null;
+            }
         } catch (CloneNotSupportedException e) {
             log.error(e.getMessage(), e);
             this.funcaoTransacao = null;
@@ -120,6 +128,9 @@ public class Alr implements Serializable {
     }
 
     public Alr removeFuncaoDados(FuncaoDados funcaoDados) {
+        if (funcaoDados == null){
+            return this;
+        }
         this.funcaoDados.remove(funcaoDados);
         funcaoDados.setAlr(null);
         return this;

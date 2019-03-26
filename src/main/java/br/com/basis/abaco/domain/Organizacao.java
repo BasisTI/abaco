@@ -40,7 +40,7 @@ import java.util.Set;
 @Table(name = "organizacao")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "organizacao")
-public class Organizacao implements Serializable, ReportObject {
+public class Organizacao implements Serializable, ReportObject, Cloneable {
 
   private static final long serialVersionUID = 1L;
 
@@ -255,4 +255,8 @@ public class Organizacao implements Serializable, ReportObject {
         + "'" + ", numeroOcorrencia='" + numeroOcorrencia + "'" + '}';
   }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

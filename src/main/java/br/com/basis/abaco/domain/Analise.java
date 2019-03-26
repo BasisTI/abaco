@@ -337,28 +337,34 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Analise funcaoDados(Set<FuncaoDados> funcaoDados) {
-        Set<FuncaoDados> cp = new LinkedHashSet<>();
-        cp.addAll(funcaoDados);
-        this.funcaoDados = cp;
+        this.funcaoDados = Optional.ofNullable(funcaoDados)
+            .map(lista -> new LinkedHashSet<FuncaoDados>(lista))
+            .orElse(new LinkedHashSet<FuncaoDados>());
         return this;
     }
 
     public Analise addFuncaoDados(FuncaoDados funcaoDados) {
+        if (funcaoDados == null) {
+            return this;
+        }
         this.funcaoDados.add(funcaoDados);
         funcaoDados.setAnalise(this);
         return this;
     }
 
     public Analise removeFuncaoDados(FuncaoDados funcaoDados) {
+        if (funcaoDados == null) {
+            return this;
+        }
         this.funcaoDados.remove(funcaoDados);
         funcaoDados.setAnalise(null);
         return this;
     }
 
     public void setFuncaoDados(Set<FuncaoDados> funcaoDados) {
-        Set<FuncaoDados> cp = new LinkedHashSet<>();
-        cp.addAll(funcaoDados);
-        this.funcaoDados = cp;
+        this.funcaoDados = Optional.ofNullable(funcaoDados)
+            .map(lista -> new LinkedHashSet<FuncaoDados>(lista))
+            .orElse(new LinkedHashSet<FuncaoDados>());
     }
 
     public Set<FuncaoTransacao> getFuncaoTransacaos() {
@@ -371,15 +377,15 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Analise funcaoTransacaos(Set<FuncaoTransacao> funcaoTransacaos) {
-        Set<FuncaoTransacao> cp = new LinkedHashSet<>();
-        cp.addAll(funcaoTransacaos);
-        this.funcaoTransacaos = cp;
+        this.funcaoTransacaos = Optional.ofNullable(funcaoTransacaos)
+            .map(lista -> new LinkedHashSet<FuncaoTransacao>(lista))
+            .orElse(new LinkedHashSet<FuncaoTransacao>());
         return this;
     }
 
     public Analise addFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
         if (funcaoTransacao == null) {
-            this.funcaoTransacaos = null;
+            return this;
         } else {
             try {
                 this.funcaoTransacaos.add((FuncaoTransacao) funcaoTransacao.getClone());
@@ -387,21 +393,25 @@ public class Analise implements Serializable, ReportObject {
             } catch (CloneNotSupportedException e) {
                 log.error(e.getMessage(), e);
                 this.funcaoTransacaos = null;
+            } finally {
+                return this;
             }
         }
-        return this;
     }
 
     public Analise removeFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
+        if (funcaoTransacao == null) {
+            return this;
+        }
         this.funcaoTransacaos.remove(funcaoTransacao);
         funcaoTransacao.setAnalise(null);
         return this;
     }
 
     public void setFuncaoTransacaos(Set<FuncaoTransacao> funcaoTransacaos) {
-        Set<FuncaoTransacao> cp = new LinkedHashSet<>();
-        cp.addAll(funcaoTransacaos);
-        this.funcaoTransacaos = cp;
+        this.funcaoTransacaos = Optional.ofNullable(funcaoTransacaos)
+            .map(lista -> new LinkedHashSet<FuncaoTransacao>(lista))
+            .orElse(new LinkedHashSet<FuncaoTransacao>());
     }
 
     public Contrato getContrato() {

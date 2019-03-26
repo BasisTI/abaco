@@ -32,6 +32,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -131,19 +132,41 @@ public class Contrato implements Serializable {
   }
 
   public void setManualContrato(Set<ManualContrato> manualContrato) {
-    this.manualContrato = new LinkedHashSet<ManualContrato>(manualContrato);
+    this.manualContrato = Optional.ofNullable(manualContrato)
+        .map( lista -> new LinkedHashSet<ManualContrato>(lista) )
+        .orElse(new LinkedHashSet<ManualContrato>());
   }
 
   public Organizacao getOrganization() {
-    return organization;
+      try {
+          if (this.organization == null) {
+              return null;
+          } else {
+              return (Organizacao) organization.clone();
+          }
+      } catch (CloneNotSupportedException e) {
+          log.error(e.getMessage(), e);
+          return null;
+      }
   }
 
   public Set<ManualContrato> getManualContrato() {
-    return new LinkedHashSet<ManualContrato>(manualContrato);
+      return Optional.ofNullable(this.manualContrato)
+          .map(lista -> new LinkedHashSet<ManualContrato>(lista))
+          .orElse(new LinkedHashSet<ManualContrato>());
   }
 
   public void setOrganization(Organizacao organization) {
-    this.organization = organization;
+      try {
+          if (organization == null){
+              this.organization = null;
+          } else {
+              this.organization = (Organizacao) organization.clone();
+          }
+      } catch (CloneNotSupportedException e) {
+          log.error(e.getMessage(), e);
+          this.organization = null;
+      }
   }
 
   public Boolean getAtivo() {
@@ -164,6 +187,9 @@ public class Contrato implements Serializable {
 
   public Manual getManual() {
       try {
+          if (this.manual == null) {
+              return null;
+          }
           return (Manual) this.manual.clone();
       } catch (CloneNotSupportedException e) {
           log.error(e.getMessage(), e);
@@ -172,7 +198,16 @@ public class Contrato implements Serializable {
   }
 
   public void setManual(Manual manual) {
-    this.manual = manual;
+      try {
+          if (manual == null) {
+              this.manual = null;
+          } else {
+              this.manual = (Manual) manual.clone();
+          }
+      } catch (CloneNotSupportedException e) {
+          log.error(e.getMessage(), e);
+          this.manual = null;
+      }
   }
 
   @Override

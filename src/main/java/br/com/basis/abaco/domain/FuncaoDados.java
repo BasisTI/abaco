@@ -34,7 +34,7 @@ import java.util.Set;
 @Table(name = "funcao_dados")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "funcaodados")
-public class FuncaoDados extends FuncaoAnalise implements Serializable {
+public class FuncaoDados extends FuncaoAnalise implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
@@ -253,5 +253,10 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
