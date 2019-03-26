@@ -86,65 +86,77 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Funcionalidade> getFuncionalidades() {
-        Set<Funcionalidade> cp = new LinkedHashSet<>();
-        cp.addAll(funcionalidades);
-        return cp;
+        return Optional.ofNullable(this.funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public FuncaoTransacao funcionalidades(Set<Funcionalidade> funcionalidades) {
-        Set<Funcionalidade> cp = new LinkedHashSet<>();
-        cp.addAll(funcionalidades);
-        this.funcionalidades = cp;
+        this.funcionalidades = Optional.ofNullable(funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
         return this;
     }
 
     public FuncaoTransacao addFuncionalidade(Funcionalidade funcionalidade) {
+        if (funcionalidade == null) {
+            return this;
+        }
         this.funcionalidades.add(funcionalidade);
         funcionalidade.setFuncaoTransacao(this);
         return this;
     }
 
     public FuncaoTransacao removeFuncionalidade(Funcionalidade funcionalidade) {
+        if (funcionalidade == null) {
+            return this;
+        }
         this.funcionalidades.remove(funcionalidade);
         funcionalidade.setFuncaoTransacao(null);
         return this;
     }
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
-        Set<Funcionalidade> cp = new LinkedHashSet<>();
-        cp.addAll(funcionalidades);
-        this.funcionalidades = cp;
+        this.funcionalidades = Optional.ofNullable(funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public Set<Alr> getAlrs() {
-        Set<Alr> cp = new LinkedHashSet<>();
-        cp.addAll(alrs);
-        return cp;
+        return Optional.ofNullable(this.alrs)
+            .map(lista -> new LinkedHashSet<Alr>(lista))
+            .orElse(new LinkedHashSet<Alr>());
     }
 
     public FuncaoTransacao alrs(Set<Alr> alrs) {
-        Set<Alr> cp = new LinkedHashSet<>();
-        cp.addAll(alrs);
-        this.alrs = cp;
+        this.alrs = Optional.ofNullable(alrs)
+            .map(lista -> new LinkedHashSet<Alr>(lista))
+            .orElse(new LinkedHashSet<Alr>());
         return this;
     }
 
     public FuncaoTransacao addAlr(Alr alr) {
+        if (alr == null) {
+            return this;
+        }
         this.alrs.add(alr);
         alr.setFuncaoTransacao(this);
         return this;
     }
 
     public FuncaoTransacao removeAlr(Alr alr) {
+        if (alr == null) {
+            return this;
+        }
         this.alrs.remove(alr);
         alr.setFuncaoTransacao(null);
         return this;
     }
 
     public void setAlrs(Set<Alr> alrs) {
-        Set<Alr> cp = new LinkedHashSet<>();
-        cp.addAll(alrs);
-        this.alrs = cp;
+        this.alrs = Optional.ofNullable(alrs)
+            .map(lista -> new LinkedHashSet<Alr>(lista))
+            .orElse(new LinkedHashSet<Alr>());
     }
 
     public String getFtrStr() {

@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -91,34 +92,40 @@ public class Modulo implements Serializable {
     }
 
     public Set<Funcionalidade> getFuncionalidades() {
-        Set<Funcionalidade> cp = new LinkedHashSet<>();
-        cp.addAll(funcionalidades);
-        return cp;
+        return Optional.ofNullable(this.funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public Modulo funcionalidades(Set<Funcionalidade> funcionalidades) {
-        Set<Funcionalidade> cp = new LinkedHashSet<>();
-        cp.addAll(funcionalidades);
-        this.funcionalidades = cp;
+        this.funcionalidades = Optional.ofNullable(funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
         return this;
     }
 
     public Modulo addFuncionalidade(Funcionalidade funcionalidade) {
+        if (funcionalidade == null) {
+            return this;
+        }
         this.funcionalidades.add(funcionalidade);
         funcionalidade.setModulo(this);
         return this;
     }
 
     public Modulo removeFuncionalidade(Funcionalidade funcionalidade) {
+        if (funcionalidade == null) {
+            return this;
+        }
         this.funcionalidades.remove(funcionalidade);
         funcionalidade.setModulo(null);
         return this;
     }
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
-        Set<Funcionalidade> cp = new LinkedHashSet<>();
-        cp.addAll(funcionalidades);
-        this.funcionalidades = cp;
+        this.funcionalidades = Optional.ofNullable(funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     @Override

@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.br.CNPJ;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -43,6 +45,7 @@ import java.util.Set;
 public class Organizacao implements Serializable, ReportObject, Cloneable {
 
   private static final long serialVersionUID = 1L;
+    private final transient Logger log = LoggerFactory.getLogger(Organizacao.class);
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -156,34 +159,40 @@ public class Organizacao implements Serializable, ReportObject, Cloneable {
   }
 
   public Set<Sistema> getSistemas() {
-    Set<Sistema> cp = new LinkedHashSet<>();
-    cp.addAll(sistemas);
-    return cp;
+    return Optional.ofNullable(this.sistemas)
+        .map(lista -> new LinkedHashSet<Sistema>(lista))
+        .orElse(new LinkedHashSet<Sistema>());
   }
 
   public Organizacao sistemas(Set<Sistema> sistemas) {
-    Set<Sistema> cp = new LinkedHashSet<>();
-    cp.addAll(sistemas);
-    this.sistemas = cp;
+    this.sistemas = Optional.ofNullable(sistemas)
+        .map(lista -> new LinkedHashSet<Sistema>(lista))
+        .orElse(new LinkedHashSet<Sistema>());
     return this;
   }
 
   public Organizacao addSistema(Sistema sistema) {
+      if (sistema == null) {
+          return this;
+      }
     this.sistemas.add(sistema);
     sistema.setOrganizacao(this);
     return this;
   }
 
   public Organizacao removeSistema(Sistema sistema) {
+      if (sistema == null) {
+          return this;
+      }
     this.sistemas.remove(sistema);
     sistema.setOrganizacao(null);
     return this;
   }
 
   public void setSistemas(Set<Sistema> sistemas) {
-    Set<Sistema> cp = new LinkedHashSet<>();
-    cp.addAll(sistemas);
-    this.sistemas = cp;
+    this.sistemas = Optional.ofNullable(sistemas)
+        .map(lista -> new LinkedHashSet<Sistema>(lista))
+        .orElse(new LinkedHashSet<Sistema>());
   }
 
   public String getSigla() {
@@ -215,15 +224,15 @@ public class Organizacao implements Serializable, ReportObject, Cloneable {
   }
 
   public Set<Contrato> getContracts() {
-    Set<Contrato> cp = new LinkedHashSet<>();
-    cp.addAll(contracts);
-    return cp;
+    return Optional.ofNullable(this.contracts)
+        .map(lista -> new LinkedHashSet<Contrato>(lista))
+        .orElse(new LinkedHashSet<Contrato>());
   }
 
   public void setContracts(Set<Contrato> contracts) {
-    Set<Contrato> cp = new LinkedHashSet<>();
-    cp.addAll(contracts);
-    this.contracts = cp;
+    this.contracts = Optional.ofNullable(contracts)
+        .map(lista -> new LinkedHashSet<Contrato>(lista))
+        .orElse(new LinkedHashSet<Contrato>());
   }
 
   public Long getLogoId() {
@@ -257,6 +266,16 @@ public class Organizacao implements Serializable, ReportObject, Cloneable {
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+      log.debug("Clone Orgnaizacao", this);
+      return super.clone();
+    }
+
+    protected Object getClone() {
+        try {
+            return this.clone();
+        } catch (CloneNotSupportedException e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
     }
 }

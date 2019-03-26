@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -170,54 +171,52 @@ public class Manual implements Serializable, ReportObject, Cloneable {
   }
 
   public Set<EsforcoFase> getEsforcoFases() {
-    Set<EsforcoFase> cp = new LinkedHashSet<>();
-    cp.addAll(esforcoFases);
-    return cp;
+    return Optional.ofNullable(this.esforcoFases)
+        .map(lista -> new LinkedHashSet<EsforcoFase>(lista))
+        .orElse(new LinkedHashSet<EsforcoFase>());
   }
 
   public Manual esforcoFases(Set<EsforcoFase> esforcoFases) {
-    Set<EsforcoFase> cp = new LinkedHashSet<>();
-    cp.addAll(esforcoFases);
-    this.esforcoFases = cp;
+    this.esforcoFases = Optional.ofNullable(esforcoFases)
+        .map(lista -> new LinkedHashSet<EsforcoFase>(lista))
+        .orElse(new LinkedHashSet<EsforcoFase>());
     return this;
   }
 
   public Manual addEsforcoFase(EsforcoFase esforcoFase) {
+      if (esforcoFase == null) {
+          return this;
+      }
     esforcoFase.setManual(this);
     this.esforcoFases.add(esforcoFase);
     return this;
   }
 
   public Manual removeEsforcoFase(EsforcoFase esforcoFase) {
+      if (esforcoFase == null) {
+          return this;
+      }
     esforcoFase.setManual(null);
     this.esforcoFases.remove(esforcoFase);
     return this;
   }
 
   public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {
-      if (esforcoFases != null) {
-          Set<EsforcoFase> cp = new LinkedHashSet<>();
-          cp.addAll(esforcoFases);
-          this.esforcoFases = cp;
-      } else {
-          this.esforcoFases = null;
-      }
+      this.esforcoFases = Optional.ofNullable(esforcoFases)
+          .map(lista -> new LinkedHashSet<EsforcoFase>(lista))
+          .orElse(new LinkedHashSet<EsforcoFase>());
   }
 
   public Set<FatorAjuste> getFatoresAjuste() {
-    if (fatoresAjuste != null) {
-        Set<FatorAjuste> cp = new LinkedHashSet<>();
-        cp.addAll(fatoresAjuste);
-        return cp;
-    } else {
-        return null;
-    }
+    return Optional.ofNullable(this.fatoresAjuste)
+        .map(lista -> new LinkedHashSet<FatorAjuste>(lista))
+        .orElse(new LinkedHashSet<FatorAjuste>());
   }
 
   public void setFatoresAjuste(Set<FatorAjuste> fatoresAjuste) {
-    Set<FatorAjuste> cp = new LinkedHashSet<>();
-    cp.addAll(fatoresAjuste);
-    this.fatoresAjuste = cp;
+    this.fatoresAjuste = Optional.ofNullable(fatoresAjuste)
+        .map(lista -> new LinkedHashSet<FatorAjuste>(lista))
+        .orElse(new LinkedHashSet<FatorAjuste>());
   }
 
   public BigDecimal getParametroInclusao() {

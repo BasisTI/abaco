@@ -34,7 +34,7 @@ import java.util.Set;
 @Table(name = "funcao_dados")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "funcaodados")
-public class FuncaoDados extends FuncaoAnalise implements Serializable, Cloneable {
+public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -93,65 +93,77 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable, Cloneabl
     }
 
     public Set<Funcionalidade> getFuncionalidades() {
-        Set<Funcionalidade> cp = new LinkedHashSet<>();
-        cp.addAll(funcionalidades);
-        return cp;
+        return Optional.ofNullable(this.funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public FuncaoDados funcionalidades(Set<Funcionalidade> funcionalidades) {
-        Set<Funcionalidade> cp = new LinkedHashSet<>();
-        cp.addAll(funcionalidades);
-        this.funcionalidades = cp;
+        this.funcionalidades = Optional.ofNullable(funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
         return this;
     }
 
     public FuncaoDados addFuncionalidade(Funcionalidade funcionalidade) {
+        if (funcionalidade == null) {
+            return this;
+        }
         this.funcionalidades.add(funcionalidade);
         funcionalidade.setFuncaoDados(this);
         return this;
     }
 
     public FuncaoDados removeFuncionalidade(Funcionalidade funcionalidade) {
+        if (funcionalidade == null) {
+            return this;
+        }
         this.funcionalidades.remove(funcionalidade);
         funcionalidade.setFuncaoDados(null);
         return this;
     }
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
-        Set<Funcionalidade> cp = new LinkedHashSet<>();
-        cp.addAll(funcionalidades);
-        this.funcionalidades = cp;
+        this.funcionalidades = Optional.ofNullable(funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public Set<Rlr> getRlrs() {
-        Set<Rlr> cp = new LinkedHashSet<>();
-        cp.addAll(rlrs);
-        return cp;
+        return Optional.ofNullable(this.rlrs)
+            .map(lista -> new LinkedHashSet<Rlr>(lista))
+            .orElse(new LinkedHashSet<Rlr>());
     }
 
     public FuncaoDados rlrs(Set<Rlr> rlrs) {
-        Set<Rlr> cp = new LinkedHashSet<>();
-        cp.addAll(rlrs);
-        this.rlrs = cp;
+        this.rlrs = Optional.ofNullable(rlrs)
+            .map(lista -> new LinkedHashSet<Rlr>(lista))
+            .orElse(new LinkedHashSet<Rlr>());
         return this;
     }
 
     public FuncaoDados addRlr(Rlr rlr) {
+        if (rlr == null) {
+            return this;
+        }
         this.rlrs.add(rlr);
         rlr.setFuncaoDados(this);
         return this;
     }
 
     public FuncaoDados removeRlr(Rlr rlr) {
+        if (rlr == null) {
+            return this;
+        }
         this.rlrs.remove(rlr);
         rlr.setFuncaoDados(null);
         return this;
     }
 
     public void setRlrs(Set<Rlr> rlrs) {
-        Set<Rlr> cp = new LinkedHashSet<>();
-        cp.addAll(rlrs);
-        this.rlrs = cp;
+        this.rlrs = Optional.ofNullable(rlrs)
+            .map(lista -> new LinkedHashSet<Rlr>(lista))
+            .orElse(new LinkedHashSet<Rlr>());
     }
 
     public Alr getAlr() {
@@ -255,8 +267,4 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable, Cloneabl
         this.quantidade = quantidade;
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
 }

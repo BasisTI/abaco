@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -145,34 +146,40 @@ public class Sistema implements Serializable, ReportObject {
   }
 
   public Set<Modulo> getModulos() {
-      Set<Modulo> cp = new LinkedHashSet<>();
-      cp.addAll(modulos);
-    return cp;
+    return Optional.ofNullable(this.modulos)
+        .map(lista -> new LinkedHashSet<Modulo>(lista))
+        .orElse(new LinkedHashSet<Modulo>());
   }
 
   public Sistema modulos(Set<Modulo> modulos) {
-      Set<Modulo> cp = new LinkedHashSet<>();
-      cp.addAll(modulos);
-    this.modulos = cp;
+    this.modulos = Optional.ofNullable(modulos)
+        .map(lista -> new LinkedHashSet<Modulo>(lista))
+        .orElse(new LinkedHashSet<Modulo>());
     return this;
   }
 
   public Sistema addModulo(Modulo modulo) {
+      if (modulo == null) {
+          return this;
+      }
     this.modulos.add(modulo);
     modulo.setSistema(this);
     return this;
   }
 
   public Sistema removeModulo(Modulo modulo) {
+      if (modulo == null) {
+          return this;
+      }
     this.modulos.remove(modulo);
     modulo.setSistema(null);
     return this;
   }
 
   public void setModulos(Set<Modulo> modulos) {
-      Set<Modulo> cp = new LinkedHashSet<>();
-      cp.addAll(modulos);
-    this.modulos = cp;
+    this.modulos = Optional.ofNullable(modulos)
+        .map(lista -> new LinkedHashSet<Modulo>(lista))
+        .orElse(new LinkedHashSet<Modulo>());
   }
 
   @Override

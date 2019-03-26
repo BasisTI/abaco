@@ -72,7 +72,7 @@ public class Alr implements Serializable {
 
     public Alr funcaoTransacao(FuncaoTransacao funcaoTransacao) {
         try {
-            if(funcaoTransacao == null) {
+            if(funcaoTransacao != null) {
                 this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
             } else {
                 this.funcaoTransacao = null;
@@ -86,7 +86,7 @@ public class Alr implements Serializable {
 
     public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
         try {
-            if(funcaoTransacao == null) {
+            if(funcaoTransacao != null) {
                 this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
             } else {
                 this.funcaoTransacao = null;

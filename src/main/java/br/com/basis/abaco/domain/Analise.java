@@ -437,7 +437,10 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Organizacao getOrganizacao() {
-        return organizacao;
+        if (this.organizacao == null){
+            return null;
+        }
+        return (Organizacao) organizacao.getClone();
     }
 
     public String getNomeOrg() {
@@ -562,7 +565,7 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Timestamp getDataCriacaoOrdemServico() {
-        if (dataCriacaoOrdemServico == null) {
+        if (this.dataCriacaoOrdemServico == null) {
             return null;
         } else {
             return new Timestamp(dataCriacaoOrdemServico.getTime());

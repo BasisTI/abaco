@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -77,34 +78,40 @@ public class Rlr implements Serializable {
     }
 
     public Set<Der> getDers() {
-        Set<Der> cp = new LinkedHashSet<>();
-        cp.addAll(ders);
-        return cp;
+        return Optional.ofNullable(this.ders)
+            .map(lista -> new LinkedHashSet<Der>(lista))
+            .orElse(new LinkedHashSet<Der>());
     }
 
     public Rlr ders(Set<Der> ders) {
-        Set<Der> cp = new LinkedHashSet<>();
-        cp.addAll(ders);
-        this.ders = cp;
+        this.ders = Optional.ofNullable(ders)
+            .map(lista -> new LinkedHashSet<Der>(lista))
+            .orElse(new LinkedHashSet<Der>());
         return this;
     }
 
     public Rlr addDer(Der der) {
+        if (der == null) {
+            return this;
+        }
         this.ders.add(der);
         der.setRlr(this);
         return this;
     }
 
     public Rlr removeDer(Der der) {
+        if (der == null) {
+            return this;
+        }
         this.ders.remove(der);
         der.setRlr(null);
         return this;
     }
 
     public void setDers(Set<Der> ders) {
-        Set<Der> cp = new LinkedHashSet<>();
-        cp.addAll(ders);
-        this.ders = cp;
+        this.ders = Optional.ofNullable(ders)
+            .map(lista -> new LinkedHashSet<Der>(lista))
+            .orElse(new LinkedHashSet<Der>());
     }
 
     public FuncaoDados getFuncaoDados() {

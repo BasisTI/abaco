@@ -90,16 +90,7 @@ public class Der implements Serializable {
     }
 
     public FuncaoDados getFuncaoDados() {
-        try {
-            if (this.funcaoDados == null){
-                return null;
-            } else {
-                return (FuncaoDados) funcaoDados.clone();
-            }
-        } catch (CloneNotSupportedException e) {
-            log.error(e.getMessage(), e);
-            return null;
-        }
+        return funcaoDados;
     }
 
     public void setFuncaoDados(FuncaoDados funcaoDados) {
@@ -107,11 +98,29 @@ public class Der implements Serializable {
     }
 
     public FuncaoTransacao getFuncaoTransacao() {
-        return funcaoTransacao;
+        try {
+            if (funcaoTransacao == null) {
+                return null;
+            } else {
+                return (FuncaoTransacao) funcaoTransacao.getClone();
+            }
+        } catch (CloneNotSupportedException e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
     }
 
     public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
-        this.funcaoTransacao = funcaoTransacao;
+        try {
+            if (funcaoTransacao == null) {
+                this.funcaoTransacao = null;
+            } else {
+                this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
+            }
+        } catch (CloneNotSupportedException e) {
+            log.error(e.getMessage(), e);
+            this.funcaoTransacao = null;
+        }
     }
 
     public Integer getValor() {

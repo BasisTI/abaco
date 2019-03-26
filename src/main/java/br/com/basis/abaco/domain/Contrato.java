@@ -138,15 +138,10 @@ public class Contrato implements Serializable {
   }
 
   public Organizacao getOrganization() {
-      try {
-          if (this.organization == null) {
-              return null;
-          } else {
-              return (Organizacao) organization.clone();
-          }
-      } catch (CloneNotSupportedException e) {
-          log.error(e.getMessage(), e);
+      if (this.organization == null) {
           return null;
+      } else {
+          return (Organizacao) organization.getClone();
       }
   }
 
@@ -157,15 +152,10 @@ public class Contrato implements Serializable {
   }
 
   public void setOrganization(Organizacao organization) {
-      try {
-          if (organization == null){
-              this.organization = null;
-          } else {
-              this.organization = (Organizacao) organization.clone();
-          }
-      } catch (CloneNotSupportedException e) {
-          log.error(e.getMessage(), e);
+      if (organization == null){
           this.organization = null;
+      } else {
+          this.organization = (Organizacao) organization.getClone();
       }
   }
 
