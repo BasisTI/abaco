@@ -1,3 +1,4 @@
+import { FieldsetModule } from 'primeng/fieldset';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
@@ -41,7 +42,8 @@ import { FuncaoResumoTableComponent } from './funcao-resumo-table.component';
         TabViewModule,
         InputTextareaModule,
         AbacoSharedModule,
-        DialogModule
+        DialogModule,
+        FieldsetModule
     ],
     declarations: [
         ModuloFuncionalidadeComponent,

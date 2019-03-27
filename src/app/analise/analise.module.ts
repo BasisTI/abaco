@@ -4,6 +4,7 @@ import {HttpModule} from '@angular/http';
 import {RouterModule} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {DatatableModule} from '@basis/angular-components';
+import { FieldsetModule } from 'primeng/fieldset';
 
 
 import {BotoesExportacaoModule} from './../botoes-exportacao/botoes-exportacao.module';
@@ -75,7 +76,8 @@ import { GenericService } from '../util/service/generic.service';
         AbacoAnaliseBotaoSalvarModule,
         BotoesExportacaoModule,
         UtilModule,
-        MemoryDataTableModule
+        MemoryDataTableModule,
+        FieldsetModule
     ],
     declarations: [
         AnaliseComponent,
