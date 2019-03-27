@@ -228,16 +228,22 @@ public class UserResource {
             String newFirstName = user.getFirstName();
             String newLastName = user.getLastName();
             String newEmail = user.getEmail();
-            user = oldUserdata.get();
-            user.setFirstName(newFirstName);
-            user.setLastName(newLastName);
-            user.setEmail(newEmail);
+            user = getOldUserData(oldUserdata, newFirstName, newLastName, newEmail);
         }
         // Atualizando os dados do usuário
         User updatableUser = userService.generateUpdatableUser(user);
         User updatedUser = userRepository.save(updatableUser);
         userSearchRepository.save(updatedUser);
         log.debug("Changed Information for User: {}", user); return updatedUser;
+    }
+
+    private User getOldUserData(Optional<User> oldUserdata, String newFirstName, String newLastName, String newEmail) {
+        User user;
+        user = oldUserdata.get();
+        user.setFirstName(newFirstName);
+        user.setLastName(newLastName);
+        user.setEmail(newEmail);
+        return user;
     }
 
     /**

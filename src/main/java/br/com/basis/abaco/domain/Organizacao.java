@@ -45,7 +45,7 @@ import java.util.Set;
 public class Organizacao implements Serializable, ReportObject, Cloneable {
 
   private static final long serialVersionUID = 1L;
-    private final transient Logger log = LoggerFactory.getLogger(Organizacao.class);
+    private transient Logger log = LoggerFactory.getLogger(Organizacao.class);
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
