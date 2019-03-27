@@ -113,8 +113,7 @@ public class RlrResource {
     @Timed
     public List<Rlr> getAllRlrs() {
         log.debug("REST request to get all Rlrs");
-        List<Rlr> rlrs = rlrRepository.findAll();
-        return rlrs;
+        return rlrRepository.findAll();
     }
 
     /**

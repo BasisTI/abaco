@@ -113,8 +113,7 @@ public class FuncionalidadeResource {
     @Timed
     public List<Funcionalidade> getAllFuncionalidades() {
         log.debug("REST request to get all Funcionalidades");
-        List<Funcionalidade> funcionalidades = funcionalidadeRepository.findAll();
-        return funcionalidades;
+        return funcionalidadeRepository.findAll();
     }
 
     /**

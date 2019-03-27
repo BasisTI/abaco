@@ -57,6 +57,8 @@ public class CustomSignInAdapter implements SignInAdapter {
 
     private Cookie getSocialAuthenticationCookie(String token) {
         Cookie socialAuthCookie = new Cookie("social-authentication", token);
+        // setSecure chamado por indicação do Sonarqube
+        socialAuthCookie.setSecure(true);
         socialAuthCookie.setPath("/");
         socialAuthCookie.setMaxAge(10);
         return socialAuthCookie;

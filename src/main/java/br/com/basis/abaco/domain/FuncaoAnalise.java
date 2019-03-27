@@ -23,6 +23,8 @@ import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @MappedSuperclass
@@ -157,7 +159,9 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     }
 
     public void setDerValues(Set<String> derValues) {
-        this.derValues = new HashSet<>(derValues);
+        this.derValues = Optional.ofNullable(derValues)
+            .map(lista -> new HashSet<String>(lista))
+            .orElse(new LinkedHashSet<String>());
     }
 
     @Override

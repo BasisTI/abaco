@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -20,6 +22,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -33,6 +36,7 @@ import java.util.Set;
 public class Alr implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private final transient Logger log = LoggerFactory.getLogger(Alr.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -67,37 +71,79 @@ public class Alr implements Serializable {
     }
 
     public Alr funcaoTransacao(FuncaoTransacao funcaoTransacao) {
-        this.funcaoTransacao = funcaoTransacao;
+        try {
+            if(funcaoTransacao != null) {
+                this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
+            } else {
+                this.funcaoTransacao = null;
+            }
+        } catch (CloneNotSupportedException e) {
+            log.error(e.getMessage(), e);
+            this.funcaoTransacao = null;
+        }
         return this;
     }
 
     public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
-        this.funcaoTransacao = funcaoTransacao;
+        try {
+            if(funcaoTransacao != null) {
+                this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
+            } else {
+                this.funcaoTransacao = null;
+            }
+        } catch (CloneNotSupportedException e) {
+            log.error(e.getMessage(), e);
+            this.funcaoTransacao = null;
+        }
     }
 
     public Set<FuncaoDados> getFuncaoDados() {
-        return funcaoDados;
+        if (funcaoDados == null){
+            return null;
+        }
+        Set<FuncaoDados> cp = new LinkedHashSet<>();
+        cp.addAll(funcaoDados);
+        return cp;
     }
 
     public Alr funcaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados = funcaoDados;
+        if (funcaoDados == null){
+            this.funcaoDados = null;
+        }else {
+            Set<FuncaoDados> cp = new LinkedHashSet<>();
+            cp.addAll(funcaoDados);
+            this.funcaoDados = cp;
+        }
         return this;
     }
 
     public Alr addFuncaoDados(FuncaoDados funcaoDados) {
-        this.funcaoDados.add(funcaoDados);
-        funcaoDados.setAlr(this);
+        if (funcaoDados == null){
+            return this;
+        }else {
+            this.funcaoDados.add(funcaoDados);
+            funcaoDados.setAlr(this);
+        }
         return this;
     }
 
     public Alr removeFuncaoDados(FuncaoDados funcaoDados) {
+        if (funcaoDados == null){
+            return this;
+        }
         this.funcaoDados.remove(funcaoDados);
         funcaoDados.setAlr(null);
         return this;
     }
 
     public void setFuncaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados = funcaoDados;
+        if (funcaoDados == null) {
+            this.funcaoDados = null;
+        } else {
+            Set<FuncaoDados> cp = new LinkedHashSet<>();
+            cp.addAll(funcaoDados);
+            this.funcaoDados = cp;
+        }
     }
 
     public String getNome() {

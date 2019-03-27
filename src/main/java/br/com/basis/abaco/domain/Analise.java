@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -41,6 +43,7 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -54,6 +57,7 @@ import java.util.Set;
 public class Analise implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
+    private final transient Logger log = LoggerFactory.getLogger(FuncaoTransacao.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -324,53 +328,90 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<FuncaoDados> getFuncaoDados() {
-        return funcaoDados;
+        if (funcaoDados == null){
+            return null;
+        }
+        Set<FuncaoDados> cp = new LinkedHashSet<>();
+        cp.addAll(funcaoDados);
+        return cp;
     }
 
     public Analise funcaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados = funcaoDados;
+        this.funcaoDados = Optional.ofNullable(funcaoDados)
+            .map(lista -> new LinkedHashSet<FuncaoDados>(lista))
+            .orElse(new LinkedHashSet<FuncaoDados>());
         return this;
     }
 
     public Analise addFuncaoDados(FuncaoDados funcaoDados) {
+        if (funcaoDados == null) {
+            return this;
+        }
         this.funcaoDados.add(funcaoDados);
         funcaoDados.setAnalise(this);
         return this;
     }
 
     public Analise removeFuncaoDados(FuncaoDados funcaoDados) {
+        if (funcaoDados == null) {
+            return this;
+        }
         this.funcaoDados.remove(funcaoDados);
         funcaoDados.setAnalise(null);
         return this;
     }
 
     public void setFuncaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados = funcaoDados;
+        this.funcaoDados = Optional.ofNullable(funcaoDados)
+            .map(lista -> new LinkedHashSet<FuncaoDados>(lista))
+            .orElse(new LinkedHashSet<FuncaoDados>());
     }
 
     public Set<FuncaoTransacao> getFuncaoTransacaos() {
-        return funcaoTransacaos;
+        if (funcaoTransacaos == null){
+            return null;
+        }
+        Set<FuncaoTransacao> cp = new LinkedHashSet<>();
+        cp.addAll(funcaoTransacaos);
+        return cp;
     }
 
     public Analise funcaoTransacaos(Set<FuncaoTransacao> funcaoTransacaos) {
-        this.funcaoTransacaos = funcaoTransacaos;
+        this.funcaoTransacaos = Optional.ofNullable(funcaoTransacaos)
+            .map(lista -> new LinkedHashSet<FuncaoTransacao>(lista))
+            .orElse(new LinkedHashSet<FuncaoTransacao>());
         return this;
     }
 
     public Analise addFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
-        this.funcaoTransacaos.add(funcaoTransacao);
-        funcaoTransacao.setAnalise(this);
-        return this;
+        if (funcaoTransacao == null) {
+            return this;
+        } else {
+            try {
+                this.funcaoTransacaos.add((FuncaoTransacao) funcaoTransacao.getClone());
+                funcaoTransacao.setAnalise(this);
+            } catch (CloneNotSupportedException e) {
+                log.error(e.getMessage(), e);
+                this.funcaoTransacaos = null;
+            } finally {
+                return this;
+            }
+        }
     }
 
     public Analise removeFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
+        if (funcaoTransacao == null) {
+            return this;
+        }
         this.funcaoTransacaos.remove(funcaoTransacao);
         funcaoTransacao.setAnalise(null);
         return this;
     }
 
     public void setFuncaoTransacaos(Set<FuncaoTransacao> funcaoTransacaos) {
-        this.funcaoTransacaos = funcaoTransacaos;
+        this.funcaoTransacaos = Optional.ofNullable(funcaoTransacaos)
+            .map(lista -> new LinkedHashSet<FuncaoTransacao>(lista))
+            .orElse(new LinkedHashSet<FuncaoTransacao>());
     }
 
     public Contrato getContrato() {
@@ -396,7 +437,10 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Organizacao getOrganizacao() {
-        return organizacao;
+        if (this.organizacao == null){
+            return null;
+        }
+        return (Organizacao) organizacao.getClone();
     }
 
     public String getNomeOrg() {
@@ -521,7 +565,7 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Timestamp getDataCriacaoOrdemServico() {
-        if (dataCriacaoOrdemServico == null) {
+        if (this.dataCriacaoOrdemServico == null) {
             return null;
         } else {
             return new Timestamp(dataCriacaoOrdemServico.getTime());
@@ -533,11 +577,18 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Timestamp getDataHomologacao() {
-        return dataHomologacao;
+        if (dataHomologacao == null) {
+            return null;
+        }
+        return (Timestamp) dataHomologacao.clone();
     }
 
     public void setDataHomologacao(Timestamp dataHomologacao) {
-        this.dataHomologacao = dataHomologacao;
+        if (dataHomologacao == null) {
+            this.dataHomologacao = null;
+        } else {
+            this.dataHomologacao = (Timestamp) dataHomologacao.clone();
+        }
     }
 
     public String getIdentificadorAnalise() {
@@ -605,6 +656,9 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<Compartilhada> getCompartilhadas() {
+        if (compartilhadas == null){
+            return null;
+        }
         Set<Compartilhada> compAux;
         compAux = compartilhadas;
         return compAux;

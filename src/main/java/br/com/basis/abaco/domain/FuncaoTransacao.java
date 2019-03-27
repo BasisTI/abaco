@@ -13,7 +13,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -21,6 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -86,53 +86,77 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Funcionalidade> getFuncionalidades() {
-        return funcionalidades;
+        return Optional.ofNullable(this.funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public FuncaoTransacao funcionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = funcionalidades;
+        this.funcionalidades = Optional.ofNullable(funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
         return this;
     }
 
     public FuncaoTransacao addFuncionalidade(Funcionalidade funcionalidade) {
+        if (funcionalidade == null) {
+            return this;
+        }
         this.funcionalidades.add(funcionalidade);
         funcionalidade.setFuncaoTransacao(this);
         return this;
     }
 
     public FuncaoTransacao removeFuncionalidade(Funcionalidade funcionalidade) {
+        if (funcionalidade == null) {
+            return this;
+        }
         this.funcionalidades.remove(funcionalidade);
         funcionalidade.setFuncaoTransacao(null);
         return this;
     }
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = funcionalidades;
+        this.funcionalidades = Optional.ofNullable(funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public Set<Alr> getAlrs() {
-        return alrs;
+        return Optional.ofNullable(this.alrs)
+            .map(lista -> new LinkedHashSet<Alr>(lista))
+            .orElse(new LinkedHashSet<Alr>());
     }
 
     public FuncaoTransacao alrs(Set<Alr> alrs) {
-        this.alrs = alrs;
+        this.alrs = Optional.ofNullable(alrs)
+            .map(lista -> new LinkedHashSet<Alr>(lista))
+            .orElse(new LinkedHashSet<Alr>());
         return this;
     }
 
     public FuncaoTransacao addAlr(Alr alr) {
+        if (alr == null) {
+            return this;
+        }
         this.alrs.add(alr);
         alr.setFuncaoTransacao(this);
         return this;
     }
 
     public FuncaoTransacao removeAlr(Alr alr) {
+        if (alr == null) {
+            return this;
+        }
         this.alrs.remove(alr);
         alr.setFuncaoTransacao(null);
         return this;
     }
 
     public void setAlrs(Set<Alr> alrs) {
-        this.alrs = alrs;
+        this.alrs = Optional.ofNullable(alrs)
+            .map(lista -> new LinkedHashSet<Alr>(lista))
+            .orElse(new LinkedHashSet<Alr>());
     }
 
     public String getFtrStr() {
@@ -174,11 +198,15 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public List<UploadedFile> getFiles() {
-        return files;
+        List<UploadedFile> cp = new ArrayList<>();
+        cp.addAll(files);
+        return cp;
     }
 
     public void setFiles(List<UploadedFile> files) {
-        this.files = files;
+        List<UploadedFile> cp = new ArrayList<>();
+        cp.addAll(files);
+        this.files = cp;
     }
 
     public Set<String> getFtrValues() {
@@ -209,5 +237,9 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public Object getClone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

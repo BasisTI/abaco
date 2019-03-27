@@ -556,11 +556,15 @@ public class AnaliseResource {
 
 
     private Boolean checarPermissao(Long idAnalise) {
-        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()); // Busca o usuário
-        List<Long> equipesIds = userRepository.findUserEquipes(logged.get().getId()); // Traz as equipes do usuário
-        Integer analiseDaEquipe = analiseRepository.analiseEquipe(idAnalise, equipesIds); // Traz as
+        // Busca o usuário
+        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
+        // Traz as equipes do usuário
+        List<Long> equipesIds = userRepository.findUserEquipes(logged.get().getId());
+        // Traz as
+        Integer analiseDaEquipe = analiseRepository.analiseEquipe(idAnalise, equipesIds);
 
-        if (analiseDaEquipe.intValue() == 0) { // Verifica se a analise faz parte de sua equipe
+        // Verifica se a analise faz parte de sua equipe
+        if (analiseDaEquipe.intValue() == 0) {
             return verificaCompartilhada(idAnalise);
         } else {
             return true;
@@ -652,15 +656,7 @@ public class AnaliseResource {
 
     private Analise unlinkAnaliseFDFT(Analise result) {
 
-        Optional.ofNullable(result.getFuncaoDados()).orElse(Collections.emptySet())
-            .forEach(fd -> {
-                fd.setAnalise(null);
-                fd.getAlr().setId(null);
-                Optional.ofNullable(fd.getRlrs()).orElse(Collections.emptySet())
-                    .forEach(rlr -> rlr.setId(null));
-                Optional.ofNullable(fd.getDers()).orElse(Collections.emptySet())
-                    .forEach(ders -> ders.setId(null));
-            });
+        getFuncaoDados(result);
 
         Optional.ofNullable(result.getFuncaoTransacaos()).orElse(Collections.emptySet())
             .forEach(ft -> {
@@ -675,6 +671,10 @@ public class AnaliseResource {
         analiseSearchRepository.save(result);
 
         return analiseCopiaSalva;
+    }
+
+    private Analise getFuncaoDados(Analise result) {
+        return result;
     }
 
 

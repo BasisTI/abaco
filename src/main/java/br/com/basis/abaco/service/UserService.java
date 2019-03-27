@@ -112,19 +112,15 @@ public class UserService {
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         userSearchRepository.save(newUser);
-        log.debug("Created Information for User: {}", newUser);
-        return newUser;
+        log.debug("Created Information for User: {}", newUser); return newUser;
     }
 
     public User createUser(UserDTO userDTO) {
         User user = new User();
-        user.setLogin(userDTO.getLogin());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setEmail(userDTO.getEmail());
-        user.setImageUrl(userDTO.getImageUrl());
+        setBaseUserProperties(userDTO, user);
         if (userDTO.getLangKey() == null) {
-            user.setLangKey("pt-br"); // default language
+            // default language
+            user.setLangKey("pt-br");
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
@@ -134,15 +130,27 @@ public class UserService {
                 .forEach(authority -> authorities.add(authorityRepository.findOne(authority)));
             user.setAuthorities(authorities);
         }
+        setUserProperties(user);
+        userRepository.save(user);
+        userSearchRepository.save(user);
+        log.debug("Created Information for User: {}", user);
+        return user;
+    }
+
+    private void setBaseUserProperties(UserDTO userDTO, User user) {
+        user.setLogin(userDTO.getLogin());
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setEmail(userDTO.getEmail());
+        user.setImageUrl(userDTO.getImageUrl());
+    }
+
+    private void setUserProperties(User user) {
         String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
         user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(ZonedDateTime.now());
         user.setActivated(true);
-        userRepository.save(user);
-        userSearchRepository.save(user);
-        log.debug("Created Information for User: {}", user);
-        return user;
     }
 
     /**
@@ -164,10 +172,12 @@ public class UserService {
     public User generateUpdatableUser(User userToBeUpdated) {
         User userPreUpdate = userRepository.findOne(userToBeUpdated.getId());
         User updatableUser = shallowCopyUser(userToBeUpdated);
-        if (updatableUser.getPassword() == null)
+        if (updatableUser.getPassword() == null) {
             updatableUser.setPassword(userPreUpdate.getPassword());
-        if (updatableUser.getLangKey() == null)
+        }
+        if (updatableUser.getLangKey() == null) {
             updatableUser.setLangKey(userPreUpdate.getLangKey());
+        }
 
         return updatableUser;
     }

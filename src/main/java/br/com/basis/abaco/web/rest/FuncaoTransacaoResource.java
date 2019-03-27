@@ -3,7 +3,6 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
-import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;

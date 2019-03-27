@@ -25,8 +25,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -72,11 +73,11 @@ public class Manual implements Serializable, ReportObject, Cloneable {
 
   @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
-  private Set<EsforcoFase> esforcoFases = new HashSet<>();
+  private Set<EsforcoFase> esforcoFases = new LinkedHashSet<>();
 
   @OneToMany(mappedBy = "manual", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
-  private Set<FatorAjuste> fatoresAjuste = new HashSet<>();
+  private Set<FatorAjuste> fatoresAjuste = new LinkedHashSet<>();
 
   @DecimalMin(value = MINPERCENT)
   @DecimalMax(value = MAXPERCENT)
@@ -170,36 +171,52 @@ public class Manual implements Serializable, ReportObject, Cloneable {
   }
 
   public Set<EsforcoFase> getEsforcoFases() {
-    return esforcoFases;
+    return Optional.ofNullable(this.esforcoFases)
+        .map(lista -> new LinkedHashSet<EsforcoFase>(lista))
+        .orElse(new LinkedHashSet<EsforcoFase>());
   }
 
   public Manual esforcoFases(Set<EsforcoFase> esforcoFases) {
-    this.esforcoFases = esforcoFases;
+    this.esforcoFases = Optional.ofNullable(esforcoFases)
+        .map(lista -> new LinkedHashSet<EsforcoFase>(lista))
+        .orElse(new LinkedHashSet<EsforcoFase>());
     return this;
   }
 
   public Manual addEsforcoFase(EsforcoFase esforcoFase) {
-    this.esforcoFases.add(esforcoFase);
+      if (esforcoFase == null) {
+          return this;
+      }
     esforcoFase.setManual(this);
+    this.esforcoFases.add(esforcoFase);
     return this;
   }
 
   public Manual removeEsforcoFase(EsforcoFase esforcoFase) {
-    this.esforcoFases.remove(esforcoFase);
+      if (esforcoFase == null) {
+          return this;
+      }
     esforcoFase.setManual(null);
+    this.esforcoFases.remove(esforcoFase);
     return this;
   }
 
   public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {
-    this.esforcoFases = esforcoFases;
+      this.esforcoFases = Optional.ofNullable(esforcoFases)
+          .map(lista -> new LinkedHashSet<EsforcoFase>(lista))
+          .orElse(new LinkedHashSet<EsforcoFase>());
   }
 
   public Set<FatorAjuste> getFatoresAjuste() {
-    return fatoresAjuste;
+    return Optional.ofNullable(this.fatoresAjuste)
+        .map(lista -> new LinkedHashSet<FatorAjuste>(lista))
+        .orElse(new LinkedHashSet<FatorAjuste>());
   }
 
   public void setFatoresAjuste(Set<FatorAjuste> fatoresAjuste) {
-    this.fatoresAjuste = fatoresAjuste;
+    this.fatoresAjuste = Optional.ofNullable(fatoresAjuste)
+        .map(lista -> new LinkedHashSet<FatorAjuste>(lista))
+        .orElse(new LinkedHashSet<FatorAjuste>());
   }
 
   public BigDecimal getParametroInclusao() {

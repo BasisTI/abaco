@@ -105,8 +105,7 @@ public class DerResource {
     @Timed
     public List<Der> getAllDers() {
         log.debug("REST request to get all Ders");
-        List<Der> ders = derRepository.findAll();
-        return ders;
+        return derRepository.findAll();
     }
 
     /**

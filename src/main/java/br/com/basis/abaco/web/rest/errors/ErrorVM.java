@@ -28,7 +28,9 @@ public class ErrorVM implements Serializable {
     public ErrorVM(String message, String description, List<FieldErrorVM> fieldErrors) {
         this.message = message;
         this.description = description;
-        this.fieldErrors = fieldErrors;
+        List<FieldErrorVM> cp = new ArrayList<>();
+        cp.addAll(fieldErrors);
+        this.fieldErrors = cp;
     }
 
     public void add(String objectName, String field, String message) {
@@ -47,6 +49,8 @@ public class ErrorVM implements Serializable {
     }
 
     public List<FieldErrorVM> getFieldErrors() {
-        return fieldErrors;
+        List<FieldErrorVM> cp = new ArrayList<>();
+        cp.addAll(fieldErrors);
+        return cp;
     }
 }

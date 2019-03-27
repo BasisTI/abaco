@@ -212,10 +212,16 @@ public class UserResource {
                             .body(null);
                 }
         // Verificando qual a autoridade do usuário logado
+      User updatedUser = getUser(user);
+
+      return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString())).body(updatedUser);
+  }
+
+    private User getUser(User user) {
         Authority adminAuth = new Authority();
-    adminAuth.setName(AuthoritiesConstants.ADMIN);
-    adminAuth.setDescription("Administrador");
-    // Restringindo os campos que o usuário comum pode alterar.
+        adminAuth.setName(AuthoritiesConstants.ADMIN);
+        adminAuth.setDescription("Administrador");
+        // Restringindo os campos que o usuário comum pode alterar.
         Optional<User> oldUserdata = userRepository.findOneById(user.getId());
         User loggedUser = this.getLoggedUser();
         if (!loggedUser.verificarAuthority() && oldUserdata.isPresent()) {
@@ -231,13 +237,10 @@ public class UserResource {
         User updatableUser = userService.generateUpdatableUser(user);
         User updatedUser = userRepository.save(updatableUser);
         userSearchRepository.save(updatedUser);
-        log.debug("Changed Information for User: {}", user);
+        log.debug("Changed Information for User: {}", user); return updatedUser;
+    }
 
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString()))
-            .body(updatedUser);
-  }
-
-  /**
+    /**
    * GET /users : get all users.
    *
    * @param pageable the pagination information

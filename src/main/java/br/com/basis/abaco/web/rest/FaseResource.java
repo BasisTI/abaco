@@ -125,8 +125,7 @@ public class FaseResource {
     @Timed
     public List<Fase> getAllFases() {
         log.debug("REST request to get all Fases");
-        List<Fase> fases = faseRepository.findAll();
-        return fases;
+        return faseRepository.findAll();
     }
 
     /**

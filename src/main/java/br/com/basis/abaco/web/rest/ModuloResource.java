@@ -1,8 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Funcionalidade;
 import br.com.basis.abaco.domain.Modulo;
-import br.com.basis.abaco.repository.FuncionalidadeRepository;
 import br.com.basis.abaco.repository.ModuloRepository;
 import br.com.basis.abaco.repository.search.ModuloSearchRepository;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
@@ -115,8 +113,7 @@ public class ModuloResource {
     @Timed
     public List<Modulo> getAllModulos() {
         log.debug("REST request to get all Modulos");
-        List<Modulo> modulos = moduloRepository.findAll();
-        return modulos;
+        return moduloRepository.findAll();
     }
 
     /**

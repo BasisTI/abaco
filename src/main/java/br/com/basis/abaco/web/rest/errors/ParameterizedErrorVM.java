@@ -13,7 +13,7 @@ public class ParameterizedErrorVM implements Serializable {
 
     public ParameterizedErrorVM(String message, String... params) {
         this.message = message;
-        this.params = params;
+        this.params = params.clone();
     }
 
     public String getMessage() {
@@ -21,7 +21,7 @@ public class ParameterizedErrorVM implements Serializable {
     }
 
     public String[] getParams() {
-        return params;
+        return params.clone();
     }
 
 }

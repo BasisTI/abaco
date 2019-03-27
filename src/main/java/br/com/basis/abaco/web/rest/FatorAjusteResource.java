@@ -118,8 +118,7 @@ public class FatorAjusteResource {
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
     public List<FatorAjuste> getAllContratoesByOrganization(@RequestBody Manual manual) {
         log.debug("REST request to get all percentual factors by manual");
-        List<FatorAjuste> factors = this.fatorAjusteRepository.findAllByManualAndTipoAjuste(manual, TipoFatorAjuste.PERCENTUAL);
-        return factors;
+        return this.fatorAjusteRepository.findAllByManualAndTipoAjuste(manual, TipoFatorAjuste.PERCENTUAL);
     }
 
 
@@ -132,8 +131,7 @@ public class FatorAjusteResource {
     @Timed
     public List<FatorAjuste> getAllFatorAjustes() {
         log.debug("REST request to get all FatorAjustes");
-        List<FatorAjuste> fatorAjustes = fatorAjusteRepository.findAll();
-        return fatorAjustes;
+        return fatorAjusteRepository.findAll();
     }
 
     /**
