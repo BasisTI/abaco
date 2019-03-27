@@ -31,7 +31,7 @@ import java.util.Objects;
 public class Der implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private transient Logger log = LoggerFactory.getLogger(Der.class);
+    private static transient Logger log = LoggerFactory.getLogger(Der.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
