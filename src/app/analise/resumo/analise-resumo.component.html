@@ -1,28 +1,24 @@
 <div class="ui-g ui-fluid">
   <div class="card card-w-title">
-    <div class="ui-g-12" style="margin-top: 25px">
-      
+    <div class="ui-g-12">
+
       <h2>PF - Final Total: {{ analise.pfTotalEsforco }}</h2>
       <h2>PF - Final Ajustado: {{ analise.adjustPFTotal }}</h2>
-      
+
       <app-analise-funcao-resumo-table [linhasResumo]="analise.resumoTotal.all">
       </app-analise-funcao-resumo-table>
 
-      <h2>Fases</h2>
-     <p-dataTable
-     id="idTabelaFasesComponentAnaliseResumo"
-      [value]="esforcoFases">
+      <p-fieldset legend="Fases" [toggleable]="true" [collapsed]="true">
+        <h2>Fases</h2>
+        <p-dataTable id="idTabelaFasesComponentAnaliseResumo" [value]="esforcoFases">
 
-        <p-column
-            header="Nome"
-            field="fase.nome">
-        </p-column>
+          <p-column header="Nome" field="fase.nome">
+          </p-column>
 
-        <p-column
-            header="Esforço %"
-            field="esforcoFormatado">
-        </p-column>
-     </p-dataTable>
+          <p-column header="Esforço %" field="esforcoFormatado">
+          </p-column>
+        </p-dataTable>
+      </p-fieldset>
 
     </div>
   </div>

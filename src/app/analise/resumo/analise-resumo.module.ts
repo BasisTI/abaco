@@ -1,3 +1,4 @@
+import { FieldsetModule } from 'primeng/fieldset';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
@@ -43,7 +44,8 @@ import { MemoryDataTableModule } from '../../memory-datatable/memory-datatable.m
     AbacoSharedModule,
     DialogModule,
     AbacoAnaliseSharedModule,
-    MemoryDataTableModule
+    MemoryDataTableModule,
+    FieldsetModule
   ],
   declarations: [
     AnaliseResumoComponent

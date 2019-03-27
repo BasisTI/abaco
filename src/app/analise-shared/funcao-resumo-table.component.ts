@@ -23,15 +23,15 @@ export class FuncaoResumoTableComponent implements OnInit {
   updateNameComplexidade(complexidade: string) {
     switch(complexidade) {
       case 'MEDIA':
-        return 'MÉDIA';
+        return 'MÉD';
       case 'SEM':
         return 'SEM';
       case 'ALTA':
-        return 'ALTA';
+        return 'ALT';
       case 'INM':
         return 'INM';
       case 'BAIXA':
-        return 'BAIXA';
+        return 'BAI';
       default:
         break;
       }
@@ -40,13 +40,13 @@ export class FuncaoResumoTableComponent implements OnInit {
   updateNameImpacto(impacto: string) {
     switch(impacto) {
       case 'INCLUSAO':
-        return 'INCLUSÃO';
+        return 'INCL';
       case 'ALTERACAO':
-        return 'ALTERAÇÃO';
+        return 'ALTE';
       case 'EXCLUSAO':
-        return 'EXCLUSÃO';
+        return 'EXCL';
       case 'CONVERSAO' :
-        return 'CONVERSÃO';
+        return 'CONV';
       default:
         break;
 
