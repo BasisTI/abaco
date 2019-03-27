@@ -224,14 +224,17 @@ public class UserResource {
         // Restringindo os campos que o usuário comum pode alterar.
         Optional<User> oldUserdata = userRepository.findOneById(user.getId());
         User loggedUser = this.getLoggedUser();
+        User userTmp;
         if (!loggedUser.verificarAuthority() && oldUserdata.isPresent()) {
             String newFirstName = user.getFirstName();
             String newLastName = user.getLastName();
             String newEmail = user.getEmail();
-            user = getOldUserData(oldUserdata, newFirstName, newLastName, newEmail);
+            userTmp = getOldUserData(oldUserdata, newFirstName, newLastName, newEmail);
+        } else {
+            userTmp = user;
         }
         // Atualizando os dados do usuário
-        User updatableUser = userService.generateUpdatableUser(user);
+        User updatableUser = userService.generateUpdatableUser(userTmp);
         User updatedUser = userRepository.save(updatableUser);
         userSearchRepository.save(updatedUser);
         log.debug("Changed Information for User: {}", user); return updatedUser;

@@ -92,10 +92,14 @@ public class SocialService {
     }
 
     private User verificarDados(String email, String userName) {
+        String newUserName;
+        User user;
         if (!StringUtils.isBlank(userName)) {
-            userName = userName.toLowerCase(Locale.ENGLISH);
+            newUserName = userName.toLowerCase(Locale.ENGLISH);
+            user = verifyUserEmail(email, newUserName);
+        } else {
+            user = verifyUserEmail(email, userName);
         }
-        User user = verifyUserEmail(email, userName);
         if (user != null) {
             return user;
         }

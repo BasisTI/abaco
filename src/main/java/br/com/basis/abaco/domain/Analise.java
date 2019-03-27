@@ -57,7 +57,7 @@ import java.util.Set;
 public class Analise implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
-    private transient Logger log = LoggerFactory.getLogger(FuncaoTransacao.class);
+    private static transient Logger log = LoggerFactory.getLogger(FuncaoTransacao.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
