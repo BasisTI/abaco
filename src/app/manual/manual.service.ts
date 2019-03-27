@@ -7,6 +7,7 @@ import {UploadService} from '../upload/upload.service';
 
 import {Manual} from './manual.model';
 import {ResponseWrapper, createRequestOption, JSONable, PageNotificationService} from '../shared';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Injectable()
 export class ManualService {
@@ -14,6 +15,7 @@ export class ManualService {
     resourceName = '/manuals';
     resourceUrl = environment.apiUrl + this.resourceName;
     searchUrl = environment.apiUrl + '/_search/manual';
+    @BlockUI() blockUI: NgBlockUI;
 
     constructor(
         private http: HttpService,
@@ -79,6 +81,11 @@ export class ManualService {
         return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                return Observable.throw(new Error(error.status));
+            }
+            if (error.status === 500) {
+                this.pageNotificationService.addErrorMsg('O manual não pode ser excluído pois está sendo usado em um contrato.');
+                this.blockUI.stop();
                 return Observable.throw(new Error(error.status));
             }
         });

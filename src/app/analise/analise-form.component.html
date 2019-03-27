@@ -9,7 +9,7 @@
                         <div>
                             <!-- Inicio dos campos para inclusão -->
                             <div class="ui-g" *ngIf="!isEdicao">
-                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
                                     <label>Organização</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -25,7 +25,7 @@
                                     </p-dropdown>
                                 </div>
 
-                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
                                     <label>Sistema</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -42,7 +42,7 @@
                                     </p-dropdown>
                                 </div>
 
-                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
                                     <label>Equipe Responsável</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -58,7 +58,7 @@
                                     </p-dropdown>
                                 </div>
 
-                                <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: center; margin-top: 25px;">
+                                <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: center; margin-top: 05px;">
                                     <div class="ui-g-2 ui-md-2 ui-sm-12">
 
                                         <app-white-button
@@ -78,9 +78,9 @@
                             <div class="ui-g" *ngIf="isEdicao">
 
                                 <!-- Inicio dos campos para alteração -->
-                                <fieldset class="ui-g-12 ui-md-12 ui-sm-12">
+                                <!-- <fieldset class="ui-g-12 ui-md-12 ui-sm-12">
 
-                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px">
                                         <label>Organização</label>
                                         <p-dropdown
                                                 [filter]="true"
@@ -96,7 +96,7 @@
                                                 (onChange)="setSistamaOrganizacao($event.value)">
                                         </p-dropdown>
                                     </div>
-                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px">
                                         <label>Equipe Responsável</label>
                                         <p-dropdown
                                                 [filter]="true"
@@ -113,7 +113,7 @@
                                         </p-dropdown>
                                     </div>
 
-                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px">
                                         <label>Sistema</label>
                                         <p-dropdown
                                                 [filter]="true"
@@ -130,16 +130,16 @@
                                         </p-dropdown>
                                     </div>
 
-                                </fieldset>
+                                </fieldset> -->
                                 <!-- Fim dos campos para alteração -->
                             </div>
 
                         </div>
 
-                        <div style="margin-bottom: 25px; margin-top: 25px" *ngIf="isEdicao">
+                        <div style="margin-bottom: 05px; margin-top: 05px" *ngIf="isEdicao">
                             <div class="ui-g">
 
-                                <div class="ui-g-6 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px">
                                     <label>Identificador da Analise *</label>
                                     <span class="md-inputfield">
                                         <input
@@ -153,8 +153,8 @@
                                     </span>
                                 </div>
                              
-                                <div class="ui-g-6 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
-                                  <label>Data da Criação da Ordem de Serviço *</label>
+                                <div class="ui-g-6 ui-md-2 ui-sm-12" style="margin-bottom: 05px">
+                                  <label>Data Criação da O. S. *</label>
                                      <span class="md-inputfield">
                                         <p-calendar
                                             required
@@ -167,7 +167,7 @@
                                      </span>
                                 </div>
 
-                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-3 ui-md-2 ui-sm-12" style="margin-bottom: 05px">
                                     <label>Contrato *</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -184,8 +184,13 @@
                                     </p-dropdown>
                                 </div>
 
+<<<<<<< Updated upstream
                                 <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                    <label>Manual *</label>
+=======
+                                <div class="ui-g-3 ui-md-2 ui-sm-12" style="margin-bottom: 05px">
                                     <label>Manual</label>
+>>>>>>> Stashed changes
                                     <p-dropdown
                                         required
                                         [filter]="true"
@@ -200,7 +205,7 @@
                                     </p-dropdown>
                                 </div>
                                 
-                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
                                     <label>Método de Contagem *</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -216,7 +221,7 @@
                                     </p-dropdown>
                                 </div>
 
-                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px">
+                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
                                     <label>Tipo de Contagem *</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -229,7 +234,7 @@
                                             [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
-                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
+                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
                                     <label>Deflator</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -243,7 +248,7 @@
                                             [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
                                     <label>Propósito da Contagem</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -255,7 +260,7 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
                                     <label>Escopo da Contagem</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -267,7 +272,7 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
                                     <label>Fronteira</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -279,7 +284,7 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
                                     <label>Documentação</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -292,7 +297,7 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-4 ui-md-6 ui-sm-12" [hidden]="validacaoCampos">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" [hidden]="validacaoCampos">
 
                                     <div class="ui-g-6 ui-md-6 ui-sm-12">
                                         Aguardar prazo de garantia {{diasGarantia > 0 ? " de " + diasGarantia + " dias"
@@ -321,7 +326,7 @@
 
                                 </div>
 
-                                <div class="ui-g-4 ui-md-6 ui-sm-12" [hidden]="validacaoCampos">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" [hidden]="validacaoCampos">
 
                                     <div class="ui-g-6 ui-md-6 ui-sm-12">
                                         Incorporar a Baseline
@@ -350,7 +355,7 @@
 
                                 </div>
 
-                                <div class="ui-g-4 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px" [hidden]="validacaoCampos">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px" [hidden]="validacaoCampos">
                                     <span class="md-inputfield">
                                         <p-calendar
                                                 [required] = analise.baselineImediatamente
@@ -369,8 +374,9 @@
 
                                 </div>
 
-                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
-                                    <p-dataTable
+                                <p-fieldset legend="Fases" [toggleable]="true" [collapsed]="true">
+                                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
+                                        <p-dataTable
                                             dataKey="id"
                                             emptyMessage="Selecione um Contrato para escolher Fases"
                                             [value]="esforcoFases"
@@ -380,32 +386,33 @@
                                             (onRowSelect)="save()"
                                             (onRowUnselect)="save()"
                                             [headerCheckboxToggleAllPages]="true">
-
                                         <p-header>Fases</p-header>
-
+                
                                         <p-column
-                                                selectionMode="multiple"
-                                                [style]="{'width':'15%'}">
+                                            selectionMode="multiple"
+                                            [style]="{'width':'15%'}">
                                         </p-column>
-
+                
                                         <p-column
-                                                header="Nome"
-                                                field="fase.nome">
+                                            header="Nome"
+                                            field="fase.nome">
                                         </p-column>
-
+                
                                         <p-column
-                                                header="Esforço %"
-                                                field="esforco">
+                                            header="Esforço %"
+                                            field="esforco">
                                         </p-column>
-
+                
                                         <p-footer
-                                                *ngIf="analise.contrato">
+                                            *ngIf="analise.contrato">
                                             Total: {{ totalEsforcoFases() }}%
                                         </p-footer>
-                                    </p-dataTable>
-                                </div>
+                                        </p-dataTable>
+                                    </div>
+                                </p-fieldset>
+                                
 
-                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px" [hidden]="validacaoCampos">
+                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
                                     <label>Observações</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -420,15 +427,15 @@
                                     </span>
                                 </div>
 
-                            <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
-                                <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 25px">
+                            <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 05px; margin-top: 05px">
+                                <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 05px">
                                     <app-white-button
                                             buttonLabel="Voltar"
                                             id="idBtnVoltarFormAnalise"
                                             routerLink="/analise">
                                     </app-white-button>
                                 </div>
-                                <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 25px">
+                                <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 05px">
                                     <app-green-button
                                             type="submit"
                                             id="idBtnSalvarFormAnalise"

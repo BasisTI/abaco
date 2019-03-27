@@ -1,14 +1,14 @@
-import {Component, ViewChild, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {ConfirmationService} from 'primeng/primeng';
-import {DatatableComponent, DatatableClickEvent} from '@basis/angular-components';
-import {Manual} from './manual.model';
-import {ManualService} from './manual.service';
-import {ElasticQuery, PageNotificationService} from '../shared';
-import {BlockUI, NgBlockUI} from 'ng-block-ui';
-import {MessageUtil} from '../util/message.util';
-import {Response} from '@angular/http';
-import {FormGroup} from '@angular/forms';
+import { Component, ViewChild, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ConfirmationService } from 'primeng/primeng';
+import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
+import { Manual } from './manual.model';
+import { ManualService } from './manual.service';
+import { ElasticQuery, PageNotificationService } from '../shared';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { MessageUtil } from '../util/message.util';
+import { Response, Headers } from '@angular/http';
+import { FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'jhi-manual',
@@ -109,7 +109,7 @@ export class ManualComponent implements OnInit {
                 this.fecharDialogClonar();
                 this.recarregarDataTable();
             });
-        }else{
+        } else {
             this.nomeValido = true;
         }
     }
@@ -122,20 +122,18 @@ export class ManualComponent implements OnInit {
     public confirmDelete(id: any) {
         this.confirmationService.confirm({
             message: MessageUtil.CONFIRMAR_EXCLUSAO,
-            accept: () => {
+            accept: () => {                
                 this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
                 this.manualService.delete(id).subscribe(() => {
-                        this.recarregarDataTable();
-                        this.blockUI.stop();
-                        this.pageNotificationService
-                            .addSuccessMsg('Registro excluído com sucesso!');
-                    }, (error: Response) => {
-
-                        if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.contratoexists') {
-                            this.pageNotificationService.addErrorMsg('Manual ' + this.manualSelecionado.nome +
-                                ' está vinculado a um Contrato e não pode ser excluído!');
-                        }
+                    this.recarregarDataTable();
+                    this.blockUI.stop();
+                    this.pageNotificationService
+                        .addSuccessMsg('Registro excluído com sucesso!');
+                }, error=> {
+                    if (error.status === 500){
+                       this.blockUI.stop();
                     }
+                }
                 );
             }
         });
