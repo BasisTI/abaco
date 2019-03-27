@@ -92,7 +92,17 @@ public class SocialService {
     }
 
     private User verificarDados(String email, String userName) {
-        if (!StringUtils.isBlank(userName)) { userName = userName.toLowerCase(Locale.ENGLISH); }
+        if (!StringUtils.isBlank(userName)) {
+            userName = userName.toLowerCase(Locale.ENGLISH);
+        }
+        User user = verifyUserEmail(email, userName);
+        if (user != null) {
+            return user;
+        }
+        return null;
+    }
+
+    private User verifyUserEmail(String email, String userName) {
         if (StringUtils.isBlank(email) && StringUtils.isBlank(userName)) {
             log.error("Cannot create social user because email and login are null");
             throw new IllegalArgumentException("Email and login cannot be null");

@@ -36,7 +36,7 @@ import java.util.Set;
 public class Alr implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private final transient Logger log = LoggerFactory.getLogger(Alr.class);
+    private transient Logger log = LoggerFactory.getLogger(Alr.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
