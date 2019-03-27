@@ -94,7 +94,7 @@
                                           (onSelect)="uploadFile($event)" accept=".pdf,.odt,.doc,.docx">
                                 <ng-template pTemplate="content">
                                     <ul *ngIf="arquivoManual && !newUpload">
-                                        <li>{{arquivoManual.originalName}} - {{arquivoManual.sizeOf}} bytes</li>
+                                        <a target="_self" href="/api/downloadFile/{{ arquivoManual.id }}" download="arquivo-manual.pdf">{{arquivoManual.originalName}}</a>
                                     </ul>
                                 </ng-template>
                             </p-fileUpload>
