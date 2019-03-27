@@ -1,6 +1,6 @@
-<div class="ui-g">
+<div class="ui-g-12 ui-md-12 ui-sm-12">
 
-  <div class="ui-g-12 ui-md-12 ui-sm-12">
+  <div class="ui-g-8 ui-md-8 ui-sm-12">
     <p-chips 
       id="chips"
       [(ngModel)]="values"
@@ -25,30 +25,30 @@
     
   </div>
 
-  <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="relacionarDers">
+  <div class="ui-g-4 ui-md-4 ui-sm-12" *ngIf="relacionarDers">
     <app-analise-referenciador-ar
       (funcaoDadosReferenciadaEvent)="funcaoDadosReferenciada($event)"
       (dersReferenciadosEvent)="dersReferenciados($event)">
     </app-analise-referenciador-ar>
   </div>
 
-  <div class="ui-g-3 ui-md-3 ui-sm-12">
+  <div class="ui-g-2 ui-md-2 ui-sm-12">
     <button 
       pButton 
       type="button"
       id="idBtnAdicionarMultiplosComponentDerChips"
       class="blue-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-      label="Adicionar Múltiplos"
+      label="+ Múltiplos"
       (click)="abrirDialogAddMultiplos()">
     </button>
   </div>
 
-  <div class="ui-g-3 ui-md-3 ui-sm-12">
+  <div class="ui-g-2 ui-md-2 ui-sm-12">
     <button 
       pButton 
       type="button"
       id="idBtnLimparMultiplosComponentDerChips"
-      label="Limpar"
+      label="-"
       (click)="limparMultiplos()">
     </button>
   </div>
