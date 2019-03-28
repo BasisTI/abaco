@@ -496,6 +496,41 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             item.dataFimVigencia = new Date(item.dataFimVigencia)
         });
 
+        this.ordenarManuais(contrato);
+        this.resetManuais();
+        this.populaComboManual(contrato);
+    }
+
+    /**
+     * Popula o dropdown de manuais
+     * @param contrato Contrato de uma organização
+     */
+    private populaComboManual(contrato: Contrato) {
+        contrato.manualContrato.forEach((item: ManualContrato) => {
+            const entity: Manual = new Manual();
+            const m: Manual = entity.copyFromJSON(item.manual);
+            this.manuais.push(item.manual);
+            Object.defineProperty(m, 'ativo', {
+                value: item.ativo === true ? true : false,
+                writable: true
+            });
+            Object.defineProperty(this.analise.manual, 'ativo', {
+                value: item.ativo === true ? true : false,
+                writable: true
+            });
+            this.manuaisCombo.push({
+                label: `${m.nome} ${item.dataInicioVigencia.toDateString()} - ` +
+                        `${item.dataFimVigencia.toDateString()}`,
+                value: m.id === this.analise.manual.id ? this.analise.manual : m
+            });
+        });
+    }
+
+    /**
+     * Ordena os manuais referentes a um contrato
+     * @param contrato Contrato que terá seus manuais ordenados
+     */
+    private ordenarManuais(contrato: Contrato) {
         contrato.manualContrato = contrato.manualContrato.sort((a, b): number => {
             if ((a.dataInicioVigencia.getTime() == b.dataInicioVigencia.getTime())) {
                 if (a.dataFimVigencia.getTime() < b.dataFimVigencia.getTime()) {
@@ -509,23 +544,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             }
             return 1;
         });
-
-
-        this.resetManuais();
-        contrato.manualContrato.forEach((item: ManualContrato) => {
-
-            const entity: Manual = new Manual();
-            let m: Manual = entity.copyFromJSON(item.manual);
-
-            this.manuais.push(item.manual);
-            this.manuaisCombo.push({
-                label: m.nome,
-                value: m.id == this.analise.manual.id ? this.analise.manual : m
-            });
-
-        });
     }
-
 
     resetManuais() {
         this.manuais = [];

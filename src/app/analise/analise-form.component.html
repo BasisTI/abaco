@@ -139,7 +139,7 @@
                         <div style="margin-bottom: 05px; margin-top: 05px" *ngIf="isEdicao">
                             <div class="ui-g">
 
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px">
+                                <div class="ui-g-4 ui-md-3 ui-sm-12" style="margin-bottom: 05px">
                                     <label>Identificador da Analise *</label>
                                     <span class="md-inputfield">
                                         <input
@@ -184,7 +184,7 @@
                                     </p-dropdown>
                                 </div>
 
-                                <div class="ui-g-2 ui-md-2 ui-sm-12" style="margin-bottom: 05px">
+                                <div class="ui-g-6 ui-md-5 ui-sm-12" style="margin-bottom: 05px">
                                     <label>Manual *</label>
                                     <p-dropdown
                                         required
@@ -197,6 +197,32 @@
                                         [(ngModel)]="analise.manual"
                                         [autoWidth]="false"
                                         datakey="id">
+                                            <div class="row">
+                                                <ng-template let-manualSelc pTemplate="selectedItem">
+                                                    {{manualSelc.label}}
+                                                    <div style="position: relative;height: 5px;">
+                                                        <p-checkbox
+                                                            id="manualAtivoCheck"
+                                                            name="manualAtivoCheck"
+                                                            [(ngModel)]="manualSelc.value.ativo"
+                                                            binary="true"
+                                                            disabled="true">
+                                                        </p-checkbox>
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template let-manual pTemplate="item">
+                                                    {{manual.label}}
+                                                    <div style="position: relative;height: 5px;">
+                                                        <p-checkbox
+                                                            id="manualAtivoCheck"
+                                                            name="manualAtivoCheck"
+                                                            [(ngModel)]="manual.value.ativo"
+                                                            binary="true"
+                                                            disabled="false">
+                                                        </p-checkbox>
+                                                    </div>
+                                                </ng-template>
+                                            </div>
                                     </p-dropdown>
                                 </div>
                                 
