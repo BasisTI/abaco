@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import {EntityToJSON} from './../shared/entity-to-json';
 import {Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import {FuncaoDados} from './funcao-dados.model';
@@ -112,7 +113,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
         private funcaoDadosService: FuncaoDadosService,
         private analiseService: AnaliseService,
-        private baselineService: BaselineService
+        private baselineService: BaselineService,
+        private translate: TranslateService
     ) {
         const colunas = [
             {header: 'Nome', field: 'name'},
@@ -137,6 +139,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         });
     }
 
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+          str = res;
+        }).unsubscribe();
+        return str;
+      }
+
     ngOnInit() {
         this.estadoInicial();
         this.impactos = AnaliseSharedUtils.impactos; 
@@ -153,13 +163,13 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     updateNameImpacto(impacto: string) {
         switch(impacto) {
           case 'INCLUSAO':
-            return 'INCLUSÃO';
+            return this.getLabel('Cadastros.FuncaoDados.Inclusao');
           case 'ALTERACAO':
-            return 'ALTERAÇÃO';
+          return this.getLabel('Cadastros.FuncaoDados.Alteracao');
           case 'EXCLUSAO':
-            return 'EXCLUSÃO';
+          return this.getLabel('Cadastros.FuncaoDados.Exclusao');
           case 'CONVERSAO' :
-            return 'CONVERSÃO';
+          return this.getLabel('Cadastros.FuncaoDados.Conversao');
           //break;
     
           }
@@ -253,7 +263,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     getTextDialog() {
-        this.textHeader = this.isEdit ? 'Alterar Função de Dados' : 'Adicionar Função de Dados';
+        this.textHeader = this.isEdit ? this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlterarFuncaoDados') : this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAdicionarFuncaoDados');
     }
 
     get currentFuncaoDados(): FuncaoDados {
@@ -314,9 +324,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     fatoresAjusteDropdownPlaceholder() {
         if (this.isContratoSelected()) {
-            return 'Selecione um Deflator';
+            return this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneDeflator');
         } else {
-            return `Selecione um Contrato na aba 'Geral' para carregar os Deflatores`;
+            return this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneContratoParaCarregarDeflatores');
         }
     }
 
@@ -331,7 +341,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     multiplos(): boolean {
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
-            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
             return false;
         } else {
             this.desconverterChips();
@@ -366,7 +376,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     adicionar(): boolean {
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
-            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
             return retorno;
         } else {
             this.desconverterChips();
@@ -383,7 +393,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                     this.salvarAnalise();
                     this.estadoInicial();
                 } else {
-                    this.pageNotificationService.addErrorMsg('Registro já cadastrado!');
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
                 }
             });
         }
@@ -438,7 +448,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             if (this.currentFuncaoDados.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0 && this.currentFuncaoDados.fatorAjuste === undefined) {
                 this.erroDeflator = false;
                 retorno = false;
-                this.pageNotificationService.addErrorMsg('Selecione um Deflator');
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneDeflator'));
             }
         }
         else {
@@ -499,7 +509,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
-            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
             return;
         } else {
             this.desconverterChips();
@@ -507,7 +517,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
             this.validarNameFuncaoDados(this.currentFuncaoDados.name).then(resolve => {
-                this.pageNotificationService.addSuccessMsg(`Função de dados '${funcaoDadosCalculada.name}' alterada com sucesso`);
+                this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')} '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.msgAlteradaComSucesso')}`);
                 this.analise.updateFuncaoDados(funcaoDadosCalculada);
                 this.atualizaResumo();
                 this.resetarEstadoPosSalvar();
@@ -617,7 +627,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 this.currentFuncaoDados.id = undefined;
                 this.currentFuncaoDados.artificialId = undefined;
                 this.currentFuncaoDados.impacto = Impacto.ALTERACAO;
-                this.textHeader = 'Clonar Função de Dados'
+                this.textHeader = this.getLabel('Cadastros.FuncaoDados.Mensagens.msgClonarFuncaoDados')
                 break;
             case 'crud':
                 this.createCrud(funcaoDadosSelecionada);
@@ -702,7 +712,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.currentFuncaoDados = funcaoDadosSelecionada;
         
         this.carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada);
-        this.pageNotificationService.addInfoMsg(`Alterando Função de Dados '${funcaoDadosSelecionada.name}'`);
+        this.pageNotificationService.addInfoMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlterandoFuncaoDados')} '${funcaoDadosSelecionada.name}'`);
     }
 
     // Prepara para clonar
@@ -710,7 +720,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
         this.currentFuncaoDados.name = this.currentFuncaoDados.name + ' - Cópia';
         this.carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada);
-        this.pageNotificationService.addInfoMsg(`Clonando Função de Dados '${funcaoDadosSelecionada.name}'`);
+        this.pageNotificationService.addInfoMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgClonandoFuncaoDados')} '${funcaoDadosSelecionada.name}'`);
     }
 
     private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
@@ -761,7 +771,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     confirmDelete(funcaoDadosSelecionada: FuncaoDados) {
         this.confirmationService.confirm({
-            message: `Tem certeza que deseja excluir a Função de Dados '${funcaoDadosSelecionada.name}'?`,
+            message: `${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgCertezaDesejaExcluirFuncaoDados')} '${funcaoDadosSelecionada.name}'?`,
             accept: () => {
                 this.analise.deleteFuncaoDados(funcaoDadosSelecionada);
                 this.salvarAnalise();

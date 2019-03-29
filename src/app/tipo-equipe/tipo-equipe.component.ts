@@ -1,4 +1,5 @@
-import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy  } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
@@ -40,20 +41,29 @@ export class TipoEquipeComponent implements AfterViewInit {
     private tipoEquipeService: TipoEquipeService,
     private confirmationService: ConfirmationService,
     private pageNotificationService: PageNotificationService,
-     ) { }
+    private translate: TranslateService
+  ) { }
 
-    valueFiltro(valuefiltro: string) {
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
+
+  valueFiltro(valuefiltro: string) {
     this.valueFiltroCampo = valuefiltro;
     this.datatable.refresh(valuefiltro);
   }
 
-  public ngOnInit(){
+  public ngOnInit() {
     this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
       this.equipeSelecionada = event.data;
     });
-  this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
-    this.equipeSelecionada = undefined;
-  });
+    this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
+      this.equipeSelecionada = undefined;
+    });
   }
 
   public ngAfterViewInit() {
@@ -78,34 +88,34 @@ export class TipoEquipeComponent implements AfterViewInit {
   }
 
   public onRowDblclick(event) {
-    
+
     if (event.target.nodeName === 'TD') {
       this.abrirEditar();
-    }else if (event.target.parentNode.nodeName === 'TD') {
+    } else if (event.target.parentNode.nodeName === 'TD') {
       this.abrirEditar();
     }
-}
+  }
 
-abrirEditar(){
-  this.router.navigate(['/admin/tipoEquipe', this.equipeSelecionada.id, 'edit']);
-}
+  abrirEditar() {
+    this.router.navigate(['/admin/tipoEquipe', this.equipeSelecionada.id, 'edit']);
+  }
 
   public confirmDelete(id: any) {
     this.confirmationService.confirm({
-      message: MessageUtil.CONFIRMAR_EXCLUSAO,
+      message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
       accept: () => {
-        this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
+        this.blockUI.start(this.getLabel('Global.Mensagens.EXCLUINDO_REGISTRO'));
         this.tipoEquipeService.delete(id).subscribe(() => {
           this.recarregarDataTable();
           this.pageNotificationService.addDeleteMsg();
           this.blockUI.stop();
         }, error => {
           if (error.status === 403) {
-            this.pageNotificationService.addErrorMessage('Você não possui permissão!');
+            this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
             this.blockUI.stop();
-        }
+          }
           if (error.status === 500) {
-            this.pageNotificationService.addErrorMessage("Falha ao excluir registro, verifique se a equipe não está vinculada a algum usuário!");
+            this.pageNotificationService.addErrorMessage(this.getLabel('Cadastros.TipoEquipe.Mensagens.msgFalhaExcluirRegistro'));
             this.blockUI.stop();
           }
         });

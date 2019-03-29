@@ -23,6 +23,8 @@ import { MessageUtil } from '../util/message.util';
 import { FatorAjuste } from '../fator-ajuste';
 import { EsforcoFase } from '../esforco-fase';
 import { ManualService } from '../manual';
+import { TranslateService } from '@ngx-translate/core';
+
 
 @Component({
     selector: 'jhi-analise-form',
@@ -61,12 +63,12 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     metodosContagem: SelectItem[] = [];
 
     fatoresAjuste: SelectItem[] = [];
-    
+
     fatorAjuste: FatorAjuste;
 
     equipeResponsavel: SelectItem[] = [];
 
-    nomeManual = MessageUtil.SELECIONE_CONTRATO;
+    nomeManual = this.getLabel('Analise.SelecioneUmContrato');
 
     manual: Manual;
 
@@ -106,6 +108,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         private userService: UserService,
         private contratoService: ContratoService,
         private manualService: ManualService,
+        private translate: TranslateService
     ) {
     }
 
@@ -125,6 +128,30 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.routeSub.unsubscribe();
+    }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
+    }
+
+    /*
+     *   Metodo responsavel por traduzir opções do dropdown Tipo de Analise
+    */
+    traduzirtiposAnalise() {
+        this.translate.stream(['Analise.Analise.TiposAnalise.ProjetoDesenvolvimento', 'Analise.Analise.TiposAnalise.ProjetoMelhoria',
+            'Analise.Analise.TiposAnalise.ContagemAplicacao']).subscribe((traducao) => {
+                this.tiposAnalise = [
+                    { label: traducao['Analise.Analise.TiposAnalise.ProjetoDesenvolvimento'], value: 'DESENVOLVIMENTO' },
+                    { label: traducao['Analise.Analise.TiposAnalise.ProjetoMelhoria'], value: 'MELHORIA' },
+                    { label: traducao['Analise.Analise.TiposAnalise.ContagemAplicacao'], value: 'APLICACAO' }
+                ];
+
+            })
+
     }
 
     /**
@@ -230,13 +257,13 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     private inicializaValoresAposCarregamento(analiseCarregada: Analise) {
         if (analiseCarregada.bloqueiaAnalise) {
-            this.pageNotificationService.addErrorMsg(MessageUtil.EDITAR_ANALISE_BLOQUEADA);
+            this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgEDITAR_ANALISE_BLOQUEADA'));
             this.router.navigate(['/analise']);
         }
         this.analise = analiseCarregada;
         if (!this.checkIfUserCanEdit() && !this.checkUserAnaliseEquipes()) {
             this.pageNotificationService
-                .addErrorMsg('Você não tem permissão para editar esta análise, redirecionando para a tela de visualização...');
+                .addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSemPermissaoParaEditarAnalise'));
             this.router.navigate([`/analise/${analiseCarregada.id}/view`]);
         }
         this.setSistemaOrganizacao(analiseCarregada.organizacao);
@@ -287,7 +314,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular o manual do contrato
      */
     setManual(manual1: Manual) {
- 
+
         if (manual1) {
             this.manualService.find(manual1.id).subscribe((manual) => {
                 this.nomeManual = manual.nome;
@@ -346,16 +373,16 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     private carregarMetodosContagem(manual: Manual) {
         this.metodosContagem = [
             {
-                value: MessageUtil.DETALHADA,
-                label: MessageUtil.DETALHADA_IFPUG
+                value: this.getLabel('Analise.Analise.metsContagens.DETALHADA'),
+                label: this.getLabel('Analise.Analise.metsContagens.DETALHADA_IFPUG')
             },
             {
-                value: MessageUtil.INDICATIVA,
-                label: this.getLabelValorVariacao(MessageUtil.INDICATIVA_NESMA, manual.valorVariacaoIndicativa)
+                value: this.getLabel('Analise.Analise.metsContagens.INDICATIVA'),
+                label: this.getLabelValorVariacao(this.getLabel('Analise.Analise.metsContagens.INDICATIVA_NESMA'), manual.valorVariacaoIndicativa)
             },
             {
-                value: MessageUtil.ESTIMADA,
-                label: this.getLabelValorVariacao(MessageUtil.ESTIMADA_NESMA, manual.valorVariacaoEstimada)
+                value: this.getLabel('Analise.Analise.metsContagens.ESTIMADA'),
+                label: this.getLabelValorVariacao(this.getLabel('Analise.Analise.metsContagens.ESTIMADA_NESMA'), manual.valorVariacaoEstimada)
             }
         ];
     }
@@ -385,12 +412,12 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     sistemaDropdownPlaceholder() {
         if (this.sistemas) {
             if (this.sistemas.length > 0) {
-                return MessageUtil.SELECIONE;
+                return this.getLabel('Analise.Analise.Selecione');
             } else {
-                return MessageUtil.ORGANIZACAO_SEM_SISTEMA;
+                return this.getLabel('Analise.Analise.Mensagens.msgORGANIZACAO_SEM_SISTEMA');
             }
         } else {
-            return MessageUtil.SELECIONE_ORGANIZACAO;
+            return this.getLabel('Analise.Analise.Mensagens.msgSELECIONE_ORGANIZACAO');
         }
     }
 
@@ -408,12 +435,12 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     public bloquearAnalise() {
         if (!this.analise.dataHomologacao) {
-            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_DATA_HOMOLOGACAO);
+            this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_HOMOLOGACAO'));
         }
 
         if (this.analise.dataHomologacao) {
             this.confirmationService.confirm({
-                message: MessageUtil.CONFIRMAR_BLOQUEIO.concat(this.analise.identificadorAnalise).concat('?'),
+                message: this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_BLOQUEIO').concat(this.analise.identificadorAnalise).concat('?'),
                 accept: () => {
                     const copy = this.analise.toJSONState();
                     this.analiseService.block(copy).subscribe(() => {
@@ -423,10 +450,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                         switch (error.status) {
                             case 400: {
                                 if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
-                                    this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
+                                    this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteAdministradoresBloquearDesbloquear'));
                                 } else {
                                     this.pageNotificationService
-                                        .addErrorMsg('Somente membros da equipe responsável podem bloquear esta análise!');
+                                        .addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeBloquearAnalise'));
                                 }
                             }
                         }
@@ -465,9 +492,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     needContratoDropdownPlaceholder() {
         if (this.isContratoSelected()) {
-            return MessageUtil.SELECIONE;
+            return this.getLabel('Analise.Analise.Selecione');
         } else {
-            return MessageUtil.SELECIONE_CONTRATO;
+            return this.getLabel('Analise.Analise.SelecioneUmContrato');
         }
     }
 
@@ -549,7 +576,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
             this.analiseService.update(this.analise).subscribe(() => {
-                this.pageNotificationService.addSuccessMsg(this.isEdit ? 'Registro salvo com sucesso!' : 'Dados alterados com sucesso!');
+                this.pageNotificationService.addSuccessMsg(this.isEdit ? this.getLabel('Analise.Analise.Mensagens.msgRegistroSalvoSucesso') : this.getLabel('Analise.Analise.Mensagens.msgDadosAlteradosSucesso'));
                 this.diasGarantia = this.analise.contrato.diasDeGarantia;
             });
         }
@@ -591,27 +618,27 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         let isValid = true;
 
         if (!this.analise.identificadorAnalise) {
-            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_IDENTIFICADOR);
+            this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_IDENTIFICADOR'));
             isValid = false;
             return isValid;
         }
         if (!this.analise.contrato) {
-            this.pageNotificationService.addInfoMsg(MessageUtil.SELECIONE_CONTRATO_CONTINUAR);
+            this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgSELECIONE_CONTRATO_CONTINUAR'));
             isValid = false;
             return isValid;
         }
         if (!this.analise.dataCriacaoOrdemServico) {
-            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_DATA_ORDEM_SERVICO);
+            this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_ORDEM_SERVICO'));
             isValid = false;
             return isValid;
         }
         if (!this.analise.metodoContagem) {
-            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_METODO_CONTAGEM);
+            this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_METODO_CONTAGEM'));
             isValid = false;
             return isValid;
         }
         if (!this.analise.tipoAnalise) {
-            this.pageNotificationService.addInfoMsg(MessageUtil.INFORME_TIPO_CONTAGEM);
+            this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_TIPO_CONTAGEM'));
             isValid = false;
             return isValid;
         }
@@ -667,7 +694,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             });
             this.mostrarDialog = true;
         } else {
-            this.pageNotificationService.addErrorMsg('Somente membros da equipe responsável podem compartilhar esta análise!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeCompartilharAnalise'));
         }
     }
 
@@ -675,11 +702,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         if (this.selectedEquipes && this.selectedEquipes.length !== 0) {
             this.analiseService.salvarCompartilhar(this.selectedEquipes).subscribe((res) => {
                 this.mostrarDialog = false;
-                this.pageNotificationService.addSuccessMsg('Análise compartilhada com sucesso!');
+                this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgAnaliseCompartilhadaSucesso'));
                 this.limparSelecaoCompartilhar();
             });
         } else {
-            this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder adicionar ou clique no X para sair!');
+            this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgSelecioneRegistroAdicionarCliqueSair'));
         }
 
     }
@@ -688,11 +715,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         if (this.selectedToDelete && this.selectedToDelete !== null) {
             this.analiseService.deletarCompartilhar(this.selectedToDelete.id).subscribe((res) => {
                 this.mostrarDialog = false;
-                this.pageNotificationService.addSuccessMsg('Compartilhamento removido com sucesso!');
+                this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgCompartilhamentoRemovidoSucesso'));
                 this.limparSelecaoCompartilhar();
             });
         } else {
-            this.pageNotificationService.addInfoMsg('Selecione pelo menos um registro para poder remover ou clique no X para sair!');
+            this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgSelecioneRegistroRemoverCliqueSair'));
         }
     }
 
@@ -705,7 +732,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     public updateViewOnly() {
         setTimeout(() => {
             this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
-                this.pageNotificationService.addSuccessMsg('Registro atualizado com sucesso!');
+                this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgRegistroAtualizadoSucesso'));
             });
         }, 250);
     }

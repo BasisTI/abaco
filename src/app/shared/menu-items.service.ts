@@ -14,32 +14,32 @@ export class MenuItemsService {
     get all(): MenuItem[] {
         return [
             {
-                label: 'Configuração', icon: 'settings',
+                label: `MenuPrincipal.Configuracao.Configuracao`, icon: 'settings',
                 visible: this.authService.isAuthenticated(),
                 items: [
-                    {label: 'Reindexar', routerLink: 'elasticsearch', icon: 'refresh'},
-                    {label: 'Editar usuário', routerLink: `usuario/edit`, icon: 'tag_faces'},
-                    {label: 'Alterar Senha', routerLink: `senha`, icon: 'security'}
+                    { label: 'MenuPrincipal.Configuracao.Reindexar', routerLink: 'elasticsearch', icon: 'refresh' },
+                    { label: 'MenuPrincipal.Configuracao.EditarUsuario', routerLink: `usuario/edit`, icon: 'tag_faces' },
+                    { label: 'MenuPrincipal.Configuracao.AlterarSenha', routerLink: `senha`, icon: 'security' }
                 ]
             },
             {
-                label: 'Cadastros', icon: 'description',
+                label: 'MenuPrincipal.Cadastros.Cadastros', icon: 'description',
                 visible: this.isLoggedCadastrosBasicos(),
                 items: [
-                    {label: 'Tipo de Fase', routerLink: 'tipoFase', icon: 'beenhere'},
-                    {label: 'Manual', routerLink: 'manual', icon: 'description'},
-                    {label: 'Organização', routerLink: 'organizacao', icon: 'business'},
-                    {label: 'Sistema', routerLink: 'sistema', icon: 'laptop'},
-                    {label: 'Tipo de Equipe', routerLink: 'admin/tipoEquipe', icon: 'people'},
-                    {label: 'Usuários', routerLink: 'admin/user', icon: 'person'}
+                    { label: 'MenuPrincipal.Cadastros.TipoFase', routerLink: 'tipoFase', icon: 'beenhere' },
+                    { label: 'MenuPrincipal.Cadastros.Manual', routerLink: 'manual', icon: 'description' },
+                    { label: 'MenuPrincipal.Cadastros.Organizacao', routerLink: 'organizacao', icon: 'business' },
+                    { label: 'MenuPrincipal.Cadastros.Sistema', routerLink: 'sistema', icon: 'laptop' },
+                    { label: 'MenuPrincipal.Administracao.TipoEquipe', routerLink: 'admin/tipoEquipe', icon: 'people' },
+                    { label: 'MenuPrincipal.Administracao.Usuarios', routerLink: 'admin/user', icon: 'person' }
                 ]
             },
             {
-                label: 'Análise', icon: 'insert_chart',
+                label: 'MenuPrincipal.Analise.Analise', icon: 'insert_chart',
                 visible: this.authService.isAuthenticated(),
                 items: [
-                    {label: 'Análise', routerLink: 'analise', icon: 'description'},
-                    {label: 'Baseline', routerLink: 'baseline', icon: 'view_list'},
+                    { label: 'MenuPrincipal.Analise.Analise', routerLink: 'analise', icon: 'description' },
+                    { label: 'MenuPrincipal.Analise.Baseline', routerLink: 'baseline', icon: 'view_list' },
                     // { label: 'Compare' }
                     // { label: 'Validação' }
                 ]

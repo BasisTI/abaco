@@ -1,17 +1,18 @@
-import {Component, OnInit, OnDestroy, OnChanges} from '@angular/core';
-import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
-import {Response} from '@angular/http';
-import {Observable, Subscription} from 'rxjs/Rx';
+import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit, OnDestroy, OnChanges } from '@angular/core';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { Response } from '@angular/http';
+import { Observable, Subscription } from 'rxjs/Rx';
 
-import {AuthService} from '@basis/angular-components';
-import {User} from './user.model';
-import {UserService} from './user.service';
-import {TipoEquipe, TipoEquipeService} from '../tipo-equipe';
-import {Organizacao, OrganizacaoService} from '../organizacao';
-import {ResponseWrapper} from '../shared';
-import {Authority} from './authority.model';
-import {PageNotificationService} from '../shared/page-notification.service';
-import {ADMIN_ROLE} from '../shared/constants';
+import { AuthService } from '@basis/angular-components';
+import { User } from './user.model';
+import { UserService } from './user.service';
+import { TipoEquipe, TipoEquipeService } from '../tipo-equipe';
+import { Organizacao, OrganizacaoService } from '../organizacao';
+import { ResponseWrapper } from '../shared';
+import { Authority } from './authority.model';
+import { PageNotificationService } from '../shared/page-notification.service';
+import { ADMIN_ROLE } from '../shared/constants';
 
 import * as _ from 'lodash';
 
@@ -51,6 +52,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
         private tipoEquipeService: TipoEquipeService,
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
+        private translate: TranslateService
     ) {
         this.isAdmin = this.isUserAdmin();    // Seta a flag de administrador (ou não) e...
         this.recuperarUrl();                  // Capturando URL ativa
@@ -58,6 +60,14 @@ export class UserFormComponent implements OnInit, OnDestroy {
             this.loadCurrentUser();             // Carrrega os dados do usuário logado,
             this.isEdit = true;                 // Levanta flag de edição,
         }
+    }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
     }
 
     ngOnInit() {
@@ -113,27 +123,27 @@ export class UserFormComponent implements OnInit, OnDestroy {
                 authority.artificialId = index;
                 switch (index) {
                     case 0: {
-                        authority.description = 'Administrador';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Administrador');
                         break;
                     }
 
                     case 1: {
-                        authority.description = 'Usuário';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Usuario');
                         break;
                     }
 
                     case 2: {
-                        authority.description = 'Observador';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Observador');
                         break;
                     }
 
                     case 3: {
-                        authority.description = 'Analista';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Analista');
                         break;
                     }
 
                     case 4: {
-                        authority.description = 'Gestor';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Gestor');
                         break;
                     }
                 }
@@ -149,29 +159,29 @@ export class UserFormComponent implements OnInit, OnDestroy {
             this.user.authorities.forEach(authority => {
                 switch (authority.name) {
                     case 'ROLE_ADMIN': {
-                        authority.description = 'Administrador';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Administrador');
                         authority.artificialId = 0;
                         break;
                     }
 
                     case 'ROLE_USER': {
-                        authority.description = 'Usuário';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Usuario');
                         authority.artificialId = 1;
                         break;
                     }
 
                     case 'ROLE_VIEW': {
-                        authority.description = 'Observador';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Observador');
                         authority.artificialId = 2;
                         break;
                     }
                     case 'ROLE_ANALISTA': {
-                        authority.description = 'Analista';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Analista');
                         authority.artificialId = 3;
                         break;
                     }
                     case 'ROLE_GESTOR': {
-                        authority.description = 'Gestor';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Gestor');
                         authority.artificialId = 4;
                         break;
                     }
@@ -186,12 +196,12 @@ export class UserFormComponent implements OnInit, OnDestroy {
      * */
     save(form) {
         if (!form.controls.email.valid && this.user.email) {
-            this.pageNotificationService.addErrorMsg('E-mail Inválido');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.EmailInvalido'));
             return;
         }
 
         if (!form.valid) {
-            this.pageNotificationService.addErrorMsg('Favor preencher os campos Obrigatórios!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'));
             return;
         }
 
@@ -220,7 +230,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
         if (isFirstNameValid && isLastNameValid && isLoginValid) {
             isValid = true;
         } else {
-            this.pageNotificationService.addErrorMsg('Favor informar os campos obrigatórios!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'));
         }
         return isValid;
     }
@@ -271,15 +281,15 @@ export class UserFormComponent implements OnInit, OnDestroy {
                     const EXISTING_FULLNAME = 'error.fullnameexists';
 
                     if (error.headers.toJSON()['x-abacoapp-error'][0] === EXISTING_USER) {
-                        this.pageNotificationService.addErrorMsg('Usuário já cadastrado!');
+                        this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Usuarios.Mensagens.UsuarioJaCadastrado'));
                         document.getElementById('login').setAttribute('style', 'border-color: red;');
                     } else {
                         if (error.headers.toJSON()['x-abacoapp-error'][0] === EXISTING_MAIL) {
-                            this.pageNotificationService.addErrorMsg('E-mail já cadastrado!');
+                            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Usuarios.Mensagens.EmailJaCadastrado'));
                             document.getElementById('email').setAttribute('style', 'border-color: red;');
                         } else {
                             if (error.headers.toJSON()['x-abacoapp-error'][0] === EXISTING_FULLNAME) {
-                                this.pageNotificationService.addErrorMsg('Usuário já cadastrado!');
+                                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Usuarios.Mensagens.UsuarioJaCadastrado'));
                                 document.getElementById('firstName').setAttribute('style', 'border-color: red;');
                                 document.getElementById('lastName').setAttribute('style', 'border-color: red;');
                             }
@@ -287,7 +297,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
                         let invalidFieldNamesString = '';
                         const fieldErrors = JSON.parse(error['_body']).fieldErrors;
                         invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-                        this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
+                        this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Usuarios.Mensagens.msgCamposInvalidos') + invalidFieldNamesString);
                     }
                 }
             }
@@ -328,7 +338,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    setOrganizacao(org: Organizacao[]){
+    setOrganizacao(org: Organizacao[]) {
         this.user.tipoEquipes = [];
         this.setEquipeOrganizacao(org);
     }

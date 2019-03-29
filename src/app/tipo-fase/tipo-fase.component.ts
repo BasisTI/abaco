@@ -1,12 +1,13 @@
-import {Component, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
-import {ConfirmationService} from 'primeng/primeng';
-import {DatatableComponent, DatatableClickEvent} from '@basis/angular-components';
+import { Component, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { ConfirmationService } from 'primeng/primeng';
+import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
 
-import {TipoFase} from './tipo-fase.model';
-import {TipoFaseService} from './tipo-fase.service';
-import {ElasticQuery} from '../shared';
-import {PageNotificationService} from '../shared';
+import { TipoFase } from './tipo-fase.model';
+import { TipoFaseService } from './tipo-fase.service';
+import { ElasticQuery } from '../shared';
+import { PageNotificationService } from '../shared';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'jhi-tipo-fase',
@@ -25,6 +26,7 @@ export class TipoFaseComponent {
         private tipoFaseService: TipoFaseService,
         private confirmationService: ConfirmationService,
         private pageNotificationService: PageNotificationService,
+        private translate: TranslateService
     ) {
     }
 
@@ -35,6 +37,14 @@ export class TipoFaseComponent {
         this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
             this.tipoFaseSelecionada = undefined;
         });
+    }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
     }
 
     datatableClick(event: DatatableClickEvent) {
@@ -68,7 +78,7 @@ export class TipoFaseComponent {
 
     confirmDelete(id: any) {
         this.confirmationService.confirm({
-            message: 'Tem certeza que deseja excluir o registro?',
+            message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
             accept: () => {
                 this.tipoFaseService.delete(id).subscribe(() => {
                     this.recarregarDataTable();

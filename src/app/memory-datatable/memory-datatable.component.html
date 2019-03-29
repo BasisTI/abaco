@@ -2,7 +2,7 @@
   <p-dataTable [value]="value"
     [immutable]="false"
     [(selection)]="selectedRow"
-    [emptyMessage]="'Nenhum registro encontrado.'"
+    [emptyMessage]="this.getLabel('Global.Mensagens.emptyMessage')"
     selectionMode="single"
     [responsive]="responsive"
     [scrollable]="scrollable"
@@ -17,7 +17,7 @@
 <div class="ui-g-1 ui-g-nopad">
   <basis-datatable-button
     *ngIf="!disableEdit"
-    [tooltip]="selectedRow != null ? 'Editar' : 'Escolha um registro para editar.'"
+    [tooltip]="selectedRow != null ? this.getLabel('Global.Mensagens.Editar') : this.getLabel('Global.Mensagens.EscolhaUmRegistroParaEditar')"
     [disabled]="selectedRow == null"
     (click)="onClick(editEventName, $event)"
     class="ui-button-success"
@@ -26,7 +26,7 @@
 
   <basis-datatable-button 
     *ngIf="!disableDelete"
-    [tooltip]="selectedRow != null ? 'Excluir' : 'Escolha um registro para excluir.'" 
+    [tooltip]="selectedRow != null ? this.getLabel('Global.Mensagens.Excluir') : this.getLabel('Global.Mensagens.EscolhaUmRegistroParaExcluir')" 
     [disabled]="selectedRow == null"
     (click)="onClick(deleteEventName, $event)" 
     class="ui-button-danger"
@@ -35,7 +35,7 @@
 
   <basis-datatable-button
     *ngIf="!disableClone"
-    [tooltip]="selectedRow != null ? 'Clonar' : 'Escolha um registro para clonar.'" 
+    [tooltip]="selectedRow != null ? this.getLabel('Global.Mensagens.Clonar') : this.getLabel('Global.Mensagens.EscolhaUmRegistroParaClonar')" 
     [disabled]="selectedRow == null"
     (click)="onClick(cloneEventName, $event)"
     class="ui-button-dark"
@@ -44,7 +44,7 @@
 
     <basis-datatable-button
     *ngIf="!disableCrud && showCrud"
-    [tooltip]="selectedRow != null ? 'Criar Crud' : 'Escolha um registro para criar crud.'" 
+    [tooltip]="selectedRow != null ? this.getLabel('Global.Mensagens.CriarCrud') : this.getLabel('Global.Mensagens.EscolhaUmRegistroParaCriarCrud')" 
     [disabled]="selectedRow == null"
     (click)="onClick(crudEventName, $event)"
     class="ui-button-success"

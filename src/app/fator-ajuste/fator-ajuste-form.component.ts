@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
@@ -38,6 +39,7 @@ export class FatorAjusteFormComponent implements OnInit, OnDestroy {
     private router: Router,
     private fatorAjusteService: FatorAjusteService,
     private manualService: ManualService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {

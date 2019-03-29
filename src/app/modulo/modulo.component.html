@@ -1,35 +1,35 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>Modulos</h1>
+      <h1 translate="Cadastros.Modulo.Modulos">Modulos</h1>
       <div class="ui-g">
         <div class="ui-g-12 ui-md-4">
             <span class="md-inputfield">
               <input type="text" pInputText class="ui-inputtext" #filter/>
-              <label>Filtro</label>
+              <label translate="Cadastros.Modulo.Filtro">Filtro</label>
             </span>
         </div>
         <div class="ui-g-12 ui-md-2">
-          <button pButton type="button" label="Pesquisar" icon="ui-icon-search" (click)="datatable.refresh(filter.value)"></button>
+          <button pButton type="button" [label]="this.getLabel('Global.Botoes.Pesquisar')" icon="ui-icon-search" (click)="datatable.refresh(filter.value)"></button>
         </div>
         <div class="ui-g-12 ui-md-2">
-          <button pButton type="button" label="Cadastrar" routerLink="/modulo/new" icon="ui-icon-add"></button>
+          <button pButton type="button" [label]="this.getLabel('Global.Botoes.Cadastrar')" routerLink="/modulo/new" icon="ui-icon-add"></button>
         </div>
         <basis-datatable 
           [url]="searchUrl" 
           (buttonClick)="datatableClick($event)" 
           #datatable>
           <p-column header="#" field="id"></p-column>
-          <p-column header="Nome" field="nome"></p-column>
-          <p-column header="Sistema" field="sistema.id"></p-column>
+          <p-column [header]="this.getLabel('Cadastros.Modulo.Nome')" field="nome"></p-column>
+          <p-column [header]="this.getLabel('Cadastros.Modulo.Sistema')" field="sistema.id"></p-column>
         </basis-datatable>
       </div>
     </div>
   </div>
 </div>
-<p-confirmDialog header="Confirmação" #dialog>
+<p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
   <p-footer>
-    <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-    <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+    <button type="button" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao)'" (click)="dialog.reject()"></button>
+    <button type="button" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim)'" (click)="dialog.accept()"></button>
   </p-footer>
 </p-confirmDialog>

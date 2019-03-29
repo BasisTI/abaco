@@ -6,7 +6,7 @@
 </button>
 
 <p-dialog 
-  header="Referenciar AR" 
+  [header]="this.getLabel('Analise.Analise.ReferenciarAR')"
   [(visible)]="mostrarDialog"
   [contentStyle]="{'overflow': 'visible'}" 
   [width]="800">
@@ -42,7 +42,7 @@
         <button 
           pButton type="button"
           class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Cancelar"
+          [label]="this.getLabel('Global.Botoes.Cancelar')"
           (click)="fecharDialog()">
         </button>
       </div>
@@ -51,7 +51,7 @@
         <button 
           pButton type="button"
           class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Relacionar"
+          [label]="this.getLabel('Global.Botoes.Relacionar')"
           (click)="relacionar()">
         </button>
       </div>

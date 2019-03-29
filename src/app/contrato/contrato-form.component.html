@@ -1,35 +1,35 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>{{ contrato.id ? 'Editar Contrato' : 'Cadastrar Contrato' }}</h1>
+      <h1>{{ contrato.id ? this.getLabel('Cadastros.Contratos.EditarContrato') : this.getLabel('Cadastros.Contratos.CadastrarContrato') }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
         <div class="ui-g">
           <div class="ui-g-6" [hidden]="!contrato.id">
             <span class="md-inputfield">
               <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="contrato.id" readonly/>
-              <label>ID</label>
+              <label translate="Cadastros.Contrato.ID">ID</label>
             </span>
           </div>          
           <div class="ui-g-6">
             <span class="md-inputfield">
               <input type="text" name="numeroContrato" [(ngModel)]="contrato.numeroContrato" pInputText/>
-              <label>Número Contrato</label>
+              <label translate="Cadastros.Contrato.NumeroContrato">Número Contrato</label>
             </span>
           </div>
           <div class="ui-g-6">
             <span class="md-inputfield">
               <p-calendar name="dataInicioVigencia" [(ngModel)]="contrato.dataInicioVigencia" dateFormat="dd/mm/yy"></p-calendar>
-              <label>Data Início Vigência</label>
+              <label translate="Cadastros.Contrato.DataInicioVigencia">Data Início Vigência</label>
             </span>
           </div>
           <div class="ui-g-6">
             <span class="md-inputfield">z
               <p-calendar name="dataFimVigencia" [(ngModel)]="contrato.dataFimVigencia" dateFormat="dd/mm/yy"></p-calendar>
-              <label>Data Fim Vigência</label>
+              <label translate="Cadastros.Contrato.DataFimVigencia">Data Fim Vigência</label>
             </span>
           </div>
           <div class="ui-g-6">
-            <p-dropdown [filter]="true" [options]="manuals" optionLabel="nome" placeholder="Manual" name="manual" [(ngModel)]="contrato.manual" [autoWidth]="false" dataKey="id"></p-dropdown>
+            <p-dropdown [filter]="true" [options]="manuals" optionLabel="nome" [placeholder]="this.getLabel('Cadastros.Contrato.Manual')" name="manual" [(ngModel)]="contrato.manual" [autoWidth]="false" dataKey="id"></p-dropdown>
           </div>
           <div class="ui-g-6" style="margin-bottom: 25px">
             <span class="md-inputfield">
@@ -39,28 +39,28 @@
                 maxlength="6"
                 [(ngModel)]="contrato.diasDeGarantia" 
                 pInputText/>
-              <label>Dias de garantia</label>
+              <label translate="Cadastros.Contrato.DiasGarantia">Dias de garantia</label>
             </span>
           </div>
           <div class = "ui-g-12" style="margin-bottom: 25px">
             <div class="ui-g">
               
               <div class="ui-g-12 ui-md-1">
-                <label>Ativo:</label>
+                <label translate="Cadastros.Contrato.Ativo:">Ativo:</label>
               </div>
 
               <div class="ui-g-12 ui-md-1">
                 <p-radioButton name="contrato_ativo" 
                   [(ngModel)]="contrato.ativo"
                   [value]="true" 
-                  label="Sim">
+                  [label]="this.getLabel('Global.Botoes.Sim')">
                 </p-radioButton>
               </div>
 
               <div class="ui-g-12 ui-md-2">
                 <p-radioButton name="contrato_ativo" 
                   [value]="false" 
-                  label="Não"
+                  [label]="this.getLabel('Global.Botoes.Nao')"
                   [(ngModel)]="contrato.ativo">
                 </p-radioButton>
               </div>
@@ -69,10 +69,10 @@
         </div>
         <div class="ui-g">
           <div class="ui-g-2">
-            <button pButton type="button" label="Cancelar" routerLink="/contrato"></button>
+            <button pButton type="button" [label]="this.getLabel('Global.Botoes.Cancelar')" routerLink="/contrato"></button>
           </div>
           <div class="ui-g-2">
-            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+            <button pButton type="submit" [label]="this.getLabel('Global.Botoes.Salvar')" [disabled]="editForm.form.invalid || isSaving" ></button>
           </div>
         </div>
       </form>

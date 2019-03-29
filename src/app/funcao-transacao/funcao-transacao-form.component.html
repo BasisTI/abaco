@@ -7,7 +7,7 @@
                     <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
                         <div class="ui-md-2" *ngIf="!isView">
                             <app-green-button
-                                    buttonLabel="Novo"
+                                    [buttonLabel]="this.getLabel('Global.Botoes.Novo')"
                                     id="idBtnNovoFormFuncaoTransacao"
                                     buttonIcon="ui-icon-add"
                                     (click)="openDialog(false)">
@@ -30,12 +30,12 @@
 
                             <p-column
                                     field="name"
-                                    header="Nome"
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Nome')"
                                     [style]="{'width': '200px'}">
                             </p-column>
 
                             <p-column
-                                    header="Deflator"
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Deflator')"
                                     [style]="{'width': '200px'}">
                                 <ng-template
                                         let-fatorAjuste="rowData.fatorAjuste"
@@ -45,7 +45,7 @@
                             </p-column>
 
                             <p-column
-                                    header="Impacto"
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Impacto')"
                                     [style]="{'width': '200px'}"
                                     field="updateImpacto(impacto)">
                                 <ng-template
@@ -56,7 +56,7 @@
                             </p-column>
 
                             <p-column
-                                    header="Módulo"
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
                                     [style]="{'width': '200px'}">
                                 <ng-template
                                         let-modulo="rowData.funcionalidade.modulo"
@@ -67,7 +67,7 @@
 
 
                             <p-column
-                                    header="Funcionalidade"
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
                                     [style]="{'width': '200px'}">
                                 <ng-template
                                         let-funcionalidade="rowData.funcionalidade"
@@ -78,13 +78,13 @@
 
                             <p-column
                                     field="tipo"
-                                    header="Classificação"
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Classificacao')"
                                     [style]="{'width': '200px'}">
                             </p-column>
 
                             <p-column
                                     field="der"
-                                    header="DER (TD)"
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.DER(TD)')"
                                     [style]="{'width': '200px'}">
                                 <ng-template
                                         let-funcaoDados="rowData"
@@ -94,7 +94,7 @@
                             </p-column>
 
                             <p-column
-                                    header="FTR (AR)"
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.FTR(AR)')"
                                     [style]="{'width': '200px'}">
                                 <ng-template
                                         let-funcaoDados="rowData"
@@ -105,12 +105,12 @@
 
                             <p-column
                                     field="complexidade"
-                                    header="Complexidade"
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Complexidade')"
                                     [style]="{'width': '200px'}">
                             </p-column>
 
                             <p-column
-                                    header="PF Bruto"
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.PFBruto')"
                                     [style]="{'width': '200px'}">
                                 <ng-template
                                         let-grossPF="rowData.grossPF"
@@ -120,7 +120,7 @@
                             </p-column>
 
                             <p-column
-                                    header="PF Líquido"
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.PFLiquido')"
                                     [style]="{'width': '200px'}">
                                 <ng-template
                                         let-pf="rowData.pf"
@@ -153,7 +153,7 @@
                 <div *ngIf="!isEdit">
                     <div class="ui-g" *ngIf="!showMultiplos">
                         <div class="ui-g-9">
-                            <label>Nome do Processo Elementar *</label>
+                            <label translate="Cadastros.FUncaoTransacao.NomeProcessoElementar">Nome do Processo Elementar *</label>
                             <p-autoComplete
                                     [(ngModel)]="currentFuncaoTransacao.name"
                                     [suggestions]="baselineResultados"
@@ -170,7 +170,7 @@
                             </p-autoComplete>
                             <span class="md-inputfield">
                                 <div *ngIf="nomeInvalido && !currentFuncaoTransacao.name"
-                                     class="ui-message ui-messages-error">
+                                     class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
                                     Campo obrigatório.
                                 </div>
                             </span>
@@ -178,7 +178,7 @@
 
                         <div class="ui-g-12 ui-md-3 ui-lg-3">
                             <app-blue-button
-                                    buttonLabel="Múltiplos"
+                                    [buttonLabel]="this.getLabel('Global.Botoes.Multiplos')"
                                     id="idBtnMultiplosFormFuncaoTransacao"
                                     (click)="buttonMultiplos()">
                             </app-blue-button>
@@ -187,7 +187,7 @@
 
                     <div class="ui-g" *ngIf="showMultiplos">
                         <div class="ui-g-9">
-                            <label>Nomes dos Processos *</label>
+                            <label translate="Cadastros.FuncaoTransacao.NomeProcessos">Nomes dos Processos *</label>
                             <textarea pInputTextarea
                                       [(ngModel)]="text"
                                       style="white-space: nowrap; overflow: auto;"
@@ -203,7 +203,7 @@
                         </div>
                         <div class="ui-g-3">
                             <app-blue-button
-                                    buttonLabel="Unitário"
+                                    [buttonLabel]="this.getLabel('Global.Botoes.Unitario')"
                                     id="idUnitarioFormFuncaoTransacao"
                                     (click)="buttonMultiplos()">
                             </app-blue-button>
@@ -214,7 +214,7 @@
                 <div *ngIf="isEdit">
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                            <label>Nome do Processo Elementar *</label>
+                            <label translate="Cadastros.FuncaoTransacao.NomeProcessoElementar">Nome do Processo Elementar *</label>
                             <input type="text" class="ui-inputtext"
                                    id="idNomesFormFuncaoTransacao"
                                    [(ngModel)]="currentFuncaoTransacao.name">
@@ -225,38 +225,38 @@
 
                 <div class="ui-g">
                     <div class="ui-g-3 ui-md-6 ui-sm-12">
-                        <label>Classificação *</label>
+                        <label translate="Cadastros.FuncaoTransacao.Classificacao*">Classificação *</label>
                         <p-dropdown
                                 [filter]="true"
                                 [options]="classificacoes"
                                 id="idClassificacoesFormFuncaoTransacao"
                                 [(ngModel)]="currentFuncaoTransacao.tipo"
-                                placeholder="Selecione uma Classificação"
+                                [placeholder]="this.getLabel('Cadastros.FuncaoTransacao.SelecioneClass')"
                                 name="classificacao"
                                 [autoWidth]="false"
                                 (onChange)="classValida()">
                         </p-dropdown>
                         <span class="md-inputfield">
-                            <div *ngIf="classInvalida" class="ui-message ui-messages-error">
+                            <div *ngIf="classInvalida" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                                 Campo obrigatório.
                             </div>
                         </span>
                     </div>
 
                     <div class="ui-g-3 ui-md-6 ui-sm-12">
-                        <label>Impacto *</label>
+                        <label translate="Cadastros.FuncaoTransacao.Impacto*">Impacto *</label>
                         <p-dropdown
                                 [filter]="true"
                                 [options]="impacto"
                                 [(ngModel)]="currentFuncaoTransacao.impacto"
-                                placeholder="Selecione..."
+                                [placeholder]="this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgSelecione')"
                                 name="impacto"
                                 id="idImpactoFormFuncaoTransacao"
                                 [autoWidth]="false"
                                 (onChange)="impactoValido()">
                         </p-dropdown>
                         <span class="md-inputfield">
-                            <div *ngIf="impactoInvalido" class="ui-message ui-messages-error">
+                            <div *ngIf="impactoInvalido" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                                 Campo obrigatório.
                             </div>
                         </span>
@@ -265,7 +265,7 @@
                 </div>
                 <div class="ui-g">
                     <div class="ui-g-3 ui-md-6 ui-sm-12">
-                        <label>Deflator *</label>
+                        <label translate="Cadastros.FuncaoTransacao.Deflator*">Deflator *</label>
                         <p-dropdown
                                 [filter]="true"
                                 [options]="fatoresAjuste"
@@ -278,21 +278,21 @@
                                 [autoWidth]="false">
                         </p-dropdown>
                         <span class="md-inputfield">
-                            <div *ngIf="erroDeflator" class="ui-message ui-messages-error">
-                                Campo obrigatório.
+                            <div *ngIf="erroDeflator" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                             </div>
                         </span>
                     </div>
 
 
                     <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
-                        <label>Quantidade *</label>
+                        <label translate="Cadastros.FuncaoTransacao.Quantidade*">Quantidade *</label>
                         <input type="number" class="ui-inputtext" min="1"
                                id="idQuantidadeFormFuncaoTransacao"
                                [(ngModel)]="currentFuncaoTransacao.quantidade">
                         <div *ngIf="erroUnitario"
-                             class="ui-message ui-messages-error">
-                            Campo obrigatório.
+                             class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                         </div>
                     </div>
 
@@ -300,7 +300,7 @@
 
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
-                    <h2>FTR (AR)</h2>
+                    <h2 translate="Cadastros.FuncaoTransacao.FTR(AR)">FTR (AR)</h2>
                     <app-analise-der-chips
                             [(values)]="alrsChips"
                             id="idFTRFormFuncaoTransacao"
@@ -309,24 +309,24 @@
                     </app-analise-der-chips>
 
                     <span class="md-inputfield">
-                        <div *ngIf="erroTR && alrsChips.length == 0" class="ui-message ui-messages-error">
-                            Campo obrigatório.
+                        <div *ngIf="erroTR && alrsChips.length == 0" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                         </div>
                     </span>
                 </div>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" [hidden]="hideElementTDTR">
-                    <h2>DER (TD)</h2>
+                    <h2 translate="Cadastros.FuncaoTransacao.DER(TD)">DER (TD)</h2>
                     <app-analise-der-chips id="idDERFormFuncaoTransacao" [(values)]="dersChips"></app-analise-der-chips>
                     <span class="md-inputfield">
-                        <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error">
-                            Campo obrigatório.
+                        <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                         </div>
                     </span>
                 </div>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12">
-                    <label>Fundamentação</label>
+                    <label translate="Cadastros.FuncaoTransacao.Fundamentacao">Fundamentação</label>
                     <span class="md-inputfield">
                 <textarea
                         [rows]="3"
@@ -341,7 +341,7 @@
                 <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                     <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
                         <app-white-button
-                                buttonLabel="Cancelar"
+                                [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
                                 id="idBtnCancelarFormFuncaoTransacao"
                                 (click)="cancelar()">
                         </app-white-button>
@@ -349,7 +349,7 @@
 
                     <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
                         <app-white-button
-                                buttonLabel="Fechar"
+                                [buttonLabel]="this.getLabel('Global.Botoes.Fechar')"
                                 id="idBtnFecharFormFuncaoTransacao"
                                 (click)="cancelar()">
                         </app-white-button>
@@ -357,7 +357,7 @@
 
                     <div class="ui-md-3 ui-sm-12">
                         <app-blue-button
-                                buttonLabel="Salvar"
+                                [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
                                 id="idBtnSalvarFormFuncaoTransacao"
                                 buttonIcon="ui-icon-add"
                                 (click)="buttonSaveEdit()">

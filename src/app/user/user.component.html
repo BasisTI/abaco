@@ -1,7 +1,7 @@
 <div class="ui-g ui-fluid">
     <div class="ui-g-12">
         <div class="card card-w-title">
-            <h1>Usuários</h1>
+            <h1 translate="Cadastros.Usuarios.Usuarios">Usuários</h1>
             <div class="ui-g">
 
                 <div class="ui-g-4 ui-md-4 ui-sm-12">
@@ -14,7 +14,7 @@
                           (keyup.enter)="performSearch()"
                           #filter
                           maxlength="50">
-                  <label>Nome</label>
+                <label translate="Cadastros.Usuarios.Nome">Nome</label>
                 </span>
                 </div>
 
@@ -28,7 +28,7 @@
                           (keyup.enter)="performSearch()"
                           #filter
                           maxlength="50"/>
-                  <label>Login</label>
+                  <label translate="Cadastros.Usuarios.Login">Login</label>
                 </span>
                 </div>
 
@@ -42,7 +42,7 @@
                           (keyup.enter)="performSearch()"
                           #filter
                           maxlength="100"/>
-                  <label>E-mail</label>
+                  <label translate="Cadastros.Usuarios.Email">E-mail</label>
                 </span>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                             [(ngModel)]="searchParams.organization"
                             [autoWidth]="false"
                             (keyup.enter)="performSearch()"
-                            placeholder="Organização">
+                            [placeholder]="getLabel('Cadastros.Usuarios.Organizacao')">
                     </p-dropdown>
                 </div>
 
@@ -68,7 +68,7 @@
                             [(ngModel)]="searchParams.profile"
                             [autoWidth]="false"
                             (keyup.enter)="performSearch()"
-                            placeholder="Perfil">
+                            [placeholder]="getLabel('Cadastros.Usuarios.Perfil')">
                     </p-dropdown>
                 </div>
 
@@ -80,7 +80,7 @@
                             [autoWidth]="false"
                             [(ngModel)]="searchParams.team"
                             (keyup.enter)="performSearch()"
-                            placeholder="Equipe">
+                            [placeholder]="getLabel('Cadastros.Usuarios.Equipe')">
                     </p-dropdown>
                 </div>
 
@@ -89,7 +89,7 @@
                 <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-white-button
-                                buttonLabel="Limpar Pesquisa"
+                                [buttonLabel]="this.getLabel('Global.Botoes.LimparPesquisa')"
                                 buttonIcon="ui-icon-clear-all"
                                 (click)="limparPesquisa()">
                         </app-white-button>
@@ -97,7 +97,7 @@
 
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-blue-button
-                                buttonLabel="Pesquisar"
+                                [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')"
                                 buttonIcon="ui-icon-search"
                                 (click)="performSearch()">
                         </app-blue-button>
@@ -105,7 +105,7 @@
 
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-green-button
-                                buttonLabel="Novo"
+                                [buttonLabel]="this.getLabel('Global.Botoes.Novo')"
                                 routerLink="/admin/user/new"
                                 buttonIcon="ui-icon-add">
                         </app-green-button>
@@ -131,14 +131,14 @@
                         <p-column header="Login" field="login" [sortable]="true"></p-column>
 
                         <p-column
-                                header="E-mail"
+                                [header]="getLabel('Cadastros.Usuarios.Email')"
                                 field="email"
                                 [style]="{'word-wrap':'break-word'}"
                                 [sortable]="true">
                         </p-column>
 
                         <p-column
-                                header="Organização"
+                                [header]="getLabel('Cadastros.Usuarios.Organizacao')"
                                 [style]="{'word-wrap':'break-word', 'width': '17.5%'}"
                                 [sortable]="true">
                             <ng-template let-col let-row="rowData" pTemplate="body">
@@ -149,7 +149,7 @@
                         </p-column>
 
                         <p-column
-                                header="Perfil"
+                                [header]="getLabel('Cadastros.Usuarios.Perfil')"
                                 [sortable]="true">
                             <ng-template let-col let-row="rowData" pTemplate="body">
                                 <li *ngFor="let perfil of row.authorities">
@@ -158,7 +158,7 @@
                             </ng-template>
                         </p-column>
 
-                        <p-column header="Equipe" [style]="{width:'15%'}" [sortable]="true">
+                        <p-column [header]="getLabel('Cadastros.Usuarios.Equipe')" [style]="{width:'15%'}" [sortable]="true">
                             <ng-template let-col let-row="rowData" pTemplate="body">
                                 <li *ngFor="let equipe of row.tipoEquipes">
                                     {{ equipe.nome }}
@@ -166,10 +166,10 @@
                             </ng-template>
                         </p-column>
 
-                        <p-column header="Ativo" field="activated"
+                        <p-column [header]="getLabel('Cadastros.Usuarios.Ativo')" field="activated"
                                   [style]="{width:'5.5%'}" [sortable]="true">
                             <ng-template let-col let-ativo="rowData" pTemplate="body">
-                                {{ ativo[col.field] ? 'Sim' : (ativo[col.field] != null ? 'Não' : null) }}
+                                {{ ativo[col.field] ? this.getLabel('Global.Botoes.Sim') : (ativo[col.field] != null ? this.getLabel('Global.Botoes.Nao') : null) }}
                             </ng-template>
                         </p-column>
 
@@ -185,9 +185,9 @@
         </div>
     </div>
 
-    <p-confirmDialog header="Confirmação" #dialog>
+    <p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
         <p-footer>
-            <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-            <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+            <button type="button" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao)'" (click)="dialog.reject()"></button>
+            <button type="button" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim)'" (click)="dialog.accept()"></button>
         </p-footer>
     </p-confirmDialog>

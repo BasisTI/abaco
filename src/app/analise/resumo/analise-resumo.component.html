@@ -2,20 +2,20 @@
   <div class="card card-w-title">
     <div class="ui-g-12">
 
-      <h2>PF - Final Total: {{ analise.pfTotalEsforco }}</h2>
-      <h2>PF - Final Ajustado: {{ analise.adjustPFTotal }}</h2>
+      <h2>{{this.getLabel('Analise.Analise.PfFinalTotal')}} {{ analise.pfTotalEsforco }}</h2>
+      <h2>{{this.getLabel('Analise.Analise.PfFinalAjustado')}} {{ analise.adjustPFTotal }}</h2>
 
       <app-analise-funcao-resumo-table [linhasResumo]="analise.resumoTotal.all">
       </app-analise-funcao-resumo-table>
 
       <p-fieldset legend="Fases" [toggleable]="true" [collapsed]="true">
-        <h2>Fases</h2>
+        <h2 translate="Analise.Analise.Fases">Fases</h2>
         <p-dataTable id="idTabelaFasesComponentAnaliseResumo" [value]="esforcoFases">
 
-          <p-column header="Nome" field="fase.nome">
+          <p-column [header]="this.getLabel('Analise.Analise.Nome')" field="fase.nome">
           </p-column>
 
-          <p-column header="Esforço %" field="esforcoFormatado">
+          <p-column [header]="this.getLabel('Analise.Analise.Esforco')" field="esforcoFormatado">
           </p-column>
         </p-dataTable>
       </p-fieldset>

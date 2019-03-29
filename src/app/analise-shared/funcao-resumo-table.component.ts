@@ -2,12 +2,25 @@ import { Component, Input, OnInit } from '@angular/core';
 import { LinhaResumo } from '../analise-shared/resumo-funcoes';
 import { Complexidade } from './complexidade-enum';
 import { AnaliseSharedUtils } from './analise-shared-utils';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-analise-funcao-resumo-table',
-    templateUrl: './funcao-resumo-table.component.html'
-  })
+  selector: 'app-analise-funcao-resumo-table',
+  templateUrl: './funcao-resumo-table.component.html'
+})
 export class FuncaoResumoTableComponent implements OnInit {
+
+  constructor(
+    private translate: TranslateService
+  ) { }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   @Input()
   linhasResumo: LinhaResumo[];
@@ -21,7 +34,7 @@ export class FuncaoResumoTableComponent implements OnInit {
     this.impactos = AnaliseSharedUtils.impactos;
   }
   updateNameComplexidade(complexidade: string) {
-    switch(complexidade) {
+    switch (complexidade) {
       case 'MEDIA':
         return 'MÉD';
       case 'SEM':
@@ -34,23 +47,23 @@ export class FuncaoResumoTableComponent implements OnInit {
         return 'BAI';
       default:
         break;
-      }
+    }
   }
 
   updateNameImpacto(impacto: string) {
-    switch(impacto) {
+    switch (impacto) {
       case 'INCLUSAO':
         return 'INCL';
       case 'ALTERACAO':
         return 'ALTE';
       case 'EXCLUSAO':
         return 'EXCL';
-      case 'CONVERSAO' :
+      case 'CONVERSAO':
         return 'CONV';
       default:
         break;
 
-      }
+    }
   }
 
 }

@@ -1,12 +1,12 @@
 <div class="ui-g ui-fluid">
     <div class="ui-g-12">
         <div class="card card-w-title">
-            <h1>{{ organizacao.id ? 'Editar Organização' : 'Incluir Organização' }}</h1>
+            <h1>{{ organizacao.id ? this.getLabel('Cadastros.Organizacao.EditarOrganizacao') : this.getLabel('Cadastros.Organizacao.IncluirOrganizacao') }}
             <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
                 <div class="ui-g">
 
                     <div class="ui-g-12" style="margin-bottom: 25px">
-                        <label>Logo da Organização</label>
+                        <label translate="Cadastros.Organizacao.LogoOrganizacao">Logo da Organização</label>
                         <p-fileUpload #fileInput maxFileSize="5242880" chooseLabel="Selecionar arquivo"
                                       (onSelect)="fileUpload($event)"
                                       accept="image/*" id="idLogoOrganizacaoFormOrganizacao" [showUploadButton]="false"
@@ -31,7 +31,7 @@
                   && !editForm.controls['nomeOrganizacao'].valid 
                   && (editForm.controls['nomeOrganizacao'].touched 
                   || editForm.submitted)"
-                   class="ui-message ui-messages-error">
+                   class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                 Campo obrigatório.
               </div>
             </span>
@@ -46,7 +46,7 @@
                   && !editForm.controls['siglaOrganizacao'].valid 
                   && (editForm.controls['siglaOrganizacao'].touched 
                   || editForm.submitted)"
-                   class="ui-message ui-messages-error">
+                   class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                 Campo obrigatório.
               </div>
             </span>
@@ -139,13 +139,13 @@
 
                 <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-white-button buttonLabel="Cancelar" id="idBtnCancelarFormOrganizacao"
+                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCancelarFormOrganizacao"
                                           routerLink="/organizacao">
                         </app-white-button>
                     </div>
 
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-green-button buttonLabel="Salvar" id="idBtnSalvarOrg"
+                        <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarOrg"
                             (click)="save(editForm)" buttonIcon="ui-icon-save">
                         </app-green-button>
                     </div>
@@ -177,8 +177,8 @@
                  <div *ngIf="this.validaNumeroContrato || (editForm1.controls['numeroContrato']
                                         && !editForm1.controls['numeroContrato'].valid
                                         && (editForm1.controls['numeroContrato'].touched
-                                        || editForm1.submitted))" class="ui-message ui-messages-error">
-                                Campo obrigatório.
+                                        || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                             </div>
               </span>
                         </div>
@@ -194,8 +194,8 @@
                             <div *ngIf="this.validaDataInicio || (editForm1.controls['dataInicioVigenciaContrato']
                                         && !editForm1.controls['dataInicioVigenciaContrato'].valid
                                         && (editForm1.controls['dataInicioVigenciaContrato'].touched
-                                        || editForm1.submitted))" class="ui-message ui-messages-error">
-                                Campo obrigatório.
+                                        || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                         </div>
                         </span>
                         </div>
@@ -212,8 +212,8 @@
                             <div *ngIf="this.validaDataFinal || (editForm1.controls['dataFimVigenciaContrato']
                                         && !editForm1.controls['dataFimVigenciaContrato'].valid
                                         && (editForm1.controls['dataFimVigenciaContrato'].touched
-                                        || editForm1.submitted))" class="ui-message ui-messages-error">
-                            Campo obrigatório.
+                                        || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                         </div>
                         </span>
                         </div>
@@ -231,7 +231,7 @@
                                 <div *ngIf="this.validaDiasGarantia || (editForm1.controls['diasDeGarantia']
                                                 && !editForm1.controls['diasDeGarantia'].valid
                                                 && (editForm1.controls['diasDeGarantia'].touched
-                                                || editForm1.submitted))" class="ui-message ui-messages-error">
+                                                || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
                                     Campo obrigatório.
                                 </div>
                             </span>
@@ -289,8 +289,8 @@
                             <div *ngIf="this.validaDataInicio || (editForm1.controls['dataInicioVigenciaContrato']
                                         && !editForm1.controls['dataInicioVigenciaContrato'].valid
                                         && (editForm1.controls['dataInicioVigenciaContrato'].touched
-                                        || editForm1.submitted))" class="ui-message ui-messages-error">
-                                Campo obrigatório.
+                                        || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                         </div>
                         </span>
                         </div>
@@ -307,8 +307,8 @@
                             <div *ngIf="this.validaDataFinal || (editForm1.controls['dataFimVigenciaContrato']
                                         && !editForm1.controls['dataFimVigenciaContrato'].valid
                                         && (editForm1.controls['dataFimVigenciaContrato'].touched
-                                        || editForm1.submitted))" class="ui-message ui-messages-error">
-                            Campo obrigatório.
+                                        || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                         </div>
                         </span>
                         </div>
@@ -338,7 +338,7 @@
                         <div class="ui-g-6" style="margin-bottom: 25px">
                             <div class="ui-g">
                             <div class="ui-md-4">
-                                <app-green-button buttonLabel="Salvar"
+                                <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
                                                     id="idBtnSalvarManualFormOrganizacao"
                                                     buttonIcon="ui-icon-save"
                                                     (click)="adicionarManual()">
@@ -379,13 +379,13 @@
         
                     <div class="ui-g ui-md-12" style="justify-content: center">
                         <div class="ui-g-2">
-                            <app-white-button buttonLabel="Cancelar" id="idBtnCancelarContratoSaveFormOrganizacao"
+                            <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCancelarContratoSaveFormOrganizacao"
                                               (click)="fecharDialogCadastroContrato()">
 
                             </app-white-button>
                         </div>
                         <div class="ui-g-2">
-                            <app-green-button buttonLabel="Salvar" id="idBtnSalvarContratoSaveFormOrganizacao"
+                            <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarContratoSaveFormOrganizacao"
                                                (click)="adicionarContrato()" buttonIcon="ui-icon-save">
                             </app-green-button>
                         </div>
@@ -481,7 +481,7 @@
                             <div *ngIf="this.validaManual || (editForm1.controls['manualDropdownContratoEdit']
                                 && !editForm1.controls['manualDropdownContratoEdit'].valid
                                 && (editForm1.controls['manualDropdownContratoEdit'].touched
-                                || editForm1.submitted))" class="ui-message ui-messages-error">
+                                || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
                                     Campo obrigatório.
                         </div>
 
@@ -498,8 +498,8 @@
                             <div *ngIf="this.validaDataInicio || (editForm1.controls['dataInicioVigenciaContrato']
                                         && !editForm1.controls['dataInicioVigenciaContrato'].valid
                                         && (editForm1.controls['dataInicioVigenciaContrato'].touched
-                                        || editForm1.submitted))" class="ui-message ui-messages-error">
-                                Campo obrigatório.
+                                        || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                             </div>
                         </span>
                     </div>
@@ -547,7 +547,7 @@
                     <div class="ui-g-6" style="margin-bottom: 25px">
                         <div class="ui-g">
                         <div class="ui-md-4">
-                            <app-green-button buttonLabel="Salvar"
+                            <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
                                                 id="idBtnSalvarManualEdtFormOrganizacao"
                                                 buttonIcon="ui-icon-save"
                                                 (click)="adicionarManualEdt()">
@@ -588,16 +588,16 @@
 
                 <div class="ui-g ui-md-12" style="justify-content: flex-end">
                     <div class="ui-g-2">
-                        <app-white-button buttonLabel="Cancelar" id="idBtnCancelarContratoEditFormOrganizacao"
+                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCancelarContratoEditFormOrganizacao"
                                           (click)="fecharDialogEditarContrato()"
                                           buttonIcon="ui-arrow-back">
                         </app-white-button>
-                        <!-- <button pButton type="button" label="Cancelar"
+                        <!-- <button pButton type="button" [label]="this.getLabel('Global.Botoes.Cancelar')"
                           (click)="fecharDialogEditarContrato()"></button> -->
                     </div>
 
                     <div class="ui-g-2">
-                        <app-green-button buttonLabel="Salvar" id="idBtnSalvarContratoEditFormOrganizacao"
+                        <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarContratoEditFormOrganizacao"
                                         buttonIcon="ui-icon-save"
                                           (click)="editarContrato()">
                         </app-green-button>
@@ -606,11 +606,11 @@
                     </div>
                 </div>
             </p-dialog>
-            <p-confirmDialog header="Confirmação" #dialog>
+            <p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
                 <p-footer>
-                    <button type="button" id="idBtnNaoDeleteFormOrganizacao" pButton icon="fa-close" label="Não"
+                    <button type="button" id="idBtnNaoDeleteFormOrganizacao" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao)'"
                             (click)="dialog.reject()"></button>
-                    <button type="button" id="idBtnSimDeleteFormOrganizacao" pButton icon="fa-check" label="Sim"
+                    <button type="button" id="idBtnSimDeleteFormOrganizacao" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim)'"
                             (click)="dialog.accept()"></button>
                 </p-footer>
             </p-confirmDialog>

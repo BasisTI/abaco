@@ -1,12 +1,12 @@
 <div class="ui-g ui-fluid" *ngIf="contrato">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>Visualizar Contrato</h1>
+      <h1 translate="Cadastros.Contratos.VisualizarContrato">Visualizar Contrato</h1>
       <div class="ui-g">
         <div class="ui-g-6">
           <span class="md-inputfield">
             <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="contrato.id" readonly/>
-            <label>ID</label>
+            <label translate="Cadastros.Contratos.ID">ID</label>
           </span>
         </div>
         <div class="ui-g-6">
@@ -15,31 +15,31 @@
             type="text" 
             name="numeroContrato" 
             pInputText [ngModel]="contrato.numeroContrato" readonly/>
-            <label>Numero Contrato</label>
+            <label translate="Cadastros.Contratos.NumeroContrato">Numero Contrato</label>
           </span>
         </div>
         <div class="ui-g-6">
           <span class="md-inputfield">
             <input type="text" name="dataInicioVigencia" pInputText [ngModel]="contrato.dataInicioVigencia|date:'dd/MM/y'" readonly/>
-            <label>Data Inicio Vigencia</label>
+            <label translate="Cadastros.Contratos.DataInicioVigencia">Data Inicio Vigencia</label>
           </span>
         </div>
         <div class="ui-g-6">
           <span class="md-inputfield">
             <input type="text" name="dataFimVigencia" pInputText [ngModel]="contrato.dataFimVigencia|date:'dd/MM/y'" readonly/>
-            <label>Data Fim Vigencia</label>
+            <label translate="Cadastros.Contratos.DataFimVigencia">Data Fim Vigencia</label>
           </span>
         </div>
         <div class="ui-g-6">
           <span class="md-inputfield">
             <input type="text" name="manual" pInputText [ngModel]="contrato.manual.nome" readonly/>
-            <label>Manual</label>
+            <label translate="Cadastros.Contratos.Manual">Manual</label>
           </span>
         </div>
       </div>
       <div class="ui-g">
         <div class="ui-g-2">
-          <button pButton type="button" label="Voltar" routerLink="/contrato"></button>
+          <button pButton type="button" [label]="this.getLabel('Global.Botoes.Voltar')" routerLink="/contrato"></button>
         </div>
       </div>
     </div>

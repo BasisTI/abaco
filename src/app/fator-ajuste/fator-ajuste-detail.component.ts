@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Rx';
 
 import { FatorAjuste } from './fator-ajuste.model';
 import { FatorAjusteService } from './fator-ajuste.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'jhi-fator-ajuste-detail',
@@ -16,8 +17,17 @@ export class FatorAjusteDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private fatorAjusteService: FatorAjusteService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private translate: TranslateService
+  ) { }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   ngOnInit() {
     this.subscription = this.route.params.subscribe((params) => {

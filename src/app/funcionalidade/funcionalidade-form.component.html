@@ -1,19 +1,19 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>{{ funcionalidade.id ? 'Editar Funcionalidade' : 'Cadastrar Funcionalidade' }}</h1>
+      <h1>{{ funcionalidade.id ? this.getLabel('Cadastros.Funcionalidade.EditarFuncionalidade') : this.getLabel('Cadastros.Funcionalidade.CadastrarFuncionalidade') }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
         <div class="ui-g">
           <div class="ui-g-6" [hidden]="!funcionalidade.id">
             <span class="md-inputfield">
               <input type="text" class="ui-inputtext" name="id" pInputText [(ngModel)]="funcionalidade.id" readonly/>
-              <label>ID</label>
+              <label translate="Cadastros.Funcionalidade.ID">ID</label>
             </span>
           </div>          
           <div class="ui-g-6">
             <span class="md-inputfield">
               <input type="text" name="nome" [(ngModel)]="funcionalidade.nome" pInputText/>
-              <label>Nome</label>
+              <label translate="Cadastros.Funcionalidade.Nome">Nome</label>
             </span>
           </div>
           
@@ -22,7 +22,7 @@
               [filter]="true"
               [options]="modulos" 
               optionLabel="id" 
-              placeholder="Modulo" 
+              [placeholder]="this.getLabel('Cadastros.Funcionalidade.Modulo')" 
               name="modulo" 
               [(ngModel)]="funcionalidade.modulo" 
               [autoWidth]="false" 
@@ -35,7 +35,7 @@
               [filter]="true"
               [options]="funcaodados" 
               optionLabel="id" 
-              placeholder="FuncaoDados" 
+              [placeholder]="this.getLabel('Cadastros.Funcionalidade.FuncaoDados')" 
               name="funcaoDados" 
               [(ngModel)]="funcionalidade.funcaoDados" 
               [autoWidth]="false" 
@@ -48,7 +48,7 @@
               [filter]="true"
               [options]="funcaotransacaos" 
               optionLabel="id" 
-              placeholder="FuncaoTransacao" 
+              [placeholder]="this.getLabel('Cadastros.Funcionalidade.FuncaoTransacao')" 
               name="funcaoTransacao" 
               [(ngModel)]="funcionalidade.funcaoTransacao" 
               [autoWidth]="false" 
@@ -59,10 +59,10 @@
         </div>
         <div class="ui-g">
           <div class="ui-g-2">
-            <button pButton type="button" label="Cancelar" routerLink="/funcionalidade"></button>
+            <button pButton type="button" [label]="this.getLabel('Global.Botoes.Cancelar')" routerLink="/funcionalidade"></button>
           </div>
           <div class="ui-g-2">
-            <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button>
+            <button pButton type="button" [label]="this.getLabel('Global.Botoes.Salvar')" [disabled]="editForm.form.invalid || isSaving" ></button>
           </div>
         </div>
       </form>

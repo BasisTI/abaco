@@ -20,6 +20,7 @@ import {Der} from '../../der/der.model';
 import { element } from 'protractor';
 import { PageNotificationService } from '../../shared/';
 import { FuncaoTransacao } from '../../funcao-transacao';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -52,6 +53,19 @@ export class DerChipsComponent implements OnChanges {
     mostrarDialogEdicao = false;
     textoEdicao = '';
     indexChipEmEdicao: number;
+
+    constructor(
+        private translate: TranslateService
+    ){}
+    
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
+    }
+
     ngOnChanges(changes: SimpleChanges) {
         // TODO precisa?
     }

@@ -8,6 +8,7 @@ import { AuthService, HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 import { User } from '../user';
 import { PageNotificationService } from '../shared/page-notification.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-form-senha',
@@ -34,8 +35,17 @@ export class SenhaFormComponent implements OnInit, OnDestroy {
     private loginService: LoginService,
     private http: HttpService,
     private zone: NgZone,
-    private pageNotificationService: PageNotificationService
-  ) { }
+    private pageNotificationService: PageNotificationService,
+    private translate: TranslateService
+    ) { }
+  
+    getLabel(label) {
+      let str: any;
+      this.translate.get(label).subscribe((res: string) => {
+          str = res;
+      }).unsubscribe();
+      return str;
+    }
 
   ngOnInit() {
     this.authenticated = this.authService.isAuthenticated();
@@ -58,7 +68,7 @@ export class SenhaFormComponent implements OnInit, OnDestroy {
     if (this.newPassword === this.newPasswordConfirm) {
       this.loginService.login(this.login, this.oldPassword).subscribe(() => {
         this.senhaService.changePassword(this.newPassword).subscribe(() => {
-          const msg = 'Senha alterada com sucesso para o usuário ' + this.login + '!';
+          const msg = this.getLabel('Configuracao.AlterarSenha.Mensagens.msgSenhaAlteradaComSucessoParaUsuario') + this.login + '!';
           this.pageNotificationService.addSuccessMsg(msg);
         }, error => {
           if (error.status === 400) {
@@ -81,16 +91,16 @@ export class SenhaFormComponent implements OnInit, OnDestroy {
 
     switch (tipoErro) {
       case 'error.passwdNotEqual': {
-        msgErro = 'Senha nova senha não confere com a confirmação!';
+        msgErro = this.getLabel('Configuracao.AlterarSenha.Mensagens.msgNovaSenhaNaoConfereComConfirmacao');
       } break;
       case 'error.passwdMismatch': {
-        msgErro = 'Senha atual incorreta!';
+        msgErro = this.getLabel('Configuracao.AlterarSenha.Mensagens.msgSenhaAtualIncorreta');
       } break;
       case 'error.badPasswdLimits': {
-        msgErro = 'Nova senha é mujito pequena ou muito grande!';
+        msgErro = this.getLabel('Configuracao.AlterarSenha.Mensagens.msgNovaSenhaMuitoPequenaOuMuitoGrande');
       } break;
       default: {
-        msgErro = 'Entrei no default.\nAlgo ainda está errado...';
+        msgErro = this.getLabel('Configuracao.AlterarSenha.Mensagens.msgEntreiNoDefaultAlgoEstaErrado');
       }
     }
     this.pageNotificationService.addErrorMsg(msgErro);

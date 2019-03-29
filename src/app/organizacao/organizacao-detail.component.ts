@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Rx';
 import { Organizacao } from './organizacao.model';
 import { OrganizacaoService } from './organizacao.service';
 import { UploadService } from '../upload/upload.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'jhi-organizacao-detail',
@@ -18,8 +19,17 @@ export class OrganizacaoDetailComponent implements OnInit, OnDestroy {
   constructor(
     private organizacaoService: OrganizacaoService,
     private route: ActivatedRoute,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private translate: TranslateService
   ) { }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   ngOnInit() {
     this.subscription = this.route.params.subscribe((params) => {
@@ -33,7 +43,7 @@ export class OrganizacaoDetailComponent implements OnInit, OnDestroy {
       if (this.organizacao.logoId != undefined && this.organizacao.logoId != null)
         this.uploadService.getLogo(organizacao.logoId).subscribe(response => {
           this.logo = response.logo;
-        });      
+        });
     });
   }
 

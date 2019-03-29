@@ -1,21 +1,22 @@
-import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Response} from '@angular/http';
-import {Observable, Subscription} from 'rxjs/Rx';
+import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Response } from '@angular/http';
+import { Observable, Subscription } from 'rxjs/Rx';
 
-import {Manual} from './manual.model';
-import {ManualService} from './manual.service';
-import {EsforcoFaseService} from '../esforco-fase/esforco-fase.service';
-import {ResponseWrapper} from '../shared';
-import {EsforcoFase} from '../esforco-fase/esforco-fase.model';
-import {TipoFaseService} from '../tipo-fase/tipo-fase.service';
-import {TipoFase} from '../tipo-fase/tipo-fase.model';
-import {DatatableClickEvent} from '@basis/angular-components';
-import {ConfirmationService} from 'primeng/components/common/confirmationservice';
-import {FatorAjuste, TipoFatorAjuste} from '../fator-ajuste/fator-ajuste.model';
-import {PageNotificationService} from '../shared/page-notification.service';
-import {UploadService} from '../upload/upload.service';
-import {FileUpload} from 'primeng/primeng';
+import { Manual } from './manual.model';
+import { ManualService } from './manual.service';
+import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
+import { ResponseWrapper } from '../shared';
+import { EsforcoFase } from '../esforco-fase/esforco-fase.model';
+import { TipoFaseService } from '../tipo-fase/tipo-fase.service';
+import { TipoFase } from '../tipo-fase/tipo-fase.model';
+import { DatatableClickEvent } from '@basis/angular-components';
+import { ConfirmationService } from 'primeng/components/common/confirmationservice';
+import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
+import { PageNotificationService } from '../shared/page-notification.service';
+import { UploadService } from '../upload/upload.service';
+import { FileUpload } from 'primeng/primeng';
 
 @Component({
     selector: 'jhi-manual-form',
@@ -40,8 +41,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     editedAdjustFactor: FatorAjuste = new FatorAjuste();
 
     adjustTypes: Array<any> = [
-        {label: 'Percentual', value: 'PERCENTUAL' },
-        {label: 'Unitário', value: 'UNITARIO' }
+        { label: 'Percentual', value: 'PERCENTUAL' },
+        { label: 'Unitário', value: 'UNITARIO' }
     ];
 
     invalidFields: Array<string> = [];
@@ -59,8 +60,17 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         private tipoFaseService: TipoFaseService,
         private confirmationService: ConfirmationService,
         private pageNotificationService: PageNotificationService,
-        private uploadService: UploadService
+        private uploadService: UploadService,
+        private translate: TranslateService
     ) {
+    }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
     }
 
     ngOnInit() {
@@ -74,7 +84,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 this.manualService.find(params['id']).subscribe(manual => {
                     this.manual = manual;
                     this.isEdit = true;
-                    if (this.manual.arquivoManualId){
+                    if (this.manual.arquivoManualId) {
                         this.getFile();
                     }
                 });
@@ -92,7 +102,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
      */
     save(form: any) {
         if (!this.checkRequiredFields()) {
-            this.pageNotificationService.addErrorMsg('Favor preencher os campos obrigatórios!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'));
             return;
         }
 
@@ -116,7 +126,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             registeredPhases.forEach(each => {
                 if (each.nome === this.manual.nome && each.id !== this.manual.id) {
                     isAlreadyRegistered = true;
-                    this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.msgJaExisteUmManualRegistradoComEsteNome'));
                 }
             });
         }
@@ -167,35 +177,35 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         let isFieldsValid = false;
 
         if (!this.manual.valorVariacaoEstimada || this.manual.valorVariacaoEstimada === undefined) {
-            this.invalidFields.push('Valor Variação Estimada');
+            this.invalidFields.push(this.getLabel('Cadastros.Manual.ValorVariacaoEstimada'));
         }
         if (!this.manual.valorVariacaoIndicativa || this.manual.valorVariacaoIndicativa === undefined) {
-            this.invalidFields.push('Valor Variação Indicativa');
+            this.invalidFields.push(this.getLabel('Cadastros.Manual.ValorVariacaoIndicativa'));
         }
         if (!this.manual.nome || this.manual.nome === undefined) {
-            this.invalidFields.push('Nome');
+            this.invalidFields.push(this.getLabel('Cadastros.Manual.Nome'));
         }
         if (!this.manual.parametroInclusao || this.manual.parametroInclusao === undefined) {
-            this.invalidFields.push('Inclusão');
+            this.invalidFields.push(this.getLabel('Cadastros.Manual.Inclusao'));
         }
         if (!this.manual.parametroAlteracao || this.manual.parametroAlteracao === undefined) {
-            this.invalidFields.push('Alteração');
+            this.invalidFields.push(this.getLabel('Cadastros.Manual.Alteracao'));
         }
         if (!this.manual.parametroExclusao || this.manual.parametroExclusao === undefined) {
-            this.invalidFields.push('Exclusão');
+            this.invalidFields.push(this.getLabel('Cadastros.Manual.Exclusao'));
         }
         if (!this.manual.parametroConversao || this.manual.parametroConversao === undefined) {
-            this.invalidFields.push('Conversão');
+            this.invalidFields.push(this.getLabel('Cadastros.Manual.Conversao'));
         }
 
         if (this.manual.esforcoFases.length === 0 || this.manual.esforcoFases === undefined) {
             document.getElementById('tabela-tipo-fase').setAttribute('style', 'border: 1px dotted red;');
-            this.invalidFields.push('Esforço de Fases');
+            this.invalidFields.push(this.getLabel('Cadastros.Manual.EsforcoFases'));
         }
 
         if (this.manual.fatoresAjuste.length === 0 || this.manual.fatoresAjuste === undefined) {
             document.getElementById('tabela-deflator').setAttribute('style', 'border: 1px dotted red;');
-            this.invalidFields.push('Deflator');
+            this.invalidFields.push(this.getLabel('Cadastros.Manual.Deflator'));
         }
 
         isFieldsValid = (this.invalidFields.length === 0);
@@ -206,11 +216,11 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     privateExibirMensagemCamposInvalidos(codErro: number) {
         switch (codErro) {
             case 1:
-                this.pageNotificationService.addErrorMsg('Campos inválidos: ' + this.getInvalidFieldsString());
-                this.invalidFields = [];
-                return;
-            case 2:
-                this.pageNotificationService.addErrorMsg('Campo Arquivo Manual está inválido!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.msgCamposInvalidos') + this.getInvalidFieldsString());
+            this.invalidFields = [];
+            return;
+        case 2:
+            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.msgCampoArquivoManualEstaInvalido'));
                 return;
         }
     }
@@ -233,15 +243,15 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     private subscribeToSaveResponse(result: Observable<Manual>) {
         result.subscribe((res: Manual) => {
-                this.isSaving = false;
-                this.router.navigate(['/manual']);
-                this.isEdit ? this.pageNotificationService.addUpdateMsg() : this.pageNotificationService.addCreateMsg();
-            },
+            this.isSaving = false;
+            this.router.navigate(['/manual']);
+            this.isEdit ? this.pageNotificationService.addUpdateMsg() : this.pageNotificationService.addCreateMsg();
+        },
             (error: Response) => {
                 this.isSaving = false;
 
                 if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.manualexists') {
-                    this.pageNotificationService.addErrorMsg('Já existe um Manual registrado com este nome!');
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.msgJaExisteUmManualRegistradoComEsteNome'));
                     document.getElementById('nome_manual').setAttribute('style', 'border-color: red;');
                 }
             });
@@ -298,7 +308,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     confirmDeletePhaseEffort() {
         this.confirmationService.confirm({
-            message: 'Tem certeza que deseja excluir o Esforço por fase ' + this.editedPhaseEffort.fase.nome + '?',
+            message: this.getLabel('Cadastros.Manual.Mensagens.msgTemCertezaQueDesejaExcluirEsforcoPorFase') + this.editedPhaseEffort.fase.nome + '?',
             accept: () => {
                 this.manual.deleteEsforcoFase(this.editedPhaseEffort);
                 this.pageNotificationService.addDeleteMsg();
@@ -309,7 +319,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     confirmDeleteAdjustFactor() {
         this.confirmationService.confirm({
-            message: 'Tem certeza que deseja excluir o Fator de Ajuste ' + this.editedAdjustFactor.nome + '?',
+            message: this.getLabel('Cadastros.Manual.Mensagens.msgTemCertezaQueDesejaExcluirFatorAjuste') + this.editedAdjustFactor.nome + '?',
             accept: () => {
                 this.manual.deleteFatoresAjuste(this.editedAdjustFactor);
                 this.pageNotificationService.addDeleteMsg();
@@ -333,7 +343,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             //            this.pageNotificationService.addUpdateMsg();
             this.closeDialogEditPhaseEffort();
         } else {
-            this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'));
         }
     }
 
@@ -343,7 +353,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addUpdateMsg();
             this.closeDialogEditAdjustFactor();
         } else {
-            this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'));
         }
     }
 
@@ -367,7 +377,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addCreateMsg();
             this.closeDialogPhaseEffort();
         } else {
-            this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'));
         }
     }
 
@@ -444,10 +454,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         if (this.checkAdjustFactorRequiredFields(this.newAdjustFactor)) {
             this.manual.addFatoresAjuste(this.newAdjustFactor);
             document.getElementById('tabela-deflator').removeAttribute('style');
-            this.pageNotificationService.addCreateMsg('Deflator incluído com sucesso!');
+            this.pageNotificationService.addCreateMsg(this.getLabel('Cadastros.Manual.Mensagens.msgDeflatorIncluidoComSucesso'));
             this.closeDialogCreateAdjustFactor();
         } else {
-            this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'));
         }
     }
 
@@ -466,7 +476,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             this.validaNomeDeflator = true;
         }
 
-        if (adjustFactor.tipoAjuste){
+        if (adjustFactor.tipoAjuste) {
             isAdjustTypeValid = true;
         } else {
             isAdjustTypeValid = false;
