@@ -7,8 +7,6 @@ import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.br.CNPJ;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -45,7 +43,6 @@ import java.util.Set;
 public class Organizacao implements Serializable, ReportObject, Cloneable {
 
   private static final long serialVersionUID = 1L;
-    private static transient Logger log = LoggerFactory.getLogger(Organizacao.class);
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -121,7 +118,7 @@ public class Organizacao implements Serializable, ReportObject, Cloneable {
     return this;
   }
 
-  public void setCnpj(String cnpj) {
+    public void setCnpj(String cnpj) {
     this.cnpj = cnpj;
   }
 
@@ -266,16 +263,9 @@ public class Organizacao implements Serializable, ReportObject, Cloneable {
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-      log.debug("Clone Orgnaizacao", this);
-      return super.clone();
+        Organizacao clone = (Organizacao) super.clone();
+        clone = this;
+        return clone;
     }
 
-    protected Object getClone() {
-        try {
-            return this.clone();
-        } catch (CloneNotSupportedException e) {
-            log.error(e.getMessage(), e);
-            return null;
-        }
-    }
 }

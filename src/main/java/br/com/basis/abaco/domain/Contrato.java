@@ -141,7 +141,12 @@ public class Contrato implements Serializable {
       if (this.organization == null) {
           return null;
       } else {
-          return (Organizacao) organization.getClone();
+          try {
+              return (Organizacao) organization.clone();
+          } catch (CloneNotSupportedException e) {
+              log.error(e.getMessage(), e);
+              return null;
+          }
       }
   }
 
@@ -155,7 +160,12 @@ public class Contrato implements Serializable {
       if (organization == null){
           this.organization = null;
       } else {
-          this.organization = (Organizacao) organization.getClone();
+          try {
+              this.organization = (Organizacao) organization.clone();
+          } catch (CloneNotSupportedException e) {
+              log.error(e.getMessage(), e);
+              this.organization = null;
+          }
       }
   }
 
