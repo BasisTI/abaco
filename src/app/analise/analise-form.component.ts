@@ -510,17 +510,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             const entity: Manual = new Manual();
             const m: Manual = entity.copyFromJSON(item.manual);
             this.manuais.push(item.manual);
-            Object.defineProperty(m, 'ativo', {
-                value: item.ativo === true ? true : false,
-                writable: true
-            });
-            Object.defineProperty(this.analise.manual, 'ativo', {
-                value: item.ativo === true ? true : false,
-                writable: true
-            });
             this.manuaisCombo.push({
-                label: `${m.nome} ${item.dataInicioVigencia.toDateString()} - ` +
-                        `${item.dataFimVigencia.toDateString()}`,
+                label: `${m.nome} ${this.formataData(item.dataInicioVigencia)} - ` +
+                        `${this.formataData(item.dataFimVigencia)}`
+                        + this.formataBoleano(item.ativo),
                 value: m.id === this.analise.manual.id ? this.analise.manual : m
             });
         });
@@ -553,6 +546,14 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     manualSelecionado(manual: Manual) {
         this.analise.esforcoFases = _.cloneDeep(manual.esforcoFases);
+    }
+
+    private formataData(data: Date): String {
+        return `${data.getDay()}/${(data.getMonth() + 1).toString}/${data.getFullYear}`;
+    }
+
+    private formataBoleano(bool: Boolean): String {
+        return bool ? 'Ativo' : 'Inativo';
     }
 
     /**
