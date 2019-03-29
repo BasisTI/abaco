@@ -198,12 +198,12 @@
       "Organizacao*": "Organization *",
       "Perfil": "Profile",
       "Perfil*": "Profile *",
-      "PrimeiroNome*": "First Name",
+      "PrimeiroNome*": "First Name *",
       "PrimeiroNome:": "First Name: ",
       "SelecioneEquipe": "Select at least one team",
       "SelecionePerfil": "Select at least one profile",
       "SelecioneOrganizacao": "Select at least one organization",
-      "UltimoNome*": "Last Name",
+      "UltimoNome*": "Last Name *",
       "UltimoNome:": "Last Name: ",
       "Usuarios": "Users",
       "Visualizar": "View User",
@@ -412,6 +412,7 @@
       "NumeroOcorrencia:": "Occurrence Number:",
       "NumeroContrato": "Contract Number",
       "Organizacao": "Organization",
+      "SelecionarArquivo":"Select File",
       "Sigla": "Initials",
       "Sigla:": "Sigla:",
       "Sigla*": "Initials*",
@@ -523,7 +524,7 @@
       "De":" of ",
       "Dias":" days",
       "DataCriacao": "Date Creation",
-      "DataCriacaoOrdemServico": "Date Creation of O. S. *",
+      "DataCriacaoOrdemServico": "Date Creation O. S. *",
       "DataHomologacao": "Date of homologation (software)",
       "DataHomologacao:": "Date of homologation (software):",
       "Deflator": "Deflator",
@@ -662,7 +663,7 @@
       "TiposAnalise":{
         "ProjetoDesenvolvimento":"Development Project",
         "ProjetoMelhoria":"Improvement Project",
-        "ContagemAplicação":"Application Count (Baseline)"
+        "ContagemAplicacao":"Application Count (Baseline)"
       },
       "Botoes":{
         "GerarRelatorio": "Generate Report",

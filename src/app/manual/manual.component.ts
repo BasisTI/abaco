@@ -86,7 +86,7 @@ export class ManualComponent implements OnInit {
 
     clonarTooltip() {
         if (!this.manualSelecionado.id) {
-            return this.getLabel('Cadastros.Manual.Mensagens.msgRegistroClonar');
+            return `${this.getLabel('Cadastros.Manual.Mensagens.msgRegistroClonar')}`;
         }
         return this.getLabel('Global.Botoes.Clonar');
     }

@@ -142,10 +142,10 @@
             <p-column header="Código"
               [style]="{width: '25%'}">
               <ng-template let-codigo="rowData.id" pTemplate="body">
-                {{ codigo ? codigo : this.getLabel('Cadastros.Sistema.Mensagens.msgAindaNaoCadastrado' }}
+                {{ codigo ? codigo : this.getLabel('Cadastros.Sistema.Mensagens.msgAindaNaoCadastrado') }}
               </ng-template>
             </p-column>
-            <p-column [header]="getLabel('Cadastros.Sistema.Nome')" field="nome"></p-column>
+            <p-column [header]="this.getLabel('Cadastros.Sistema.Nome')" field="nome"></p-column>
           </app-memory-datatable>
 
         </div>
@@ -177,8 +177,8 @@
             (buttonClick)="datatableClick($event)"
             id="idTabelaFuncionalidadesFormSistema"
             disableClone="true">
-            <p-column header="Módulo" field="modulo.nome"></p-column>
-            <p-column header="Nome" field="nome"></p-column>
+            <p-column [header]="this.getLabel('Cadastros.Sistema.Modulo')" field="modulo.nome"></p-column>
+            <p-column [header]="this.getLabel('Cadastros.Sistema.Nome')" field="nome"></p-column>
           </app-memory-datatable>
         </div>
 
@@ -193,7 +193,7 @@
         </div>
 
         <!-- Dialog módulo -->
-        <p-dialog [header]="getLabel('Cadastros.Sistema.Modulo')"
+        <p-dialog [header]="this.getLabel('Cadastros.Sistema.Modulo')"
           [(visible)]="mostrarDialogModulo"
           [contentStyle]="{'overflow':'visible'}"
           [width]="800">
@@ -243,7 +243,7 @@
 
         <!-- Dialog Editar módulo -->
         <p-dialog 
-          [header]="getLabel('Cadastros.Sistema.EditarModulo')"
+          [header]="this.getLabel('Cadastros.Sistema.EditarModulo')" 
           [(visible)]="mostrarDialogEditarModulo"
           [contentStyle]="{'overflow':'visible'}" 
           [width]="800">
@@ -292,10 +292,10 @@
         </p-dialog>
 
         <!-- Dialog confirmação deleção -->
-        <p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
+        <p-confirmDialog [header]="getLabel('Global.Mensagens.Confirmacao')" #dialog>
           <p-footer>
-            <button type="button" id="idNaoDelteFormSistema" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao)'" (click)="dialog.reject()"></button>
-            <button type="button" id="idSimDelteFormSistema" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim)'" (click)="dialog.accept()"></button>
+            <button type="button" id="idNaoDelteFormSistema" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao')" (click)="dialog.reject()"></button>
+            <button type="button" id="idSimDelteFormSistema" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim')" (click)="dialog.accept()"></button>
           </p-footer>
         </p-confirmDialog>
 
@@ -317,7 +317,7 @@
                   required
                   #nomeFuncionalidade='ngModel'
                   (keydown.enter)="adicionarFuncionalidade()"/>
-                <label>Nome *</label>
+                <label translate="Cadastros.Sistema.Nome*">Nome *</label>
                 <div *ngIf="editForm.controls['nomeFuncionalidade'] 
                   && !editForm.controls['nomeFuncionalidade'].valid 
                   && (editForm.controls['nomeFuncionalidade'].touched 
@@ -335,7 +335,7 @@
                   [options]="sistema.modulos"
                   optionLabel="nome"
                   id="idModuloFuncionalidadeSaveFormSistema"
-                  placeholder="Módulo *"
+                  [placeholder]="this.getLabel('Cadastros.Sistema.Modulo*')"
                   name="funcionalidadeModulo"
                   [(ngModel)]="novaFuncionalidade.modulo"
                   [autoWidth]="false"
@@ -409,7 +409,7 @@
                   [options]="sistema.modulos" 
                   optionLabel="nome"
                   id="idModuloFuncionalidadeEditFormSistema"
-                  [placeholder]="this.getLabel('Cadastros.Sistema.Modulo*')'" 
+                  [placeholder]="this.getLabel('Cadastros.Sistema.Modulo*')"
                   name="funcionalidadeModulo"
                   [(ngModel)]="funcionalidadeEmEdicao.modulo" 
                   [autoWidth]="false"

@@ -2,7 +2,7 @@
   <div class="ui-g-12">
     <div class="card card-w-title">
 
-      <h1 translate="Cadastros.Organizacao.Organizacao">Organização</h1>
+      <h1>Organização</h1>
 
       <div class="ui-g">
 
@@ -15,25 +15,25 @@
       <div class="ui-g">
 
         <div class="ui-g-12 ui-md-12 ui-sm-12">
-          <label>{{this.getLabel('Cadastros.Organizacao.Sigla:}} {{ organizacao.sigla }}</label>
+          <label>Sigla: {{ organizacao.sigla }}</label>
         </div>
         <div class="ui-g-12 ui-md-12 ui-sm-12">
-          <label>{{this.getLabel('Cadastros.Organizacao.Nome:}} {{ organizacao.nome }}</label>
+          <label>Nome: {{ organizacao.nome }}</label>
         </div>
         <div class="ui-g-12 ui-md-12 ui-sm-12">
-          <label translate="Cadastros.Organizacao.CNPJ:">CNPJ: </label>
+          <label>CNPJ: </label>
           <input id="idCNPJDetailOrganizacao" type="text" name="cnpj" mask="99.999.999/9999-99" [ngModel]="organizacao.cnpj" style="border-style: none" readonly/>
         </div>
         <div class="ui-g-12 ui-md-12 ui-sm-12">
-          <label>{{this.getLabel('Cadastros.Organizacao.NumeroOcorrencia:}} {{ organizacao.numeroOcorrencia }}</label>
+          <label>Número ocorrência: {{ organizacao.numeroOcorrencia }}</label>
         </div>
         <div class="ui-g-12 ui-md-12 ui-sm-12">
-          <label>{{this.getLabel('Cadastros.Organizacao.Ativo:}} {{ organizacao.ativo ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}</label>
+          <label>Ativo: {{ organizacao.ativo ? 'Sim' : 'Não' }}</label>
         </div>
       </div>
 
       <div class="ui-g" style="margin-bottom: 25px">
-        <h4 translate="Cadastros.Organizacao.Contratos">Contratos</h4>
+          <h4>Contratos</h4>
 
           <app-memory-datatable
             [value]="organizacao.contracts"
@@ -42,12 +42,12 @@
             #contratosDataTable>
             
             <p-column 
-            [header]="this.getLabel('Cadastros.Organizacao.NumeroContrato')"
+              header="Número do Contrato" 
               field="numeroContrato">
             </p-column>
             
             <p-column
-            [header]="this.getLabel('Cadastros.Organizacao.InicioVigencia')" 
+              header="Ínicio Vigência" 
               field="dataInicioVigencia">
               <ng-template 
                 let-col 
@@ -58,7 +58,7 @@
             </p-column>
             
             <p-column 
-              [header]="this.getLabel('Cadastros.Organizacao.FinalVigencia')"
+              header="Final Vigência" 
               field="dataFimVigencia">
               <ng-template 
                 let-col 
@@ -69,7 +69,7 @@
             </p-column>
 
             <p-column 
-              [header]="this.getLabel('Cadastros.Organizacao.Manuais')" 
+              header="Manuais" 
               [sorteble]="true">
               <ng-template let-col let-row="rowData" pTemplate="body">
                 <li *ngFor="let manualContrato of row.manualContrato">
@@ -79,13 +79,13 @@
             </p-column>
             
             <p-column 
-              [header]="this.getLabel('Cadastros.Organizacao.Ativo')" 
+              header="Ativo" 
               field="ativo">
               <ng-template 
                 let-col 
                 let-ativo="rowData" 
                 pTemplate="body">
-                {{ ativo[col.field] ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
+                {{ ativo[col.field] ? 'Sim' : 'Não' }}
               </ng-template>
             </p-column>
           </app-memory-datatable>
@@ -93,7 +93,7 @@
         </div>
       <div class="ui-g">
         <div class="ui-g-3">
-          <button pButton type="button" id="idBtnVoltarDetailOrganizacao" [label]="this.getLabel('Global.Botoes.Voltar')" routerLink="/organizacao"></button>
+          <button pButton type="button" id="idBtnVoltarDetailOrganizacao" label="Voltar" routerLink="/organizacao"></button>
         </div>
       </div>
     </div>

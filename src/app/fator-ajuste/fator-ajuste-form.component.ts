@@ -40,7 +40,15 @@ export class FatorAjusteFormComponent implements OnInit, OnDestroy {
     private fatorAjusteService: FatorAjusteService,
     private manualService: ManualService,
     private translate: TranslateService
-  ) {}
+  ) { }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   ngOnInit() {
     this.isSaving = false;

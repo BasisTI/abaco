@@ -1,13 +1,13 @@
 <div class="ui-g ui-fluid">
     <div class="ui-g-12">
         <div class="card card-w-title">
-            <h1>{{ organizacao.id ? this.getLabel('Cadastros.Organizacao.EditarOrganizacao') : this.getLabel('Cadastros.Organizacao.IncluirOrganizacao') }}
+            <h1>{{ organizacao.id ? this.getLabel('Cadastros.Organizacao.EditarOrganizacao') : this.getLabel('Cadastros.Organizacao.IncluirOrganizacao') }}</h1>
             <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
                 <div class="ui-g">
 
                     <div class="ui-g-12" style="margin-bottom: 25px">
                         <label translate="Cadastros.Organizacao.LogoOrganizacao">Logo da Organização</label>
-                        <p-fileUpload #fileInput maxFileSize="5242880" chooseLabel="Selecionar arquivo"
+                        <p-fileUpload #fileInput maxFileSize="5242880" [chooseLabel]="this.getLabel('Cadastros.Organizacao.SelecionarArquivo')"
                                       (onSelect)="fileUpload($event)"
                                       accept="image/*" id="idLogoOrganizacaoFormOrganizacao" [showUploadButton]="false"
                                       [showCancelButton]="false"
@@ -26,7 +26,7 @@
               <input type="text" name="nomeOrganizacao" maxlength="80" id="idNomeFormOrganizacao" required
                      [(ngModel)]="organizacao.nome"
                      pInputText #nomeOrganizacao='ngModel'/>
-              <label>Nome *</label>
+              <label translate="Cadastros.Organizacao.Nome*">Nome *</label>
               <div *ngIf="editForm.controls['nomeOrganizacao'] 
                   && !editForm.controls['nomeOrganizacao'].valid 
                   && (editForm.controls['nomeOrganizacao'].touched 
@@ -41,7 +41,7 @@
             <span class="md-inputfield">
               <input type="text" name="siglaOrganizacao" id="idSiglaFormOrganizacao" [(ngModel)]="organizacao.sigla"
                      pInputText maxlength="255" #siglaOrganizacao='ngModel' required/>
-              <label>Sigla*</label>
+              <label translate="Cadastros.Organizacao.Sigla*">Sigla*</label>
               <div *ngIf="editForm.controls['siglaOrganizacao'] 
                   && !editForm.controls['siglaOrganizacao'].valid 
                   && (editForm.controls['siglaOrganizacao'].touched 
@@ -57,11 +57,11 @@
               <input type="text" id="idCNPJFormOrganizacao" name="cnpjOrganizacao" maxlength="18" minlength="14"
                      mask="99.999.999/9999-99"
                      pattern="[0-9]+$" [(ngModel)]="organizacao.cnpj" pInputText required/>
-              <label>CNPJ*</label>
+              <label translate="Cadastros.Organizacao.CNPJ*">CNPJ*</label>
               <div *ngIf="editForm.controls['cnpjOrganizacao'] 
               && !editForm.controls['cnpjOrganizacao'].valid 
               && (editForm.controls['cnpjOrganizacao'].touched 
-              || editForm.submitted)" class="ui-message ui-messages-error">
+              || editForm.submitted)" class="ui-message ui-messages-error" translate="Cadastros.Organizacao.Mensagens.msgCNPJInvalido">
                 CNPJ Inválido!
               </div>
             </span>
@@ -71,34 +71,34 @@
             <span class="md-inputfield">
               <input type="text" maxlength="250" id="idNumeroOcorrenciaFormOrganizacao" name="numeroOcorrencia"
                      [(ngModel)]="organizacao.numeroOcorrencia" pInputText/>
-              <label>Número da Ocorrência</label>
+              <label translate="Cadastros.Organizacao.NumeroOcorrencia">Número da Ocorrência</label>
             </span>
                     </div>
 
                     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                         <div class="ui-g">
                             <div class="ui-g-1 ui-md-1 ui-sm-12">
-                                <label>Ativo:</label>
+                                <label translate="Cadastros.Organizacao.Ativo:">Ativo:</label>
                             </div>
                             <div class="ui-g-1 ui-md-1 ui-sm-12">
                                 <p-radioButton name="org_ativo" id="idAtivoSimFormOrganizacao" [value]="true"
-                                               label="Sim" [(ngModel)]="organizacao.ativo"></p-radioButton>
+                                               [label]="this.getLabel('Global.Botoes.Sim')" [(ngModel)]="organizacao.ativo"></p-radioButton>
                             </div>
                             <div class="ui-g-1 ui-md-1 ui-sm-12">
                                 <p-radioButton name="org_ativo" id="idAtivoNaoFormOrganizacao" [value]="false"
-                                               label="Não" [(ngModel)]="organizacao.ativo"></p-radioButton>
+                                [label]="this.getLabel('Global.Botoes.Nao')" [(ngModel)]="organizacao.ativo"></p-radioButton>
                             </div>
                         </div>
                     </div>
 
                     <div class="ui-g">
-                        <h4 style="margin-bottom: 0px; margin-top: 0px;">
+                        <h4 style="margin-bottom: 0px; margin-top: 0px;" translate="Cadastros.Organizacao.Contratos*">
                             Contratos*
                         </h4>
 
                         <div class="ui-g ui-md-12" style="justify-content: flex-end">
                             <div class="ui-md-2">
-                                <app-blue-button buttonLabel="Novo Contrato" buttonIcon="ui-icon-add"
+                                <app-blue-button [buttonLabel]="this.getLabel('Cadastros.Organizacao.Botoes.NovoContrato')" buttonIcon="ui-icon-add"
                                                  id="idBtnNovoContratoFormOrganizacao"
                                                  (click)="abrirDialogCadastroContrato(editForm1.resetForm())">
                                 </app-blue-button>
@@ -108,27 +108,27 @@
                             <app-memory-datatable [value]="organizacao.contracts" (buttonClick)="datatableClick($event)"
                                                   disableClone="true">
 
-                                <p-column header="Número do Contrato" field="numeroContrato">
+                                <p-column [header]="this.getLabel('Cadastros.Organizacao.NumeroContrato')" field="numeroContrato">
                                 </p-column>
 
-                                <p-column header="Início Vigência" field="dataInicioVigencia">
+                                <p-column [header]="this.getLabel('Cadastros.Organizacao.InicioVigencia')" field="dataInicioVigencia">
                                     <ng-template let-col let-dataInicioVigencia="rowData" pTemplate="body">
                                         {{ dataInicioVigencia[col.field] | date: 'dd/MM/y' }}
                                     </ng-template>
                                 </p-column>
 
-                                <p-column header="Final Vigência" field="dataFimVigencia">
+                                <p-column [header]="this.getLabel('Cadastros.Organizacao.FinalVigencia')" field="dataFimVigencia">
                                     <ng-template let-col let-dataFimVigencia="rowData" pTemplate="body">
                                         {{ dataFimVigencia[col.field] | date: 'dd/MM/y' }}
                                     </ng-template>
                                 </p-column>
 
-                                <p-column header="Dias de Garantia" field="diasDeGarantia">
+                                <p-column [header]="this.getLabel('Cadastros.Organizacao.DiasGarantia')" field="diasDeGarantia">
                                 </p-column>
 
-                                <p-column header="Ativo" field="ativo">
+                                <p-column [header]="this.getLabel('Cadastros.Organizacao.Ativo')" field="ativo">
                                     <ng-template let-col let-ativo="rowData" pTemplate="body">
-                                        {{ ativo[col.field] ? 'Sim' : 'Não' }}
+                                        {{ ativo[col.field] ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
                                     </ng-template>
                                 </p-column>
 
@@ -157,7 +157,7 @@
             </form>
             <form name="editForm1" role="form" novalidate (ngSubmit)="save(editForm1)" #editForm1="ngForm">
 
-                <p-dialog header="Contrato" [(visible)]="mostrarDialogCadastroContrato"
+                <p-dialog [header]="this.getLabel('Cadastros.Organizacao.Contrato')" [(visible)]="mostrarDialogCadastroContrato"
                           (onHide)="fecharContrato(editForm1.resetForm())"
                           [contentStyle]="{'overflow':'visible'}"
                           [width]="900">
@@ -173,12 +173,12 @@
                         id="idNumeroContratoContratoSaveFormOrganizacao"
                         [(ngModel)]="novoContrato.numeroContrato"
                         pInputText required autofocus=""/>
-                <label>Número do Contrato *</label>
+                <label translate="Cadastros.Organizacao.CadastroContrato.NumeroContrato*">Número do Contrato *</label>
                  <div *ngIf="this.validaNumeroContrato || (editForm1.controls['numeroContrato']
                                         && !editForm1.controls['numeroContrato'].valid
                                         && (editForm1.controls['numeroContrato'].touched
-                                        || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                    Campo obrigatório.
+                                        || editForm1.submitted))" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                                Campo obrigatório.
                             </div>
               </span>
                         </div>
@@ -190,12 +190,12 @@
                                         [(ngModel)]="novoContrato.dataInicioVigencia" [monthNavigator]="true"
                                         [yearNavigator]="true" required>
                             </p-calendar>
-                            <label>Data de Início da Vigência *</label>
+                            <label translate="Cadastros.Organizacao.CadastroContrato.DataInicioVigencia*">Data de Início da Vigência *</label>
                             <div *ngIf="this.validaDataInicio || (editForm1.controls['dataInicioVigenciaContrato']
                                         && !editForm1.controls['dataInicioVigenciaContrato'].valid
                                         && (editForm1.controls['dataInicioVigenciaContrato'].touched
-                                        || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                    Campo obrigatório.
+                                        || editForm1.submitted))" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                                Campo obrigatório.
                         </div>
                         </span>
                         </div>
@@ -208,12 +208,12 @@
                                         [yearNavigator]="true"
                                         required>
                             </p-calendar>
-                            <label>Data Final da Vigência *</label>
+                            <label translate="Cadastros.Organizacao.CadastroContrato.DataFinalVigencia*">Data Final da Vigência *</label>
                             <div *ngIf="this.validaDataFinal || (editForm1.controls['dataFimVigenciaContrato']
                                         && !editForm1.controls['dataFimVigenciaContrato'].valid
                                         && (editForm1.controls['dataFimVigenciaContrato'].touched
-                                        || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                    Campo obrigatório.
+                                        || editForm1.submitted))" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                            Campo obrigatório.
                         </div>
                         </span>
                         </div>
@@ -225,13 +225,13 @@
                                     name="diasDeGarantia"
                                     id="idDiasGarantiaContratoSaveFormOrganizacao"
                                     [(ngModel)]="novoContrato.diasDeGarantia"
-                                    placeholder="Dias de garantia *"
+                                    [placeholder]="this.getLabel('Cadastros.Organizacao.CadastroContrato.DiasGarantia*')"
                                     pInputText
                                     required/>
                                 <div *ngIf="this.validaDiasGarantia || (editForm1.controls['diasDeGarantia']
                                                 && !editForm1.controls['diasDeGarantia'].valid
                                                 && (editForm1.controls['diasDeGarantia'].touched
-                                                || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                                || editForm1.submitted))" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                                     Campo obrigatório.
                                 </div>
                             </span>
@@ -240,17 +240,17 @@
                         <div class="ui-g-6" style="margin-bottom: 25px">
                             <div class="ui-g">
                                 <div class="ui-g-6 ui-md-2">
-                                    <label>Ativo:</label>
+                                    <label translate="Cadastros.Organizacao.CadastroContrato.Ativo:">Ativo:</label>
                                 </div>
                                 <div class="ui-g-12 ui-md-2">
                                     <p-radioButton name="contrato_ativo" 
                                     [(ngModel)]="ativo" [value]="true"
                                                 id="idAtivoSimContratoSaveFormOrganizacao"
-                                                label="Sim">
+                                                [label]="this.getLabel('Global.Botoes.Sim')">
                                     </p-radioButton>
                                 </div>
                                 <div class="ui-g-12 ui-md-2">
-                                    <p-radioButton name="contrato_ativo" [value]="false" label="Não"
+                                    <p-radioButton name="contrato_ativo" [value]="false" [label]="this.getLabel('Global.Botoes.Nao')"
                                                 id="idAtivoNaoContratoSaveFormOrganizacao"
                                                 [(ngModel)]="ativo">
                                     </p-radioButton>
@@ -259,11 +259,11 @@
                         </div>
                     </div>
 
-                    <p-fieldset legend="Manuais" [toggleable]="true" [collapsed]="true">
+                    <p-fieldset [legend]="this.getLabel('Cadastros.Organizacao.Manuais')" [toggleable]="true" [collapsed]="true">
                         <div class="ui-g-12" style="margin-bottom: 25px">
                             <p-dropdown [filter]="true" [options]="manuais" optionLabel="nome"
                                 id="idManuais"
-                                placeholder="Manual *" name="manualDropdownNovo" [(ngModel)]="manualContratoNovo.manual"
+                                [placeholder]="this.getLabel('Cadastros.Organizacao.CadastroContrato.Manual*')" name="manualDropdownNovo" [(ngModel)]="manualContratoNovo.manual"
                                 [autoWidth]="false"
                                 (onChange)="validarManual()" dataKey="id" required [resetFilterOnHide]="false"
                                 #ctrl="ngModel">
@@ -272,7 +272,7 @@
                                 <div *ngIf="this.validaManual || (editForm1.controls['manualDropdownNovo']
                                     && !editForm1.controls['manualDropdownNovo'].valid
                                     && (editForm1.controls['manualDropdownNovo'].touched
-                                    || editForm1.submitted))" class="ui-message ui-messages-error">
+                                    || editForm1.submitted))" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                                         Campo obrigatório.
                             </div>
 
@@ -285,12 +285,12 @@
                                         [(ngModel)]="manualContratoNovo.dataInicioVigencia" [monthNavigator]="true"
                                         [yearNavigator]="true" required>
                             </p-calendar>
-                            <label>Data de Início da Vigência *</label>
+                            <label translate="Cadastros.Organizacao.CadastroContrato.DataInicioVigencia*">Data de Início da Vigência *</label>
                             <div *ngIf="this.validaDataInicio || (editForm1.controls['dataInicioVigenciaContrato']
                                         && !editForm1.controls['dataInicioVigenciaContrato'].valid
                                         && (editForm1.controls['dataInicioVigenciaContrato'].touched
-                                        || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                    Campo obrigatório.
+                                        || editForm1.submitted))" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                                Campo obrigatório.
                         </div>
                         </span>
                         </div>
@@ -303,12 +303,12 @@
                                         [yearNavigator]="true"
                                         required>
                             </p-calendar>
-                            <label>Data Final da Vigência *</label>
+                            <label translate="Cadastros.Organizacao.CadastroContrato.DataFinalVigencia*">Data Final da Vigência *</label>
                             <div *ngIf="this.validaDataFinal || (editForm1.controls['dataFimVigenciaContrato']
                                         && !editForm1.controls['dataFimVigenciaContrato'].valid
                                         && (editForm1.controls['dataFimVigenciaContrato'].touched
-                                        || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                    Campo obrigatório.
+                                        || editForm1.submitted))" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                            Campo obrigatório.
                         </div>
                         </span>
                         </div>
@@ -316,19 +316,19 @@
                         <div class="ui-g-6" style="margin-bottom: 25px">
                             <div class="ui-g">
                                 <div class="ui-g-12 ui-md-2">
-                                    <label>Ativo:</label>
+                                    <label translate="Cadastros.Organizacao.CadastroContrato.Ativo:">Ativo:</label>
                                 </div>
                                 <div class="ui-g-12 ui-md-2">
                                     <p-radioButton name="manual_ativo" 
                                                 [(ngModel)]="manualContratoNovo.ativo" 
                                                 [value]="true"
                                                 id="idAtivoSimManual"
-                                                label="Sim">
+                                                [label]="this.getLabel('Global.Botoes.Sim')">
                                     </p-radioButton>
                                 </div>
                                 <div class="ui-g-12 ui-md-2">
                                     <p-radioButton name="manual_ativo" 
-                                                [value]="false" label="Não"
+                                                [value]="false" [label]="this.getLabel('Global.Botoes.Nao')"
                                                 id="idAtivoNaoManual"
                                                 [(ngModel)]="manualContratoNovo.ativo">
                                     </p-radioButton>
@@ -353,24 +353,24 @@
                             (buttonClick)="manualContratoTableClickNovo($event)"
                             disableClone="true">
 
-                            <p-column header="Manual" field="manual.nome">
+                            <p-column [header]="this.getLabel('Cadastros.Organizacao.Manual')" field="manual.nome">
                             </p-column>
 
-                            <p-column header="Inicio Vigência" field="dataInicioVigencia">
+                            <p-column [header]="this.getLabel('Cadastros.Organizacao.InicioVigencia')" field="dataInicioVigencia">
                                 <ng-template let-col let-dataInicioVigencia="rowData" pTemplate="body">
                                     {{ dataInicioVigencia[col.field] | date: 'dd/MM/y' }}
                                 </ng-template>
                             </p-column>
 
-                            <p-column header="Final Vigência" field="dataFimVigencia">
+                            <p-column [header]="this.getLabel('Cadastros.Organizacao.FinalVigencia')" field="dataFimVigencia">
                                 <ng-template let-col let-dataFimVigencia="rowData" pTemplate="body">
                                         {{ dataFimVigencia[col.field] | date: 'dd/MM/y' }}
                                     </ng-template>
                             </p-column>
 
-                            <p-column header="Ativo" field="ativo">
+                            <p-column [header]="this.getLabel('Cadastros.Organizacao.Ativo')" field="ativo">
                                 <ng-template let-col let-ativo="rowData" pTemplate="body">
-                                    {{ ativo[col.field] ? 'Sim' : 'Não' }}
+                                    {{ ativo[col.field] ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
                                 </ng-template>
                             </p-column>
 
@@ -392,7 +392,7 @@
                     </div>
                 </p-dialog>
             </form>
-            <p-dialog header="Editar Contrato" [(visible)]="mostrarDialogEdicaoContrato"
+            <p-dialog header="this.getLabel('Cadastros.Organizacao.EditarContrato')" [(visible)]="mostrarDialogEdicaoContrato"
                       [contentStyle]="{'overflow':'visible'}"
                       [width]="800">
                 <div class="ui-g">
@@ -402,7 +402,7 @@
                        maxlength="30"
                        name="numeroContrato"
                        [(ngModel)]="contratoEmEdicao.numeroContrato" pInputText/>
-                <label>Número do Contrato</label>
+                <label translate="Cadastros.Organizacao.NumeroContrato">Número do Contrato</label>
               </span>
                     </div>
 
@@ -422,7 +422,7 @@
                             [yearNavigator]="true"
                             dateFormat="dd/mm/yy" yearRange="2000:2050">
                 </p-calendar>
-                <label>Data de Início da Vigência</label>
+                <label translate="Cadastros.Organizacao.DataInicioDaVigencia">Data de Início da Vigência</label>
               </span>
                     </div>
 
@@ -434,7 +434,7 @@
                             dateFormat="dd/mm/yy"
                             yearRange="2000:2050">
                 </p-calendar>
-                <label>Data Final da Vigência</label>
+                <label translate="Cadastros.Organizacao.DataFinalVigencia">Data Final da Vigência</label>
               </span>
                     </div>
 
@@ -443,14 +443,14 @@
                 <input type="text" mask="999" name="diasDeGarantia" id="idDiasGarantiaContratoEditFormOrganizacao"
                        [(ngModel)]="contratoEmEdicao.diasDeGarantia" pInputText
                        pKeyFilter="int"/>
-                <label>Dias de garantia</label>
+                <label translate="Cadastros.Organizacao.DiasGarantia">Dias de garantia</label>
               </span>
                     </div>
 
                     <div class="ui-g-12" style="margin-bottom: 25px">
                         <div class="ui-g">
                             <div class="ui-g-12 ui-md-1">
-                                <label>Ativo</label>
+                                <label translate="Cadastros.Organizacao.Ativo">Ativo</label>
                             </div>
 
                             <p-checkbox name="contrato_ativo" id="idAtivoContratoEditFormOrganizacao" binary="true"
@@ -472,7 +472,7 @@
                     <div class="ui-g-12" style="margin-bottom: 25px">
                         <p-dropdown [filter]="true" [(options)]="manuais" optionLabel="nome"
                             id="idManuais"
-                            placeholder="Manual *" name="manualDropdownContratoEdit" [(ngModel)]="manualContratoEdt.manual"
+                            [placeholder]="this.getLabel('Cadastros.Organizacao.CadastroContrato.Manual*')" name="manualDropdownContratoEdit" [(ngModel)]="manualContratoEdt.manual"
                             [autoWidth]="false"
                             dataKey="id" required [resetFilterOnHide]="false"
                             #ctrl="ngModel">
@@ -481,7 +481,7 @@
                             <div *ngIf="this.validaManual || (editForm1.controls['manualDropdownContratoEdit']
                                 && !editForm1.controls['manualDropdownContratoEdit'].valid
                                 && (editForm1.controls['manualDropdownContratoEdit'].touched
-                                || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                || editForm1.submitted))" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                                     Campo obrigatório.
                         </div>
 
@@ -494,12 +494,12 @@
                                         [(ngModel)]="manualContratoEdt.dataInicioVigencia" [monthNavigator]="true"
                                         [yearNavigator]="true" required>
                             </p-calendar>
-                            <label>Data de Início da Vigência *</label>
+                            <label translate="Cadastros.Organizacao.CadastroContrato.DataInicioVigencia*">Data de Início da Vigência *</label>
                             <div *ngIf="this.validaDataInicio || (editForm1.controls['dataInicioVigenciaContrato']
                                         && !editForm1.controls['dataInicioVigenciaContrato'].valid
                                         && (editForm1.controls['dataInicioVigenciaContrato'].touched
-                                        || editForm1.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                    Campo obrigatório.
+                                        || editForm1.submitted))" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                                Campo obrigatório.
                             </div>
                         </span>
                     </div>
@@ -512,11 +512,11 @@
                                     [yearNavigator]="true"
                                     required>
                         </p-calendar>
-                        <label>Data Final da Vigência *</label>
+                        <label translate="Cadastros.Organizacao.CadastroContrato.DataFinalVigencia*">Data Final da Vigência *</label>
                         <div *ngIf="this.validaDataFinal || (editForm1.controls['dataFimVigenciaContrato']
                                     && !editForm1.controls['dataFimVigenciaContrato'].valid
                                     && (editForm1.controls['dataFimVigenciaContrato'].touched
-                                    || editForm1.submitted))" class="ui-message ui-messages-error">
+                                    || editForm1.submitted))" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                         Campo obrigatório.
                     </div>
                     </span>
@@ -525,19 +525,19 @@
                     <div class="ui-g-6" style="margin-bottom: 25px">
                         <div class="ui-g">
                             <div class="ui-g-12 ui-md-2">
-                                <label>Ativo:</label>
+                                <label translate="Cadastros.Organizacao.Ativo:">Ativo:</label>
                             </div>
                             <div class="ui-g-12 ui-md-2">
                                 <p-radioButton name="manual_ativoEdt" 
                                             [(ngModel)]="manualContratoEdt.ativo" 
                                             [value]="true"
                                             id="idAtivoSimManualEdt"
-                                            label="Sim">
+                                            [label]="this.getLabel('Global.Botoes.Sim')">
                                 </p-radioButton>
                             </div>
                             <div class="ui-g-12 ui-md-2">
                                 <p-radioButton name="manual_ativoEdt" 
-                                            [value]="false" label="Não"
+                                            [value]="false" [label]="this.getLabel('Global.Botoes.Nao')"
                                             id="idAtivoNaoManualEdt"
                                             [(ngModel)]="manualContratoEdt.ativo">
                                 </p-radioButton>
@@ -562,24 +562,24 @@
                         (buttonClick)="manualContratoTableClick($event)"
                         disableClone="true">
 
-                        <p-column header="Manual" field="manual.nome">
+                        <p-column [header]="this.getLabel('Cadastros.Organizacao.Manual')" field="manual.nome">
                         </p-column>
 
-                        <p-column header="Inicio Vigência" field="dataInicioVigencia">
+                        <p-column [header]="this.getLabel('Cadastros.Organizacao.InicioVigencia')" field="dataInicioVigencia">
                             <ng-template let-col let-dataInicioVigencia="rowData" pTemplate="body">
                                 {{ dataInicioVigencia[col.field] | date: 'dd/MM/y' }}
                             </ng-template>
                         </p-column>
 
-                        <p-column header="Final Vigência" field="dataFimVigencia">
+                        <p-column [header]="this.getLabel('Cadastros.Organizacao.FinalVigencia')" field="dataFimVigencia">
                             <ng-template let-col let-dataFimVigencia="rowData" pTemplate="body">
                                     {{ dataFimVigencia[col.field] | date: 'dd/MM/y' }}
                                 </ng-template>
                         </p-column>
 
-                        <p-column header="Ativo" field="ativo">
+                        <p-column [header]="this.getLabel('Cadastros.Organizacao.Ativo')" field="ativo">
                             <ng-template let-col let-ativo="rowData" pTemplate="body">
-                                {{ ativo[col.field] ? 'Sim' : 'Não' }}
+                                {{ ativo[col.field] ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
                             </ng-template>
                         </p-column>
 
@@ -592,7 +592,7 @@
                                           (click)="fecharDialogEditarContrato()"
                                           buttonIcon="ui-arrow-back">
                         </app-white-button>
-                        <!-- <button pButton type="button" [label]="this.getLabel('Global.Botoes.Cancelar')"
+                        <!-- <button pButton type="button" label="Cancelar"
                           (click)="fecharDialogEditarContrato()"></button> -->
                     </div>
 
@@ -606,11 +606,11 @@
                     </div>
                 </div>
             </p-dialog>
-            <p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
+            <p-confirmDialog [header]="getLabel('Global.Mensagens.Confirmacao')" #dialog>
                 <p-footer>
-                    <button type="button" id="idBtnNaoDeleteFormOrganizacao" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao)'"
+                    <button type="button" id="idBtnNaoDeleteFormOrganizacao" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao')"
                             (click)="dialog.reject()"></button>
-                    <button type="button" id="idBtnSimDeleteFormOrganizacao" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim)'"
+                    <button type="button" id="idBtnSimDeleteFormOrganizacao" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim')"
                             (click)="dialog.accept()"></button>
                 </p-footer>
             </p-confirmDialog>
