@@ -328,12 +328,9 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<FuncaoDados> getFuncaoDados() {
-        if (funcaoDados == null){
-            return null;
-        }
-        Set<FuncaoDados> cp = new LinkedHashSet<>();
-        cp.addAll(funcaoDados);
-        return cp;
+        return Optional.ofNullable(this.funcaoDados)
+            .map(lista -> new LinkedHashSet<FuncaoDados>(lista))
+            .orElse(new LinkedHashSet<FuncaoDados>());
     }
 
     public Analise funcaoDados(Set<FuncaoDados> funcaoDados) {
@@ -368,12 +365,9 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<FuncaoTransacao> getFuncaoTransacaos() {
-        if (funcaoTransacaos == null){
-            return null;
-        }
-        Set<FuncaoTransacao> cp = new LinkedHashSet<>();
-        cp.addAll(funcaoTransacaos);
-        return cp;
+        return Optional.ofNullable(this.funcaoTransacaos)
+            .map(lista -> new LinkedHashSet<FuncaoTransacao>(lista))
+            .orElse(new LinkedHashSet<FuncaoTransacao>());
     }
 
     public Analise funcaoTransacaos(Set<FuncaoTransacao> funcaoTransacaos) {
@@ -386,17 +380,9 @@ public class Analise implements Serializable, ReportObject {
     public Analise addFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
         if (funcaoTransacao == null) {
             return this;
-        } else {
-            try {
-                this.funcaoTransacaos.add((FuncaoTransacao) funcaoTransacao.getClone());
-                funcaoTransacao.setAnalise(this);
-            } catch (CloneNotSupportedException e) {
-                log.error(e.getMessage(), e);
-                this.funcaoTransacaos = null;
-            } finally {
-                return this;
-            }
         }
+        this.funcaoTransacaos.add(funcaoTransacao);
+        return this;
     }
 
     public Analise removeFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
@@ -440,7 +426,12 @@ public class Analise implements Serializable, ReportObject {
         if (this.organizacao == null){
             return null;
         }
-        return (Organizacao) organizacao.getClone();
+        try {
+            return (Organizacao) organizacao.clone();
+        } catch (CloneNotSupportedException e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
     }
 
     public String getNomeOrg() {
