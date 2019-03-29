@@ -78,7 +78,7 @@
                             <div class="ui-g" *ngIf="isEdicao">
 
                                 <!-- Inicio dos campos para alteração -->
-                                <!-- <fieldset class="ui-g-12 ui-md-12 ui-sm-12">
+                                <div class="ui-g-12 ui-md-12 ui-sm-12">
 
                                     <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px">
                                         <label>Organização</label>
@@ -130,7 +130,7 @@
                                         </p-dropdown>
                                     </div>
 
-                                </fieldset> -->
+                                </div>
                                 <!-- Fim dos campos para alteração -->
                             </div>
 
@@ -200,7 +200,7 @@
                                     </p-dropdown>
                                 </div>
                                 
-                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" *ngIf="validacaoCampos">
                                     <label>Método de Contagem *</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -216,7 +216,36 @@
                                     </p-dropdown>
                                 </div>
 
-                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" *ngIf="validacaoCampos">
+                                    <label>Tipo de Contagem *</label>
+                                    <p-dropdown
+                                            [filter]="true"
+                                            required
+                                            id="idTipoContagemFormAnalise"
+                                            name="tiposAnalise"
+                                            placeholder="Selecione..."
+                                            [options]="tiposAnalise"
+                                            [(ngModel)]="analise.tipoAnalise"
+                                            [autoWidth]="false">
+                                    </p-dropdown>
+                                </div>
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px" *ngIf="!validacaoCampos">
+                                    <label>Método de Contagem *</label>
+                                    <p-dropdown
+                                            [filter]="true"
+                                            required
+                                            id="idMetodoContagemFormAnalise"
+                                            placeholder="{{ needContratoDropdownPlaceholder() }}"
+                                            name="metodoContagem"
+                                            [options]="metodosContagem"
+                                            [disabled]="!this.analise.contrato"
+                                            [(ngModel)]="analise.metodoContagem"
+                                            [autoWidth]="false"
+                                            [disabled]="!this.analise.contrato">
+                                    </p-dropdown>
+                                </div>
+
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px" *ngIf="!validacaoCampos">
                                     <label>Tipo de Contagem *</label>
                                     <p-dropdown
                                             [filter]="true"
