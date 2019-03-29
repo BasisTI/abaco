@@ -549,11 +549,13 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     private formataData(data: Date): String {
-        return `${data.getDay()}/${(data.getMonth() + 1).toString}/${data.getFullYear}`;
+        debugger;
+        let dt = `   ${data.getDay()}/${(data.getMonth() + 1)}/${data.getFullYear()}`;
+        return dt;
     }
 
     private formataBoleano(bool: Boolean): String {
-        return bool ? 'Ativo' : 'Inativo';
+        return bool ? '    - Ativo' : ' - Inativo';
     }
 
     /**
