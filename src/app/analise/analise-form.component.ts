@@ -496,6 +496,34 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             item.dataFimVigencia = new Date(item.dataFimVigencia)
         });
 
+        this.ordenarManuais(contrato);
+        this.resetManuais();
+        this.populaComboManual(contrato);
+    }
+
+    /**
+     * Popula o dropdown de manuais
+     * @param contrato Contrato de uma organização
+     */
+    private populaComboManual(contrato: Contrato) {
+        contrato.manualContrato.forEach((item: ManualContrato) => {
+            const entity: Manual = new Manual();
+            const m: Manual = entity.copyFromJSON(item.manual);
+            this.manuais.push(item.manual);
+            this.manuaisCombo.push({
+                label: `${m.nome} ${this.formataData(item.dataInicioVigencia)} - ` +
+                        `${this.formataData(item.dataFimVigencia)}`
+                        + this.formataBoleano(item.ativo),
+                value: m.id === this.analise.manual.id ? this.analise.manual : m
+            });
+        });
+    }
+
+    /**
+     * Ordena os manuais referentes a um contrato
+     * @param contrato Contrato que terá seus manuais ordenados
+     */
+    private ordenarManuais(contrato: Contrato) {
         contrato.manualContrato = contrato.manualContrato.sort((a, b): number => {
             if ((a.dataInicioVigencia.getTime() == b.dataInicioVigencia.getTime())) {
                 if (a.dataFimVigencia.getTime() < b.dataFimVigencia.getTime()) {
@@ -509,23 +537,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             }
             return 1;
         });
-
-
-        this.resetManuais();
-        contrato.manualContrato.forEach((item: ManualContrato) => {
-
-            const entity: Manual = new Manual();
-            let m: Manual = entity.copyFromJSON(item.manual);
-
-            this.manuais.push(item.manual);
-            this.manuaisCombo.push({
-                label: m.nome,
-                value: m.id == this.analise.manual.id ? this.analise.manual : m
-            });
-
-        });
     }
-
 
     resetManuais() {
         this.manuais = [];
@@ -534,6 +546,15 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     manualSelecionado(manual: Manual) {
         this.analise.esforcoFases = _.cloneDeep(manual.esforcoFases);
+    }
+
+    private formataData(data: Date): String {
+        let dt = `   ${data.getDay()}/${(data.getMonth() + 1)}/${data.getFullYear()}`;
+        return dt;
+    }
+
+    private formataBoleano(bool: Boolean): String {
+        return bool ? '    - Ativo' : ' - Inativo';
     }
 
     /**
