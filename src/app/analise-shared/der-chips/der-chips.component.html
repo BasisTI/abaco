@@ -25,13 +25,6 @@
     
   </div>
 
-  <div class="ui-g-4 ui-md-4 ui-sm-12" *ngIf="relacionarDers">
-    <app-analise-referenciador-ar
-      (funcaoDadosReferenciadaEvent)="funcaoDadosReferenciada($event)"
-      (dersReferenciadosEvent)="dersReferenciados($event)">
-    </app-analise-referenciador-ar>
-  </div>
-
   <div class="ui-g-2 ui-md-2 ui-sm-12">
     <button 
       pButton 
@@ -53,7 +46,14 @@
     </button>
   </div>
 
-  <div class="ui-g-12 ui-md-12 ui-sm-12">
+  <div class="ui-g-6 ui-md-6 ui-sm-12" *ngIf="relacionarDers">
+    <app-analise-referenciador-ar
+      (funcaoDadosReferenciadaEvent)="funcaoDadosReferenciada($event)"
+      (dersReferenciadosEvent)="dersReferenciados($event)">
+    </app-analise-referenciador-ar>
+  </div>
+
+  <div class="ui-g-6 ui-md-6 ui-sm-12">
     <span>
       {{ showTotal() }}
     </span>
