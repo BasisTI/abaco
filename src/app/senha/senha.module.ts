@@ -18,6 +18,14 @@ import {
 
 import { SenhaComponent, SenhaFormComponent, senhaRoute, SenhaService } from './';
 
+import { HttpClient } from '@angular/common/http';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
 @NgModule({
     imports: [
         CommonModule,
@@ -33,7 +41,14 @@ import { SenhaComponent, SenhaFormComponent, senhaRoute, SenhaService } from './
         InputTextModule,
         ConfirmDialogModule,
         PasswordModule,
-        SecurityModule.forRoot()
+        SecurityModule.forRoot(),
+        TranslateModule.forChild({
+            loader: {
+              provide: TranslateLoader,
+              useFactory: (createTranslateLoader),
+              deps: [HttpClient]
+            }
+          })
     ],
     declarations: [
         SenhaFormComponent,

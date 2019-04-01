@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
@@ -20,8 +21,17 @@ export class FatorAjusteComponent {
   constructor(
     private router: Router,
     private fatorAjusteService: FatorAjusteService,
-    private confirmationService: ConfirmationService
-  ) {}
+    private confirmationService: ConfirmationService,
+    private translate: TranslateService
+  ) { }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
@@ -42,7 +52,7 @@ export class FatorAjusteComponent {
 
   confirmDelete(id: any) {
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja excluir o registro?',
+      message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
       accept: () => {
         this.fatorAjusteService.delete(id).subscribe(() => {
           this.datatable.refresh(undefined);

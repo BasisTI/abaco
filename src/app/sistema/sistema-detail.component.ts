@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
@@ -16,8 +17,17 @@ export class SistemaDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private sistemaService: SistemaService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private translate: TranslateService
+  ) { }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   ngOnInit() {
     this.subscription = this.route.params.subscribe((params) => {

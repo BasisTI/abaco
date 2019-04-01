@@ -1,15 +1,16 @@
-import {MessageUtil} from './../util/message.util';
-import {ExportacaoUtil} from './../util/exportacao.util';
-import {ExportacaoUtilService} from '../util/service/exportacao-util.service';
-import {Component, OnInit, EventEmitter, Input} from '@angular/core';
-import {MenuItem, DataTable} from 'primeng/primeng';
-import {HttpService} from '@basis/angular-components';
-import {environment} from '../../environments/environment';
-import {NgBlockUI, BlockUI} from 'ng-block-ui';
-import {PageNotificationService} from '@basis/angular-components';
-import {PanelMenuModule} from 'primeng/components/panelmenu/panelmenu';
-import {ElasticQuery} from '../shared/elastic-query';
-import {ViewChild, ElementRef, AfterViewInit} from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { MessageUtil } from './../util/message.util';
+import { ExportacaoUtil } from './../util/exportacao.util';
+import { ExportacaoUtilService } from '../util/service/exportacao-util.service';
+import { Component, OnInit, EventEmitter, Input } from '@angular/core';
+import { MenuItem, DataTable } from 'primeng/primeng';
+import { HttpService } from '@basis/angular-components';
+import { environment } from '../../environments/environment';
+import { NgBlockUI, BlockUI } from 'ng-block-ui';
+import { PageNotificationService } from '@basis/angular-components';
+import { PanelMenuModule } from 'primeng/components/panelmenu/panelmenu';
+import { ElasticQuery } from '../shared/elastic-query';
+import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 
 @Component({
     selector: 'app-botoes-exportacao',
@@ -31,8 +32,17 @@ export class BotoesExportacaoComponent implements OnInit {
 
     constructor(
         private http: HttpService,
-        private pageNotificationService: PageNotificationService
+        private pageNotificationService: PageNotificationService,
+        private translate: TranslateService
     ) {
+    }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
     }
 
 
@@ -84,17 +94,17 @@ export class BotoesExportacaoComponent implements OnInit {
         );
     }
 
-//   private addGenerateMessage(isImprimir: boolean) {
-//     if (isImprimir)
-//         this.pageNotificationService.addCreateMsg('Exportando pesquisa!');
-//     else
-//         this.pageNotificationService.addCreateMsg('Imprimindo pesquisa!');
-//   }
+    //   private addGenerateMessage(isImprimir: boolean) {
+    //     if (isImprimir)
+    //         this.pageNotificationService.addCreateMsg('Exportando pesquisa!');
+    //     else
+    //         this.pageNotificationService.addCreateMsg('Imprimindo pesquisa!');
+    //   }
     private addErrorMessage(isImprimir: boolean) {
         if (isImprimir)
-            this.pageNotificationService.addErrorMessage('Erro ao imprimir pesquisa!');
+            this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.ErroImprimirPesquisa'));
         else
-            this.pageNotificationService.addErrorMessage('Erro ao exportar pesquisa!');
+            this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.ErroExportarpesquisa'));
     }
 }
 
@@ -111,20 +121,20 @@ export class PanelMenuDemo {
                     label: 'New',
                     icon: 'fa-plus',
                     items: [
-                        {label: 'Project'},
-                        {label: 'Other'},
+                        { label: 'Project' },
+                        { label: 'Other' },
                     ]
                 },
-                    {label: 'Open'},
-                    {label: 'Quit'}
+                { label: 'Open' },
+                { label: 'Quit' }
                 ]
             },
             {
                 label: 'Edit',
                 icon: 'fa-edit',
                 items: [
-                    {label: 'Undo', icon: 'fa-mail-forward'},
-                    {label: 'Redo', icon: 'fa-mail-reply'}
+                    { label: 'Undo', icon: 'fa-mail-forward' },
+                    { label: 'Redo', icon: 'fa-mail-reply' }
                 ]
             },
             {
@@ -161,15 +171,15 @@ export class PanelMenuDemo {
                         label: 'Edit',
                         icon: 'fa-refresh',
                         items: [
-                            {label: 'Save', icon: 'fa-save'},
-                            {label: 'Update', icon: 'fa-save'},
+                            { label: 'Save', icon: 'fa-save' },
+                            { label: 'Update', icon: 'fa-save' },
                         ]
                     },
                     {
                         label: 'Other',
                         icon: 'fa-phone',
                         items: [
-                            {label: 'Delete', icon: 'fa-minus'}
+                            { label: 'Delete', icon: 'fa-minus' }
                         ]
                     }
                 ]

@@ -4,7 +4,7 @@
 
     <div class="card card-w-title">
 
-      <h1>Tipo de Equipe</h1>
+      <h1 translate="Cadastros.TipoEquipe.TipoEquipe">Tipo de Equipe</h1>
       <div class="ui-g">
 
         <div class="ui-g-12 ui-md-12 ui-sm-12">
@@ -12,7 +12,7 @@
             <input type="text" pInputText class="ui-inputtext" name="filtroTipoEquipe" maxlength="250" [(ngModel)]="elasticQuery.value"
               (keyup.enter)="datatable.refresh(elasticQuery.query)" #filter/>
               
-            <label>Descrição</label>
+              <label translate="Cadastros.TipoEquipe.Descricao">Descrição</label>
           </span>
         </div>
 
@@ -23,17 +23,17 @@
         <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
 
           <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-white-button buttonLabel="Limpar Pesquisa" buttonIcon="ui-icon-clear-all" (click)="limparPesquisa()">
+            <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.LimparPesquisa')" buttonIcon="ui-icon-clear-all" (click)="limparPesquisa()">
             </app-white-button>
           </div>
 
           <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-blue-button buttonLabel="Pesquisar" buttonIcon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)">
+            <app-blue-button [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')" buttonIcon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)">
             </app-blue-button>
           </div>
 
           <div class="uui-g-2 ui-md-2 ui-sm-12">
-            <app-green-button buttonLabel="Novo" buttonIcon="ui-icon-add" routerLink="/admin/tipoEquipe/new">
+            <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Novo')" buttonIcon="ui-icon-add" routerLink="/admin/tipoEquipe/new">
             </app-green-button>
           </div>
           
@@ -46,13 +46,13 @@
           [showPaginationFooter]="true" 
           #datatable>
 
-          <p-column header="Código" field="id" [sortable]="true" [style]="{'word-wrap':'break-word', 'width': '15%'}">
+          <p-column [header]="getLabel('Cadastros.TipoEquipe.Codigo')" field="id" [sortable]="true" [style]="{'word-wrap':'break-word', 'width': '15%'}">
           </p-column>
 
-          <p-column header="Nome" field="nome" [sortable]="true" [style]="{'word-wrap':'break-word', 'width': '35%'}">
+          <p-column [header]="getLabel('Cadastros.TipoEquipe.Nome')" field="nome" [sortable]="true" [style]="{'word-wrap':'break-word', 'width': '35%'}">
           </p-column>
 
-          <p-column header="Organização" [style]="{'word-wrap':'break-word', 'width': '50%'}" [sortable]="true" field="organizacoes.nome">
+          <p-column [header]="getLabel('Cadastros.TipoEquipe.Organizacao')" [style]="{'word-wrap':'break-word', 'width': '50%'}" [sortable]="true" field="organizacoes.nome">
             <ng-template let-col let-row="rowData" pTemplate="body">
               <li *ngFor="let org of row.organizacoes">
                 {{ org.nome }}
@@ -72,9 +72,9 @@
   </div>
 </div>
 
-<p-confirmDialog header="Confirmação" #dialog>
+<p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
   <p-footer>
-    <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-    <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+    <button type="button" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao')" (click)="dialog.reject()"></button>
+    <button type="button" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim')" (click)="dialog.accept()"></button>
   </p-footer>
 </p-confirmDialog>

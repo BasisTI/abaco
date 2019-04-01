@@ -1,7 +1,7 @@
 <div class="ui-g ui-fluid">
     <div class="ui-g-12">
         <div class="card card-w-title">
-            <h1>{{ tipoFase.id ? 'Editar Tipo de Fase' : 'Cadastrar Tipo de Fase' }}</h1>
+            <h1>{{ tipoFase.id ? this.getLabel('Cadastros.TipoFase.EditarTipoFase') : this.getLabel('Cadastros.TipoFase.CadastrarTipoFase') }}</h1>
 
             <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
                 <div class="ui-g" style="margin-bottom: 25px; margin-top: 25px">
@@ -17,12 +17,12 @@
                       pInputText
                       id="idNomeTipoFase"
                       required/>
-              <label>Nome</label>
+              <label translate="Cadastros.TipoFase.Nome">Nome</label>
               <div *ngIf="editForm.controls['nomeTipoFase'] 
                 && !editForm.controls['nomeTipoFase'].valid 
                 && (editForm.controls['nomeTipoFase'].touched 
                 || editForm.submitted)"
-                   class="ui-message ui-messages-error">
+                   class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                 Campo obrigatório.
               </div>
             </span>
@@ -31,11 +31,11 @@
 
                 <div class="ui-g ui-md-12" style="justify-content: center">
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-white-button buttonLabel="Cancelar" routerLink="/tipoFase"
+                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" routerLink="/tipoFase"
                                           id="idBtnCancelarFormTipoFase"></app-white-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"
+                        <app-submit-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" [disabled]="editForm.form.invalid || isSaving"
                                            id="idBtnSalvarFormTipoFase"></app-submit-button>
                     </div>
                 </div>

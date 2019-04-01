@@ -1,7 +1,7 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>{{ sistema.id ? 'Editar Sistema' : 'Cadastrar Sistema' }}</h1>
+      <h1>{{ sistema.id ? this.getLabel('Cadastros.Sistema.EditarSistema') : this.getLabel('Cadastros.Sistema.CadastrarSistema') }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm"
         (keydown.enter)="$event.preventDefault()">
         <div class="ui-g">
@@ -17,12 +17,12 @@
                 pInputText
                 required
                 #siglaSistema='ngModel'/>
-              <label>Sigla *</label>
+              <label translate="Cadastros.Sistema.Sigla*">Sigla *</label>
               <div *ngIf="editForm.controls['siglaSistema'] 
                 && !editForm.controls['siglaSistema'].valid 
                 && (editForm.controls['siglaSistema'].touched 
                 || editForm.submitted)" 
-                class="ui-message ui-messages-error">
+                class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                 Campo obrigatório.
               </div>
             </span>
@@ -39,12 +39,12 @@
                 pInputText
                 required
                 #nomeSistema='ngModel'/>
-              <label>Nome do Sistema *</label>
+              <label translate="Cadastros.Sistema.NomeSistema*">Nome do Sistema *</label>
               <div *ngIf="editForm.controls['nomeSistema'] 
                 && !editForm.controls['nomeSistema'].valid 
                 && (editForm.controls['nomeSistema'].touched 
                 || editForm.submitted)" 
-                class="ui-message ui-messages-error">
+                class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                 Campo obrigatório.
               </div>
             </span>
@@ -56,7 +56,7 @@
                 [filter]="true"
                 id="tipo_sistema"
                 [options]="tipoSistemaOptions"
-                placeholder="Tipo do Sistema *"
+                [placeholder]="getLabel('Cadastros.Sistema.TipoSistema*')"
                 name="tipoSistema"
                 [(ngModel)]="sistema.tipoSistema"
                 [autoWidth]="false"
@@ -67,7 +67,7 @@
                 && !editForm.controls['tipoSistema'].valid
                 && (editForm.controls['tipoSistema'].touched
                 || editForm.submitted)"
-                   class="ui-message-select ui-messages-error-select">
+                   class="ui-message-select ui-messages-error-select" translate="Global.Mensagens.CampoObrigatorio">
                 Campo obrigatório.
               </div>
             </span>
@@ -82,7 +82,7 @@
                 maxlength="100"
                 [(ngModel)]="sistema.numeroOcorrencia" 
                 pInputText/>
-              <label>Número da Ocorrência</label>
+              <label translate="Cadastros.Sistema.NumeroOcorrencia">Número da Ocorrência</label>
             </span>
           </div>
 
@@ -93,7 +93,7 @@
                 id="organizacao_sistema"
                 [options]="organizacaos"
                 optionLabel="nome"
-                placeholder="Organização *"
+                [placeholder]="getLabel('Cadastros.Sistema.Organizacao*')"
                 name="organizacao"
                 [(ngModel)]="sistema.organizacao"
                 [autoWidth]="false"
@@ -105,7 +105,7 @@
                 && !editForm.controls['organizacao'].valid
                 && (editForm.controls['organizacao'].touched
                 || editForm.submitted)"
-                   class="ui-message-select ui-messages-error-select">
+                   class="ui-message-select ui-messages-error-select" translate="Global.Mensagens.CampoObrigatorio">
                 Campo obrigatório.
               </div>
             </span>
@@ -114,14 +114,14 @@
 
         <!-- Módulos -->
         <div class="ui-g">
-          <h4 style="margin-bottom: 0px; margin-top: 0px;">
+          <h4 style="margin-bottom: 0px; margin-top: 0px;" translate="Cadastros.Sistema.Modulos">
             Módulos
           </h4>
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-blue-button 
-                buttonLabel="Novo Módulo" 
+                [buttonLabel]="getLabel('Global.Botoes.NovoModulo')" 
                 buttonIcon="ui-icon-add" 
                 id="idBtnNovoModuloFormSistema"
                 (click)="abrirDialogModulo()">
@@ -142,10 +142,10 @@
             <p-column header="Código"
               [style]="{width: '25%'}">
               <ng-template let-codigo="rowData.id" pTemplate="body">
-                {{ codigo ? codigo : 'Ainda não cadastrado' }}
+                {{ codigo ? codigo : this.getLabel('Cadastros.Sistema.Mensagens.msgAindaNaoCadastrado') }}
               </ng-template>
             </p-column>
-            <p-column header="Nome" field="nome"></p-column>
+            <p-column [header]="this.getLabel('Cadastros.Sistema.Nome')" field="nome"></p-column>
           </app-memory-datatable>
 
         </div>
@@ -177,23 +177,23 @@
             (buttonClick)="datatableClick($event)"
             id="idTabelaFuncionalidadesFormSistema"
             disableClone="true">
-            <p-column header="Módulo" field="modulo.nome"></p-column>
-            <p-column header="Nome" field="nome"></p-column>
+            <p-column [header]="this.getLabel('Cadastros.Sistema.Modulo')" field="modulo.nome"></p-column>
+            <p-column [header]="this.getLabel('Cadastros.Sistema.Nome')" field="nome"></p-column>
           </app-memory-datatable>
         </div>
 
         <!-- Botões salvar e cancelar do fim da página -->
         <div class="ui-g" style="justify-content: center; padding-top: 25px;">
           <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-white-button buttonLabel="Cancelar" id="idBtnCancelarFormSistema" routerLink="/sistema"></app-white-button>
+            <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCancelarFormSistema" routerLink="/sistema"></app-white-button>
           </div>
           <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-submit-button buttonLabel="Salvar" id="idBtnSalvarFormSistema"[disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+            <app-submit-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarFormSistema"[disabled]="editForm.form.invalid || isSaving"></app-submit-button>
           </div>
         </div>
 
         <!-- Dialog módulo -->
-        <p-dialog header="Módulo"
+        <p-dialog [header]="this.getLabel('Cadastros.Sistema.Modulo')"
           [(visible)]="mostrarDialogModulo"
           [contentStyle]="{'overflow':'visible'}"
           [width]="800">
@@ -210,12 +210,12 @@
                   (keydown.enter)="adicionarModulo()"
                   #nomeModulo='ngModel'
                   required/>
-                <label>Nome *</label>
+                <label translate="Cadastros.Sistema.Nome*">Nome *</label>
                 <div *ngIf="editForm.controls['nomeModulo'] 
                   && !editForm.controls['nomeModulo'].valid 
                   && (editForm.controls['nomeModulo'].touched 
                   || editForm.submitted || valido) " 
-                  class="ui-message ui-messages-error">
+                  class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                   Campo obrigatório.
                 </div>
 
@@ -226,14 +226,14 @@
           <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-white-button 
-                buttonLabel="Cancelar" 
+                [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" 
                 id="idBtnCancelarModuloSaveFormSistema"
                 (click)="fecharDialogModulo()">
               </app-white-button>
             </div>
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-green-button 
-                buttonLabel="Salvar" 
+                [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" 
                 id="idBtnSalvarModuloSaveFormSistema"
                 (click)="adicionarModulo()">
               </app-green-button>
@@ -243,7 +243,7 @@
 
         <!-- Dialog Editar módulo -->
         <p-dialog 
-          header="Editar Módulo" 
+          [header]="this.getLabel('Cadastros.Sistema.EditarModulo')" 
           [(visible)]="mostrarDialogEditarModulo"
           [contentStyle]="{'overflow':'visible'}" 
           [width]="800">
@@ -258,12 +258,12 @@
                   id="idNomeModuloEditFormSistema"
                   pInputText 
                   (keydown.enter)="editarModulo()"/>
-                <label>Nome do Módulo</label>
+                <label translate="Cadastros.Sistema.NomeModulo">Nome do Módulo</label>
                 <div *ngIf="(editForm.controls['EditnomeModulo'] 
                   && !editForm.controls['EditnomeModulo'].valid 
                   && (editForm.controls['EditnomeModulo'].touched 
                   || editForm.submitted) || valido)" 
-                  class="ui-message ui-messages-error">
+                  class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                   Campo obrigatório.
                 </div>
               </span>
@@ -274,7 +274,7 @@
 
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-white-button 
-                buttonLabel="Cancelar" 
+                [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" 
                 id="idBtnCancelarModuloEditFormSistema"
                 (click)="fecharDialogEditarModulo()">
               </app-white-button>
@@ -282,7 +282,7 @@
 
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-green-button 
-                buttonLabel="Salvar" 
+                [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" 
                 id="idBtnSalvarModuloEditFormSistema"
                 (click)="editarModulo()">
               </app-green-button>
@@ -292,10 +292,10 @@
         </p-dialog>
 
         <!-- Dialog confirmação deleção -->
-        <p-confirmDialog header="Confirmação" #dialog>
+        <p-confirmDialog [header]="getLabel('Global.Mensagens.Confirmacao')" #dialog>
           <p-footer>
-            <button type="button" id="idNaoDelteFormSistema" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-            <button type="button" id="idSimDelteFormSistema" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+            <button type="button" id="idNaoDelteFormSistema" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao')" (click)="dialog.reject()"></button>
+            <button type="button" id="idSimDelteFormSistema" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim')" (click)="dialog.accept()"></button>
           </p-footer>
         </p-confirmDialog>
 
@@ -317,12 +317,12 @@
                   required
                   #nomeFuncionalidade='ngModel'
                   (keydown.enter)="adicionarFuncionalidade()"/>
-                <label>Nome *</label>
+                <label translate="Cadastros.Sistema.Nome*">Nome *</label>
                 <div *ngIf="editForm.controls['nomeFuncionalidade'] 
                   && !editForm.controls['nomeFuncionalidade'].valid 
                   && (editForm.controls['nomeFuncionalidade'].touched 
                   || editForm.submitted || valido)" 
-                  class="ui-message ui-messages-error">
+                  class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                   Campo obrigatório.
                 </div>
               </span>
@@ -335,7 +335,7 @@
                   [options]="sistema.modulos"
                   optionLabel="nome"
                   id="idModuloFuncionalidadeSaveFormSistema"
-                  placeholder="Módulo *"
+                  [placeholder]="this.getLabel('Cadastros.Sistema.Modulo*')"
                   name="funcionalidadeModulo"
                   [(ngModel)]="novaFuncionalidade.modulo"
                   [autoWidth]="false"
@@ -346,7 +346,7 @@
                   && !editForm.controls['funcionalidadeModulo'].valid 
                   && (editForm.controls['funcionalidadeModulo'].touched 
                   || editForm.submitted || valido)" 
-                  class="ui-message ui-messages-error">
+                  class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                   Campo obrigatório.
                 </div>
               </span>
@@ -357,7 +357,7 @@
 
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-white-button 
-                buttonLabel="Cancelar"
+                [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
                 id="idBtnCancelarFuncionalidadeSaveFormSistema" 
                 (click)="fecharDialogFuncionalidade()">
               </app-white-button>
@@ -365,7 +365,7 @@
 
             <div class="ui-g-2">
               <app-green-button 
-                buttonLabel="Salvar" 
+                [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" 
                 id="idSalvarFuncionalidadeSaveFormSistema"
                 (click)="adicionarFuncionalidade()">
               </app-green-button>
@@ -391,12 +391,12 @@
                   required
                   #nomeFuncionalidade='ngModel'
                   (keydown.enter)="editarFuncionalidade()"/>
-                <label>Nome *</label>
+                <label translate="Cadastros.Sistema.Nome*">Nome *</label>
                 <div *ngIf="editForm.controls['nomeFuncionalidade'] 
                   && !editForm.controls['nomeFuncionalidade'].valid 
                   && (editForm.controls['nomeFuncionalidade'].touched 
                   || editForm.submitted || valido)" 
-                  class="ui-message ui-messages-error">
+                  class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                   Campo obrigatório.
                 </div>
               </span>
@@ -409,7 +409,7 @@
                   [options]="sistema.modulos" 
                   optionLabel="nome"
                   id="idModuloFuncionalidadeEditFormSistema"
-                  placeholder="Módulo *" 
+                  [placeholder]="this.getLabel('Cadastros.Sistema.Modulo*')"
                   name="funcionalidadeModulo"
                   [(ngModel)]="funcionalidadeEmEdicao.modulo" 
                   [autoWidth]="false"
@@ -420,7 +420,7 @@
                   && !editForm.controls['funcionalidadeModulo'].valid 
                   && (editForm.controls['funcionalidadeModulo'].touched 
                   || editForm.submitted || valido)" 
-                  class="ui-message ui-messages-error">
+                  class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                   Campo obrigatório.
                 </div>
               </span>
@@ -431,7 +431,7 @@
 
             <div class="ui-g-2">
               <app-white-button 
-                buttonLabel="Cancelar" 
+                [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" 
                 id="idBtnCancelarFuncionalidadeEditFormSistema"
                 (click)="fecharDialogEditarFuncionalidade()">
               </app-white-button>
@@ -439,7 +439,7 @@
 
             <div class="ui-g-2">
               <app-green-button 
-                buttonLabel="Salvar" 
+                [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" 
                 id="idBtnSalvarFuncionalidadeEditFormSistema"
                 (click)="editarFuncionalidade()">
               </app-green-button>

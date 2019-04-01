@@ -4,6 +4,7 @@ import {Subscription} from 'rxjs/Rx';
 
 import {User} from './user.model';
 import {UserService} from './user.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'jhi-user-detail',
@@ -16,8 +17,17 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
     constructor(
         private userService: UserService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private translate: TranslateService
     ) {
+    }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
     }
 
     ngOnInit() {
@@ -34,22 +44,22 @@ export class UserDetailComponent implements OnInit, OnDestroy {
                     authority.artificialId = index;
                     switch (index) {
                         case 0: {
-                            authority.description = 'Administrador';
+                            authority.description = this.getLabel('Cadastros.Usuarios.Administrador');
                             break;
                         }
 
                         case 1: {
-                            authority.description = 'Usuário';
+                            authority.description = this.getLabel('Cadastros.Usuarios.Usuario');
                             break;
                         }
 
                         case 2: {
-                            authority.description = 'Observador';
+                            authority.description = this.getLabel('Cadastros.Usuarios.Observador');
                             break;
                         }
 
                         case 3: {
-                            authority.description = 'Analista';
+                            authority.description = this.getLabel('Cadastros.Usuarios.Analista');
                             break;
                         }
                     }

@@ -12,6 +12,7 @@ import { StringConcatService } from '../shared/string-concat.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { MessageUtil } from '../util/message.util';
 import { Response } from '@angular/http';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -50,7 +51,8 @@ export class SistemaComponent implements AfterViewInit {
     private confirmationService: ConfirmationService,
     private organizacaoService: OrganizacaoService,
     private stringConcatService: StringConcatService,
-    private pageNotificationService: PageNotificationService
+    private pageNotificationService: PageNotificationService,
+    private translate: TranslateService
   ) {
     const emptyOrganization = new Organizacao();
 
@@ -58,6 +60,14 @@ export class SistemaComponent implements AfterViewInit {
       this.organizations = response.json;
       this.organizations.unshift(emptyOrganization);
     });
+  }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
   }
 
   public ngOnInit(){
@@ -116,16 +126,16 @@ abrirEditar(){
    */
   public confirmDelete(id: any) {
     this.confirmationService.confirm({
-      message: MessageUtil.CONFIRMAR_EXCLUSAO,
+      message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
       accept: () => {
-        this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
+        this.blockUI.start(this.getLabel('Global.Mensagens.EXCLUINDO_REGISTRO'));
         this.sistemaService.delete(id).subscribe(() => {
           this.limparPesquisa();
           this.pageNotificationService.addDeleteMsg();
           this.blockUI.stop();
         }, (error: Response) => {
             if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.analiseexists') {
-              this.pageNotificationService.addErrorMsg('O sistema está vinculado a uma análise e não pode ser excluído!');
+              this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Sistema.Mensagens.msgSistemaVinculadoNaoPodeSerExcluido'));
             }
           }
         );

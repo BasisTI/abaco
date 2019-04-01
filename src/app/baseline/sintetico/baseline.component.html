@@ -2,7 +2,7 @@
     <div class="ui-g-12 ui-md-12 ui-sm-12">
         <div class="card card-w-title">
 
-            <h1>Baseline</h1>
+            <h1 translate="Analise.Baseline.Baseline">Baseline</h1>
             <div class="ui-g">
                 <div class="ui-g">
                     <basis-datatable
@@ -22,11 +22,11 @@
                           disabled="selecionada">
                         </basis-datatable-button>
 
-                        <p-column header="Nome" field="nome" [sortable]="true"></p-column>
-                        <p-column header="Sigla" field="sigla" [sortable]="true"></p-column>
-                        <p-column header="Número da Ocorrência" field="numeroocorrencia" [sortable]="true"></p-column>
-                        <p-column header="Pontos de Função" field="sum" [sortable]="true"></p-column>
-                        <p-column header="Equipe" field="nomeEquipe" [sortable]="true"></p-column>
+                        <p-column [header]="this.getLabel('Analise.Baseline.Nome')" field="nome" [sortable]="true"></p-column>
+                        <p-column [header]="this.getLabel('Analise.Baseline.Sigla')" field="sigla" [sortable]="true"></p-column>
+                        <p-column [header]="this.getLabel('Analise.Baseline.NumeroOcorrencia')" field="numeroocorrencia" [sortable]="true"></p-column>
+                        <p-column [header]="this.getLabel('Analise.Baseline.PontosFuncao')" field="sum" [sortable]="true"></p-column>
+                        <p-column [header]="this.getLabel('Analise.Baseline.Equipe')" field="nomeEquipe" [sortable]="true"></p-column>
                     </basis-datatable>
 
                     <div class="ui-g-12 ui-md-2">

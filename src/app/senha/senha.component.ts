@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit, OnDestroy, OnChanges } from '@angular/core';
 import { SenhaService } from './senha.service';
 import { Router, UrlSegment, ActivatedRoute } from '@angular/router';
@@ -20,6 +21,7 @@ export class SenhaComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private senhaService: SenhaService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit() {

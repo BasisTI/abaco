@@ -4,7 +4,7 @@
 
     <div class="card card-w-title">
 
-      <h1>Sistemas</h1>
+      <h1 translate="Cadastros.Sistema.Sistemas">Sistemas</h1>
       <div class="ui-g">
 
         <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 5px">
@@ -18,7 +18,7 @@
               (keyup.enter)="performSearch()"
               maxlength="20"
               #filter />
-            <label>Sigla</label>
+            <label translate="Cadastros.Sistema.Sigla">Sigla</label>
           </span>
         </div>
 
@@ -33,7 +33,7 @@
               (keyup.enter)="performSearch()"
               maxlength="100"
               #filter />
-            <label>Nome do Sistema</label>
+            <label translate="Cadastros.Sistema.NomeSistema">Nome do Sistema</label>
           </span>
         </div>
 
@@ -46,7 +46,7 @@
             optionLabel="nome" 
             [(ngModel)]="searchParams.organizacao" 
             [autoWidth]="false" 
-            placeholder="Organização">
+            [placeholder]="getLabel('Cadastros.Sistema.Organizacao')">
           </p-dropdown>
         </div>
 
@@ -56,7 +56,7 @@
         <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-white-button 
-              buttonLabel="Limpar Pesquisa" 
+            [buttonLabel]="this.getLabel('Global.Botoes.LimparPesquisa')" 
               id="idBtnLimparPesquisaComponentSistema"
               buttonIcon="ui-icon-clear-all"
               (click)="limparPesquisa()">
@@ -65,7 +65,7 @@
 
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-blue-button 
-              buttonLabel="Pesquisar" 
+              [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')" 
               id="idBtnPesquisarComponentSistema"
               buttonIcon="ui-icon-search" 
               (click)="performSearch()">
@@ -74,7 +74,7 @@
 
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-green-button 
-              buttonLabel="Novo" 
+              [buttonLabel]="this.getLabel('Global.Botoes.Novo')" 
               id="idBtnNovoComponentSistema"
               routerLink="/sistema/new" 
               buttonIcon="ui-icon-add">
@@ -91,10 +91,10 @@
           [rowsPerPageOptions]="rowsPerPageOptions"
           [showPaginationFooter]="true"
           #datatable>
-          <p-column header="Sigla" field="sigla" [sortable]="true"></p-column>
-          <p-column header="Nome" field="nome" [sortable]="true"></p-column>
-          <p-column header="Número da Ocorrência" field="numeroOcorrencia" [sortable]="true"></p-column>
-          <p-column header="Organização" field="organizacao.nome" [sortable]="true"></p-column>
+          <p-column [header]="getLabel('Cadastros.Sistema.Sigla')" field="sigla" [sortable]="true"></p-column>
+          <p-column [header]="getLabel('Cadastros.Sistema.Nome')" field="nome" [sortable]="true"></p-column>
+          <p-column [header]="getLabel('Cadastros.Sistema.NumeroOcorrencia')" field="numeroOcorrencia" [sortable]="true"></p-column>
+          <p-column [header]="getLabel('Cadastros.Sistema.Organizacao')" field="organizacao.nome" [sortable]="true"></p-column>
         </basis-datatable>
         
         <div class="ui-g-12 ui-md-2">
@@ -110,9 +110,9 @@
 
 </div>
 
-<p-confirmDialog header="Confirmação" #dialog>
+<p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
   <p-footer>
-    <button type="button" id="idNaoDeleteComponentSistema" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-    <button type="button" id="idSimDeleteComponentSistema" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+    <button type="button" id="idNaoDeleteComponentSistema" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao')" (click)="dialog.reject()"></button>
+    <button type="button" id="idSimDeleteComponentSistema" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim')" (click)="dialog.accept()"></button>
   </p-footer>
 </p-confirmDialog>

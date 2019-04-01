@@ -12,6 +12,14 @@ import { FormsModule } from '@angular/forms';
 import { AbacoDerTextModule } from '../der-text/der-text.module';
 import { ReferenciadorArComponent } from './referenciador-ar/referenciador-ar.component';
 
+import {HttpClient} from '@angular/common/http';
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
 @NgModule({
   imports: [
     CommonModule,
@@ -23,7 +31,14 @@ import { ReferenciadorArComponent } from './referenciador-ar/referenciador-ar.co
     DialogModule,
     InputTextareaModule,
     DropdownModule,
-    MultiSelectModule
+    MultiSelectModule,
+    TranslateModule.forChild({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    })
   ],
   declarations: [
     DerChipsComponent,

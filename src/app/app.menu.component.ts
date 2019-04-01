@@ -43,7 +43,7 @@ export class AppMenuComponent implements OnInit {
         <a [href]="child.url||'#'" (click)="itemClick($event,child,i)" (mouseenter)="onMouseEnter(i)" class="ripplelink"
           *ngIf="!child.routerLink" [attr.tabindex]="!visible ? '-1' : null" [attr.target]="child.target">
           <i class="material-icons">{{child.icon}}</i>
-          <span>{{child.label}}</span>
+          <span>{{child.label | translate}}</span>
           <span class="menuitem-badge" *ngIf="child.badge">{{child.badge}}</span>
           <i class="material-icons submenu-icon" *ngIf="child.items">keyboard_arrow_down</i>
         </a>
@@ -51,7 +51,7 @@ export class AppMenuComponent implements OnInit {
             [routerLink]="child.routerLink" routerLinkActive="active-menuitem-routerlink"
             [routerLinkActiveOptions]="{exact: true}" [attr.tabindex]="!visible ? '-1' : null" [attr.target]="child.target">
             <i class="material-icons">{{child.icon}}</i>
-            <span>{{child.label}}</span>
+            <span>{{child.label | translate}}</span>
             <span class="menuitem-badge" *ngIf="child.badge">{{child.badge}}</span>
             <i class="material-icons submenu-icon" *ngIf="child.items">keyboard_arrow_down</i>
           </a>

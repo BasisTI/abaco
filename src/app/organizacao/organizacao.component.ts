@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
@@ -9,7 +10,7 @@ import { OrganizacaoService } from './organizacao.service';
 import { ElasticQuery } from '../shared';
 import { PageNotificationService } from '../shared/page-notification.service';
 import { NgxMaskModule } from 'ngx-mask';
-import {DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 
 
 @Component({
@@ -35,16 +36,25 @@ export class OrganizacaoComponent implements AfterViewInit, OnInit {
     private router: Router,
     private organizacaoService: OrganizacaoService,
     private confirmationService: ConfirmationService,
-    private pageNotificationService: PageNotificationService
-  ) {}
+    private pageNotificationService: PageNotificationService,
+    private translate: TranslateService
+  ) { }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   public ngOnInit() {
     this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
       this.organizacaoSelecionada = event.data;
     });
-  this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
-    this.organizacaoSelecionada = undefined;
-  });
+    this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
+      this.organizacaoSelecionada = undefined;
+    });
   }
 
   ngAfterViewInit() {
@@ -53,7 +63,7 @@ export class OrganizacaoComponent implements AfterViewInit, OnInit {
 
   datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
-      
+
       return;
     }
     switch (event.button) {
@@ -73,18 +83,18 @@ export class OrganizacaoComponent implements AfterViewInit, OnInit {
 
     if (event.target.nodeName === 'TD') {
       this.abrirEditar();
-    }else if (event.target.parentNode.nodeName === 'TD') {
+    } else if (event.target.parentNode.nodeName === 'TD') {
       this.abrirEditar();
     }
-}
+  }
 
-abrirEditar() {
-  this.router.navigate(['/organizacao', this.organizacaoSelecionada.id, 'edit']);
-}
+  abrirEditar() {
+    this.router.navigate(['/organizacao', this.organizacaoSelecionada.id, 'edit']);
+  }
 
   confirmDelete(id: any) {
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja excluir o registro?',
+      message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
       accept: () => {
         this.organizacaoService.delete(id).subscribe(() => {
           this.pageNotificationService.addDeleteMsg();
@@ -92,7 +102,7 @@ abrirEditar() {
         }, error => {
           if (error.status === 500) {
             this.pageNotificationService
-                .addErrorMsg('A organização não pode ser deletada pois está associada a um contrato, equipe ou análise!');
+              .addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgOrganizacaoNaoPodeSerDeletadaPoisEstaAssociadaAContratoEquipeOuAnalise'));
           }
         });
       }
@@ -106,7 +116,7 @@ abrirEditar() {
 
   recarregarDataTable() {
     //Se descrição == CNPJ remove caracteres . - / para fazer pesquisa. 
-    if(this.elasticQuery.value.length == 18 && this.elasticQuery.value[2] == "."){
+    if (this.elasticQuery.value.length == 18 && this.elasticQuery.value[2] == ".") {
       this.elasticQuery.value = this.elasticQuery.value.replace(".", "");
       this.elasticQuery.value = this.elasticQuery.value.replace(".", "");
       this.elasticQuery.value = this.elasticQuery.value.replace("/", "");

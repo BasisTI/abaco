@@ -12,7 +12,7 @@
           <!--<i class="fa ui-icon-landscape">logo</i>-->
         </span>
 
-        <h1 class="title p-b-34 p-t-27">LOGIN</h1>
+        <h1 class="title p-b-34 p-t-27" translate="Login.LOGIN">LOGIN</h1>
 
         <div class="ui-g">
 
@@ -22,7 +22,7 @@
                 type="text"
                 name="username"
                 [(ngModel)]="username"
-                placeholder="Usuário *"
+                [placeholder]="this.getLabel('Login.Usuario*')"
                 pInputText />
                 <span class="username" data-placeholder=""></span>
 
@@ -30,8 +30,8 @@
           <div *ngIf="(loginForm.controls['username']
                                         && !loginForm.controls['username'].valid
                                         && (loginForm.controls['username'].touched
-                                        || loginForm.submitted))" class="ui-message ui-messages-error">
-                                Campo obrigatório.
+                                        || loginForm.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                 </div>
           <div class="ui-g-12 ui-md-12 ui-sm-12 input">
             <input
@@ -39,7 +39,7 @@
                 pPassword
                 type="password"
                 name="password"
-                placeholder="Senha *"
+                [placeholder]="this.getLabel('Login.Senha*')"
                 [(ngModel)]="password"
                 [feedback]="false" />
                 <span class="password" data-placeholder=""></span>
@@ -48,14 +48,14 @@
           <div *ngIf="(loginForm.controls['password']
                                         && !loginForm.controls['password'].valid
                                         && (loginForm.controls['password'].touched
-                                        || loginForm.submitted))" class="ui-message ui-messages-error">
-                                Campo obrigatório.
+                                        || loginForm.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                 </div>
         </div>
 
         <div class="ui-g-12 login-btn">
             <button pButton type="submit">
-                <span>Login</span>
+              <span translate="Login.Login">Login</span>
             </button>
         </div>
       </form>
@@ -70,7 +70,7 @@
     <div class="card login-panel" style="margin: 0px auto 0 auto; min-height: 50px;">
       <span style="font-size: 20px;"> {{ authenticatedUserFullName() }} </span>
 
-      <p style="font-size: 20px;">Bem-vindo ao Ábaco</p>
+      <p style="font-size: 20px;">{{this.getLabel('Login.BemVindo')}}</p>
       <i class="material-icons" style="font-size: 200px; color: #618849;">blur_linear</i>
     </div>
     <!-- Fim Após a autenticação exibir o campo abaixo-->

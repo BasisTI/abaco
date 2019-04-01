@@ -26,6 +26,15 @@ import { AnaliseResumoComponent } from './analise-resumo.component';
 
 import { MemoryDataTableModule } from '../../memory-datatable/memory-datatable.module';
 
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+
+export function createTranslateLoader(http: HttpClient) {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  }
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -45,7 +54,14 @@ import { MemoryDataTableModule } from '../../memory-datatable/memory-datatable.m
     DialogModule,
     AbacoAnaliseSharedModule,
     MemoryDataTableModule,
-    FieldsetModule
+    FieldsetModule,
+    TranslateModule.forChild({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    })
   ],
   declarations: [
     AnaliseResumoComponent

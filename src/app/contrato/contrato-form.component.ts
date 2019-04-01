@@ -9,6 +9,7 @@ import { ContratoService } from './contrato.service';
 import { Manual, ManualService } from '../manual';
 import { ResponseWrapper } from '../shared';
 import { PageNotificationService } from '../shared/page-notification.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'jhi-contrato-form',
@@ -27,7 +28,16 @@ export class ContratoFormComponent implements OnInit, OnDestroy {
     private contratoService: ContratoService,
     private manualService: ManualService,
     private pageNotificationService: PageNotificationService,
-  ) {}
+    private translate: TranslateService
+  ) { }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   ngOnInit() {
     this.isSaving = false;
@@ -44,10 +54,10 @@ export class ContratoFormComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    if (!(this.contrato.dataInicioValida())){
-      this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
+    if (!(this.contrato.dataInicioValida())) {
+      this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Contratos.Mensagens.DataInicioVigenciaNaoPosteriorDataTerminoVigencia'));
       document.getElementById('login').setAttribute('style', 'border-color: red;');
-      
+
       return
     }
     this.isSaving = true;
@@ -59,22 +69,22 @@ export class ContratoFormComponent implements OnInit, OnDestroy {
       this.subscribeToSaveResponse(this.contratoService.create(this.contrato));
     }
   }
-z
+  z
   private subscribeToSaveResponse(result: Observable<Contrato>) {
     result.subscribe((res: Contrato) => {
       this.isSaving = false;
       this.router.navigate(['/contrato']);
 
-      this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg();
+      this.isEdit ? this.pageNotificationService.addUpdateMsg() : this.pageNotificationService.addCreateMsg();
     }, (error: Response) => {
       this.isSaving = false;
-      if(error.status === 400){
-        let errorType : string = error.headers.toJSON()['x-abacoapp-error'][0];
+      if (error.status === 400) {
+        let errorType: string = error.headers.toJSON()['x-abacoapp-error'][0];
 
-        switch(errorType){
-          case "error.beggindateGTenddate" : {
-            
-            this.pageNotificationService.addErrorMsg('"Início Vigência" não pode ser posterior a "Final Vigência"');
+        switch (errorType) {
+          case "error.beggindateGTenddate": {
+
+            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Contratos.Mensagens.InicioVigenciaNaoPosteriorFinalVigencia'));
             document.getElementById('login').setAttribute('style', 'border-color: red;');
           }
         }
@@ -82,7 +92,7 @@ z
         let invalidFieldNamesString = '';
         const fieldErrors = JSON.parse(error['_body']).fieldErrors;
         invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-        this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
+        this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Contratos.Mensagens.CamposInvalidos') + invalidFieldNamesString);
       }
     });
   }

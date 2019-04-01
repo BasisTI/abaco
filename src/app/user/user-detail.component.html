@@ -1,49 +1,49 @@
 <div class="ui-g ui-fluid" *ngIf="user">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>Visualizar Usuário</h1>
+      <h1 translate="Cadastros.Usuarios.VisualizarUsuario">Visualizar Usuário</h1>
       <div class="ui-g">
           <div class="ui-g-4" style="margin-bottom: 25px">
-            <label>Primeiro Nome: {{ user.firstName }}</label>
+            <label>{{this.getLabel('Cadastros.Usuarios.PrimeiroNome:')}} {{ user.firstName }}</label>
           </div>
           <div class="ui-g-4" style="margin-bottom: 25px">
-            <label>Último Nome: {{ user.lastName }}</label>
+            <label>{{this.getLabel('Cadastros.Usuarios.UltimoNome:')}} {{ user.lastName }}</label>
           </div>
           <div class="ui-g-4" style="margin-bottom: 25px">
-            <label>Login: {{ user.login }}</label>
+            <label>{{this.getLabel('Cadastros.Usuarios.Login:')}} {{ user.login }}</label>
           </div>
           <div class="ui-g-4" style="margin-bottom: 25px">
-            <label>Email: {{ user.email }}</label>
+            <label>{{this.getLabel('Cadastros.Usuarios.Email:')}} {{ user.email }}</label>
           </div>
           <div class="ui-g-4">
-            <label>Ativo: {{ user.activated ? 'Sim' : 'Não' }}</label>
+            <label>{{this.getLabel('Cadastros.Usuarios.Ativo:')}} {{ user.activated ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}</label>
           </div>
           <div class="ui-g-4"></div>
 
           <div class="ui-g-6" style="margin-bottom: 25px">
-            <h3 class="first">Perfil</h3>
+            <h3 class="first" translate="Cadastros.Usuarios.Perfil">Perfil</h3>
             <p-dataTable [value]="user.authorities">
-              <p-column field="description" header="Nome"></p-column>
+              <p-column field="description" [header]="getLabel('Cadastros.Usuarios.Nome')"></p-column>
             </p-dataTable>
           </div>
 
           <div class="ui-g-6" style="margin-bottom: 25px">
-            <h3 class="first">Organização</h3>
+            <h3 class="first" translate="Cadastros.Usuarios.Organizacao">Organização</h3>
             <p-dataTable [value]="user.organizacoes">
-              <p-column field="nome" header="Nome"></p-column>
+              <p-column field="nome" [header]="getLabel('Cadastros.Usuarios.Nome')"></p-column>
             </p-dataTable>
           </div>
 
         <div class="ui-g-6" style="margin-bottom: 25px">
-          <h3 class="first">Equipe</h3>
+          <h3 class="first" translate="Cadastros.Usuarios.Equipe">Equipe</h3>
           <p-dataTable [value]="user.tipoEquipes">
-            <p-column field="nome" header="Nome"></p-column>
+            <p-column field="nome" [header]="getLabel('Cadastros.Usuarios.Nome')"></p-column>
           </p-dataTable>
         </div>
       </div>
       <div class="ui-g">
         <div class="ui-g-2">
-          <button pButton type="button" label="Voltar" routerLink="/admin/user"></button>
+          <button pButton type="button" [label]="this.getLabel('Global.Botoes.Voltar')" routerLink="/admin/user"></button>
         </div>
       </div>
     </div>

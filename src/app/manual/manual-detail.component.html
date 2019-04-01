@@ -1,57 +1,57 @@
 <div class="ui-g ui-fluid" *ngIf="manual">
     <div class="ui-g-12">
         <div class="card card-w-title">
-            <h1>Visualizar Manual</h1>
+            <h1 translate="Cadastros.Manual.VisualizarManual">Visualizar Manual</h1>
             <div class="ui-g">
                 <div class="ui-g-6">
-                    <label>ID: {{ manual.id }}</label>
+                    <label>{{this.getLabel('Cadastros.Manual.ID:')}} {{ manual.id }}</label>
                 </div>
                 <div class="ui-g-6">
-                    <label>Nome: {{ manual.nome }}</label>
+                    <label>{{this.getLabel('Cadastros.Manual.Nome:')}} {{ manual.nome }}</label>
                 </div>
                 <div class="ui-g-6">
-                    <label>Observação: {{ manual.observacao }}</label>
+                    <label>{{this.getLabel('Cadastros.Manual.Observacao:')}} {{ manual.observacao }}</label>
                 </div>
                 <div class="ui-g-6">
-                    <label>Valor Variação Estimada: {{ manual.valorVariacaoEstimada }}</label>
+                    <label>{{this.getLabel('Cadastros.Manual.ValorEstimada:')}} {{ manual.valorVariacaoEstimada }}</label>
                 </div>
                 <div class="ui-g-6">
-                    <label>Valor Variação Indicativa: {{ manual.valorVariacaoIndicativa }}</label>
+                    <label>{{this.getLabel('Cadastros.Manual.ValorIndicativa:')}} {{ manual.valorVariacaoIndicativa }}</label>
                 </div>
                 <div class="ui-g-6">
-                    <label>Arquivo Manual: {{ fileName }}</label>
+                    <label>{{this.getLabel('Cadastros.Manual.ArquivoManual:')}} {{ fileName }}</label>
                 </div>
             </div>
 
             <div class="ui-g">
-                <h1>Impacto</h1>
+                <h1 translate="Cadastros.Manual.Impacto">Impacto</h1>
                 <div class="ui-g-12">
                     <app-memory-datatable [value]="manualArray" id="idTabelaImpactoDetailManual"
                                           (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true"
                                           disableDelete="true" disableClone="true">
-                        <p-column header="Inclusão(%)" field="parametroInclusaoFormatado">
-                        </p-column>
-                        <p-column header="Alteração(%)" field="parametroAlteracaoFormatado">
-                        </p-column>
-                        <p-column header="Exclusão(%)" field="parametroExclusaoFormatado">
-                        </p-column>
-                        <p-column header="Conversão(%)" field="parametroConversaoFormatado">
-                        </p-column>
-                        <p-column header="Versão CPM" field="versaoCPM">
-                        </p-column>
+                                          <p-column [header]="this.getLabel('Cadastros.Manual.Inclusao(%)')" field="parametroInclusaoFormatado">
+                                    </p-column>
+                                    <p-column [header]="this.getLabel('Cadastros.Manual.Alteracao(%)')" field="parametroAlteracaoFormatado">
+                                    </p-column>
+                                    <p-column [header]="this.getLabel('Cadastros.Manual.Exclusao(%)')" field="parametroExclusaoFormatado">
+                                    </p-column>
+                                    <p-column [header]="this.getLabel('Cadastros.Manual.Conversao(%)')" field="parametroConversaoFormatado">
+                                    </p-column>
+                                    <p-column [header]="this.getLabel('Cadastros.Manual.VersaoCPM')" field="versaoCPM">
+                                    </p-column>
                     </app-memory-datatable>
                 </div>
             </div>
 
             <div class="ui-g">
-                <h1>Esforços por Fase</h1>
+                <h1 translate="Cadastros.Manual.EsforcosPorFases">Esforços por Fase</h1>
                 <div class="ui-g-12">
                     <app-memory-datatable [value]="manual.esforcoFases" id="idTabelaEsforcoFaseDetailManual"
                                           (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true"
                                           disableDelete="true" disableClone="true">
-                        <p-column header="Tipo de fase" field="fase.nome">
+                        <p-column [header]="this.getLabel('Cadastros.Manual.TipoFase')" field="fase.nome">
                         </p-column>
-                        <p-column header="Percentual (%)" field="esforcoFormatado">
+                        <p-column [header]="this.getLabel('Cadastros.Manual.Percentual(%)')" field="esforcoFormatado">
                         </p-column>
                     </app-memory-datatable>
                 </div>
@@ -59,25 +59,25 @@
 
             <div class="ui-g">
                 <div class="ui-g-12">
-                    <h1>Fatores de Ajuste</h1>
+                    <h1 translate="Cadastros.Manual.FatoresAjuste">Fatores de Ajuste</h1>
                     <app-memory-datatable [value]="manual.fatoresAjuste" id="idTabelaFatorAjusteDetailManual"
                                           (buttonClick)="adjustFactorDatatableClick($event)" disableEdit="true"
                                           disableView="true" disableDelete="true" disableClone="true">
-                        <p-column header="Código" field="codigo">
+                                          <p-column [header]="this.getLabel('Cadastros.Manual.Codigo')" field="codigo">
                             <ng-template let-col let-codigo="rowData" pTemplate="body">
                                 {{ codigo[col.field] == null ? '---' : codigo[col.field]}}
                             </ng-template>
                         </p-column>
-                        <p-column header="Nome" field="nome">
+                        <p-column [header]="this.getLabel('Cadastros.Manual.Nome')" field="nome">
                         </p-column>
-                        <p-column header="Fator" field="fatorFormatado">
+                        <p-column [header]="this.getLabel('Cadastros.Manual.Fator')" field="fatorFormatado">
                         </p-column>
-                        <p-column header="Tipo Ajuste" field="tipoAjuste">
+                        <p-column [header]="this.getLabel('Cadastros.Manual.TipoAjuste')" field="tipoAjuste">
                             <ng-template let-col let-tipoAjuste="rowData" pTemplate="body">
-                                {{ tipoAjuste[col.field] == 'PERCENTUAL' ? 'Percentual' : 'Unitário'}}
+                                {{ tipoAjuste[col.field] == 'PERCENTUAL' ? this.getLabel('Cadastros.Manual.Percentual') : this.getLabel('Cadastros.Manual.Unitario')}}
                             </ng-template>
                         </p-column>
-                        <p-column header="Ativo" field="ativo">
+                        <p-column [header]="this.getLabel('Cadastros.Manual.Ativo')" field="ativo">
                             <ng-template let-col let-ativo="rowData" pTemplate="body">
                                 {{ ativo[col.field] | activeBoolean }}
                             </ng-template>
@@ -87,7 +87,7 @@
             </div>
             <div class="ui-g">
                 <div class="ui-g-2">
-                    <button pButton type="button" label="Voltar" id="idBtnVoltarDetailManual"
+                    <button pButton type="button" [label]="this.getLabel('Global.Botoes.Voltar')" id="idBtnVoltarDetailManual"
                             routerLink="/manual"></button>
                 </div>
             </div>

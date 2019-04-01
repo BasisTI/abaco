@@ -1,7 +1,7 @@
 <div *ngIf="habilitarBotaoSalvar()">
   <button pButton type="button"
     class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-    label="Salvar Análise"
+    [label]="this.getLabel('Global.Botoes.SalvarAnalise')"
     icon="ui-icon-save"
     (click)="salvar()">
   </button>
@@ -13,7 +13,7 @@
   
   <button pButton type="button"
     class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-    label="Salvar"
+    [label]="this.getLabel('Global.Botoes.Salvar')"
     icon="ui-icon-save"
     [disabled]="true">
   </button>

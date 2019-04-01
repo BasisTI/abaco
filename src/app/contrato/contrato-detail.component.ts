@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Rx';
 
 import { Contrato } from './contrato.model';
 import { ContratoService } from './contrato.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'jhi-contrato-detail',
@@ -16,8 +17,18 @@ export class ContratoDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private contratoService: ContratoService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translate: TranslateService
   ) {}
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+        str = res;
+    }).unsubscribe();
+    return str;
+  }
+  
 
   ngOnInit() {
     this.subscription = this.route.params.subscribe((params) => {

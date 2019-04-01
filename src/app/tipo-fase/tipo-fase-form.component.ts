@@ -1,11 +1,12 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Response} from '@angular/http';
-import {Observable, Subscription} from 'rxjs/Rx';
+import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Response } from '@angular/http';
+import { Observable, Subscription } from 'rxjs/Rx';
 
-import {TipoFase} from './tipo-fase.model';
-import {TipoFaseService} from './tipo-fase.service';
-import {PageNotificationService} from '../shared';
+import { TipoFase } from './tipo-fase.model';
+import { TipoFaseService } from './tipo-fase.service';
+import { PageNotificationService } from '../shared';
 
 @Component({
     selector: 'jhi-tipo-fase-form',
@@ -21,7 +22,16 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
         private router: Router,
         private tipoFaseService: TipoFaseService,
         private pageNotificationService: PageNotificationService,
+        private translate: TranslateService
     ) {
+    }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
     }
 
     ngOnInit() {
@@ -36,7 +46,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
 
     save(form) {
         if (!form.valid) {
-            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
             return;
         }
         this.tipoFaseService.query().subscribe(response => {
@@ -61,7 +71,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
             registeredPhases.forEach(each => {
                 if (each.nome.toUpperCase() === this.tipoFase.nome.toUpperCase() && each.id !== this.tipoFase.id) {
                     isAlreadyRegistered = true;
-                    this.pageNotificationService.addErrorMsg('Já existe um Tipo de Fase cadastrado com esse nome!');
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.TipoFase.Mensagens.msgJaExisteTipoFaseCadastradoComEsseNome'));
                 }
             });
         }
@@ -74,11 +84,11 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
         if (this.tipoFase.nome !== null && this.tipoFase.nome !== undefined && this.tipoFase.nome !== '') {
             isNameValid = true;
             if (this.tipoFase.nome.length > 254) {
-                this.pageNotificationService.addErrorMsg('O nome da fase excede o máximo de caracteres!');
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.TipoFase.Mensagens.msgNomeFaseExcedeMaximoCaracteres'));
                 isNameValid = false;
             }
         } else {
-            this.pageNotificationService.addErrorMsg('Favor, informar os campos obrigatórios!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.msgFavorInformarCamposObrigatorios'));
         }
 
         return isNameValid;
@@ -97,7 +107,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
                 case 400: {
                     const fieldErrors = JSON.parse(error['_body']).fieldErrors;
                     const invalidFieldsString = this.pageNotificationService.getInvalidFields(fieldErrors);
-                    this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldsString);
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.TipoFase.Mensagens.msgCamposInvalidos') + invalidFieldsString);
                 }
             }
         });

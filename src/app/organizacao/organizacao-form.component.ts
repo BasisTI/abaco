@@ -1,26 +1,27 @@
-import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Response} from '@angular/http';
-import {Observable, Subscription} from 'rxjs/Rx';
-import {SelectItem} from 'primeng/primeng';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Response } from '@angular/http';
+import { Observable, Subscription } from 'rxjs/Rx';
+import { SelectItem } from 'primeng/primeng';
 
-import {Organizacao} from './organizacao.model';
-import {OrganizacaoService} from './organizacao.service';
-import {Contrato, ContratoService} from '../contrato';
-import {Manual, ManualService} from '../manual';
-import {ResponseWrapper} from '../shared';
-import {ConfirmationService} from 'primeng/components/common/confirmationservice';
-import {DatatableClickEvent} from '@basis/angular-components';
-import {environment} from '../../environments/environment';
-import {PageNotificationService} from '../shared/page-notification.service';
-import {UploadService} from '../upload/upload.service';
-import {FileUpload} from 'primeng/primeng';
-import {NgxMaskModule} from 'ngx-mask';
-import {ValidacaoUtil} from '../util/validacao.util';
-import {ValueTransformer} from '@angular/compiler/src/util';
-import {Upload} from '../upload/upload.model';
-import {EsforcoFase} from '../esforco-fase';
+import { Organizacao } from './organizacao.model';
+import { OrganizacaoService } from './organizacao.service';
+import { Contrato, ContratoService } from '../contrato';
+import { Manual, ManualService } from '../manual';
+import { ResponseWrapper } from '../shared';
+import { ConfirmationService } from 'primeng/components/common/confirmationservice';
+import { DatatableClickEvent } from '@basis/angular-components';
+import { environment } from '../../environments/environment';
+import { PageNotificationService } from '../shared/page-notification.service';
+import { UploadService } from '../upload/upload.service';
+import { FileUpload } from 'primeng/primeng';
+import { NgxMaskModule } from 'ngx-mask';
+import { ValidacaoUtil } from '../util/validacao.util';
+import { ValueTransformer } from '@angular/compiler/src/util';
+import { Upload } from '../upload/upload.model';
+import { EsforcoFase } from '../esforco-fase';
 import { ManualContrato } from './ManualContrato.model';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -57,7 +58,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     imageUrl: any;
     upload: Upload;
     alterouLogo: boolean;
-    manuaisAdicionados: ManualContrato [] = [];
+    manuaisAdicionados: ManualContrato[] = [];
     novoManual: Manual;
     inicioVigencia;
     fimVigencia;
@@ -82,8 +83,17 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         private manualService: ManualService,
         private confirmationService: ConfirmationService,
         private pageNotificationService: PageNotificationService,
-        private uploadService: UploadService
+        private uploadService: UploadService,
+        private translate: TranslateService
     ) {
+    }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
     }
 
     /**
@@ -162,7 +172,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMsg('Favor preencher o número do contrato');
             a = false;
         }
-        if ( (contrato.manualContrato === null || contrato.manualContrato === undefined)
+        if ((contrato.manualContrato === null || contrato.manualContrato === undefined)
             || (contrato.manualContrato.length <= 0)) {
             this.manualInvalido = true;
             this.pageNotificationService.addErrorMsg('Deve haver ao menos um manual');
@@ -221,14 +231,14 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     adicionarManual() {
-        if (this.validaDadosManual(this.manualContratoNovo) ) {
+        if (this.validaDadosManual(this.manualContratoNovo)) {
             if (
                 this.manualContratoNovo.artificialId !== undefined
                 &&
                 this.manualContratoNovo.artificialId != null
             ) {
                 const manualContratoTemp = this.manualContratoNovo.clone();
-                this.novoContrato.updateManualContrato( manualContratoTemp );
+                this.novoContrato.updateManualContrato(manualContratoTemp);
             } else {
                 const manualContratoTemp = this.setManualContrato(this.manualContratoNovo);
                 this.novoContrato.addManualContrato(manualContratoTemp);
@@ -239,16 +249,16 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     adicionarManualEdt() {
-        if (this.validaDadosManual(this.manualContratoEdt) ) {
+        if (this.validaDadosManual(this.manualContratoEdt)) {
             if (
                 this.manualContratoEdt.id !== undefined
                 &&
                 this.manualContratoEdt.id != null
             ) {
                 const manualContratoTemp = this.manualContratoEdt.clone();
-                this.contratoEmEdicao.updateManualContrato( manualContratoTemp );
+                this.contratoEmEdicao.updateManualContrato(manualContratoTemp);
             } else {
-                const manualContratoTemp = this.setManualContrato( this.manualContratoEdt );
+                const manualContratoTemp = this.setManualContrato(this.manualContratoEdt);
                 this.contratoEmEdicao.addManualContrato(manualContratoTemp);
             }
             this.validaManual = false;
@@ -294,12 +304,12 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
         switch (event.button) {
             case 'edit':
-            this.manualContratoEdt = event.selection.clone();
-            break;
+                this.manualContratoEdt = event.selection.clone();
+                break;
             case 'delete':
-            this.manualContratoEdt = event.selection.clone();
-            this.comfirmarExcluirManual();
-            break;
+                this.manualContratoEdt = event.selection.clone();
+                this.comfirmarExcluirManual();
+                break;
         }
     }
 
@@ -309,12 +319,12 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
         switch (event.button) {
             case 'edit':
-            this.manualContratoNovo = event.selection.clone();
-            break;
+                this.manualContratoNovo = event.selection.clone();
+                break;
             case 'delete':
-            this.manualContratoNovo = event.selection.clone();
-            this.comfirmarExcluirManualNovo();
-            break;
+                this.manualContratoNovo = event.selection.clone();
+                this.comfirmarExcluirManualNovo();
+                break;
         }
     }
 
@@ -338,13 +348,13 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
      * */
     editarContrato() {
         if (!this.manualContratoEdt.id === undefined
-                && (this.manualContratoEdt.manual !== undefined && this.manualContratoEdt.manual !== null)
-            ) {
-                this.contratoEmEdicao.addManualContrato( this.manualContratoEdt.clone() );
+            && (this.manualContratoEdt.manual !== undefined && this.manualContratoEdt.manual !== null)
+        ) {
+            this.contratoEmEdicao.addManualContrato(this.manualContratoEdt.clone());
         } else if (this.manualContratoEdt.manual !== undefined && this.manualContratoEdt.manual !== null) {
-            this.contratoEmEdicao.updateManualContrato( this.manualContratoEdt );
+            this.contratoEmEdicao.updateManualContrato(this.manualContratoEdt);
         }
-        if (this.validaCamposContrato(this.contratoEmEdicao) ) {
+        if (this.validaCamposContrato(this.contratoEmEdicao)) {
             this.manualContratoEdt = new ManualContrato();
             this.organizacao.updateContrato(this.contratoEmEdicao);
             this.fecharDialogEditarContrato();
@@ -357,8 +367,8 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
      * */
     confirmDeleteContrato() {
         this.confirmationService.confirm({
-            message: `Tem certeza que deseja excluir o contrato '${this.contratoEmEdicao.numeroContrato}'
-        e todas as suas funcionalidades?`,
+            message: `${this.getLabel('Cadastros.Organizacao.Mensagens.msgTemCertezaQueDesejaExcluirContrato')} '${this.contratoEmEdicao.numeroContrato}'
+            ${this.getLabel('Cadastros.Organizacao.Mensagens.msgETodasAsSuasFuncionalidades')}`,
             accept: () => {
                 this.organizacao.deleteContrato(this.contratoEmEdicao);
                 this.contratoEmEdicao = new Contrato();
@@ -368,7 +378,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
     comfirmarExcluirManual() {
         this.confirmationService.confirm({
-            message: `Tem certeza que deseja excluir o manual '${this.manualContratoEdt.manual.nome}'
+            message: `${this.getLabel('Cadastros.Organizacao.Mensagens.msgTemCertezaQueDesejaExcluirManual')} ${this.manualContratoEdt.manual.nome}'
         ?`,
             accept: () => {
                 this.contratoEmEdicao.deleteManualContrato(this.manualContratoEdt);
@@ -379,7 +389,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
     comfirmarExcluirManualNovo() {
         this.confirmationService.confirm({
-            message: `Tem certeza que deseja excluir o manual '${this.manualContratoNovo.manual.nome}'
+            message: `${this.getLabel('Cadastros.Organizacao.Mensagens.msgTemCertezaQueDesejaExcluirManual')} ${this.manualContratoEdt.manual.nome}'
         ?`,
             accept: () => {
                 this.novoContrato.deleteManualContrato(this.manualContratoNovo);
@@ -394,33 +404,33 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     save(form) {
         this.cnpjValido = false;
         if (!this.organizacao.nome) {
-            this.pageNotificationService.addErrorMsg('O campo Nome é obrigatório!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgCampoNomeObrigatorio'));
             return;
         }
 
         if (!this.organizacao.sigla) {
-            this.pageNotificationService.addErrorMsg('O campo Sigla é obrigatório!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgCampoSiglaObrigatorio'));
             return;
         }
 
         this.isSaving = true;
         if (!this.organizacao.cnpj) {
             this.cnpjValido = true;
-            this.pageNotificationService.addErrorMsg('O campo CNPJ é obrigatório!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgCampoCNPJObrigatorio'));
             return;
         }
 
         if (this.organizacao.cnpj !== ' ') {
             if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
                 this.cnpjValido = true;
-                this.pageNotificationService.addErrorMsg('CNPJ inválido');
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgCNPJInvalido'));
                 return;
             }
         }
 
         if (this.organizacao.contracts.length === 0 || this.organizacao.contracts === undefined) {
             document.getElementById('tabela-contrato').setAttribute('style', 'border: 1px dotted red;');
-            this.pageNotificationService.addErrorMsg('Pelo menos 1 contrato é obrigatório por organização.');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgPeloMenosUmContratoObrigatorioPorOrganizacao'));
             return;
         }
 
@@ -479,7 +489,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             organizacoesRegistradas.forEach(each => {
                 if (each.nome.toUpperCase() === this.organizacao.nome.toUpperCase() && each.id !== this.organizacao.id) {
                     isAlreadyRegistered = true;
-                    this.pageNotificationService.addErrorMsg('Já existe uma Organização registrada com este nome!');
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgJaExisteUmaOrganizacaoRegistradaComEsteNome'));
                 }
             });
         }
@@ -492,7 +502,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             organizacoesRegistradas.forEach(each => {
                 if (each.cnpj === this.organizacao.cnpj && each.id !== this.organizacao.id) {
                     isAlreadyRegistered = true;
-                    this.pageNotificationService.addErrorMsg('Já existe uma Organização registrada com este CNPJ!');
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgJaExisteOrganizacaoRegistradaComEsteCNPJ'));
                 }
             });
         }
@@ -539,42 +549,42 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
                 const errorType: string = error.headers.toJSON()['x-abacoapp-error'][0];
 
                 switch (errorType) {
-                    case 'error.orgNomeInvalido' : {
-                        this.pageNotificationService.addErrorMsg('O campo "Nome" possui carcteres inválidos! '
-                            + 'Verifique se há espaços no início, no final ou mais de um espaço entre palavras.');
+                    case 'error.orgNomeInvalido': {
+                        this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgCampoNomePossuiCaracteresInvalidos')
+                            + this.getLabel('Cadastros.Organizacao.Mensagens.msgVerifiqueSeHaEspacosNoInicioNoFinalOuMaisDeUmEspacoEntrePalavras'));
                         //document.getElementById('login').setAttribute('style', 'border-color: red;');
                         break;
                     }
-                    case 'error.orgCnpjInvalido' : {
-                        this.pageNotificationService.addErrorMsg('O campo "CNPJ" possui carcteres inválidos! '
-                            + 'Verifique se há espaços no início ou no final.');
+                    case 'error.orgCnpjInvalido': {
+                        this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgCampoCNPJPossuiCaracteresInvalidos')
+                            + this.getLabel('Cadastros.Organizacao.Mensagens.msgVerifiqueSeHaEspacosNoInicioOuFinal'));
                         //document.getElementById('login').setAttribute('style', 'border-color: red;');
                         break;
                     }
-                    case 'error.orgSiglaInvalido' : {
-                        this.pageNotificationService.addErrorMsg('O campo "Sigla" possui carcteres inválidos! '
-                            + 'Verifique se há espaços no início ou no final.');
+                    case 'error.orgSiglaInvalido': {
+                        this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgCampoSiglaPossuiCaracteresInvalidos')
+                            + this.getLabel('Cadastros.Organizacao.Mensagens.msgVerifiqueSeHaEspacosNoInicioOuFinal'));
                         //document.getElementById('login').setAttribute('style', 'border-color: red;');
                         break;
                     }
-                    case 'error.orgNumOcorInvalido' : {
-                        this.pageNotificationService.addErrorMsg('O campo "Número da Ocorrência" possui carcteres inválidos! '
-                            + 'Verifique se há espaços no início ou no final.');
+                    case 'error.orgNumOcorInvalido': {
+                        this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgCampoNumeroDaOcorrenciaPossuiCaracteresInvalidos')
+                            + this.getLabel('Cadastros.Organizacao.Mensagens.msgVerifiqueSeHaEspacosNoInicioOuFinal'));
                         //document.getElementById('login').setAttribute('style', 'border-color: red;');
                         break;
                     }
-                    case 'error.organizacaoexists' : {
-                        this.pageNotificationService.addErrorMsg('Já existe organização cadastrada com mesmo nome!');
+                    case 'error.organizacaoexists': {
+                        this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgJaExisteOrganizacaoCadastradaComMesmoNome'));
                         //document.getElementById('login').setAttribute('style', 'border-color: red;');
                         break;
                     }
-                    case 'error.cnpjexists' : {
-                        this.pageNotificationService.addErrorMsg('Já existe organização cadastrada com mesmo CNPJ!');
+                    case 'error.cnpjexists': {
+                        this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgJaExisteOrganizacaoCadastradaComMesmoCNPJ'));
                         //document.getElementById('login').setAttribute('style', 'border-color: red;');
                         break;
                     }
-                    case 'error.beggindateGTenddate' : {
-                        this.pageNotificationService.addErrorMsg('"Início Vigência" não pode ser posterior a "Final Vigência"');
+                    case 'error.beggindateGTenddate': {
+                        this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgInicioVigenciaNaoPodeSerPosteriorFinalVigencia'));
                         //document.getElementById('login').setAttribute('style', 'border-color: red;');
                         break;
                     }
@@ -582,7 +592,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
                 let invalidFieldNamesString = '';
                 const fieldErrors = JSON.parse(error['_body']).fieldErrors;
                 invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-                this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgCamposInvalidos') + invalidFieldNamesString);
             }
         });
     }

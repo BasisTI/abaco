@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {BaselineService} from '../../baseline.service';
 import {Subscription} from '../../../../../node_modules/rxjs/Rx';
 import {DatatableComponent} from '@basis/angular-components';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class BaselineImpactoComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
         private baselineService: BaselineService,
+        private translate: TranslateService
     ) {
     }
 

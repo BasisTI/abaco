@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component } from '@angular/core';
 import { AppComponent } from './app.component';
 import { LoginService } from './login';
@@ -74,7 +75,8 @@ export class AppTopBarComponent {
         public app: AppComponent,
         private loginService: LoginService,
         private authService: AuthService<User>,
-        private router: Router
+        private router: Router,
+        private translate: TranslateService
     ) { }
 
     logout() {
@@ -83,7 +85,8 @@ export class AppTopBarComponent {
     }
 
     setLanguage(element) {
-      sessionStorage.setItem("language", element.name);
-      location.reload();
+        localStorage.setItem("language", element.name);
+        this.translate.use(element.name);
+        window.location.reload(true);
     }
 }

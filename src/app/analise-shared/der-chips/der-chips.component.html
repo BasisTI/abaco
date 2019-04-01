@@ -19,7 +19,7 @@
     </p-chips>
 
     <div *ngIf="tamanhoChip"
-          class="ui-message ui-messages-error">
+          class="ui-message ui-messages-error" translate="Global.Mensagens.LimiteExcedido">
           Limite de caracteres excedido (50)
     </div>
     
@@ -31,7 +31,7 @@
       type="button"
       id="idBtnAdicionarMultiplosComponentDerChips"
       class="blue-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-      label="+ Múltiplos"
+      [label]="this.getLabel('Global.Botoes.+Multiplos')"
       (click)="abrirDialogAddMultiplos()">
     </button>
   </div>
@@ -61,14 +61,14 @@
   
   <div class="ui-g-12 ui-md-12 ui-sm-12" *ngIf="deveMostrarDuplicatas()">
     <span >
-      Valores duplicados: {{ duplicatesResult.duplicatasFormatadas() }}
+      {{this.getLabel('Analise.Analise.ValoresDuplicados:')}} {{ duplicatesResult.duplicatasFormatadas() }}
     </span>
   </div>
 
 </div>
 
 <p-dialog 
-  header="Adicionar múltiplos"
+  [header]="this.getLabel('Analise.Analise.AdicionarMultiplos')"
   [(visible)]="mostrarDialogAddMultiplos"
   id="idAdicionarMultiplosComponentDerChips"
   [contentStyle]="{'overflow': 'visible'}"
@@ -81,11 +81,11 @@
         id="idAddMultiplosComponentDerChips">
       </app-analise-der-text>
         <div *ngIf="validaMultiplos"
-          class="ui-message ui-messages-error">
+          class="ui-message ui-messages-error" translate="Global.Mensagens.ValoresDuplicados">
             O campo possui valores duplicado!
         </div>
         <div *ngIf="validaMultiplosRegistrados"
-          class="ui-message ui-messages-error">
+          class="ui-message ui-messages-error" translate="Global.Mensagens.RegistroCadastrado">
             Registro já cadastrado!
         </div>
     </div>
@@ -97,7 +97,7 @@
           type="button"
           id="idBtnCancelarComponentDerChips"
           class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Cancelar" 
+          [label]="this.getLabel('Global.Botoes.Cancelar')" 
           (click)="fecharDialogAddMultiplos()">
         </button>
       </div>
@@ -108,7 +108,7 @@
           type="button"
           id="idBtnAdicionarComponentDerChips"
           class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Adicionar"
+          [label]="this.getLabel('Global.Botoes.Adicionar')"
           (click)="adicionarMultiplos()">
         </button>
       </div>
@@ -117,7 +117,7 @@
 </p-dialog>
 
 <p-dialog
-  header="Editar"
+  [header]="this.getLabel('Analise.Analise.Editar')"
   [(visible)]="mostrarDialogEdicao"
   [contentStyle]="{'overflow': 'visible'}" 
   [width]="800">
@@ -140,7 +140,7 @@
           type="button"
           id="idBtnCancelarDialogComponentDerChips"
           class=" abaco-white-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Cancelar" 
+          [label]="this.getLabel('Global.Botoes.Cancelar')"  
           (click)="fecharDialogEdicao()">
         </button>
       </div>
@@ -150,7 +150,7 @@
           pButton
           type="button"
           class="green-btn flat ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-          label="Editar"
+          [label]="this.getLabel('Global.Botoes.Editar')"
           id="idBtnEditarComponentDerChips" 
           (click)="editarChip()">
         </button>

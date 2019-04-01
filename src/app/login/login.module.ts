@@ -18,6 +18,14 @@ import {
 
 import { LoginComponent, loginRoute, LoginService } from './';
 
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
 @NgModule({
     imports: [
         CommonModule,
@@ -33,7 +41,14 @@ import { LoginComponent, loginRoute, LoginService } from './';
         InputTextModule,
         ConfirmDialogModule,
         PasswordModule,
-        SecurityModule.forRoot()
+        SecurityModule.forRoot(),
+        TranslateModule.forChild({
+            loader: {
+              provide: TranslateLoader,
+              useFactory: (createTranslateLoader),
+              deps: [HttpClient]
+            }
+          })
     ],
     declarations: [
         LoginComponent

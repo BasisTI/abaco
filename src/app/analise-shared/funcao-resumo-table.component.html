@@ -1,6 +1,6 @@
 <div class="ui-g-12 ui-md-12 ui-sm-12">
   <div class="ui-g-7 ui-md-7 ui-sm-12">
-    <h2>Complexidade</h2>
+    <h2 translate="Cadastros.FuncaoDados.Complexidade">Complexidade</h2>
     <p-dataTable [value]="linhasResumo" [responsive]="true" scrollable="true" scrollWidth="100%">
       <p-column field="label"></p-column>
 
@@ -12,19 +12,19 @@
         </p-column>
       </div>
 
-      <p-column header="Qtd">
+      <p-column [header]="this.getLabel('Cadastros.FuncaoDados.Qtd')">
         <ng-template let-linhaResumo="rowData" pTemplate="body">
           {{ linhaResumo.getQuantidadeTotal() }}
         </ng-template>
       </p-column>
 
-      <p-column header="PF - Total">
+      <p-column [header]="this.getLabel('Cadastros.FuncaoDados.PFTotal')">
         <ng-template let-linhaResumo="rowData" pTemplate="body">
           {{ linhaResumo.getTotalGrossPF() | number }}
         </ng-template>
       </p-column>
 
-      <p-column header="PF - Ajust">
+      <p-column [header]="this.getLabel('Cadastros.FuncaoDados.PFAjustado')">
         <ng-template let-linhaResumo="rowData" pTemplate="body">
           {{ linhaResumo.getTotalPf() | number }}
         </ng-template>
@@ -34,7 +34,7 @@
   </div>
 
   <div class="ui-g-5 ui-md-5 ui-sm-12">
-    <h2>Impacto</h2>
+    <h2 translate="Cadastros.FuncaoDados.Impacto">Impacto</h2>
     <p-dataTable [value]="linhasResumo" [responsive]="true" scrollable="true" scrollWidth="100%">
       <p-column field="label"></p-column>
 

@@ -1,7 +1,7 @@
 <div class="ui-g ui-fluid">
     <div class="ui-g-12 ui-md-12 ui-sm-12">
         <div class="card card-w-title">
-            <h1>Tipo de Fase</h1>
+            <h1 translate="Cadastros.TipoFase.TipoFase">Tipo de Fase</h1>
             <div class="ui-g">
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12">
@@ -12,7 +12,7 @@
                        id="idDescricaoComponentTipoFase"
                        (keyup.enter)="datatable.refresh(elasticQuery.query)"
                        #filter maxlength="100" />
-                <label>Descrição</label>
+                <label translate="Cadastros.TipoFase.Descricao">Descrição</label>
               </span>
                 </div>
             </div>
@@ -20,7 +20,7 @@
                 <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-white-button
-                                buttonLabel="Limpar Pesquisa"
+                                [buttonLabel]="this.getLabel('Global.Botoes.LimparPesquisa')"
                                 buttonIcon="ui-icon-clear-all"
                                 id="idBtnLimparComponentTipoFase"
                                 (click)="limparPesquisa()">
@@ -28,7 +28,7 @@
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-blue-button
-                                buttonLabel="Pesquisar"
+                                [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')"
                                 buttonIcon="ui-icon-search"
                                 id="idBtnPesquisarComponentTipoFase"
                                 (click)="datatable.refresh(elasticQuery.query)">
@@ -36,7 +36,7 @@
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-green-button
-                                buttonLabel="Novo"
+                                [buttonLabel]="this.getLabel('Global.Botoes.Novo')"
                                 id="idBtnNovoComponentTipoFase"
                                 routerLink="/tipoFase/new"
                                 buttonIcon="ui-icon-add">
@@ -53,9 +53,9 @@
                         id="idTabelaComponentTipoFase"
                         [showPaginationFooter]="true"
                         #datatable>
-                    <p-column header="Código" field="id" id="idCodigoTabelaComponentTipoFase"
+                    <p-column [header]="getLabel('Cadastros.TipoFase.Codigo')" field="id" id="idCodigoTabelaComponentTipoFase"
                               [sortable]="true"></p-column>
-                    <p-column header="Nome" field="nome" id="idNomeTabelComponentTipoFase" [sortable]="true"></p-column>
+                    <p-column [header]="getLabel('Cadastros.TipoFase.Nome')" field="nome" id="idNomeTabelComponentTipoFase" [sortable]="true"></p-column>
                 </basis-datatable>
 
                 <div class="ui-g-12 ui-md-2">
@@ -67,11 +67,11 @@
         </div>
     </div>
 </div>
-<p-confirmDialog header="Confirmação" #dialog>
+<p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"
+        <button type="button" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao')" (click)="dialog.reject()"
                 id="idBtnNaoComponentTipoFase"></button>
-        <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"
+        <button type="button" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim')" (click)="dialog.accept()"
                 id="idBtnSimComponentTipoFase"></button>
     </p-footer>
 </p-confirmDialog>

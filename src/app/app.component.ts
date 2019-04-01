@@ -72,8 +72,14 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   @ViewChild('layoutMenuScroller') layoutMenuScrollerViewChild: ElementRef;
 
   constructor(public renderer: Renderer, translate: TranslateService) {
+    translate.addLangs(['en', 'es', 'pt']);
     translate.setDefaultLang('pt');
-   }
+
+    const browserLang = translate.getBrowserLang();
+    if (localStorage.getItem("language")) {
+      translate.use(localStorage.getItem("language"));
+    }
+  }
 
   ngAfterViewInit() {
     this.layoutContainer = <HTMLDivElement>this.layourContainerViewChild.nativeElement;

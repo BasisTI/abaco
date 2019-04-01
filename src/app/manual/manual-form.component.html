@@ -1,7 +1,7 @@
 <div class="ui-g ui-fluid">
     <div class="ui-g-12">
         <div class="card card-w-title">
-            <h1>{{ manual.id ? 'Editar Manual' : 'Cadastrar Manual' }}</h1>
+            <h1>{{ manual.id ? this.getLabel('Cadastros.Manual.EditarManual') : this.getLabel('Cadastros.Manual.CadastrarManual') }}</h1>
             <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
 
                 <div class="ui-g">
@@ -19,12 +19,12 @@
                         <span class="md-inputfield">
                             <input id="nome_manual" type="text" name="nome" maxlength="250" [(ngModel)]="manual.nome"
                                    pInputText #nome='ngModel' required/>
-                            <label>{{ 'Nome *' | translate }}</label>
+                            <label translate="Cadastros.Manual.Nome*">Nome *</label>
                              <div *ngIf="editForm.controls['nome']
                                      && !editForm.controls['nome'].valid
                                      && (editForm.controls['nome'].touched
                                      || editForm.submitted)"
-                                  class="ui-message ui-messages-error">
+                                  class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                 Campo obrigatório.
               </div>
                         </span>
@@ -40,13 +40,13 @@
                                    [(ngModel)]="manual.valorVariacaoEstimadaFormatado"
                                        #valorVariacaoEstimada='ngModel'>
                             </p-spinner>
-                            <label>Valor Variação Estimada (%) *</label>
+                            <label translate="Cadastros.Manual.ValorEstimada">Valor Variação Estimada (%) *</label>
                             <div *ngIf="editForm.controls['valorVariacaoEstimada']
                                         && !editForm.controls['valorVariacaoEstimada'].valid
                                         && (editForm.controls['valorVariacaoEstimada'].touched
                                         || editForm.submitted)"
-                                 class="ui-message ui-messages-error">
-                                Campo obrigatório.
+                                 class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                             </div>
                         </span>
                     </div>
@@ -58,13 +58,13 @@
                                    id="idValorVariacaoIndicativoFormManual"
                                    name="valorVariacaoIndicativa" #valorVariacaoIndicativa='ngModel'
                                    [(ngModel)]="manual.valorVariacaoIndicativaFormatado"></p-spinner>
-                            <label>Valor Variação Indicativa (%) *</label>
+                            <label translate="Cadastros.Manual.ValorIndicativa">Valor Variação Indicativa (%) *</label>
                             <div *ngIf="editForm.controls['valorVariacaoIndicativa']
                                         && !editForm.controls['valorVariacaoIndicativa'].valid
                                         && (editForm.controls['valorVariacaoIndicativa'].touched
                                         || editForm.submitted)"
-                                 class="ui-message ui-messages-error">
-                                Campo obrigatório.
+                                 class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                             </div>
                         </span>
                     </div>
@@ -73,7 +73,7 @@
 
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-12 ui-sm-12">
-                        <label>Observação</label>
+                        <label translate="Cadastros.Manual.Observacao">Observação</label>
                     </div>
 
                     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 01px">
@@ -86,9 +86,9 @@
 
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 01px">
-                        <label>Arquivo Manual</label>
+                        <label translate="Cadastros.Manual.ArquivoManual">Arquivo Manual</label>
                         <span class="md-inputfield">
-                            <p-fileUpload #fileInput chooseLabel="Selecionar arquivo" [showUploadButton]="false"
+                            <p-fileUpload #fileInput [chooseLabel]="this.getLabel('Cadastros.Manual.SelecionarArquivo')" [showUploadButton]="false"
                                           id="idArquivoManualFormManual"
                                           [showCancelButton]="false" name="arquivoManual"
                                           (onSelect)="uploadFile($event)" accept=".pdf,.odt,.doc,.docx">
@@ -106,7 +106,7 @@
                     <div class="ui-g-12 ui-md-12 ui-sm-12">
 
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 01px">
-                            <label>Impacto</label>
+                            <label translate="Cadastros.Manual.Impacto">Impacto</label>
                         </div>
 
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 01px">
@@ -117,12 +117,12 @@
                                            [(ngModel)]="manual.parametroInclusaoFormatado"
                                            #parametroInclusao='ngModel'>
                                 </p-spinner>
-                                <label>Inclusão (%) *</label>
+                                <label translate="Cadastros.Manual.Inclusao(%)*">Inclusão (%) *</label>
                                 <div *ngIf="editForm.controls['parametroInclusao']
                                             && !editForm.controls['parametroInclusao'].valid
                                             && (editForm.controls['parametroInclusao'].touched
                                             || editForm.submitted)"
-                                     class="ui-message ui-messages-error">
+                                     class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
                                     Campo obrigatório.
                                 </div>
                             </span>
@@ -136,12 +136,12 @@
                                            [(ngModel)]="manual.parametroAlteracaoFormatado"
                                            #parametroAlteracao='ngModel'>
                                 </p-spinner>
-                                <label>Alteração (%) *</label>
+                                <label translate="Cadastros.Manual.Alteracao(%)*">Alteração (%) *</label>
                                 <div *ngIf="editForm.controls['parametroAlteracao']
                                             && !editForm.controls['parametroAlteracao'].valid
                                             && (editForm.controls['parametroAlteracao'].touched
                                             || editForm.submitted)"
-                                     class="ui-message ui-messages-error">
+                                     class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
                                     Campo obrigatório.
                                 </div>
                             </span>
@@ -155,12 +155,12 @@
                                            [(ngModel)]="manual.parametroExclusaoFormatado"
                                            #parametroExclusao='ngModel'>
                                 </p-spinner>
-                                <label>Exclusão (%) *</label>
+                                <label translate="Cadastros.Manual.Exclusao(%)*">Exclusão (%) *</label>
                                 <div *ngIf="editForm.controls['parametroExclusao']
                                             && !editForm.controls['parametroExclusao'].valid
                                             && (editForm.controls['parametroExclusao'].touched
                                             || editForm.submitted)"
-                                     class="ui-message ui-messages-error">
+                                     class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
                                     Campo obrigatório.
                                 </div>
                             </span>
@@ -172,12 +172,12 @@
                                        name="parametroConversao" [(ngModel)]="manual.parametroConversaoFormatado"
                                            #parametroConversao='ngModel'>
                                 </p-spinner>
-                                <label>Conversão (%) *</label>
+                                <label translate="Cadastros.Manual.Conversao(%)*">Conversão (%) *</label>
                                 <div *ngIf="editForm.controls['parametroConversao']
                                             && !editForm.controls['parametroConversao'].valid
                                             && (editForm.controls['parametroConversao'].touched
                                             || editForm.submitted)"
-                                     class="ui-message ui-messages-error">
+                                     class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
                                     Campo obrigatório.
                                 </div>
                             </span>
@@ -186,7 +186,7 @@
                         <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-top: 01px; margin-bottom: 01px">
 
                             <div class="ui-g-3 ui-md-4 ui-sm-12">
-                                <label>Versão do CPM</label>
+                                <label translate="Cadastros.Manual.VersaoCPM">Versão do CPM</label>
                             </div>
 
                             <div class="ui-g-2 ui-md-4 ui-sm-12">
@@ -211,7 +211,7 @@
                 <div class="ui-g">
                     <div class="ui-g ui-md-12" style="justify-content: flex-end">
                         <div class="ui-g-3 ui-md-3 ui-sm-12">
-                            <app-blue-button buttonLabel="Novo Esforço Fase" buttonIcon="ui-icon-add"
+                            <app-blue-button [buttonLabel]="this.getLabel('Cadastros.Manual.Botoes.NovoEsforcoFase')" buttonIcon="ui-icon-add"
                                              id="idBtnNovoEsforcoFaseFormManual"
                                              (click)="openDialogPhaseEffort(editForm1.resetForm())">
                             </app-blue-button>
@@ -223,9 +223,9 @@
                     <div class="ui-g-12 ui-md-12 ui-sm-12" id="tabela-tipo-fase">
                         <app-memory-datatable [value]="manual.esforcoFases" id="idTabelaEsforcoFaseFormManual"
                                               (buttonClick)="datatableClick($event)" disableClone="true">
-                            <p-column header="Tipo de Fase" field="fase.nome">
+                            <p-column [header]="this.getLabel('Cadastros.Manual.TipoFase')" field="fase.nome">
                             </p-column>
-                            <p-column header="Percentual (%)" field="esforcoFormatado">
+                            <p-column [header]="this.getLabel('Cadastros.Manual.Percentual(%)')" field="esforcoFormatado">
                             </p-column>
                         </app-memory-datatable>
                     </div>
@@ -233,14 +233,14 @@
 
                 <div class="ui-g">
                     <div class="ui-g-4 ui-g-offset-6">
-                        Total: {{ getPhaseEffortTotalPercentual() }} %
+                        {{this.getLabel('Cadastros.Manual.Total:')}} {{ getPhaseEffortTotalPercentual() }} %
                     </div>
                 </div>
 
                 <div class="ui-g">
                     <div class="ui-g ui-md-12" style="justify-content: flex-end">
                         <div class="ui-g-3 ui-md-3 ui-sm-12">
-                            <app-blue-button buttonLabel="Novo Deflator" buttonIcon="ui-icon-add"
+                            <app-blue-button [buttonLabel]="this.getLabel('Cadastros.Manual.Botoes.NovoDeflator')" buttonIcon="ui-icon-add"
                                              id="idBtnNovoDeflatorFormManual"
                                              (click)="openDialogCreateAdjustFactor(editForm2.resetForm())">
                             </app-blue-button>
@@ -253,21 +253,21 @@
                         <app-memory-datatable [value]="manual.fatoresAjuste" id="idTabelaDeflatorFormManual"
                                               (buttonClick)="adjustFactorDatatableClick($event)" disableClone="true"
                                               paginator="true">
-                            <p-column header="Código" field="codigo" [sortable]="true">
+                            <p-column [header]="this.getLabel('Cadastros.Manual.Codigo')" field="codigo" [sortable]="true">
                                 <ng-template let-col let-codigo="rowData" pTemplate="body">
                                     {{ codigo[col.field] == null ? '---' : codigo[col.field]}}
                                 </ng-template>
                             </p-column>
-                            <p-column header="Nome" field="nome" [sortable]="true">
+                            <p-column [header]="this.getLabel('Cadastros.Manual.Nome')" field="nome" [sortable]="true">
                             </p-column>
-                            <p-column header="Deflator" field="fatorFormatado" [sortable]="true">
+                            <p-column [header]="this.getLabel('Cadastros.Manual.Deflator')" field="fatorFormatado" [sortable]="true">
                             </p-column>
-                            <p-column header="Tipo Deflator" field="tipoAjuste" [sortable]="true">
+                            <p-column [header]="this.getLabel('Cadastros.Manual.TipoDeflator')" field="tipoAjuste" [sortable]="true">
                                 <ng-template let-col let-tipoAjuste="rowData" pTemplate="body">
-                                    {{ tipoAjuste[col.field] == 'PERCENTUAL' ? 'Percentual' : 'Unitário'}}
+                                    {{ tipoAjuste[col.field] == 'PERCENTUAL' ? this.getLabel('Cadastros.Manual.Percentual') : this.getLabel('Cadastros.Manual.Unitario')}}
                                 </ng-template>
                             </p-column>
-                            <p-column header="Ativo" field="ativo" [sortable]="true">
+                            <p-column [header]="this.getLabel('Cadastros.Manual.Ativo')" field="ativo" [sortable]="true">
                                 <ng-template let-col let-ativo="rowData" pTemplate="body">
                                     {{ ativo[col.field] | activeBoolean }}
                                 </ng-template>
@@ -278,11 +278,11 @@
 
                 <div class="ui-g" style="justify-content: center; margin-top: 25px;">
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-white-button buttonLabel="Cancelar" id="idBtnCancelarFormManual"
+                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCancelarFormManual"
                                           routerLink="/manual"></app-white-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-submit-button buttonLabel="Salvar" id="idBtnSalvarFormManual"
+                        <app-submit-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarFormManual"
                                            [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
                     </div>
                 </div>
@@ -292,20 +292,20 @@
             <form name="editForm1" role="form" novalidate (ngSubmit)="save(editForm1)" #editForm1="ngForm">
 
                 <!-- Dialog Registro Esforco Fase -->
-                <p-dialog header="Esforço por Fase" [(visible)]="showDialogPhaseEffort"
+                <p-dialog [header]="this.getLabel('Cadastros.Manual.EsforcoFase')" [(visible)]="showDialogPhaseEffort"
                           (onHide)="fecharEsforcoFase()"
                           onreset="esforcoFases"
                           [contentStyle]="{'overflow':'visible'}"
                           [width]="800">
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                            <label>Tipo de Fase *</label>
+                            <label translate="Cadastros.Manual.TipoFase*">Tipo de Fase *</label>
                             <p-dropdown required
                                         [filter]="true"
                                         id="nome_fase"
                                         [options]="tipoFases"
                                         [(ngModel)]="newPhaseEffort.fase"
-                                        placeholder="Tipo de Fase"
+                                        [placeholder]="this.getLabel('Cadastros.Manual.TipoFase')"
                                         [autoWidth]="false"
                                         name="tipoFase"
                                         optionLabel="nome"
@@ -314,14 +314,14 @@
                             <div *ngIf="this.validaTipoFase || (editForm.controls['tipoFase']
                                         && !editForm.controls['tipoFase'].valid
                                         && editForm.controls['tipoFase'].touched)">
-                                <span style="color: red">Campo obrigatório.</span>
+                                <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                            <label>Esforço (%) *</label>
+                            <label translate="Cadastros.Manual.Esforco">Esforço (%) *</label>
                             <p-spinner
                                    required
                                    step="0.010"
@@ -335,7 +335,7 @@
                             <div *ngIf="this.validaEsforco || (editForm.controls['esfocoFase']
                                         && !editForm.controls['esfocoFase'].valid
                                         && editForm.controls['esfocoFase'].touched)">
-                                <span style="color: red">Campo obrigatório.</span>
+                                <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
                             </div>
                         </div>
                     </div>
@@ -343,13 +343,13 @@
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-white-button buttonLabel="Cancelar" id="idBtnCAncelarSaveEsforcoFormManual"
+                                <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCAncelarSaveEsforcoFormManual"
                                                   (click)="closeDialogPhaseEffort()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-green-button buttonLabel="Salvar" id="idBtnSalvarSaveEsforcoFormManual"
+                                <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarSaveEsforcoFormManual"
                                                   buttonIcon="ui-icon-add"
                                                   (click)="addPhaseEffort()">
                                 </app-green-button>
@@ -361,19 +361,19 @@
             </form>
 
                 <!-- Dialog Edit  Esforco Fase -->
-                <p-dialog header="Esforço por Fase" [(visible)]="showDialogEditPhaseEffort"
+                <p-dialog [header]="this.getLabel('Cadastros.Manual.EsforcoFase')" [(visible)]="showDialogEditPhaseEffort"
                           [contentStyle]="{'overflow':'visible'}"
                           [width]="800">
 
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                            <label>Tipo de Fase*</label>
+                            <label translate="Cadastros.Manual.TipoFase*">Tipo de Fase*</label>
                             <p-dropdown [filter]="true"
                                         id="nome_fase_edit"
                                         [options]="tipoFases"
                                         [(ngModel)]="editedPhaseEffort.fase"
                                         optionLabel="nome"
-                                        placeholder="Tipo de Fase"
+                                        [placeholder]="this.getLabel('Cadastros.Manual.TipoFase')"
                                         name="fase"
                                         dataKey="id"
                                         [autoWidth]="false">
@@ -382,14 +382,14 @@
                             <div *ngIf="editForm.controls['fase']
                                         && !editForm.controls['fase'].valid
                                         && (editForm.controls['fase'].touched)">
-                                <span style="color: red">Campo obrigatório.</span>
+                                <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                            <label>Esforço (%)*</label>
+                            <label translate="Cadastros.Manual.Esforco(%)*">Esforço (%)*</label>
                             <p-spinner
                                     required
                                     step="0.010"
@@ -403,7 +403,7 @@
                                         && !editForm.controls['esforco'].valid
                                         && (editForm.controls['esforco'].touched
                                         || editForm.submitted)">
-                                <span style="color: red">Campo obrigatório.</span>
+                                <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
                             </div>
                         </div>
                     </div>
@@ -411,13 +411,13 @@
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-white-button buttonLabel="Cancelar" id="idBtnCancelarEditFormManual"
+                                <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCancelarEditFormManual"
                                                   (click)="closeDialogEditPhaseEffort()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-green-button buttonLabel="Salvar" id="idBtnSalvarEditFormManual"
+                                <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarEditFormManual"
                                                   buttonIcon="ui-icon-add"
                                                   (click)="editPhaseEffort()">
                                 </app-green-button>
@@ -433,14 +433,14 @@
             <form name="editForm2" role="form" novalidate (ngSubmit)="save(editForm2)" #editForm2="ngForm">
 
 
-                <p-dialog header="Deflator" [(visible)]="showDialogCreateAdjustFactor"
+                <p-dialog [header]="this.getLabel('Cadastros.Manual.Deflator')" [(visible)]="showDialogCreateAdjustFactor"
                           (onHide)="closeDialogCreateAdjustFactor()"
                           [contentStyle]="{'overflow':'visible'}"
                           [width]="800">
                     <div class="ui-g">
 
                         <div class="ui-g-6 ui-md-6 ui-sm-12" style="padding-top: 25px">
-                            <label>Nome *</label>
+                            <label translate="Cadastros.Manual.Nome*">Nome *</label>
 
                             <input id="nome_fator_ajuste" type="text" name="nomeFatorAjuste"
                                    [(ngModel)]="newAdjustFactor.nome"
@@ -450,28 +450,28 @@
                             <div *ngIf="this.validaNomeDeflator || (editForm2.controls['nomeFatorAjuste']
                                     && !editForm2.controls['nomeFatorAjuste'].valid
                                     && editForm2.controls['nomeFatorAjuste'].touched)">
-                                <span style="color: red">Campo obrigatório.</span>
+                                <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
                             </div>
                         </div>
 
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
-                            <label>Tipo Deflator *</label><br>
+                            <label translate="Cadastros.CadastroDeflator.TipoDeflator*">Tipo Deflator *</label><br>
                             <p-dropdown [filter]="true" #dd id="tipo_ajuste" [options]="adjustTypes" name="tipoAjuste"
                                         [(ngModel)]="newAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false"
-                                        placeholder="Tipo Ajuste" required
+                                        [placeholder]="this.getLabel('Cadastros.Manual.TipoAjuste')" required
                                         (onClick)= "this.validaTipoDeflator = false">
                             </p-dropdown>
                             <div *ngIf="this.validaTipoDeflator || (editForm2.controls['tipoAjuste']
                                         && !editForm2.controls['tipoAjuste'].valid
                                         && editForm2.controls['tipoAjuste'].touched)">
-                                <span style="color: red">Campo obrigatório.</span>
+                                <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
                             </div>
                         </div>
 
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
-                            <label *ngIf="isPercentualEnum(newAdjustFactor.tipoAjuste)">Deflator (%) *</label>
-                            <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)">Deflator (PF) *</label>
-                            <label *ngIf="newAdjustFactor.tipoAjuste === undefined">Deflator *</label>
+                            <label *ngIf="isPercentualEnum(newAdjustFactor.tipoAjuste)" translate="Cadastros.Manual.Deflator(%)*">Deflator (%) *</label>
+                            <label *ngIf="isUnitaryEnum(newAdjustFactor.tipoAjuste)" translate="Cadastros.Manual.Deflator(PF)*">Deflator (PF) *</label>
+                            <label *ngIf="newAdjustFactor.tipoAjuste === undefined" translate="Cadastros.Manual.Deflator*">Deflator *</label>
 
                             <p-spinner
                                 id="idDeflatorDeflatorFormManual"
@@ -489,7 +489,7 @@
                             <div *ngIf="this.validaDeflator || (editForm2.controls['fator']
                                         && !editForm2.controls['fator'].valid
                                         && editForm2.controls['fator'].touched)">
-                                <span style="color: red">Campo obrigatório.</span>
+                                <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
                             </div>
                         </div>
 
@@ -497,7 +497,7 @@
 
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                            <label>Descrição</label>
+                            <label translate="Cadastros.Manual.Descricao">Descrição</label>
                             <textarea [rows]="15" [cols]="90" id="idDescricaoSaveFormManual" pInputTextarea
                                       maxlength="2000" name="descricaoFatorAjuste"
                                       [(ngModel)]="newAdjustFactor.descricao">
@@ -507,13 +507,13 @@
 
                     <!----><div class="ui-g">
                         <div class="ui-g-5 ui-md-5 ui-sm-12" style="padding-top: 01px">
-                            <label>Código</label>
+                            <label translate="Cadastros.Manual.Codigo">Código</label>
                             <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="newAdjustFactor.codigo"
                                    pInputText maxlength="255"/>
                         </div>
 
                         <div class="ui-g-7 ui-md-7 ui-sm-12" style="padding-top: 25px">
-                            <label>Origem</label>
+                            <label translate="Cadastros.Manual.Origem">Origem</label>
                             <input id="origem_fator" type="text" name="origem" [(ngModel)]="newAdjustFactor.origem"
                                    pInputText maxlength="255"/>
                         </div>
@@ -522,13 +522,13 @@
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-white-button buttonLabel="Cancelar" id="idBtnCancelarDeflatorSaveFormManual"
+                                <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCancelarDeflatorSaveFormManual"
                                                   (click)="closeDialogCreateAdjustFactor()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-green-button buttonLabel="Salvar" id="idBtnSalvarDeflatorSaveFormManual"
+                                <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarDeflatorSaveFormManual"
                                                   buttonIcon="ui-icon-add" (click)="addAdjustFactor()">
                                 </app-green-button>
                             </div>
@@ -547,7 +547,7 @@
 
                     <div class="ui-g">
                         <div class="ui-g-6 ui-md-6 ui-sm-12" style="padding-top: 25px">
-                            <label>Nome *</label>
+                            <label translate="Cadastros.Manual.Nome*">Nome *</label>
                             <input id="nome_fator_ajuste" type="text" name="nomeEdicaoFatorAjuste"
                                    [(ngModel)]="editedAdjustFactor.nome"
                                    pInputText required maxlength="255"
@@ -555,12 +555,12 @@
                             <div *ngIf="this.validaNomeDeflator || (editForm.controls['nomeEdicaoFatorAjuste']
                                     && !editForm.controls['nomeEdicaoFatorAjuste'].valid
                                     && editForm.controls['nomeEdicaoFatorAjuste'].touched)">
-                                <span style="color: red">Campo obrigatório.</span>
+                                <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
                             </div>
                         </div>
 
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
-                            <label>Tipo Ajuste *</label><br>
+                            <label translate="Cadastros.Manual.TipoAjuste*">Tipo Ajuste *</label><br>
                             <p-dropdown [filter]="true" id="tipo_ajuste" [options]="adjustTypes" name="tipoAjusteEdit"
                                         [(ngModel)]="editedAdjustFactor.tipoAjuste" filter="true" [autoWidth]="false" required>
                             </p-dropdown>
@@ -568,14 +568,14 @@
                             <div *ngIf="this.validaTipoDeflator || (editForm.controls['tipoAjusteEdit']
                                         && !editForm.controls['tipoAjusteEdit'].valid
                                         && editForm.controls['tipoAjusteEdit'].touched)">
-                                <span style="color: red">Campo obrigatório.</span>
+                                <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
                             </div>
                         </div>
 
                         <div class="ui-g-3 ui-md-3 ui-sm-12" style="padding-top: 25px">
-                            <label *ngIf="isPercentualEnum(editedAdjustFactor.tipoAjuste)">Deflator (%) *</label>
-                            <label *ngIf="isUnitaryEnum(editedAdjustFactor.tipoAjuste)">Deflator (PF) *</label>
-                            <label *ngIf="editedAdjustFactor.tipoAjuste === undefined">Deflator *</label>
+                            <label *ngIf="isPercentualEnum(editedAdjustFactor.tipoAjuste)" translate="Cadastros.Manual.Deflator(%)*">Deflator (%) *</label>
+                            <label *ngIf="isUnitaryEnum(editedAdjustFactor.tipoAjuste)" translate="Cadastros.Manual.Deflator(PF)*">Deflator (PF) *</label>
+                            <label *ngIf="editedAdjustFactor.tipoAjuste === undefined" translate="Cadastros.Manual.Deflator*">Deflator *</label>
 
                             <p-spinner
                                 step="0.1"
@@ -592,7 +592,7 @@
                             <div *ngIf="this.validaDeflator || (editForm.controls['fatorEdit']
                                         && !editForm.controls['fatorEdit'].valid
                                         && editForm.controls['fatorEdit'].touched)">
-                                <span style="color: red">Campo obrigatório.</span>
+                                <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
                             </div>
 
                         </div>
@@ -601,7 +601,7 @@
 
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                            <label>Descrição</label>
+                            <label translate="Cadastros.Manual.Descricao">Descrição</label>
                             <textarea [rows]="15" [cols]="90" id="idDescricaoEditFormManual" pInputTextarea
                                       name="descricaoEdicaoFatorAjuste"
                                       [(ngModel)]="editedAdjustFactor.descricao" maxlength="2000">
@@ -617,7 +617,7 @@
                         </div>-->
 
                         <div class="ui-g-7 ui-md-7 ui-sm-12" style="padding-top: 25px">
-                            <label>Origem</label>
+                            <label translate="Cadastros.Manual.Origem">Origem</label>
                             <input id="origem_fator" type="text" name="origem" [(ngModel)]="editedAdjustFactor.origem"
                                    pInputText maxlength="255"/>
                         </div>
@@ -627,13 +627,13 @@
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
                             <div class="ui-g-3 ui-md-3 ui-sm-12">
-                                <app-white-button buttonLabel="Cancelar" id="idBtnCancelarEditFormManual"
+                                <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCancelarEditFormManual"
                                                   (click)="closeDialogEditAdjustFactor()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-3 ui-md-3 ui-sm-12">
-                                <app-green-button buttonLabel="Salvar" id="idBtnSalvarEditFormManual"
+                                <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarEditFormManual"
                                                   buttonIcon="ui-icon-add"
                                                   (click)="editAdjustFactor()">
                                 </app-green-button>
@@ -643,11 +643,11 @@
                 </p-dialog>
                 <!-- Inicio Dialog Edit Fator Ajuste -->
 
-                <p-confirmDialog header="Confirmação" #dialog>
+                <p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
                     <p-footer>
-                        <app-white-button buttonLabel="Não" id="idBtnNaoFormManual" buttonIcon="fa-close"
+                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Nao')" id="idBtnNaoFormManual" buttonIcon="fa-close"
                                           (click)="dialog.reject()"></app-white-button>
-                        <app-green-button buttonLabel="Sim" id="idBtnSimFormManual" buttonIcon="fa-check"
+                        <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Sim')" id="idBtnSimFormManual" buttonIcon="fa-check"
                                           (click)="dialog.accept()"></app-green-button>
                     </p-footer>
                 </p-confirmDialog>
