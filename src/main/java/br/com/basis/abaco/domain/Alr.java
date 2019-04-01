@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -71,39 +72,26 @@ public class Alr implements Serializable {
     }
 
     public Alr funcaoTransacao(FuncaoTransacao funcaoTransacao) {
-        try {
-            if(funcaoTransacao != null) {
-                this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
-            } else {
-                this.funcaoTransacao = null;
-            }
-        } catch (CloneNotSupportedException e) {
-            log.error(e.getMessage(), e);
+        if(funcaoTransacao != null) {
+            this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
+        } else {
             this.funcaoTransacao = null;
         }
         return this;
     }
 
     public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
-        try {
-            if(funcaoTransacao != null) {
-                this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
-            } else {
-                this.funcaoTransacao = null;
-            }
-        } catch (CloneNotSupportedException e) {
-            log.error(e.getMessage(), e);
+        if(funcaoTransacao != null) {
+            this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
+        } else {
             this.funcaoTransacao = null;
         }
     }
 
     public Set<FuncaoDados> getFuncaoDados() {
-        if (funcaoDados == null){
-            return null;
-        }
-        Set<FuncaoDados> cp = new LinkedHashSet<>();
-        cp.addAll(funcaoDados);
-        return cp;
+        return Optional.ofNullable(this.funcaoDados)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<FuncaoDados>());
     }
 
     public Alr funcaoDados(Set<FuncaoDados> funcaoDados) {
@@ -112,7 +100,9 @@ public class Alr implements Serializable {
         }else {
             Set<FuncaoDados> cp = new LinkedHashSet<>();
             cp.addAll(funcaoDados);
-            this.funcaoDados = cp;
+            this.funcaoDados = Optional.ofNullable(funcaoDados)
+                .map(LinkedHashSet::new)
+                .orElse(new LinkedHashSet<>());
         }
         return this;
     }

@@ -98,28 +98,17 @@ public class Der implements Serializable {
     }
 
     public FuncaoTransacao getFuncaoTransacao() {
-        try {
-            if (funcaoTransacao == null) {
-                return null;
-            } else {
-                return (FuncaoTransacao) funcaoTransacao.getClone();
-            }
-        } catch (CloneNotSupportedException e) {
-            log.error(e.getMessage(), e);
+        if (funcaoTransacao == null) {
             return null;
         }
+        return (FuncaoTransacao) funcaoTransacao.getClone();
     }
 
     public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
-        try {
-            if (funcaoTransacao == null) {
-                this.funcaoTransacao = null;
-            } else {
-                this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
-            }
-        } catch (CloneNotSupportedException e) {
-            log.error(e.getMessage(), e);
+        if (funcaoTransacao == null) {
             this.funcaoTransacao = null;
+        } else {
+            this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
         }
     }
 

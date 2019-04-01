@@ -5,6 +5,7 @@ import br.com.basis.abaco.AbacoApp;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.repository.*;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
+import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
@@ -83,6 +84,12 @@ public class AnaliseResourceIntTest {
 
     @Autowired
     private FuncaoDadosRepository funcaoDadosRepository;
+
+    @Autowired
+    private FuncaoTransacaoRepository funcaoTransacaoRepository;
+
+    @Autowired
+    private FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository;
 
     @Autowired
     private UserRepository userRepository;

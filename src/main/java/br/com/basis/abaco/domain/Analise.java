@@ -57,7 +57,7 @@ import java.util.Set;
 public class Analise implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
-    private static transient Logger log = LoggerFactory.getLogger(FuncaoTransacao.class);
+    private static transient Logger log = LoggerFactory.getLogger(Analise.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -360,13 +360,13 @@ public class Analise implements Serializable, ReportObject {
 
     public void setFuncaoDados(Set<FuncaoDados> funcaoDados) {
         this.funcaoDados = Optional.ofNullable(funcaoDados)
-            .map(lista -> new LinkedHashSet<FuncaoDados>(lista))
+            .map(LinkedHashSet::new)
             .orElse(new LinkedHashSet<FuncaoDados>());
     }
 
     public Set<FuncaoTransacao> getFuncaoTransacaos() {
         return Optional.ofNullable(this.funcaoTransacaos)
-            .map(lista -> new LinkedHashSet<FuncaoTransacao>(lista))
+            .map(LinkedHashSet::new)
             .orElse(new LinkedHashSet<FuncaoTransacao>());
     }
 
