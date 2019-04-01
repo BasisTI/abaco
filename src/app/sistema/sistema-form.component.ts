@@ -1,18 +1,18 @@
 import { TranslateService } from '@ngx-translate/core';
-import {ConfirmationService, SelectItem} from 'primeng/primeng';
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Response} from '@angular/http';
-import {Observable, Subscription} from 'rxjs/Rx';
-import {DatatableClickEvent} from '@basis/angular-components';
+import { ConfirmationService, SelectItem } from 'primeng/primeng';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Response } from '@angular/http';
+import { Observable, Subscription } from 'rxjs/Rx';
+import { DatatableClickEvent } from '@basis/angular-components';
 
-import {Sistema} from './sistema.model';
-import {SistemaService} from './sistema.service';
-import {Organizacao, OrganizacaoService} from '../organizacao';
-import {Modulo, ModuloService} from '../modulo';
-import {Funcionalidade, FuncionalidadeService} from '../funcionalidade';
-import {ResponseWrapper} from '../shared';
-import {PageNotificationService} from '../shared/page-notification.service';
+import { Sistema } from './sistema.model';
+import { SistemaService } from './sistema.service';
+import { Organizacao, OrganizacaoService } from '../organizacao';
+import { Modulo, ModuloService } from '../modulo';
+import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
+import { ResponseWrapper } from '../shared';
+import { PageNotificationService } from '../shared/page-notification.service';
 
 @Component({
     selector: 'jhi-sistema-form',
@@ -62,12 +62,13 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     getLabel(label) {
         let str: any;
         this.translate.get(label).subscribe((res: string) => {
-          str = res;
+            str = res;
         }).unsubscribe();
         return str;
-      }
+    }
 
     ngOnInit() {
+        this.traduzirTipoSistema();
         this.isSaving = false;
         this.organizacaoService.findActiveOrganizations().subscribe(response => {
             this.organizacaos = response;
@@ -78,6 +79,18 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
                 this.sistemaService.find(params['id']).subscribe(sistema => this.sistema = sistema);
             }
         });
+    }
+
+    /*
+    *   Metodo responsavel por traduzir as adjustTypes
+    */
+    traduzirTipoSistema() {
+        this.translate.stream(['Cadastros.Sistema.TipoSistema.Novo', 'Cadastros.Sistema.TipoSistema.Legado']).subscribe((traducao) => {
+            this.tipoSistemaOptions = [
+                { label: traducao['Cadastros.Sistema.TipoSistema.Novo'], value: 'NOVO' },
+                { label: traducao['Cadastros.Sistema.TipoSistema.Legado'], value: 'LEGADO' },
+            ];
+        })
     }
 
     datatableClick(event: DatatableClickEvent) {
@@ -363,7 +376,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     private subscribeToSaveResponse(result: Observable<Sistema>) {
         result.subscribe((res: Sistema) => {
             this.isSaving = false;
-            this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg(this.getLabel('Cadastros.Sistema.Mensagens.msgSistemaCadastradoComSucesso'));
+            this.isEdit ? this.pageNotificationService.addUpdateMsg() : this.pageNotificationService.addCreateMsg(this.getLabel('Cadastros.Sistema.Mensagens.msgSistemaCadastradoComSucesso'));
             this.router.navigate(['/sistema']);
         }, (error: Response) => {
             this.isSaving = false;

@@ -13,10 +13,10 @@
                     <label>{{this.getLabel('Cadastros.Manual.Observacao:')}} {{ manual.observacao }}</label>
                 </div>
                 <div class="ui-g-6">
-                    <label>{{this.getLabel('Cadastros.Manual.ValorEstimada')}} {{ manual.valorVariacaoEstimada }}</label>
+                    <label>{{this.getLabel('Cadastros.Manual.ValorEstimada:')}} {{ manual.valorVariacaoEstimada }}</label>
                 </div>
                 <div class="ui-g-6">
-                    <label>{{this.getLabel('Cadastros.Manual.ValorIndicativa')}} {{ manual.valorVariacaoIndicativa }}</label>
+                    <label>{{this.getLabel('Cadastros.Manual.ValorIndicativa:')}} {{ manual.valorVariacaoIndicativa }}</label>
                 </div>
                 <div class="ui-g-6">
                     <label>{{this.getLabel('Cadastros.Manual.ArquivoManual:')}} {{ fileName }}</label>
@@ -44,7 +44,7 @@
             </div>
 
             <div class="ui-g">
-                <h1 translate="Cadastros.Manual.EsforcosPorFase">Esforços por Fase</h1>
+                <h1 translate="Cadastros.Manual.EsforcosPorFases">Esforços por Fase</h1>
                 <div class="ui-g-12">
                     <app-memory-datatable [value]="manual.esforcoFases" id="idTabelaEsforcoFaseDetailManual"
                                           (buttonClick)="datatableClick($event)" disableEdit="true" disableView="true"

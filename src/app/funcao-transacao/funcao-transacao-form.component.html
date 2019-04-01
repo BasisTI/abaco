@@ -40,7 +40,7 @@
                                 <ng-template
                                         let-fatorAjuste="rowData.fatorAjuste"
                                         pTemplate="body">
-                                    {{ fatorAjuste ? fatorAjuste.nome : 'Nenhum' }}
+                                    {{ fatorAjuste ? fatorAjuste.nome : this.getLabel('Global.Mensagens.Nenhum') }}
                                 </ng-template>
                             </p-column>
 
@@ -51,7 +51,7 @@
                                 <ng-template
                                         let-impacto="rowData.impacto"
                                         pTemplate="body">
-                                    {{ impacto ? updateImpacto(impacto) : 'Nenhum' }}
+                                    {{ impacto ? updateImpacto(impacto) : this.getLabel('Global.Mensagens.Nenhum') }}
                                 </ng-template>
                             </p-column>
 
@@ -153,7 +153,7 @@
                 <div *ngIf="!isEdit">
                     <div class="ui-g" *ngIf="!showMultiplos">
                         <div class="ui-g-9">
-                            <label translate="Cadastros.FUncaoTransacao.NomeProcessoElementar">Nome do Processo Elementar *</label>
+                            <label translate="Cadastros.FuncaoTransacao.NomeProcessoElementar">Nome do Processo Elementar *</label>
                             <p-autoComplete
                                     [(ngModel)]="currentFuncaoTransacao.name"
                                     [suggestions]="baselineResultados"

@@ -160,13 +160,15 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.colunasAMostrar = [];
         this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
         this.traduzirColunas();
+        this.traduzirClassificacoes();
+        this.traduzirImpactos();
     }
 
     /*
     *   Metodo responsavel por traduzir as colunas que ficam em função de dados de Analise
     */
     traduzirColunas() {
-        this.translate.stream(['Cadastros.FuncaoDados.Nome', 'Cadastros.FuncaoDados.Deflator','Cadastros.FuncaoDados.Impacto',
+        this.translate.stream(['Cadastros.FuncaoDados.Nome', 'Cadastros.FuncaoDados.Deflator', 'Cadastros.FuncaoDados.Impacto',
             'Cadastros.FuncaoDados.Modulo', 'Cadastros.FuncaoDados.Funcionalidade', 'Cadastros.FuncaoDados.Classificacao',
             'Cadastros.FuncaoDados.DER(TD)', 'Cadastros.FuncaoDados.RLR(TR)', 'Cadastros.FuncaoDados.Complexidade',
             'Cadastros.FuncaoDados.PFTotal', 'Cadastros.FuncaoDados.PFAjustado']).subscribe((traducao) => {
@@ -185,6 +187,36 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                 ];
 
             })
+    }
+
+    /*
+    *   Metodo responsavel por traduzir as classificacoes que ficam em função de dados 
+    */
+    traduzirClassificacoes() {
+        this.translate.stream(['Cadastros.FuncaoDados.Classificacoes.ALI', 'Cadastros.FuncaoDados.Classificacoes.AIE']).subscribe((traducao) => {
+            this.classificacoes = [
+                { label: traducao['Cadastros.FuncaoDados.Classificacoes.ALI'], value: 'ALI' },
+                { label: traducao['Cadastros.FuncaoDados.Classificacoes.AIE'], value: 'AIE' },
+            ];
+
+        })
+    }
+
+    /*
+    *   Metodo responsavel por traduzir os tipos de impacto em função de dados 
+    */
+    traduzirImpactos() {
+        this.translate.stream(['Cadastros.FuncaoDados.Impactos.Inclusao', 'Cadastros.FuncaoDados.Impactos.Alteracao', 
+        'Cadastros.FuncaoDados.Impactos.Exclusao', 'Cadastros.FuncaoDados.Impactos.Conversao',
+        'Cadastros.FuncaoDados.Impactos.Outros']).subscribe((traducao) => {
+            this.impacto = [
+                { label: traducao['Cadastros.FuncaoDados.Impactos.Inclusao'], value: 'INCLUSAO' },
+                { label: traducao['Cadastros.FuncaoDados.Impactos.Alteracao'], value: 'ALTERACAO' },
+                { label: traducao['Cadastros.FuncaoDados.Impactos.Exclusao'], value: 'EXCLUSAO' },
+                { label: traducao['Cadastros.FuncaoDados.Impactos.Conversao'], value: 'CONVERSAO' },
+                { label: traducao['Cadastros.FuncaoDados.Impactos.Outros'], value: 'ITENS_NAO_MENSURAVEIS' }
+            ];
+        })
     }
 
     updateNameImpacto(impacto: string) {
@@ -689,7 +721,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         var _this = this;
 
         let crudExcluir = new FuncaoTransacao;
-        crudExcluir.name = 'Excluir';
+        crudExcluir.name = this.getLabel('Cadastros.FuncaoDados.Excluir');
         crudExcluir.funcionalidade = funcaoDadosSelecionada.funcionalidade;
         crudExcluir.tipo = TipoFuncaoTransacao.EE;
         crudExcluir.impacto = Impacto.INCLUSAO;
@@ -697,7 +729,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.inserirCrud(crudExcluir);
 
         let crudEditar = new FuncaoTransacao;
-        crudEditar.name = 'Editar';
+        crudEditar.name = this.getLabel('Cadastros.FuncaoDados.Editar');
         crudEditar.funcionalidade = funcaoDadosSelecionada.funcionalidade;
         crudEditar.tipo = TipoFuncaoTransacao.EE;
         crudEditar.impacto = Impacto.INCLUSAO;
@@ -707,7 +739,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         }, 1000);
 
         let crudInserir = new FuncaoTransacao;
-        crudInserir.name = 'Inserir';
+        crudInserir.name = this.getLabel('Cadastros.FuncaoDados.Inserir');
         crudInserir.funcionalidade = funcaoDadosSelecionada.funcionalidade;
         crudInserir.tipo = TipoFuncaoTransacao.EE;
         crudInserir.impacto = Impacto.INCLUSAO;
@@ -717,7 +749,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         }, 2000);
 
         let crudPesquisar = new FuncaoTransacao;
-        crudPesquisar.name = 'Pesquisar';
+        crudPesquisar.name = this.getLabel('Cadastros.FuncaoDados.Pesquisar');
         crudPesquisar.funcionalidade = funcaoDadosSelecionada.funcionalidade;
         crudPesquisar.tipo = TipoFuncaoTransacao.CE;
         crudPesquisar.impacto = Impacto.INCLUSAO;
@@ -727,7 +759,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         }, 3000);
 
         if (this.crudExist) {
-            this.pageNotificationService.addErrorMsg('CRUD já cadastrado!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoDados.Mensagens.msgCrudJaCadastrado'));
         }
     }
 
@@ -745,7 +777,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     // Prepara para clonar
     private prepareToClone(funcaoDadosSelecionada: FuncaoDados) {
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
-        this.currentFuncaoDados.name = this.currentFuncaoDados.name + ' - Cópia';
+        this.currentFuncaoDados.name = this.currentFuncaoDados.name + this.getLabel('Cadastros.FuncaoDados.Copia');
         this.carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada);
         this.pageNotificationService.addInfoMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgClonandoFuncaoDados')} '${funcaoDadosSelecionada.name}'`);
     }
@@ -808,7 +840,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     formataFatorAjuste(fatorAjuste: FatorAjuste): string {
-        return fatorAjuste ? FatorAjusteLabelGenerator.generate(fatorAjuste) : 'Nenhum';
+        return fatorAjuste ? FatorAjusteLabelGenerator.generate(fatorAjuste) : this.getLabel('Global.Mensagens.Nenhum');
     }
 
     ordenarColunas(colunasAMostrarModificada: SelectItem[]) {

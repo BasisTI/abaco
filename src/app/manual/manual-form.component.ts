@@ -74,6 +74,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.traduzirClassificacoes();
         this.newUpload = false;
         this.isSaving = false;
         this.routeSub = this.route.params.subscribe(params => {
@@ -118,6 +119,18 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 }
             }
         });
+    }
+
+    /*
+    *   Metodo responsavel por traduzir as adjustTypes
+    */
+    traduzirClassificacoes() {
+        this.translate.stream(['Cadastros.Manual.Percentual', 'Cadastros.Manual.Unitario']).subscribe((traducao) => {
+            this.adjustTypes = [
+                { label: traducao['Cadastros.Manual.Percentual'], value: 'PERCENTUAL' },
+                { label: traducao['Cadastros.Manual.Unitario'], value: 'UNITARIO' },
+            ];
+        })
     }
 
     private checkIfManualAlreadyExists(registeredPhases: Array<TipoFase>): boolean {
@@ -216,11 +229,11 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     privateExibirMensagemCamposInvalidos(codErro: number) {
         switch (codErro) {
             case 1:
-            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.msgCamposInvalidos') + this.getInvalidFieldsString());
-            this.invalidFields = [];
-            return;
-        case 2:
-            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.msgCampoArquivoManualEstaInvalido'));
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.msgCamposInvalidos') + this.getInvalidFieldsString());
+                this.invalidFields = [];
+                return;
+            case 2:
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.msgCampoArquivoManualEstaInvalido'));
                 return;
         }
     }

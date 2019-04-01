@@ -155,7 +155,7 @@
       "Manual": "Manual",
       "Manual:": "Manual:",
       "Nome": "Nombre",
-      "Nome:": "Nombre",
+      "Nome:": "Nombre: ",
       "Nome*": "Nombre *",
       "Observacao": "Observación",
       "Observacao:": "Observación:",
@@ -362,6 +362,10 @@
         "msgOcorreuErroNoSistema": "Se ha producido un error en el sistema!",
         "msgCamposInvalidos": "Campos no válidos: ",
         "msgAindaNaoCadastrado":"Todavía no registrado"
+      },
+      "TipoSistema":{
+        "Novo":"Nuevo",
+        "Legado":"Legado"
       }
     },
     "FuncaoDados": {
@@ -397,6 +401,11 @@
       "Alteracao":"CAMBIO",
       "Exclusao":"EXCLUSIÓN",
       "Conversao":"CONVERSIÓN",
+      "Excluir":"Borrar",
+      "Editar":"Editar",
+      "Inserir":"Insertar",
+      "Pesquisar":"Buscar",
+      "Copia":" - Copia",
       "Mensagens": {
         "msgAdicionarFuncaoDados": "Agregar función de datos",
         "msgAlterarFuncaoDados": "Cambio de la función de datos",
@@ -410,7 +419,19 @@
         "msgSelecioneContratoParaCarregarDeflatores": "Seleccione un Contrato en la pestaña General para cargar los Deflactores",
         "msgSelecioneModuloSubmodulo": "Seleccione un módulo y un submódulo",
         "msgRegistroCadastrado": "Registro ya registrado",
-        "msgCertezaDesejaExcluirFuncaoDados": "Está seguro de que desea eliminar la función de datos "
+        "msgCertezaDesejaExcluirFuncaoDados": "Está seguro de que desea eliminar la función de datos ",
+        "msgCrudJaCadastrado":"CRUD ya registrado!"
+      },
+      "Classificacoes":{
+        "ALI":"ALI - Archivo Lógico Interno",
+        "AIE":"AIE - Archivo de Interfaz Externa"
+      },
+      "Impactos":{
+        "Inclusao":"Inclusión",
+        "Alteracao":"Cambio",
+        "Exclusao":"Exclusión",
+        "Conversao":"Conversión",
+        "Outros":"Otros"
       }
     },
     "FuncaoTransacao": {
@@ -771,7 +792,8 @@
       "Clonar":"Clon",
       "EscolhaUmRegistroParaClonar":"Elija un registro para clonar.",
       "CriarCrud":"Crear Crud",
-      "EscolhaUmRegistroParaCriarCrud":"Elija un registro para crear crud."
+      "EscolhaUmRegistroParaCriarCrud":"Elija un registro para crear crud.",
+      "Nenhum":"Ningún"
     }
   },
   "MenuPrincipal": {

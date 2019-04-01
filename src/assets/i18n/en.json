@@ -69,6 +69,11 @@
       "Alteracao":"CHANGE",
       "Exclusao":"EXCLUSION",
       "Conversao":"CONVERSION",
+      "Excluir":"Delete",
+      "Editar":"Edit",
+      "Inserir":"Insert",
+      "Pesquisar":"Scearch",
+      "Copia":" - Copy",
       "Mensagens": {
         "msgAdicionarFuncaoDados": "Add Data Role",
         "msgAlterarFuncaoDados": "Change Data Function",
@@ -82,7 +87,19 @@
         "msgSelecioneContratoParaCarregarDeflatores": "Select a Contract on the 'General' tab to load the Deflators",
         "msgSelecioneModuloSubmodulo": "Select a Module and Functionality",
         "msgRegistroCadastrado": "Registration already registered",
-        "msgCertezaDesejaExcluirFuncaoDados": "Are you sure you want to delete the Data Role "
+        "msgCertezaDesejaExcluirFuncaoDados": "Are you sure you want to delete the Data Role ",
+        "msgCrudJaCadastrado":"CRUD already registered!"
+      },
+      "Classificacoes":{
+        "ALI":"ALI - Internal Logical File",
+        "AIE":"AIE - External Interface File"
+      },
+      "Impactos":{
+        "Inclusao":"Inclusion",
+        "Alteracao":"Change",
+        "Exclusao":"Exclusion",
+        "Conversao":"Conversion",
+        "Outros":"Others"
       }
     },
     "FuncaoTransacao": {
@@ -298,7 +315,7 @@
       "Manual": "Manual",
       "Manual:": "Manual:",
       "Nome": "Name",
-      "Nome:": "Name",
+      "Nome:": "Name: ",
       "Nome*": "Name *",
       "Observacao": "Note",
       "Observacao:": "Note:",
@@ -505,6 +522,10 @@
         "msgOcorreuErroNoSistema": "An error has occurred in the system!",
         "msgCamposInvalidos": "Invalid fields: ",
         "msgAindaNaoCadastrado":"Not yet registered"
+      },
+      "TipoSistema":{
+        "Novo":"New",
+        "Legado":"Legacy"
       }
     }
   },
@@ -740,7 +761,7 @@
       "SalvarAnalise": "Save Analyze",
       "SelecionarArquivo": "Select File",
       "Sim": "Yes",
-      "Unitário": "Unitary",
+      "Unitario": "Unitary",
       "Voltar": "Back"
     },
     "Mensagens": {
@@ -776,7 +797,8 @@
       "Clonar":"Clone",
       "EscolhaUmRegistroParaClonar":"Choose a record to clone.",
       "CriarCrud":"Create Crud",
-      "EscolhaUmRegistroParaCriarCrud":"Choose a record to create crud."
+      "EscolhaUmRegistroParaCriarCrud":"Choose a record to create crud.",
+      "Nenhum":"None"
     }
   },
   "MenuPrincipal": {

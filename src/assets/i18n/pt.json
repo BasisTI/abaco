@@ -157,10 +157,10 @@
       "Impacto": "Impacto",
       "Manual": "Manual",
       "Nome": "Nome",
-      "Nome:": "Nome",
+      "Nome:": "Nome: ",
       "Nome*": "Nome *",
       "Observacao": "Observação",
-      "Observacao:": "Observação:",
+      "Observacao:": "Observação: ",
       "Origem": "Origem",
       "Percentual":"Percentual",
       "Percentual(%)": "Percentual (%)",
@@ -341,6 +341,10 @@
         "msgOcorreuErroNoSistema": "Ocorreu um erro no sistema!",
         "msgCamposInvalidos": "Campos inválidos: ",
         "msgAindaNaoCadastrado":"Ainda não cadastrado"
+      },
+      "TipoSistema":{
+        "Novo":"Novo",
+        "Legado":"Legado"
       }
     },
     "FatorAjuste": {
@@ -401,6 +405,11 @@
       "Exclusao":"EXCLUSÃO",
       "Alteracao":"ALTERAÇÃO",
       "Conversao":"CONVERSÃO",
+      "Excluir":"Excluir",
+      "Editar":"Editar",
+      "Inserir":"Inserir",
+      "Pesquisar":"Pesquisar",
+      "Copia":" - Cópia",
       "Mensagens": {
         "msgAdicionarFuncaoDados": "Adicionar Função de Dados",
         "msgAlterarFuncaoDados": "Alterar Função de Dados",
@@ -414,7 +423,19 @@
         "msgSelecioneContratoParaCarregarDeflatores": "Selecione um Contrato na aba Geral para carregar os Deflatores",
         "msgSelecioneModuloSubmodulo": "Selecione um Módulo e Submódulo",
         "msgRegistroCadastrado": "Registro já cadastrado",
-        "msgCertezaDesejaExcluirFuncaoDados": "Tem certeza que deseja excluir a Função de Dados "
+        "msgCertezaDesejaExcluirFuncaoDados": "Tem certeza que deseja excluir a Função de Dados ",
+        "msgCrudJaCadastrado":"CRUD já cadastrado!"
+      },
+      "Classificacoes":{
+        "ALI":"ALI - Arquivo Lógico Interno",
+        "AIE":"AIE - Arquivo de Interface Externa"
+      },
+      "Impactos":{
+        "Inclusao":"Inclusão",
+        "Alteracao":"Alteração",
+        "Exclusao":"Exclusão",
+        "Conversao":"Conversão",
+        "Outros":"Outros"
       }
     },
     "FuncaoTransacao": {
@@ -774,7 +795,8 @@
       "Clonar":"Clonar",
       "EscolhaUmRegistroParaClonar":"Escolha um registro para clonar.",
       "CriarCrud":"Criar Crud",
-      "EscolhaUmRegistroParaCriarCrud":"Escolha um registro para criar crud."
+      "EscolhaUmRegistroParaCriarCrud":"Escolha um registro para criar crud.",
+      "Nenhum":"Nenhum"
     }
   },
   "MenuPrincipal": {
