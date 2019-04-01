@@ -599,7 +599,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     private formataBoleano(bool: Boolean): String {
-        return bool ? '    - Ativo' : ' - Inativo';
+        return bool ? this.getLabel('Analise.Analise.Ativo') : this.getLabel('Analise.Analise.Inativo');
     }
 
     /**

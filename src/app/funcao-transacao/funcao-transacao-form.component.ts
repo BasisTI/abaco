@@ -452,7 +452,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
 
         if (this.currentFuncaoTransacao.funcionalidade === undefined) {
-            this.pageNotificationService.addErrorMsg('Selecione um Módulo e Submódulo');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgSelecioneUmModuloEFuncionalidade'));
             retorno = false;
         }
 

@@ -81,7 +81,7 @@
                                 <div class="ui-g-12 ui-md-12 ui-sm-12">
 
                                     <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px">
-                                        <label>Organização</label>
+                                        <label translate="Analise.Analise.Organizacao">Organização</label>
                                         <p-dropdown
                                                 [filter]="true"
                                                 dataKey="id"
@@ -97,7 +97,7 @@
                                         </p-dropdown>
                                     </div>
                                     <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px">
-                                        <label>Equipe Responsável</label>
+                                        <label translate="Analise.Analise.EquipeResponsavel">Equipe Responsável</label>
                                         <p-dropdown
                                                 [filter]="true"
                                                 dataKey="id"
@@ -114,7 +114,7 @@
                                     </div>
 
                                     <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px">
-                                        <label>Sistema</label>
+                                        <label translate="Analise.Analise.Sistema">Sistema</label>
                                         <p-dropdown
                                                 [filter]="true"
                                                 dataKey="id"
@@ -223,20 +223,20 @@
                                 </div>
 
                                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" *ngIf="validacaoCampos">
-                                    <label>Tipo de Contagem *</label>
+                                    <label translate="Analise.Analise.TipoContagem*">Tipo de Contagem *</label>
                                     <p-dropdown
                                             [filter]="true"
                                             required
                                             id="idTipoContagemFormAnalise"
                                             name="tiposAnalise"
-                                            placeholder="Selecione..."
+                                            [placeholder]="this.getLabel('Analise.Analise.Selecione')"
                                             [options]="tiposAnalise"
                                             [(ngModel)]="analise.tipoAnalise"
                                             [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
                                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px" *ngIf="!validacaoCampos">
-                                    <label>Método de Contagem *</label>
+                                    <label translate="Analise.Analise.MetodoContagem*">Método de Contagem *</label>
                                     <p-dropdown
                                             [filter]="true"
                                             required

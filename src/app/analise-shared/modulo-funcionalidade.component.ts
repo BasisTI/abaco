@@ -308,15 +308,15 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         if (this.isModuloSelected()) {
             return this.funcionalidadeDropdownPlaceHolderComModuloSelecionado();
         } else {
-            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneModuloCarregarSubmodulos');
+            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneModuloCarregarFuncionalidades');
         }
     }
 
     private funcionalidadeDropdownPlaceHolderComModuloSelecionado(): string {
         if (this.moduloSelecionadoTemFuncionalidade()) {
-            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneSubmodulo');
+            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneFuncionalidade');
         } else {
-            return this.getLabel('Analise.Analise.Mensagens.msgNenhumSubmoduloCadastrado');
+            return this.getLabel('Analise.Analise.Mensagens.msgNenhumaFuncionalidadeCadastrado');
         }
     }
 
