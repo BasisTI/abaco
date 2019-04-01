@@ -3,8 +3,6 @@ package br.com.basis.abaco.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -31,7 +29,6 @@ import java.util.Objects;
 public class Der implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static transient Logger log = LoggerFactory.getLogger(Der.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -101,15 +98,11 @@ public class Der implements Serializable {
         if (funcaoTransacao == null) {
             return null;
         }
-        return (FuncaoTransacao) funcaoTransacao.getClone();
+        return funcaoTransacao;
     }
 
     public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
-        if (funcaoTransacao == null) {
-            this.funcaoTransacao = null;
-        } else {
-            this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
-        }
+        this.funcaoTransacao = funcaoTransacao;
     }
 
     public Integer getValor() {

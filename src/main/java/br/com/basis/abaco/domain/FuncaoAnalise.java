@@ -48,7 +48,7 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
 
     @ManyToOne
     @JoinColumn(name = "analise_id")
-    @JsonBackReference
+    @JsonBackReference(value = "analise")
     private Analise analise;
 
     @ManyToOne(fetch = FetchType.EAGER)

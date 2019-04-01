@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.CascadeType;
@@ -241,8 +239,4 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
         this.quantidade = quantidade;
     }
 
-    public Object getClone() {
-        FuncaoTransacao clone = null;
-        return this;
-    }
 }
