@@ -69,6 +69,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         this.blockUI.stop();
         this.userAnaliseUrl = this.changeUrl();
         this.estadoInicial();
+        this.traduzirmetsContagens();
     }
 
     getLabel(label) {
@@ -104,6 +105,22 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
             this.loggedUser = res;
         });
     }
+    /*
+    *   Metodo responsavel por traduzir metricas de Analise
+    */
+    traduzirmetsContagens() {
+        this.translate.stream(['Analise.Analise.metsContagens.DETALHADA', 'Analise.Analise.metsContagens.ESTIMADA',
+            'Analise.Analise.metsContagens.INDICATIVA']).subscribe((traducao) => {
+                this.metsContagens = [
+                    { label: traducao['Analise.Analise.metsContagens.DETALHADA'], value: 'DETALHADA' },
+                    { label: traducao['Analise.Analise.metsContagens.ESTIMADA'], value: 'ESTIMADA' },
+                    { label: traducao['Analise.Analise.metsContagens.INDICATIVA'], value: 'INDICATIVA' }
+                ];
+
+            })
+    }
+
+
     /**
      * Função para recuperar análises da equipe do usuário
      */

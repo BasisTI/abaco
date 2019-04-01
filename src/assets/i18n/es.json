@@ -281,7 +281,7 @@
         "DataFinalVigencia*": "Fecha de la Vigencia *",
         "DiasGarantia*": "Días de Garantía *",
         "Manual*": "Manual *",
-        "NumeroContrato*": "Número de Contrato *",
+        "NumeroContrato*": "Número de Contrato *"
       },
       "Mensagens": {
         "msgOrganizacaoNaoPodeSerDeletadaPoisEstaAssociadaAContratoEquipeOuAnalise": "La organización no puede ser borrada pues está asociada a un contrato, equipo o análisis!",
@@ -370,7 +370,7 @@
       "Complexidade": "Complejidad",
       "Deflator": "Deflactor",
       "Deflator*": "Deflactor *",
-      "DER(TD)": "DER (TD)",
+      "DER(TD)": "DER(TD)",
       "DER(TD)*": "DER (TD) *",
       "FTR(AR)": "FTR (AR)",
       "Funcionalidade": "Funcionalidad",
@@ -388,6 +388,7 @@
       "Qtd":"Qtd",
       "Quantidade": "Cantidad",
       "Quantidade*": "Cantidad *",
+      "RLR(TR)":"RLR(TR)",
       "RLR(TR)*": "RLR (TR) *",
       "Selecione": "Seleccionar...",
       "SelecioneClass": "Seleccione una Categoría",
@@ -646,6 +647,19 @@
         "CompartilhandoAnalise":"Compartiendo análisis",
         "AtualizandoCompartilhamento":"Actualización de recursos compartidos",
         "AguardeUmMomento":"Espera un momento"
+      },      
+      "lstComplexidades":{
+        "Media": "MÉD",
+        "Alta":"ALT",
+        "Baixa":"BAJ",
+        "SEM":"SEM",
+        "INM":"INM"
+      },
+      "lstImpactos":{
+        "Inclusao":"INCL",
+        "Alteracao":"CAMB",
+        "Exclusao":"EXCL",
+        "Conversao":"CONV"
       },
       "metsContagens": {
         "DETALHADA": "DETALLADA",

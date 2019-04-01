@@ -36,15 +36,15 @@ export class FuncaoResumoTableComponent implements OnInit {
   updateNameComplexidade(complexidade: string) {
     switch (complexidade) {
       case 'MEDIA':
-        return 'MÉD';
+        return this.getLabel('Analise.Analise.lstComplexidades.Media');
       case 'SEM':
-        return 'SEM';
+        return this.getLabel('Analise.Analise.lstComplexidades.SEM');
       case 'ALTA':
-        return 'ALT';
+        return this.getLabel('Analise.Analise.lstComplexidades.Alta');
       case 'INM':
-        return 'INM';
+        return this.getLabel('Analise.Analise.lstComplexidades.INM');
       case 'BAIXA':
-        return 'BAI';
+        return this.getLabel('Analise.Analise.lstComplexidades.Baixa');
       default:
         break;
     }
@@ -53,13 +53,13 @@ export class FuncaoResumoTableComponent implements OnInit {
   updateNameImpacto(impacto: string) {
     switch (impacto) {
       case 'INCLUSAO':
-        return 'INCL';
+        return this.getLabel('Analise.Analise.lstImpactos.Inclusao');
       case 'ALTERACAO':
-        return 'ALTE';
+        return this.getLabel('Analise.Analise.lstImpactos.Alteracao');
       case 'EXCLUSAO':
-        return 'EXCL';
+        return this.getLabel('Analise.Analise.lstImpactos.Exclusao');
       case 'CONVERSAO':
-        return 'CONV';
+        return this.getLabel('Analise.Analise.lstImpactos.Conversao');
       default:
         break;
 

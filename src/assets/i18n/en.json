@@ -42,7 +42,7 @@
       "Complexidade": "Complexity",
       "Deflator": "Deflator",
       "Deflator*": "Deflator *",
-      "DER(TD)": "DER (TD)",
+      "DER(TD)": "DER(TD)",
       "DER(TD)*": "DER (TD) *",
       "FTR(AR)": "FTR (AR)",
       "Funcionalidade": "Functionality",
@@ -60,6 +60,7 @@
       "PFAjustado":"Adjusted - PF",
       "Quantidade": "Quantity *",
       "Quantidade*": "Quantity *",
+      "RLR(TR)":"RLR(TR)",
       "RLR(TR)*": "RLR (TR) *",
       "Selecione": "Select...",
       "SelecioneClass": "Select a Category",
@@ -651,6 +652,19 @@
         "CompartilhandoAnalise":"Sharing analysis",
         "AtualizandoCompartilhamento":"Updating sharing",
         "AguardeUmMomento":"Wait a moment"
+      },
+      "lstComplexidades":{
+        "Media": "MED",
+        "Alta":"HIG",
+        "Baixa":"LOW",
+        "SEM":"SEM",
+        "INM":"INM"
+      },
+      "lstImpactos":{
+        "Inclusao":"INCL",
+        "Alteracao":"CHAN",
+        "Exclusao":"EXCL",
+        "Conversao":"CONV"
       },
       "metsContagens": {
         "DETALHADA": "DETAILED",

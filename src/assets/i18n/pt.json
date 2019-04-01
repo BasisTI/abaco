@@ -374,7 +374,7 @@
       "Complexidade": "Complexidade",
       "Deflator": "Deflator",
       "Deflator*": "Deflator *",
-      "DER(TD)": "DER (TD)",
+      "DER(TD)": "DER(TD)",
       "DER(TD)*": "DER (TD) *",
       "FTR(AR)": "FTR (AR)",
       "Funcionalidade": "Funcionalidade",
@@ -393,6 +393,7 @@
       "Quantidade": "Quantidade",
       "Quantidade*": "Quantidade *",
       "RLR(TR)*": "RLR (TR) *",
+      "RLR(TR)":"RLR(TR)",
       "Selecione": "Selecione...",
       "SelecioneClass": "Selecione uma Classificação",
       "Submodulo*": "Submódulo *",
@@ -650,6 +651,19 @@
         "CompartilhandoAnalise":"Compartilhando análise",
         "AtualizandoCompartilhamento":"Atualizando compartilhamento",
         "AguardeUmMomento":"Aguarde um momento"
+      },
+      "lstComplexidades":{
+        "Media": "MÉD",
+        "Alta":"ALT",
+        "Baixa":"BAI",
+        "SEM":"SEM",
+        "INM":"INM"
+      },
+      "lstImpactos":{
+        "Inclusao":"INCL",
+        "Alteracao":"ALTE",
+        "Exclusao":"EXCL",
+        "Conversao":"CONV"
       },
       "metsContagens": {
         "DETALHADA": "DETALHADA",

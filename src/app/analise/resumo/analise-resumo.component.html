@@ -8,7 +8,7 @@
       <app-analise-funcao-resumo-table [linhasResumo]="analise.resumoTotal.all">
       </app-analise-funcao-resumo-table>
 
-      <p-fieldset legend="Fases" [toggleable]="true" [collapsed]="true">
+      <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')" [toggleable]="true" [collapsed]="true">
         <h2 translate="Analise.Analise.Fases">Fases</h2>
         <p-dataTable id="idTabelaFasesComponentAnaliseResumo" [value]="esforcoFases">
 
