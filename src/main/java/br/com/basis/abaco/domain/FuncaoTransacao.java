@@ -87,13 +87,13 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     public Set<Funcionalidade> getFuncionalidades() {
         return Optional.ofNullable(this.funcionalidades)
-            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .map(LinkedHashSet::new)
             .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public FuncaoTransacao funcionalidades(Set<Funcionalidade> funcionalidades) {
         this.funcionalidades = Optional.ofNullable(funcionalidades)
-            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .map(LinkedHashSet::new)
             .orElse(new LinkedHashSet<Funcionalidade>());
         return this;
     }
@@ -118,19 +118,19 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
         this.funcionalidades = Optional.ofNullable(funcionalidades)
-            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .map(LinkedHashSet::new)
             .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public Set<Alr> getAlrs() {
         return Optional.ofNullable(this.alrs)
-            .map(lista -> new LinkedHashSet<Alr>(lista))
+            .map(LinkedHashSet::new)
             .orElse(new LinkedHashSet<Alr>());
     }
 
     public FuncaoTransacao alrs(Set<Alr> alrs) {
         this.alrs = Optional.ofNullable(alrs)
-            .map(lista -> new LinkedHashSet<Alr>(lista))
+            .map(LinkedHashSet::new)
             .orElse(new LinkedHashSet<Alr>());
         return this;
     }
@@ -155,7 +155,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     public void setAlrs(Set<Alr> alrs) {
         this.alrs = Optional.ofNullable(alrs)
-            .map(lista -> new LinkedHashSet<Alr>(lista))
+            .map(LinkedHashSet::new)
             .orElse(new LinkedHashSet<Alr>());
     }
 
@@ -173,7 +173,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     public void setDers(Set<Der> ders) {
         this.ders = Optional.ofNullable(ders)
-            .map((lista) -> new HashSet<Der>(lista))
+            .map(HashSet::new)
             .orElse(new HashSet<Der>());
     }
 
@@ -189,7 +189,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
         if (funcaoTransacao.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), funcaoTransacao.getId());
+        return Objects.equals(id, funcaoTransacao.id);
     }
 
     @Override
@@ -198,15 +198,15 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public List<UploadedFile> getFiles() {
-        List<UploadedFile> cp = new ArrayList<>();
-        cp.addAll(files);
-        return cp;
+        return Optional.ofNullable(files)
+            .map(ArrayList::new)
+            .orElse(new ArrayList<>());
     }
 
     public void setFiles(List<UploadedFile> files) {
-        List<UploadedFile> cp = new ArrayList<>();
-        cp.addAll(files);
-        this.files = cp;
+        this.files = Optional.ofNullable(files)
+            .map(ArrayList::new)
+            .orElse(new ArrayList<>());
     }
 
     public Set<String> getFtrValues() {
@@ -215,7 +215,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     public void setFtrValues(Set<String> ftrValues) {
         this.ftrValues = Optional.ofNullable(ftrValues)
-            .map((lista) -> new HashSet<String>(lista))
+            .map(HashSet::new)
             .orElse(new HashSet<String>());
     }
 
@@ -239,7 +239,4 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
         this.quantidade = quantidade;
     }
 
-    public Object getClone() throws CloneNotSupportedException {
-        return super.clone();
-    }
 }

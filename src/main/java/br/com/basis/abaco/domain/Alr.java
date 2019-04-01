@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -24,6 +22,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -36,7 +35,6 @@ import java.util.Set;
 public class Alr implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static transient Logger log = LoggerFactory.getLogger(Alr.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -71,39 +69,19 @@ public class Alr implements Serializable {
     }
 
     public Alr funcaoTransacao(FuncaoTransacao funcaoTransacao) {
-        try {
-            if(funcaoTransacao != null) {
-                this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
-            } else {
-                this.funcaoTransacao = null;
-            }
-        } catch (CloneNotSupportedException e) {
-            log.error(e.getMessage(), e);
-            this.funcaoTransacao = null;
-        }
+
+        this.funcaoTransacao = funcaoTransacao;
         return this;
     }
 
     public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
-        try {
-            if(funcaoTransacao != null) {
-                this.funcaoTransacao = (FuncaoTransacao) funcaoTransacao.getClone();
-            } else {
-                this.funcaoTransacao = null;
-            }
-        } catch (CloneNotSupportedException e) {
-            log.error(e.getMessage(), e);
-            this.funcaoTransacao = null;
-        }
+        this.funcaoTransacao = funcaoTransacao;
     }
 
     public Set<FuncaoDados> getFuncaoDados() {
-        if (funcaoDados == null){
-            return null;
-        }
-        Set<FuncaoDados> cp = new LinkedHashSet<>();
-        cp.addAll(funcaoDados);
-        return cp;
+        return Optional.ofNullable(this.funcaoDados)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<>());
     }
 
     public Alr funcaoDados(Set<FuncaoDados> funcaoDados) {
@@ -112,7 +90,9 @@ public class Alr implements Serializable {
         }else {
             Set<FuncaoDados> cp = new LinkedHashSet<>();
             cp.addAll(funcaoDados);
-            this.funcaoDados = cp;
+            this.funcaoDados = Optional.ofNullable(funcaoDados)
+                .map(LinkedHashSet::new)
+                .orElse(new LinkedHashSet<>());
         }
         return this;
     }
@@ -137,13 +117,9 @@ public class Alr implements Serializable {
     }
 
     public void setFuncaoDados(Set<FuncaoDados> funcaoDados) {
-        if (funcaoDados == null) {
-            this.funcaoDados = null;
-        } else {
-            Set<FuncaoDados> cp = new LinkedHashSet<>();
-            cp.addAll(funcaoDados);
-            this.funcaoDados = cp;
-        }
+        this.funcaoDados = Optional.ofNullable(funcaoDados)
+        .map(LinkedHashSet::new)
+        .orElse(new LinkedHashSet<>());
     }
 
     public String getNome() {

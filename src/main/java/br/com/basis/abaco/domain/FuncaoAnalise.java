@@ -34,7 +34,7 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
+    protected Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "complexidade")
@@ -48,7 +48,7 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
 
     @ManyToOne
     @JoinColumn(name = "analise_id")
-    @JsonBackReference
+    @JsonBackReference(value = "analise")
     private Analise analise;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -160,7 +160,7 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
 
     public void setDerValues(Set<String> derValues) {
         this.derValues = Optional.ofNullable(derValues)
-            .map(lista -> new HashSet<String>(lista))
+            .map(HashSet::new)
             .orElse(new LinkedHashSet<String>());
     }
 
