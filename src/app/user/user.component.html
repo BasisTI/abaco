@@ -167,7 +167,7 @@
                         </p-column>
 
                         <p-column [header]="getLabel('Cadastros.Usuarios.Ativo')" field="activated"
-                                  [style]="{width:'5.5%'}" [sortable]="true">
+                                  [style]="{width:'6.5%'}" [sortable]="true">
                             <ng-template let-col let-ativo="rowData" pTemplate="body">
                                 {{ ativo[col.field] ? this.getLabel('Global.Botoes.Sim') : (ativo[col.field] != null ? this.getLabel('Global.Botoes.Nao') : null) }}
                             </ng-template>
