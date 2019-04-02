@@ -113,6 +113,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         this.habilitarCamposIniciais();
         this.listOrganizacoes();
         this.getAnalise();
+        this.traduzirtiposAnalise();
     }
 
     ngOnDestroy() {
@@ -157,6 +158,22 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
             }
         });
     }
+
+    /*
+     *   Metodo responsavel por traduzir opções do dropdown Tipo de Analise
+    */
+    traduzirtiposAnalise() {
+        this.translate.stream(['Analise.Analise.TiposAnalise.ProjetoDesenvolvimento', 'Analise.Analise.TiposAnalise.ProjetoMelhoria',
+            'Analise.Analise.TiposAnalise.ContagemAplicacao']).subscribe((traducao) => {
+                this.tiposAnalise = [
+                    { label: traducao['Analise.Analise.TiposAnalise.ProjetoDesenvolvimento'], value: 'DESENVOLVIMENTO' },
+                    { label: traducao['Analise.Analise.TiposAnalise.ProjetoMelhoria'], value: 'MELHORIA' },
+                    { label: traducao['Analise.Analise.TiposAnalise.ContagemAplicacao'], value: 'APLICACAO' }
+                ];
+
+            })
+    }
+
 
     /**
      * Método responsável por popular a data de Homologação
@@ -300,15 +317,15 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     private carregarMetodosContagem(manual: Manual) {
         this.metodosContagem = [
             {
-                value: this.getLabel('Analise.Analise.metsContagens.DETALHADA'),
+                value: MessageUtil.DETALHADA,
                 label: this.getLabel('Analise.Analise.metsContagens.DETALHADA_IFPUG')
             },
             {
-                value: this.getLabel('Analise.Analise.metsContagens.INDICATIVA'),
+                value: MessageUtil.INDICATIVA,
                 label: this.getLabelValorVariacao(this.getLabel('Analise.Analise.metsContagens.INDICATIVA_NESMA'), manual.valorVariacaoIndicativaFormatado)
             },
             {
-                value: this.getLabel('Analise.Analise.metsContagens.ESTIMADA'),
+                value: MessageUtil.ESTIMADA,
                 label: this.getLabelValorVariacao(this.getLabel('Analise.Analise.metsContagens.ESTIMADA_NESMA'), manual.valorVariacaoEstimadaFormatado)
             }
         ];

@@ -150,16 +150,16 @@
 
         </div>
 
-        <!-- Submódulo -->
+        <!-- Funcionalidade -->
         <div class="ui-g">
-          <h4 style="margin-bottom: 0px;">
-              Submódulo
+          <h4 style="margin-bottom: 0px;" translate="Cadastros.Sistema.Funcionalidade">
+              Funcionalidade
           </h4>
 
           <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2 ui-md-2 ui-sm-12">
               <app-blue-button 
-                buttonLabel="Novo Submódulo"
+                [buttonLabel]="this.getLabel('Global.Botoes.NovaFuncionalidade')"
                 buttonIcon="ui-icon-add" 
                 id="idBtnNovoSubmoduloFormSistema"
                 (click)="abrirDialogFuncionalidade()"
@@ -300,7 +300,7 @@
         </p-confirmDialog>
 
         <!-- Dialog funcionalidade -->
-        <p-dialog header="Submódulo" 
+        <p-dialog [header]="this.getLabel('Cadastros.Sistema.Funcionalidade')" 
           [(visible)]="mostrarDialogFuncionalidade"
           [contentStyle]="{'overflow':'visible'}" 
           [width]="800">
@@ -374,8 +374,8 @@
 
         </p-dialog>
 
-        <!-- Dialog editar Submódulos -->
-        <p-dialog header="Submódulo" [(visible)]="mostrarDialogEditarFuncionalidade"
+        <!-- Dialog editar Funcionalidades -->
+        <p-dialog [header]="this.getLabel('Cadastros.Sistema.Funcionalidade')" [(visible)]="mostrarDialogEditarFuncionalidade"
           [contentStyle]="{'overflow':'visible'}" [width]="800">
           <div class="ui-g">
 

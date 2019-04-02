@@ -190,7 +190,8 @@
         "msgClonadoPartirDoManual": " clonado a partir del manual ",
         "msgComSucesso": " con éxito!",
         "msgManualNaoPodeSerExcluido":"El manual no se puede eliminar porque se está utilizando en un contrato.",
-        "msgRegistroClonar":"Seleccione un registro para clonar"
+        "msgRegistroClonar":"Seleccione un registro para clonar",
+        "msgManualEstaVinculadoUmaAnalise":"El manual está vinculado a un análisis."
       },
       "Botoes": {
         "NovoEsforcoFase": "Nuevo Esfuerzo Fase",
@@ -325,6 +326,7 @@
       "Codigo": "Código",
       "EditarModulo": "Editar Módulo",
       "EditarSistema": "Editar Sistema",
+      "Funcionalidade":"Funcionalidad",
       "Funcionalidades": "Funciones",
       "Modulo": "Módulo",
       "Modulo*": "Módulo *",
@@ -344,7 +346,6 @@
       "Sigla:": "Abreviatura:",
       "Sigla*": "Abreviatura *",
       "Sistemas": "Sistemas",
-      "SubModulo": "Submódulo",
       "TipoSistema*": "Tipo del Sistema *",
       "VisualizarSistema": "Ver Sistema",
       "Mensagens": {
@@ -396,7 +397,6 @@
       "RLR(TR)*": "RLR (TR) *",
       "Selecione": "Seleccionar...",
       "SelecioneClass": "Seleccione una Categoría",
-      "Submodulo *": "Submódulo *",
       "Inclusao":"INCLUSIÓN",
       "Alteracao":"CAMBIO",
       "Exclusao":"EXCLUSIÓN",
@@ -417,7 +417,7 @@
         "msgAlteradaComSucesso": " cambiada con éxito",
         "msgSelecioneDeflator": "Seleccione un deflactor",
         "msgSelecioneContratoParaCarregarDeflatores": "Seleccione un Contrato en la pestaña General para cargar los Deflactores",
-        "msgSelecioneModuloSubmodulo": "Seleccione un módulo y un submódulo",
+        "msgSelecioneModuloFuncionalidade": "Seleccione un módulo y una funcionalidad",
         "msgRegistroCadastrado": "Registro ya registrado",
         "msgCertezaDesejaExcluirFuncaoDados": "Está seguro de que desea eliminar la función de datos ",
         "msgCrudJaCadastrado":"CRUD ya registrado!"
@@ -464,7 +464,7 @@
         "msgAdicionarFuncaoDeTransacao": "Agregar Función de Transacción",
         "msgSelecioneUmDeflator": "Seleccione un Deflactor",
         "msgSelecioneUmContratoNaAbaGeralParaCarregarOsDeflatores": "Seleccione un Contrato en la pestaña General para cargar los Deflactores",
-        "msgSelecioneUmModuloESubmodulo": "Seleccione un Módulo y Submódulo",
+        "msgSelecioneUmModuloEFuncionalidade": "Seleccione un Módulo y Funcionalidad",
         "msgFuncaoDeTransacao": "Función de Transacción ",
         "msgAlteradaComSucesso": "cambiado con éxito",
         "msgClonarFuncaoDeTransacao": "Clonar la Función de Transacción",
@@ -508,7 +508,9 @@
         "msgClonadoAPartirDoManual": " clonado a partir del manual ",
         "msgComSucesso": " con éxito!",
         "msgRegistroExcluidoComSucesso": "Registro eliminado con éxito!",
-        "msgEstaVinculadoUmContratoNaoPodeSerExcluido": " está vinculado a un contrato y no se puede eliminar!"
+        "msgEstaVinculadoUmContratoNaoPodeSerExcluido": " está vinculado a un contrato y no se puede eliminar!",
+        "msgModulo": "Módulo ",
+        "msgCriadoParaSistema": " creado para el sistema "
       }
     },
     "Funcionalidade": {
@@ -542,7 +544,7 @@
       "De":" de ",
       "Dias":" días",
       "DataCriacao": "Fecha Creación",
-      "DataCriacaoOrdemServico": "Fecha de la Creación de la O. S. *",
+      "DataCriacaoOrdemServico": "Fecha Creación O. S. *",
       "DataHomologacao": "Fecha de la Homologación (software)",
       "DataHomologacao:": "Fecha de la Homologación (software):",
       "Deflator": "Deflactor",
@@ -559,6 +561,8 @@
       "Fases": "Fases",
       "Fronteira": "Frontera",
       "Fronteira:": "Frontera:",
+      "Funcionalidade":"Funcionalidad",
+      "Funcionalidade*":"Funcionalidad *",
       "FuncoesDados": "Funciones de Datos",
       "FuncoesTransacao": "Funciones de Transacción",
       "Geral": "General",
@@ -598,14 +602,14 @@
       "SelecioneUmContrato": "Seleccione un Contrato",
       "Sistema": "Sistema",
       "Sistema:": "Sistema:",
-      "SubModulo": "Submódulo",
-      "SubModulo*": "Submódulo *",
       "SomenteVisualizar": "Sólo Vista?",
       "TipoContagem*": "Tipo de Cuenta *",
       "TipoContagem:": "Tipo de Cuenta:",
       "Total": "Total:",
       "ValoresDuplicados:": "Valores duplicados:",
       "VisualizarAnalise": "Ver el Análisis",
+      "Ativo":" - Activo",
+      "Inativo":" - Inactivo",
       "Mensagens": {
         "msgRegistroClonar": "Seleccione un registro para clonar",
         "msgResgistroCompartilhar": "Seleccione un registro para compartir",
@@ -643,9 +647,9 @@
         "msgSelecioneQuaisDERsReferenciar": "Seleccione qué DER desea hacer referencia",
         "msgSelecioneFuncaoDados": "Seleccione una Función de Datos",
         "msgNenhumModuloCadastrado": "Ninguno Módulo registrado",
-        "msgNenhumSubmoduloCadastrado": "Ningún Submódulo registrado",
-        "msgSelecioneSubmodulo": "Seleccione un Submódulo",
-        "msgSelecioneModuloCarregarSubmodulos": "Seleccione un Módulo para cargar los Submódulos",
+        "msgNenhumaFuncionalidadeCadastrado": "Ningún Funcionlidade registrado",
+        "msgSelecioneFuncionalidade": "Seleccione una Funcionalidad",
+        "msgSelecioneModuloCarregarFuncionalidades": "Seleccione un Módulo para cargar las Funciones",
         "msgSelecioneSistemaParaCarregarModulos": "Seleccione un Sistema en la pestaña General para cargar los Módulos",
         "msgSelecioneModulo": "Seleccione un Módulo",
         "msgCONCAT_COPIA": "- COPIA",
@@ -656,6 +660,9 @@
         "msgCONFIRMAR_CLONE":"Está seguro de que desea clonar el registro ",
         "msgERRO_EXCLUSAO_ANALISE_BLOQUEADA":"No se puede eliminar un análisis bloqueado",
         "magCertezaExcluirRegistro": "Está seguro de que desea eliminar el registro ",
+        "msgFuncionalidade":"Funcionalidad ",
+        "msgCriadoNoModulo":" creado en el módulo ",
+        "msgNoSistema":" del sistema ",
         "CriandoAnálise":"Creación de análisis",
         "AtualizandoAnalise":"Actualización del análisis",
         "BloqueandoDesbloqueandoAnalise":"Bloquear / desbloquear análisis",
@@ -745,7 +752,7 @@
       "Nao": "No",
       "Novo": "Nuevo",
       "NovoModulo": "Nuevo Módulo",
-      "NovoSubModulo": "Nuevo Submódulo",
+      "NovaFuncionalidade": "Nueva Funcionalidad",
       "Pesquisar": "Buscar",
       "ReferenciarAR": "Referir AR",
       "Relacionar": "Relacionar",
@@ -794,6 +801,11 @@
       "CriarCrud":"Crear Crud",
       "EscolhaUmRegistroParaCriarCrud":"Elija un registro para crear crud.",
       "Nenhum":"Ningún"
+    },
+    "Idiomas":{
+      "Portugues":"Portugués",
+      "Ingles":"Inglés",
+      "Espanhol":"Español"
     }
   },
   "MenuPrincipal": {
