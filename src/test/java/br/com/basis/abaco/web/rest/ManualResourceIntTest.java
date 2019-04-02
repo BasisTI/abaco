@@ -3,7 +3,7 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.AbacoApp;
 
 import br.com.basis.abaco.domain.Manual;
-import br.com.basis.abaco.repository.ManualRepository;
+import br.com.basis.abaco.repository.*;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 
@@ -79,6 +79,18 @@ public class ManualResourceIntTest {
     private DynamicExportsService dynamicExportsService;
 
     @Autowired
+    private FuncaoTransacaoRepository funcaoTransacaoRepository;
+
+    @Autowired
+    private  ManualContratoRepository manualContratoRepository;
+
+    @Autowired
+    private FatorAjusteRepository fatorAjusteRepository;
+
+    @Autowired
+    private AnaliseRepository analiseRepository;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restManualMockMvc;
@@ -88,7 +100,8 @@ public class ManualResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            ManualResource manualResource = new ManualResource(manualRepository, manualSearchRepository, dynamicExportsService);
+            ManualResource manualResource = new ManualResource(manualRepository, manualSearchRepository, dynamicExportsService, manualContratoRepository
+            , analiseRepository, fatorAjusteRepository, funcaoTransacaoRepository);
         this.restManualMockMvc = MockMvcBuilders.standaloneSetup(manualResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -200,25 +213,6 @@ public class ManualResourceIntTest {
 
         List<Manual> manualList = manualRepository.findAll();
         assertThat(manualList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void getAllManuals() throws Exception {
-        // Initialize the database
-        manualRepository.saveAndFlush(manual);
-
-        // Get all the manualList
-        restManualMockMvc.perform(get("/api/manuals?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(manual.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())))
-            .andExpect(jsonPath("$.[*].observacao").value(hasItem(DEFAULT_OBSERVACAO.toString())))
-            .andExpect(jsonPath("$.[*].valorVariacaoEstimada").value(hasItem(DEFAULT_VALOR_VARIACAO_ESTIMADA.intValue())))
-            .andExpect(jsonPath("$.[*].valorVariacaoIndicativa").value(hasItem(DEFAULT_VALOR_VARIACAO_INDICATIVA.intValue())))
-            .andExpect(jsonPath("$.[*].arquivoManualContentType").value(hasItem(DEFAULT_ARQUIVO_MANUAL_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].arquivoManual").value(hasItem(Base64Utils.encodeToString(DEFAULT_ARQUIVO_MANUAL))));
     }
 
     @Test
