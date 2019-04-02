@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component, Inject, forwardRef } from '@angular/core';
 import { AppComponent } from './app.component';
 
@@ -34,4 +35,8 @@ import { AppComponent } from './app.component';
   `
 })
 
-export class AppFooterComponent { }
+export class AppFooterComponent {
+
+  constructor(private translate: TranslateService) { };
+
+}

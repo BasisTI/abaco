@@ -38,7 +38,7 @@
         <div class="ui-g-6 ui-md-6 ui-sm-12">
             <div class="ui-g-10 ui-md-10 ui-sm-10">
                 <!-- filtro/pesquisa? -->
-                <label>Submódulo *</label>
+                <label translate="Analise.Analise.Funcionalidade*">Funcionalidade *</label>
                 <p-dropdown
                         [filter]="true"
                         optionLabel="nome"
@@ -107,9 +107,9 @@
 
     </p-dialog>
 
-    <!-- Dialog Submódulo -->
+    <!-- Dialog Funcionalidade -->
     <p-dialog
-            header="Submódulo"
+            [header]="this.getLabel('Analise.Analise.Funcionalidade')"
             [(visible)]="mostrarDialogFuncionalidade"
             [contentStyle]="{'overflow':'visible'}"
             [width]="800">
