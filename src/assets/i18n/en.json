@@ -352,7 +352,9 @@
         "msgComSucesso": " successfully! ",
         "msgManualNaoPodeSerExcluido":"The manual can not be deleted because it is being used in a contract.",
         "msgRegistroClonar":"Select a record to clone",
-        "msgManualEstaVinculadoUmaAnalise":"The manual is linked to an analysis."
+        "msgManualEstaVinculadoUmaAnalise":"The manual is linked to an analysis.",
+        "msgManualVinculadoFatorAjusteVerifiqueFuncoesDadosOuFuncoesTransacoes": "The manual is linked to an adjustment factor, check your data functions or your transactions functions."
+
       },
       "Botoes": {
         "NovoEsforcoFase": "New Phase Effort",
