@@ -175,7 +175,9 @@
         "msgClonadoAPartirDoManual": "cloned from the manual",
         "msgComSucesso": "successfully!",
         "msgRegistroExcluidoComSucecom sucesso!sso": "Record successfully deleted!",
-        "msgEstaVinculadoUmContratoNaoPodeSerExcluido": "is bound to a Contract and can not be deleted!"
+        "msgEstaVinculadoUmContratoNaoPodeSerExcluido": "is bound to a Contract and can not be deleted!",
+        "msgModulo": "Module ",
+        "msgCriadoParaSistema": " create for the System "
       }
     },
     "Funcionalidade": {
@@ -349,7 +351,8 @@
         "msgClonadoPartirDoManual": " cloned from the manual ",
         "msgComSucesso": " successfully! ",
         "msgManualNaoPodeSerExcluido":"The manual can not be deleted because it is being used in a contract.",
-        "msgRegistroClonar":"Select a record to clone"
+        "msgRegistroClonar":"Select a record to clone",
+        "msgManualEstaVinculadoUmaAnalise":"The manual is linked to an analysis."
       },
       "Botoes": {
         "NovoEsforcoFase": "New Phase Effort",
@@ -662,6 +665,9 @@
         "msgCONFIRMAR_CLONE":"Are you sure you want to clone the registry ",
         "msgERRO_EXCLUSAO_ANALISE_BLOQUEADA":"You can not delete a blocked analysis",
         "msgCertezaExcluirRegistro": "Are you sure you want to delete the record ",
+        "msgFuncionalidade":"Functionality ",
+        "msgCriadoNoModulo":" created in module ",
+        "msgNoSistema":" of the system ",
         "CriandoAnálise":"Creating Analysis",
         "AtualizandoAnalise":"Updating Analysis",
         "BloqueandoDesbloqueandoAnalise":"Locking / Unblocking Analysis",
@@ -800,6 +806,11 @@
       "CriarCrud":"Create Crud",
       "EscolhaUmRegistroParaCriarCrud":"Choose a record to create crud.",
       "Nenhum":"None"
+    },
+    "Idiomas":{
+      "Portugues":"Portuguese",
+      "Ingles":"English",
+      "Espanhol":"Spanish"
     }
   },
   "MenuPrincipal": {

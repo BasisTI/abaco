@@ -190,7 +190,8 @@
         "msgClonadoPartirDoManual": " clonado a partir del manual ",
         "msgComSucesso": " con éxito!",
         "msgManualNaoPodeSerExcluido":"El manual no se puede eliminar porque se está utilizando en un contrato.",
-        "msgRegistroClonar":"Seleccione un registro para clonar"
+        "msgRegistroClonar":"Seleccione un registro para clonar",
+        "msgManualEstaVinculadoUmaAnalise":"El manual está vinculado a un análisis."
       },
       "Botoes": {
         "NovoEsforcoFase": "Nuevo Esfuerzo Fase",
@@ -507,7 +508,9 @@
         "msgClonadoAPartirDoManual": " clonado a partir del manual ",
         "msgComSucesso": " con éxito!",
         "msgRegistroExcluidoComSucesso": "Registro eliminado con éxito!",
-        "msgEstaVinculadoUmContratoNaoPodeSerExcluido": " está vinculado a un contrato y no se puede eliminar!"
+        "msgEstaVinculadoUmContratoNaoPodeSerExcluido": " está vinculado a un contrato y no se puede eliminar!",
+        "msgModulo": "Módulo ",
+        "msgCriadoParaSistema": " creado para el sistema "
       }
     },
     "Funcionalidade": {
@@ -657,6 +660,9 @@
         "msgCONFIRMAR_CLONE":"Está seguro de que desea clonar el registro ",
         "msgERRO_EXCLUSAO_ANALISE_BLOQUEADA":"No se puede eliminar un análisis bloqueado",
         "magCertezaExcluirRegistro": "Está seguro de que desea eliminar el registro ",
+        "msgFuncionalidade":"Funcionalidad ",
+        "msgCriadoNoModulo":" creado en el módulo ",
+        "msgNoSistema":" del sistema ",
         "CriandoAnálise":"Creación de análisis",
         "AtualizandoAnalise":"Actualización del análisis",
         "BloqueandoDesbloqueandoAnalise":"Bloquear / desbloquear análisis",
@@ -795,6 +801,11 @@
       "CriarCrud":"Crear Crud",
       "EscolhaUmRegistroParaCriarCrud":"Elija un registro para crear crud.",
       "Nenhum":"Ningún"
+    },
+    "Idiomas":{
+      "Portugues":"Portugués",
+      "Ingles":"Inglés",
+      "Espanhol":"Español"
     }
   },
   "MenuPrincipal": {
