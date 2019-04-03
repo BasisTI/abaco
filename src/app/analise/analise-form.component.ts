@@ -78,7 +78,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     @BlockUI() blockUI: NgBlockUI;
 
-    private fatorAjusteNenhumSelectItem = { label: MessageUtil.NENHUM, value: undefined };
+    private fatorAjusteNenhumSelectItem = { label: this.getLabel('Global.Mensagens.Nenhum'), value: undefined };
 
     tiposAnalise: SelectItem[] = [
         { label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO },
@@ -127,7 +127,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.getAnalise();
         this.traduzirtiposAnalise();
         this.traduzirMetodoContagem();
-
     }
 
     ngOnDestroy() {
@@ -158,19 +157,19 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     /*
-     *   Metodo responsavel por traduzir opções dos Metodos de Contagem de Analise
+    *   Metodo responsavel por traduzir opções dos Metodos de Contagem de Analise
     */
-    traduzirMetodoContagem() {
-        this.translate.stream(['Analise.Analise.metsContagens.DETALHADA_IFPUG', 'Analise.Analise.metsContagens.INDICATIVA_NESMA',
-            'Analise.Analise.metsContagens.ESTIMADA_NESMA']).subscribe((traducao) => {
-                this.metodoContagem = [
-                    { label: traducao['Analise.Analise.metsContagens.DETALHADA_IFPUG'], value: 'DETALHADA' },
-                    { label: traducao['Analise.Analise.metsContagens.INDICATIVA_NESMA'], value: 'INDICATIVA' },
-                    { label: traducao['Analise.Analise.metsContagens.ESTIMADA_NESMA'], value: 'ESTIMADA' }
-                ];
+   traduzirMetodoContagem() {
+    this.translate.stream(['Analise.Analise.metsContagens.DETALHADA_IFPUG', 'Analise.Analise.metsContagens.INDICATIVA_NESMA',
+        'Analise.Analise.metsContagens.ESTIMADA_NESMA']).subscribe((traducao) => {
+            this.metodoContagem = [
+                { label: traducao['Analise.Analise.metsContagens.DETALHADA_IFPUG'], value: 'DETALHADA' },
+                { label: traducao['Analise.Analise.metsContagens.INDICATIVA_NESMA'], value: 'INDICATIVA' },
+                { label: traducao['Analise.Analise.metsContagens.ESTIMADA_NESMA'], value: 'ESTIMADA' }
+            ];
 
-            })
-    }
+        })
+}
 
     /**
      * Função para recuperar os dados do usuário logado no momento
