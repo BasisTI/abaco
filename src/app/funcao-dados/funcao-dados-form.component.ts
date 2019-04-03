@@ -720,7 +720,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private gerarAlr(funcaoTransacaoCalculada: FuncaoTransacao, fnDado: FuncaoDados) {
-        const alr = new Alr(undefined, fnDado.name, 1, null);
+        const alr = new Alr(undefined, fnDado.name, undefined, null);
         if (funcaoTransacaoCalculada.alrs !== undefined && funcaoTransacaoCalculada.alrs != null) {
             funcaoTransacaoCalculada.alrs.push(alr);
         } else {
