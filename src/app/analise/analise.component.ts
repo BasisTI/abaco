@@ -40,6 +40,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     selectedToDelete: AnaliseShareEquipe;
     analiseTemp: Analise = new Analise();
     loggedUser: User;
+    query: String;
 
     metsContagens = [
         { label: undefined, value: undefined },
@@ -449,9 +450,41 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         querySearch = querySearch.concat((this.searchGroup.organizacao && this.searchGroup.organizacao.nome) ? 'organizacao=' + this.searchGroup.organizacao.nome + '&' : '');
         querySearch = querySearch.concat((this.searchGroup.equipe && this.searchGroup.equipe.nome) ? 'equipe=' + this.searchGroup.equipe.nome : '');
         querySearch = (querySearch === '?') ? '' : querySearch;
-        querySearch = (querySearch.endsWith('&')) ? querySearch.slice(0, -1) : querySearch;;
+        querySearch = (querySearch.endsWith('&')) ? querySearch.slice(0, -1) : querySearch;
 
+        this.recuperarQuery(this.searchGroup);
         return this.grupoService.grupoUrl + querySearch;
+    }
+
+    recuperarQuery(searchGroup: SearchGroup){
+        this.query = '';
+
+        this.query = this.query.concat((this.searchGroup.identificadorAnalise) ? 'identificadorAnalise:*'+ this.searchGroup.identificadorAnalise + '*' : '');
+        
+        if(this.searchGroup.sistema && this.searchGroup.sistema.nome !== undefined && this.query == ''){
+            this.query = this.query + 'sistema.nome:*' + this.searchGroup.sistema.nome + '*';
+        } else if(this.searchGroup.sistema && this.searchGroup.sistema.nome !== undefined && this.query != ''){
+            this.query = this.query + ' AND sistema.nome:*' + this.searchGroup.sistema.nome + '*';
+        }
+
+        if(this.searchGroup.metodoContagem !== undefined && this.query == ''){
+            this.query = 'metodoContagem:*' + this.searchGroup.metodoContagem + '*';
+        } else if(this.searchGroup.metodoContagem !== undefined && this.query != ''){
+            this.query = this.query + ' AND metodoContagem:*' + this.searchGroup.metodoContagem + '*';
+        }
+
+        if(this.searchGroup.organizacao && this.searchGroup.organizacao.nome !== undefined && this.query == ''){
+            this.query = 'organizacao.nome:*' + this.searchGroup.organizacao.nome + '*';
+        } else if (this.searchGroup.organizacao && this.searchGroup.organizacao.nome !== undefined && this.query != ''){
+            this.query = this.query + ' AND organizacao.nome:*' + this.searchGroup.organizacao.nome + '*';
+        }
+
+        if(this.searchGroup.equipe && this.searchGroup.equipe.nome !== undefined && this.query == ''){
+            this.query = 'equipeResponsavel.nome:*' + this.searchGroup.equipe.nome + '*';
+        } else if (this.searchGroup.equipe && this.searchGroup.equipe.nome !== undefined && this.query != ''){
+            this.query = this.query + ' AND equipeResponsavel.nome:*' + this.searchGroup.equipe.nome + '*';
+        }
+
     }
 
     public performSearch() {
