@@ -1,6 +1,14 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.FatorAjuste;
+import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Manual;
+import br.com.basis.abaco.domain.ManualContrato;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.FatorAjusteRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.ManualContratoRepository;
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.service.exception.RelatorioException;
@@ -61,9 +69,17 @@ public class ManualResource {
     private static final String ENTITY_NAME = "manual";
 
     private final ManualRepository manualRepository;
+    
+    private final ManualContratoRepository manualContratoRepository;
 
     private final ManualSearchRepository manualSearchRepository;
-
+    
+    private final AnaliseRepository analiseRepository;
+        
+    private final FuncaoTransacaoRepository funcaoTransacaoRepository;
+    
+    private final FatorAjusteRepository fatorAjusteRepository;
+    
     private final DynamicExportsService dynamicExportsService;
 
     private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
@@ -74,10 +90,19 @@ public class ManualResource {
 
     private static final String ROLE_GESTOR = "ROLE_GESTOR";
 
-    public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository, DynamicExportsService dynamicExportsService) {
+    private boolean status = false;
+
+    public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository, DynamicExportsService dynamicExportsService,
+    	ManualContratoRepository manualContratoRepository, AnaliseRepository analiseRepository, FatorAjusteRepository fatorAjusteRepository,
+    	FuncaoTransacaoRepository funcaoTransacaoRepository) {
         this.manualRepository = manualRepository;
         this.manualSearchRepository = manualSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
+        this.manualContratoRepository = manualContratoRepository;
+        this.analiseRepository = analiseRepository;
+        this.fatorAjusteRepository = fatorAjusteRepository;
+        this.funcaoTransacaoRepository = funcaoTransacaoRepository;
+        
     }
 
     /**
@@ -201,32 +226,84 @@ public class ManualResource {
      *            the id of the manual to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/manuals/{id}")
-    @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-    public ResponseEntity<Void> deleteManual(@PathVariable Long id) {
-        log.debug("REST request to delete Manual : {}", id);
+	@DeleteMapping("/manuals/{id}")
+	@Timed
+	@Secured({ ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA })
+	public ResponseEntity<String> deleteManual(@PathVariable Long id) {
+		log.debug("REST request to delete Manual : {}", id);
 
-        if(manualRepository.quantidadeContrato(id) > 0) {
-            return ResponseEntity.badRequest().headers(
-                HeaderUtil.createFailureAlert(ENTITY_NAME, "contratoexists", "A manual cannot be deleted"))
-                .body(null);
-        }
+		if (verificarManualContrato(id)) {
+			return ResponseEntity.badRequest().body("contratoexists");
+		}
 
-        manualRepository.delete(id);
-        manualSearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
+		if (verificarAn(id)) {
+			return ResponseEntity.badRequest().body("analiseexists");
+		}
+		if (verificarFt(id)) {
+			return ResponseEntity.badRequest().body("fatorajusteexists");
+		}
 
-    /**
-     * SEARCH /_search/manuals?query=:query : search for the manual corresponding to
-     * the query.
-     *
-     * @param query
-     *            the query of the manual search
-     * @return the result of the search
-     * @throws URISyntaxException
-     */
+		manualRepository.delete(id);
+		manualSearchRepository.delete(id);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+	}
+
+	private boolean verificarManualContrato(Long id) {
+		status=false;
+		List<ManualContrato> lstmanualContrato = manualContratoRepository.findAll();
+		if (!lstmanualContrato.isEmpty()) {
+			for (int i = 0; i < lstmanualContrato.size(); i++) {
+				if (lstmanualContrato.get(i).getManual().getId().equals(id)) {
+					status=true;
+					return status;
+				}
+			}
+		}
+		return status;
+	}
+
+	private boolean verificarAn(Long id) {
+		status = false;
+		List<Analise> lstAnalise = analiseRepository.findAll();
+		if (!lstAnalise.isEmpty()) {
+			for (int i = 0; i < lstAnalise.size(); i++) {
+				if (lstAnalise.get(i).getManual().getId().equals(id)) {
+					status = true;
+					return status;
+				}
+			}
+		}
+		return status;
+	}
+
+	private boolean verificarFt(Long id) {
+		status = false;
+		List<FatorAjuste> lstFAjuste = fatorAjusteRepository.findAll();
+		List<FuncaoTransacao> lstFt = funcaoTransacaoRepository.findAll();
+		if (!lstFAjuste.isEmpty()) {
+			for (int i = 0; i < lstFAjuste.size(); i++) {
+				if (lstFAjuste.get(i).getManual().getId().equals(id)) {
+					for (int j = 0; j < lstFt.size(); j++) {
+						if (lstFt.get(j).getFatorAjuste().getId().equals(lstFAjuste.get(i).getId())) {
+							status = true;
+							return status;
+						}
+					}
+					fatorAjusteRepository.delete(lstFAjuste.get(i));
+				}
+			}
+		}
+		return status;
+	}
+
+	/**
+	 * SEARCH /_search/manuals?query=:query : search for the manual corresponding to
+	 * the query.
+	 *
+	 * @param query the query of the manual search
+	 * @return the result of the search
+	 * @throws URISyntaxException
+	 */
     @GetMapping("/_search/manual")
     @Timed
     public ResponseEntity<List<Manual>> searchManuals(@RequestParam(defaultValue = "*") String query, @RequestParam String order, @RequestParam(name="page") int pageNumber, @RequestParam int size, @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
