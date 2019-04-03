@@ -1,0 +1,5 @@
+<root>
+    <item name='org.springframework.web.bind.annotation.RequestMapping'>
+        <annotation name='java.lang.Deprecated'/>
+    </item>
+</root>
