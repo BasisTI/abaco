@@ -1,3 +1,4 @@
+import { Der } from './../der/der.model';
 import {EntityToJSON} from './../shared/entity-to-json';
 import {Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import {FuncaoDados} from './funcao-dados.model';
@@ -601,7 +602,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const funcaoDadosSelecionada: FuncaoDados = event.selection.clone();
+        let funcaoDadosSelecionada: FuncaoDados = event.selection.clone();
         switch (event.button) {
             case 'edit':
                 this.isEdit = true;
@@ -696,8 +697,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         ft.fatorAjuste = fdSelecionada.fatorAjuste;
         ft.ders = [];
         fdSelecionada.ders.forEach(item => ft.ders.push(item));
+        this.criarDersMenssagemAcao(ft.ders);
         this.gerarAlr(ft, fdSelecionada);
         return ft;
+    }
+
+    private criarDersMenssagemAcao(ders: Der[]) {
+        ders.push(new Der(undefined, 'Menssagem'));
+        ders.push(new Der(undefined, 'Ação'));
     }
 
     private persistirFuncaoTransacao(ft: FuncaoTransacao) {
