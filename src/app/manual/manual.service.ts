@@ -1,3 +1,4 @@
+import { Headers } from '@angular/http';
 import { TranslateService } from '@ngx-translate/core';
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
@@ -89,12 +90,23 @@ export class ManualService {
 
     delete(id: number): Observable<Response> {
         return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
+            console.log(error);
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
-            if (error.status === 500) {
-                this.pageNotificationService.addErrorMsg('O manual não pode ser excluído pois está sendo usado em um contrato.');
+            if (error._body == "contratoexists") {
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.Mensagens.msgManualNaoPodeSerExcluido'));
+                this.blockUI.stop();
+                return Observable.throw(new Error(error.status));
+            } 
+            if (error._body == "analiseexists") {
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.Mensagens.msgManualEstaVinculadoUmaAnalise'));
+                this.blockUI.stop();
+                return Observable.throw(new Error(error.status));
+            }
+            if (error._body == "fatorajusteexists") {
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.Mensagens.msgManualVinculadoFatorAjusteVerifiqueFuncoesDadosOuFuncoesTransacoes'));
                 this.blockUI.stop();
                 return Observable.throw(new Error(error.status));
             }

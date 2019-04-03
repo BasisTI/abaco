@@ -50,17 +50,17 @@ import { Router } from '@angular/router';
                         <ul class="ultima-menu animated fadeInDown">
                             <li role="menuitem">
                                 <a name="es" (click)="setLanguage($event.target)">
-                                    <span>Espanhol</span>
+                                    <span translate="Global.Idiomas.Espanhol">Espanhol</span>
                                 </a>
                             </li>
                             <li role="menuitem">
                                 <a name="en" (click)="setLanguage($event.target)">
-                                    <span>Inglês</span>
+                                    <span translate="Global.Idiomas.Ingles">Inglês</span>
                                 </a>
                             </li>
                             <li role="menuitem">
                                 <a name="pt" (click)="setLanguage($event.target)">
-                                    <span>Português</span>
+                                    <span translate="Global.Idiomas.Portugues">Português</span>
                                 </a>
                             </li>
                         </ul>

@@ -55,7 +55,7 @@
       "NomeProcessoElementar": "Elementary Process Name *",
       "PFBruto": "Crude PF",
       "PFLiquido": "Liquid PF",
-      "Qtd":"Qtd",
+      "Qtd":"Qty",
       "PFTotal":"Total - PF",
       "PFAjustado":"Adjusted - PF",
       "Quantidade": "Quantity *",
@@ -64,7 +64,6 @@
       "RLR(TR)*": "RLR (TR) *",
       "Selecione": "Select...",
       "SelecioneClass": "Select a Category",
-      "Submodulo*": "Submodule *",
       "Inclusao":"INCLUSION",
       "Alteracao":"CHANGE",
       "Exclusao":"EXCLUSION",
@@ -85,7 +84,7 @@
         "msgAlteradaComSucesso": " successfully changed",
         "msgSelecioneDeflator": "Select a Deflator",
         "msgSelecioneContratoParaCarregarDeflatores": "Select a Contract on the 'General' tab to load the Deflators",
-        "msgSelecioneModuloSubmodulo": "Select a Module and Functionality",
+        "msgSelecioneModuloFuncionalidade": "Select a Module and Functionality",
         "msgRegistroCadastrado": "Registration already registered",
         "msgCertezaDesejaExcluirFuncaoDados": "Are you sure you want to delete the Data Role ",
         "msgCrudJaCadastrado":"CRUD already registered!"
@@ -132,7 +131,7 @@
         "msgAdicionarFuncaoDeTransacao": "Add Transaction Function",
         "msgSelecioneUmDeflator": "Select a Deflator",
         "msgSelecioneUmContratoNaAbaGeralParaCarregarOsDeflatores": "Select a Contract in the General tab to load Deflators",
-        "msgSelecioneUmModuloESubmodulo": "Select a Module and Submodule",
+        "msgSelecioneUmModuloEFuncionalidade": "Select a Module and Funcionality",
         "msgFuncaoDeTransacao": "Transaction Function ",
         "msgAlteradaComSucesso": "changed successfully",
         "msgClonarFuncaoDeTransacao": "Clone Transaction Function",
@@ -176,7 +175,9 @@
         "msgClonadoAPartirDoManual": "cloned from the manual",
         "msgComSucesso": "successfully!",
         "msgRegistroExcluidoComSucecom sucesso!sso": "Record successfully deleted!",
-        "msgEstaVinculadoUmContratoNaoPodeSerExcluido": "is bound to a Contract and can not be deleted!"
+        "msgEstaVinculadoUmContratoNaoPodeSerExcluido": "is bound to a Contract and can not be deleted!",
+        "msgModulo": "Module ",
+        "msgCriadoParaSistema": " create for the System "
       }
     },
     "Funcionalidade": {
@@ -350,7 +351,10 @@
         "msgClonadoPartirDoManual": " cloned from the manual ",
         "msgComSucesso": " successfully! ",
         "msgManualNaoPodeSerExcluido":"The manual can not be deleted because it is being used in a contract.",
-        "msgRegistroClonar":"Select a record to clone"
+        "msgRegistroClonar":"Select a record to clone",
+        "msgManualEstaVinculadoUmaAnalise":"The manual is linked to an analysis.",
+        "msgManualVinculadoFatorAjusteVerifiqueFuncoesDadosOuFuncoesTransacoes": "The manual is linked to an adjustment factor, check your data functions or your transactions functions."
+
       },
       "Botoes": {
         "NovoEsforcoFase": "New Phase Effort",
@@ -485,6 +489,7 @@
       "Codigo": "Code",
       "EditarModulo": "Edit Module",
       "EditarSistema": "Edit System",
+      "Funcionalidade":"Functionality",
       "Funcionalidades": "Functionalities",
       "Modulo": "Module",
       "Modulo*": "Module *",
@@ -504,7 +509,6 @@
       "Sigla:": "Initials:",
       "Sigla*": "Initials *",
       "Sistemas": "Systems",
-      "SubModulo": "Submodule",
       "TipoSistema*": "System Type *",
       "VisualizarSistema": "View System",
       "Mensagens": {
@@ -563,6 +567,8 @@
       "Fases": "Phases",
       "Fronteira": "Border",
       "Fronteira:": "Border:",
+      "Funcionalidade":"Functionality",
+      "Funcionalidade*":"Functionality *",
       "FuncoesDados": "Data Functions",
       "FuncoesTransacao": "Transaction Functions",
       "Geral": "General",
@@ -602,8 +608,6 @@
       "SelecioneUmContrato": "Select a Contract",
       "Sistema": "System",
       "Sistema:": "System:",
-      "SubModulo": "Submodule",
-      "SubModulo*": "Submodule *",
       "SomenteVisualizar": "Only View?",
       "TipoContagem*": "Counting Type *",
       "TipoContagem:": "Counting Type:",
@@ -611,6 +615,8 @@
       "ValoresDuplicados:": "Duplicate Values:",
       "VisualizarAnalise": "View Analysis",
       "INDICATIVA": "INDICATIVE",
+      "Ativo":" - Active",
+      "Inativo":" - Inactive",
       "Mensagens": {
         "msgRegistroClonar": "Select a record to clone",
         "msgResgistroCompartilhar": "Select a record to share",
@@ -647,12 +653,12 @@
         "msgSelecioneFuncaoDadosParaSelecionarDERsReferenciar": "DERs - Select a Data Function to select which DERs to reference",
         "msgSelecioneQuaisDERsReferenciar": "Select which DERs you want to reference",
         "msgSelecioneFuncaoDados": "Select a Data Function",
-        "msgSelecioneSubmodulo": "Select a Submodule",
-        "msgSelecioneModuloCarregarSubmodulos": "Select a Module to load the Submodules",
+        "msgSelecioneFuncionalidade": "Select a Funcionality",
+        "msgSelecioneModuloCarregarFuncionalidades": "Select a Module to load the Funcionality",
         "msgSelecioneSistemaParaCarregarModulos": "Select a System in the 'General' tab to load the Modules",
         "msgSelecioneModulo": "Select a Module",
         "msgNenhumModuloCadastrado": "No Module registered",
-        "msgNenhumSubmoduloCadastrado": "No Submodule registered",
+        "msgNenhumaFuncionalidadeCadastrado": "No Submodule registered",
         "msgCONCAT_COPIA": "- COPY",
         "msgCLONAGEM_SUCESSO": "successfully cloned!",
         "msgCONFIRMAR_BLOQUEIO": "'Are you sure you want to block registry",
@@ -661,6 +667,9 @@
         "msgCONFIRMAR_CLONE":"Are you sure you want to clone the registry ",
         "msgERRO_EXCLUSAO_ANALISE_BLOQUEADA":"You can not delete a blocked analysis",
         "msgCertezaExcluirRegistro": "Are you sure you want to delete the record ",
+        "msgFuncionalidade":"Functionality ",
+        "msgCriadoNoModulo":" created in module ",
+        "msgNoSistema":" of the system ",
         "CriandoAnálise":"Creating Analysis",
         "AtualizandoAnalise":"Updating Analysis",
         "BloqueandoDesbloqueandoAnalise":"Locking / Unblocking Analysis",
@@ -750,8 +759,8 @@
       "Nao": "No",
       "Novo": "New",
       "NovoModulo": "New Module",
-      "NovoSubModulo": "New SubModule",
-      "Pesquisar": "Scearch",
+      "NovaFuncionalidade": "New Functionality",
+      "Pesquisar": "Search",
       "ReferenciarAR": "Refer AR",
       "Relacionar": "Relate",
       "RelatorioDetalhado": "Detailed Report",
@@ -799,6 +808,11 @@
       "CriarCrud":"Create Crud",
       "EscolhaUmRegistroParaCriarCrud":"Choose a record to create crud.",
       "Nenhum":"None"
+    },
+    "Idiomas":{
+      "Portugues":"Portuguese",
+      "Ingles":"English",
+      "Espanhol":"Spanish"
     }
   },
   "MenuPrincipal": {

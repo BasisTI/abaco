@@ -301,22 +301,22 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     private criarMensagemDeSucessoDaCriacaoDoModulo(nomeModulo: string, nomeSistema: string) {
         this.pageNotificationService
-            .addSuccessMsg(`Módulo '${nomeModulo}' criado para o Sistema '${nomeSistema}'`);
+            .addSuccessMsg(`${this.getLabel('Cadastros.Modulo.Mensagens.msgModulo')} ${nomeModulo} ${this.getLabel('Cadastros.Modulo.Mensagens.msgCriadoParaSistema')} ${nomeSistema}`);
     }
 
     funcionalidadeDropdownPlaceholder() {
         if (this.isModuloSelected()) {
             return this.funcionalidadeDropdownPlaceHolderComModuloSelecionado();
         } else {
-            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneModuloCarregarSubmodulos');
+            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneModuloCarregarFuncionalidades');
         }
     }
 
     private funcionalidadeDropdownPlaceHolderComModuloSelecionado(): string {
         if (this.moduloSelecionadoTemFuncionalidade()) {
-            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneSubmodulo');
+            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneFuncionalidade');
         } else {
-            return this.getLabel('Analise.Analise.Mensagens.msgNenhumSubmoduloCadastrado');
+            return this.getLabel('Analise.Analise.Mensagens.msgNenhumaFuncionalidadeCadastrado');
         }
     }
 
@@ -376,7 +376,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     private criarMensagemDeSucessoDaCriacaoDaFuncionalidade(nomeFunc: string, nomeModulo: string, nomeSistema: string) {
         this.pageNotificationService
-            .addSuccessMsg(`Submódulo '${nomeFunc}' criado no Módulo '${nomeModulo}' do Sistema '${nomeSistema}'`);
+            .addSuccessMsg(`${this.getLabel('Analise.Analise.Mensagens.msgSubmodulo')} ${nomeFunc} ${this.getLabel('Analise.Analise.Mensagens.msgCriadoNoModulo')} ${nomeModulo} ${this.getLabel('Analise.Analise.Mensagens.msgDoSistema')} ${nomeSistema}`);
     }
 
     ngOnDestroy() {

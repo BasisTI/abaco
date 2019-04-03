@@ -194,7 +194,9 @@
         "msgClonadoPartirDoManual":" clonado a partir do manual ",
         "msgComSucesso":" com sucesso!",
         "msgManualNaoPodeSerExcluido":"O manual não pode ser excluído pois está sendo usado em um contrato.",
-        "msgRegistroClonar":"Selecione um registro para clonar"
+        "msgRegistroClonar":"Selecione um registro para clonar",
+        "msgManualEstaVinculadoUmaAnalise":"O manual está vinculado à uma analise.",
+        "msgManualVinculadoFatorAjusteVerifiqueFuncoesDadosOuFuncoesTransacoes": "O manual está em vinculado a um fator ajuste, Verifique suas funções de dados ou suas funções transações."
       },
       "Botoes": {
         "NovoEsforcoFase": "Novo Esforço Fase",
@@ -304,6 +306,7 @@
       "Codigo": "Código",
       "EditarModulo": "Editar Módulo",
       "EditarSistema": "Editar Sistema",
+      "Funcionalidade":"Funcionalidade",
       "Funcionalidades": "Funcionalidades",
       "Modulo": "Módulo",
       "Modulo*": "Módulo *",
@@ -323,7 +326,6 @@
       "Sigla:": "Sigla:",
       "Sigla*": "Sigla *",
       "Sistemas": "Sistemas",
-      "SubModulo": "Submódulo",
       "TipoSistema*": "Tipo do Sistema *",
       "VisualizarSistema": "Visualizar Sistema",
       "Mensagens": {
@@ -400,7 +402,6 @@
       "RLR(TR)":"RLR(TR)",
       "Selecione": "Selecione...",
       "SelecioneClass": "Selecione uma Classificação",
-      "Submodulo*": "Submódulo *",
       "Inclusao":"INCLUSÃO",
       "Exclusao":"EXCLUSÃO",
       "Alteracao":"ALTERAÇÃO",
@@ -421,7 +422,7 @@
         "msgAlteradaComSucesso": " alterada com sucesso",
         "msgSelecioneDeflator": "Selecione um Deflator",
         "msgSelecioneContratoParaCarregarDeflatores": "Selecione um Contrato na aba Geral para carregar os Deflatores",
-        "msgSelecioneModuloSubmodulo": "Selecione um Módulo e Submódulo",
+        "msgSelecioneModuloFuncionalidade": "Selecione um Módulo e Funcionalidade",
         "msgRegistroCadastrado": "Registro já cadastrado",
         "msgCertezaDesejaExcluirFuncaoDados": "Tem certeza que deseja excluir a Função de Dados ",
         "msgCrudJaCadastrado":"CRUD já cadastrado!"
@@ -468,7 +469,7 @@
         "msgAdicionarFuncaoDeTransacao": "Adicionar Função de Transação",
         "msgSelecioneUmDeflator": "Selecione um Deflator",
         "msgSelecioneUmContratoNaAbaGeralParaCarregarOsDeflatores": "Selecione um Contrato na aba Geral para carregar os Deflatores",
-        "msgSelecioneUmModuloESubmodulo": "Selecione um Módulo e Submódulo",
+        "msgSelecioneUmModuloEFuncionalidade": "Selecione um Módulo e Funcionalidade",
         "msgFuncaoDeTransacao": "Função de Transação ",
         "msgAlteradaComSucesso": " alterada com sucesso",
         "msgClonarFuncaoDeTransacao": "Clonar Função de Transação",
@@ -512,7 +513,9 @@
         "msgClonadoAPartirDoManual": "clonado a partir do manual ",
         "msgComSucesso": " com sucesso!",
         "msgRegistroExcluidoComSucesso": "Registro excluído com sucesso!",
-        "msgEstaVinculadoUmContratoNaoPodeSerExcluido": " está vinculado a um Contrato e não pode ser excluído!"
+        "msgEstaVinculadoUmContratoNaoPodeSerExcluido": " está vinculado a um Contrato e não pode ser excluído!",
+        "msgModulo":"Módulo ",
+        "msgCriadoParaSistema":" criado para o Sistema "
       }
     },
     "Funcionalidade": {
@@ -546,7 +549,7 @@
       "De":" de ",
       "Dias":" dias",
       "DataCriacao": "Data Criação",
-      "DataCriacaoOrdemServico": "Data da Criação da O. S. *",
+      "DataCriacaoOrdemServico": "Data Criação da O. S. *",
       "DataHomologacao": "Data de homologação (software)",
       "DataHomologacao:": "Data de homologação (software):",
       "Deflator": "Deflator",
@@ -563,6 +566,8 @@
       "Fases": "Fases",
       "Fronteira": "Fronteira",
       "Fronteira:": "Fronteira:",
+      "Funcionalidade":"Funcionalidade",
+      "Funcionalidade*":"Funcionalidade *",
       "FuncoesDados": "Funções de Dados",
       "FuncoesTransacao": "Funções de Transação",
       "Geral": "Geral",
@@ -602,14 +607,14 @@
       "SelecioneUmContrato": "Selecione um Contrato",
       "Sistema": "Sistema",
       "Sistema:": "Sistema:",
-      "SubModulo": "Submódulo",
-      "SubModulo*": "Submódulo *",
       "SomenteVisualizar": "Somente Visualizar?",
       "TipoContagem*": "Tipo de Contagem *",
       "TipoContagem:": "Tipo de Contagem:",
       "Total": "Total:",
       "ValoresDuplicados:": "Valores duplicados:",
       "VisualizarAnalise": "Visualizar Análise",
+      "Ativo":" - Ativo",
+      "Inativo":" - Inativo",
       "Mensagens": {
         "msgRegistroClonar": "Selecione um registro para clonar",
         "msgResgistroCompartilhar": "Selecione um registro para compartilhar",
@@ -649,9 +654,9 @@
         "msgSelecioneSistemaParaCarregarModulos": "Selecione um Sistema na aba 'Geral' para carregar os Módulos",
         "msgSelecioneModulo": "Selecione um Módulo",
         "msgNenhumModuloCadastrado": "Nenhum Módulo cadastrado",
-        "msgSelecioneModuloCarregarSubmodulos": "Selecione um Módulo para carregar os Submódulos",
-        "msgSelecioneSubmodulo": "Selecione um Submódulo",
-        "msgNenhumSubmoduloCadastrado": "Nenhum Submódulo cadastrado",
+        "msgSelecioneModuloCarregarFuncionalidades": "Selecione um Módulo para carregar as Funcionalidades",
+        "msgSelecioneFuncionalidade": "Selecione uma Funcionalidade",
+        "msgNenhumaFuncionalidadeCadastrado": "Nenhuma Funcionalidade Cadastrada",
         "msgCONCAT_COPIA": " - CÓPIA",
         "msgCLONAGEM_SUCESSO": " clonada com sucesso!",
         "msgCONFIRMAR_BLOQUEIO": "Tem certeza que deseja bloquear o registro ",
@@ -660,6 +665,9 @@
         "msgCONFIRMAR_CLONE":"Tem certeza que deseja clonar o registro ",
         "msgERRO_EXCLUSAO_ANALISE_BLOQUEADA":"Você não pode excluir uma análise bloqueada",
         "msgCertezaExcluirRegistro": "Tem certeza que deseja excluir o registro ",
+        "msgFuncionalidade":"Funcionalidade ",
+        "msgCriadoNoModulo":" criado no módulo ",
+        "msgNoSistema":" do Sistema ",
         "CriandoAnálise":"Criando análise",
         "AtualizandoAnalise":"Atualizando análise",
         "BloqueandoDesbloqueandoAnalise":"Bloqueando/Desbloqueando análise",
@@ -749,7 +757,7 @@
       "Nao": "Não",
       "Novo": "Novo",
       "NovoModulo": "Novo Módulo",
-      "NovoSubModulo": "Novo Submódulo",
+      "NovaFuncionalidade": "Nova Funcionalidade",
       "Pesquisar": "Pesquisar",
       "ReferenciarAR": "Referenciar AR",
       "Relacionar": "Relacionar",
@@ -797,6 +805,11 @@
       "CriarCrud":"Criar Crud",
       "EscolhaUmRegistroParaCriarCrud":"Escolha um registro para criar crud.",
       "Nenhum":"Nenhum"
+    },
+    "Idiomas":{
+      "Portugues":"Português",
+      "Ingles":"Inglês",
+      "Espanhol":"Espanhol"
     }
   },
   "MenuPrincipal": {

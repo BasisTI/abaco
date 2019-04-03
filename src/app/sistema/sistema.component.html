@@ -9,10 +9,9 @@
 
         <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 5px">
           <span class="md-inputfield">
-            <input 
+            <input
               type="text"
-              (click)="switchUrlSigla()" 
-              pInputText class="ui-inputtext" 
+              pInputText class="ui-inputtext"
               [(ngModel)]="searchParams.sigla"
               id="idSiglaComponentSistema"
               (keyup.enter)="performSearch()"
@@ -24,10 +23,9 @@
 
         <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 5px">
           <span class="md-inputfield">
-            <input 
+            <input
               type="text"
-              (click)="switchUrlNomeSistema()"
-              pInputText class="ui-inputtext" 
+              pInputText class="ui-inputtext"
               id="idNomeSistemaComponentSistema"
               [(ngModel)]="searchParams.nomeSistema"
               (keyup.enter)="performSearch()"
@@ -38,14 +36,14 @@
         </div>
 
         <div class="ui-g-4 ui-md-4 ui-sm-12">
-          <p-dropdown 
+          <p-dropdown
             [filter]="true"
             (click)="switchUrlOrganizacao()"
-            [options]="organizations" 
+            [options]="organizations"
             id="idOrganizacaoComponentSistema"
-            optionLabel="nome" 
-            [(ngModel)]="searchParams.organizacao" 
-            [autoWidth]="false" 
+            optionLabel="nome"
+            [(ngModel)]="searchParams.organizacao"
+            [autoWidth]="false"
             [placeholder]="getLabel('Cadastros.Sistema.Organizacao')">
           </p-dropdown>
         </div>
@@ -55,8 +53,8 @@
       <div class="ui-g">
         <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
           <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-white-button 
-            [buttonLabel]="this.getLabel('Global.Botoes.LimparPesquisa')" 
+            <app-white-button
+            [buttonLabel]="this.getLabel('Global.Botoes.LimparPesquisa')"
               id="idBtnLimparPesquisaComponentSistema"
               buttonIcon="ui-icon-clear-all"
               (click)="limparPesquisa()">
@@ -64,25 +62,25 @@
           </div>
 
           <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-blue-button 
-              [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')" 
+            <app-blue-button
+              [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')"
               id="idBtnPesquisarComponentSistema"
-              buttonIcon="ui-icon-search" 
+              buttonIcon="ui-icon-search"
               (click)="performSearch()">
             </app-blue-button>
           </div>
 
           <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-green-button 
-              [buttonLabel]="this.getLabel('Global.Botoes.Novo')" 
+            <app-green-button
+              [buttonLabel]="this.getLabel('Global.Botoes.Novo')"
               id="idBtnNovoComponentSistema"
-              routerLink="/sistema/new" 
+              routerLink="/sistema/new"
               buttonIcon="ui-icon-add">
             </app-green-button>
           </div>
         </div>
 
-        <basis-datatable 
+        <basis-datatable
           [url]="searchUrl"
           (dblclick)="onRowDblclick($event)"
           (buttonClick)="datatableClick($event)"
@@ -96,7 +94,7 @@
           <p-column [header]="getLabel('Cadastros.Sistema.NumeroOcorrencia')" field="numeroOcorrencia" [sortable]="true"></p-column>
           <p-column [header]="getLabel('Cadastros.Sistema.Organizacao')" field="organizacao.nome" [sortable]="true"></p-column>
         </basis-datatable>
-        
+
         <div class="ui-g-12 ui-md-2">
           <app-botoes-exportacao [query]="elasticQuery.value" resourceName="sistema" fileName="sistema" id="idBtnExportacaoComponentSistema">
           </app-botoes-exportacao>
