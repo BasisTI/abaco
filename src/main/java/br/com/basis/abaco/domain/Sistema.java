@@ -49,12 +49,10 @@ public class Sistema implements Serializable, ReportObject {
 
   @Size(max = 255)
   @Column(name = "sigla", length = 255)
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
   private String sigla;
 
   @NotNull
   @Column(name = "nome", nullable = false)
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
   private String nome;
 
     @Enumerated(EnumType.STRING)
