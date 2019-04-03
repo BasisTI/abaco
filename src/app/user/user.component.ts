@@ -228,7 +228,6 @@ export class UserComponent implements AfterViewInit, OnInit {
     performSearch() {
         this.checkUndefinedParams();
         this.query = this.stringConcatService.concatResults(this.createStringParamsArray()).slice(1);
-        console.log("result do concat: " + this.query)
         this.recarregarDataTable();
     }
 
@@ -246,7 +245,6 @@ export class UserComponent implements AfterViewInit, OnInit {
     }
 
     recarregarDataTable() {
-        console.log("valor da query: " + this.query);
         this.datatable.refresh(this.query ? this.query : "*");
     }
 
