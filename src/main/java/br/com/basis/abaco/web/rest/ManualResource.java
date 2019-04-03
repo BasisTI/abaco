@@ -267,7 +267,7 @@ public class ManualResource {
         List<Analise> lstAnalise = analiseRepository.findAll();
         if (!lstAnalise.isEmpty()) {
             for (int i = 0; i < lstAnalise.size(); i++) {
-                if (lstAnalise.get(i).getManual().getId().equals(id)) {
+                if (lstAnalise.get(i).getManual()!= null && lstAnalise.get(i).getManual().getId().equals(id)) {
                     status = true;
                     return status;
                 }
@@ -282,9 +282,9 @@ public class ManualResource {
         List<FuncaoTransacao> lstFt = funcaoTransacaoRepository.findAll();
         if (!lstFAjuste.isEmpty()) {
             for (int i = 0; i < lstFAjuste.size(); i++) {
-                if (lstFAjuste.get(i).getManual().getId().equals(id)) {
+                if (lstFAjuste.get(i).getManual()!=null && lstFAjuste.get(i).getManual().getId().equals(id)) {
                     for (int j = 0; j < lstFt.size(); j++) {
-                        if (lstFt.get(j).getFatorAjuste().getId().equals(lstFAjuste.get(i).getId())) {
+                        if (lstFt.get(j).getFatorAjuste()!=null && lstFt.get(j).getFatorAjuste().getId().equals(lstFAjuste.get(i).getId())) {
                             status = true;
                             return status;
                         }
