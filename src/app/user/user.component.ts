@@ -214,12 +214,12 @@ export class UserComponent implements AfterViewInit, OnInit {
     private createStringParamsArray(): Array<string> {
         const arrayParams: Array<string> = [];
 
-        (this.searchParams.fullName !== undefined) ? (arrayParams.push('+firstName:' + this.searchParams.fullName)) : (this);
-        (this.searchParams.login !== undefined) ? (arrayParams.push('+login:' + this.searchParams.login)) : (this);
-        (this.searchParams.email !== undefined) ? (arrayParams.push('+email:' + this.searchParams.email)) : (this);
-        (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome !== undefined) ? (arrayParams.push('+organizacoes.nome:' + this.searchParams.organization.nome)) : (this)) : (this);
-        (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name !== undefined) ? (arrayParams.push('+authorities.name:' + this.searchParams.profile.name)) : (this)) : (this);
-        (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (arrayParams.push('+tipoEquipes.nome:' + this.searchParams.team.nome)) : (this)) : (this);
+        (this.searchParams.fullName !== undefined) ? (arrayParams.push('+firstName:' + "*" + this.searchParams.fullName + "*" )) : (this);
+        (this.searchParams.login !== undefined) ? (arrayParams.push('+login:' + "*" + this.searchParams.login + "*" )) : (this);
+        (this.searchParams.email !== undefined) ? (arrayParams.push('+email:' + "*" + this.searchParams.email + "*" )) : (this);
+        (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome !== undefined) ? (arrayParams.push('+organizacoes.nome:' + "*" + this.searchParams.organization.nome+ "*")) : (this)) : (this);
+        (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name !== undefined) ? (arrayParams.push('+authorities.name:'+ "*"+ this.searchParams.profile.name+ "*")) : (this)) : (this);
+        (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (arrayParams.push('+tipoEquipes.nome:'+ "*" + this.searchParams.team.nome+ "*")) : (this)) : (this);
 
         return arrayParams;
     }
@@ -228,6 +228,7 @@ export class UserComponent implements AfterViewInit, OnInit {
     performSearch() {
         this.checkUndefinedParams();
         this.query = this.stringConcatService.concatResults(this.createStringParamsArray()).slice(1);
+        console.log("result do concat: " + this.query)
         this.recarregarDataTable();
     }
 
@@ -245,6 +246,7 @@ export class UserComponent implements AfterViewInit, OnInit {
     }
 
     recarregarDataTable() {
+        console.log("valor da query: " + this.query);
         this.datatable.refresh(this.query ? this.query : "*");
     }
 
