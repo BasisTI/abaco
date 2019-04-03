@@ -195,7 +195,8 @@
         "msgComSucesso":" com sucesso!",
         "msgManualNaoPodeSerExcluido":"O manual não pode ser excluído pois está sendo usado em um contrato.",
         "msgRegistroClonar":"Selecione um registro para clonar",
-        "msgManualEstaVinculadoUmaAnalise":"O manual está vinculado à uma analise."
+        "msgManualEstaVinculadoUmaAnalise":"O manual está vinculado à uma analise.",
+        "msgManualVinculadoFatorAjusteVerifiqueFuncoesDadosOuFuncoesTransacoes": "O manual está em vinculado a um fator ajuste, Verifique suas funções de dados ou suas funções transações."
       },
       "Botoes": {
         "NovoEsforcoFase": "Novo Esforço Fase",
