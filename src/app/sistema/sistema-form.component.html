@@ -139,7 +139,7 @@
             (buttonClick)="datatableClick($event)"
             disableClone="true"
             >
-            <p-column header="Código"
+            <p-column [header]="this.getLabel('Cadastros.Sistema.Codigo')"
               [style]="{width: '25%'}">
               <ng-template let-codigo="rowData.id" pTemplate="body">
                 {{ codigo ? codigo : this.getLabel('Cadastros.Sistema.Mensagens.msgAindaNaoCadastrado') }}

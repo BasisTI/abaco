@@ -71,7 +71,7 @@
       "Excluir":"Delete",
       "Editar":"Edit",
       "Inserir":"Insert",
-      "Pesquisar":"Scearch",
+      "Pesquisar":"Search",
       "Copia":" - Copy",
       "Mensagens": {
         "msgAdicionarFuncaoDados": "Add Data Role",
@@ -727,7 +727,8 @@
       "Impacto": "Impact",
       "Nome": "Name",
       "NumeroOcorrencia": "Occurrence Number",
-      "PF": "PF:",
+      "PF:": "PF: ",
+      "PF":"PF",
       "PontosFuncao": "Function Points",
       "RelatorioBaseline": "Baseline Report",
       "RLR": "RLR",
