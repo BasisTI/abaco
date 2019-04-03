@@ -191,7 +191,6 @@ public class AnaliseResource {
         Analise analiseData = this.salvaNovaData(analise);
         linkFuncoesToAnalise(analiseData);
         Analise result = analiseRepository.save(analiseData);
-        //unlinkAnaliseFromFuncoes(result);
         analiseSearchRepository.save(result);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analiseData.getId().toString()))
             .body(result);
