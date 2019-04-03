@@ -6,6 +6,7 @@ import { DatatableComponent, DatatableClickEvent } from '@basis/angular-componen
 import { environment } from '../../environments/environment';
 import { Funcionalidade } from './funcionalidade.model';
 import { FuncionalidadeService } from './funcionalidade.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'jhi-funcionalidade',
@@ -20,8 +21,9 @@ export class FuncionalidadeComponent {
   constructor(
     private router: Router,
     private funcionalidadeService: FuncionalidadeService,
-    private confirmationService: ConfirmationService
-  ) {}
+    private confirmationService: ConfirmationService,
+    private translate: TranslateService
+  ) { }
 
   datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
@@ -40,9 +42,17 @@ export class FuncionalidadeComponent {
     }
   }
 
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
+
   confirmDelete(id: any) {
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja excluir o registro?',
+      message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
       accept: () => {
         this.funcionalidadeService.delete(id).subscribe(() => {
           this.datatable.refresh(undefined);

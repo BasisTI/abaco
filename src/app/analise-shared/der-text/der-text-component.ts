@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 
 import { ParseResult, DerTextParser } from './der-text-parser';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-analise-der-text',
@@ -28,7 +29,15 @@ export class DerTextComponent implements OnChanges {
 
   text: string;
 
-  constructor() { }
+  constructor(private translate: TranslateService) { }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     this.text = changes.value.currentValue;

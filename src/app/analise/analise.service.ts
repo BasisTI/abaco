@@ -1,11 +1,12 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Injectable } from '@angular/core';
 import { Response, RequestMethod, ResponseContentType } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 
-import { Analise , AnaliseShareEquipe} from './';
-import {ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService} from '../shared';
+import { Analise, AnaliseShareEquipe } from './';
+import { ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService } from '../shared';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { loginRoute } from '../login';
 import { GenericService } from '../util/service/generic.service';
@@ -33,23 +34,31 @@ export class AnaliseService {
 
   @BlockUI() blockUI: NgBlockUI;
 
-    constructor(private http: HttpService, private pageNotificationService: PageNotificationService, private genericService : GenericService) {}
+  constructor(private http: HttpService, private pageNotificationService: PageNotificationService, private genericService: GenericService, private translate: TranslateService) { }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   /**
    *
    */
   public create(analise: Analise): Observable<Analise> {
-    this.blockUI.start('Criando análise...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.CriandoAnálise'));
     const copy = this.convert(analise);
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       this.blockUI.stop();
       return this.genericService.convertJsonToObject(res.json(), new Analise())
     }).catch((error: any) => {
-        if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
-            return Observable.throw(new Error(error.status));
-        }
+      if (error.status === 403) {
+        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        return Observable.throw(new Error(error.status));
+      }
     });
   }
 
@@ -58,7 +67,7 @@ export class AnaliseService {
    */
   public atualizaAnalise(analise: Analise) {
     this.update(analise)
-        .subscribe();
+      .subscribe();
   }
 
 
@@ -66,17 +75,17 @@ export class AnaliseService {
    *
    */
   public update(analise: Analise): Observable<Analise> {
-    this.blockUI.start('Atualizando análise...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.AtualizandoAnalise'));
     const copy = this.convert(analise);
     return this.http.put(this.resourceUrl, copy).map((res: Response) => {
       const jsonResponse = res.json();
       this.blockUI.stop();
       return this.convertItemFromServer(jsonResponse);
     }).catch((error: any) => {
-        if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
-            return Observable.throw(new Error(error.status));
-        }
+      if (error.status === 403) {
+        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        return Observable.throw(new Error(error.status));
+      }
     });
   }
 
@@ -84,25 +93,25 @@ export class AnaliseService {
    *
    */
   public block(analise: Analise): Observable<Analise> {
-    this.blockUI.start('Bloqueando/Desbloqueando análise...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.BloqueandoDesbloqueandoAnalise'));
     const copy = analise;
     return this.http.put(`${this.resourceUrl}/${copy.id}/block`, copy).map((res: Response) => {
       this.blockUI.stop();
       return null;
     }).catch((error: any) => {
-        switch (error.status) {
-          case 400: {
-            if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
-                this.pageNotificationService.addErrorMsg('Somente administradores podem bloquear/desbloquear análises!');
-            }
-            break;
+      switch (error.status) {
+        case 400: {
+          if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
+            this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteAdministradoresBloquearDesbloquear'));
           }
-          case 403: {
-            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
-            break;
-          }
+          break;
         }
-        return Observable.throw(new Error(error.status));
+        case 403: {
+          this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+          break;
+        }
+      }
+      return Observable.throw(new Error(error.status));
     });
   }
 
@@ -119,14 +128,14 @@ export class AnaliseService {
    *
    */
   public geraRelatorioPdfBrowser(id: number): Observable<string> {
-    this.blockUI.start('GERANDO RELATORIO...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.GerandoRelatorio'));
     this.http.get(`${this.relatoriosUrl}/${id}`, {
-    method: RequestMethod.Get,
-    responseType: ResponseContentType.Blob,
-  }).subscribe(
+      method: RequestMethod.Get,
+      responseType: ResponseContentType.Blob,
+    }).subscribe(
       (response) => {
         const mediaType = 'application/pdf';
-        const blob = new Blob([response.blob()], {type: mediaType});
+        const blob = new Blob([response.blob()], { type: mediaType });
         const fileURL = window.URL.createObjectURL(blob);
         const anchor = document.createElement('a');
         anchor.download = 'analise.pdf';
@@ -135,27 +144,27 @@ export class AnaliseService {
         this.blockUI.stop();
         return null;
       });
-      return null;
+    return null;
   }
 
-    /**
-   *
-   */
+  /**
+ *
+ */
   public geraRelatorioPdfDetalhadoBrowser(id: number): Observable<string> {
-    this.blockUI.start('GERANDO RELATORIO...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.GerandoRelatorio'));
     this.http.get(`${this.relatoriosDetalhadoUrl}/${id}`, {
-    method: RequestMethod.Get,
-    responseType: ResponseContentType.Blob,
-  }).catch((error: any) => {
-    if (error.status === 500) {
-        this.pageNotificationService.addErrorMsg('Erro ao gerar relatório, verifique se a análise possui FDs/FTs cadastradas');
+      method: RequestMethod.Get,
+      responseType: ResponseContentType.Blob,
+    }).catch((error: any) => {
+      if (error.status === 500) {
+        this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.ErroGerarRelatorio'));
         this.blockUI.stop();
         return Observable.throw(new Error(error.status));
-    }
-}).subscribe(
+      }
+    }).subscribe(
       (response) => {
         const mediaType = 'application/pdf';
-        const blob = new Blob([response.blob()], {type: mediaType});
+        const blob = new Blob([response.blob()], { type: mediaType });
         const fileURL = window.URL.createObjectURL(blob);
         const anchor = document.createElement('a');
         anchor.download = 'analise.pdf';
@@ -164,28 +173,28 @@ export class AnaliseService {
         this.blockUI.stop();
         return null;
       });
-      return null;
+    return null;
   }
 
   /**
    *
    */
   public gerarRelatorioExcel(id: number): Observable<string> {
-    this.blockUI.start('GERANDO RELATORIO...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.GerandoRelatorio'));
     this.http.get(`${this.relatorioExcelUrl}/${id}`, {
-    method: RequestMethod.Get,
-    responseType: ResponseContentType.Blob,
-  }).catch((error: any) => {
-    this.blockUI.stop();
-    if (error.status === 500) {
-        this.pageNotificationService.addErrorMsg('Erro ao gerar relatório, verifique se a análise possui FDs/FTs cadastradas');
+      method: RequestMethod.Get,
+      responseType: ResponseContentType.Blob,
+    }).catch((error: any) => {
+      this.blockUI.stop();
+      if (error.status === 500) {
+        this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.ErroGerarRelatorio'));
         this.blockUI.stop();
         return Observable.throw(new Error(error.status));
-    }
-}).subscribe(
+      }
+    }).subscribe(
       (response) => {
         const mediaType = 'application/vnd.ms-excel';
-        const blob = new Blob([response.blob()], {type: mediaType});
+        const blob = new Blob([response.blob()], { type: mediaType });
         const fileURL = window.URL.createObjectURL(blob);
         const anchor = document.createElement('a');
         anchor.download = 'analise.xls';
@@ -195,21 +204,21 @@ export class AnaliseService {
         this.blockUI.stop();
         return null;
       });
-      return null;
+    return null;
   }
 
   /**
    *
    */
   public geraBaselinePdfBrowser(): Observable<string> {
-    this.blockUI.start('GERANDO RELATORIO...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.GerandoRelatorio'));
     this.http.get(`${this.relatoriosBaselineUrl}`, {
-    method: RequestMethod.Get,
-    responseType: ResponseContentType.Blob,
-  }).subscribe(
+      method: RequestMethod.Get,
+      responseType: ResponseContentType.Blob,
+    }).subscribe(
       (response) => {
         const mediaType = 'application/pdf';
-        const blob = new Blob([response.blob()], {type: mediaType});
+        const blob = new Blob([response.blob()], { type: mediaType });
         const fileURL = window.URL.createObjectURL(blob);
         const anchor = document.createElement('a');
         anchor.download = 'analise.pdf';
@@ -218,14 +227,14 @@ export class AnaliseService {
         this.blockUI.stop();
         return null;
       });
-      return null;
+    return null;
   }
 
   /**
    *
    */
   public find(id: number): Observable<Analise> {
-    this.blockUI.start('Procurando análise...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.ProcurandoAnalise'));
     return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
       const jsonResponse = res.json();
       const analiseJson = this.convertItemFromServer(jsonResponse);
@@ -246,7 +255,7 @@ export class AnaliseService {
    * @param idUsuario Id do usuário que está fazendo a requisição
    */
   findAnalisesUsuario(idUsuario: number): Observable<Analise[]> {
-    this.blockUI.start('Filtrando análises...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.FiltrandoAnalises'));
     const url = `${this.resourceUrl}/user/${idUsuario}`;
     return this.http.get(url)
       .map(
@@ -255,20 +264,20 @@ export class AnaliseService {
       );
   }
 
-  tratarErro(erro: string, id: number) {}
+  tratarErro(erro: string, id: number) { }
   /**
    *
    */
   public query(req?: any): Observable<ResponseWrapper> {
-    this.blockUI.start('Aguenta um cadinho aí...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.AguardeUmMomento'));
     const options = createRequestOption(req);
     return this.http.get(this.resourceUrl, options)
-    .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg('Você não possui permissão!');
-                return Observable.throw(new Error(error.status));
-            }
-        });
+      .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+        if (error.status === 403) {
+          this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+          return Observable.throw(new Error(error.status));
+        }
+      });
   }
 
   /**
@@ -276,10 +285,10 @@ export class AnaliseService {
    */
   public delete(id: number): Observable<Response> {
     return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
-        if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
-            return Observable.throw(new Error(error.status));
-        }
+      if (error.status === 403) {
+        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        return Observable.throw(new Error(error.status));
+      }
     });
   }
 
@@ -303,7 +312,7 @@ export class AnaliseService {
     return new Analise().copyFromJSON(json);
   }
 
-  convertJsonToAnalise (res: Response): Analise[] {
+  convertJsonToAnalise(res: Response): Analise[] {
     const jsonResponse = res.json();
     let result = [];
     for (let i = 0; i < jsonResponse.length; i++) {
@@ -321,31 +330,31 @@ export class AnaliseService {
 
   // PARTE RESPONSÁVEL PELO "COMPARTILHAR"
 
-   /** Encontra todas as equipes que têm acesso àquela análise
-   *
-   *
-   */
+  /** Encontra todas as equipes que têm acesso àquela análise
+  *
+  *
+  */
   findAllCompartilhadaByAnalise(analiseId: number): Observable<ResponseWrapper> {
-    this.blockUI.start('Buscando análises...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.BuscandoAnalises'));
     const url = `${this.findCompartilhadaByAnaliseUrl}/${analiseId}`;
     return this.http.get(url)
       .map((res: Response) => this.convertResponse(res));
   }
-  
+
 
 
   findAllBaseline(): Observable<Response> {
-    this.blockUI.start('Buscando análises baseline...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.BuscandoAnalisesBaseline'));
     const url = `${this.resourceUrl}/baseline`;
     return this.http.get(url);
   }
 
-   /** Salva as equipes que têm acesso àquela análise
-   *
-   *
-   */
+  /** Salva as equipes que têm acesso àquela análise
+  *
+  *
+  */
   salvarCompartilhar(listaCompartilhada: Array<AnaliseShareEquipe>) {
-    this.blockUI.start('Compartilhando análise...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.CompartilhandoAnalise'));
     return this.http.post(`${this.resourceUrl}/compartilhar`, listaCompartilhada).map((res: Response) => {
       const jsonResponse = res.json();
       this.blockUI.stop();
@@ -353,34 +362,34 @@ export class AnaliseService {
     });
   }
 
-   /** Deletas as equipes que têm acesso àquela análise
-   *
-   *
-   */
+  /** Deletas as equipes que têm acesso àquela análise
+  *
+  *
+  */
   deletarCompartilhar(id: number): Observable<Response> {
     return this.http.delete(`${this.resourceUrl}/compartilhar/delete/${id}`).catch((error: any) => {
       if (error.status === 403) {
-          this.pageNotificationService.addErrorMsg('Você não possui permissão!');
-          return Observable.throw(new Error(error.status));
+        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        return Observable.throw(new Error(error.status));
       }
     });
   }
 
-   /**Atualiza um compartilhamento para "Somente visualizar ou Editar"
-   *
-   *
-   */
+  /**Atualiza um compartilhamento para "Somente visualizar ou Editar"
+  *
+  *
+  */
   atualizarCompartilhar(compartilhada) {
-    this.blockUI.start('Atualizando compartilhamento...');
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.AtualizandoCompartilhamento'));
     const copy = compartilhada;
     return this.http.put(`${this.resourceUrl}/compartilhar/viewonly/${copy.id}`, copy).map((res: Response) => {
       this.blockUI.stop();
       return null;
     }).catch((error: any) => {
-        if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
-            return Observable.throw(new Error(error.status));
-        }
+      if (error.status === 403) {
+        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        return Observable.throw(new Error(error.status));
+      }
     });
   }
 }

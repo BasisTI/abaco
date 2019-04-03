@@ -1,7 +1,7 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>{{ tipoEquipe.id ? 'Editar Tipo de Equipe' : 'Cadastrar Tipo de Equipe' }}</h1>
+      <h1>{{ tipoEquipe.id ? this.getLabel('Cadastros.TipoEquipe.EditarTipodeEquipe') : this.getLabel('Cadastros.TipoEquipe.CadastrarTipoEquipe') }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
         
         <div class="ui-g">
@@ -16,12 +16,12 @@
                 pInputText
                 #nomeTipoEquipe='ngModel'
                 required/>
-              <label>Nome *</label>
+              <label translate="Cadastros.TipoEquipe.Nome*">Nome *</label>
               <div *ngIf="editForm.controls['nomeTipoEquipe'] 
               && !editForm.controls['nomeTipoEquipe'].valid 
               && (editForm.controls['nomeTipoEquipe'].touched 
               || editForm.submitted)" 
-              class="ui-message ui-messages-error">
+              class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
               Campo obrigatório.
             </div>
             </span>
@@ -29,13 +29,13 @@
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: -25px">
             <span>
-              <h3 class="first">Organização *</h3>
+              <h3 class="first" translate="Cadastros.TipoEquipe.Organizacao*">Organização *</h3>
               <p-multiSelect
                 name= "organizacoesMultiSelect"
                 [options]="organizacoes"
                 [(ngModel)]="tipoEquipe.organizacoes"
                 dataKey="id"
-                defaultLabel="Selecione ao menos uma organização" 
+                [defaultLabel]="getLabel('Cadastros.TipoEquipe.SelecioneOrganizacao')" 
                 optionLabel="nome"
                 selectedItemsLabel="{0} organizações selecionadas"
                 #organizacoesMultiSelect='ngModel'
@@ -45,7 +45,7 @@
               && !editForm.controls['organizacoesMultiSelect'].valid 
               && (editForm.controls['organizacoesMultiSelect'].touched 
               || editForm.submitted)" 
-              style="color: red; font-size: 10px;">
+              style="color: red; font-size: 10px;" translate="Global.Mensagens.CampoObrigatorio">
               Campo obrigatório.
             </div>
             </span>
@@ -57,7 +57,7 @@
           
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-white-button 
-              buttonLabel="Cancelar" 
+              [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" 
               routerLink="/admin/tipoEquipe">
             </app-white-button>
           </div>
@@ -65,7 +65,7 @@
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-submit-button 
               (click)="editForm.submit"
-              buttonLabel="Salvar" 
+              [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" 
               [disabled]="editForm.form.invalid || isSaving">
             </app-submit-button>
           </div>

@@ -32,6 +32,14 @@ import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.modul
 import { AbacoDerTextModule } from '../analise-shared/der-text/der-text.module';
 import { FuncaoDadosService } from './funcao-dados.service';
 
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+
+export function createTranslateLoader(http: HttpClient) {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  }
+
 @NgModule({
   imports: [
     CommonModule,
@@ -56,7 +64,14 @@ import { FuncaoDadosService } from './funcao-dados.service';
     AbacoEllipsisTooltipModule,
     MultiSelectModule,
     AbacoDerChipsModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    TranslateModule.forChild({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    })
   ],
   declarations: [
     FuncaoDadosFormComponent

@@ -1,20 +1,21 @@
-import {Component, ViewChild, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {ConfirmationService} from 'primeng/primeng';
-import {DatatableComponent, DatatableClickEvent} from '@basis/angular-components';
-import {Response} from '@angular/http';
+import { TranslateService } from '@ngx-translate/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ConfirmationService } from 'primeng/primeng';
+import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
+import { Response } from '@angular/http';
 
-import {environment} from '../../environments/environment';
-import {User} from './user.model';
-import {UserService} from './user.service';
-import {ElasticQuery, PageNotificationService} from '../shared';
-import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
-import {Organizacao} from '../organizacao/organizacao.model';
-import {OrganizacaoService} from '../organizacao/organizacao.service';
-import {Authority} from './authority.model';
-import {TipoEquipe} from '../tipo-equipe/tipo-equipe.model';
-import {TipoEquipeService} from '../tipo-equipe/tipo-equipe.service';
-import {StringConcatService} from '../shared/string-concat.service';
+import { environment } from '../../environments/environment';
+import { User } from './user.model';
+import { UserService } from './user.service';
+import { ElasticQuery, PageNotificationService } from '../shared';
+import { AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { Organizacao } from '../organizacao/organizacao.model';
+import { OrganizacaoService } from '../organizacao/organizacao.service';
+import { Authority } from './authority.model';
+import { TipoEquipe } from '../tipo-equipe/tipo-equipe.model';
+import { TipoEquipeService } from '../tipo-equipe/tipo-equipe.service';
+import { StringConcatService } from '../shared/string-concat.service';
 
 @Component({
     selector: 'jhi-user',
@@ -28,7 +29,7 @@ export class UserComponent implements AfterViewInit, OnInit {
 
     usuarioSelecionado: User;
 
-    paginationParams = {contentIndex: null};
+    paginationParams = { contentIndex: null };
 
     query: String = "*";
 
@@ -54,8 +55,17 @@ export class UserComponent implements AfterViewInit, OnInit {
         private organizacaoService: OrganizacaoService,
         private tipoEquipeService: TipoEquipeService,
         private stringConcatService: StringConcatService,
-        private pageNotificationService: PageNotificationService
+        private pageNotificationService: PageNotificationService,
+        private translate: TranslateService
     ) {
+    }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
     }
 
     ngOnInit() {
@@ -109,23 +119,23 @@ export class UserComponent implements AfterViewInit, OnInit {
             this.authorities.forEach((authority) => {
                 switch (authority.name) {
                     case 'ROLE_ADMIN': {
-                        authority.description = 'Administrador';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Administrador');
                         break;
                     }
                     case 'ROLE_USER': {
-                        authority.description = 'Usuário';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Usuario');
                         break;
                     }
                     case 'ROLE_VIEW': {
-                        authority.description = 'Observador';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Observador');
                         break;
                     }
                     case 'ROLE_ANALISTA': {
-                        authority.description = 'Analista';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Analista');
                         break;
                     }
                     case 'ROLE_GESTOR': {
-                        authority.description = 'Gestor';
+                        authority.description = this.getLabel('Cadastros.Usuarios.Gestor');
                         break;
                     }
                 }
@@ -168,7 +178,7 @@ export class UserComponent implements AfterViewInit, OnInit {
 
     confirmDelete(user: User) {
         this.confirmationService.confirm({
-            message: 'Tem certeza que deseja excluir o registro?',
+            message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
             accept: () => {
                 this.userService.delete(user).subscribe(() => {
                     this.datatable.refresh(this.query);
@@ -177,12 +187,12 @@ export class UserComponent implements AfterViewInit, OnInit {
                     if (error.status === 400) {
                         const errorType: string = error.headers.toJSON()['x-abacoapp-error'][0];
                         switch (errorType) {
-                            case 'error.userexists' : {
-                                this.pageNotificationService.addErrorMsg('Você não pode excluir o Administrador!');
+                            case 'error.userexists': {
+                                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Usuarios.Mensagens.msgVoceNaoPodeExcluirAdministrador'));
                                 break;
                             }
-                            case 'error.analiseexists' : {
-                                this.pageNotificationService.addErrorMsg('Você não pode excluir o usuário porque ele é dono de alguma Análise!');
+                            case 'error.analiseexists': {
+                                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Usuarios.Mensagens.msgVoceNaoPodeExcluirUsuarioEleDonoAnalise'));
                                 break;
                             }
                         }
@@ -201,15 +211,15 @@ export class UserComponent implements AfterViewInit, OnInit {
         (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)) : (this);
     }
 
-   private createStringParamsArray(): Array<string> {
+    private createStringParamsArray(): Array<string> {
         const arrayParams: Array<string> = [];
 
-        (this.searchParams.fullName !== undefined) ? (arrayParams.push('+firstName:' + this.searchParams.fullName)) : (this);
-        (this.searchParams.login !== undefined) ? (arrayParams.push('+login:' + this.searchParams.login)) : (this);
-        (this.searchParams.email !== undefined) ? (arrayParams.push('+email:' + this.searchParams.email)) : (this);
-        (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome !== undefined) ? (arrayParams.push('+organizacoes.nome:' + this.searchParams.organization.nome)) : (this)) : (this);
-        (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name !== undefined) ? (arrayParams.push('+authorities.name:' + this.searchParams.profile.name)) : (this)) : (this);
-        (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (arrayParams.push('+tipoEquipes.nome:' + this.searchParams.team.nome)) : (this)) : (this);
+        (this.searchParams.fullName !== undefined) ? (arrayParams.push('+firstName:' + "*" + this.searchParams.fullName + "*" )) : (this);
+        (this.searchParams.login !== undefined) ? (arrayParams.push('+login:' + "*" + this.searchParams.login + "*" )) : (this);
+        (this.searchParams.email !== undefined) ? (arrayParams.push('+email:' + "*" + this.searchParams.email + "*" )) : (this);
+        (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome !== undefined) ? (arrayParams.push('+organizacoes.nome:' + "*" + this.searchParams.organization.nome+ "*")) : (this)) : (this);
+        (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name !== undefined) ? (arrayParams.push('+authorities.name:'+ "*"+ this.searchParams.profile.name+ "*")) : (this)) : (this);
+        (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (arrayParams.push('+tipoEquipes.nome:'+ "*" + this.searchParams.team.nome+ "*")) : (this)) : (this);
 
         return arrayParams;
     }
@@ -220,7 +230,7 @@ export class UserComponent implements AfterViewInit, OnInit {
         this.query = this.stringConcatService.concatResults(this.createStringParamsArray()).slice(1);
         this.recarregarDataTable();
     }
-    
+
     limparPesquisa() {
         this.searchParams = {
             fullName: undefined,

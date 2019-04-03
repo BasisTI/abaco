@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/primeng';
@@ -32,9 +33,18 @@ export class ManualComponent implements OnInit {
         private router: Router,
         private manualService: ManualService,
         private confirmationService: ConfirmationService,
-        private pageNotificationService: PageNotificationService
+        private pageNotificationService: PageNotificationService,
+        private translate: TranslateService
     ) {
     }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+          str = res;
+        }).unsubscribe();
+        return str;
+      }
 
     public ngOnInit() {
         this.mostrarDialogClonar = false;
@@ -76,9 +86,9 @@ export class ManualComponent implements OnInit {
 
     clonarTooltip() {
         if (!this.manualSelecionado.id) {
-            return 'Selecione um registro para clonar';
+            return `${this.getLabel('Cadastros.Manual.Mensagens.msgRegistroClonar')}`;
         }
-        return 'Clonar';
+        return this.getLabel('Global.Botoes.Clonar');
     }
 
     abrirEditar() {
@@ -105,7 +115,7 @@ export class ManualComponent implements OnInit {
 
             this.manualService.create(manualClonado).subscribe((manualSalvo: Manual) => {
                 this.pageNotificationService
-                    .addSuccessMsg(`Manual '${manualSalvo.nome}' clonado a partir do manual '${this.manualSelecionado.nome}' com sucesso!`);
+                .addSuccessMsg(`${this.getLabel('Cadastros.Manual.Mensagens.msgManual')} ${manualSalvo.nome} ${this.getLabel('Cadastros.Manual.Mensagens.msgClonadoPartirDoManual')} ${this.manualSelecionado.nome} ${this.getLabel('Cadastros.Manual.Mensagens.msgComSucesso')}`);
                 this.fecharDialogClonar();
                 this.recarregarDataTable();
             });
@@ -121,14 +131,14 @@ export class ManualComponent implements OnInit {
 
     public confirmDelete(id: any) {
         this.confirmationService.confirm({
-            message: MessageUtil.CONFIRMAR_EXCLUSAO,
+            message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
             accept: () => {                
-                this.blockUI.start(MessageUtil.EXCLUINDO_REGISTRO);
+                this.blockUI.start(this.getLabel('Global.Mensagens.EXCLUINDO_REGISTRO'));
                 this.manualService.delete(id).subscribe(() => {
                     this.recarregarDataTable();
                     this.blockUI.stop();
                     this.pageNotificationService
-                        .addSuccessMsg('Registro excluído com sucesso!');
+                    .addSuccessMsg(this.getLabel('Global.Mensagens.RegistroExcluidoComSucesso'));
                 }, error=> {
                     if (error.status === 500){
                        this.blockUI.stop();

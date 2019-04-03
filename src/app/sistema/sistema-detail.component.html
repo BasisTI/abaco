@@ -1,24 +1,24 @@
 <div class="ui-g ui-fluid" *ngIf="sistema">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>Visualizar Sistema</h1>
+      <h1 translate="Cadastros.Sistema.VisualizarSistema">Visualizar Sistema</h1>
       <div class="ui-g">
         <div class="ui-g-2" style="margin-bottom: 25px">
-          <label>Sigla: {{ sistema.sigla }}</label>
+          <label>{{this.getLabel('Cadastros.Sistema.Sigla:')}} {{ sistema.sigla }}</label>
         </div>
         <div class="ui-g-10" style="margin-bottom: 25px">
-          <label>Nome do Sistema: {{ sistema.nome }}</label>
+          <label>{{this.getLabel('Cadastros.Sistema.NomeSistema:')}} {{ sistema.nome }}</label>
         </div>
         <div class="ui-g-4" style="margin-bottom: 25px">
-          <label>Número da Ocorrência: {{ sistema.numeroOcorrencia }}</label>
+          <label>{{this.getLabel('Cadastros.Sistema.NumeroOcorrencia:')}} {{ sistema.numeroOcorrencia }}</label>
         </div>
         <div class="ui-g-8" style="margin-bottom: 25px">
-          <label>Organização: {{ sistema.organizacao.nome }}</label>
+          <label>{{this.getLabel('Cadastros.Sistema.Organizacao:')}} {{ sistema.organizacao.nome }}</label>
         </div>
       </div>
 
       <div class="ui-g">
-        <h4 style="margin-top: 0px;">
+        <h4 style="margin-top: 0px;" translate="Cadastros.Sistema.Modulos">
           Módulos
         </h4>
 
@@ -27,24 +27,24 @@
           [immutable]="false" 
           id="idTabelaModuloDetailSistema"
           #modulosDataTable>
-          <p-column header="Código"
+          <p-column [header]="getLabel('Cadastros.Sistema.Codigo')"
             [style]="{width: '25%'}" 
             field="id">
           </p-column>
-          <p-column header="Nome" field="nome"></p-column>
+          <p-column [header]="getLabel('Cadastros.Sistema.Nome')" field="nome"></p-column>
         </p-dataTable>
       </div>
 
       <div class="ui-g" style="margin-bottom: 25px">
-          <h4 style>Funcionalidades</h4>
+          <h4 style translate="Cadastros.Sistema.Funcionalidades">Funcionalidades</h4>
 
           <p-dataTable 
             [value]="sistema.funcionalidades"
             [immutable]="false"
             id="idTabelaFuncionalidadesDetailSistema"
             #funcionalidadesDataTable>
-            <p-column header="Módulo" field="modulo.nome"></p-column>
-            <p-column header="Nome" field="nome"></p-column>
+            <p-column [header]="getLabel('Cadastros.Sistema.Modulo')" field="modulo.nome"></p-column>
+            <p-column [header]="getLabel('Cadastros.Sistema.Nome')" field="nome"></p-column>
           </p-dataTable>
       </div>
 
@@ -53,7 +53,7 @@
           <button 
             pButton type="button"
             id="idBtnVoltarDetailSistema" 
-            label="Voltar" 
+            [label]="this.getLabel('Global.Botoes.Voltar')" 
             routerLink="/sistema">
           </button>
         </div>

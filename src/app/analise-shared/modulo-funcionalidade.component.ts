@@ -1,15 +1,16 @@
+import { TranslateService } from '@ngx-translate/core';
 import {
     Component, OnInit, Input, Output,
     EventEmitter, ChangeDetectorRef, OnDestroy
 } from '@angular/core';
-import {AnaliseSharedDataService, PageNotificationService} from '../shared';
-import {Analise} from '../analise';
-import {Manual} from '../manual';
-import {FatorAjuste} from '../fator-ajuste';
-import {Sistema, SistemaService} from '../sistema/index';
-import {Modulo, ModuloService} from '../modulo';
-import {Funcionalidade, FuncionalidadeService} from '../funcionalidade';
-import {Subscription} from 'rxjs/Subscription';
+import { AnaliseSharedDataService, PageNotificationService } from '../shared';
+import { Analise } from '../analise';
+import { Manual } from '../manual';
+import { FatorAjuste } from '../fator-ajuste';
+import { Sistema, SistemaService } from '../sistema/index';
+import { Modulo, ModuloService } from '../modulo';
+import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
+import { Subscription } from 'rxjs/Subscription';
 
 import * as _ from 'lodash';
 import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
@@ -61,8 +62,17 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         private funcionalidadeService: FuncionalidadeService,
         private changeDetectorRef: ChangeDetectorRef,
         private pageNotificationService: PageNotificationService,
-        private funcaoDadosService: FuncaoDadosService
+        private funcaoDadosService: FuncaoDadosService,
+        private translate: TranslateService
     ) {
+    }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
     }
 
     ngOnInit() {
@@ -81,11 +91,11 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.subscribeFuncionalideBaseline();
     }
 
-    private subscribeFuncionalideBaseline(){
+    private subscribeFuncionalideBaseline() {
         this.funcaoDadosService.dataModd$.subscribe(
-            (data:Funcionalidade) => {
+            (data: Funcionalidade) => {
                 this.funcionalidades = data.modulo.funcionalidades;
-                this.selecionarModuloBaseline(data.modulo.id,data.id);
+                this.selecionarModuloBaseline(data.modulo.id, data.id);
             });
     }
 
@@ -149,14 +159,14 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
     private selecionarModulo(moduloId: number) {
-        this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
+        this.moduloSelecionado = _.find(this.modulos, { 'id': moduloId });
         this.moduloSelected(this.moduloSelecionado);
     }
 
     /* Seleciona no dropdown o modulo da Baseline recebido do componente funcao-dados-form-component.ts*/
-    private selecionarModuloBaseline(moduloId: number,funcionalideId: number) {
-        this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
-        this.funcionalidadeSelecionada = _.find(this.funcionalidades, {'id': funcionalideId});
+    private selecionarModuloBaseline(moduloId: number, funcionalideId: number) {
+        this.moduloSelecionado = _.find(this.modulos, { 'id': moduloId });
+        this.funcionalidadeSelecionada = _.find(this.funcionalidades, { 'id': funcionalideId });
     }
 
     private subscribeFuncaoAnaliseCarregada() {
@@ -186,7 +196,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.selecionarModulo(currentModulo.id);
 
         this.funcionalidades = currentModulo.funcionalidades;
-        this.funcionalidadeSelecionada = _.find(this.funcionalidades, {'id': currentFuncionalidade.id});
+        this.funcionalidadeSelecionada = _.find(this.funcionalidades, { 'id': currentFuncionalidade.id });
         this.funcionalidadeSelected(this.funcionalidadeSelecionada);
     }
 
@@ -217,15 +227,15 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         if (this.isSistemaSelected()) {
             return this.moduloDropdownPlaceholderComSistemaSelecionado();
         } else {
-            return `Selecione um Sistema na aba 'Geral' para carregar os Módulos`;
+            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneSistemaParaCarregarModulos');
         }
     }
 
     private moduloDropdownPlaceholderComSistemaSelecionado(): string {
         if (this.sistemaTemModulos()) {
-            return 'Selecione um Módulo';
+            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneModulo');
         } else {
-            return 'Nenhum Módulo cadastrado';
+            return this.getLabel('Analise.Analise.Mensagens.msgNenhumModuloCadastrado');
         }
     }
 
@@ -251,7 +261,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     moduloSelected(modulo: Modulo) {
         this.deselecionaFuncionalidadeSeModuloSelecionadoForDiferente();
-        
+
         const moduloId = modulo.id;
         this.funcionalidadeService.findFuncionalidadesByModulo(moduloId).subscribe((funcionalidades: Funcionalidade[]) => {
             this.funcionalidades = funcionalidades;
@@ -267,7 +277,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     adicionarModulo() {
         if (!this.novoModulo.nome) {
-            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
             return;
         }
         const sistemaId = this.sistema.id;
@@ -291,22 +301,22 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     private criarMensagemDeSucessoDaCriacaoDoModulo(nomeModulo: string, nomeSistema: string) {
         this.pageNotificationService
-            .addSuccessMsg(`Módulo '${nomeModulo}' criado para o Sistema '${nomeSistema}'`);
+            .addSuccessMsg(`${this.getLabel('Cadastros.Modulo.Mensagens.msgModulo')} ${nomeModulo} ${this.getLabel('Cadastros.Modulo.Mensagens.msgCriadoParaSistema')} ${nomeSistema}`);
     }
 
     funcionalidadeDropdownPlaceholder() {
         if (this.isModuloSelected()) {
             return this.funcionalidadeDropdownPlaceHolderComModuloSelecionado();
         } else {
-            return 'Selecione um Módulo para carregar os Submódulos';
+            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneModuloCarregarFuncionalidades');
         }
     }
 
     private funcionalidadeDropdownPlaceHolderComModuloSelecionado(): string {
         if (this.moduloSelecionadoTemFuncionalidade()) {
-            return 'Selecione um Submódulo';
+            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneFuncionalidade');
         } else {
-            return 'Nenhum Submódulo cadastrado';
+            return this.getLabel('Analise.Analise.Mensagens.msgNenhumaFuncionalidadeCadastrado');
         }
     }
 
@@ -327,7 +337,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     adicionarFuncionalidade() {
         if (this.novaFuncionalidade.nome === undefined) {
-            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
             return;
         }
         const moduloId = this.moduloSelecionado.id;
@@ -360,13 +370,13 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade) {
         this.funcionalidadeSelecionada = _.find(this.moduloSelecionado.funcionalidades,
-            {'id': funcionalidadeCriada.id});
+            { 'id': funcionalidadeCriada.id });
         this.funcionalidadeSelected(this.funcionalidadeSelecionada);
     }
 
     private criarMensagemDeSucessoDaCriacaoDaFuncionalidade(nomeFunc: string, nomeModulo: string, nomeSistema: string) {
         this.pageNotificationService
-            .addSuccessMsg(`Submódulo '${nomeFunc}' criado no Módulo '${nomeModulo}' do Sistema '${nomeSistema}'`);
+            .addSuccessMsg(`${this.getLabel('Analise.Analise.Mensagens.msgSubmodulo')} ${nomeFunc} ${this.getLabel('Analise.Analise.Mensagens.msgCriadoNoModulo')} ${nomeModulo} ${this.getLabel('Analise.Analise.Mensagens.msgDoSistema')} ${nomeSistema}`);
     }
 
     ngOnDestroy() {

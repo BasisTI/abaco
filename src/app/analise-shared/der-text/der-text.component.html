@@ -18,12 +18,12 @@
 
   <div class="ui-g-12">
     <span>
-      Total: {{ showTotal() }}
+      {{this.getLabel('Analise.Analise.Total')}} {{ showTotal() }}
     </span>
   </div>
   <div class="ui-g-12" *ngIf="deveMostrarDuplicatas()">
     <span >
-      Valores duplicados: {{ parseResult.duplicatasFormatadas() }}
+      {{this.getLabel('Analise.Analise.ValoresDuplicados:')}} {{ parseResult.duplicatasFormatadas() }}
     </span>
   </div>
 </div>

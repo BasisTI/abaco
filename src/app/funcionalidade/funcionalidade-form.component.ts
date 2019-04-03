@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
@@ -32,10 +33,19 @@ export class FuncionalidadeFormComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private funcionalidadeService: FuncionalidadeService,
+    private translate: TranslateService
     // private moduloService: ModuloService,
     // private funcaoDadosService: FuncaoDadosService,
     // private funcaoTransacaoService: FuncaoTransacaoService,
   ) {}
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   ngOnInit() {
     this.isSaving = false;

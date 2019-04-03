@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component } from '@angular/core';
 import { AppComponent } from './app.component';
 import { LoginService } from './login';
@@ -49,17 +50,17 @@ import { Router } from '@angular/router';
                         <ul class="ultima-menu animated fadeInDown">
                             <li role="menuitem">
                                 <a name="es" (click)="setLanguage($event.target)">
-                                    <span>Espanhol</span>
+                                    <span translate="Global.Idiomas.Espanhol">Espanhol</span>
                                 </a>
                             </li>
                             <li role="menuitem">
                                 <a name="en" (click)="setLanguage($event.target)">
-                                    <span>Inglês</span>
+                                    <span translate="Global.Idiomas.Ingles">Inglês</span>
                                 </a>
                             </li>
                             <li role="menuitem">
                                 <a name="pt" (click)="setLanguage($event.target)">
-                                    <span>Português</span>
+                                    <span translate="Global.Idiomas.Portugues">Português</span>
                                 </a>
                             </li>
                         </ul>
@@ -74,7 +75,8 @@ export class AppTopBarComponent {
         public app: AppComponent,
         private loginService: LoginService,
         private authService: AuthService<User>,
-        private router: Router
+        private router: Router,
+        private translate: TranslateService
     ) { }
 
     logout() {
@@ -83,7 +85,8 @@ export class AppTopBarComponent {
     }
 
     setLanguage(element) {
-      sessionStorage.setItem("language", element.name);
-      location.reload();
+        localStorage.setItem("language", element.name);
+        this.translate.use(element.name);
+        window.location.reload(true);
     }
 }

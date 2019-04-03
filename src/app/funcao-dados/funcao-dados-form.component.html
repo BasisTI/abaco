@@ -6,7 +6,7 @@
                 <div class="ui-g-12">
                     <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
                         <div class="ui-md-2" *ngIf="!isView">
-                            <app-green-button buttonLabel="Novo" id="idNovoFormFuncaoDados" buttonIcon="ui-icon-add"
+                            <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Novo')" id="idNovoFormFuncaoDados" buttonIcon="ui-icon-add"
                                               (click)="openDialog(false)">
                             </app-green-button>
                         </div>
@@ -111,7 +111,7 @@
                 <div *ngIf="!isEdit">
                     <div class="ui-g" *ngIf="!showMultiplos">
                         <div class="ui-g-9">
-                            <label>Nome do Processo Elementar *</label>
+                            <label translate="Cadastros.FuncaoDados.NomeProcessoElementar">Nome do Processo Elementar *</label>
                             <p-autoComplete
                                     maxlength="2000"
                                     [(ngModel)]="currentFuncaoDados.name"
@@ -128,13 +128,13 @@
                             </p-autoComplete>
                             <span class="md-inputfield">
                                 <div *ngIf="nomeInvalido && !currentFuncaoDados.name"
-                                     class="ui-message ui-messages-error">
+                                     class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                                     Campo obrigatório.
                                 </div>
                             </span>
                         </div>
                         <div class="ui-g-12 ui-md-3 ui-lg-3">
-                            <app-blue-button buttonLabel="Múltiplos" id="idBtnMultiplosFormFuncaoDados"
+                            <app-blue-button [buttonLabel]="this.getLabel('Global.Botoes.Multiplos')" id="idBtnMultiplosFormFuncaoDados"
                                              (click)="buttonMultiplos()">
                             </app-blue-button>
                         </div>
@@ -142,7 +142,7 @@
 
                     <div class="ui-g" *ngIf="showMultiplos">
                         <div class="ui-g-9">
-                            <label>Nomes dos Processos *</label>
+                            <label translate="Cadastros.FuncaoDados.NomeProcessos">Nomes dos Processos *</label>
                             <textarea pInputTextarea
                                       maxlength="2000"
                                       [(ngModel)]="text"
@@ -158,7 +158,7 @@
                          </textarea>
                         </div>
                         <div class="ui-g-3">
-                            <app-blue-button buttonLabel="Unitário" id="idBtnUnitarioFormFuncaoDados"
+                            <app-blue-button [buttonLabel]="this.getLabel('Global.Botoes.Unitario')" id="idBtnUnitarioFormFuncaoDados"
                                              (click)="buttonMultiplos()">
                             </app-blue-button>
                         </div>
@@ -168,7 +168,7 @@
                 <div *ngIf="isEdit">
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                            <label>Nome do Processo Elementar *</label>
+                            <label translate="Cadastros.FuncaoDados.NomeProcessoElementar">Nome do Processo Elementar *</label>
                             <input
                                     maxlength="2000"
                                     type="text" class="ui-inputtext"
@@ -181,28 +181,28 @@
 
                 <div class="ui-g">
                     <div class="ui-g-3 ui-md-6 ui-sm-12">
-                        <label>Classificação *</label>
+                        <label translate="Cadastros.FuncaoDados.Classificacao*">Classificação *</label>
                         <p-dropdown [filter]="true" [options]="classificacoes" id="idClassificacoesFormFuncaoDados"
-                                    [(ngModel)]="currentFuncaoDados.tipo" placeholder="Selecione uma Classificação"
+                                    [(ngModel)]="currentFuncaoDados.tipo" [placeholder]="this.getLabel('Cadastros.FuncaoDados.SelecioneClass')"
                                     name="classificacao"
                                     [autoWidth]="false" (onChange)="classValida()">
                         </p-dropdown>
                         <span class="md-inputfield">
-                            <div *ngIf="classInvalida" class="ui-message ui-messages-error">
+                            <div *ngIf="classInvalida" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                                 Campo obrigatório.
                             </div>
                         </span>
                     </div>
 
                     <div class="ui-g-3 ui-md-6 ui-sm-12">
-                        <label>Impacto *</label>
+                        <label translate="Cadastros.FuncaoDados.Impacto*">Impacto *</label>
                         <p-dropdown [filter]="true" [options]="impacto" id="idImpactoFormFuncaoDados"
                                     [(ngModel)]="currentFuncaoDados.impacto"
-                                    placeholder="Selecione..." name="impacto" [autoWidth]="false"
+                                    [placeholder]="this.getLabel('Cadastros.FuncaoDados.Selecione')" name="impacto" [autoWidth]="false"
                                     (onChange)="impactoValido()">
                         </p-dropdown>
                         <span class="md-inputfield">
-                            <div *ngIf="impactoInvalido" class="ui-message ui-messages-error">
+                            <div *ngIf="impactoInvalido" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                                 Campo obrigatório.
                             </div>
                         </span>
@@ -211,7 +211,7 @@
 
                 <div class="ui-g">
                     <div class="ui-g-3 ui-md-6 ui-sm-12">
-                        <label>Deflator *</label>
+                        <label translate="Cadastros.FuncaoDados.Deflator*">Deflator *</label>
                         <p-dropdown 
                                     [filter]="true"
                                     [options]="fatoresAjuste"
@@ -224,7 +224,7 @@
                                     [autoWidth]="false">
                         </p-dropdown>
                         <span class="md-inputfield">
-                            <div *ngIf="erroDeflator" class="ui-message ui-messages-error">
+                            <div *ngIf="erroDeflator" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                                 Campo obrigatório.
                             </div>
                         </span>
@@ -232,11 +232,11 @@
 
 
                     <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
-                        <label>Quantidade *</label>
+                        <label translate="Cadastros.FuncaoDados.Quantidade*">Quantidade *</label>
                         <input type="number" class="ui-inputtext" min="1" [(ngModel)]="currentFuncaoDados.quantidade"
                                id="idQuantidadeFormFuncaoDados">
                         <span class="md-inputfield">
-                            <div *ngIf="erroUnitario" class="ui-message ui-messages-error">
+                            <div *ngIf="erroUnitario" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
                                 Campo obrigatório.
                             </div>
                         </span>
@@ -244,29 +244,29 @@
                 </div>
 
                 <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
-                    <h2>RLR (TR) *</h2>
+                    <h2 translate="Cadastros.FuncaoDados.RLR(TR)*">RLR (TR) *</h2>
                     <app-analise-der-chips [(values)]="rlrsChips" (onChange)="adicionar()" id="idRLRFormFuncaoDados">
                     </app-analise-der-chips>
                     <span class="md-inputfield">
-                        <div *ngIf="erroTR && rlrsChips.length == 0" class="ui-message ui-messages-error">
+                        <div *ngIf="erroTR && rlrsChips.length == 0" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                             Campo obrigatório.
                         </div>
                     </span>
                 </div>
 
                 <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
-                    <h2>DER (TD) *</h2>
+                    <h2 translate="Cadastros.FuncaoDados.DER(TD)*">DER (TD) *</h2>
                     <app-analise-der-chips [(values)]="dersChips" id="idDERFormFuncaoDados" (onChange)="adicionar()">
                     </app-analise-der-chips>
                     <span class="md-inputfield">
-                        <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error">
+                        <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
                             Campo obrigatório.
                         </div>
                     </span>
                 </div>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12">
-                    <label>Fundamentação</label>
+                    <label translate="Cadastros.FuncaoDados.Fundamentacao">Fundamentação</label>
                     <span class="md-inputfield">
                 <textarea
                         maxlength="5000"
@@ -281,17 +281,17 @@
 
                 <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                     <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
-                        <app-white-button buttonLabel="Cancelar" id="idBtmCancelarFormFuncaoDados" (click)="cancelar()">
+                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtmCancelarFormFuncaoDados" (click)="cancelar()">
                         </app-white-button>
                     </div>
 
                     <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
-                        <app-white-button buttonLabel="Fechar" id="idBtnFecharFormFuncaoDados" (click)="cancelar()">
+                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Fechar')" id="idBtnFecharFormFuncaoDados" (click)="cancelar()">
                         </app-white-button>
                     </div>
 
                     <div class="ui-md-3 ui-sm-12">
-                        <app-blue-button buttonLabel="Salvar" id="idSalvarFormFuncaoDados" buttonIcon="ui-icon-add"
+                        <app-blue-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idSalvarFormFuncaoDados" buttonIcon="ui-icon-add"
                                          (click)="buttonSaveEdit()">
                         </app-blue-button>
                     </div>

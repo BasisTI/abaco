@@ -1,7 +1,7 @@
 <div class="ui-g ui-fluid">
     <div class="ui-g-12">
         <div class="card card-w-title">
-            <h1>Manual</h1>
+            <h1 translate="Cadastros.Manual.Manual">Manual</h1>
             <div class="ui-g">
                 <div class="ui-g-12 ui-md-12 ui-sm-12">
           <span class="md-inputfield">
@@ -13,14 +13,14 @@
                     (keyup.enter)="datatable.refresh(elasticQuery.query)"
                     maxlength="200"
                     #filter/>
-            <label>Descrição</label>
+                    <label translate="Cadastros.Manual.Descricao">Descrição</label>
           </span>
                 </div>
 
                 <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-white-button
-                                buttonLabel="Limpar Pesquisa"
+                                [buttonLabel]="this.getLabel('Global.Botoes.LimparPesquisa')"
                                 id="idBtnLimparPesquisaComponentManual"
                                 buttonIcon="ui-icon-clear-all"
                                 (click)="limparPesquisa()">
@@ -28,7 +28,7 @@
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-blue-button
-                                buttonLabel="Pesquisar"
+                                [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')"
                                 id="idBtnPesquisarComponentManual"
                                 buttonIcon="ui-icon-search"
                                 (click)="datatable.refresh(elasticQuery.query)">
@@ -37,7 +37,7 @@
 
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-green-button
-                                buttonLabel="Novo"
+                                [buttonLabel]="this.getLabel('Global.Botoes.Novo')"
                                 id="idBtnNovoComponentManual"
                                 buttonIcon="ui-icon-add"
                                 routerLink="/manual/new">
@@ -65,50 +65,50 @@
 
                     <!--<p-column header="Código" field="id" [sortable]="true"></p-column>-->
 
-                    <p-column header="Nome" field="nome" [sortable]="true" [style]="{'width': '15%'}"></p-column>
-                    <p-column header="Estimada" field="valorVariacaoEstimada" [sortable]="true">
+                    <p-column [header]="this.getLabel('Cadastros.Manual.Nome')" field="nome" [sortable]="true" [style]="{'width': '15%'}"></p-column>
+                    <p-column [header]="this.getLabel('Cadastros.Manual.Estimada')" field="valorVariacaoEstimada" [sortable]="true">
                         <ng-template let-col let-valorVariacaoEstimada="rowData" pTemplate="body">
                             {{ valorVariacaoEstimada[col.field].toString() | slice:0:4}}%
                         </ng-template>
                     </p-column>
 
-                    <p-column header="Indicativa" field="valorVariacaoIndicativa" [sortable]="true">
+                    <p-column [header]="this.getLabel('Cadastros.Manual.Indicativa')" field="valorVariacaoIndicativa" [sortable]="true">
                         <ng-template pTemplate="body" let-col let-valorVariacaoIndicativa="rowData">
                             {{ valorVariacaoIndicativa[col.field].toString() | slice:0:4}}%
                         </ng-template>
                     </p-column>
 
-                    <p-column header="Inclusão" field="parametroInclusao" [sortable]="true">
+                    <p-column [header]="this.getLabel('Cadastros.Manual.Inclusao')" field="parametroInclusao" [sortable]="true">
                         <ng-template let-col let-parametroInclusao="rowData" pTemplate="body">
                             {{ parametroInclusao[col.field].toString() | slice:0:4}}%
                         </ng-template>
                     </p-column>
 
-                    <p-column header="Alteração" field="parametroAlteracao" [sortable]="true">
+                    <p-column [header]="this.getLabel('Cadastros.Manual.Alteracao')" field="parametroAlteracao" [sortable]="true">
                         <ng-template let-col let-parametroAlteracao="rowData" pTemplate="body">
                             {{ parametroAlteracao[col.field].toString() | slice:0:4}}%
                         </ng-template>
                     </p-column>
 
-                    <p-column header="Exclusão" field="parametroExclusao" [sortable]="true">
+                    <p-column [header]="this.getLabel('Cadastros.Manual.Exclusao')" field="parametroExclusao" [sortable]="true">
                         <ng-template let-col let-parametroExclusao="rowData" pTemplate="body">
                             {{ parametroExclusao[col.field].toString() | slice:0:4}}%
                         </ng-template>
                     </p-column>
 
-                    <p-column header="Conversão" field="parametroConversao" [sortable]="true">
+                    <p-column [header]="this.getLabel('Cadastros.Manual.Conversao')" field="parametroConversao" [sortable]="true">
                         <ng-template let-col let-parametroConversao="rowData" pTemplate="body">
                             {{ parametroConversao[col.field].toString() | slice:0:4}}%
                         </ng-template>
                     </p-column>
 
-                    <p-column header="Observação" field="observacao" [style]="{'width': '25%'}" [sortable]="true">
+                    <p-column [header]="this.getLabel('Cadastros.Manual.Observacao')" field="observacao" [style]="{'width': '25%'}" [sortable]="true">
                     </p-column>
 
                 </basis-datatable>
 
                 <div class="ui-g-12 ui-md-2">
-                    <app-botoes-exportacao resourceName="manual" id="idBtnExportarComponentManual" fileName="manual">
+                    <app-botoes-exportacao [query]="elasticQuery.value" resourceName="manual" id="idBtnExportarComponentManual" fileName="manual">
                     </app-botoes-exportacao>
                 </div>
 
@@ -116,16 +116,16 @@
         </div>
     </div>
 </div>
-<p-confirmDialog header="Confirmação" #dialog>
+<p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
     <p-footer>
-        <app-white-button buttonLabel="Não" id="idBtnNaoComponentManual" buttonIcon="fa-close"
+        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Nao')" id="idBtnNaoComponentManual" buttonIcon="fa-close"
                           (click)="dialog.reject()"></app-white-button>
-        <app-green-button buttonLabel="Sim" id="idBtnSimComponentManual" buttonIcon="fa-check"
+        <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Sim')" id="idBtnSimComponentManual" buttonIcon="fa-check"
                           (click)="dialog.accept()"></app-green-button>
     </p-footer>
 </p-confirmDialog>
 
-<p-dialog header="Clonar Manual" [(visible)]="mostrarDialogClonar" [contentStyle]="{'overflow':'visible'}"
+<p-dialog [header]="this.getLabel('Cadastros.Manual.ClonarManual')" [(visible)]="mostrarDialogClonar" [contentStyle]="{'overflow':'visible'}"
           [width]="800">
     <div class="ui-g">
         <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 30px">
@@ -139,18 +139,18 @@
                 size="90"
                 maxlength="250"/>
             <div *ngIf="nomeValido">
-                                <span style="color: red">Campo obrigatório.</span>
+                                <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
                             </div>
-        <label>Nome*</label>
+      <label translate="Cadastros.Manual.Nome*">Nome*</label>
       </span>
         </div>
     </div>
 
     <div class="ui-g ui-md-12" style="justify-content: flex-end">
         <div>
-            <app-white-button buttonLabel="Cancelar" id="idBtnCancelarCloneComponentManual" buttonIcon="fa-close"
+            <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCancelarCloneComponentManual" buttonIcon="fa-close"
                               (click)="fecharDialogClonar()"></app-white-button>
-            <app-green-button buttonLabel="Salvar" id="idBtnSalvarCloneComponentManual" buttonIcon="ui-icon-save"
+            <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarCloneComponentManual" buttonIcon="ui-icon-save"
                               (click)="clonar()"></app-green-button>
         </div>
     </div>

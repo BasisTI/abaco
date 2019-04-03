@@ -31,6 +31,14 @@ import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/an
 import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.module';
 import { FuncaoTransacaoService } from './funcao-transacao.service';
 
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+
+export function createTranslateLoader(http: HttpClient) {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  }
+
 @NgModule({
   imports: [
     CommonModule,
@@ -53,7 +61,14 @@ import { FuncaoTransacaoService } from './funcao-transacao.service';
     MemoryDataTableModule,
     AbacoAnaliseBotaoSalvarModule,
     AbacoDerChipsModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    TranslateModule.forChild({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    })
   ],
   declarations: [
     FuncaoTransacaoFormComponent

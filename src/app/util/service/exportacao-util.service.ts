@@ -39,13 +39,15 @@ export class ExportacaoUtilService {
 
     static exportarRelatorio(tipoRelatorio: string, resourceUrl: string, http: HttpService, query: string) {
         if(query == undefined){
-            query = "*";
-        }
-        else{
-            query = "*" + query +"*";
-        }
+            query = '?query=' + "*";
+        } else if (resourceUrl == '/api/analise' || resourceUrl == '/api/sistema' || resourceUrl == '/api/users'){
+            query = '?query=' + query;
+        } else {
+            query = '?query=' + "*" + query +"*";
+        } 
+        
         return ExportacaoUtilService.gerar(
-            `${resourceUrl}/exportacao/` + tipoRelatorio + '?query=' + query,
+            `${resourceUrl}/exportacao/` + tipoRelatorio + query,
             ExportacaoUtilService.getContentType(tipoRelatorio),
             http
         );

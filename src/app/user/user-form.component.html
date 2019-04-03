@@ -1,7 +1,7 @@
 <div class="ui-g ui-fluid">
   <div class="ui-g-12">
     <div class="card card-w-title">
-      <h1>{{ user.id ? 'Editar Usuário' : 'Cadastrar Usuário' }}</h1>
+      <h1>{{ user.id ? this.getLabel('Cadastros.Usuarios.EditarUsuario') : this.getLabel('Cadastros.Usuarios.CadastrarUsuario') }}</h1>
       <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
         <div class="ui-g">
 
@@ -14,13 +14,13 @@
                 maxlength="50" 
                 [(ngModel)]="user.firstName" 
                 pInputText required/>
-              <label>Primeiro Nome *</label>
+                <label translate="Cadastros.Usuarios.PrimeiroNome*">Primeiro Nome *</label>
 
               <div *ngIf="editForm.controls['firstNameUser'] 
                   && !editForm.controls['firstNameUser'].valid 
                   && (editForm.controls['firstNameUser'].touched 
                   || editForm.submitted)" 
-                  class="ui-message ui-messages-error">
+                  class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                 Campo obrigatório.
               </div>
 
@@ -36,12 +36,12 @@
                 #lastNameUser='ngModel'
                 [(ngModel)]="user.lastName" 
                 pInputText required/>
-              <label>Último Nome *</label>
+                <label translate="Cadastros.Usuarios.UltimoNome*">Último Nome *</label>
               <div *ngIf="editForm.controls['lastNameUser'] 
                   && !editForm.controls['lastNameUser'].valid 
                   && (editForm.controls['lastNameUser'].touched 
                   || editForm.submitted)" 
-                  class="ui-message ui-messages-error">
+                  class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                 Campo obrigatório.
               </div>
             </span>
@@ -57,13 +57,13 @@
                 [(ngModel)]="user.login" 
                 #loginUser='ngModel'
                 pInputText required/>
-              <label>Login *</label>
+              <label translate="Cadastros.Usuarios.Login*">Login *</label>
               <div *ngIf= "editForm.controls['loginUser'] 
                   && !this.desabilitado() 
                   && !editForm.controls['loginUser'].valid 
                   && (editForm.controls['loginUser'].touched 
                   || editForm.submitted)"
-                  class="ui-message ui-messages-error">
+                  class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                 Campo obrigatório.
               </div>
             </span>
@@ -79,13 +79,13 @@
                       maxlength="100"
                       #email='ngModel'
                       required email/>
-              <label>E-mail *</label>
+              <label translate="Cadastros.Usuarios.Email*">E-mail *</label>
                 <div *ngIf="editForm.controls['email']
                             && !editForm.controls['email'].valid
                             && this.user.email
                             && (editForm.controls['email'].touched
                             || editForm.submitted)"
-                            class="ui-message ui-messages-error">
+                            class="ui-message ui-messages-error" translate="Cadastros.Usuarios.EmailInvalido">
                             Email Inválido
                 </div>
               <div *ngIf="editForm.controls['email']
@@ -94,7 +94,7 @@
                    && !this.user.email
                    && (editForm.controls['email'].touched
                    || editForm.submitted)"
-                   class="ui-message ui-messages-error">
+                   class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                 Campo obrigatório.
               </div>
             </span>
@@ -103,14 +103,14 @@
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <div class="ui-g">
               <div class="ui-g-12 ui-md-4">
-                <label>Ativo</label>
+                <label translate="Cadastros.Usuarios.Ativo">Ativo</label>
               </div>
 
               <div class="ui-g-12 ui-md-4">
                 <p-radioButton name="user_ativo"
                   [disabled]="this.desabilitado()"
                   [value]="true"
-                  label="Sim"
+                  [label]="this.getLabel('Global.Botoes.Sim')"
                   [(ngModel)]="user.activated">
                 </p-radioButton>
               </div>
@@ -119,7 +119,7 @@
                 <p-radioButton name="user_ativo"
                   [disabled]="this.desabilitado()"
                   [value]="false"
-                  label="Não"
+                  [label]="this.getLabel('Global.Botoes.Nao')"
                   [(ngModel)]="user.activated">
                 </p-radioButton>
               </div>
@@ -129,11 +129,11 @@
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span>
-              <h3 class="first">Perfil *</h3>
+              <h3 class="first" translate="Cadastros.Usuarios.Perfil*">Perfil *</h3>
               <p-multiSelect 
                 [disabled]="this.desabilitado()"
                 name="authoritiesMultiselect"
-                defaultLabel="Selecione ao menos um perfil"
+                [defaultLabel]="this.getLabel('Cadastros.Usuarios.SelecionePerfil')"
                 [options]="authorities"
                 [(ngModel)]="user.authorities"
                 dataKey="artificialId"
@@ -148,14 +148,14 @@
                 && !editForm.controls['authoritiesMultiselect'].valid 
                 && (editForm.controls['authoritiesMultiselect'].touched 
                 || editForm.submitted)">
-                 <span style="color: red">Campo obrigatório.</span>
+                 <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
               </div>
             </span>
           </div>
 
           <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
             <span>
-              <h3 class="first">Organização *</h3>
+              <h3 class="first" translate="Cadastros.Usuarios.Organizacao*">Organização *</h3>
               <p-multiSelect 
                 (onChange)="setOrganizacao($event.value)"
                 [disabled]="this.desabilitado()"
@@ -163,7 +163,7 @@
                 [options]="organizacoes"
                 [(ngModel)]="user.organizacoes" 
                 dataKey="id"
-                defaultLabel="Selecione ao menos uma organização" 
+                [defaultLabel]="this.getLabel('Cadastros.Usuarios.SelecioneOrganizacao')"
                 optionLabel="nome"
                 selectedItemsLabel="{0} organizações selecionadas"
                 #organizacoesMultiSelect='ngModel'
@@ -174,21 +174,21 @@
                 && !editForm.controls['organizacoesMultiSelect'].valid 
                 && (editForm.controls['organizacoesMultiSelect'].touched 
                 || editForm.submitted)">
-                <span style="color: red">Campo obrigatório.</span>
+                <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
               </div>
             </span>
           </div>
 
         <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
           <span>
-            <h3 class="first">Equipe *</h3>
+            <h3 class="first" translate="Cadastros.Usuarios.Equipe*">Equipe *</h3>
             <p-multiSelect 
               [disabled]="this.disableEquipeDropdown()"
               name="equipesMultiSelect" 
               [(options)]="tipoEquipes"
               [(ngModel)]="user.tipoEquipes" 
               dataKey="id"
-              defaultLabel="Selecione ao menos uma equipe" 
+              [defaultLabel]="this.getLabel('Cadastros.Usuarios.SelecioneEquipe')"
               optionLabel="nome"
               selectedItemsLabel="{0} equipes selecionadas"
               #equipesMultiSelect='ngModel'
@@ -199,7 +199,7 @@
               && !editForm.controls['equipesMultiSelect'].valid 
               && (editForm.controls['equipesMultiSelect'].touched 
               || editForm.submitted)">
-              <span style="color: red">Campo obrigatório.</span>
+              <span style="color: red" translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.</span>
             </div>
           </span>
         </div>
@@ -208,12 +208,12 @@
 
         <div class="ui-g" style="justify-content: center; margin-top: 25px;">
           <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-white-button buttonLabel="Cancelar" routerLink="/admin/user"></app-white-button>
-            <!-- <button pButton type="button" label="Cancelar" routerLink="/admin/user"></button> -->
+            <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" routerLink="/admin/user"></app-white-button>
+            <!-- <button pButton type="button" [label]="this.getLabel('Global.Botoes.Cancelar')" routerLink="/admin/user"></button> -->
           </div>
           <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-submit-button buttonLabel="Salvar" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
-            <!-- <button pButton type="submit" label="Salvar" [disabled]="editForm.form.invalid || isSaving" ></button> -->
+            <app-submit-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
+            <!-- <button pButton type="button" [label]="this.getLabel('Global.Botoes.Salvar')" [disabled]="editForm.form.invalid || isSaving" ></button> -->
           </div>
         </div>
 

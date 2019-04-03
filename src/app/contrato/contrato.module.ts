@@ -24,6 +24,14 @@ import {
 } from './';
 import { GenericService } from '../util/service/generic.service';
 
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
 @NgModule({
   imports: [
     CommonModule,
@@ -38,6 +46,13 @@ import { GenericService } from '../util/service/generic.service';
     RadioButtonModule,
     InputTextModule,
     ConfirmDialogModule,
+    TranslateModule.forChild({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    })
   ],
   declarations: [
     ContratoComponent,

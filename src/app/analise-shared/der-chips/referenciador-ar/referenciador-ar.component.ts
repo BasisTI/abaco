@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import {
     Component,
     Input,
@@ -49,8 +50,17 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
     constructor(
         private analiseSharedDataService: AnaliseSharedDataService,
         private analiseService: AnaliseService,
-        private baselineService: BaselineService
+        private baselineService: BaselineService,
+        private translate: TranslateService
     ) {
+    }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
     }
 
     ngOnInit() {
@@ -139,7 +149,7 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
     }
 
     funcoesDadosDropdownPlaceholder(): string {
-        return 'Selecione uma Função Dados';
+        return this.getLabel('Analise.Analise.Mensagens.msgSelecioneFuncaoDados');
     }
 
     funcaoDadosSelected(fd: FuncaoDados) {
@@ -149,9 +159,9 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
     dersMultiSelectedPlaceholder(): string {
         if (!this.funcaoDadosSelecionada) {
-            return 'DERs - Selecione uma Função de Dados para selecionar quais DERs referenciar';
+            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneFuncaoDadosParaSelecionarDERsReferenciar');
         } else if (this.funcaoDadosSelecionada) {
-            return 'Selecione quais DERs deseja referenciar';
+            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneQuaisDERsReferenciar');
         }
     }
 

@@ -6,12 +6,12 @@
 
             <div class="ui-g-10 ui-md-10 ui-sm-10">
                 <!-- filtro/pesquisa? -->
-                <label>Módulo*</label>
+                <label translate="Analise.Analise.Modulo*">Módulo*</label>
                 <p-dropdown
                         [filter]="true"
                         optionLabel="nome"
                         name="modulo"
-                        placeholder="Selecione..."
+                        [placeholder]="this.getLabel('Analise.Analise.Selecione')"
                         [options]="modulos"
                         [(ngModel)]="moduloSelecionado"
                         (onChange)="moduloSelected($event.value)"
@@ -19,7 +19,7 @@
                 </p-dropdown>
                 <span class="md-inputfield">
                     <div *ngIf="erroModulo"
-                    class="ui-message ui-messages-error">
+                    class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                         Campo Obrigatório.
                     </div>
                 </span>
@@ -38,7 +38,7 @@
         <div class="ui-g-6 ui-md-6 ui-sm-12">
             <div class="ui-g-10 ui-md-10 ui-sm-10">
                 <!-- filtro/pesquisa? -->
-                <label>Submódulo *</label>
+                <label translate="Analise.Analise.Funcionalidade*">Funcionalidade *</label>
                 <p-dropdown
                         [filter]="true"
                         optionLabel="nome"
@@ -52,7 +52,7 @@
                 </p-dropdown>
                 <span class="md-inputfield">
                     <div *ngIf="erroModulo"
-                    class="ui-message ui-messages-error">
+                    class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                         Campo Obrigatório.
                     </div>
                 </span>
@@ -70,7 +70,7 @@
 
     <!-- Dialog módulo -->
     <p-dialog
-            header="Módulo"
+            [header]="this.getLabel('Cadastros.FuncaoDados.Modulo')"
             [(visible)]="mostrarDialogModulo"
             [contentStyle]="{'overflow':'visible'}"
             [width]="800">
@@ -84,7 +84,7 @@
                   [(ngModel)]="novoModulo.nome"
                   pInputText
                   (keydown.enter)="adicionarModulo()"/>
-          <label>Nome *</label>
+         <label translate="Analise.Analise.Nome*">Nome *</label>
         </span>
             </div>
         </div>
@@ -92,14 +92,14 @@
         <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2">
                 <app-white-button
-                        buttonLabel="Cancelar"
+                        [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
                         (click)="fecharDialogModulo()">
                 </app-white-button>
             </div>
 
             <div class="ui-g-2">
                 <app-green-button
-                        buttonLabel="Salvar"
+                        [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
                         (click)="adicionarModulo()">
                 </app-green-button>
             </div>
@@ -107,16 +107,16 @@
 
     </p-dialog>
 
-    <!-- Dialog Submódulo -->
+    <!-- Dialog Funcionalidade -->
     <p-dialog
-            header="Submódulo"
+            [header]="this.getLabel('Analise.Analise.Funcionalidade')"
             [(visible)]="mostrarDialogFuncionalidade"
             [contentStyle]="{'overflow':'visible'}"
             [width]="800">
 
         <div class="ui-g">
             <div class="ui-g-12" style="margin-bottom: 05px">
-                <span>Módulo: {{ moduloName() }}</span>
+                <span>{{this.getLabel('Cadastros.FuncaoDados.Modulo')}} {{ moduloName() }}</span>
             </div>
             <div class="ui-g-12" style="margin-bottom: 05px">
         <span class="md-inputfield">
@@ -125,17 +125,17 @@
                   name="nomeFuncionalidade"
                   [(ngModel)]="novaFuncionalidade.nome"
                   pInputText />
-          <label>Nome *</label>
+         <label translate="Analise.Analise.Nome*">Nome *</label>
         </span>
             </div>
         </div>
 
         <div class="ui-g ui-md-12" style="justify-content: flex-end">
             <div class="ui-g-2">
-                <app-white-button buttonLabel="Cancelar" (click)="fecharDialogFuncionalidade()"></app-white-button>
+                <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" (click)="fecharDialogFuncionalidade()"></app-white-button>
             </div>
             <div class="ui-g-2">
-                <app-green-button buttonLabel="Salvar" (click)="adicionarFuncionalidade()"></app-green-button>
+                <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" (click)="adicionarFuncionalidade()"></app-green-button>
             </div>
         </div>
     </p-dialog>

@@ -6,6 +6,7 @@ import { DatatableComponent, DatatableClickEvent } from '@basis/angular-componen
 import { environment } from '../../environments/environment';
 import { Contrato } from './contrato.model';
 import { ContratoService } from './contrato.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'jhi-contrato',
@@ -20,8 +21,17 @@ export class ContratoComponent {
   constructor(
     private router: Router,
     private contratoService: ContratoService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private translate: TranslateService
   ) {}
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+        str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   datatableClick(event: DatatableClickEvent) {
     if (!event.selection) {
@@ -42,7 +52,7 @@ export class ContratoComponent {
 
   confirmDelete(id: any) {
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja excluir o registro?',
+      message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
       accept: () => {
         this.contratoService.delete(id).subscribe(() => {
           this.datatable.refresh(undefined);

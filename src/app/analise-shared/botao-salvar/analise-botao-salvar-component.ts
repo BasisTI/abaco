@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 
 import { Analise, AnaliseService } from '../../analise';
@@ -25,7 +26,16 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
     private pageNotificationService: PageNotificationService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
+    private translate: TranslateService
   ) { }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+        str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   habilitarBotaoSalvar(): boolean {
     const habilitar: boolean = this.checarSeDeveHabilitarBotaoEConstruirMotivos();
@@ -37,13 +47,13 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
     this.motivosBotaoDesabilitado.clear();
     // TODO complementar. hoje é só uma prova de conceito
     if (_.isEmpty(this.analise.organizacao)) {
-      this.motivosBotaoDesabilitado.add('- Selecione uma Organização');
+      this.motivosBotaoDesabilitado.add(this.getLabel('Analise.Analise.Mensagens.msgSelecioneOrganizacao'));
     }
     if (_.isEmpty(this.analise.equipeResponsavel)) {
-      this.motivosBotaoDesabilitado.add('- Selecione uma Equipe Responsável');
+      this.motivosBotaoDesabilitado.add(this.getLabel('Analise.Analise.Mensagens.msgSelecioneEquipeResponsavel'));
     }
     if (_.isEmpty(this.analise.sistema)) {
-      this.motivosBotaoDesabilitado.add('- Selecione um Sistema');
+      this.motivosBotaoDesabilitado.add(this.getLabel('Analise.Analise.Mensagens.msgSelecioneSistema'));
     }
     return _.isEmpty(this.motivosBotaoDesabilitado);
   }
@@ -86,7 +96,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   private subscribeToUpdateResponse(result: Observable<any>) {
     this.updateSubscription = result.subscribe((res: Analise) => {
       this.analise = res;
-      this.pageNotificationService.addSuccessMsg('Análise atualizada com sucesso');
+      this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgAnaliseAtualizadaSucesso'));
     });
   }
 
@@ -98,7 +108,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   private subscribeToSaveResponse(result: Observable<any>) {
     this.saveSubscription = result.subscribe((res: Analise) => {
       this.analise = res;
-      this.pageNotificationService.addSuccessMsg('Análise salva com sucesso');
+      this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgAnaliseSalvaSucesso'));
 
       this.router.navigate(['/analise', this.analise.id, 'edit']);
     });

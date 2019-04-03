@@ -1,12 +1,14 @@
-import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
-import {Observable} from 'rxjs/Rx';
-import {HttpService} from '@basis/angular-components';
-import {environment} from '../../environments/environment';
-import {UploadService} from '../upload/upload.service';
+import { Headers } from '@angular/http';
+import { TranslateService } from '@ngx-translate/core';
+import { Injectable } from '@angular/core';
+import { Response } from '@angular/http';
+import { Observable } from 'rxjs/Rx';
+import { HttpService } from '@basis/angular-components';
+import { environment } from '../../environments/environment';
+import { UploadService } from '../upload/upload.service';
 
-import {Manual} from './manual.model';
-import {ResponseWrapper, createRequestOption, JSONable, PageNotificationService} from '../shared';
+import { Manual } from './manual.model';
+import { ResponseWrapper, createRequestOption, JSONable, PageNotificationService } from '../shared';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Injectable()
@@ -20,8 +22,17 @@ export class ManualService {
     constructor(
         private http: HttpService,
         private uploadService: UploadService,
-        private pageNotificationService: PageNotificationService
+        private pageNotificationService: PageNotificationService,
+        private translate: TranslateService
     ) {
+    }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
     }
 
     create(manual: Manual): Observable<any> {
@@ -31,7 +42,7 @@ export class ManualService {
             return this.convertItemFromServer(jsonResponse);
         }).catch((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
             if (error.status === 400) {
@@ -48,7 +59,7 @@ export class ManualService {
             return this.convertItemFromServer(jsonResponse);
         }).catch((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
         });
@@ -60,7 +71,7 @@ export class ManualService {
             return this.convertItemFromServer(jsonResponse);
         }).catch((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
         });
@@ -71,7 +82,7 @@ export class ManualService {
         return this.http.get(this.resourceUrl, options)
             .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
                 if (error.status === 403) {
-                    this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                     return Observable.throw(new Error(error.status));
                 }
             });
@@ -79,12 +90,23 @@ export class ManualService {
 
     delete(id: number): Observable<Response> {
         return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
+            console.log(error);
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
-            if (error.status === 500) {
-                this.pageNotificationService.addErrorMsg('O manual não pode ser excluído pois está sendo usado em um contrato.');
+            if (error._body == "contratoexists") {
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.Mensagens.msgManualNaoPodeSerExcluido'));
+                this.blockUI.stop();
+                return Observable.throw(new Error(error.status));
+            } 
+            if (error._body == "analiseexists") {
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.Mensagens.msgManualEstaVinculadoUmaAnalise'));
+                this.blockUI.stop();
+                return Observable.throw(new Error(error.status));
+            }
+            if (error._body == "fatorajusteexists") {
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Manual.Mensagens.msgManualVinculadoFatorAjusteVerifiqueFuncoesDadosOuFuncoesTransacoes'));
                 this.blockUI.stop();
                 return Observable.throw(new Error(error.status));
             }

@@ -1,17 +1,18 @@
-import {ConfirmationService, SelectItem} from 'primeng/primeng';
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Response} from '@angular/http';
-import {Observable, Subscription} from 'rxjs/Rx';
-import {DatatableClickEvent} from '@basis/angular-components';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfirmationService, SelectItem } from 'primeng/primeng';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Response } from '@angular/http';
+import { Observable, Subscription } from 'rxjs/Rx';
+import { DatatableClickEvent } from '@basis/angular-components';
 
-import {Sistema} from './sistema.model';
-import {SistemaService} from './sistema.service';
-import {Organizacao, OrganizacaoService} from '../organizacao';
-import {Modulo, ModuloService} from '../modulo';
-import {Funcionalidade, FuncionalidadeService} from '../funcionalidade';
-import {ResponseWrapper} from '../shared';
-import {PageNotificationService} from '../shared/page-notification.service';
+import { Sistema } from './sistema.model';
+import { SistemaService } from './sistema.service';
+import { Organizacao, OrganizacaoService } from '../organizacao';
+import { Modulo, ModuloService } from '../modulo';
+import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
+import { ResponseWrapper } from '../shared';
+import { PageNotificationService } from '../shared/page-notification.service';
 
 @Component({
     selector: 'jhi-sistema-form',
@@ -53,11 +54,21 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         private sistemaService: SistemaService,
         private organizacaoService: OrganizacaoService,
         private confirmationService: ConfirmationService,
-        private pageNotificationService: PageNotificationService
+        private pageNotificationService: PageNotificationService,
+        private translate: TranslateService
     ) {
     }
 
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
+    }
+
     ngOnInit() {
+        this.traduzirTipoSistema();
         this.isSaving = false;
         this.organizacaoService.findActiveOrganizations().subscribe(response => {
             this.organizacaos = response;
@@ -68,6 +79,18 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
                 this.sistemaService.find(params['id']).subscribe(sistema => this.sistema = sistema);
             }
         });
+    }
+
+    /*
+    *   Metodo responsavel por traduzir as adjustTypes
+    */
+    traduzirTipoSistema() {
+        this.translate.stream(['Cadastros.Sistema.TipoSistema.Novo', 'Cadastros.Sistema.TipoSistema.Legado']).subscribe((traducao) => {
+            this.tipoSistemaOptions = [
+                { label: traducao['Cadastros.Sistema.TipoSistema.Novo'], value: 'NOVO' },
+                { label: traducao['Cadastros.Sistema.TipoSistema.Legado'], value: 'LEGADO' },
+            ];
+        })
     }
 
     datatableClick(event: DatatableClickEvent) {
@@ -106,7 +129,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     editarModulo() {
         if (this.moduloEmEdicao.nome === undefined || this.moduloEmEdicao.nome.length === 0) {
             this.valido = true;
-            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
             return;
         }
         this.valido = false;
@@ -116,15 +139,15 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
     confirmDeleteModulo() {
         this.confirmationService.confirm({
-            message: `Tem certeza que deseja excluir o módulo '${this.moduloEmEdicao.nome}' ?`,
+            message: `${this.getLabel('Cadastros.Sistema.Mensagens.msgTemCertezaQueDesejaExcluirModulo')} '${this.moduloEmEdicao.nome}' ?`,
             accept: () => {
                 if (this.moduleCanBeDeleted()) {
                     this.sistema.deleteModulo(this.moduloEmEdicao);
                     this.moduloEmEdicao = new Modulo();
                 } else {
-                    this.pageNotificationService.addErrorMsg('O módulo '
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Sistema.Mensagens.msgOModulo')
                         + this.moduloEmEdicao.nome
-                        + ' não pode ser excluído porque existem funcionalidades atribuídas.');
+                        + this.getLabel('Cadastros.Sistema.Mensagens.msgNaoPodeSerExcluidoExistemFuncionalidadesAtribuidas'));
                 }
             }
         });
@@ -160,7 +183,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     adicionarModulo() {
         if (this.novoModulo.nome === undefined) {
             this.valido = true;
-            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
             return;
         }
         this.valido = false;
@@ -192,7 +215,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     adicionarFuncionalidade() {
         if (this.novaFuncionalidade.nome === undefined || this.novaFuncionalidade.modulo === undefined) {
             this.valido = true;
-            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
             return;
         }
         this.valido = false;
@@ -213,7 +236,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         // update funciona pois a cópia possui o mesmo artificialId
         if (this.funcionalidadeEmEdicao.nome === undefined || this.funcionalidadeEmEdicao.modulo === undefined || this.funcionalidadeEmEdicao.nome.length === 0) {
             this.valido = true;
-            this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
             return;
         }
         this.valido = false;
@@ -223,8 +246,8 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
     confirmDeleteFuncionalidade() {
         this.confirmationService.confirm({
-            message: `Tem certeza que deseja excluir a funcionalidade '${this.funcionalidadeEmEdicao.nome}'
-        do módulo '${this.funcionalidadeEmEdicao.modulo.nome}'?`,
+            message: `${this.getLabel('Cadastros.Sistema.Mensagens.msgCertezaExcluirFuncionalidade')} '${this.funcionalidadeEmEdicao.nome}'
+            ${this.getLabel('Cadastros.Sistema.Mensagens.msgDoModulo')} '${this.funcionalidadeEmEdicao.modulo.nome}'?`,
             accept: () => {
                 this.sistema.deleteFuncionalidade(this.funcionalidadeEmEdicao);
                 this.moduloEmEdicao = new Modulo();
@@ -234,7 +257,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
 
     save(form) {
         // if (!form.valid) {
-        //   this.pageNotificationService.addErrorMsg('Favor preencher o campo obrigatório!');
+        //   this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
         //   return;
         // }
         this.isSaving = true;
@@ -262,7 +285,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
             sistemas.forEach(each => {
                 if (each.nome === this.sistema.nome && each.organizacao.id === this.sistema.organizacao.id && each.id !== this.sistema.id) {
                     isAlreadyRegistered = true;
-                    this.pageNotificationService.addErrorMsg('O sistema ' + each.nome + ' já está cadastrado!');
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Sistema.Mensagens.msgOSistema') + each.nome + this.getLabel('Cadastros.Sistema.Mensagens.msgJaEstaCadastrado'));
                 }
             });
         }
@@ -275,7 +298,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         if (this.checkIfIsEmpty(this.sistema.sigla)) {
             if (this.sistema.sigla.length >= 255) {
                 exceedsMaximumValue = true;
-                this.pageNotificationService.addErrorMsg('O campo sigla excede o número de caracteres.');
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Sistema.Mensagens.msgCampoSiglaExcedeNumeroCaracteres'));
             }
         }
 
@@ -298,7 +321,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         if (this.checkIfIsEmpty(this.sistema.nome)) {
             if (this.sistema.nome.length >= 255) {
                 isValid = false;
-                this.pageNotificationService.addErrorMsg('O campo Nome excede o número de caracteres.');
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Sistema.Mensagens.msgCampoNomeExcedeNumeroCaracteres'));
             }
         }
 
@@ -335,7 +358,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
             : (isRequiredFieldsValid = false);
 
         (!isRequiredFieldsValid)
-            ? (this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios!')) : (this);
+            ? (this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'))) : (this);
         return isRequiredFieldsValid;
     }
 
@@ -346,14 +369,14 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
     }
 
     private notifyRequiredFields() {
-        this.pageNotificationService.addErrorMsg('Favor, preencher os campos obrigatórios.');
+        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'));
         document.getElementById('sigla_sistema').setAttribute('style', 'border-color: red');
     }
 
     private subscribeToSaveResponse(result: Observable<Sistema>) {
         result.subscribe((res: Sistema) => {
             this.isSaving = false;
-            this.isEdit ? this.pageNotificationService.addUpdateMsg() :  this.pageNotificationService.addCreateMsg('Sistema cadastrado com sucesso!');
+            this.isEdit ? this.pageNotificationService.addUpdateMsg() : this.pageNotificationService.addCreateMsg(this.getLabel('Cadastros.Sistema.Mensagens.msgSistemaCadastradoComSucesso'));
             this.router.navigate(['/sistema']);
         }, (error: Response) => {
             this.isSaving = false;
@@ -363,11 +386,11 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
                     let invalidFieldNamesString = '';
                     const fieldErrors = JSON.parse(error['body']).fieldErrors;
                     invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-                    this.pageNotificationService.addErrorMsg('Campos inválidos: ' + invalidFieldNamesString);
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Sistema.Mensagens.msgCamposInvalidos') + invalidFieldNamesString);
                     break;
                 }
                 default: {
-                    this.pageNotificationService.addErrorMsg('Ocorreu um erro no sistema!');
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Sistema.Mensagens.msgOcorreuErroNoSistema'));
                     break;
                 }
             }

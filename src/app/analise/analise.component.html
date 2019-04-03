@@ -4,7 +4,7 @@
 
         <div class="card card-w-title">
 
-            <h1>Análise</h1>
+            <h1 translate="Analise.Analise.Analise">Análise</h1>
 
             <div class="ui-g">
                 <div class="ui-g-4 ui-md-4 ui-sm-12">
@@ -16,7 +16,7 @@
                         (keyup.enter)="performSearch()"
                         id="idIdentificadorComponentAnalise"
                         maxlength="50">
-                      <label>Identificador</label>
+                        <label translate="Analise.Analise.Identificador">Identificador</label>
                     </span>
                   </div>
       
@@ -28,7 +28,7 @@
                       id="idNomeSistemaComponentAnalise"
                       [(ngModel)]="searchGroup.sistema" 
                       [autoWidth]="false" 
-                      placeholder="Sistema">
+                      [placeholder]="this.getLabel('Analise.Analise.Sistema')">
                     </p-dropdown>
                   </div>
 
@@ -39,7 +39,7 @@
                       id="idMetodoContagemComponentAnalise"
                       [(ngModel)]="searchGroup.metodoContagem" 
                       [autoWidth]="false" 
-                      placeholder="Metodo de Contagem">
+                      [placeholder]="this.getLabel('Analise.Analise.MetodoContagem')">
                     </p-dropdown>
                   </div>
           </div>
@@ -53,7 +53,7 @@
                 id="idOrganizacaoComponentAnalise"
                 [(ngModel)]="searchGroup.organizacao" 
                 [autoWidth]="false" 
-                placeholder="Organização">
+                [placeholder]="this.getLabel('Analise.Analise.Organizacao')">
               </p-dropdown>
             </div>
             
@@ -65,7 +65,7 @@
                 id="idTimeComponentAnalise" 
                 [autoWidth]="false" 
                 [(ngModel)]="searchGroup.equipe" 
-                placeholder="Equipe">
+                [placeholder]="this.getLabel('Analise.Analise.Equipe')">
               </p-dropdown>
             </div>
         </div>
@@ -76,7 +76,7 @@
 
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-white-button
-                                    buttonLabel="Limpar Pesquisa"
+                                    [buttonLabel]="this.getLabel('Global.Botoes.LimparPesquisa')"
                                     id="idBtnLimparPesquisaComponentAnalise"
                                     buttonIcon="ui-icon-clear-all"
                                     (click)="limparPesquisa()">
@@ -85,7 +85,7 @@
 
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-blue-button
-                                    buttonLabel="Pesquisar"
+                                    [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')"
                                     id="idBtnPesquisarComponentAnalise"
                                     buttonIcon="ui-icon-search"
                                     (click)="performSearch()">
@@ -94,7 +94,7 @@
 
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-green-button
-                                    buttonLabel="Novo"
+                                    [buttonLabel]="this.getLabel('Global.Botoes.Novo')"
                                     id="idBtnNovoComponentAnalise"
                                     buttonIcon="ui-icon-add"
                                     routerLink="/analise/new">
@@ -116,7 +116,7 @@
                         <basis-datatable-button 
                                 *ngIf="blocked"
                                 name="desbloquear"
-                                tooltip="Desbloquear"
+                                [tooltip]="this.getLabel('Global.Botoes.Desbloquear')"
                                 icon="block"
                                 (click)="[bloqueiaAnalise(blocked)]"
                                 class="ui-button-success">
@@ -125,7 +125,7 @@
                         <basis-datatable-button 
                                 *ngIf="!blocked && inicial"
                                 name="bloquear"
-                                tooltip="Bloquear"
+                                [tooltip]="this.getLabel('Global.Botoes.Bloquear')"
                                 icon="block"
                                 (click)="bloqueiaAnalise(blocked)"
                                 class="ui-button-danger">
@@ -161,25 +161,25 @@
                                 class="ui-button-success">
                         </basis-datatable-button>
 
-                        <p-column header="Organização" field="organizacao" [sortable]="true"
+                        <p-column [header]="this.getLabel('Analise.Analise.Organizacao')" field="organizacao" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}"></p-column>
 
-                        <p-column header="Identificador Análise" field="identificadorAnalise" [sortable]="true"
+                        <p-column [header]="this.getLabel('Analise.Analise.IdentificadorAnalise')" field="identificadorAnalise" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}"></p-column>
-                        <p-column header="Equipe" field="equipe" [sortable]="true"
+                        <p-column [header]="this.getLabel('Analise.Analise.Equipe')" field="equipe" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}"></p-column>
-                        <p-column header="Sistema" field="sistema" [sortable]="true"
+                        <p-column [header]="this.getLabel('Analise.Analise.Sistema')" field="sistema" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}"></p-column>
-                        <p-column header="Método de Contagem" field="metodoContagem" [sortable]="true"
+                        <p-column [header]="this.getLabel('Analise.Analise.MetodoContagem')" field="metodoContagem" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}"></p-column>
 
-                        <p-column header="PF Total" field="pfTotal" [sortable]="true" [style]="{'font-size': '1.0vw'}">
+                        <p-column [header]="this.getLabel('Analise.Analise.PFTotal')" field="pfTotal" [sortable]="true" [style]="{'font-size': '1.0vw'}">
                             <ng-template let-col let-pfTotal="rowData.pfTotal" pTemplate="body">
                                 {{ pfTotal > 0 ? pfTotal : 0 | number: '00.00'}}
                             </ng-template>
                         </p-column>
 
-                        <p-column header="PF Ajustado" field="pfAjustado" [sortable]="true" [style]="{'font-size': '1.0vw'}">
+                        <p-column [header]="this.getLabel('Analise.Analise.PFAjustado')" field="pfAjustado" [sortable]="true" [style]="{'font-size': '1.0vw'}">
                             <ng-template let-col let-pfAjustado="rowData.pfAjustado" pTemplate="body">
                                 {{ pfAjustado > 0 ? pfAjustado : 0 | number: '00.00'}}
                             </ng-template>
@@ -192,7 +192,7 @@
                             </ng-template>
                         </p-column> -->
 
-                        <p-column header="Data Criação" field="dataCriacao" [sortable]="true" [style]="{'font-size': '1.0vw'}">
+                        <p-column [header]="this.getLabel('Analise.Analise.DataCriacao')" field="dataCriacao" [sortable]="true" [style]="{'font-size': '1.0vw'}">
                             <ng-template let-col let-dataCriacao="rowData.dataCriacao" pTemplate="body">
                                 {{ dataCriacao | date: 'dd/MM/y - HH:mm' }}
                             </ng-template>
@@ -204,17 +204,17 @@
                           </ng-template>
                         </p-column> -->
 
-                        <p-column header="Bloqueado" field="bloqueado" [sortable]="true"
+                        <p-column [header]="this.getLabel('Analise.Analise.Bloqueado')" field="bloqueado" [sortable]="true"
                                   [style]="{'font-size': '1.0vw'}">
                             <ng-template let-col let-bloqueado="rowData" pTemplate="body">
-                                {{ bloqueado[col.field] ? 'Sim' : 'Não' }}
+                                {{ bloqueado[col.field] ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
                             </ng-template>
                         </p-column>
 
                     </basis-datatable>
 
                     <div class="ui-g-12 ui-md-2">
-                        <app-botoes-exportacao resourceName="analise" id="idBtnExportacaoComponentAnalise" fileName="analise">
+                        <app-botoes-exportacao [query]="query" resourceName="analise" id="idBtnExportacaoComponentAnalise" fileName="analise">
                         </app-botoes-exportacao>
                     </div>
 
@@ -225,20 +225,20 @@
 
 </div>
 
-<p-confirmDialog header="Confirmação" #dialog>
+<p-confirmDialog [header]="getLabel('Global.Mensagens.Confirmacao')" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" label="Não" (click)="dialog.reject()"></button>
-        <button type="button" pButton icon="fa-check" label="Sim" (click)="dialog.accept()"></button>
+        <button type="button" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao')" (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim')" (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>
 
-<p-dialog header="Compartilhar Análise" [(visible)]="mostrarDialog" [width]="800" [modal]="true" (onHide)="limparSelecaoCompartilhar()">
+<p-dialog [header]="this.getLabel('Analise.Analise.CompartilharAnalise')" [(visible)]="mostrarDialog" [width]="800" [modal]="true" (onHide)="limparSelecaoCompartilhar()">
         <p-dataTable
         [(value)]="equipeShare"
         [headerCheckboxToggleAllPages]="true"
         [(selection)]="selectedEquipes"
         dataKey="equipeId"
-        emptyMessage="Nenhuma outra equipe na sua organização pode ter acesso à essa análise">
+        [emptyMessage]="this.getLabel('Analise.Analise.Mensagens.msgNenhumaEquipeNaOrganizaçãoAcessoAnálise')">
 
             <p-column
                 selectionMode="multiple"
@@ -246,12 +246,12 @@
             </p-column>
 
             <p-column
-                header="Equipe"
+                [header]="this.getLabel('Analise.Analise.Equipe')"
                 field="nomeEquipe">
             </p-column>
 
             <p-column
-                header="Somente visualizar?"
+                [header]="this.getLabel('Analise.Analise.SomenteVisualizar')"
                 field="viewOnly"
                 [style]="{'width':'15%'}">
                 <ng-template let-col let-equipeShare="rowData" pTemplate="body">
@@ -260,25 +260,25 @@
             </p-column>
         </p-dataTable>
 
-        <app-green-button buttonLabel="Adicionar" (click)="salvarCompartilhar()" style="float:right; margin-top: 5px"></app-green-button>
+        <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Adicionar')" (click)="salvarCompartilhar()" style="float:right; margin-top: 5px"></app-green-button>
         <br/>
         <br/>
 
         <hr/>
-        <h3>Compartilhada com:</h3>
+        <h3 translate="Analise.Analise.CompartilhadaCom">Compartilhada com:</h3>
         <p-dataTable
         [(value)]="analiseTemp.compartilhadas"
         selectionMode="single"
         [(selection)]="selectedToDelete"
         dataKey="equipeId"
-        emptyMessage="Nenhuma outra equipe tem acesso à essa análise">
+        [emptyMessage]="this.getLabel('Analise.Analise.Mensagens.msgNenhumaEquipeAcessoAnalise')">
             <p-column
-                header="Equipe"
+                [header]="this.getLabel('Analise.Analise.Equipe')"
                 field="nomeEquipe">
             </p-column>
 
             <p-column
-                header="Somente visualizar?"
+                [header]="this.getLabel('Analise.Analise.SomenteVisualizar')"   
                 field="viewOnly"
                 [style]="{'width':'15%'}">
                 <ng-template let-col let-analiseTemp="rowData" pTemplate="body">
@@ -287,6 +287,6 @@
             </p-column>
         </p-dataTable>
 
-        <app-red-button buttonLabel="Remover" (click)="deletarCompartilhar()" style="float:right; margin-top: 5px"></app-red-button>
+        <app-red-button [buttonLabel]="this.getLabel('Global.Botoes.Remover')" (click)="deletarCompartilhar()" style="float:right; margin-top: 5px"></app-red-button>
 
 </p-dialog>

@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit, OnDestroy, NgZone} from '@angular/core';
 import { Response } from '@angular/http';
 import { LoginService } from './login.service';
@@ -30,8 +31,17 @@ export class LoginComponent implements OnInit, OnDestroy {
     private authService: AuthService<User>,
     private http: HttpService,
     private zone: NgZone,
-    private pageNotificationService: PageNotificationService
+    private pageNotificationService: PageNotificationService,
+    private translate: TranslateService
   ) { }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   ngOnInit() {
     this.authenticated = this.authService.isAuthenticated();
@@ -43,12 +53,12 @@ export class LoginComponent implements OnInit, OnDestroy {
   login() {
 
     if (!this.username || !this.password) {
-      this.pageNotificationService.addErrorMsg('Preencha os campos obrigatórios!');
+      this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'));
       return;
     }
 
     if (this.password.length < 4) {
-      this.pageNotificationService.addErrorMsg('A senha precisa ter no mínimo 4 caracteres!');
+      this.pageNotificationService.addErrorMsg(this.getLabel('Login.Mensagens.msgASenhaPrecisaTerNoMinimo4Caracteres'));
       return;
     }
 
@@ -66,10 +76,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     }, error => {
       switch (error.status) {
         case 401: {
-          this.pageNotificationService.addErrorMsg('Usuário ou senha inválidos!');
+          this.pageNotificationService.addErrorMsg(this.getLabel('Login.Mensagens.msgUsuarioOuSenhaInvalidos'));
         } break;
         case 400: {
-          this.pageNotificationService.addErrorMsg('Usuário ou senha inválidos!');
+          this.pageNotificationService.addErrorMsg(this.getLabel('Login.Mensagens.msgUsuarioOuSenhaInvalidos'));
         } break;
       }
     });

@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { Organizacao } from './organizacao.model';
 import {ResponseWrapper, createRequestOption, JhiDateUtils, JSONable, PageNotificationService} from '../shared';
 import { UploadService } from '../upload/upload.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class OrganizacaoService {
@@ -22,9 +23,17 @@ export class OrganizacaoService {
   constructor(
     private http: HttpService,
     private uploadService: UploadService,
-    private pageNotificationService: PageNotificationService
-  ) {}
+    private pageNotificationService: PageNotificationService,
+    private translate: TranslateService
+  ) { }
 
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
   create(organizacao: Organizacao): Observable<any> {
     const copy = this.convertToJSON(organizacao);
     return this.http.post(this.resourceUrl, copy).map((res: Response) => {
@@ -32,7 +41,7 @@ export class OrganizacaoService {
       return this.convertFromJSON(jsonResponse);
     }).catch((error: any) => {
         if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
             return Observable.throw(new Error(error.status));
         }
     });
@@ -45,7 +54,7 @@ export class OrganizacaoService {
       return this.convertFromJSON(jsonResponse);
     }).catch((error: any) => {
         if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
             return Observable.throw(new Error(error.status));
         }
     });
@@ -57,7 +66,7 @@ export class OrganizacaoService {
       return this.convertFromJSON(jsonResponse);
     }).catch((error: any) => {
         if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
             return Observable.throw(new Error(error.status));
         }
     });
@@ -68,7 +77,7 @@ export class OrganizacaoService {
       return this.http.get(this.resourceUrl, options)
           .map((res: Response) => this.convertResponseToResponseWrapper(res)).catch((error: any) => {
               if (error.status === 403) {
-                  this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                  this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                   return Observable.throw(new Error(error.status));
               }
           });
@@ -79,7 +88,7 @@ export class OrganizacaoService {
         return this.http.get(this.resourceUrl + '/ativas', options)
             .map((res: Response) => this.convertResponseToResponseWrapper(res)).catch((error: any) => {
                 if (error.status === 403) {
-                    this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                     return Observable.throw(new Error(error.status));
                 }
             });
@@ -88,7 +97,7 @@ export class OrganizacaoService {
   delete(id: number): Observable<Response> {
     return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
         if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
             return Observable.throw(new Error(error.status));
         }
     });
@@ -99,7 +108,7 @@ export class OrganizacaoService {
       return response.json();
     }).catch((error: any) => {
         if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg('Você não possui permissão!');
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
             return Observable.throw(new Error(error.status));
         }
     });

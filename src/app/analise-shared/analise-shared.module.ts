@@ -25,6 +25,15 @@ import { AbacoSharedModule } from '../shared/abaco-shared.module';
 import { ModuloFuncionalidadeComponent } from './modulo-funcionalidade.component';
 import { FuncaoResumoTableComponent } from './funcao-resumo-table.component';
 
+import {HttpClient} from '@angular/common/http';
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
+
 @NgModule({
     imports: [
         CommonModule,
@@ -43,7 +52,14 @@ import { FuncaoResumoTableComponent } from './funcao-resumo-table.component';
         InputTextareaModule,
         AbacoSharedModule,
         DialogModule,
-        FieldsetModule
+        FieldsetModule,
+        TranslateModule.forChild({
+            loader: {
+              provide: TranslateLoader,
+              useFactory: (createTranslateLoader),
+              deps: [HttpClient]
+            }
+          })
     ],
     declarations: [
         ModuloFuncionalidadeComponent,
