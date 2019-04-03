@@ -3,10 +3,14 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.AbacoApp;
 
 import br.com.basis.abaco.domain.Manual;
-import br.com.basis.abaco.repository.*;
+
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
-
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.ManualRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.FatorAjusteRepository;
+import br.com.basis.abaco.repository.ManualContratoRepository;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.junit.Before;
 import org.junit.Ignore;
