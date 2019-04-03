@@ -168,7 +168,9 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Der> getDers() {
-        return Collections.unmodifiableSet(ders);
+        return Optional.ofNullable(ders)
+               .map(HashSet::new)
+                .orElse(new HashSet<>());
     }
 
     public void setDers(Set<Der> ders) {

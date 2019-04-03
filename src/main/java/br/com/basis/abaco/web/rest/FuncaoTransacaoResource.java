@@ -98,6 +98,30 @@ public class FuncaoTransacaoResource {
     }
 
     /**
+     * PUT  /funcao-transacaos : Updates an existing funcaoTransacao.
+     *
+     * @param funcaoTransacao the funcaoTransacao to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated funcaoTransacao,
+     * or with status 400 (Bad Request) if the funcaoTransacao is not valid,
+     * or with status 500 (Internal Server Error) if the funcaoTransacao couldnt be updated
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @PutMapping("/funcao-transacaos/crud")
+    @Timed
+    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+    public ResponseEntity<FuncaoTransacao> gerarCrud(@RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
+        log.debug("REST request to update FuncaoTransacao : {}", funcaoTransacao);
+        if (funcaoTransacao.getId() == null) {
+            return createFuncaoTransacao(funcaoTransacao);
+        }
+        FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
+        funcaoTransacaoSearchRepository.save(result);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoTransacao.getId().toString()))
+            .body(result);
+    }
+
+    /**
      * GET  /funcao-transacaos : get all the funcaoTransacaos.
      *
      * @return the ResponseEntity with status 200 (OK) and the list of funcaoTransacaos in body
@@ -135,6 +159,25 @@ public class FuncaoTransacaoResource {
         if (funcaoTransacao.getAnalise().getFuncaoTransacaos() != null) {
             funcaoTransacao.getAnalise().getFuncaoTransacaos().clear();
         }
+
+        ModelMapper modelMapper = new ModelMapper();
+
+        FuncaoTransacaoApiDTO funcaoDadosDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoApiDTO.class);
+
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
+    }
+
+    /**
+     * GET  /funcao-transacaos/completa/:id : get the "id" funcaotransacao.
+     *
+     * @param id the id of the funcaoTransacao to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the funcaoTransacao, or with status 404 (Not Found)
+     */
+    @GetMapping("/funcao-transacaos/completa/{id}")
+    @Timed
+    public ResponseEntity<FuncaoTransacaoApiDTO> getFuncaoTransacaoCompleta(@PathVariable Long id) {
+        log.debug("REST request to get FuncaoTransacao : {}", id);
+        FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findWithDerAndAlr(id);
 
         ModelMapper modelMapper = new ModelMapper();
 

@@ -54,6 +54,7 @@ spring:
             hibernate.generate_statistics: true
             hibernate.default_schema: public
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.NoDefaultJCacheRegionFactory
+            hibernate.event.merge.entity_copy_observe: allow
     data:
         elasticsearch:
             cluster-name:

@@ -54,6 +54,8 @@ spring:
             naming:
                 physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
                 implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        properties:
+            hibernate.event.merge.entity_copy_observer: allow
     messages:
         basename: i18n/messages
     mvc:
