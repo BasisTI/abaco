@@ -64,7 +64,6 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 
   @Size(max = 50)
   @Column(name = "first_name", length = 50)
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
   private String firstName;
 
   @Size(max = 50)
