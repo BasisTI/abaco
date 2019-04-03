@@ -29,6 +29,7 @@ import {
 } from './';
 import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
 import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.module';
+import { FuncaoTransacaoService } from './funcao-transacao.service';
 
 @NgModule({
   imports: [
@@ -61,7 +62,8 @@ import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.modul
     FuncaoTransacaoFormComponent
   ],
   providers: [
-    ConfirmationService
+    ConfirmationService,
+    FuncaoTransacaoService
   ]
 })
 export class AbacoFuncaoTransacaoModule {}

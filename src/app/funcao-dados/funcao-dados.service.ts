@@ -33,6 +33,9 @@ export class FuncaoDadosService {
     constructor(private http: HttpService) {
     }
 
+    gerarCrud(funcaoTransacao: FuncaoTransacao) {
+    }
+
     findAllNamesBySistemaId(sistemaId: number): Observable<string[]> {
         const url = `${this.sistemaResourceUrl}/${sistemaId}/funcao-dados`;
         return this.http.get(url)
