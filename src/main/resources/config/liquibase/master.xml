@@ -99,6 +99,7 @@
     <include file="classpath:config/liquibase/changelog/ALTER_manual_contrato.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/ALTER_contrato.xml" relativeToChangelogFile="false"/>
 	<include file="classpath:config/liquibase/changelog/ALTER_analise_20190314.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/ALTER_entity_contrato.xml" relativeToChangelogFile="false"/>
 
     
 </databaseChangeLog>
