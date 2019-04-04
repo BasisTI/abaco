@@ -29,6 +29,7 @@ import { Der } from '../der/der.model';
 import { Impacto } from '../analise-shared/impacto-enum';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
 import { loginRoute } from '../login';
+import { FuncaoTransacaoService } from './funcao-transacao.service';
 
 
 
@@ -105,6 +106,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         private funcaoDadosService: FuncaoDadosService,
         private analiseService: AnaliseService,
         private baselineService: BaselineService,
+        private funcaoTransacaoService: FuncaoTransacaoService,
         private translate: TranslateService
     ) {
     }
@@ -580,9 +582,18 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.disableTRDER();
         this.configurarDialog();
 
+
         this.currentFuncaoTransacao = funcaoTransacaoSelecionada;
+
         this.carregarValoresNaPaginaParaEdicao(funcaoTransacaoSelecionada);
         this.pageNotificationService.addInfoMsg(`${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlterandoFuncaoDeTransacao')} '${funcaoTransacaoSelecionada.name}'`);
+    }
+
+    private carregarDersAlrs() {
+        this.funcaoTransacaoService.getFuncaoTransacaosCompleta(this.currentFuncaoTransacao.id)
+        .subscribe(funcaoTransacao => {
+            this.currentFuncaoTransacao = funcaoTransacao;
+        });
     }
 
     // Prepara para clonar

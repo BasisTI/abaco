@@ -29,6 +29,7 @@ import {
 } from './';
 import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
 import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.module';
+import { FuncaoTransacaoService } from './funcao-transacao.service';
 
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -76,7 +77,8 @@ export function createTranslateLoader(http: HttpClient) {
     FuncaoTransacaoFormComponent
   ],
   providers: [
-    ConfirmationService
+    ConfirmationService,
+    FuncaoTransacaoService
   ]
 })
 export class AbacoFuncaoTransacaoModule {}

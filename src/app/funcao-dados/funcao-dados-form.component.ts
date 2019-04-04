@@ -1,3 +1,4 @@
+import { Der } from './../der/der.model';
 import { TranslateService } from '@ngx-translate/core';
 import { EntityToJSON } from './../shared/entity-to-json';
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
@@ -35,6 +36,7 @@ import { Impacto } from '../analise-shared/impacto-enum';
 import { FuncaoTransacao, TipoFuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
 import { CalculadoraTransacao } from './../analise-shared/calculadora-transacao';
 import { fcall } from 'q';
+import { Alr } from '../alr/alr.model';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -669,7 +671,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const funcaoDadosSelecionada: FuncaoDados = event.selection.clone();
+        let funcaoDadosSelecionada: FuncaoDados = event.selection.clone();
         switch (event.button) {
             case 'edit':
                 this.isEdit = true;
@@ -698,16 +700,17 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.desconverterChips();
         this.verificarModulo();
 
-        var funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem,
-            funcaoTransacaoAtual,
-            this.analise.contrato.manual);
+        const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem,
+                                                                    funcaoTransacaoAtual,
+                                                                    this.analise.contrato.manual);
 
-        this.validarNameFuncaoTransacaos(funcaoTransacaoAtual.name).then(resolve => {
+        this.validarNameFuncaoTransacaos(funcaoTransacaoAtual.name).then( resolve => {
             if (resolve) {
                 this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
                 this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
                 this.atualizaResumo();
                 this.resetarEstadoPosSalvar();
+                // this.persistirFuncaoTransacao(funcaoTransacaoCalculada);
                 this.salvarAnalise();
                 this.estadoInicial();
             } else {
@@ -716,51 +719,65 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         });
     }
 
+    private gerarAlr(funcaoTransacaoCalculada: FuncaoTransacao, fnDado: FuncaoDados) {
+        const alr = new Alr(undefined, fnDado.name, undefined, null);
+        if (funcaoTransacaoCalculada.alrs !== undefined && funcaoTransacaoCalculada.alrs != null) {
+            funcaoTransacaoCalculada.alrs.push(alr);
+        } else {
+            const alrs: Alr[] = [];
+            alrs.push(alr);
+            funcaoTransacaoCalculada.alrs = alrs;
+        }
+    }
+
     private createCrud(funcaoDadosSelecionada: FuncaoDados) {
 
-        var _this = this;
+        const _this = this;
 
-        let crudExcluir = new FuncaoTransacao;
-        crudExcluir.name = this.getLabel('Cadastros.FuncaoDados.Excluir');
-        crudExcluir.funcionalidade = funcaoDadosSelecionada.funcionalidade;
-        crudExcluir.tipo = TipoFuncaoTransacao.EE;
-        crudExcluir.impacto = Impacto.INCLUSAO;
-        crudExcluir.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
-        this.inserirCrud(crudExcluir);
+        const fdExcluir = this.gerarFuncaoTransacao('Excluir', funcaoDadosSelecionada);
+        this.inserirCrud(fdExcluir);
 
-        let crudEditar = new FuncaoTransacao;
-        crudEditar.name = this.getLabel('Cadastros.FuncaoDados.Editar');
-        crudEditar.funcionalidade = funcaoDadosSelecionada.funcionalidade;
-        crudEditar.tipo = TipoFuncaoTransacao.EE;
-        crudEditar.impacto = Impacto.INCLUSAO;
-        crudEditar.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
-        setTimeout(function () {
-            _this.inserirCrud(crudEditar)
+        const fdEditar = this.gerarFuncaoTransacao('Editar', funcaoDadosSelecionada);
+        setTimeout(function(){
+            _this.inserirCrud(fdEditar);
         }, 1000);
 
-        let crudInserir = new FuncaoTransacao;
-        crudInserir.name = this.getLabel('Cadastros.FuncaoDados.Inserir');
-        crudInserir.funcionalidade = funcaoDadosSelecionada.funcionalidade;
-        crudInserir.tipo = TipoFuncaoTransacao.EE;
-        crudInserir.impacto = Impacto.INCLUSAO;
-        crudInserir.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
-        setTimeout(function () {
-            _this.inserirCrud(crudInserir)
+        const fdInserir = this.gerarFuncaoTransacao('Inserir', funcaoDadosSelecionada);
+        setTimeout(function(){
+            _this.inserirCrud(fdInserir);
         }, 2000);
 
-        let crudPesquisar = new FuncaoTransacao;
-        crudPesquisar.name = this.getLabel('Cadastros.FuncaoDados.Pesquisar');
-        crudPesquisar.funcionalidade = funcaoDadosSelecionada.funcionalidade;
-        crudPesquisar.tipo = TipoFuncaoTransacao.CE;
-        crudPesquisar.impacto = Impacto.INCLUSAO;
-        crudPesquisar.fatorAjuste = funcaoDadosSelecionada.fatorAjuste;
-        setTimeout(function () {
-            _this.inserirCrud(crudPesquisar)
+        const fdPesquisar = this.gerarFuncaoTransacao('Pesquisar', funcaoDadosSelecionada);
+        setTimeout(function(){
+            _this.inserirCrud(fdPesquisar);
         }, 3000);
 
         if (this.crudExist) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoDados.Mensagens.msgCrudJaCadastrado'));
+            this.pageNotificationService.addErrorMsg('CRUD já cadastrado!');
         }
+    }
+
+    private gerarFuncaoTransacao(tipo: string, fdSelecionada: FuncaoDados): FuncaoTransacao {
+        const ft = new FuncaoTransacao();
+        ft.name = tipo;
+        ft.funcionalidade = fdSelecionada.funcionalidade;
+        ft.tipo = tipo === 'Pesquisar' ? TipoFuncaoTransacao.CE : TipoFuncaoTransacao.EE;
+        ft.impacto = Impacto.INCLUSAO;
+        ft.fatorAjuste = fdSelecionada.fatorAjuste;
+        ft.ders = [];
+        fdSelecionada.ders.forEach(item => ft.ders.push(item));
+        this.criarDersMenssagemAcao(ft.ders);
+        this.gerarAlr(ft, fdSelecionada);
+        return ft;
+    }
+
+    private criarDersMenssagemAcao(ders: Der[]) {
+        ders.push(new Der(undefined, 'Menssagem'));
+        ders.push(new Der(undefined, 'Ação'));
+    }
+
+    private persistirFuncaoTransacao(ft: FuncaoTransacao) {
+        this.funcaoDadosService.gerarCrud(ft);
     }
 
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
