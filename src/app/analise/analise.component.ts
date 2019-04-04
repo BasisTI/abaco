@@ -503,31 +503,31 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
      * Bloquear Análise
      */
     public bloqueiaAnalise(bloquear: boolean) {
-        var _this = this;
+        //var _this = this;
 
-        _this.analiseService.find(_this.analiseSelecionada.idAnalise).subscribe((res: any) => {
-            _this.analiseTemp = res;
+        this.analiseService.find(this.analiseSelecionada.idAnalise).subscribe((res: any) => {
+            this.analiseTemp = res;
         });
 
-        setTimeout(function () {
-            if (!_this.analiseTemp.dataHomologacao) {
-                _this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_HOMOLOGACAO'));
+        setTimeout( () => {
+            if (!this.analiseTemp.dataHomologacao) {
+                this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_HOMOLOGACAO'));
             } else {
-                if (_this.checkUserAnaliseEquipes()) {
-                    _this.confirmationService.confirm({
-                        message: _this.mensagemDialogBloquear(bloquear),
+                if (this.checkUserAnaliseEquipes()) {
+                    this.confirmationService.confirm({
+                        message: this.mensagemDialogBloquear(bloquear),
                         accept: () => {
-                            const copy = _this.analiseTemp.toJSONState();
-                            _this.analiseService.block(copy).subscribe(() => {
-                                const nome = _this.analiseTemp.identificadorAnalise;
-                                const bloqueado = _this.analiseTemp.bloqueiaAnalise;
-                                _this.mensagemAnaliseBloqueada(bloqueado, nome);
-                                _this.recarregarDataTable();
+                            const copy = this.analiseTemp.toJSONState();
+                            this.analiseService.block(copy).subscribe(() => {
+                                const nome = this.analiseTemp.identificadorAnalise;
+                                const bloqueado = this.analiseTemp.bloqueiaAnalise;
+                                this.mensagemAnaliseBloqueada(bloqueado, nome);
+                                this.recarregarDataTable();
                             });
                         }
                     });
                 } else {
-                    _this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeBloquearAnalise'));
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeBloquearAnalise'));
                 }
             }
         }, 1000);
