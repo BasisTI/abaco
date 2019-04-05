@@ -216,21 +216,11 @@ export class SistemaComponent implements AfterViewInit {
      */
     private createStringParamsArray(): Array<string> {
         let stringParamsArray: Array<string> = [];
-
-        (this.searchParams.sigla !== undefined) ? (stringParamsArray.push("sigla:*" + this.searchParams.sigla + "*")) : (this);
-        if (this.searchParams.sigla !== undefined) {
-            (this.searchParams.nomeSistema !== undefined) ? (stringParamsArray.push("AND nome:*" + this.searchParams.nomeSistema + "*")) : (this);
-        } else {
-            (this.searchParams.nomeSistema !== undefined) ? (stringParamsArray.push("nome:*" + this.searchParams.nomeSistema + "*")) : (this);
-        }
-        if (this.searchParams.sigla !== undefined || this.searchParams.nomeSistema !== undefined) {
-            (this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push("AND organizacao.nome:*" + this.searchParams.organizacao.nome + "*")) : (this);
-        } else {
-            (this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push("organizacao.nome:*" + this.searchParams.organizacao.nome + "*")) : (this);
-
-        }
-
-
+        
+        (this.searchParams.sigla !== undefined) ? (stringParamsArray.push('sigla:' + "*" + this.searchParams.sigla + "*" )) : (this);
+        (this.searchParams.nomeSistema !== undefined) ? (stringParamsArray.push('nome:' + "*" + this.searchParams.nomeSistema + "*" )) : (this);
+        (this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push('organizacao:' + "*" + this.searchParams.organizacao.nome + "*" )) : (this);
+        
         return stringParamsArray;
     }
 
