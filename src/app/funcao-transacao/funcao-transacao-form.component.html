@@ -29,6 +29,27 @@
                                 scrollWidth="100%">
 
                             <p-column
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
+                                    [style]="{'width': '200px'}">
+                                <ng-template
+                                        let-modulo="rowData.funcionalidade.modulo"
+                                        pTemplate="body">
+                                    {{ modulo.nome }}
+                                </ng-template>
+                            </p-column>
+
+
+                            <p-column
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
+                                    [style]="{'width': '200px'}">
+                                <ng-template
+                                        let-funcionalidade="rowData.funcionalidade"
+                                        pTemplate="body">
+                                    {{ funcionalidade.nome }}
+                                </ng-template>
+                            </p-column>
+
+                            <p-column
                                     field="name"
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.Nome')"
                                     [style]="{'width': '200px'}">
@@ -52,27 +73,6 @@
                                         let-impacto="rowData.impacto"
                                         pTemplate="body">
                                     {{ impacto ? updateImpacto(impacto) : this.getLabel('Global.Mensagens.Nenhum') }}
-                                </ng-template>
-                            </p-column>
-
-                            <p-column
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
-                                    [style]="{'width': '200px'}">
-                                <ng-template
-                                        let-modulo="rowData.funcionalidade.modulo"
-                                        pTemplate="body">
-                                    {{ modulo.nome }}
-                                </ng-template>
-                            </p-column>
-
-
-                            <p-column
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
-                                    [style]="{'width': '200px'}">
-                                <ng-template
-                                        let-funcionalidade="rowData.funcionalidade"
-                                        pTemplate="body">
-                                    {{ funcionalidade.nome }}
                                 </ng-template>
                             </p-column>
 
