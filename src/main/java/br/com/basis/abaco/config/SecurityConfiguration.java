@@ -66,7 +66,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Override
-  public void configure(WebSecurity web) throws Exception {
+  public void configure(WebSecurity web) {
     // // @formatter:off
         web.ignoring()
             .antMatchers(HttpMethod.OPTIONS, "/**")
@@ -80,8 +80,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  protected void configure(HttpSecurity http) {
     // @formatter:off
+      try {
+          configureHttp(http);
+      } catch (Exception e) {
+          throw new SecurityException(e);
+      }
+      // @formatter:on
+  }
+
+    private void configureHttp(HttpSecurity http) throws Exception {
         http
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class).exceptionHandling()
             .authenticationEntryPoint(http401UnauthorizedEntryPoint()).and().csrf().disable().headers().frameOptions()
@@ -100,10 +109,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/swagger-ui/index.html").hasAuthority(AuthoritiesConstants.ADMIN)
             .and()
             .apply(securityConfigurerAdapter());
-        // @formatter:on
-  }
+    }
 
-  private JWTConfigurer securityConfigurerAdapter() {
+    private JWTConfigurer securityConfigurerAdapter() {
     return new JWTConfigurer(tokenProvider);
   }
 

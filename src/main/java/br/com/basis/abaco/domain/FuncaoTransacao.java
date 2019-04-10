@@ -36,12 +36,13 @@ import java.util.Set;
 public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static  final String FUNCAOTRANSACAO = "funcaoTransacao";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo")
     private TipoFuncaoTransacao tipo;
 
-    @OneToMany(mappedBy = "funcaoTransacao")
+    @OneToMany(mappedBy = FUNCAOTRANSACAO)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Funcionalidade> funcionalidades = new HashSet<>();
@@ -53,12 +54,12 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     private Integer quantidade;
 
 
-    @JsonManagedReference(value = "funcaoTransacao")
-    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = FUNCAOTRANSACAO)
+    @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Alr> alrs = new HashSet<>();
 
-    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
 
     @Transient
@@ -68,8 +69,8 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     @Column(name = "impacto")
     private ImpactoFatorAjuste impacto;
 
-    @JsonManagedReference(value = "funcaoTransacao")
-    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = FUNCAOTRANSACAO)
+    @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Der> ders = new HashSet<>();
 
     public TipoFuncaoTransacao getTipo() {
@@ -191,7 +192,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
         if (funcaoTransacao.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, funcaoTransacao.id);
+        return Objects.equals(getId(), funcaoTransacao.getId());
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.util.Arrays;
  * By default, it only runs with the "dev" profile.
  */
 @Aspect
-public class LoggingAspect {
+public class  LoggingAspect {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -56,11 +56,8 @@ public class LoggingAspect {
      * Advice that logs when a method is entered and exited.
      */
     @Around("loggingPointcut()")
-    public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        if (log.isDebugEnabled()) {
-            log.debug("Enter: {}.{}() with argument[s] = {}", joinPoint.getSignature().getDeclaringTypeName(),
-                joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
-        }
+    public Object logAround(ProceedingJoinPoint joinPoint) {
+        isDebugMode(joinPoint);
         try {
             Object result = joinPoint.proceed();
             if (log.isDebugEnabled()) {
@@ -73,6 +70,17 @@ public class LoggingAspect {
                 joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
 
             throw e;
+        } catch (Throwable throwable) {
+            log.error("Cannot proceed: {} in {}.{}()", Arrays.toString(joinPoint.getArgs()),
+                joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
+            throw new IllegalStateException(throwable);
+        }
+    }
+
+    private void isDebugMode(ProceedingJoinPoint joinPoint) {
+        if (log.isDebugEnabled()) {
+            log.debug("Enter: {}.{}() with argument[s] = {}", joinPoint.getSignature().getDeclaringTypeName(),
+                joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
         }
     }
 }
