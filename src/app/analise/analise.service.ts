@@ -169,8 +169,6 @@ export class AnaliseService {
         const anchor = document.createElement('a');
         anchor.download = 'analise.pdf';
         anchor.href = fileURL;
-        //window.open(fileURL, '_blank', '');
-
         document.body.appendChild(anchor);
         anchor.click();
         this.blockUI.stop();
