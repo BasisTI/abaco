@@ -37,6 +37,9 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
     ders: Der[] = [];
 
+    derMsg: Der = new Der(1, 'Mensagem');
+    derAcao: Der = new Der(2, 'Ação');
+
     idAnalise: number;
 
     mostrarDialog = false;
@@ -144,7 +147,8 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
         /*if (!this.funcoesDados) {
             return false;
         }
-        return this.funcoesDados.length > 0;*/
+        return this.funcoesDados.length > 0;
+        */
         return true;
     }
 
@@ -155,6 +159,13 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
     funcaoDadosSelected(fd: FuncaoDados) {
         this.funcaoDadosSelecionada = fd;
         this.ders = fd.ders;
+        if(!this.ders.some(der => {
+            return der.nome === 'Mensagem' || der.nome === 'Ação';
+        })){
+            this.ders.push(this.derMsg);
+            this.ders.push(this.derAcao);
+        }
+        // debugger;
     }
 
     dersMultiSelectedPlaceholder(): string {
