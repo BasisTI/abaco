@@ -56,6 +56,7 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 public class Analise implements Serializable, ReportObject {
 
+    private static final String ANALISE = "analise";
     private static final long serialVersionUID = 1L;
     private static transient Logger log = LoggerFactory.getLogger(Analise.class);
 
@@ -137,14 +138,14 @@ public class Analise implements Serializable, ReportObject {
     @OneToMany(mappedBy = "analises")
     private Set<Compartilhada> compartilhadas = new HashSet<>();
 
-    @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JsonManagedReference(value = "analise")
+    @JsonManagedReference(value = ANALISE)
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
 
-    @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JsonManagedReference(value = "analise")
+    @JsonManagedReference(value = ANALISE)
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
 
     @Column(name = "data_criacao_ordem_servico")
