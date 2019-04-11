@@ -768,10 +768,10 @@ public class RelatorioAnaliseRest {
      * @return
      */
     private String funcao(String valor) {
-        if (valor.equals("INCLUSAO")){ return Integer.toString(analise.getContrato().getManual().getParametroInclusao().intValue()) + "%"; }
-        if (valor.equals("ALTERACAO")){ return Integer.toString(analise.getContrato().getManual().getParametroAlteracao().intValue()) + "%"; }
-        if (valor.equals("EXCLUSAO")){ return Integer.toString(analise.getContrato().getManual().getParametroExclusao().intValue()) + "%"; }
-        if (valor.equals("CONVERSAO")){ return Integer.toString(analise.getContrato().getManual().getParametroConversao().intValue()) + "%"; }
+        if (valor.equals("INCLUSAO")){ return Integer.toString(analise.getManual().getParametroInclusao().intValue()) + "%"; }
+        if (valor.equals("ALTERACAO")){ return Integer.toString(analise.getManual().getParametroAlteracao().intValue()) + "%"; }
+        if (valor.equals("EXCLUSAO")){ return Integer.toString(analise.getManual().getParametroExclusao().intValue()) + "%"; }
+        if (valor.equals("CONVERSAO")){ return Integer.toString(analise.getManual().getParametroConversao().intValue()) + "%"; }
         return null;
     }
 
