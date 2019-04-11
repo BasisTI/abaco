@@ -85,7 +85,8 @@ public class MailService {
     @Async
     public void sendCreationEmail(User user) {
         log.debug("Sending creation e-mail to '{}'", user.getEmail());
-        Locale locale = Locale.forLanguageTag(user.getLangKey());
+        String langkey = user.getLangKey();
+        Locale locale = new Locale(langkey.substring(0, 2).toLowerCase(), langkey.substring(3).toLowerCase());
         Context context = new Context(locale);
         context.setVariable(USER, user);
         context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
