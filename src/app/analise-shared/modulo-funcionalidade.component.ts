@@ -200,6 +200,11 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.funcionalidadeSelected(this.funcionalidadeSelecionada);
     }
 
+    private selecionaFuncionalidadeFromCurrentAnalise() {
+        const currentFuncionalidade: Funcionalidade = this.currentFuncaoAnalise.funcionalidade;
+        this.funcionalidadeSelecionada = _.find(this.funcionalidades, { 'id': currentFuncionalidade.id });
+    }
+
     private subscribeFuncaoAnaliseDescarregada() {
         this.subscriptionFuncaoAnaliseDescarregada =
             this.analiseSharedDataService.getFuncaoAnaliseDescarregadaSubject().subscribe(() => {
@@ -265,6 +270,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         const moduloId = modulo.id;
         this.funcionalidadeService.findFuncionalidadesByModulo(moduloId).subscribe((funcionalidades: Funcionalidade[]) => {
             this.funcionalidades = funcionalidades;
+            this.selecionaFuncionalidadeFromCurrentAnalise();
         });
         this.moduloSelectedEvent.emit(modulo);
     }
