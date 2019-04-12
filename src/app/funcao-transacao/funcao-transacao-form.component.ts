@@ -334,11 +334,12 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     searchBaseline(event): void {
+
+        let mdCache = this.moduloCache;
+        
         this.baselineResultados = this.dadosBaselineFT.filter(function (fd) {
-
             var teste: string = event.query;
-
-            return fd.name.toLowerCase().includes(teste.toLowerCase());
+            return fd.name.toLowerCase().includes(teste.toLowerCase()) && fd.idfuncionalidade == mdCache.id;
         });
 
     }
@@ -350,7 +351,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.moduloCache = funcionalidade;
         }
         this.currentFuncaoTransacao.funcionalidade = funcionalidade;
+        this.carregarDadosBaseline();
     }
+
 
     adicionar(): boolean {
         const retorno: boolean = this.verifyDataRequire();
@@ -681,7 +684,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     openDialog(param: boolean) {
-        this.carregarDadosBaseline();
         this.isEdit = param;
         this.disableTRDER();
         this.configurarDialog();

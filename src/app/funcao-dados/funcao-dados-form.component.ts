@@ -298,9 +298,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     searchBaseline(event): void {
+        let mdCache = this.moduloCache;
         this.baselineResults = this.dadosBaselineFD.filter(function (fc) {
             var teste: string = event.query;
-            return fc.name.toLowerCase().includes(teste.toLowerCase());
+            return fc.name.toLowerCase().includes(teste.toLowerCase()) && fc.idfuncionalidade == mdCache.id;
         });
     }
 
@@ -397,6 +398,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             this.moduloCache = funcionalidade;
         }
         this.currentFuncaoDados.funcionalidade = funcionalidade;
+        this.carregarDadosBaseline();
     }
 
     multiplos(): boolean {
@@ -872,7 +874,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     openDialog(param: boolean) {
         this.subscribeToAnaliseCarregada();
-        this.carregarDadosBaseline();
         this.isEdit = param;
         this.disableTRDER();
         this.configurarDialog();
