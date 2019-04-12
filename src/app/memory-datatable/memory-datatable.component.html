@@ -2,6 +2,7 @@
   <p-dataTable [value]="value"
     [immutable]="false"
     [(selection)]="selectedRow"
+    (onRowSelect)="onRowSelect($event)"
     [emptyMessage]="this.getLabel('Global.Mensagens.emptyMessage')"
     selectionMode="single"
     [responsive]="responsive"

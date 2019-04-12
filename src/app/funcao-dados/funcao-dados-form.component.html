@@ -18,6 +18,8 @@
                                               [showCrud]="true"
                                               [value]="funcoesDados" id="idTabelaFuncaoDados"
                                               (buttonClick)="datatableClick($event)"
+                                              (selectRow)="selectRow($event)"
+                                              (dblclick)="onRowDblclick($event)"
                                               [responsive]="true" scrollable="true" scrollWidth="100%">
 
                             <div *ngFor="let col of colunasAMostrar">
