@@ -55,6 +55,12 @@ spring:
         port: 25
         username: abaco@basis.com.br
         password:
+        protocol: smtp
+            tls: true
+            properties.mail.smtp:
+                auth: true
+                starttls.enable: true
+                ssl.trust: smtp.basis.intern
     thymeleaf:
         cache: true
 
