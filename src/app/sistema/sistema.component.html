@@ -11,6 +11,7 @@
           <span class="md-inputfield">
             <input
               type="text"
+              (click)= "switchUrlSigla()"
               pInputText class="ui-inputtext"
               [(ngModel)]="searchParams.sigla"
               id="idSiglaComponentSistema"
@@ -25,6 +26,7 @@
           <span class="md-inputfield">
             <input
               type="text"
+              (click)= "switchUrlNomeSistema()"
               pInputText class="ui-inputtext"
               id="idNomeSistemaComponentSistema"
               [(ngModel)]="searchParams.nomeSistema"
