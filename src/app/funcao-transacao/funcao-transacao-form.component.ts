@@ -383,7 +383,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     this.currentFuncaoTransacao,
                     this.analise.contrato.manual);
 
-                this.validarNameFuncaoTransacaos(this.currentFuncaoTransacao.name).then(resolve => {
+                this.validarFuncaoTransacaos(this.currentFuncaoTransacao).then(resolve => {
                     if (resolve) {
                         this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
                         this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
@@ -401,7 +401,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
 
-    validarNameFuncaoTransacaos(nome: string) {
+    validarFuncaoTransacaos(ft: FuncaoTransacao) {
         const that = this;
         return new Promise(resolve => {
             if (that.analise.funcaoTransacaos) {
@@ -409,7 +409,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     return resolve(true);
                 }
                 that.analise.funcaoTransacaos.forEach((data, index) => {
-                    if (data.name === nome) {
+                    if (data === ft) {
                         return resolve(false);
                     }
                     if (!that.analise.funcaoTransacaos[index + 1]) {
@@ -515,7 +515,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.verificarModulo();
             const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
                 this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-            this.validarNameFuncaoTransacaos(this.currentFuncaoTransacao.name).then(resolve => {
+            this.validarFuncaoTransacaos(this.currentFuncaoTransacao).then(resolve => {
                 this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
                 this.atualizaResumo();
                 this.resetarEstadoPosSalvar();
