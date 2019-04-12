@@ -34,7 +34,7 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
-    protected Long id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "complexidade")

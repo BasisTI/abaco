@@ -299,7 +299,7 @@ public class SistemaResource {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
-        QueryBuilder qb = QueryBuilders.matchQuery("sigla", query);
+        QueryBuilder qb = QueryBuilders.matchPhraseQuery("sigla", query);
 
         Page<Sistema> page = sistemaSearchRepository.search((qb), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchSigla/sistemas");
@@ -315,7 +315,7 @@ public class SistemaResource {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
-        QueryBuilder qb = QueryBuilders.matchQuery("nome", query);
+        QueryBuilder qb = QueryBuilders.matchPhraseQuery("nome", query);
 
         Page<Sistema> page = sistemaSearchRepository.search((qb), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchSistema/sistemas");
@@ -331,7 +331,7 @@ public class SistemaResource {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
-        QueryBuilder qb = QueryBuilders.matchQuery("organizacao.nome", query);
+        QueryBuilder qb = QueryBuilders.matchPhraseQuery("organizacao.nome", query);
 
         Page<Sistema> page = sistemaSearchRepository.search((qb), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchOrganizacao/sistemas");

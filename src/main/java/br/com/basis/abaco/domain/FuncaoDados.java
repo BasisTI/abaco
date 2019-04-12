@@ -37,12 +37,13 @@ import java.util.Set;
 public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final String FUNCAODADOS = "funcaoDados";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo")
     private TipoFuncaoDados tipo;
 
-    @OneToMany(mappedBy = "funcaoDados")
+    @OneToMany(mappedBy = FUNCAODADOS)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Funcionalidade> funcionalidades = new HashSet<>();
@@ -53,22 +54,22 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @Column
     private Integer quantidade;
 
-    @JsonManagedReference(value = "funcaoDados")
-    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = FUNCAODADOS)
+    @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Rlr> rlrs = new HashSet<>();
 
     @ManyToOne
     private Alr alr;
 
-    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
 
     @Transient
     private Set<String> rlrValues;
 
-    @JsonManagedReference(value = "funcaoDados")
-    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = FUNCAODADOS)
+    @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Der> ders = new HashSet<>();
 
     @JsonIgnore
