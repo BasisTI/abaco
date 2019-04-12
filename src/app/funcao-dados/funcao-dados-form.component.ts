@@ -447,7 +447,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem,
                 this.currentFuncaoDados,
                 this.analise.contrato.manual);
-            this.validarNameFuncaoDados(this.currentFuncaoDados.name).then(resolve => {
+            this.validarNameFuncaoDados(this.currentFuncaoDados).then(resolve => {
                 if (resolve) {
                     this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
                     this.analise.addFuncaoDados(funcaoDadosCalculada);
@@ -464,7 +464,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     /* Verificar esta promisse */
-    validarNameFuncaoDados(nome: string) {
+    validarNameFuncaoDados(fd: FuncaoDados) {
         const that = this;
         return new Promise(resolve => {
             if (that.analise.funcaoDados.length === 0) {
@@ -472,7 +472,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             }
             if (that.analise.funcaoDados) {
                 that.analise.funcaoDados.forEach((data, index) => {
-                    if (data.name === nome) {
+                    if (data === fd) {
                         return resolve(false);
                     }
                     if (!that.analise.funcaoDados[index + 1]) {
@@ -579,7 +579,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             this.verificarModulo();
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
-            this.validarNameFuncaoDados(this.currentFuncaoDados.name).then(resolve => {
+            this.validarNameFuncaoDados(this.currentFuncaoDados).then(resolve => {
                 this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')} '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.msgAlteradaComSucesso')}`);
                 this.analise.updateFuncaoDados(funcaoDadosCalculada);
                 this.atualizaResumo();
