@@ -145,7 +145,7 @@ export class SistemaComponent implements AfterViewInit {
 
     public switchUrlSigla() {
 
-        if (((this.searchParams.sigla === undefined) || (this.searchParams.sigla !== '')) &&
+        if (((this.searchParams.sigla !== undefined) || (this.searchParams.sigla !== '')) &&
             ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
             ((this.searchParams.organizacao.nome === undefined) || (this.searchParams.organizacao.nome === ''))) {
 
@@ -157,7 +157,7 @@ export class SistemaComponent implements AfterViewInit {
     }
 
     public switchUrlNomeSistema() {
-        if (((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema !== '')) &&
+        if (((this.searchParams.nomeSistema !== undefined) || (this.searchParams.nomeSistema !== '')) &&
             ((this.searchParams.sigla === undefined) || (this.searchParams.sigla === '')) &&
             ((this.searchParams.organizacao.nome === undefined) || (this.searchParams.organizacao.nome === ''))) {
 
@@ -172,7 +172,7 @@ export class SistemaComponent implements AfterViewInit {
 
     public switchUrlOrganizacao() {
 
-        if (((this.searchParams.organizacao.nome === undefined) || (this.searchParams.organizacao.nome !== '')) &&
+        if (((this.searchParams.organizacao.nome !== undefined) || (this.searchParams.organizacao.nome !== '')) &&
             ((this.searchParams.nomeSistema === undefined) || (this.searchParams.nomeSistema === '')) &&
             ((this.searchParams.sigla === undefined) || (this.searchParams.sigla === ''))) {
 
@@ -216,11 +216,33 @@ export class SistemaComponent implements AfterViewInit {
      */
     private createStringParamsArray(): Array<string> {
         let stringParamsArray: Array<string> = [];
-        
-        (this.searchParams.sigla !== undefined) ? (stringParamsArray.push('sigla:' + "*" + this.searchParams.sigla + "*" )) : (this);
-        (this.searchParams.nomeSistema !== undefined) ? (stringParamsArray.push('nome:' + "*" + this.searchParams.nomeSistema + "*" )) : (this);
-        (this.searchParams.organizacao.nome !== undefined) ? (stringParamsArray.push('organizacao:' + "*" + this.searchParams.organizacao.nome + "*" )) : (this);
-        
+
+        if (this.searchParams.sigla !== undefined && this.searchParams.nomeSistema === undefined && this.searchParams.organizacao.nome === undefined) {
+            (this.searchParams.sigla !== undefined && this.elasticQuery.value == '') ? (stringParamsArray.push("*" + this.searchParams.sigla + "*")) : (this);
+        }
+        else if (this.searchParams.nomeSistema !== undefined && this.searchParams.sigla === undefined && this.searchParams.organizacao.nome === undefined) {
+            (this.searchParams.nomeSistema !== undefined && this.elasticQuery.value == '') ? (stringParamsArray.push("*" + this.searchParams.nomeSistema + "*")) : (this);
+        }
+        else if (this.searchParams.organizacao.nome !== undefined && this.searchParams.nomeSistema === undefined && this.searchParams.sigla === undefined) {
+            (this.searchParams.organizacao.nome !== undefined && this.elasticQuery.value == '') ? (stringParamsArray.push("*" + this.searchParams.organizacao.nome + "*")) : (this);
+        }
+        else if (this.searchParams.sigla === undefined && this.searchParams.nomeSistema !== undefined && this.searchParams.organizacao.nome !== undefined) {
+            (this.searchParams.nomeSistema !== undefined || this.elasticQuery.value == '') ? (stringParamsArray.push('nome:' + this.searchParams.nomeSistema)) : (this);
+            (this.searchParams.organizacao.nome !== undefined && this.elasticQuery.value == '') ? (stringParamsArray.push("AND organizacao.nome:" + this.searchParams.organizacao.nome)) : (this);
+        }
+        else if ( this.searchParams.nomeSistema === undefined && this.searchParams.sigla !== undefined && this.searchParams.organizacao.nome !== undefined) {
+            (this.searchParams.sigla !== undefined || this.elasticQuery.value == '') ? (stringParamsArray.push("sigla:" + this.searchParams.sigla)) : (this);
+            (this.searchParams.organizacao.nome !== undefined && this.elasticQuery.value == '') ? (stringParamsArray.push("AND organizacao.nome:" + this.searchParams.organizacao.nome)) : (this);
+        }
+        else if (this.searchParams.organizacao.nome === undefined && this.searchParams.sigla !== undefined && this.searchParams.nomeSistema !== undefined ) {
+            (this.searchParams.sigla !== undefined || this.elasticQuery.value == '') ? (stringParamsArray.push("sigla:" + this.searchParams.sigla)) : (this);
+            (this.searchParams.nomeSistema !== undefined || this.elasticQuery.value != '') ? (stringParamsArray.push('AND nome:' + this.searchParams.nomeSistema)) : (this);
+        }
+        else if (this.searchParams.sigla !== undefined && this.searchParams.nomeSistema !== undefined && this.searchParams.organizacao.nome !== undefined) {
+            (this.searchParams.sigla !== undefined || this.elasticQuery.value == '') ? (stringParamsArray.push("sigla:" + this.searchParams.sigla)) : (this);
+            (this.searchParams.nomeSistema !== undefined || this.elasticQuery.value == '') ? (stringParamsArray.push('AND nome:' + this.searchParams.nomeSistema)) : (this);
+            (this.searchParams.organizacao.nome !== undefined && this.elasticQuery.value == '') ? (stringParamsArray.push("AND organizacao.nome:" + this.searchParams.organizacao.nome)) : (this);
+        }
         return stringParamsArray;
     }
 
