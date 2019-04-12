@@ -84,6 +84,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     results: string[];
     baselineResults: any[] = [];
     funcoesDadosList: FuncaoDados[] = [];
+    funcaoDadosEditar: FuncaoDados;
 
     impacto: SelectItem[] = [
         { label: 'Inclusão', value: 'INCLUSAO' },
@@ -166,6 +167,22 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.traduzirImpactos();
     }
 
+    public onRowDblclick(event) {
+        if (event.target.nodeName === 'TD') {
+            this.abrirEditar();
+        } else if (event.target.parentNode.nodeName === 'TD') {
+            this.abrirEditar();
+        }
+    }
+
+    selectRow(event) {
+        this.funcaoDadosEditar = event.data.clone();
+    }
+
+    abrirEditar() {
+        this.isEdit = true;
+        this.prepararParaEdicao(this.funcaoDadosEditar);
+    }
     /*
     *   Metodo responsavel por traduzir as colunas que ficam em função de dados de Analise
     */

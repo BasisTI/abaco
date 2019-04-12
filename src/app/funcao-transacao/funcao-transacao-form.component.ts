@@ -67,6 +67,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     dadosBaselineFT: BaselineAnalitico[] = [];
     dadosserviceBL: BaselineService[] = [];
     funcoesTransacaoList: FuncaoTransacao[] = [];
+    FuncaoTransacaoEditar: FuncaoTransacao;
 
     impacto: SelectItem[] = [
         { label: 'Inclusão', value: 'INCLUSAO' },
@@ -137,6 +138,22 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.traduzirImpactos();
     }
 
+    public onRowDblclick(event) {
+        if (event.target.nodeName === 'TD') {
+            this.abrirEditar();
+        } else if (event.target.parentNode.nodeName === 'TD') {
+            this.abrirEditar();
+        }
+    }
+
+    selectRow(event) {
+        this.FuncaoTransacaoEditar = event.data.clone();
+    }
+
+    abrirEditar() {
+        this.isEdit = true;
+        this.prepararParaEdicao(this.FuncaoTransacaoEditar);
+    }
     /*
     *   Metodo responsavel por traduzir os tipos de impacto em função de dados 
     */
