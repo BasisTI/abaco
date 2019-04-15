@@ -24,6 +24,8 @@
                                 id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
                                 [value]="funcoesTransacoes"
                                 (buttonClick)="datatableClick($event)"
+                                (selectRow)="selectRow($event)"
+                                (dblclick)="onRowDblclick($event)"
                                 [responsive]="true"
                                 scrollable="true"
                                 scrollWidth="100%">

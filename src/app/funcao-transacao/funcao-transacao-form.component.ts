@@ -67,6 +67,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     dadosBaselineFT: BaselineAnalitico[] = [];
     dadosserviceBL: BaselineService[] = [];
     funcoesTransacaoList: FuncaoTransacao[] = [];
+    FuncaoTransacaoEditar: FuncaoTransacao;
 
     impacto: SelectItem[] = [
         { label: 'Inclusão', value: 'INCLUSAO' },
@@ -137,6 +138,22 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.traduzirImpactos();
     }
 
+    public onRowDblclick(event) {
+        if (event.target.nodeName === 'TD') {
+            this.abrirEditar();
+        } else if (event.target.parentNode.nodeName === 'TD') {
+            this.abrirEditar();
+        }
+    }
+
+    selectRow(event) {
+        this.FuncaoTransacaoEditar = event.data.clone();
+    }
+
+    abrirEditar() {
+        this.isEdit = true;
+        this.prepararParaEdicao(this.FuncaoTransacaoEditar);
+    }
     /*
     *   Metodo responsavel por traduzir os tipos de impacto em função de dados 
     */
@@ -334,11 +351,12 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     searchBaseline(event): void {
+
+        let mdCache = this.moduloCache;
+        
         this.baselineResultados = this.dadosBaselineFT.filter(function (fd) {
-
             var teste: string = event.query;
-
-            return fd.name.toLowerCase().includes(teste.toLowerCase());
+            return fd.name.toLowerCase().includes(teste.toLowerCase()) && fd.idfuncionalidade == mdCache.id;
         });
 
     }
@@ -350,7 +368,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.moduloCache = funcionalidade;
         }
         this.currentFuncaoTransacao.funcionalidade = funcionalidade;
+        this.carregarDadosBaseline();
     }
+
 
     adicionar(): boolean {
         const retorno: boolean = this.verifyDataRequire();
@@ -366,7 +386,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     this.currentFuncaoTransacao,
                     this.analise.contrato.manual);
 
-                this.validarNameFuncaoTransacaos(this.currentFuncaoTransacao.name).then(resolve => {
+                this.validarFuncaoTransacaos(this.currentFuncaoTransacao).then(resolve => {
                     if (resolve) {
                         this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
                         this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
@@ -384,7 +404,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
 
-    validarNameFuncaoTransacaos(nome: string) {
+    validarFuncaoTransacaos(ft: FuncaoTransacao) {
         const that = this;
         return new Promise(resolve => {
             if (that.analise.funcaoTransacaos) {
@@ -392,7 +412,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     return resolve(true);
                 }
                 that.analise.funcaoTransacaos.forEach((data, index) => {
-                    if (data.name === nome) {
+                    if (data === ft) {
                         return resolve(false);
                     }
                     if (!that.analise.funcaoTransacaos[index + 1]) {
@@ -498,7 +518,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.verificarModulo();
             const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
                 this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-            this.validarNameFuncaoTransacaos(this.currentFuncaoTransacao.name).then(resolve => {
+            this.validarFuncaoTransacaos(this.currentFuncaoTransacao).then(resolve => {
                 this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
                 this.atualizaResumo();
                 this.resetarEstadoPosSalvar();
@@ -681,7 +701,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     openDialog(param: boolean) {
-        this.carregarDadosBaseline();
         this.isEdit = param;
         this.disableTRDER();
         this.configurarDialog();

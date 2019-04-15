@@ -84,6 +84,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     results: string[];
     baselineResults: any[] = [];
     funcoesDadosList: FuncaoDados[] = [];
+    funcaoDadosEditar: FuncaoDados;
 
     impacto: SelectItem[] = [
         { label: 'Inclusão', value: 'INCLUSAO' },
@@ -166,6 +167,22 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.traduzirImpactos();
     }
 
+    public onRowDblclick(event) {
+        if (event.target.nodeName === 'TD') {
+            this.abrirEditar();
+        } else if (event.target.parentNode.nodeName === 'TD') {
+            this.abrirEditar();
+        }
+    }
+
+    selectRow(event) {
+        this.funcaoDadosEditar = event.data.clone();
+    }
+
+    abrirEditar() {
+        this.isEdit = true;
+        this.prepararParaEdicao(this.funcaoDadosEditar);
+    }
     /*
     *   Metodo responsavel por traduzir as colunas que ficam em função de dados de Analise
     */
@@ -298,9 +315,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     searchBaseline(event): void {
+        let mdCache = this.moduloCache;
         this.baselineResults = this.dadosBaselineFD.filter(function (fc) {
             var teste: string = event.query;
-            return fc.name.toLowerCase().includes(teste.toLowerCase());
+            return fc.name.toLowerCase().includes(teste.toLowerCase()) && fc.idfuncionalidade == mdCache.id;
         });
     }
 
@@ -397,6 +415,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             this.moduloCache = funcionalidade;
         }
         this.currentFuncaoDados.funcionalidade = funcionalidade;
+        this.carregarDadosBaseline();
     }
 
     multiplos(): boolean {
@@ -445,7 +464,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem,
                 this.currentFuncaoDados,
                 this.analise.contrato.manual);
-            this.validarNameFuncaoDados(this.currentFuncaoDados.name).then(resolve => {
+            this.validarNameFuncaoDados(this.currentFuncaoDados).then(resolve => {
                 if (resolve) {
                     this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
                     this.analise.addFuncaoDados(funcaoDadosCalculada);
@@ -462,7 +481,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     /* Verificar esta promisse */
-    validarNameFuncaoDados(nome: string) {
+    validarNameFuncaoDados(fd: FuncaoDados) {
         const that = this;
         return new Promise(resolve => {
             if (that.analise.funcaoDados.length === 0) {
@@ -470,7 +489,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             }
             if (that.analise.funcaoDados) {
                 that.analise.funcaoDados.forEach((data, index) => {
-                    if (data.name === nome) {
+                    if (data === fd) {
                         return resolve(false);
                     }
                     if (!that.analise.funcaoDados[index + 1]) {
@@ -577,7 +596,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             this.verificarModulo();
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
-            this.validarNameFuncaoDados(this.currentFuncaoDados.name).then(resolve => {
+            this.validarNameFuncaoDados(this.currentFuncaoDados).then(resolve => {
                 this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')} '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.msgAlteradaComSucesso')}`);
                 this.analise.updateFuncaoDados(funcaoDadosCalculada);
                 this.atualizaResumo();
@@ -872,7 +891,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     openDialog(param: boolean) {
         this.subscribeToAnaliseCarregada();
-        this.carregarDadosBaseline();
         this.isEdit = param;
         this.disableTRDER();
         this.configurarDialog();

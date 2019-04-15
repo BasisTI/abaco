@@ -72,6 +72,9 @@ export class MemoryDatatableComponent implements AfterViewInit {
   @Output()
   buttonClick: EventEmitter<DatatableClickEvent> = new EventEmitter<DatatableClickEvent>();
 
+  @Output()
+  selectRow: EventEmitter<any> = new EventEmitter();
+
   @ViewChild(DataTable)
   primeDatatableComponent: any;
 
@@ -110,4 +113,7 @@ export class MemoryDatatableComponent implements AfterViewInit {
     this.sortF = event.field;
   }
 
+  onRowSelect(event) {
+    this.selectRow.emit(event);
+    }
 }
