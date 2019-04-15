@@ -197,7 +197,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     public buttonSaveEdit() {
-
         if (this.isEdit) {
             this.editar();
         } else {

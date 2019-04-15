@@ -140,6 +140,10 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
         //if (this.habilitarBotaoAbrirDialog()) {
         this.subscribeAnaliseCarregada();
         this.mostrarDialog = true;
+        if( !this.ders.some( der => der.nome === 'Mensagem' || der.nome === 'Ação' ) ){
+            this.ders.push(this.derMsg);
+            this.ders.push(this.derAcao);
+        } 
         //}
     }
 
@@ -158,14 +162,10 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
     funcaoDadosSelected(fd: FuncaoDados) {
         this.funcaoDadosSelecionada = fd;
-        this.ders = fd.ders;
-        if(!this.ders.some(der => {
-            return der.nome === 'Mensagem' || der.nome === 'Ação';
-        })){
-            this.ders.push(this.derMsg);
-            this.ders.push(this.derAcao);
-        }
-        // debugger;
+        //this.ders = fd.ders;
+        fd.ders.map(add => {
+            this.ders.unshift(add);
+        })
     }
 
     dersMultiSelectedPlaceholder(): string {
