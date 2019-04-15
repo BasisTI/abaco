@@ -140,10 +140,6 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
         //if (this.habilitarBotaoAbrirDialog()) {
         this.subscribeAnaliseCarregada();
         this.mostrarDialog = true;
-        if( !this.ders.some( der => der.nome === 'Mensagem' || der.nome === 'Ação' ) ){
-            this.ders.push(this.derMsg);
-            this.ders.push(this.derAcao);
-        } 
         //}
     }
 
@@ -162,18 +158,18 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
     funcaoDadosSelected(fd: FuncaoDados) {
         this.funcaoDadosSelecionada = fd;
-        //this.ders = fd.ders;
-        fd.ders.map(add => {
-            this.ders.unshift(add);
-        })
+        this.ders = this.funcaoDadosSelecionada.ders;
+        if( !this.ders.some( der => (der.nome === 'Mensagem' || der.nome === 'Ação'))){
+            this.ders.push(this.derMsg, this.derAcao);
+        }
     }
 
     dersMultiSelectedPlaceholder(): string {
         if (!this.funcaoDadosSelecionada) {
             return this.getLabel('Analise.Analise.Mensagens.msgSelecioneFuncaoDadosParaSelecionarDERsReferenciar');
-        } else if (this.funcaoDadosSelecionada) {
-            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneQuaisDERsReferenciar');
         }
+        return this.getLabel('Analise.Analise.Mensagens.msgSelecioneQuaisDERsReferenciar');
+        
     }
 
     relacionar() {
