@@ -228,13 +228,13 @@ export class SistemaComponent implements AfterViewInit {
         let stringParamsArray: Array<string> = [];
 
         if (this.searchParams.sigla !== undefined && this.searchParams.nomeSistema === undefined && this.searchParams.organizacao.nome === undefined) {
-            (this.searchParams.sigla !== undefined && this.elasticQuery.value == '') ? (stringParamsArray.push("*" + this.searchParams.sigla + "*")) : (this);
+            (this.searchParams.sigla !== undefined || this.elasticQuery.value == '') ? (stringParamsArray.push("*" + this.searchParams.sigla + "*")) : (this);
         }
         else if (this.searchParams.nomeSistema !== undefined && this.searchParams.sigla === undefined && this.searchParams.organizacao.nome === undefined) {
-            (this.searchParams.nomeSistema !== undefined && this.elasticQuery.value == '') ? (stringParamsArray.push("*" + this.searchParams.nomeSistema + "*")) : (this);
+            (this.searchParams.nomeSistema !== undefined || this.elasticQuery.value == '') ? (stringParamsArray.push("*" + this.searchParams.nomeSistema + "*")) : (this);
         }
         else if (this.searchParams.organizacao.nome !== undefined && this.searchParams.nomeSistema === undefined && this.searchParams.sigla === undefined) {
-            (this.searchParams.organizacao.nome !== undefined && this.elasticQuery.value == '') ? (stringParamsArray.push("*" + this.searchParams.organizacao.nome + "*")) : (this);
+            (this.searchParams.organizacao.nome !== undefined || this.elasticQuery.value == '') ? (stringParamsArray.push("*" + this.searchParams.organizacao.nome + "*")) : (this);
         }
         else if (this.searchParams.sigla === undefined && this.searchParams.nomeSistema !== undefined && this.searchParams.organizacao.nome !== undefined) {
             (this.searchParams.nomeSistema !== undefined || this.elasticQuery.value == '') ? (stringParamsArray.push('nome:' + this.searchParams.nomeSistema)) : (this);
