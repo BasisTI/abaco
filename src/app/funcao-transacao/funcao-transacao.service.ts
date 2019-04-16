@@ -20,7 +20,6 @@ export class FuncaoTransacaoService {
     getFuncaoTransacaosCompleta(analiseId: number): Observable<FuncaoTransacao> {
         return this.http.get(`${this.allFuncaoTransacaosUrl}/${analiseId}`).map((res: Response) => {
             const resposta = this.convertJsonToSinteticoTransacao(res.json());
-            console.log('funcaoTransacaoService response', resposta);
             return resposta;
         });
     }

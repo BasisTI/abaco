@@ -24,9 +24,32 @@
                                 id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
                                 [value]="funcoesTransacoes"
                                 (buttonClick)="datatableClick($event)"
+                                (selectRow)="selectRow($event)"
+                                (dblclick)="onRowDblclick($event)"
                                 [responsive]="true"
                                 scrollable="true"
                                 scrollWidth="100%">
+
+                            <p-column
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
+                                    [style]="{'width': '200px'}">
+                                <ng-template
+                                        let-modulo="rowData.funcionalidade.modulo"
+                                        pTemplate="body">
+                                    {{ modulo.nome }}
+                                </ng-template>
+                            </p-column>
+
+
+                            <p-column
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
+                                    [style]="{'width': '200px'}">
+                                <ng-template
+                                        let-funcionalidade="rowData.funcionalidade"
+                                        pTemplate="body">
+                                    {{ funcionalidade.nome }}
+                                </ng-template>
+                            </p-column>
 
                             <p-column
                                     field="name"
@@ -52,27 +75,6 @@
                                         let-impacto="rowData.impacto"
                                         pTemplate="body">
                                     {{ impacto ? updateImpacto(impacto) : this.getLabel('Global.Mensagens.Nenhum') }}
-                                </ng-template>
-                            </p-column>
-
-                            <p-column
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
-                                    [style]="{'width': '200px'}">
-                                <ng-template
-                                        let-modulo="rowData.funcionalidade.modulo"
-                                        pTemplate="body">
-                                    {{ modulo.nome }}
-                                </ng-template>
-                            </p-column>
-
-
-                            <p-column
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
-                                    [style]="{'width': '200px'}">
-                                <ng-template
-                                        let-funcionalidade="rowData.funcionalidade"
-                                        pTemplate="body">
-                                    {{ funcionalidade.nome }}
                                 </ng-template>
                             </p-column>
 
@@ -278,7 +280,7 @@
                                 [autoWidth]="false">
                         </p-dropdown>
                         <span class="md-inputfield">
-                            <div *ngIf="erroDeflator" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                            <div *ngIf="deflatorVazio" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
                                     Campo obrigatório.
                             </div>
                         </span>

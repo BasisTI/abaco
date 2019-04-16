@@ -15,7 +15,8 @@ export class BaselineAnalitico {
         public dataHomologacao?: string,
         public complexidade?: string,
         public der?: number,
-        public rlralr?: number
+        public rlralr?: number,
+        public idfuncionalidade?: number
     ){}
 
     static convertJsonToObject(json: any): BaselineAnalitico {
