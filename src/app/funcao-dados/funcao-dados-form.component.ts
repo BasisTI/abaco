@@ -836,7 +836,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     private carregarDerERlr(fd: FuncaoDados) {
-        this.dersChips = this.loadReference(fd.ders, fd.derValues);
+        let ders = this.loadReference(fd.ders, fd.derValues);
+
+        this.dersChips = ders.filter(der => {
+            return !(der.text === 'Mensagem' || der.text === 'Ação');
+        });
         this.rlrsChips = this.loadReference(fd.rlrs, fd.rlrValues);
     }
 
