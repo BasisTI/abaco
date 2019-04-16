@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title th:text="#{email.activation.title}">JHipster creation</title>
+        <title th:text="#{email.activation.title}">Novo usuário Ábaco</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
         <p th:text="#{email.activation.greeting(${user.login})}">
-            Dear
+            Olá
         </p>
         <p th:text="#{email.creation.text1}">
-            Your JHipster account has been created, please click on the URL below to access it:
+            Sua conta Ábaco foi criada, por favor acesse a seguinte URL:
         </p>
         <p>
             <p>Login: <a th:href="@{|${baseUrl}/#/reset/finish?key=${user.resetKey}|}" th:text="|${user.login}|">login</a></p>
-            <p>Password: <a th:text="|${user.password}|">password</a></p>
+            <p>Senha: <a th:text="|${user.password}|">password</a></p>
         </p>
         <p>
-            <span th:text="#{email.activation.text2}">Regards, </span>
+            <span th:text="#{email.activation.text2}">Saudações, </span>
             <br/>
-            <em th:text="#{email.signature}">JHipster.</em>
+            <em th:text="#{email.signature}">Ábaco.</em>
         </p>
     </body>
 </html>

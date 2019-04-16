@@ -7,8 +7,11 @@ import br.com.basis.abaco.reports.rest.RelatorioBaselineRest;
 import br.com.basis.abaco.repository.BaseLineAnaliticoRepository;
 import br.com.basis.abaco.repository.BaseLineSinteticoRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.service.dto.BaselineAnaliticoDTO;
 import com.codahale.metrics.annotation.Timed;
 import net.sf.jasperreports.engine.JRException;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,7 @@ public class BaseLineAnaliticoResource {
 
     private final BaseLineAnaliticoRepository baseLineAnaliticoRepository;
     private final FuncaoDadosRepository funcaoDadosRepository;
+    private final FuncaoTransacaoRepository funcaoTransacaoRepository;
 
     private final BaseLineSinteticoRepository baseLineSinteticoRepository;
 
@@ -53,8 +57,9 @@ public class BaseLineAnaliticoResource {
     private HttpServletResponse response;
 
 
-    public BaseLineAnaliticoResource(BaseLineAnaliticoRepository baseLineAnaliticoRepository, FuncaoDadosRepository funcaoDadosRepository, BaseLineSinteticoRepository baseLineSinteticoRepository) {
+    public BaseLineAnaliticoResource(BaseLineAnaliticoRepository baseLineAnaliticoRepository, FuncaoDadosRepository funcaoDadosRepository, FuncaoTransacaoRepository funcaoTransacaoRepository, BaseLineSinteticoRepository baseLineSinteticoRepository) {
         this.baseLineAnaliticoRepository = baseLineAnaliticoRepository;
+        this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.baseLineSinteticoRepository = baseLineSinteticoRepository;
         this.funcaoDadosRepository = funcaoDadosRepository;
     }
@@ -77,19 +82,67 @@ public class BaseLineAnaliticoResource {
     }
 
 
-    @GetMapping("/baseline-analiticos/fd/{id}")
-    @Timed
     public List<BaseLineAnalitico> getBaseLineAnaliticoFD(@PathVariable Long id) {
         log.debug(DBG_MSG_FD, id);
         return baseLineAnaliticoRepository.getAllAnaliticosFD(id);
     }
 
-    @GetMapping("/baseline-analiticos/ft/{id}")
+    @GetMapping("/baseline-analiticos/fd/{id}")
     @Timed
+    public List<BaselineAnaliticoDTO> getBaseLineAnaliticoFDDTO(@PathVariable Long id) {
+        log.debug(DBG_MSG_FD, id);
+
+        List<BaseLineAnalitico> baseLineAnaliticos = baseLineAnaliticoRepository.getAllAnaliticosFD(id);
+        List<BaselineAnaliticoDTO> baselineAnaliticoDTOS = new ArrayList<>();
+
+        ModelMapper modelMapper = new ModelMapper();
+
+        baseLineAnaliticos.forEach(baseLineAnalitico ->
+            baselineAnaliticoDTOS.add(modelMapper.map(baseLineAnalitico, BaselineAnaliticoDTO.class))
+        );
+
+        baselineAnaliticoDTOS.forEach(baselineAnaliticoDTO ->
+            baselineAnaliticoDTO.setIdfuncionalidade(pesquisarFuncionalidadeFD(baselineAnaliticoDTO.getIdfuncaodados()))
+        );
+
+        return baselineAnaliticoDTOS;
+
+    }
+
+
     public List<BaseLineAnalitico> getBaseLineAnaliticoFT(@PathVariable Long id) {
         log.debug("REST request to get FT BaseLineAnalitico : {}", id);
         return baseLineAnaliticoRepository.getAllAnaliticosFT(id);
     }
+
+    @GetMapping("/baseline-analiticos/ft/{id}")
+    @Timed
+    public List<BaselineAnaliticoDTO> getBaseLineAnaliticoFTDTO(@PathVariable Long id) {
+        log.debug("REST request to get FT BaseLineAnaliticoDTO : {}", id);
+        List<BaseLineAnalitico> baseLineAnaliticos = baseLineAnaliticoRepository.getAllAnaliticosFT(id);
+        List<BaselineAnaliticoDTO> baselineAnaliticoDTOS = new ArrayList<>();
+
+        ModelMapper modelMapper = new ModelMapper();
+
+        baseLineAnaliticos.forEach(baseLineAnalitico ->
+            baselineAnaliticoDTOS.add(modelMapper.map(baseLineAnalitico, BaselineAnaliticoDTO.class))
+        );
+
+        baselineAnaliticoDTOS.forEach(baselineAnaliticoDTO ->
+            baselineAnaliticoDTO.setIdfuncionalidade(pesquisarFuncionalidadeFT(baselineAnaliticoDTO.getIdfuncaodados()))
+        );
+
+        return baselineAnaliticoDTOS;
+    }
+
+    private Long pesquisarFuncionalidadeFT(Long idfuncaodados){
+        return funcaoTransacaoRepository.getIdFuncionalidade(idfuncaodados);
+    }
+
+    private Long pesquisarFuncionalidadeFD(Long idfuncaodados){
+        return funcaoDadosRepository.getIdFuncionalidade(idfuncaodados);
+    }
+
 
     @GetMapping("/baseline-analiticos/funcao-dados/{id}")
     @Timed

@@ -43,7 +43,7 @@ public class LoggingConfiguration {
         }
     }
 
-    private void addLog(LoggerContext context) {
+    private final void addLog(LoggerContext context) {
         addLogstashAppender(context);
     }
 
