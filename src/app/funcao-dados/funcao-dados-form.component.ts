@@ -436,14 +436,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    validarNameFuncaoTransacaos(nome: string) {
+    validarNameFuncaoTransacaos(ft: FuncaoTransacao) {
         const that = this;
         return new Promise(resolve => {
             if (that.analise.funcaoTransacaos.length === 0) {
                 return resolve(true);
             }
             that.analise.funcaoTransacaos.forEach((data, index) => {
-                if (data.name === nome) {
+                if (data.comprar(ft)) {
                     return resolve(false);
                 }
                 if (!that.analise.funcaoTransacaos[index + 1]) {
@@ -489,7 +489,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             }
             if (that.analise.funcaoDados) {
                 that.analise.funcaoDados.forEach((data, index) => {
-                    if (data === fd) {
+                    if (data.comprar(fd)) {
                         return resolve(false);
                     }
                     if (!that.analise.funcaoDados[index + 1]) {
@@ -597,12 +597,16 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
             this.validarNameFuncaoDados(this.currentFuncaoDados).then(resolve => {
-                this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')} '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.msgAlteradaComSucesso')}`);
-                this.analise.updateFuncaoDados(funcaoDadosCalculada);
-                this.atualizaResumo();
-                this.resetarEstadoPosSalvar();
-                this.salvarAnalise();
-                this.fecharDialog();
+                if(resolve) {
+                    this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')} '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.msgAlteradaComSucesso')}`);
+                    this.analise.updateFuncaoDados(funcaoDadosCalculada);
+                    this.atualizaResumo();
+                    this.resetarEstadoPosSalvar();
+                    this.salvarAnalise();
+                    this.fecharDialog();
+                } else {
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
+                }
             });
         }
     }
@@ -723,7 +727,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                                                                     funcaoTransacaoAtual,
                                                                     this.analise.contrato.manual);
 
-        this.validarNameFuncaoTransacaos(funcaoTransacaoAtual.name).then( resolve => {
+        this.validarNameFuncaoTransacaos(funcaoTransacaoAtual).then( resolve => {
             if (resolve) {
                 this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
                 this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
