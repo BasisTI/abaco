@@ -429,11 +429,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="97" uuid="d5206a8f-6e39-41fa-a6d7-189df1e3f7c6">
+					<jr:column width="87" uuid="d5206a8f-6e39-41fa-a6d7-189df1e3f7c6">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="97" height="30" isRemoveLineWhenBlank="true" uuid="e614c123-9e3c-48ac-9884-524b6fdc0ef6"/>
+								<reportElement x="0" y="0" width="87" height="30" isRemoveLineWhenBlank="true" uuid="e614c123-9e3c-48ac-9884-524b6fdc0ef6"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -442,7 +442,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="97" height="15" isRemoveLineWhenBlank="true" uuid="c30e5ef5-0f79-41b1-9b25-1128c033f7c2"/>
+								<reportElement x="0" y="0" width="87" height="15" isRemoveLineWhenBlank="true" uuid="c30e5ef5-0f79-41b1-9b25-1128c033f7c2"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
@@ -451,20 +451,20 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="101" uuid="e9c9b61c-ec86-41e5-aaf8-71b18b6e1941">
+					<jr:column width="90" uuid="e9c9b61c-ec86-41e5-aaf8-71b18b6e1941">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="101" height="30" isRemoveLineWhenBlank="true" uuid="8bafbe0d-b0e0-4e59-b5e9-a5f0281b31ec"/>
+								<reportElement x="0" y="0" width="90" height="30" isRemoveLineWhenBlank="true" uuid="8bafbe0d-b0e0-4e59-b5e9-a5f0281b31ec"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
-								<text><![CDATA[Submódulo]]></text>
+								<text><![CDATA[Funcionalidade]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="101" height="15" isRemoveLineWhenBlank="true" uuid="a10c060e-0e4a-4ae2-b61a-bc2da02bf2cb"/>
+								<reportElement x="0" y="0" width="90" height="15" isRemoveLineWhenBlank="true" uuid="a10c060e-0e4a-4ae2-b61a-bc2da02bf2cb"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
@@ -473,11 +473,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="95" uuid="20e11cb1-e247-4195-8fe7-f8bc324d7155">
+					<jr:column width="116" uuid="20e11cb1-e247-4195-8fe7-f8bc324d7155">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="95" height="30" isRemoveLineWhenBlank="true" uuid="a1a3ad6c-d577-4bd2-9d98-1ad5e8c17197"/>
+								<reportElement x="0" y="0" width="116" height="30" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="a1a3ad6c-d577-4bd2-9d98-1ad5e8c17197"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -486,7 +486,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="f1e99930-0c83-4799-baf6-490f43625c54"/>
+								<reportElement x="0" y="0" width="116" height="15" isRemoveLineWhenBlank="true" uuid="f1e99930-0c83-4799-baf6-490f43625c54"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
@@ -686,11 +686,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="97" uuid="f1293d70-22bf-415d-97ef-e15c30aa94d7">
+					<jr:column width="87" uuid="f1293d70-22bf-415d-97ef-e15c30aa94d7">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="97" height="30" isRemoveLineWhenBlank="true" uuid="1d62c627-786d-43da-b222-6913a6231a5f"/>
+								<reportElement x="0" y="0" width="87" height="30" isRemoveLineWhenBlank="true" uuid="1d62c627-786d-43da-b222-6913a6231a5f"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -699,7 +699,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="97" height="15" isRemoveLineWhenBlank="true" uuid="228b2b9b-0ff1-43b4-ac4f-23fa274d6ba3"/>
+								<reportElement x="0" y="0" width="87" height="15" isRemoveLineWhenBlank="true" uuid="228b2b9b-0ff1-43b4-ac4f-23fa274d6ba3"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
@@ -708,20 +708,20 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="101" uuid="3f5a838a-1ead-4917-bcbd-13ef6404f796">
+					<jr:column width="90" uuid="3f5a838a-1ead-4917-bcbd-13ef6404f796">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="101" height="30" isRemoveLineWhenBlank="true" uuid="80a10167-7f8f-4fd2-bef2-a2c8defc05fe"/>
+								<reportElement x="0" y="0" width="90" height="30" isRemoveLineWhenBlank="true" uuid="80a10167-7f8f-4fd2-bef2-a2c8defc05fe"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
-								<text><![CDATA[Submódulo]]></text>
+								<text><![CDATA[Funcionalidade]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="101" height="15" isRemoveLineWhenBlank="true" uuid="9d0e3686-cb1c-4401-b517-1ff8f63a16c6"/>
+								<reportElement x="0" y="0" width="90" height="15" isRemoveLineWhenBlank="true" uuid="9d0e3686-cb1c-4401-b517-1ff8f63a16c6"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
@@ -730,11 +730,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="95" uuid="264bed19-9b94-4f7d-84eb-348d497d1a64">
+					<jr:column width="116" uuid="264bed19-9b94-4f7d-84eb-348d497d1a64">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="95" height="30" isRemoveLineWhenBlank="true" uuid="3b5059db-edea-4356-a302-20a6e9c5c315"/>
+								<reportElement x="0" y="0" width="116" height="30" isRemoveLineWhenBlank="true" uuid="3b5059db-edea-4356-a302-20a6e9c5c315"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -743,7 +743,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="51ce2211-f112-41f6-9712-f9aac6c9a5eb"/>
+								<reportElement x="0" y="0" width="116" height="15" isRemoveLineWhenBlank="true" uuid="51ce2211-f112-41f6-9712-f9aac6c9a5eb"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
