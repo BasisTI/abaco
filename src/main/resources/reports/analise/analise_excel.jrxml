@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="analise" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9ac44673-b60e-4209-99b8-14605622790d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="ireport.zoom" value="1.1000000000000019"/>
@@ -485,7 +485,7 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="f1e99930-0c83-4799-baf6-490f43625c54"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
@@ -742,7 +742,7 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="51ce2211-f112-41f6-9712-f9aac6c9a5eb"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
@@ -890,7 +890,7 @@
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Listagem Nominal de ALRs, RLRs e DERs]]></text>
+				<text><![CDATA[Listagem Nominal de ALRs, RLRs e DERs TESTE 2 ]]></text>
 			</staticText>
 			<componentElement>
 				<reportElement x="0" y="74" width="802" height="45" isRemoveLineWhenBlank="true" uuid="a7e85fc9-752a-40a5-9b21-c4d9466b8b94">
