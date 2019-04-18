@@ -35,6 +35,7 @@ local.properties
 .settings/
 .loadpath
 .factorypath
+.gitmodules
 /src/main/resources/rebel.xml
 
 # External tool builders
