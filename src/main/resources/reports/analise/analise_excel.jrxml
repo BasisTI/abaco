@@ -386,11 +386,11 @@
 					<datasetRun subDataset="DSfuncaoDados" uuid="f2f9071a-bf86-4991-958c-7b5a1d6b2129">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFUNCAOFD})]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="144" uuid="4fd00eb5-0c91-49ba-813a-ae98702ebec5">
+					<jr:column width="139" uuid="4fd00eb5-0c91-49ba-813a-ae98702ebec5">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="144" height="30" isRemoveLineWhenBlank="true" uuid="1ace7a92-dfab-4005-9fcd-07efa4d9ce4d"/>
+								<reportElement x="0" y="0" width="139" height="30" isRemoveLineWhenBlank="true" uuid="1ace7a92-dfab-4005-9fcd-07efa4d9ce4d"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -400,7 +400,7 @@
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
 							<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="144" height="15" isRemoveLineWhenBlank="true" uuid="bf212947-eef4-483c-ba96-5d93f1b89db5"/>
+								<reportElement x="0" y="0" width="139" height="15" isRemoveLineWhenBlank="true" uuid="bf212947-eef4-483c-ba96-5d93f1b89db5"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -451,11 +451,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="90" uuid="e9c9b61c-ec86-41e5-aaf8-71b18b6e1941">
+					<jr:column width="95" uuid="e9c9b61c-ec86-41e5-aaf8-71b18b6e1941">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="90" height="30" isRemoveLineWhenBlank="true" uuid="8bafbe0d-b0e0-4e59-b5e9-a5f0281b31ec"/>
+								<reportElement x="0" y="0" width="95" height="30" isRemoveLineWhenBlank="true" uuid="8bafbe0d-b0e0-4e59-b5e9-a5f0281b31ec"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -464,7 +464,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="90" height="15" isRemoveLineWhenBlank="true" uuid="a10c060e-0e4a-4ae2-b61a-bc2da02bf2cb"/>
+								<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="a10c060e-0e4a-4ae2-b61a-bc2da02bf2cb"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
@@ -644,11 +644,11 @@
 					<datasetRun subDataset="DSfuncaoTransacao" uuid="e1857bad-8526-47ab-a402-fa33d0f87ab1">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFUNCAOFT})]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="144" uuid="abd82808-b191-4834-b1ff-8f673cf1cdc6">
+					<jr:column width="139" uuid="abd82808-b191-4834-b1ff-8f673cf1cdc6">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="144" height="30" isRemoveLineWhenBlank="true" uuid="05496910-fa72-4bcf-9919-9e4b7760cb88"/>
+								<reportElement x="0" y="0" width="139" height="30" isRemoveLineWhenBlank="true" uuid="05496910-fa72-4bcf-9919-9e4b7760cb88"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -657,7 +657,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="144" height="15" isRemoveLineWhenBlank="true" uuid="6c07aead-acc3-4591-8d3f-813295fa859a"/>
+								<reportElement x="0" y="0" width="139" height="15" isRemoveLineWhenBlank="true" uuid="6c07aead-acc3-4591-8d3f-813295fa859a"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -708,11 +708,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="90" uuid="3f5a838a-1ead-4917-bcbd-13ef6404f796">
+					<jr:column width="95" uuid="3f5a838a-1ead-4917-bcbd-13ef6404f796">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="90" height="30" isRemoveLineWhenBlank="true" uuid="80a10167-7f8f-4fd2-bef2-a2c8defc05fe"/>
+								<reportElement x="0" y="0" width="95" height="30" isRemoveLineWhenBlank="true" uuid="80a10167-7f8f-4fd2-bef2-a2c8defc05fe"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -721,7 +721,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="90" height="15" isRemoveLineWhenBlank="true" uuid="9d0e3686-cb1c-4401-b517-1ff8f63a16c6"/>
+								<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="9d0e3686-cb1c-4401-b517-1ff8f63a16c6"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
@@ -890,7 +890,7 @@
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Listagem Nominal de ALRs, RLRs e DERs TESTE 2 ]]></text>
+				<text><![CDATA[Listagem Nominal de ALRs, RLRs e DERs]]></text>
 			</staticText>
 			<componentElement>
 				<reportElement x="0" y="74" width="802" height="45" isRemoveLineWhenBlank="true" uuid="a7e85fc9-752a-40a5-9b21-c4d9466b8b94">
