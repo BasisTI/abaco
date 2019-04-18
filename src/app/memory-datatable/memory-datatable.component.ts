@@ -35,6 +35,9 @@ export class MemoryDatatableComponent implements AfterViewInit {
   @Input()
   crudEventName = 'crud';
 
+  @Input()
+  filterEventName = 'filter';
+
   selectedRow: any;
 
   @Input()
@@ -50,7 +53,13 @@ export class MemoryDatatableComponent implements AfterViewInit {
   disableCrud: boolean;
 
   @Input()
+  disableFilter: boolean;
+
+  @Input()
   showCrud: boolean = false;
+
+  @Input()
+  showFilter: boolean = false;
 
   @Input()
   responsive = true;
@@ -90,7 +99,7 @@ export class MemoryDatatableComponent implements AfterViewInit {
     }).unsubscribe();
     return str;
   }
-
+  
   ngAfterViewInit() {
     this.primeDatatableComponent.cols = this.cols;
     this.primeDatatableComponent.ngAfterContentInit();
@@ -102,6 +111,14 @@ export class MemoryDatatableComponent implements AfterViewInit {
     event.stopPropagation();
     this.resetSelectedRow(button);
   }
+
+  onClickFilter(button: string, event: any) {
+    let a = new DatatableClickEvent(button, null);
+    this.buttonClick.emit(a);
+    event.stopPropagation();
+    this.resetSelectedRow(button);
+  }
+
 
   resetSelectedRow(button: string) {
     if (button === 'delete') {

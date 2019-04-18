@@ -21,6 +21,7 @@
                                 [disableDelete]="this.isView"
                                 [disableEdit]="this.isView"
                                 [disableClone]="this.isView"
+                                [showFilter]="true"
                                 id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
                                 [value]="funcoesTransacoes"
                                 (buttonClick)="datatableClick($event)"
@@ -29,7 +30,6 @@
                                 [responsive]="true"
                                 scrollable="true"
                                 scrollWidth="100%">
-
                             <p-column
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
                                     [style]="{'width': '200px'}">

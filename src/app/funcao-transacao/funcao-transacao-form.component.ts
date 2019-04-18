@@ -16,6 +16,7 @@ import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
 import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { Subscription } from 'rxjs/Subscription';
+import { Router } from '@angular/router';
 
 import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
 import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
@@ -46,6 +47,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     textHeader: string;
     @Input() isView: boolean;
     isEdit: boolean;
+    isFilter: boolean;
     nomeInvalido;
     classInvalida;
     impactoInvalido: boolean;
@@ -109,7 +111,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         private analiseService: AnaliseService,
         private baselineService: BaselineService,
         private funcaoTransacaoService: FuncaoTransacaoService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private router: Router
+
     ) {
     }
 
@@ -582,12 +586,17 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     datatableClick(event: DatatableClickEvent) {
-        if (!event.selection) {
+        const button = event.button;
+        if (button!== 'filter' && !event.selection) {
             return;
         }
 
-        const funcaoTransacaoSelecionada: FuncaoTransacao = event.selection.clone();
-        switch (event.button) {
+        let funcaoTransacaoSelecionada: FuncaoTransacao;
+        if(button !== 'filter' ) {
+            funcaoTransacaoSelecionada = event.selection.clone();
+        }
+
+        switch (button) {
             case 'edit':
                 this.isEdit = true;
                 this.prepararParaEdicao(funcaoTransacaoSelecionada);
@@ -604,6 +613,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 this.currentFuncaoTransacao.artificialId = undefined;
                 this.currentFuncaoTransacao.impacto = Impacto.ALTERACAO;
                 this.textHeader = this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgClonarFuncaoDeTransacao');
+                break;
+            case 'filter':
+                this.router.navigate(['/analise', this.analise.id, 'edit','searchft']);    
+                break;
         }
     }
 

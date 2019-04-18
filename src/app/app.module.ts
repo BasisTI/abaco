@@ -68,6 +68,7 @@ import {AnalistaGuard} from './analista.guard';
 import {UserGuard} from './user.guard';
 import {ObservadorGuard} from './observador.guard';
 import {GestorGuard} from './gestor.guard';
+import { PesquisarFtComponent } from './pesquisar-ft/pesquisar-ft.component';
 
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
@@ -130,6 +131,7 @@ export function createTranslateLoader(http: HttpClient) {
         AppRightPanelComponent,
         AppBreadcrumbComponent,
         InlineProfileComponent,
+        PesquisarFtComponent,
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},

@@ -52,4 +52,11 @@
     icon="input">
     </basis-datatable-button>
 
+    <basis-datatable-button
+    *ngIf="showFilter"
+    (click)="onClickFilter(filterEventName, $event)"
+    class="ui-button-success"
+    icon="input">
+    </basis-datatable-button>
+
 </div>
