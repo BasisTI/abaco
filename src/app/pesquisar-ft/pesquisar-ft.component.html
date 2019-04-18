@@ -1,3 +1,99 @@
-<h1>a</h1>
+<div class="ui-g ui-fluid">
+    <div class="ui-g-12">
+        <div class="card card-w-title">
+
+            <div class="ui-g-6">
+                <div class="ui-g-12">
+                    <div class="ui-g ui-md-12" style="margin-bottom: 25px; margin-top: 25px">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
+                            <label>Módulo</label>
+                            <p-dropdown [filter]="true" required id="idTipoContagemFormAnalise" name="modulos"
+                                [options]="modulos" [autoWidth]="false">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g-6">
+                <div class="ui-g-12">
+                    <div class="ui-g ui-md-12" style="margin-bottom: 25px; margin-top: 25px">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
+                            <label>Funcionalidade</label>
+                            <p-dropdown [filter]="true" required id="idTipoContagemFormAnalise" name="tiposAnalise"
+                                [options]="tiposAnalise" [autoWidth]="false">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+
+                <app-memory-datatable [disableDelete]="true" [disableEdit]="true" [disableClone]="true"
+                    id="idTabelaFuncaoTransacaoFormFuncaoTransacao" [responsive]="true" scrollable="true"
+                    scrollWidth="100%">
+                    <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')" [style]="{'width': '200px'}">
+                        <ng-template let-modulo="rowData.funcionalidade.modulo" pTemplate="body">
+                            {{ modulo.nome }}
+                        </ng-template>
+                    </p-column>
 
 
+                    <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
+                        [style]="{'width': '200px'}">
+                        <ng-template let-funcionalidade="rowData.funcionalidade" pTemplate="body">
+                            {{ funcionalidade.nome }}
+                        </ng-template>
+                    </p-column>
+
+                    <p-column field="name" [header]="this.getLabel('Cadastros.FuncaoTransacao.Nome')"
+                        [style]="{'width': '200px'}">
+                    </p-column>
+
+                    <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Impacto')" [style]="{'width': '200px'}"
+                        field="updateImpacto(impacto)">
+                        <ng-template let-impacto="rowData.impacto" pTemplate="body">
+                            {{ impacto ? updateImpacto(impacto) : this.getLabel('Global.Mensagens.Nenhum') }}
+                        </ng-template>
+                    </p-column>
+
+                    <p-column field="tipo" [header]="this.getLabel('Cadastros.FuncaoTransacao.Classificacao')"
+                        [style]="{'width': '200px'}">
+                    </p-column>
+
+                    <p-column field="der" [header]="this.getLabel('Cadastros.FuncaoTransacao.DER(TD)')"
+                        [style]="{'width': '200px'}">
+                        <ng-template let-funcaoDados="rowData" pTemplate="body">
+                            {{ funcaoDados.derValue() }}
+                        </ng-template>
+                    </p-column>
+
+                    <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.FTR(AR)')"
+                        [style]="{'width': '200px'}">
+                        <ng-template let-funcaoDados="rowData" pTemplate="body">
+                            {{ funcaoDados.ftrValue() }}
+                        </ng-template>
+                    </p-column>
+
+                    <p-column field="complexidade" [header]="this.getLabel('Cadastros.FuncaoTransacao.Complexidade')"
+                        [style]="{'width': '200px'}">
+                    </p-column>
+
+                    <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.PFBruto')"
+                        [style]="{'width': '200px'}">
+                        <ng-template let-grossPF="rowData.grossPF" pTemplate="body">
+                            {{ grossPF | number }}
+                        </ng-template>
+                    </p-column>
+
+                    <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.PFLiquido')"
+                        [style]="{'width': '200px'}">
+                        <ng-template let-pf="rowData.pf" pTemplate="body">
+                            {{ pf | number }}
+                        </ng-template>
+                    </p-column>
+                </app-memory-datatable>
+            </div>
+        </div>
+    </div>
+</div>
