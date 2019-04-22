@@ -69,6 +69,12 @@ public class BaseLineAnalitico implements Serializable {
     @Column(name = "rlr_alr")
     private BigDecimal rlralr;
 
+    @Column(name = "nome_funcionalidade")
+    private String nomeFuncionalidade;
+
+    @Column(name = "nome_modulo")
+    private String nomeModulo;
+
     public Long getId() {
         return id;
     }
@@ -99,6 +105,22 @@ public class BaseLineAnalitico implements Serializable {
 
     public void setEquipeResponsavelId(Long equipeResponsavelId) {
         this.equipeResponsavelId = equipeResponsavelId;
+    }
+
+    public String getNomeFuncionalidade() { 
+    	return nomeFuncionalidade;
+    }
+
+    public void setNomeFuncionalidade(String nomeFuncionalidade){
+        this.nomeFuncionalidade = nomeFuncionalidade;
+    }
+
+    public String getNomeModulo(){
+    	return nomeModulo;
+    }
+
+    public void setNomeModulo(String nomeModulo){
+        this.nomeModulo = nomeModulo;
     }
 
     public String getTipo() {
