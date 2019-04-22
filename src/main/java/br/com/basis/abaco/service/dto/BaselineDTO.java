@@ -13,9 +13,9 @@ public class BaselineDTO {
     private String complexidade;
 
     private String pf;
-    
+
     private String nomeFuncionalidade;
-    
+
     private String nomeModulo;
 
     public String getNome() {
@@ -67,19 +67,19 @@ public class BaselineDTO {
     }
 
     public String getNomeFuncionalidade() {
-    	return nomeFuncionalidade;
+        return nomeFuncionalidade;
     }
-    
+
     public void setNomeFuncionalidade(String nomeFuncionalidade) {
-    	this.nomeFuncionalidade = nomeFuncionalidade;
+        this.nomeFuncionalidade = nomeFuncionalidade;
     }
-    
+
     public String getNomeModulo() {
-    	return nomeModulo;
+        return nomeModulo;
     }
-    
+
     public void setNomeModulo(String nomeModulo) {
-    	this.nomeModulo = nomeModulo;
+        this.nomeModulo = nomeModulo;
     }
 
 }
