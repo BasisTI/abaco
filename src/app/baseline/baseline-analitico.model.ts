@@ -6,7 +6,7 @@ export class BaselineAnalitico {
         public idfuncaodados?: number,
         public tipo?: string,
         public classificacao?: string,
-        public  impacto?: string,
+        public impacto?: string,
         public nome?: string,
         public sigla?: string,
         public name?: string,
@@ -16,7 +16,9 @@ export class BaselineAnalitico {
         public complexidade?: string,
         public der?: number,
         public rlralr?: number,
-        public idfuncionalidade?: number
+        public idfuncionalidade?: number,
+        public nomeFuncionalidade?: string,
+        public nomeModulo?: string, 
     ){}
 
     static convertJsonToObject(json: any): BaselineAnalitico {

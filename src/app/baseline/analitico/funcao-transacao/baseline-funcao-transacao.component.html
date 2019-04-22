@@ -14,6 +14,8 @@
                             [rowsPerPageOptions]="rowsPerPageOptionsFT"
                             [showPaginationFooter]="true"
                             #datatableFT>
+                            <p-column [header]="this.getLabel('Analise.Baseline.Modulo')"  field="nomeModulo" [sortable]="true"></p-column>
+                            <p-column [header]="this.getLabel('Analise.Baseline.Funcionalidade')" field="nomeFuncionalidade" [sortable]="true"></p-column>
                             <p-column [header]="this.getLabel('Analise.Baseline.Nome')" field="name" [sortable]="true"></p-column>
                             <p-column [header]="this.getLabel('Analise.Baseline.Classif')" field="classificacao" [sortable]="true"></p-column>
                             <p-column [header]="this.getLabel('Analise.Baseline.RLR')" field="rlralr" [sortable]="true"></p-column>
