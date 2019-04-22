@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageUtil } from '../util/message.util';
 import { SelectItem } from 'primeng/primeng';
@@ -16,6 +16,9 @@ import { FatorAjuste } from '../fator-ajuste';
 import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
 import * as _ from 'lodash';
 import { Modulo } from '../modulo';
+import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
+import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
+import { FuncaoTransacao } from '../funcao-transacao';
 
 @Component({
   selector: 'app-pesquisar-ft',
@@ -24,14 +27,18 @@ import { Modulo } from '../modulo';
 export class PesquisarFtComponent implements OnInit, OnDestroy {
 
   private routeSub: Subscription;
-  
+
+  private oldModuloSelectedId = -1;
+
   organizacoes: Organizacao[];
-  
+
   modulos: Modulo[];
 
   contratos: Contrato[];
 
   sistemas: Sistema[];
+
+  funcionalidades: Funcionalidade[];
 
   esforcoFases: EsforcoFase[] = [];
 
@@ -43,8 +50,15 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
   manual: Manual;
 
+  moduloSelecionado: Modulo;
+
+  funcionalidadeSelecionada: Funcionalidade;
+
+  @Output()
+  moduloSelectedEvent = new EventEmitter<Modulo>();
+
   nomeManual = this.getLabel('Analise.SelecioneUmContrato');
-  
+
   private fatorAjusteNenhumSelectItem = { label: MessageUtil.NENHUM, value: undefined };
 
   public hideShowSelectEquipe: boolean;
@@ -58,6 +72,10 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     private sistemaService: SistemaService,
     private equipeService: TipoEquipeService,
     private changeDetectorRef: ChangeDetectorRef,
+    private funcaoDadosService: FuncaoDadosService,
+    private funcionalidadeService: FuncionalidadeService,
+
+
   ) { }
 
   ngOnInit() {
@@ -98,12 +116,34 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  updateImpacto(impacto: string) {
+    switch (impacto) {
+      case 'INCLUSAO':
+        return this.getLabel('Cadastros.FuncaoTransacao.Inclusao');
+      case 'ALTERACAO':
+        return this.getLabel('Cadastros.FuncaoTransacao.Alteracao');
+      case 'EXCLUSAO':
+        return this.getLabel('Cadastros.FuncaoTransacao.Exclusao');
+      case 'CONVERSAO':
+        return this.getLabel('Cadastros.FuncaoTransacao.Conversao');
+      default: return this.getLabel('Global.Mensagens.Nenhum');
+    }
+  }
+
   get analise(): Analise {
     return this.analiseSharedDataService.analise;
   }
 
   set analise(analise: Analise) {
     this.analiseSharedDataService.analise = analise;
+  }
+
+  get funcoesTransacoes(): FuncaoTransacao[] {
+    if (!this.analise.funcaoTransacaos) {
+      return [];
+    }
+    return this.analise.funcaoTransacaos;
   }
 
 
@@ -113,91 +153,122 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     this.setManual(analiseCarregada.manual);
     this.carregaFatorAjusteNaEdicao();
     this.carregarModulosQuandoTiverSistemaDisponivel();
+    this.subscribeFuncionalideBaseline();
   }
 
   setSistamaOrganizacao(org: Organizacao) {
     this.contratos = org.contracts;
     this.sistemaService.findAllSystemOrg(org.id).subscribe((res: ResponseWrapper) => {
-        this.sistemas = res.json;
+      this.sistemas = res.json;
     });
     this.setEquipeOrganizacao(org);
-}
+  }
 
-setManual(manual: Manual) {
-  if (manual) {
+  setManual(manual: Manual) {
+    if (manual) {
       this.nomeManual = manual.nome;
       this.carregarEsforcoFases(manual);
       this.carregarMetodosContagem(manual);
       this.inicializaFatoresAjuste(manual);
+    }
   }
-}
 
-setEquipeOrganizacao(org: Organizacao) {
-  this.contratos = org.contracts;
-  this.equipeService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
+  setEquipeOrganizacao(org: Organizacao) {
+    this.contratos = org.contracts;
+    this.equipeService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
       this.equipeResponsavel = res.json;
       if (this.equipeResponsavel !== null) {
-          this.hideShowSelectEquipe = false;
+        this.hideShowSelectEquipe = false;
       }
-  });
-}
-
-private carregaFatorAjusteNaEdicao() {
-  const fatorAjuste: FatorAjuste = this.analise.fatorAjuste;
-  if (fatorAjuste) {
-      const fatorAjusteSelectItem: SelectItem
-          = _.find(this.fatoresAjuste, { value: { id: fatorAjuste.id } });
-      this.analise.fatorAjuste = fatorAjusteSelectItem.value;
+    });
   }
-}
 
-private carregarEsforcoFases(manual: Manual) {
-  this.esforcoFases = _.cloneDeep(manual.esforcoFases);
-}
+  private carregaFatorAjusteNaEdicao() {
+    const fatorAjuste: FatorAjuste = this.analise.fatorAjuste;
+    if (fatorAjuste) {
+      const fatorAjusteSelectItem: SelectItem["value"]
+        = _.find(this.fatoresAjuste, { value: { id: fatorAjuste.id } });
+      this.analise.fatorAjuste = fatorAjusteSelectItem;
+    }
+  }
 
-private carregarMetodosContagem(manual: Manual) {
-  this.metodosContagem = [
+  private carregarEsforcoFases(manual: Manual) {
+    this.esforcoFases = _.cloneDeep(manual.esforcoFases);
+  }
+
+  private carregarMetodosContagem(manual: Manual) {
+    this.metodosContagem = [
       {
-          value: MessageUtil.DETALHADA,
-          label: this.getLabel('Analise.Analise.metsContagens.DETALHADA_IFPUG')
+        value: MessageUtil.DETALHADA,
+        label: this.getLabel('Analise.Analise.metsContagens.DETALHADA_IFPUG')
       },
       {
-          value: MessageUtil.INDICATIVA,
-          label: this.getLabelValorVariacao(this.getLabel('Analise.Analise.metsContagens.INDICATIVA_NESMA'), manual.valorVariacaoIndicativaFormatado)
+        value: MessageUtil.INDICATIVA,
+        label: this.getLabelValorVariacao(this.getLabel('Analise.Analise.metsContagens.INDICATIVA_NESMA'), manual.valorVariacaoIndicativaFormatado)
       },
       {
-          value: MessageUtil.ESTIMADA,
-          label: this.getLabelValorVariacao(this.getLabel('Analise.Analise.metsContagens.ESTIMADA_NESMA'), manual.valorVariacaoEstimadaFormatado)
+        value: MessageUtil.ESTIMADA,
+        label: this.getLabelValorVariacao(this.getLabel('Analise.Analise.metsContagens.ESTIMADA_NESMA'), manual.valorVariacaoEstimadaFormatado)
       }
-  ];
-}
+    ];
+  }
 
-private inicializaFatoresAjuste(manual: Manual) {
-  const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
-  this.fatoresAjuste =
+  private inicializaFatoresAjuste(manual: Manual) {
+    const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+    this.fatoresAjuste =
       faS.map(fa => {
-          const label = FatorAjusteLabelGenerator.generate(fa);
-          return { label: label, value: fa };
+        const label = FatorAjusteLabelGenerator.generate(fa);
+        return { label: label, value: fa };
       });
-  this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
-}
+    this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+  }
 
-private getLabelValorVariacao(label: string, valorVariacao: number): string {
-  return label + ' - ' + valorVariacao + '%';
-}
+  private getLabelValorVariacao(label: string, valorVariacao: number): string {
+    return label + ' - ' + valorVariacao + '%';
+  }
 
-private carregarModulosQuandoTiverSistemaDisponivel() {
-  const sistemaId = this.analise.sistema.id;
-  this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
+  private carregarModulosQuandoTiverSistemaDisponivel() {
+    const sistemaId = this.analise.sistema.id;
+    this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
       this.recarregarSistema(sistemaRecarregado);
       this.modulos = sistemaRecarregado.modulos;
-  });
-  this.changeDetectorRef.detectChanges();
-}
+    });
+    this.changeDetectorRef.detectChanges();
+  }
 
-private recarregarSistema(sistemaRecarregado: Sistema) {
-  this.analiseSharedDataService.analise.sistema = sistemaRecarregado;
-  this.modulos = sistemaRecarregado.modulos;
-}
+  private recarregarSistema(sistemaRecarregado: Sistema) {
+    this.analiseSharedDataService.analise.sistema = sistemaRecarregado;
+    this.modulos = sistemaRecarregado.modulos;
+  }
+
+  private subscribeFuncionalideBaseline() {
+    this.funcaoDadosService.dataModd$.subscribe(
+      (data: Funcionalidade) => {
+        this.funcionalidades = data.modulo.funcionalidades;
+        this.selecionarModuloBaseline(data.modulo.id, data.id);
+      });
+  }
+
+  private selecionarModuloBaseline(moduloId: number, funcionalideId: number) {
+    this.moduloSelecionado = _.find(this.modulos, { 'id': moduloId });
+    this.funcionalidadeSelecionada = _.find(this.funcionalidades, { 'id': funcionalideId });
+  }
+
+  moduloSelected(modulo: Modulo) {
+    this.moduloSelecionado = modulo;
+    this.deselecionaFuncionalidadeSeModuloSelecionadoForDiferente();
+
+    const moduloId = modulo.id;
+    this.funcionalidadeService.findFuncionalidadesByModulo(moduloId).subscribe((funcionalidades: Funcionalidade[]) => {
+      this.funcionalidades = funcionalidades;
+    });
+    this.moduloSelectedEvent.emit(modulo);
+  }
+
+  private deselecionaFuncionalidadeSeModuloSelecionadoForDiferente() {
+    if (this.moduloSelecionado.id !== this.oldModuloSelectedId) {
+      this.funcionalidadeSelecionada = undefined;
+    }
+  }
 
 }
