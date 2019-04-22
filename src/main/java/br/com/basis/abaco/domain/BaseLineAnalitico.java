@@ -107,8 +107,8 @@ public class BaseLineAnalitico implements Serializable {
         this.equipeResponsavelId = equipeResponsavelId;
     }
 
-    public String getNomeFuncionalidade() { 
-    	return nomeFuncionalidade;
+    public String getNomeFuncionalidade() {
+        return nomeFuncionalidade;
     }
 
     public void setNomeFuncionalidade(String nomeFuncionalidade){
@@ -116,7 +116,7 @@ public class BaseLineAnalitico implements Serializable {
     }
 
     public String getNomeModulo(){
-    	return nomeModulo;
+        return nomeModulo;
     }
 
     public void setNomeModulo(String nomeModulo){
