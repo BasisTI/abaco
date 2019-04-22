@@ -656,7 +656,7 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="139" height="15" isRemoveLineWhenBlank="true" uuid="6c07aead-acc3-4591-8d3f-813295fa859a"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
