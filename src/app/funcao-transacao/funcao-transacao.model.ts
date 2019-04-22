@@ -78,6 +78,12 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
     return copy;
   }
 
+  comprar(funcaoTransacao: FuncaoTransacao): boolean {
+    return funcaoTransacao.name === this.name &&
+    funcaoTransacao.funcionalidade.id === this.funcionalidade.id &&
+    funcaoTransacao.funcionalidade.modulo.id === this.funcionalidade.modulo.id;
+  }
+
   copyFromJSON(json: any): FuncaoTransacao {
     return new FuncaoTransacaoCopyFromJSON(json).copy();
   }
