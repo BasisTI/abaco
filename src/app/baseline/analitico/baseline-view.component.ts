@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BaselineService} from '../baseline.service';
@@ -21,7 +22,16 @@ export class BaselineViewComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
         private baselineService: BaselineService,
+        private translate: TranslateService
     ) {
+    }
+
+    getLabel(label) {
+        let str: any;
+        this.translate.get(label).subscribe((res: string) => {
+            str = res;
+        }).unsubscribe();
+        return str;
     }
 
     ngOnDestroy(): void {

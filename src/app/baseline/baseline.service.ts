@@ -56,7 +56,7 @@ export class BaselineService {
     }
 
     baselineAnaliticoFT(id: number): Observable<ResponseWrapper> {
-        return this.http.get(`${this.analiticosFTUrl}${id}`).map((res: Response) => {
+        return this.http.get(`${this.analiticosFTUrl}${id}`).map((res: Response) => {    
             return this.convertResponseAnalitico(res);
         });
     }
