@@ -100,6 +100,7 @@
     <include file="classpath:config/liquibase/changelog/ALTER_contrato.xml" relativeToChangelogFile="false"/>
 	<include file="classpath:config/liquibase/changelog/ALTER_analise_20190314.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/ALTER_entity_contrato.xml" relativeToChangelogFile="false"/>
-
+    <include file="classpath:config/liquibase/changelog/20190423_DROP_view_baseline_analitico.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20190423_added_entity_BaseLineAnalitico.xml" relativeToChangelogFile="false"/>
     
 </databaseChangeLog>
