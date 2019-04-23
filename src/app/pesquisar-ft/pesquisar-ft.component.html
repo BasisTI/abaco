@@ -31,7 +31,7 @@
                 </div>
             </div>
 
-            <div class="ui-md-2 ui-sm-12">
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-blue-button id="idBtnPesquisarComponentSistema" buttonIcon="ui-icon-search"
                     [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')"
                     (click)="performSearch()">
@@ -39,14 +39,14 @@
             </div>
 
             <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')">
-                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
+                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 01px">
                     <p-dataTable dataKey="id"
                         [emptyMessage]="this.getLabel('Analise.Analise.Mensagens.msgSelecioneContratoParaEscolherFases')"
                         [value]="funcoesTransacoes" id="idTabelaFases" [(selection)]="analise.esforcoFases"
-                        [headerCheckboxToggleAllPages]="true" [toggleable]="true" scrollable="true" scrollWidth="105%">
+                        [headerCheckboxToggleAllPages]="true" [toggleable]="true" scrollable="true" scrollWidth="1000px">
                         <p-header translate="Analise.Analise.Fases">Funções de Transação</p-header>
 
-                        <p-column selectionMode="multiple" [style]="{'width':'15%'}">
+                        <p-column selectionMode="multiple" [style]="{'width':'40px'}">
                         </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
@@ -58,14 +58,14 @@
 
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
-                            [style]="{'width': '100px'}">
+                            [style]="{'width': '120px'}">
                             <ng-template let-funcionalidade="rowData.funcionalidade" pTemplate="body">
                                 {{ funcionalidade.nome }}
                             </ng-template>
                         </p-column>
 
                         <p-column field="name" [header]="this.getLabel('Cadastros.FuncaoTransacao.Nome')"
-                            [style]="{'width': '100px'}">
+                            [style]="{'width': '150px'}">
                         </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Impacto')"
@@ -76,7 +76,7 @@
                         </p-column>
 
                         <p-column field="tipo" [header]="this.getLabel('Cadastros.FuncaoTransacao.Classificacao')"
-                            [style]="{'width': '100px'}">
+                            [style]="{'width': '120px'}">
                         </p-column>
 
                         <p-column field="der" [header]="this.getLabel('Cadastros.FuncaoTransacao.DER(TD)')"
@@ -94,7 +94,7 @@
                         </p-column>
                         <p-column field="complexidade"
                             [header]="this.getLabel('Cadastros.FuncaoTransacao.Complexidade')"
-                            [style]="{'width': '100px'}">
+                            [style]="{'width': '120px'}">
                         </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.PFBruto')"
