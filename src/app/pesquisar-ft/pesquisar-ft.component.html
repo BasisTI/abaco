@@ -33,33 +33,29 @@
 
             <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-blue-button id="idBtnPesquisarComponentSistema" buttonIcon="ui-icon-search"
-                    [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')"
-                    (click)="performSearch()">
+                    [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')" (click)="performSearch()">
                 </app-blue-button>
             </div>
 
             <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')" [collapsed]="true" >
                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
-                    <p-dataTable dataKey="id"
-                        [emptyMessage]="this.getLabel('Analise.Analise.Mensagens.msgSelecioneContratoParaEscolherFases')"
-                        [value]="funcoesTransacoes" id="idTabelaFases" [(selection)]="analise.esforcoFases"
-                        [headerCheckboxToggleAllPages]="true" [toggleable]="true" scrollable="true" scrollWidth="100%" >
-                        <p-header translate="Analise.Analise.Fases">Funções de Transação</p-header>
-
-                        <p-column selectionMode="multiple" [style]="{'width':'40px'}">
+                    <basis-datatable dataKey="id" [(ngModel)]="funcoestransacoes" [(selection)]="analise.esforcoFases"
+                        [headerCheckboxToggleAllPages]="true" [toggleable]="true" scrollable="true" scrollWidth="105%"
+                        #datatable>
+                        <p-column selectionMode="multiple" [style]="{'width':'15%'}">
                         </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
                             [style]="{'width': '100px'}">
-                            <ng-template let-modulo="rowData.funcionalidade.modulo" pTemplate="body">
+                            <ng-template let-modulo="rowData.funcoestransacoes.modulo" pTemplate="body">
                                 {{ modulo.nome }}
                             </ng-template>
                         </p-column>
 
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
-                            [style]="{'width': '130px'}">
-                            <ng-template let-funcionalidade="rowData.funcionalidade" pTemplate="body">
+                            [style]="{'width': '100px'}">
+                            <ng-template let-funcionalidade="rowData.funcoestransacoes" pTemplate="body">
                                 {{ funcionalidade.nome }}
                             </ng-template>
                         </p-column>
@@ -111,9 +107,20 @@
                             </ng-template>
                         </p-column>
 
-                    </p-dataTable>
+                    </basis-datatable>
                 </div>
             </p-fieldset>
+            <div>
+                {{ funcoestransacoes | json }}
+            </div>
+            <div class="ui-md-2 ui-sm-12">
+                <app-green-button 
+                [buttonLabel]="this.getLabel('Global.Botoes.Novo')" 
+                id="idBtnNovoFormFuncaoTransacao"
+                buttonIcon="ui-icon-add" 
+                (click)="montarFuncoesTransacao()">
+                </app-green-button>
+            </div>
         </div>
     </div>
 </div>

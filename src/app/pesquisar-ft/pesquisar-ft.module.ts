@@ -11,12 +11,13 @@ import {
     DropdownModule,
     RadioButtonModule,
     ConfirmDialogModule,
-    DataTableModule,
     DialogModule
   } from 'primeng/primeng';
 
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
-import { PesquisarFtComponent } from './pesquisar-ft.component'
+import { PesquisarFtComponent } from './pesquisar-ft.component';
+import { DatatableModule } from '@basis/angular-components';
+
 const rotas: Routes = [
     {
         path: 'analise/:id/edit/searchft',
@@ -35,7 +36,7 @@ const rotas: Routes = [
     DropdownModule,
     RadioButtonModule,
     ConfirmDialogModule,
-    DataTableModule,
+    DatatableModule,
     DialogModule, 
     MemoryDataTableModule
     ],

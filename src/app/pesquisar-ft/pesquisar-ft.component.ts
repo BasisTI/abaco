@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageUtil } from '../util/message.util';
 import { SelectItem } from 'primeng/primeng';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Rx';
 import { AnaliseService, Analise } from '../analise';
-import { AnaliseSharedDataService, ResponseWrapper } from '../shared';
+import { AnaliseSharedDataService, ResponseWrapper, ElasticQuery } from '../shared';
 import { Manual } from '../manual';
 import { Organizacao } from '../organizacao';
 import { Contrato } from '../contrato';
@@ -19,6 +19,7 @@ import { Modulo } from '../modulo';
 import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
 import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
 import { FuncaoTransacao } from '../funcao-transacao';
+import { DatatableComponent } from '@basis/angular-components';
 
 @Component({
   selector: 'app-pesquisar-ft',
@@ -32,6 +33,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
   organizacoes: Organizacao[];
 
+  @ViewChild(DatatableComponent) datatable: DatatableComponent;
+
   modulos: Modulo[];
 
   contratos: Contrato[];
@@ -40,6 +43,10 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
   funcionalidades: Funcionalidade[];
 
+  analises: Analise[];
+
+  funcoestransacoes: Funcionalidade[] = [];
+
   esforcoFases: EsforcoFase[] = [];
 
   metodosContagem: SelectItem[] = [];
@@ -47,6 +54,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
   fatoresAjuste: SelectItem[] = [];
 
   equipeResponsavel: SelectItem[] = [];
+
+  teste: any;
 
   manual: Manual;
 
@@ -63,8 +72,13 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
   public hideShowSelectEquipe: boolean;
 
+  elasticQuery: ElasticQuery = new ElasticQuery();
+
+  searchParams: any = {
+    modulo: undefined
+  };
+
   constructor(
-    private router: Router,
     private translate: TranslateService,
     private route: ActivatedRoute,
     private analiseService: AnaliseService,
@@ -74,12 +88,13 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     private changeDetectorRef: ChangeDetectorRef,
     private funcaoDadosService: FuncaoDadosService,
     private funcionalidadeService: FuncionalidadeService,
-
-
   ) { }
 
   ngOnInit() {
     this.getAnalise();
+    this.estadoInicial();
+    this.getTodasAnalisesBaseline();
+
   }
 
   ngOnDestroy() {
@@ -93,6 +108,14 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
   ];
 
 
+  estadoInicial() {
+    this.datatable.disableDelete = true;
+    this.datatable.disableEdit = true;
+    this.datatable.disableView = true;
+    this.datatable.disableLoadingBlockUI = true;
+    this.datatable.paginator = false;
+
+  }
 
   getLabel(label) {
     let str: any;
@@ -116,6 +139,15 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     });
   }
 
+  getTodasAnalisesBaseline() {
+    this.analiseService.findAllBaseline().subscribe(dado => {
+      this.analises = this.analiseService.convertJsonToAnalise(dado);
+
+      this.getFuncoesTransacoes();
+    }
+    );
+
+  }
 
   updateImpacto(impacto: string) {
     switch (impacto) {
@@ -132,6 +164,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
   }
 
   get analise(): Analise {
+    this.analise = this.analiseSharedDataService.analise;
     return this.analiseSharedDataService.analise;
   }
 
@@ -139,11 +172,21 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     this.analiseSharedDataService.analise = analise;
   }
 
-  get funcoesTransacoes(): FuncaoTransacao[] {
-    if (!this.analise.funcaoTransacaos) {
-      return [];
+  getFuncoesTransacoes() {
+    this.analises.forEach(a => {
+      if (a.sistema.id === this.analise.sistema.id) {
+        a.funcaoTransacaos.forEach(b => {
+          this.funcoestransacoes.push(b.funcionalidade);
+        })
+      }
+    });
+
+    if (this.analise.funcaoTransacaos) {
+      this.analise.funcaoTransacaos.forEach(a => {
+        this.funcoestransacoes.push(a.funcionalidade);
+      }
+      )
     }
-    return this.analise.funcaoTransacaos;
   }
 
 
@@ -271,4 +314,26 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     }
   }
 
+  performSearch() {
+    this.recarregarDataTable();
+  }
+
+  private createStringParamsArray(): Array<string> {
+    const arrayParams: Array<string> = [];
+
+    (this.searchParams.fullName !== undefined) ? (arrayParams.push('+firstName:' + "*" + this.searchParams.fullName + "*")) : (this);
+    (this.searchParams.login !== undefined) ? (arrayParams.push('+login:' + "*" + this.searchParams.login + "*")) : (this);
+    (this.searchParams.email !== undefined) ? (arrayParams.push('+email:' + "*" + this.searchParams.email + "*")) : (this);
+
+    return arrayParams;
+  }
+
+  montarFuncoesTransacao() {
+
+  }
+
+  public recarregarDataTable() {
+    this.getFuncoesTransacoes();
+    this.datatable.refresh("0290209");
+  }
 }
