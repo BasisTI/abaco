@@ -38,12 +38,12 @@
                 </app-blue-button>
             </div>
 
-            <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')">
-                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 01px">
+            <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')" [collapsed]="true" >
+                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
                     <p-dataTable dataKey="id"
                         [emptyMessage]="this.getLabel('Analise.Analise.Mensagens.msgSelecioneContratoParaEscolherFases')"
                         [value]="funcoesTransacoes" id="idTabelaFases" [(selection)]="analise.esforcoFases"
-                        [headerCheckboxToggleAllPages]="true" [toggleable]="true" scrollable="true" scrollWidth="1000px">
+                        [headerCheckboxToggleAllPages]="true" [toggleable]="true" scrollable="true" scrollWidth="100%" >
                         <p-header translate="Analise.Analise.Fases">Funções de Transação</p-header>
 
                         <p-column selectionMode="multiple" [style]="{'width':'40px'}">
@@ -58,7 +58,7 @@
 
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
-                            [style]="{'width': '120px'}">
+                            [style]="{'width': '130px'}">
                             <ng-template let-funcionalidade="rowData.funcionalidade" pTemplate="body">
                                 {{ funcionalidade.nome }}
                             </ng-template>
