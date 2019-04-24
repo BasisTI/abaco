@@ -37,71 +37,77 @@
                 </app-blue-button>
             </div>
 
-            <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')" [collapsed]="true" >
+            <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')" [collapsed]="true">
                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
-                    <basis-datatable dataKey="id" [(ngModel)]="funcoestransacoes" [(selection)]="analise.esforcoFases"
+                    <basis-datatable dataKey="id" [value]="fn" [(selection)]="analise.esforcoFases"
                         [headerCheckboxToggleAllPages]="true" [toggleable]="true" scrollable="true" scrollWidth="105%"
                         #datatable>
-                        <p-column selectionMode="multiple" [style]="{'width':'15%'}">
-                        </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
-                            [style]="{'width': '100px'}">
-                            <ng-template let-modulo="rowData.funcoestransacoes.modulo" pTemplate="body">
+                            [style]="{'width': '200px'}">
+                            <ng-template let-modulo="rowData.funcionalidade.modulo" pTemplate="body">
                                 {{ modulo.nome }}
                             </ng-template>
                         </p-column>
 
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
-                            [style]="{'width': '100px'}">
-                            <ng-template let-funcionalidade="rowData.funcoestransacoes" pTemplate="body">
+                            [style]="{'width': '200px'}">
+                            <ng-template let-funcionalidade="rowData.funcionalidade" pTemplate="body">
                                 {{ funcionalidade.nome }}
                             </ng-template>
                         </p-column>
 
                         <p-column field="name" [header]="this.getLabel('Cadastros.FuncaoTransacao.Nome')"
-                            [style]="{'width': '150px'}">
+                            [style]="{'width': '200px'}">
+                        </p-column>
+
+                        <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Deflator')"
+                            [style]="{'width': '200px'}">
+                            <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
+                                {{ fatorAjuste ? fatorAjuste.nome : this.getLabel('Global.Mensagens.Nenhum') }}
+                            </ng-template>
                         </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Impacto')"
-                            [style]="{'width': '100px'}" field="updateImpacto(impacto)">
+                            [style]="{'width': '200px'}" field="updateImpacto(impacto)">
                             <ng-template let-impacto="rowData.impacto" pTemplate="body">
                                 {{ impacto ? updateImpacto(impacto) : this.getLabel('Global.Mensagens.Nenhum') }}
                             </ng-template>
                         </p-column>
 
                         <p-column field="tipo" [header]="this.getLabel('Cadastros.FuncaoTransacao.Classificacao')"
-                            [style]="{'width': '120px'}">
+                            [style]="{'width': '200px'}">
                         </p-column>
 
                         <p-column field="der" [header]="this.getLabel('Cadastros.FuncaoTransacao.DER(TD)')"
-                            [style]="{'width': '100px'}">
+                            [style]="{'width': '200px'}">
                             <ng-template let-funcaoDados="rowData" pTemplate="body">
                                 {{ funcaoDados.derValue() }}
                             </ng-template>
                         </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.FTR(AR)')"
-                            [style]="{'width': '100px'}">
+                            [style]="{'width': '200px'}">
                             <ng-template let-funcaoDados="rowData" pTemplate="body">
                                 {{ funcaoDados.ftrValue() }}
                             </ng-template>
                         </p-column>
+
                         <p-column field="complexidade"
                             [header]="this.getLabel('Cadastros.FuncaoTransacao.Complexidade')"
-                            [style]="{'width': '120px'}">
+                            [style]="{'width': '200px'}">
                         </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.PFBruto')"
-                            [style]="{'width': '100px'}">
+                            [style]="{'width': '200px'}">
                             <ng-template let-grossPF="rowData.grossPF" pTemplate="body">
                                 {{ grossPF | number }}
                             </ng-template>
                         </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.PFLiquido')"
-                            [style]="{'width': '100px'}">
+                            [style]="{'width': '200px'}">
                             <ng-template let-pf="rowData.pf" pTemplate="body">
                                 {{ pf | number }}
                             </ng-template>
@@ -110,15 +116,10 @@
                     </basis-datatable>
                 </div>
             </p-fieldset>
-            <div>
-                {{ funcoestransacoes | json }}
-            </div>
+
             <div class="ui-md-2 ui-sm-12">
-                <app-green-button 
-                [buttonLabel]="this.getLabel('Global.Botoes.Novo')" 
-                id="idBtnNovoFormFuncaoTransacao"
-                buttonIcon="ui-icon-add" 
-                (click)="montarFuncoesTransacao()">
+                <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Novo')" id="idBtnNovoFormFuncaoTransacao"
+                    buttonIcon="ui-icon-add" (click)="montarFuncoesTransacao()">
                 </app-green-button>
             </div>
         </div>

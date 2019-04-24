@@ -41,7 +41,9 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
   sistemas: Sistema[];
 
-  funcionalidades: Funcionalidade[];
+  funcionalidades: Funcionalidade[] = [];
+
+  fn: Funcionalidade[] = [];
 
   analises: Analise[];
 
@@ -173,20 +175,30 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
   }
 
   getFuncoesTransacoes() {
+    this.funcionalidades = [];
+
     this.analises.forEach(a => {
       if (a.sistema.id === this.analise.sistema.id) {
         a.funcaoTransacaos.forEach(b => {
-          this.funcoestransacoes.push(b.funcionalidade);
+          console.log(b);
+            this.funcionalidades.push(b);
         })
       }
     });
 
     if (this.analise.funcaoTransacaos) {
       this.analise.funcaoTransacaos.forEach(a => {
-        this.funcoestransacoes.push(a.funcionalidade);
-      }
-      )
+        this.funcionalidades.push(a);
+      })
     }
+
+    // this.fn = this.funcionalidades.filter((thing, index, self) =>
+    //   index === self.findIndex((t) => (
+    //     t.id === thing.id 
+    //   ))
+    // )
+    this.fn = this.funcionalidades
+    console.log( this.fn);
   }
 
 
