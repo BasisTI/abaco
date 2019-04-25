@@ -14,6 +14,10 @@ public class BaselineDTO {
 
     private String pf;
 
+    private String nomeFuncionalidade;
+
+    private String nomeModulo;
+
     public String getNome() {
         return nome;
     }
@@ -60,6 +64,22 @@ public class BaselineDTO {
 
     public void setPf(String pf) {
         this.pf = pf;
+    }
+
+    public String getNomeFuncionalidade() {
+        return nomeFuncionalidade;
+    }
+
+    public void setNomeFuncionalidade(String nomeFuncionalidade) {
+        this.nomeFuncionalidade = nomeFuncionalidade;
+    }
+
+    public String getNomeModulo() {
+        return nomeModulo;
+    }
+
+    public void setNomeModulo(String nomeModulo) {
+        this.nomeModulo = nomeModulo;
     }
 
 }

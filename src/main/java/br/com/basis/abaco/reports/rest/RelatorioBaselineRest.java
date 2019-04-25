@@ -97,6 +97,8 @@ public class RelatorioBaselineRest {
             objeto.setDer(a.getDer().toString());
             objeto.setComplexidade(a.getComplexidade());
             objeto.setPf(a.getPf().toString());
+            objeto.setNomeFuncionalidade(a.getNomeFuncionalidade());
+            objeto.setNomeModulo(a.getNomeModulo());
 
             listBaselineFdsDTO.add(objeto); }
 
@@ -117,6 +119,8 @@ public class RelatorioBaselineRest {
             objeto.setNome(a.getName());
             objeto.setClassificacao(a.getClassificacao());
             objeto.setRlr(a.getRlralr().toString());
+            objeto.setNomeFuncionalidade(a.getNomeFuncionalidade());
+            objeto.setNomeModulo(a.getNomeModulo());
 
             listBaselineFtsDTO.add(objeto); }
 

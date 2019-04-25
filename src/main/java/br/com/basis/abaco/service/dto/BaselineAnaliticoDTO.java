@@ -43,5 +43,9 @@ public class BaselineAnaliticoDTO {
     private BigDecimal rlralr;
 
     private Long idfuncionalidade;
+    
+    private String nomeFuncionalidade;
+    
+    private String nomeModulo;
 
 }
