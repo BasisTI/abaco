@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, EventEmitter, Output, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MessageUtil } from '../util/message.util';
 import { SelectItem } from 'primeng/primeng';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Rx';
 import { AnaliseService, Analise } from '../analise';
-import { AnaliseSharedDataService, ResponseWrapper, ElasticQuery } from '../shared';
+import { AnaliseSharedDataService, ResponseWrapper, ElasticQuery, PageNotificationService } from '../shared';
 import { Manual } from '../manual';
 import { Organizacao } from '../organizacao';
 import { Contrato } from '../contrato';
@@ -20,6 +20,7 @@ import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
 import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
 import { FuncaoTransacao } from '../funcao-transacao';
 import { DatatableComponent } from '@basis/angular-components';
+import { CalculadoraTransacao } from '../analise-shared';
 
 @Component({
   selector: 'app-pesquisar-ft',
@@ -29,6 +30,16 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
   private routeSub: Subscription;
 
+  enviarParaBaseLine: boolean;
+
+  disableFuncaoTrasacao: boolean;
+
+  isEdit: boolean;
+
+  disableAba: boolean;
+
+  currentFuncaoTransacao: FuncaoTransacao;
+
   private oldModuloSelectedId = -1;
 
   organizacoes: Organizacao[];
@@ -37,17 +48,23 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
   modulos: Modulo[];
 
+  public validacaoCampos: boolean;
+
+  diasGarantia: number;
+
   contratos: Contrato[];
 
   sistemas: Sistema[];
 
-  funcionalidades: Funcionalidade[] = [];
+  funcionalidades: Funcionalidade[];
+
+  arrayFt: any[] = [];
 
   fn: Funcionalidade[] = [];
 
   analises: Analise[];
 
-  funcoestransacoes: Funcionalidade[] = [];
+  funcaoTransacaoFuncionalidade: Funcionalidade[] = [];
 
   esforcoFases: EsforcoFase[] = [];
 
@@ -57,9 +74,13 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
   equipeResponsavel: SelectItem[] = [];
 
+  funcoesTransacaoList: FuncaoTransacao[] = [];
+
   teste: any;
 
   manual: Manual;
+
+  novoDeflator: FatorAjuste;
 
   moduloSelecionado: Modulo;
 
@@ -70,7 +91,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
   nomeManual = this.getLabel('Analise.SelecioneUmContrato');
 
-  private fatorAjusteNenhumSelectItem = { label: MessageUtil.NENHUM, value: undefined };
+  private fatorAjusteNenhumSelectItem = { label: 'Manter o original', value: undefined };
 
   public hideShowSelectEquipe: boolean;
 
@@ -90,6 +111,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     private changeDetectorRef: ChangeDetectorRef,
     private funcaoDadosService: FuncaoDadosService,
     private funcionalidadeService: FuncionalidadeService,
+    private pageNotificationService: PageNotificationService,
+
   ) { }
 
   ngOnInit() {
@@ -175,20 +198,19 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
   }
 
   getFuncoesTransacoes() {
-    this.funcionalidades = [];
+    this.funcaoTransacaoFuncionalidade = [];
 
     this.analises.forEach(a => {
       if (a.sistema.id === this.analise.sistema.id) {
         a.funcaoTransacaos.forEach(b => {
-          console.log(b);
-            this.funcionalidades.push(b);
+          this.funcaoTransacaoFuncionalidade.push(b);
         })
       }
     });
 
     if (this.analise.funcaoTransacaos) {
       this.analise.funcaoTransacaos.forEach(a => {
-        this.funcionalidades.push(a);
+        this.funcaoTransacaoFuncionalidade.push(a);
       })
     }
 
@@ -197,8 +219,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     //     t.id === thing.id 
     //   ))
     // )
-    this.fn = this.funcionalidades
-    console.log( this.fn);
+    this.fn = this.funcaoTransacaoFuncionalidade
   }
 
 
@@ -269,7 +290,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
   }
 
   private inicializaFatoresAjuste(manual: Manual) {
-    const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
+    const faS: FatorAjuste[] = _.cloneDeep(this.analise.manual.fatoresAjuste);
     this.fatoresAjuste =
       faS.map(fa => {
         const label = FatorAjusteLabelGenerator.generate(fa);
@@ -341,11 +362,121 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
   }
 
   montarFuncoesTransacao() {
-
+    if (this.datatable.selectedRow != undefined) {
+      this.datatable.selectedRow.map(ft => {
+        let value: FuncaoTransacao = _.cloneDeep(ft);
+        value.id = undefined;
+        value.ders.map(vd => {
+          vd.id = undefined;
+        })
+        value.alrs.map(vd => {
+          vd.id = undefined;
+        })
+        if (this.novoDeflator !== undefined) {
+          value.fatorAjuste = this.novoDeflator;
+          value = CalculadoraTransacao.calcular(this.analise.metodoContagem, value, this.analise.manual)
+          console.log("Ft Original " + ft)
+          console.log("Ft com deflator alterado " + value)
+        }
+        this.analise.addFuncaoTransacao(value);
+      });
+    }
+    this.save();
   }
 
   public recarregarDataTable() {
+    console.log(this.fn)
     this.getFuncoesTransacoes();
     this.datatable.refresh("0290209");
+
   }
+
+  save() {
+
+    this.validaCamposObrigatorios();
+    if (this.verificarCamposObrigatorios()) {
+      this.analiseService.update(this.analise).subscribe(() => {
+        this.pageNotificationService.addSuccessMsg(this.isEdit ? this.getLabel('Analise.Analise.Mensagens.msgRegistroSalvoSucesso') : this.getLabel('Analise.Analise.Mensagens.msgDadosAlteradosSucesso'));
+        this.diasGarantia = this.analise.contrato.diasDeGarantia;
+      });
+    }
+  }
+
+  private validaCamposObrigatorios() {
+    const validacaoIdentificadorAnalise = this.analise.identificadorAnalise ? true : false;
+    const validacaoContrato = this.analise.contrato ? true : false;
+    const validacaoMetodoContagem = this.analise.metodoContagem ? true : false;
+    const validacaoTipoAnallise = this.analise.tipoAnalise ? true : false;
+
+    this.validacaoCampos = !(validacaoIdentificadorAnalise === true
+      && validacaoContrato === true
+      && validacaoMetodoContagem === true
+      && validacaoTipoAnallise === true);
+
+    this.enableDisableAba();
+  }
+
+  enableDisableAba() {
+    if (this.validacaoCampos === false) {
+      this.disableAba = false;
+      this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
+    }
+  }
+
+  private verificarCamposObrigatorios(): boolean {
+    let isValid = true;
+
+    if (!this.analise.identificadorAnalise) {
+      this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_IDENTIFICADOR'));
+      isValid = false;
+      return isValid;
+    }
+    if (!this.analise.contrato) {
+      this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgSELECIONE_CONTRATO_CONTINUAR'));
+      isValid = false;
+      return isValid;
+    }
+    if (!this.analise.dataCriacaoOrdemServico) {
+      this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_ORDEM_SERVICO'));
+      isValid = false;
+      return isValid;
+    }
+    if (!this.analise.metodoContagem) {
+      this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_METODO_CONTAGEM'));
+      isValid = false;
+      return isValid;
+    }
+    if (!this.analise.tipoAnalise) {
+      this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_TIPO_CONTAGEM'));
+      isValid = false;
+      return isValid;
+    }
+
+    return isValid;
+  }
+
+  isContratoSelected(): boolean {
+    const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
+    if (isContratoSelected) {
+      if (this.fatoresAjuste.length === 0) {
+        this.inicializaFatoresAjuste(this.manual);
+      }
+    }
+    return isContratoSelected;
+  }
+
+  mudarDeflator(event) {
+    this.novoDeflator = event;
+  }
+
+  calcularComNovoDeflator(funcao: FuncaoTransacao) {
+    const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem,
+      funcao,
+      this.analise.contrato.manual);
+    this.funcoesTransacaoList.push(funcaoTransacaoCalculada);
+  }
+
+
+
+
 }

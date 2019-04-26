@@ -740,7 +740,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     private inicializaFatoresAjuste(manual: Manual) {
         if (manual.fatoresAjuste) {
-            this.faS = _.cloneDeep(manual.fatoresAjuste);
+            this.faS = _.cloneDeep(this.analise.manual.fatoresAjuste);
             
             this.faS.sort((n1, n2) => {
                 if (n1.fator < n2.fator)

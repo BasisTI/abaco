@@ -608,6 +608,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         // if (!this.aguardarGarantia) {
         //     this.analise.baselineImediatamente = true;
         // }
+        console.log("aqui")
         if (!this.enviarParaBaseLine) {
             this.analise.enviarBaseline = true;
         }

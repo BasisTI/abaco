@@ -5,7 +5,7 @@
             <div class="ui-g-6">
                 <div class="ui-g-12">
                     <div class="ui-g ui-md-12" style="margin-bottom: 25px; margin-top: 25px">
-                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
+                        <div class="ui-g-12 ui-md-10 ui-sm-12" style="margin-bottom: 05px">
                             <label>Módulo</label>
                             <p-dropdown [filter]="true" optionLabel="nome" name="modulo"
                                 [placeholder]="this.getLabel('Analise.Analise.Selecione')"
@@ -20,7 +20,7 @@
             <div class="ui-g-6">
                 <div class="ui-g-12">
                     <div class="ui-g ui-md-12" style="margin-bottom: 25px; margin-top: 25px">
-                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
+                        <div class="ui-g-12 ui-md-10 ui-sm-12" style="margin-bottom: 05px">
                             <label>Funcionalidade</label>
                             <p-dropdown [filter]="true" required id="idTipoContagemFormAnalise" name="funcionalidades"
                                 optionLabel="nome" [placeholder]="this.getLabel('Analise.Analise.Selecione')"
@@ -39,12 +39,16 @@
 
             <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')" [collapsed]="true">
                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
-                    <basis-datatable dataKey="id" [value]="fn" [(selection)]="analise.esforcoFases"
-                        [headerCheckboxToggleAllPages]="true" [toggleable]="true" scrollable="true" scrollWidth="105%"
+                    <basis-datatable dataKey="id" [value]="fn"
+                        [headerCheckboxToggleAllPages]="true" [toggleable]="true" scrollable="true" scrollWidth="120%"
                         #datatable>
 
+                        <p-column selectionMode="multiple" [style]="{'width':'6%'}"
+                            (onHeaderCheckboxToggle)="montarFuncoesTransacao()">
+                        </p-column>
+
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
-                            [style]="{'width': '200px'}">
+                            [style]="{'width': '10.7%'}">
                             <ng-template let-modulo="rowData.funcionalidade.modulo" pTemplate="body">
                                 {{ modulo.nome }}
                             </ng-template>
@@ -52,76 +56,85 @@
 
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
-                            [style]="{'width': '200px'}">
+                            [style]="{'width': '15.9%'}">
                             <ng-template let-funcionalidade="rowData.funcionalidade" pTemplate="body">
                                 {{ funcionalidade.nome }}
                             </ng-template>
                         </p-column>
 
                         <p-column field="name" [header]="this.getLabel('Cadastros.FuncaoTransacao.Nome')"
-                            [style]="{'width': '200px'}">
+                            [style]="{'width': '10.7%'}">
                         </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Deflator')"
-                            [style]="{'width': '200px'}">
+                            [style]="{'width': '10.7%'}">
                             <ng-template let-fatorAjuste="rowData.fatorAjuste" pTemplate="body">
                                 {{ fatorAjuste ? fatorAjuste.nome : this.getLabel('Global.Mensagens.Nenhum') }}
                             </ng-template>
                         </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.Impacto')"
-                            [style]="{'width': '200px'}" field="updateImpacto(impacto)">
+                            [style]="{'width': '11.7%'}" field="updateImpacto(impacto)">
                             <ng-template let-impacto="rowData.impacto" pTemplate="body">
                                 {{ impacto ? updateImpacto(impacto) : this.getLabel('Global.Mensagens.Nenhum') }}
                             </ng-template>
                         </p-column>
 
-                        <p-column field="tipo" [header]="this.getLabel('Cadastros.FuncaoTransacao.Classificacao')"
-                            [style]="{'width': '200px'}">
+                        <p-column field="tipo" header="Classif." [style]="{'width': '8.7%'}">
                         </p-column>
 
                         <p-column field="der" [header]="this.getLabel('Cadastros.FuncaoTransacao.DER(TD)')"
-                            [style]="{'width': '200px'}">
+                            [style]="{'width': '9.7%'}">
                             <ng-template let-funcaoDados="rowData" pTemplate="body">
                                 {{ funcaoDados.derValue() }}
                             </ng-template>
                         </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.FTR(AR)')"
-                            [style]="{'width': '200px'}">
+                            [style]="{'width': '9.7%'}">
                             <ng-template let-funcaoDados="rowData" pTemplate="body">
                                 {{ funcaoDados.ftrValue() }}
                             </ng-template>
                         </p-column>
 
-                        <p-column field="complexidade"
-                            [header]="this.getLabel('Cadastros.FuncaoTransacao.Complexidade')"
-                            [style]="{'width': '200px'}">
+                        <p-column field="complexidade" header="Complex." [style]="{'width': '11.5%'}">
                         </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.PFBruto')"
-                            [style]="{'width': '200px'}">
+                            [style]="{'width': '9.7%'}">
                             <ng-template let-grossPF="rowData.grossPF" pTemplate="body">
                                 {{ grossPF | number }}
                             </ng-template>
                         </p-column>
 
                         <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.PFLiquido')"
-                            [style]="{'width': '200px'}">
+                            [style]="{'width': '10.7%'}">
                             <ng-template let-pf="rowData.pf" pTemplate="body">
                                 {{ pf | number }}
                             </ng-template>
                         </p-column>
-
                     </basis-datatable>
                 </div>
-            </p-fieldset>
 
-            <div class="ui-md-2 ui-sm-12">
-                <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Novo')" id="idBtnNovoFormFuncaoTransacao"
-                    buttonIcon="ui-icon-add" (click)="montarFuncoesTransacao()">
-                </app-green-button>
-            </div>
+                <div class="ui-g-3 ui-md-4 ui-sm-6">
+                    <label>Deflator</label>
+                    <p-dropdown
+                            [filter]="true"
+                            [options]="fatoresAjuste"
+                            [disabled]="!isContratoSelected()"
+                            name="fatorAjuste"
+                            [autoWidth]="false"
+                            (onChange)="mudarDeflator($event.value)"
+                            >
+                    </p-dropdown>
+                </div>
+
+            </p-fieldset>
+        </div>
+        <div class="ui-g-2 ui-md-2 ui-sm-12">
+            <app-green-button id="idBtnPesquisarComponentSistema" buttonIcon="ui-icon-arrowstop-1-e"
+                buttonLabel="Gerar" (click)=" montarFuncoesTransacao()">
+            </app-green-button>
         </div>
     </div>
 </div>
