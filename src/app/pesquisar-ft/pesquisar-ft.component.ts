@@ -21,6 +21,7 @@ import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
 import { FuncaoTransacao } from '../funcao-transacao';
 import { DatatableComponent } from '@basis/angular-components';
 import { CalculadoraTransacao } from '../analise-shared';
+import { StringConcatService } from '../shared/string-concat.service';
 
 @Component({
   selector: 'app-pesquisar-ft',
@@ -34,6 +35,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
   disableFuncaoTrasacao: boolean;
 
+  query: String = "*";
+
   isEdit: boolean;
 
   disableAba: boolean;
@@ -45,6 +48,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
   organizacoes: Organizacao[];
 
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
+
+  searchUrl = "/api/_search/funcao-transacaos"
 
   modulos: Modulo[];
 
@@ -113,6 +118,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     private funcionalidadeService: FuncionalidadeService,
     private pageNotificationService: PageNotificationService,
     private router: Router,
+    private stringConcatService: StringConcatService,
+
   ) { }
 
   ngOnInit() {
@@ -342,16 +349,16 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
   }
 
   performSearch() {
+    this.query = this.stringConcatService.concatResults(this.createStringParamsArray());
     this.recarregarDataTable();
   }
 
   private createStringParamsArray(): Array<string> {
     const arrayParams: Array<string> = [];
 
-    (this.searchParams.fullName !== undefined) ? (arrayParams.push('+firstName:' + "*" + this.searchParams.fullName + "*")) : (this);
-    (this.searchParams.login !== undefined) ? (arrayParams.push('+login:' + "*" + this.searchParams.login + "*")) : (this);
-    (this.searchParams.email !== undefined) ? (arrayParams.push('+email:' + "*" + this.searchParams.email + "*")) : (this);
-
+    (this.searchParams.modulo !== undefined) ? (arrayParams.push('modulo.nome:' + "*" + this.searchParams.modulo + "*")) : (this);
+    (this.searchParams.funcionalidade !== undefined) ? (arrayParams.push('funcionalidade.nome:' + "*" + this.searchParams.funcionalidade + "*")) : (this);
+    
     return arrayParams;
   }
 
@@ -376,13 +383,6 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
       });
     }
     this.save();
-  }
-
-  public recarregarDataTable() {
-    console.log(this.fn)
-    this.getFuncoesTransacoes();
-    this.datatable.refresh("0290209");
-
   }
 
   save() {
@@ -474,6 +474,9 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     this.router.navigate(['/analise', this.analise.id, 'edit']);    
   }
 
-
+  public recarregarDataTable() {
+    console.log(this.query);
+    this.datatable.refresh(this.query ? this.query : "*");
+  }
 
 }
