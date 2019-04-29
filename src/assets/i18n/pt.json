@@ -752,6 +752,7 @@
       "Editar": "Editar",
       "Exportar": "Exportar",
       "Fechar": "Fechar",
+      "Gerar": "Gerar",
       "GerarRelatorio": "Gerar Relatório",
       "Limpar": "Limpar",
       "LimparPesquisa": "Limpar Pesquisa",
@@ -807,7 +808,8 @@
       "EscolhaUmRegistroParaClonar":"Escolha um registro para clonar.",
       "CriarCrud":"Criar Crud",
       "EscolhaUmRegistroParaCriarCrud":"Escolha um registro para criar crud.",
-      "Nenhum":"Nenhum"
+      "Nenhum":"Nenhum",
+      "DeflatorDeOrigen":"Manter deflator original"
     },
     "Idiomas":{
       "Portugues":"Português",

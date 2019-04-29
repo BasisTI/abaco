@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, EventEmitter, Output, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageUtil } from '../util/message.util';
 import { SelectItem } from 'primeng/primeng';
 import { TranslateService } from '@ngx-translate/core';
@@ -91,7 +91,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
   nomeManual = this.getLabel('Analise.SelecioneUmContrato');
 
-  private fatorAjusteNenhumSelectItem = { label: 'Manter o original', value: undefined };
+  private fatorAjusteNenhumSelectItem = { label: this.getLabel('Global.Mensagens.DeflatorDeOrigen'), value: undefined };
 
   public hideShowSelectEquipe: boolean;
 
@@ -112,7 +112,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     private funcaoDadosService: FuncaoDadosService,
     private funcionalidadeService: FuncionalidadeService,
     private pageNotificationService: PageNotificationService,
-
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -207,12 +207,6 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
         })
       }
     });
-
-    if (this.analise.funcaoTransacaos) {
-      this.analise.funcaoTransacaos.forEach(a => {
-        this.funcaoTransacaoFuncionalidade.push(a);
-      })
-    }
 
     // this.fn = this.funcionalidades.filter((thing, index, self) =>
     //   index === self.findIndex((t) => (
@@ -476,6 +470,9 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     this.funcoesTransacaoList.push(funcaoTransacaoCalculada);
   }
 
+  retornarParaTelaDeFT(){
+    this.router.navigate(['/analise', this.analise.id, 'edit']);    
+  }
 
 
 

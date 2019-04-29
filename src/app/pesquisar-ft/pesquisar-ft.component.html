@@ -6,7 +6,7 @@
                 <div class="ui-g-12">
                     <div class="ui-g ui-md-12" style="margin-bottom: 25px; margin-top: 25px">
                         <div class="ui-g-12 ui-md-10 ui-sm-12" style="margin-bottom: 05px">
-                            <label>Módulo</label>
+                            <label translate="Cadastros.FuncaoTransacao.Modulo">Módulo</label>
                             <p-dropdown [filter]="true" optionLabel="nome" name="modulo"
                                 [placeholder]="this.getLabel('Analise.Analise.Selecione')"
                                 (onChange)="moduloSelected($event.value)" [(ngModel)]="moduloSelecionado"
@@ -21,7 +21,7 @@
                 <div class="ui-g-12">
                     <div class="ui-g ui-md-12" style="margin-bottom: 25px; margin-top: 25px">
                         <div class="ui-g-12 ui-md-10 ui-sm-12" style="margin-bottom: 05px">
-                            <label>Funcionalidade</label>
+                            <label translate="Cadastros.FuncaoTransacao.Funcionalidade">Funcionalidade</label>
                             <p-dropdown [filter]="true" required id="idTipoContagemFormAnalise" name="funcionalidades"
                                 optionLabel="nome" [placeholder]="this.getLabel('Analise.Analise.Selecione')"
                                 [options]="funcionalidades" [autoWidth]="false">
@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="ui-g-3 ui-md-4 ui-sm-6">
-                    <label>Deflator</label>
+                    <label translate="">Deflator</label>
                     <p-dropdown
                             [filter]="true"
                             [options]="fatoresAjuste"
@@ -131,10 +131,23 @@
 
             </p-fieldset>
         </div>
-        <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-green-button id="idBtnPesquisarComponentSistema" buttonIcon="ui-icon-arrowstop-1-e"
-                buttonLabel="Gerar" (click)=" montarFuncoesTransacao()">
+        
+        <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
+
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+                <app-white-button
+                        [buttonLabel]="this.getLabel('Global.Botoes.Voltar')"
+                        id="idBtnLimparPesquisaComponentAnalise"
+                        buttonIcon="ui-icon-clear-all"
+                        (click)="retornarParaTelaDeFT()"
+                        >
+                </app-white-button>
+            </div>
+            
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+                <app-green-button id="idBtnPesquisarComponentSistema" buttonIcon="ui-icon-arrowstop-1-e"
+                [buttonLabel]="this.getLabel('Global.Botoes.Gerar')" (click)="montarFuncoesTransacao()">
             </app-green-button>
-        </div>
+            </div>
     </div>
 </div>

@@ -17,6 +17,13 @@ import {
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
 import { PesquisarFtComponent } from './pesquisar-ft.component';
 import { DatatableModule } from '@basis/angular-components';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+
+export function createTranslateLoader(http: HttpClient) {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  }
 
 const rotas: Routes = [
     {
@@ -38,7 +45,14 @@ const rotas: Routes = [
     ConfirmDialogModule,
     DatatableModule,
     DialogModule, 
-    MemoryDataTableModule
+    MemoryDataTableModule,
+    TranslateModule.forChild({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    })
     ],
     declarations: [
         PesquisarFtComponent

@@ -505,6 +505,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     public bloqueiaAnalise(bloquear: boolean) {
         //var _this = this;
 
+        console.log("oi")
         this.analiseService.find(this.analiseSelecionada.idAnalise).subscribe((res: any) => {
             this.analiseTemp = res;
         });
