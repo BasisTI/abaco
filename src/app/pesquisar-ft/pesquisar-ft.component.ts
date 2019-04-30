@@ -519,37 +519,31 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     }
 
     validarFT(funcao: FuncaoTransacao) {
-        this.validarFuncaoTransacaos(this.currentFuncaoTransacao).then(resolve => {
-            if (resolve) {
+        // this.validarFuncaoTransacaos(this.currentFuncaoTransacao).then(resolve => {
+        //     if (resolve) {
                 this.pageNotificationService.addCreateMsgWithName(funcao.name);
                 this.analise.addFuncaoTransacao(funcao);
                 this.estadoInicial();
                 this.save();
-            } else {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgRegistroCadastrado'));
-            }
-        });
+        //     } else {
+        //         this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgRegistroCadastrado'));
+        //     }
+        // });
     }
 
     validarFuncaoTransacaos(ft: FuncaoTransacao) {
-        const that = this;
         return new Promise(resolve => {
-            if (that.analise.funcaoTransacaos) {
-                if (that.analise.funcaoTransacaos.length === 0) {
+            if (this.analise.funcaoTransacaos) {
+                if (this.analise.funcaoTransacaos.length === 0) {
                     return resolve(true);
                 }
-                that.analise.funcaoTransacaos.forEach((data, index) => {
-                    try {
+                this.analise.funcaoTransacaos.forEach((data, index) => {
                         if (data.comprar(ft)) {
                             return resolve(false);
                         }
-                        if (!that.analise.funcaoTransacaos[index + 1]) {
+                        if (!this.analise.funcaoTransacaos[index + 1]) {
                             return resolve(true);
                         }
-                    } catch (error) {
-                        this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgRegistroCadastrado'));
-                    }
-
                 });
             }
         });
