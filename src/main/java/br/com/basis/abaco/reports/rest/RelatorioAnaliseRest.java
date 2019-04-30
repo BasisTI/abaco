@@ -41,6 +41,8 @@ public class RelatorioAnaliseRest {
 
     private static String caminhoAnaliseDetalhada = "reports/analise/analise_detalhada.jasper";
 
+    private static String caminhoAnaliseContagem = "reports/doc_fundamet_cont.jasper";
+
     private static String caminhoAnaliseExcel = "reports/analise/analise_excel.jasper";
 
     private static String caminhoImagemBasis = "reports/img/logo_basis.gif";
@@ -94,10 +96,15 @@ public class RelatorioAnaliseRest {
         init();
         popularObjeto(analise);
 
-        if(tipo == TipoRelatorio.ANALISE) {
-            return relatorio.downloadPdfArquivo(analise, caminhoRalatorioAnalise, popularParametroAnalise());
-        } else if(tipo == TipoRelatorio.ANALISE_DETALHADA) {
-            return relatorio.downloadPdfArquivo(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
+        switch(tipo){
+            case ANALISE:
+                return relatorio.downloadPdfArquivo(analise, caminhoRalatorioAnalise, popularParametroAnalise());
+
+            case ANALISE_DETALHADA:
+                return relatorio.downloadPdfArquivo(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
+
+            case CONTAGEM:
+                return relatorio.downloadPdfArquivo(analise, caminhoAnaliseContagem, popularParametroAnalise(analise));
         }
         return null;
     }
@@ -134,6 +141,11 @@ public class RelatorioAnaliseRest {
     }
 
 
+    private Map<String, Object> popularParametroAnalise(Analise analise){
+        parametro = new HashMap<>();
+        parametro.put("indet_analise_param", analise);
+        return parametro;
+    }
 
     /**
      * Método responsável por popular o parametro do Jasper.

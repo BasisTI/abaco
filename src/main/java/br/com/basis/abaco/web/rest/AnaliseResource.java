@@ -58,6 +58,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URI;
@@ -457,6 +458,19 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadExcel(analise);
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/relatorioContagemPdf/{id}")
+    public @ResponseBody
+    ResponseEntity<byte[]> gerarRelatorioContagemPdf(@PathVariable Long id) throws FileNotFoundException, JRException {
+        Analise analise = recuperarAnalise(id);
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
+        log.debug("REST request to generate a count report : {}", analise);
+        return relatorioAnaliseRest.downloadPdfArquivo(analise, TipoRelatorio.CONTAGEM);
+    }
 
 
     /**
