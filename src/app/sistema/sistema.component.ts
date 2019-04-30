@@ -291,6 +291,8 @@ export class SistemaComponent implements AfterViewInit {
      *
      */
     public recarregarDataTable() {
+        console.log(this.datatable)
+        console.log(this.elasticQuery.query)
         this.datatable.url = this.searchUrl;
         this.datatable.refresh(this.elasticQuery.value ? this.elasticQuery.value : this.elasticQuery.query);
     }

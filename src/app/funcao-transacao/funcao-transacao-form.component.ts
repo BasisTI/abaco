@@ -29,9 +29,7 @@ import { FuncaoTransacao, TipoFuncaoTransacao } from './funcao-transacao.model';
 import { Der } from '../der/der.model';
 import { Impacto } from '../analise-shared/impacto-enum';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
-import { loginRoute } from '../login';
 import { FuncaoTransacaoService } from './funcao-transacao.service';
-import { debug } from 'util';
 
 
 
@@ -61,7 +59,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     windowWidthDialog: any;
     impactos: string[];
 
-
+    display: boolean = false;
     moduloCache: Funcionalidade;
     dersChips: DerChipItem[];
     alrsChips: DerChipItem[];
@@ -113,8 +111,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         private baselineService: BaselineService,
         private funcaoTransacaoService: FuncaoTransacaoService,
         private translate: TranslateService,
-        private router: Router
-
     ) {
     }
 
@@ -141,6 +137,14 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.dersChips = [];
         this.alrsChips = [];
         this.traduzirImpactos();
+        this.subscribeDisplay();
+    }
+
+    private subscribeDisplay() {
+        this.funcaoTransacaoService.display$.subscribe(
+            (data: boolean) => {
+               this.display = data;
+            });
     }
 
     public onRowDblclick(event) {
@@ -620,11 +624,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 this.textHeader = this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgClonarFuncaoDeTransacao');
                 break;
             case 'filter':
-                this.router.navigate(['/analise', this.analise.id, 'edit','searchft']);    
-                break;
+            this.display = true;
+            break;
         }
     }
-
+   
     private prepararParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
 
         this.disableTRDER();
@@ -730,6 +734,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
+    openDialogAdcFT(param: boolean){
+        this.isFilter = param;
+        this.configurarDialog();
+    }
+
     configurarDialog() {
         this.getTextDialog();
         this.windowHeightDialog = window.innerHeight * 0.60;
@@ -774,6 +783,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.estadoInicial();
         }
     }
+
+    
 }
 
 

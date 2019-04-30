@@ -4,15 +4,15 @@ import { CommonModule } from '@angular/common';
 import { Routes } from '@angular/router';
 import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
 import {
-    ButtonModule,
-    InputTextModule,
-    SpinnerModule,
-    CalendarModule,
-    DropdownModule,
-    RadioButtonModule,
-    ConfirmDialogModule,
-    DialogModule
-  } from 'primeng/primeng';
+  ButtonModule,
+  InputTextModule,
+  SpinnerModule,
+  CalendarModule,
+  DropdownModule,
+  RadioButtonModule,
+  ConfirmDialogModule,
+  DialogModule
+} from 'primeng/primeng';
 
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
 import { PesquisarFtComponent } from './pesquisar-ft.component';
@@ -22,17 +22,17 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 
 export function createTranslateLoader(http: HttpClient) {
-    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-  }
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 const rotas: Routes = [
-    {
-        path: 'analise/:id/edit/searchft',
-        component: PesquisarFtComponent
-    }
+  {
+    path: 'analise/:id/edit/searchft',
+    component: PesquisarFtComponent
+  }
 ];
 @NgModule({
-    imports: [
+  imports: [
     ButtonModule,
     CommonModule,
     InputTextModule,
@@ -44,7 +44,7 @@ const rotas: Routes = [
     RadioButtonModule,
     ConfirmDialogModule,
     DatatableModule,
-    DialogModule, 
+    DialogModule,
     MemoryDataTableModule,
     TranslateModule.forChild({
       loader: {
@@ -53,11 +53,14 @@ const rotas: Routes = [
         deps: [HttpClient]
       }
     })
-    ],
-    declarations: [
-        PesquisarFtComponent
-      ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  ],
+  declarations: [
+    PesquisarFtComponent
+  ],
+  exports: [
+    PesquisarFtComponent
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PesquisarFuncaoTransacaoModule {
 

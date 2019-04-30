@@ -14,6 +14,8 @@ export class FuncaoTransacaoService {
 
     allFuncaoTransacaosUrl = this.funcaoTransacaoResourceUrl + '/completa';
 
+    public display = new Subject<boolean>();
+    display$ = this.display.asObservable();
 
     constructor(private http: HttpService) {}
 

@@ -137,6 +137,15 @@
                 </div>
             </div>
 
+            <!-- DIALOG: COPIAR FUNÇÕES DE TRANSAÇÃO -->
+            <div>
+                <p-dialog [header]="this.getLabel('Cadastros.FuncaoTransacao.ClonarFuncoesDeTransacao')" [(visible)]="display" [width]="1200" [height]="800">
+                    <app-pesquisar-ft></app-pesquisar-ft>
+                </p-dialog>
+            </div>
+
+
+
 
             <!-- DIALOG: ADICIONAR E EDITAR FUNÇÃO DE DADOS -->
             <p-dialog
@@ -368,6 +377,8 @@
                 </div>
             </p-dialog>
             <!-- Fim Dialog adicionar função de dados  -->
+
+            
 
         </div>
     </div>
