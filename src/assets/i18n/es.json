@@ -708,7 +708,8 @@
         "GerarRelatorio": "Generar Informe",
         "CompartilharAnalise": "Compartir Análisis",
         "BloquearAnalise": "Bloquear Análisis",
-        "SalvarAnalise": "Guardar Análisis"
+        "SalvarAnalise": "Guardar Análisis",
+        "FundamentacaoContagem": "Fundamentación de Recuento"
       }
     },
     "Baseline": {

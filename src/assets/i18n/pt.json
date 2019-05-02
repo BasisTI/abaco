@@ -711,7 +711,8 @@
         "GerarRelatorio": "Gerar Relatório",
         "CompartilharAnalise": "Compartilhar Análise",
         "BloquearAnalise": "Bloquear Análise",
-        "SalvarAnalise": "Salvar Análise"
+        "SalvarAnalise": "Salvar Análise",
+        "FundamentacaoContagem": "Fundamentação de Contagem"
       }
     },
     "Baseline": {

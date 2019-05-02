@@ -168,6 +168,13 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
         return this.getLabel('Analise.Analise.RelatorioExcel');
     }
 
+    relatorioContagemTooltip() {
+        if (!this.analiseSelecionada.idAnalise) {
+            return this.getLabel('Analise.Analise.RelatorioDetalhado');
+        }
+        return this.getLabel('Analise.Analise.Botoes.FundamentacaoContagem');
+    }
+
     recuperarOrganizacoes() {
         this.organizacaoService.query().subscribe(response => {
             this.organizations = response.json;
@@ -243,6 +250,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 } else {
                     this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeCompartilharAnalise'));
                 }
+                break;
+            case 'relatorioAnaliseContagem':
+                this.gerarRelatorioContagem(event.selection);
                 break;
         }
     }
@@ -439,6 +449,14 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     */
     public geraBaselinePdfBrowser() {
         this.analiseService.geraBaselinePdfBrowser();
+    }
+
+    /**
+     * método responsável por gerar o relatório de Fundamentação de Contagem.
+     * @param analise
+     */
+    public gerarRelatorioContagem(analise: Grupo) {
+        this.analiseService.gerarRelatorioContagem(analise.idAnalise);
     }
 
     public changeUrl() {

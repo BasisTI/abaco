@@ -32,6 +32,8 @@ export class AnaliseService {
 
   relatoriosBaselineUrl = environment.apiUrl + '/downloadPdfBaselineBrowser';
 
+  relatorioContagemUrl = environment.apiUrl + '/relatorioContagemPdf';
+
   @BlockUI() blockUI: NgBlockUI;
 
   constructor(private http: HttpService, private pageNotificationService: PageNotificationService, private genericService: GenericService, private translate: TranslateService) { }
@@ -214,6 +216,31 @@ export class AnaliseService {
   public geraBaselinePdfBrowser(): Observable<string> {
     this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.GerandoRelatorio'));
     this.http.get(`${this.relatoriosBaselineUrl}`, {
+      method: RequestMethod.Get,
+      responseType: ResponseContentType.Blob,
+    }).subscribe(
+      (response) => {
+        const mediaType = 'application/pdf';
+        const blob = new Blob([response.blob()], { type: mediaType });
+        const fileURL = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.download = 'analise.pdf';
+        anchor.href = fileURL;
+        window.open(fileURL, '_blank', '');
+        this.blockUI.stop();
+        return null;
+      });
+    return null;
+  }
+
+  /**
+   * Método responsável por acessa o serviço que gerá o relatório
+   * @param idAnalise indentificador da análise que será utilizada como base do relatório
+   * @returns
+   */
+  public gerarRelatorioContagem(idAnalise: number): Observable<string> {
+    this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.GerandoRelatorio'));
+    this.http.get(`${this.relatorioContagemUrl}/${idAnalise}`, {
       method: RequestMethod.Get,
       responseType: ResponseContentType.Blob,
     }).subscribe(
