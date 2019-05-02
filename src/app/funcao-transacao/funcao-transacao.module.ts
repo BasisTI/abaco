@@ -27,13 +27,14 @@ import {
 import {
   FuncaoTransacaoFormComponent,
 } from './';
+import { PesquisarFtRoutes } from './funcao-transacao-form.route';
 import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
 import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.module';
 import { FuncaoTransacaoService } from './funcao-transacao.service';
-
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { PesquisarFuncaoTransacaoModule } from '../pesquisar-ft/pesquisar-ft.module';
 
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -55,6 +56,7 @@ export function createTranslateLoader(http: HttpClient) {
     AbacoButtonsModule,
     TabViewModule,
     InputTextareaModule,
+    RouterModule.forChild(PesquisarFtRoutes),
     AbacoSharedModule,
     DialogModule,
     AbacoAnaliseSharedModule,
@@ -62,6 +64,7 @@ export function createTranslateLoader(http: HttpClient) {
     AbacoAnaliseBotaoSalvarModule,
     AbacoDerChipsModule,
     AutoCompleteModule,
+    PesquisarFuncaoTransacaoModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,

@@ -105,6 +105,7 @@
       "Classificacao": "Classification",
       "Classificacao*": "Classification *",
       "Complexidade": "Complexity",
+      "ClonarFuncoesDeTransacao": "Clone Transaction Functions",
       "Deflator": "Deflator",
       "Deflator*": "Deflator *",
       "DER(TD)": "DER (TD)",
@@ -754,6 +755,7 @@
       "Editar": "Edit",
       "Exportar": "Export",
       "Fechar": "Close",
+      "Gerar": "Generate",
       "GerarRelatorio": "Generate Report",
       "Limpar": "Clear",
       "LimparPesquisa": "Clear Search",
@@ -810,7 +812,8 @@
       "EscolhaUmRegistroParaClonar":"Choose a record to clone.",
       "CriarCrud":"Create Crud",
       "EscolhaUmRegistroParaCriarCrud":"Choose a record to create crud.",
-      "Nenhum":"None"
+      "Nenhum":"None",
+      "DeflatorDeOrigen":"Maintain original deflator"
     },
     "Idiomas":{
       "Portugues":"Portuguese",
