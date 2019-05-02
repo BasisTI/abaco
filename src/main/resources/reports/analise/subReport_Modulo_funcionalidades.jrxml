@@ -16,7 +16,7 @@
 				<textFieldExpression><![CDATA["2."+$V{modCont}+"."+$V{funcioCont}+" Funcionalidade "+ $F{}]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="-1" y="50" width="556" height="59" uuid="8d563122-8ade-4bff-927d-9e8cd8ed3973">
+				<reportElement positionType="FixRelativeToBottom" x="-1" y="50" width="556" height="59" uuid="8d563122-8ade-4bff-927d-9e8cd8ed3973">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>

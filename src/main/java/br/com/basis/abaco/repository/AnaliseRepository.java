@@ -46,6 +46,17 @@ public interface AnaliseRepository extends JpaRepository<Analise,Long> {
     @EntityGraph(attributePaths = {"compartilhadas","funcaoDados","funcaoTransacaos","esforcoFases"})
     Analise findOne(Long id);
 
+    @Query(value = "SELECT * "+
+        "FROM analise a " +
+        "Join sistema s on s.id = a.sistema_id " +
+        "Join organizacao o on o.id = a.organizacao_id " +
+        "Join modulo m on s.id = m.sistema_id " +
+        "Join funcionalidade f on f.modulo_id = m.id " +
+        "Join funcao_dados fd on fd.funcionalidade_id = f.id " +
+        "Join funcao_transacao ft on ft.funcionalidade_id = f.id " +
+        "WHERE a.id = :id", nativeQuery = true)
+    Analise reportContagem(@Param("id")Long id);
+
     @EntityGraph(attributePaths = {"compartilhadas","funcaoDados","funcaoTransacaos","esforcoFases"})
     Optional<Analise> findOneById (Long id);
 

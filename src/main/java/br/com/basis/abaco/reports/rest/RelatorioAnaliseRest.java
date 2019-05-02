@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -142,8 +143,9 @@ public class RelatorioAnaliseRest {
 
 
     private Map<String, Object> popularParametroAnalise(Analise analise){
-        parametro = new HashMap<>();
-        parametro.put("indet_analise_param", analise);
+        parametro = new HashMap<String, Object>();
+        analise.setOrganizacao(analise.getOrganizacao());
+        parametro.put("indet_analise_param", Collections.singletonList(analise));
         return parametro;
     }
 

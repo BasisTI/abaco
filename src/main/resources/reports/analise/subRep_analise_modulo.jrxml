@@ -6,7 +6,7 @@
 		<![CDATA[]]>
 	</queryString>
 	<field name="nome" class="java.lang.String"/>
-	<field name="funcionalidades" class="java.util.LinkedHashMap"/>
+	<field name="funcionalidades" class="java.util.List"/>
 	<variable name="modCount" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -15,14 +15,8 @@
 		<band height="190" splitType="Stretch">
 			<textField>
 				<reportElement x="10" y="30" width="270" height="20" uuid="6ae815e2-3eff-45f1-9efd-8a7125385be6"/>
-				<textFieldExpression><![CDATA["2."+$V{modCont}+" Módulo "+$F{nome}.getNome()]]></textFieldExpression>
+				<textFieldExpression><![CDATA["2."+$V{modCount}+" Módulo "+$F{nome}]]></textFieldExpression>
 			</textField>
-			<subreport>
-				<reportElement x="-20" y="50" width="595" height="140" uuid="f151d484-b58d-47b4-8057-587989a35571"/>
-				<parametersMapExpression><![CDATA[$V{modCount}]]></parametersMapExpression>
-				<dataSourceExpression><![CDATA[$F{funcionalidades}]]></dataSourceExpression>
-				<subreportExpression><![CDATA["src/main/resources/reports/analise/subReport_Modulo_funcionalidades.jasper"]]></subreportExpression>
-			</subreport>
 		</band>
 	</detail>
 </jasperReport>
