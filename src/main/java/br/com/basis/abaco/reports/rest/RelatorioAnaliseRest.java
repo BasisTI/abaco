@@ -14,7 +14,10 @@ import br.com.basis.abaco.service.dto.FuncaoDadosDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoDTO;
 import br.com.basis.abaco.service.dto.FuncoesDTO;
 import br.com.basis.abaco.service.dto.ListaFdFtDTO;
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRResultSetDataSource;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -105,7 +108,7 @@ public class RelatorioAnaliseRest {
                 return relatorio.downloadPdfArquivo(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
 
             case CONTAGEM:
-                return relatorio.downloadPdfArquivo(analise, caminhoAnaliseContagem, popularParametroAnalise(analise));
+                return relatorio.downloadPdfArquivo(analise, caminhoAnaliseContagem, construirDataSource(analise));
         }
         return null;
     }
@@ -144,9 +147,13 @@ public class RelatorioAnaliseRest {
 
     private Map<String, Object> popularParametroAnalise(Analise analise){
         parametro = new HashMap<String, Object>();
-        analise.setOrganizacao(analise.getOrganizacao());
         parametro.put("indet_analise_param", Collections.singletonList(analise));
+        parametro.put("modulos", analise.getSistema().getModulos());
         return parametro;
+    }
+
+    private JRBeanCollectionDataSource construirDataSource(Analise analise) {
+        return new JRBeanCollectionDataSource(Collections.singletonList(analise));
     }
 
     /**

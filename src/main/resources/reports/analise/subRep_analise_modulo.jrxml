@@ -7,14 +7,17 @@
 	</queryString>
 	<field name="nome" class="java.lang.String"/>
 	<field name="funcionalidades" class="java.util.List"/>
-	<variable name="modCount" class="java.lang.String"/>
+	<variable name="modCount" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[+1]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="190" splitType="Stretch">
+		<band height="50" splitType="Stretch">
 			<textField>
-				<reportElement x="10" y="30" width="270" height="20" uuid="6ae815e2-3eff-45f1-9efd-8a7125385be6"/>
+				<reportElement x="10" y="-20" width="270" height="20" uuid="6ae815e2-3eff-45f1-9efd-8a7125385be6"/>
 				<textFieldExpression><![CDATA["2."+$V{modCount}+" Módulo "+$F{nome}]]></textFieldExpression>
 			</textField>
 		</band>

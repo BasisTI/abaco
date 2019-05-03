@@ -1,11 +1,13 @@
 package br.com.basis.abaco.reports.util;
 
 import br.com.basis.abaco.domain.Analise;
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
@@ -69,6 +71,27 @@ public class RelatorioUtil {
     public ResponseEntity<byte[]> downloadPdfArquivo(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
         InputStream stram = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
         JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(stram, parametrosJasper, new JREmptyDataSource());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s.pdf\"", analise.getIdentificadorAnalise().trim()));
+        return new ResponseEntity<byte[]>(outputStream.toByteArray(),headers, HttpStatus.OK);
+    }
+
+    /**
+     * Método responsável por fazer o download do PDF diretamente.
+     * @param analise
+     * @param caminhoJasperResolucao
+     * @param dataSource
+     * @return
+     * @throws FileNotFoundException
+     * @throws JRException
+     */
+    @SuppressWarnings({ RAW_TYPES, UNCHECKED })
+    public ResponseEntity<byte[]> downloadPdfArquivo(Analise analise, String caminhoJasperResolucao, JRBeanCollectionDataSource dataSource) throws FileNotFoundException, JRException {
+        InputStream stram = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
+        JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(stram, null, dataSource);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
         HttpHeaders headers = new HttpHeaders();
