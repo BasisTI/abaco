@@ -40,6 +40,12 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
     query: String = "*";
 
+    modPesquisa: boolean = true;
+
+    funcPesquisa: boolean = true;
+
+    deflaPesquisa: boolean = true;
+
     isEdit: boolean;
 
     disableAba: boolean;
@@ -103,11 +109,11 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
     nomeManual = this.getLabel('Analise.SelecioneUmContrato');
 
-    private fatorAjusteNenhumSelectItem = { label: this.getLabel('Global.Mensagens.DeflatorDeOrigen'), value: undefined };
-
     public hideShowSelectEquipe: boolean;
 
     elasticQuery: ElasticQuery = new ElasticQuery();
+
+    deflaPadrao: SelectItem = { label: "Não Alterar", value: "original-bAsis" };
 
     searchParams: any = {
         modulo: undefined
@@ -124,7 +130,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
         private funcaoDadosService: FuncaoDadosService,
         private funcionalidadeService: FuncionalidadeService,
         private pageNotificationService: PageNotificationService,
-        private funcaoTransacaoService:  FuncaoTransacaoService
+        private funcaoTransacaoService: FuncaoTransacaoService
 
 
     ) { }
@@ -132,8 +138,6 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.getAnalise();
         this.estadoInicial();
-        this.getTodasAnalisesBaseline();
-        this.recarregarDatatableAnaliseNova()
     }
 
     ngOnDestroy() {
@@ -171,6 +175,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
                 this.analiseService.find(params['id']).subscribe(analise => {
                     this.inicializaValoresAposCarregamento(analise);
                     this.analiseSharedDataService.analiseCarregada();
+                    this.getTodasAnalisesBaseline();
+                    this.estadoInicial();
                 });
             } else {
                 this.analise.esforcoFases = [];
@@ -299,6 +305,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
                 = _.find(this.fatoresAjuste, { value: { id: fatorAjuste.id } });
             this.analise.fatorAjuste = fatorAjusteSelectItem;
         }
+        this.fatoresAjuste.unshift(this.deflaPadrao);
     }
 
     private carregarEsforcoFases(manual: Manual) {
@@ -329,7 +336,9 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
                 const label = FatorAjusteLabelGenerator.generate(fa);
                 return { label: label, value: fa };
             });
-        this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+        this.carregarModulosQuandoTiverSistemaDisponivel();
+        this.getTodasAnalisesBaseline();
+
     }
 
     private getLabelValorVariacao(label: string, valorVariacao: number): string {
@@ -367,43 +376,64 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
         this.moduloSelecionado = modulo;
         this.deselecionaFuncionalidadeSeModuloSelecionadoForDiferente();
 
-        const moduloId = modulo.id;
-        this.funcionalidadeService.findFuncionalidadesByModulo(moduloId).subscribe((funcionalidades: Funcionalidade[]) => {
-            this.funcionalidades = funcionalidades;
-        });
-        this.moduloSelectedEvent.emit(modulo);
+        if (modulo != undefined && modulo != null) {
+            const moduloId = modulo.id;
+            this.funcionalidadeService.findFuncionalidadesByModulo(moduloId).subscribe((funcionalidades: Funcionalidade[]) => {
+                this.funcionalidades = funcionalidades;
+            });
+            this.moduloSelectedEvent.emit(modulo);
+        }
     }
 
     funcionalidadeSelected(funcionalidade: Funcionalidade) {
         this.funcionalidadeAtual = funcionalidade;
     }
     private deselecionaFuncionalidadeSeModuloSelecionadoForDiferente() {
-        if (this.moduloSelecionado.id !== this.oldModuloSelectedId) {
-            this.funcionalidadeSelecionada = undefined;
+        if (this.moduloSelecionado != undefined) {
+            if (this.moduloSelecionado.id !== this.oldModuloSelectedId) {
+                this.funcionalidadeSelecionada = undefined;
+            }
         }
+
     }
 
+
     performSearch() {
+        if (this.moduloSelecionado == undefined) {
+            this.modPesquisa = false;
+        } else {
+            this.modPesquisa = true;
+        }
+        if (this.funcionalidadeAtual == undefined) {
+            this.funcPesquisa = false;
+        } else {
+            this.funcPesquisa = true;
+        }
         this.recarregarDataTable();
     }
 
     montarFuncoesTransacao() {
-        if (this.datatable.selectedRow != undefined) {
-            this.datatable.selectedRow.map(ft => {
-                let value: FuncaoTransacao = _.cloneDeep(ft);
-                value.id = undefined;
-                value.ders.map(vd => {
-                    vd.id = undefined;
-                })
-                value.alrs.map(vd => {
-                    vd.id = undefined;
-                })
-                if (this.novoDeflator !== undefined) {
-                    value.fatorAjuste = this.novoDeflator;
-                    value = CalculadoraTransacao.calcular(this.analise.metodoContagem, value, this.analise.manual)
-                }
-                this.validarFT(value);
-            });
+        if (this.novoDeflator === undefined) {
+            this.deflaPesquisa = false;
+        } else {
+            this.deflaPesquisa = true;
+            if (this.datatable.selectedRow != undefined) {
+                this.datatable.selectedRow.map(ft => {
+                    let value: FuncaoTransacao = _.cloneDeep(ft);
+                    value.id = undefined;
+                    value.ders.map(vd => {
+                        vd.id = undefined;
+                    })
+                    value.alrs.map(vd => {
+                        vd.id = undefined;
+                    })
+                    if (this.novoDeflator != null) {
+                        value.fatorAjuste = this.novoDeflator;
+                        value = CalculadoraTransacao.calcular(this.analise.metodoContagem, value, this.analise.manual)
+                    }
+                    this.validarFT(value);
+                });
+            }
         }
     }
 
@@ -416,13 +446,9 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
             this.getFuncoesTransacoes();
         }
     }
-    public recarregarDatatableAnaliseNova(){
-            this.getFuncoesTransacoesPorMod(this.moduloSelecionado.nome);
-            this.getFuncoesTransacoesPorModEFunc(this.moduloSelecionado.nome, this.funcionalidadeAtual.nome);
-    }
 
-    public limparPesquisa(modDropDown, funcDropDown) {
-        this.limparModAndFunc(modDropDown, funcDropDown);
+    public limparPesquisa(modDropDown, funcDropDown, deflaDropDown) {
+        this.limparModAndFunc(modDropDown, funcDropDown, deflaDropDown);
         this.getFuncoesTransacoes();
     }
 
@@ -500,7 +526,11 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     }
 
     mudarDeflator(event) {
-        this.novoDeflator = event;
+        if (event == "original-bAsis") {
+            this.novoDeflator = null;
+        } else {
+            this.novoDeflator = event;
+        }
     }
 
     calcularComNovoDeflator(funcao: FuncaoTransacao) {
@@ -510,26 +540,31 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
         this.funcoesTransacaoList.push(funcaoTransacaoCalculada);
     }
 
-    retornarParaTelaDeFT(modDropDown, funcDropDown) {
-        this.limparModAndFunc(modDropDown, funcDropDown)
-        this.funcaoTransacaoService.display.next(false);  
+    retornarParaTelaDeFT(modDropDown, funcDropDown, deflaDropDown) {
+        this.limparModAndFunc(modDropDown, funcDropDown, deflaDropDown)
+        this.funcaoTransacaoService.display.next(false);
         this.getFuncoesTransacoes();
     }
 
-    limparModAndFunc(modDropDown, funcDropDown){
+    limparModAndFunc(modDropDown, funcDropDown, deflaDropDown) {
         modDropDown.clear(null);
         funcDropDown.clear(null);
+        deflaDropDown.clear(undefined);
         this.moduloSelecionado = undefined;
         this.funcionalidadeSelecionada = undefined;
+        this.deflaPadrao = undefined;
+        this.modPesquisa = true;
+        this.funcPesquisa = true;
+        this.datatable.selectedRow = undefined;
     }
 
     validarFT(funcao: FuncaoTransacao) {
         // this.validarFuncaoTransacaos(this.currentFuncaoTransacao).then(resolve => {
         //     if (resolve) {
-                this.pageNotificationService.addCreateMsgWithName(funcao.name);
-                this.analise.addFuncaoTransacao(funcao);
-                this.estadoInicial();
-                this.save();
+        this.pageNotificationService.addCreateMsgWithName(funcao.name);
+        this.analise.addFuncaoTransacao(funcao);
+        this.estadoInicial();
+        this.save();
         //     } else {
         //         this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgRegistroCadastrado'));
         //     }
@@ -543,15 +578,14 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
                     return resolve(true);
                 }
                 this.analise.funcaoTransacaos.forEach((data, index) => {
-                        if (data.comprar(ft)) {
-                            return resolve(false);
-                        }
-                        if (!this.analise.funcaoTransacaos[index + 1]) {
-                            return resolve(true);
-                        }
+                    if (data.comprar(ft)) {
+                        return resolve(false);
+                    }
+                    if (!this.analise.funcaoTransacaos[index + 1]) {
+                        return resolve(true);
+                    }
                 });
             }
         });
     }
-
 }

@@ -703,6 +703,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         return this.analiseSharedDataService.analise;
     }
 
+    pistolei(){
+        console.log("aqui")
+    }
+
     set analise(analise: Analise) {
         this.analiseSharedDataService.analise = analise;
     }
