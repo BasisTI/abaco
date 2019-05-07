@@ -133,7 +133,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
         this.getAnalise();
         this.estadoInicial();
         this.getTodasAnalisesBaseline();
-
+        this.recarregarDatatableAnaliseNova()
     }
 
     ngOnDestroy() {
@@ -416,6 +416,10 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
             this.getFuncoesTransacoes();
         }
     }
+    public recarregarDatatableAnaliseNova(){
+            this.getFuncoesTransacoesPorMod(this.moduloSelecionado.nome);
+            this.getFuncoesTransacoesPorModEFunc(this.moduloSelecionado.nome, this.funcionalidadeAtual.nome);
+    }
 
     public limparPesquisa(modDropDown, funcDropDown) {
         this.limparModAndFunc(modDropDown, funcDropDown);
@@ -509,6 +513,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     retornarParaTelaDeFT(modDropDown, funcDropDown) {
         this.limparModAndFunc(modDropDown, funcDropDown)
         this.funcaoTransacaoService.display.next(false);  
+        this.getFuncoesTransacoes();
     }
 
     limparModAndFunc(modDropDown, funcDropDown){
