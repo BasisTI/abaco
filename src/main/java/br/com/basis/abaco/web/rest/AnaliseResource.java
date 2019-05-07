@@ -12,7 +12,9 @@ import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.GrupoRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
@@ -105,6 +107,10 @@ public class AnaliseResource {
 
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
+    private final FuncaoDadosRepository funcaoDadosRepository;
+
+    private final FuncaoTransacaoRepository funcaoTransacaoRepository;
+
     private RelatorioAnaliseRest relatorioAnaliseRest;
 
     private DynamicExportsService dynamicExportsService;
@@ -127,8 +133,10 @@ public class AnaliseResource {
                            FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
                            DynamicExportsService dynamicExportsService,
                            UserRepository userRepository,
+                           FuncaoDadosRepository funcaoDadosRepository,
                            CompartilhadaRepository compartilhadaRepository,
-                           GrupoRepository grupoRepository) {
+                           GrupoRepository grupoRepository,
+                           FuncaoTransacaoRepository funcaoTransacaoRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
@@ -136,6 +144,8 @@ public class AnaliseResource {
         this.userRepository = userRepository;
         this.compartilhadaRepository = compartilhadaRepository;
         this.grupoRepository = grupoRepository;
+        this.funcaoDadosRepository = funcaoDadosRepository;
+        this.funcaoTransacaoRepository = funcaoTransacaoRepository;
     }
 
     /**
@@ -466,7 +476,7 @@ public class AnaliseResource {
     @GetMapping("/relatorioContagemPdf/{id}")
     public @ResponseBody
     ResponseEntity<byte[]> gerarRelatorioContagemPdf(@PathVariable Long id) throws FileNotFoundException, JRException {
-        Analise analise = recuperarAnalise(id);
+        Analise analise = recuperarAnaliseContagem(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         log.debug("REST request to generate a count report : {}", analise);
         return relatorioAnaliseRest.downloadPdfArquivo(analise, TipoRelatorio.CONTAGEM);
@@ -599,6 +609,24 @@ public class AnaliseResource {
 
         if (retorno) {
             return analiseRepository.findOne(id);
+        } else {
+            return null;
+        }
+    }
+
+    private Analise recuperarAnaliseContagem(Long id) {
+
+        boolean retorno = checarPermissao(id);
+
+        if (retorno) {
+            Analise analise = analiseRepository.reportContagem(id);
+            analise.getSistema().getModulos().forEach(modulo -> {
+                modulo.getFuncionalidades().forEach(funcionalidade -> {
+                    funcionalidade.setFuncoesDados(funcaoDadosRepository.findByFuncionalidade(funcionalidade.getId()));
+                    funcionalidade.setFuncoesTransacao(funcaoTransacaoRepository.findByFuncionalidade(funcionalidade.getId()));
+                });
+            });
+            return analise;
         } else {
             return null;
         }

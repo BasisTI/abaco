@@ -70,7 +70,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     @JsonManagedReference(value = FUNCAODADOS)
     @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Der> ders = new HashSet<>();
+    private Set<Der> ders = new LinkedHashSet<>();
 
     @JsonIgnore
     @ManyToOne
@@ -236,8 +236,8 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public void setDers(Set<Der> ders) {
         this.ders = Optional.ofNullable(ders)
-        .map((lista) -> new HashSet<Der>(lista))
-        .orElse(new HashSet<Der>());
+        .map(LinkedHashSet::new)
+        .orElse(new LinkedHashSet<Der>());
     }
 
     public FuncaoDadosVersionavel getFuncaoDadosVersionavel() {

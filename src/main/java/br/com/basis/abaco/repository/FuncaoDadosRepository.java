@@ -4,9 +4,11 @@ import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Spring Data JPA repository for the FuncaoDados entity.
@@ -32,5 +34,8 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
 
     @Query(value = "SELECT funcionalidade_id FROM Funcao_Dados where id = ?1", nativeQuery = true)
     Long getIdFuncionalidade(Long id);
+
+    @Query(value = "SELECT * FROM funcao_dados WHERE funcionalidade_id = :id", nativeQuery = true)
+    Set<FuncaoDados> findByFuncionalidade(@Param("id") Long id);
 
 }
