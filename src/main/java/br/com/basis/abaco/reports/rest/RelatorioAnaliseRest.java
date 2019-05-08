@@ -15,6 +15,7 @@ import br.com.basis.abaco.service.dto.FuncaoTransacaoDTO;
 import br.com.basis.abaco.service.dto.FuncoesDTO;
 import br.com.basis.abaco.service.dto.ListaFdFtDTO;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -25,6 +26,7 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +42,8 @@ public class RelatorioAnaliseRest {
     private static String caminhoRalatorioAnalise = "reports/analise/analise.jasper";
 
     private static String caminhoAnaliseDetalhada = "reports/analise/analise_detalhada.jasper";
+
+    private static String caminhoAnaliseContagem = "reports/doc_fundamet_cont.jasper";
 
     private static String caminhoAnaliseExcel = "reports/analise/analise_excel.jasper";
 
@@ -94,12 +98,18 @@ public class RelatorioAnaliseRest {
         init();
         popularObjeto(analise);
 
-        if(tipo == TipoRelatorio.ANALISE) {
-            return relatorio.downloadPdfArquivo(analise, caminhoRalatorioAnalise, popularParametroAnalise());
-        } else if(tipo == TipoRelatorio.ANALISE_DETALHADA) {
-            return relatorio.downloadPdfArquivo(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
+        switch(tipo){
+            case ANALISE:
+                return relatorio.downloadPdfArquivo(analise, caminhoRalatorioAnalise, popularParametroAnalise());
+
+            case ANALISE_DETALHADA:
+                return relatorio.downloadPdfArquivo(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
+
+            case CONTAGEM:
+                return relatorio.downloadPdfArquivo(analise, caminhoAnaliseContagem, construirDataSource(analise));
+
+            default: return null;
         }
-        return null;
     }
 
     /**empolgação
@@ -112,12 +122,18 @@ public class RelatorioAnaliseRest {
         init();
         popularObjeto(analise);
 
-        if(tipo == TipoRelatorio.ANALISE) {
-            return relatorio.downloadPdfBrowser(analise, caminhoRalatorioAnalise, popularParametroAnalise());
-        } else if(tipo == TipoRelatorio.ANALISE_DETALHADA) {
-            return relatorio.downloadPdfBrowser(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
+        switch(tipo) {
+            case ANALISE:
+                return relatorio.downloadPdfBrowser(analise, caminhoRalatorioAnalise, popularParametroAnalise());
+
+            case ANALISE_DETALHADA:
+                return relatorio.downloadPdfBrowser(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
+
+            case CONTAGEM:
+                return relatorio.downloadPdfBrowser(analise, caminhoAnaliseContagem, construirDataSource(analise));
+
+            default: return null;
         }
-        return null;
     }
 
     /**Gera o relatório para excel
@@ -134,6 +150,9 @@ public class RelatorioAnaliseRest {
     }
 
 
+    private JRBeanCollectionDataSource construirDataSource(Analise analise) {
+        return new JRBeanCollectionDataSource(Collections.singletonList(analise));
+    }
 
     /**
      * Método responsável por popular o parametro do Jasper.

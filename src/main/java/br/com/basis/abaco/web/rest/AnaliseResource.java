@@ -12,7 +12,9 @@ import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.GrupoRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
@@ -58,6 +60,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URI;
@@ -104,6 +107,10 @@ public class AnaliseResource {
 
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
+    private final FuncaoDadosRepository funcaoDadosRepository;
+
+    private final FuncaoTransacaoRepository funcaoTransacaoRepository;
+
     private RelatorioAnaliseRest relatorioAnaliseRest;
 
     private DynamicExportsService dynamicExportsService;
@@ -126,8 +133,10 @@ public class AnaliseResource {
                            FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
                            DynamicExportsService dynamicExportsService,
                            UserRepository userRepository,
+                           FuncaoDadosRepository funcaoDadosRepository,
                            CompartilhadaRepository compartilhadaRepository,
-                           GrupoRepository grupoRepository) {
+                           GrupoRepository grupoRepository,
+                           FuncaoTransacaoRepository funcaoTransacaoRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
@@ -135,6 +144,8 @@ public class AnaliseResource {
         this.userRepository = userRepository;
         this.compartilhadaRepository = compartilhadaRepository;
         this.grupoRepository = grupoRepository;
+        this.funcaoDadosRepository = funcaoDadosRepository;
+        this.funcaoTransacaoRepository = funcaoTransacaoRepository;
     }
 
     /**
@@ -457,6 +468,20 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadExcel(analise);
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/relatorioContagemPdf/{id}")
+    @Timed
+    public @ResponseBody
+    byte[] gerarRelatorioContagemPdf(@PathVariable Long id) throws FileNotFoundException, JRException {
+        Analise analise = recuperarAnaliseContagem(id);
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
+        log.debug("REST request to generate a count report : {}", analise);
+        return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.CONTAGEM);
+    }
 
 
     /**
@@ -585,6 +610,24 @@ public class AnaliseResource {
 
         if (retorno) {
             return analiseRepository.findOne(id);
+        } else {
+            return null;
+        }
+    }
+
+    private Analise recuperarAnaliseContagem(Long id) {
+
+        boolean retorno = checarPermissao(id);
+
+        if (retorno) {
+            Analise analise = analiseRepository.reportContagem(id);
+            analise.getSistema().getModulos().forEach(modulo -> {
+                modulo.getFuncionalidades().forEach(funcionalidade -> {
+                    funcionalidade.setFuncoesDados(funcaoDadosRepository.findByFuncionalidade(funcionalidade.getId()));
+                    funcionalidade.setFuncoesTransacao(funcaoTransacaoRepository.findByFuncionalidade(funcionalidade.getId()));
+                });
+            });
+            return analise;
         } else {
             return null;
         }

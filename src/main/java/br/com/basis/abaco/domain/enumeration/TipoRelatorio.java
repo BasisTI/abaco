@@ -6,5 +6,5 @@ package br.com.basis.abaco.domain.enumeration;
  */
 public enum TipoRelatorio {
 
-    ANALISE, ANALISE_DETALHADA, BASELINE
+    ANALISE, ANALISE_DETALHADA, BASELINE, CONTAGEM
 }
