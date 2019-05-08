@@ -185,7 +185,7 @@
 				<textFieldExpression><![CDATA["2." + $P{nMod} + "." + $V{nFuncionalidade} + " " + $F{nome}]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement isPrintRepeatedValues="false" x="0" y="30" width="540" height="60" uuid="41b372b5-2e32-4c3b-b462-2c5397555318">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="0" y="30" width="540" height="60" uuid="41b372b5-2e32-4c3b-b462-2c5397555318">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -195,54 +195,54 @@
 					<datasetRun subDataset="funcoesDadosDS" uuid="efa26144-afb6-48e4-ac95-711c005934f2">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{funcoesDados})]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="70" uuid="0e88535d-231d-4fbe-87d3-1c2d9ba12635">
+					<jr:column width="60" uuid="0e88535d-231d-4fbe-87d3-1c2d9ba12635">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="70" height="30" uuid="d1cac2e7-36cf-4f02-8140-2cf4b74fec57"/>
+								<reportElement x="0" y="0" width="60" height="30" uuid="d1cac2e7-36cf-4f02-8140-2cf4b74fec57"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<text><![CDATA[Tipo]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="70" height="30" uuid="de599d38-6ba2-4865-becf-e8fb2f10ebb3"/>
+								<reportElement x="0" y="0" width="60" height="30" uuid="de599d38-6ba2-4865-becf-e8fb2f10ebb3"/>
 								<box leftPadding="2"/>
 								<textElement textAlignment="Justified" verticalAlignment="Top"/>
 								<textFieldExpression><![CDATA[""+$F{tipo}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="70" uuid="589f0694-1c2e-4cd7-b0d4-ea94da6cd04a">
+					<jr:column width="60" uuid="589f0694-1c2e-4cd7-b0d4-ea94da6cd04a">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="70" height="30" uuid="3ee8cd00-042b-4088-a46e-49a4532d4c09"/>
+								<reportElement x="0" y="0" width="60" height="30" uuid="3ee8cd00-042b-4088-a46e-49a4532d4c09"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<text><![CDATA[Impacto]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="70" height="30" uuid="9d5e8b1b-7385-4e4d-b6ae-5cf2687ab38e"/>
+								<reportElement x="0" y="0" width="60" height="30" uuid="9d5e8b1b-7385-4e4d-b6ae-5cf2687ab38e"/>
 								<box leftPadding="2"/>
 								<textElement textAlignment="Justified" verticalAlignment="Top"/>
 								<textFieldExpression><![CDATA[""+$F{impacto}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="40" uuid="f59fe4c3-5e34-4038-8a7e-cac4dfd9c373">
+					<jr:column width="60" uuid="f59fe4c3-5e34-4038-8a7e-cac4dfd9c373">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="40" height="30" uuid="f6d5435c-ce0d-4312-aa3f-50d65900bf5d"/>
+								<reportElement x="0" y="0" width="60" height="30" uuid="f6d5435c-ce0d-4312-aa3f-50d65900bf5d"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<text><![CDATA[Deflator]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="40" height="30" uuid="81c617f0-3ade-4a29-85e2-6098f6148a4f"/>
+								<reportElement x="0" y="0" width="60" height="30" uuid="81c617f0-3ade-4a29-85e2-6098f6148a4f"/>
 								<textElement textAlignment="Justified" verticalAlignment="Top"/>
 								<textFieldExpression><![CDATA[$F{fatorAjuste.fator}]]></textFieldExpression>
 							</textField>
@@ -259,7 +259,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<componentElement>
-								<reportElement positionType="FixRelativeToBottom" x="0" y="0" width="90" height="30" uuid="a7ee3b15-94ba-4d98-b03a-32c6835486a7">
+								<reportElement x="0" y="0" width="90" height="30" uuid="a7ee3b15-94ba-4d98-b03a-32c6835486a7">
 									<property name="net.sf.jasperreports.export.headertoolbar.table.name" value="rlrList"/>
 								</reportElement>
 								<jr:list printOrder="Vertical">
@@ -267,7 +267,7 @@
 										<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{rlrs})]]></dataSourceExpression>
 									</datasetRun>
 									<jr:listContents height="30" width="90">
-										<textField>
+										<textField isBlankWhenNull="true">
 											<reportElement x="0" y="0" width="90" height="30" uuid="13a7a8f1-72a9-4ece-be4e-97bc682e7c56"/>
 											<box leftPadding="2"/>
 											<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
@@ -296,7 +296,7 @@
 										<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{ders})]]></dataSourceExpression>
 									</datasetRun>
 									<jr:listContents height="30" width="90">
-										<textField>
+										<textField isBlankWhenNull="true">
 											<reportElement x="0" y="0" width="90" height="30" uuid="68e53369-ecd4-42f1-be11-04314d2bfd3d"/>
 											<box leftPadding="2"/>
 											<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
@@ -338,52 +338,52 @@
 					<datasetRun subDataset="funcaoTransacaoDS" uuid="ba70f931-7b14-42e6-9503-5df11e1df6df">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{funcoesTransacao})]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="70" uuid="01e18f75-7155-454e-adde-c57490aa3a35">
+					<jr:column width="60" uuid="01e18f75-7155-454e-adde-c57490aa3a35">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:columnHeader style="Table 3_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="70" height="30" uuid="776e908c-edd3-45d6-9163-f371fde8e61b"/>
+								<reportElement x="0" y="0" width="60" height="30" uuid="776e908c-edd3-45d6-9163-f371fde8e61b"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<text><![CDATA[Tipo]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 3_TD" height="30">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="70" height="30" uuid="d5fb9c54-856c-4003-b47a-99a560615e95"/>
+								<reportElement x="0" y="0" width="60" height="30" uuid="d5fb9c54-856c-4003-b47a-99a560615e95"/>
 								<box leftPadding="2"/>
 								<textFieldExpression><![CDATA[""+$F{tipo}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="70" uuid="f5ef56a3-f747-46c1-9c67-5ebb1db85671">
+					<jr:column width="60" uuid="f5ef56a3-f747-46c1-9c67-5ebb1db85671">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 						<jr:columnHeader style="Table 3_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="70" height="30" uuid="b053099b-5f23-4990-940f-6154188bac78"/>
+								<reportElement x="0" y="0" width="60" height="30" uuid="b053099b-5f23-4990-940f-6154188bac78"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<text><![CDATA[Impacto]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 3_TD" height="30">
 							<textField isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="70" height="30" uuid="75d96d7a-61a5-4abb-939d-51fe026b51bc"/>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="60" height="30" uuid="75d96d7a-61a5-4abb-939d-51fe026b51bc"/>
 								<box leftPadding="2"/>
 								<textFieldExpression><![CDATA[""+$F{impacto}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="40" uuid="30b82461-30dc-467c-b68b-21bdc1eb3f16">
+					<jr:column width="60" uuid="30b82461-30dc-467c-b68b-21bdc1eb3f16">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 						<jr:columnHeader style="Table 3_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="40" height="30" uuid="1d086d55-c044-42d7-a1c9-c1556b7cd91d"/>
+								<reportElement x="0" y="0" width="60" height="30" uuid="1d086d55-c044-42d7-a1c9-c1556b7cd91d"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<text><![CDATA[Deflator]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 3_TD" height="30">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="40" height="30" uuid="7f856565-fee3-4e1c-93f7-8ff04a7e1f80"/>
+								<reportElement x="0" y="0" width="60" height="30" uuid="7f856565-fee3-4e1c-93f7-8ff04a7e1f80"/>
 								<box leftPadding="2"/>
 								<textFieldExpression><![CDATA[$F{fatorAjuste.fator}]]></textFieldExpression>
 							</textField>
@@ -408,7 +408,7 @@
 										<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{alrs})]]></dataSourceExpression>
 									</datasetRun>
 									<jr:listContents height="30" width="90">
-										<textField>
+										<textField isBlankWhenNull="true">
 											<reportElement x="0" y="0" width="90" height="30" uuid="415d922c-db38-4d13-a94e-b3f3a4c776b5"/>
 											<box leftPadding="4"/>
 											<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
@@ -437,7 +437,7 @@
 										<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{ders})]]></dataSourceExpression>
 									</datasetRun>
 									<jr:listContents height="30" width="90">
-										<textField>
+										<textField isBlankWhenNull="true">
 											<reportElement x="0" y="0" width="90" height="30" uuid="6a677003-9d28-423a-b654-59bc766a1a32"/>
 											<box leftPadding="2"/>
 											<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>

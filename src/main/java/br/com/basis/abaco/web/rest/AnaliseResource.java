@@ -474,12 +474,13 @@ public class AnaliseResource {
      * @return
      */
     @GetMapping("/relatorioContagemPdf/{id}")
+    @Timed
     public @ResponseBody
-    ResponseEntity<byte[]> gerarRelatorioContagemPdf(@PathVariable Long id) throws FileNotFoundException, JRException {
+    byte[] gerarRelatorioContagemPdf(@PathVariable Long id) throws FileNotFoundException, JRException {
         Analise analise = recuperarAnaliseContagem(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         log.debug("REST request to generate a count report : {}", analise);
-        return relatorioAnaliseRest.downloadPdfArquivo(analise, TipoRelatorio.CONTAGEM);
+        return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.CONTAGEM);
     }
 
 

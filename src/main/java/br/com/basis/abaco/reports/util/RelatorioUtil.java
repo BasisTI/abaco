@@ -1,7 +1,6 @@
 package br.com.basis.abaco.reports.util;
 
 import br.com.basis.abaco.domain.Analise;
-import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -40,6 +39,8 @@ public class RelatorioUtil {
     private static final String RAW_TYPES = "rawtypes";
 
     private static final String UNCHECKED = "unchecked";
+
+    private static final String EXCEL = "application/vnd.ms-excel";
 
     private HttpServletResponse response;
 
@@ -129,7 +130,42 @@ public class RelatorioUtil {
         exporter.exportReport();
 
         response.setHeader(CONTENT_DISP, INLINE_FILENAME + analise.getIdentificadorAnalise().trim() + ".xls");
-        response.setContentType("application/vnd.ms-excel");
+        response.setContentType(EXCEL);
+
+
+        return outputStream.toByteArray();
+    }
+
+    /**
+     * Método responsável por exibir o PDF no browser.
+     * @param analise
+     * @param caminhoJasperResolucao
+     * @param dataSource
+     * @return
+     * @throws FileNotFoundException
+     * @throws JRException
+     */
+    @SuppressWarnings({ RAW_TYPES, UNCHECKED })
+    public @ResponseBody byte[] downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, JRBeanCollectionDataSource dataSource) throws JRException {
+
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
+
+        JasperPrint jasperPrint = (JasperPrint)JasperFillManager.fillReport(stream, null, dataSource);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        JRPdfExporter exporter = new JRPdfExporter();
+        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+
+
+        SimplePdfReportConfiguration configuration = new SimplePdfReportConfiguration();
+        exporter.setConfiguration(configuration);
+
+        exporter.exportReport();
+
+        response.setHeader(CONTENT_DISP, INLINE_FILENAME + analise.getIdentificadorAnalise().trim() + ".xls");
+        response.setContentType(EXCEL);
 
 
         return outputStream.toByteArray();
@@ -168,7 +204,7 @@ public class RelatorioUtil {
 
         exporter.exportReport();
 
-        response.setContentType("application/vnd.ms-excel");
+        response.setContentType(EXCEL);
 
         response.setHeader(CONTENT_DISP, INLINE_FILENAME + analise.getIdentificadorAnalise().trim() + ".xls");
 

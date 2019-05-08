@@ -14,9 +14,7 @@ import br.com.basis.abaco.service.dto.FuncaoDadosDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoDTO;
 import br.com.basis.abaco.service.dto.FuncoesDTO;
 import br.com.basis.abaco.service.dto.ListaFdFtDTO;
-import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRResultSetDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -109,8 +107,9 @@ public class RelatorioAnaliseRest {
 
             case CONTAGEM:
                 return relatorio.downloadPdfArquivo(analise, caminhoAnaliseContagem, construirDataSource(analise));
+
+            default: return null;
         }
-        return null;
     }
 
     /**empolgação
@@ -123,12 +122,18 @@ public class RelatorioAnaliseRest {
         init();
         popularObjeto(analise);
 
-        if(tipo == TipoRelatorio.ANALISE) {
-            return relatorio.downloadPdfBrowser(analise, caminhoRalatorioAnalise, popularParametroAnalise());
-        } else if(tipo == TipoRelatorio.ANALISE_DETALHADA) {
-            return relatorio.downloadPdfBrowser(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
+        switch(tipo) {
+            case ANALISE:
+                return relatorio.downloadPdfBrowser(analise, caminhoRalatorioAnalise, popularParametroAnalise());
+
+            case ANALISE_DETALHADA:
+                return relatorio.downloadPdfBrowser(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
+
+            case CONTAGEM:
+                return relatorio.downloadPdfBrowser(analise, caminhoAnaliseContagem, construirDataSource(analise));
+
+            default: return null;
         }
-        return null;
     }
 
     /**Gera o relatório para excel
@@ -144,13 +149,6 @@ public class RelatorioAnaliseRest {
         return relatorio.downloadExcel(analise, caminhoAnaliseExcel, popularParametroAnalise());
     }
 
-
-    private Map<String, Object> popularParametroAnalise(Analise analise){
-        parametro = new HashMap<String, Object>();
-        parametro.put("indet_analise_param", Collections.singletonList(analise));
-        parametro.put("modulos", analise.getSistema().getModulos());
-        return parametro;
-    }
 
     private JRBeanCollectionDataSource construirDataSource(Analise analise) {
         return new JRBeanCollectionDataSource(Collections.singletonList(analise));
