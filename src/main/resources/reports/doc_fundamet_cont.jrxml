@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="doc_fundamet_cont" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5137bfa7-c2e2-4c56-89c4-c578fa83a325">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="doc_fundamet_cont" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isTitleNewPage="true" isIgnorePagination="true" uuid="5137bfa7-c2e2-4c56-89c4-c578fa83a325">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="br.com.basis.abaco.domain.*"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
@@ -40,7 +39,7 @@
 		<field name="id" class="java.lang.Long"/>
 		<field name="contrato.numeroContrato" class="java.lang.String"/>
 		<field name="manual.nome" class="java.lang.String"/>
-		<field name="metodoContagem" class="br.com.basis.abaco.domain.enumeration.MetodoContagem"/>
+		<field name="metodoContagem" class="java.util.Enumeration"/>
 		<field name="organizacao" class="java.lang.String"/>
 		<field name="organizacao.nome" class="java.lang.String"/>
 	</subDataset>
@@ -51,8 +50,7 @@
 	<field name="id" class="java.lang.Long"/>
 	<field name="contrato.numeroContrato" class="java.lang.String"/>
 	<field name="manual.nome" class="java.lang.String"/>
-	<field name="metodoContagem" class="br.com.basis.abaco.domain.enumeration.MetodoContagem"/>
-	<field name="organizacao" class="java.lang.String"/>
+	<field name="metodoContagem" class="java.lang.Object"/>
 	<field name="organizacao.nome" class="java.lang.String"/>
 	<field name="sistema.modulos" class="java.util.LinkedHashSet"/>
 	<variable name="modCont" class="java.lang.Integer" calculation="Sum">
@@ -67,7 +65,7 @@
 			<textField>
 				<reportElement key="" x="80" y="0" width="400" height="50" uuid="a28c69bb-9148-4438-ba83-983f78977e26"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="14" isBold="true" isUnderline="true"/>
+					<font size="16" isBold="true" isUnderline="false"/>
 					<paragraph lineSpacing="1_1_2"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Documento de Fundamentação de Contagem"]]></textFieldExpression>
@@ -78,11 +76,14 @@
 			</image>
 			<textField>
 				<reportElement x="480" y="0" width="80" height="20" uuid="3dea6fde-db4e-4d3f-9b3b-21605ed68a37"/>
-				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA["Versão: X.X"]]></textFieldExpression>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA["Versão: 1.0"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="65" width="212" height="24" uuid="b35d6d18-8a97-4a8b-93a0-ef71e959a7e9"/>
+				<reportElement x="0" y="65" width="300" height="24" uuid="b35d6d18-8a97-4a8b-93a0-ef71e959a7e9"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
 				<text><![CDATA[1. Indentificação da Análise]]></text>
 			</staticText>
 			<textField pattern="MMMM , yyyy">
@@ -91,61 +92,97 @@
 			</textField>
 			<textField>
 				<reportElement x="120" y="120" width="130" height="30" uuid="3e9230c1-607e-44a5-ac8c-c7495feb550c"/>
+				<box leftPadding="3">
+					<pen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{sistema.nome}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="120" y="150" width="130" height="30" uuid="b4bc5f7f-1b59-4f5b-8e5e-009ed1049949"/>
+				<box leftPadding="3">
+					<pen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="399" y="90" width="139" height="30" uuid="3b3eaa1f-cd6c-4b30-bf60-0c7e62b391a6"/>
+				<reportElement x="398" y="90" width="139" height="30" uuid="3b3eaa1f-cd6c-4b30-bf60-0c7e62b391a6"/>
+				<box leftPadding="3">
+					<pen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{contrato.numeroContrato}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="399" y="120" width="141" height="30" uuid="8d4f3b52-ea86-4d2b-a406-1fa05d897330"/>
+				<reportElement x="398" y="120" width="139" height="30" uuid="8d4f3b52-ea86-4d2b-a406-1fa05d897330"/>
+				<box leftPadding="3">
+					<pen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{manual.nome}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="400" y="150" width="139" height="30" uuid="f94101d4-66f5-4686-845f-ee155a046177"/>
+				<reportElement x="398" y="150" width="139" height="30" uuid="f94101d4-66f5-4686-845f-ee155a046177"/>
+				<box leftPadding="3">
+					<pen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{metodoContagem}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[""+$F{metodoContagem}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="120" y="90" width="129" height="30" uuid="d0b745a7-6159-47d1-a719-453b57c4383b"/>
+				<reportElement x="120" y="90" width="130" height="30" uuid="d0b745a7-6159-47d1-a719-453b57c4383b"/>
+				<box leftPadding="3">
+					<pen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{organizacao.nome}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="20" y="90" width="100" height="30" uuid="350422dc-f1d3-4ea6-b390-01874d8c5d09"/>
+				<reportElement mode="Opaque" x="20" y="90" width="100" height="30" backcolor="#FBC7A5" uuid="350422dc-f1d3-4ea6-b390-01874d8c5d09"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<text><![CDATA[Organização: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="20" y="120" width="100" height="30" uuid="8c800f3f-587e-4275-a63e-3892577c434b"/>
+				<reportElement mode="Opaque" x="20" y="120" width="100" height="30" backcolor="#FBC7A5" uuid="8c800f3f-587e-4275-a63e-3892577c434b"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<text><![CDATA[Sistema: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="20" y="150" width="100" height="30" uuid="2f68a99a-d78c-4618-a0a3-f8c6f358a445"/>
+				<reportElement mode="Opaque" x="20" y="150" width="100" height="30" backcolor="#FBC7A5" uuid="2f68a99a-d78c-4618-a0a3-f8c6f358a445"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<text><![CDATA[Identificador: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="280" y="90" width="118" height="30" uuid="9a8d534d-572e-421f-84c7-b932cd54c9d4"/>
+				<reportElement mode="Opaque" x="280" y="90" width="118" height="30" backcolor="#FBC7A5" uuid="9a8d534d-572e-421f-84c7-b932cd54c9d4"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<text><![CDATA[Contrato: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="280" y="120" width="118" height="30" uuid="f8a7eafd-45c1-4c89-bfa8-57403b98c168"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<reportElement mode="Opaque" x="280" y="120" width="118" height="30" backcolor="#FBC7A5" uuid="f8a7eafd-45c1-4c89-bfa8-57403b98c168"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none"/>
 				<text><![CDATA[Manual: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="280" y="150" width="118" height="30" uuid="fd72f001-6610-46fc-b13a-9a7ec536d2c1"/>
+				<reportElement mode="Opaque" x="280" y="150" width="118" height="30" backcolor="#FBC7A5" uuid="fd72f001-6610-46fc-b13a-9a7ec536d2c1"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<text><![CDATA[Método de Contagem: ]]></text>
 			</staticText>
@@ -154,7 +191,10 @@
 	<detail>
 		<band height="252" splitType="Stretch">
 			<staticText>
-				<reportElement x="-1" y="6" width="212" height="14" uuid="8450d05d-2db8-4da9-b7dc-87b7150d586f"/>
+				<reportElement x="-1" y="6" width="321" height="24" uuid="8450d05d-2db8-4da9-b7dc-87b7150d586f"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
 				<text><![CDATA[2. Detalhamento da Análise]]></text>
 			</staticText>
 			<subreport isUsingCache="false" runToBottom="true">
