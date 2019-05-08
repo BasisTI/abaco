@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, EventEmitter, Output, ViewChild, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MessageUtil } from '../util/message.util';
-import { SelectItem, Dropdown } from 'primeng/primeng';
+import { SelectItem } from 'primeng/primeng';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Rx';
 import { AnaliseService, Analise } from '../analise';
@@ -22,8 +22,8 @@ import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
 import { FuncaoTransacao } from '../funcao-transacao';
 import { DatatableComponent } from '@basis/angular-components';
 import { CalculadoraTransacao } from '../analise-shared';
-import { StringConcatService } from '../shared/string-concat.service';
 import { FuncaoTransacaoService } from '../funcao-transacao/funcao-transacao.service';
+import { BaselineService } from '../baseline';
 
 @Component({
     selector: 'app-pesquisar-ft',
@@ -130,8 +130,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
         private funcaoDadosService: FuncaoDadosService,
         private funcionalidadeService: FuncionalidadeService,
         private pageNotificationService: PageNotificationService,
-        private funcaoTransacaoService: FuncaoTransacaoService
-
+        private funcaoTransacaoService: FuncaoTransacaoService,
+        private baselineFT: BaselineService
 
     ) { }
 
@@ -410,6 +410,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
             this.funcPesquisa = true;
         }
         this.recarregarDataTable();
+
+
     }
 
     montarFuncoesTransacao() {
