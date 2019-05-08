@@ -80,6 +80,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
     funcaoTransacaoFuncionalidade: Funcionalidade[] = [];
 
+    funcaoTransacao: Funcionalidade[] = [];
+
     esforcoFases: EsforcoFase[] = [];
 
     metodosContagem: SelectItem[] = [];
@@ -103,7 +105,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     funcionalidadeAtual: Funcionalidade;
 
     funcionalidadeSelecionada: Funcionalidade;
-
+     
+    dadosBaseFT: any;
     @Output()
     moduloSelectedEvent = new EventEmitter<Modulo>();
 
@@ -175,8 +178,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
                 this.analiseService.find(params['id']).subscribe(analise => {
                     this.inicializaValoresAposCarregamento(analise);
                     this.analiseSharedDataService.analiseCarregada();
-                    this.getTodasAnalisesBaseline();
                     this.estadoInicial();
+                    this.getTodasAnalisesBaseline();
                 });
             } else {
                 this.analise.esforcoFases = [];
@@ -187,11 +190,21 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     getTodasAnalisesBaseline() {
         this.analiseService.findAllBaseline().subscribe(dado => {
             this.analises = this.analiseService.convertJsonToAnalise(dado);
-
-            this.getFuncoesTransacoes();
+            this.getBaselineAnalitico();
         }
         );
 
+    }
+
+    getBaselineAnalitico(){
+        this.baselineFT.baselineAnaliticoFT(this.analise.sistema.id).subscribe(dado =>{
+            this.dadosBaseFT = dado.json;
+            this.getFuncoesTransacoes();
+        });
+    }
+
+    carregarFtsAoCriarNovaAnalise(){
+        this.getTodasAnalisesBaseline();
     }
 
     updateImpacto(impacto: string) {
@@ -219,6 +232,38 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
     getFuncoesTransacoes() {
         this.funcaoTransacaoFuncionalidade = [];
+        this.fn = [];
+        this.funcaoTransacao = [];
+
+        if(this.analises != undefined){
+            this.analises.forEach(a => {
+                if (a.sistema.id === this.analise.sistema.id) {
+                    a.funcaoTransacaos.forEach(b => {
+                        this.funcaoTransacaoFuncionalidade.push(b);
+                    })
+                }
+            });
+        };
+       
+        if(this.dadosBaseFT != undefined){
+            this.dadosBaseFT.forEach(ft => {
+                this.funcaoTransacaoFuncionalidade.forEach(f => {
+                    if(ft.idfuncaodados == f.id){
+                        this.funcaoTransacao.push(f);
+                    }
+                })
+            });
+        };
+       
+        this.fn = this.funcaoTransacao;
+    }
+
+
+
+    getFuncoesTransacoesPorMod(nome: String) {
+        this.funcaoTransacaoFuncionalidade = [];
+        this.fn = [];
+        this.funcaoTransacao = [];
 
         this.analises.forEach(a => {
             if (a.sistema.id === this.analise.sistema.id) {
@@ -227,39 +272,41 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
                 })
             }
         });
-        this.fn = this.funcaoTransacaoFuncionalidade
-    }
 
-    getFuncoesTransacoesPorMod(nome: String) {
-        this.funcaoTransacaoFuncionalidade = [];
-
-        this.analises.forEach(a => {
-            if (a.sistema.id === this.analise.sistema.id) {
-                a.funcaoTransacaos.forEach(b => {
-                    if (b.funcionalidade.modulo.nome == nome) {
-                        this.funcaoTransacaoFuncionalidade.push(b);
-                    }
-                })
-            }
-        });
-        this.fn = this.funcaoTransacaoFuncionalidade
+        this.dadosBaseFT.forEach(ft => {
+            this.funcaoTransacaoFuncionalidade.forEach(f => {
+                if(ft.idfuncaodados == f.id && ft.nomeModulo == nome){
+                    this.funcaoTransacao.push(f);
+                }
+            })
+        })
+        this.fn = this.funcaoTransacao;
     }
 
 
     getFuncoesTransacoesPorModEFunc(nome: String, nomeF: String) {
         this.funcaoTransacaoFuncionalidade = [];
+        this.fn = [];
+        this.funcaoTransacao = [];
 
         this.analises.forEach(a => {
             if (a.sistema.id === this.analise.sistema.id) {
                 a.funcaoTransacaos.forEach(b => {
-                    if (b.funcionalidade.modulo.nome == nome && b.funcionalidade.nome == nomeF) {
-                        this.funcaoTransacaoFuncionalidade.push(b);
-                    }
+                    this.funcaoTransacaoFuncionalidade.push(b);
                 })
             }
         });
 
-        this.fn = this.funcaoTransacaoFuncionalidade
+        this.dadosBaseFT.forEach(ft => {
+            this.funcaoTransacaoFuncionalidade.forEach(f => {
+                if(ft.idfuncaodados == f.id && ft.nomeModulo == nome && ft.nomeFuncionalidade == nomeF){
+                    this.funcaoTransacao.push(f);
+                }
+            })
+        })
+
+        this.fn = this.funcaoTransacao;
+
     }
 
     private inicializaValoresAposCarregamento(analiseCarregada: Analise) {
@@ -282,6 +329,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     setManual(manual: Manual) {
         if (manual) {
             this.nomeManual = manual.nome;
+            this.getBaselineAnalitico();
             this.carregarEsforcoFases(manual);
             this.carregarMetodosContagem(manual);
             this.inicializaFatoresAjuste(manual);
@@ -337,7 +385,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
                 return { label: label, value: fa };
             });
         this.carregarModulosQuandoTiverSistemaDisponivel();
-        this.getTodasAnalisesBaseline();
+        this.carregarFtsAoCriarNovaAnalise();
 
     }
 
@@ -410,8 +458,6 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
             this.funcPesquisa = true;
         }
         this.recarregarDataTable();
-
-
     }
 
     montarFuncoesTransacao() {
