@@ -249,9 +249,10 @@ export class AnaliseService {
         const blob = new Blob([response.blob()], { type: mediaType });
         const fileURL = window.URL.createObjectURL(blob);
         const anchor = document.createElement('a');
-        anchor.download = 'analise.pdf';
+        anchor.download = 'analise_contagem.pdf';
         anchor.href = fileURL;
-        window.open(fileURL, '_blank', '');
+        document.body.appendChild(anchor);
+        anchor.click();
         this.blockUI.stop();
         return null;
       });
