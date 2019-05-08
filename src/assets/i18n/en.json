@@ -714,7 +714,8 @@
         "GerarRelatorio": "Generate Report",
         "CompartilharAnalise": "Shared Analysis",
         "BloquearAnalise": "Block Analysis",
-        "SalvarAnalise": "Save Analyze"
+        "SalvarAnalise": "Save Analyze",
+        "FundamentacaoContagem": "Counting Substantation"
       }
     },
     "Baseline": {
