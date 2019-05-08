@@ -16,6 +16,7 @@ import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
 import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { Subscription } from 'rxjs/Subscription';
+import { Router } from '@angular/router';
 
 import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
 import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
@@ -28,9 +29,7 @@ import { FuncaoTransacao, TipoFuncaoTransacao } from './funcao-transacao.model';
 import { Der } from '../der/der.model';
 import { Impacto } from '../analise-shared/impacto-enum';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
-import { loginRoute } from '../login';
 import { FuncaoTransacaoService } from './funcao-transacao.service';
-import { debug } from 'util';
 
 
 
@@ -47,6 +46,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     textHeader: string;
     @Input() isView: boolean;
     isEdit: boolean;
+    isFilter: boolean;
     nomeInvalido;
     classInvalida;
     impactoInvalido: boolean;
@@ -59,7 +59,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     windowWidthDialog: any;
     impactos: string[];
 
-
+    display: boolean = false;
     moduloCache: Funcionalidade;
     dersChips: DerChipItem[];
     alrsChips: DerChipItem[];
@@ -110,7 +110,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         private analiseService: AnaliseService,
         private baselineService: BaselineService,
         private funcaoTransacaoService: FuncaoTransacaoService,
-        private translate: TranslateService
+        private translate: TranslateService,
     ) {
     }
 
@@ -137,6 +137,14 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.dersChips = [];
         this.alrsChips = [];
         this.traduzirImpactos();
+        this.subscribeDisplay();
+    }
+
+    private subscribeDisplay() {
+        this.funcaoTransacaoService.display$.subscribe(
+            (data: boolean) => {
+               this.display = data;
+            });
     }
 
     public onRowDblclick(event) {
@@ -587,12 +595,17 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     datatableClick(event: DatatableClickEvent) {
-        if (!event.selection) {
+        const button = event.button;
+        if (button!== 'filter' && !event.selection) {
             return;
         }
 
-        const funcaoTransacaoSelecionada: FuncaoTransacao = event.selection.clone();
-        switch (event.button) {
+        let funcaoTransacaoSelecionada: FuncaoTransacao;
+        if(button !== 'filter' ) {
+            funcaoTransacaoSelecionada = event.selection.clone();
+        }
+
+        switch (button) {
             case 'edit':
                 this.isEdit = true;
                 this.prepararParaEdicao(funcaoTransacaoSelecionada);
@@ -609,9 +622,13 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 this.currentFuncaoTransacao.artificialId = undefined;
                 this.currentFuncaoTransacao.impacto = Impacto.ALTERACAO;
                 this.textHeader = this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgClonarFuncaoDeTransacao');
+                break;
+            case 'filter':
+            this.display = true;
+            break;
         }
     }
-
+   
     private prepararParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
 
         this.disableTRDER();
@@ -717,6 +734,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
+    openDialogAdcFT(param: boolean){
+        this.isFilter = param;
+        this.configurarDialog();
+    }
+
     configurarDialog() {
         this.getTextDialog();
         this.windowHeightDialog = window.innerHeight * 0.60;
@@ -727,7 +749,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     private inicializaFatoresAjuste(manual: Manual) {
         if (manual.fatoresAjuste) {
-            this.faS = _.cloneDeep(manual.fatoresAjuste);
+            this.faS = _.cloneDeep(this.analise.manual.fatoresAjuste);
             
             this.faS.sort((n1, n2) => {
                 if (n1.fator < n2.fator)
@@ -761,6 +783,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.estadoInicial();
         }
     }
+
+    
 }
 
 
