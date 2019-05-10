@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -127,7 +128,7 @@ public class RelatorioUtil {
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
     public @ResponseBody byte[] downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, JRBeanCollectionDataSource dataSource) throws JRException {
 
-        return buildPDFBrowser(caminhoJasperResolucao, null, dataSource);
+        return buildPDFBrowser(caminhoJasperResolucao, new HashMap(), dataSource);
     }
 
     private byte[] buildPDFBrowser(String caminhoJasperResolucao, Map parametters, JRBeanCollectionDataSource dataSource) throws JRException {
