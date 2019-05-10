@@ -147,11 +147,13 @@ public class RelatorioUtil {
 
         exporter.exportReport();
 
-        response.setHeader(CONTENT_DISP, INLINE_FILENAME + analise.getIdentificadorAnalise().trim() + ".xls");
-        response.setContentType(EXCEL);
+        JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
 
+        response.setContentType("application/x-pdf");
 
-        return outputStream.toByteArray();
+        response.setHeader(CONTENT_DISP, INLINE_FILENAME + ".pdf");
+
+        return  JasperExportManager.exportReportToPdf(jasperPrint);
     }
 
     /**
