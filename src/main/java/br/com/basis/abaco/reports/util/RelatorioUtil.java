@@ -112,7 +112,7 @@ public class RelatorioUtil {
      */
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
     public @ResponseBody byte[] downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
-        return buildPDFBrowser(analise, caminhoJasperResolucao, parametrosJasper, null);
+        return buildPDFBrowser(caminhoJasperResolucao, parametrosJasper, null);
     }
 
     /**
@@ -127,10 +127,10 @@ public class RelatorioUtil {
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
     public @ResponseBody byte[] downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, JRBeanCollectionDataSource dataSource) throws JRException {
 
-        return buildPDFBrowser(analise, caminhoJasperResolucao, null, dataSource);
+        return buildPDFBrowser(caminhoJasperResolucao, null, dataSource);
     }
 
-    private byte[] buildPDFBrowser(Analise analise, String caminhoJasperResolucao, Map parametters, JRBeanCollectionDataSource dataSource) throws JRException {
+    private byte[] buildPDFBrowser(String caminhoJasperResolucao, Map parametters, JRBeanCollectionDataSource dataSource) throws JRException {
         InputStream stream = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
 
         JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(stream, parametters, dataSource);
