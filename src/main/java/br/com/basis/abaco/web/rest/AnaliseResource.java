@@ -621,13 +621,17 @@ public class AnaliseResource {
 
         if (retorno) {
             Analise analise = analiseRepository.reportContagem(id);
-            analise.getSistema().getModulos().forEach(modulo -> {
-                modulo.getFuncionalidades().forEach(funcionalidade -> {
-                    funcionalidade.setFuncoesDados(funcaoDadosRepository.findByFuncionalidade(funcionalidade.getId()));
-                    funcionalidade.setFuncoesTransacao(funcaoTransacaoRepository.findByFuncionalidade(funcionalidade.getId()));
+            Sistema sistema = analise.getSistema();
+            if(sistema != null) {
+            sistema.getModulos().forEach(modulo -> {
+                    modulo.getFuncionalidades().forEach(funcionalidade -> {
+                        funcionalidade.setFuncoesDados(funcaoDadosRepository.findByFuncionalidade(funcionalidade.getId()));
+                        funcionalidade.setFuncoesTransacao(funcaoTransacaoRepository.findByFuncionalidade(funcionalidade.getId()));
+                    });
                 });
-            });
-            return analise;
+                return analise;
+            }
+            return null;
         } else {
             return null;
         }
