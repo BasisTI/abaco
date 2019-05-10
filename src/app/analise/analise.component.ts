@@ -170,9 +170,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
 
     relatorioContagemTooltip() {
         if (!this.analiseSelecionada.idAnalise) {
-            return this.getLabel('Analise.Analise.RelatorioDetalhado');
+            return this.getLabel('Analise.Analise.Botoes.FundamentacaoContagem');
         }
-        return this.getLabel('Analise.Analise.Botoes.FundamentacaoContagem');
+        return this.getLabel('Analise.Analise.RelatorioDetalhado');
     }
 
     recuperarOrganizacoes() {
