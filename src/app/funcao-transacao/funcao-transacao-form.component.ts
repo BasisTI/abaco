@@ -30,7 +30,8 @@ import { Der } from '../der/der.model';
 import { Impacto } from '../analise-shared/impacto-enum';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
 import { FuncaoTransacaoService } from './funcao-transacao.service';
-
+import * as ClassicEditor from 'basis-ckeditor5';
+import { Editor } from './funcao-transacao.model';
 
 
 @Component({
@@ -89,6 +90,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     @Input()
     label: string;
     showMultiplos = false;
+    @Input() properties: Editor;
+    @Input() uploadImagem: boolean = true;
+    @Input() criacaoTabela: boolean = true;
+
+    public Editor = ClassicEditor;
 
     private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
     private analiseCarregadaSubscription: Subscription;
@@ -129,6 +135,13 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.subscribeToAnaliseCarregada();
         this.initClassificacoes();
         this.impactos = AnaliseSharedUtils.impactos;
+
+        if (!this.uploadImagem) {
+            this.config.toolbar.splice(this.config.toolbar.indexOf('imageUpload'));
+        }
+        if (!this.criacaoTabela) {
+            this.config.toolbar.splice(this.config.toolbar.indexOf('insertTable'));
+        }
     }
 
     estadoInicial() {
@@ -164,7 +177,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.prepararParaEdicao(this.FuncaoTransacaoEditar);
     }
     /*
-    *   Metodo responsavel por traduzir os tipos de impacto em função de dados 
+    *   Metodo responsavel por traduzir os tipos de impacto em função de dados
     */
     traduzirImpactos() {
         this.translate.stream(['Cadastros.FuncaoDados.Impactos.Inclusao', 'Cadastros.FuncaoDados.Impactos.Alteracao',
@@ -180,6 +193,36 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
             })
     }
+
+    public config = {
+        language: 'pt-br',
+        toolbar: [
+                'heading', '|', 'bold', 'italic', 'hiperlink', 'underline', 'bulletedList', 'numberedList', 'alignment', '|',
+                'imageUpload', 'insertTable', 'imageStyle:side', 'imageStyle:full', '|', 'undo', 'redo', 'copy', 'cut', 'paste'
+                ],
+        heading: {
+                options: [
+                    { model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph' },
+                    { model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1' },
+                    { model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2' },
+                    { model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3' }
+                        ]
+                },
+        alignment: {
+                options: ['left', 'right', 'center', 'justify']
+                    },
+        image: {
+            toolbar: [
+                        ]
+                },
+        table: {
+            contentToolbar: [
+                'tableColumn',
+                'tableRow',
+                'mergeTableCells'
+                ]
+            }
+        }
 
     updateImpacto(impacto: string) {
         switch (impacto) {
@@ -361,7 +404,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     searchBaseline(event): void {
 
         let mdCache = this.moduloCache;
-        
+
         this.baselineResultados = this.dadosBaselineFT.filter(function (fd) {
             var teste: string = event.query;
             return fd.name.toLowerCase().includes(teste.toLowerCase()) && fd.idfuncionalidade == mdCache.id;
@@ -628,7 +671,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             break;
         }
     }
-   
+
     private prepararParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
 
         this.disableTRDER();
@@ -750,7 +793,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     private inicializaFatoresAjuste(manual: Manual) {
         if (manual.fatoresAjuste) {
             this.faS = _.cloneDeep(this.analise.manual.fatoresAjuste);
-            
+
             this.faS.sort((n1, n2) => {
                 if (n1.fator < n2.fator)
                     return 1;
@@ -784,7 +827,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    
+
 }
 
 

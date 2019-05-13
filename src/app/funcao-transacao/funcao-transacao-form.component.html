@@ -339,13 +339,15 @@
                 <div class="ui-g-12 ui-md-12 ui-sm-12">
                     <label translate="Cadastros.FuncaoTransacao.Fundamentacao">Fundamentação</label>
                     <span class="md-inputfield">
-                <textarea
+                <ckeditor
                         [rows]="3"
                         id="idFundamentacaoFormFuncaoTransacao"
                         [cols]="180"
+                        [editor]="Editor"
+                        [config]="config"
                         pInputTextarea name="funcaoDadosSustentacao"
                         [(ngModel)]="currentFuncaoTransacao.sustantation">
-                </textarea>
+                </ckeditor>
             </span>
                 </div>
 
@@ -378,7 +380,7 @@
             </p-dialog>
             <!-- Fim Dialog adicionar função de dados  -->
 
-            
+
 
         </div>
     </div>
