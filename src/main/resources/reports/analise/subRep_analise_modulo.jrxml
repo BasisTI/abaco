@@ -32,7 +32,7 @@
 					<subreportParameterExpression><![CDATA[$V{nMod}]]></subreportParameterExpression>
 				</subreportParameter>
 				<dataSourceExpression><![CDATA[new  net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{funcionalidades})]]></dataSourceExpression>
-				<subreportExpression><![CDATA[net.sf.jasperreports.engine.util.JRLoader.loadObject(getClass().getResource("./reports/subRep_funcionalidades.jasper"))]]></subreportExpression>
+				<subreportExpression><![CDATA[net.sf.jasperreports.engine.util.JRLoader.loadObject(getClass().getResource("/reports/subRep_funcionalidades.jasper"))]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>
