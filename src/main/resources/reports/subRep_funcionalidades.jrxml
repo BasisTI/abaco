@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subRep_funcionalidades" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="170acde5-5888-42eb-8738-ed9d85c2386b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<import value="br.com.basis.abaco.domain.*"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#FAD0B4">
 		<box>
@@ -403,7 +404,7 @@
 								<reportElement x="0" y="0" width="90" height="30" uuid="6ba7b042-8615-4ad8-9211-51a34f9ab177">
 									<property name="net.sf.jasperreports.export.headertoolbar.table.name" value="alrsFT"/>
 								</reportElement>
-								<jr:list>
+								<jr:list printOrder="Vertical">
 									<datasetRun subDataset="rlrsFT" uuid="a31e6015-ce36-41f8-acf1-5e7b7fe43f15">
 										<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{alrs})]]></dataSourceExpression>
 									</datasetRun>
