@@ -19,9 +19,11 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -94,7 +96,7 @@ public class RelatorioAnaliseRest {
      * @throws FileNotFoundException
      * @throws JRException
      */
-    public ResponseEntity<byte[]> downloadPdfArquivo(Analise analise, TipoRelatorio tipo) throws FileNotFoundException, JRException {
+    public ResponseEntity<byte[]> downloadPdfArquivo(Analise analise, TipoRelatorio tipo) throws IOException, JRException {
         init();
         popularObjeto(analise);
 
@@ -106,10 +108,17 @@ public class RelatorioAnaliseRest {
                 return relatorio.downloadPdfArquivo(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
 
             case CONTAGEM:
-                return relatorio.downloadPdfArquivo(analise, caminhoAnaliseContagem, construirDataSource(analise));
+                return relatorio.downloadPdfArquivo(analise, caminhoAnaliseContagem, construirParams(), construirDataSource(analise));
 
             default: return null;
         }
+    }
+
+    private Map construirParams() throws IOException {
+        Map param = new HashMap<String, Object>();
+        param.put("Logo", ImageIO.read(this.getClass().getClassLoader()
+            .getResourceAsStream(caminhoImagemBasis)));
+        return param;
     }
 
     /**empolgação

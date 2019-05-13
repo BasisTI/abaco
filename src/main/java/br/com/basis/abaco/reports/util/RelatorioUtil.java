@@ -91,9 +91,9 @@ public class RelatorioUtil {
      * @throws JRException
      */
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
-    public ResponseEntity<byte[]> downloadPdfArquivo(Analise analise, String caminhoJasperResolucao, JRBeanCollectionDataSource dataSource) throws FileNotFoundException, JRException {
+    public ResponseEntity<byte[]> downloadPdfArquivo(Analise analise, String caminhoJasperResolucao, Map params ,JRBeanCollectionDataSource dataSource) throws FileNotFoundException, JRException {
         InputStream stram = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
-        JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(stram, null, dataSource);
+        JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(stram, params, dataSource);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
         HttpHeaders headers = new HttpHeaders();
