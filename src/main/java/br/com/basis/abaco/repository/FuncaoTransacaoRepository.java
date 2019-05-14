@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Set;
+
 /**
  * Spring Data JPA repository for the FuncaoTransacao entity.
  */
@@ -16,4 +18,7 @@ public interface FuncaoTransacaoRepository extends JpaRepository<FuncaoTransacao
 
     @Query("SELECT f FROM FuncaoTransacao f JOIN FETCH f.ders WHERE f.id = (:id)")
     FuncaoTransacao findWithDerAndAlr(@Param("id") Long id);
+
+    @Query(value = "SELECT * FROM funcao_transacao WHERE funcionalidade_id = :id", nativeQuery = true)
+    Set<FuncaoTransacao> findByFuncionalidade(@Param("id") Long id);
  }
