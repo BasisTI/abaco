@@ -37,6 +37,8 @@ import { FuncaoTransacao, TipoFuncaoTransacao } from './../funcao-transacao/func
 import { CalculadoraTransacao } from './../analise-shared/calculadora-transacao';
 import { fcall } from 'q';
 import { Alr } from '../alr/alr.model';
+import * as ClassicEditor from 'basis-ckeditor5';
+import { Editor } from './funcao-dados.model';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -50,6 +52,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     text: string;
     @Input()
     label: string;
+    @Input() properties: Editor;
+    @Input() uploadImagem: boolean = true;
+    @Input() criacaoTabela: boolean = true;
+
+    public Editor = ClassicEditor;
 
     faS: FatorAjuste[] = [];
 
@@ -153,6 +160,13 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.estadoInicial();
         this.impactos = AnaliseSharedUtils.impactos;
+
+        if (!this.uploadImagem) {
+            this.config.toolbar.splice(this.config.toolbar.indexOf('imageUpload'));
+        }
+        if (!this.criacaoTabela) {
+            this.config.toolbar.splice(this.config.toolbar.indexOf('insertTable'));
+        }
     }
 
     estadoInicial() {
@@ -208,8 +222,38 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             })
     }
 
+    public config = {
+            language: 'pt-br',
+            toolbar: [
+                    'heading', '|', 'bold', 'italic', 'hiperlink', 'underline', 'bulletedList', 'numberedList', 'alignment', '|',
+                    'imageUpload', 'insertTable', 'imageStyle:side', 'imageStyle:full', '|', 'undo', 'redo', 'copy', 'cut', 'paste'
+                    ],
+            heading: {
+                    options: [
+                        { model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph' },
+                        { model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1' },
+                        { model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2' },
+                        { model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3' }
+                            ]
+                    },
+            alignment: {
+                    options: ['left', 'right', 'center', 'justify']
+                        },
+            image: {
+                toolbar: [
+                            ]
+                    },
+            table: {
+                contentToolbar: [
+                    'tableColumn',
+                    'tableRow',
+                    'mergeTableCells'
+                    ]
+                }
+            }
+
     /*
-    *   Metodo responsavel por traduzir as classificacoes que ficam em função de dados 
+    *   Metodo responsavel por traduzir as classificacoes que ficam em função de dados
     */
     traduzirClassificacoes() {
         this.translate.stream(['Cadastros.FuncaoDados.Classificacoes.ALI', 'Cadastros.FuncaoDados.Classificacoes.AIE']).subscribe((traducao) => {
@@ -222,10 +266,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
 
     /*
-    *   Metodo responsavel por traduzir os tipos de impacto em função de dados 
+    *   Metodo responsavel por traduzir os tipos de impacto em função de dados
     */
     traduzirImpactos() {
-        this.translate.stream(['Cadastros.FuncaoDados.Impactos.Inclusao', 'Cadastros.FuncaoDados.Impactos.Alteracao', 
+        this.translate.stream(['Cadastros.FuncaoDados.Impactos.Inclusao', 'Cadastros.FuncaoDados.Impactos.Alteracao',
         'Cadastros.FuncaoDados.Impactos.Exclusao', 'Cadastros.FuncaoDados.Impactos.Conversao',
         'Cadastros.FuncaoDados.Impactos.Outros']).subscribe((traducao) => {
             this.impacto = [
@@ -595,19 +639,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             this.desconverterChips();
             this.verificarModulo();
             const funcaoDadosCalculada = Calculadora.calcular(
-                this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
-            this.validarNameFuncaoDados(this.currentFuncaoDados).then(resolve => {
-                if(resolve) {
-                    this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')} '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.msgAlteradaComSucesso')}`);
-                    this.analise.updateFuncaoDados(funcaoDadosCalculada);
-                    this.atualizaResumo();
-                    this.resetarEstadoPosSalvar();
-                    this.salvarAnalise();
-                    this.fecharDialog();
-                } else {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
-                }
-            });
+            this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
+            this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
+                '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlteradaComSucesso')}`);
+            this.analise.updateFuncaoDados(funcaoDadosCalculada);
+            this.atualizaResumo();
+            this.resetarEstadoPosSalvar();
+            this.salvarAnalise();
+            this.fecharDialog();
         }
     }
 

@@ -17,6 +17,13 @@ export enum TipoFuncaoTransacao {
   'INM' = 'INM'
 }
 
+export class Editor {
+    constructor(public label?: string,
+        public placeholder?: string,
+        public formControlName?: string
+    ) { }
+}
+
 export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnalise, JSONable<FuncaoTransacao> {
 
   detStr: string;

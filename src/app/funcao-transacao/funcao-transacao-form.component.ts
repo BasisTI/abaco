@@ -16,6 +16,7 @@ import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
 import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { Subscription } from 'rxjs/Subscription';
+import { Router } from '@angular/router';
 
 import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
 import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
@@ -28,10 +29,9 @@ import { FuncaoTransacao, TipoFuncaoTransacao } from './funcao-transacao.model';
 import { Der } from '../der/der.model';
 import { Impacto } from '../analise-shared/impacto-enum';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
-import { loginRoute } from '../login';
 import { FuncaoTransacaoService } from './funcao-transacao.service';
-import { debug } from 'util';
-
+import * as ClassicEditor from 'basis-ckeditor5';
+import { Editor } from './funcao-transacao.model';
 
 
 @Component({
@@ -47,6 +47,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     textHeader: string;
     @Input() isView: boolean;
     isEdit: boolean;
+    isFilter: boolean;
     nomeInvalido;
     classInvalida;
     impactoInvalido: boolean;
@@ -59,7 +60,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     windowWidthDialog: any;
     impactos: string[];
 
-
+    display: boolean = false;
     moduloCache: Funcionalidade;
     dersChips: DerChipItem[];
     alrsChips: DerChipItem[];
@@ -89,6 +90,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     @Input()
     label: string;
     showMultiplos = false;
+    @Input() properties: Editor;
+    @Input() uploadImagem: boolean = true;
+    @Input() criacaoTabela: boolean = true;
+
+    public Editor = ClassicEditor;
 
     private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
     private analiseCarregadaSubscription: Subscription;
@@ -110,7 +116,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         private analiseService: AnaliseService,
         private baselineService: BaselineService,
         private funcaoTransacaoService: FuncaoTransacaoService,
-        private translate: TranslateService
+        private translate: TranslateService,
     ) {
     }
 
@@ -129,6 +135,13 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.subscribeToAnaliseCarregada();
         this.initClassificacoes();
         this.impactos = AnaliseSharedUtils.impactos;
+
+        if (!this.uploadImagem) {
+            this.config.toolbar.splice(this.config.toolbar.indexOf('imageUpload'));
+        }
+        if (!this.criacaoTabela) {
+            this.config.toolbar.splice(this.config.toolbar.indexOf('insertTable'));
+        }
     }
 
     estadoInicial() {
@@ -137,6 +150,14 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.dersChips = [];
         this.alrsChips = [];
         this.traduzirImpactos();
+        this.subscribeDisplay();
+    }
+
+    private subscribeDisplay() {
+        this.funcaoTransacaoService.display$.subscribe(
+            (data: boolean) => {
+               this.display = data;
+            });
     }
 
     public onRowDblclick(event) {
@@ -156,7 +177,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.prepararParaEdicao(this.FuncaoTransacaoEditar);
     }
     /*
-    *   Metodo responsavel por traduzir os tipos de impacto em função de dados 
+    *   Metodo responsavel por traduzir os tipos de impacto em função de dados
     */
     traduzirImpactos() {
         this.translate.stream(['Cadastros.FuncaoDados.Impactos.Inclusao', 'Cadastros.FuncaoDados.Impactos.Alteracao',
@@ -172,6 +193,36 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
             })
     }
+
+    public config = {
+        language: 'pt-br',
+        toolbar: [
+                'heading', '|', 'bold', 'italic', 'hiperlink', 'underline', 'bulletedList', 'numberedList', 'alignment', '|',
+                'imageUpload', 'insertTable', 'imageStyle:side', 'imageStyle:full', '|', 'undo', 'redo', 'copy', 'cut', 'paste'
+                ],
+        heading: {
+                options: [
+                    { model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph' },
+                    { model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1' },
+                    { model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2' },
+                    { model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3' }
+                        ]
+                },
+        alignment: {
+                options: ['left', 'right', 'center', 'justify']
+                    },
+        image: {
+            toolbar: [
+                        ]
+                },
+        table: {
+            contentToolbar: [
+                'tableColumn',
+                'tableRow',
+                'mergeTableCells'
+                ]
+            }
+        }
 
     updateImpacto(impacto: string) {
         switch (impacto) {
@@ -353,7 +404,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     searchBaseline(event): void {
 
         let mdCache = this.moduloCache;
-        
+
         this.baselineResultados = this.dadosBaselineFT.filter(function (fd) {
             var teste: string = event.query;
             return fd.name.toLowerCase().includes(teste.toLowerCase()) && fd.idfuncionalidade == mdCache.id;
@@ -517,23 +568,17 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.desconverterChips();
             this.verificarModulo();
             const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
-                this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-            this.validarFuncaoTransacaos(this.currentFuncaoTransacao).then(resolve => {
-                if(resolve) {
-                    this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
-                    this.atualizaResumo();
-                    this.resetarEstadoPosSalvar();
-                    this.salvarAnalise();
-                    this.fecharDialog();
-                    this.pageNotificationService
-                        .addSuccessMsg(`${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgFuncaoDeTransacao')}
-                        '${funcaoTransacaoCalculada.name}' ${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlteradaComSucesso')}`);
-                    this.atualizaResumo();
-                    this.resetarEstadoPosSalvar();
-                } else {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgRegistroCadastrado'));
-                }
-            });
+            this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
+            this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
+            this.atualizaResumo();
+            this.resetarEstadoPosSalvar();
+            this.salvarAnalise();
+            this.fecharDialog();
+            this.pageNotificationService
+                .addSuccessMsg(`${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgFuncaoDeTransacao')}
+                '${funcaoTransacaoCalculada.name}' ${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlteradaComSucesso')}`);
+            this.atualizaResumo();
+            this.resetarEstadoPosSalvar();
         }
     }
 
@@ -587,12 +632,17 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     datatableClick(event: DatatableClickEvent) {
-        if (!event.selection) {
+        const button = event.button;
+        if (button!== 'filter' && !event.selection) {
             return;
         }
 
-        const funcaoTransacaoSelecionada: FuncaoTransacao = event.selection.clone();
-        switch (event.button) {
+        let funcaoTransacaoSelecionada: FuncaoTransacao;
+        if(button !== 'filter' ) {
+            funcaoTransacaoSelecionada = event.selection.clone();
+        }
+
+        switch (button) {
             case 'edit':
                 this.isEdit = true;
                 this.prepararParaEdicao(funcaoTransacaoSelecionada);
@@ -609,6 +659,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 this.currentFuncaoTransacao.artificialId = undefined;
                 this.currentFuncaoTransacao.impacto = Impacto.ALTERACAO;
                 this.textHeader = this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgClonarFuncaoDeTransacao');
+                break;
+            case 'filter':
+            this.display = true;
+            break;
         }
     }
 
@@ -717,6 +771,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
+    openDialogAdcFT(param: boolean){
+        this.isFilter = param;
+        this.configurarDialog();
+    }
+
     configurarDialog() {
         this.getTextDialog();
         this.windowHeightDialog = window.innerHeight * 0.60;
@@ -727,8 +786,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     private inicializaFatoresAjuste(manual: Manual) {
         if (manual.fatoresAjuste) {
-            this.faS = _.cloneDeep(manual.fatoresAjuste);
-            
+            this.faS = _.cloneDeep(this.analise.manual.fatoresAjuste);
+
             this.faS.sort((n1, n2) => {
                 if (n1.fator < n2.fator)
                     return 1;
@@ -761,6 +820,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.estadoInicial();
         }
     }
+
+
 }
 
 
