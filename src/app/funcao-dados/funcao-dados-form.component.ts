@@ -528,7 +528,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     validarNameFuncaoDados(fd: FuncaoDados) {
         const that = this;
         return new Promise(resolve => {
-            debugger;
             if (that.analise.funcaoDados.length === 0) {
                 return resolve(true);
             }
