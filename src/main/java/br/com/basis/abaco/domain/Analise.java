@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -54,6 +55,7 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "analise")
 @EntityListeners(AuditingEntityListener.class)
+@Embeddable
 public class Analise implements Serializable, ReportObject {
 
     private static final String ANALISE = "analise";
@@ -118,6 +120,9 @@ public class Analise implements Serializable, ReportObject {
 
     @Embedded
     private AbacoAudit audit = new AbacoAudit();
+    
+    @ManyToMany
+    private Set<UserAnalise> userAnalise;
 
     // FIXME @CreatedBy e @LastModifiedBy de Analise não seguem o padrão dado em
     // User

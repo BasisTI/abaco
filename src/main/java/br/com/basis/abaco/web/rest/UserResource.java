@@ -100,7 +100,7 @@ public class UserResource {
 
   private final UserRepository userRepository;
 
-    private final AnaliseRepository analiseRepository;
+  private final AnaliseRepository analiseRepository;
 
   private final MailService mailService;
 
@@ -110,22 +110,23 @@ public class UserResource {
 
   private final AuthorityRepository authorityRepository;
 
-    private final DynamicExportsService dynamicExportsService;
+  private final DynamicExportsService dynamicExportsService;
 
-    private String userexists = "userexists";
+  private String userexists = "userexists";
 
-    public UserResource(UserRepository userRepository, MailService mailService, UserService userService,
-      UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository, DynamicExportsService dynamicExportsService, AnaliseRepository analiseRepository) {
+  public UserResource(UserRepository userRepository, MailService mailService, UserService userService,
+      UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository,
+      DynamicExportsService dynamicExportsService, AnaliseRepository analiseRepository) {
 
-        this.analiseRepository = analiseRepository;
+    this.analiseRepository = analiseRepository;
     this.userRepository = userRepository;
     this.mailService = mailService;
     this.userService = userService;
     this.userSearchRepository = userSearchRepository;
     this.authorityRepository = authorityRepository;
-        this.dynamicExportsService = dynamicExportsService;
+    this.dynamicExportsService = dynamicExportsService;
 
-    }
+  }
 
   /**
    * POST /users : Creates a new user.
@@ -142,7 +143,7 @@ public class UserResource {
    */
   @PostMapping("/users")
   @Timed
-  @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+  @Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR })
   public ResponseEntity createUser(@RequestBody User user) throws URISyntaxException {
     log.debug("REST request to save User : {}", user);
 
@@ -155,8 +156,8 @@ public class UserResource {
       return this.createBadRequest("fullnameexists", "Full Name already in use");
     } else {
 
-            user.setLangKey("pt_BR");
-            user.setPassword(RandomUtil.generatePassword());
+      user.setLangKey("pt_BR");
+      user.setPassword(RandomUtil.generatePassword());
       mailService.sendCreationEmail(user);
       User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
       User newUser = userRepository.save(userReadyToBeSaved);
@@ -167,14 +168,15 @@ public class UserResource {
     }
   }
 
-    /**
-     * Função para construir reposta do tipo Bad Request informando o erro ocorrido.
-     * @param errorKey Chave de erro que será incluída na resposta
-     * @param defaultMessage Mensagem padrão que será incluída no log
-     * @return ResponseEntity com uma Bad Request personalizada
-     */
+  /**
+   * Função para construir reposta do tipo Bad Request informando o erro ocorrido.
+   * 
+   * @param errorKey       Chave de erro que será incluída na resposta
+   * @param defaultMessage Mensagem padrão que será incluída no log
+   * @return ResponseEntity com uma Bad Request personalizada
+   */
 
-    private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
+  private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {
     return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, errorKey, defaultMessage))
         .body(null);
   }
@@ -190,66 +192,71 @@ public class UserResource {
    */
   @PutMapping("/users")
   @Timed
-  @Secured({AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR})
+  @Secured({ AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR })
   public ResponseEntity<User> updateUser(@RequestBody User user2) {
-      User user = user2;
+    User user = user2;
     log.debug("REST request to update User : {}", user);
     // Verificação de consistência - Não pode haver dois usuários com e-mails iguais
     Optional<User> existingUser = userRepository.findOneByEmail(user.getEmail());
     if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
-      return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "emailexists", "E-mail already in use"))
-          .body(null);
+      return ResponseEntity.badRequest()
+          .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "emailexists", "E-mail already in use")).body(null);
     }
     // Verificação de consistência - Não pode haver dois usuários com logins iguais
     existingUser = userRepository.findOneByLogin(user.getLogin().toLowerCase());
     if (existingUser.isPresent() && (!existingUser.get().getId().equals(user.getId()))) {
-      return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, userexists, "Login already in use"))
-          .body(null);
+      return ResponseEntity.badRequest()
+          .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, userexists, "Login already in use")).body(null);
     }
-        // Verificação de consistência - Não pode haver dois usuários com nome completo iguais
-    if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent() && !userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId().equals(user.getId())) {
-                    return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use"))
-                            .body(null);
-                }
-        // Verificando qual a autoridade do usuário logado
-      User updatedUser = getUser(user);
+    // Verificação de consistência - Não pode haver dois usuários com nome completo
+    // iguais
+    if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()
+        && !userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId()
+            .equals(user.getId())) {
+      return ResponseEntity.badRequest()
+          .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use")).body(null);
+    }
+    // Verificando qual a autoridade do usuário logado
+    User updatedUser = getUser(user);
 
-      return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString())).body(updatedUser);
+    return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString()))
+        .body(updatedUser);
   }
 
-    private User getUser(User user) {
-        Authority adminAuth = new Authority();
-        adminAuth.setName(AuthoritiesConstants.ADMIN);
-        adminAuth.setDescription("Administrador");
-        // Restringindo os campos que o usuário comum pode alterar.
-        Optional<User> oldUserdata = userRepository.findOneById(user.getId());
-        User loggedUser = this.getLoggedUser();
-        User userTmp;
-        if (!loggedUser.verificarAuthority() && oldUserdata.isPresent()) {
-            String newFirstName = user.getFirstName();
-            String newLastName = user.getLastName();
-            String newEmail = user.getEmail();
-            userTmp = getOldUserData(oldUserdata, newFirstName, newLastName, newEmail);
-        } else {
-            userTmp = user;
-        }
-        // Atualizando os dados do usuário
-        User updatableUser = userService.generateUpdatableUser(userTmp);
-        User updatedUser = userRepository.save(updatableUser);
-        userSearchRepository.save(updatedUser);
-        log.debug("Changed Information for User: {}", user); return updatedUser;
+  private User getUser(User user) {
+    Authority adminAuth = new Authority();
+    adminAuth.setName(AuthoritiesConstants.ADMIN);
+    adminAuth.setDescription("Administrador");
+    // Restringindo os campos que o usuário comum pode alterar.
+    Optional<User> oldUserdata = userRepository.findOneById(user.getId());
+    User loggedUser = this.getLoggedUser();
+    User userTmp;
+    if (!loggedUser.verificarAuthority() && oldUserdata.isPresent()) {
+      String newFirstName = user.getFirstName();
+      String newLastName = user.getLastName();
+      String newEmail = user.getEmail();
+      userTmp = getOldUserData(oldUserdata, newFirstName, newLastName, newEmail);
+    } else {
+      userTmp = user;
     }
+    // Atualizando os dados do usuário
+    User updatableUser = userService.generateUpdatableUser(userTmp);
+    User updatedUser = userRepository.save(updatableUser);
+    userSearchRepository.save(updatedUser);
+    log.debug("Changed Information for User: {}", user);
+    return updatedUser;
+  }
 
-    private User getOldUserData(Optional<User> oldUserdata, String newFirstName, String newLastName, String newEmail) {
-        User user;
-        user = oldUserdata.get();
-        user.setFirstName(newFirstName);
-        user.setLastName(newLastName);
-        user.setEmail(newEmail);
-        return user;
-    }
+  private User getOldUserData(Optional<User> oldUserdata, String newFirstName, String newLastName, String newEmail) {
+    User user;
+    user = oldUserdata.get();
+    user.setFirstName(newFirstName);
+    user.setLastName(newLastName);
+    user.setEmail(newEmail);
+    return user;
+  }
 
-    /**
+  /**
    * GET /users : get all users.
    *
    * @param pageable the pagination information
@@ -258,13 +265,29 @@ public class UserResource {
    */
   @GetMapping("/users")
   @Timed
-  @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+  @Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR })
   public ResponseEntity<List<UserDTO>> getAllUsers(@ApiParam Pageable pageable) throws URISyntaxException {
     final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
     HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
     return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
   }
 
+  /**
+   * GET /users : get all users from sistemas and organização.
+   *
+   * @param pageable the pagination information
+   * @return the ResponseEntity with status 200 (OK) and with body all users
+   * @throws URISyntaxException if the pagination headers couldn't be generated
+   */
+  @GetMapping("/users/from")
+  @Timed
+  @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+  public ResponseEntity<List<UserDTO>> getAllUsersFronSistemaAndOrganizacao(@ApiParam Pageable pageable) throws URISyntaxException {
+    final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
+    HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
+    return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+  }
+  
   /**
    * GET /users/:id : get the "id" user.
    *
@@ -280,29 +303,29 @@ public class UserResource {
     return userService.getUserWithAuthorities(id);
   }
 
-    /**
-     * GET /users/logged : get the current logged user data.
-     *
-     * @return a User object containing user's data, or with status 404 (Not Found)
-     */
-    @GetMapping("/users/logged")
-    @Timed
-    public User getLoggedUser() {
-        log.debug("REST request to get current logged user");
-        String login = SecurityUtils.getCurrentUserLogin();
-        return userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
-    }
+  /**
+   * GET /users/logged : get the current logged user data.
+   *
+   * @return a User object containing user's data, or with status 404 (Not Found)
+   */
+  @GetMapping("/users/logged")
+  @Timed
+  public User getLoggedUser() {
+    log.debug("REST request to get current logged user");
+    String login = SecurityUtils.getCurrentUserLogin();
+    return userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
+  }
 
-    /**
-     * GET  get the current logged user active organizations
-     *
-     * @return a list of active organizations, or with status 404 (Not Found)
-     */
-    @GetMapping("/users/activeorgs")
-    @Timed
-    public User getLoggedUserActiveOrgs() {
-        return userRepository.findUserWithActiveOrgs(SecurityUtils.getCurrentUserLogin());
-    }
+  /**
+   * GET get the current logged user active organizations
+   *
+   * @return a list of active organizations, or with status 404 (Not Found)
+   */
+  @GetMapping("/users/activeorgs")
+  @Timed
+  public User getLoggedUserActiveOrgs() {
+    return userRepository.findUserWithActiveOrgs(SecurityUtils.getCurrentUserLogin());
+  }
 
   @GetMapping("/users/authorities")
   @Timed
@@ -320,18 +343,20 @@ public class UserResource {
    */
   @DeleteMapping("/users/{id}")
   @Timed
-  @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+  @Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR })
   public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
     log.debug("REST request to delete User: {}", id);
-        if (id == 3l) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME,userexists, "Você não pode excluir o usuário Administrador!"))
-                .body(null);
-        }else if(!analiseRepository.findByCreatedBy(id).isEmpty()) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME,"analiseexists", "Você não pode excluir o usuário pois ele é dono de uma ou mais análises!"))
-                .body(null);
-        }
-        userService.deleteUser(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    if (id == 3l) {
+      return ResponseEntity.badRequest()
+          .headers(
+              HeaderUtil.createFailureAlert(ENTITY_NAME, userexists, "Você não pode excluir o usuário Administrador!"))
+          .body(null);
+    } else if (!analiseRepository.findByCreatedBy(id).isEmpty()) {
+      return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseexists",
+          "Você não pode excluir o usuário pois ele é dono de uma ou mais análises!")).body(null);
+    }
+    userService.deleteUser(id);
+    return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
   }
 
   /**
@@ -344,7 +369,7 @@ public class UserResource {
    */
   @GetMapping("/_search/users")
   @Timed
-  @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+  @Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR })
   public ResponseEntity<List<User>> search(@RequestParam(defaultValue = "*") String query, @RequestParam String order,
       @RequestParam(name = "page") int pageNumber, @RequestParam int size,
       @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
@@ -356,20 +381,23 @@ public class UserResource {
     return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
   }
 
-    @GetMapping(value = "/users/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    @Timed
+  @GetMapping(value = "/users/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+  @Timed
 
-    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream;
-        try {
-            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-            Page<User> result =  userSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
-            byteArrayOutputStream = dynamicExportsService.export(new RelatorioUserColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
-        } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
-            log.error(e.getMessage(), e);
-            throw new RelatorioException(e);
-        }
-        return DynamicExporter.output(byteArrayOutputStream,
-            "relatorio." + tipoRelatorio);
+  public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
+      @RequestParam(defaultValue = "*") String query) throws RelatorioException {
+    ByteArrayOutputStream byteArrayOutputStream;
+    try {
+      new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
+      Page<User> result = userSearchRepository.search(queryStringQuery(query),
+          dynamicExportsService.obterPageableMaximoExportacao());
+      byteArrayOutputStream = dynamicExportsService.export(new RelatorioUserColunas(), result, tipoRelatorio,
+          Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
+          Optional.ofNullable(AbacoUtil.getReportFooter()));
+    } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
+      log.error(e.getMessage(), e);
+      throw new RelatorioException(e);
     }
+    return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
+  }
 }
