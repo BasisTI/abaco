@@ -73,7 +73,7 @@
 			</textField>
 			<image>
 				<reportElement x="0" y="0" width="80" height="50" uuid="c846fe2a-ca45-4a4d-958a-1f755694b836"/>
-				<imageExpression><![CDATA["./reports/img/logobasis.png"]]></imageExpression>
+				<imageExpression><![CDATA["/reports/img/logobasis.png"]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement x="490" y="0" width="70" height="20" uuid="3dea6fde-db4e-4d3f-9b3b-21605ed68a37"/>
@@ -202,7 +202,7 @@
 			<subreport isUsingCache="false" runToBottom="true">
 				<reportElement positionType="Float" stretchType="ElementGroupBottom" x="-1" y="30" width="556" height="220" uuid="37fced05-7ec2-4f78-8a79-4d380d9ba3b7"/>
 				<dataSourceExpression><![CDATA[new  net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{sistema.modulos})]]></dataSourceExpression>
-				<subreportExpression><![CDATA[net.sf.jasperreports.engine.util.JRLoader.loadObject(getClass().getResource("./reports/analise/subRep_analise_modulo.jasper"))]]></subreportExpression>
+				<subreportExpression><![CDATA[net.sf.jasperreports.engine.util.JRLoader.loadObject(getClass().getResource("/reports/analise/subRep_analise_modulo.jasper"))]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>
