@@ -25,15 +25,13 @@ import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
 import { Manual } from '../manual';
 import { Modulo } from '../modulo';
 import { CalculadoraTransacao } from '../analise-shared';
-import { FuncaoTransacao, TipoFuncaoTransacao } from './funcao-transacao.model';
+import { FuncaoTransacao, TipoFuncaoTransacao, Editor } from './funcao-transacao.model';
 import { Der } from '../der/der.model';
 import { Impacto } from '../analise-shared/impacto-enum';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
 import { FuncaoTransacaoService } from './funcao-transacao.service';
 import * as ClassicEditor from 'basis-ckeditor5';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
-import { Editor } from './funcao-transacao.model';
-
 
 @Component({
     selector: 'app-analise-funcao-transacao',
@@ -196,17 +194,15 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     { label: traducao['Cadastros.FuncaoDados.Impactos.Outros'], value: 'ITENS_NAO_MENSURAVEIS' }
                 ];
 
-            })
+            });
     }
- public onChange({ editor }: ChangeEvent) {
+    public onChange({ editor }: ChangeEvent) {
         const data = editor.getData();
-
         return data;
     }
 
-    onReady(eventData) {
+    public onReady(eventData) {
         eventData.plugins.get('FileRepository').createUploadAdapter = function (loader) {
-            console.log(btoa(loader.file));
             return new UploadAdapter(loader);
         };
     }
@@ -858,7 +854,6 @@ export class UploadAdapter {
     }
 
     readThis(file: File): Promise<any> {
-        console.log(file)
         let imagePromise: Promise<any> = new Promise((resolve, reject) => {
             const myReader: FileReader = new FileReader();
             myReader.onloadend = (e) => {

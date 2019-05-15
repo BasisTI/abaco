@@ -33,13 +33,12 @@ import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-
 import { forEach } from '../../../node_modules/@angular/router/src/utils/collection';
 import { Impacto } from '../analise-shared/impacto-enum';
 
-import { FuncaoTransacao, TipoFuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
+import { FuncaoTransacao, TipoFuncaoTransacao, Editor } from './../funcao-transacao/funcao-transacao.model';
 import { CalculadoraTransacao } from './../analise-shared/calculadora-transacao';
 import { fcall } from 'q';
 import { Alr } from '../alr/alr.model';
 import * as ClassicEditor from 'basis-ckeditor5';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
-import { Editor } from './funcao-dados.model';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -228,15 +227,20 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     }
     public onChange({ editor }: ChangeEvent) {
         const data = editor.getData();
-
         return data;
     }
 
-    onReady(eventData) {
+    public onReady(eventData) {
         eventData.plugins.get('FileRepository').createUploadAdapter = function (loader) {
-            console.log(btoa(loader.file));
             return new UploadAdapter(loader);
         };
+    }
+    public submit(e) {
+        var messageLength = ClassicEditor.instances['editor'].getData().replace(/<[^>]*>/gi, '').length;
+        if( !messageLength ) {
+            alert( 'Please enter a message' );
+            e.preventDefault();
+        }
     }
 
     public config = {
@@ -1023,7 +1027,6 @@ export class UploadAdapter {
     }
 
     readThis(file: File): Promise<any> {
-        console.log(file)
         let imagePromise: Promise<any> = new Promise((resolve, reject) => {
             const myReader: FileReader = new FileReader();
             myReader.onloadend = (e) => {
