@@ -274,9 +274,12 @@
                         maxlength="5000"
                         [rows]="3"
                         id="idFundamentacaoFormFuncaoDados"
-                        [cols]="180"
+                        [cols]="200"
                         [editor]="Editor"
                         [config]="config"
+                        [data]="editorData"
+                        (ready)="onReady($event)"
+                        [disabled]="isDisabled"
                         pInputTextarea name="funcaoDadosSustentacao"
                         [(ngModel)]="currentFuncaoDados.sustantation">
                 </ckeditor>

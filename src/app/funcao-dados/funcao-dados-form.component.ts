@@ -1,10 +1,10 @@
 import { Der } from './../der/der.model';
 import { TranslateService } from '@ngx-translate/core';
 import { EntityToJSON } from './../shared/entity-to-json';
-import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FuncaoDados } from './funcao-dados.model';
 import { FatorAjuste } from '../fator-ajuste';
 import { FuncaoAnalise } from './../analise-shared/funcao-analise';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { BaselineAnalitico } from './../baseline/baseline-analitico.model';
 import { BaselineService } from './../baseline/baseline.service';
 import { AnaliseSharedDataService, PageNotificationService, ResponseWrapper } from '../shared';
@@ -38,6 +38,7 @@ import { CalculadoraTransacao } from './../analise-shared/calculadora-transacao'
 import { fcall } from 'q';
 import { Alr } from '../alr/alr.model';
 import * as ClassicEditor from 'basis-ckeditor5';
+import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import { Editor } from './funcao-dados.model';
 
 @Component({
@@ -58,6 +59,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
     public Editor = ClassicEditor;
 
+    public editorData = '<p>Hello, world!</p>';
+
+    public isDisabled = false;
+
     faS: FatorAjuste[] = [];
 
     textHeader: string;
@@ -65,10 +70,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     @BlockUI() blockUI: NgBlockUI;      // Usado para bloquear o sistema enquanto aguarda resolução das requisições do backend
     isEdit: boolean;
     crudExist: boolean = false;
-    nomeInvalido;
+    nomeInvalido: boolean;
     isSaving: boolean;
     listaFD: string[];
-    classInvalida;
+    classInvalida: boolean;
     impactoInvalido: boolean;
     hideElementTDTR: boolean;
     hideShowQuantidade: boolean;
@@ -149,7 +154,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    getLabel(label) {
+    getLabel(label: string | string[]) {
         let str: any;
         this.translate.get(label).subscribe((res: string) => {
             str = res;
@@ -181,7 +186,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.traduzirImpactos();
     }
 
-    public onRowDblclick(event) {
+    public onRowDblclick(event: { target: { nodeName: string; parentNode: { nodeName: string; }; }; }) {
         if (event.target.nodeName === 'TD') {
             this.abrirEditar();
         } else if (event.target.parentNode.nodeName === 'TD') {
@@ -189,7 +194,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    selectRow(event) {
+    selectRow(event: { data: { clone: () => FuncaoDados; }; }) {
         this.funcaoDadosEditar = event.data.clone();
     }
 
@@ -221,36 +226,48 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
 
             })
     }
+    public onChange({ editor }: ChangeEvent) {
+        const data = editor.getData();
+
+        return data;
+    }
+
+    onReady(eventData) {
+        eventData.plugins.get('FileRepository').createUploadAdapter = function (loader) {
+            console.log(btoa(loader.file));
+            return new UploadAdapter(loader);
+        };
+    }
 
     public config = {
-            language: 'pt-br',
+        language: 'pt-br',
+        toolbar: [
+            'heading', '|', 'bold', 'italic', 'hiperlink', 'underline', 'bulletedList', 'numberedList', 'alignment', 'blockQuote', '|',
+            'imageUpload', 'insertTable', 'imageStyle:side', 'imageStyle:full', 'mediaEmbed', '|', 'undo', 'redo'
+        ],
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph' },
+                { model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1' },
+                { model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2' },
+                { model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3' }
+            ]
+        },
+        alignment: {
+            options: ['left', 'right', 'center', 'justify']
+        },
+        image: {
             toolbar: [
-                    'heading', '|', 'bold', 'italic', 'hiperlink', 'underline', 'bulletedList', 'numberedList', 'alignment', '|',
-                    'imageUpload', 'insertTable', 'imageStyle:side', 'imageStyle:full', '|', 'undo', 'redo', 'copy', 'cut', 'paste'
-                    ],
-            heading: {
-                    options: [
-                        { model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph' },
-                        { model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1' },
-                        { model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2' },
-                        { model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3' }
-                            ]
-                    },
-            alignment: {
-                    options: ['left', 'right', 'center', 'justify']
-                        },
-            image: {
-                toolbar: [
-                            ]
-                    },
-            table: {
-                contentToolbar: [
-                    'tableColumn',
-                    'tableRow',
-                    'mergeTableCells'
-                    ]
-                }
-            }
+            ]
+        },
+        table: {
+            contentToolbar: [
+                'tableColumn',
+                'tableRow',
+                'mergeTableCells'
+            ]
+        }
+    }
 
     /*
     *   Metodo responsavel por traduzir as classificacoes que ficam em função de dados
@@ -270,16 +287,16 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     */
     traduzirImpactos() {
         this.translate.stream(['Cadastros.FuncaoDados.Impactos.Inclusao', 'Cadastros.FuncaoDados.Impactos.Alteracao',
-        'Cadastros.FuncaoDados.Impactos.Exclusao', 'Cadastros.FuncaoDados.Impactos.Conversao',
-        'Cadastros.FuncaoDados.Impactos.Outros']).subscribe((traducao) => {
-            this.impacto = [
-                { label: traducao['Cadastros.FuncaoDados.Impactos.Inclusao'], value: 'INCLUSAO' },
-                { label: traducao['Cadastros.FuncaoDados.Impactos.Alteracao'], value: 'ALTERACAO' },
-                { label: traducao['Cadastros.FuncaoDados.Impactos.Exclusao'], value: 'EXCLUSAO' },
-                { label: traducao['Cadastros.FuncaoDados.Impactos.Conversao'], value: 'CONVERSAO' },
-                { label: traducao['Cadastros.FuncaoDados.Impactos.Outros'], value: 'ITENS_NAO_MENSURAVEIS' }
-            ];
-        })
+            'Cadastros.FuncaoDados.Impactos.Exclusao', 'Cadastros.FuncaoDados.Impactos.Conversao',
+            'Cadastros.FuncaoDados.Impactos.Outros']).subscribe((traducao) => {
+                this.impacto = [
+                    { label: traducao['Cadastros.FuncaoDados.Impactos.Inclusao'], value: 'INCLUSAO' },
+                    { label: traducao['Cadastros.FuncaoDados.Impactos.Alteracao'], value: 'ALTERACAO' },
+                    { label: traducao['Cadastros.FuncaoDados.Impactos.Exclusao'], value: 'EXCLUSAO' },
+                    { label: traducao['Cadastros.FuncaoDados.Impactos.Conversao'], value: 'CONVERSAO' },
+                    { label: traducao['Cadastros.FuncaoDados.Impactos.Outros'], value: 'ITENS_NAO_MENSURAVEIS' }
+                ];
+            })
     }
 
     updateNameImpacto(impacto: string) {
@@ -358,7 +375,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             });
     }
 
-    searchBaseline(event): void {
+    searchBaseline(event: { query: string; }): void {
         let mdCache = this.moduloCache;
         this.baselineResults = this.dadosBaselineFD.filter(function (fc) {
             var teste: string = event.query;
@@ -377,7 +394,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             });
     }
 
-    autoCompleteNomes(event) {
+    autoCompleteNomes(event: { query: string; }) {
 
         // TODO qual melhor método? inclues? startsWith ignore case?
         this.sugestoesAutoComplete = this.nomeDasFuncoesDoSistema
@@ -641,7 +658,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
             this.validarNameFuncaoDados(this.currentFuncaoDados).then(resolve => {
-                if(resolve) {
+                if (resolve) {
                     this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')} '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.msgAlteradaComSucesso')}`);
                     this.analise.updateFuncaoDados(funcaoDadosCalculada);
                     this.atualizaResumo();
@@ -768,10 +785,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.verificarModulo();
 
         const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem,
-                                                                    funcaoTransacaoAtual,
-                                                                    this.analise.contrato.manual);
+            funcaoTransacaoAtual,
+            this.analise.contrato.manual);
 
-        this.validarNameFuncaoTransacaos(funcaoTransacaoAtual).then( resolve => {
+        this.validarNameFuncaoTransacaos(funcaoTransacaoAtual).then(resolve => {
             if (resolve) {
                 this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
                 this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
@@ -805,17 +822,17 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.inserirCrud(fdExcluir);
 
         const fdEditar = this.gerarFuncaoTransacao('Editar', funcaoDadosSelecionada);
-        setTimeout(function(){
+        setTimeout(function () {
             _this.inserirCrud(fdEditar);
         }, 1000);
 
         const fdInserir = this.gerarFuncaoTransacao('Inserir', funcaoDadosSelecionada);
-        setTimeout(function(){
+        setTimeout(function () {
             _this.inserirCrud(fdInserir);
         }, 2000);
 
         const fdPesquisar = this.gerarFuncaoTransacao('Pesquisar', funcaoDadosSelecionada);
-        setTimeout(function(){
+        setTimeout(function () {
             _this.inserirCrud(fdPesquisar);
         }, 3000);
 
@@ -993,4 +1010,28 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.showMultiplos = !this.showMultiplos;
     }
 
+}
+
+export class UploadAdapter {
+    private loader;
+    constructor(loader: any) {
+        this.loader = loader;
+    }
+
+    public upload(): Promise<any> {
+        return this.readThis(this.loader.file);
+    }
+
+    readThis(file: File): Promise<any> {
+        console.log(file)
+        let imagePromise: Promise<any> = new Promise((resolve, reject) => {
+            const myReader: FileReader = new FileReader();
+            myReader.onloadend = (e) => {
+                let image = myReader.result;
+                return { default: "data:image/png;base64," + image };
+            };
+            myReader.readAsDataURL(file);
+        });
+        return imagePromise;
+    }
 }
