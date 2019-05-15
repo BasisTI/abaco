@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subReport_funcaoDados" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="09cb13d4-129a-4ce5-914e-12293aadde56">
+	<subDataset name="rlrs" whenResourceMissingType="Empty" uuid="263f5524-f2a1-4323-a5b7-380808c09dbd">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="nome" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="ders" whenResourceMissingType="Empty" uuid="07ea2714-bb73-446d-bf8b-d41742a46152">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="nome" class="java.lang.String"/>
+	</subDataset>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="tipo" class="java.lang.Object"/>
+	<field name="impacto" class="java.lang.Object"/>
+	<field name="rlrs" class="java.util.Collection"/>
+	<field name="ders" class="java.util.Collection"/>
+	<field name="fatorAjuste.fator" class="java.math.BigDecimal"/>
+	<field name="sustantation" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="250" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="90" height="30" forecolor="#000000" backcolor="#FFCA9E" uuid="f4c60d0c-a56b-4919-9c42-628f69a5e97c"/>
+				<box>
+					<pen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Tipo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="30" width="90" height="30" backcolor="#FFCA9E" uuid="7eb4f371-c0ed-4b61-ab24-06f74120ceb4"/>
+				<box>
+					<pen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Impacto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="60" width="90" height="30" backcolor="#FFCA9E" uuid="2320ec94-8233-4d43-8cd6-6b15338514f4"/>
+				<box>
+					<pen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Deflator]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="ElementGroupHeight" mode="Opaque" x="0" y="90" width="90" height="30" backcolor="#FFCA9E" uuid="f0c80904-1674-4a18-a327-3507440771f8"/>
+				<box>
+					<pen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[RLR (TR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="ElementGroupHeight" mode="Opaque" x="0" y="120" width="90" height="30" backcolor="#FFCA9E" uuid="78795520-fba9-483b-aa64-850b6c052073"/>
+				<box>
+					<pen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[DER (TD)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="150" width="544" height="30" backcolor="#FFCA9E" uuid="4cc2ef4b-e360-4482-a02f-14aa3ff2d993"/>
+				<box>
+					<pen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Fundamentação]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="180" width="544" height="62" uuid="0dc20065-1d46-4c4d-85ad-b8eefa51aac5"/>
+				<box topPadding="0" leftPadding="2" rightPadding="9">
+					<pen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA[$F{sustantation}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement positionType="Float" x="90" y="90" width="452" height="30" uuid="c95c3e0b-f179-48ae-b043-4778bff40cd1">
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value="rlr_List"/>
+					<property name="com.jaspersoft.studio.unit.CONTENTS.width" value="px"/>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Horizontal">
+					<datasetRun subDataset="rlrs" uuid="063e28f8-b4aa-4ea4-addc-c7de4116eb7e">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{rlrs})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="30" width="80">
+						<textField isBlankWhenNull="true">
+							<reportElement positionType="Float" x="0" y="0" width="80" height="30" uuid="217cee1d-4d1c-49ef-8304-a5335ec19bf3"/>
+							<box leftPadding="2" rightPadding="2">
+								<pen lineWidth="0.75"/>
+							</box>
+							<textElement verticalAlignment="Top"/>
+							<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="90" y="120" width="452" height="30" uuid="3e3f0c79-cba2-4b8a-90ca-8b6369229fc4">
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value="derList"/>
+					<property name="com.jaspersoft.studio.unit.CONTENTS.width" value="px"/>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Horizontal">
+					<datasetRun subDataset="ders" uuid="f91d50b3-040a-4a9b-8ab0-3e322e92d73c">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{ders})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="30" width="80">
+						<textField isBlankWhenNull="true">
+							<reportElement positionType="Float" x="0" y="0" width="80" height="30" uuid="194b655a-cf4d-478d-b351-89e68eba1dd4"/>
+							<box leftPadding="3" rightPadding="2">
+								<pen lineWidth="0.75"/>
+							</box>
+							<textElement>
+								<paragraph lineSpacing="1_1_2"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="90" y="0" width="452" height="30" uuid="971654b4-668a-4a36-9e38-b0a4c5c887c8"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[""+$F{tipo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="90" y="30" width="452" height="30" uuid="2f1a5bc8-e286-4802-bcab-17dfebf82422"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[""+$F{impacto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="90" y="60" width="452" height="30" uuid="e841fa16-4d7c-499e-a3c0-7b5bf931a667"/>
+				<box leftPadding="3" rightPadding="4">
+					<pen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{fatorAjuste.fator}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
