@@ -71,6 +71,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
         public compartilhadas?: AnaliseShareEquipe[],
         public dataCriacaoOrdemServico?: any,
         public manual?: Manual,
+        public users?: User
         ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
         this.inicializaResumos();
@@ -312,7 +313,8 @@ export class Analise implements BaseEntity, JSONable<Analise> {
             this.bloqueiaAnalise,
             this.compartilhadas,
             this.dataCriacaoOrdemServico,
-            this.manual);
+            this.manual,
+            this.users);
     }
 
 }

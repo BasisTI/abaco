@@ -74,6 +74,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     manuais: Manual[] = [];
 
+    users: User[] = [];
+
+    usersName: SelectItem[] = [];
+
     manuaisCombo: SelectItem[] = [];
 
     @BlockUI() blockUI: NgBlockUI;
@@ -289,6 +293,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 analiseCarregada.manual ? analiseCarregada.manual : new Manual());
         this.carregaFatorAjusteNaEdicao();
         this.isEdit = this.analise.identificadorAnalise == undefined ? true : false;
+        this.populaComboUsers();
     }
 
     /**
@@ -773,6 +778,19 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgRegistroAtualizadoSucesso'));
             });
         }, 250);
+    }
+
+    private populaComboUsers(){
+        this.userService.getAllUsers().subscribe( users =>{
+            this.users = users;
+            this.users.map(user => {
+                this.usersName.push({
+                    label: `${user.firstName} ${user.lastName}`,
+                    value: user.id
+                });
+            });
+        });
+        
     }
 }
 
