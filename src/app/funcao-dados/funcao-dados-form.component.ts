@@ -235,13 +235,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             return new UploadAdapter(loader);
         };
     }
-    public submit(e) {
-        var messageLength = ClassicEditor.instances['editor'].getData().replace(/<[^>]*>/gi, '').length;
-        if( !messageLength ) {
-            alert( 'Please enter a message' );
-            e.preventDefault();
-        }
-    }
 
     public config = {
         language: 'pt-br',
@@ -382,7 +375,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     searchBaseline(event: { query: string; }): void {
         let mdCache = this.moduloCache;
         this.baselineResults = this.dadosBaselineFD.filter(function (fc) {
-            var teste: string = event.query;
+            const teste: string = event.query;
             return fc.name.toLowerCase().includes(teste.toLowerCase()) && fc.idfuncionalidade == mdCache.id;
         });
     }
