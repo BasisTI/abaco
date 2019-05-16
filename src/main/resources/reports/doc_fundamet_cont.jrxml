@@ -64,7 +64,7 @@
 	<title>
 		<band height="272" splitType="Stretch">
 			<textField isStretchWithOverflow="true">
-				<reportElement key="" x="80" y="0" width="410" height="50" uuid="a28c69bb-9148-4438-ba83-983f78977e26"/>
+				<reportElement key="" x="80" y="0" width="400" height="50" uuid="a28c69bb-9148-4438-ba83-983f78977e26"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16" isBold="true" isUnderline="true"/>
 					<paragraph lineSpacing="1_1_2"/>
@@ -76,7 +76,7 @@
 				<imageExpression><![CDATA["/reports/img/logobasis.png"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="490" y="0" width="70" height="20" uuid="3dea6fde-db4e-4d3f-9b3b-21605ed68a37"/>
+				<reportElement x="480" y="0" width="70" height="20" uuid="3dea6fde-db4e-4d3f-9b3b-21605ed68a37"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA["Versão: 1.0"]]></textFieldExpression>
 			</textField>
@@ -88,7 +88,7 @@
 				<text><![CDATA[1. Indentificação da Análise]]></text>
 			</staticText>
 			<textField pattern="MMMM , yyyy">
-				<reportElement stretchType="RelativeToBandHeight" x="490" y="20" width="70" height="30" uuid="ec5d5d07-873d-442e-b11c-7045a747ccb9"/>
+				<reportElement stretchType="RelativeToBandHeight" x="480" y="20" width="70" height="30" uuid="ec5d5d07-873d-442e-b11c-7045a747ccb9"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
