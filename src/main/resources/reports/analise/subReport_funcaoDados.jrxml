@@ -28,7 +28,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="250" splitType="Stretch">
+		<band height="271" splitType="Stretch">
 			<staticText>
 				<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="90" height="30" forecolor="#000000" backcolor="#FFCA9E" uuid="f4c60d0c-a56b-4919-9c42-628f69a5e97c"/>
 				<box>

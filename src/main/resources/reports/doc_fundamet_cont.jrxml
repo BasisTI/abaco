@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="doc_fundamet_cont" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="5137bfa7-c2e2-4c56-89c4-c578fa83a325">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="doc_fundamet_cont" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5137bfa7-c2e2-4c56-89c4-c578fa83a325">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<import value="br.com.basis.abaco.domain.*"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -73,7 +73,7 @@
 			</textField>
 			<image>
 				<reportElement x="0" y="0" width="80" height="50" uuid="c846fe2a-ca45-4a4d-958a-1f755694b836"/>
-				<imageExpression><![CDATA["/reports/img/logobasis.png"]]></imageExpression>
+				<imageExpression><![CDATA["./reports/img/logobasis.png"]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement x="490" y="0" width="70" height="20" uuid="3dea6fde-db4e-4d3f-9b3b-21605ed68a37"/>
@@ -191,7 +191,7 @@
 		</band>
 	</title>
 	<detail>
-		<band height="250" splitType="Stretch">
+		<band height="61" splitType="Stretch">
 			<staticText>
 				<reportElement x="-1" y="6" width="321" height="24" uuid="8450d05d-2db8-4da9-b7dc-87b7150d586f"/>
 				<textElement>
@@ -200,10 +200,18 @@
 				<text><![CDATA[2. Detalhamento da Análise]]></text>
 			</staticText>
 			<subreport isUsingCache="false" runToBottom="true">
-				<reportElement positionType="Float" stretchType="ElementGroupBottom" x="-1" y="30" width="556" height="220" uuid="37fced05-7ec2-4f78-8a79-4d380d9ba3b7"/>
+				<reportElement positionType="Float" stretchType="ElementGroupBottom" x="-1" y="30" width="556" height="20" uuid="37fced05-7ec2-4f78-8a79-4d380d9ba3b7"/>
 				<dataSourceExpression><![CDATA[new  net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{sistema.modulos})]]></dataSourceExpression>
 				<subreportExpression><![CDATA[net.sf.jasperreports.engine.util.JRLoader.loadObject(getClass().getResource("/reports/analise/subRep_analise_modulo.jasper"))]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>
+	<pageFooter>
+		<band height="23">
+			<textField>
+				<reportElement x="450" y="0" width="100" height="20" uuid="b9d81a7d-dc88-452e-b64c-dd452e174a62"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
 </jasperReport>
