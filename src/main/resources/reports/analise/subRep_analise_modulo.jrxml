@@ -18,7 +18,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="548" splitType="Stretch">
+		<band height="58" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="-10" width="380" height="20" uuid="6ae815e2-3eff-45f1-9efd-8a7125385be6"/>
 				<textElement>
@@ -27,7 +27,7 @@
 				<textFieldExpression><![CDATA["2."+$V{nMod}+" Módulo "+$F{nome}]]></textFieldExpression>
 			</textField>
 			<subreport isUsingCache="false">
-				<reportElement stretchType="ElementGroupBottom" x="-20" y="10" width="570" height="530" uuid="580ea808-9235-426c-83ca-1ab108d29124"/>
+				<reportElement stretchType="ElementGroupBottom" x="-20" y="10" width="570" height="40" uuid="580ea808-9235-426c-83ca-1ab108d29124"/>
 				<subreportParameter name="nMod">
 					<subreportParameterExpression><![CDATA[$V{nMod}]]></subreportParameterExpression>
 				</subreportParameter>

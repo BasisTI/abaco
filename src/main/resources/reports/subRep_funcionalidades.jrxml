@@ -177,21 +177,21 @@
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="522" splitType="Stretch">
+		<band height="61" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="540" height="20" uuid="ffdf5c75-f380-4856-b906-3879e38c8ccd"/>
+				<reportElement x="0" y="-20" width="540" height="20" uuid="ffdf5c75-f380-4856-b906-3879e38c8ccd"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA["2." + $P{nMod} + "." + $V{nFuncionalidade} + " " + $F{nome}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement x="-15" y="20" width="559" height="210" uuid="a19d2c56-e54b-4f5b-9992-066bc8499053"/>
+				<reportElement x="-20" y="0" width="559" height="30" uuid="a19d2c56-e54b-4f5b-9992-066bc8499053"/>
 				<dataSourceExpression><![CDATA[new  net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{funcoesDados})]]></dataSourceExpression>
 				<subreportExpression><![CDATA[net.sf.jasperreports.engine.util.JRLoader.loadObject(getClass().getResource("/reports/analise/subReport_funcaoDados.jasper"))]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="-16" y="230" width="560" height="240" uuid="2d69d415-b008-454e-8f1d-089edfa46536"/>
+				<reportElement positionType="Float" x="-21" y="30" width="560" height="30" uuid="2d69d415-b008-454e-8f1d-089edfa46536"/>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{funcoesTransacao})]]></dataSourceExpression>
 				<subreportExpression><![CDATA[net.sf.jasperreports.engine.util.JRLoader.loadObject(getClass().getResource("/reports/analise/SubReport_funcaoTransacao.jasper"))]]></subreportExpression>
 			</subreport>

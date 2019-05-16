@@ -28,7 +28,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="250" splitType="Stretch">
+		<band height="271" splitType="Stretch">
 			<staticText>
 				<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="90" height="30" forecolor="#000000" backcolor="#FFCA9E" uuid="f4c60d0c-a56b-4919-9c42-628f69a5e97c"/>
 				<box>
@@ -89,9 +89,9 @@
 				</textElement>
 				<text><![CDATA[Fundamentação]]></text>
 			</staticText>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="0" y="180" width="544" height="62" uuid="0dc20065-1d46-4c4d-85ad-b8eefa51aac5"/>
-				<box topPadding="0" leftPadding="2" rightPadding="9">
+				<box topPadding="2" leftPadding="5" rightPadding="9">
 					<pen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Justified" markup="html"/>
@@ -108,11 +108,11 @@
 					</datasetRun>
 					<jr:listContents height="30" width="80">
 						<textField isBlankWhenNull="true">
-							<reportElement positionType="Float" x="0" y="0" width="80" height="30" uuid="217cee1d-4d1c-49ef-8304-a5335ec19bf3"/>
-							<box leftPadding="2" rightPadding="2">
+							<reportElement positionType="Float" x="0" y="0" width="80" height="30" isRemoveLineWhenBlank="true" uuid="217cee1d-4d1c-49ef-8304-a5335ec19bf3"/>
+							<box leftPadding="4" rightPadding="2">
 								<pen lineWidth="0.75"/>
 							</box>
-							<textElement verticalAlignment="Top"/>
+							<textElement verticalAlignment="Middle"/>
 							<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 						</textField>
 					</jr:listContents>
@@ -129,11 +129,11 @@
 					</datasetRun>
 					<jr:listContents height="30" width="80">
 						<textField isBlankWhenNull="true">
-							<reportElement positionType="Float" x="0" y="0" width="80" height="30" uuid="194b655a-cf4d-478d-b351-89e68eba1dd4"/>
+							<reportElement positionType="Float" x="0" y="0" width="80" height="30" isRemoveLineWhenBlank="true" uuid="194b655a-cf4d-478d-b351-89e68eba1dd4"/>
 							<box leftPadding="3" rightPadding="2">
 								<pen lineWidth="0.75"/>
 							</box>
-							<textElement>
+							<textElement verticalAlignment="Middle">
 								<paragraph lineSpacing="1_1_2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
@@ -143,26 +143,26 @@
 			</componentElement>
 			<textField isBlankWhenNull="true">
 				<reportElement positionType="Float" x="90" y="0" width="452" height="30" uuid="971654b4-668a-4a36-9e38-b0a4c5c887c8"/>
-				<box leftPadding="2" rightPadding="2">
+				<box leftPadding="5" rightPadding="2">
 					<pen lineWidth="0.75"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Top"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[""+$F{tipo}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement positionType="Float" x="90" y="30" width="452" height="30" uuid="2f1a5bc8-e286-4802-bcab-17dfebf82422"/>
-				<box leftPadding="2" rightPadding="2">
+				<box leftPadding="5" rightPadding="2">
 					<pen lineWidth="0.75"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Top"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[""+$F{impacto}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement positionType="Float" x="90" y="60" width="452" height="30" uuid="e841fa16-4d7c-499e-a3c0-7b5bf931a667"/>
-				<box leftPadding="3" rightPadding="4">
+				<box leftPadding="5" rightPadding="4">
 					<pen lineWidth="0.75"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Top"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{fatorAjuste.fator}]]></textFieldExpression>
 			</textField>
 		</band>
