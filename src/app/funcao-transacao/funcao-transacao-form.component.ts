@@ -581,23 +581,17 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.desconverterChips();
             this.verificarModulo();
             const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
-                this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-            this.validarFuncaoTransacaos(this.currentFuncaoTransacao).then(resolve => {
-                if(resolve) {
-                    this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
-                    this.atualizaResumo();
-                    this.resetarEstadoPosSalvar();
-                    this.salvarAnalise();
-                    this.fecharDialog();
-                    this.pageNotificationService
-                        .addSuccessMsg(`${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgFuncaoDeTransacao')}
-                        '${funcaoTransacaoCalculada.name}' ${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlteradaComSucesso')}`);
-                    this.atualizaResumo();
-                    this.resetarEstadoPosSalvar();
-                } else {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgRegistroCadastrado'));
-                }
-            });
+            this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
+            this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
+            this.atualizaResumo();
+            this.resetarEstadoPosSalvar();
+            this.salvarAnalise();
+            this.fecharDialog();
+            this.pageNotificationService
+                .addSuccessMsg(`${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgFuncaoDeTransacao')}
+                '${funcaoTransacaoCalculada.name}' ${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlteradaComSucesso')}`);
+            this.atualizaResumo();
+            this.resetarEstadoPosSalvar();
         }
     }
 

@@ -653,19 +653,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             this.desconverterChips();
             this.verificarModulo();
             const funcaoDadosCalculada = Calculadora.calcular(
-                this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
-            this.validarNameFuncaoDados(this.currentFuncaoDados).then(resolve => {
-                if (resolve) {
-                    this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')} '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.msgAlteradaComSucesso')}`);
-                    this.analise.updateFuncaoDados(funcaoDadosCalculada);
-                    this.atualizaResumo();
-                    this.resetarEstadoPosSalvar();
-                    this.salvarAnalise();
-                    this.fecharDialog();
-                } else {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
-                }
-            });
+            this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
+            this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
+                '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlteradaComSucesso')}`);
+            this.analise.updateFuncaoDados(funcaoDadosCalculada);
+            this.atualizaResumo();
+            this.resetarEstadoPosSalvar();
+            this.salvarAnalise();
+            this.fecharDialog();
         }
     }
 
