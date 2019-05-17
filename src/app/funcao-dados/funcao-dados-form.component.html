@@ -277,6 +277,9 @@
                         [cols]="180"
                         [editor]="Editor"
                         [config]="config"
+                        [data]="editorData"
+                        (ready)="onReady($event)"
+                        [disabled]="isDisabled"
                         pInputTextarea name="funcaoDadosSustentacao"
                         [(ngModel)]="currentFuncaoDados.sustantation">
                 </ckeditor>
