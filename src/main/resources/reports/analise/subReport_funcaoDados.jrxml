@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subReport_funcaoDados" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="09cb13d4-129a-4ce5-914e-12293aadde56">
 	<subDataset name="rlrs" whenResourceMissingType="Empty" uuid="263f5524-f2a1-4323-a5b7-380808c09dbd">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
@@ -29,7 +29,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="272" splitType="Stretch">
+		<band height="268" splitType="Stretch">
 			<staticText>
 				<reportElement positionType="Float" mode="Opaque" x="-20" y="29" width="80" height="30" forecolor="#000000" backcolor="#FFCA9E" uuid="f4c60d0c-a56b-4919-9c42-628f69a5e97c"/>
 				<box>
@@ -90,14 +90,6 @@
 				</textElement>
 				<text><![CDATA[Fundamentação]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="-20" y="210" width="560" height="40" uuid="0dc20065-1d46-4c4d-85ad-b8eefa51aac5"/>
-				<box topPadding="2" leftPadding="5" rightPadding="9">
-					<pen lineWidth="0.75"/>
-				</box>
-				<textElement textAlignment="Justified" markup="html"/>
-				<textFieldExpression><![CDATA[$F{sustantation}]]></textFieldExpression>
-			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement positionType="Float" x="60" y="30" width="480" height="29" uuid="971654b4-668a-4a36-9e38-b0a4c5c887c8">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -151,7 +143,7 @@
 			<frame>
 				<reportElement stretchType="ElementGroupHeight" x="-20" y="149" width="560" height="31" uuid="25a92228-0972-4e49-9a5e-8e7a69984282"/>
 				<box>
-					<pen lineWidth="0.25"/>
+					<pen lineWidth="0.75"/>
 				</box>
 				<componentElement>
 					<reportElement positionType="Float" x="0" y="0" width="300" height="31" uuid="c95c3e0b-f179-48ae-b043-4778bff40cd1">
@@ -165,9 +157,9 @@
 						</datasetRun>
 						<jr:listContents height="31" width="300">
 							<textField isBlankWhenNull="true">
-								<reportElement positionType="Float" x="0" y="0" width="300" height="31" isRemoveLineWhenBlank="true" uuid="217cee1d-4d1c-49ef-8304-a5335ec19bf3"/>
+								<reportElement positionType="Float" x="0" y="0" width="300" height="30" isRemoveLineWhenBlank="true" uuid="217cee1d-4d1c-49ef-8304-a5335ec19bf3"/>
 								<box leftPadding="4" rightPadding="2">
-									<pen lineWidth="0.5"/>
+									<pen lineWidth="0.75"/>
 								</box>
 								<textElement verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
@@ -187,9 +179,9 @@
 						</datasetRun>
 						<jr:listContents height="31" width="260">
 							<textField isBlankWhenNull="true">
-								<reportElement positionType="Float" x="0" y="0" width="260" height="31" isRemoveLineWhenBlank="true" uuid="194b655a-cf4d-478d-b351-89e68eba1dd4"/>
+								<reportElement positionType="Float" x="0" y="0" width="260" height="30" isRemoveLineWhenBlank="true" uuid="194b655a-cf4d-478d-b351-89e68eba1dd4"/>
 								<box leftPadding="3" rightPadding="2">
-									<pen lineWidth="0.5"/>
+									<pen lineWidth="0.75"/>
 								</box>
 								<textElement verticalAlignment="Middle">
 									<paragraph lineSpacing="1_1_2"/>
@@ -200,6 +192,12 @@
 					</jr:list>
 				</componentElement>
 			</frame>
+			<componentElement>
+				<reportElement x="-20" y="210" width="560" height="50" uuid="4327fb65-0914-485e-bccd-4e17b56acc7f"/>
+				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" scaleType="RetainShape" horizontalAlign="Left" verticalAlign="Middle">
+					<hc:htmlContentExpression><![CDATA[$F{sustantation}]]></hc:htmlContentExpression>
+				</hc:html>
+			</componentElement>
 		</band>
 	</detail>
 </jasperReport>

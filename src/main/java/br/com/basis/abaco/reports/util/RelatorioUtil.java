@@ -1,6 +1,12 @@
 package br.com.basis.abaco.reports.util;
 
 import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.reports.util.itextutils.ReportFactory;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.layout.Document;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -13,6 +19,7 @@ import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfReportConfiguration;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,9 +51,13 @@ public class RelatorioUtil {
 
     private static final String EXCEL = "application/vnd.ms-excel";
 
+    private static final String CONTAGEM_PDF = "analise_contagem.pdf";
+
     private HttpServletResponse response;
 
     private HttpServletRequest request;
+
+    private ByteArrayOutputStream byteArray;
 
     public RelatorioUtil(HttpServletResponse response, HttpServletRequest request) {
         this.response = response;
@@ -155,6 +167,23 @@ public class RelatorioUtil {
         response.setHeader(CONTENT_DISP, INLINE_FILENAME + ".pdf");
 
         return  JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
+
+    private ResponseEntity<InputStreamResource> buildReport() throws IOException, DocumentException {
+        Document document = buildDocument();
+        ReportFactory relatorioFactory = new ReportFactory();
+        document.setMargins(relatorioFactory.getTopMargin(), relatorioFactory.getRightMargin(), relatorioFactory.getBottomMargin(), relatorioFactory.getLeftMargin());
+
+        document.close();
+        return DynamicExporter.output(byteArray, CONTAGEM_PDF);
+    }
+
+    private Document buildDocument() throws FileNotFoundException {
+        byteArray = new ByteArrayOutputStream();
+        PdfWriter writer = new PdfWriter(byteArray);
+        PdfDocument pdfDocument = new PdfDocument(writer);
+        return new Document(pdfDocument);
     }
 
     /**
