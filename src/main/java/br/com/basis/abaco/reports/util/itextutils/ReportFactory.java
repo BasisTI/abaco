@@ -22,6 +22,8 @@ import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.borders.SolidBorder;
+import com.itextpdf.layout.element.BlockElement;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Div;
 import com.itextpdf.layout.element.IBlockElement;
@@ -36,11 +38,19 @@ import com.itextpdf.styledxmlparser.node.IElementNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
+/**
+ *
+ */
 public class ReportFactory {
     private Float topMargin, rightMargin, bottomMargin, leftMargin;
     private PdfFont regular = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
@@ -52,29 +62,60 @@ public class ReportFactory {
     private Logger log = LoggerFactory.getLogger(ReportFactory.class);
 
     public ReportFactory() throws IOException {
-        topMargin = (float) 0.4 * 72;
-        rightMargin = (float) 0.6 * 72;
-        bottomMargin = (float) 0.79 * 72;
-        leftMargin = (float) 1.18 * 72;
+        topMargin = (float) 0.3 * 72;
+        rightMargin = (float) 0.3 * 72;
+        bottomMargin = (float) 0.3 * 72;
+        leftMargin = (float) 0.3 * 72;
     }
 
-    public Div makeCabecalho(URL pathImg) throws IOException {
-        Div divCabecalho = new Div();
+    public Table makeCabecalho(File pathImg, String title, String versionText, Document document) {
+        Table table = new Table(3);
+        table.setWidth(document.getPdfDocument().getDefaultPageSize().getWidth() - rightMargin - rightMargin);
         try {
-            Image imgBrasao = new Image(ImageDataFactory.create(pathImg));
-            imgBrasao.setWidth(90).setHeight(85).setHorizontalAlignment(HorizontalAlignment.CENTER);
-            Paragraph cabecalho1 = new Paragraph("MINISTÉRIO DA DEFESA");
-            cabecalho1.setTextAlignment(TextAlignment.CENTER).setFont(bold).setFontSize(10).setMarginBottom(0).setMarginTop(0);
-            Paragraph cabecalho2 = new Paragraph("EXÉRCITO BRASILEIRO");
-            cabecalho2.setTextAlignment(TextAlignment.CENTER).setFont(bold).setFontSize(10).setMarginBottom(0).setMarginTop(0);
-            Paragraph cabecalho3 = new Paragraph("ESTADO-MAIOR DO EXÉRCITO");
-            cabecalho3.setTextAlignment(TextAlignment.CENTER).setFont(bold).setFontSize(10).setMarginBottom(0).setMarginTop(0);
-            divCabecalho.add(imgBrasao).add(cabecalho1).add(cabecalho2).add(cabecalho3);
-            return divCabecalho;
-        } catch (RuntimeException e) {
+            Image logo = new Image(ImageDataFactory.create(pathImg.getAbsolutePath()));
+            logo.setWidth(80).setHeight(40);
+            Paragraph titleParagraph = makeTitulo(title, 18F, TextAlignment.CENTER,  false);
+            Div leftContent = makeRightHeader(versionText);
+            configureHeader(table, logo, titleParagraph, leftContent);
+            return table;
+        } catch (RuntimeException | MalformedURLException e) {
             log.info(e.getMessage(), e);
-            return divCabecalho;
+            return table;
         }
+    }
+
+    private void configureHeader(Table table, Image logo, Paragraph titleParagraph, Div leftContent) {
+        table.addCell(new Cell().add(logo).setHorizontalAlignment(HorizontalAlignment.LEFT).setVerticalAlignment(VerticalAlignment.MIDDLE).setBorder(Border.NO_BORDER));
+        table.addCell(new Cell().add(titleParagraph).setHorizontalAlignment(HorizontalAlignment.CENTER).setVerticalAlignment(VerticalAlignment.MIDDLE).setBorder(Border.NO_BORDER));
+        table.addCell(new Cell().add(leftContent).setHorizontalAlignment(HorizontalAlignment.RIGHT).setVerticalAlignment(VerticalAlignment.MIDDLE).setMaxWidth(80).setBorder(Border.NO_BORDER));
+    }
+
+    private Div makeRightHeader(String versionText) {
+        Div div = new Div();
+        Paragraph version = new Paragraph(versionText);
+        version.setTextAlignment(TextAlignment.RIGHT);
+        version.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+        Paragraph dateParagraph = new Paragraph(getDateNow());
+        dateParagraph.setTextAlignment(TextAlignment.RIGHT);
+        dateParagraph.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+        div.add(dateParagraph);
+        div.add(version);
+        div.setMaxWidth(80);
+        div.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+        div.setMarginRight(0);
+        return div;
+    }
+
+    private String getDateNow() {
+        TimeZone zone = TimeZone.getTimeZone("GMT-03:00");
+        Calendar calendar = Calendar.getInstance(zone);
+        Locale locale = new Locale("pt", "BR");
+        SimpleDateFormat format = new SimpleDateFormat("MMMM, yyyy", locale);
+        return format.format(calendar.getTime());
+    }
+
+    public void setBorder(BlockElement element, float lenght) {
+        element.setBorder(new SolidBorder(lenght));
     }
 
     public Paragraph makeTitulo(String text, Float fontSize, TextAlignment alignment, Boolean isFirstLineIndent) {
@@ -83,6 +124,8 @@ public class ReportFactory {
             titulo.setTextAlignment(alignment);
             titulo.setFont(bold);
             titulo.setFontSize(fontSize);
+            titulo.setMargin(0);
+            titulo.setHorizontalAlignment(HorizontalAlignment.CENTER);
             if (isFirstLineIndent) {
                 titulo.setFirstLineIndent(rightMargin);
             }

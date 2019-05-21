@@ -60,7 +60,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URI;
@@ -476,11 +475,11 @@ public class AnaliseResource {
     @GetMapping("/relatorioContagemPdf/{id}")
     @Timed
     public @ResponseBody
-    byte[] gerarRelatorioContagemPdf(@PathVariable Long id) throws FileNotFoundException, JRException {
+    ResponseEntity<InputStreamResource> gerarRelatorioContagemPdf(@PathVariable Long id) throws IOException, JRException {
         Analise analise = recuperarAnaliseContagem(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         log.debug("REST request to generate a count report : {}", analise);
-        return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.CONTAGEM);
+        return relatorioAnaliseRest.downloadRepoertContagem(analise);
     }
 
 

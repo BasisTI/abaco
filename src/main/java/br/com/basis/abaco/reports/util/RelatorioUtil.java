@@ -3,9 +3,9 @@ package br.com.basis.abaco.reports.util;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.reports.util.itextutils.ReportFactory;
 import br.com.basis.dynamicexports.util.DynamicExporter;
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.layout.Document;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -29,9 +29,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +54,8 @@ public class RelatorioUtil {
     private static final String EXCEL = "application/vnd.ms-excel";
 
     private static final String CONTAGEM_PDF = "analise_contagem.pdf";
+
+    private static final String VERSION_CONTAGEM = "versão: 1.0";
 
     private HttpServletResponse response;
 
@@ -170,19 +174,27 @@ public class RelatorioUtil {
     }
 
 
-    private ResponseEntity<InputStreamResource> buildReport() throws IOException, DocumentException {
+    public ResponseEntity<InputStreamResource> buildReport(Analise analise) throws IOException {
         Document document = buildDocument();
-        ReportFactory relatorioFactory = new ReportFactory();
-        document.setMargins(relatorioFactory.getTopMargin(), relatorioFactory.getRightMargin(), relatorioFactory.getBottomMargin(), relatorioFactory.getLeftMargin());
+        ReportFactory factory = new ReportFactory();
+        document.setMargins(factory.getTopMargin(), factory.getRightMargin(), factory.getBottomMargin(), factory.getLeftMargin());
+        buildHeader(document, factory);
 
         document.close();
         return DynamicExporter.output(byteArray, CONTAGEM_PDF);
+    }
+
+    private void buildHeader(Document document, ReportFactory factory) throws MalformedURLException {
+        File img = new File("src/main/resources/reports/img/logobasis.png");
+        document.add(factory.makeCabecalho(img, "Documento de Fundamentação de Contagem", VERSION_CONTAGEM, document));
+        document.add(factory.makeEspaco());
     }
 
     private Document buildDocument() throws FileNotFoundException {
         byteArray = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(byteArray);
         PdfDocument pdfDocument = new PdfDocument(writer);
+        pdfDocument.setDefaultPageSize(PageSize.A4);
         return new Document(pdfDocument);
     }
 

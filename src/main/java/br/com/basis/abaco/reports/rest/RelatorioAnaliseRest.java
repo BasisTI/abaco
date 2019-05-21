@@ -16,6 +16,7 @@ import br.com.basis.abaco.service.dto.FuncoesDTO;
 import br.com.basis.abaco.service.dto.ListaFdFtDTO;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -107,11 +108,14 @@ public class RelatorioAnaliseRest {
             case ANALISE_DETALHADA:
                 return relatorio.downloadPdfArquivo(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
 
-            case CONTAGEM:
-                return relatorio.downloadPdfArquivo(analise, caminhoAnaliseContagem, construirParams(), construirDataSource(analise));
-
             default: return null;
         }
+    }
+
+    public ResponseEntity<InputStreamResource> downloadRepoertContagem(Analise analise) throws IOException {
+        init();
+        popularObjeto(analise);
+        return relatorio.buildReport(analise);
     }
 
     private Map construirParams() throws IOException {
