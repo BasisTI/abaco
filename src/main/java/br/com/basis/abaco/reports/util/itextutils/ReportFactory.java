@@ -9,6 +9,8 @@ import com.itextpdf.html2pdf.attach.impl.DefaultTagWorkerFactory;
 import com.itextpdf.html2pdf.html.TagConstants;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.colors.WebColors;
 import com.itextpdf.kernel.events.Event;
 import com.itextpdf.kernel.events.IEventHandler;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
@@ -23,6 +25,7 @@ import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.borders.SolidBorder;
+import com.itextpdf.layout.element.AreaBreak;
 import com.itextpdf.layout.element.BlockElement;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Div;
@@ -52,7 +55,7 @@ import java.util.TimeZone;
  *
  */
 public class ReportFactory {
-    private Float topMargin, rightMargin, bottomMargin, leftMargin;
+    private Float topMargin, rightMargin, bottomMargin, leftMargin, tabMargin, tableHeaderWidth, availableSpace;
     private PdfFont regular = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
     private PdfFont bold = PdfFontFactory.createFont(StandardFonts.TIMES_BOLD);
     private FooterHandler footerHandler;
@@ -61,18 +64,20 @@ public class ReportFactory {
     private Div divHtmlConvert;
     private Logger log = LoggerFactory.getLogger(ReportFactory.class);
     private int subTitleNumber = 1;
-    private Table table;
 
     public ReportFactory() throws IOException {
         topMargin = (float) 0.3 * 72;
         rightMargin = (float) 0.3 * 72;
         bottomMargin = (float) 0.3 * 72;
         leftMargin = (float) 0.3 * 72;
+        tabMargin = (float) 0.35 * 72;
+        tableHeaderWidth = 140F;
     }
 
     public Table makeCabecalho(File pathImg, String title, String versionText, Document document) {
         Table table = new Table(3);
-        table.setWidth(document.getPdfDocument().getDefaultPageSize().getWidth() - rightMargin - rightMargin);
+        this.availableSpace = document.getPdfDocument().getDefaultPageSize().getWidth() - rightMargin - rightMargin;
+        table.setWidth(availableSpace);
         try {
             Image logo = new Image(ImageDataFactory.create(pathImg.getAbsolutePath()));
             logo.setWidth(80).setHeight(40);
@@ -284,13 +289,21 @@ public class ReportFactory {
         subTitle.setTextAlignment(alignment);
         subTitle.setFont(bold);
         subTitle.setFontSize(fontSize);
-        subTitle.setMargin(rightMargin);
         return subTitle;
     }
 
-    public void makeTable(int columns) {
-        table = new Table(columns);
-        table
+    public IBlockElement makeTableLine(String headerText, String content) {
+        Table line = new Table(2);
+        line.setWidth(availableSpace - tabMargin);
+        line.addCell(new Cell().add(
+                new Paragraph(headerText)
+            ).setWidth(tableHeaderWidth).setBackgroundColor(WebColors.getRGBColor("#ffca9e"))
+        );
+        line.addCell(new Cell().add(
+            new Paragraph(content)
+        ));
+        line.setMarginLeft(tabMargin);
+        return line;
     }
 
 

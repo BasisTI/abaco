@@ -198,14 +198,16 @@ public class RelatorioUtil {
     private void buildBodyAnaliseDetail(@NotNull Analise analise, @NotNull Document document, @NotNull ReportFactory factory) {
         document.add(factory.makeSubTitle("Identificação da Análise", TextAlignment.LEFT, 14F));
         document.add(factory.makeEspaco());
-        document.add(buildAnaliseDetail(analise, factory));
+        buildAnaliseDetail(document, analise, factory);
     }
 
-    private AreaBreak buildAnaliseDetail(Analise analise, ReportFactory factory) {
-        factory.makeTable(6);
-        factory.makeTableHeaders();
-        factory.fillTable();
-        return null;
+    private void buildAnaliseDetail(Document document, Analise analise, ReportFactory factory) {
+        document.add(factory.makeTableLine("Organização", analise.getOrganizacao().getNome()));
+        document.add(factory.makeTableLine("Sistema", analise.getSistema().getNome()));
+        document.add(factory.makeTableLine("Identificador", analise.getIdentificadorAnalise()));
+        document.add(factory.makeTableLine("Contrato", analise.getContrato().getNumeroContrato()));
+        document.add(factory.makeTableLine("Manual", analise.getManual().getNome()));
+        document.add(factory.makeTableLine("Organização", analise.getMetodoContagemString()));
     }
 
     /**
