@@ -60,6 +60,8 @@ public class ReportFactory {
     private ITagWorkerFactory mapperTagCKEditor;
     private Div divHtmlConvert;
     private Logger log = LoggerFactory.getLogger(ReportFactory.class);
+    private int subTitleNumber = 1;
+    private Table table;
 
     public ReportFactory() throws IOException {
         topMargin = (float) 0.3 * 72;
@@ -90,6 +92,13 @@ public class ReportFactory {
         table.addCell(new Cell().add(leftContent).setHorizontalAlignment(HorizontalAlignment.RIGHT).setVerticalAlignment(VerticalAlignment.MIDDLE).setMaxWidth(80).setBorder(Border.NO_BORDER));
     }
 
+    /**
+     * Constroi o cabeçalho esquedo contendo a versão do relatório e data atual<p>
+     *     no formato MMMM, yyyy
+     * </p>
+     * @param versionText versão do relatório
+     * @return Div contendo o cabeçalho formatado
+     */
     private Div makeRightHeader(String versionText) {
         Div div = new Div();
         Paragraph version = new Paragraph(versionText);
@@ -260,6 +269,28 @@ public class ReportFactory {
         } else {
             return new Paragraph("");
         }
+    }
+
+    /**
+     * Cria um sibtítulo de nível 1, possui auto contagem de lista
+     * @param text Texto que será exibido
+     * @param alignment Alinhamento do texto
+     * @param fontSize tamanho da Fonte
+     * @return
+     */
+    public Paragraph makeSubTitle(String text, TextAlignment alignment, float fontSize) {
+        Paragraph subTitle = new Paragraph(subTitleNumber + ". " + text);
+        subTitleNumber++;
+        subTitle.setTextAlignment(alignment);
+        subTitle.setFont(bold);
+        subTitle.setFontSize(fontSize);
+        subTitle.setMargin(rightMargin);
+        return subTitle;
+    }
+
+    public void makeTable(int columns) {
+        table = new Table(columns);
+        table
     }
 
 

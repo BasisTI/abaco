@@ -7,6 +7,9 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.AreaBreak;
+import com.itextpdf.layout.property.TextAlignment;
+import lombok.NonNull;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -28,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -179,12 +183,38 @@ public class RelatorioUtil {
         ReportFactory factory = new ReportFactory();
         document.setMargins(factory.getTopMargin(), factory.getRightMargin(), factory.getBottomMargin(), factory.getLeftMargin());
         buildHeader(document, factory);
+        buildBodyAnaliseDetail(analise, document, factory);
 
         document.close();
         return DynamicExporter.output(byteArray, CONTAGEM_PDF);
     }
 
-    private void buildHeader(Document document, ReportFactory factory) throws MalformedURLException {
+    /**
+     * Cria o corpo do relatório de contagem
+     * @param analise analise a serdetalhada
+     * @param document documento base dor elatório
+     * @param factory classe cosntrutora auxiliar do relatório
+     */
+    private void buildBodyAnaliseDetail(@NotNull Analise analise, @NotNull Document document, @NotNull ReportFactory factory) {
+        document.add(factory.makeSubTitle("Identificação da Análise", TextAlignment.LEFT, 14F));
+        document.add(factory.makeEspaco());
+        document.add(buildAnaliseDetail(analise, factory));
+    }
+
+    private AreaBreak buildAnaliseDetail(Analise analise, ReportFactory factory) {
+        factory.makeTable(6);
+        factory.makeTableHeaders();
+        factory.fillTable();
+        return null;
+    }
+
+    /**
+     * Cria o cabeçalho do relatório de contagem
+     * @param document
+     * @param factory
+     * @throws MalformedURLException
+     */
+    private void buildHeader(@NotNull Document document, @NotNull ReportFactory factory) throws MalformedURLException {
         File img = new File("src/main/resources/reports/img/logobasis.png");
         document.add(factory.makeCabecalho(img, "Documento de Fundamentação de Contagem", VERSION_CONTAGEM, document));
         document.add(factory.makeEspaco());
