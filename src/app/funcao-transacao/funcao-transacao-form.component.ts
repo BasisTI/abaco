@@ -343,7 +343,15 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         if (!this.analise.funcaoTransacaos) {
             return [];
         }
-        return this.analise.funcaoTransacaos;
+        return this.analise.funcaoTransacaos.sort((a, b) => {
+            if (a.funcionalidade.nome > b.funcionalidade.nome) {
+                return 1;
+            }
+            if (a.funcionalidade.nome < b.funcionalidade.nome) {
+                return -1;
+            }
+            return 0;
+        });
     }
 
     private get analise(): Analise {

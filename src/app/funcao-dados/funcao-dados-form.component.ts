@@ -415,7 +415,15 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         if (!this.analise.funcaoDados) {
             return [];
         }
-        return this.analise.funcaoDados;
+        return this.analise.funcaoDados.sort((a, b) => {
+            if (a.funcionalidade.nome > b.funcionalidade.nome) {
+                return 1;
+            }
+            if (a.funcionalidade.nome < b.funcionalidade.nome) {
+                return -1;
+            }
+            return 0;
+        });
     }
 
     private get analise(): Analise {
