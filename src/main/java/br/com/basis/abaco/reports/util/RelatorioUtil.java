@@ -1,15 +1,16 @@
 package br.com.basis.abaco.reports.util;
 
 import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.Modulo;
 import br.com.basis.abaco.reports.util.itextutils.ReportFactory;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.AreaBreak;
 import com.itextpdf.layout.property.TextAlignment;
-import lombok.NonNull;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -38,8 +39,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author eduardo.andrade
@@ -178,7 +182,7 @@ public class RelatorioUtil {
     }
 
 
-    public ResponseEntity<InputStreamResource> buildReport(Analise analise) throws IOException {
+    public ResponseEntity<InputStreamResource> buildReport(@NotNull Analise analise) throws IOException {
         Document document = buildDocument();
         ReportFactory factory = new ReportFactory();
         document.setMargins(factory.getTopMargin(), factory.getRightMargin(), factory.getBottomMargin(), factory.getLeftMargin());
@@ -197,8 +201,66 @@ public class RelatorioUtil {
      */
     private void buildBodyAnaliseDetail(@NotNull Analise analise, @NotNull Document document, @NotNull ReportFactory factory) {
         document.add(factory.makeSubTitle("Identificação da Análise", TextAlignment.LEFT, 14F));
-        document.add(factory.makeEspaco());
         buildAnaliseDetail(document, analise, factory);
+        document.add(factory.makeSubTitle("Detalhamento da Análise", TextAlignment.LEFT, 14F));
+        buildModules(analise.getSistema().getModulos(), document, factory);
+    }
+
+    private void buildModules(Set<Modulo> modulos, Document document, ReportFactory factory) {
+        modulos.forEach(modulo -> {
+            document.add(factory.makeSubTitleLv2(modulo.getNome(), TextAlignment.LEFT, 12F));
+            modulo.getFuncionalidades().forEach(funcionalidade -> {
+                funcionalidade.getFuncoesDados().forEach(funcaoDados -> {
+                    document.add(factory.makeSubTitleLv3(funcaoDados.getName(), TextAlignment.LEFT, 12F));
+                    buildTableFD(funcaoDados, factory, document);
+                });
+                funcionalidade.getFuncoesTransacao().forEach(funcaoTransacao -> {
+                    document.add(factory.makeSubTitleLv3(funcaoTransacao.getName(), TextAlignment.LEFT, 12F));
+                    buildtableFT(funcaoTransacao, factory, document);
+                });
+                document.add(factory.makeEspaco());
+            });
+        });
+    }
+
+    private void buildtableFT(FuncaoTransacao funcaoTransacao, ReportFactory factory, Document document) {
+        document.add(factory.makeTableLine("Entidade", funcaoTransacao.getName()));
+        document.add(factory.makeTableLine("Tipo", funcaoTransacao.getTipo().name()));
+        document.add(factory.makeTableLine("impacto", funcaoTransacao.getImpacto().name()));
+        document.add(factory.makeTableLine("Deflator", funcaoTransacao.getFatorAjuste().getFator().toString()));
+        List<String>alrs = new ArrayList<>();
+        List<String>ders = new ArrayList<>();
+        funcaoTransacao.getAlrs().forEach(alr -> alrs.add(alr.getNome()));
+        funcaoTransacao.getDers().forEach(der -> ders.add(der.getNome()));
+        List<List<String>> datas = new ArrayList();
+        datas.add(alrs);
+        datas.add(ders);
+        List<String>headers = new ArrayList<>(2);
+        headers.add("Entidades Referênciadas");
+        headers.add("Campos");
+        document.add(factory.makeTableLineVerticalTables(headers, datas, TextAlignment.LEFT, 12F));
+        document.add(factory.makeDescriptionField("Fundamentação", funcaoTransacao.getSustantation(), TextAlignment.JUSTIFIED, TextAlignment.CENTER, 12F));
+        document.add(factory.makeEspaco());
+    }
+
+    private void buildTableFD(FuncaoDados funcaoDados, ReportFactory factory, Document document) {
+        document.add(factory.makeTableLine("Entidade", funcaoDados.getName()));
+        document.add(factory.makeTableLine("Tipo", funcaoDados.getTipo().name()));
+        document.add(factory.makeTableLine("impacto", funcaoDados.getImpacto().name()));
+        document.add(factory.makeTableLine("Deflator", funcaoDados.getFatorAjuste().getFator().toString()));
+        List<String>rlrs = new ArrayList<>();
+        List<String>ders = new ArrayList<>();
+        funcaoDados.getRlrs().forEach(rlr -> rlrs.add(rlr.getNome()));
+        funcaoDados.getDers().forEach(der -> ders.add(der.getNome()));
+        List<List<String>> datas = new ArrayList();
+        datas.add(rlrs);
+        datas.add(ders);
+        List<String>headers = new ArrayList<>(2);
+        headers.add("Entidades Dependentes Relacionadas");
+        headers.add("Campos");
+        document.add(factory.makeTableLineVerticalTables(headers, datas, TextAlignment.LEFT, 12F));
+        document.add(factory.makeDescriptionField("Fundamentação", funcaoDados.getSustantation(), TextAlignment.JUSTIFIED, TextAlignment.CENTER, 12F));
+        document.add(factory.makeEspaco());
     }
 
     private void buildAnaliseDetail(Document document, Analise analise, ReportFactory factory) {

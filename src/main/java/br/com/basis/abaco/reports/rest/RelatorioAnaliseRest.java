@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,7 +113,7 @@ public class RelatorioAnaliseRest {
         }
     }
 
-    public ResponseEntity<InputStreamResource> downloadRepoertContagem(Analise analise) throws IOException {
+    public ResponseEntity<InputStreamResource> downloadRepoertContagem(@NotNull Analise analise) throws IOException {
         init();
         popularObjeto(analise);
         return relatorio.buildReport(analise);

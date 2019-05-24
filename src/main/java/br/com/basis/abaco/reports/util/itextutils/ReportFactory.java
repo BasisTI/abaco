@@ -9,7 +9,6 @@ import com.itextpdf.html2pdf.attach.impl.DefaultTagWorkerFactory;
 import com.itextpdf.html2pdf.html.TagConstants;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.colors.Color;
 import com.itextpdf.kernel.colors.WebColors;
 import com.itextpdf.kernel.events.Event;
 import com.itextpdf.kernel.events.IEventHandler;
@@ -25,7 +24,6 @@ import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.borders.SolidBorder;
-import com.itextpdf.layout.element.AreaBreak;
 import com.itextpdf.layout.element.BlockElement;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Div;
@@ -41,6 +39,7 @@ import com.itextpdf.styledxmlparser.node.IElementNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -52,7 +51,11 @@ import java.util.Map;
 import java.util.TimeZone;
 
 /**
- *
+ * Class that supports the creation of reports using IText.</p>
+ * It is necessary to create an instance to use the methods. When creating an instance, base document </p>
+ * ({@link PdfDocument}) parameters are used to calculate necessary lengths.
+ * @author Davy gonçalves Cardoso Lima
+ * @author Lucas Reinaldo Costa Lacerda
  */
 public class ReportFactory {
     private Float topMargin, rightMargin, bottomMargin, leftMargin, tabMargin, tableHeaderWidth, availableSpace;
@@ -63,7 +66,8 @@ public class ReportFactory {
     private ITagWorkerFactory mapperTagCKEditor;
     private Div divHtmlConvert;
     private Logger log = LoggerFactory.getLogger(ReportFactory.class);
-    private int subTitleNumber = 1;
+    private int subTitleNumber = 0, subTitleLv2 = 0, subTitleLv3 = 0;
+    private float minDescriptionHeight;
 
     public ReportFactory() throws IOException {
         topMargin = (float) 0.3 * 72;
@@ -72,6 +76,7 @@ public class ReportFactory {
         leftMargin = (float) 0.3 * 72;
         tabMargin = (float) 0.35 * 72;
         tableHeaderWidth = 140F;
+        minDescriptionHeight = 20F;
     }
 
     public Table makeCabecalho(File pathImg, String title, String versionText, Document document) {
@@ -284,8 +289,8 @@ public class ReportFactory {
      * @return
      */
     public Paragraph makeSubTitle(String text, TextAlignment alignment, float fontSize) {
-        Paragraph subTitle = new Paragraph(subTitleNumber + ". " + text);
         subTitleNumber++;
+        Paragraph subTitle = new Paragraph(subTitleNumber + " " + text);
         subTitle.setTextAlignment(alignment);
         subTitle.setFont(bold);
         subTitle.setFontSize(fontSize);
@@ -304,6 +309,116 @@ public class ReportFactory {
         ));
         line.setMarginLeft(tabMargin);
         return line;
+    }
+
+    /**
+     *
+     * @param subTitle
+     * @param alignment
+     * @param fontSize
+     * @return
+     */
+    public Paragraph makeSubTitleLv2(String subTitle, TextAlignment alignment, float fontSize) {
+        subTitleLv2++;
+        Paragraph title = new Paragraph(subTitleNumber + "." + subTitleLv2 + " " + subTitle);
+        title.setTextAlignment(alignment);
+        title.setFont(bold);
+        title.setFontSize(fontSize);
+        title.setMarginLeft(tabMargin);
+        return title;
+    }
+
+    /**
+     *
+     * @param titleText
+     * @param alignment
+     * @param fontSize
+     * @return
+     */
+    public IBlockElement makeSubTitleLv3(String titleText, TextAlignment alignment, float fontSize) {
+        subTitleLv3++;
+        Paragraph title = new Paragraph(subTitleNumber + "." + subTitleLv2 + "." + subTitleLv3 + " " + titleText);
+        title.setTextAlignment(alignment);
+        title.setFont(regular);
+        title.setFontSize(fontSize);
+        title.setMarginLeft(tabMargin);
+        return title;
+    }
+
+    /**
+     *
+     * @param headers
+     * @param datas
+     * @param fontSize
+     * @return
+     * @throws RuntimeException if length of parameter 'headers' are not the of parameter 'datas'
+     */
+    public IBlockElement makeTableLineVerticalTables(@NotNull List<String> headers, @NotNull List<List<String>> datas, @NotNull TextAlignment alignment
+            , @NotNull float fontSize) {
+        if(headers.size() != datas.size())
+            throw new RuntimeException("Length of parameter 'headers' must be the same of parameter 'datas'");
+        Table div = new Table(headers.size());
+        div.setWidth(availableSpace - leftMargin);
+        for (int i = 0; i < datas.size(); i++) {
+            List<String> data = datas.get(i);
+            Table table = new Table(1);
+            table.setMargin(0);
+            float width = (availableSpace - leftMargin) / headers.size();
+            table.setWidth(width);
+            makeTableHeader(headers, i, table);
+            fillTable(alignment, fontSize, data, table);
+            div.addCell(new Cell().add(table).setBorder(Border.NO_BORDER).setWidth(width).setPadding(0).setMargin(0));
+        }
+        div.setMarginLeft(tabMargin);
+        return div;
+    }
+
+    /**
+     *
+     * @param alignment
+     * @param fontSize
+     * @param data
+     * @param table
+     */
+    private void fillTable(TextAlignment alignment, @NotNull float fontSize, @NotNull List<String> data,@NotNull Table table) {
+        for (String s : data) {
+            if(s != null)
+                table.addCell(new Cell().add(
+                    new Paragraph(s).setTextAlignment(alignment).setFontSize(fontSize).setFont(regular)
+                ));
+        }
+    }
+
+    /**
+     *
+     * @param headers
+     * @param columnPosition
+     * @param table
+     */
+    private void makeTableHeader(@NotNull List<String> headers, @NotNull int columnPosition, @NotNull Table table) {
+        String header = headers.get(columnPosition);
+        table.addHeaderCell(new Cell().add(
+            new Paragraph().add(header)
+        ).setBackgroundColor(WebColors.getRGBColor("#ffca9e")));
+    }
+
+    public IBlockElement makeDescriptionField(@NotNull String headerText, String content, @NotNull TextAlignment textAlignmentContent
+        , TextAlignment headerAlignment, float fontSize) {
+        Table table = new Table(1);
+        table.setWidth(availableSpace - leftMargin);
+        table.setMargin(0).setPadding(0);
+        table.addHeaderCell(new Cell().add(
+                new Paragraph(headerText).setTextAlignment(headerAlignment).setFontSize(fontSize)
+            ).setBackgroundColor(WebColors.getRGBColor("#ffca9e")
+        ));
+        if(content == null){
+            content = "";
+        }
+        table.addCell(new Cell().add(
+            new Paragraph(content).setTextAlignment(textAlignmentContent).setFontSize(fontSize).setMinHeight(minDescriptionHeight)
+        ));
+        table.setMarginLeft(tabMargin);
+        return table;
     }
 
 
