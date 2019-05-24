@@ -19,6 +19,7 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
@@ -36,6 +37,7 @@ import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
 import com.itextpdf.styledxmlparser.node.IElementNode;
+import groovy.util.logging.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +52,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+@Slf4j
 /**
  * Class that supports the creation of reports using IText.</p>
  * It is necessary to create an instance to use the methods. When creating an instance, base document </p>
@@ -402,8 +405,7 @@ public class ReportFactory {
         ).setBackgroundColor(WebColors.getRGBColor("#ffca9e")));
     }
 
-    public IBlockElement makeDescriptionField(@NotNull String headerText, String content, @NotNull TextAlignment textAlignmentContent
-        , TextAlignment headerAlignment, float fontSize) {
+    public IBlockElement makeDescriptionField(@NotNull String headerText, String content, TextAlignment headerAlignment, float fontSize) {
         Table table = new Table(1);
         table.setWidth(availableSpace - leftMargin);
         table.setMargin(0).setPadding(0);
@@ -414,9 +416,12 @@ public class ReportFactory {
         if(content == null){
             content = "";
         }
-        table.addCell(new Cell().add(
-            new Paragraph(content).setTextAlignment(textAlignmentContent).setFontSize(fontSize).setMinHeight(minDescriptionHeight)
-        ));
+        try {
+            Div div = htmltoPDF(content);
+            table.addCell(new Cell().add(div));
+        } catch (IOException e) {
+            log.debug(e.getMessage() + " caused by:" + e.getCause(), e);
+        }
         table.setMarginLeft(tabMargin);
         return table;
     }

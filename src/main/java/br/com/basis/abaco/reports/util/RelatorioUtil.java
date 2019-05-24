@@ -3,6 +3,7 @@ package br.com.basis.abaco.reports.util;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.Funcionalidade;
 import br.com.basis.abaco.domain.Modulo;
 import br.com.basis.abaco.reports.util.itextutils.ReportFactory;
 import br.com.basis.dynamicexports.util.DynamicExporter;
@@ -207,20 +208,20 @@ public class RelatorioUtil {
     }
 
     private void buildModules(Set<Modulo> modulos, Document document, ReportFactory factory) {
-        modulos.forEach(modulo -> {
+        for (Modulo modulo : modulos) {
             document.add(factory.makeSubTitleLv2(modulo.getNome(), TextAlignment.LEFT, 12F));
-            modulo.getFuncionalidades().forEach(funcionalidade -> {
+            for (Funcionalidade funcionalidade : modulo.getFuncionalidades()) {
                 funcionalidade.getFuncoesDados().forEach(funcaoDados -> {
                     document.add(factory.makeSubTitleLv3(funcaoDados.getName(), TextAlignment.LEFT, 12F));
                     buildTableFD(funcaoDados, factory, document);
                 });
-                funcionalidade.getFuncoesTransacao().forEach(funcaoTransacao -> {
+                for (FuncaoTransacao funcaoTransacao : funcionalidade.getFuncoesTransacao()) {
                     document.add(factory.makeSubTitleLv3(funcaoTransacao.getName(), TextAlignment.LEFT, 12F));
                     buildtableFT(funcaoTransacao, factory, document);
-                });
+                }
                 document.add(factory.makeEspaco());
-            });
-        });
+            };
+        };
     }
 
     private void buildtableFT(FuncaoTransacao funcaoTransacao, ReportFactory factory, Document document) {
@@ -239,7 +240,7 @@ public class RelatorioUtil {
         headers.add("Entidades Referênciadas");
         headers.add("Campos");
         document.add(factory.makeTableLineVerticalTables(headers, datas, TextAlignment.LEFT, 12F));
-        document.add(factory.makeDescriptionField("Fundamentação", funcaoTransacao.getSustantation(), TextAlignment.JUSTIFIED, TextAlignment.CENTER, 12F));
+        document.add(factory.makeDescriptionField("Fundamentação", funcaoTransacao.getSustantation(), TextAlignment.JUSTIFIED, 12F));
         document.add(factory.makeEspaco());
     }
 
@@ -259,7 +260,7 @@ public class RelatorioUtil {
         headers.add("Entidades Dependentes Relacionadas");
         headers.add("Campos");
         document.add(factory.makeTableLineVerticalTables(headers, datas, TextAlignment.LEFT, 12F));
-        document.add(factory.makeDescriptionField("Fundamentação", funcaoDados.getSustantation(), TextAlignment.JUSTIFIED, TextAlignment.CENTER, 12F));
+        document.add(factory.makeDescriptionField("Fundamentação", funcaoDados.getSustantation(), TextAlignment.JUSTIFIED, 12F));
         document.add(factory.makeEspaco());
     }
 
