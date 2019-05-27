@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -92,18 +92,18 @@ public class ReportFactory {
      * @param document Documento @{@link PdfDocument}
      * @return @{@link Table} que organiza o cabeçalho
      */
-    public Table makeCabecalho(File pathImg, String title, String versionText, Document document) {
+    public Table makeCabecalho(URL pathImg, String title, String versionText, Document document) {
         Table table = new Table(3);
         this.availableSpace = document.getPdfDocument().getDefaultPageSize().getWidth() - rightMargin - rightMargin;
         table.setWidth(availableSpace);
         try {
-            Image logo = new Image(ImageDataFactory.create(pathImg.getAbsolutePath()));
+            Image logo = new Image(ImageDataFactory.create(pathImg));
             logo.setWidth(80).setHeight(40);
             Paragraph titleParagraph = makeTitulo(title, 18F, TextAlignment.CENTER,  false);
             Div leftContent = makeRightHeader(versionText);
             configureHeader(table, logo, titleParagraph, leftContent);
             return table;
-        } catch (RuntimeException | MalformedURLException e) {
+        } catch (RuntimeException e) {
             log.info(e.getMessage(), e);
             return table;
         }
