@@ -29,6 +29,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -122,7 +123,8 @@ public class Analise implements Serializable, ReportObject {
     private AbacoAudit audit = new AbacoAudit();
     
     @ManyToMany
-    private Set<UserAnalise> userAnalise;
+    @JoinTable(name = "user_analise", joinColumns = @JoinColumn(name = "analise_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    private Set<User> users;
 
     // FIXME @CreatedBy e @LastModifiedBy de Analise não seguem o padrão dado em
     // User
@@ -426,6 +428,16 @@ public class Analise implements Serializable, ReportObject {
 
     public void setContrato(Contrato contrato) {
         this.contrato = contrato;
+    }
+    
+    public Set<User> getUsers() {
+      return this.users;
+  }
+    
+    public void setUsers(Set<User> usuarios) {
+      this.users = Optional.ofNullable(usuarios)
+          .map(LinkedHashSet::new)
+          .orElse(new LinkedHashSet<User>());
     }
 
     public Organizacao getOrganizacao() {

@@ -43,10 +43,22 @@ public interface AnaliseRepository extends JpaRepository<Analise,Long> {
     @Query( value = "SELECT view_only FROM analise_compartilhada WHERE analise_id = ?1", nativeQuery = true)
     Boolean analiseCompartilhada (Long analiseId);
 
-    @EntityGraph(attributePaths = {"compartilhadas","funcaoDados","funcaoTransacaos","esforcoFases"})
+    @EntityGraph(attributePaths = {"compartilhadas","funcaoDados","funcaoTransacaos","esforcoFases","users"})
     Analise findOne(Long id);
 
-    @EntityGraph(attributePaths = {"compartilhadas","funcaoDados","funcaoTransacaos","esforcoFases"})
+    @Query(value = "SELECT a "+
+        "FROM Analise a " +
+        "JOIN Sistema s              ON s.id = a.sistema.id " +
+        "JOIN Organizacao o          ON o.id = a.organizacao.id " +
+        "JOIN Modulo m               ON s.id = m.sistema.id " +
+        "JOIN Funcionalidade f       ON f.modulo.id = m.id " +
+        "JOIN FuncaoDados fd        ON fd.funcionalidade.id = f.id " +
+        "JOIN FuncaoTransacao ft    ON ft.funcionalidade.id = f.id " +
+        "JOIN FETCH FatorAjuste fa        ON fa.id = fd.fatorAjuste.id OR fa.id = ft.fatorAjuste.id " +
+        "WHERE a.id = :id")
+    Analise reportContagem(@Param("id")Long id);
+
+    @EntityGraph(attributePaths = {"compartilhadas","funcaoDados","funcaoTransacaos","esforcoFases","users"})
     Optional<Analise> findOneById (Long id);
 
 }

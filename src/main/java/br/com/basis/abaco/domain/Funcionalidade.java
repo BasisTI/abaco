@@ -17,9 +17,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * A Funcionalidade.
@@ -50,9 +55,17 @@ public class Funcionalidade implements Serializable {
     @JsonIgnore
     private FuncaoDados funcaoDados;
 
+    @Transient
+    @JsonIgnore
+    private Set<FuncaoDados> funcoesDados = new HashSet<>();
+
     @ManyToOne
     @JsonIgnore
     private FuncaoTransacao funcaoTransacao;
+
+    @Transient
+    @JsonIgnore
+    private Set<FuncaoTransacao> funcoesTransacao = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -112,6 +125,30 @@ public class Funcionalidade implements Serializable {
 
     public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
         this.funcaoTransacao = funcaoTransacao;
+    }
+
+    public Set<FuncaoDados> getFuncoesDados() {
+        return Optional.ofNullable(funcoesDados)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<>());
+    }
+
+    public void setFuncoesDados(Set<FuncaoDados> funcoesDados) {
+        this.funcoesDados = Optional.ofNullable(funcoesDados)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<>());
+    }
+
+    public Set<FuncaoTransacao> getFuncoesTransacao() {
+        return Optional.ofNullable(funcoesTransacao)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<>());
+    }
+
+    public void setFuncoesTransacao(Set<FuncaoTransacao> funcoesTransacao) {
+        this.funcoesTransacao = Optional.ofNullable(funcoesTransacao)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<>());
     }
 
     @Override

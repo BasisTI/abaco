@@ -193,8 +193,7 @@ public class UserResource {
   @PutMapping("/users")
   @Timed
   @Secured({ AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR })
-  public ResponseEntity<User> updateUser(@RequestBody User user2) {
-    User user = user2;
+  public ResponseEntity<User> updateUser(@RequestBody User user) {
     log.debug("REST request to update User : {}", user);
     // Verificação de consistência - Não pode haver dois usuários com e-mails iguais
     Optional<User> existingUser = userRepository.findOneByEmail(user.getEmail());
@@ -211,16 +210,14 @@ public class UserResource {
     // Verificação de consistência - Não pode haver dois usuários com nome completo
     // iguais
     if (userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).isPresent()
-        && !userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId()
-            .equals(user.getId())) {
+        && !userRepository.findOneByFirstNameAndLastName(user.getFirstName(), user.getLastName()).get().getId().equals(user.getId())) {
       return ResponseEntity.badRequest()
           .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "fullnameexists", "Full Name already in use")).body(null);
     }
     // Verificando qual a autoridade do usuário logado
     User updatedUser = getUser(user);
 
-    return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString()))
-        .body(updatedUser);
+    return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString())).body(updatedUser);
   }
 
   private User getUser(User user) {
@@ -231,6 +228,17 @@ public class UserResource {
     Optional<User> oldUserdata = userRepository.findOneById(user.getId());
     User loggedUser = this.getLoggedUser();
     User userTmp;
+    userTmp = verifyAuthority(user, oldUserdata, loggedUser);
+    // Atualizando os dados do usuário
+    User updatableUser = userService.generateUpdatableUser(userTmp);
+    User updatedUser = userRepository.save(updatableUser);
+    userSearchRepository.save(updatedUser);
+    log.debug("Changed Information for User: {}", user);
+    return updatedUser;
+  }
+
+  private User verifyAuthority(User user, Optional<User> oldUserdata, User loggedUser) {
+    User userTmp;
     if (!loggedUser.verificarAuthority() && oldUserdata.isPresent()) {
       String newFirstName = user.getFirstName();
       String newLastName = user.getLastName();
@@ -239,12 +247,7 @@ public class UserResource {
     } else {
       userTmp = user;
     }
-    // Atualizando os dados do usuário
-    User updatableUser = userService.generateUpdatableUser(userTmp);
-    User updatedUser = userRepository.save(updatableUser);
-    userSearchRepository.save(updatedUser);
-    log.debug("Changed Information for User: {}", user);
-    return updatedUser;
+    return userTmp;
   }
 
   private User getOldUserData(Optional<User> oldUserdata, String newFirstName, String newLastName, String newEmail) {
@@ -275,19 +278,16 @@ public class UserResource {
   /**
    * GET /users : get all users from sistemas and organização.
    *
-   * @param pageable the pagination information
    * @return the ResponseEntity with status 200 (OK) and with body all users
    * @throws URISyntaxException if the pagination headers couldn't be generated
    */
-  @GetMapping("/users/from")
+  @GetMapping("/users/{organizacaoId}/{equipeId}")
   @Timed
   @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
-  public ResponseEntity<List<UserDTO>> getAllUsersFronSistemaAndOrganizacao(@ApiParam Pageable pageable) throws URISyntaxException {
-    final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
-    HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
-    return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+  public List<UserDTO> getAllUsersFronSistemaAndOrganizacao(@PathVariable Long organizacaoId, @PathVariable Long equipeId) throws URISyntaxException {
+      return userService.getAllUsersOrgEquip(organizacaoId, equipeId);
   }
-  
+
   /**
    * GET /users/:id : get the "id" user.
    *

@@ -129,8 +129,8 @@ public class AnaliseResourceIntTest {
                                                               analiseSearchRepository,
                                                               funcaoDadosVersionavelRepository,
                                                               dynamicExportsService,
-                                                              userRepository,
-                                                              compartilhadaRepository, grupoRepository);
+                                                              userRepository, funcaoDadosRepository,
+                                                              compartilhadaRepository, grupoRepository, funcaoTransacaoRepository);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();

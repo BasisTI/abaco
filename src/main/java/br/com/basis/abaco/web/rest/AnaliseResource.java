@@ -12,7 +12,9 @@ import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.GrupoRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
@@ -43,6 +45,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,6 +60,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -104,6 +108,10 @@ public class AnaliseResource {
 
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
+    private final FuncaoDadosRepository funcaoDadosRepository;
+
+    private final FuncaoTransacaoRepository funcaoTransacaoRepository;
+
     private RelatorioAnaliseRest relatorioAnaliseRest;
 
     private DynamicExportsService dynamicExportsService;
@@ -126,8 +134,10 @@ public class AnaliseResource {
                            FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
                            DynamicExportsService dynamicExportsService,
                            UserRepository userRepository,
+                           FuncaoDadosRepository funcaoDadosRepository,
                            CompartilhadaRepository compartilhadaRepository,
-                           GrupoRepository grupoRepository) {
+                           GrupoRepository grupoRepository,
+                           FuncaoTransacaoRepository funcaoTransacaoRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
@@ -135,6 +145,8 @@ public class AnaliseResource {
         this.userRepository = userRepository;
         this.compartilhadaRepository = compartilhadaRepository;
         this.grupoRepository = grupoRepository;
+        this.funcaoDadosRepository = funcaoDadosRepository;
+        this.funcaoTransacaoRepository = funcaoTransacaoRepository;
     }
 
     /**
@@ -457,6 +469,20 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadExcel(analise);
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/relatorioContagemPdf/{id}")
+    @Timed
+    public @ResponseBody
+    ResponseEntity<InputStreamResource> gerarRelatorioContagemPdf(@PathVariable Long id) throws IOException, JRException {
+        Analise analise = recuperarAnaliseContagem(id);
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
+        log.debug("REST request to generate a count report : {}", analise);
+        return relatorioAnaliseRest.downloadRepoertContagem(analise);
+    }
 
 
     /**
@@ -585,6 +611,29 @@ public class AnaliseResource {
 
         if (retorno) {
             return analiseRepository.findOne(id);
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional(readOnly = true)
+    private Analise recuperarAnaliseContagem(@NotNull Long id) {
+
+        boolean retorno = checarPermissao(id);
+
+        if (retorno) {
+            Analise analise = analiseRepository.reportContagem(id);
+            Sistema sistema = analise.getSistema();
+            if(sistema != null) {
+            sistema.getModulos().forEach(modulo -> {
+                    modulo.getFuncionalidades().forEach(funcionalidade -> {
+                        funcionalidade.setFuncoesDados(funcaoDadosRepository.findByFuncionalidade(funcionalidade.getId()));
+                        funcionalidade.setFuncoesTransacao(funcaoTransacaoRepository.findByFuncionalidade(funcionalidade.getId()));
+                    });
+                });
+                return analise;
+            }
+            return null;
         } else {
             return null;
         }

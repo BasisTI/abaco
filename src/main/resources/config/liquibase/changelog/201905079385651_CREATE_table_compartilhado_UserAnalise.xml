@@ -3,31 +3,36 @@
                    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <changeSet author="vitor (generated)" id="201905079385651-1">
-         <createTable tableName="user_analise">
-            <column name="user_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="analise_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <addPrimaryKey columnNames="id" tableName="user_analise"/>
-
-        <addForeignKeyConstraint baseColumnNames="analise_id"
-                                 baseTableName="user_analise"
-                                 constraintName="fk_analise_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="analise"/>
-
-        <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="user_analise"
-                                 constraintName="fk_user_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="jhi_user"/>
-    </changeSet>      
+   <changeSet author="vitor.claudino (generated)" id="1517854067111-1.1">
+      <createTable tableName="user_analise">
+         <column name="analise_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="user_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="vitor.claudino (generated)" id="1517854067111-2.2">
+      <addPrimaryKey columnNames="analise_id, user_id"
+                     tableName="user_analise"/>
+   </changeSet>
+   <changeSet author="vitor.claudino (generated)" id="1517854067111-3.3">
+      <addForeignKeyConstraint baseColumnNames="analise_id"
+                               baseTableName="user_analise"
+                               constraintName="FK_analise_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="analise"/>
+   </changeSet>
+   <changeSet author="vitor.claudino (generated)" id="1517854067111-4.4">
+      <addForeignKeyConstraint baseColumnNames="user_id"
+                               baseTableName="user_analise"
+                               constraintName="FK_user_id"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="jhi_user"/>
+   </changeSet>
 </databaseChangeLog>

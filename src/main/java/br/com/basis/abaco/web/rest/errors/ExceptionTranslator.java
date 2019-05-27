@@ -79,11 +79,7 @@ public class ExceptionTranslator {
     public ResponseEntity<ErrorVM> processRuntimeException(Exception ex) {
         BodyBuilder builder;
         ErrorVM errorVM;
-        if (log.isDebugEnabled()) {
-            log.error(ex.getMessage(), ex);
-        } else {
-            log.error(ex.getMessage(), ex);
-        }
+        log.error(ex.getMessage(), ex);
         ResponseStatus responseStatus = AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class);
         if (responseStatus != null) {
             builder = ResponseEntity.status(responseStatus.value());
