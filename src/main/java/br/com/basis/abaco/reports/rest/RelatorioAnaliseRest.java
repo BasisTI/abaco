@@ -119,13 +119,6 @@ public class RelatorioAnaliseRest {
         return relatorio.buildReport(analise);
     }
 
-    private Map construirParams() throws IOException {
-        Map param = new HashMap<String, Object>();
-        param.put("Logo", ImageIO.read(this.getClass().getClassLoader()
-            .getResourceAsStream(caminhoImagemBasis)));
-        return param;
-    }
-
     /**empolgação
      *
      * @param analise

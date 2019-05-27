@@ -203,25 +203,26 @@ public class RelatorioUtil {
     private void buildBodyAnaliseDetail(@NotNull Analise analise, @NotNull Document document, @NotNull ReportFactory factory) {
         document.add(factory.makeSubTitle("Identificação da Análise", TextAlignment.LEFT, 14F));
         buildAnaliseDetail(document, analise, factory);
+        document.add(factory.makeEspaco());
         document.add(factory.makeSubTitle("Detalhamento da Análise", TextAlignment.LEFT, 14F));
         buildModules(analise.getSistema().getModulos(), document, factory);
     }
 
     private void buildModules(Set<Modulo> modulos, Document document, ReportFactory factory) {
         for (Modulo modulo : modulos) {
-            document.add(factory.makeSubTitleLv2(modulo.getNome(), TextAlignment.LEFT, 12F));
+            document.add(factory.makeSubTitleLv2(modulo.getNome().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
             for (Funcionalidade funcionalidade : modulo.getFuncionalidades()) {
                 funcionalidade.getFuncoesDados().forEach(funcaoDados -> {
-                    document.add(factory.makeSubTitleLv3(funcaoDados.getName(), TextAlignment.LEFT, 12F));
+                    document.add(factory.makeSubTitleLv3(funcaoDados.getName().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
                     buildTableFD(funcaoDados, factory, document);
                 });
                 for (FuncaoTransacao funcaoTransacao : funcionalidade.getFuncoesTransacao()) {
-                    document.add(factory.makeSubTitleLv3(funcaoTransacao.getName(), TextAlignment.LEFT, 12F));
+                    document.add(factory.makeSubTitleLv3(funcaoTransacao.getName().replace("\n", "").trim(), TextAlignment.LEFT, 12F));
                     buildtableFT(funcaoTransacao, factory, document);
                 }
-                document.add(factory.makeEspaco());
-            };
-        };
+            }
+            document.add(factory.makeEspaco());
+        }
     }
 
     private void buildtableFT(FuncaoTransacao funcaoTransacao, ReportFactory factory, Document document) {
@@ -248,7 +249,7 @@ public class RelatorioUtil {
         document.add(factory.makeTableLine("Entidade", funcaoDados.getName()));
         document.add(factory.makeTableLine("Tipo", funcaoDados.getTipo().name()));
         document.add(factory.makeTableLine("impacto", funcaoDados.getImpacto().name()));
-        document.add(factory.makeTableLine("Deflator", funcaoDados.getFatorAjuste().getFator().toString()));
+        document.add(factory.makeTableLine("Deflator", funcaoDados.getFatorAjuste().getFator().toPlainString()));
         List<String>rlrs = new ArrayList<>();
         List<String>ders = new ArrayList<>();
         funcaoDados.getRlrs().forEach(rlr -> rlrs.add(rlr.getNome()));

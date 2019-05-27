@@ -1,5 +1,6 @@
 package br.com.basis.abaco.reports.util.itextutils;
 
+import br.com.basis.abaco.reports.util.itextutils.exeptions.SizeMatchExeption;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.html2pdf.attach.ITagWorker;
@@ -19,7 +20,6 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
-import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
@@ -54,13 +54,14 @@ import java.util.TimeZone;
 
 @Slf4j
 /**
- * Class that supports the creation of reports using IText.</p>
- * It is necessary to create an instance to use the methods. When creating an instance, base document </p>
+ * Class that supports the creation of reports using IText.<p>
+ * It is necessary to create an instance to use the methods. When creating an instance, base document <p>
  * ({@link PdfDocument}) parameters are used to calculate necessary lengths.
  * @author Davy gonçalves Cardoso Lima
  * @author Lucas Reinaldo Costa Lacerda
  */
 public class ReportFactory {
+    public static final String HEADER_BACKGROUND_COLOR = "#ffca9e";
     private Float topMargin, rightMargin, bottomMargin, leftMargin, tabMargin, tableHeaderWidth, availableSpace;
     private PdfFont regular = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
     private PdfFont bold = PdfFontFactory.createFont(StandardFonts.TIMES_BOLD);
@@ -82,6 +83,15 @@ public class ReportFactory {
         minDescriptionHeight = 20F;
     }
 
+    /**
+     * Cria um cabeçalho de um relatório contendo uma imagem alinhada a esquerda <p>
+     * um título centralizado e data formatada para mês ano com a versão do relatório
+     * @param pathImg arquivo @{@link File} refêniado a imagem do logo
+     * @param title Título do relatório
+     * @param versionText versão do relatório
+     * @param document Documento @{@link PdfDocument}
+     * @return @{@link Table} que organiza o cabeçalho
+     */
     public Table makeCabecalho(File pathImg, String title, String versionText, Document document) {
         Table table = new Table(3);
         this.availableSpace = document.getPdfDocument().getDefaultPageSize().getWidth() - rightMargin - rightMargin;
@@ -99,6 +109,13 @@ public class ReportFactory {
         }
     }
 
+    /**
+     * Configua o cabeçalho
+     * @param table Tabela que referência o cabeçalho
+     * @param logo Imagem do logo
+     * @param titleParagraph Titulo
+     * @param leftContent Data e versão
+     */
     private void configureHeader(Table table, Image logo, Paragraph titleParagraph, Div leftContent) {
         table.addCell(new Cell().add(logo).setHorizontalAlignment(HorizontalAlignment.LEFT).setVerticalAlignment(VerticalAlignment.MIDDLE).setBorder(Border.NO_BORDER));
         table.addCell(new Cell().add(titleParagraph).setHorizontalAlignment(HorizontalAlignment.CENTER).setVerticalAlignment(VerticalAlignment.MIDDLE).setBorder(Border.NO_BORDER));
@@ -108,7 +125,7 @@ public class ReportFactory {
     /**
      * Constroi o cabeçalho esquedo contendo a versão do relatório e data atual<p>
      *     no formato MMMM, yyyy
-     * </p>
+     * <p>
      * @param versionText versão do relatório
      * @return Div contendo o cabeçalho formatado
      */
@@ -128,6 +145,10 @@ public class ReportFactory {
         return div;
     }
 
+    /**
+     * Cria a data atual no formato mês, ano
+     * @return data atual formatada
+     */
     private String getDateNow() {
         TimeZone zone = TimeZone.getTimeZone("GMT-03:00");
         Calendar calendar = Calendar.getInstance(zone);
@@ -140,6 +161,14 @@ public class ReportFactory {
         element.setBorder(new SolidBorder(lenght));
     }
 
+    /**
+     * Cria um título
+     * @param text Texto do título
+     * @param fontSize Tamanho da fonte
+     * @param alignment Alinhamento
+     * @param isFirstLineIndent
+     * @return @{@link Paragraph} contendo o título formatado
+     */
     public Paragraph makeTitulo(String text, Float fontSize, TextAlignment alignment, Boolean isFirstLineIndent) {
         if (text != null) {
             Paragraph titulo = new Paragraph(text);
@@ -225,6 +254,11 @@ public class ReportFactory {
         return divHtmlConvert;
     }
 
+    /**
+     * Converte um texto HTML em um @{@link IElement}
+     * @param html String que contém o texto html
+     * @throws IOException Caso ocorra problema na conversão
+     */
     private void convertHtml(String html) throws IOException {
         ConverterProperties props = new ConverterProperties().setTagWorkerFactory(mapperTagCKEditor);
         divHtmlConvert = new Div();
@@ -300,12 +334,18 @@ public class ReportFactory {
         return subTitle;
     }
 
+    /**
+     * Cria umma linha de tablea
+     * @param headerText Título do cabeçalho da linha
+     * @param content Conteúdo da linha
+     * @return A linha de tabela
+     */
     public IBlockElement makeTableLine(String headerText, String content) {
         Table line = new Table(2);
         line.setWidth(availableSpace - tabMargin);
         line.addCell(new Cell().add(
                 new Paragraph(headerText)
-            ).setWidth(tableHeaderWidth).setBackgroundColor(WebColors.getRGBColor("#ffca9e"))
+            ).setWidth(tableHeaderWidth).setBackgroundColor(WebColors.getRGBColor(HEADER_BACKGROUND_COLOR))
         );
         line.addCell(new Cell().add(
             new Paragraph(content)
@@ -315,7 +355,9 @@ public class ReportFactory {
     }
 
     /**
-     *
+     * Cria um subTítulo que possui uma numeração auto incrementada, a aexmeplo:
+     * <li>1.<b>1</b> Título</li>
+     * O valor do subtulo auto incrementa após a chamada deste método
      * @param subTitle
      * @param alignment
      * @param fontSize
@@ -332,13 +374,16 @@ public class ReportFactory {
     }
 
     /**
-     *
-     * @param titleText
-     * @param alignment
-     * @param fontSize
-     * @return
+     * Cria um sub titulo de nível 3. O Título de nívle 3 possui um conador à sua frente referênciando o número
+     * atual do Título nivel 1 e Título nivel 2, formando a exemplo: <p>
+     *  <li> 1.1.<b>1</b> - Título </li>
+     *  Seu número auto incrementa a cada novo título de nível 3.
+     * @param titleText Texto do título
+     * @param alignment Alinhamento
+     * @param fontSize Tamanho da fonte
+     * @return @{@link Paragraph} Formatado para títulode nível 3
      */
-    public IBlockElement makeSubTitleLv3(String titleText, TextAlignment alignment, float fontSize) {
+    public Paragraph makeSubTitleLv3(String titleText, TextAlignment alignment, float fontSize) {
         subTitleLv3++;
         Paragraph title = new Paragraph(subTitleNumber + "." + subTitleLv2 + "." + subTitleLv3 + " " + titleText);
         title.setTextAlignment(alignment);
@@ -349,17 +394,18 @@ public class ReportFactory {
     }
 
     /**
-     *
-     * @param headers
-     * @param datas
-     * @param fontSize
-     * @return
+     * Cria um linha de tabela, podendo formar uma tabela horizontal
+     * @param headers Títulos
+     * @param datas Conteúdos
+     * @param fontSize Tamanho da fonte
+     * @return Uma linha de ou @{@link Table} vertical
      * @throws RuntimeException if length of parameter 'headers' are not the of parameter 'datas'
      */
     public IBlockElement makeTableLineVerticalTables(@NotNull List<String> headers, @NotNull List<List<String>> datas, @NotNull TextAlignment alignment
             , @NotNull float fontSize) {
-        if(headers.size() != datas.size())
-            throw new RuntimeException("Length of parameter 'headers' must be the same of parameter 'datas'");
+        if(headers.size() != datas.size()) {
+            throw new SizeMatchExeption("Length of parameter 'headers' must be the same of parameter 'datas'");
+        }
         Table div = new Table(headers.size());
         div.setWidth(availableSpace - leftMargin);
         for (int i = 0; i < datas.size(); i++) {
@@ -385,45 +431,60 @@ public class ReportFactory {
      */
     private void fillTable(TextAlignment alignment, @NotNull float fontSize, @NotNull List<String> data,@NotNull Table table) {
         for (String s : data) {
-            if(s != null)
+            if(s != null) {
                 table.addCell(new Cell().add(
                     new Paragraph(s).setTextAlignment(alignment).setFontSize(fontSize).setFont(regular)
                 ));
+            }
         }
     }
 
     /**
-     *
-     * @param headers
-     * @param columnPosition
-     * @param table
+     * Cria o cabeçalho de uma tablea
+     * @param headers @{@link List} que conterá os textos a serem postos como cabeçalhos
+     * @param columnPosition Posição do cabeçalho
+     * @param table Tabela que terá os cabeçalhos
      */
     private void makeTableHeader(@NotNull List<String> headers, @NotNull int columnPosition, @NotNull Table table) {
         String header = headers.get(columnPosition);
         table.addHeaderCell(new Cell().add(
             new Paragraph().add(header)
-        ).setBackgroundColor(WebColors.getRGBColor("#ffca9e")));
+        ).setBackgroundColor(WebColors.getRGBColor(HEADER_BACKGROUND_COLOR)));
     }
 
+    /**
+     * Cria um campo descritivo
+     * @param headerText Titulo do cmapo descritivo
+     * @param content Conteudo do campo descritivo, podendo ser um texto HTML
+     * @param headerAlignment Alinhamento do título
+     * @param fontSize Tamanho da fonte do cabeçalho
+     * @return
+     */
     public IBlockElement makeDescriptionField(@NotNull String headerText, String content, TextAlignment headerAlignment, float fontSize) {
         Table table = new Table(1);
         table.setWidth(availableSpace - leftMargin);
         table.setMargin(0).setPadding(0);
         table.addHeaderCell(new Cell().add(
                 new Paragraph(headerText).setTextAlignment(headerAlignment).setFontSize(fontSize)
-            ).setBackgroundColor(WebColors.getRGBColor("#ffca9e")
+            ).setBackgroundColor(WebColors.getRGBColor(HEADER_BACKGROUND_COLOR)
         ));
+        buildContentDescription(content, table);
+        table.setMarginLeft(tabMargin);
+        table.setMinHeight(14F);
+        return table;
+    }
+
+    private void buildContentDescription(String content, Table table) {
         if(content == null){
             content = "";
         }
         try {
             Div div = htmltoPDF(content);
+            div.setMinHeight(minDescriptionHeight);
             table.addCell(new Cell().add(div));
         } catch (IOException e) {
             log.debug(e.getMessage() + " caused by:" + e.getCause(), e);
         }
-        table.setMarginLeft(tabMargin);
-        return table;
     }
 
 
@@ -487,6 +548,10 @@ public class ReportFactory {
 
     public Paragraph makeEspaco() {
         return new Paragraph("\n");
+    }
+
+    public Paragraph makeDoubleEspaco() {
+        return new Paragraph("\n\n").setPaddingBottom(bottomMargin);
     }
 
     /**
