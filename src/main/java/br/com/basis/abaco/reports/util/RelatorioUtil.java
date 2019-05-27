@@ -281,7 +281,7 @@ public class RelatorioUtil {
      * @throws MalformedURLException
      */
     private void buildHeader(@NotNull Document document, @NotNull ReportFactory factory) throws MalformedURLException {
-        File img = new File("src/main/resources/reports/img/logobasis.png");
+        File img = new File("/reports/img/logobasis.png");
         document.add(factory.makeCabecalho(img, "Documento de Fundamentação de Contagem", VERSION_CONTAGEM, document));
         document.add(factory.makeEspaco());
     }
