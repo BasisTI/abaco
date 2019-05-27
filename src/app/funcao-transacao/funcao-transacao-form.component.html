@@ -139,7 +139,7 @@
 
             <!-- DIALOG: COPIAR FUNÇÕES DE TRANSAÇÃO -->
             <div>
-                <p-dialog [header]="this.getLabel('Cadastros.FuncaoTransacao.ClonarFuncoesDeTransacao')" [(visible)]="display" [width]="1200" [height]="800">
+                <p-dialog [header]="this.getLabel('Cadastros.FuncaoTransacao.ClonarFuncoesDeTransacao')" [(visible)]="display" [width]="1400" [closable]="false">
                     <app-pesquisar-ft></app-pesquisar-ft>
                 </p-dialog>
             </div>
@@ -339,13 +339,18 @@
                 <div class="ui-g-12 ui-md-12 ui-sm-12">
                     <label translate="Cadastros.FuncaoTransacao.Fundamentacao">Fundamentação</label>
                     <span class="md-inputfield">
-                <textarea
+                <ckeditor
                         [rows]="3"
                         id="idFundamentacaoFormFuncaoTransacao"
                         [cols]="180"
+                        [editor]="Editor"
+                        [config]="config"
+                        [data]="editorData"
+                        (ready)="onReady($event)"
+                        [disabled]="isDisabled"
                         pInputTextarea name="funcaoDadosSustentacao"
                         [(ngModel)]="currentFuncaoTransacao.sustantation">
-                </textarea>
+                </ckeditor>
             </span>
                 </div>
 
@@ -378,7 +383,7 @@
             </p-dialog>
             <!-- Fim Dialog adicionar função de dados  -->
 
-            
+
 
         </div>
     </div>

@@ -2,8 +2,8 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { DatatableModule } from '@basis/angular-components';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DatatableModule, SecurityModule } from '@basis/angular-components';
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
 import { AbacoSharedModule } from '../shared/abaco-shared.module';
 import { AbacoAnaliseSharedModule } from '../analise-shared/analise-shared.module';
@@ -35,6 +35,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { PesquisarFuncaoTransacaoModule } from '../pesquisar-ft/pesquisar-ft.module';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -56,6 +57,9 @@ export function createTranslateLoader(http: HttpClient) {
     AbacoButtonsModule,
     TabViewModule,
     InputTextareaModule,
+    CKEditorModule,
+    SecurityModule,
+    ReactiveFormsModule,
     RouterModule.forChild(PesquisarFtRoutes),
     AbacoSharedModule,
     DialogModule,
@@ -82,6 +86,7 @@ export function createTranslateLoader(http: HttpClient) {
   providers: [
     ConfirmationService,
     FuncaoTransacaoService
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AbacoFuncaoTransacaoModule {}

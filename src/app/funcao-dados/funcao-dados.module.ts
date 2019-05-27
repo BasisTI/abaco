@@ -1,8 +1,11 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FuncaoDadosFormComponent } from './funcao-dados-form.component';
+import { DatatableModule } from '@basis/angular-components';
+import {SecurityModule} from '@basis/angular-components';
+import {CKEditorModule} from '@ckeditor/ckeditor5-angular';
 
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
 
@@ -65,6 +68,9 @@ export function createTranslateLoader(http: HttpClient) {
     MultiSelectModule,
     AbacoDerChipsModule,
     AutoCompleteModule,
+    CKEditorModule,
+    SecurityModule,
+    ReactiveFormsModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
@@ -82,6 +88,7 @@ export function createTranslateLoader(http: HttpClient) {
   providers: [
     FuncaoDadosService,
     ConfirmationService
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AbacoFuncaoDadosModule { }

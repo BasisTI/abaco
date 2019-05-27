@@ -25,13 +25,13 @@ import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
 import { Manual } from '../manual';
 import { Modulo } from '../modulo';
 import { CalculadoraTransacao } from '../analise-shared';
-import { FuncaoTransacao, TipoFuncaoTransacao } from './funcao-transacao.model';
+import { FuncaoTransacao, TipoFuncaoTransacao, Editor } from './funcao-transacao.model';
 import { Der } from '../der/der.model';
 import { Impacto } from '../analise-shared/impacto-enum';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
 import { FuncaoTransacaoService } from './funcao-transacao.service';
-
-
+import * as ClassicEditor from 'basis-ckeditor5';
+import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 
 @Component({
     selector: 'app-analise-funcao-transacao',
@@ -89,6 +89,15 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     @Input()
     label: string;
     showMultiplos = false;
+    @Input() properties: Editor;
+    @Input() uploadImagem: boolean = true;
+    @Input() criacaoTabela: boolean = true;
+
+    public Editor = ClassicEditor;
+
+    public editorData = '<p>Hello, world!</p>';
+
+    public isDisabled = false;
 
     private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
     private analiseCarregadaSubscription: Subscription;
@@ -129,6 +138,13 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.subscribeToAnaliseCarregada();
         this.initClassificacoes();
         this.impactos = AnaliseSharedUtils.impactos;
+
+        if (!this.uploadImagem) {
+            this.config.toolbar.splice(this.config.toolbar.indexOf('imageUpload'));
+        }
+        if (!this.criacaoTabela) {
+            this.config.toolbar.splice(this.config.toolbar.indexOf('insertTable'));
+        }
     }
 
     estadoInicial() {
@@ -164,7 +180,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.prepararParaEdicao(this.FuncaoTransacaoEditar);
     }
     /*
-    *   Metodo responsavel por traduzir os tipos de impacto em função de dados 
+    *   Metodo responsavel por traduzir os tipos de impacto em função de dados
     */
     traduzirImpactos() {
         this.translate.stream(['Cadastros.FuncaoDados.Impactos.Inclusao', 'Cadastros.FuncaoDados.Impactos.Alteracao',
@@ -178,7 +194,47 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     { label: traducao['Cadastros.FuncaoDados.Impactos.Outros'], value: 'ITENS_NAO_MENSURAVEIS' }
                 ];
 
-            })
+            });
+    }
+    public onChange({ editor }: ChangeEvent) {
+        const data = editor.getData();
+        return data;
+    }
+
+    public onReady(eventData) {
+        eventData.plugins.get('FileRepository').createUploadAdapter = function (loader) {
+            return new UploadAdapter(loader);
+        };
+    }
+
+    public config = {
+        language: 'pt-br',
+        toolbar: [
+            'heading', '|', 'bold', 'italic', 'hiperlink', 'underline', 'bulletedList', 'numberedList', 'alignment', 'blockQuote', '|',
+            'imageUpload', 'insertTable', 'imageStyle:side', 'imageStyle:full', 'mediaEmbed', '|', 'undo', 'redo'
+        ],
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph' },
+                { model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1' },
+                { model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2' },
+                { model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3' }
+            ]
+        },
+        alignment: {
+            options: ['left', 'right', 'center', 'justify']
+        },
+        image: {
+            toolbar: [
+            ]
+        },
+        table: {
+            contentToolbar: [
+                'tableColumn',
+                'tableRow',
+                'mergeTableCells'
+            ]
+        }
     }
 
     updateImpacto(impacto: string) {
@@ -287,7 +343,15 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         if (!this.analise.funcaoTransacaos) {
             return [];
         }
-        return this.analise.funcaoTransacaos;
+        return this.analise.funcaoTransacaos.sort((a, b) => {
+            if (a.funcionalidade.nome > b.funcionalidade.nome) {
+                return 1;
+            }
+            if (a.funcionalidade.nome < b.funcionalidade.nome) {
+                return -1;
+            }
+            return 0;
+        });
     }
 
     private get analise(): Analise {
@@ -361,7 +425,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     searchBaseline(event): void {
 
         let mdCache = this.moduloCache;
-        
+
         this.baselineResultados = this.dadosBaselineFT.filter(function (fd) {
             var teste: string = event.query;
             return fd.name.toLowerCase().includes(teste.toLowerCase()) && fd.idfuncionalidade == mdCache.id;
@@ -525,23 +589,17 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.desconverterChips();
             this.verificarModulo();
             const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
-                this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-            this.validarFuncaoTransacaos(this.currentFuncaoTransacao).then(resolve => {
-                if(resolve) {
-                    this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
-                    this.atualizaResumo();
-                    this.resetarEstadoPosSalvar();
-                    this.salvarAnalise();
-                    this.fecharDialog();
-                    this.pageNotificationService
-                        .addSuccessMsg(`${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgFuncaoDeTransacao')}
-                        '${funcaoTransacaoCalculada.name}' ${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlteradaComSucesso')}`);
-                    this.atualizaResumo();
-                    this.resetarEstadoPosSalvar();
-                } else {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgRegistroCadastrado'));
-                }
-            });
+            this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
+            this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
+            this.atualizaResumo();
+            this.resetarEstadoPosSalvar();
+            this.salvarAnalise();
+            this.fecharDialog();
+            this.pageNotificationService
+                .addSuccessMsg(`${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgFuncaoDeTransacao')}
+                '${funcaoTransacaoCalculada.name}' ${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlteradaComSucesso')}`);
+            this.atualizaResumo();
+            this.resetarEstadoPosSalvar();
         }
     }
 
@@ -628,7 +686,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             break;
         }
     }
-   
+
     private prepararParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
 
         this.disableTRDER();
@@ -750,7 +808,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     private inicializaFatoresAjuste(manual: Manual) {
         if (manual.fatoresAjuste) {
             this.faS = _.cloneDeep(this.analise.manual.fatoresAjuste);
-            
+
             this.faS.sort((n1, n2) => {
                 if (n1.fator < n2.fator)
                     return 1;
@@ -784,9 +842,31 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    
+
 }
 
+export class UploadAdapter {
+    private loader;
+    constructor(loader: any) {
+        this.loader = loader;
+    }
+
+    public upload(): Promise<any> {
+        return this.readThis(this.loader.file);
+    }
+
+    readThis(file: File): Promise<any> {
+        let imagePromise: Promise<any> = new Promise((resolve, reject) => {
+            const myReader: FileReader = new FileReader();
+            myReader.onloadend = (e) => {
+                let image = myReader.result;
+                return { default: "data:image/png;base64," + image };
+            };
+            myReader.readAsDataURL(file);
+        });
+        return imagePromise;
+    }
+}
 
 
 

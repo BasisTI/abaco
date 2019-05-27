@@ -1,6 +1,6 @@
 {
   "name": "abaco",
-  "version": "2.2.0",
+  "version": "2.3.1",
   "license": "COMMERCIAL",
   "angular-cli": {},
   "engines": {
@@ -29,6 +29,8 @@
     "@ngx-translate/core": "^9.1.1",
     "@ngx-translate/http-loader": "^2.0.1",
     "@types/lodash": "^4.14.91",
+    "@ckeditor/ckeditor5-angular": "^1.1.0",
+    "basis-ckeditor5": "^11.2.3",
     "angular2-jwt": "^0.2.3",
     "angular2-text-mask": "^8.0.4",
     "chart.js": "2.1.3",
