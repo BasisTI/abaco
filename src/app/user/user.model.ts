@@ -1,8 +1,10 @@
 import { BaseEntity } from '../shared';
 import { User as BasisUser } from '@basis/angular-components';
 import { Authority } from './authority.model';
-import {TipoEquipe} from '../tipo-equipe';
-import {Organizacao} from '../organizacao';
+import { TipoEquipe } from '../tipo-equipe';
+import { Organizacao } from '../organizacao';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { UserService } from './user.service';
 
 
 export class User implements BaseEntity, BasisUser {
@@ -26,12 +28,20 @@ export class User implements BaseEntity, BasisUser {
     return this.firstName + ' ' + this.lastName;
   }
 
+  set nome(fullName: string) {
+    this.nome = fullName;
+  }
+
   get roles(): string[] {
     return this.authorities.map(a => a.name);
   }
 
   set roles(roles: string[]) {
     this.authorities = roles.map(r => new Authority(r));
+  }
+
+  toJSONState() {
+    return Object.assign({}, this);
   }
 
 }

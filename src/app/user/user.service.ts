@@ -1,3 +1,5 @@
+import { TipoEquipe } from './../tipo-equipe/tipo-equipe.model';
+import { Organizacao } from './../organizacao/organizacao.model';
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
@@ -42,8 +44,8 @@ export class UserService {
     });
   }
 
-  getAllUsers(): Observable<User[]> {
-    return this.http.get(`${this.resourceUrl}/from`).map((res: Response) => {
+  getAllUsers(org: Organizacao, tipoequip: TipoEquipe): Observable<User[]> {
+    return this.http.get(`${this.resourceUrl}/${org.id}/${tipoequip.id}`).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertUsersFromServer(jsonResponse);
     });

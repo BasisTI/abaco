@@ -1,18 +1,20 @@
+import { UserService } from './../user/user.service';
 import { Manual } from './../manual/manual.model';
-import {BaseEntity, MappableEntities, JSONable} from '../shared';
-import {Contrato} from '../contrato';
-import {EsforcoFase} from '../esforco-fase/index';
-import {Sistema} from '../sistema/index';
-import {FuncaoDados, TipoFuncaoDados, FuncaoDadosFormComponent} from '../funcao-dados/index';
-import {ResumoTotal, ResumoFuncoes} from '../analise-shared/resumo-funcoes';
-import {FuncaoTransacao} from '../funcao-transacao/funcao-transacao.model';
-import {FatorAjuste} from '../fator-ajuste';
-import {ModuloDaFuncionalidadeFinder} from './modulo-finder';
-import {FuncaoAnalise} from '../analise-shared/funcao-analise';
-import {Organizacao} from '../organizacao';
-import {TipoEquipe} from '../tipo-equipe';
+import { BaseEntity, MappableEntities, JSONable } from '../shared';
+import { Contrato } from '../contrato';
+import { EsforcoFase } from '../esforco-fase/index';
+import { Sistema } from '../sistema/index';
+import { FuncaoDados, TipoFuncaoDados, FuncaoDadosFormComponent } from '../funcao-dados/index';
+import { ResumoTotal, ResumoFuncoes } from '../analise-shared/resumo-funcoes';
+import { FuncaoTransacao } from '../funcao-transacao/funcao-transacao.model';
+import { FatorAjuste } from '../fator-ajuste';
+import { ModuloDaFuncionalidadeFinder } from './modulo-finder';
+import { FuncaoAnalise } from '../analise-shared/funcao-analise';
+import { Organizacao } from '../organizacao';
+import { TipoEquipe } from '../tipo-equipe';
 import { User } from '../user';
 import { AnaliseShareEquipe } from './analise-share-equipe.model';
+import { Observable } from 'rxjs/Rx';
 
 export enum MetodoContagem {
     'DETALHADA' = 'DETALHADA',
@@ -37,6 +39,8 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     private _resumoFuncaoTransacao: ResumoFuncoes;
 
     private _resumoTotal: ResumoTotal;
+
+    private userService: UserService;
 
     constructor(
         public id?: number,
@@ -71,8 +75,8 @@ export class Analise implements BaseEntity, JSONable<Analise> {
         public compartilhadas?: AnaliseShareEquipe[],
         public dataCriacaoOrdemServico?: any,
         public manual?: Manual,
-        public users?: User
-        ) {
+        public users?: User[]
+    ) {
         this.inicializaMappables(funcaoDados, funcaoTransacaos);
         this.inicializaResumos();
 
@@ -148,11 +152,11 @@ export class Analise implements BaseEntity, JSONable<Analise> {
 
     aplicarFator(pf: number): number {
         if (this.fatorAjuste.tipoAjuste === 'UNITARIO') {
-          return this.fatorAjuste.fator;
+            return this.fatorAjuste.fator;
         } else {
-          return pf * this.fatorAjuste.fator;
+            return pf * this.fatorAjuste.fator;
         }
-      }
+    }
     /**
      *
      */
@@ -174,6 +178,9 @@ export class Analise implements BaseEntity, JSONable<Analise> {
         }
         if (copy.funcaoTransacaos) {
             copy.funcaoTransacaos = copy.funcaoTransacaos.map(fd => fd.toJSONState());
+        }
+        if (copy.users) {
+            copy.users = copy.users.map(user => Object.assign({}, user));
         }
         copy.sistema = Sistema.toNonCircularJson(copy.sistema);
 
@@ -376,6 +383,7 @@ class AnaliseCopyFromJSON {
         if (!this._analiseConverted.baselineImediatamente) {
             this._analiseConverted.baselineImediatamente = false;
         }
+        this._analiseConverted.users = this._json.users;
     }
 
     private converteFuncoes() {
@@ -425,7 +433,7 @@ class AnaliseCopyFromJSON {
             .map(efJSON => new EsforcoFase().copyFromJSON(efJSON));
     }
 
-    private converteManual(){
+    private converteManual() {
         if (this._json.contrato !== null) {
             this._analiseConverted.manual = new Manual().copyFromJSON(this._json.manual);
         } else {
