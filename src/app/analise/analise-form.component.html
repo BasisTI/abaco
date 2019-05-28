@@ -279,13 +279,12 @@
                                     </p-dropdown>
                                 </div>
                                 <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos" *ngIf="isEdicao">
-                                    <label>Usuários</label>
+                                    <label translate="Analise.Analise.Usuarios">Usuários</label>
                                     <p-multiSelect
                                             [filter]="true"
                                             required
                                             id="idUserFormAnalise"
                                             disabled="{{ !isContratoSelected() }}"
-                                            placeholder="{{ needContratoDropdownPlaceholder() }}"
                                             name="usersMultiselect"
                                             [(options)]="users"
                                             [(ngModel)]="analise.users"
@@ -295,23 +294,6 @@
                                             #usersMultiselect='ngModel'>
                                     </p-multiSelect>
                                 </div>
-                                <!-- <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos" *ngIf="!isEdicao">
-                                    <label>Usuários</label>
-                                    <p-multiSelect
-                                            [filter]="true"
-                                            required
-                                            id="idUserFormAnalise"
-                                            disabled="{{ !isContratoSelected() }}"
-                                            placeholder="{{ needContratoDropdownPlaceholder() }}"
-                                            name="usersMultiselect"
-                                            [(options)]="users"
-                                            [(ngModel)]="analise.users"
-                                            optionLabel="nome"
-                                            [autoWidth]="false"
-                                            selectedItemsLabel="{0} Usuários Selecionados"
-                                            #usersMultiselect="usersName">
-                                    </p-multiSelect>
-                                </div> -->
                                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
                                     <label translate="Analise.Analise.PropositoContagem">Propósito da Contagem</label>
                                     <span class="md-inputfield">
