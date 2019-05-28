@@ -1,3 +1,5 @@
+import { TipoEquipe } from './../tipo-equipe/tipo-equipe.model';
+import { Organizacao } from './../organizacao/organizacao.model';
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
@@ -39,6 +41,13 @@ export class UserService {
     return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
       const jsonResponse = res.json();
       return this.convertItemFromServer(jsonResponse);
+    });
+  }
+
+  getAllUsers(org: Organizacao, tipoequip: TipoEquipe): Observable<User[]> {
+    return this.http.get(`${this.resourceUrl}/${org.id}/${tipoequip.id}`).map((res: Response) => {
+      const jsonResponse = res.json();
+      return this.convertUsersFromServer(jsonResponse);
     });
   }
 
@@ -97,6 +106,19 @@ export class UserService {
     const entity: User = Object.assign(new User(), json);
     entity.authorities = this.generateAuthorities(json);
     return entity;
+  }
+
+  /**
+   * Convert a returned JSON object to User.
+   */
+  private convertUsersFromServer(json: any): User[] {
+    const users: User[] = [];
+    json.map(item => {
+      const entity: User = Object.assign(new User(), item);
+      entity.authorities = this.generateAuthorities(item);
+      users.push(entity);
+    })
+    return users;
   }
 
   // TODO User implements JSONable

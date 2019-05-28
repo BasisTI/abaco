@@ -235,7 +235,7 @@
                                             [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
-                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px" *ngIf="!validacaoCampos">
+                                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 05px" *ngIf="!validacaoCampos">
                                     <label translate="Analise.Analise.MetodoContagem*">Método de Contagem *</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -251,7 +251,7 @@
                                     </p-dropdown>
                                 </div>
 
-                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px" *ngIf="!validacaoCampos">
+                                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 05px" *ngIf="!validacaoCampos">
                                     <label translate="Analise.Analise.TipoContagem*">Tipo de Contagem *</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -264,7 +264,7 @@
                                             [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
-                                <div class="ui-g-3 ui-md-4 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
+                                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
                                     <label translate="Analise.Analise.Deflator">Deflator</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -277,6 +277,22 @@
                                             [(ngModel)]="analise.fatorAjuste"
                                             [autoWidth]="false">
                                     </p-dropdown>
+                                </div>
+                                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos" *ngIf="isEdicao">
+                                    <label translate="Analise.Analise.Usuarios">Usuários</label>
+                                    <p-multiSelect
+                                            [filter]="true"
+                                            required
+                                            id="idUserFormAnalise"
+                                            disabled="{{ !isContratoSelected() }}"
+                                            name="usersMultiselect"
+                                            [(options)]="users"
+                                            [(ngModel)]="analise.users"
+                                            optionLabel="nome"
+                                            [autoWidth]="false"
+                                            selectedItemsLabel="{0} Usuários Selecionados"
+                                            #usersMultiselect='ngModel'>
+                                    </p-multiSelect>
                                 </div>
                                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
                                     <label translate="Analise.Analise.PropositoContagem">Propósito da Contagem</label>

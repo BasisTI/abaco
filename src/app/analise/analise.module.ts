@@ -28,6 +28,7 @@ import {
     ConfirmationService,
     TabViewModule,
     InputTextareaModule,
+    MultiSelectModule
 } from 'primeng/primeng';
 
 import {
@@ -67,6 +68,7 @@ export function createTranslateLoader(http: HttpClient) {
         SpinnerModule,
         CalendarModule,
         DropdownModule,
+        MultiSelectModule,
         RadioButtonModule,
         InputTextModule,
         DataTableModule,
