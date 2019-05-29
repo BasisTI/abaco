@@ -233,35 +233,25 @@ public class RelatorioUtil {
         document.add(factory.makeTableLine("Deflator", funcaoTransacao.getFatorAjuste().getFator().toString()));
         List<String>alrs = new ArrayList<>();
         List<String>ders = new ArrayList<>();
-        funcaoTransacao.getAlrs().forEach(alr -> alrs.add(alr.getNome()));
-        funcaoTransacao.getDers().forEach(der -> ders.add(der.getNome()));
-        List<List<String>> datas = new ArrayList();
-        datas.add(alrs);
-        datas.add(ders);
-        List<String>headers = new ArrayList<>(2);
-        headers.add("Entidades Referênciadas");
-        headers.add("Campos");
-        document.add(factory.makeTableLineVerticalTables(headers, datas, TextAlignment.LEFT, 12F));
+        funcaoTransacao.getAlrs().forEach(alr -> alrs.add(alr.getNome() != null ? alr.getNome() : alr.getValor().toString()));
+        funcaoTransacao.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : der.getValor().toString()));
+        document.add(factory.makeBulletList("Entidades Referênciadas", alrs));
+        document.add(factory.makeBulletList("Campos", alrs));
         document.add(factory.makeDescriptionField("Fundamentação", funcaoTransacao.getSustantation(), TextAlignment.JUSTIFIED, 12F));
         document.add(factory.makeEspaco());
     }
 
     private void buildTableFD(FuncaoDados funcaoDados, ReportFactory factory, Document document) {
-        document.add(factory.makeTableLine("Entidade", funcaoDados.getName()));
+        document.add(factory.makeTableLine("Transação", funcaoDados.getName()));
         document.add(factory.makeTableLine("Tipo", funcaoDados.getTipo().name()));
-        document.add(factory.makeTableLine("impacto", funcaoDados.getImpacto().name()));
+        document.add(factory.makeTableLine("Impacto", funcaoDados.getImpacto().name()));
         document.add(factory.makeTableLine("Deflator", funcaoDados.getFatorAjuste().getFator().toPlainString()));
         List<String>rlrs = new ArrayList<>();
         List<String>ders = new ArrayList<>();
-        funcaoDados.getRlrs().forEach(rlr -> rlrs.add(rlr.getNome()));
-        funcaoDados.getDers().forEach(der -> ders.add(der.getNome()));
-        List<List<String>> datas = new ArrayList();
-        datas.add(rlrs);
-        datas.add(ders);
-        List<String>headers = new ArrayList<>(2);
-        headers.add("Entidades Dependentes Relacionadas");
-        headers.add("Campos");
-        document.add(factory.makeTableLineVerticalTables(headers, datas, TextAlignment.LEFT, 12F));
+        funcaoDados.getRlrs().forEach(rlr -> rlrs.add(rlr.getNome() != null ? rlr.getNome() : rlr.getValor().toString()));
+        funcaoDados.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : der.getValor().toString()));
+        document.add(factory.makeBulletList("Entidades Referenciadas", rlrs));
+        document.add(factory.makeBulletList("Campos", ders));
         document.add(factory.makeDescriptionField("Fundamentação", funcaoDados.getSustantation(), TextAlignment.JUSTIFIED, 12F));
         document.add(factory.makeEspaco());
     }
