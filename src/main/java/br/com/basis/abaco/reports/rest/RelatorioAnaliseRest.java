@@ -16,12 +16,13 @@ import br.com.basis.abaco.service.dto.FuncoesDTO;
 import br.com.basis.abaco.service.dto.ListaFdFtDTO;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -107,18 +108,14 @@ public class RelatorioAnaliseRest {
             case ANALISE_DETALHADA:
                 return relatorio.downloadPdfArquivo(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
 
-            case CONTAGEM:
-                return relatorio.downloadPdfArquivo(analise, caminhoAnaliseContagem, construirParams(), construirDataSource(analise));
-
             default: return null;
         }
     }
 
-    private Map construirParams() throws IOException {
-        Map param = new HashMap<String, Object>();
-        param.put("Logo", ImageIO.read(this.getClass().getClassLoader()
-            .getResourceAsStream(caminhoImagemBasis)));
-        return param;
+    public ResponseEntity<InputStreamResource> downloadRepoertContagem(@NotNull Analise analise) throws IOException {
+        init();
+        popularObjeto(analise);
+        return relatorio.buildReport(analise);
     }
 
     /**empolgação

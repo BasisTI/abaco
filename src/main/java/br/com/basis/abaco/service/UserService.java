@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -257,6 +258,16 @@ public class UserService {
     @Transactional(readOnly = true)
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
         return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map(UserDTO::new);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<UserDTO> getAllUsersOrgEquip(Long idOrg, Long idEquip) {
+        List<User> lista = userRepository.findAllUsersOrgEquip(idOrg, idEquip);
+        List<UserDTO> lst = new ArrayList<>();
+        for(int i = 0; i<lista.size(); i++){
+            lst.add(new UserDTO(lista.get(i)));
+        }
+        return lst;
     }
 
     @Transactional(readOnly = true)
