@@ -229,13 +229,13 @@ public class RelatorioUtil {
     private void buildtableFT(FuncaoTransacao funcaoTransacao, ReportFactory factory, Document document) {
         document.add(factory.makeTableLine("Entidade", funcaoTransacao.getName()));
         document.add(factory.makeTableLine("Tipo", funcaoTransacao.getTipo().name()));
-        document.add(factory.makeTableLine("impacto", funcaoTransacao.getImpacto().name()));
+        document.add(factory.makeTableLine("Impacto", funcaoTransacao.getImpacto().name()));
         document.add(factory.makeTableLine("Deflator", funcaoTransacao.getFatorAjuste().getFator().toString()));
         List<String>alrs = new ArrayList<>();
         List<String>ders = new ArrayList<>();
         funcaoTransacao.getAlrs().forEach(alr -> alrs.add(alr.getNome() != null ? alr.getNome() : alr.getValor().toString()));
         funcaoTransacao.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : der.getValor().toString()));
-        document.add(factory.makeBulletList("Entidades Referênciadas", alrs));
+        document.add(factory.makeBulletList("Entidades Referenciadas", alrs));
         document.add(factory.makeBulletList("Campos", alrs));
         document.add(factory.makeDescriptionField("Fundamentação", funcaoTransacao.getSustantation(), TextAlignment.JUSTIFIED, 12F));
         document.add(factory.makeEspaco());
