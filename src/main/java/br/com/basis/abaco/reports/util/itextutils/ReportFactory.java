@@ -31,12 +31,14 @@ import com.itextpdf.layout.element.Div;
 import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.IElement;
 import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.ListItem;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
 import com.itextpdf.styledxmlparser.node.IElementNode;
+import com.itextpdf.text.Font;
 import groovy.util.logging.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +67,7 @@ public class ReportFactory {
     private Float topMargin, rightMargin, bottomMargin, leftMargin, tabMargin, tableHeaderWidth, availableSpace;
     private PdfFont regular = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
     private PdfFont bold = PdfFontFactory.createFont(StandardFonts.TIMES_BOLD);
+    private Font font = new Font(Font.FontFamily.TIMES_ROMAN, 12);
     private FooterHandler footerHandler;
     private PageSizeModifier pageSizeModifier;
     private ITagWorkerFactory mapperTagCKEditor;
@@ -94,7 +97,7 @@ public class ReportFactory {
      */
     public Table makeCabecalho(URL pathImg, String title, String versionText, Document document) {
         Table table = new Table(3);
-        this.availableSpace = document.getPdfDocument().getDefaultPageSize().getWidth() - rightMargin - rightMargin;
+        this.availableSpace = document.getPdfDocument().getDefaultPageSize().getWidth() - rightMargin - leftMargin;
         table.setWidth(availableSpace);
         try {
             Image logo = new Image(ImageDataFactory.create(pathImg));
@@ -429,14 +432,37 @@ public class ReportFactory {
      * @param data
      * @param table
      */
-    private void fillTable(TextAlignment alignment, @NotNull float fontSize, @NotNull List<String> data,@NotNull Table table) {
+    private void fillTable(TextAlignment alignment, @NotNull float fontSize,@NotNull List<String> data, @NotNull Table table) {
+        com.itextpdf.layout.element.List list = new com.itextpdf.layout.element.List();
         for (String s : data) {
             if(s != null) {
-                table.addCell(new Cell().add(
-                    new Paragraph(s).setTextAlignment(alignment).setFontSize(fontSize).setFont(regular)
-                ));
+                ListItem item = new ListItem();
+                item.add(new Paragraph(s).setTextAlignment(alignment).setFontSize(fontSize).setFont(regular).setMargin(0).setPadding(0));
+                item.setMargin(0).setPadding(0);
+                list.add(item).setMargin(0).setPadding(0);
             }
         }
+        list.setMargin(0).setPadding(0);
+        table.addCell(list).setMargin(0).setPadding(1);
+    }
+
+    public Div makeBulletList(@NotNull String header, @NotNull List<String> data){
+        Paragraph list = new Paragraph();
+        for (String item: data) {
+            if(item != null) {
+                list.add("\u2022 " + item + "  ");
+            }
+        }
+        Div div = new Div();
+        div.add(new Paragraph(header)
+            .setBackgroundColor(WebColors.getRGBColor(HEADER_BACKGROUND_COLOR)).setMargin(0).setPaddingLeft(4F)
+            .setHorizontalAlignment(HorizontalAlignment.CENTER).setBorderBottom(new SolidBorder(0.2F))
+        );
+        div.add(list.setPaddingLeft(0).setMargin(0));
+        setBorder(div, 0.8F);
+        div.setWidth(availableSpace - leftMargin);
+        div.setMarginLeft(tabMargin);
+        return div;
     }
 
     /**
