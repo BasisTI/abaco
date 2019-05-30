@@ -74,6 +74,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     manuais: Manual[] = [];
 
+    users: User[] = [];
+
     manuaisCombo: SelectItem[] = [];
 
     @BlockUI() blockUI: NgBlockUI;
@@ -159,17 +161,17 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     /*
     *   Metodo responsavel por traduzir opções dos Metodos de Contagem de Analise
     */
-   traduzirMetodoContagem() {
-    this.translate.stream(['Analise.Analise.metsContagens.DETALHADA_IFPUG', 'Analise.Analise.metsContagens.INDICATIVA_NESMA',
-        'Analise.Analise.metsContagens.ESTIMADA_NESMA']).subscribe((traducao) => {
-            this.metodoContagem = [
-                { label: traducao['Analise.Analise.metsContagens.DETALHADA_IFPUG'], value: 'DETALHADA' },
-                { label: traducao['Analise.Analise.metsContagens.INDICATIVA_NESMA'], value: 'INDICATIVA' },
-                { label: traducao['Analise.Analise.metsContagens.ESTIMADA_NESMA'], value: 'ESTIMADA' }
-            ];
+    traduzirMetodoContagem() {
+        this.translate.stream(['Analise.Analise.metsContagens.DETALHADA_IFPUG', 'Analise.Analise.metsContagens.INDICATIVA_NESMA',
+            'Analise.Analise.metsContagens.ESTIMADA_NESMA']).subscribe((traducao) => {
+                this.metodoContagem = [
+                    { label: traducao['Analise.Analise.metsContagens.DETALHADA_IFPUG'], value: 'DETALHADA' },
+                    { label: traducao['Analise.Analise.metsContagens.INDICATIVA_NESMA'], value: 'INDICATIVA' },
+                    { label: traducao['Analise.Analise.metsContagens.ESTIMADA_NESMA'], value: 'ESTIMADA' }
+                ];
 
-        })
-}
+            })
+    }
 
     /**
      * Função para recuperar os dados do usuário logado no momento
@@ -289,6 +291,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 analiseCarregada.manual ? analiseCarregada.manual : new Manual());
         this.carregaFatorAjusteNaEdicao();
         this.isEdit = this.analise.identificadorAnalise == undefined ? true : false;
+        this.populaComboUsers();
     }
 
     /**
@@ -556,8 +559,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.manuais.push(item.manual);
             this.manuaisCombo.push({
                 label: `${m.nome} ${this.formataData(item.dataInicioVigencia)} - ` +
-                        `${this.formataData(item.dataFimVigencia)}`
-                        + this.formataBoleano(item.ativo),
+                    `${this.formataData(item.dataFimVigencia)}`
+                    + this.formataBoleano(item.ativo),
                 value: m.id === this.analise.manual.id ? this.analise.manual : m
             });
         });
@@ -774,6 +777,18 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgRegistroAtualizadoSucesso'));
             });
         }, 250);
+    }
+
+    private populaComboUsers() {
+        this.userService.getAllUsers(this.analise.organizacao, this.analise.equipeResponsavel).subscribe(usuarios => {
+            this.users = usuarios;
+            this.users.map((user, index) => {
+                this.analise.users.length === 0 ? (user.id === this.loggedUser.id ? this.analise.users.push(user) : undefined) : undefined;
+                let fil: User[] = this.analise.users.filter(res => res.id == user.id);
+                fil.length === 0 ? undefined : fil[0].nome = fil[0].firstName + ' ' + fil[0].lastName;
+                this.users[index] = fil.length === 0 ? user : fil[0];
+            });
+        });
     }
 }
 
