@@ -243,6 +243,13 @@ export class AnaliseService {
     this.http.get(`${this.relatorioContagemUrl}/${idAnalise}`, {
       method: RequestMethod.Get,
       responseType: ResponseContentType.Blob,
+    }).catch((error: any) => {
+      this.blockUI.stop();
+      if (error.status === 500) {
+        this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.ErroGerarRelatorio'));
+        this.blockUI.stop();
+        return Observable.throw(new Error(error.status));
+      }
     }).subscribe(
       (response) => {
         const mediaType = 'application/pdf';

@@ -815,7 +815,13 @@
       "CriarCrud":"Create Crud",
       "EscolhaUmRegistroParaCriarCrud":"Choose a record to create crud.",
       "Nenhum":"None",
-      "DeflatorDeOrigen":"Maintain original deflator"
+      "DeflatorDeOrigen":"Maintain original deflator",
+      "SemPermissaoAcao": "You do not have permission for this action."
+    },
+    "Usuario": {
+      "Editando": "Editing user.",
+      "Cadastrando": "Registering user.",
+      "Excluiindo": "Deleting user."
     },
     "Idiomas":{
       "Portugues":"Portuguese",
