@@ -202,10 +202,10 @@ public class RelatorioUtil {
      * @param factory classe cosntrutora auxiliar do relatório
      */
     private void buildBodyAnaliseDetail(@NotNull Analise analise, @NotNull Document document, @NotNull ReportFactory factory) {
-        document.add(factory.makeSubTitle("Identificação da Análise", TextAlignment.LEFT, 14F));
+        document.add(factory.makeSubTitle("Identificação da Demanda", TextAlignment.LEFT, 14F));
         buildAnaliseDetail(document, analise, factory);
         document.add(factory.makeEspaco());
-        document.add(factory.makeSubTitle("Detalhamento da Análise", TextAlignment.LEFT, 14F));
+        document.add(factory.makeSubTitle("Detalhamento da Demanda", TextAlignment.LEFT, 14F));
         buildModules(analise.getSistema().getModulos(), document, factory);
     }
 
@@ -227,30 +227,28 @@ public class RelatorioUtil {
     }
 
     private void buildtableFT(FuncaoTransacao funcaoTransacao, ReportFactory factory, Document document) {
-        document.add(factory.makeTableLine("Entidade", funcaoTransacao.getName()));
+        document.add(factory.makeTableLine("Funcionalidade/Cenário", funcaoTransacao.getName()));
         document.add(factory.makeTableLine("Tipo", funcaoTransacao.getTipo().name()));
         document.add(factory.makeTableLine("Impacto", funcaoTransacao.getImpacto().name()));
-        document.add(factory.makeTableLine("Deflator", funcaoTransacao.getFatorAjuste().getFator().toString()));
         List<String>alrs = new ArrayList<>();
         List<String>ders = new ArrayList<>();
-        funcaoTransacao.getAlrs().forEach(alr -> alrs.add(alr.getNome() != null ? alr.getNome() : alr.getValor().toString()));
-        funcaoTransacao.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : der.getValor().toString()));
+        funcaoTransacao.getAlrs().forEach(alr -> alrs.add(alr.getNome() != null ? alr.getNome() : (alr.getValor() != null ? alr.getValor().toString() : null)));
+        funcaoTransacao.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : (der.getValor() != null ? der.getValor().toString(): null)));
         document.add(factory.makeBulletList("Entidades Referenciadas", alrs));
-        document.add(factory.makeBulletList("Campos", alrs));
+        document.add(factory.makeBulletList("Campos", ders));
         document.add(factory.makeDescriptionField("Fundamentação", funcaoTransacao.getSustantation(), TextAlignment.JUSTIFIED, 12F));
         document.add(factory.makeEspaco());
     }
 
     private void buildTableFD(FuncaoDados funcaoDados, ReportFactory factory, Document document) {
-        document.add(factory.makeTableLine("Transação", funcaoDados.getName()));
+        document.add(factory.makeTableLine("Entidade", funcaoDados.getName()));
         document.add(factory.makeTableLine("Tipo", funcaoDados.getTipo().name()));
         document.add(factory.makeTableLine("Impacto", funcaoDados.getImpacto().name()));
-        document.add(factory.makeTableLine("Deflator", funcaoDados.getFatorAjuste().getFator().toPlainString()));
         List<String>rlrs = new ArrayList<>();
         List<String>ders = new ArrayList<>();
-        funcaoDados.getRlrs().forEach(rlr -> rlrs.add(rlr.getNome() != null ? rlr.getNome() : rlr.getValor().toString()));
-        funcaoDados.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : der.getValor().toString()));
-        document.add(factory.makeBulletList("Entidades Referenciadas", rlrs));
+        funcaoDados.getRlrs().forEach(rlr -> rlrs.add(rlr.getNome() != null ? rlr.getNome() : (rlr.getValor() != null ? rlr.getValor().toString(): null)));
+        funcaoDados.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : (der.getValor() != null ? der.getValor().toString() : null)));
+        document.add(factory.makeBulletList("Subentidades", rlrs));
         document.add(factory.makeBulletList("Campos", ders));
         document.add(factory.makeDescriptionField("Fundamentação", funcaoDados.getSustantation(), TextAlignment.JUSTIFIED, 12F));
         document.add(factory.makeEspaco());
@@ -261,8 +259,6 @@ public class RelatorioUtil {
         document.add(factory.makeTableLine("Sistema", analise.getSistema().getNome()));
         document.add(factory.makeTableLine("Identificador", analise.getIdentificadorAnalise()));
         document.add(factory.makeTableLine("Contrato", analise.getContrato().getNumeroContrato()));
-        document.add(factory.makeTableLine("Manual", analise.getManual().getNome()));
-        document.add(factory.makeTableLine("Organização", analise.getMetodoContagemString()));
     }
 
     /**
