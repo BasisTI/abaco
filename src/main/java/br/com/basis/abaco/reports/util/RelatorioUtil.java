@@ -5,6 +5,9 @@ import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Funcionalidade;
 import br.com.basis.abaco.domain.Modulo;
+import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
+import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
+
 import br.com.basis.abaco.reports.util.itextutils.ReportFactory;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.itextpdf.kernel.geom.PageSize;
@@ -65,7 +68,6 @@ public class RelatorioUtil {
 
     private static final String CONTAGEM_PDF = "analise_contagem.pdf";
 
-    private static final String VERSION_CONTAGEM = "versão: 1.0";
 
     private HttpServletResponse response;
 
@@ -228,7 +230,7 @@ public class RelatorioUtil {
 
     private void buildtableFT(FuncaoTransacao funcaoTransacao, ReportFactory factory, Document document) {
         document.add(factory.makeTableLine("Funcionalidade/Cenário", funcaoTransacao.getName()));
-        document.add(factory.makeTableLine("Tipo", funcaoTransacao.getTipo().name()));
+        document.add(factory.makeTableLine("Tipo", translateTipo(funcaoTransacao.getTipo())));
         document.add(factory.makeTableLine("Impacto", funcaoTransacao.getImpacto().name()));
         List<String>alrs = new ArrayList<>();
         List<String>ders = new ArrayList<>();
@@ -242,7 +244,7 @@ public class RelatorioUtil {
 
     private void buildTableFD(FuncaoDados funcaoDados, ReportFactory factory, Document document) {
         document.add(factory.makeTableLine("Entidade", funcaoDados.getName()));
-        document.add(factory.makeTableLine("Tipo", funcaoDados.getTipo().name()));
+        document.add(factory.makeTableLine("Tipo", translateTipo(funcaoDados.getTipo())));
         document.add(factory.makeTableLine("Impacto", funcaoDados.getImpacto().name()));
         List<String>rlrs = new ArrayList<>();
         List<String>ders = new ArrayList<>();
@@ -261,6 +263,26 @@ public class RelatorioUtil {
         document.add(factory.makeTableLine("Contrato", analise.getContrato().getNumeroContrato()));
     }
 
+    private String translateTipo(Enum tipo) {
+        if(tipo instanceof TipoFuncaoDados) {
+            switch ((TipoFuncaoDados)tipo) {
+                case ALI:
+                    return "Entidade mantida internamente pelo sistema";
+                case AIE:
+                    return "Entidade referenciada de outro sistema";
+                case INM:
+                    return "Item não mensurável / Requisito não funcional";
+            }
+        }
+        switch ((TipoFuncaoTransacao)tipo){
+            case EE: return "Funcionalidade/cenário que cria/atualiza dados no sistema";
+            case CE: return "Funcionalidade/cenário que apresenta dados armazenados no sistema";
+            case SE: return "Funcionalidade/cenário que apresenta dados armazenados no sistema, com derivação ou cálculo, e que pode ainda criar/atualizar dados no sistema";
+            case INM: return "Item não mensurável / Requisito não funcional";
+        }
+        return tipo.toString();
+    }
+
     /**
      * Cria o cabeçalho do relatório de contagem
      * @param document
@@ -269,7 +291,7 @@ public class RelatorioUtil {
      */
     private void buildHeader(@NotNull Document document, @NotNull ReportFactory factory) throws MalformedURLException {
         URL img = RelatorioUtil.class.getClassLoader().getResource("reports/img/logobasis.png");
-        document.add(factory.makeCabecalho(img, "Documento de Fundamentação de Contagem", VERSION_CONTAGEM, document));
+        document.add(factory.makeCabecalho(img, "Documento de Fundamentação de Contagem", document));
         document.add(factory.makeEspaco());
     }
 
@@ -295,7 +317,7 @@ public class RelatorioUtil {
 
         InputStream stream = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
 
-        JasperPrint jasperPrint = (JasperPrint)JasperFillManager.fillReport(stream, parametrosJasper, new JREmptyDataSource());
+        JasperPrint jasperPrint = JasperFillManager.fillReport(stream, parametrosJasper, new JREmptyDataSource());
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
