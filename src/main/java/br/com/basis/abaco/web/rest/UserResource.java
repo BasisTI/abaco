@@ -184,7 +184,7 @@ public class UserResource {
   /**
    * PUT /users : Updates an existing User.
    *
-   * @param user2 the user to update
+   * @param user the user to update
    * @return the ResponseEntity with status 200 (OK) and with body the updated
    *         user, or with status 400 (Bad Request) if the login or email is
    *         already in use, or with status 500 (Internal Server Error) if the

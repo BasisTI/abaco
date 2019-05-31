@@ -88,14 +88,13 @@ public class ReportFactory {
 
     /**
      * Cria um cabeçalho de um relatório contendo uma imagem alinhada a esquerda <p>
-     * um título centralizado e data formatada para mês ano com a versão do relatório
+     * um título centralizado e data formatada para mês ano.
      * @param pathImg arquivo @{@link File} refêniado a imagem do logo
      * @param title Título do relatório
-     * @param versionText versão do relatório
      * @param document Documento @{@link PdfDocument}
      * @return @{@link Table} que organiza o cabeçalho
      */
-    public Table makeCabecalho(URL pathImg, String title, String versionText, Document document) {
+    public Table makeCabecalho(URL pathImg, String title, Document document) {
         Table table = new Table(3);
         this.availableSpace = document.getPdfDocument().getDefaultPageSize().getWidth() - rightMargin - leftMargin;
         table.setWidth(availableSpace);
@@ -103,7 +102,7 @@ public class ReportFactory {
             Image logo = new Image(ImageDataFactory.create(pathImg));
             logo.setWidth(80).setHeight(40);
             Paragraph titleParagraph = makeTitulo(title, 18F, TextAlignment.CENTER,  false);
-            Div leftContent = makeRightHeader(versionText);
+            Div leftContent = makeRightHeader();
             configureHeader(table, logo, titleParagraph, leftContent);
             return table;
         } catch (RuntimeException e) {
@@ -126,22 +125,17 @@ public class ReportFactory {
     }
 
     /**
-     * Constroi o cabeçalho esquedo contendo a versão do relatório e data atual<p>
+     * Constroi o cabeçalho esquedo contendo a data atual<p>
      *     no formato MMMM, yyyy
      * <p>
-     * @param versionText versão do relatório
      * @return Div contendo o cabeçalho formatado
      */
-    private Div makeRightHeader(String versionText) {
+    private Div makeRightHeader() {
         Div div = new Div();
-        Paragraph version = new Paragraph(versionText);
-        version.setTextAlignment(TextAlignment.RIGHT);
-        version.setHorizontalAlignment(HorizontalAlignment.RIGHT);
         Paragraph dateParagraph = new Paragraph(getDateNow());
         dateParagraph.setTextAlignment(TextAlignment.RIGHT);
         dateParagraph.setHorizontalAlignment(HorizontalAlignment.RIGHT);
         div.add(dateParagraph);
-        div.add(version);
         div.setMaxWidth(80);
         div.setHorizontalAlignment(HorizontalAlignment.RIGHT);
         div.setMarginRight(0);
