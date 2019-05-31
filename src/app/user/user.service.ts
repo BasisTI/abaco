@@ -5,10 +5,13 @@ import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
+import { TranslateService } from '@ngx-translate/core';
+import { ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService } from '../shared';
+
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 import { User } from './user.model';
 import { Authority } from './authority.model';
-import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
 
 @Injectable()
 export class UserService {
@@ -19,21 +22,50 @@ export class UserService {
 
   searchUrl = environment.apiUrl + '/_search/users';
 
-  constructor(private http: HttpService) { }
+  @BlockUI() blockUI: NgBlockUI;
+
+  constructor(private http: HttpService, private translate: TranslateService, private pageNotificationService: PageNotificationService) { }
+
+  getLabel(label) {
+    let str: any;
+    this.translate.get(label).subscribe((res: string) => {
+      str = res;
+    }).unsubscribe();
+    return str;
+  }
 
   create(user: User): Observable<User> {
+    this.blockUI.start(this.getLabel('Usuario.Cadastrando'));
     const copy = this.convert(user);
-    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
+    return this.http.post(this.resourceUrl, copy).catch((error: any) => {
+      this.blockUI.stop();
+      if (error.status === 403) {
+        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.SemPermissaoAcao'));
+        return Observable.throw(new Error(error.status));
+      }
+    })
+    .map((res: Response) => {
       const jsonResponse = res.json();
+      this.blockUI.stop();
       return this.convertItemFromServer(jsonResponse);
     });
   }
 
   update(user: User): Observable<User> {
+    this.blockUI.start(this.getLabel('Usuario.Editando'));
     const copy = this.convert(user);
-    return this.http.put(this.resourceUrl, copy).map((res: Response) => {
+    return this.http.put(this.resourceUrl, copy).catch((error: any) => {
+      this.blockUI.stop();
+      if (error.status === 403) {
+        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.SemPermissaoAcao'));
+        return Observable.throw(new Error(error.status));
+      }
+    })
+    .map((res: Response) => {
       const jsonResponse = res.json();
+      this.blockUI.stop();
       return this.convertItemFromServer(jsonResponse);
+      
     });
   }
 
