@@ -213,19 +213,34 @@ public class RelatorioUtil {
 
     private void buildModules(Set<Modulo> modulos, Document document, ReportFactory factory) {
         for (Modulo modulo : modulos) {
-            document.add(factory.makeSubTitleLv2(modulo.getNome().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
+            if(verifyModulo(modulo)) {
+                document.add(factory.makeSubTitleLv2(modulo.getNome().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
+                for (Funcionalidade funcionalidade : modulo.getFuncionalidades()) {
+                    funcionalidade.getFuncoesDados().forEach(funcaoDados -> {
+                        document.add(factory.makeSubTitleLv3(funcaoDados.getName().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
+                        buildTableFD(funcaoDados, factory, document);
+                    });
+                    for (FuncaoTransacao funcaoTransacao : funcionalidade.getFuncoesTransacao()) {
+                        document.add(factory.makeSubTitleLv3(funcaoTransacao.getName().replace("\n", "").trim(), TextAlignment.LEFT, 12F));
+                        buildtableFT(funcaoTransacao, factory, document);
+                    }
+                }
+                document.add(factory.makeEspaco());
+            }
+        }
+    }
+
+    private boolean verifyModulo(Modulo modulo) {
+        if(modulo != null && modulo.getFuncionalidades().size() > 0){
+            boolean verificador = false;
             for (Funcionalidade funcionalidade : modulo.getFuncionalidades()) {
-                funcionalidade.getFuncoesDados().forEach(funcaoDados -> {
-                    document.add(factory.makeSubTitleLv3(funcaoDados.getName().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
-                    buildTableFD(funcaoDados, factory, document);
-                });
-                for (FuncaoTransacao funcaoTransacao : funcionalidade.getFuncoesTransacao()) {
-                    document.add(factory.makeSubTitleLv3(funcaoTransacao.getName().replace("\n", "").trim(), TextAlignment.LEFT, 12F));
-                    buildtableFT(funcaoTransacao, factory, document);
+                if(funcionalidade.getFuncoesTransacao().size() > 0 || funcionalidade.getFuncoesDados().size() > 0){
+                    verificador = true;
                 }
             }
-            document.add(factory.makeEspaco());
+            return verificador;
         }
+        return false;
     }
 
     private void buildtableFT(FuncaoTransacao funcaoTransacao, ReportFactory factory, Document document) {
