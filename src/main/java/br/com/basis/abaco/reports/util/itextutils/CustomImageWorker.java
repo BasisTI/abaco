@@ -17,7 +17,7 @@ public class CustomImageWorker extends ImgTagWorker {
     @Override
     public IPropertyContainer getElementResult() {
         Image result = ((Image)super.getElementResult());
-        if (!processed) {
+        if (!processed && result != null) {
             float imageWidth = result.getImageScaledWidth();
             Float topMargin, rightMargin, bottomMargin, leftMargin;
             topMargin = (float)37.8;

@@ -5,6 +5,9 @@ import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Funcionalidade;
 import br.com.basis.abaco.domain.Modulo;
+import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
+import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
+
 import br.com.basis.abaco.reports.util.itextutils.ReportFactory;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.itextpdf.kernel.geom.PageSize;
@@ -65,7 +68,6 @@ public class RelatorioUtil {
 
     private static final String CONTAGEM_PDF = "analise_contagem.pdf";
 
-    private static final String VERSION_CONTAGEM = "versão: 1.0";
 
     private HttpServletResponse response;
 
@@ -202,55 +204,68 @@ public class RelatorioUtil {
      * @param factory classe cosntrutora auxiliar do relatório
      */
     private void buildBodyAnaliseDetail(@NotNull Analise analise, @NotNull Document document, @NotNull ReportFactory factory) {
-        document.add(factory.makeSubTitle("Identificação da Análise", TextAlignment.LEFT, 14F));
+        document.add(factory.makeSubTitle("Identificação da Demanda", TextAlignment.LEFT, 14F));
         buildAnaliseDetail(document, analise, factory);
         document.add(factory.makeEspaco());
-        document.add(factory.makeSubTitle("Detalhamento da Análise", TextAlignment.LEFT, 14F));
+        document.add(factory.makeSubTitle("Detalhamento da Demanda", TextAlignment.LEFT, 14F));
         buildModules(analise.getSistema().getModulos(), document, factory);
     }
 
     private void buildModules(Set<Modulo> modulos, Document document, ReportFactory factory) {
         for (Modulo modulo : modulos) {
-            document.add(factory.makeSubTitleLv2(modulo.getNome().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
-            for (Funcionalidade funcionalidade : modulo.getFuncionalidades()) {
-                funcionalidade.getFuncoesDados().forEach(funcaoDados -> {
-                    document.add(factory.makeSubTitleLv3(funcaoDados.getName().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
-                    buildTableFD(funcaoDados, factory, document);
-                });
-                for (FuncaoTransacao funcaoTransacao : funcionalidade.getFuncoesTransacao()) {
-                    document.add(factory.makeSubTitleLv3(funcaoTransacao.getName().replace("\n", "").trim(), TextAlignment.LEFT, 12F));
-                    buildtableFT(funcaoTransacao, factory, document);
+            if(verifyModulo(modulo)) {
+                document.add(factory.makeSubTitleLv2(modulo.getNome().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
+                for (Funcionalidade funcionalidade : modulo.getFuncionalidades()) {
+                    funcionalidade.getFuncoesDados().forEach(funcaoDados -> {
+                        document.add(factory.makeSubTitleLv3(funcaoDados.getName().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
+                        buildTableFD(funcaoDados, factory, document);
+                    });
+                    for (FuncaoTransacao funcaoTransacao : funcionalidade.getFuncoesTransacao()) {
+                        document.add(factory.makeSubTitleLv3(funcaoTransacao.getName().replace("\n", "").trim(), TextAlignment.LEFT, 12F));
+                        buildtableFT(funcaoTransacao, factory, document);
+                    }
                 }
+                document.add(factory.makeEspaco());
             }
-            document.add(factory.makeEspaco());
         }
     }
 
+    private boolean verifyModulo(Modulo modulo) {
+        if(modulo != null && modulo.getFuncionalidades().size() > 0){
+            boolean verificador = false;
+            for (Funcionalidade funcionalidade : modulo.getFuncionalidades()) {
+                if(funcionalidade.getFuncoesTransacao().size() > 0 || funcionalidade.getFuncoesDados().size() > 0){
+                    verificador = true;
+                }
+            }
+            return verificador;
+        }
+        return false;
+    }
+
     private void buildtableFT(FuncaoTransacao funcaoTransacao, ReportFactory factory, Document document) {
-        document.add(factory.makeTableLine("Entidade", funcaoTransacao.getName()));
-        document.add(factory.makeTableLine("Tipo", funcaoTransacao.getTipo().name()));
+        document.add(factory.makeTableLine("Funcionalidade/Cenário", funcaoTransacao.getName()));
+        document.add(factory.makeTableLine("Tipo", translateTipo(funcaoTransacao.getTipo())));
         document.add(factory.makeTableLine("Impacto", funcaoTransacao.getImpacto().name()));
-        document.add(factory.makeTableLine("Deflator", funcaoTransacao.getFatorAjuste().getFator().toString()));
         List<String>alrs = new ArrayList<>();
         List<String>ders = new ArrayList<>();
-        funcaoTransacao.getAlrs().forEach(alr -> alrs.add(alr.getNome() != null ? alr.getNome() : alr.getValor().toString()));
-        funcaoTransacao.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : der.getValor().toString()));
+        funcaoTransacao.getAlrs().forEach(alr -> alrs.add(alr.getNome() != null ? alr.getNome() : (alr.getValor() != null ? alr.getValor().toString() : null)));
+        funcaoTransacao.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : (der.getValor() != null ? der.getValor().toString(): null)));
         document.add(factory.makeBulletList("Entidades Referenciadas", alrs));
-        document.add(factory.makeBulletList("Campos", alrs));
+        document.add(factory.makeBulletList("Campos", ders));
         document.add(factory.makeDescriptionField("Fundamentação", funcaoTransacao.getSustantation(), TextAlignment.JUSTIFIED, 12F));
         document.add(factory.makeEspaco());
     }
 
     private void buildTableFD(FuncaoDados funcaoDados, ReportFactory factory, Document document) {
-        document.add(factory.makeTableLine("Transação", funcaoDados.getName()));
-        document.add(factory.makeTableLine("Tipo", funcaoDados.getTipo().name()));
+        document.add(factory.makeTableLine("Entidade", funcaoDados.getName()));
+        document.add(factory.makeTableLine("Tipo", translateTipo(funcaoDados.getTipo())));
         document.add(factory.makeTableLine("Impacto", funcaoDados.getImpacto().name()));
-        document.add(factory.makeTableLine("Deflator", funcaoDados.getFatorAjuste().getFator().toPlainString()));
         List<String>rlrs = new ArrayList<>();
         List<String>ders = new ArrayList<>();
-        funcaoDados.getRlrs().forEach(rlr -> rlrs.add(rlr.getNome() != null ? rlr.getNome() : rlr.getValor().toString()));
-        funcaoDados.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : der.getValor().toString()));
-        document.add(factory.makeBulletList("Entidades Referenciadas", rlrs));
+        funcaoDados.getRlrs().forEach(rlr -> rlrs.add(rlr.getNome() != null ? rlr.getNome() : (rlr.getValor() != null ? rlr.getValor().toString(): null)));
+        funcaoDados.getDers().forEach(der -> ders.add(der.getNome() != null ? der.getNome() : (der.getValor() != null ? der.getValor().toString() : null)));
+        document.add(factory.makeBulletList("Subentidades", rlrs));
         document.add(factory.makeBulletList("Campos", ders));
         document.add(factory.makeDescriptionField("Fundamentação", funcaoDados.getSustantation(), TextAlignment.JUSTIFIED, 12F));
         document.add(factory.makeEspaco());
@@ -261,8 +276,26 @@ public class RelatorioUtil {
         document.add(factory.makeTableLine("Sistema", analise.getSistema().getNome()));
         document.add(factory.makeTableLine("Identificador", analise.getIdentificadorAnalise()));
         document.add(factory.makeTableLine("Contrato", analise.getContrato().getNumeroContrato()));
-        document.add(factory.makeTableLine("Manual", analise.getManual().getNome()));
-        document.add(factory.makeTableLine("Organização", analise.getMetodoContagemString()));
+    }
+
+    private String translateTipo(Enum tipo) {
+        if(tipo instanceof TipoFuncaoDados) {
+            switch ((TipoFuncaoDados)tipo) {
+                case ALI:
+                    return "Entidade mantida internamente pelo sistema";
+                case AIE:
+                    return "Entidade referenciada de outro sistema";
+                case INM:
+                    return "Item não mensurável / Requisito não funcional";
+            }
+        }
+        switch ((TipoFuncaoTransacao)tipo){
+            case EE: return "Funcionalidade/cenário que cria/atualiza dados no sistema";
+            case CE: return "Funcionalidade/cenário que apresenta dados armazenados no sistema";
+            case SE: return "Funcionalidade/cenário que apresenta dados armazenados no sistema, com derivação ou cálculo, e que pode ainda criar/atualizar dados no sistema";
+            case INM: return "Item não mensurável / Requisito não funcional";
+        }
+        return tipo.toString();
     }
 
     /**
@@ -273,7 +306,7 @@ public class RelatorioUtil {
      */
     private void buildHeader(@NotNull Document document, @NotNull ReportFactory factory) throws MalformedURLException {
         URL img = RelatorioUtil.class.getClassLoader().getResource("reports/img/logobasis.png");
-        document.add(factory.makeCabecalho(img, "Documento de Fundamentação de Contagem", VERSION_CONTAGEM, document));
+        document.add(factory.makeCabecalho(img, "Documento de Fundamentação de Contagem", document));
         document.add(factory.makeEspaco());
     }
 
@@ -299,7 +332,7 @@ public class RelatorioUtil {
 
         InputStream stream = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
 
-        JasperPrint jasperPrint = (JasperPrint)JasperFillManager.fillReport(stream, parametrosJasper, new JREmptyDataSource());
+        JasperPrint jasperPrint = JasperFillManager.fillReport(stream, parametrosJasper, new JREmptyDataSource());
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
