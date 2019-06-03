@@ -216,18 +216,23 @@ public class RelatorioUtil {
             if(verifyModulo(modulo)) {
                 document.add(factory.makeSubTitleLv2(modulo.getNome().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
                 for (Funcionalidade funcionalidade : modulo.getFuncionalidades()) {
-                    funcionalidade.getFuncoesDados().forEach(funcaoDados -> {
-                        document.add(factory.makeSubTitleLv3(funcaoDados.getName().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
-                        buildTableFD(funcaoDados, factory, document);
-                    });
-                    for (FuncaoTransacao funcaoTransacao : funcionalidade.getFuncoesTransacao()) {
-                        document.add(factory.makeSubTitleLv3(funcaoTransacao.getName().replace("\n", "").trim(), TextAlignment.LEFT, 12F));
-                        buildtableFT(funcaoTransacao, factory, document);
+                    if(verifyFuncionalidade(funcionalidade)) {
+                        document.add(factory.makeSubTitleLv3(funcionalidade.getNome().replace("\n", "").trim(), TextAlignment.LEFT, 12F));
+                        for (FuncaoDados funcoesDado : funcionalidade.getFuncoesDados()) {
+                            buildTableFD(funcoesDado, factory, document);
+                        }
+                        for (FuncaoTransacao funcaoTransacao : funcionalidade.getFuncoesTransacao()) {
+                            buildtableFT(funcaoTransacao, factory, document);
+                        }
                     }
                 }
                 document.add(factory.makeEspaco());
             }
         }
+    }
+
+    private boolean verifyFuncionalidade(Funcionalidade funcionalidade) {
+        return funcionalidade.getFuncoesTransacao().size() > 0 || funcionalidade.getFuncoesDados().size() > 0;
     }
 
     private boolean verifyModulo(Modulo modulo) {

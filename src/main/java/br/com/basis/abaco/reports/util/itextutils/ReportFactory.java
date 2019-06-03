@@ -324,6 +324,7 @@ public class ReportFactory {
      */
     public Paragraph makeSubTitle(String text, TextAlignment alignment, float fontSize) {
         subTitleNumber++;
+        subTitleLv2 = 0;
         Paragraph subTitle = new Paragraph(subTitleNumber + " " + text);
         subTitle.setTextAlignment(alignment);
         subTitle.setFont(bold);
@@ -362,6 +363,7 @@ public class ReportFactory {
      */
     public Paragraph makeSubTitleLv2(String subTitle, TextAlignment alignment, float fontSize) {
         subTitleLv2++;
+        subTitleLv3 = 0;
         Paragraph title = new Paragraph(subTitleNumber + "." + subTitleLv2 + " " + subTitle);
         title.setTextAlignment(alignment);
         title.setFont(bold);

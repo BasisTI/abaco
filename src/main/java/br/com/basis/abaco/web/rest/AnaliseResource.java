@@ -481,7 +481,7 @@ public class AnaliseResource {
         Analise analise = recuperarAnaliseContagem(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         log.debug("REST request to generate a count report : {}", analise);
-        return relatorioAnaliseRest.downloadRepoertContagem(analise);
+        return relatorioAnaliseRest.downloadReportContagem(analise);
     }
 
 
@@ -627,8 +627,8 @@ public class AnaliseResource {
             if(sistema != null) {
             sistema.getModulos().forEach(modulo -> {
                     modulo.getFuncionalidades().forEach(funcionalidade -> {
-                        funcionalidade.setFuncoesDados(funcaoDadosRepository.findByFuncionalidade(funcionalidade.getId()));
-                        funcionalidade.setFuncoesTransacao(funcaoTransacaoRepository.findByFuncionalidade(funcionalidade.getId()));
+                        funcionalidade.setFuncoesDados(funcaoDadosRepository.findByAnaliseFuncionalidade(id, funcionalidade.getId()));
+                        funcionalidade.setFuncoesTransacao(funcaoTransacaoRepository.findByAnaliseFuncionalidade(id, funcionalidade.getId()));
                     });
                 });
                 return analise;
