@@ -481,7 +481,7 @@ public class AnaliseResource {
         Analise analise = recuperarAnaliseContagem(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         log.debug("REST request to generate a count report : {}", analise);
-        return relatorioAnaliseRest.downloadRepoertContagem(analise);
+        return relatorioAnaliseRest.downloadReportContagem(analise);
     }
 
 

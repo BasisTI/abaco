@@ -112,7 +112,7 @@ public class RelatorioAnaliseRest {
         }
     }
 
-    public ResponseEntity<InputStreamResource> downloadRepoertContagem(@NotNull Analise analise) throws IOException {
+    public ResponseEntity<InputStreamResource> downloadReportContagem(@NotNull Analise analise) throws IOException {
         init();
         popularObjeto(analise);
         return relatorio.buildReport(analise);
