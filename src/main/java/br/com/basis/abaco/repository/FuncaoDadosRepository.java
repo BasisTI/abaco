@@ -38,4 +38,6 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
     @Query(value = "SELECT * FROM funcao_dados WHERE funcionalidade_id = :id", nativeQuery = true)
     Set<FuncaoDados> findByFuncionalidade(@Param("id") Long id);
 
+    @Query( value = "SELECT * FROM funcao_dados WHERE analise_id = :analiseId AND funcionalidade_id = :funcionalidadeId", nativeQuery = true)
+    Set<FuncaoDados> findByAnaliseFuncionalidade(@Param("analiseId")Long analiseId,@Param("funcionalidadeId") Long funcionalidadeId);
 }
