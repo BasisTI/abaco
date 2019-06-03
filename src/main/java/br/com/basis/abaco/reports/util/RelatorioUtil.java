@@ -217,11 +217,11 @@ public class RelatorioUtil {
                 document.add(factory.makeSubTitleLv2(modulo.getNome().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
                 for (Funcionalidade funcionalidade : modulo.getFuncionalidades()) {
                     funcionalidade.getFuncoesDados().forEach(funcaoDados -> {
-                        document.add(factory.makeSubTitleLv3(funcaoDados.getName().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
+                        document.add(factory.makeSubTitleLv3(funcionalidade.getNome().replace("\n", "").replace("\t", "").trim(), TextAlignment.LEFT, 12F));
                         buildTableFD(funcaoDados, factory, document);
                     });
                     for (FuncaoTransacao funcaoTransacao : funcionalidade.getFuncoesTransacao()) {
-                        document.add(factory.makeSubTitleLv3(funcaoTransacao.getName().replace("\n", "").trim(), TextAlignment.LEFT, 12F));
+                        document.add(factory.makeSubTitleLv3(funcionalidade.getNome().replace("\n", "").trim(), TextAlignment.LEFT, 12F));
                         buildtableFT(funcaoTransacao, factory, document);
                     }
                 }
