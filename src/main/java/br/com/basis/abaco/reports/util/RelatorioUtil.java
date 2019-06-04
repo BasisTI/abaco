@@ -5,6 +5,7 @@ import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Funcionalidade;
 import br.com.basis.abaco.domain.Modulo;
+import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 
@@ -251,7 +252,7 @@ public class RelatorioUtil {
     private void buildtableFT(FuncaoTransacao funcaoTransacao, ReportFactory factory, Document document) {
         document.add(factory.makeTableLine("Funcionalidade/Cenário", funcaoTransacao.getName()));
         document.add(factory.makeTableLine("Tipo", translateTipo(funcaoTransacao.getTipo())));
-        document.add(factory.makeTableLine("Impacto", funcaoTransacao.getImpacto().name()));
+        document.add(factory.makeTableLine("Impacto", translateFT(funcaoTransacao.getImpacto())));
         List<String>alrs = new ArrayList<>();
         List<String>ders = new ArrayList<>();
         funcaoTransacao.getAlrs().forEach(alr -> alrs.add(alr.getNome() != null ? alr.getNome() : (alr.getValor() != null ? alr.getValor().toString() : null)));
@@ -265,7 +266,7 @@ public class RelatorioUtil {
     private void buildTableFD(FuncaoDados funcaoDados, ReportFactory factory, Document document) {
         document.add(factory.makeTableLine("Entidade", funcaoDados.getName()));
         document.add(factory.makeTableLine("Tipo", translateTipo(funcaoDados.getTipo())));
-        document.add(factory.makeTableLine("Impacto", funcaoDados.getImpacto().name()));
+        document.add(factory.makeTableLine("Impacto", translateFD(funcaoDados.getImpacto())));
         List<String>rlrs = new ArrayList<>();
         List<String>ders = new ArrayList<>();
         funcaoDados.getRlrs().forEach(rlr -> rlrs.add(rlr.getNome() != null ? rlr.getNome() : (rlr.getValor() != null ? rlr.getValor().toString(): null)));
@@ -274,6 +275,28 @@ public class RelatorioUtil {
         document.add(factory.makeBulletList("Campos", ders));
         document.add(factory.makeDescriptionField("Fundamentação", funcaoDados.getSustantation(), TextAlignment.JUSTIFIED, 12F));
         document.add(factory.makeEspaco());
+    }
+
+    private String translateFD(ImpactoFatorAjuste impacto) {
+        switch (impacto){
+            case INCLUSAO: return "Entidade incluída nesta demanda";
+            case ALTERACAO: return "Entidade alterada nesta demanda";
+            case CONVERSAO:return "Conversão ou migração de dados";
+            case EXCLUSAO: return "Entidade excluída nesta demanda";
+            case ITENS_NAO_MENSURAVEIS: return "Outros";
+            default: return null;
+        }
+    }
+
+    private String translateFT(ImpactoFatorAjuste impacto) {
+        switch (impacto){
+            case INCLUSAO: return "Funcionalidade/cenário incluído nesta demanda";
+            case ALTERACAO: return "Funcionalidade/cenário alterado nesta demanda";
+            case CONVERSAO:return "Conversão ou migração de dados";
+            case EXCLUSAO: return "Funcionalidade/cenário excluído nesta demanda";
+            case ITENS_NAO_MENSURAVEIS: return "Outros";
+            default: return null;
+        }
     }
 
     private void buildAnaliseDetail(Document document, Analise analise, ReportFactory factory) {
