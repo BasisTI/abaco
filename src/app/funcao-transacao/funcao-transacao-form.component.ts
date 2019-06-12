@@ -29,7 +29,7 @@ import { Der } from '../der/der.model';
 import { Impacto } from '../analise-shared/impacto-enum';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
 import { FuncaoTransacaoService } from './funcao-transacao.service';
-
+import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Base64Upload from '../../ckeditor/Base64Upload';
 
