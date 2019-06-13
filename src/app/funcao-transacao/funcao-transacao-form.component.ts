@@ -16,7 +16,6 @@ import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/primeng';
 import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
 import { Subscription } from 'rxjs/Subscription';
-import { Router } from '@angular/router';
 
 import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
 import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
@@ -30,8 +29,9 @@ import { Der } from '../der/der.model';
 import { Impacto } from '../analise-shared/impacto-enum';
 import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
 import { FuncaoTransacaoService } from './funcao-transacao.service';
-import * as ClassicEditor from 'basis-ckeditor5';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Base64Upload from '../../ckeditor/Base64Upload';
 
 @Component({
     selector: 'app-analise-funcao-transacao',
@@ -108,6 +108,37 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     public erroTD: boolean;
     public erroUnitario: boolean;
     public erroDeflator: boolean;
+
+    public config = {
+        extraPlugins: [Base64Upload],
+        language: 'pt-br',
+        toolbar: [
+            'heading', '|', 'bold', 'italic', 'hiperlink', 'underline', 'bulletedList', 'numberedList', 'alignment', 'blockQuote', '|',
+            'imageUpload', 'insertTable', 'imageStyle:side', 'imageStyle:full', 'mediaEmbed', '|', 'undo', 'redo'
+        ],
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph' },
+                { model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1' },
+                { model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2' },
+                { model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3' }
+            ]
+        },
+        alignment: {
+            options: ['left', 'right', 'center', 'justify']
+        },
+        image: {
+            toolbar: [
+            ]
+        },
+        table: {
+            contentToolbar: [
+                'tableColumn',
+                'tableRow',
+                'mergeTableCells'
+            ]
+        }
+    }
 
 
     constructor(
@@ -201,41 +232,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         return data;
     }
 
-    public onReady(eventData) {
-        eventData.plugins.get('FileRepository').createUploadAdapter = function (loader) {
-            return new UploadAdapter(loader);
-        };
-    }
+    public onReady(eventData) {}
 
-    public config = {
-        language: 'pt-br',
-        toolbar: [
-            'heading', '|', 'bold', 'italic', 'hiperlink', 'underline', 'bulletedList', 'numberedList', 'alignment', 'blockQuote', '|',
-            'imageUpload', 'insertTable', 'imageStyle:side', 'imageStyle:full', 'mediaEmbed', '|', 'undo', 'redo'
-        ],
-        heading: {
-            options: [
-                { model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph' },
-                { model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1' },
-                { model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2' },
-                { model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3' }
-            ]
-        },
-        alignment: {
-            options: ['left', 'right', 'center', 'justify']
-        },
-        image: {
-            toolbar: [
-            ]
-        },
-        table: {
-            contentToolbar: [
-                'tableColumn',
-                'tableRow',
-                'mergeTableCells'
-            ]
-        }
-    }
+
 
     updateImpacto(impacto: string) {
         switch (impacto) {
@@ -844,29 +843,4 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
 
 }
-
-export class UploadAdapter {
-    private loader;
-    constructor(loader: any) {
-        this.loader = loader;
-    }
-
-    public upload(): Promise<any> {
-        return this.readThis(this.loader.file);
-    }
-
-    readThis(file: File): Promise<any> {
-        let imagePromise: Promise<any> = new Promise((resolve, reject) => {
-            const myReader: FileReader = new FileReader();
-            myReader.onloadend = (e) => {
-                let image = myReader.result;
-                return { default: "data:image/png;base64," + image };
-            };
-            myReader.readAsDataURL(file);
-        });
-        return imagePromise;
-    }
-}
-
-
 
