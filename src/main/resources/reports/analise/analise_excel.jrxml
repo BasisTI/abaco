@@ -424,7 +424,7 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="44" height="15" isRemoveLineWhenBlank="true" uuid="4e1fb97c-9c88-4e29-bc1f-b946c9bf5df4"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
@@ -445,7 +445,7 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="87" height="15" isRemoveLineWhenBlank="true" uuid="c30e5ef5-0f79-41b1-9b25-1128c033f7c2"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
@@ -467,7 +467,7 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="a10c060e-0e4a-4ae2-b61a-bc2da02bf2cb"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
@@ -511,7 +511,7 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="2c2987ef-e489-4b6c-9a0a-8c5e143aecd0"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
@@ -532,7 +532,7 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="28516d78-bdeb-414a-ba87-225231d93af1"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
@@ -553,7 +553,7 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="50" height="15" isRemoveLineWhenBlank="true" uuid="e59e67a6-20a0-46f8-b2aa-33a231cdd91c"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
@@ -574,7 +574,7 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="f130ee0c-014d-429d-98ff-6f98bdb7951e"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
@@ -595,7 +595,7 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="24265e84-ecb7-4010-afb5-61437e6acadc"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
@@ -616,7 +616,7 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="71" height="15" isRemoveLineWhenBlank="true" uuid="69079dba-620d-410f-9b69-897f79573405"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 									<paragraph lineSpacing="Proportional"/>
@@ -646,6 +646,8 @@
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
 					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value="FT"/>
+					<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+					<property name="net.sf.jasperreports.export.xls.auto.fit.row" value="true"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="DSfuncaoTransacao" uuid="e1857bad-8526-47ab-a402-fa33d0f87ab1">
@@ -664,7 +666,9 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="139" height="15" isRemoveLineWhenBlank="true" uuid="6c07aead-acc3-4591-8d3f-813295fa859a"/>
+								<reportElement x="0" y="0" width="139" height="15" isRemoveLineWhenBlank="true" uuid="6c07aead-acc3-4591-8d3f-813295fa859a">
+									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -684,8 +688,10 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="44" height="15" isRemoveLineWhenBlank="true" uuid="627c59e5-f7f1-4581-b862-1d3b1948ae3b"/>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="44" height="15" isRemoveLineWhenBlank="true" uuid="627c59e5-f7f1-4581-b862-1d3b1948ae3b">
+									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -705,8 +711,10 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="87" height="15" isRemoveLineWhenBlank="true" uuid="228b2b9b-0ff1-43b4-ac4f-23fa274d6ba3"/>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="87" height="15" isRemoveLineWhenBlank="true" uuid="228b2b9b-0ff1-43b4-ac4f-23fa274d6ba3">
+									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
@@ -727,8 +735,10 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15">
-							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="9d0e3686-cb1c-4401-b517-1ff8f63a16c6"/>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="9d0e3686-cb1c-4401-b517-1ff8f63a16c6">
+									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
@@ -750,7 +760,9 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="116" height="15" isRemoveLineWhenBlank="true" uuid="51ce2211-f112-41f6-9712-f9aac6c9a5eb"/>
+								<reportElement x="0" y="0" width="116" height="15" isRemoveLineWhenBlank="true" uuid="51ce2211-f112-41f6-9712-f9aac6c9a5eb">
+									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
@@ -771,8 +783,10 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="666ed8fc-8cd7-4783-bb78-47badbe57a15"/>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="666ed8fc-8cd7-4783-bb78-47badbe57a15">
+									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -792,8 +806,10 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="a8450b1d-0d78-4596-b596-fd14f7279a08"/>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="a8450b1d-0d78-4596-b596-fd14f7279a08">
+									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -813,8 +829,10 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="50" height="15" isRemoveLineWhenBlank="true" uuid="c99b787f-2296-495b-a7aa-3ad8c20c320a"/>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="50" height="15" isRemoveLineWhenBlank="true" uuid="c99b787f-2296-495b-a7aa-3ad8c20c320a">
+									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -834,8 +852,10 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="bdf7053a-90c1-4148-9e7a-331408af9cd3"/>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="bdf7053a-90c1-4148-9e7a-331408af9cd3">
+									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -855,8 +875,10 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="031fe397-f82a-4c0f-86ec-aca6304e5454"/>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="031fe397-f82a-4c0f-86ec-aca6304e5454">
+									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -876,8 +898,10 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15">
-							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="71" height="15" isRemoveLineWhenBlank="true" uuid="2190d032-a4af-482e-8d92-1a01fafb3507"/>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="71" height="15" isRemoveLineWhenBlank="true" uuid="2190d032-a4af-482e-8d92-1a01fafb3507">
+									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
