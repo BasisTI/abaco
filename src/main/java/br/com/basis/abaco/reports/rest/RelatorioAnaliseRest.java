@@ -8,6 +8,7 @@ import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
+import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.util.RelatorioUtil;
 import br.com.basis.abaco.service.dto.FuncaoDadosDTO;
@@ -319,7 +320,7 @@ public class RelatorioAnaliseRest {
     private int countQuantidadeDerFd(Long id) {
         int total = 0;
         Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
-        if (funcaoDados != null) {
+        if (funcaoDados != null && analise.getMetodoContagem() != MetodoContagem.ESTIMADA) {
             for(FuncaoDados fd : funcaoDados) {
                 if(fd.getId().equals(id)) {
                     total = fd.getDers().size();
@@ -336,7 +337,7 @@ public class RelatorioAnaliseRest {
     private int countQuantidadeRlrFd(Long id) {
         int total = 0;
         Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
-        if (funcaoDados != null) {
+        if (funcaoDados != null && analise.getMetodoContagem() != MetodoContagem.ESTIMADA) {
             for(FuncaoDados fd : funcaoDados) {
                 if(fd.getId().equals(id)) {
                     total = fd.getRlrs().size();
@@ -353,7 +354,7 @@ public class RelatorioAnaliseRest {
     private int countQuantidadeFtrFt(Long id) {
         int total = 0;
         Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
-        if (funcaoTransacaos != null) {
+        if (funcaoTransacaos != null && analise.getMetodoContagem() != MetodoContagem.ESTIMADA) {
             for(FuncaoTransacao ft : funcaoTransacaos) {
                 if(ft.getId().equals(id)) {
                     total = ft.getAlrs().size();
@@ -370,7 +371,7 @@ public class RelatorioAnaliseRest {
     private int countQuantidadeDerFt(Long id) {
         int total = 0;
         Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
-        if (funcaoTransacaos != null) {
+        if (funcaoTransacaos != null && analise.getMetodoContagem() != MetodoContagem.ESTIMADA) {
             for(FuncaoTransacao ft : funcaoTransacaos) {
                 if(ft.getId().equals(id)) {
                     total = ft.getDers().size();
