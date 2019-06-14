@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
@@ -53,6 +54,7 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "funcionalidade_id")
+    @OrderBy("nome ASC")
     private Funcionalidade funcionalidade;
 
     @Column
