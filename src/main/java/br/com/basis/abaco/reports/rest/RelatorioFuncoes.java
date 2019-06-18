@@ -121,7 +121,7 @@ public class RelatorioFuncoes {
         funcoes.setTipoFt(f.getTipo() == null ? dash : f.getTipo().toString());
         funcoes.setComplexidadeFt(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
         funcoes.setPfTotalFt(f.getGrossPF() == null ? dash : f.getGrossPF().stripTrailingZeros().toPlainString());
-        funcoes.setPfAjustadoFt(f.getPf() == null ? dash : f.getGrossPF().stripTrailingZeros().toPlainString());
+        funcoes.setPfAjustadoFt(f.getPf() == null ? dash : f.getPf().stripTrailingZeros().toPlainString());
     }
 
     /**

@@ -15,6 +15,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -46,6 +47,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @OneToMany(mappedBy = FUNCAODADOS)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @OrderBy("nome ASC, id ASC")
     private Set<Funcionalidade> funcionalidades = new HashSet<>();
 
     @Column
