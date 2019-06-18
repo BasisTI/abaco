@@ -76,7 +76,7 @@
 
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-white-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.LimparPesquisa')"
+                                    [buttonLabel]="'Global.Botoes.LimparPesquisa' | translate"
                                     id="idBtnLimparPesquisaComponentAnalise"
                                     buttonIcon="ui-icon-clear-all"
                                     (click)="limparPesquisa()">
@@ -85,7 +85,7 @@
 
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-blue-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')"
+                                    [buttonLabel]="'Global.Botoes.Pesquisar' | translate"
                                     id="idBtnPesquisarComponentAnalise"
                                     buttonIcon="ui-icon-search"
                                     (click)="performSearch()">
@@ -94,7 +94,7 @@
 
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-green-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.Novo')"
+                                    [buttonLabel]="'Global.Botoes.Novo' | translate"
                                     id="idBtnNovoComponentAnalise"
                                     buttonIcon="ui-icon-add"
                                     routerLink="/analise/new">

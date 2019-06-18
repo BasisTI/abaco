@@ -3,23 +3,22 @@ import { Sistema, SistemaService } from './../sistema';
 import { TipoEquipe, TipoEquipeService } from './../tipo-equipe';
 import { Organizacao, OrganizacaoService } from './../organizacao';
 import { User, UserService } from '../user';
-import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, SelectItem } from 'primeng/primeng';
 import { Analise, AnaliseService, AnaliseShareEquipe, GrupoService } from './';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
 import { PageNotificationService, ResponseWrapper } from '../shared';
-import { MessageUtil } from '../util/message.util';
-import { Response } from '@angular/http';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Grupo, SearchGroup } from './grupo/grupo.model';
 import { ChangeDetectorRef } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'jhi-analise',
     templateUrl: './analise.component.html'
 })
-export class AnaliseComponent implements OnInit, AfterViewInit {
+export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
     @BlockUI() blockUI: NgBlockUI;
@@ -41,6 +40,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
     analiseTemp: Analise = new Analise();
     loggedUser: User;
     query: String;
+
+    translateSusbscriptions: Subscription[] = [];
 
     metsContagens = [
         { label: undefined, value: undefined },
@@ -75,9 +76,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
 
     getLabel(label) {
         let str: any;
-        this.translate.get(label).subscribe((res: string) => {
+        this.translateSusbscriptions.push( this.translate.get(label).subscribe((res: string) => {
             str = res;
-        }).unsubscribe();
+        }));
         return str;
     }
 
@@ -632,5 +633,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit {
                 this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgRegistroAtualizadoSucesso'));
             });
         }, 250);
+    }
+
+    ngOnDestroy() {
+        this.translateSusbscriptions.forEach(subscription => subscription.unsubscribe());
     }
 }

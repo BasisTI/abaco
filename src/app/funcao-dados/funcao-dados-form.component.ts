@@ -96,6 +96,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     funcoesDadosList: FuncaoDados[] = [];
     funcaoDadosEditar: FuncaoDados;
 
+    translateSubscriptions: Subscription[] = [];
+
     impacto: SelectItem[] = [
         { label: 'Inclusão', value: 'INCLUSAO' },
         { label: 'Alteração', value: 'ALTERACAO' },
@@ -187,9 +189,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
 
     getLabel(label: string | string[]) {
         let str: any;
-        this.translate.get(label).subscribe((res: string) => {
+        this.translateSubscriptions.push(this.translate.get(label).subscribe((res: string) => {
             str = res;
-        }).unsubscribe();
+        }));
         return str;
     }
 
@@ -1056,6 +1058,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     ngOnDestroy() {
         this.changeDetectorRef.detach();
         this.analiseCarregadaSubscription.unsubscribe();
+        this.translateSubscriptions.forEach(susbscription => susbscription.unsubscribe());
     }
 
     openDialog(param: boolean) {
