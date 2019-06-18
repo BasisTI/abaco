@@ -465,6 +465,7 @@
       "Alteracao":"ALTERAÇÃO",
       "Exclusao":"EXCLUSÃO",
       "Conversao":"CONVERSÃO",
+      "PossuiFundamentacao": "Possui Fundamentação",
       "Mensagens": {
         "msgAlterarFuncaoDeTransacao": "Alterar Função de Transação",
         "msgAdicionarFuncaoDeTransacao": "Adicionar Função de Transação",

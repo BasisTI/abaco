@@ -127,6 +127,7 @@
       "Exclusao":"EXCLUSION",
       "Alteracao":"CHANGE",
       "Conversao":"CONVERSION",
+      "PossuiFundamentacao": "Have Grounds",
       "Mensagens": {
         "msgAlterarFuncaoDeTransacao": "Change Transaction Function",
         "msgAdicionarFuncaoDeTransacao": "Add Transaction Function",

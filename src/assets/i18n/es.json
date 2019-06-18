@@ -462,6 +462,7 @@
       "Exclusao":"EXCLUSIÓN",
       "Alteracao":"CAMBIO",
       "Conversao":"CONVERSIÓN",
+      "PossuiFundamentacao": "Tiene Motivación",
       "Mensagens": {
         "msgAlterarFuncaoDeTransacao": "Cambiar Función de Transacción",
         "msgAdicionarFuncaoDeTransacao": "Agregar Función de Transacción",

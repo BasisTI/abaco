@@ -1,8 +1,9 @@
+import { MemoryDatatableComponent } from './../memory-datatable/memory-datatable.component';
 import { Der } from './../der/der.model';
 import { TranslateService } from '@ngx-translate/core';
 import { FuncaoDados } from './funcao-dados.model';
 import { FatorAjuste } from '../fator-ajuste';
-import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
 import { BaselineAnalitico } from './../baseline/baseline-analitico.model';
 import { BaselineService } from './../baseline/baseline.service';
 import { AnaliseSharedDataService, PageNotificationService, ResponseWrapper } from '../shared';
@@ -10,7 +11,7 @@ import { Analise, AnaliseService } from '../analise';
 
 import * as _ from 'lodash';
 import { Funcionalidade } from '../funcionalidade/index';
-import { SelectItem } from 'primeng/primeng';
+import { SelectItem, Column } from 'primeng/primeng';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Calculadora } from '../analise-shared/calculadora';
 import { DatatableClickEvent } from '@basis/angular-components';
@@ -40,7 +41,7 @@ import Base64Upload from '../../ckeditor/Base64Upload';
     selector: 'app-analise-funcao-dados',
     templateUrl: './funcao-dados-form.component.html'
 })
-export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
+export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @Output()
     valueChange: EventEmitter<string> = new EventEmitter<string>();
@@ -51,6 +52,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
     @Input() properties: Editor;
     @Input() uploadImagem: boolean = true;
     @Input() criacaoTabela: boolean = true;
+
+    @ViewChildren(MemoryDatatableComponent) tables: QueryList<MemoryDatatableComponent>;
 
     public Editor = ClassicEditor;
 
@@ -169,7 +172,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
             { header: 'RLR (TR)' },
             { header: 'Complexidade', field: 'complexidade' },
             { header: 'PF - Total' },
-            { header: 'PF - Ajustado' }
+            { header: 'PF - Ajustado' },
+            { header: 'Possui Fundamentação' },
         ];
 
         this.colunasOptions = colunas.map((col, index) => {
@@ -221,6 +225,100 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         }
     }
 
+    ngAfterViewInit() {
+       this.setSotableFields();
+    }
+
+    setSotableFields() {
+        // este forEach rodará apenas 1 vez, devido ao @ViewChildren retornar um array
+        this.tables.forEach(table => {
+            table.cols.forEach(column => {
+                const item = this.colunasAMostrar.find(element =>
+                    (element.header === column.header)
+                );
+                column.sortField = this.getField(item.header);
+                column.filterField = this.getField(item.header);
+                this.exceptions(column, item.header);
+                column.ngAfterContentInit();
+            });
+        });
+    }
+
+    sortColumn(event: any) {
+        this.funcoesDados.sort((a, b) => {
+            switch (event.field) {
+                case 'fatorAjuste': return this.sortByComposityField(a, b, event.field, 'nome');
+                case 'funcionalidade': return this.sortByComposityField(a, b, event.field, 'nome');
+                case 'sustantation': return this.sortByBinary(a, b, event.field);
+                case 'funcionaldiade.modulo.nome': return this.sortByComposityField2(a, b, 'funcionalidade', 'modulo', 'nome');
+                default: return this.sortByField(a, b, event.field);
+            }
+        });
+        if (event.order < 0) {
+            this.funcoesDados = this.funcoesDados.reverse();
+        }
+    }
+
+    getField(header: string): string {
+        switch (header) {
+            case 'Nome': return 'name';
+            case 'Módulo': return 'funcionaldiade.modulo.nome';
+            case 'Impacto': return 'impacto';
+            case 'Deflator': return 'fatorAjuste';
+            case 'Funcionalidade': return 'funcionalidade';
+            case 'PF - Total': return 'pf';
+            case 'PF - Ajustado': return 'grossPF';
+            case 'Classificação': return 'tipo';
+            case 'DER (TD)': return 'der';
+            case 'RLR(TR)': return 'rlr';
+            case 'Complexidade': return 'complexidade';
+            case 'Possui Fundamentação': return 'sustantation';
+        }
+    }
+
+    exceptions(column: Column, field: string) {
+        if (field === 'der' || field === 'rlr' || field === 'sustantation') {
+            column.filterField = undefined;
+            column.filter = false;
+        }
+    }
+
+    sortByComposityField(a: FuncaoDados, b: FuncaoDados, field: string, composity: string) {
+        if (a[field][composity] > b[field][composity]) {
+            return 1;
+        } else if (a[field][composity] < b[field][composity]) {
+            return -1;
+        }
+        return 0;
+    }
+
+    sortByComposityField2(a: FuncaoDados, b: FuncaoDados, field: string, composity: string, composity2: string) {
+        if (a[field][composity][composity2] > b[field][composity][composity2]) {
+            return 1;
+        } else if (a[field][composity][composity2] < b[field][composity][composity2]) {
+            return -1;
+        }
+        return 0;
+    }
+
+    sortByBinary(a: FuncaoDados, b: FuncaoDados, field: string): number {
+        if (a[field] === true &&  b[field] === false) {
+            return 1;
+        } else if (a[field] === false && b[field] === true) {
+            return -1;
+        }
+        return 0;
+    }
+
+    sortByField(a: FuncaoDados, b: FuncaoDados, field: string): number {
+        if (a[field] > b[field]) {
+            return 1;
+        } else if (a[field] < b[field]) {
+            return -1;
+        }
+        return 0;
+    }
+
     selectRow(event: { data: { clone: () => FuncaoDados; }; }) {
         this.funcaoDadosEditar = event.data.clone();
     }
@@ -236,7 +334,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         this.translate.stream(['Cadastros.FuncaoDados.Nome', 'Cadastros.FuncaoDados.Deflator', 'Cadastros.FuncaoDados.Impacto',
             'Cadastros.FuncaoDados.Modulo', 'Cadastros.FuncaoDados.Funcionalidade', 'Cadastros.FuncaoDados.Classificacao',
             'Cadastros.FuncaoDados.DER(TD)', 'Cadastros.FuncaoDados.RLR(TR)', 'Cadastros.FuncaoDados.Complexidade',
-            'Cadastros.FuncaoDados.PFTotal', 'Cadastros.FuncaoDados.PFAjustado']).subscribe((traducao) => {
+            'Cadastros.FuncaoDados.PFTotal', 'Cadastros.FuncaoDados.PFAjustado', 'Cadastros.FuncaoTransacao.PossuiFundamentacao']
+            ).subscribe((traducao) => {
                 this.colunasAMostrar = [
                     { header: traducao['Cadastros.FuncaoDados.Nome'], field: 'name' },
                     { header: traducao['Cadastros.FuncaoDados.Deflator'] },
@@ -248,7 +347,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
                     { header: traducao['Cadastros.FuncaoDados.RLR(TR)'] },
                     { header: traducao['Cadastros.FuncaoDados.Complexidade'], field: 'complexidade' },
                     { header: traducao['Cadastros.FuncaoDados.PFTotal'] },
-                    { header: traducao['Cadastros.FuncaoDados.PFAjustado'] }
+                    { header: traducao['Cadastros.FuncaoDados.PFAjustado'] },
+                    { header: traducao['Cadastros.FuncaoTransacao.PossuiFundamentacao'] },
                 ];
 
             })
@@ -410,16 +510,21 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy {
         if (!this.analise.funcaoDados) {
             return [];
         }
-        return this.analise.funcaoDados.sort((a, b) => {
-            if (a.funcionalidade.nome > b.funcionalidade.nome) {
-                return 1;
-            }
-            if (a.funcionalidade.nome < b.funcionalidade.nome) {
-                return -1;
-            }
-            return 0;
-        });
+        // return this.analise.funcaoDados.sort((a, b) => {
+        //     if (a.funcionalidade.nome > b.funcionalidade.nome) {
+        //         return 1;
+        //     }
+        //     if (a.funcionalidade.nome < b.funcionalidade.nome) {
+        //         return -1;
+        //     }
+        //     return 0;
+        // });
+        return this.analise.funcaoDados;
     }
+
+    set funcoesDados(funcaoDados: FuncaoDados[]) {
+        this.analise.funcaoDados = funcaoDados;
+    };
 
     private get analise(): Analise {
         return this.analiseSharedDataService.analise;
