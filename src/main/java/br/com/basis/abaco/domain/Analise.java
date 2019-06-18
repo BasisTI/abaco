@@ -149,13 +149,13 @@ public class Analise implements Serializable, ReportObject {
     @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonManagedReference(value = ANALISE)
-    @OrderBy("funcionalidade ASC, name ASC ,id ASC")
+    @OrderBy("name ASC, funcionalidade ASC, id ASC")
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
 
     @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonManagedReference(value = ANALISE)
-    @OrderBy("funcionalidade ASC, name ASC, id ASC")
+    @OrderBy("name ASC, funcionalidade ASC, id ASC")
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
 
     @Column(name = "data_criacao_ordem_servico")

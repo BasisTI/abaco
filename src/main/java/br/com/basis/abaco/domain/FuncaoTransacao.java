@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -45,6 +46,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     @OneToMany(mappedBy = FUNCAOTRANSACAO)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @OrderBy("nome ASC, id ASC")
     private Set<Funcionalidade> funcionalidades = new HashSet<>();
 
     @Column
