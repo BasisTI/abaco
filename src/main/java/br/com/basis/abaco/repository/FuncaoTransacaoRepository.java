@@ -13,15 +13,15 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public interface FuncaoTransacaoRepository extends JpaRepository<FuncaoTransacao, Long> {
 
-    @Query(value = "SELECT funcionalidade_id FROM Funcao_Transacao where id = ?1", nativeQuery = true)
+    @Query(value = "SELECT f.funcionalidade.id FROM FuncaoTransacao f where f.id = ?1")
     Long getIdFuncionalidade(Long id);
 
     @Query("SELECT f FROM FuncaoTransacao f JOIN FETCH f.ders WHERE f.id = (:id)")
     FuncaoTransacao findWithDerAndAlr(@Param("id") Long id);
 
-    @Query(value = "SELECT * FROM funcao_transacao WHERE funcionalidade_id = :id", nativeQuery = true)
+    @Query(value = "SELECT f FROM FuncaoTransacao f WHERE f.funcionalidade.id = :id")
     Set<FuncaoTransacao> findByFuncionalidade(@Param("id") Long id);
 
-    @Query( value = "SELECT * FROM funcao_transacao WHERE analise_id = :analiseId AND funcionalidade_id = :funcionalidadeId", nativeQuery = true)
+    @Query( value = "SELECT f FROM FuncaoTransacao f WHERE f.analise.id = :analiseId AND f.funcionalidade.id = :funcionalidadeId ORDER BY f.name asc, f.id asc")
     Set<FuncaoTransacao> findByAnaliseFuncionalidade(@Param("analiseId") Long analiseId, @Param("funcionalidadeId") Long funcionalidadeId);
 }
