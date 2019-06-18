@@ -32,7 +32,12 @@
                                 scrollWidth="100%">
                             <p-column
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
-                                    [style]="{'width': '200px'}">
+                                    [style]="{'width': '200px'}"
+                                    field="funcionalidade.modulo"
+                                    filterField="funcionalidade.modulo"
+                                    sortable="custom"
+                                    filter="true" 
+                                    (sortFunction)="sortColumn($event)">
                                 <ng-template
                                         let-modulo="rowData.funcionalidade.modulo"
                                         pTemplate="body">
@@ -43,7 +48,12 @@
 
                             <p-column
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
-                                    [style]="{'width': '200px'}">
+                                    field="funcionalidade"
+                                    filterField="funcionalidade"
+                                    [style]="{'width': '200px'}"
+                                    sortable="custom" 
+                                    filter="true"
+                                    (sortFunction)="sortColumn($event)">
                                 <ng-template
                                         let-funcionalidade="rowData.funcionalidade"
                                         pTemplate="body">
@@ -52,13 +62,22 @@
                             </p-column>
 
                             <p-column
+                                    sortable="custom" 
+                                    (sortFunction)="sortColumn($event)"
                                     field="name"
+                                    filterField="name"
+                                    filter="true"
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.Nome')"
                                     [style]="{'width': '200px'}">
                             </p-column>
 
                             <p-column
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.Deflator')"
+                                    field="fatorAjuste"
+                                    filterField="fatorAjuste"
+                                    sortable="custom" 
+                                    filter="true"
+                                    (sortFunction)="sortColumn($event)"
                                     [style]="{'width': '200px'}">
                                 <ng-template
                                         let-fatorAjuste="rowData.fatorAjuste"
@@ -69,8 +88,12 @@
 
                             <p-column
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.Impacto')"
+                                    sortable="custom"
+                                    filter="true" 
+                                    (sortFunction)="sortColumn($event)"
                                     [style]="{'width': '200px'}"
-                                    field="updateImpacto(impacto)">
+                                    field="updateImpacto(impacto)"
+                                    filterField="impacto">
                                 <ng-template
                                         let-impacto="rowData.impacto"
                                         pTemplate="body">
@@ -80,13 +103,19 @@
 
                             <p-column
                                     field="tipo"
+                                    filterField="tipo"
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.Classificacao')"
+                                    sortable="custom" 
+                                    filter="true"
+                                    (sortFunction)="sortColumn($event)"
                                     [style]="{'width': '200px'}">
                             </p-column>
 
                             <p-column
                                     field="der"
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.DER(TD)')"
+                                    sortable="custom" 
+                                    (sortFunction)="sortColumn($event)"
                                     [style]="{'width': '200px'}">
                                 <ng-template
                                         let-funcaoDados="rowData"
@@ -97,6 +126,9 @@
 
                             <p-column
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.FTR(AR)')"
+                                    sortable="custom" 
+                                    (sortFunction)="sortColumn($event)"
+                                    field="ftr"
                                     [style]="{'width': '200px'}">
                                 <ng-template
                                         let-funcaoDados="rowData"
@@ -107,12 +139,21 @@
 
                             <p-column
                                     field="complexidade"
+                                    filterField="complexidade"
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.Complexidade')"
+                                    sortable="custom" 
+                                    filter="true"
+                                    (sortFunction)="sortColumn($event)"
                                     [style]="{'width': '200px'}">
                             </p-column>
 
                             <p-column
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.PFBruto')"
+                                    sortable="custom" 
+                                    (sortFunction)="sortColumn($event)"
+                                    field="grossPF"
+                                    filterField="grossPF"
+                                    filter="true"
                                     [style]="{'width': '200px'}">
                                 <ng-template
                                         let-grossPF="rowData.grossPF"
@@ -123,11 +164,29 @@
 
                             <p-column
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.PFLiquido')"
+                                    sortable="custom" 
+                                    (sortFunction)="sortColumn($event)"
+                                    field="pf"
+                                    filterField="pf"
+                                    filter="true"
                                     [style]="{'width': '200px'}">
                                 <ng-template
                                         let-pf="rowData.pf"
                                         pTemplate="body">
                                     {{ pf | number }}
+                                </ng-template>
+                            </p-column>
+
+                            <p-column
+                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.PossuiFundamentacao')"
+                                    sortable="custom" 
+                                    (sortFunction)="sortColumn($event)"
+                                    field="sustantation"
+                                    [style]="{'width': '200px'}">
+                                <ng-template
+                                        let-sustantation="rowData.sustantation"
+                                        pTemplate="body">
+                                        {{ sustantation ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
                                 </ng-template>
                             </p-column>
 

@@ -1,9 +1,10 @@
+import { MemoryDatatableComponent } from './../memory-datatable/memory-datatable.component';
 import { TranslateService } from '@ngx-translate/core';
 import { AnaliseSharedUtils } from './../analise-shared/analise-shared-utils';
 import { BaselineService } from './../baseline/baseline.service';
 import { FuncaoDadosService } from './../funcao-dados/funcao-dados.service';
 import { BaselineAnalitico } from './../baseline/baseline-analitico.model';
-import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter, QueryList, ViewChildren } from '@angular/core';
 import { AnaliseSharedDataService, PageNotificationService, ResponseWrapper, EntityToJSON } from '../shared';
 import { Analise, AnaliseService } from '../analise';
 import { FatorAjuste } from '../fator-ajuste';
@@ -92,6 +93,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     @Input() properties: Editor;
     @Input() uploadImagem: boolean = true;
     @Input() criacaoTabela: boolean = true;
+
+    @ViewChildren(MemoryDatatableComponent) tables: QueryList<MemoryDatatableComponent>;
 
     public Editor = ClassicEditor;
 
@@ -185,6 +188,57 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.alrsChips = [];
         this.traduzirImpactos();
         this.subscribeDisplay();
+    }
+
+    sortColumn(event: any) {
+        this.funcoesTransacoes.sort((a, b) => {
+            switch (event.field) {
+                case 'fatorAjuste': return this.sortByComposityField(a, b, event.field, 'nome');
+                case 'funcionalidade': return this.sortByComposityField(a, b, event.field, 'nome');
+                case 'sustantation': return this.sortByBinary(a, b, event.field);
+                case 'funcionaldiade.modulo.nome': return this.sortByComposityField2(a, b, 'funcionalidade', 'modulo', 'nome');
+                default: return this.sortByField(a, b, event.field);
+            }
+        });
+        if (event.order < 0) {
+            this.funcoesTransacoes = this.funcoesTransacoes.reverse();
+        }
+    }
+
+    sortByComposityField(a: FuncaoTransacao, b: FuncaoTransacao, field: string, composity: string) {
+        if (a[field][composity] > b[field][composity]) {
+            return 1;
+        } else if (a[field][composity] < b[field][composity]) {
+            return -1;
+        }
+        return 0;
+    }
+
+    sortByComposityField2(a: FuncaoTransacao, b: FuncaoTransacao, field: string, composity: string, composity2: string) {
+        if (a[field][composity][composity2] > b[field][composity][composity2]) {
+            return 1;
+        } else if (a[field][composity][composity2] < b[field][composity][composity2]) {
+            return -1;
+        }
+        return 0;
+    }
+
+    sortByBinary(a: FuncaoTransacao, b: FuncaoTransacao, field: string): number {
+        if (a[field] === true &&  b[field] === false) {
+            return 1;
+        } else if (a[field] === false && b[field] === true) {
+            return -1;
+        }
+        return 0;
+    }
+
+    sortByField(a: FuncaoTransacao, b: FuncaoTransacao, field: string): number {
+        if (a[field] > b[field]) {
+            return 1;
+        } else if (a[field] < b[field]) {
+            return -1;
+        }
+        return 0;
     }
 
     private subscribeDisplay() {
@@ -342,15 +396,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         if (!this.analise.funcaoTransacaos) {
             return [];
         }
-        return this.analise.funcaoTransacaos.sort((a, b) => {
-            if (a.funcionalidade.nome > b.funcionalidade.nome) {
-                return 1;
-            }
-            if (a.funcionalidade.nome < b.funcionalidade.nome) {
-                return -1;
-            }
-            return 0;
-        });
+        return this.analise.funcaoTransacaos;
+    }
+
+    set funcoesTransacoes(funcoesTransacaoes: FuncaoTransacao[]) {
+        this.analise.funcaoTransacaos = funcoesTransacaoes;
     }
 
     private get analise(): Analise {

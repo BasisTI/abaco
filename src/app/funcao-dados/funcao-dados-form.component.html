@@ -24,7 +24,14 @@
 
                             <div *ngFor="let col of colunasAMostrar">
                                 <div *ngIf="col.field; else template_column">
-                                    <p-column [field]="col.field" [header]="col.header" [style]="{'width': '200px'}">
+                                    <p-column 
+                                        [field]="col.field" 
+                                        [header]="col.header"
+                                        sortable="custom" 
+                                        (sortFunction)="sortColumn($event)"
+                                        [name]="col.header"
+                                        filter="true"
+                                        [style]="{'width': '200px'}">
                                         <ng-template *ngIf="col.header === 'Impacto'" let-impacto="rowData.impacto"
                                                      pTemplate="body">
                                             <app-ellipsis-tooltip [value]="updateNameImpacto(impacto)">
@@ -35,7 +42,14 @@
                                 </div>
 
                                 <ng-template #template_column>
-                                    <p-column [header]="col.header" [style]="{'width': '200px'}">
+                                    <p-column   
+                                        [header]="col.header" 
+                                        [field]="col.field" 
+                                        sortable="custom" 
+                                        (sortFunction)="sortColumn($event)"
+                                        [name]="col.header" 
+                                        filter="true"
+                                        [style]="{'width': '200px'}">
                                         <ng-template *ngIf="col.header === 'Deflator'"
                                                      let-fatorAjuste="rowData.fatorAjuste"
                                                      pTemplate="body">
@@ -77,6 +91,10 @@
                                         <ng-template *ngIf="col.header === 'PF - Ajustado'" let-pf="rowData.pf"
                                                      pTemplate="body">
                                             {{ pf | number }}
+                                        </ng-template>
+                                        <ng-template *ngIf="col.header === 'Possui Fundamentação'" let-sustentation="rowData.sustantation"
+                                                     pTemplate="body">
+                                            {{ sustentation ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
                                         </ng-template>
 
                                     </p-column>
