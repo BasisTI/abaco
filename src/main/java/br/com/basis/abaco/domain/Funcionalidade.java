@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -53,6 +54,7 @@ public class Funcionalidade implements Serializable {
 
     @ManyToOne
     @JsonIgnore
+    @OrderBy("name ASC, id ASC")
     private FuncaoDados funcaoDados;
 
     @Transient
@@ -61,6 +63,7 @@ public class Funcionalidade implements Serializable {
 
     @ManyToOne
     @JsonIgnore
+    @OrderBy("name ASC, id ASC")
     private FuncaoTransacao funcaoTransacao;
 
     @Transient

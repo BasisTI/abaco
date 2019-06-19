@@ -23,21 +23,21 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
 
     List<FuncaoDados> findByFuncaoDadosVersionavelIn(List<FuncaoDadosVersionavel> funcoesDadosVersionaveis);
 
-    @Query( value = "SELECT * FROM funcao_dados WHERE analise_id = ?1 AND name = ?2", nativeQuery = true)
+    @Query( value = "SELECT f FROM FuncaoDados f WHERE f.analise.id = ?1 AND f.name = ?2")
     FuncaoDados findName(Long idAnalise, String name);
 
-    @Query( value = "SELECT * FROM funcao_dados WHERE analise_id = ?1", nativeQuery = true)
+    @Query( value = "SELECT f FROM FuncaoDados f WHERE f.analise.id = ?1")
     List<FuncaoDados> findByAnalise(Long id);
 
-    @Query( value = "SELECT * FROM funcao_dados WHERE id = ?1", nativeQuery = true)
+    @Query( value = "SELECT f FROM FuncaoDados f WHERE f.id = ?1")
     FuncaoDados findById(Long id);
 
-    @Query(value = "SELECT funcionalidade_id FROM Funcao_Dados where id = ?1", nativeQuery = true)
+    @Query(value = "SELECT f.funcionalidade.id FROM FuncaoDados f where f.id = ?1")
     Long getIdFuncionalidade(Long id);
 
-    @Query(value = "SELECT * FROM funcao_dados WHERE funcionalidade_id = :id", nativeQuery = true)
+    @Query(value = "SELECT f FROM FuncaoDados f WHERE f.funcionalidade = :id")
     Set<FuncaoDados> findByFuncionalidade(@Param("id") Long id);
 
-    @Query( value = "SELECT * FROM funcao_dados WHERE analise_id = :analiseId AND funcionalidade_id = :funcionalidadeId", nativeQuery = true)
+    @Query( value = "SELECT f FROM FuncaoDados f WHERE f.analise.id = :analiseId AND f.funcionalidade.id = :funcionalidadeId ORDER BY f.name asc, f.id asc")
     Set<FuncaoDados> findByAnaliseFuncionalidade(@Param("analiseId")Long analiseId,@Param("funcionalidadeId") Long funcionalidadeId);
 }
