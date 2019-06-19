@@ -19,7 +19,7 @@ public interface CompartilhadaRepository extends JpaRepository<Compartilhada,Lon
     List<Compartilhada> findAllByAnaliseId(Long id);
 
     // Query para gerar lista de id's das análises compartilhadas com as equipes
-    @Query(value = "SELECT a.analise_id FROM analise_compartilhada a WHERE a.equipe_id IN :idEquipes", nativeQuery = true)
+    @Query(value = "SELECT a.analiseId FROM Compartilhada a WHERE a.equipeId IN :idEquipes")
     List<BigInteger> findByEquipeId(@Param("idEquipes") List<Long> idEquipes);
 
 }

@@ -18,7 +18,6 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
      *
      * @return
      */
-    @Query(value = "SELECT * FROM contrato c WHERE c.organization_id = ?1", nativeQuery = true)
     List<Contrato> findAllByOrganization(Long id);
 
     @EntityGraph(attributePaths = {"manualContrato"})

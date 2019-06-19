@@ -198,7 +198,7 @@ public class SistemaResource {
   @Transactional
   public Set<Sistema> findAllSystemOrg(@PathVariable Long idOrganizacao) {
         log.debug("REST request to get all Sistemas by Organizacao");
-    return sistemaRepository.findAllSystemOrg(idOrganizacao);
+    return sistemaRepository.findAllByOrganizacao(idOrganizacao);
   }
 
   /**
@@ -256,7 +256,7 @@ public class SistemaResource {
     @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
   public ResponseEntity<Void> deleteSistema(@PathVariable Long id) {
     log.debug("REST request to delete Sistema : {}", id);
-    if (sistemaRepository.quantidadeSistema(id) > 0) {
+    if (sistemaRepository.exists(id)) {
       return ResponseEntity.badRequest().headers(
                HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseexists", "This System can not be deleted"))
                .body(null);

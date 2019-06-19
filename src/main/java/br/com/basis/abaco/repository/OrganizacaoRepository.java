@@ -17,11 +17,8 @@ public interface OrganizacaoRepository extends JpaRepository<Organizacao, Long> 
 
     List<Organizacao> findByAtivoTrue();
 
-    @Query(value = "SELECT * FROM organizacao where ativo = true", nativeQuery = true)
+    @Query(value = "SELECT o FROM Organizacao o where o.ativo = true")
     List<Organizacao> searchActiveOrganizations();
-
-    @Query(value = "SELECT * FROM tipoequipe_organizacao where tipoequipe_id = :idTipoEquipe", nativeQuery = true)
-    List<Organizacao> searchActiveOrganizations(@Param("idTipoEquipe") Long idTipoEquipe);
 
     @EntityGraph(attributePaths = {"sistemas","contracts","tipoEquipe"})
     Optional<Organizacao> findOneByNome(String nome);

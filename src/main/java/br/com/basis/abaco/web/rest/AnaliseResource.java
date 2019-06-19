@@ -71,6 +71,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -584,9 +585,10 @@ public class AnaliseResource {
         // Busca o usuário
         Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
         // Traz as equipes do usuário
-        List<Long> equipesIds = userRepository.findUserEquipes(logged.get().getId());
+        List<BigInteger> equipesIds = userRepository.findUserEquipes(logged.get().getId());
         // Traz as
-        Integer analiseDaEquipe = analiseRepository.analiseEquipe(idAnalise, equipesIds);
+        List<Long> convertidos = equipesIds.stream().map(bigInteger -> bigInteger.longValue()).collect(Collectors.toList());
+        Integer analiseDaEquipe = analiseRepository.analiseEquipe(idAnalise, convertidos);
 
         // Verifica se a analise faz parte de sua equipe
         if (analiseDaEquipe.intValue() == 0) {
