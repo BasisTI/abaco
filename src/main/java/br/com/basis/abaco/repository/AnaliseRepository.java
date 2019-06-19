@@ -56,7 +56,7 @@ public interface AnaliseRepository extends JpaRepository<Analise,Long> {
         "JOIN FuncaoDados fd        ON fd.funcionalidade.id = f.id " +
         "JOIN FuncaoTransacao ft    ON ft.funcionalidade.id = f.id " +
         "JOIN FETCH FatorAjuste fa        ON fa.id = fd.fatorAjuste.id OR fa.id = ft.fatorAjuste.id " +
-        "WHERE a.id = :id")
+        "WHERE a.id = :id ORDER BY m.nome, f.nome, fd.name, ft.name")
     Analise reportContagem(@Param("id")Long id);
 
     @EntityGraph(attributePaths = {"compartilhadas","funcaoDados","funcaoTransacaos","esforcoFases","users"})
