@@ -71,6 +71,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     funcoesTransacaoList: FuncaoTransacao[] = [];
     FuncaoTransacaoEditar: FuncaoTransacao;
 
+    translateSubscriptions: Subscription[] = [];
+
     impacto: SelectItem[] = [
         { label: 'Inclusão', value: 'INCLUSAO' },
         { label: 'Alteração', value: 'ALTERACAO' },
@@ -159,9 +161,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     getLabel(label) {
         let str: any;
-        this.translate.get(label).subscribe((res: string) => {
+        this.translateSubscriptions.push(this.translate.get(label).subscribe((res: string) => {
             str = res;
-        }).unsubscribe();
+        }));
         return str;
     }
 
@@ -826,6 +828,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.changeDetectorRef.detach();
         this.analiseCarregadaSubscription.unsubscribe();
+        this.translateSubscriptions.forEach(susbscription => susbscription.unsubscribe());
     }
 
     openDialog(param: boolean) {

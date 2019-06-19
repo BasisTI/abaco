@@ -7,7 +7,7 @@
                     <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
                         <div class="ui-md-2" *ngIf="!isView">
                             <app-green-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.Novo')"
+                                    [buttonLabel]="'Global.Botoes.Novo' | translate"
                                     id="idBtnNovoFormFuncaoTransacao"
                                     buttonIcon="ui-icon-add"
                                     (click)="openDialog(false)">
@@ -416,7 +416,7 @@
                 <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                     <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
                         <app-white-button
-                                [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
+                                [buttonLabel]="'Global.Botoes.Cancelar' | translate"
                                 id="idBtnCancelarFormFuncaoTransacao"
                                 (click)="cancelar()">
                         </app-white-button>
@@ -424,7 +424,7 @@
 
                     <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
                         <app-white-button
-                                [buttonLabel]="this.getLabel('Global.Botoes.Fechar')"
+                                [buttonLabel]="'Global.Botoes.Fechar' | translate"
                                 id="idBtnFecharFormFuncaoTransacao"
                                 (click)="cancelar()">
                         </app-white-button>
@@ -432,7 +432,7 @@
 
                     <div class="ui-md-3 ui-sm-12">
                         <app-blue-button
-                                [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
+                                [buttonLabel]="'Global.Botoes.Salvar' | translate"
                                 id="idBtnSalvarFormFuncaoTransacao"
                                 buttonIcon="ui-icon-add"
                                 (click)="buttonSaveEdit()">

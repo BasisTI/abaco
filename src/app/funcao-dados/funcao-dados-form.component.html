@@ -6,7 +6,7 @@
                 <div class="ui-g-12">
                     <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
                         <div class="ui-md-2" *ngIf="!isView">
-                            <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Novo')" id="idNovoFormFuncaoDados" buttonIcon="ui-icon-add"
+                            <app-green-button [buttonLabel]="'Global.Botoes.Novo' | translate" id="idNovoFormFuncaoDados" buttonIcon="ui-icon-add"
                                               (click)="openDialog(false)">
                             </app-green-button>
                         </div>
@@ -306,17 +306,17 @@
 
                 <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                     <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
-                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtmCancelarFormFuncaoDados" (click)="cancelar()">
+                        <app-white-button [buttonLabel]="'Global.Botoes.Cancelar' | translate" id="idBtmCancelarFormFuncaoDados" (click)="cancelar()">
                         </app-white-button>
                     </div>
 
                     <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
-                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Fechar')" id="idBtnFecharFormFuncaoDados" (click)="cancelar()">
+                        <app-white-button [buttonLabel]="'Global.Botoes.Fechar' | translate" id="idBtnFecharFormFuncaoDados" (click)="cancelar()">
                         </app-white-button>
                     </div>
 
                     <div class="ui-md-3 ui-sm-12">
-                        <app-blue-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idSalvarFormFuncaoDados" buttonIcon="ui-icon-add"
+                        <app-blue-button [buttonLabel]="'Global.Botoes.Salvar' | translate" id="idSalvarFormFuncaoDados" buttonIcon="ui-icon-add"
                                          (click)="buttonSaveEdit()">
                         </app-blue-button>
                     </div>
