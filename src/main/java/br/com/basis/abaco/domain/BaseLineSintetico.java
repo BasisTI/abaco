@@ -1,6 +1,7 @@
 package br.com.basis.abaco.domain;
 
 import br.com.basis.dynamicexports.pojo.ReportObject;
+import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "baseline_sintetico")
+@Immutable
 public class BaseLineSintetico implements Serializable, ReportObject {
 
     @Id

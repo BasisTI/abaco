@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -18,14 +17,11 @@ import java.util.Set;
 @Repository
 public interface BaseLineAnaliticoRepository extends JpaRepository<BaseLineAnalitico, Long> {
 
-    @Query( value = "SELECT * FROM baseline_analitico where id_sistema = ?1 AND tipo = 'ft'", nativeQuery = true)
+    @Query( value = "SELECT b FROM BaseLineAnalitico b where b.idsistema = ?1 AND b.tipo = 'ft'")
     List<BaseLineAnalitico> getAllAnaliticosFT(Long id);
 
-    @Query( value = "SELECT * FROM baseline_analitico where id_sistema = ?1 AND tipo = 'fd'", nativeQuery = true)
+    @Query( value = "SELECT b FROM BaseLineAnalitico b where b.idsistema = ?1 AND b.tipo = 'fd'")
     List<BaseLineAnalitico> getAllAnaliticosFD(Long id);
-
-    @Query( value = "select * from baseline_analitico", nativeQuery = true)
-    Set<BaseLineAnalitico> getAllAnaliticos();
 
     Page<BaseLineAnalitico> getAllByIdsistemaAndEquipeResponsavelIdAndTipo(Long id, Long idEquipe, String ft,Pageable pageable);
 

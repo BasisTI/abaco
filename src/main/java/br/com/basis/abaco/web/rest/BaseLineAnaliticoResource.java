@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -65,7 +66,7 @@ public class BaseLineAnaliticoResource {
     }
 
     private BaseLineSintetico recuperarBaselinePorSistema(Long id){
-        return baseLineSinteticoRepository.getBaseLineSinteticoId(id);
+        return baseLineSinteticoRepository.findOneByIdsistema(id);
     }
 
 
@@ -78,7 +79,7 @@ public class BaseLineAnaliticoResource {
     @Timed
     public Set<BaseLineAnalitico> getAllBaseLineAnaliticos() {
         log.debug("REST request to get all BaseLineAnaliticos");
-        return baseLineAnaliticoRepository.getAllAnaliticos();
+        return new HashSet<>(baseLineAnaliticoRepository.findAll());
     }
 
 

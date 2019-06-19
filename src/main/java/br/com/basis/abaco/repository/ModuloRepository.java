@@ -10,10 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 @SuppressWarnings("unused")
 public interface ModuloRepository extends JpaRepository<Modulo, Long> {
 
-    @Query(value = "SELECT * FROM modulo m WHERE m.id = (" +
-                                        "SELECT modulo_id FROM funcionalidade WHERE id = ?1" +
-                                    ")",
-        nativeQuery = true)
+    @Query(value = "SELECT m FROM Modulo m WHERE m.id = ( SELECT f.modulo.id FROM Funcionalidade f WHERE f.id = ?1 )")
     public Modulo findByFuncionalidade(Long id);
 
 }

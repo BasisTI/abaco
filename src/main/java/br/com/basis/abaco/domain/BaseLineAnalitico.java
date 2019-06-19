@@ -1,5 +1,6 @@
 package br.com.basis.abaco.domain;
 
+import org.hibernate.annotations.Immutable;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "baseline_analitico")
 @Document(indexName = "baselineanalitico")
+@Immutable
 public class BaseLineAnalitico implements Serializable {
 
     @Id
