@@ -18,6 +18,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -64,6 +65,7 @@ public class Sistema implements Serializable, ReportObject {
   private String numeroOcorrencia;
 
   @ManyToOne
+  @JoinColumn(name = "organizacao_id")
   private Organizacao organizacao;
 
   @OneToMany(mappedBy = "sistema", cascade = CascadeType.ALL, orphanRemoval = true)
