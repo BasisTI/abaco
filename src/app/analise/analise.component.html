@@ -222,6 +222,14 @@
                             </ng-template>
                         </p-column>
 
+                        <p-column [header]="this.getLabel('Analise.Analise.Usuarios')" field="usuarios" [sortable]="true">
+                            <ng-template let-col let-users="rowData.usuarios" pTemplate="body">
+                                    <li *ngFor="let user of users">
+                                        {{ user }}
+                                    </li>
+                            </ng-template>
+                        </p-column>
+
                     </basis-datatable>
 
                     <div class="ui-g-12 ui-md-2">
