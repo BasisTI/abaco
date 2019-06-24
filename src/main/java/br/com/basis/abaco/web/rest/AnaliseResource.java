@@ -19,6 +19,7 @@ import br.com.basis.abaco.repository.GrupoRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.service.dto.GrupoDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -71,6 +72,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
@@ -516,7 +518,7 @@ public class AnaliseResource {
      */
     @GetMapping("/analises")
     @Timed
-    public ResponseEntity<List<Grupo>> getAllAnalisesEquipes(
+    public ResponseEntity<List<GrupoDTO>> getAllAnalisesEquipes(
         @RequestParam(defaultValue = "asc") String order,
         @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
         @RequestParam(defaultValue = "20") int size,
@@ -544,7 +546,7 @@ public class AnaliseResource {
 
     }
 
-    private ResponseEntity<List<Grupo>> verificaEquipe(Optional<String> identificador, Optional<String> sistema,
+    private ResponseEntity<List<GrupoDTO>> verificaEquipe(Optional<String> identificador, Optional<String> sistema,
         Optional<String> metodo, Optional<String> organizacao, Optional<String> equipe, Pageable pageable,
         List<Long> equipesIds) throws URISyntaxException {
       
@@ -555,13 +557,18 @@ public class AnaliseResource {
               Page<Grupo> page = grupoRepository.findByIdAnalises(this.converteListaBigIntLong(idsAnalises),
                   identificador.orElse(null), sistema.orElse(null), metodo.orElse(null),
                   organizacao.orElse(null), equipe.orElse(null), pageable);
-              HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/equipes");
-              return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+              page.forEach(grupo -> {
+                  Set<User> users = userRepository.findAllByAnalise(grupo.getIdAnalise());
+                  grupo.setUsuarios(users);
+              });
+              Page<GrupoDTO> pageDTO = page.map(GrupoDTO::new);
+              HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageDTO, "/api/analises/equipes");
+              return new ResponseEntity<>(pageDTO.getContent(), headers, HttpStatus.OK);
           }
       }
 
 
-      return new ResponseEntity<>(new ArrayList<Grupo>(), null, HttpStatus.OK);
+      return new ResponseEntity<>(new ArrayList<GrupoDTO>(), null, HttpStatus.OK);
     }
 
 
