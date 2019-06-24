@@ -22,7 +22,7 @@ public interface SistemaRepository extends JpaRepository<Sistema, Long> {
      */
     List<Sistema> findAllByOrganizacao(Organizacao organizacao);
 
-    public Set<Sistema> findAllByOrganizacao(Long id);
+    Set<Sistema> findAllByOrganizacaoId(Long id);
 
     @EntityGraph(attributePaths = "modulos")
     Sistema findOne(Long id);

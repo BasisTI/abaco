@@ -198,7 +198,7 @@ public class SistemaResource {
   @Transactional
   public Set<Sistema> findAllSystemOrg(@PathVariable Long idOrganizacao) {
         log.debug("REST request to get all Sistemas by Organizacao");
-    return sistemaRepository.findAllByOrganizacao(idOrganizacao);
+    return sistemaRepository.findAllByOrganizacaoId(idOrganizacao);
   }
 
   /**
