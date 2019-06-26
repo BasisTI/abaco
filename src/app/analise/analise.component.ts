@@ -40,6 +40,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
     analiseTemp: Analise = new Analise();
     loggedUser: User;
     query: String;
+    usuarios: String[] = [];
 
     translateSusbscriptions: Subscription[] = [];
 
@@ -400,6 +401,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.searchGroup.sistema = undefined;
         this.searchGroup.metodoContagem = undefined;
         this.searchGroup.equipe = undefined;
+        this.searchGroup.usuario = undefined;
         this.userAnaliseUrl = this.changeUrl();
         this.recarregarDataTable();
     }
@@ -464,11 +466,23 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
 
         let querySearch = '?identificador=';
         querySearch = querySearch.concat((this.searchGroup.identificadorAnalise) ? this.searchGroup.identificadorAnalise + '&' : '&');
-        querySearch = querySearch.concat((this.searchGroup.sistema && this.searchGroup.sistema.nome) ? 'sistema=' + this.searchGroup.sistema.nome + '&' : '');
+
+        querySearch = querySearch.concat((this.searchGroup.sistema && this.searchGroup.sistema.nome) ?
+        'sistema=' + this.searchGroup.sistema.nome + '&' : '');
+
         querySearch = querySearch.concat((this.searchGroup.metodoContagem) ? 'metodo=' + this.searchGroup.metodoContagem + '&' : '');
-        querySearch = querySearch.concat((this.searchGroup.organizacao && this.searchGroup.organizacao.nome) ? 'organizacao=' + this.searchGroup.organizacao.nome + '&' : '');
-        querySearch = querySearch.concat((this.searchGroup.equipe && this.searchGroup.equipe.nome) ? 'equipe=' + this.searchGroup.equipe.nome : '');
+
+        querySearch = querySearch.concat((this.searchGroup.organizacao && this.searchGroup.organizacao.nome) ?
+        'organizacao=' + this.searchGroup.organizacao.nome + '&' : '');
+
+        querySearch = querySearch.concat((this.searchGroup.equipe && this.searchGroup.equipe.nome) ?
+        'equipe=' + this.searchGroup.equipe.nome : '');
+
+        querySearch = querySearch.concat((this.searchGroup.usuario) ?
+        'usuario=' + this.searchGroup.usuario + '&' : '');
+
         querySearch = (querySearch === '?') ? '' : querySearch;
+
         querySearch = (querySearch.endsWith('&')) ? querySearch.slice(0, -1) : querySearch;
 
         this.recuperarQuery(this.searchGroup);

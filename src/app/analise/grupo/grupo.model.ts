@@ -38,7 +38,7 @@ export class SearchGroup {
         public equipe?: TipoEquipe,
         public sistema?: Sistema,
         public metodoContagem?: string,
-        public usuarios?: string[],
+        public usuario?: string,
     ) {
     }
 
