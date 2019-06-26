@@ -28,7 +28,7 @@ public interface GrupoRepository extends JpaRepository<Grupo, Long> {
         "( :metodo IS NULL OR ( :metodo IS NOT NULL AND g.metodoContagem = :metodo)) AND " +
         "( :organizacao IS NULL OR ( :organizacao IS NOT NULL AND g.organizacao = :organizacao)) AND " +
         "( :equipe IS NULL OR ( :equipe IS NOT NULL AND g.equipe = :equipe)) AND " +
-        "( :usuario IS NULL OR ( :usuario IS NOT NULL AND :usuario LIKE concat(u.firstName, ' ', u.lastName) )) AND  " +
+        "( :usuario IS NULL OR ( :usuario IS NOT NULL AND :usuario LIKE UPPER(concat(u.firstName, ' ', u.lastName)) )) AND  " +
         "( g.idAnalise in :ids)")
     Page<Grupo> findByIdAnalises(
         @Param("ids") List<Long> ids,

@@ -557,7 +557,7 @@ public class AnaliseResource {
           if (idsAnalises.size() != 0) {
               Page<Grupo> page = grupoRepository.findByIdAnalises(this.converteListaBigIntLong(idsAnalises),
                   identificador.orElse(null), sistema.orElse(null), metodo.orElse(null),
-                  organizacao.orElse(null), equipe.orElse(null), usuario.orElse(null), pageable);
+                  organizacao.orElse(null), equipe.orElse(null), usuario.map(String::toUpperCase).orElseGet(() -> usuario.orElse(null)), pageable);
               page.forEach(grupo -> {
                   Set<User> users = userRepository.findAllByAnalise(grupo.getIdAnalise());
                   grupo.setUsuarios(users);

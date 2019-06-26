@@ -1,6 +1,7 @@
 package br.com.basis.abaco.service.dto;
 
 import br.com.basis.abaco.domain.Grupo;
+import br.com.basis.abaco.domain.User;
 
 import java.sql.Timestamp;
 import java.util.LinkedHashSet;
@@ -41,14 +42,12 @@ public class GrupoDTO {
     public GrupoDTO(Grupo grupo) {
         this(grupo.getIdAnalise(), grupo.getIdentificadorAnalise(), grupo.getOrganizacao(), grupo.getSistema()
             , grupo.getEquipe(), grupo.getPfTotal(), grupo.getMetodoContagem(), grupo.getDiasDeGarantia(), grupo.getPfAjustado()
-            , grupo.isBloqueado(), grupo.getDataHomologacao(), grupo.getUsuarios().stream().map( user ->
-                user.getFirstName().concat(" ").concat(user.getLastName())
-            ).collect(Collectors.toSet()), grupo.getDataCriacao());
+            , grupo.isBloqueado(), grupo.getDataHomologacao(), grupo.getUsuarios(), grupo.getDataCriacao());
     }
 
     public GrupoDTO(Long idAnalise, String identificadorAnalise, String organizacao, String sistema, String equipe
         , String pfTotal, String metodoContagem, Integer diasDeGarantia, String pfAjustado, Boolean bloqueado
-        , Timestamp dataHomologacao, Set<String> usuarios, Timestamp dataCriacao) {
+        , Timestamp dataHomologacao, Set<User> usuarios, Timestamp dataCriacao) {
         this.idAnalise = idAnalise;
         this.identificadorAnalise = identificadorAnalise;
         this.organizacao = organizacao;
@@ -60,9 +59,7 @@ public class GrupoDTO {
         this.pfAjustado = pfAjustado;
         this.bloqueado = bloqueado;
         this.dataHomologacao = dataHomologacao.toString();
-        this.usuarios = Optional.ofNullable(usuarios)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<>());
+        this.usuarios = usuarios.stream().map(user -> user.getFirstName().concat(" ").concat(user.getLastName())).collect(Collectors.toSet());
         this.dataCriacao = dataCriacao.toString();
     }
 
