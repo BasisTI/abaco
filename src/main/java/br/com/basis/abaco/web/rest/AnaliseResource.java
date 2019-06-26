@@ -527,7 +527,8 @@ public class AnaliseResource {
         @RequestParam(value = "sistema") Optional<String> sistema,
         @RequestParam(value = "metodo") Optional<String> metodo,
         @RequestParam(value = "organizacao") Optional<String> organizacao,
-        @RequestParam(value = "equipe") Optional<String> equipe)
+        @RequestParam(value = "equipe") Optional<String> equipe,
+        @RequestParam(value = "usuario") Optional<String> usuario)
 
         throws URISyntaxException {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
@@ -541,14 +542,14 @@ public class AnaliseResource {
             equipesIds.add(equipes.getId());
         }
         
-        return verificaEquipe(identificador, sistema, metodo, organizacao, equipe, pageable, equipesIds);
+        return verificaEquipe(identificador, sistema, metodo, organizacao, equipe, pageable, equipesIds, usuario);
 
 
     }
 
     private ResponseEntity<List<GrupoDTO>> verificaEquipe(Optional<String> identificador, Optional<String> sistema,
-        Optional<String> metodo, Optional<String> organizacao, Optional<String> equipe, Pageable pageable,
-        List<Long> equipesIds) throws URISyntaxException {
+                                                          Optional<String> metodo, Optional<String> organizacao, Optional<String> equipe, Pageable pageable,
+                                                          List<Long> equipesIds, Optional<String> usuario) throws URISyntaxException {
       
       List<BigInteger> idsAnalises;
       if (equipesIds.size() != 0) {
@@ -556,7 +557,7 @@ public class AnaliseResource {
           if (idsAnalises.size() != 0) {
               Page<Grupo> page = grupoRepository.findByIdAnalises(this.converteListaBigIntLong(idsAnalises),
                   identificador.orElse(null), sistema.orElse(null), metodo.orElse(null),
-                  organizacao.orElse(null), equipe.orElse(null), pageable);
+                  organizacao.orElse(null), equipe.orElse(null), usuario.orElse(null), pageable);
               page.forEach(grupo -> {
                   Set<User> users = userRepository.findAllByAnalise(grupo.getIdAnalise());
                   grupo.setUsuarios(users);
