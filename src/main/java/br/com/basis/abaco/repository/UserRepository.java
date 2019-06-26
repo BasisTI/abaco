@@ -14,6 +14,7 @@ import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Spring Data JPA repository for the User entity.
@@ -59,4 +60,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "select u from User u join fetch u.organizacoes o where u.login=?1 and u.activated=true and o.ativo=true")
     User findUserWithActiveOrgs(String login);
 
+    @Query(value = "SELECT a.users FROM Analise a WHERE a.id = :id  ")
+    Set<User> findAllByAnalise(@Param("id") Long analiseId);
 }
