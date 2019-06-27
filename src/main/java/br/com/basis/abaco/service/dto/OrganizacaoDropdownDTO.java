@@ -9,6 +9,9 @@ public class OrganizacaoDropdownDTO extends DropdownDTO {
         this.cnpj = cnpj;
     }
 
+    public OrganizacaoDropdownDTO() {
+    }
+
     public String getCnpj() {
         return cnpj;
     }
