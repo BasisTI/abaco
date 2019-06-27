@@ -1,0 +1,17 @@
+version: '2'
+services:
+    registry:
+        extends:
+            file: jhipster-registry/jhipster-registry.yml
+            service: jhipster-registry
+        container_name: registry-abaco
+    postgresql:
+        extends:
+            file: postgresql/postgresql.yml
+            service: abaco-postgresql
+        container_name: postgresql-abaco
+    elasticsearch:
+        extends:
+            file: elasticsearch/elasticsearch.yml
+            service: abaco-elasticsearch
+        container_name: elasticsearch-abaco
