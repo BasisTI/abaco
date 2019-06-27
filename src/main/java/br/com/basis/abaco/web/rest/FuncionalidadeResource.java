@@ -139,7 +139,7 @@ public class FuncionalidadeResource {
     @Timed
     public List<Funcionalidade> getAllFuncionalidadesModulo(@PathVariable Long id) {
         log.debug("REST request to get all Funcionalidades");
-        return funcionalidadeRepository.findByModulo(id);
+        return funcionalidadeRepository.findByModuloId(id);
     }
 
     /**

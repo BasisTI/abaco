@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @SuppressWarnings("unused")
 public interface FuncionalidadeRepository extends JpaRepository<Funcionalidade, Long> {
 
-    List<Funcionalidade> findByModulo (Long idModulo);
+    List<Funcionalidade> findByModuloId (Long idModulo);
 
 }

@@ -19,9 +19,9 @@ import java.util.List;
 public interface GrupoRepository extends JpaRepository<Grupo, Long> {
 
 
-    @Query("SELECT g FROM Grupo g " +
-        "JOIN Analise a ON a.id = g.idAnalise " +
-        "JOIN a.users u " +
+    @Query("SELECT DISTINCT g FROM Grupo g " +
+        "INNER JOIN Analise a ON a.id = g.idAnalise " +
+        "INNER JOIN a.users u " +
         "WHERE " +
         "( :identificador IS NULL OR ( :identificador IS NOT NULL AND UPPER(g.identificadorAnalise) like concat('%', UPPER( :identificador), '%'))) AND " +
         "( :sistema IS NULL OR ( :sistema IS NOT NULL AND g.sistema = :sistema)) AND " +
