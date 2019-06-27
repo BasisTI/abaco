@@ -72,9 +72,9 @@ export class OrganizacaoService {
     });
   }
 
-  query(req?: any): Observable<ResponseWrapper> {
+  dropDown(req?: any): Observable<ResponseWrapper> {
       const options = createRequestOption(req);
-      return this.http.get(this.resourceUrl, options)
+      return this.http.get(this.resourceUrl + '/drop-down', options)
           .map((res: Response) => this.convertResponseToResponseWrapper(res)).catch((error: any) => {
               if (error.status === 403) {
                   this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));

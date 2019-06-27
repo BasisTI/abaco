@@ -178,7 +178,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     recuperarOrganizacoes() {
-        this.organizacaoService.query().subscribe(response => {
+        this.organizacaoService.dropDown().subscribe(response => {
             this.organizations = response.json;
             let emptyOrg = new Organizacao();
             this.organizations.unshift(emptyOrg);
