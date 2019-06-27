@@ -64,7 +64,7 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
 
     this.isSaving = true;
     let teamTypesRegistered: Array<TipoEquipe>;
-    this.tipoEquipeService.query().subscribe(response => {
+    this.tipoEquipeService.dropDown().subscribe(response => {
       teamTypesRegistered = response.json;
       if (this.tipoEquipe.id !== undefined) {
         if (this.checkFieldsMaxLength() && !this.checkDuplicity(teamTypesRegistered)) {

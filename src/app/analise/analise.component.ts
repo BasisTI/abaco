@@ -194,7 +194,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     recuperarEquipe() {
-        this.tipoEquipeService.query().subscribe(response => {
+        this.tipoEquipeService.dropDown().subscribe(response => {
             this.teams = response.json;
             let emptyTeam = new TipoEquipe();
             this.teams.unshift(emptyTeam);
