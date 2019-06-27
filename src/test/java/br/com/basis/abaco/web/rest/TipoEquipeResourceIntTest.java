@@ -1,13 +1,19 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.AbacoApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import br.com.basis.abaco.domain.TipoEquipe;
-import br.com.basis.abaco.repository.TipoEquipeRepository;
-import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
-import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
+import java.util.List;
 
-import br.com.basis.dynamicexports.service.DynamicExportsService;
+import javax.persistence.EntityManager;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,13 +28,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import br.com.basis.abaco.AbacoApp;
+import br.com.basis.abaco.domain.TipoEquipe;
+import br.com.basis.abaco.repository.TipoEquipeRepository;
+import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
+import br.com.basis.abaco.service.TipoEquipeService;
+import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 
 /**
  * Test class for the TipoEquipeResource REST controller.
@@ -63,6 +69,9 @@ public class TipoEquipeResourceIntTest {
     @Autowired
     private DynamicExportsService dynamicExportsService;
 
+    @Autowired
+    private TipoEquipeService tipoEquipeService;
+
     private MockMvc restTipoEquipeMockMvc;
 
     private TipoEquipe tipoEquipe;
@@ -70,7 +79,8 @@ public class TipoEquipeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final TipoEquipeResource tipoEquipeResource = new TipoEquipeResource(tipoEquipeRepository, tipoEquipeSearchRepository, dynamicExportsService);
+        final TipoEquipeResource tipoEquipeResource = new TipoEquipeResource(tipoEquipeRepository,
+                tipoEquipeSearchRepository, dynamicExportsService, tipoEquipeService);
         this.restTipoEquipeMockMvc = MockMvcBuilders.standaloneSetup(tipoEquipeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
