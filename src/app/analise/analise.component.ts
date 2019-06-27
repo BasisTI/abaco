@@ -186,7 +186,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     recuperarSistema() {
-        this.sistemaService.query().subscribe(response => {
+        this.sistemaService.dropDown().subscribe(response => {
             this.nomeSistemas = response.json;
             let emptySystem = new Sistema();
             this.nomeSistemas.unshift(emptySystem);
