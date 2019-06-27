@@ -12,16 +12,15 @@ import br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO;
 @Transactional
 public class OrganizacaoService {
 
-	private final OrganizacaoRepository organizacaoRepository;
+    private final OrganizacaoRepository organizacaoRepository;
 
-
-	public OrganizacaoService(OrganizacaoRepository organizacaoRepository) {
-		this.organizacaoRepository = organizacaoRepository;
+    public OrganizacaoService(OrganizacaoRepository organizacaoRepository) {
+        this.organizacaoRepository = organizacaoRepository;
     }
-    
+
     @Transactional(readOnly = true)
-	public List<OrganizacaoDropdownDTO> getOrganizacaoDropdown() {
-		return organizacaoRepository.getOrganizacaoDropdown();
+    public List<OrganizacaoDropdownDTO> getOrganizacaoDropdown() {
+        return organizacaoRepository.getOrganizacaoDropdown();
     }
 
 }

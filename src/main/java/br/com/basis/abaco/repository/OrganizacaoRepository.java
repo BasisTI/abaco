@@ -28,10 +28,10 @@ public interface OrganizacaoRepository extends JpaRepository<Organizacao, Long> 
     Optional<Organizacao> findOneByCnpj(String cnpj);
 
     @Override
-	@EntityGraph(attributePaths = {"sistemas","contracts","tipoEquipe"})
+    @EntityGraph(attributePaths = { "sistemas", "contracts", "tipoEquipe" })
     Organizacao findOne(Long id);
 
-	@Query("SELECT new br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO(o.id, o.nome, o.cnpj) FROM Organizacao o")
-	List<OrganizacaoDropdownDTO> getOrganizacaoDropdown();
+    @Query("SELECT new br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO(o.id, o.nome, o.cnpj) FROM Organizacao o")
+    List<OrganizacaoDropdownDTO> getOrganizacaoDropdown();
 
 }
