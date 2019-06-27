@@ -107,7 +107,7 @@ export class UserComponent implements AfterViewInit, OnInit {
      * Método responsável por recuperar as equipes.
      */
     recuperarEquipe() {
-        this.tipoEquipeService.query().subscribe(response => {
+        this.tipoEquipeService.dropDown().subscribe(response => {
             this.teams = response.json;
             const emptyTeam = new TipoEquipe();
             this.teams.unshift(emptyTeam);
