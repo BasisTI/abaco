@@ -31,11 +31,11 @@ public class GrupoDTO {
 
     private Boolean bloqueado;
 
-    private String dataHomologacao;
+    private Timestamp dataHomologacao;
 
     private Set<String> usuarios;
 
-    private String dataCriacao;
+    private Timestamp dataCriacao;
 
     public GrupoDTO() {}
 
@@ -58,9 +58,9 @@ public class GrupoDTO {
         this.diasDeGarantia = diasDeGarantia;
         this.pfAjustado = pfAjustado;
         this.bloqueado = bloqueado;
-        this.dataHomologacao = dataHomologacao.toString();
+        this.dataHomologacao = Optional.ofNullable(dataHomologacao).orElse(null);
         this.usuarios = usuarios.stream().map(user -> user.getFirstName().concat(" ").concat(user.getLastName())).collect(Collectors.toSet());
-        this.dataCriacao = dataCriacao.toString();
+        this.dataCriacao = Optional.ofNullable(dataCriacao).orElse(null);
     }
 
 
@@ -145,12 +145,12 @@ public class GrupoDTO {
         this.bloqueado = bloqueado;
     }
 
-    public String getDataHomologacao() {
-        return dataHomologacao;
+    public Timestamp getDataHomologacao() {
+        return Optional.ofNullable(dataHomologacao).orElse(null);
     }
 
-    public void setDataHomologacao(String dataHomologacao) {
-        this.dataHomologacao = dataHomologacao;
+    public void setDataHomologacao(Timestamp dataHomologacao) {
+        this.dataHomologacao = Optional.ofNullable(dataHomologacao).orElse(null);
     }
 
     public Set<String> getUsuarios() {
@@ -165,11 +165,11 @@ public class GrupoDTO {
             .orElse(new LinkedHashSet<>());
     }
 
-    public String getDataCriacao() {
-        return dataCriacao;
+    public Timestamp getDataCriacao() {
+        return Optional.ofNullable(dataCriacao).orElse(null);
     }
 
-    public void setDataCriacao(String dataCriacao) {
-        this.dataCriacao = dataCriacao;
+    public void setDataCriacao(Timestamp dataCriacao) {
+        this.dataCriacao = Optional.ofNullable(dataCriacao).orElse(null);
     }
 }

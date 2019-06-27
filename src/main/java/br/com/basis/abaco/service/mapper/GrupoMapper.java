@@ -5,10 +5,6 @@ import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.service.dto.GrupoDTO;
 import org.mapstruct.Mapper;
 
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,16 +31,6 @@ public interface GrupoMapper {
             user.setLastName(name.substring(name.indexOf(' ') + 1));
             return user;
         }).collect(Collectors.toSet());
-    }
-
-    default Timestamp timestampFromString(String timestamp) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-        Date parsedDate = dateFormat.parse(timestamp);
-        return new java.sql.Timestamp(parsedDate.getTime());
-    }
-
-    default String stringFromTimestamp(Timestamp timestamp) {
-        return timestamp.toString();
     }
 
 }
