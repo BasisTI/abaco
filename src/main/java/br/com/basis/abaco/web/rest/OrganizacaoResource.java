@@ -208,7 +208,7 @@ public class OrganizacaoResource {
     @GetMapping("/organizacaos/drop-down")
     @Timed
     public List<OrganizacaoDropdownDTO> getOrganizacaoDropdown() {
-        log.debug("REST request to get all Organizacaos");
+        log.debug("REST request to get dropdown Organizacaos");
         return organizacaoService.getOrganizacaoDropdown();
     }
 
