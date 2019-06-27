@@ -11,6 +11,9 @@ public class DropdownDTO {
         this.nome = nome;
     }
 
+    public DropdownDTO() {
+    }
+
     public Long getId() {
         return id;
     }

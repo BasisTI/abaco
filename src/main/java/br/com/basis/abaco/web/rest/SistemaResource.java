@@ -1,26 +1,20 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
-import br.com.basis.abaco.domain.Modulo;
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.domain.Sistema;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
-import br.com.basis.abaco.repository.SistemaRepository;
-import br.com.basis.abaco.repository.search.SistemaSearchRepository;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioSistemaColunas;
-import br.com.basis.abaco.utils.AbacoUtil;
-import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import br.com.basis.dynamicexports.util.DynamicExporter;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.slf4j.Logger;
@@ -46,19 +40,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
+import br.com.basis.abaco.domain.Modulo;
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
+import br.com.basis.abaco.repository.SistemaRepository;
+import br.com.basis.abaco.repository.search.SistemaSearchRepository;
+import br.com.basis.abaco.service.SistemaService;
+import br.com.basis.abaco.service.dto.SistemaDropdownDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioSistemaColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import io.github.jhipster.web.util.ResponseUtil;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 
 /**
  * REST controller for managing Sistema.
@@ -83,6 +88,8 @@ public class SistemaResource {
 
   private final DynamicExportsService dynamicExportsService;
 
+    private final SistemaService sistemaService;
+
   private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -97,13 +104,15 @@ public class SistemaResource {
       SistemaRepository sistemaRepository,
       SistemaSearchRepository sistemaSearchRepository,
       FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
-      FuncaoDadosRepository funcaoDadosRepository, DynamicExportsService dynamicExportsService) {
+            FuncaoDadosRepository funcaoDadosRepository, DynamicExportsService dynamicExportsService,
+            SistemaService sistemaService) {
 
     this.sistemaRepository = sistemaRepository;
     this.sistemaSearchRepository = sistemaSearchRepository;
     this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
     this.funcaoDadosRepository = funcaoDadosRepository;
     this.dynamicExportsService = dynamicExportsService;
+        this.sistemaService = sistemaService;
   }
 
   /**
@@ -201,16 +210,12 @@ public class SistemaResource {
     return sistemaRepository.findAllByOrganizacaoId(idOrganizacao);
   }
 
-  /**
-   * GET /sistemas : get all the sistemas.
-   * @return the ResponseEntity with status 200 (OK) and the list of sistemas in body
-   */
-  @GetMapping("/sistemas")
-  @Timed
-  public List<Sistema> getAllSistemas() {
-    log.debug("REST request to get all Sistemas");
-    return sistemaRepository.findAll();
-  }
+    @GetMapping("/sistemas/drop-down")
+    @Timed
+    public List<SistemaDropdownDTO> getSistemaDropdown() {
+        log.debug("REST request to get dropdown Sistemas");
+        return sistemaService.getSistemaDropdown();
+    }
 
   /**
    * GET /sistemas/:id : get the "id" sistema.
