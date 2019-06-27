@@ -84,7 +84,7 @@ export class UserComponent implements AfterViewInit, OnInit {
      * Método responsável por recuperar as organizações.
      */
     recuperarOrganizacoes() {
-        this.organizacaoService.query().subscribe(response => {
+        this.organizacaoService.dropDown().subscribe(response => {
             this.organizations = response.json;
             const emptyOrg = new Organizacao();
             this.organizations.unshift(emptyOrg);
