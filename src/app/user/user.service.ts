@@ -93,16 +93,6 @@ export class UserService {
     });
   }
 
-  /**
-   * Função que retorna dados do usuário logado somente com as organizações ativas
-   */
-  findCurrentUserActiveOrgs(): Observable<User> {
-    return this.http.get(`${this.resourceUrl}/activeorgs`).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
-  }
-
   query(req?: any): Observable<ResponseWrapper> {
     const options = createRequestOption(req);
     return this.http.get(this.resourceUrl, options)
@@ -119,6 +109,15 @@ export class UserService {
         return res.json().map(item => {
           return new Authority(item.name);
         });
+      });
+  }
+
+  getLoggedUserWithId(): Observable<User> {
+    return this.http.get(this.resourceUrl + '/active-user')
+      .map(res => {
+        const user = new User();
+        user.id = res.json();
+        return user;
       });
   }
 

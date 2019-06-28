@@ -18,7 +18,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 import * as _ from 'lodash';
 import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
-import { TipoEquipeService } from '../tipo-equipe';
+import { TipoEquipeService, TipoEquipe } from '../tipo-equipe';
 import { MessageUtil } from '../util/message.util';
 import { FatorAjuste } from '../fator-ajuste';
 import { EsforcoFase } from '../esforco-fase';
@@ -47,6 +47,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     dataHomol: any;
     dataCriacao: any;
     loggedUser: User;
+    tipoEquipesLoggedUser: TipoEquipe[] = [];
     diasGarantia: number;
     public validacaoCampos: boolean;
     aguardarGarantia: boolean;
@@ -124,7 +125,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.isSaving = false;
         this.dataHomol = new Date();
         this.dataCriacao = new Date();
-        this.getLoggedUser();
+        this.getOrganizationsFromActiveLoggedUser();
+        this.getLoggedUserId();
+        this.getEquipesFromActiveLoggedUser();
         this.habilitarCamposIniciais();
         this.getAnalise();
         this.traduzirtiposAnalise();
@@ -176,10 +179,21 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     /**
      * Função para recuperar os dados do usuário logado no momento
      */
-    getLoggedUser() {
-        this.userService.findCurrentUserActiveOrgs().subscribe(res => {
+    getOrganizationsFromActiveLoggedUser() {
+        this.organizacaoService.dropDownActiveLoggedUser().subscribe(res => {
+            this.populateOrgs(res.json);
+        });
+    }
+
+    getLoggedUserId() {
+        this.userService.getLoggedUserWithId().subscribe(res => {
             this.loggedUser = res;
-            this.populateOrgs(res.organizacoes);
+        });
+    }
+
+    getEquipesFromActiveLoggedUser() {
+        this.equipeService.getEquipesActiveLoggedUser().subscribe(res => {
+            this.tipoEquipesLoggedUser = res.json;
         });
     }
 
@@ -189,8 +203,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     checkUserAnaliseEquipes() {
         let retorno = false;
-        if (this.loggedUser.tipoEquipes) {
-            this.loggedUser.tipoEquipes.forEach(equipe => {
+        if (this.tipoEquipesLoggedUser) {
+            this.tipoEquipesLoggedUser.forEach(equipe => {
                 if (equipe.id === this.analise.equipeResponsavel.id) {
                     retorno = true;
                 }
@@ -201,8 +215,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     checkIfUserCanEdit() {
         let retorno = false;
-        if (this.loggedUser.tipoEquipes) {
-            this.loggedUser.tipoEquipes.forEach(equipe => {
+        if (this.tipoEquipesLoggedUser) {
+            this.tipoEquipesLoggedUser.forEach(equipe => {
                 this.analise.compartilhadas.forEach(compartilhada => {
                     if (equipe.id === compartilhada.equipeId) {
                         if (!compartilhada.viewOnly) {
