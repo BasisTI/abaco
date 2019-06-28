@@ -109,9 +109,8 @@ export class TipoEquipeService {
     });
   }
 
-  dropDown(req?: any): Observable<ResponseWrapper> {
-    const options = createRequestOption(req);
-    return this.http.get(this.resourceUrl + '/drop-down', options).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+  dropDown(): Observable<ResponseWrapper> {
+    return this.http.get(this.resourceUrl + '/drop-down').map((res: Response) => this.convertResponse(res)).catch((error: any) => {
       if (error.status === 403) {
         this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
         return Observable.throw(new Error(error.status));

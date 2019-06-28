@@ -1,43 +1,27 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpModule } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FuncaoDadosFormComponent } from './funcao-dados-form.component';
-import { DatatableModule } from '@basis/angular-components';
-import {SecurityModule} from '@basis/angular-components';
-import {CKEditorModule} from '@ckeditor/ckeditor5-angular';
-
+import { HttpModule } from '@angular/http';
+import { SecurityModule } from '@basis/angular-components';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { AutoCompleteModule, ButtonModule, CalendarModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, DropdownModule, InputTextareaModule, InputTextModule, MultiSelectModule, RadioButtonModule, SpinnerModule, TabViewModule } from 'primeng/primeng';
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
-
-import {
-  ButtonModule,
-  InputTextModule,
-  SpinnerModule,
-  CalendarModule,
-  DropdownModule,
-  RadioButtonModule,
-  ConfirmDialogModule,
-  DataTableModule,
-  ConfirmationService,
-  TabViewModule,
-  InputTextareaModule,
-  DialogModule,
-  MultiSelectModule,
-  AutoCompleteModule
-} from 'primeng/primeng';
-
-import { AbacoSharedModule } from '../shared/abaco-shared.module';
 import { AbacoAnaliseSharedModule } from '../analise-shared/analise-shared.module';
-import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
 import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
-import { AbacoEllipsisTooltipModule } from '../shared/ellipsis-tooltip/ellipsis-tooltip.module';
 import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.module';
-import { AbacoDerTextModule } from '../analise-shared/der-text/der-text.module';
+import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
+import { AbacoSharedModule } from '../shared/abaco-shared.module';
+import { AbacoEllipsisTooltipModule } from '../shared/ellipsis-tooltip/ellipsis-tooltip.module';
+import { DerService } from './../der/der.service';
+import { FuncaoDadosFormComponent } from './funcao-dados-form.component';
 import { FuncaoDadosService } from './funcao-dados.service';
 
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+
+
+
 
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -87,6 +71,7 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   providers: [
     FuncaoDadosService,
+    DerService,
     ConfirmationService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
