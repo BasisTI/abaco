@@ -6,8 +6,10 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO;
 
 /**
@@ -33,5 +35,9 @@ public interface OrganizacaoRepository extends JpaRepository<Organizacao, Long> 
 
     @Query("SELECT new br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO(o.id, o.nome, o.cnpj) FROM Organizacao o")
     List<OrganizacaoDropdownDTO> getOrganizacaoDropdown();
+
+    @Query(value = "SELECT new br.com.basis.abaco.service.dto.DropdownDTO(o.id, o.nome) FROM User u JOIN u.organizacoes o "
+            + " WHERE u.login = :currentUserLogin AND u.activated IS TRUE AND o.ativo IS TRUE ")
+    List<DropdownDTO> findActiveUserOrganizations(@Param("currentUserLogin") String currentUserLogin);
 
 }

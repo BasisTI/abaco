@@ -1,15 +1,12 @@
 package br.com.basis.abaco.service;
 
-import br.com.basis.abaco.config.Constants;
-import br.com.basis.abaco.domain.Authority;
-import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.repository.AuthorityRepository;
-import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.search.UserSearchRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
-import br.com.basis.abaco.security.SecurityUtils;
-import br.com.basis.abaco.service.dto.UserDTO;
-import br.com.basis.abaco.service.util.RandomUtil;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +17,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import br.com.basis.abaco.config.Constants;
+import br.com.basis.abaco.domain.Authority;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.repository.AuthorityRepository;
+import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.search.UserSearchRepository;
+import br.com.basis.abaco.security.AuthoritiesConstants;
+import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.service.dto.UserDTO;
+import br.com.basis.abaco.service.util.RandomUtil;
 
 /**
  * Service class for managing users.
@@ -300,5 +300,9 @@ public class UserService {
             userRepository.delete(user);
             userSearchRepository.delete(user);
         }
+    }
+
+    public Long getLoggedUserId() {
+        return userRepository.getLoggedUserId(SecurityUtils.getCurrentUserLogin());
     }
 }

@@ -42,6 +42,7 @@ import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.repository.OrganizacaoRepository;
 import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
 import br.com.basis.abaco.service.OrganizacaoService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioOrganizacaoColunas;
@@ -298,4 +299,10 @@ public class OrganizacaoResource {
     }
     return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
   }
+
+    @GetMapping("/organizacaos/active-user")
+    @Timed
+    public List<DropdownDTO> findActiveUserOrganizations() {
+        return organizacaoService.findActiveUserOrganizations();
+    }
 }

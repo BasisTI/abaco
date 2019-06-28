@@ -264,4 +264,10 @@ public class TipoEquipeResource {
         return DynamicExporter.output(byteArrayOutputStream,
             "relatorio." + tipoRelatorio);
     }
+
+    @GetMapping("/tipo-equipes/active-user")
+    @Timed
+    public List<DropdownDTO> findActiveUserTipoEquipes() {
+        return tipoEquipeService.findActiveUserTipoEquipes();
+    }
 }
