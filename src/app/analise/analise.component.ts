@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs';
     selector: 'jhi-analise',
     templateUrl: './analise.component.html'
 })
-export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AnaliseComponent implements OnInit, OnDestroy {
 
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
     @BlockUI() blockUI: NgBlockUI;
@@ -38,7 +38,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
     selectedEquipes: Array<AnaliseShareEquipe>;
     selectedToDelete: AnaliseShareEquipe;
     analiseTemp: Analise = new Analise();
-    loggedUser: User;
+    tipoEquipesLoggedUser: TipoEquipe[] = [];
     query: String;
     usuarios: String[] = [];
 
@@ -65,7 +65,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
         private userService: UserService,
         private grupoService: GrupoService,
         private cdref: ChangeDetectorRef,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private equipeService: TipoEquipeService,
     ) { }
 
     public ngOnInit() {
@@ -84,7 +85,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     estadoInicial() {
-        this.getLoggedUser();
+        this.getEquipesFromActiveLoggedUser();
         this.recuperarAnalisesUsuario();            // Filtrando as análises que o usuário pode ver
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
@@ -100,14 +101,13 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
             this.analiseSelecionada = undefined;
         });
     }
-    /**
-     * Função para recuperar os dados do usuário logado no momento
-     */
-    getLoggedUser() {
-        this.userService.findCurrentUser().subscribe(res => {
-            this.loggedUser = res;
+    
+    getEquipesFromActiveLoggedUser() {
+        this.equipeService.getEquipesActiveLoggedUser().subscribe(res => {
+            this.tipoEquipesLoggedUser = res.json;
         });
     }
+
     /*
     *   Metodo responsavel por traduzir metricas de Analise
     */
@@ -201,11 +201,6 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    ngAfterViewInit() {
-        this.recarregarDataTable();
-        this.cdref.detectChanges();
-    }
-
     /**
      * Clique na tabela análise
      */
@@ -262,8 +257,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
         let retorno: boolean = false;
         return this.analiseService.find(this.analiseSelecionada.idAnalise).subscribe((res: any) => {
             this.analiseTemp = res;
-            if (this.loggedUser.tipoEquipes) {
-                this.loggedUser.tipoEquipes.forEach(equipe => {
+            if (this.tipoEquipesLoggedUser) {
+                this.tipoEquipesLoggedUser.forEach(equipe => {
                     if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
                         retorno = true;
                     }
@@ -279,8 +274,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     checkIfUserCanEdit() {
         let retorno: boolean = false;
-        if (this.loggedUser.tipoEquipes) {
-            this.loggedUser.tipoEquipes.forEach(equipe => {
+        if (this.tipoEquipesLoggedUser) {
+            this.tipoEquipesLoggedUser.forEach(equipe => {
                 if (this.analiseSelecionada.compartilhadas) {
                     this.analiseSelecionada.compartilhadas.forEach(compartilhada => {
                         if (equipe.id === compartilhada.equipeId) {

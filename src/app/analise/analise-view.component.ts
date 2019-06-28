@@ -14,7 +14,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 import * as _ from 'lodash';
 import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
-import { TipoEquipeService } from '../tipo-equipe';
+import { TipoEquipeService, TipoEquipe } from '../tipo-equipe';
 import { MessageUtil } from '../util/message.util';
 import { FatorAjuste } from '../fator-ajuste';
 import { EsforcoFase } from '../esforco-fase';
@@ -42,7 +42,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     selectedEquipes: Array<AnaliseShareEquipe>;
     selectedToDelete: AnaliseShareEquipe;
     mostrarDialog: boolean = false;
-    loggedUser: User;
+    tipoEquipesLoggedUser: TipoEquipe[] = [];
     dataCriacao: any;
 
     organizacoes: Organizacao[];
@@ -109,7 +109,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         this.isSaving = false;
         this.dataHomol = new Date();
         this.dataCriacao = new Date();
-        this.getLoggedUser();
+        this.getEquipesFromActiveLoggedUser();
         this.habilitarCamposIniciais();
         this.listOrganizacoes();
         this.getAnalise();
@@ -128,12 +128,9 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         return str;
     }
 
-    /**
-     * Função para recuperar os dados do usuário logado no momento
-     */
-    getLoggedUser() {
-        this.userService.findCurrentUser().subscribe(res => {
-            this.loggedUser = res;
+    getEquipesFromActiveLoggedUser() {
+        this.equipeService.getEquipesActiveLoggedUser().subscribe(res => {
+            this.tipoEquipesLoggedUser = res.json;
         });
     }
 
@@ -458,8 +455,8 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
 
     checkUserAnaliseEquipes() {
         let retorno: boolean = false;
-        if (this.loggedUser.tipoEquipes) {
-            this.loggedUser.tipoEquipes.forEach(equipe => {
+        if (this.tipoEquipesLoggedUser) {
+            this.tipoEquipesLoggedUser.forEach(equipe => {
                 if (equipe.id === this.analise.equipeResponsavel.id) {
                     retorno = true;
                 }
