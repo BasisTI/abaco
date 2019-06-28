@@ -1,0 +1,11 @@
+version: '2'
+services:
+    abaco-postgresql:
+        image: postgres:9.6.2
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        ports:
+            - 5432:5432
+        volumes:
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql

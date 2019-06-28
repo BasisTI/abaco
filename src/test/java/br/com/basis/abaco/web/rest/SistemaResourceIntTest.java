@@ -1,14 +1,19 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.AbacoApp;
-import br.com.basis.abaco.domain.Sistema;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
-import br.com.basis.abaco.repository.SistemaRepository;
-import br.com.basis.abaco.repository.search.SistemaSearchRepository;
-import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import br.com.basis.dynamicexports.service.DynamicExportsService;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,13 +28,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import br.com.basis.abaco.AbacoApp;
+import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
+import br.com.basis.abaco.repository.SistemaRepository;
+import br.com.basis.abaco.repository.search.SistemaSearchRepository;
+import br.com.basis.abaco.service.SistemaService;
+import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 
 /**
  * Test class for the SistemaResource REST controller.
@@ -80,11 +87,15 @@ public class SistemaResourceIntTest {
     @Autowired
     private FuncaoDadosRepository funcaoDadosRepository;
 
+    @Autowired
+    private SistemaService sistemaService;
+
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        SistemaResource sistemaResource = new SistemaResource(sistemaRepository, sistemaSearchRepository, funcaoDadosVersionavelRepository, funcaoDadosRepository,  dynamicExportsService);
+        SistemaResource sistemaResource = new SistemaResource(sistemaRepository, sistemaSearchRepository,
+                funcaoDadosVersionavelRepository, funcaoDadosRepository, dynamicExportsService, sistemaService);
         this.restSistemaMockMvc = MockMvcBuilders.standaloneSetup(sistemaResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();

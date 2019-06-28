@@ -1,13 +1,19 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.AbacoApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.repository.OrganizacaoRepository;
-import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
-import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
+import java.util.List;
 
-import br.com.basis.dynamicexports.service.DynamicExportsService;
+import javax.persistence.EntityManager;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,13 +28,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import br.com.basis.abaco.AbacoApp;
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.repository.OrganizacaoRepository;
+import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
+import br.com.basis.abaco.service.OrganizacaoService;
+import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 
 /**
  * Test class for the OrganizacaoResource REST controller.
@@ -70,6 +76,9 @@ public class OrganizacaoResourceIntTest {
     private ExceptionTranslator exceptionTranslator;
 
     @Autowired
+    private OrganizacaoService organizacaoService;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restOrganizacaoMockMvc;
@@ -79,7 +88,8 @@ public class OrganizacaoResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            OrganizacaoResource organizacaoResource = new OrganizacaoResource(organizacaoRepository, organizacaoSearchRepository, dynamicExportsService);
+        OrganizacaoResource organizacaoResource = new OrganizacaoResource(organizacaoRepository,
+                organizacaoSearchRepository, dynamicExportsService, organizacaoService);
         this.restOrganizacaoMockMvc = MockMvcBuilders.standaloneSetup(organizacaoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
