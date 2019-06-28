@@ -16,6 +16,7 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.property.TextAlignment;
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -141,7 +142,7 @@ public class RelatorioUtil {
      */
     @SuppressWarnings({ RAW_TYPES, UNCHECKED })
     public @ResponseBody byte[] downloadPdfBrowser(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws FileNotFoundException, JRException {
-        return buildPDFBrowser(caminhoJasperResolucao, parametrosJasper, null);
+        return buildPDFBrowser(caminhoJasperResolucao, parametrosJasper, new JREmptyDataSource());
     }
 
     /**
@@ -159,7 +160,7 @@ public class RelatorioUtil {
         return buildPDFBrowser(caminhoJasperResolucao, new HashMap(), dataSource);
     }
 
-    private byte[] buildPDFBrowser(String caminhoJasperResolucao, Map parametters, JRBeanCollectionDataSource dataSource) throws JRException {
+    private @ResponseBody byte[] buildPDFBrowser(String caminhoJasperResolucao, Map parametters, JRDataSource dataSource) throws JRException {
         InputStream stream = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
 
         JasperPrint jasperPrint = (JasperPrint) JasperFillManager.fillReport(stream, parametters, dataSource);
@@ -178,7 +179,7 @@ public class RelatorioUtil {
 
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
 
-        response.setContentType("application/x-pdf");
+        response.setContentType("application/pdf");
 
         response.setHeader(CONTENT_DISP, INLINE_FILENAME + ".pdf");
 
