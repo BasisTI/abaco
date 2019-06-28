@@ -37,4 +37,8 @@ public interface TipoEquipeRepository extends JpaRepository<TipoEquipe, Long> {
     @Query("SELECT new br.com.basis.abaco.service.dto.DropdownDTO(e.id, e.nome) FROM TipoEquipe e")
     List<DropdownDTO> getTipoEquipeDropdown();
 
+    @Query(value = "SELECT new br.com.basis.abaco.service.dto.DropdownDTO(t.id, t.nome) FROM User u JOIN u.tipoEquipes t "
+            + " WHERE u.login = :currentUserLogin AND u.activated IS TRUE ")
+    List<DropdownDTO> findActiveUserTipoEquipes(@Param("currentUserLogin") String currentUserLogin);
+
 }

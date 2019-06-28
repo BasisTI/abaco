@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.basis.abaco.repository.OrganizacaoRepository;
+import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO;
 
 @Service
@@ -21,6 +23,11 @@ public class OrganizacaoService {
     @Transactional(readOnly = true)
     public List<OrganizacaoDropdownDTO> getOrganizacaoDropdown() {
         return organizacaoRepository.getOrganizacaoDropdown();
+    }
+
+    @Transactional(readOnly = true)
+    public List<DropdownDTO> findActiveUserOrganizations() {
+        return organizacaoRepository.findActiveUserOrganizations(SecurityUtils.getCurrentUserLogin());
     }
 
 }
