@@ -44,7 +44,7 @@ public interface AnaliseRepository extends JpaRepository<Analise,Long> {
     @Query( value = "SELECT a.viewOnly FROM Compartilhada a WHERE a.analiseId = ?1")
     Boolean analiseCompartilhada (Long analiseId);
 
-    @EntityGraph(attributePaths = {"compartilhadas","funcaoDados","funcaoTransacaos","esforcoFases","users", "fatorAjuste"})
+    @EntityGraph(attributePaths = {"compartilhadas","funcaoDados","funcaoTransacaos","esforcoFases","users", "fatorAjuste", "contrato"})
     Analise findOne(Long id);
 
     @Query(value = "SELECT a "+

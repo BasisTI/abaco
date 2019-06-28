@@ -202,7 +202,7 @@ public class AnaliseResource {
             return ResponseEntity.badRequest().headers(
                 HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
         }
-        analise.setCreatedOn(analiseRepository.findOneById(analise.getId()).get().getCreatedOn());
+        analise.setCreatedOn(analiseRepository.findOne(analise.getId()).getCreatedOn());
         Analise analiseData = this.salvaNovaData(analise);
         linkFuncoesToAnalise(analiseData);
         Analise result = analiseRepository.save(analiseData);
