@@ -72,6 +72,15 @@ export class OrganizacaoService {
     });
   }
 
+    /**
+   * Função que retorna dados do usuário logado somente com as organizações ativas
+   */
+  dropDownActiveLoggedUser(): Observable<ResponseWrapper> {
+    return this.http.get(this.resourceUrl + '/active-user').map((res: Response) => {
+      return this.convertResponseToResponseWrapper(res);
+    });
+  }
+
   dropDown(req?: any): Observable<ResponseWrapper> {
       const options = createRequestOption(req);
       return this.http.get(this.resourceUrl + '/drop-down', options)
