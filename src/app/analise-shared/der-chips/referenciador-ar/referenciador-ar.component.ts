@@ -76,15 +76,10 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
         this.subscribeAnaliseCarregada();     
     }
 
-    private getFuncoesDados(): FuncaoDados[] {
-        return this.analise.funcaoDados;
-    }
-
-    private get analise(): Analise {
-        return this.analiseSharedDataService.analise;
-    }
-
-    private getAnalisesBaseline() {
+    private getFuncoesDados() {
+        if (this.funcoesDados.length > 0) {
+            return;
+        }
         this.funcaoDadosService.dropDown().subscribe(res => {
             this.funcoesDados = this.funcoesDados.concat(res.map((item: any) => {
                 let fd = new FuncaoDados();
@@ -125,9 +120,7 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
     }
 
     abrirDialog() {
-        this.funcoesDados = [];
-        this.funcoesDados = this.getFuncoesDados();
-        this.getAnalisesBaseline();
+        this.getFuncoesDados();
         //if (this.habilitarBotaoAbrirDialog()) {
         this.subscribeAnaliseCarregada();
         this.mostrarDialog = true;

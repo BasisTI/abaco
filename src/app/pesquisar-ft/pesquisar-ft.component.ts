@@ -188,6 +188,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     }
 
     getTodasAnalisesBaseline() {
+        // TODO REMOVER REQUEST
         this.analiseService.findAllBaseline().subscribe(dado => {
             this.analises = this.analiseService.convertJsonToAnalise(dado);
             this.getBaselineAnalitico();
