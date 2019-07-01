@@ -1,12 +1,14 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
-import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +24,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
+import br.com.basis.abaco.service.FuncaoDadosService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing FuncaoDados.
@@ -46,9 +50,13 @@ public class FuncaoDadosResource {
 
     private final FuncaoDadosSearchRepository funcaoDadosSearchRepository;
 
-    public FuncaoDadosResource(FuncaoDadosRepository funcaoDadosRepository, FuncaoDadosSearchRepository funcaoDadosSearchRepository) {
+    private final FuncaoDadosService funcaoDadosService;
+
+    public FuncaoDadosResource(FuncaoDadosRepository funcaoDadosRepository,
+            FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoDadosService funcaoDadosService) {
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoDadosSearchRepository = funcaoDadosSearchRepository;
+        this.funcaoDadosService = funcaoDadosService;
     }
 
     /**
@@ -196,5 +204,11 @@ public class FuncaoDadosResource {
             .collect(Collectors.toList());
     }
 
+    @GetMapping("/funcao-dados/drop-down")
+    @Timed
+    public List<DropdownDTO> getFuncaoDadosDropdown() {
+        log.debug("REST request to get dropdown FuncaoDados");
+        return funcaoDadosService.getFuncaoDadosDropdown();
+    }
 
 }
