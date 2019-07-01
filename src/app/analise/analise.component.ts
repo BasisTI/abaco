@@ -1,22 +1,21 @@
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { DatatableClickEvent, DatatableComponent } from '@basis/angular-components';
 import { TranslateService } from '@ngx-translate/core';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { ConfirmationService } from 'primeng/primeng';
+import { Subscription } from 'rxjs';
+import { PageNotificationService, ResponseWrapper } from '../shared';
+import { Analise, AnaliseService, AnaliseShareEquipe, GrupoService } from './';
+import { Organizacao, OrganizacaoService } from './../organizacao';
 import { Sistema, SistemaService } from './../sistema';
 import { TipoEquipe, TipoEquipeService } from './../tipo-equipe';
-import { Organizacao, OrganizacaoService } from './../organizacao';
-import { User, UserService } from '../user';
-import { Component, ViewChild, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { ConfirmationService, SelectItem } from 'primeng/primeng';
-import { Analise, AnaliseService, AnaliseShareEquipe, GrupoService } from './';
-import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
-import { PageNotificationService, ResponseWrapper } from '../shared';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Grupo, SearchGroup } from './grupo/grupo.model';
-import { ChangeDetectorRef } from '@angular/core';
-import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'jhi-analise',
-    templateUrl: './analise.component.html'
+    templateUrl: './analise.component.html',
+    providers: [GrupoService]
 })
 export class AnaliseComponent implements OnInit, OnDestroy {
 
@@ -62,10 +61,8 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         private tipoEquipeService: TipoEquipeService,
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
-        private userService: UserService,
-        private grupoService: GrupoService,
-        private cdref: ChangeDetectorRef,
         private translate: TranslateService,
+        private grupoService: GrupoService,
         private equipeService: TipoEquipeService,
     ) { }
 

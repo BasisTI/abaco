@@ -51,8 +51,8 @@ export class FuncionalidadeService {
         });
     }
 
-    findFuncionalidadesByModulo(id: number): Observable<Funcionalidade[]> {
-        return this.http.get(`${this.resourceUrl}/modulo/${id}`).map((res: Response) => {
+    findFuncionalidadesDropdownByModulo(id: number): Observable<Funcionalidade[]> {
+        return this.http.get(`${this.resourceUrl}/drop-down/${id}`).map((res: Response) => {
           const jsonResponse = res.json();
           return this.convertListFromServer(jsonResponse);
         }).catch((error: any) => {
