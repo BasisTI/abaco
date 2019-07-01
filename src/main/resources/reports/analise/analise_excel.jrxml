@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="analise" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9ac44673-b60e-4209-99b8-14605622790d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="ireport.zoom" value="1.1000000000000019"/>
@@ -404,7 +404,7 @@
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
 							<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="139" height="15" isRemoveLineWhenBlank="true" uuid="bf212947-eef4-483c-ba96-5d93f1b89db5"/>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="139" height="15" isRemoveLineWhenBlank="true" uuid="bf212947-eef4-483c-ba96-5d93f1b89db5"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -425,7 +425,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="44" height="15" isRemoveLineWhenBlank="true" uuid="4e1fb97c-9c88-4e29-bc1f-b946c9bf5df4"/>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="44" height="15" isRemoveLineWhenBlank="true" uuid="4e1fb97c-9c88-4e29-bc1f-b946c9bf5df4"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -446,7 +446,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="87" height="15" isRemoveLineWhenBlank="true" uuid="c30e5ef5-0f79-41b1-9b25-1128c033f7c2"/>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="87" height="15" isRemoveLineWhenBlank="true" uuid="c30e5ef5-0f79-41b1-9b25-1128c033f7c2"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
@@ -468,7 +468,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="a10c060e-0e4a-4ae2-b61a-bc2da02bf2cb"/>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="a10c060e-0e4a-4ae2-b61a-bc2da02bf2cb"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
@@ -490,7 +490,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="116" height="15" isRemoveLineWhenBlank="true" uuid="f1e99930-0c83-4799-baf6-490f43625c54"/>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="116" height="15" isRemoveLineWhenBlank="true" uuid="f1e99930-0c83-4799-baf6-490f43625c54"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="9"/>
 									<paragraph lineSpacing="Proportional"/>
@@ -512,7 +512,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="2c2987ef-e489-4b6c-9a0a-8c5e143aecd0"/>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="2c2987ef-e489-4b6c-9a0a-8c5e143aecd0"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -533,7 +533,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="28516d78-bdeb-414a-ba87-225231d93af1"/>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="28516d78-bdeb-414a-ba87-225231d93af1"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -554,7 +554,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="50" height="15" isRemoveLineWhenBlank="true" uuid="e59e67a6-20a0-46f8-b2aa-33a231cdd91c"/>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="50" height="15" isRemoveLineWhenBlank="true" uuid="e59e67a6-20a0-46f8-b2aa-33a231cdd91c"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -575,7 +575,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="f130ee0c-014d-429d-98ff-6f98bdb7951e"/>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="f130ee0c-014d-429d-98ff-6f98bdb7951e"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -596,7 +596,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="24265e84-ecb7-4010-afb5-61437e6acadc"/>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="24265e84-ecb7-4010-afb5-61437e6acadc"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -617,7 +617,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="71" height="15" isRemoveLineWhenBlank="true" uuid="69079dba-620d-410f-9b69-897f79573405"/>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="71" height="15" isRemoveLineWhenBlank="true" uuid="69079dba-620d-410f-9b69-897f79573405"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 									<paragraph lineSpacing="Proportional"/>
 								</textElement>
@@ -664,7 +664,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="139" height="15" isRemoveLineWhenBlank="true" uuid="6c07aead-acc3-4591-8d3f-813295fa859a">
+								<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="139" height="15" isRemoveLineWhenBlank="true" uuid="6c07aead-acc3-4591-8d3f-813295fa859a">
 									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
 									<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 								</reportElement>
@@ -688,7 +688,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="44" height="15" isRemoveLineWhenBlank="true" uuid="627c59e5-f7f1-4581-b862-1d3b1948ae3b">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="44" height="15" isRemoveLineWhenBlank="true" uuid="627c59e5-f7f1-4581-b862-1d3b1948ae3b">
 									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
 									<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 								</reportElement>
@@ -712,7 +712,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="87" height="15" isRemoveLineWhenBlank="true" uuid="228b2b9b-0ff1-43b4-ac4f-23fa274d6ba3">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="87" height="15" isRemoveLineWhenBlank="true" uuid="228b2b9b-0ff1-43b4-ac4f-23fa274d6ba3">
 									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
 									<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 								</reportElement>
@@ -737,7 +737,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="9d0e3686-cb1c-4401-b517-1ff8f63a16c6">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="9d0e3686-cb1c-4401-b517-1ff8f63a16c6">
 									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
 									<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 								</reportElement>
@@ -762,7 +762,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="116" height="15" isRemoveLineWhenBlank="true" uuid="51ce2211-f112-41f6-9712-f9aac6c9a5eb">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="116" height="15" isRemoveLineWhenBlank="true" uuid="51ce2211-f112-41f6-9712-f9aac6c9a5eb">
 									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
 									<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 								</reportElement>
@@ -787,7 +787,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="666ed8fc-8cd7-4783-bb78-47badbe57a15">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="666ed8fc-8cd7-4783-bb78-47badbe57a15">
 									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
 									<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 								</reportElement>
@@ -811,7 +811,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="a8450b1d-0d78-4596-b596-fd14f7279a08">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="30" height="15" isRemoveLineWhenBlank="true" uuid="a8450b1d-0d78-4596-b596-fd14f7279a08">
 									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
 									<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 								</reportElement>
@@ -835,7 +835,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="50" height="15" isRemoveLineWhenBlank="true" uuid="c99b787f-2296-495b-a7aa-3ad8c20c320a">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="50" height="15" isRemoveLineWhenBlank="true" uuid="c99b787f-2296-495b-a7aa-3ad8c20c320a">
 									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
 									<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 								</reportElement>
@@ -859,7 +859,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="bdf7053a-90c1-4148-9e7a-331408af9cd3">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="bdf7053a-90c1-4148-9e7a-331408af9cd3">
 									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
 									<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 								</reportElement>
@@ -883,7 +883,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="031fe397-f82a-4c0f-86ec-aca6304e5454">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="031fe397-f82a-4c0f-86ec-aca6304e5454">
 									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
 									<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 								</reportElement>
@@ -907,7 +907,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="71" height="15" isRemoveLineWhenBlank="true" uuid="2190d032-a4af-482e-8d92-1a01fafb3507">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="71" height="15" isRemoveLineWhenBlank="true" uuid="2190d032-a4af-482e-8d92-1a01fafb3507">
 									<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
 									<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 								</reportElement>
@@ -946,11 +946,12 @@
 					<datasetRun subDataset="ListaFDFT" uuid="f3db6a55-1c0b-40a7-8b27-c09c2eb31e91">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFDFT})]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="271" uuid="88b42c06-b09b-46dc-b704-861b5f18c493">
+					<jr:column width="270" uuid="88b42c06-b09b-46dc-b704-861b5f18c493">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:tableHeader style="Table 3_TH" height="30" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<staticText>
-								<reportElement x="0" y="0" width="271" height="30" uuid="0067ba72-93b2-43fe-b5be-1342c57ff8e6"/>
+								<reportElement x="0" y="0" width="270" height="30" uuid="0067ba72-93b2-43fe-b5be-1342c57ff8e6"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
@@ -960,8 +961,8 @@
 						<jr:detailCell style="Table 3_TD" height="15">
 							<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 							<textField>
-								<reportElement x="0" y="0" width="271" height="15" uuid="dfa4cd49-9de3-4f53-b9a6-150d90ccca93"/>
-								<textElement verticalAlignment="Middle">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="270" height="15" uuid="dfa4cd49-9de3-4f53-b9a6-150d90ccca93"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph leftIndent="2"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
@@ -981,8 +982,8 @@
 						</jr:tableHeader>
 						<jr:detailCell style="Table 3_TD" height="15">
 							<textField isStretchWithOverflow="true">
-								<reportElement x="0" y="0" width="240" height="15" uuid="e3e123d4-b518-4e66-9105-7d9110df8e52"/>
-								<textElement textAlignment="Left">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="240" height="15" uuid="e3e123d4-b518-4e66-9105-7d9110df8e52"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{der}]]></textFieldExpression>
@@ -1002,8 +1003,8 @@
 						</jr:tableHeader>
 						<jr:detailCell style="Table 3_TD" height="15">
 							<textField isStretchWithOverflow="true">
-								<reportElement x="0" y="0" width="292" height="15" uuid="87001e9c-34b6-4cc2-b8f9-804773435a4a"/>
-								<textElement textAlignment="Left" verticalAlignment="Top">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="292" height="15" uuid="87001e9c-34b6-4cc2-b8f9-804773435a4a"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<paragraph leftIndent="2"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{alrtr}]]></textFieldExpression>
