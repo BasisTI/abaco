@@ -1,12 +1,16 @@
 package br.com.basis.abaco.repository;
 
-import br.com.basis.abaco.domain.Organizacao;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-import java.util.Optional;
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO;
 
 /**
  * Spring Data JPA repository for the Organizacao entity.
@@ -25,7 +29,15 @@ public interface OrganizacaoRepository extends JpaRepository<Organizacao, Long> 
     @EntityGraph(attributePaths = {"sistemas","contracts","tipoEquipe"})
     Optional<Organizacao> findOneByCnpj(String cnpj);
 
-    @EntityGraph(attributePaths = {"sistemas","contracts","tipoEquipe"})
+    @Override
+    @EntityGraph(attributePaths = { "sistemas", "contracts", "tipoEquipe" })
     Organizacao findOne(Long id);
+
+    @Query("SELECT new br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO(o.id, o.nome, o.cnpj) FROM Organizacao o")
+    List<OrganizacaoDropdownDTO> getOrganizacaoDropdown();
+
+    @Query(value = "SELECT new br.com.basis.abaco.service.dto.DropdownDTO(o.id, o.nome) FROM User u JOIN u.organizacoes o "
+            + " WHERE u.login = :currentUserLogin AND u.activated IS TRUE AND o.ativo IS TRUE ")
+    List<DropdownDTO> findActiveUserOrganizations(@Param("currentUserLogin") String currentUserLogin);
 
 }

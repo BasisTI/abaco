@@ -17,10 +17,10 @@ import java.util.List;
 @Repository
 public interface BaseLineAnaliticoRepository extends JpaRepository<BaseLineAnalitico, Long> {
 
-    @Query( value = "SELECT b FROM BaseLineAnalitico b where b.idsistema = ?1 AND b.tipo = 'ft'")
+    @Query( value = "SELECT b FROM BaseLineAnalitico b where b.idsistema = ?1 AND b.tipo = 'ft' ORDER BY b.nomeFuncionalidade asc, b.name asc")
     List<BaseLineAnalitico> getAllAnaliticosFT(Long id);
 
-    @Query( value = "SELECT b FROM BaseLineAnalitico b where b.idsistema = ?1 AND b.tipo = 'fd'")
+    @Query( value = "SELECT b FROM BaseLineAnalitico b where b.idsistema = ?1 AND b.tipo = 'fd' ORDER BY b.nomeFuncionalidade asc, b.name asc")
     List<BaseLineAnalitico> getAllAnaliticosFD(Long id);
 
     Page<BaseLineAnalitico> getAllByIdsistemaAndEquipeResponsavelIdAndTipo(Long id, Long idEquipe, String ft,Pageable pageable);

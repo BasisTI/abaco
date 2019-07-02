@@ -1,14 +1,16 @@
 package br.com.basis.abaco.repository;
 
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 
 /**
  * Spring Data JPA repository for the FuncaoDados entity.
@@ -40,4 +42,8 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
 
     @Query( value = "SELECT f FROM FuncaoDados f WHERE f.analise.id = :analiseId AND f.funcionalidade.id = :funcionalidadeId ORDER BY f.name asc, f.id asc")
     Set<FuncaoDados> findByAnaliseFuncionalidade(@Param("analiseId")Long analiseId,@Param("funcionalidadeId") Long funcionalidadeId);
+
+    @Query(value = "SELECT new br.com.basis.abaco.service.dto.DropdownDTO(f.id, f.name) FROM Analise a JOIN a.funcaoDados f"
+            + " WHERE a.enviarBaseline = true AND a.bloqueiaAnalise = true")
+    List<DropdownDTO> getFuncaoDadosDropdown();
 }

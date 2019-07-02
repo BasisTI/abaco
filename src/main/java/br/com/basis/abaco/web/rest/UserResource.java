@@ -1,29 +1,14 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Authority;
-import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.repository.AnaliseRepository;
-import br.com.basis.abaco.repository.AuthorityRepository;
-import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.search.UserSearchRepository;
-import br.com.basis.abaco.security.AuthoritiesConstants;
-import br.com.basis.abaco.security.SecurityUtils;
-import br.com.basis.abaco.service.MailService;
-import br.com.basis.abaco.service.UserService;
-import br.com.basis.abaco.service.dto.UserDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioUserColunas;
-import br.com.basis.abaco.service.util.RandomUtil;
-import br.com.basis.abaco.utils.AbacoUtil;
-import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import br.com.basis.dynamicexports.util.DynamicExporter;
-import com.codahale.metrics.annotation.Timed;
-import io.swagger.annotations.ApiParam;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -47,14 +32,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.Authority;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.AuthorityRepository;
+import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.search.UserSearchRepository;
+import br.com.basis.abaco.security.AuthoritiesConstants;
+import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.service.MailService;
+import br.com.basis.abaco.service.UserService;
+import br.com.basis.abaco.service.dto.UserDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioUserColunas;
+import br.com.basis.abaco.service.util.RandomUtil;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import io.swagger.annotations.ApiParam;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 
 /**
  * REST controller for managing users.
@@ -316,17 +318,6 @@ public class UserResource {
     return userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
   }
 
-  /**
-   * GET get the current logged user active organizations
-   *
-   * @return a list of active organizations, or with status 404 (Not Found)
-   */
-  @GetMapping("/users/activeorgs")
-  @Timed
-  public User getLoggedUserActiveOrgs() {
-    return userRepository.findUserWithActiveOrgs(SecurityUtils.getCurrentUserLogin());
-  }
-
   @GetMapping("/users/authorities")
   @Timed
   public ResponseEntity<List<Authority>> getAllAuthorities(@ApiParam Pageable pageable) throws URISyntaxException {
@@ -400,4 +391,10 @@ public class UserResource {
     }
     return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
   }
+
+    @GetMapping("/users/active-user")
+    @Timed
+    public Long getLoggedUserId() {
+        return userService.getLoggedUserId();
+    }
 }

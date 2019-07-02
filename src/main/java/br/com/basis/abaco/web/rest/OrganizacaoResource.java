@@ -1,21 +1,18 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.repository.OrganizacaoRepository;
-import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioOrganizacaoColunas;
-import br.com.basis.abaco.utils.AbacoUtil;
-import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import br.com.basis.dynamicexports.util.DynamicExporter;
-import com.codahale.metrics.annotation.Timed;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
-import io.github.jhipster.web.util.ResponseUtil;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -39,17 +36,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.repository.OrganizacaoRepository;
+import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
+import br.com.basis.abaco.service.OrganizacaoService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioOrganizacaoColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import io.github.jhipster.web.util.ResponseUtil;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 
 /**
  * REST controller for managing Organizacao.
@@ -74,7 +79,9 @@ public class OrganizacaoResource {
 
   private final DynamicExportsService dynamicExportsService;
 
-  private static final String ROLE_ADMIN = "ROLE_ADMIN";
+    private final OrganizacaoService organizacaoService;
+
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
   private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
 
@@ -82,12 +89,14 @@ public class OrganizacaoResource {
 
   private static final String ROLE_GESTOR = "ROLE_GESTOR";
 
-  public OrganizacaoResource(OrganizacaoRepository organizacaoRepository,
-      OrganizacaoSearchRepository organizacaoSearchRepository, DynamicExportsService dynamicExportsService) {
-    this.organizacaoRepository = organizacaoRepository;
-    this.organizacaoSearchRepository = organizacaoSearchRepository;
-    this.dynamicExportsService = dynamicExportsService;
-  }
+    public OrganizacaoResource(OrganizacaoRepository organizacaoRepository,
+            OrganizacaoSearchRepository organizacaoSearchRepository, DynamicExportsService dynamicExportsService,
+            OrganizacaoService organizacaoService) {
+        this.organizacaoRepository = organizacaoRepository;
+        this.organizacaoSearchRepository = organizacaoSearchRepository;
+        this.dynamicExportsService = dynamicExportsService;
+        this.organizacaoService = organizacaoService;
+    }
 
   /**
    * Function to format a bad request URL to be returned to frontend
@@ -197,18 +206,12 @@ public class OrganizacaoResource {
         .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, organizacao.getId().toString())).body(result);
   }
 
-  /**
-   * GET /organizacaos : get all the organizacaos.
-   *
-   * @return the ResponseEntity with status 200 (OK) and the list of organizacaos
-   *         in body
-   */
-  @GetMapping("/organizacaos")
-  @Timed
-  public List<Organizacao> getAllOrganizacaos() {
-    log.debug("REST request to get all Organizacaos");
-    return organizacaoRepository.findAll();
-  }
+    @GetMapping("/organizacaos/drop-down")
+    @Timed
+    public List<OrganizacaoDropdownDTO> getOrganizacaoDropdown() {
+        log.debug("REST request to get dropdown Organizacaos");
+        return organizacaoService.getOrganizacaoDropdown();
+    }
 
   @GetMapping("/organizacaos/ativas")
   @Timed
@@ -296,4 +299,10 @@ public class OrganizacaoResource {
     }
     return DynamicExporter.output(byteArrayOutputStream, "relatorio." + tipoRelatorio);
   }
+
+    @GetMapping("/organizacaos/active-user")
+    @Timed
+    public List<DropdownDTO> findActiveUserOrganizations() {
+        return organizacaoService.findActiveUserOrganizations();
+    }
 }

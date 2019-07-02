@@ -1,17 +1,24 @@
 package br.com.basis.abaco.domain;
 
+import org.hibernate.annotations.Immutable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.LinkedHashSet;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * A Grupo.
  */
 @Entity
 @Table(name = "grupo")
+@Immutable
 public class  Grupo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,6 +59,9 @@ public class  Grupo implements Serializable {
 
     @Column(name = "bloqueado")
     private Boolean bloqueado;
+
+    @Transient
+    private Set<User> usuarios;
 
     public Long getIdAnalise() {
         return idAnalise;
@@ -204,5 +214,17 @@ public class  Grupo implements Serializable {
         Timestamp timeAux;
         timeAux = dataCriacao == null ? null : new Timestamp(dataCriacao.getTime());
         this.dataCriacao = timeAux;
+    }
+
+    public Set<User> getUsuarios() {
+        return  Optional.ofNullable(usuarios)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<>());
+    }
+
+    public void setUsuarios(Set<User> usuarios) {
+        this.usuarios = Optional.ofNullable(usuarios)
+        .map(LinkedHashSet::new)
+        .orElse(new LinkedHashSet<>());
     }
 }
