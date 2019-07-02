@@ -1,11 +1,19 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.AbacoApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
-import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,17 +29,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.math.BigDecimal;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
+import br.com.basis.abaco.AbacoApp;
+import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
+import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
+import br.com.basis.abaco.service.FuncaoDadosService;
+import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 /**
  * Test class for the FuncaoDadosResource REST controller.
  *
@@ -68,6 +73,9 @@ public class FuncaoDadosResourceIntTest {
     @Autowired
     private EntityManager em;
 
+    @Autowired
+    private FuncaoDadosService funcaoDadosService;
+
     private MockMvc restFuncaoDadosMockMvc;
 
     private FuncaoDados funcaoDados;
@@ -75,7 +83,8 @@ public class FuncaoDadosResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            FuncaoDadosResource funcaoDadosResource = new FuncaoDadosResource(funcaoDadosRepository, funcaoDadosSearchRepository);
+        FuncaoDadosResource funcaoDadosResource = new FuncaoDadosResource(funcaoDadosRepository,
+                funcaoDadosSearchRepository, funcaoDadosService);
         this.restFuncaoDadosMockMvc = MockMvcBuilders.standaloneSetup(funcaoDadosResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
