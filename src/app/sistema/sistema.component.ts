@@ -20,7 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'jhi-sistema',
     templateUrl: './sistema.component.html'
 })
-export class SistemaComponent implements AfterViewInit {
+export class SistemaComponent {
 
     @BlockUI() blockUI: NgBlockUI;
 
@@ -79,17 +79,7 @@ export class SistemaComponent implements AfterViewInit {
         });
     }
 
-    /**
-     *
-     */
-    public ngAfterViewInit() {
-        this.recarregarDataTable();
 
-    }
-
-    /**
-     *
-     */
     public datatableClick(event: DatatableClickEvent) {
         if (!event.selection) {
             return;

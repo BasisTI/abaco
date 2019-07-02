@@ -17,7 +17,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   selector: 'jhi-organizacao',
   templateUrl: './organizacao.component.html'
 })
-export class OrganizacaoComponent implements AfterViewInit, OnInit {
+export class OrganizacaoComponent implements OnInit {
 
   @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
@@ -55,10 +55,6 @@ export class OrganizacaoComponent implements AfterViewInit, OnInit {
     this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
       this.organizacaoSelecionada = undefined;
     });
-  }
-
-  ngAfterViewInit() {
-    this.recarregarDataTable();
   }
 
   datatableClick(event: DatatableClickEvent) {
