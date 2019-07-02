@@ -285,7 +285,7 @@ public class UserResource {
    */
   @GetMapping("/users/{organizacaoId}/{equipeId}")
   @Timed
-  @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+  @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
   public List<UserDTO> getAllUsersFronSistemaAndOrganizacao(@PathVariable Long organizacaoId, @PathVariable Long equipeId) throws URISyntaxException {
       return userService.getAllUsersOrgEquip(organizacaoId, equipeId);
   }
