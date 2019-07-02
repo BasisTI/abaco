@@ -5,11 +5,9 @@ import { ConfirmationService } from 'primeng/primeng';
 import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
 import { Response } from '@angular/http';
 
-import { environment } from '../../environments/environment';
 import { User } from './user.model';
 import { UserService } from './user.service';
-import { ElasticQuery, PageNotificationService } from '../shared';
-import { AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import {  PageNotificationService } from '../shared';
 import { Organizacao } from '../organizacao/organizacao.model';
 import { OrganizacaoService } from '../organizacao/organizacao.service';
 import { Authority } from './authority.model';
@@ -21,7 +19,7 @@ import { StringConcatService } from '../shared/string-concat.service';
     selector: 'jhi-user',
     templateUrl: './user.component.html'
 })
-export class UserComponent implements AfterViewInit, OnInit {
+export class UserComponent implements OnInit {
 
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
 
@@ -141,10 +139,6 @@ export class UserComponent implements AfterViewInit, OnInit {
                 }
             });
         }
-    }
-
-    ngAfterViewInit() {
-        this.recarregarDataTable();
     }
 
     datatableClick(event: DatatableClickEvent) {

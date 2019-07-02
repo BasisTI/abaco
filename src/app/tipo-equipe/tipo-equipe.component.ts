@@ -18,7 +18,7 @@ import { MessageUtil } from '../util/message.util';
   selector: 'jhi-tipo-equipe',
   templateUrl: './tipo-equipe.component.html'
 })
-export class TipoEquipeComponent implements AfterViewInit {
+export class TipoEquipeComponent {
 
   @BlockUI() blockUI: NgBlockUI;
 
@@ -64,10 +64,6 @@ export class TipoEquipeComponent implements AfterViewInit {
     this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
       this.equipeSelecionada = undefined;
     });
-  }
-
-  public ngAfterViewInit() {
-    this.recarregarDataTable();
   }
 
   public datatableClick(event: DatatableClickEvent) {
