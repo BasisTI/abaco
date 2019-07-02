@@ -17,7 +17,7 @@ import { Funcionalidade } from '../funcionalidade';
 @Injectable()
 export class FuncaoDadosService {
 
-    sistemaResourceUrl = environment.apiUrl + '/funcao-dados';
+    resourceUrl = environment.apiUrl + '/funcao-dados';
 
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
 
@@ -37,26 +37,31 @@ export class FuncaoDadosService {
     }
 
     findAllNamesBySistemaId(sistemaId: number): Observable<string[]> {
-        const url = `${this.sistemaResourceUrl}/${sistemaId}/funcao-dados`;
+        const url = `${this.resourceUrl}/${sistemaId}/funcao-dados`;
         return this.http.get(url)
             .map((res: Response) => res.json().map(json => json.nome));
     }
 
+    dropDown(): Observable<any> {
+        return this.http.get(this.resourceUrl + '/drop-down')
+            .map((res: Response) => res.json());
+    }
+
     recuperarFuncaoDadosPorIdNome(id: number, nome: string): Observable<FuncaoDados> {
-        const url = `${this.sistemaResourceUrl}/${id}/funcao-dados-versionavel/${nome}`;
+        const url = `${this.resourceUrl}/${id}/funcao-dados-versionavel/${nome}`;
         return this.http.get(url)
             .map((res: Response) => res.json());
     }
 
     public getFuncaoDadosAnalise(id: number): Observable<ResponseWrapper> {
-        const url = `${this.sistemaResourceUrl}/analise/${id}`;
+        const url = `${this.resourceUrl}/analise/${id}`;
         return this.http.get(url).map((res: Response) => {
             return this.convertResponseFuncaoDados(res);
         });
     }
 
     getFuncaoDadosBaseline(id: number): Observable<FuncaoDados> {
-        return this.http.get(`${this.sistemaResourceUrl}/${id}`).map((res: Response) => {
+        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
             const resposta = this.convertJsonToSintetico(res.json());
             return resposta;
         });
@@ -92,7 +97,7 @@ export class FuncaoDadosService {
     }
 
     public delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.sistemaResourceUrl}/${id}`);
+        return this.http.delete(`${this.resourceUrl}/${id}`);
     }
 
     private convertResponse(res: Response): ResponseWrapper {

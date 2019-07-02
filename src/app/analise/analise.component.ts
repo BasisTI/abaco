@@ -1,24 +1,23 @@
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { DatatableClickEvent, DatatableComponent } from '@basis/angular-components';
 import { TranslateService } from '@ngx-translate/core';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { ConfirmationService } from 'primeng/primeng';
+import { Subscription } from 'rxjs';
+import { PageNotificationService, ResponseWrapper } from '../shared';
+import { Analise, AnaliseService, AnaliseShareEquipe, GrupoService } from './';
+import { Organizacao, OrganizacaoService } from './../organizacao';
 import { Sistema, SistemaService } from './../sistema';
 import { TipoEquipe, TipoEquipeService } from './../tipo-equipe';
-import { Organizacao, OrganizacaoService } from './../organizacao';
-import { User, UserService } from '../user';
-import { Component, ViewChild, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { ConfirmationService, SelectItem } from 'primeng/primeng';
-import { Analise, AnaliseService, AnaliseShareEquipe, GrupoService } from './';
-import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
-import { PageNotificationService, ResponseWrapper } from '../shared';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Grupo, SearchGroup } from './grupo/grupo.model';
-import { ChangeDetectorRef } from '@angular/core';
-import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'jhi-analise',
-    templateUrl: './analise.component.html'
+    templateUrl: './analise.component.html',
+    providers: [GrupoService]
 })
-export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AnaliseComponent implements OnInit, OnDestroy {
 
     @ViewChild(DatatableComponent) datatable: DatatableComponent;
     @BlockUI() blockUI: NgBlockUI;
@@ -38,8 +37,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
     selectedEquipes: Array<AnaliseShareEquipe>;
     selectedToDelete: AnaliseShareEquipe;
     analiseTemp: Analise = new Analise();
-    loggedUser: User;
+    tipoEquipesLoggedUser: TipoEquipe[] = [];
     query: String;
+    usuarios: String[] = [];
 
     translateSusbscriptions: Subscription[] = [];
 
@@ -61,10 +61,9 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
         private tipoEquipeService: TipoEquipeService,
         private organizacaoService: OrganizacaoService,
         private pageNotificationService: PageNotificationService,
-        private userService: UserService,
+        private translate: TranslateService,
         private grupoService: GrupoService,
-        private cdref: ChangeDetectorRef,
-        private translate: TranslateService
+        private equipeService: TipoEquipeService,
     ) { }
 
     public ngOnInit() {
@@ -83,7 +82,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     estadoInicial() {
-        this.getLoggedUser();
+        this.getEquipesFromActiveLoggedUser();
         this.recuperarAnalisesUsuario();            // Filtrando as análises que o usuário pode ver
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
@@ -99,14 +98,13 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
             this.analiseSelecionada = undefined;
         });
     }
-    /**
-     * Função para recuperar os dados do usuário logado no momento
-     */
-    getLoggedUser() {
-        this.userService.findCurrentUser().subscribe(res => {
-            this.loggedUser = res;
+    
+    getEquipesFromActiveLoggedUser() {
+        this.equipeService.getEquipesActiveLoggedUser().subscribe(res => {
+            this.tipoEquipesLoggedUser = res.json;
         });
     }
+
     /*
     *   Metodo responsavel por traduzir metricas de Analise
     */
@@ -177,7 +175,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     recuperarOrganizacoes() {
-        this.organizacaoService.query().subscribe(response => {
+        this.organizacaoService.dropDown().subscribe(response => {
             this.organizations = response.json;
             let emptyOrg = new Organizacao();
             this.organizations.unshift(emptyOrg);
@@ -185,7 +183,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     recuperarSistema() {
-        this.sistemaService.query().subscribe(response => {
+        this.sistemaService.dropDown().subscribe(response => {
             this.nomeSistemas = response.json;
             let emptySystem = new Sistema();
             this.nomeSistemas.unshift(emptySystem);
@@ -193,16 +191,11 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     recuperarEquipe() {
-        this.tipoEquipeService.query().subscribe(response => {
+        this.tipoEquipeService.dropDown().subscribe(response => {
             this.teams = response.json;
             let emptyTeam = new TipoEquipe();
             this.teams.unshift(emptyTeam);
         });
-    }
-
-    ngAfterViewInit() {
-        this.recarregarDataTable();
-        this.cdref.detectChanges();
     }
 
     /**
@@ -261,8 +254,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
         let retorno: boolean = false;
         return this.analiseService.find(this.analiseSelecionada.idAnalise).subscribe((res: any) => {
             this.analiseTemp = res;
-            if (this.loggedUser.tipoEquipes) {
-                this.loggedUser.tipoEquipes.forEach(equipe => {
+            if (this.tipoEquipesLoggedUser) {
+                this.tipoEquipesLoggedUser.forEach(equipe => {
                     if (equipe.id === this.analiseTemp.equipeResponsavel.id) {
                         retorno = true;
                     }
@@ -278,8 +271,8 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     checkIfUserCanEdit() {
         let retorno: boolean = false;
-        if (this.loggedUser.tipoEquipes) {
-            this.loggedUser.tipoEquipes.forEach(equipe => {
+        if (this.tipoEquipesLoggedUser) {
+            this.tipoEquipesLoggedUser.forEach(equipe => {
                 if (this.analiseSelecionada.compartilhadas) {
                     this.analiseSelecionada.compartilhadas.forEach(compartilhada => {
                         if (equipe.id === compartilhada.equipeId) {
@@ -400,6 +393,7 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.searchGroup.sistema = undefined;
         this.searchGroup.metodoContagem = undefined;
         this.searchGroup.equipe = undefined;
+        this.searchGroup.usuario = undefined;
         this.userAnaliseUrl = this.changeUrl();
         this.recarregarDataTable();
     }
@@ -464,11 +458,23 @@ export class AnaliseComponent implements OnInit, AfterViewInit, OnDestroy {
 
         let querySearch = '?identificador=';
         querySearch = querySearch.concat((this.searchGroup.identificadorAnalise) ? this.searchGroup.identificadorAnalise + '&' : '&');
-        querySearch = querySearch.concat((this.searchGroup.sistema && this.searchGroup.sistema.nome) ? 'sistema=' + this.searchGroup.sistema.nome + '&' : '');
+
+        querySearch = querySearch.concat((this.searchGroup.sistema && this.searchGroup.sistema.nome) ?
+        'sistema=' + this.searchGroup.sistema.nome + '&' : '');
+
         querySearch = querySearch.concat((this.searchGroup.metodoContagem) ? 'metodo=' + this.searchGroup.metodoContagem + '&' : '');
-        querySearch = querySearch.concat((this.searchGroup.organizacao && this.searchGroup.organizacao.nome) ? 'organizacao=' + this.searchGroup.organizacao.nome + '&' : '');
-        querySearch = querySearch.concat((this.searchGroup.equipe && this.searchGroup.equipe.nome) ? 'equipe=' + this.searchGroup.equipe.nome : '');
+
+        querySearch = querySearch.concat((this.searchGroup.organizacao && this.searchGroup.organizacao.nome) ?
+        'organizacao=' + this.searchGroup.organizacao.nome + '&' : '');
+
+        querySearch = querySearch.concat((this.searchGroup.equipe && this.searchGroup.equipe.nome) ?
+        'equipe=' + this.searchGroup.equipe.nome : '');
+
+        querySearch = querySearch.concat((this.searchGroup.usuario) ?
+        'usuario=' + this.searchGroup.usuario + '&' : '');
+
         querySearch = (querySearch === '?') ? '' : querySearch;
+
         querySearch = (querySearch.endsWith('&')) ? querySearch.slice(0, -1) : querySearch;
 
         this.recuperarQuery(this.searchGroup);

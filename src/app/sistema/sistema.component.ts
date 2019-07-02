@@ -56,7 +56,7 @@ export class SistemaComponent implements AfterViewInit {
     ) {
         const emptyOrganization = new Organizacao();
 
-        this.organizacaoService.query().subscribe(response => {
+        this.organizacaoService.dropDown().subscribe(response => {
             this.organizations = response.json;
             this.organizations.unshift(emptyOrganization);
         });

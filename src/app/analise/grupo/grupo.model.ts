@@ -17,7 +17,8 @@ export class Grupo {
         public dataCriacao?: any,
         public dataHomologacao?: any,
         public bloqueado?: boolean,
-        public dataCriacaoOrdemServico?: any
+        public dataCriacaoOrdemServico?: any,
+        public usuarios?: string[],
     ) {
     }
 
@@ -37,6 +38,7 @@ export class SearchGroup {
         public equipe?: TipoEquipe,
         public sistema?: Sistema,
         public metodoContagem?: string,
+        public usuario?: string,
     ) {
     }
 

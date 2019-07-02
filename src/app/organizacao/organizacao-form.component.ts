@@ -434,7 +434,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.organizacaoService.query().subscribe(response => {
+        this.organizacaoService.dropDown().subscribe(response => {
             const todasOrganizacoes = response;
             if (!this.checkIfOrganizacaoAlreadyExists(todasOrganizacoes.json)
                 && !this.checkIfCnpjAlreadyExists(todasOrganizacoes.json)) {

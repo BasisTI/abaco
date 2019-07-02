@@ -202,7 +202,9 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     private selecionaFuncionalidadeFromCurrentAnalise() {
         const currentFuncionalidade: Funcionalidade = this.currentFuncaoAnalise.funcionalidade;
-        this.funcionalidadeSelecionada = _.find(this.funcionalidades, { 'id': currentFuncionalidade.id });
+        if (currentFuncionalidade != null) {
+            this.funcionalidadeSelecionada = _.find(this.funcionalidades, { 'id': currentFuncionalidade.id });
+        }
     }
 
     private subscribeFuncaoAnaliseDescarregada() {
@@ -268,7 +270,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.deselecionaFuncionalidadeSeModuloSelecionadoForDiferente();
 
         const moduloId = modulo.id;
-        this.funcionalidadeService.findFuncionalidadesByModulo(moduloId).subscribe((funcionalidades: Funcionalidade[]) => {
+        this.funcionalidadeService.findFuncionalidadesDropdownByModulo(moduloId).subscribe((funcionalidades: Funcionalidade[]) => {
             this.funcionalidades = funcionalidades;
             this.selecionaFuncionalidadeFromCurrentAnalise();
         });

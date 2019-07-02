@@ -1,18 +1,17 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Response } from '@angular/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DatatableClickEvent } from '@basis/angular-components';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, SelectItem } from 'primeng/primeng';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { DatatableClickEvent } from '@basis/angular-components';
-
+import { Funcionalidade } from '../funcionalidade';
+import { Modulo } from '../modulo';
+import { OrganizacaoService } from '../organizacao';
+import { PageNotificationService } from '../shared/page-notification.service';
 import { Sistema } from './sistema.model';
 import { SistemaService } from './sistema.service';
-import { Organizacao, OrganizacaoService } from '../organizacao';
-import { Modulo, ModuloService } from '../modulo';
-import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
-import { ResponseWrapper } from '../shared';
-import { PageNotificationService } from '../shared/page-notification.service';
+
 
 @Component({
     selector: 'jhi-sistema-form',
@@ -263,7 +262,7 @@ export class SistemaFormComponent implements OnInit, OnDestroy {
         this.isSaving = true;
         (this.sistema.modulos === undefined) ? (this.sistema.modulos = []) : (this.sistema);
         let sistemas: Array<Sistema>;
-        this.sistemaService.query().subscribe(response => {
+        this.sistemaService.dropDown().subscribe(response => {
             sistemas = response.json;
 
             if (this.sistema.id !== undefined) {

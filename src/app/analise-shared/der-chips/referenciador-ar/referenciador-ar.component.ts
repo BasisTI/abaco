@@ -1,3 +1,5 @@
+import { DerService } from './../../../der/der.service';
+import { FuncaoDadosService } from './../../../funcao-dados/funcao-dados.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
     Component,
@@ -44,7 +46,7 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
     mostrarDialog = false;
 
-    funcaoDadosSelecionada: FuncaoDados;
+    funcaoDadosSelecionada: any;
 
     dersReferenciados: Der[] = [];
 
@@ -54,7 +56,9 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
         private analiseSharedDataService: AnaliseSharedDataService,
         private analiseService: AnaliseService,
         private baselineService: BaselineService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private funcaoDadosService: FuncaoDadosService,
+        private derService: DerService
     ) {
     }
 
@@ -72,36 +76,18 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
         this.subscribeAnaliseCarregada();     
     }
 
-    private getFuncoesDados(): FuncaoDados[] {
-        return this.analise.funcaoDados;
-    }
-
-    private get analise(): Analise {
-        return this.analiseSharedDataService.analise;
-    }
-
-    private getAnalisesBaseline() {
-        this.analiseService.findAllBaseline().subscribe(res => {
-            let analises = this.analiseService.convertJsonToAnalise(res);
-            this.carregarFuncaoDadosBaseline(analises);
-        });
-    }
-
-    public carregarFuncaoDadosBaseline(analises: Analise[]) {
-
-        let funcoesDadosBaseline: FuncaoDados[] = [];
-
-        for (let analise of analises) {
-            let fds: FuncaoDados[] = analise.funcaoDados;
-            
-            for (let fd of fds) {
-                funcoesDadosBaseline.push(fd);
-            }
+    private getFuncoesDados() {
+        if (this.funcoesDados.length > 0) {
+            return;
         }
-
-        this.funcoesDados = this.funcoesDados.concat(funcoesDadosBaseline);
-        //this.funcoesDados = funcoesDadosBaseline;
-
+        this.funcaoDadosService.dropDown().subscribe(res => {
+            this.funcoesDados = this.funcoesDados.concat(res.map((item: any) => {
+                let fd = new FuncaoDados();
+                fd.id = item.id;
+                fd.name = item.nome;
+                return fd;
+            }));
+        });
     }
 
     private subscribeAnaliseCarregada() {
@@ -134,9 +120,7 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
     }
 
     abrirDialog() {
-        this.funcoesDados = [];
-        this.funcoesDados = this.getFuncoesDados();
-        this.getAnalisesBaseline();
+        this.getFuncoesDados();
         //if (this.habilitarBotaoAbrirDialog()) {
         this.subscribeAnaliseCarregada();
         this.mostrarDialog = true;
@@ -158,10 +142,13 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
     funcaoDadosSelected(fd: FuncaoDados) {
         this.funcaoDadosSelecionada = fd;
-        this.ders = this.funcaoDadosSelecionada.ders;
-        if( !this.ders.some( der => (der.nome === 'Mensagem' || der.nome === 'Ação'))){
-            this.ders.push(this.derMsg, this.derAcao);
-        }
+
+        this.derService.dropDownByFuncaoDadosId(fd.id).subscribe(res => {
+            this.ders = res;
+            if( !this.ders.some( der => (der.nome === 'Mensagem' || der.nome === 'Ação'))){
+                this.ders.push(this.derMsg, this.derAcao);
+            }
+        });
     }
 
     dersMultiSelectedPlaceholder(): string {

@@ -1,13 +1,12 @@
-import { TranslateService } from '@ngx-translate/core';
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
 import { HttpService } from '@basis/angular-components';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Rx';
 import { environment } from '../../environments/environment';
-
+import { createRequestOption, PageNotificationService, ResponseWrapper } from '../shared';
 import { TipoEquipe } from './tipo-equipe.model';
-import { ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService } from '../shared';
-import { BlockUI } from 'ng-block-ui';
+
 
 @Injectable()
 export class TipoEquipeService {
@@ -110,9 +109,18 @@ export class TipoEquipeService {
     });
   }
 
-  query(req?: any): Observable<ResponseWrapper> {
+  dropDown(): Observable<ResponseWrapper> {
+    return this.http.get(this.resourceUrl + '/drop-down').map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+      if (error.status === 403) {
+        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        return Observable.throw(new Error(error.status));
+      }
+    });
+  }
+
+  getEquipesActiveLoggedUser(req?: any): Observable<ResponseWrapper> {
     const options = createRequestOption(req);
-    return this.http.get(this.resourceUrl, options).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+    return this.http.get(this.resourceUrl + '/active-user', options).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
       if (error.status === 403) {
         this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
         return Observable.throw(new Error(error.status));

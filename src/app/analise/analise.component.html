@@ -33,19 +33,21 @@
                   </div>
 
                   <div class="ui-g-4 ui-md-4 ui-sm-12">
-                    <p-dropdown 
-                      [filter]="true"
-                      [options]="metsContagens" 
-                      id="idMetodoContagemComponentAnalise"
-                      [(ngModel)]="searchGroup.metodoContagem" 
-                      [autoWidth]="false" 
-                      [placeholder]="this.getLabel('Analise.Analise.MetodoContagem')">
-                    </p-dropdown>
+                    <span class="md-inputfield">
+                        <input 
+                          type="text"
+                          pInputText class="ui-inputtext"
+                          [(ngModel)]="searchGroup.usuario"
+                          (keyup.enter)="performSearch()"
+                          id="idUsuarioFiltrotAnalise"
+                          maxlength="50">
+                          <label translate="Analise.Analise.Usuarios">Identificador</label>
+                      </span>
                   </div>
           </div>
           <div class="ui-g">
       
-            <div class="ui-g-4 ui-md-6 ui-sm-12">
+            <div class="ui-g-4 ui-md-4 ui-sm-12">
               <p-dropdown 
                 [filter]="true"
                 [options]="organizations" 
@@ -57,7 +59,7 @@
               </p-dropdown>
             </div>
             
-            <div class="ui-g-4 ui-md-6 ui-sm-12">
+            <div class="ui-g-4 ui-md-4 ui-sm-12">
               <p-dropdown 
                 [filter]="true"
                 [options]="teams" 
@@ -67,6 +69,16 @@
                 [(ngModel)]="searchGroup.equipe" 
                 [placeholder]="this.getLabel('Analise.Analise.Equipe')">
               </p-dropdown>
+            </div>
+            <div class="ui-g-4 ui-md-4 ui-sm-12">
+                <p-dropdown 
+                  [filter]="true"
+                  [options]="metsContagens" 
+                  id="idMetodoContagemComponentAnalise"
+                  [(ngModel)]="searchGroup.metodoContagem" 
+                  [autoWidth]="false" 
+                  [placeholder]="this.getLabel('Analise.Analise.MetodoContagem')">
+                </p-dropdown>
             </div>
         </div>
 
@@ -219,6 +231,14 @@
                         <p-column [header]="this.getLabel('Analise.Analise.Bloqueado')" field="bloqueado" [sortable]="true">
                             <ng-template let-col let-bloqueado="rowData" pTemplate="body">
                                 {{ bloqueado[col.field] ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
+                            </ng-template>
+                        </p-column>
+
+                        <p-column [header]="this.getLabel('Analise.Analise.Usuarios')" field="usuarios" [sortable]="true">
+                            <ng-template let-col let-users="rowData.usuarios" pTemplate="body">
+                                    <li *ngFor="let user of users">
+                                        {{ user }}
+                                    </li>
                             </ng-template>
                         </p-column>
 

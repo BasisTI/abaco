@@ -72,9 +72,17 @@ export class OrganizacaoService {
     });
   }
 
-  query(req?: any): Observable<ResponseWrapper> {
-      const options = createRequestOption(req);
-      return this.http.get(this.resourceUrl, options)
+    /**
+   * Função que retorna dados do usuário logado somente com as organizações ativas
+   */
+  dropDownActiveLoggedUser(): Observable<ResponseWrapper> {
+    return this.http.get(this.resourceUrl + '/active-user').map((res: Response) => {
+      return this.convertResponseToResponseWrapper(res);
+    });
+  }
+
+  dropDown(): Observable<ResponseWrapper> {
+      return this.http.get(this.resourceUrl + '/drop-down')
           .map((res: Response) => this.convertResponseToResponseWrapper(res)).catch((error: any) => {
               if (error.status === 403) {
                   this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
