@@ -18,6 +18,6 @@ public class ManualService {
     }
 
     public List<DropdownDTO> getManuaisDropdownDTO() {
-        return manualRepository.getManualdropdow();
+        return manualRepository.getManualDropdow();
     }
 }
