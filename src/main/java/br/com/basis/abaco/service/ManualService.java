@@ -17,7 +17,7 @@ public class ManualService {
         this.manualRepository = manualRepository;
     }
 
-    public List<DropdownDTO> getManuaisDropdownDTO() {
+    public List<DropdownDTO> getManuaisDropdown() {
         return manualRepository.getManualDropdow();
     }
 }

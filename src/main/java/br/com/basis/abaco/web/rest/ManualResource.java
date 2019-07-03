@@ -207,17 +207,12 @@ public class ManualResource {
         return manualRepository.findAll();
     }
 
-    /**
-     * GET /manuals : get all the manuals for dropdowns.
-     *
-     * @return the ResponseEntity with status 200 (OK) and the list of manuals in
-     *         body
-     */
+
     @GetMapping("/manuals/dropdown")
     @Timed
     public List<DropdownDTO> getManualsDropdown() {
         log.debug("REST request to get all Manuals Dropdown");
-        return manualService.getManuaisDropdownDTO();
+        return manualService.getManuaisDropdown();
     }
 
     /**
