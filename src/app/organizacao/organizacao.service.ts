@@ -121,17 +121,6 @@ export class OrganizacaoService {
     });
   }
 
-  findActiveOrganizations() {
-    return this.http.get(this.findActive).map((response: Response) => {
-      return response.json();
-    }).catch((error: any) => {
-        if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-            return Observable.throw(new Error(error.status));
-        }
-    });
-  }
-
   private convertResponseToResponseWrapper(res: Response): ResponseWrapper {
     const jsonResponse = res.json();
     const result = [];

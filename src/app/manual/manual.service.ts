@@ -1,4 +1,3 @@
-import { Headers } from '@angular/http';
 import { TranslateService } from '@ngx-translate/core';
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
@@ -21,7 +20,6 @@ export class ManualService {
 
     constructor(
         private http: HttpService,
-        private uploadService: UploadService,
         private pageNotificationService: PageNotificationService,
         private translate: TranslateService
     ) {
@@ -88,9 +86,8 @@ export class ManualService {
             });
     }
 
-    queryDropdown(req?: any): Observable<ResponseWrapper> {
-        const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl + '/dropdown', options)
+    queryDropdown(): Observable<ResponseWrapper> {
+        return this.http.get(this.resourceUrl + '/dropdown')
             .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
                 if (error.status === 403) {
                     this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
