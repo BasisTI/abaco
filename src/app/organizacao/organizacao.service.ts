@@ -91,6 +91,16 @@ export class OrganizacaoService {
           });
   }
 
+  dropDownActive(): Observable<ResponseWrapper> {
+    return this.http.get(this.resourceUrl + '/drop-down/active')
+        .map((res: Response) => this.convertResponseToResponseWrapper(res)).catch((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                return Observable.throw(new Error(error.status));
+            }
+        });
+}
+
     searchActiveOrganizations(req?: any): Observable<ResponseWrapper> {
         const options = createRequestOption(req);
         return this.http.get(this.resourceUrl + '/ativas', options)
@@ -104,17 +114,6 @@ export class OrganizacaoService {
 
   delete(id: number): Observable<Response> {
     return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
-        if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-            return Observable.throw(new Error(error.status));
-        }
-    });
-  }
-
-  findActiveOrganizations() {
-    return this.http.get(this.findActive).map((response: Response) => {
-      return response.json();
-    }).catch((error: any) => {
         if (error.status === 403) {
             this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
             return Observable.throw(new Error(error.status));

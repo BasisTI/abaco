@@ -245,7 +245,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                     this.setDataOrdemServico();
                     this.diasGarantia = this.getGarantia();
                     this.contratoSelected(this.analise.contrato);
-                    this.update();
+                    this.realizarValidacoes();
                 });
             } else {
                 this.analise = new Analise();
@@ -637,10 +637,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    update() {
+    realizarValidacoes() {
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
-            this.analiseService.update(this.analise).subscribe();
             this.diasGarantia = this.analise.contrato.diasDeGarantia;
         }
     }
