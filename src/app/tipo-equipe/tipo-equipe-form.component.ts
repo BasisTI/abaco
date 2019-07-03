@@ -50,8 +50,8 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
         this.tipoEquipeService.find(params['id']).subscribe(tipoEquipe => this.tipoEquipe = tipoEquipe);
       }
     });
-    this.organizacaoService.findActiveOrganizations().subscribe((res) => {
-      this.organizacoes = res;
+    this.organizacaoService.dropDownActive().subscribe((res) => {
+      this.organizacoes = res.json;
     });
   }
 

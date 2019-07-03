@@ -78,8 +78,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
     }
 
     private recuperarListaOrganizacao() {
-        this.organizacaoService.findActiveOrganizations().subscribe((res) => {
-            this.organizacoes = res;
+        this.organizacaoService.dropDownActive().subscribe((res) => {
+            this.organizacoes = res.json;
         });
     }
 
