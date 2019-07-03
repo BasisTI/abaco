@@ -26,6 +26,11 @@ public class OrganizacaoService {
     }
 
     @Transactional(readOnly = true)
+    public List<OrganizacaoDropdownDTO> getOrganizacaoDropdownAtivo() {
+        return organizacaoRepository.getOrganizacaoDropdownAtivo();
+    }
+
+    @Transactional(readOnly = true)
     public List<DropdownDTO> findActiveUserOrganizations() {
         return organizacaoRepository.findActiveUserOrganizations(SecurityUtils.getCurrentUserLogin());
     }

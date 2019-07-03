@@ -213,6 +213,13 @@ public class OrganizacaoResource {
         return organizacaoService.getOrganizacaoDropdown();
     }
 
+    @GetMapping("/organizacaos/drop-down/active")
+    @Timed
+    public List<OrganizacaoDropdownDTO> getOrganizacaoDropdownAtivas() {
+        log.debug("REST request to get dropdown Organizacaos");
+        return organizacaoService.getOrganizacaoDropdownAtivo();
+    }
+
   @GetMapping("/organizacaos/ativas")
   @Timed
   public List<Organizacao> searchActiveOrganizations() {

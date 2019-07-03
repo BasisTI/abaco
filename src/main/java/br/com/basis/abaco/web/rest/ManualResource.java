@@ -11,6 +11,8 @@ import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.ManualContratoRepository;
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
+import br.com.basis.abaco.service.ManualService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioManualColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -82,6 +84,8 @@ public class ManualResource {
 
     private final DynamicExportsService dynamicExportsService;
 
+    private final ManualService manualService;
+
     private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -94,7 +98,7 @@ public class ManualResource {
 
     public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository, DynamicExportsService dynamicExportsService,
                           ManualContratoRepository manualContratoRepository, AnaliseRepository analiseRepository, FatorAjusteRepository fatorAjusteRepository,
-                          FuncaoTransacaoRepository funcaoTransacaoRepository) {
+                          FuncaoTransacaoRepository funcaoTransacaoRepository, ManualService manualService) {
         this.manualRepository = manualRepository;
         this.manualSearchRepository = manualSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
@@ -102,7 +106,7 @@ public class ManualResource {
         this.analiseRepository = analiseRepository;
         this.fatorAjusteRepository = fatorAjusteRepository;
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
-
+        this.manualService = manualService;
     }
 
     /**
@@ -201,6 +205,14 @@ public class ManualResource {
     public List<Manual> getAllManuals() {
         log.debug("REST request to get all Manuals");
         return manualRepository.findAll();
+    }
+
+
+    @GetMapping("/manuals/dropdown")
+    @Timed
+    public List<DropdownDTO> getManualsDropdown() {
+        log.debug("REST request to get all Manuals Dropdown");
+        return manualService.getManuaisDropdown();
     }
 
     /**

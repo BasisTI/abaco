@@ -1,9 +1,12 @@
 package br.com.basis.abaco.repository;
 
 import br.com.basis.abaco.domain.Manual;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,4 +20,6 @@ public interface ManualRepository extends JpaRepository<Manual, Long> {
     @EntityGraph(attributePaths = {"esforcoFases","fatoresAjuste"})
     Manual findOne(Long id);
 
+    @Query("SELECT new br.com.basis.abaco.service.dto.DropdownDTO(m.id, m.nome) FROM Manual m")
+    List<DropdownDTO> getManualDropdow();
 }
