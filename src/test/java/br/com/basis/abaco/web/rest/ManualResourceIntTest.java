@@ -5,6 +5,7 @@ import br.com.basis.abaco.AbacoApp;
 import br.com.basis.abaco.domain.Manual;
 
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
+import br.com.basis.abaco.service.ManualService;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.ManualRepository;
@@ -101,11 +102,14 @@ public class ManualResourceIntTest {
 
     private Manual manual;
 
+    @Autowired
+    private ManualService manualService;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
             ManualResource manualResource = new ManualResource(manualRepository, manualSearchRepository, dynamicExportsService, manualContratoRepository
-            , analiseRepository, fatorAjusteRepository, funcaoTransacaoRepository);
+            , analiseRepository, fatorAjusteRepository, funcaoTransacaoRepository, manualService);
         this.restManualMockMvc = MockMvcBuilders.standaloneSetup(manualResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
