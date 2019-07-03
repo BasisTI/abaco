@@ -86,7 +86,7 @@ export class ManualService {
             });
     }
 
-    queryDropdown(): Observable<ResponseWrapper> {
+    dropdown(): Observable<ResponseWrapper> {
         return this.http.get(this.resourceUrl + '/dropdown')
             .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
                 if (error.status === 403) {

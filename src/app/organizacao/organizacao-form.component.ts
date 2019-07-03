@@ -103,7 +103,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         this.isEdit = false;
         this.cnpjValido = false;
         this.isSaving = false;
-        this.manualService.queryDropdown().subscribe((res: ResponseWrapper) => {
+        this.manualService.dropdown().subscribe((res: ResponseWrapper) => {
             this.manuais = res.json;
         });
         this.routeSub = this.route.params.subscribe(params => {
