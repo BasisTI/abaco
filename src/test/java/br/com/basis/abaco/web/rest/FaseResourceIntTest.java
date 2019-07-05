@@ -1,14 +1,10 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.AbacoApp;
-
 import br.com.basis.abaco.domain.Fase;
-import br.com.basis.abaco.repository.FaseRepository;
-import br.com.basis.abaco.repository.search.FaseSearchRepository;
+import br.com.basis.abaco.service.FaseService;
+import br.com.basis.abaco.service.dto.FaseDTO;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
-
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import com.netflix.discovery.converters.Auto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,8 +24,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the FaseResource REST controller.
@@ -44,13 +45,7 @@ public class FaseResourceIntTest {
     private static final String UPDATED_NOME = "BBBBBBBBBB";
 
     @Autowired
-    private FaseRepository faseRepository;
-
-    @Autowired
-    private FaseSearchRepository faseSearchRepository;
-
-    @Autowired
-    private DynamicExportsService dynamicExportsService;
+    private FaseService faseService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -71,7 +66,7 @@ public class FaseResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            FaseResource faseResource = new FaseResource(faseRepository, faseSearchRepository, dynamicExportsService);
+            FaseResource faseResource = new FaseResource(faseService);
         this.restFaseMockMvc = MockMvcBuilders.standaloneSetup(faseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -92,14 +87,14 @@ public class FaseResourceIntTest {
 
     @Before
     public void initTest() {
-        faseSearchRepository.deleteAll();
+        faseService.deleteAll();
         fase = createEntity(em);
     }
 
     @Test
     @Transactional
     public void createFase() throws Exception {
-        int databaseSizeBeforeCreate = faseRepository.findAll().size();
+        int databaseSizeBeforeCreate = faseService.getFasesDTO().size();
 
         // Create the Fase
 
@@ -109,20 +104,20 @@ public class FaseResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the Fase in the database
-        List<Fase> faseList = faseRepository.findAll();
+        List<FaseDTO> faseList = faseService.getFasesDTO();
         assertThat(faseList).hasSize(databaseSizeBeforeCreate + 1);
-        Fase testFase = faseList.get(faseList.size() - 1);
+        FaseDTO testFase = faseList.get(faseList.size() - 1);
         assertThat(testFase.getNome()).isEqualTo(DEFAULT_NOME);
 
         // Validate the Fase in Elasticsearch
-        Fase faseEs = faseSearchRepository.findOne(testFase.getId());
+        FaseDTO faseEs = faseService.getFaseDTO(testFase.getId());
         assertThat(faseEs).isEqualToComparingFieldByField(testFase);
     }
 
     @Test
     @Transactional
     public void createFaseWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = faseRepository.findAll().size();
+        int databaseSizeBeforeCreate = faseService.getFasesDTO().size();
 
         // Create the Fase with an existing ID
         Fase existingFase = new Fase();
@@ -135,7 +130,7 @@ public class FaseResourceIntTest {
             .andExpect(status().isBadRequest());
 
         // Validate the Alice in the database
-        List<Fase> faseList = faseRepository.findAll();
+        List<FaseDTO> faseList = faseService.getFasesDTO();
         assertThat(faseList).hasSize(databaseSizeBeforeCreate);
     }
 
@@ -143,7 +138,7 @@ public class FaseResourceIntTest {
     @Transactional
     public void getAllFases() throws Exception {
         // Initialize the database
-        faseRepository.saveAndFlush(fase);
+        faseService.save(fase);
 
         // Get all the faseList
         restFaseMockMvc.perform(get("/api/fases?sort=id,desc"))
@@ -157,7 +152,7 @@ public class FaseResourceIntTest {
     @Transactional
     public void getFase() throws Exception {
         // Initialize the database
-        faseRepository.saveAndFlush(fase);
+        faseService.save(fase);
 
         // Get the fase
         restFaseMockMvc.perform(get("/api/fases/{id}", fase.getId()))
@@ -179,14 +174,13 @@ public class FaseResourceIntTest {
     @Transactional
     public void updateFase() throws Exception {
         // Initialize the database
-        faseRepository.saveAndFlush(fase);
-        faseSearchRepository.save(fase);
-        int databaseSizeBeforeUpdate = faseRepository.findAll().size();
+        faseService.save(fase);
+        faseService.save(fase);
+        int databaseSizeBeforeUpdate = faseService.getFasesDTO().size();
 
         // Update the fase
-        Fase updatedFase = faseRepository.findOne(fase.getId());
-        updatedFase
-                .nome(UPDATED_NOME);
+        FaseDTO updatedFase = faseService.getFaseDTO(fase.getId());
+        updatedFase.setNome(UPDATED_NOME);
 
         restFaseMockMvc.perform(put("/api/fases")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -194,20 +188,20 @@ public class FaseResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the Fase in the database
-        List<Fase> faseList = faseRepository.findAll();
+        List<FaseDTO> faseList = faseService.getFasesDTO();
         assertThat(faseList).hasSize(databaseSizeBeforeUpdate);
-        Fase testFase = faseList.get(faseList.size() - 1);
+        FaseDTO testFase = faseList.get(faseList.size() - 1);
         assertThat(testFase.getNome()).isEqualTo(UPDATED_NOME);
 
         // Validate the Fase in Elasticsearch
-        Fase faseEs = faseSearchRepository.findOne(testFase.getId());
+        FaseDTO faseEs = faseService.getFaseDTO(testFase.getId());
         assertThat(faseEs).isEqualToComparingFieldByField(testFase);
     }
 
     @Test
     @Transactional
     public void updateNonExistingFase() throws Exception {
-        int databaseSizeBeforeUpdate = faseRepository.findAll().size();
+        int databaseSizeBeforeUpdate = faseService.getFasesDTO().size();
 
         // Create the Fase
 
@@ -218,7 +212,7 @@ public class FaseResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the Fase in the database
-        List<Fase> faseList = faseRepository.findAll();
+        List<FaseDTO> faseList = faseService.getFasesDTO();
         assertThat(faseList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
@@ -226,9 +220,8 @@ public class FaseResourceIntTest {
     @Transactional
     public void deleteFase() throws Exception {
         // Initialize the database
-        faseRepository.saveAndFlush(fase);
-        faseSearchRepository.save(fase);
-        int databaseSizeBeforeDelete = faseRepository.findAll().size();
+        faseService.save(fase);
+        int databaseSizeBeforeDelete = faseService.getFasesDTO().size();
 
         // Get the fase
         restFaseMockMvc.perform(delete("/api/fases/{id}", fase.getId())
@@ -236,11 +229,11 @@ public class FaseResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean faseExistsInEs = faseSearchRepository.exists(fase.getId());
+        boolean faseExistsInEs = faseService.exists(fase.getId());
         assertThat(faseExistsInEs).isFalse();
 
         // Validate the database is empty
-        List<Fase> faseList = faseRepository.findAll();
+        List<FaseDTO> faseList = faseService.getFasesDTO();
         assertThat(faseList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
@@ -248,8 +241,7 @@ public class FaseResourceIntTest {
     @Transactional
     public void searchFase() throws Exception {
         // Initialize the database
-        faseRepository.saveAndFlush(fase);
-        faseSearchRepository.save(fase);
+        faseService.save(fase);
 
         // Search the fase
         restFaseMockMvc.perform(get("/api/_search/fases?query=id:" + fase.getId()))
