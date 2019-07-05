@@ -31,11 +31,11 @@
 
                 <div class="ui-g ui-md-12" style="justify-content: center">
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" routerLink="/tipoFase"
+                        <app-white-button [buttonLabel]="'Global.Botoes.Cancelar' | translate" routerLink="/tipoFase"
                                           id="idBtnCancelarFormTipoFase"></app-white-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-submit-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" [disabled]="editForm.form.invalid || isSaving"
+                        <app-submit-button [buttonLabel]="'Global.Botoes.Salvar' | translate" [disabled]="editForm.form.invalid || isSaving"
                                            id="idBtnSalvarFormTipoFase"></app-submit-button>
                     </div>
                 </div>
