@@ -1,22 +1,19 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Fase;
 import br.com.basis.abaco.service.FaseService;
 import br.com.basis.abaco.service.dto.FaseDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -60,13 +57,8 @@ public class FaseResource {
     @PostMapping("/fases")
     @Timed
     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
-    public ResponseEntity<FaseDTO> createFase(@RequestBody Fase fase) throws URISyntaxException {
+    public ResponseEntity<FaseDTO> createFase(@RequestBody FaseDTO fase) throws URISyntaxException {
         log.debug("REST request to save Fase : {}", fase);
-        if (fase.getId() != null) {
-            return ResponseEntity.badRequest().headers(
-                HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new fase cannot already have an ID"))
-                .body(null);
-        }
         FaseDTO result = faseService.save(fase);
         return ResponseEntity.created(new URI("/api/fases/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -76,14 +68,11 @@ public class FaseResource {
     @PutMapping("/fases")
     @Timed
     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
-    public ResponseEntity<FaseDTO> updateFase(@RequestBody Fase fase) throws URISyntaxException {
-        log.debug("REST request to update Fase : {}", fase);
-        if (fase.getId() == null) {
-            return createFase(fase);
-        }
-        FaseDTO result = faseService.save(fase);
+    public ResponseEntity<FaseDTO> updateFase(@RequestBody FaseDTO faseDTO) throws URISyntaxException {
+        log.debug("REST request to update Fase : {}", faseDTO);
+        FaseDTO result = faseService.save(faseDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, fase.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, faseDTO.getId().toString()))
             .body(result);
     }
 
@@ -113,17 +102,12 @@ public class FaseResource {
 
     @GetMapping("/_search/fases")
     @Timed
-    public ResponseEntity<List<Fase>> searchFases(
+    public ResponseEntity<List<FaseDTO>> searchFases(
         @RequestParam(defaultValue = "*") String query,
-        @RequestParam String order,
-        @RequestParam(name="page") int pageNumber,
-        @RequestParam int size,
-        @RequestParam(defaultValue="id") String sort) throws URISyntaxException {
+        @ApiParam Pageable pageable) throws URISyntaxException {
         log.debug("REST request to search Fases for query {}", query);
-        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
-        Page<Fase> page = faseService.getFases(queryStringQuery(query), newPageable);
+        Page<FaseDTO> page = faseService.getFases(queryStringQuery(query), pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/fases");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

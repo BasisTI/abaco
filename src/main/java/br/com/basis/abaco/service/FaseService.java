@@ -8,6 +8,8 @@ import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.mapper.FaseMapper;
 import br.com.basis.abaco.service.relatorio.RelatorioFaseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.web.rest.errors.CustomParameterizedException;
+import br.com.basis.abaco.web.rest.errors.ErrorConstants;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
@@ -50,10 +52,14 @@ public class FaseService {
     }
 
 
-    public FaseDTO save(Fase fase) {
-        Fase result = faseRepository.save(fase);
-        faseSearchRepository.save(result);
-        return faseMapper.toDto(result);
+    public FaseDTO save(FaseDTO faseDTO) {
+        Fase fase = faseMapper.toEntity(faseDTO);
+        if(!faseRepository.existsByNome(fase.getNome())) {
+            Fase result = faseRepository.save(fase);
+            faseSearchRepository.save(result);
+            return faseMapper.toDto(result);
+        }
+        throw new CustomParameterizedException(ErrorConstants.FASE_CADASTRADA);
     }
 
     public List<FaseDTO> getFasesDTO() {
@@ -65,8 +71,9 @@ public class FaseService {
         faseSearchRepository.delete(id);
     }
 
-    public Page<Fase> getFases(QueryStringQueryBuilder query, Pageable newPageable) {
-        return faseSearchRepository.search(query, newPageable);
+    public Page<FaseDTO> getFases(QueryStringQueryBuilder query, Pageable newPageable) {
+        Page<Fase> search = faseSearchRepository.search(query, newPageable);
+        return search.map(faseMapper::toDto);
     }
 
     public ByteArrayOutputStream getRelatorioBAOS(String tipoRelatorio, String query) throws RelatorioException {

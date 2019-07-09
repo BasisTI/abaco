@@ -4,8 +4,6 @@ import br.com.basis.abaco.domain.Fase;
 import br.com.basis.abaco.service.dto.FaseDTO;
 import org.mapstruct.Mapper;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring", uses = {})
 public interface FaseMapper {
 
@@ -13,7 +11,4 @@ public interface FaseMapper {
 
     FaseDTO toDto(Fase entity);
 
-    List<FaseDTO> toDtoList(List<Fase> entityList);
-
-    List<Fase> toEntityList(List<FaseDTO> dtoList);
 }
