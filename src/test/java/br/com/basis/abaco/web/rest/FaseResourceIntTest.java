@@ -195,7 +195,7 @@ public class FaseResourceIntTest {
 
         restFaseMockMvc.perform(
                 get(API + "/tipoFase/exportacao/pdf?query=**")
-            )
+            ).andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_OCTET_STREAM_VALUE));
     }
 
