@@ -33,12 +33,7 @@ export class TipoFaseService {
         return this.http.post(this.resourceUrl, copy).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertItemFromServer(jsonResponse);
-        }).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                return Observable.throw(new Error(error.status));
-            }
-        });
+        }).catch((error: any) => this.handlerError(error));
     }
 
     /**
@@ -49,12 +44,19 @@ export class TipoFaseService {
         return this.http.put(this.resourceUrl, copy).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertItemFromServer(jsonResponse);
-        }).catch((error: any) => {
-            if (error.status === 403) {
+        }).catch((error: any) => this.handlerError(error));
+    }
+
+    handlerError(error: any):Observable<TipoFase> {
+        switch (error.status) {
+            case 400:
+                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
+                return Observable.throw(new Error(error.status));
+
+            case 403:
                 this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
-            }
-        });
+        }
     }
 
     /**
@@ -64,12 +66,7 @@ export class TipoFaseService {
         return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertItemFromServer(jsonResponse);
-        }).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                return Observable.throw(new Error(error.status));
-            }
-        });
+        }).catch((error: any) => this.handlerError(error));
     }
 
     /**
