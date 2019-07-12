@@ -92,7 +92,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.tipoFaseService.query().subscribe((response: ResponseWrapper) => {
+        this.tipoFaseService.query().subscribe((response: any) => {
             this.tipoFases = response.json;
         });
         this.manual.versaoCPM = 431;

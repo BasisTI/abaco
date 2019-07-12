@@ -72,14 +72,10 @@ export class TipoFaseService {
     /**
      * Find Query object TipoFase.
      */
-    query(req?: any): Observable<ResponseWrapper> {
+    query(req?: any): Observable<TipoFase> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
-                if (error.status === 403) {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                    return Observable.throw(new Error(error.status));
-                }
+        return this.http.get(this.resourceUrl, options).map((res: Response) => res.json() ).catch((error: any) => {
+                return this.handlerError(error);
             });
     }
 
@@ -97,15 +93,6 @@ export class TipoFaseService {
                 return Observable.throw(new Error(error.status));
             }
         });
-    }
-
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
     }
 
     /**

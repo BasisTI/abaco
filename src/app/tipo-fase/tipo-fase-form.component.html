@@ -5,27 +5,26 @@
 
             <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
                 <div class="ui-g" style="margin-bottom: 25px; margin-top: 25px">
-
                     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-            <span class="md-inputfield">
-              <input
-                      type="text"
-                      name="nomeTipoFase"
-                      [(ngModel)]="tipoFase.nome"
-                      [maxlength]="250"
-                      #nomeTipoFase='ngModel'
-                      pInputText
-                      id="idNomeTipoFase"
-                      required/>
-              <label translate="Cadastros.TipoFase.Nome">Nome</label>
-              <div *ngIf="editForm.controls['nomeTipoFase'] 
-                && !editForm.controls['nomeTipoFase'].valid 
-                && (editForm.controls['nomeTipoFase'].touched 
-                || editForm.submitted)"
-                   class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
-                Campo obrigatório.
-              </div>
-            </span>
+                        <span class="md-inputfield">
+                            <input
+                                    type="text"
+                                    name="nomeTipoFase"
+                                    [(ngModel)]="tipoFase.nome"
+                                    [maxlength]="250"
+                                    #nomeTipoFase='ngModel'
+                                    pInputText
+                                    id="idNomeTipoFase"
+                                    required/>
+                            <label translate="Cadastros.TipoFase.Nome">Nome</label>
+                            <div *ngIf="editForm.controls['nomeTipoFase'] 
+                                && !editForm.controls['nomeTipoFase'].valid 
+                                && (editForm.controls['nomeTipoFase'].touched 
+                                || editForm.submitted)"
+                                class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                                Campo obrigatório.
+                            </div>
+                        </span>
                     </div>
                 </div>
 
@@ -39,7 +38,9 @@
                                            id="idBtnSalvarFormTipoFase"></app-submit-button>
                     </div>
                 </div>
+
             </form>
+
         </div>
     </div>
 </div>

@@ -13,7 +13,7 @@ import {TipoFaseService} from './tipo-fase.service';
 export class TipoFaseDetailComponent implements OnInit, OnDestroy {
 
     public tipoFase: TipoFase;
-    private subscription: Subscription;
+    private subscriptionList: Subscription[] = [];
 
     constructor(
         private tipoFaseService: TipoFaseService,
@@ -24,25 +24,25 @@ export class TipoFaseDetailComponent implements OnInit, OnDestroy {
 
     getLabel(label) {
         let str: any;
-        this.translate.get(label).subscribe((res: string) => {
+        this.subscriptionList.push( this.translate.get(label).subscribe((res: string) => {
           str = res;
-        }).unsubscribe();
+        }) );
         return str;
     }
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.subscriptionList.push( this.route.params.subscribe((params) => {
             this.load(params['id']);
-        });
+        }) );
     }
 
     load(id) {
-        this.tipoFaseService.find(id).subscribe((tipoFase) => {
+        this.subscriptionList.push( this.tipoFaseService.find(id).subscribe((tipoFase) => {
             this.tipoFase = tipoFase;
-        });
+        }) );
     }
 
     ngOnDestroy() {
-        this.subscription.unsubscribe();
+        this.subscriptionList.forEach((sub) => sub.unsubscribe());
     }
 }
