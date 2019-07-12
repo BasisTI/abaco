@@ -640,6 +640,7 @@
         "msgINFORME_TIPO_CONTAGEM": "Informe o Tipo de Contagem para continuar",
         "msgINFORME_DATA_HOMOLOGACAO": "Informe a data de homolagação para continuar",
         "msgINFORME_DATA_ORDEM_SERVICO": "Informe a data de criação da ordem de serviço para continuar",
+        "msgINFORME_USUARIO": "Deve haver ao menos um usuário para continuar",
         "msgRegistroSalvoSucesso": "Registro salvo com sucesso!",
         "msgDadosAlteradosSucesso": "Dados alterados com sucesso!",
         "msgORGANIZACAO_SEM_SISTEMA": "Organização não possui nenhum Sistema cadastrado",

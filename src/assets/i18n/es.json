@@ -637,6 +637,7 @@
         "msgINFORME_TIPO_CONTAGEM": "Introduzca el tipo de cuenta para continuar",
         "msgINFORME_DATA_HOMOLOGACAO": "Introduzca la fecha de homolización para continuar",
         "msgINFORME_DATA_ORDEM_SERVICO": "Introduzca la fecha de creación de la orden de servicio para continuar",
+        "msgINFORME_USUARIO": "Debe haber al menos un usuario para continuar",
         "msgRegistroSalvoSucesso": "Registro salvo con éxito!",
         "msgDadosAlteradosSucesso": "Datos alterados con éxito!",
         "msgORGANIZACAO_SEM_SISTEMA": "La organización no tiene ningún sistema registrado",
