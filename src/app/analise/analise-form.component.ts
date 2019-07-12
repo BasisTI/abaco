@@ -622,16 +622,15 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por persistir as informações das análises na edição.
      **/
     save() {
-        // if (!this.aguardarGarantia) {
-        //     this.analise.baselineImediatamente = true;
-        // }
         if (!this.enviarParaBaseLine) {
             this.analise.enviarBaseline = true;
         }
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
             this.analiseService.update(this.analise).subscribe(() => {
-                this.pageNotificationService.addSuccessMsg(this.isEdit ? this.getLabel('Analise.Analise.Mensagens.msgRegistroSalvoSucesso') : this.getLabel('Analise.Analise.Mensagens.msgDadosAlteradosSucesso'));
+                this.pageNotificationService.addSuccessMsg(
+                    this.isEdit ? this.getLabel('Analise.Analise.Mensagens.msgRegistroSalvoSucesso') :
+                    this.getLabel('Analise.Analise.Mensagens.msgDadosAlteradosSucesso'));
                 this.diasGarantia = this.analise.contrato.diasDeGarantia;
             });
         }
@@ -693,6 +692,12 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         }
         if (!this.analise.tipoAnalise) {
             this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_TIPO_CONTAGEM'));
+            isValid = false;
+            return isValid;
+        }
+
+        if (!this.analise.users || this.analise.users.length <= 0) {
+            this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_TIPO_CONTAGEM'));
             isValid = false;
             return isValid;
         }
