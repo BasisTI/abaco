@@ -32,6 +32,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -550,14 +551,15 @@ public class AnaliseResource {
     private ResponseEntity<List<GrupoDTO>> verificaEquipe(Optional<String> identificador, Optional<String> sistema,
                                                           Optional<String> metodo, Optional<String> organizacao, Optional<String> equipe, Pageable pageable,
                                                           List<Long> equipesIds, Optional<String> usuario) throws URISyntaxException {
-      
-      List<BigInteger> idsAnalises;
+        String usuarioPesquisa = getUsuarioPesquisa(usuario);
+
+        List<BigInteger> idsAnalises;
       if (equipesIds.size() != 0) {
           idsAnalises = analiseRepository.listAnalisesEquipe(equipesIds);
           if (idsAnalises.size() != 0) {
               Page<Grupo> page = grupoRepository.findByIdAnalises(this.converteListaBigIntLong(idsAnalises),
                   identificador.orElse(null), sistema.orElse(null), metodo.orElse(null),
-                  organizacao.orElse(null), equipe.orElse(null), usuario.map(String::toUpperCase).orElseGet(() -> usuario.orElse(null)), pageable);
+                  organizacao.orElse(null), equipe.orElse(null), usuarioPesquisa, pageable);
               page.forEach(grupo -> {
                   Set<User> users = userRepository.findAllByAnalise(grupo.getIdAnalise());
                   grupo.setUsuarios(users);
@@ -570,6 +572,15 @@ public class AnaliseResource {
 
 
       return new ResponseEntity<>(new ArrayList<GrupoDTO>(), null, HttpStatus.OK);
+    }
+
+    @Nullable
+    private String getUsuarioPesquisa(Optional<String> usuario) {
+        String usuarioPesquisa = usuario.orElse(null);
+        if(usuarioPesquisa != null) {
+            usuarioPesquisa = usuarioPesquisa.toUpperCase();
+        }
+        return usuarioPesquisa;
     }
 
 
