@@ -16,5 +16,5 @@ public interface FaseRepository extends JpaRepository<Fase, Long> {
     @Query("SELECT new br.com.basis.abaco.service.dto.FaseDTO(f.id, f.nome) FROM Fase f")
     List<FaseDTO> getFasesDTO();
 
-    boolean existsByNome(String nome);
+    Boolean existsByNome(String nome);
 }

@@ -2,7 +2,9 @@ package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.AbacoApp;
 import br.com.basis.abaco.domain.Fase;
+import br.com.basis.abaco.service.EsforcoFaseService;
 import br.com.basis.abaco.service.FaseService;
+import br.com.basis.abaco.service.dto.EsforcoFaseDTO;
 import br.com.basis.abaco.service.dto.FaseDTO;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
@@ -49,6 +51,9 @@ public class FaseResourceIntTest {
 
     @Autowired
     private FaseService faseService;
+
+    @Autowired
+    private EsforcoFaseService esforcoFaseService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -161,6 +166,14 @@ public class FaseResourceIntTest {
 
         restFaseMockMvc.perform(get(RESOURCE + "/{id}", dto.getId()))
             .andExpect(status().isNotFound());
+    }
+
+    @Test public void deleteFaseWithExeption() {
+        EsforcoFaseDTO esforcoFaseDTO = new EsforcoFaseDTO();
+        FaseDTO faseDTO = createEntity();
+        esforcoFaseDTO.setFase(faseDTO);
+
+        esforcoFaseService
     }
 
     @Test

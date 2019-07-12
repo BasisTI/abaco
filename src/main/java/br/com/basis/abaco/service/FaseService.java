@@ -41,25 +41,29 @@ public class FaseService {
 
     private final DynamicExportsService dynamicExportsService;
 
+    private final EsforcoFaseService esforcoFaseService;
+
     private final FaseMapper faseMapper;
 
-
-    public FaseService(FaseRepository faseRepository, FaseSearchRepository faseSearchRepository, DynamicExportsService dynamicExportsService, FaseMapper faseMapper) {
+    public FaseService(FaseRepository faseRepository
+        , FaseSearchRepository faseSearchRepository
+        , DynamicExportsService dynamicExportsService
+        , EsforcoFaseService esforcoFaseService, FaseMapper faseMapper) {
         this.faseRepository = faseRepository;
         this.faseSearchRepository = faseSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
+        this.esforcoFaseService = esforcoFaseService;
         this.faseMapper = faseMapper;
     }
 
-
     public FaseDTO save(FaseDTO faseDTO) {
         Fase fase = faseMapper.toEntity(faseDTO);
-        if(!faseRepository.existsByNome(fase.getNome())) {
-            Fase result = faseRepository.save(fase);
-            faseSearchRepository.save(result);
-            return faseMapper.toDto(result);
+        if(faseRepository.existsByNome(fase.getNome())) {
+            throw new CustomParameterizedException(ErrorConstants.FASE_CADASTRADA);
         }
-        throw new CustomParameterizedException(ErrorConstants.FASE_CADASTRADA);
+        Fase result = faseRepository.save(fase);
+        faseSearchRepository.save(result);
+        return faseMapper.toDto(result);
     }
 
     public List<FaseDTO> getFasesDTO() {
@@ -67,6 +71,9 @@ public class FaseService {
     }
 
     public void delete(Long id) {
+        if(esforcoFaseService.existFase(id)) {
+            throw new CustomParameterizedException(ErrorConstants.FASE_EM_USO);
+        }
         faseRepository.delete(id);
         faseSearchRepository.delete(id);
     }

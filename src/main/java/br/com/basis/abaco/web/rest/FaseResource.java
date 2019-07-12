@@ -121,6 +121,4 @@ public class FaseResource {
         return DynamicExporter.output(byteArrayOutputStream,
             "relatorio." + tipoRelatorio);
     }
-
-
 }

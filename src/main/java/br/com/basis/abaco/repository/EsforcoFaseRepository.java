@@ -13,4 +13,6 @@ import java.util.List;
 public interface EsforcoFaseRepository extends JpaRepository<EsforcoFase, Long> {
 
     public List<EsforcoFase> findAllByManual(Manual manual);
+
+    Boolean existsByFaseId(Long id);
 }

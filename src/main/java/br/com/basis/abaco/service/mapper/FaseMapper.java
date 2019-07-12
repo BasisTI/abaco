@@ -10,5 +10,4 @@ public interface FaseMapper {
     Fase toEntity(FaseDTO dto);
 
     FaseDTO toDto(Fase entity);
-
 }
