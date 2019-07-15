@@ -24,10 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import java.math.BigDecimal;
+
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -172,8 +175,15 @@ public class FaseResourceIntTest {
         EsforcoFaseDTO esforcoFaseDTO = new EsforcoFaseDTO();
         FaseDTO faseDTO = createEntity();
         esforcoFaseDTO.setFase(faseDTO);
+        esforcoFaseDTO.setEsforco(new BigDecimal(25));
 
-        esforcoFaseService
+        // TODO TERA QUE SUBSTITUIR PELO SAVE DO ESFORCO FASE RESOURCE QUANDO FOR REFEITO
+        esforcoFaseDTO = esforcoFaseService.save(esforcoFaseDTO);
+
+        assertNotNull(esforcoFaseDTO);
+        assertNotNull(esforcoFaseDTO.getFase());
+
+        assertTrue( esforcoFaseService.existFase(esforcoFaseDTO.getFase().getId()) );
     }
 
     @Test
