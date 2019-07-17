@@ -161,7 +161,7 @@ public class Analise implements Serializable, ReportObject {
     @Column(name = "data_criacao_ordem_servico")
     private Timestamp dataCriacaoOrdemServico;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private FatorAjuste fatorAjuste;
 
     @ManyToMany
