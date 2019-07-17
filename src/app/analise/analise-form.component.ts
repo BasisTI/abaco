@@ -81,8 +81,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     @BlockUI() blockUI: NgBlockUI;
 
-    private fatorAjusteNenhumSelectItem = { label: this.getLabel('Global.Mensagens.Nenhum'), value: undefined };
-
     tiposAnalise: SelectItem[] = [
         { label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO },
         { label: MessageUtil.PROJETO_MELHORIA, value: MessageUtil.MELHORIA },
@@ -300,10 +298,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.router.navigate([`/analise/${analiseCarregada.id}/view`]);
         }
         this.setSistemaOrganizacao(analiseCarregada.organizacao);
-        if (analiseCarregada.contrato != undefined && analiseCarregada.contrato.manualContrato)
+        if (analiseCarregada.contrato != undefined && analiseCarregada.contrato.manualContrato){
             this.setManual(
                 analiseCarregada.manual ? analiseCarregada.manual : new Manual());
-        this.carregaFatorAjusteNaEdicao();
+        }
         this.isEdit = this.analise.identificadorAnalise == undefined ? true : false;
         this.populaComboUsers();
     }
@@ -357,6 +355,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 this.inicializaFatoresAjuste(manual);
                 this.manualSelecionado(manual);
                 this.setManuais(this.analise.contrato);
+                this.carregaFatorAjusteNaEdicao();
             });
         }
     }
@@ -368,12 +367,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.fatoresAjuste = [];
         if (manual.fatoresAjuste) {
             const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
-            this.fatoresAjuste =
-                faS.map(fa => {
-                    const label = FatorAjusteLabelGenerator.generate(fa);
-                    return { label: label, value: fa };
-                });
-            this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+            faS.forEach(fa => {
+                const label = FatorAjusteLabelGenerator.generate(fa);
+                this.fatoresAjuste.push( { label, value: fa } );
+            });
+            this.fatoresAjuste.push({ label: this.getLabel('Global.Mensagens.Nenhum'), value: null });
         }
     }
 
@@ -381,12 +379,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular os fatores de ajuste do Manual na Edicao
      */
     private carregaFatorAjusteNaEdicao() {
-        const fatorAjuste: FatorAjuste = this.analise.fatorAjuste;
-        if (fatorAjuste) {
-            const fatorAjusteSelectItem: SelectItem["value"]
-                = _.find(this.fatoresAjuste, { value: { id: fatorAjuste.id } });
-            this.analise.fatorAjuste = fatorAjusteSelectItem;
-        }
+        const fa: any = this.analise.fatorAjuste;
+         this.fatorAjuste = this.fatoresAjuste.find((f) => f.value.id === fa.value.id ).value;
     }
 
     /**
@@ -625,6 +619,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         if (!this.enviarParaBaseLine) {
             this.analise.enviarBaseline = true;
         }
+        // TODO O dropdown de deflator não esta funcionando com o analise.fatorAjuste
+        this.analise.fatorAjuste = this.fatorAjuste;
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
             this.analiseService.update(this.analise).subscribe(() => {
