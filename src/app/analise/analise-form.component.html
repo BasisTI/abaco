@@ -270,6 +270,8 @@
                                             filter="true"
                                             required
                                             id="idDeflatorAnalise"
+                                            disabled="{{ !isContratoSelected() }}"
+                                            placeholder="{{ needContratoDropdownPlaceholder() }}"
                                             name="deflator"
                                             [options]="fatoresAjuste"
                                             [(ngModel)]="fatorAjuste"
