@@ -1,6 +1,10 @@
 {
   "name": "abaco",
+<<<<<<< HEAD
   "version": "2.3.11",
+=======
+  "version": "2.3.10",
+>>>>>>> BASIS-86900
   "license": "COMMERCIAL",
   "angular-cli": {},
   "engines": {
