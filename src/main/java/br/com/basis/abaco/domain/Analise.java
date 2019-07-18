@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -161,6 +162,7 @@ public class Analise implements Serializable, ReportObject {
     @Column(name = "data_criacao_ordem_servico")
     private Timestamp dataCriacaoOrdemServico;
 
+    @Nullable
     @ManyToOne
     private FatorAjuste fatorAjuste;
 
