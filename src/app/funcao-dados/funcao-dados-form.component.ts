@@ -305,7 +305,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.isEdit = true;
         this.prepararParaEdicao(this.funcaoDadosEditar);
     }
-
+    
     public onChange({ editor }: ChangeEvent) {
         const data = editor.getData();
         return data;

@@ -298,7 +298,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.router.navigate([`/analise/${analiseCarregada.id}/view`]);
         }
         this.setSistemaOrganizacao(analiseCarregada.organizacao);
-        if (analiseCarregada.contrato != undefined && analiseCarregada.contrato.manualContrato){
+        if (analiseCarregada.contrato != undefined && analiseCarregada.contrato.manualContrato) {
             this.setManual(
                 analiseCarregada.manual ? analiseCarregada.manual : new Manual());
         }
@@ -371,7 +371,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 const label = FatorAjusteLabelGenerator.generate(fa);
                 this.fatoresAjuste.push( { label, value: fa } );
             });
-            this.fatoresAjuste.push({ label: this.getLabel('Global.Mensagens.Nenhum'), value: null });
+            this.fatoresAjuste.unshift({ label: this.getLabel('Global.Mensagens.Nenhum'), value: undefined });
         }
     }
 
@@ -380,7 +380,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      */
     private carregaFatorAjusteNaEdicao() {
         const fa: any = this.analise.fatorAjuste;
-         this.fatorAjuste = this.fatoresAjuste.find((f) => f.value.id === fa.value.id ).value;
+        this.fatorAjuste = this.fatoresAjuste.find((f) => f.value.id === fa.value.id ).value;
     }
 
     /**
