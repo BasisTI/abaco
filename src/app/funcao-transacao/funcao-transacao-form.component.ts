@@ -398,7 +398,18 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         if (!this.analise.funcaoTransacaos) {
             return [];
         }
+        this.createPropertiesFlters();
         return this.analise.funcaoTransacaos;
+    }
+
+    /**
+     * Este método gera os campos dinâmicos necessários para realizar filtros
+     */
+    private createPropertiesFlters() {
+        this.analise.funcaoTransacaos.forEach(ft => Object.defineProperties(ft, {
+            'derFilter': {value: ft.derValue(), writable: true},
+            'ftrFilter': {value: ft.ftrValue(), writable: true}
+        }));
     }
 
     set funcoesTransacoes(funcoesTransacaoes: FuncaoTransacao[]) {

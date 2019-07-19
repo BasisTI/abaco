@@ -162,30 +162,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         private analiseService: AnaliseService,
         private baselineService: BaselineService,
         private translate: TranslateService
-    ) {
-        const colunas = [
-            { header: 'Nome', field: 'name' },
-            { header: 'Deflator' },
-            { header: 'Impacto', field: 'impacto' },
-            { header: 'Módulo' },
-            { header: 'Funcionalidade' },
-            { header: 'Classificação', field: 'tipo' },
-            { header: 'DER (TD)' },
-            { header: 'RLR (TR)' },
-            { header: 'Complexidade', field: 'complexidade' },
-            { header: 'PF - Total' },
-            { header: 'PF - Ajustado' },
-            { header: 'Possui Fundamentação' },
-        ];
-
-        this.colunasOptions = colunas.map((col, index) => {
-            col['index'] = index;
-            return {
-                label: col.header,
-                value: col,
-            };
-        });
-    }
+    ) {}
 
     getLabel(label: string | string[]) {
         let str: any;
@@ -214,7 +191,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.subscribeToAnaliseCarregada();
         this.colunasAMostrar = [];
         this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
-        this.traduzirColunas();
         this.traduzirClassificacoes();
         this.traduzirImpactos();
     }
@@ -329,32 +305,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.isEdit = true;
         this.prepararParaEdicao(this.funcaoDadosEditar);
     }
-    /*
-    *   Metodo responsavel por traduzir as colunas que ficam em função de dados de Analise
-    */
-    traduzirColunas() {
-        this.translate.stream(['Cadastros.FuncaoDados.Nome', 'Cadastros.FuncaoDados.Deflator', 'Cadastros.FuncaoDados.Impacto',
-            'Cadastros.FuncaoDados.Modulo', 'Cadastros.FuncaoDados.Funcionalidade', 'Cadastros.FuncaoDados.Classificacao',
-            'Cadastros.FuncaoDados.DER(TD)', 'Cadastros.FuncaoDados.RLR(TR)', 'Cadastros.FuncaoDados.Complexidade',
-            'Cadastros.FuncaoDados.PFTotal', 'Cadastros.FuncaoDados.PFAjustado', 'Cadastros.FuncaoTransacao.PossuiFundamentacao']
-            ).subscribe((traducao) => {
-                this.colunasAMostrar = [
-                    { header: traducao['Cadastros.FuncaoDados.Nome'], field: 'name' },
-                    { header: traducao['Cadastros.FuncaoDados.Deflator'] },
-                    { header: traducao['Cadastros.FuncaoDados.Impacto'], field: 'impacto' },
-                    { header: traducao['Cadastros.FuncaoDados.Modulo'] },
-                    { header: traducao['Cadastros.FuncaoDados.Funcionalidade'] },
-                    { header: traducao['Cadastros.FuncaoDados.Classificacao'], field: 'tipo' },
-                    { header: traducao['Cadastros.FuncaoDados.DER(TD)'] },
-                    { header: traducao['Cadastros.FuncaoDados.RLR(TR)'] },
-                    { header: traducao['Cadastros.FuncaoDados.Complexidade'], field: 'complexidade' },
-                    { header: traducao['Cadastros.FuncaoDados.PFTotal'] },
-                    { header: traducao['Cadastros.FuncaoDados.PFAjustado'] },
-                    { header: traducao['Cadastros.FuncaoTransacao.PossuiFundamentacao'] },
-                ];
-
-            })
-    }
+    
     public onChange({ editor }: ChangeEvent) {
         const data = editor.getData();
         return data;
@@ -512,16 +463,17 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         if (!this.analise.funcaoDados) {
             return [];
         }
-        // return this.analise.funcaoDados.sort((a, b) => {
-        //     if (a.funcionalidade.nome > b.funcionalidade.nome) {
-        //         return 1;
-        //     }
-        //     if (a.funcionalidade.nome < b.funcionalidade.nome) {
-        //         return -1;
-        //     }
-        //     return 0;
-        // });
+        this.setFieldsFilter();
         return this.analise.funcaoDados;
+    }
+
+    private setFieldsFilter() {
+        this.analise.funcaoDados.forEach(fd => Object.defineProperties(fd, {
+            'derFilter': {value: fd.derValue(), writable: true},
+            'rlrFilter': {value: fd.rlrValue(), writable: true},
+            'fatorAjusteFilter': {value: this.formataFatorAjuste(fd.fatorAjuste), writable: true},
+            'impactoFilter': {value: this.updateNameImpacto(fd.impacto), writable: true}
+        }));
     }
 
     set funcoesDados(funcaoDados: FuncaoDados[]) {

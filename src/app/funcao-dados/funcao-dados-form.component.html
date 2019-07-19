@@ -22,85 +22,141 @@
                                               (dblclick)="onRowDblclick($event)"
                                               [responsive]="true" scrollable="true" scrollWidth="100%">
 
-                            <div *ngFor="let col of colunasAMostrar">
-                                <div *ngIf="col.field; else template_column">
-                                    <p-column 
-                                        [field]="col.field" 
-                                        [header]="col.header"
-                                        sortable="custom" 
-                                        (sortFunction)="sortColumn($event)"
-                                        [name]="col.header"
-                                        filter="true"
-                                        [style]="{'width': '200px'}">
-                                        <ng-template *ngIf="col.header === 'Impacto'" let-impacto="rowData.impacto"
-                                                     pTemplate="body">
-                                            <app-ellipsis-tooltip [value]="updateNameImpacto(impacto)">
-
-                                            </app-ellipsis-tooltip>
-                                        </ng-template>
-                                    </p-column>
-                                </div>
-
-                                <ng-template #template_column>
-                                    <p-column   
-                                        [header]="col.header" 
-                                        [field]="col.field" 
-                                        sortable="custom" 
-                                        (sortFunction)="sortColumn($event)"
-                                        [name]="col.header" 
-                                        filter="true"
-                                        [style]="{'width': '200px'}">
-                                        <ng-template *ngIf="col.header === 'Deflator'"
-                                                     let-fatorAjuste="rowData.fatorAjuste"
-                                                     pTemplate="body">
-                                            <app-ellipsis-tooltip [value]="formataFatorAjuste(fatorAjuste)">
-
-                                            </app-ellipsis-tooltip>
-                                        </ng-template>
-
-                                        <ng-template *ngIf="col.header === 'Módulo'"
-                                                     let-modulo="rowData.funcionalidade.modulo"
-                                                     pTemplate="body">
-                                            <app-ellipsis-tooltip [value]="modulo.nome">
-                                            </app-ellipsis-tooltip>
-                                        </ng-template>
-
-                                        <ng-template *ngIf="col.header === 'Funcionalidade'"
-                                                     let-funcionalidade="rowData.funcionalidade"
-                                                     pTemplate="body">
-                                            <app-ellipsis-tooltip [value]="funcionalidade.nome">
-                                            </app-ellipsis-tooltip>
-                                        </ng-template>
-
-                                        <ng-template *ngIf="col.header === 'DER (TD)'" let-funcaoDados="rowData"
-                                                     pTemplate="body">
-                                            <app-ellipsis-tooltip [value]="funcaoDados.derValue()">
-                                            </app-ellipsis-tooltip>
-                                        </ng-template>
-
-                                        <ng-template *ngIf="col.header === 'RLR (TR)'" let-funcaoDados="rowData"
-                                                     pTemplate="body">
-                                            <app-ellipsis-tooltip [value]="funcaoDados.rlrValue()">
-                                            </app-ellipsis-tooltip>
-                                        </ng-template>
-
-                                        <ng-template *ngIf="col.header === 'PF - Total'" let-grossPF="rowData.grossPF"
-                                                     pTemplate="body">
-                                            {{ grossPF | number }}
-                                        </ng-template>
-                                        <ng-template *ngIf="col.header === 'PF - Ajustado'" let-pf="rowData.pf"
-                                                     pTemplate="body">
-                                            {{ pf | number }}
-                                        </ng-template>
-                                        <ng-template *ngIf="col.header === 'Possui Fundamentação'" let-sustentation="rowData.sustantation"
-                                                     pTemplate="body">
-                                            {{ sustentation ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
-                                        </ng-template>
-
-                                    </p-column>
-                                </ng-template>
-
-                            </div>
+                                        <p-column
+                                              field="name"
+                                              filter="true"
+                                              name="nomeFuncaoDadosFormComponent"
+                                              id="idNomeFuncaoDadosFormComponent"
+                                              [header]="this.getLabel('Cadastros.FuncaoDados.Nome')"
+                                              sortable="true"
+                                              (sortFunction)="sortColumn($event)"
+                                              [style]="{'width': '200px'}">
+                                        </p-column>
+              
+                                        <p-column
+                                            field="fatorAjusteFilter"
+                                            filter="true"
+                                            name="fatorAjusteFuncaoDadosFormComponent"
+                                            id="idFatorAjusteFuncaoDadosFormComponent"
+                                            [header]="this.getLabel('Cadastros.FuncaoDados.Deflator')"
+                                            sortable="true"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                        </p-column>
+            
+                                        <p-column
+                                            field="impactoFilter"
+                                            filter="true"
+                                            name="impactoFuncaoDadosFormComponent"
+                                            id="idImpaqctoFuncaoDadosFormComponent"
+                                            [header]="this.getLabel('Cadastros.FuncaoDados.Impacto')"
+                                            sortable="true"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                        </p-column>
+            
+                                        <p-column
+                                            field="funcionalidade.modulo.nome"
+                                            filter="true"
+                                            name="nomeModuloFuncaoDadosFormComponent"
+                                            id="idNomeModuloFuncaoDadosFormComponent"
+                                            [header]="this.getLabel('Cadastros.FuncaoDados.Modulo')"
+                                            sortable="true"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                        </p-column>
+            
+                                        <p-column
+                                            field="funcionalidade.nome"
+                                            filter="true"
+                                            name="nomeFuncionalidadeFuncaoDadosFormComponent"
+                                            id="idNomeFuncionalidadeFuncaoDadosFormComponent"
+                                            [header]="this.getLabel('Cadastros.FuncaoDados.Funcionalidade')"
+                                            sortable="true"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                        </p-column>
+            
+                                        <p-column
+                                            field="tipo"
+                                            filter="true"
+                                            name="tipoFuncaoDadosFormComponent"
+                                            id="idTipoFuncaoDadosFormComponent"
+                                            [header]="this.getLabel('Cadastros.FuncaoDados.Classificacao')"
+                                            sortable="true"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                        </p-column>
+            
+                                        <p-column
+                                            field="derFilter"
+                                            filter="true"
+                                            name="derFuncaoDadosFormComponent"
+                                            id="idDerFuncaoDadosFormComponent"
+                                            [header]="this.getLabel('Cadastros.FuncaoDados.DER(TD)')"
+                                            sortable="true"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                        </p-column>
+            
+                                        <p-column
+                                            field="rlrFilter"
+                                            filter="true"
+                                            name="rlrFuncaoDadosFormComponent"
+                                            id="idRlrFuncaoDadosFormComponent"
+                                            [header]="this.getLabel('Cadastros.FuncaoDados.RLR(TR)')"
+                                            sortable="true"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                        </p-column>
+            
+                                        <p-column
+                                            field="complexidade"
+                                            filter="true"
+                                            name="complexidadeFuncaoDadosFormComponent"
+                                            id="idComplexidadeFuncaoDadosFormComponent"
+                                            [header]="this.getLabel('Cadastros.FuncaoDados.Complexidade')"
+                                            sortable="true"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                        </p-column>
+            
+                                        <p-column
+                                            field="grossPF"
+                                            filter="true"
+                                            name="pfTotalFuncaoDadosFormComponent"
+                                            id="idPfTotalFuncaoDadosFormComponent"
+                                            [header]="this.getLabel('Cadastros.FuncaoDados.PFAjustado')"
+                                            sortable="true"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                        </p-column>
+            
+                                        <p-column
+                                            field="pf"
+                                            filter="true"
+                                            name="pfFuncaoDadosFormComponent"
+                                            id="idPfFuncaoDadosFormComponent"
+                                            [header]="this.getLabel('Cadastros.FuncaoDados.RLR(TR)')"
+                                            sortable="true"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                        </p-column>
+            
+                                        <p-column
+                                            field="sustantation"
+                                            filter="true"
+                                            name="sustentantionFuncaoDadosFormComponent"
+                                            id="idSustentantionFuncaoDadosFormComponent"
+                                            [header]="this.getLabel('Cadastros.FuncaoDados.PossuiFundamentacao')"
+                                            sortable="true"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                            <ng-template let-sustentation="rowData.sustantation"
+                                                                pTemplate="body">
+                                                {{ sustentation ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
+                                            </ng-template>
+                                        </p-column>
                         </app-memory-datatable>
                     </div>
                 </div>
