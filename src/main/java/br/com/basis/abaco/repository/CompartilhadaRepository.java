@@ -22,6 +22,4 @@ public interface CompartilhadaRepository extends JpaRepository<Compartilhada,Lon
     @Query(value = "SELECT a.analiseId FROM Compartilhada a WHERE a.equipeId IN :idEquipes")
     List<BigInteger> findByEquipeId(@Param("idEquipes") List<Long> idEquipes);
 
-    Boolean existsByAnaliseId(Long analiseId);
-
 }
