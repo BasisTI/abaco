@@ -304,7 +304,7 @@ public class AnaliseResource {
         } else {
             return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new Analise());
+                .body(null);
         }
 
     }
@@ -619,11 +619,11 @@ public class AnaliseResource {
     }
 
     private Boolean verificaCompartilhada(Long idAnalise) {
-        if (analiseRepository.analiseCompartilhada(idAnalise) == null) {
-            return false;
+        Boolean result = compartilhadaRepository.existsByAnaliseId(idAnalise);
+        if (result != null) {
+            return result;
         }
-        return analiseRepository.analiseCompartilhada(idAnalise);
-
+        return false;
     }
 
     private Analise recuperarAnalise(Long id) {
