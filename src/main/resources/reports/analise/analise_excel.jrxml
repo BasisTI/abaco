@@ -675,7 +675,7 @@
 				<text><![CDATA[Total:]]></text>
 			</staticText>
 		</band>
-		<band height="136">
+		<band height="114">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 			<staticText>
 				<reportElement positionType="Float" x="0" y="34" width="611" height="18" uuid="4513f641-9471-4ab0-ab6e-a345ff7bbaf4">
@@ -995,13 +995,13 @@
 				<textFieldExpression><![CDATA[$V{sumTotalAJUSTPFFT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="Float" x="1" y="0" width="801" height="1" uuid="174e587b-b4cf-40f5-ae5e-d1b50da16f2c">
+				<reportElement positionType="Float" x="1" y="4" width="801" height="1" uuid="174e587b-b4cf-40f5-ae5e-d1b50da16f2c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 			</line>
 			<rectangle>
-				<reportElement x="0" y="4" width="802" height="18" uuid="6367358e-555b-4561-a271-98c84927582a"/>
+				<reportElement x="0" y="7" width="802" height="18" uuid="6367358e-555b-4561-a271-98c84927582a"/>
 				<graphicElement>
 					<pen lineColor="#FFFFFF"/>
 				</graphicElement>
