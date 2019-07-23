@@ -619,11 +619,7 @@ public class AnaliseResource {
     }
 
     private Boolean verificaCompartilhada(Long idAnalise) {
-        Boolean result = compartilhadaRepository.existsByAnaliseId(idAnalise);
-        if (result != null) {
-            return result;
-        }
-        return false;
+        return compartilhadaRepository.existsByAnaliseId(idAnalise);
     }
 
     private Analise recuperarAnalise(Long id) {
