@@ -5,9 +5,6 @@ import br.com.basis.abaco.repository.document.FaseDocument;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring", uses = {})
-public interface FaseDocumentMapper {
+public interface FaseDocumentMapper extends EntityDocumentMapper<FaseDocument, Fase> {
 
-    FaseDocument toDocument(Fase fase);
-
-    Fase toEntity(FaseDocument document);
 }

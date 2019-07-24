@@ -7,9 +7,11 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.io.Serializable;
+
 @Document(indexName = "fase")
 @Data
-public class FaseDocument {
+public class FaseDocument implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
