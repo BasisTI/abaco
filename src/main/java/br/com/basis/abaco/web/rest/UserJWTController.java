@@ -37,71 +37,71 @@ import java.util.Collections;
 @RequestMapping("/api")
 public class UserJWTController {
 
-	private final Logger log = LoggerFactory.getLogger(UserJWTController.class);
+  private final Logger log = LoggerFactory.getLogger(UserJWTController.class);
 
-	private final TokenProvider tokenProvider;
+  private final TokenProvider tokenProvider;
 
-	private final AuthenticationManager authenticationManager;
+  private final AuthenticationManager authenticationManager;
 
-	private UserService userService;
+  private UserService userService;
 
-	private CookieUtil cookieUtil;
+  private CookieUtil cookieUtil;
 
-	public UserJWTController(TokenProvider tokenProvider, AuthenticationManager authenticationManager,
-			UserService userService, CookieUtil cookieUtil) {
-		this.tokenProvider = tokenProvider;
-		this.authenticationManager = authenticationManager;
-		this.userService = userService;
-		this.cookieUtil = cookieUtil;
-	}
+  public UserJWTController(TokenProvider tokenProvider, AuthenticationManager authenticationManager,
+      UserService userService, CookieUtil cookieUtil) {
+    this.tokenProvider = tokenProvider;
+    this.authenticationManager = authenticationManager;
+    this.userService = userService;
+    this.cookieUtil = cookieUtil;
+  }
 
-	@PostMapping("/authenticate")
-	@Timed
-	@SuppressWarnings("rawtypes")
-	public ResponseEntity authorize(@Valid @RequestBody LoginVM loginVM, HttpServletResponse response) {
+  @PostMapping("/authenticate")
+  @Timed
+  @SuppressWarnings("rawtypes")
+  public ResponseEntity authorize(@Valid @RequestBody LoginVM loginVM, HttpServletResponse response) {
 
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-				loginVM.getUsername(), loginVM.getPassword());
+    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+        loginVM.getUsername(), loginVM.getPassword());
 
-		try {
-			Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-			boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();
-			String jwt = tokenProvider.createToken(authentication, rememberMe);
-			response.addHeader(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
+    try {
+      Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+      boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();
+      String jwt = tokenProvider.createToken(authentication, rememberMe);
+      response.addHeader(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-			cookieUtil.create(response, jwt);
+      cookieUtil.create(response, jwt);
 
-			return ResponseEntity.ok(new JWTToken(jwt));
-		} catch (AuthenticationException ae) {
-			log.trace("Authentication exception trace: {}", ae);
-			return new ResponseEntity<>(Collections.singletonMap("AuthenticationException", ae.getLocalizedMessage()),
-					HttpStatus.UNAUTHORIZED);
-		}
-	}
+      return ResponseEntity.ok(new JWTToken(jwt));
+    } catch (AuthenticationException ae) {
+      log.trace("Authentication exception trace: {}", ae);
+      return new ResponseEntity<>(Collections.singletonMap("AuthenticationException", ae.getLocalizedMessage()),
+          HttpStatus.UNAUTHORIZED);
+    }
+  }
 
-	@GetMapping("/logout")
-	@Timed
-	public ResponseEntity<Void> logout(HttpServletResponse response) {
-		cookieUtil.clear(response);
-		return ResponseEntity.ok().build();
-	}
+  @GetMapping("/logout")
+  @Timed
+  public ResponseEntity<Void> logout(HttpServletResponse response) {
+    cookieUtil.clear(response);
+    return ResponseEntity.ok().build();
+  }
 
-	@GetMapping("/user/details")
-	@Timed
-	public ResponseEntity<BasisUserDetails> getUserDetails(
-			@CookieValue(name = AuthenticationConstants.TOKEN_NAME, defaultValue = "notFound") String token)
-			throws URISyntaxException {
-		if (!token.equals("notFound")) {
-			return ResponseEntity.ok(generateUserDetails());
-		}
+  @GetMapping("/user/details")
+  @Timed
+  public ResponseEntity<BasisUserDetails> getUserDetails(
+      @CookieValue(name = AuthenticationConstants.TOKEN_NAME, defaultValue = "notFound") String token)
+      throws URISyntaxException {
+    if (!token.equals("notFound")) {
+      return ResponseEntity.ok(generateUserDetails());
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	private BasisUserDetails generateUserDetails() {
-		User currentUser = userService.getUserWithAuthorities();
-		Collection<? extends GrantedAuthority> currentUserRoles = SecurityUtils.getCurrentUserRoles();
-		return new BasisUserDetails(currentUser.getFirstName(), currentUser.getLastName(), currentUserRoles);
-	}
+  private BasisUserDetails generateUserDetails() {
+    User currentUser = userService.getUserWithAuthorities();
+    Collection<? extends GrantedAuthority> currentUserRoles = SecurityUtils.getCurrentUserRoles();
+    return new BasisUserDetails(currentUser.getFirstName(), currentUser.getLastName(), currentUserRoles);
+  }
 }

@@ -15,6 +15,7 @@ import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UserProfile;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Transactional
 public class SocialService {
 
     private final Logger log = LoggerFactory.getLogger(SocialService.class);
@@ -75,9 +77,36 @@ public class SocialService {
     private User createUserIfNotExist(UserProfile userProfile, String langKey, String providerId, String imageUrl) {
         String email = userProfile.getEmail();
         String userName = userProfile.getUsername();
+        User user = verificarDados(email, userName);
+        if (user != null){ return user; }
+
+        String login = getLoginDependingOnProviderId(userProfile, providerId);
+        String encryptedPassword = passwordEncoder.encode(RandomStringUtils.random(10));
+        Set<Authority> authorities = new HashSet<>(1);
+        authorities.add(authorityRepository.findOne("ROLE_USER"));
+
+        User newUser = getUser(userProfile, langKey, imageUrl, email, login, encryptedPassword, authorities);
+
+        userSearchRepository.save(newUser);
+        return userRepository.save(newUser);
+    }
+
+    private User verificarDados(String email, String userName) {
+        String newUserName;
+        User user;
         if (!StringUtils.isBlank(userName)) {
-            userName = userName.toLowerCase(Locale.ENGLISH);
+            newUserName = userName.toLowerCase(Locale.ENGLISH);
+            user = verifyUserEmail(email, newUserName);
+        } else {
+            user = verifyUserEmail(email, userName);
         }
+        if (user != null) {
+            return user;
+        }
+        return null;
+    }
+
+    private User verifyUserEmail(String email, String userName) {
         if (StringUtils.isBlank(email) && StringUtils.isBlank(userName)) {
             log.error("Cannot create social user because email and login are null");
             throw new IllegalArgumentException("Email and login cannot be null");
@@ -93,12 +122,10 @@ public class SocialService {
                 return user.get();
             }
         }
+        return null;
+    }
 
-        String login = getLoginDependingOnProviderId(userProfile, providerId);
-        String encryptedPassword = passwordEncoder.encode(RandomStringUtils.random(10));
-        Set<Authority> authorities = new HashSet<>(1);
-        authorities.add(authorityRepository.findOne("ROLE_USER"));
-
+    private User getUser(UserProfile userProfile, String langKey, String imageUrl, String email, String login, String encryptedPassword, Set<Authority> authorities) {
         User newUser = new User();
         newUser.setLogin(login);
         newUser.setPassword(encryptedPassword);
@@ -109,9 +136,7 @@ public class SocialService {
         newUser.setAuthorities(authorities);
         newUser.setLangKey(langKey);
         newUser.setImageUrl(imageUrl);
-
-        userSearchRepository.save(newUser);
-        return userRepository.save(newUser);
+        return newUser;
     }
 
     /**

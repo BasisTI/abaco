@@ -39,10 +39,8 @@ spring:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:postgresql://localhost:5432/abaco
-        # username: abaco
-        # password: abaco
-        username: postgres
-        password: 1
+        username: abaco
+        password: abaco
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
@@ -54,17 +52,14 @@ spring:
             hibernate.generate_statistics: true
             hibernate.default_schema: public
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.NoDefaultJCacheRegionFactory
+            hibernate.event.merge.entity_copy_observe: allow
     data:
         elasticsearch:
             cluster-name:
             cluster-nodes: localhost:9300
-            properties:
-                path:
-                  logs: target/elasticsearch/log
-                  data: target/elasticsearch/data
     mail:
-        host: smtp.basis.intern
-        port: 25
+        host: localhost
+        port: 1025
         username:
         password:
     messages:
@@ -149,6 +144,3 @@ jhipster:
 
 application:
 
-logging:
-    level:
-        org.elasticsearch: DEBUG

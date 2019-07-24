@@ -13,17 +13,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -36,14 +38,16 @@ import java.util.Set;
 public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final String FUNCAODADOS = "funcaoDados";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo")
     private TipoFuncaoDados tipo;
 
-    @OneToMany(mappedBy = "funcaoDados")
+    @OneToMany(mappedBy = FUNCAODADOS)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @OrderBy("nome ASC, id ASC")
     private Set<Funcionalidade> funcionalidades = new HashSet<>();
 
     @Column
@@ -52,23 +56,23 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @Column
     private Integer quantidade;
 
-    @JsonManagedReference(value = "funcaoDados")
-    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference(value = FUNCAODADOS)
+    @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Rlr> rlrs = new HashSet<>();
 
     @ManyToOne
     private Alr alr;
 
-    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
 
     @Transient
     private Set<String> rlrValues;
 
-    @JsonManagedReference(value = "funcaoDados")
-    @OneToMany(mappedBy = "funcaoDados", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<Der> ders = new HashSet<>();
+    @JsonManagedReference(value = FUNCAODADOS)
+    @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Der> ders = new LinkedHashSet<>();
 
     @JsonIgnore
     @ManyToOne
@@ -92,53 +96,77 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Funcionalidade> getFuncionalidades() {
-        return funcionalidades;
+        return Optional.ofNullable(this.funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public FuncaoDados funcionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = funcionalidades;
+        this.funcionalidades = Optional.ofNullable(funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
         return this;
     }
 
     public FuncaoDados addFuncionalidade(Funcionalidade funcionalidade) {
+        if (funcionalidade == null) {
+            return this;
+        }
         this.funcionalidades.add(funcionalidade);
         funcionalidade.setFuncaoDados(this);
         return this;
     }
 
     public FuncaoDados removeFuncionalidade(Funcionalidade funcionalidade) {
+        if (funcionalidade == null) {
+            return this;
+        }
         this.funcionalidades.remove(funcionalidade);
         funcionalidade.setFuncaoDados(null);
         return this;
     }
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = funcionalidades;
+        this.funcionalidades = Optional.ofNullable(funcionalidades)
+            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+            .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public Set<Rlr> getRlrs() {
-        return rlrs;
+        return Optional.ofNullable(this.rlrs)
+            .map(lista -> new LinkedHashSet<Rlr>(lista))
+            .orElse(new LinkedHashSet<Rlr>());
     }
 
     public FuncaoDados rlrs(Set<Rlr> rlrs) {
-        this.rlrs = rlrs;
+        this.rlrs = Optional.ofNullable(rlrs)
+            .map(lista -> new LinkedHashSet<Rlr>(lista))
+            .orElse(new LinkedHashSet<Rlr>());
         return this;
     }
 
     public FuncaoDados addRlr(Rlr rlr) {
+        if (rlr == null) {
+            return this;
+        }
         this.rlrs.add(rlr);
         rlr.setFuncaoDados(this);
         return this;
     }
 
     public FuncaoDados removeRlr(Rlr rlr) {
+        if (rlr == null) {
+            return this;
+        }
         this.rlrs.remove(rlr);
         rlr.setFuncaoDados(null);
         return this;
     }
 
     public void setRlrs(Set<Rlr> rlrs) {
-        this.rlrs = rlrs;
+        this.rlrs = Optional.ofNullable(rlrs)
+            .map(lista -> new LinkedHashSet<Rlr>(lista))
+            .orElse(new LinkedHashSet<Rlr>());
     }
 
     public Alr getAlr() {
@@ -183,11 +211,15 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public List<UploadedFile> getFiles() {
-        return files;
+        List<UploadedFile> cp = new ArrayList<>();
+        cp.addAll(files);
+        return cp;
     }
 
     public void setFiles(List<UploadedFile> files) {
-        this.files = files;
+        List<UploadedFile> cp = new ArrayList<>();
+        cp.addAll(files);
+        this.files = cp;
     }
 
     public Set<String> getRlrValues() {
@@ -195,7 +227,9 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public void setRlrValues(Set<String> rlrValues) {
-        this.rlrValues = new HashSet<String>(rlrValues);
+        this.rlrValues = Optional.ofNullable(rlrValues)
+            .map((lista) -> new HashSet<String>(lista))
+            .orElse(new HashSet<String>());
     }
 
     public Set<Der> getDers() {
@@ -203,7 +237,9 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     }
 
     public void setDers(Set<Der> ders) {
-        this.ders = new HashSet<Der>(ders);
+        this.ders = Optional.ofNullable(ders)
+        .map(LinkedHashSet::new)
+        .orElse(new LinkedHashSet<Der>());
     }
 
     public FuncaoDadosVersionavel getFuncaoDadosVersionavel() {
@@ -214,13 +250,13 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
         this.funcaoDadosVersionavel = funcaoDadosVersionavel;
     }
 
-	public ImpactoFatorAjuste getImpacto() {
-		return impacto;
-	}
+    public ImpactoFatorAjuste getImpacto() {
+        return impacto;
+    }
 
-	public void setImpacto(ImpactoFatorAjuste impacto) {
-		this.impacto = impacto;
-	}
+    public void setImpacto(ImpactoFatorAjuste impacto) {
+        this.impacto = impacto;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -233,4 +269,5 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
+
 }

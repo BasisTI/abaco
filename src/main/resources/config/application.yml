@@ -48,12 +48,14 @@ spring:
            max-file-size: 15MB
            max-request-size: 15MB
     jpa:
-        open-in-view: false
+        open-in-view: true
         hibernate:
             ddl-auto: none
             naming:
                 physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
                 implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        properties:
+            hibernate.event.merge.entity_copy_observer: allow
     messages:
         basename: i18n/messages
     mvc:

@@ -95,6 +95,9 @@ public class Der implements Serializable {
     }
 
     public FuncaoTransacao getFuncaoTransacao() {
+        if (funcaoTransacao == null) {
+            return null;
+        }
         return funcaoTransacao;
     }
 

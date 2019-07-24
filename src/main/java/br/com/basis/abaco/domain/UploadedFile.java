@@ -12,6 +12,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -21,7 +22,7 @@ import java.util.Date;
 @Entity
 @Table(name = "files")
 
-public class UploadedFile {
+public class UploadedFile implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -86,11 +87,11 @@ public class UploadedFile {
     }
 
     public Date getDateOf() {
-        return dateOf;
+        return (Date) dateOf.clone();
     }
 
     public void setDateOf(Date dateOf) {
-        this.dateOf = dateOf;
+        this.dateOf = (Date) dateOf.clone();
     }
 
     public Integer getSizeOf() {

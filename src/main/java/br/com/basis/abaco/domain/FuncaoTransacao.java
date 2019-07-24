@@ -13,16 +13,18 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -35,14 +37,16 @@ import java.util.Set;
 public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static  final String FUNCAOTRANSACAO = "funcaoTransacao";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo")
     private TipoFuncaoTransacao tipo;
 
-    @OneToMany(mappedBy = "funcaoTransacao")
+    @OneToMany(mappedBy = FUNCAOTRANSACAO)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @OrderBy("nome ASC, id ASC")
     private Set<Funcionalidade> funcionalidades = new HashSet<>();
 
     @Column
@@ -52,12 +56,12 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     private Integer quantidade;
 
 
-    @JsonManagedReference(value = "funcaoTransacao")
-    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference(value = FUNCAOTRANSACAO)
+    @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Alr> alrs = new HashSet<>();
 
-    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UploadedFile> files = new ArrayList<>();
 
     @Transient
@@ -67,8 +71,8 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     @Column(name = "impacto")
     private ImpactoFatorAjuste impacto;
 
-    @JsonManagedReference(value = "funcaoTransacao")
-    @OneToMany(mappedBy = "funcaoTransacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference(value = FUNCAOTRANSACAO)
+    @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Der> ders = new HashSet<>();
 
     public TipoFuncaoTransacao getTipo() {
@@ -85,53 +89,77 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Funcionalidade> getFuncionalidades() {
-        return funcionalidades;
+        return Optional.ofNullable(this.funcionalidades)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public FuncaoTransacao funcionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = funcionalidades;
+        this.funcionalidades = Optional.ofNullable(funcionalidades)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<Funcionalidade>());
         return this;
     }
 
     public FuncaoTransacao addFuncionalidade(Funcionalidade funcionalidade) {
+        if (funcionalidade == null) {
+            return this;
+        }
         this.funcionalidades.add(funcionalidade);
         funcionalidade.setFuncaoTransacao(this);
         return this;
     }
 
     public FuncaoTransacao removeFuncionalidade(Funcionalidade funcionalidade) {
+        if (funcionalidade == null) {
+            return this;
+        }
         this.funcionalidades.remove(funcionalidade);
         funcionalidade.setFuncaoTransacao(null);
         return this;
     }
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = funcionalidades;
+        this.funcionalidades = Optional.ofNullable(funcionalidades)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public Set<Alr> getAlrs() {
-        return alrs;
+        return Optional.ofNullable(this.alrs)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<Alr>());
     }
 
     public FuncaoTransacao alrs(Set<Alr> alrs) {
-        this.alrs = alrs;
+        this.alrs = Optional.ofNullable(alrs)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<Alr>());
         return this;
     }
 
     public FuncaoTransacao addAlr(Alr alr) {
+        if (alr == null) {
+            return this;
+        }
         this.alrs.add(alr);
         alr.setFuncaoTransacao(this);
         return this;
     }
 
     public FuncaoTransacao removeAlr(Alr alr) {
+        if (alr == null) {
+            return this;
+        }
         this.alrs.remove(alr);
         alr.setFuncaoTransacao(null);
         return this;
     }
 
     public void setAlrs(Set<Alr> alrs) {
-        this.alrs = alrs;
+        this.alrs = Optional.ofNullable(alrs)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<Alr>());
     }
 
     public String getFtrStr() {
@@ -143,11 +171,15 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Der> getDers() {
-        return Collections.unmodifiableSet(ders);
+        return Optional.ofNullable(ders)
+               .map(HashSet::new)
+                .orElse(new HashSet<>());
     }
 
     public void setDers(Set<Der> ders) {
-        this.ders = new HashSet<Der>(ders);
+        this.ders = Optional.ofNullable(ders)
+            .map(HashSet::new)
+            .orElse(new HashSet<Der>());
     }
 
     @Override
@@ -171,11 +203,15 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public List<UploadedFile> getFiles() {
-        return files;
+        return Optional.ofNullable(files)
+            .map(ArrayList::new)
+            .orElse(new ArrayList<>());
     }
 
     public void setFiles(List<UploadedFile> files) {
-        this.files = files;
+        this.files = Optional.ofNullable(files)
+            .map(ArrayList::new)
+            .orElse(new ArrayList<>());
     }
 
     public Set<String> getFtrValues() {
@@ -183,7 +219,9 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public void setFtrValues(Set<String> ftrValues) {
-        this.ftrValues = new HashSet<String>(ftrValues);
+        this.ftrValues = Optional.ofNullable(ftrValues)
+            .map(HashSet::new)
+            .orElse(new HashSet<String>());
     }
 
     public ImpactoFatorAjuste getImpacto() {
@@ -205,4 +243,5 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
+
 }

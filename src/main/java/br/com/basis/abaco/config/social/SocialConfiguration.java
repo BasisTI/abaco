@@ -63,36 +63,24 @@ public class SocialConfiguration implements SocialConfigurer {
     @Override
     public void addConnectionFactories(ConnectionFactoryConfigurer connectionFactoryConfigurer, Environment environment) {
         // Google configuration
-        String googleClientId = environment.getProperty("spring.social.google.client-id");
-        String googleClientSecret = environment.getProperty("spring.social.google.client-secret");
-        if (googleClientId != null && googleClientSecret != null) {
-            log.debug("Configuring GoogleConnectionFactory");
-            connectionFactoryConfigurer.addConnectionFactory(
-                new GoogleConnectionFactory(
-                    googleClientId,
-                    googleClientSecret
-                )
-            );
-        } else {
-            log.error("Cannot configure GoogleConnectionFactory id or secret null");
-        }
+        configurarGoogleClient(connectionFactoryConfigurer, environment);
 
         // Facebook configuration
-        String facebookClientId = environment.getProperty("spring.social.facebook.client-id");
-        String facebookClientSecret = environment.getProperty("spring.social.facebook.client-secret");
-        if (facebookClientId != null && facebookClientSecret != null) {
-            log.debug("Configuring FacebookConnectionFactory");
-            connectionFactoryConfigurer.addConnectionFactory(
-                new FacebookConnectionFactory(
-                    facebookClientId,
-                    facebookClientSecret
-                )
-            );
-        } else {
-            log.error("Cannot configure FacebookConnectionFactory id or secret null");
-        }
+        configurarFacebookClient(connectionFactoryConfigurer, environment);
 
         // Twitter configuration
+        configurarTwitterClient(connectionFactoryConfigurer, environment);
+
+        // jhipster-needle-add-social-connection-factory
+    }
+
+    private void configurarGoogleClient(ConnectionFactoryConfigurer connectionFactoryConfigurer, Environment environment) {
+        String googleClientId = environment.getProperty("spring.social.google.client-id");
+        String googleClientSecret = environment.getProperty("spring.social.google.client-secret");
+        validaGoogleClient(connectionFactoryConfigurer, googleClientId, googleClientSecret);
+    }
+
+    private void configurarTwitterClient(ConnectionFactoryConfigurer connectionFactoryConfigurer, Environment environment) {
         String twitterClientId = environment.getProperty("spring.social.twitter.client-id");
         String twitterClientSecret = environment.getProperty("spring.social.twitter.client-secret");
         if (twitterClientId != null && twitterClientSecret != null) {
@@ -106,8 +94,36 @@ public class SocialConfiguration implements SocialConfigurer {
         } else {
             log.error("Cannot configure TwitterConnectionFactory id or secret null");
         }
+    }
 
-        // jhipster-needle-add-social-connection-factory
+    private void configurarFacebookClient(ConnectionFactoryConfigurer connectionFactoryConfigurer, Environment environment) {
+        String facebookClientId = environment.getProperty("spring.social.facebook.client-id");
+        String facebookClientSecret = environment.getProperty("spring.social.facebook.client-secret");
+        if (facebookClientId != null && facebookClientSecret != null) {
+            log.debug("Configuring FacebookConnectionFactory");
+            connectionFactoryConfigurer.addConnectionFactory(
+                new FacebookConnectionFactory(
+                    facebookClientId,
+                    facebookClientSecret
+                )
+            );
+        } else {
+            log.error("Cannot configure FacebookConnectionFactory id or secret null");
+        }
+    }
+
+    private void validaGoogleClient(ConnectionFactoryConfigurer connectionFactoryConfigurer, String googleClientId, String googleClientSecret) {
+        if (googleClientId != null && googleClientSecret != null) {
+            log.debug("Configuring GoogleConnectionFactory");
+            connectionFactoryConfigurer.addConnectionFactory(
+                new GoogleConnectionFactory(
+                    googleClientId,
+                    googleClientSecret
+                )
+            );
+        } else {
+            log.error("Cannot configure GoogleConnectionFactory id or secret null");
+        }
     }
 
     @Override
@@ -128,7 +144,7 @@ public class SocialConfiguration implements SocialConfigurer {
     }
 
     @Bean
-    public ProviderSignInController providerSignInController(ConnectionFactoryLocator connectionFactoryLocator, UsersConnectionRepository usersConnectionRepository, SignInAdapter signInAdapter) throws Exception {
+    public ProviderSignInController providerSignInController(ConnectionFactoryLocator connectionFactoryLocator, UsersConnectionRepository usersConnectionRepository, SignInAdapter signInAdapter) {
         ProviderSignInController providerSignInController = new ProviderSignInController(connectionFactoryLocator, usersConnectionRepository, signInAdapter);
         providerSignInController.setSignUpUrl("/social/signup");
         providerSignInController.setApplicationUrl(environment.getProperty("spring.application.url"));

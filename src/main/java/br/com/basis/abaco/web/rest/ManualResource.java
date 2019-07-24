@@ -1,6 +1,14 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.FatorAjuste;
+import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Manual;
+import br.com.basis.abaco.domain.ManualContrato;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.FatorAjusteRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.ManualContratoRepository;
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.service.exception.RelatorioException;
@@ -42,6 +50,7 @@ import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,7 +70,15 @@ public class ManualResource {
 
     private final ManualRepository manualRepository;
 
+    private final ManualContratoRepository manualContratoRepository;
+
     private final ManualSearchRepository manualSearchRepository;
+
+    private final AnaliseRepository analiseRepository;
+
+    private final FuncaoTransacaoRepository funcaoTransacaoRepository;
+
+    private final FatorAjusteRepository fatorAjusteRepository;
 
     private final DynamicExportsService dynamicExportsService;
 
@@ -73,10 +90,19 @@ public class ManualResource {
 
     private static final String ROLE_GESTOR = "ROLE_GESTOR";
 
-    public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository, DynamicExportsService dynamicExportsService) {
+    private boolean status = false;
+
+    public ManualResource(ManualRepository manualRepository, ManualSearchRepository manualSearchRepository, DynamicExportsService dynamicExportsService,
+                          ManualContratoRepository manualContratoRepository, AnaliseRepository analiseRepository, FatorAjusteRepository fatorAjusteRepository,
+                          FuncaoTransacaoRepository funcaoTransacaoRepository) {
         this.manualRepository = manualRepository;
         this.manualSearchRepository = manualSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
+        this.manualContratoRepository = manualContratoRepository;
+        this.analiseRepository = analiseRepository;
+        this.fatorAjusteRepository = fatorAjusteRepository;
+        this.funcaoTransacaoRepository = funcaoTransacaoRepository;
+
     }
 
     /**
@@ -97,8 +123,8 @@ public class ManualResource {
         log.debug("REST request to save Manual : {}", manual);
         if (manual.getId() != null) {
             return ResponseEntity.badRequest().headers(
-                    HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new manual cannot already have an ID"))
-                    .body(null);
+                HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new manual cannot already have an ID"))
+                .body(null);
         }
 
         Optional<Manual> existingManual = manualRepository.findOneByNome(manual.getNome());
@@ -112,18 +138,20 @@ public class ManualResource {
         Manual result = manualRepository.save(linkedManual);
         manualSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/manuals/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
 
     private Manual linkManualToPhaseEffortsAndAdjustFactors(Manual manual) {
 
-        manual.getEsforcoFases().forEach(phaseEffort -> {
-            phaseEffort.setManual(manual);
-        });
+        Optional.ofNullable(manual.getEsforcoFases()).orElse(Collections.emptySet())
+            .forEach(phaseEffort -> {
+                phaseEffort.setManual(manual);
+            });
 
-        manual.getFatoresAjuste().forEach(adjustFactor -> {
-            adjustFactor.setManual(manual);
-        });
+        Optional.ofNullable(manual.getFatoresAjuste()).orElse(Collections.emptySet())
+            .forEach(adjustFactor -> {
+                adjustFactor.setManual(manual);
+            });
 
         return manual;
     }
@@ -159,7 +187,7 @@ public class ManualResource {
         Manual result = manualRepository.save(manual);
         manualSearchRepository.save(result);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, manual.getId().toString()))
-                .body(result);
+            .body(result);
     }
 
     /**
@@ -172,8 +200,7 @@ public class ManualResource {
     @Timed
     public List<Manual> getAllManuals() {
         log.debug("REST request to get all Manuals");
-        List<Manual> manuals = manualRepository.findAll();
-        return manuals;
+        return manualRepository.findAll();
     }
 
     /**
@@ -201,14 +228,19 @@ public class ManualResource {
      */
     @DeleteMapping("/manuals/{id}")
     @Timed
-    @Secured({ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA})
-    public ResponseEntity<Void> deleteManual(@PathVariable Long id) {
+    @Secured({ ROLE_ADMIN, ROLE_USER, ROLE_GESTOR, ROLE_ANALISTA })
+    public ResponseEntity<String> deleteManual(@PathVariable Long id) {
         log.debug("REST request to delete Manual : {}", id);
 
-        if(manualRepository.quantidadeContrato(id) > 0) {
-            return ResponseEntity.badRequest().headers(
-                HeaderUtil.createFailureAlert(ENTITY_NAME, "contratoexists", "A manual cannot be deleted"))
-                .body(null);
+        if (verificarManualContrato(id)) {
+            return ResponseEntity.badRequest().body("contratoexists");
+        }
+
+        if (verificarAn(id)) {
+            return ResponseEntity.badRequest().body("analiseexists");
+        }
+        if (verificarFt(id)) {
+            return ResponseEntity.badRequest().body("fatorajusteexists");
         }
 
         manualRepository.delete(id);
@@ -216,12 +248,59 @@ public class ManualResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
+    private boolean verificarManualContrato(Long id) {
+        status=false;
+        List<ManualContrato> lstmanualContrato = manualContratoRepository.findAll();
+        if (!lstmanualContrato.isEmpty()) {
+            for (int i = 0; i < lstmanualContrato.size(); i++) {
+                if (lstmanualContrato.get(i).getManual().getId().equals(id)) {
+                    status=true;
+                    return status;
+                }
+            }
+        }
+        return status;
+    }
+
+    private boolean verificarAn(Long id) {
+        status = false;
+        List<Analise> lstAnalise = analiseRepository.findAll();
+        if (!lstAnalise.isEmpty()) {
+            for (int i = 0; i < lstAnalise.size(); i++) {
+                if (lstAnalise.get(i).getManual()!= null && lstAnalise.get(i).getManual().getId().equals(id)) {
+                    status = true;
+                    return status;
+                }
+            }
+        }
+        return status;
+    }
+
+    private boolean verificarFt(Long id) {
+        status = false;
+        List<FatorAjuste> lstFAjuste = fatorAjusteRepository.findAll();
+        List<FuncaoTransacao> lstFt = funcaoTransacaoRepository.findAll();
+        if (!lstFAjuste.isEmpty()) {
+            for (int i = 0; i < lstFAjuste.size(); i++) {
+                if (lstFAjuste.get(i).getManual()!=null && lstFAjuste.get(i).getManual().getId().equals(id)) {
+                    for (int j = 0; j < lstFt.size(); j++) {
+                        if (lstFt.get(j).getFatorAjuste()!=null && lstFt.get(j).getFatorAjuste().getId().equals(lstFAjuste.get(i).getId())) {
+                            status = true;
+                            return status;
+                        }
+                    }
+                    fatorAjusteRepository.delete(lstFAjuste.get(i));
+                }
+            }
+        }
+        return status;
+    }
+
     /**
      * SEARCH /_search/manuals?query=:query : search for the manual corresponding to
      * the query.
      *
-     * @param query
-     *            the query of the manual search
+     * @param query the query of the manual search
      * @return the result of the search
      * @throws URISyntaxException
      */

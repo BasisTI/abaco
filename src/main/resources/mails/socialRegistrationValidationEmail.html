@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title th:text="#{email.social.registration.title}">JHipster activation</title>
+        <title th:text="#{email.social.registration.title}">Ábaco ativação</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
         <p th:text="#{email.social.registration.greeting(${user.firstName})}">
-            Dear
+            Caro
         </p>
         <p th:text="#{email.social.registration.text1(${provider})}">
-            Your JHipster account has been created with the social connection: Provider.
+            Sua conta Ábaco foi criada com a conexão social: Provedor.
         </p>
         <p>
-            <span th:text="#{email.social.registration.text2}">Regards, </span>
+            <span th:text="#{email.social.registration.text2}">Saudações, </span>
             <br/>
-            <em th:text="#{email.signature}">JHipster.</em>
+            <em th:text="#{email.signature}">Ábaco.</em>
         </p>
     </body>
 </html>

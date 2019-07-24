@@ -23,7 +23,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DatatypeConverter;
+
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -80,6 +82,14 @@ public class UploadController {
     @GetMapping("/getFile/{id}")
     public UploadedFile getUploadedFile(@PathVariable Long id) throws IOException {
         return filesRepository.findOne(id);
+    }
+    
+    @GetMapping("/downloadFile/{id}")
+    public void downloadPDFResource(HttpServletResponse response, @PathVariable Long id) throws IOException {
+    byte [] arquivo = filesRepository.findOne(id).getLogo();
+    response.setContentType("application/pdf");
+    response.addHeader("Content-Disposition", "attachment; filename=arquivo-manual.pdf");
+    response.getOutputStream().write(arquivo);
     }
 
     @DeleteMapping("/deleteFile/{id}")

@@ -6,16 +6,16 @@ package br.com.basis.abaco.service.dto;
  */
 public class AlrFtDTO {
 
-    private String nomeAlrDto;
+    private String nome;
 
     private String nomeAlrFtDto;
 
-    public String getNomeAlrDto() {
-        return nomeAlrDto;
+    public String getNome() {
+        return nome;
     }
 
-    public void setNomeAlrDto(String nomeAlrDto) {
-        this.nomeAlrDto = nomeAlrDto;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getNomeAlrFtDto() {

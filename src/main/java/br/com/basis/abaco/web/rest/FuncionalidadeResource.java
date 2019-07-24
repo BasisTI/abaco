@@ -1,11 +1,16 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Funcionalidade;
-import br.com.basis.abaco.repository.FuncionalidadeRepository;
-import br.com.basis.abaco.repository.search.FuncionalidadeSearchRepository;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +25,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.Funcionalidade;
+import br.com.basis.abaco.repository.FuncionalidadeRepository;
+import br.com.basis.abaco.repository.search.FuncionalidadeSearchRepository;
+import br.com.basis.abaco.service.FuncionalidadeService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing Funcionalidade.
@@ -45,6 +50,8 @@ public class FuncionalidadeResource {
 
     private final FuncionalidadeSearchRepository funcionalidadeSearchRepository;
 
+    private FuncionalidadeService funcionalidadeService;
+
     private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -53,9 +60,12 @@ public class FuncionalidadeResource {
 
     private static final String ROLE_GESTOR = "ROLE_GESTOR";
 
-    public FuncionalidadeResource(FuncionalidadeRepository funcionalidadeRepository, FuncionalidadeSearchRepository funcionalidadeSearchRepository) {
+    public FuncionalidadeResource(FuncionalidadeRepository funcionalidadeRepository,
+            FuncionalidadeSearchRepository funcionalidadeSearchRepository,
+            FuncionalidadeService funcionalidadeService) {
         this.funcionalidadeRepository = funcionalidadeRepository;
         this.funcionalidadeSearchRepository = funcionalidadeSearchRepository;
+        this.funcionalidadeService = funcionalidadeService;
     }
 
     /**
@@ -113,8 +123,7 @@ public class FuncionalidadeResource {
     @Timed
     public List<Funcionalidade> getAllFuncionalidades() {
         log.debug("REST request to get all Funcionalidades");
-        List<Funcionalidade> funcionalidades = funcionalidadeRepository.findAll();
-        return funcionalidades;
+        return funcionalidadeRepository.findAll();
     }
 
     /**
@@ -130,7 +139,7 @@ public class FuncionalidadeResource {
         Funcionalidade funcionalidade = funcionalidadeRepository.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcionalidade));
     }
-
+    
     /**
      * DELETE  /funcionalidades/:id : delete the "id" funcionalidade.
      *
@@ -163,5 +172,11 @@ public class FuncionalidadeResource {
             .collect(Collectors.toList());
     }
 
+    @GetMapping("/funcionalidades/drop-down/{idModulo}")
+    @Timed
+    public List<DropdownDTO> findDropdownByModuloId(@PathVariable Long idModulo) {
+        log.debug("REST request to get dropdown Funcionalidades for Modulo {}", idModulo);
+        return funcionalidadeService.findDropdownByModuloId(idModulo);
+    }
 
 }

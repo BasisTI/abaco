@@ -1,11 +1,21 @@
 package br.com.basis.abaco.repository;
 
-import br.com.basis.abaco.domain.Der;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import br.com.basis.abaco.domain.Der;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 
 /**
  * Spring Data JPA repository for the Der entity.
  */
 public interface DerRepository extends JpaRepository<Der, Long> {
+
+    @Query(value = "SELECT new br.com.basis.abaco.service.dto.DropdownDTO(d.id, d.nome) FROM Der d "
+            + " WHERE d.funcaoDados.id = :idFuncaoDados ")
+    List<DropdownDTO> getDerByFuncaoDadosIdDropdown(@Param("idFuncaoDados") Long idFuncaoDados);
 
 }

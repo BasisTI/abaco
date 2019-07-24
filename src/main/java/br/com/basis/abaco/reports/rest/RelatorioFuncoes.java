@@ -14,6 +14,7 @@ import br.com.basis.abaco.service.dto.ImpactoDTO;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author eduardo.andrade
@@ -43,13 +44,19 @@ public class RelatorioFuncoes {
      */
     public List<FuncoesDTO> prepararListaFuncoes(Analise analise) {
         List<FuncoesDTO> list = new ArrayList<>();
-        for(FuncaoTransacao f : analise.getFuncaoTransacaos()) {
-            this.popularFuncaoTransacao(f);
-            list.add(funcoes);
+        Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
+        if (funcaoTransacaos != null) {
+            for(FuncaoTransacao f : funcaoTransacaos) {
+                this.popularFuncaoTransacao(f);
+                list.add(funcoes);
+            }
         }
-        for(FuncaoDados f : analise.getFuncaoDados()) {
-            this.popularFuncaoDados(f);
-            list.add(funcoes);
+        Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
+        if (funcaoDados != null) {
+            for (FuncaoDados f : funcaoDados) {
+                this.popularFuncaoDados(f);
+                list.add(funcoes);
+            }
         }
         return list;
     }
@@ -114,7 +121,7 @@ public class RelatorioFuncoes {
         funcoes.setTipoFt(f.getTipo() == null ? dash : f.getTipo().toString());
         funcoes.setComplexidadeFt(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
         funcoes.setPfTotalFt(f.getGrossPF() == null ? dash : f.getGrossPF().stripTrailingZeros().toPlainString());
-        funcoes.setPfAjustadoFt(f.getPf() == null ? dash : f.getGrossPF().stripTrailingZeros().toPlainString());
+        funcoes.setPfAjustadoFt(f.getPf() == null ? dash : f.getPf().stripTrailingZeros().toPlainString());
     }
 
     /**
@@ -149,16 +156,19 @@ public class RelatorioFuncoes {
      * @param analise
      */
     public FuncoesDTO recuperarCountsFt(Analise analise) {
-        for(FuncaoTransacao f : analise.getFuncaoTransacaos()) {
-            this.countEeComplex(f);
-            this.countSeComplex(f);
-            this.countCeComplex(f);
-            this.countInmComplex(f);
-            this.countEeImpacto(f);
-            this.countSeImpacto(f);
-            this.countCeImpacto(f);
-            this.countInmImpacto(f);
-            this.popularPFsFt(f);
+        Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
+        if (funcaoTransacaos != null) {
+            for (FuncaoTransacao f : funcaoTransacaos) {
+                this.countEeComplex(f);
+                this.countSeComplex(f);
+                this.countCeComplex(f);
+                this.countInmComplex(f);
+                this.countEeImpacto(f);
+                this.countSeImpacto(f);
+                this.countCeImpacto(f);
+                this.countInmImpacto(f);
+                this.popularPFsFt(f);
+            }
         }
         return funcoes;
     }
@@ -396,14 +406,17 @@ public class RelatorioFuncoes {
      */
     public FuncoesDTO recuperarCountsFd(Analise analise) {
 
-        for(FuncaoDados f : analise.getFuncaoDados()) {
-            this.countALiComplex(f);
-            this.countAieComplex(f);
-            this.countInmComplex(f);
-            this.countAliImpacto(f);
-            this.countAieImpacto(f);
-            this.countInmImpacto(f);
-            this.popularPFsFd(f);
+        Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
+        if (funcaoDados != null) {
+            for (FuncaoDados f : funcaoDados) {
+                this.countALiComplex(f);
+                this.countAieComplex(f);
+                this.countInmComplex(f);
+                this.countAliImpacto(f);
+                this.countAieImpacto(f);
+                this.countInmImpacto(f);
+                this.popularPFsFd(f);
+            }
         }
         return funcoes;
     }

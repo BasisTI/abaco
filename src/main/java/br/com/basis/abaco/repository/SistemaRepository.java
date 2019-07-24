@@ -1,17 +1,19 @@
 package br.com.basis.abaco.repository;
 
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.domain.Sistema;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
-import java.util.Set;
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.service.dto.SistemaDropdownDTO;
 
 /**
  * Spring Data JPA repository for the Sistema entity.
  */
-@SuppressWarnings("unused")
 public interface SistemaRepository extends JpaRepository<Sistema, Long> {
 
     /**
@@ -22,11 +24,13 @@ public interface SistemaRepository extends JpaRepository<Sistema, Long> {
      */
     List<Sistema> findAllByOrganizacao(Organizacao organizacao);
 
-    @Query( value = "SELECT count(*) FROM ANALISE WHERE sistema_id = ?1", nativeQuery = true)
-    public Integer quantidadeSistema(Long id);
+    Set<Sistema> findAllByOrganizacaoId(Long id);
 
+    @Override
+    @EntityGraph(attributePaths = "modulos")
+    Sistema findOne(Long id);
 
-    @Query( value = "Select * FROM SISTEMA WHERE organizacao_id = ?1", nativeQuery = true)
-    public Set<Sistema> findAllSystemOrg(Long id);
+    @Query("SELECT new br.com.basis.abaco.service.dto.SistemaDropdownDTO(s.id, s.nome, s.organizacao.id) FROM Sistema s")
+    List<SistemaDropdownDTO> getSistemaDropdown();
 
 }

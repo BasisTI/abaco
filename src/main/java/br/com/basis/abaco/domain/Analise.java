@@ -5,9 +5,13 @@ import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.TipoAnalise;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -16,19 +20,21 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -41,7 +47,9 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 @ApiModel(description = "<Enter note text here>")
@@ -50,9 +58,12 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "analise")
 @EntityListeners(AuditingEntityListener.class)
+@Embeddable
 public class Analise implements Serializable, ReportObject {
 
+    private static final String ANALISE = "analise";
     private static final long serialVersionUID = 1L;
+    private static transient Logger log = LoggerFactory.getLogger(Analise.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -107,11 +118,15 @@ public class Analise implements Serializable, ReportObject {
     @ManyToOne
     private Contrato contrato;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Organizacao organizacao;
 
     @Embedded
     private AbacoAudit audit = new AbacoAudit();
+    
+    @ManyToMany
+    @JoinTable(name = "user_analise", joinColumns = @JoinColumn(name = "analise_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    private Set<User> users;
 
     // FIXME @CreatedBy e @LastModifiedBy de Analise não seguem o padrão dado em
     // User
@@ -129,23 +144,29 @@ public class Analise implements Serializable, ReportObject {
     @JoinColumn
     private User editedBy;
 
-    @OneToMany(mappedBy = "analises", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "analises")
     private Set<Compartilhada> compartilhadas = new HashSet<>();
 
-    @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JsonManagedReference
+    @JsonManagedReference(value = ANALISE)
+    @OrderBy("name ASC, funcionalidade ASC, id ASC")
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
 
-    @OneToMany(mappedBy = "analise", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JsonManagedReference
+    @JsonManagedReference(value = ANALISE)
+    @OrderBy("name ASC, funcionalidade ASC, id ASC")
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
 
+    @Column(name = "data_criacao_ordem_servico")
+    private Timestamp dataCriacaoOrdemServico;
+
+    @Nullable
     @ManyToOne
     private FatorAjuste fatorAjuste;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     private Set<EsforcoFase> esforcoFases;
 
     @Size(max = 4000)
@@ -169,6 +190,10 @@ public class Analise implements Serializable, ReportObject {
 
     @ManyToOne
     private TipoEquipe equipeResponsavel;
+    
+    @ManyToOne
+    private Manual manual;
+    
 
     public Long getId() {
         return id;
@@ -190,9 +215,8 @@ public class Analise implements Serializable, ReportObject {
     public Analise() {
     }
 
-    public Analise(String identificadorAnalise, String pfTotal, String adjustPFTotal,
-                   Sistema sistema, Organizacao organizacao, Boolean baselineImediatamente,
-                   TipoEquipe equipeResponsavel) {
+    public Analise(String identificadorAnalise, String pfTotal, String adjustPFTotal, Sistema sistema,
+            Organizacao organizacao, Boolean baselineImediatamente, TipoEquipe equipeResponsavel, Manual manual) {
         this.id = null;
         this.identificadorAnalise = identificadorAnalise.concat(" - CÓPIA");
         this.pfTotal = pfTotal;
@@ -201,6 +225,7 @@ public class Analise implements Serializable, ReportObject {
         this.organizacao = organizacao;
         this.baselineImediatamente = baselineImediatamente;
         this.equipeResponsavel = equipeResponsavel;
+        this.manual = manual;
     }
 
     public void setNumeroOs(String numeroOs) {
@@ -316,53 +341,76 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<FuncaoDados> getFuncaoDados() {
-        return funcaoDados;
+        return Optional.ofNullable(this.funcaoDados)
+            .map(lista -> new LinkedHashSet<FuncaoDados>(lista))
+            .orElse(new LinkedHashSet<FuncaoDados>());
     }
 
     public Analise funcaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados = funcaoDados;
+        this.funcaoDados = Optional.ofNullable(funcaoDados)
+            .map(lista -> new LinkedHashSet<FuncaoDados>(lista))
+            .orElse(new LinkedHashSet<FuncaoDados>());
         return this;
     }
 
     public Analise addFuncaoDados(FuncaoDados funcaoDados) {
+        if (funcaoDados == null) {
+            return this;
+        }
         this.funcaoDados.add(funcaoDados);
         funcaoDados.setAnalise(this);
         return this;
     }
 
     public Analise removeFuncaoDados(FuncaoDados funcaoDados) {
+        if (funcaoDados == null) {
+            return this;
+        }
         this.funcaoDados.remove(funcaoDados);
         funcaoDados.setAnalise(null);
         return this;
     }
 
     public void setFuncaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados = funcaoDados;
+        this.funcaoDados = Optional.ofNullable(funcaoDados)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<FuncaoDados>());
     }
 
     public Set<FuncaoTransacao> getFuncaoTransacaos() {
-        return funcaoTransacaos;
+        return Optional.ofNullable(this.funcaoTransacaos)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<FuncaoTransacao>());
     }
 
     public Analise funcaoTransacaos(Set<FuncaoTransacao> funcaoTransacaos) {
-        this.funcaoTransacaos = funcaoTransacaos;
+        this.funcaoTransacaos = Optional.ofNullable(funcaoTransacaos)
+            .map(lista -> new LinkedHashSet<FuncaoTransacao>(lista))
+            .orElse(new LinkedHashSet<FuncaoTransacao>());
         return this;
     }
 
     public Analise addFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
+        if (funcaoTransacao == null) {
+            return this;
+        }
         this.funcaoTransacaos.add(funcaoTransacao);
-        funcaoTransacao.setAnalise(this);
         return this;
     }
 
     public Analise removeFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
+        if (funcaoTransacao == null) {
+            return this;
+        }
         this.funcaoTransacaos.remove(funcaoTransacao);
         funcaoTransacao.setAnalise(null);
         return this;
     }
 
     public void setFuncaoTransacaos(Set<FuncaoTransacao> funcaoTransacaos) {
-        this.funcaoTransacaos = funcaoTransacaos;
+        this.funcaoTransacaos = Optional.ofNullable(funcaoTransacaos)
+            .map(lista -> new LinkedHashSet<FuncaoTransacao>(lista))
+            .orElse(new LinkedHashSet<FuncaoTransacao>());
     }
 
     public Contrato getContrato() {
@@ -386,9 +434,27 @@ public class Analise implements Serializable, ReportObject {
     public void setContrato(Contrato contrato) {
         this.contrato = contrato;
     }
+    
+    public Set<User> getUsers() {
+      return this.users;
+  }
+    
+    public void setUsers(Set<User> usuarios) {
+      this.users = Optional.ofNullable(usuarios)
+          .map(LinkedHashSet::new)
+          .orElse(new LinkedHashSet<User>());
+    }
 
     public Organizacao getOrganizacao() {
-        return organizacao;
+        if (this.organizacao == null){
+            return null;
+        }
+        try {
+            return (Organizacao) organizacao.clone();
+        } catch (CloneNotSupportedException e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
     }
 
     public String getNomeOrg() {
@@ -451,7 +517,9 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {
-        this.esforcoFases = new HashSet<EsforcoFase>(esforcoFases);
+        this.esforcoFases = Optional.ofNullable(esforcoFases)
+            .map((lista) -> new HashSet<EsforcoFase>(lista))
+            .orElse(new HashSet<EsforcoFase>());
     }
 
     public String getObservacoes() {
@@ -510,12 +578,31 @@ public class Analise implements Serializable, ReportObject {
         return this;
     }
 
+    public Timestamp getDataCriacaoOrdemServico() {
+        if (this.dataCriacaoOrdemServico == null) {
+            return null;
+        } else {
+            return new Timestamp(dataCriacaoOrdemServico.getTime());
+        }
+    }
+
+    public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
+        this.dataCriacaoOrdemServico = new Timestamp(dataCriacaoOrdemServico.getTime());
+    }
+
     public Timestamp getDataHomologacao() {
-        return dataHomologacao;
+        if (dataHomologacao == null) {
+            return null;
+        }
+        return (Timestamp) dataHomologacao.clone();
     }
 
     public void setDataHomologacao(Timestamp dataHomologacao) {
-        this.dataHomologacao = dataHomologacao;
+        if (dataHomologacao == null) {
+            this.dataHomologacao = null;
+        } else {
+            this.dataHomologacao = (Timestamp) dataHomologacao.clone();
+        }
     }
 
     public String getIdentificadorAnalise() {
@@ -536,6 +623,14 @@ public class Analise implements Serializable, ReportObject {
 
     public void setEquipeResponsavel(TipoEquipe equipeResponsavel) {
         this.equipeResponsavel = equipeResponsavel;
+    }
+    
+    public Manual getManual() {
+        return manual;
+    }
+
+    public void setManual(Manual manual) {
+        this.manual = manual;
     }
 
     public AbacoAudit getAudit() {
@@ -575,6 +670,9 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<Compartilhada> getCompartilhadas() {
+        if (compartilhadas == null){
+            return null;
+        }
         Set<Compartilhada> compAux;
         compAux = compartilhadas;
         return compAux;
@@ -589,20 +687,11 @@ public class Analise implements Serializable, ReportObject {
     @Override
     public String toString() {
         // // @formatter:off
-        return "Analise{"
-            + "id=" + id
-            + ", numeroOs='" + numeroOs + "'"
-            + ", tipoContagem='" + metodoContagem + "'"
-            + ", dataHomologacao='" + dataHomologacao + "'"
-            + ", valorAjuste='" + valorAjuste + "'"
-            + ", pfTotal='" + pfTotal + "'"
-            + ", escopo='" + escopo + "'"
-            + ", fronteiras='" + fronteiras + "'"
-            + ", documentacao='" + documentacao + "'"
-            + ", tipoAnalise='" + tipoAnalise + "'"
-            + ", propositoContagem='" + propositoContagem + "'"
-            + '}';
+        return "Analise{" + "id=" + id + ", numeroOs='" + numeroOs + "'" + ", tipoContagem='" + metodoContagem + "'"
+                + ", dataHomologacao='" + dataHomologacao + "'" + ", dataCriacaoOrdemServico='"
+                + dataCriacaoOrdemServico + "'" + ", valorAjuste='" + valorAjuste + "'" + ", pfTotal='" + pfTotal + "'"
+                + ", escopo='" + escopo + "'" + ", fronteiras='" + fronteiras + "'" + ", documentacao='" + documentacao
+                + "'" + ", tipoAnalise='" + tipoAnalise + "'" + ", propositoContagem='" + propositoContagem + "'" + '}';
         // @formatter:on
     }
-
 }

@@ -15,11 +15,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * A Funcionalidade.
@@ -30,112 +36,146 @@ import java.util.Objects;
 @Document(indexName = "funcionalidade")
 public class Funcionalidade implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-	@SequenceGenerator(name = "sequenceGenerator")
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
+    private Long id;
 
-	@NotNull
-	@Column(name = "nome", nullable = false)
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
-	private String nome;
+    @NotNull
+    @Column(name = "nome", nullable = false)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
+    private String nome;
 
-	@ManyToOne
-	@JsonBackReference
-	private Modulo modulo;
+    @ManyToOne
+    @JsonBackReference
+    private Modulo modulo;
 
-	@ManyToOne
-	@JsonIgnore
-	private FuncaoDados funcaoDados;
+    @ManyToOne
+    @JsonIgnore
+    @OrderBy("name ASC, id ASC")
+    private FuncaoDados funcaoDados;
 
-	@ManyToOne
-	@JsonIgnore
-	private FuncaoTransacao funcaoTransacao;
+    @Transient
+    @JsonIgnore
+    private Set<FuncaoDados> funcoesDados = new HashSet<>();
 
-	public Long getId() {
-		return id;
-	}
+    @ManyToOne
+    @JsonIgnore
+    @OrderBy("name ASC, id ASC")
+    private FuncaoTransacao funcaoTransacao;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Transient
+    @JsonIgnore
+    private Set<FuncaoTransacao> funcoesTransacao = new HashSet<>();
 
-	public String getNome() {
-		return nome;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Funcionalidade nome(String nome) {
-		this.nome = nome;
-		return this;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public Modulo getModulo() {
-		return modulo;
-	}
+    public Funcionalidade nome(String nome) {
+        this.nome = nome;
+        return this;
+    }
 
-	public Funcionalidade modulo(Modulo modulo) {
-		this.modulo = modulo;
-		return this;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public void setModulo(Modulo modulo) {
-		this.modulo = modulo;
-	}
+    public Modulo getModulo() {
+        return modulo;
+    }
 
-	public FuncaoDados getFuncaoDados() {
-		return funcaoDados;
-	}
+    public Funcionalidade modulo(Modulo modulo) {
+        this.modulo = modulo;
+        return this;
+    }
 
-	public Funcionalidade funcaoDados(FuncaoDados funcaoDados) {
-		this.funcaoDados = funcaoDados;
-		return this;
-	}
+    public void setModulo(Modulo modulo) {
+        this.modulo = modulo;
+    }
 
-	public void setFuncaoDados(FuncaoDados funcaoDados) {
-		this.funcaoDados = funcaoDados;
-	}
+    public FuncaoDados getFuncaoDados() {
+        return funcaoDados;
+    }
 
-	public FuncaoTransacao getFuncaoTransacao() {
-		return funcaoTransacao;
-	}
+    public Funcionalidade funcaoDados(FuncaoDados funcaoDados) {
+        this.funcaoDados = funcaoDados;
+        return this;
+    }
 
-	public Funcionalidade funcaoTransacao(FuncaoTransacao funcaoTransacao) {
-		this.funcaoTransacao = funcaoTransacao;
-		return this;
-	}
+    public void setFuncaoDados(FuncaoDados funcaoDados) {
+        this.funcaoDados = funcaoDados;
+    }
 
-	public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
-		this.funcaoTransacao = funcaoTransacao;
-	}
+    public FuncaoTransacao getFuncaoTransacao() {
+        return funcaoTransacao;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		Funcionalidade funcionalidade = (Funcionalidade) o;
-		if (funcionalidade.id == null || id == null) {
-			return false;
-		}
-		return Objects.equals(id, funcionalidade.id);
-	}
+    public Funcionalidade funcaoTransacao(FuncaoTransacao funcaoTransacao) {
+        this.funcaoTransacao = funcaoTransacao;
+        return this;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(id);
-	}
+    public void setFuncaoTransacao(FuncaoTransacao funcaoTransacao) {
+        this.funcaoTransacao = funcaoTransacao;
+    }
 
-	@Override
-	public String toString() {
-		return "Funcionalidade{" + "id=" + id + ", nome='" + nome + "'" + '}';
-	}
+    public Set<FuncaoDados> getFuncoesDados() {
+        return Optional.ofNullable(funcoesDados)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<>());
+    }
+
+    public void setFuncoesDados(Set<FuncaoDados> funcoesDados) {
+        this.funcoesDados = Optional.ofNullable(funcoesDados)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<>());
+    }
+
+    public Set<FuncaoTransacao> getFuncoesTransacao() {
+        return Optional.ofNullable(funcoesTransacao)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<>());
+    }
+
+    public void setFuncoesTransacao(Set<FuncaoTransacao> funcoesTransacao) {
+        this.funcoesTransacao = Optional.ofNullable(funcoesTransacao)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<>());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Funcionalidade funcionalidade = (Funcionalidade) o;
+        if (funcionalidade.id == null || id == null) {
+            return false;
+        }
+        return Objects.equals(id, funcionalidade.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Funcionalidade{" + "id=" + id + ", nome='" + nome + "'" + '}';
+    }
 }

@@ -69,17 +69,17 @@ public class MetricsConfiguration extends MetricsConfigurerAdapter {
     @PostConstruct
     public void init() {
         log.debug("Registering JVM gauges");
-        metricRegistry.register(PROP_METRIC_REG_JVM_MEMORY, new MemoryUsageGaugeSet());
-        metricRegistry.register(PROP_METRIC_REG_JVM_GARBAGE, new GarbageCollectorMetricSet());
-        metricRegistry.register(PROP_METRIC_REG_JVM_THREADS, new ThreadStatesGaugeSet());
-        metricRegistry.register(PROP_METRIC_REG_JVM_FILES, new FileDescriptorRatioGauge());
-        metricRegistry.register(PROP_METRIC_REG_JVM_BUFFERS, new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
+        setMetrics();
 
         metricRegistry.register(PROP_METRIC_REG_JCACHE_STATISTICS, new JCacheGaugeSet());
         if (hikariDataSource != null) {
             log.debug("Monitoring the datasource");
             hikariDataSource.setMetricRegistry(metricRegistry);
         }
+        setJHipsterProperties();
+    }
+
+    private void setJHipsterProperties() {
         if (jHipsterProperties.getMetrics().getJmx().isEnabled()) {
             log.debug("Initializing Metrics JMX reporting");
             JmxReporter jmxReporter = JmxReporter.forRegistry(metricRegistry).build();
@@ -94,5 +94,13 @@ public class MetricsConfiguration extends MetricsConfigurerAdapter {
                 .build();
             reporter.start(jHipsterProperties.getMetrics().getLogs().getReportFrequency(), TimeUnit.SECONDS);
         }
+    }
+
+    private void setMetrics() {
+        metricRegistry.register(PROP_METRIC_REG_JVM_MEMORY, new MemoryUsageGaugeSet());
+        metricRegistry.register(PROP_METRIC_REG_JVM_GARBAGE, new GarbageCollectorMetricSet());
+        metricRegistry.register(PROP_METRIC_REG_JVM_THREADS, new ThreadStatesGaugeSet());
+        metricRegistry.register(PROP_METRIC_REG_JVM_FILES, new FileDescriptorRatioGauge());
+        metricRegistry.register(PROP_METRIC_REG_JVM_BUFFERS, new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
     }
 }

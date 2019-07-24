@@ -1,28 +1,34 @@
 package br.com.basis.abaco.service.dto;
 
-/**
- * @author eduardo.andrade
- * @since 29/06/2018
- */
 public class RlrFdDTO {
 
-    private String rlrDto;
+    private Long id;
 
-    private String nomeRlrFdDto;
+    private String nome;
 
-    public String getRlrDto() {
-        return rlrDto;
+    private Integer valor;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setRlrDto(String rlrDto2) {
-        this.rlrDto = rlrDto2;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getNomeRlrFdDto() {
-        return nomeRlrFdDto;
+    public String getNome() {
+        return nome;
     }
 
-    public void setNomeRlrFdDto(String nomeRlrFdDto) {
-        this.nomeRlrFdDto = nomeRlrFdDto;
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Integer getValor() {
+        return valor;
+    }
+
+    public void setValor(Integer valor) {
+        this.valor = valor;
     }
 }

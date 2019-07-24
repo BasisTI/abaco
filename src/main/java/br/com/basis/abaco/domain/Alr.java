@@ -20,7 +20,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -67,6 +69,7 @@ public class Alr implements Serializable {
     }
 
     public Alr funcaoTransacao(FuncaoTransacao funcaoTransacao) {
+
         this.funcaoTransacao = funcaoTransacao;
         return this;
     }
@@ -76,28 +79,47 @@ public class Alr implements Serializable {
     }
 
     public Set<FuncaoDados> getFuncaoDados() {
-        return funcaoDados;
+        return Optional.ofNullable(this.funcaoDados)
+            .map(LinkedHashSet::new)
+            .orElse(new LinkedHashSet<>());
     }
 
     public Alr funcaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados = funcaoDados;
+        if (funcaoDados == null){
+            this.funcaoDados = null;
+        }else {
+            Set<FuncaoDados> cp = new LinkedHashSet<>();
+            cp.addAll(funcaoDados);
+            this.funcaoDados = Optional.ofNullable(funcaoDados)
+                .map(LinkedHashSet::new)
+                .orElse(new LinkedHashSet<>());
+        }
         return this;
     }
 
     public Alr addFuncaoDados(FuncaoDados funcaoDados) {
-        this.funcaoDados.add(funcaoDados);
-        funcaoDados.setAlr(this);
+        if (funcaoDados == null){
+            return this;
+        }else {
+            this.funcaoDados.add(funcaoDados);
+            funcaoDados.setAlr(this);
+        }
         return this;
     }
 
     public Alr removeFuncaoDados(FuncaoDados funcaoDados) {
+        if (funcaoDados == null){
+            return this;
+        }
         this.funcaoDados.remove(funcaoDados);
         funcaoDados.setAlr(null);
         return this;
     }
 
     public void setFuncaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados = funcaoDados;
+        this.funcaoDados = Optional.ofNullable(funcaoDados)
+        .map(LinkedHashSet::new)
+        .orElse(new LinkedHashSet<>());
     }
 
     public String getNome() {

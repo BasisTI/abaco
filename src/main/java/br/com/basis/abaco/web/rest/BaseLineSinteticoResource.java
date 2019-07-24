@@ -52,14 +52,14 @@ public class BaseLineSinteticoResource {
     @Timed
     public List<BaseLineSintetico> getAllBaseLineSinteticos() {
         log.debug("REST request to get all BaseLineSinteticos");
-        return baseLineSinteticoRepository.getBaseLineSintetico();
+        return baseLineSinteticoRepository.findAll();
     }
 
     @GetMapping("/baseline-sinteticos/{id}")
     @Timed
     public ResponseEntity<BaseLineSintetico> getBaseLineSintetico(@PathVariable Long id) {
         log.debug("REST request to get all BaseLineSinteticos: {}", id);
-        BaseLineSintetico funcaoDados = baseLineSinteticoRepository.getBaseLineSinteticoId(id);
+        BaseLineSintetico funcaoDados = baseLineSinteticoRepository.findOneByIdsistema(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDados));
     }
 
@@ -68,7 +68,7 @@ public class BaseLineSinteticoResource {
     public ResponseEntity<BaseLineSintetico> getBaseLineSinteticoEquipe(
         @PathVariable Long id,@PathVariable Long idEquipe) {
         log.debug("REST request to get all BaseLineSinteticos: {}", id);
-        BaseLineSintetico funcaoDados = baseLineSinteticoRepository.getBaseLineSinteticoIdEquipe(id,idEquipe);
+        BaseLineSintetico funcaoDados = baseLineSinteticoRepository.findOneByIdsistemaAndEquipeResponsavelId(id,idEquipe);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDados));
     }
 
@@ -78,7 +78,7 @@ public class BaseLineSinteticoResource {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-            Page<BaseLineSintetico> result =  baseLineSinteticoRepository.getBaseLineSinteticoRelatorio(dynamicExportsService.obterPageableMaximoExportacao());
+            Page<BaseLineSintetico> result =  baseLineSinteticoRepository.findAll(dynamicExportsService.obterPageableMaximoExportacao());
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioBaselineSinteticoColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             log.error(e.getMessage(), e);

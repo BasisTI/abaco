@@ -34,13 +34,17 @@ public class LoggingConfiguration {
     public LoggingConfiguration(JHipsterProperties jHipsterProperties) {
         this.jHipsterProperties = jHipsterProperties;
         if (jHipsterProperties.getLogging().getLogstash().isEnabled()) {
-            addLogstashAppender(context);
+            addLog(context);
 
             // Add context listener
             LogbackLoggerContextListener loggerContextListener = new LogbackLoggerContextListener();
             loggerContextListener.setContext(context);
             context.addListener(loggerContextListener);
         }
+    }
+
+    private final void addLog(LoggerContext context) {
+        addLogstashAppender(context);
     }
 
     public void addLogstashAppender(LoggerContext context) {
@@ -52,15 +56,10 @@ public class LoggingConfiguration {
         String customFields = "{\"app_name\":\"" + appName + "\",\"app_port\":\"" + serverPort + "\"}";
 
         // Set the Logstash appender config from JHipster properties
-        logstashAppender.setSyslogHost(jHipsterProperties.getLogging().getLogstash().getHost());
-        logstashAppender.setPort(jHipsterProperties.getLogging().getLogstash().getPort());
-        logstashAppender.setCustomFields(customFields);
+        setLogConfig(logstashAppender, customFields);
 
         // Limit the maximum length of the forwarded stacktrace so that it won't exceed the 8KB UDP limit of logstash
-        ShortenedThrowableConverter throwableConverter = new ShortenedThrowableConverter();
-        throwableConverter.setMaxLength(7500);
-        throwableConverter.setRootCauseFirst(true);
-        logstashAppender.setThrowableConverter(throwableConverter);
+        setLimitStackTrace(logstashAppender);
 
         logstashAppender.start();
 
@@ -73,6 +72,19 @@ public class LoggingConfiguration {
         asyncLogstashAppender.start();
 
         context.getLogger("ROOT").addAppender(asyncLogstashAppender);
+    }
+
+    private void setLimitStackTrace(LogstashSocketAppender logstashAppender) {
+        ShortenedThrowableConverter throwableConverter = new ShortenedThrowableConverter();
+        throwableConverter.setMaxLength(7500);
+        throwableConverter.setRootCauseFirst(true);
+        logstashAppender.setThrowableConverter(throwableConverter);
+    }
+
+    private void setLogConfig(LogstashSocketAppender logstashAppender, String customFields) {
+        logstashAppender.setSyslogHost(jHipsterProperties.getLogging().getLogstash().getHost());
+        logstashAppender.setPort(jHipsterProperties.getLogging().getLogstash().getPort());
+        logstashAppender.setCustomFields(customFields);
     }
 
 

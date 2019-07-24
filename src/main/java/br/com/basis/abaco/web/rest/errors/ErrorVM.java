@@ -3,6 +3,7 @@ package br.com.basis.abaco.web.rest.errors;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * View Model for transferring error message with a list of field errors.
@@ -28,7 +29,9 @@ public class ErrorVM implements Serializable {
     public ErrorVM(String message, String description, List<FieldErrorVM> fieldErrors) {
         this.message = message;
         this.description = description;
-        this.fieldErrors = fieldErrors;
+        List<FieldErrorVM> cp = new ArrayList<>();
+        cp.addAll(fieldErrors);
+        this.fieldErrors = cp;
     }
 
     public void add(String objectName, String field, String message) {
@@ -47,6 +50,8 @@ public class ErrorVM implements Serializable {
     }
 
     public List<FieldErrorVM> getFieldErrors() {
-        return fieldErrors;
+        return Optional.ofNullable(fieldErrors)
+            .map(lista -> new ArrayList(lista))
+            .orElse(new ArrayList());
     }
 }

@@ -35,6 +35,7 @@ local.properties
 .settings/
 .loadpath
 .factorypath
+.gitmodules
 /src/main/resources/rebel.xml
 
 # External tool builders
@@ -110,7 +111,6 @@ Desktop.ini
 # Linux
 ######################
 backend_start.sh
-scripts.sh
 
 ######################
 # Directories

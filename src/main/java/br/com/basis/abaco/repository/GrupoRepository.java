@@ -19,12 +19,16 @@ import java.util.List;
 public interface GrupoRepository extends JpaRepository<Grupo, Long> {
 
 
-    @Query("SELECT g FROM Grupo g WHERE " +
+    @Query("SELECT DISTINCT g FROM Grupo g " +
+        "INNER JOIN Analise a ON a.id = g.idAnalise " +
+        "INNER JOIN a.users u " +
+        "WHERE " +
         "( :identificador IS NULL OR ( :identificador IS NOT NULL AND UPPER(g.identificadorAnalise) like concat('%', UPPER( :identificador), '%'))) AND " +
         "( :sistema IS NULL OR ( :sistema IS NOT NULL AND g.sistema = :sistema)) AND " +
         "( :metodo IS NULL OR ( :metodo IS NOT NULL AND g.metodoContagem = :metodo)) AND " +
         "( :organizacao IS NULL OR ( :organizacao IS NOT NULL AND g.organizacao = :organizacao)) AND " +
         "( :equipe IS NULL OR ( :equipe IS NOT NULL AND g.equipe = :equipe)) AND " +
+        "( :usuario IS NULL OR ( :usuario IS NOT NULL AND :usuario LIKE UPPER(concat(u.firstName, ' ', u.lastName)) )) AND  " +
         "( g.idAnalise in :ids)")
     Page<Grupo> findByIdAnalises(
         @Param("ids") List<Long> ids,
@@ -33,7 +37,7 @@ public interface GrupoRepository extends JpaRepository<Grupo, Long> {
         @Param("metodo") String metodo,
         @Param("organizacao") String organizacao,
         @Param("equipe") String equipe,
-        Pageable pageable);
+        @Param("usuario") String usuario, Pageable pageable);
 
 
 }

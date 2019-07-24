@@ -6,17 +6,20 @@ import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import br.com.basis.abaco.domain.Grupo;
 import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.GrupoRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
-import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.service.dto.GrupoDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -29,6 +32,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +47,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,6 +62,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -64,8 +70,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -103,6 +112,10 @@ public class AnaliseResource {
 
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
 
+    private final FuncaoDadosRepository funcaoDadosRepository;
+
+    private final FuncaoTransacaoRepository funcaoTransacaoRepository;
+
     private RelatorioAnaliseRest relatorioAnaliseRest;
 
     private DynamicExportsService dynamicExportsService;
@@ -125,8 +138,10 @@ public class AnaliseResource {
                            FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
                            DynamicExportsService dynamicExportsService,
                            UserRepository userRepository,
+                           FuncaoDadosRepository funcaoDadosRepository,
                            CompartilhadaRepository compartilhadaRepository,
-                           GrupoRepository grupoRepository) {
+                           GrupoRepository grupoRepository,
+                           FuncaoTransacaoRepository funcaoTransacaoRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
@@ -134,6 +149,8 @@ public class AnaliseResource {
         this.userRepository = userRepository;
         this.compartilhadaRepository = compartilhadaRepository;
         this.grupoRepository = grupoRepository;
+        this.funcaoDadosRepository = funcaoDadosRepository;
+        this.funcaoTransacaoRepository = funcaoTransacaoRepository;
     }
 
     /**
@@ -186,11 +203,10 @@ public class AnaliseResource {
             return ResponseEntity.badRequest().headers(
                 HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
         }
-        analise.setCreatedOn(analiseRepository.findOneById(analise.getId()).get().getCreatedOn());
+        analise.setCreatedOn(analiseRepository.findOne(analise.getId()).getCreatedOn());
         Analise analiseData = this.salvaNovaData(analise);
         linkFuncoesToAnalise(analiseData);
         Analise result = analiseRepository.save(analiseData);
-        unlinkAnaliseFromFuncoes(result);
         analiseSearchRepository.save(result);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analiseData.getId().toString()))
             .body(result);
@@ -253,7 +269,7 @@ public class AnaliseResource {
         if (analise != null) {
             Analise analiseCopia = new Analise(analise.getIdentificadorAnalise(),
                 analise.getPfTotal(), analise.getAdjustPFTotal(), analise.getSistema(),
-                analise.getOrganizacao(),analise.getBaselineImediatamente(), analise.getEquipeResponsavel());
+                analise.getOrganizacao(),analise.getBaselineImediatamente(), analise.getEquipeResponsavel(), analise.getManual());
 
             Analise analiseCopiaSalva = analiseRepository.save(analiseCopia);
             analiseSearchRepository.save(analiseCopiaSalva);
@@ -288,9 +304,21 @@ public class AnaliseResource {
         } else {
             return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new Analise());
+                .body(null);
         }
 
+    }
+
+    /**
+     * GET BUSCAR ANÁLISES DA BASELINE
+     *
+     * @param
+     * @return
+     */
+    @GetMapping("/analises/baseline")
+    @Timed
+    public List<Analise> getAllAnalisesBaseline() {
+        return analiseRepository.findAllByBaseline();
     }
 
     /**
@@ -445,6 +473,20 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadExcel(analise);
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/relatorioContagemPdf/{id}")
+    @Timed
+    public @ResponseBody
+    ResponseEntity<InputStreamResource> gerarRelatorioContagemPdf(@PathVariable Long id) throws IOException, JRException {
+        Analise analise = recuperarAnaliseContagem(id);
+        relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
+        log.debug("REST request to generate a count report : {}", analise);
+        return relatorioAnaliseRest.downloadReportContagem(analise);
+    }
 
 
     /**
@@ -477,7 +519,7 @@ public class AnaliseResource {
      */
     @GetMapping("/analises")
     @Timed
-    public ResponseEntity<List<Grupo>> getAllAnalisesEquipes(
+    public ResponseEntity<List<GrupoDTO>> getAllAnalisesEquipes(
         @RequestParam(defaultValue = "asc") String order,
         @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
         @RequestParam(defaultValue = "20") int size,
@@ -486,33 +528,59 @@ public class AnaliseResource {
         @RequestParam(value = "sistema") Optional<String> sistema,
         @RequestParam(value = "metodo") Optional<String> metodo,
         @RequestParam(value = "organizacao") Optional<String> organizacao,
-        @RequestParam(value = "equipe") Optional<String> equipe)
+        @RequestParam(value = "equipe") Optional<String> equipe,
+        @RequestParam(value = "usuario") Optional<String> usuario)
 
         throws URISyntaxException {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
-        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
+        List<TipoEquipe> listaEquipes = userRepository.findAllEquipesByLogin(SecurityUtils.getCurrentUserLogin());
 
-        List<Long> equipesIds;
-        List<BigInteger> idsAnalises;
+        List<Long> equipesIds = new ArrayList<>();
 
-        equipesIds = userRepository.findUserEquipes(logged.get().getId());
-        if (equipesIds.size() != 0) {
-            idsAnalises = analiseRepository.listAnalisesEquipe(equipesIds);
-            if (idsAnalises.size() != 0) {
-                Page<Grupo> page = grupoRepository.findByIdAnalises(this.converteListaBigIntLong(idsAnalises),
-                    identificador.orElse(null), sistema.orElse(null), metodo.orElse(null),
-                    organizacao.orElse(null), equipe.orElse(null), pageable);
-                HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/equipes");
-                return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-            }
+        for (TipoEquipe equipes : listaEquipes) {
+            equipesIds.add(equipes.getId());
         }
+        
+        return verificaEquipe(identificador, sistema, metodo, organizacao, equipe, pageable, equipesIds, usuario);
 
 
-        return new ResponseEntity<>(new ArrayList<Grupo>(), null, HttpStatus.OK);
+    }
+
+    private ResponseEntity<List<GrupoDTO>> verificaEquipe(Optional<String> identificador, Optional<String> sistema,
+                                                          Optional<String> metodo, Optional<String> organizacao, Optional<String> equipe, Pageable pageable,
+                                                          List<Long> equipesIds, Optional<String> usuario) throws URISyntaxException {
+        String usuarioPesquisa = getUsuarioPesquisa(usuario);
+
+        List<BigInteger> idsAnalises;
+      if (equipesIds.size() != 0) {
+          idsAnalises = analiseRepository.listAnalisesEquipe(equipesIds);
+          if (idsAnalises.size() != 0) {
+              Page<Grupo> page = grupoRepository.findByIdAnalises(this.converteListaBigIntLong(idsAnalises),
+                  identificador.orElse(null), sistema.orElse(null), metodo.orElse(null),
+                  organizacao.orElse(null), equipe.orElse(null), usuarioPesquisa, pageable);
+              page.forEach(grupo -> {
+                  Set<User> users = userRepository.findAllByAnalise(grupo.getIdAnalise());
+                  grupo.setUsuarios(users);
+              });
+              Page<GrupoDTO> pageDTO = page.map(GrupoDTO::new);
+              HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageDTO, "/api/analises/equipes");
+              return new ResponseEntity<>(pageDTO.getContent(), headers, HttpStatus.OK);
+          }
+      }
 
 
+      return new ResponseEntity<>(new ArrayList<GrupoDTO>(), null, HttpStatus.OK);
+    }
+
+    @Nullable
+    private String getUsuarioPesquisa(Optional<String> usuario) {
+        String usuarioPesquisa = usuario.orElse(null);
+        if(usuarioPesquisa != null) {
+            usuarioPesquisa = usuarioPesquisa.toUpperCase();
+        }
+        return usuarioPesquisa;
     }
 
 
@@ -533,11 +601,16 @@ public class AnaliseResource {
 
 
     private Boolean checarPermissao(Long idAnalise) {
-        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()); // Busca o usuário
-        List<Long> equipesIds = userRepository.findUserEquipes(logged.get().getId()); // Traz as equipes do usuário
-        Integer analiseDaEquipe = analiseRepository.analiseEquipe(idAnalise, equipesIds); // Traz as
+        // Busca o usuário
+        Optional<User> logged = userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin());
+        // Traz as equipes do usuário
+        List<BigInteger> equipesIds = userRepository.findUserEquipes(logged.get().getId());
+        // Traz as
+        List<Long> convertidos = equipesIds.stream().map(bigInteger -> bigInteger.longValue()).collect(Collectors.toList());
+        Integer analiseDaEquipe = analiseRepository.analiseEquipe(idAnalise, convertidos);
 
-        if (analiseDaEquipe.intValue() == 0) { // Verifica se a analise faz parte de sua equipe
+        // Verifica se a analise faz parte de sua equipe
+        if (analiseDaEquipe.intValue() == 0) {
             return verificaCompartilhada(idAnalise);
         } else {
             return true;
@@ -546,11 +619,7 @@ public class AnaliseResource {
     }
 
     private Boolean verificaCompartilhada(Long idAnalise) {
-        if (analiseRepository.analiseCompartilhada(idAnalise) == null) {
-            return false;
-        }
-        return analiseRepository.analiseCompartilhada(idAnalise);
-
+        return compartilhadaRepository.existsByAnaliseId(idAnalise);
     }
 
     private Analise recuperarAnalise(Long id) {
@@ -564,23 +633,50 @@ public class AnaliseResource {
         }
     }
 
+    @Transactional(readOnly = true)
+    private Analise recuperarAnaliseContagem(@NotNull Long id) {
+
+        boolean retorno = checarPermissao(id);
+
+        if (retorno) {
+            Analise analise = analiseRepository.reportContagem(id);
+            Sistema sistema = analise.getSistema();
+            if(sistema != null) {
+            sistema.getModulos().forEach(modulo -> {
+                    modulo.getFuncionalidades().forEach(funcionalidade -> {
+                        funcionalidade.setFuncoesDados(funcaoDadosRepository.findByAnaliseFuncionalidade(id, funcionalidade.getId()));
+                        funcionalidade.setFuncoesTransacao(funcaoTransacaoRepository.findByAnaliseFuncionalidade(id, funcionalidade.getId()));
+                    });
+                });
+                return analise;
+            }
+            return null;
+        } else {
+            return null;
+        }
+    }
+
     private void linkFuncoesToAnalise(Analise analise) {
         linkAnaliseToFuncaoDados(analise);
         linkAnaliseToFuncaoTransacaos(analise);
     }
 
     private void linkAnaliseToFuncaoDados(Analise analise) {
-        analise.getFuncaoDados().forEach(funcaoDados -> {
-            funcaoDados.setAnalise(analise);
-            linkFuncaoDadosRelationships(funcaoDados);
-            handleVersionFuncaoDados(funcaoDados, analise.getSistema());
-        });
+        Optional.ofNullable(analise.getFuncaoDados()).orElse(Collections.emptySet())
+            .forEach(funcaoDados -> {
+                funcaoDados.setAnalise(analise);
+                linkFuncaoDadosRelationships(funcaoDados);
+                handleVersionFuncaoDados(funcaoDados, analise.getSistema());
+            });
     }
 
     private void linkFuncaoDadosRelationships(FuncaoDados funcaoDados) {
-        funcaoDados.getFiles().forEach(file -> file.setFuncaoDados(funcaoDados));
-        funcaoDados.getDers().forEach(der -> der.setFuncaoDados(funcaoDados));
-        funcaoDados.getRlrs().forEach(rlr -> rlr.setFuncaoDados(funcaoDados));
+        Optional.ofNullable(funcaoDados.getFiles()).orElse(Collections.emptyList())
+            .forEach(file -> file.setFuncaoDados(funcaoDados));
+        Optional.ofNullable(funcaoDados.getDers()).orElse(Collections.emptySet())
+            .forEach(der -> der.setFuncaoDados(funcaoDados));
+        Optional.ofNullable(funcaoDados.getRlrs()).orElse(Collections.emptySet())
+            .forEach(rlr -> rlr.setFuncaoDados(funcaoDados));
     }
 
     private void handleVersionFuncaoDados(FuncaoDados funcaoDados, Sistema sistema) {
@@ -599,43 +695,51 @@ public class AnaliseResource {
     }
 
     private void linkAnaliseToFuncaoTransacaos(Analise analise) {
-        analise.getFuncaoTransacaos().forEach(funcaoTransacao -> {
-            funcaoTransacao.setAnalise(analise);
-            funcaoTransacao.getFiles().forEach(file -> file.setFuncaoTransacao(funcaoTransacao));
-            funcaoTransacao.getDers().forEach(der -> der.setFuncaoTransacao(funcaoTransacao));
-            funcaoTransacao.getAlrs().forEach(alr -> alr.setFuncaoTransacao(funcaoTransacao));
-        });
+        Optional.ofNullable(analise.getFuncaoTransacaos()).orElse(Collections.emptySet())
+            .forEach(funcaoTransacao -> {
+                funcaoTransacao.setAnalise(analise);
+                Optional.ofNullable(funcaoTransacao.getFiles()).orElse(Collections.emptyList())
+                    .forEach(file -> file.setFuncaoTransacao(funcaoTransacao));
+                Optional.ofNullable(funcaoTransacao.getDers()).orElse(Collections.emptySet())
+                    .forEach(der -> der.setFuncaoTransacao(funcaoTransacao));
+                Optional.ofNullable(funcaoTransacao.getAlrs()).orElse(Collections.emptySet())
+                    .forEach(alr -> alr.setFuncaoTransacao(funcaoTransacao));
+            });
     }
 
     private void unlinkAnaliseFromFuncoes(Analise result) {
-        result.getFuncaoDados().forEach(entry -> {
-            entry.setAnalise(null);
-        });
-        result.getFuncaoTransacaos().forEach(entry -> {
-            entry.setAnalise(null);
-        });
+        Optional.ofNullable(result.getFuncaoDados()).orElse(Collections.emptySet())
+            .forEach(entry -> {
+                entry.setAnalise(null);
+            });
+        Optional.ofNullable(result.getFuncaoTransacaos()).orElse(Collections.emptySet())
+            .forEach(entry -> {
+                entry.setAnalise(null);
+            });
     }
 
 
     private Analise unlinkAnaliseFDFT(Analise result) {
 
-        result.getFuncaoDados().forEach(fd -> {
-            fd.setAnalise(null);
-            fd.getAlr().setId(null);
-            fd.getRlrs().forEach(rlr -> rlr.setId(null));
-            fd.getDers().forEach(ders -> ders.setId(null));
-        });
+        getFuncaoDados(result);
 
-        result.getFuncaoTransacaos().forEach(ft -> {
-            ft.setAnalise(null);
-            ft.getAlrs().forEach(rlr -> rlr.setId(null));
-            ft.getDers().forEach(ders -> ders.setId(null));
-        });
+        Optional.ofNullable(result.getFuncaoTransacaos()).orElse(Collections.emptySet())
+            .forEach(ft -> {
+                ft.setAnalise(null);
+                Optional.ofNullable(ft.getAlrs()).orElse(Collections.emptySet())
+                    .forEach(rlr -> rlr.setId(null));
+                Optional.ofNullable(ft.getDers()).orElse(Collections.emptySet())
+                    .forEach(ders -> ders.setId(null));
+            });
 
         Analise analiseCopiaSalva = analiseRepository.save(result);
         analiseSearchRepository.save(result);
 
         return analiseCopiaSalva;
+    }
+
+    private Analise getFuncaoDados(Analise result) {
+        return result;
     }
 
 

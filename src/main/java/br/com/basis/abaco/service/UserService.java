@@ -1,5 +1,22 @@
 package br.com.basis.abaco.service;
 
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.basis.abaco.config.Constants;
 import br.com.basis.abaco.domain.Authority;
 import br.com.basis.abaco.domain.User;
@@ -10,20 +27,6 @@ import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.UserDTO;
 import br.com.basis.abaco.service.util.RandomUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * Service class for managing users.
@@ -110,36 +113,45 @@ public class UserService {
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         userSearchRepository.save(newUser);
-        log.debug("Created Information for User: {}", newUser);
-        return newUser;
+        log.debug("Created Information for User: {}", newUser); return newUser;
     }
 
     public User createUser(UserDTO userDTO) {
         User user = new User();
-        user.setLogin(userDTO.getLogin());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setEmail(userDTO.getEmail());
-        user.setImageUrl(userDTO.getImageUrl());
+        setBaseUserProperties(userDTO, user);
         if (userDTO.getLangKey() == null) {
-            user.setLangKey("pt-br"); // default language
+            // default language
+            user.setLangKey("pt-br");
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
         if (userDTO.getAuthorities() != null) {
             Set<Authority> authorities = new HashSet<>();
-            userDTO.getAuthorities().forEach(authority -> authorities.add(authorityRepository.findOne(authority)));
+            Optional.ofNullable(userDTO.getAuthorities()).orElse(Collections.emptySet())
+                .forEach(authority -> authorities.add(authorityRepository.findOne(authority)));
             user.setAuthorities(authorities);
         }
+        setUserProperties(user);
+        userRepository.save(user);
+        userSearchRepository.save(user);
+        log.debug("Created Information for User: {}", user);
+        return user;
+    }
+
+    private void setBaseUserProperties(UserDTO userDTO, User user) {
+        user.setLogin(userDTO.getLogin());
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setEmail(userDTO.getEmail());
+        user.setImageUrl(userDTO.getImageUrl());
+    }
+
+    private void setUserProperties(User user) {
         String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
         user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(ZonedDateTime.now());
         user.setActivated(true);
-        userRepository.save(user);
-        userSearchRepository.save(user);
-        log.debug("Created Information for User: {}", user);
-        return user;
     }
 
     /**
@@ -161,10 +173,12 @@ public class UserService {
     public User generateUpdatableUser(User userToBeUpdated) {
         User userPreUpdate = userRepository.findOne(userToBeUpdated.getId());
         User updatableUser = shallowCopyUser(userToBeUpdated);
-        if (updatableUser.getPassword() == null)
+        if (updatableUser.getPassword() == null) {
             updatableUser.setPassword(userPreUpdate.getPassword());
-        if (updatableUser.getLangKey() == null)
+        }
+        if (updatableUser.getLangKey() == null) {
             updatableUser.setLangKey(userPreUpdate.getLangKey());
+        }
 
         return updatableUser;
     }
@@ -245,6 +259,16 @@ public class UserService {
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
         return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map(UserDTO::new);
     }
+    
+    @Transactional(readOnly = true)
+    public List<UserDTO> getAllUsersOrgEquip(Long idOrg, Long idEquip) {
+        List<User> lista = userRepository.findAllUsersOrgEquip(idOrg, idEquip);
+        List<UserDTO> lst = new ArrayList<>();
+        for(int i = 0; i<lista.size(); i++){
+            lst.add(new UserDTO(lista.get(i)));
+        }
+        return lst;
+    }
 
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthoritiesByLogin(String login) {
@@ -276,5 +300,9 @@ public class UserService {
             userRepository.delete(user);
             userSearchRepository.delete(user);
         }
+    }
+
+    public Long getLoggedUserId() {
+        return userRepository.getLoggedUserId(SecurityUtils.getCurrentUserLogin());
     }
 }

@@ -11,17 +11,21 @@ import javax.persistence.Embedded;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @MappedSuperclass
@@ -45,11 +49,12 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
 
     @ManyToOne
     @JoinColumn(name = "analise_id")
-    @JsonBackReference
+    @JsonBackReference(value = "analise")
     private Analise analise;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "funcionalidade_id")
+    @OrderBy("nome ASC")
     private Funcionalidade funcionalidade;
 
     @Column
@@ -156,7 +161,9 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     }
 
     public void setDerValues(Set<String> derValues) {
-        this.derValues = new HashSet<>(derValues);
+        this.derValues = Optional.ofNullable(derValues)
+            .map(HashSet::new)
+            .orElse(new LinkedHashSet<String>());
     }
 
     @Override

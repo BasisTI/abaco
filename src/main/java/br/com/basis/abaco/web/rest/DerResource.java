@@ -1,11 +1,16 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.repository.DerRepository;
-import br.com.basis.abaco.repository.search.DerSearchRepository;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import com.codahale.metrics.annotation.Timed;
-import io.github.jhipster.web.util.ResponseUtil;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +25,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.codahale.metrics.annotation.Timed;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import br.com.basis.abaco.domain.Der;
+import br.com.basis.abaco.repository.DerRepository;
+import br.com.basis.abaco.repository.search.DerSearchRepository;
+import br.com.basis.abaco.service.DerService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing Der.
@@ -45,9 +50,12 @@ public class DerResource {
 
     private final DerSearchRepository derSearchRepository;
 
-    public DerResource(DerRepository derRepository, DerSearchRepository derSearchRepository) {
+    private final DerService derService;
+
+    public DerResource(DerRepository derRepository, DerSearchRepository derSearchRepository, DerService derService) {
         this.derRepository = derRepository;
         this.derSearchRepository = derSearchRepository;
+        this.derService = derService;
     }
 
     /**
@@ -105,8 +113,7 @@ public class DerResource {
     @Timed
     public List<Der> getAllDers() {
         log.debug("REST request to get all Ders");
-        List<Der> ders = derRepository.findAll();
-        return ders;
+        return derRepository.findAll();
     }
 
     /**
@@ -155,5 +162,11 @@ public class DerResource {
             .collect(Collectors.toList());
     }
 
+    @GetMapping("/ders/drop-down/{idFuncaoDados}")
+    @Timed
+    public List<DropdownDTO> getDerByFuncaoDadosIdDropdown(@PathVariable Long idFuncaoDados) {
+        log.debug("REST request to get dropdown Der for FuncaoDados {}", idFuncaoDados);
+        return derService.getDerByFuncaoDadosIdDropdown(idFuncaoDados);
+    }
 
 }

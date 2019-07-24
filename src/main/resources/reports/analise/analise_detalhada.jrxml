@@ -762,7 +762,7 @@
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="Table 6_TD" height="15">
-								<textField isBlankWhenNull="true">
+								<textField isBlankWhenNull="true" isStretchWithOverflow="true">
 									<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="c09f6e4c-21ea-4d44-8d80-35806c5cc8f7"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font size="9"/>
@@ -1024,7 +1024,7 @@
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="Table 1_TD" height="15">
-								<textField isBlankWhenNull="true">
+								<textField isBlankWhenNull="true" isStretchWithOverflow="true">
 									<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="52c6bec9-9d2f-473a-9177-4bf9c2661926"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font size="9"/>
@@ -2008,7 +2008,7 @@
 						</jr:tableHeader>
 						<jr:detailCell style="Table 3_TD" height="15" rowSpan="1">
 							<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-							<textField>
+							<textField isStretchWithOverflow="true">
 								<reportElement x="0" y="0" width="301" height="15" uuid="7bf0a2ba-8b50-4ee0-920e-91f42f7073f2"/>
 								<textElement verticalAlignment="Middle">
 									<paragraph leftIndent="2"/>
