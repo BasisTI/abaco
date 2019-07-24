@@ -2,10 +2,12 @@ package br.com.basis.abaco.service;
 
 import br.com.basis.abaco.domain.Fase;
 import br.com.basis.abaco.repository.FaseRepository;
+import br.com.basis.abaco.repository.document.FaseDocument;
 import br.com.basis.abaco.repository.search.FaseSearchRepository;
 import br.com.basis.abaco.service.dto.FaseDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.mapper.FaseMapper;
+import br.com.basis.abaco.service.mapper.document.FaseDocumentMapper;
 import br.com.basis.abaco.service.relatorio.RelatorioFaseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.web.rest.errors.CustomParameterizedException;
@@ -45,15 +47,20 @@ public class FaseService {
 
     private final FaseMapper faseMapper;
 
+    private final FaseDocumentMapper faseDocumentMapper;
+
     public FaseService(FaseRepository faseRepository
         , FaseSearchRepository faseSearchRepository
         , DynamicExportsService dynamicExportsService
-        , EsforcoFaseService esforcoFaseService, FaseMapper faseMapper) {
+        , EsforcoFaseService esforcoFaseService
+        , FaseMapper faseMapper
+        , FaseDocumentMapper faseDocumentMapper) {
         this.faseRepository = faseRepository;
         this.faseSearchRepository = faseSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
         this.esforcoFaseService = esforcoFaseService;
         this.faseMapper = faseMapper;
+        this.faseDocumentMapper = faseDocumentMapper;
     }
 
     public FaseDTO save(FaseDTO faseDTO) {
@@ -62,7 +69,8 @@ public class FaseService {
             throw new CustomParameterizedException(ErrorConstants.FASE_CADASTRADA);
         }
         Fase result = faseRepository.save(fase);
-        faseSearchRepository.save(result);
+        FaseDocument document = faseDocumentMapper.toDocument(result);
+        faseSearchRepository.save(document);
         return faseMapper.toDto(result);
     }
 
@@ -79,17 +87,19 @@ public class FaseService {
     }
 
     public Page<FaseDTO> getFases(QueryStringQueryBuilder query, Pageable newPageable) {
-        Page<Fase> search = faseSearchRepository.search(query, newPageable);
-        return search.map(faseMapper::toDto);
+        Page<FaseDocument> search = faseSearchRepository.search(query, newPageable);
+        Page<Fase> map = search.map(faseDocumentMapper::toEntity);
+        return map.map(faseMapper::toDto);
     }
 
     public ByteArrayOutputStream getRelatorioBAOS(String tipoRelatorio, String query) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-            Page<Fase> result =  faseSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
+            Page<FaseDocument> result =  faseSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
+            Page<Fase> map = result.map(faseDocumentMapper::toEntity);
             byteArrayOutputStream = dynamicExportsService.export(
-                new RelatorioFaseColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
+                new RelatorioFaseColunas(), map, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
                 Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             log.error(e.getMessage(), e);
