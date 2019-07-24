@@ -113,11 +113,4 @@ public class FaseService {
         return faseMapper.toDto(one);
     }
 
-    public void deleteAll() {
-        faseRepository.deleteAll();
-    }
-
-    public boolean exists(Long id) {
-        return faseRepository.exists(id);
-    }
 }
