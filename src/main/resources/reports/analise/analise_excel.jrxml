@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="analise" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9ac44673-b60e-4209-99b8-14605622790d">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="analise" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="9ac44673-b60e-4209-99b8-14605622790d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="ireport.zoom" value="1.1000000000000019"/>
 	<property name="ireport.x" value="0"/>
@@ -14,6 +14,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<import value="java.lang.*"/>
 	<style name="Table 2_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -166,6 +167,14 @@
 		<field name="modulo" class="java.lang.String"/>
 		<field name="submodulo" class="java.lang.String"/>
 		<field name="fatorAjusteValor" class="java.lang.String"/>
+		<variable name="pfTotalFT" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[($F{pfTotalFt} != "---" ? Double.valueOf($F{pfTotalFt}) : 0)]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+		<variable name="pfAjustFT" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[($F{pfAjustadoFt} != "---" ? Double.valueOf($F{pfAjustadoFt}) : 0)]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
 	</subDataset>
 	<subDataset name="DSfuncaoDados" uuid="07e0f874-a4e2-4e5b-9af8-de9ba8c9f39c">
 		<queryString>
@@ -183,6 +192,14 @@
 		<field name="fatorAjusteValor" class="java.lang.String"/>
 		<field name="modulo" class="java.lang.String"/>
 		<field name="submodulo" class="java.lang.String"/>
+		<variable name="sumPfTotalFD" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[($F{pfTotalFd} != "---" ? Double.valueOf($F{pfTotalFd}) : 0D)]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+		<variable name="sumAjustPfTotalFD" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[($F{pfAjustadoFd} != "---" ? Double.valueOf( $F{pfAjustadoFd} ) : 0)]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
 	</subDataset>
 	<subDataset name="ListaFDFT" whenResourceMissingType="Empty" uuid="ce7e0f2e-12db-4bee-98f7-2d2df384d37d">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
@@ -316,6 +333,10 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
+	<variable name="sumTotalPFFD" class="java.lang.Double"/>
+	<variable name="sumTotalAJUSTPFFD" class="java.lang.Double"/>
+	<variable name="sumTotalPFFT" class="java.lang.Double"/>
+	<variable name="sumTotalAJUSTPFFT" class="java.lang.Double"/>
 	<title>
 		<band height="60">
 			<frame>
@@ -364,10 +385,10 @@
 		</band>
 	</title>
 	<detail>
-		<band height="97">
+		<band height="88">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 			<staticText>
-				<reportElement x="0" y="5" width="250" height="20" uuid="4b1af94b-726f-4afe-bfda-e0d928bc002c"/>
+				<reportElement x="0" y="8" width="250" height="19" uuid="4b1af94b-726f-4afe-bfda-e0d928bc002c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -390,6 +411,8 @@
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="DSfuncaoDados" uuid="f2f9071a-bf86-4991-958c-7b5a1d6b2129">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFUNCAOFD})]]></dataSourceExpression>
+						<returnValue fromVariable="sumPfTotalFD" toVariable="sumTotalPFFD" calculation="Sum"/>
+						<returnValue fromVariable="sumAjustPfTotalFD" toVariable="sumTotalAJUSTPFFD" calculation="Sum"/>
 					</datasetRun>
 					<jr:column width="119" uuid="4fd00eb5-0c91-49ba-813a-ae98702ebec5">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
@@ -630,11 +653,32 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
+			<textField evaluationTime="Report">
+				<reportElement x="681" y="9" width="60" height="18" uuid="33d65031-0a06-4dfd-933e-d6d9e0facbc8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{sumTotalPFFD}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="741" y="9" width="61" height="18" uuid="798e3f2f-6f2a-4ea5-a882-ad3a90362211">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{sumTotalAJUSTPFFD}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="611" y="9" width="70" height="18" uuid="172a7b44-174d-4ec9-bfba-7fd5e438b6e9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
 		</band>
-		<band height="97">
+		<band height="114">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 			<staticText>
-				<reportElement x="0" y="5" width="802" height="20" uuid="4513f641-9471-4ab0-ab6e-a345ff7bbaf4">
+				<reportElement positionType="Float" x="0" y="34" width="611" height="18" uuid="4513f641-9471-4ab0-ab6e-a345ff7bbaf4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle">
@@ -643,7 +687,7 @@
 				<text><![CDATA[Função de Transação]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement stretchType="ElementGroupHeight" x="0" y="27" width="802" height="45" uuid="aa7a29a6-8ea1-4e47-8788-a295e55587f7">
+				<reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="52" width="802" height="45" uuid="aa7a29a6-8ea1-4e47-8788-a295e55587f7">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
@@ -653,6 +697,8 @@
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="DSfuncaoTransacao" uuid="e1857bad-8526-47ab-a402-fa33d0f87ab1">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFUNCAOFT})]]></dataSourceExpression>
+						<returnValue fromVariable="pfTotalFT" toVariable="sumTotalPFFT" calculation="Sum"/>
+						<returnValue fromVariable="pfAjustFT" toVariable="sumTotalAJUSTPFFT" calculation="Sum"/>
 					</datasetRun>
 					<jr:column width="119" uuid="abd82808-b191-4834-b1ff-8f673cf1cdc6">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
@@ -927,11 +973,44 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
+			<staticText>
+				<reportElement positionType="Float" x="611" y="34" width="70" height="18" uuid="78aadf67-56f0-4e7c-8bf7-5f0229d76eca">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement positionType="Float" x="681" y="34" width="60" height="18" uuid="b9074f6a-acb7-420a-a252-6d9c5b8e5eae">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{sumTotalPFFT}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement positionType="Float" x="741" y="34" width="61" height="18" uuid="ad91f52d-043a-44de-be3e-2e6f45df9643">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{sumTotalAJUSTPFFT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="1" y="4" width="801" height="1" uuid="174e587b-b4cf-40f5-ae5e-d1b50da16f2c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<rectangle>
+				<reportElement x="0" y="7" width="802" height="18" uuid="6367358e-555b-4561-a271-98c84927582a"/>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
 		</band>
 		<band height="154">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 			<staticText>
-				<reportElement x="0" y="33" width="802" height="40" uuid="daf669b8-51fa-498c-b649-33d3be81223b">
+				<reportElement positionType="Float" x="0" y="33" width="802" height="40" uuid="daf669b8-51fa-498c-b649-33d3be81223b">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[$P{LISTAFDFT}.size() != 0]]></printWhenExpression>
 				</reportElement>
@@ -941,7 +1020,7 @@
 				<text><![CDATA[Listagem Nominal de ALRs, RLRs e DERs]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement x="0" y="74" width="802" height="45" isRemoveLineWhenBlank="true" uuid="a7e85fc9-752a-40a5-9b21-c4d9466b8b94">
+				<reportElement positionType="Float" x="0" y="74" width="802" height="45" isRemoveLineWhenBlank="true" uuid="a7e85fc9-752a-40a5-9b21-c4d9466b8b94">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 3_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 3_CH"/>
@@ -1020,6 +1099,18 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
+			<rectangle>
+				<reportElement x="0" y="4" width="802" height="18" uuid="e42c913a-d209-43a5-a8e3-730dbcda3f0c"/>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<line>
+				<reportElement positionType="Float" x="1" y="0" width="801" height="1" uuid="791f1a4d-1e2e-4c26-a9bb-60de069e8cf1">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
 		</band>
 	</detail>
 </jasperReport>

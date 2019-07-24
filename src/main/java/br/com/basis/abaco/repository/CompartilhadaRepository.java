@@ -23,5 +23,4 @@ public interface CompartilhadaRepository extends JpaRepository<Compartilhada,Lon
     List<BigInteger> findByEquipeId(@Param("idEquipes") List<Long> idEquipes);
 
     Boolean existsByAnaliseId(Long analiseId);
-
 }
