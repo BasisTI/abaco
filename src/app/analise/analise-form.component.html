@@ -267,14 +267,14 @@
                                 <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
                                     <label translate="Analise.Analise.Deflator">Deflator</label>
                                     <p-dropdown
-                                            [filter]="true"
+                                            filter="true"
                                             required
-                                            id="idDeflatorFormAnalise"
+                                            id="idDeflatorAnalise"
                                             disabled="{{ !isContratoSelected() }}"
                                             placeholder="{{ needContratoDropdownPlaceholder() }}"
-                                            name="fatorAjuste"
+                                            name="deflator"
                                             [options]="fatoresAjuste"
-                                            [(ngModel)]="analise.fatorAjuste"
+                                            [(ngModel)]="fatorAjuste"
                                             [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
