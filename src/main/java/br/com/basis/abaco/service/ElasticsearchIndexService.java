@@ -22,7 +22,6 @@ import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.ContratoRepository;
 import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.EsforcoFaseRepository;
-import br.com.basis.abaco.repository.FaseRepository;
 import br.com.basis.abaco.repository.FatorAjusteRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
@@ -35,13 +34,11 @@ import br.com.basis.abaco.repository.RlrRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.document.FaseDocument;
 import br.com.basis.abaco.repository.search.AlrSearchRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.ContratoSearchRepository;
 import br.com.basis.abaco.repository.search.DerSearchRepository;
 import br.com.basis.abaco.repository.search.EsforcoFaseSearchRepository;
-import br.com.basis.abaco.repository.search.FaseSearchRepository;
 import br.com.basis.abaco.repository.search.FatorAjusteSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
@@ -54,8 +51,6 @@ import br.com.basis.abaco.repository.search.RlrSearchRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
-import br.com.basis.abaco.service.mapper.document.EntityDocumentMapper;
-import br.com.basis.abaco.service.mapper.document.FaseDocumentMapper;
 import com.codahale.metrics.annotation.Timed;
 import org.elasticsearch.indices.IndexAlreadyExistsException;
 import org.slf4j.Logger;
@@ -97,12 +92,6 @@ public class ElasticsearchIndexService {
     private final EsforcoFaseRepository esforcoFaseRepository;
 
     private final EsforcoFaseSearchRepository esforcoFaseSearchRepository;
-
-    private final FaseRepository faseRepository;
-
-    private final FaseSearchRepository faseSearchRepository;
-
-    private final FaseDocumentMapper faseDocumentMapper;
 
     private final FatorAjusteRepository fatorAjusteRepository;
 
@@ -167,9 +156,6 @@ public class ElasticsearchIndexService {
         DerSearchRepository derSearchRepository,
         EsforcoFaseRepository esforcoFaseRepository,
         EsforcoFaseSearchRepository esforcoFaseSearchRepository,
-        FaseRepository faseRepository,
-        FaseSearchRepository faseSearchRepository,
-        FaseDocumentMapper faseDocumentMapper,
         FatorAjusteRepository fatorAjusteRepository,
         FatorAjusteSearchRepository fatorAjusteSearchRepository,
         FuncaoDadosRepository funcaoDadosRepository,
@@ -199,7 +185,6 @@ public class ElasticsearchIndexService {
         this.contratoRepository = contratoRepository; this.contratoSearchRepository = contratoSearchRepository;
         this.derRepository = derRepository; this.derSearchRepository = derSearchRepository;
         this.esforcoFaseRepository = esforcoFaseRepository; this.esforcoFaseSearchRepository = esforcoFaseSearchRepository;
-        this.faseRepository = faseRepository; this.faseSearchRepository = faseSearchRepository; this.faseDocumentMapper = faseDocumentMapper;
         this.fatorAjusteRepository = fatorAjusteRepository; this.fatorAjusteSearchRepository = fatorAjusteSearchRepository;
         this.funcaoDadosRepository = funcaoDadosRepository; this.funcaoDadosSearchRepository = funcaoDadosSearchRepository;
         this.funcaoTransacaoRepository = funcaoTransacaoRepository; this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
@@ -248,39 +233,10 @@ public class ElasticsearchIndexService {
         reindexForClass(Contrato.class, contratoRepository, contratoSearchRepository);
         reindexForClass(Der.class, derRepository, derSearchRepository);
         reindexForClass(EsforcoFase.class, esforcoFaseRepository, esforcoFaseSearchRepository);
-        reindexForClass(FaseDocument.class, faseRepository, faseSearchRepository, faseDocumentMapper);
         reindexForClass(FatorAjuste.class, fatorAjusteRepository, fatorAjusteSearchRepository);
         reindexForClass(FuncaoDados.class, funcaoDadosRepository, funcaoDadosSearchRepository);
         reindexForClass(FuncaoTransacao.class, funcaoTransacaoRepository, funcaoTransacaoSearchRepository);
         reindexForClass(Funcionalidade.class, funcionalidadeRepository, funcionalidadeSearchRepository);
-    }
-
-    private <T, R extends Serializable, D extends Serializable> void reindexForClass(Class<R> entityClass, JpaRepository<T, D> jpaRepository,
-                                                             ElasticsearchRepository<R, D> elasticsearchRepository, EntityDocumentMapper<R, T> mapper) {
-        deleteIndexes(entityClass);
-        elasticsearchTemplate.putMapping(entityClass);
-        if (jpaRepository.count() > 0) {
-            try {
-                Method m = jpaRepository.getClass().getMethod("findAllWithEagerRelationships");
-                List<T> list = (List<T>) m.invoke(jpaRepository);
-                List<R> documents = mapper.toDocumentList(list);
-                elasticsearchRepository.save(documents);
-            } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
-                elasticsearchRepository.save(mapper.toDocumentList(jpaRepository.findAll()));
-                log.error(e.getMessage(), e);
-                log.debug(e.getMessage(), e);
-            }
-        }
-    }
-
-    private <R extends Serializable> void deleteIndexes(Class<R> entityClass) {
-        elasticsearchTemplate.deleteIndex(entityClass);
-        try {
-            elasticsearchTemplate.createIndex(entityClass);
-        } catch (IndexAlreadyExistsException e) {
-            log.error(e.getMessage(), e);
-            log.debug(e.getMessage(), e);
-        }
     }
 
     private <T, D extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, D> jpaRepository,

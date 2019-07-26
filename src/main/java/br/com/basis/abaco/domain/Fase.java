@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A Fase.
@@ -33,4 +34,16 @@ public class Fase implements Serializable, ReportObject {
     @Column(name = "nome", unique=true)
     private String nome;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Fase)) return false;
+        Fase fase = (Fase) o;
+        return Objects.equals(getId(), fase.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }
