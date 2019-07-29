@@ -1,3 +1,4 @@
+import { MetodoContagem } from './../analise/analise.model';
 import { MemoryDatatableComponent } from './../memory-datatable/memory-datatable.component';
 import { Der } from './../der/der.model';
 import { TranslateService } from '@ngx-translate/core';
@@ -904,8 +905,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         ft.fatorAjuste = fdSelecionada.fatorAjuste;
         ft.ders = [];
         fdSelecionada.ders.forEach(item => ft.ders.push(item));
-        this.criarDersMenssagemAcao(ft.ders);
-        this.gerarAlr(ft, fdSelecionada);
+        if (this.analise.metodoContagem === MetodoContagem.DETALHADA) {
+            this.criarDersMenssagemAcao(ft.ders);
+            this.gerarAlr(ft, fdSelecionada);
+        }
         return ft;
     }
 
