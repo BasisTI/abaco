@@ -100,8 +100,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     public Editor = ClassicEditor;
 
-    public editorData = '<p>Hello, world!</p>';
-
     public isDisabled = false;
 
     private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
@@ -846,6 +844,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.isEdit = param;
         this.disableTRDER();
         this.configurarDialog();
+        this.currentFuncaoTransacao.sustantation = null;
         if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
             if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                 this.hideShowQuantidade = false;
