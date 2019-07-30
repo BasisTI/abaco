@@ -58,8 +58,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
 
     public Editor = ClassicEditor;
 
-    public editorData = '<p>Hello, world!</p>';
-
     public isDisabled = false;
 
     faS: FatorAjuste[] = [];
@@ -311,9 +309,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         const data = editor.getData();
         return data;
     }
-
-    public onReady(eventData) {}
-
 
     /*
     *   Metodo responsavel por traduzir as classificacoes que ficam em função de dados
@@ -1022,6 +1017,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.disableTRDER();
         this.configurarDialog();
         this.currentFuncaoDados.fatorAjuste = this.faS[0];
+        this.currentFuncaoDados.sustantation = null;
         if (this.currentFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
             this.hideShowQuantidade = false;
         } else {
