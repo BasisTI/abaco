@@ -15,6 +15,7 @@
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<import value="java.lang.*"/>
+	<import value="br.com.basis.abaco.domain.enumeration.MetodoContagem"/>
 	<style name="Table 2_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -1009,6 +1010,7 @@
 		</band>
 		<band height="154">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<printWhenExpression><![CDATA[$P{METODOCONTAGEM} ==  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
 			<staticText>
 				<reportElement positionType="Float" x="0" y="33" width="802" height="40" uuid="daf669b8-51fa-498c-b649-33d3be81223b">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
