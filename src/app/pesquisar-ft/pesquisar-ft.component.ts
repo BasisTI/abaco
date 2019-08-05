@@ -265,9 +265,9 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
         this.analises.forEach(a => {
             if (a.sistema.id === this.analise.sistema.id) {
-                this.analise.funcaoTransacaos.forEach(b => {
+                a.funcaoTransacaos.forEach(b => {
                     this.funcaoTransacaoFuncionalidade.push(b);
-                })
+                });
             }
         });
 
@@ -291,7 +291,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
             if (a.sistema.id === this.analise.sistema.id) {
                 a.funcaoTransacaos.forEach(b => {
                     this.funcaoTransacaoFuncionalidade.push(b);
-                })
+                });
             }
         });
 
@@ -463,7 +463,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
             this.deflaPesquisa = false;
         } else {
             this.deflaPesquisa = true;
-            if (this.selections.length) {
+            if (this.selections.length > 0) {
                 this.selections.map(ft => {
                     let value: FuncaoTransacao = _.cloneDeep(ft);
                     value.id = undefined;
@@ -484,7 +484,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     }
 
     public recarregarDataTable() {
-        if (this.moduloSelecionado && this.funcionalidadeAtual) {
+        if ( (this.moduloSelecionado !== undefined && this.moduloSelecionado !== null)
+            && (this.funcionalidadeAtual === undefined || this.funcionalidadeAtual === null) ) {
             this.getFuncoesTransacoesPorMod(this.moduloSelecionado.nome);
         } else if (this.moduloSelecionado != undefined && this.funcionalidadeAtual != undefined) {
             this.getFuncoesTransacoesPorModEFunc(this.moduloSelecionado.nome, this.funcionalidadeAtual.nome);
