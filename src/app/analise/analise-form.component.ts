@@ -806,7 +806,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     private verificaExistencia(usuarios: User[]) {
         usuarios.forEach(user => {
             const verify = this.users.find((element) => element.id === user.id);
-            if (verify === undefined) {
+            if (!verify) {
                 this.users.push(user);
             }
         });
