@@ -799,7 +799,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             // O map é para "clonar" a lista, se manipular o mesmo ponteiro vai adicionar todos os usuários na analise.
             this.users = this.analise.users.map(u => u);
             this.verificaExistencia(usuarios);
-            this.users.map((user) => user.nome = user.firstName + ' ' + user.lastName );
+            this.users.forEach((user) => user.nome = user.firstName + ' ' + user.lastName );
         });
     }
 
