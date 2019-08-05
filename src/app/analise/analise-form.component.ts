@@ -796,14 +796,16 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     private populaComboUsers() {
         this.userService.getAllUsers(this.analise.organizacao, this.analise.equipeResponsavel).subscribe(usuarios => {
-            this.users = _.clone(this.analise.users);
             this.verificaExistencia(usuarios);
             this.users.forEach((user) => user.nome = user.firstName + ' ' + user.lastName );
         });
     }
 
     private verificaExistencia(usuarios: User[]) {
-        this.users = _.union(this.users, usuarios);
+        this.users = _.clone(this.analise.users);
+        this.users = this.users.concat(usuarios.filter(user => {
+            return !this.analise.users.some(usuario => user.id === usuario.id);
+        }));
     }
 }
 
