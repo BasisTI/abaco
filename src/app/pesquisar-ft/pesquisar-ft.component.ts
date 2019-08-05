@@ -1,3 +1,4 @@
+import { DataTable } from 'primeng/datatable';
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, EventEmitter, Output, ViewChild, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MessageUtil } from '../util/message.util';
@@ -20,7 +21,6 @@ import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
 
 import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
 import { FuncaoTransacao } from '../funcao-transacao';
-import { DatatableComponent } from '@basis/angular-components';
 import { CalculadoraTransacao } from '../analise-shared';
 import { FuncaoTransacaoService } from '../funcao-transacao/funcao-transacao.service';
 import { BaselineService } from '../baseline';
@@ -56,9 +56,9 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
     organizacoes: Organizacao[];
 
-    @ViewChild(DatatableComponent) datatable: DatatableComponent;
+    @ViewChild(DataTable) datatable: DataTable;
 
-    searchUrl = "/api/_search/funcao-transacaos"
+    selections: FuncaoTransacao[] = [];
 
     modulos: Modulo[];
 
@@ -155,10 +155,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
 
     estadoInicial() {
-        this.datatable.disableDelete = true;
-        this.datatable.disableEdit = true;
-        this.datatable.disableView = true;
-        this.datatable.disableLoadingBlockUI = true;
+        this.datatable.editable = true;
         this.datatable.paginator = false;
 
     }
@@ -270,7 +267,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
             if (a.sistema.id === this.analise.sistema.id) {
                 a.funcaoTransacaos.forEach(b => {
                     this.funcaoTransacaoFuncionalidade.push(b);
-                })
+                });
             }
         });
 
@@ -294,7 +291,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
             if (a.sistema.id === this.analise.sistema.id) {
                 a.funcaoTransacaos.forEach(b => {
                     this.funcaoTransacaoFuncionalidade.push(b);
-                })
+                });
             }
         });
 
@@ -466,28 +463,26 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
             this.deflaPesquisa = false;
         } else {
             this.deflaPesquisa = true;
-            if (this.datatable.selectedRow != undefined) {
-                this.datatable.selectedRow.map(ft => {
-                    let value: FuncaoTransacao = _.cloneDeep(ft);
-                    value.id = undefined;
-                    value.ders.map(vd => {
-                        vd.id = undefined;
-                    })
-                    value.alrs.map(vd => {
-                        vd.id = undefined;
-                    })
-                    if (this.novoDeflator != null) {
-                        value.fatorAjuste = this.novoDeflator;
-                        value = CalculadoraTransacao.calcular(this.analise.metodoContagem, value, this.analise.manual)
-                    }
-                    this.validarFT(value);
+            this.selections.forEach(ft => {
+                let value: FuncaoTransacao = _.cloneDeep(ft);
+                value.id = undefined;
+                value.ders.forEach(vd => {
+                    vd.id = undefined;
                 });
-            }
+                value.alrs.forEach(vd => {
+                    vd.id = undefined;
+                });
+                if (this.novoDeflator != null) {
+                    value.fatorAjuste = this.novoDeflator;
+                    value = CalculadoraTransacao.calcular(this.analise.metodoContagem, value, this.analise.manual)
+                }
+                this.validarFT(value);
+            });
         }
     }
 
     public recarregarDataTable() {
-        if (this.moduloSelecionado != undefined && this.funcionalidadeAtual == undefined) {
+        if ( (this.moduloSelecionado != null) && (this.funcionalidadeAtual == null) ) {
             this.getFuncoesTransacoesPorMod(this.moduloSelecionado.nome);
         } else if (this.moduloSelecionado != undefined && this.funcionalidadeAtual != undefined) {
             this.getFuncoesTransacoesPorModEFunc(this.moduloSelecionado.nome, this.funcionalidadeAtual.nome);
@@ -604,7 +599,6 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
         this.deflaPadrao = undefined;
         this.modPesquisa = true;
         this.funcPesquisa = true;
-        this.datatable.selectedRow = undefined;
     }
 
     validarFT(funcao: FuncaoTransacao) {
