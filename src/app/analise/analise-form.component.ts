@@ -796,20 +796,14 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     private populaComboUsers() {
         this.userService.getAllUsers(this.analise.organizacao, this.analise.equipeResponsavel).subscribe(usuarios => {
-            // O map é para "clonar" a lista, se manipular o mesmo ponteiro vai adicionar todos os usuários na analise.
-            this.users = this.analise.users.map(u => u);
+            this.users = _.clone(this.analise.users);
             this.verificaExistencia(usuarios);
             this.users.forEach((user) => user.nome = user.firstName + ' ' + user.lastName );
         });
     }
 
     private verificaExistencia(usuarios: User[]) {
-        usuarios.forEach(user => {
-            const verify = this.users.find((element) => element.id === user.id);
-            if (!verify) {
-                this.users.push(user);
-            }
-        });
+        this.users = _.union(this.users, usuarios);
     }
 }
 
