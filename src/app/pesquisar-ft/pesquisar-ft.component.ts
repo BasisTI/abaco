@@ -463,29 +463,26 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
             this.deflaPesquisa = false;
         } else {
             this.deflaPesquisa = true;
-            if (this.selections.length > 0) {
-                this.selections.map(ft => {
-                    let value: FuncaoTransacao = _.cloneDeep(ft);
-                    value.id = undefined;
-                    value.ders.map(vd => {
-                        vd.id = undefined;
-                    });
-                    value.alrs.map(vd => {
-                        vd.id = undefined;
-                    });
-                    if (this.novoDeflator != null) {
-                        value.fatorAjuste = this.novoDeflator;
-                        value = CalculadoraTransacao.calcular(this.analise.metodoContagem, value, this.analise.manual)
-                    }
-                    this.validarFT(value);
+            this.selections.map(ft => {
+                let value: FuncaoTransacao = _.cloneDeep(ft);
+                value.id = undefined;
+                value.ders.map(vd => {
+                    vd.id = undefined;
                 });
-            }
+                value.alrs.map(vd => {
+                    vd.id = undefined;
+                });
+                if (this.novoDeflator != null) {
+                    value.fatorAjuste = this.novoDeflator;
+                    value = CalculadoraTransacao.calcular(this.analise.metodoContagem, value, this.analise.manual)
+                }
+                this.validarFT(value);
+            });
         }
     }
 
     public recarregarDataTable() {
-        if ( (this.moduloSelecionado !== undefined && this.moduloSelecionado !== null)
-            && (this.funcionalidadeAtual === undefined || this.funcionalidadeAtual === null) ) {
+        if ( (this.moduloSelecionado != null) && (this.funcionalidadeAtual == null) ) {
             this.getFuncoesTransacoesPorMod(this.moduloSelecionado.nome);
         } else if (this.moduloSelecionado != undefined && this.funcionalidadeAtual != undefined) {
             this.getFuncoesTransacoesPorModEFunc(this.moduloSelecionado.nome, this.funcionalidadeAtual.nome);
