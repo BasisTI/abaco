@@ -11,12 +11,12 @@ import {
   DropdownModule,
   RadioButtonModule,
   ConfirmDialogModule,
-  DialogModule
+  DialogModule,
+  DataTableModule
 } from 'primeng/primeng';
 
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
 import { PesquisarFtComponent } from './pesquisar-ft.component';
-import { DatatableModule } from '@basis/angular-components';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
@@ -43,9 +43,9 @@ const rotas: Routes = [
     DropdownModule,
     RadioButtonModule,
     ConfirmDialogModule,
-    DatatableModule,
     DialogModule,
     MemoryDataTableModule,
+    DataTableModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,

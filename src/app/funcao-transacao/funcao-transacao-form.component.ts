@@ -73,7 +73,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     translateSubscriptions: Subscription[] = [];
 
-    defaultSort = [{field: 'name', order: 1}];
+    defaultSort = [{field: 'funcionalidade.nome', order: 1}];
 
     impacto: SelectItem[] = [
         { label: 'Inclusão', value: 'INCLUSAO' },
