@@ -463,13 +463,13 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
             this.deflaPesquisa = false;
         } else {
             this.deflaPesquisa = true;
-            this.selections.map(ft => {
+            this.selections.forEach(ft => {
                 let value: FuncaoTransacao = _.cloneDeep(ft);
                 value.id = undefined;
-                value.ders.map(vd => {
+                value.ders.forEach(vd => {
                     vd.id = undefined;
                 });
-                value.alrs.map(vd => {
+                value.alrs.forEach(vd => {
                     vd.id = undefined;
                 });
                 if (this.novoDeflator != null) {
