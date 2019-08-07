@@ -1,9 +1,8 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DatatableModule, SecurityModule } from '@basis/angular-components';
+import {  SecurityModule } from '@basis/angular-components';
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
 import { AbacoSharedModule } from '../shared/abaco-shared.module';
 import { AbacoAnaliseSharedModule } from '../analise-shared/analise-shared.module';
@@ -27,7 +26,6 @@ import {
 import {
   FuncaoTransacaoFormComponent,
 } from './';
-import { PesquisarFtRoutes } from './funcao-transacao-form.route';
 import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
 import { AbacoDerChipsModule } from '../analise-shared/der-chips/der-chips.module';
 import { FuncaoTransacaoService } from './funcao-transacao.service';
@@ -60,7 +58,6 @@ export function createTranslateLoader(http: HttpClient) {
     CKEditorModule,
     SecurityModule,
     ReactiveFormsModule,
-    RouterModule.forChild(PesquisarFtRoutes),
     AbacoSharedModule,
     DialogModule,
     AbacoAnaliseSharedModule,
