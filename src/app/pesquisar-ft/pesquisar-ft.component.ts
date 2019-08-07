@@ -192,7 +192,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
                 if (a.sistema.id === this.analise.sistema.id) {
                     a.funcaoTransacaos.forEach(b => {
                         this.funcaoTransacaoFuncionalidade.push(b);
-                    })
+                    });
                 }
             });
         };
@@ -203,7 +203,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
                     if(basilineAnalitico.idfuncaodados == funcaoTransacao.id){
                         this.funcaoTransacao.push(funcaoTransacao);
                     }
-                })
+                });
             });
         };
        
@@ -264,7 +264,6 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     private inicializaValoresAposCarregamento() {
         this.setSistamaOrganizacao(this.analise.organizacao);
         this.carregaFatorAjusteNaEdicao();
-        this.carregarModulosQuandoTiverSistemaDisponivel();
         this.subscribeFuncionalideBaseline();
     }
 

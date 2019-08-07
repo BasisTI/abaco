@@ -12,6 +12,7 @@ export class AnaliseSharedDataService {
 
   private saveSubject = new Subject<any>();
   private loadSubject = new Subject<any>();
+  // TODO Esse evento listener pode ser desnecessário, pois um sistema nunca mudará para uma análise.
   private sistemaSelectedSubject = new Subject<any>();
   private funcaoAnaliseCarregadaSubject = new Subject<any>();
   private funcaoAnaliseDescarregadaSubject = new Subject<any>();

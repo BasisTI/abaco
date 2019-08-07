@@ -535,7 +535,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         if (contrato && contrato.manualContrato) {
             this.setManuais(contrato);
             var manualSelected = (typeof this.analise.manual.id !== "undefined") ? this.analise.manual : contrato.manualContrato[0].manual;
-            this.setManual(manualSelected);
+            //this.setManual(manualSelected);
             this.analise.manual = manualSelected;
             this.diasGarantia = this.analise.contrato.diasDeGarantia;
             this.carregarMetodosContagem(manualSelected)
