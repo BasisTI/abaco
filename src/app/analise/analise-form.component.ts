@@ -693,7 +693,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         }
 
         if (!this.analise.users || this.analise.users.length <= 0) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_TIPO_CONTAGEM'));
+            this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_USUARIO'));
             isValid = false;
             return isValid;
         }
@@ -805,6 +805,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.users = this.users.concat(usuarios.filter(user => {
             return !this.analise.users.some(usuario => user.id === usuario.id);
         }));
+        // Nova analise
+        if (this.analise.users.length == 0) {
+            const user = _.find(this.users, {id: this.loggedUser.id})
+            this.analise.users.push(user);
+        }
     }
 }
 

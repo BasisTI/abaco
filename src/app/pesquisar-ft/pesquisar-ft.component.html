@@ -46,12 +46,12 @@
 
                 <div class="ui-g-2 ui-md-2 ui-sm-12">
                     <app-blue-button id="idBtnPesquisarPesquisar-ft" buttonIcon="ui-icon-search"
-                        [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')" (click)="performSearch()">
+                        [buttonLabel]="'Global.Botoes.Pesquisar' | translate" (click)="performSearch()">
                     </app-blue-button>
                 </div>
 
                 <div class="ui-g-2 ui-md-2 ui-sm-12">
-                    <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.LimparPesquisa')"
+                    <app-white-button [buttonLabel]="'Global.Botoes.LimparPesquisa' | translate"
                         id="idBtnLimparPesquisaPesquisa-ft" buttonIcon="ui-icon-clear-all"
                         (click)="limparPesquisa(modDropDown, funcDropDown, deflaDropDown)">
                     </app-white-button>
@@ -132,7 +132,7 @@
         <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 5px; margin-top: 5px">
 
             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Fechar')"
+                <app-white-button [buttonLabel]="'Global.Botoes.Fechar' | translate"
                     id="idBtnLimparPesquisaComponentAnalise" buttonIcon="ui-icon-clear-all"
                     (click)="retornarParaTelaDeFT(modDropDown, funcDropDown, deflaDropDown)">
                 </app-white-button>
@@ -140,7 +140,7 @@
 
             <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-green-button id="idBtnPesquisarComponentSistema" buttonIcon="ui-icon-arrowstop-1-e"
-                    [buttonLabel]="this.getLabel('Global.Botoes.Gerar')" (click)="montarFuncoesTransacao()">
+                    [buttonLabel]="'Global.Botoes.Gerar' | translate" (click)="montarFuncoesTransacao()">
                 </app-green-button>
             </div>
         </div>
