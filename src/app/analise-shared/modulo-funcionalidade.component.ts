@@ -106,6 +106,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
             });
     }
 
+    // TODO Refatorar, pode estar gerando requisições multiplas.
     private carregarModulosQuandoTiverSistemaDisponivel() {
         const sistemaId = this.sistema.id;
         this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
