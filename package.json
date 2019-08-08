@@ -1,10 +1,6 @@
 {
   "name": "abaco",
-<<<<<<< HEAD
   "version": "2.4.0-SNAPSHOT",
-=======
-  "version": "2.3.17",
->>>>>>> homologacao
   "license": "COMMERCIAL",
   "angular-cli": {},
   "engines": {
