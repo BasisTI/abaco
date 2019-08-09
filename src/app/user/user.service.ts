@@ -39,10 +39,7 @@ export class UserService {
     const copy = this.convert(user);
     return this.http.post(this.resourceUrl, copy).catch((error: any) => {
       this.blockUI.stop();
-      if (error.status === 403) {
-        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.SemPermissaoAcao'));
-        return Observable.throw(new Error(error.status));
-      }
+      return this.handlerError(error);
     })
     .map((res: Response) => {
       const jsonResponse = res.json();
@@ -56,10 +53,7 @@ export class UserService {
     const copy = this.convert(user);
     return this.http.put(this.resourceUrl, copy).catch((error: any) => {
       this.blockUI.stop();
-      if (error.status === 403) {
-        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.SemPermissaoAcao'));
-        return Observable.throw(new Error(error.status));
-      }
+      return this.handlerError(error);
     })
     .map((res: Response) => {
       const jsonResponse = res.json();
@@ -69,6 +63,27 @@ export class UserService {
     });
   }
 
+  private handlerError(error: any) {
+    switch (error.status) {
+      case 400:
+          this.handlerUserExistsError(error.headers);
+          return Observable.throw(new Error(error.status));
+      case 403:
+        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.SemPermissaoAcao'));
+        return Observable.throw(new Error(error.status));
+      }
+  }
+
+  private handlerUserExistsError(header: Headers) {
+    switch (header.get("x-abacoapp-error")) {
+      case 'error.userexists': this.pageNotificationService.addErrorMsg(this.getLabel('Usuario.UsuarioExistente'));
+      break;
+      case 'error.emailexists': this.pageNotificationService.addErrorMsg(this.getLabel('Usuario.EmailCadastrado'));
+      break;
+      case 'error.fullnameexists': this.pageNotificationService.addErrorMsg(this.getLabel('Usuario.NomeEmUso'));
+      break;
+    }
+  }
   find(id: number): Observable<User> {
     return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
       const jsonResponse = res.json();

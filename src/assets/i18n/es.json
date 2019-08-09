@@ -825,7 +825,10 @@
   "Usuario": {
     "Editando": "Edición de usuario.",
     "Cadastrando": "Registro de usuario.",
-    "Excluiindo": "Excluir usuario."
+    "Excluiindo": "Excluir usuario.",
+    "UsuarioExistente": "Este usuario ya existe.",
+    "EmailCadastrado": "Esta dirección de correo electrónico ya está registrada.",
+    "NomeEmUso": "Este nombre de usuario ya está en uso."
   },
   "MenuPrincipal": {
     "Administracao": {
