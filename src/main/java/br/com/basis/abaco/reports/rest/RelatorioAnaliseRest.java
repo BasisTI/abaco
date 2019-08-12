@@ -258,10 +258,10 @@ public class RelatorioAnaliseRest {
      *
      */
     private void popularManual() {
-        if (validarObjetosNulos(analise.getContrato()) && validarObjetosNulos(analise.getContrato().getManual())) {
-            parametro.put("MANUALNM", analise.getContrato().getManual().getNome());
+        if (validarObjetosNulos(analise.getContrato()) && validarObjetosNulos(analise.getManual())) {
+            parametro.put("MANUALNM", analise.getManual().getNome());
             parametro.put("METODOCONTAGEM", analise.getMetodoContagem().toString());
-            parametro.put("VERSAOCPM", verificarVersaoCPM(analise.getContrato().getManual().getVersaoCPM()));
+            parametro.put("VERSAOCPM", verificarVersaoCPM(analise.getManual().getVersaoCPM()));
         }
     }
 
