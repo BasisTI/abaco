@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { HttpService, SecurityModule, AuthService } from '@basis/angular-components';
+import { SecurityModule, AuthService } from '@basis/angular-components';
+import { CookieService } from 'ngx-cookie-service';
 import {
     ButtonModule,
     InputTextModule,
@@ -12,7 +13,6 @@ import {
     DropdownModule,
     RadioButtonModule,
     ConfirmDialogModule,
-    ConfirmationService,
     PasswordModule
 } from 'primeng/primeng';
 
@@ -55,7 +55,8 @@ export function createTranslateLoader(http: HttpClient) {
     ],
     providers: [
         LoginService,
-        AuthService
+        AuthService,
+        CookieService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
