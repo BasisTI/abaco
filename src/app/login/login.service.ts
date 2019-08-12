@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { RequestOptions, Response } from '@angular/http';
+import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable()
 export class LoginService {
@@ -11,7 +12,7 @@ export class LoginService {
 
     private logoutUrl = environment.apiUrl + '/logout';
 
-    constructor(private http: HttpService) { }
+    constructor(private http: HttpService, private cookieService: CookieService) { }
 
     login(username: string, password: string): Observable<any> {
         const credential = { username: username, password: password };
@@ -22,6 +23,7 @@ export class LoginService {
     }
 
     logout(): Observable<any> {
+        this.cookieService.deleteAll();
         return this.http.get(this.logoutUrl);
     }
 }

@@ -73,6 +73,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     translateSubscriptions: Subscription[] = [];
 
+    defaultSort = [{field: 'funcionalidade.nome', order: 1}];
+
     impacto: SelectItem[] = [
         { label: 'Inclusão', value: 'INCLUSAO' },
         { label: 'Alteração', value: 'ALTERACAO' },
@@ -99,8 +101,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     @ViewChildren(MemoryDatatableComponent) tables: QueryList<MemoryDatatableComponent>;
 
     public Editor = ClassicEditor;
-
-    public editorData = '<p>Hello, world!</p>';
 
     public isDisabled = false;
 
@@ -846,6 +846,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.isEdit = param;
         this.disableTRDER();
         this.configurarDialog();
+        this.currentFuncaoTransacao.sustantation = null;
         if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
             if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
                 this.hideShowQuantidade = false;

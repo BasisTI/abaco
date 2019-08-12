@@ -29,7 +29,8 @@
                                 (dblclick)="onRowDblclick($event)"
                                 [responsive]="true"
                                 scrollable="true"
-                                scrollWidth="100%">
+                                scrollWidth="100%"
+                                [multiSortMeta]="defaultSort">
                             <p-column
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
                                     [style]="{'width': '200px'}"
@@ -110,7 +111,8 @@
                                     filterMatchMode="contains"
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.DER(TD)')"
                                     sortable="custom" 
-                                    (sortFunction)="sortColumn($event)">
+                                    (sortFunction)="sortColumn($event)"
+                                    [style]="{'width': '200px'}">
                             </p-column>
 
                             <p-column
@@ -119,7 +121,8 @@
                                     filterMatchMode="contains"
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.FTR(AR)')"
                                     sortable="custom" 
-                                    (sortFunction)="sortColumn($event)">
+                                    (sortFunction)="sortColumn($event)"
+                                    [style]="{'width': '200px'}">
                             </p-column>
 
                             <p-column
@@ -394,8 +397,6 @@
                         [cols]="180"
                         [editor]="Editor"
                         [config]="config"
-                        [data]="editorData"
-                        (ready)="onReady($event)"
                         [disabled]="isDisabled"
                         pInputTextarea name="funcaoDadosSustentacao"
                         [(ngModel)]="currentFuncaoTransacao.sustantation">

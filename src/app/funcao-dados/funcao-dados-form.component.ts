@@ -1,3 +1,4 @@
+import { MetodoContagem } from './../analise/analise.model';
 import { MemoryDatatableComponent } from './../memory-datatable/memory-datatable.component';
 import { Der } from './../der/der.model';
 import { TranslateService } from '@ngx-translate/core';
@@ -56,8 +57,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     @ViewChildren(MemoryDatatableComponent) tables: QueryList<MemoryDatatableComponent>;
 
     public Editor = ClassicEditor;
-
-    public editorData = '<p>Hello, world!</p>';
 
     public isDisabled = false;
 
@@ -310,9 +309,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         const data = editor.getData();
         return data;
     }
-
-    public onReady(eventData) {}
-
 
     /*
     *   Metodo responsavel por traduzir as classificacoes que ficam em função de dados
@@ -904,8 +900,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         ft.fatorAjuste = fdSelecionada.fatorAjuste;
         ft.ders = [];
         fdSelecionada.ders.forEach(item => ft.ders.push(item));
-        this.criarDersMenssagemAcao(ft.ders);
-        this.gerarAlr(ft, fdSelecionada);
+        if (this.analise.metodoContagem === MetodoContagem.DETALHADA) {
+            this.criarDersMenssagemAcao(ft.ders);
+            this.gerarAlr(ft, fdSelecionada);
+        }
         return ft;
     }
 
@@ -1019,6 +1017,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.disableTRDER();
         this.configurarDialog();
         this.currentFuncaoDados.fatorAjuste = this.faS[0];
+        this.currentFuncaoDados.sustantation = null;
         if (this.currentFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
             this.hideShowQuantidade = false;
         } else {

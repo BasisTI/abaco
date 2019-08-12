@@ -528,14 +528,9 @@ export class AnaliseComponent implements OnInit, OnDestroy {
      * Bloquear Análise
      */
     public bloqueiaAnalise(bloquear: boolean) {
-        //var _this = this;
-
         this.analiseService.find(this.analiseSelecionada.idAnalise).subscribe((res: any) => {
             this.analiseTemp = res;
-        });
-
-        setTimeout( () => {
-            if (!this.analiseTemp.dataHomologacao) {
+            if (!this.analiseTemp.dataHomologacao && !bloquear) {
                 this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_HOMOLOGACAO'));
             } else {
                 if (this.checkUserAnaliseEquipes()) {
@@ -555,8 +550,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
                     this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeBloquearAnalise'));
                 }
             }
-        }, 1000);
-
+        });
     }
 
     private mensagemDialogBloquear(retorno: boolean) {

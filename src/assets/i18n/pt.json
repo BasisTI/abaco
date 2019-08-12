@@ -827,7 +827,10 @@
   "Usuario": {
     "Editando": "Editando usuário.",
     "Cadastrando": "Cadastrando usuário.",
-    "Excluiindo": "Excluindo usuário."
+    "Excluiindo": "Excluindo usuário.",
+    "UsuarioExistente": "Este usuário já existe.",
+    "EmailCadastrado": "Este endereço de e-mail já está cadastrado.",
+    "NomeEmUso": "Este nome de usuário já está sendo usado."
   },
   "MenuPrincipal": {
     "Administracao": {

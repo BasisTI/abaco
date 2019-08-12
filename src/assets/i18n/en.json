@@ -821,16 +821,19 @@
       "DeflatorDeOrigen":"Maintain original deflator",
       "SemPermissaoAcao": "You do not have permission for this action."
     },
-    "Usuario": {
-      "Editando": "Editing user.",
-      "Cadastrando": "Registering user.",
-      "Excluiindo": "Deleting user."
-    },
     "Idiomas":{
       "Portugues":"Portuguese",
       "Ingles":"English",
       "Espanhol":"Spanish"
     }
+  },
+  "Usuario": {
+    "Editando": "Editing user.",
+    "Cadastrando": "Registering user.",
+    "Excluiindo": "Deleting user.",
+    "UsuarioExistente": "This user already exists",
+    "EmailCadastrado": "This email address is already registered.",
+    "NomeEmUso": "This username is already in use."
   },
   "MenuPrincipal": {
     "Administracao": {

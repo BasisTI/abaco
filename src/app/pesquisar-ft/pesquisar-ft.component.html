@@ -45,14 +45,14 @@
             <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: px; margin-top: 05px">
 
                 <div class="ui-g-2 ui-md-2 ui-sm-12">
-                    <app-blue-button id="idBtnPesquisarComponentSistema" buttonIcon="ui-icon-search"
-                        [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')" (click)="performSearch()">
+                    <app-blue-button id="idBtnPesquisarPesquisar-ft" buttonIcon="ui-icon-search"
+                        [buttonLabel]="'Global.Botoes.Pesquisar' | translate" (click)="performSearch()">
                     </app-blue-button>
                 </div>
 
                 <div class="ui-g-2 ui-md-2 ui-sm-12">
-                    <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.LimparPesquisa')"
-                        id="idBtnLimparPesquisaComponentOrganizacao" buttonIcon="ui-icon-clear-all"
+                    <app-white-button [buttonLabel]="'Global.Botoes.LimparPesquisa' | translate"
+                        id="idBtnLimparPesquisaPesquisa-ft" buttonIcon="ui-icon-clear-all"
                         (click)="limparPesquisa(modDropDown, funcDropDown, deflaDropDown)">
                     </app-white-button>
                 </div>
@@ -60,8 +60,12 @@
 
             <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')" [collapsed]="true">
                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
-                    <basis-datatable dataKey="id" [value]="fn" [url]="searchUrl" [headerCheckboxToggleAllPages]="true"
-                        [toggleable]="true" scrollable="true" scrollWidth="100%" #datatable>
+
+                    <p-dataTable dataKey="id" 
+                        [value]="fn"
+                        selectionMode="multiple"
+                        [(selection)]="selections"
+                        #datatable>
 
                         <p-column selectionMode="multiple" [style]="{'width':'5%'}"
                             (onHeaderCheckboxToggle)="montarFuncoesTransacao()">
@@ -102,7 +106,7 @@
                             </ng-template>
                         </p-column>
 
-                    </basis-datatable>
+                    </p-dataTable>
                 </div>
 
                 <div class="ui-g-12">
@@ -128,7 +132,7 @@
         <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 5px; margin-top: 5px">
 
             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Fechar')"
+                <app-white-button [buttonLabel]="'Global.Botoes.Fechar' | translate"
                     id="idBtnLimparPesquisaComponentAnalise" buttonIcon="ui-icon-clear-all"
                     (click)="retornarParaTelaDeFT(modDropDown, funcDropDown, deflaDropDown)">
                 </app-white-button>
@@ -136,7 +140,7 @@
 
             <div class="ui-g-2 ui-md-2 ui-sm-12">
                 <app-green-button id="idBtnPesquisarComponentSistema" buttonIcon="ui-icon-arrowstop-1-e"
-                    [buttonLabel]="this.getLabel('Global.Botoes.Gerar')" (click)="montarFuncoesTransacao()">
+                    [buttonLabel]="'Global.Botoes.Gerar' | translate" (click)="montarFuncoesTransacao()">
                 </app-green-button>
             </div>
         </div>
