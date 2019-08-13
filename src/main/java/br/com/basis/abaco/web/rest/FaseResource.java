@@ -35,8 +35,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
 /**
  * REST controller for managing Fase.
  */
@@ -60,8 +58,8 @@ public class FaseResource {
     public ResponseEntity<FaseDTO> createFase(@RequestBody FaseDTO fase) throws URISyntaxException {
         log.debug("REST request to save Fase : {}", fase);
         FaseDTO result = faseService.save(fase);
-        return ResponseEntity.created(new URI("/api/fases/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+        return ResponseEntity.created(new URI("/api/fases/" + result.getNome()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getNome()))
             .body(result);
     }
 
@@ -72,7 +70,7 @@ public class FaseResource {
         log.debug("REST request to update Fase : {}", faseDTO);
         FaseDTO result = faseService.save(faseDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, faseDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, faseDTO.getNome()))
             .body(result);
     }
 
@@ -100,14 +98,15 @@ public class FaseResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    @GetMapping("/_search/fases")
+    @PostMapping("/_search/fases")
     @Timed
     public ResponseEntity<List<FaseDTO>> searchFases(
         @RequestParam(defaultValue = "*") String query,
-        @ApiParam Pageable pageable) throws URISyntaxException {
+        @ApiParam Pageable pageable,
+        @RequestBody FaseDTO filter) throws URISyntaxException {
         log.debug("REST request to search Fases for query {}", query);
 
-        Page<FaseDTO> page = faseService.getFases(queryStringQuery(query), pageable);
+        Page<FaseDTO> page = faseService.getFases(filter, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/fases");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -116,8 +115,8 @@ public class FaseResource {
     @Timed
     public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(
         @PathVariable String tipoRelatorio,
-        @RequestParam(defaultValue = "*") String query) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = faseService.getRelatorioBAOS(tipoRelatorio, query);
+        @ApiParam Pageable pageable) throws RelatorioException {
+        ByteArrayOutputStream byteArrayOutputStream = faseService.getRelatorioBAOS(tipoRelatorio, pageable);
         return DynamicExporter.output(byteArrayOutputStream,
             "relatorio." + tipoRelatorio);
     }

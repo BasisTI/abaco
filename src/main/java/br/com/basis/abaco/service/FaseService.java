@@ -1,8 +1,7 @@
 package br.com.basis.abaco.service;
 
-import br.com.basis.abaco.domain.Fase;
+import br.com.basis.abaco.domain.novo.Fase;
 import br.com.basis.abaco.repository.FaseRepository;
-import br.com.basis.abaco.repository.search.FaseSearchRepository;
 import br.com.basis.abaco.service.dto.FaseDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.mapper.FaseMapper;
@@ -13,11 +12,12 @@ import br.com.basis.abaco.web.rest.errors.ErrorConstants;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
-
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 @Service
 @Transactional
@@ -44,7 +41,6 @@ public class FaseService {
     private final FaseMapper faseMapper;
 
     public FaseService(FaseRepository faseRepository
-        , FaseSearchRepository faseSearchRepository
         , DynamicExportsService dynamicExportsService
         , EsforcoFaseService esforcoFaseService
         , FaseMapper faseMapper) {
@@ -74,16 +70,18 @@ public class FaseService {
         faseRepository.delete(id);
     }
 
-    public Page<FaseDTO> getFases(QueryStringQueryBuilder query, Pageable newPageable) {
-        Page<Fase> search = faseRepository.findAll(query, newPageable);
+    public Page<FaseDTO> getFases(FaseDTO filter, Pageable page) {
+        Example<Fase> example = Example.of(faseMapper.toEntity(filter));
+        Page<Fase> search = faseRepository.findAll(example, page);
+
         return search.map(faseMapper::toDto);
     }
 
-    public ByteArrayOutputStream getRelatorioBAOS(String tipoRelatorio, String query) throws RelatorioException {
+    public ByteArrayOutputStream getRelatorioBAOS(String tipoRelatorio, Pageable pageable) throws RelatorioException {
+        NativeSearchQuery build = new NativeSearchQueryBuilder().withPageable(pageable).build();
         ByteArrayOutputStream byteArrayOutputStream;
         try {
-            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-            Page<Fase> result =  faseSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
+            Page<Fase> result =  faseRepository.findAll(pageable);
             byteArrayOutputStream = dynamicExportsService.export(
                 new RelatorioFaseColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
                 Optional.ofNullable(AbacoUtil.getReportFooter()));

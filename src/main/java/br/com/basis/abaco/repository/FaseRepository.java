@@ -1,8 +1,9 @@
 package br.com.basis.abaco.repository;
 
-import br.com.basis.abaco.domain.Fase;
+import br.com.basis.abaco.domain.novo.Fase;
 import br.com.basis.abaco.service.dto.FaseDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
