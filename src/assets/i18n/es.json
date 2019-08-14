@@ -753,6 +753,7 @@
       "Desbloquear": "Desbloquear",
       "DesbloquearAnalise": "Desbloquear Análisis",
       "Editar": "Editar",
+      "Excluir": "Excluir",
       "Exportar": "Exportación",
       "Fechar": "Cerrar",
       "Gerar": "Generar",
@@ -776,7 +777,8 @@
       "SelecionarArquivo": "Seleccionar Archivo",
       "Sim": "Sí",
       "Unitario": "Unitario",
-      "Voltar": "Regreso"
+      "Voltar": "Regreso",
+      "Visualizar": "Ver"
     },
     "Mensagens": {
       "CampoObrigatorio": "Campo Obligatorio",

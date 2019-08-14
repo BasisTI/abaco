@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
 
-import { TipoFase } from './tipo-fase.model';
+import { TipoFase } from './model/tipo-fase.model';
 import { TipoFaseService } from './tipo-fase.service';
 import { PageNotificationService } from '../shared';
 

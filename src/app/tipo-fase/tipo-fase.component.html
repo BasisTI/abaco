@@ -8,9 +8,9 @@
               <span class="md-inputfield">
                 <input type="text" pInputText class="ui-inputtext"
                        name="filtroTipoFase"
-                       [(ngModel)]="elasticQuery.value"
-                       id="idDescricaoComponentTipoFase"
-                       (keyup.enter)="datatable.refresh(elasticQuery.query)"
+                       [(ngModel)]="filtro.nome"
+                       id="idDescricaoTipoFaseComponent"
+                       (keyup.enter)="obterTodaFases()"
                        #filter maxlength="100" />
                 <label translate="Cadastros.TipoFase.Descricao">Descrição</label>
               </span>
@@ -31,7 +31,7 @@
                                 [buttonLabel]="'Global.Botoes.Pesquisar' | translate"
                                 buttonIcon="ui-icon-search"
                                 id="idBtnPesquisarComponentTipoFase"
-                                (click)="datatable.refresh(elasticQuery.query)">
+                                (click)="obterTodaFases()">
                         </app-blue-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
@@ -44,22 +44,42 @@
                     </div>
                 </div>
 
-                <basis-datatable
-                        [url]="searchUrl"
-                        (dblclick)="onRowDblclick($event)"
-                        (buttonClick)="datatableClick($event)"
-                        [rows]="20"
-                        [rowsPerPageOptions]="rowsPerPageOptions"
-                        id="idTabelaComponentTipoFase"
-                        [showPaginationFooter]="true"
-                        #datatable>
-                    <p-column [header]="getLabel('Cadastros.TipoFase.Codigo')" field="id" id="idCodigoTabelaComponentTipoFase"
-                              [sortable]="true"></p-column>
-                    <p-column [header]="getLabel('Cadastros.TipoFase.Nome')" field="nome" id="idNomeTabelComponentTipoFase" [sortable]="true"></p-column>
-                </basis-datatable>
+                <div>
+                    <div class="ui-g-11 ui-md-11">
+                        <p-dataTable id="idTabelaComponentTipoFase"
+                            (onRowDblclick)="editarClickEvent($event)"
+                            [rows]="20"
+                            [value]="tiposFase"
+                            [rowsPerPageOptions]="rowsPerPageOptions"
+                            [paginator]="true"
+                            selectionMode="single"
+                            dataKey="nome"
+                            #datatable>
+                            <p-column [header]="'Cadastros.TipoFase.Codigo' | translate" 
+                                field="id" id="idCodigoTabelaComponentTipoFase" [sortable]="true">
+                            </p-column>
+                            <p-column [header]="'Cadastros.TipoFase.Nome' | translate" 
+                                field="nome" id="idNomeTabelComponentTipoFase" [sortable]="true">
+                            </p-column>
+                        </p-dataTable>
+                    </div>
+
+                    <div class="ui-g-1 btn-table">
+                        <button type="button" pButton class="green-btn side-button" name="edit" icon="ui-icon-edit" value="edit"
+                            [title]="'Global.Botoes.Editar' | translate" (click)="editarClickEvent()" [disabled]="tipoFaseSelecionada == null">
+                        </button>
+                        <button type="button" pButton class="side-button" name="view" icon="ui-icon-remove-red-eye"
+                            [title]="'Global.Botoes.Visualizar' | translate" (click)="abrirVisualizar()" [disabled]="tipoFaseSelecionada == null">
+                        </button>
+                        <button type="button" pButton class="ui-button-danger side-button" name="delete"
+                            icon="ui-icon-do-not-disturb-alt" [title]="'Global.Botoes.Excluir' | translate" (click)="confirmDelete()" 
+                            [disabled]="tipoFaseSelecionada == null">
+                        </button>
+                    </div>
+                </div>
 
                 <div class="ui-g-12 ui-md-2">
-                    <app-botoes-exportacao [query]="elasticQuery.value" resourceName="tipoFase" fileName="TipoFase" id="idBtnExportacaoComponentTipoFase">
+                    <app-botoes-exportacao [query]="filtro.nome" resourceName="tipoFase" fileName="TipoFase" id="idBtnExportacaoComponentTipoFase">
                     </app-botoes-exportacao>
                 </div>
 

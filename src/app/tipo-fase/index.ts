@@ -1,4 +1,4 @@
-export * from './tipo-fase.model';
+export * from './model/tipo-fase.model';
 export * from './tipo-fase.service';
 export * from './tipo-fase-form.component';
 export * from './tipo-fase-detail.component';

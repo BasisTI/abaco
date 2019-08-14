@@ -756,6 +756,7 @@
       "Desbloquear": "Desbloquear",
       "DesbloquearAnalise": "Desbloquear Análise",
       "Editar": "Editar",
+      "Excluir": "Excluir",
       "Exportar": "Exportar",
       "Fechar": "Fechar",
       "Gerar": "Gerar",
@@ -779,7 +780,8 @@
       "SelecionarArquivo": "Selecionar Arquivo",
       "Sim": "Sim",
       "Unitario": "Unitário",
-      "Voltar": "Voltar"
+      "Voltar": "Voltar",
+      "Visualizar": "Visualizar"
     },
     "Mensagens": {
       "CampoObrigatorio": "Campo Obrigatório.",

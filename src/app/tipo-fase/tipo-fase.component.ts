@@ -1,14 +1,15 @@
+import { DatatableClickEvent } from '@basis/angular-components';
 import { Subscription } from 'rxjs/Subscription';
 import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConfirmationService } from 'primeng/primeng';
-import { DatatableComponent, DatatableClickEvent } from '@basis/angular-components';
+import { ConfirmationService, DataTable } from 'primeng/primeng';
 
-import { TipoFase } from './tipo-fase.model';
+import { TipoFase } from './model/tipo-fase.model';
 import { TipoFaseService } from './tipo-fase.service';
-import { ElasticQuery } from '../shared';
 import { PageNotificationService } from '../shared';
 import { TranslateService } from '@ngx-translate/core';
+import { Pageable } from '../util/pageable.util';
+import { TipoFaseFilter } from './model/tipoFase.filter';
 
 @Component({
     selector: 'jhi-tipo-fase',
@@ -16,12 +17,14 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class TipoFaseComponent implements OnDestroy, OnInit {
 
-    @ViewChild(DatatableComponent) datatable: DatatableComponent;
+    @ViewChild(DataTable) dataTable: DataTable;
     searchUrl: string = this.tipoFaseService.searchUrl;
     tipoFaseSelecionada: TipoFase;
-    elasticQuery: ElasticQuery = new ElasticQuery();
+    filtro: TipoFaseFilter;
     rowsPerPageOptions: number[] = [5, 10, 20];
+    tiposFase: TipoFase[] = [];
 
+    // Lista de listeners para serem desabilitados no fim do ciclo de vida do componente
     private subscriptionList: Subscription[] = [];
 
     constructor(
@@ -31,13 +34,15 @@ export class TipoFaseComponent implements OnDestroy, OnInit {
         private pageNotificationService: PageNotificationService,
         private translate: TranslateService
     ) {
+        this.filtro = new TipoFaseFilter(null, null);
     }
 
     public ngOnInit() {
-        this.subscriptionList.push( this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
+        this.obterTodaFases();
+        this.subscriptionList.push( this.dataTable.onRowSelect.subscribe((event) => {
             this.tipoFaseSelecionada = event.data;
         }) );
-        this.subscriptionList.push( this.datatable.pDatatableComponent.onRowUnselect.subscribe(() => {
+        this.subscriptionList.push( this.dataTable.onRowUnselect.subscribe(() => {
             this.tipoFaseSelecionada = undefined;
         }) );
     }
@@ -50,54 +55,43 @@ export class TipoFaseComponent implements OnDestroy, OnInit {
         return str;
     }
 
-    datatableClick(event: DatatableClickEvent) {
-        if (!event.selection) {
-            return;
-        }
-        switch (event.button) {
-            case 'edit':
-                this.router.navigate(['/tipoFase', event.selection.id, 'edit']);
-                break;
-            case 'delete':
-                this.confirmDelete(event.selection.id);
-                break;
-            case 'view':
-                this.router.navigate(['/tipoFase', event.selection.id]);
-                break;
-        }
+    editarClickEvent(event?: any) {
+        console.log('DTBEvent Click', event);
+        this.router.navigate(['/tipoFase', this.tipoFaseSelecionada.id, 'edit']);
     }
 
-    public onRowDblclick(event) {
-        if (event.target.nodeName === 'TD') {
-            this.abrirEditar();
-        } else if (event.target.parentNode.nodeName === 'TD') {
-            this.abrirEditar();
-        }
+    obterTodaFases() {
+        const pageable = new Pageable(this.dataTable.page, this.dataTable.rows);
+        pageable.setSort(this.dataTable.sortOrder, this.dataTable.sortField);
+        this.subscriptionList.push(
+             this.tipoFaseService.query(this.filtro, pageable).subscribe(tiposFase => this.tiposFase = tiposFase) 
+        );           
     }
 
     abrirEditar() {
         this.router.navigate(['/tipoFase', this.tipoFaseSelecionada.id, 'edit']);
     }
 
-    confirmDelete(id: any) {
+    abrirVisualizar() {
+        this.router.navigate(['/tipoFase', this.tipoFaseSelecionada.id]);
+    }
+
+    confirmDelete() {
         this.confirmationService.confirm({
             message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
             accept: () => {
-                this.subscriptionList.push( this.tipoFaseService.delete(id).subscribe(() => {
-                    this.recarregarDataTable();
+                this.subscriptionList.push( this.tipoFaseService.delete(this.tipoFaseSelecionada.id).subscribe(() => {
                     this.pageNotificationService.addDeleteMsg();
+                    this.tipoFaseSelecionada = null;
+                    this.obterTodaFases();
                 }) );
             }
         });
     }
 
     limparPesquisa() {
-        this.elasticQuery.reset();
-        this.recarregarDataTable();
-    }
-
-    recarregarDataTable() {
-        this.datatable.refresh(this.elasticQuery.query);
+        this.filtro.nome = null;
+        this.obterTodaFases();
     }
 
     ngOnDestroy() {

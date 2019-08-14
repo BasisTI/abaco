@@ -3,7 +3,7 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 
-import {TipoFase} from './tipo-fase.model';
+import {TipoFase} from './model/tipo-fase.model';
 import {TipoFaseService} from './tipo-fase.service';
 
 @Component({

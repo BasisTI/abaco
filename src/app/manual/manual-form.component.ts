@@ -10,7 +10,7 @@ import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
 import { ResponseWrapper } from '../shared';
 import { EsforcoFase } from '../esforco-fase/esforco-fase.model';
 import { TipoFaseService } from '../tipo-fase/tipo-fase.service';
-import { TipoFase } from '../tipo-fase/tipo-fase.model';
+import { TipoFase } from '../tipo-fase/model/tipo-fase.model';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/components/common/confirmationservice';
 import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';

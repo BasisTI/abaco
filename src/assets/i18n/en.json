@@ -758,6 +758,7 @@
       "Desbloquear": "Unlock",
       "DesbloquearAnalise": "Unlock Analysis",
       "Editar": "Edit",
+      "Excluir": "Delete",
       "Exportar": "Export",
       "Fechar": "Close",
       "Gerar": "Generate",
@@ -781,7 +782,8 @@
       "SelecionarArquivo": "Select File",
       "Sim": "Yes",
       "Unitario": "Unitary",
-      "Voltar": "Back"
+      "Voltar": "Back",
+      "Visualizar": "View"
     },
     "Mensagens": {
       "CampoObrigatorio": "Required field.",

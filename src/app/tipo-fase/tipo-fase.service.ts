@@ -1,12 +1,16 @@
+import { TipoFaseFilter } from './model/tipoFase.filter';
+import { RequestOptions } from '@angular/http';
+import { Pageable } from './../util/pageable.util';
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 
-import { TipoFase } from './tipo-fase.model';
-import { ResponseWrapper, createRequestOption, PageNotificationService } from '../shared';
+import { TipoFase } from './model/tipo-fase.model';
+import { PageNotificationService } from '../shared';
 import { TranslateService } from '@ngx-translate/core';
+import { Page } from '../util/page';
 
 @Injectable()
 export class TipoFaseService {
@@ -72,11 +76,16 @@ export class TipoFaseService {
     /**
      * Find Query object TipoFase.
      */
-    query(req?: any): Observable<TipoFase> {
-        const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options).map((res: Response) => res.json() ).catch((error: any) => {
-                return this.handlerError(error);
+    query(filtro?: TipoFaseFilter ,page?: Pageable): Observable<TipoFase[]> {
+        const options =  new RequestOptions({params: Object.assign(page)});
+        return this.http.post(this.searchUrl, filtro, options).map((res: Response) => {
+            const tiposFaseJson: Page<TipoFase> = res.json();
+            const tiposFase: TipoFase[] = [];
+            tiposFaseJson.content.forEach(fase => {
+                tiposFase.push( this.convertItemFromServer(fase) );
             });
+            return tiposFase;
+        },(error: any) => this.handlerError(error));
     }
 
     /**
