@@ -1,4 +1,3 @@
-import { DatatableClickEvent } from '@basis/angular-components';
 import { Subscription } from 'rxjs/Subscription';
 import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
