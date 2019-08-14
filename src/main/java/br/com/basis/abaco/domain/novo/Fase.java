@@ -33,8 +33,12 @@ public class Fase implements Serializable, ReportObject {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Fase)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Fase)) {
+            return false;
+        }
         Fase fase = (Fase) o;
         return Objects.equals(getId(), fase.getId());
     }
