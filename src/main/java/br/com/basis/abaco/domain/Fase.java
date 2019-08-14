@@ -38,7 +38,6 @@ public class Fase implements Serializable, ReportObject {
     @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
-
     public Long getId() {
         return id;
     }

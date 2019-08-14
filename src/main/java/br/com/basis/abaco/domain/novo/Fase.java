@@ -1,6 +1,5 @@
 package br.com.basis.abaco.domain.novo;
 
-import br.com.basis.dynamicexports.pojo.ReportObject;
 import lombok.Data;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -19,7 +18,7 @@ import java.util.Objects;
 @Table(name = "fase")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Data
-public class Fase implements Serializable, ReportObject {
+public class Fase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
