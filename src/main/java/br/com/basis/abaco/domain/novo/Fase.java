@@ -32,6 +32,13 @@ public class Fase implements Serializable, ReportObject {
     private String nome;
 
     @Override
+    public String toString() {
+        return "Fase{" +
+            "id=" + id +
+            '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

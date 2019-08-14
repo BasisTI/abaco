@@ -1,11 +1,12 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.AbacoApp;
-import br.com.basis.abaco.domain.Fase;
+import br.com.basis.abaco.repository.FaseRepository;
 import br.com.basis.abaco.service.EsforcoFaseService;
 import br.com.basis.abaco.service.FaseService;
 import br.com.basis.abaco.service.dto.EsforcoFaseDTO;
 import br.com.basis.abaco.service.dto.FaseDTO;
+import br.com.basis.abaco.service.dto.filtro.FaseFiltroDTO;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-
 import java.math.BigDecimal;
 
 import static org.hamcrest.Matchers.hasItem;
@@ -70,6 +70,9 @@ public class FaseResourceIntTest {
     @Autowired
     private EntityManager em;
 
+    @Autowired
+    private FaseRepository repository;
+
     private MockMvc restFaseMockMvc;
 
     private static final String API = "/api/";
@@ -84,6 +87,7 @@ public class FaseResourceIntTest {
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setMessageConverters(jacksonMessageConverter, new ResourceHttpMessageConverter()).build();
+        repository.deleteAll();
     }
 
     public static FaseDTO createEntity() {
@@ -190,11 +194,46 @@ public class FaseResourceIntTest {
     public void searchFase() throws Exception {
         FaseDTO dto = postDTO(createEntity());
 
-        restFaseMockMvc.perform(get(API + "_search/fases"))
+        FaseDTO dto2 = new FaseDTO();
+        dto2.setNome(UPDATED_NOME);
+        postDTO(dto2);
+
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
+
+        restFaseMockMvc.perform(
+                post(API + "_search/fases")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(filtro))
+            )
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(dto.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME)));
+            .andExpect(jsonPath("$.totalElements").value(2))
+            .andExpect(jsonPath("$.content.[*].id").value(hasItem(dto.getId().intValue())))
+            .andExpect(jsonPath("$.content.[*].nome").value(hasItem(DEFAULT_NOME)))
+            .andExpect(jsonPath("$.content.[*].nome").value(hasItem(UPDATED_NOME)));
+    }
+
+    @Test
+    public void searchFaseFiltered() throws Exception {
+        FaseDTO dto = postDTO(createEntity());
+
+        FaseDTO dto2 = new FaseDTO();
+        dto2.setNome(UPDATED_NOME);
+        postDTO(dto2);
+
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
+        filtro.setNome(DEFAULT_NOME);
+
+        restFaseMockMvc.perform(
+            post(API + "_search/fases")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(filtro))
+        )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.totalElements").value(1))
+            .andExpect(jsonPath("$.content.[*].id").value(hasItem(dto.getId().intValue())))
+            .andExpect(jsonPath("$.content.[*].nome").value(hasItem(DEFAULT_NOME)));
     }
 
     @Test
@@ -222,8 +261,4 @@ public class FaseResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_OCTET_STREAM_VALUE));
     }
 
-    @Test
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Fase.class);
-    }
 }
