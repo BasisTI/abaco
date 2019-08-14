@@ -55,8 +55,7 @@ export class TipoFaseComponent implements OnDestroy, OnInit {
         return str;
     }
 
-    editarClickEvent(event?: any) {
-        console.log('DTBEvent Click', event);
+    editarClickEvent() {
         this.router.navigate(['/tipoFase', this.tipoFaseSelecionada.id, 'edit']);
     }
 
