@@ -175,7 +175,8 @@ public class FaseResourceIntTest {
             .andExpect(status().isNotFound());
     }
 
-    @Test public void deleteFaseWithExeption() {
+    @Test
+    public void deleteFaseWithExeption() {
         EsforcoFaseDTO esforcoFaseDTO = new EsforcoFaseDTO();
         FaseDTO faseDTO = createEntity();
         esforcoFaseDTO.setFase(faseDTO);
