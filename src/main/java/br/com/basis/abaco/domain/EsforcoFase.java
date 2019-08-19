@@ -48,7 +48,7 @@ public class EsforcoFase implements Serializable {
     private Manual manual;
 
     @ManyToOne
-    @Cascade({CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE, CascadeType.DETACH})
+    @Cascade({CascadeType.PERSIST, CascadeType.MERGE})
     private Fase fase;
 
     public Long getId() {
