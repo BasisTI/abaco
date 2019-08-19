@@ -76,7 +76,7 @@ export class TipoFaseService {
     /**
      * Find Query object TipoFase.
      */
-    query(filtro?: TipoFaseFilter ,page?: Pageable): Observable<TipoFase[]> {
+    query(filtro?: TipoFaseFilter ,page: Pageable = new Pageable()): Observable<TipoFase[]> {
         const options =  new RequestOptions({params: Object.assign(page)});
         return this.http.post(this.searchUrl, filtro, options).map((res: Response) => {
             const tiposFaseJson: Page<TipoFase> = res.json();

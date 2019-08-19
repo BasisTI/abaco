@@ -33,7 +33,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     showDialogEditPhaseEffort = false;
     showDialogCreateAdjustFactor = false;
     showDialogEditAdjustFactor = false;
-    tipoFases: Array<TipoFase> = [];
+    tipoFases: TipoFase[] = [];
     percentual: number;
     newPhaseEffort: EsforcoFase = new EsforcoFase();
     editedPhaseEffort: EsforcoFase = new EsforcoFase();
@@ -93,7 +93,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         });
 
         this.tipoFaseService.query().subscribe((response: any) => {
-            this.tipoFases = response.json;
+            this.tipoFases = response;
         });
         this.manual.versaoCPM = 431;
     }
