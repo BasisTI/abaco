@@ -30,9 +30,9 @@ spring:
         serialization.write_dates_as_timestamps: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://localhost:5432/abacoTest
-        username: abaco
-        password: abaco
+        url: jdbc:postgresql://localhost:5432/abacotest
+        username: abacotest
+        password: abacotest
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL

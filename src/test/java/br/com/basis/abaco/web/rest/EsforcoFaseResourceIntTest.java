@@ -1,11 +1,19 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.AbacoApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import br.com.basis.abaco.domain.EsforcoFase;
-import br.com.basis.abaco.repository.EsforcoFaseRepository;
-import br.com.basis.abaco.repository.search.EsforcoFaseSearchRepository;
-import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +29,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.math.BigDecimal;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import br.com.basis.abaco.AbacoApp;
+import br.com.basis.abaco.domain.EsforcoFase;
+import br.com.basis.abaco.repository.EsforcoFaseRepository;
+import br.com.basis.abaco.repository.search.EsforcoFaseSearchRepository;
+import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the EsforcoFaseResource REST controller.
