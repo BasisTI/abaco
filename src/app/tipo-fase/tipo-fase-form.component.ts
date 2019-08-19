@@ -51,11 +51,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
             return;
         }
         this.isSaving = true;
-        if (this.tipoFase.id !== undefined) {
-            this.subscribeToSaveResponse(this.tipoFaseService.update(this.tipoFase));
-        } else {
-            this.subscribeToSaveResponse(this.tipoFaseService.create(this.tipoFase));
-        }
+        this.subscribeToSaveResponse(this.tipoFaseService.create(this.tipoFase));
     }
 
     private subscribeToSaveResponse(result: Observable<TipoFase>) {

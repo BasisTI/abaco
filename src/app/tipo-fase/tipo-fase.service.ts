@@ -16,7 +16,7 @@ import { Page } from '../util/page';
 export class TipoFaseService {
 
     resourceUrl = environment.apiUrl + '/fases';
-    searchUrl = environment.apiUrl + '/_search/fases';
+    searchUrl = environment.apiUrl + '/search/fases';
 
     constructor(private http: HttpService, private pageNotificationService: PageNotificationService, private translate: TranslateService) {
     }
@@ -35,17 +35,6 @@ export class TipoFaseService {
     create(tipoFase: TipoFase): Observable<TipoFase> {
         const copy = this.convert(tipoFase);
         return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        }).catch((error: any) => this.handlerError(error));
-    }
-
-    /**
-     * Update object TipoFase.
-     */
-    update(tipoFase: TipoFase): Observable<TipoFase> {
-        const copy = this.convert(tipoFase);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertItemFromServer(jsonResponse);
         }).catch((error: any) => this.handlerError(error));
