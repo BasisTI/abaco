@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A Fase.
@@ -52,4 +53,31 @@ public class Fase implements Serializable, ReportObject {
         this.nome = nome;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Fase fase = (Fase) o;
+        if (fase.id == null || id == null) {
+            return false;
+        }
+        return Objects.equals(id, fase.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Fase{" +
+            "id=" + id +
+            ", nome='" + nome + "'" +
+            '}';
+    }
 }
