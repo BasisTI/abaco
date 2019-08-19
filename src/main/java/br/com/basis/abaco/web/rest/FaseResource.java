@@ -100,7 +100,7 @@ public class FaseResource {
     @Timed
     public ResponseEntity<Page<FaseDTO>> searchFases(
         @ApiParam Pageable pageable,
-        @RequestBody FaseFiltroDTO filter) throws URISyntaxException {
+        @RequestBody(required = false) FaseFiltroDTO filter) throws URISyntaxException {
         log.debug("REST request to search Fases for query {}", filter);
 
         Page<FaseDTO> page = faseService.getFases(filter, pageable);

@@ -76,6 +76,9 @@ public class FaseService {
     }
 
     public Page<FaseDTO> getFases(FaseFiltroDTO filter, Pageable page) {
+        if (filter == null ){
+            filter = new FaseFiltroDTO();
+        }
         ExampleMatcher caseInsensitiveExampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase();
         Example<Fase> example = Example.of(filtroMapper.toEntity(filter), caseInsensitiveExampleMatcher);
         Page<Fase> search = faseRepository.findAll(example, page);
