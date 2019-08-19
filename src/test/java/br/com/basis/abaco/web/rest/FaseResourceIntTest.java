@@ -176,9 +176,9 @@ public class FaseResourceIntTest {
     }
 
     @Test
-    public void deleteFaseWithExeption() {
+    public void deleteFaseWithExeption() throws Exception {
         EsforcoFaseDTO esforcoFaseDTO = new EsforcoFaseDTO();
-        FaseDTO faseDTO = createEntity();
+        FaseDTO faseDTO = postDTO(createEntity());
         esforcoFaseDTO.setFase(faseDTO);
         esforcoFaseDTO.setEsforco(new BigDecimal(25));
 
