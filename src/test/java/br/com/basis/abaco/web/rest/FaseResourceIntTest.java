@@ -1,9 +1,11 @@
 package br.com.basis.abaco.web.rest;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,17 +21,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -50,6 +49,7 @@ import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
 @Transactional
+@WithMockUser
 public class FaseResourceIntTest {
 
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
@@ -57,7 +57,7 @@ public class FaseResourceIntTest {
 
     @Autowired
     private FaseService faseService;
-
+    
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -109,19 +109,10 @@ public class FaseResourceIntTest {
             ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()
         , FaseDTO.class);
     }
-
-    @Test
-    public void createAndFind() throws Exception {
-
-        FaseDTO dto = createFase();
-
-        postDTO(dto);
-        Pageable pageable = new PageRequest(1, 20, new Sort(new Sort.Order(Sort.Direction.ASC, "nome")));
-        
-        FaseFiltroDTO filtro = new FaseFiltroDTO();
     
-        //Page<FaseDTO> fases = faseService.getFases(filtro, pageable);
-        
+    public FaseDTO persistFaseDTO() throws Exception {
+        postDTO(createFase());
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
     
         Page<FaseDTO> fases = jacksonMessageConverter.getObjectMapper().readValue(
             restFaseMockMvc.perform(
@@ -131,8 +122,28 @@ public class FaseResourceIntTest {
             ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()
             , new TypeReference<CustomPageImpl<FaseDTO>>(){});
         
-        dto = fases.getContent().get(0);
+        return fases.getContent().get(0);
+    }
+
+    @Test
+    public void createAndFind() throws Exception {
+
+        FaseDTO dto = createFase();
+
+        postDTO(dto);
+
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
     
+        Page<FaseDTO> fases = jacksonMessageConverter.getObjectMapper().readValue(
+            restFaseMockMvc.perform(
+                post(API + "search/fases")
+                    .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                    .content(TestUtil.convertObjectToJsonBytes(filtro))
+            ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()
+            , new TypeReference<CustomPageImpl<FaseDTO>>(){});
+
+        dto = fases.getContent().get(0);
+
         dto = getDTO(dto.getId());
 
         assertNotNull(dto);
@@ -140,132 +151,138 @@ public class FaseResourceIntTest {
         assertNotNull(dto.getNome());
     }
 
-//    @Test
-//    public void createWithExeption() throws Exception {
-//        FaseDTO dto = persistFaseDTO();
-//        dto.setId(null);
-//        restFaseMockMvc.perform(post(RESOURCE)
-//            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-//            .content(TestUtil.convertObjectToJsonBytes(dto)))
-//            .andExpect(status().isBadRequest());
-//
-//        restFaseMockMvc.perform(
-//            put(RESOURCE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dto))
-//        ).andExpect(status().isBadRequest());
-//    }
-//
-//    @Test
-//    public void edit() throws Exception {
-//        FaseDTO dto = persistFaseDTO();
-//        assertNotNull(dto.getId());
-//
-//        dto.setNome(UPDATED_NOME);
-//
-//        restFaseMockMvc.perform(
-//            put(RESOURCE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dto))
-//        ).andExpect(status().isOk());
-//
-//        dto = getDTO(dto.getId());
-//
-//        assertEquals(UPDATED_NOME, dto.getNome());
-//    }
-//
-//    @Test
-//    public void getNonExistingFase() throws Exception {
-//        restFaseMockMvc.perform(get(RESOURCE + "/{id}", Long.MAX_VALUE))
-//            .andExpect(status().isNotFound());
-//    }
-//
-//    @Test
-//    public void deleteFase() throws Exception {
-//        FaseDTO dto = persistFaseDTO();
-//
-//        restFaseMockMvc.perform(delete(RESOURCE + "/{id}", dto.getId())
-//            .accept(TestUtil.APPLICATION_JSON_UTF8))
-//            .andExpect(status().isOk());
-//
-//        restFaseMockMvc.perform(get(RESOURCE + "/{id}", dto.getId()))
-//            .andExpect(status().isNotFound());
-//    }
-//
-//    @Test
-//    public void deleteFaseWithExeption() throws Exception {
-//        FaseDTO faseDTO = persistFaseDTO();
-//
-//        // TODO REMOVER MOCK QUANDO ESFORÇO FASE ESTIVER INTEGRADA CORRETAMENTE
-//        // mock
-//
-//    }
-//
-//    @Test
-//    public void searchFase() throws Exception {
-//        FaseDTO dto = persistFaseDTO();
-//
-//        FaseDTO dto2 = new FaseDTO();
-//        dto2.setNome(UPDATED_NOME);
-//        postDTO(dto2);
-//
-//        FaseFiltroDTO filtro = new FaseFiltroDTO();
-//
-//        restFaseMockMvc.perform(
-//                post(API + "search/fases")
-//                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-//                .content(TestUtil.convertObjectToJsonBytes(filtro))
-//            )
-//            .andExpect(status().isOk())
-//            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//            .andExpect(jsonPath("$.totalElements").value(2))
-//            .andExpect(jsonPath("$.content.[*].id").value(hasItem(dto.getId().intValue())))
-//            .andExpect(jsonPath("$.content.[*].nome").value(hasItem(DEFAULT_NOME)))
-//            .andExpect(jsonPath("$.content.[*].nome").value(hasItem(UPDATED_NOME)));
-//    }
-//
-//    @Test
-//    public void searchFaseFiltered() throws Exception {
-//        FaseDTO dto = persistFaseDTO();
-//
-//        FaseDTO dto2 = new FaseDTO();
-//        dto2.setNome(UPDATED_NOME);
-//        postDTO(dto2);
-//
-//        FaseFiltroDTO filtro = new FaseFiltroDTO();
-//        filtro.setNome(DEFAULT_NOME);
-//
-//        restFaseMockMvc.perform(
-//            post(API + "_search/fases")
-//                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-//                .content(TestUtil.convertObjectToJsonBytes(filtro))
-//        )
-//            .andExpect(status().isOk())
-//            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//            .andExpect(jsonPath("$.totalElements").value(1))
-//            .andExpect(jsonPath("$.content.[*].id").value(hasItem(dto.getId().intValue())))
-//            .andExpect(jsonPath("$.content.[*].nome").value(hasItem(DEFAULT_NOME)));
-//    }
-//
-//    @Test
-//    public void getFases() throws Exception {
-//        postDTO(createFase());
-//
-//        FaseDTO dto2 = createFase();
-//        dto2.setNome(UPDATED_NOME);
-//        postDTO(dto2);
-//
-//        restFaseMockMvc.perform(get(RESOURCE)).andExpect(status().isOk())
-//        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//        .andExpect(jsonPath("$", hasSize(2)))
-//        .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME)))
-//        .andExpect(jsonPath("$.[*].nome").value(hasItem(UPDATED_NOME)));
-//    }
-//
-//    @Test
-//    public void getRelatorio() throws Exception {
-//        postDTO(createFase());
-//
-//        restFaseMockMvc.perform(
-//                get(API + "/tipoFase/exportacao/pdf?query=**")
-//            ).andExpect(status().isOk())
-//            .andExpect(content().contentType(MediaType.APPLICATION_OCTET_STREAM_VALUE));
-//    }
+    @Test
+    public void createWithExeption() throws Exception {
+        FaseDTO dto = persistFaseDTO();
+        dto.setId(null);
+        restFaseMockMvc.perform(post(RESOURCE)
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(dto)))
+            .andExpect(status().isBadRequest());
+
+        restFaseMockMvc.perform(
+            post(RESOURCE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dto))
+        ).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void edit() throws Exception {
+        FaseDTO dto = persistFaseDTO();
+        assertNotNull(dto.getId());
+
+        dto.setNome(UPDATED_NOME);
+
+        restFaseMockMvc.perform(
+            post(RESOURCE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dto))
+        ).andExpect(status().isOk());
+
+        dto = getDTO(dto.getId());
+
+        assertEquals(UPDATED_NOME, dto.getNome());
+    }
+
+    @Test
+    public void getNonExistingFase() throws Exception {
+        restFaseMockMvc.perform(get(RESOURCE + "/{id}", Long.MAX_VALUE))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteFase() throws Exception {
+        FaseDTO dto = persistFaseDTO();
+
+        restFaseMockMvc.perform(delete(RESOURCE + "/{id}", dto.getId())
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
+
+        restFaseMockMvc.perform(get(RESOURCE + "/{id}", dto.getId()))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteFaseWithExeption() throws Exception {
+        FaseDTO faseDTO = persistFaseDTO();
+
+        // TODO REMOVER MOCK QUANDO ESFORÇO FASE ESTIVER INTEGRADA CORRETAMENTE
+        // mock
+
+    }
+
+    @Test
+    public void searchFase() throws Exception {
+        FaseDTO dto = persistFaseDTO();
+
+        FaseDTO dto2 = new FaseDTO();
+        dto2.setNome(UPDATED_NOME);
+        postDTO(dto2);
+
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
+
+        restFaseMockMvc.perform(
+                post(API + "search/fases")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(filtro))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.totalElements").value(2))
+            .andExpect(jsonPath("$.content.[*].id").value(hasItem(dto.getId().intValue())))
+            .andExpect(jsonPath("$.content.[*].nome").value(hasItem(DEFAULT_NOME)))
+            .andExpect(jsonPath("$.content.[*].nome").value(hasItem(UPDATED_NOME)));
+    }
+
+    @Test
+    public void searchFaseFiltered() throws Exception {
+        FaseDTO dto = persistFaseDTO();
+
+        FaseDTO dto2 = new FaseDTO();
+        dto2.setNome(UPDATED_NOME);
+        postDTO(dto2);
+
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
+        filtro.setNome(DEFAULT_NOME);
+
+        restFaseMockMvc.perform(
+            post(API + "search/fases")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(filtro))
+        )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.totalElements").value(1))
+            .andExpect(jsonPath("$.content.[*].id").value(hasItem(dto.getId().intValue())))
+            .andExpect(jsonPath("$.content.[*].nome").value(hasItem(DEFAULT_NOME)));
+    }
+
+    @Test
+    public void getFases() throws Exception {
+        postDTO(createFase());
+
+        FaseDTO dto2 = createFase();
+        dto2.setNome(UPDATED_NOME);
+        postDTO(dto2);
+    
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
+    
+        restFaseMockMvc.perform(
+            post(API + "search/fases")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(filtro))
+        ).andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+        .andExpect(jsonPath("$.totalElements", equalTo(2)))
+        .andExpect(jsonPath("$.content.[*].nome").value(hasItem(DEFAULT_NOME)))
+        .andExpect(jsonPath("$.content.[*].nome").value(hasItem(UPDATED_NOME)));
+    }
+
+    @Test
+    public void getRelatorio() throws Exception {
+        postDTO(createFase());
+
+        restFaseMockMvc.perform(
+                get(API + "/tipoFase/exportacao/pdf?query=**")
+            ).andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_OCTET_STREAM_VALUE));
+    }
 
 }
