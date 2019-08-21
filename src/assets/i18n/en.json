@@ -237,17 +237,17 @@
       }
     },
     "Fase": {
-      "CadastrarTipoFase": "Enter Phase Type",
+      "CadastrarTipoFase": "Enter Phase",
       "Codigo": "Code",
       "Descricao": "Description",
-      "EditarTipoFase": "Edit Phase Type",
+      "EditarTipoFase": "Edit Phase",
       "ID": "ID:",
       "Nome": "Name",
       "Nome:": "Name: ",
-      "TipoFase": "Phase Type",
-      "VisualizarTipoFase": "View Phase Type",
+      "Fase": "Phase",
+      "VisualizarFase": "View Phase",
       "Mensagens": {
-        "msgJaExisteTipoFaseCadastradoComEsseNome": "There is already a Phase Type registered under this name!",
+        "msgJaExisteTipoFaseCadastradoComEsseNome": "There is already a Phase registered under this name!",
         "msgNomeFaseExcedeMaximoCaracteres": "Phase name exceeds maximum characters!",
         "msgFavorInformarCamposObrigatorios": "Please enter the required fields!",
         "msgCamposInvalidos": "Invalid fields: ",
@@ -330,9 +330,8 @@
       "TipoAjuste": "Adjustment Type",
       "TipoAjuste*":"Adjustment Type *",
       "TipoDeflator": "Deflator Type",
-      "TipoFase": "Phase Type",
-      "TipoDeFase": "Phase Type",
-      "TipoFase*": "Phase Type *",
+      "Fase": "Phase",
+      "Fase*": "Phase *",
       "Unitario":"Unit",
       "ValorEstimada": "Estimated Variation Value (%) *",
       "ValorIndicativa": "Indicative Variation Value (%) *",
@@ -366,7 +365,7 @@
     "CadastroEsforcoFase": {
       "Esforco(%)*": "Effort (%) *",
       "EsforcoFase": "Effort Per Phase",
-      "TipoFase*": "Phase Type *"
+      "Fase*": "Phase *"
     },
     "CadastroDeflator": {
       "Codigo": "Code",
@@ -854,7 +853,7 @@
       "Manual": "Manual",
       "Organizacao": "Organization",
       "Sistema": "System",
-      "TipoFase": "Phase Type"
+      "Fase": "Phase"
     },
     "Analise": {
       "Analise": "Analyze",

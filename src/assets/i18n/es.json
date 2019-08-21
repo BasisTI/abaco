@@ -109,8 +109,8 @@
       "ID": "ID:",
       "Nome": "Nombre",
       "Nome:": "Nombre:",
-      "TipoFase": "Tipo de la Fase",
-      "VisualizarTipoFase": "Ver Tipo Fase",
+      "Fase": "Fase",
+      "VisualizarFase": "Ver Fase",
       "Mensagens": {
         "msgJaExisteTipoFaseCadastradoComEsseNome": "Ya existe un Tipo de Fase registrado con ese nombre!",
         "msgNomeFaseExcedeMaximoCaracteres": "El nombre de la fase supera el máximo de caracteres!",
@@ -167,9 +167,8 @@
       "TipoAjuste": "Tipo Ajuste",
       "TipoAJuste*":"Tipo AJuste *",
       "TipoDeflator": "Tipo Deflactor",
-      "TipoFase": "Tipo de la Fase",
-      "TipoDeFase": "Tipo de la Fase",
-      "TipoFase*": "Tipo de la Fase *",
+      "Fase": "Fase",
+      "Fase*": "Fase *",
       "Unitario":"Unitario",
       "ValorEstimada": "Valor Variación Estimada (%) *",
       "ValorIndicativa": "Valor Variación Indicativa (%) *",
@@ -203,7 +202,7 @@
     "CadastroEsforcoFase": {
       "Esforco(%)*": "Esfuerzo (%) *",
       "EsforcoFase": "Esfuerzo por Fase",
-      "TipoFase*": "Tipo de la Fase *"
+      "Fase*": "Fase *"
     },
     "CadastroDeflator": {
       "Codigo": "Código",
@@ -849,7 +848,7 @@
       "Manual": "Manual",
       "Organizacao": "Organización",
       "Sistema": "Sistema",
-      "TipoFase": "Tipo de la Fase"
+      "Fase": "Fase"
     },
     "Analise": {
       "Analise": "Análisis",

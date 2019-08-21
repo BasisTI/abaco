@@ -101,17 +101,17 @@
       }
     },
     "Fase": {
-      "CadastrarTipoFase": "Cadastrar Tipo de Fase",
+      "CadastrarTipoFase": "Cadastrar Fase",
       "Codigo": "Código",
       "Descricao": "Descrição",
-      "EditarTipoFase": "Editar Tipo de Fase",
+      "EditarTipoFase": "Editar Fase",
       "ID": "ID:",
       "Nome": "Nome",
       "Nome:": "Nome:",
-      "TipoFase": "Tipo de Fase",
-      "VisualizarTipoFase": "Visualizar Tipo Fase",
+      "Fase": "Fase",
+      "VisualizarFase": "Visualizar Fase",
       "Mensagens": {
-        "msgJaExisteTipoFaseCadastradoComEsseNome": "Já existe um Tipo de Fase cadastrado com esse nome!",
+        "msgJaExisteTipoFaseCadastradoComEsseNome": "Já existe um Fase cadastrado com esse nome!",
         "msgNomeFaseExcedeMaximoCaracteres": "O nome da fase excede o máximo de caracteres!",
         "msgFavorInformarCamposObrigatorios": "Favor, informar os campos obrigatórios!",
         "msgCamposInvalidos": "Campos inválidos: ",
@@ -169,9 +169,8 @@
       "TipoAjuste": "Tipo Ajuste",
       "TipoAjuste*":"Tipo Ajuste *",
       "TipoDeflator": "Tipo Deflator",
-      "TipoFase": "Tipo de Fase",
-      "TipoDeFase": "Tipo de Fase",
-      "TipoFase*": "Tipo de Fase *",
+      "Fase": "Fase",
+      "Fase*": "Fase *",
       "Unitario":"Unitário",
       "ValorVariacaoIndicativa": "Valor Variação Indicativa",
       "ValorVariacaoEstimada": "Valor Variação Estimada",
@@ -206,7 +205,7 @@
     "CadastroEsforcoFase": {
       "Esforco(%)*": "Esforço (%) *",
       "EsforcoFase": "Esforço Por Fase",
-      "TipoFase*": "Tipo de Fase *"
+      "Fase*": "Fase *"
     },
     "CadastroDeflator": {
       "Codigo": "Código",
@@ -851,7 +850,7 @@
       "Manual": "Manual",
       "Organizacao": "Organização",
       "Sistema": "Sistema",
-      "TipoFase": "Tipo de Fase"
+      "Fase": "Fase"
     },
     "Analise": {
       "Analise": "Análise",
