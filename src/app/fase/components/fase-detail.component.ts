@@ -36,8 +36,8 @@ export class FaseDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.subscriptionList.push( this.tipoFaseService.find(id).subscribe((tipoFase) => {
-            this.fase = tipoFase;
+        this.subscriptionList.push( this.tipoFaseService.find(id).subscribe((fase) => {
+            this.fase = fase;
         }) );
     }
 

@@ -53,7 +53,7 @@ export class FaseComponent implements OnDestroy, OnInit {
     }
 
     editarClickEvent() {
-        this.router.navigate(['/tipoFase', this.tipoFaseSelecionada.id, 'edit']);
+        this.router.navigate(['/fase', this.tipoFaseSelecionada.id, 'edit']);
     }
 
     obterTodaFases() {
@@ -66,11 +66,11 @@ export class FaseComponent implements OnDestroy, OnInit {
     }
 
     abrirEditar() {
-        this.router.navigate(['/tipoFase', this.tipoFaseSelecionada.id, 'edit']);
+        this.router.navigate(['/fase', this.tipoFaseSelecionada.id, 'edit']);
     }
 
     abrirVisualizar() {
-        this.router.navigate(['/tipoFase', this.tipoFaseSelecionada.id]);
+        this.router.navigate(['/fase', this.tipoFaseSelecionada.id]);
     }
 
     confirmDelete() {

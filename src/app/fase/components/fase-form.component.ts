@@ -39,7 +39,7 @@ export class FaseFormComponent implements OnInit, OnDestroy {
         this.subscriptionList.push( this.route.params.subscribe(params => {
             this.fase = new Fase();
             if (params['id']) {
-                this.tipoFaseService.find(params['id']).subscribe(tipoFase => this.fase = tipoFase);
+                this.tipoFaseService.find(params['id']).subscribe(fase => this.fase = fase);
             }
         }) );
     }
@@ -56,7 +56,7 @@ export class FaseFormComponent implements OnInit, OnDestroy {
     private subscribeToSaveResponse(result: Observable<boolean>) {
         this.subscriptionList.push( result.subscribe(() => {
             this.isSaving = false;
-            this.router.navigate(['/tipoFase']);
+            this.router.navigate(['/fase']);
             (this.fase.id === undefined) ? (this.pageNotificationService.addCreateMsg()) :
             (this.pageNotificationService.addUpdateMsg());
 
@@ -68,7 +68,7 @@ export class FaseFormComponent implements OnInit, OnDestroy {
                     const fieldErrors = JSON.parse(error['_body']).fieldErrors;
                     const invalidFieldsString = this.pageNotificationService.getInvalidFields(fieldErrors);
                     this.pageNotificationService.addErrorMsg(
-                        this.getLabel('Cadastros.TipoFase.Mensagens.msgCamposInvalidos') + invalidFieldsString);
+                        this.getLabel('Cadastros.fase.Mensagens.msgCamposInvalidos') + invalidFieldsString);
                 }
             }
         }) );
