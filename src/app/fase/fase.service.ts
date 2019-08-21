@@ -1,19 +1,19 @@
-import { TipoFaseFilter } from './model/tipoFase.filter';
-import { RequestOptions } from '@angular/http';
-import { Pageable } from './../util/pageable.util';
+import { DataTable } from 'primeng/primeng';
+import { FaseFilter } from './model/fase.filter';
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 
-import { TipoFase } from './model/tipo-fase.model';
+import { Fase } from './model/fase.model';
 import { PageNotificationService } from '../shared';
 import { TranslateService } from '@ngx-translate/core';
 import { Page } from '../util/page';
+import { RequestUtil } from '../util/requestUtil';
 
 @Injectable()
-export class TipoFaseService {
+export class FaseService {
 
     resourceUrl = environment.apiUrl + '/fases';
     searchUrl = environment.apiUrl + '/search/fases';
@@ -29,10 +29,7 @@ export class TipoFaseService {
         return str;
     }
 
-    /**
-     * Create object TipoFase.
-     */
-    create(tipoFase: TipoFase): Observable<TipoFase> {
+    create(tipoFase: Fase): Observable<Fase> {
         const copy = this.convert(tipoFase);
         return this.http.post(this.resourceUrl, copy).map((res: Response) => {
             const jsonResponse = res.json();
@@ -40,7 +37,7 @@ export class TipoFaseService {
         }).catch((error: any) => this.handlerError(error));
     }
 
-    handlerError(error: any):Observable<TipoFase> {
+    handlerError(error: any):Observable<Fase> {
         switch (error.status) {
             case 400:
                 this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
@@ -52,24 +49,21 @@ export class TipoFaseService {
         }
     }
 
-    /**
-     * Find object TipoFase.
-     */
-    find(id: number): Observable<TipoFase> {
+    find(id: number): Observable<Fase> {
         return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertItemFromServer(jsonResponse);
         }).catch((error: any) => this.handlerError(error));
     }
 
-    /**
-     * Find Query object TipoFase.
-     */
-    query(filtro?: TipoFaseFilter ,page: Pageable = new Pageable()): Observable<TipoFase[]> {
-        const options =  new RequestOptions({params: Object.assign(page)});
+    query(filtro?: FaseFilter, datatable?: DataTable): Observable<Fase[]> {
+        const options = {params: RequestUtil.getRequestParams(datatable) };
+        if (!filtro) {
+            filtro = new FaseFilter();
+        }
         return this.http.post(this.searchUrl, filtro, options).map((res: Response) => {
-            const tiposFaseJson: Page<TipoFase> = res.json();
-            const tiposFase: TipoFase[] = [];
+            const tiposFaseJson: Page<Fase> = res.json();
+            const tiposFase: Fase[] = [];
             tiposFaseJson.content.forEach(fase => {
                 tiposFase.push( this.convertItemFromServer(fase) );
             });
@@ -77,9 +71,6 @@ export class TipoFaseService {
         },(error: any) => this.handlerError(error));
     }
 
-    /**
-     * Delete object TipoFase.
-     */
     delete(id: number): Observable<Response> {
         return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
             if (error.status === 403) {
@@ -93,19 +84,13 @@ export class TipoFaseService {
         });
     }
 
-    /**
-     * Convert a returned JSON object to TipoFase.
-     */
-    private convertItemFromServer(json: any): TipoFase {
-        const entity: TipoFase = Object.assign(new TipoFase(), json);
+    private convertItemFromServer(json: any): Fase {
+        const entity: Fase = Object.assign(new Fase(), json);
         return entity;
     }
 
-    /**
-     * Convert a TipoFase to a JSON which can be sent to the server.
-     */
-    private convert(tipoFase: TipoFase): TipoFase {
-        const copy: TipoFase = Object.assign({}, tipoFase);
+    private convert(tipoFase: Fase): Fase {
+        const copy: Fase = Object.assign({}, tipoFase);
         return copy;
     }
 }

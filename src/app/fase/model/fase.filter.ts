@@ -1,4 +1,4 @@
-export class TipoFaseFilter {
+export class FaseFilter {
 
     constructor(
         public id?: number,

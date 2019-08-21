@@ -4,16 +4,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
 
-import { TipoFase } from './model/tipo-fase.model';
-import { TipoFaseService } from './tipo-fase.service';
+import { Fase } from './model/fase.model';
+import { FaseService } from './fase.service';
 import { PageNotificationService } from '../shared';
 
 @Component({
     selector: 'jhi-tipo-fase-form',
-    templateUrl: './tipo-fase-form.component.html'
+    templateUrl: './fase-form.component.html'
 })
-export class TipoFaseFormComponent implements OnInit, OnDestroy {
-    tipoFase: TipoFase;
+export class FaseFormComponent implements OnInit, OnDestroy {
+    tipoFase: Fase;
     isSaving: boolean;
 
     private subscriptionList: Subscription[] = [];
@@ -21,7 +21,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private tipoFaseService: TipoFaseService,
+        private tipoFaseService: FaseService,
         private pageNotificationService: PageNotificationService,
         private translate: TranslateService
     ) {
@@ -38,7 +38,7 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.isSaving = false;
         this.subscriptionList.push( this.route.params.subscribe(params => {
-            this.tipoFase = new TipoFase();
+            this.tipoFase = new Fase();
             if (params['id']) {
                 this.tipoFaseService.find(params['id']).subscribe(tipoFase => this.tipoFase = tipoFase);
             }
@@ -54,8 +54,8 @@ export class TipoFaseFormComponent implements OnInit, OnDestroy {
         this.subscribeToSaveResponse(this.tipoFaseService.create(this.tipoFase));
     }
 
-    private subscribeToSaveResponse(result: Observable<TipoFase>) {
-        this.subscriptionList.push( result.subscribe((res: TipoFase) => {
+    private subscribeToSaveResponse(result: Observable<Fase>) {
+        this.subscriptionList.push( result.subscribe((res: Fase) => {
             this.isSaving = false;
             this.router.navigate(['/tipoFase']);
             (this.tipoFase.id === undefined) ? (this.pageNotificationService.addCreateMsg()) :

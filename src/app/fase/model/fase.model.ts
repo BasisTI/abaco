@@ -1,6 +1,6 @@
 import {BaseEntity} from '../../shared';
 
-export class TipoFase implements BaseEntity {
+export class Fase implements BaseEntity {
 
     constructor(
         public id?: number,

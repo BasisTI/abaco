@@ -9,8 +9,8 @@ import { ManualService } from './manual.service';
 import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
 import { ResponseWrapper } from '../shared';
 import { EsforcoFase } from '../esforco-fase/esforco-fase.model';
-import { TipoFaseService } from '../tipo-fase/tipo-fase.service';
-import { TipoFase } from '../tipo-fase/model/tipo-fase.model';
+import { FaseService } from '../fase/fase.service';
+import { Fase } from '../fase/model/fase.model';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/components/common/confirmationservice';
 import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
@@ -33,7 +33,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     showDialogEditPhaseEffort = false;
     showDialogCreateAdjustFactor = false;
     showDialogEditAdjustFactor = false;
-    tipoFases: TipoFase[] = [];
+    tipoFases: Fase[] = [];
     percentual: number;
     newPhaseEffort: EsforcoFase = new EsforcoFase();
     editedPhaseEffort: EsforcoFase = new EsforcoFase();
@@ -57,7 +57,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         private router: Router,
         private manualService: ManualService,
         private esforcoFaseService: EsforcoFaseService,
-        private tipoFaseService: TipoFaseService,
+        private tipoFaseService: FaseService,
         private confirmationService: ConfirmationService,
         private pageNotificationService: PageNotificationService,
         private uploadService: UploadService,
@@ -92,8 +92,8 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.tipoFaseService.query().subscribe((response: any) => {
-            this.tipoFases = response;
+        this.tipoFaseService.query().subscribe((fases: Fase[]) => {
+            this.tipoFases = fases;
         });
         this.manual.versaoCPM = 431;
     }
@@ -133,7 +133,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         })
     }
 
-    private checkIfManualAlreadyExists(registeredPhases: Array<TipoFase>): boolean {
+    private checkIfManualAlreadyExists(registeredPhases: Array<Fase>): boolean {
         let isAlreadyRegistered = false;
         if (registeredPhases) {
             registeredPhases.forEach(each => {

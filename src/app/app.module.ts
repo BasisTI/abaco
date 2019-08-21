@@ -45,7 +45,7 @@ import {AbacoOrganizacaoModule} from './organizacao/organizacao.module';
 import {AbacoContratoModule} from './contrato/contrato.module';
 import {AbacoTipoEquipeModule} from './tipo-equipe/tipo-equipe.module';
 import {AbacoUserModule} from './user/user.module';
-import {AbacoTipoFaseModule} from './tipo-fase/tipo-fase.module';
+import {AbacoFaseModule} from './fase/fase.module';
 import {AbacoSistemaModule} from './sistema/sistema.module';
 import {AbacoBaselineModule} from './baseline/baseline.module';
 import {AbacoModuloModule} from './modulo/modulo.module';
@@ -97,7 +97,7 @@ export function createTranslateLoader(http: HttpClient) {
         AbacoTipoEquipeModule,
         AbacoElasticSearchModule,
         AbacoUserModule,
-        AbacoTipoFaseModule,
+        AbacoFaseModule,
         AbacoSistemaModule,
         AbacoBaselineModule,
         AbacoModuloModule,

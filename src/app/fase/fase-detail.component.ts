@@ -3,20 +3,20 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs/Rx';
 
-import {TipoFase} from './model/tipo-fase.model';
-import {TipoFaseService} from './tipo-fase.service';
+import {Fase} from './model/fase.model';
+import {FaseService} from './fase.service';
 
 @Component({
     selector: 'jhi-tipo-fase-detail',
-    templateUrl: './tipo-fase-detail.component.html'
+    templateUrl: './fase-detail.component.html'
 })
-export class TipoFaseDetailComponent implements OnInit, OnDestroy {
+export class FaseDetailComponent implements OnInit, OnDestroy {
 
-    public tipoFase: TipoFase;
+    public tipoFase: Fase;
     private subscriptionList: Subscription[] = [];
 
     constructor(
-        private tipoFaseService: TipoFaseService,
+        private tipoFaseService: FaseService,
         private route: ActivatedRoute,
         private translate: TranslateService
     ) {
