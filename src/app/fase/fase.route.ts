@@ -6,22 +6,22 @@ import { AuthGuard } from '@basis/angular-components';
 
 export const FaseRoute: Routes = [
   {
-    path: 'tipoFase',
+    path: 'fase',
     component: FaseComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'tipoFase/new',
+    path: 'fase/new',
     component: FaseFormComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'tipoFase/:id/edit',
+    path: 'fase/:id/edit',
     component: FaseFormComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'tipoFase/:id',
+    path: 'fase/:id',
     component: FaseDetailComponent,
     canActivate: [AuthGuard]
   },
