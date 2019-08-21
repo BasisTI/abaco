@@ -29,15 +29,14 @@ export class FaseService {
         return str;
     }
 
-    create(tipoFase: Fase): Observable<Fase> {
-        const copy = this.convert(tipoFase);
+    create(fase: Fase): Observable<boolean> {
+        const copy = this.convert(fase);
         return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
+            return res.ok;
         }).catch((error: any) => this.handlerError(error));
     }
 
-    handlerError(error: any):Observable<Fase> {
+    handlerError(error: any):Observable<any> {
         switch (error.status) {
             case 400:
                 this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));

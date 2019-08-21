@@ -1,7 +1,7 @@
 <div class="ui-g ui-fluid">
     <div class="ui-g-12 ui-md-12 ui-sm-12">
         <div class="card card-w-title">
-            <h1 translate="Cadastros.TipoFase.TipoFase">Tipo de Fase</h1>
+            <h1 translate="Cadastros.Fase.TipoFase">Tipo de Fase</h1>
             <div class="ui-g">
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12">
@@ -12,7 +12,7 @@
                        id="idDescricaoTipoFaseComponent"
                        (keyup.enter)="obterTodaFases()"
                        #filter maxlength="100" />
-                <label translate="Cadastros.TipoFase.Descricao">Descrição</label>
+                <label translate="Cadastros.Fase.Descricao">Descrição</label>
               </span>
                 </div>
             </div>
@@ -49,16 +49,16 @@
                         <p-dataTable id="idTabelaComponentTipoFase"
                             (onRowDblclick)="editarClickEvent()"
                             [rows]="20"
-                            [value]="tiposFase"
+                            [value]="fases"
                             [rowsPerPageOptions]="rowsPerPageOptions"
                             [paginator]="true"
                             selectionMode="single"
                             dataKey="nome"
                             #datatable>
-                            <p-column [header]="'Cadastros.TipoFase.Codigo' | translate" 
+                            <p-column [header]="'Cadastros.Fase.Codigo' | translate" 
                                 field="id" id="idCodigoTabelaComponentTipoFase" [sortable]="true">
                             </p-column>
-                            <p-column [header]="'Cadastros.TipoFase.Nome' | translate" 
+                            <p-column [header]="'Cadastros.Fase.Nome' | translate" 
                                 field="nome" id="idNomeTabelComponentTipoFase" [sortable]="true">
                             </p-column>
                         </p-dataTable>
@@ -72,7 +72,7 @@
                             [title]="'Global.Botoes.Visualizar' | translate" (click)="abrirVisualizar()" [disabled]="tipoFaseSelecionada == null">
                         </button>
                         <button type="button" pButton class="ui-button-danger side-button" name="delete"
-                            icon="ui-icon-do-not-disturb-alt" [title]="'Global.Botoes.Excluir' | translate" (click)="confirmDelete()" 
+                            icon="ui-icon-trash" [title]="'Global.Botoes.Excluir' | translate" (click)="confirmDelete()" 
                             [disabled]="tipoFaseSelecionada == null">
                         </button>
                     </div>

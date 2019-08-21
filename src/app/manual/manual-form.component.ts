@@ -32,7 +32,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     showDialogEditPhaseEffort = false;
     showDialogCreateAdjustFactor = false;
     showDialogEditAdjustFactor = false;
-    tipoFases: Fase[] = [];
+    fases: Fase[] = [];
     percentual: number;
     newPhaseEffort: EsforcoFase = new EsforcoFase();
     editedPhaseEffort: EsforcoFase = new EsforcoFase();
@@ -92,7 +92,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         });
 
         this.tipoFaseService.query().subscribe((fases: Fase[]) => {
-            this.tipoFases = fases;
+            this.fases = fases;
         });
         this.manual.versaoCPM = 431;
     }

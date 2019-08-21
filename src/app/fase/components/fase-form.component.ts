@@ -12,7 +12,7 @@ import { PageNotificationService } from '../../shared';
     templateUrl: './fase-form.component.html'
 })
 export class FaseFormComponent implements OnInit, OnDestroy {
-    tipoFase: Fase;
+    fase: Fase;
     isSaving: boolean;
 
     private subscriptionList: Subscription[] = [];
@@ -37,9 +37,9 @@ export class FaseFormComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.isSaving = false;
         this.subscriptionList.push( this.route.params.subscribe(params => {
-            this.tipoFase = new Fase();
+            this.fase = new Fase();
             if (params['id']) {
-                this.tipoFaseService.find(params['id']).subscribe(tipoFase => this.tipoFase = tipoFase);
+                this.tipoFaseService.find(params['id']).subscribe(tipoFase => this.fase = tipoFase);
             }
         }) );
     }
@@ -50,14 +50,14 @@ export class FaseFormComponent implements OnInit, OnDestroy {
             return;
         }
         this.isSaving = true;
-        this.subscribeToSaveResponse(this.tipoFaseService.create(this.tipoFase));
+        this.subscribeToSaveResponse(this.tipoFaseService.create(this.fase));
     }
 
-    private subscribeToSaveResponse(result: Observable<Fase>) {
-        this.subscriptionList.push( result.subscribe((res: Fase) => {
+    private subscribeToSaveResponse(result: Observable<boolean>) {
+        this.subscriptionList.push( result.subscribe(() => {
             this.isSaving = false;
             this.router.navigate(['/tipoFase']);
-            (this.tipoFase.id === undefined) ? (this.pageNotificationService.addCreateMsg()) :
+            (this.fase.id === undefined) ? (this.pageNotificationService.addCreateMsg()) :
             (this.pageNotificationService.addUpdateMsg());
 
         }, (error: Response) => {

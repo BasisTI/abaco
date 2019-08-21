@@ -236,7 +236,7 @@
         "msgCamposInvalidos": "Invalid fields: "
       }
     },
-    "TipoFase": {
+    "Fase": {
       "CadastrarTipoFase": "Enter Phase Type",
       "Codigo": "Code",
       "Descricao": "Description",

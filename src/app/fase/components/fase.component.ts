@@ -19,7 +19,7 @@ export class FaseComponent implements OnDestroy, OnInit {
     tipoFaseSelecionada: Fase;
     filtro: FaseFilter;
     rowsPerPageOptions: number[] = [5, 10, 20];
-    tiposFase: Fase[] = [];
+    fases: Fase[] = [];
 
     // Lista de listeners para serem desabilitados no fim do ciclo de vida do componente
     private subscriptionList: Subscription[] = [];
@@ -61,7 +61,7 @@ export class FaseComponent implements OnDestroy, OnInit {
         pageable.setSort(this.dataTable.sortOrder, this.dataTable.sortField);
         this.subscriptionList.push(
              this.tipoFaseService.query(this.filtro, this.dataTable)
-                .subscribe(tiposFase => this.tiposFase = tiposFase) 
+                .subscribe(tiposFase => this.fases = tiposFase) 
         );           
     }
 

@@ -303,7 +303,7 @@
                             <p-dropdown required
                                         [filter]="true"
                                         id="nome_fase"
-                                        [options]="tipoFases"
+                                        [options]="fases"
                                         [(ngModel)]="newPhaseEffort.fase"
                                         [placeholder]="this.getLabel('Cadastros.Manual.TipoFase')"
                                         [autoWidth]="false"
@@ -370,7 +370,7 @@
                             <label translate="Cadastros.Manual.TipoFase*">Tipo de Fase*</label>
                             <p-dropdown [filter]="true"
                                         id="nome_fase_edit"
-                                        [options]="tipoFases"
+                                        [options]="fases"
                                         [(ngModel)]="editedPhaseEffort.fase"
                                         optionLabel="nome"
                                         [placeholder]="this.getLabel('Cadastros.Manual.TipoFase')"

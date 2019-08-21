@@ -11,7 +11,7 @@ import { FaseService, Fase } from '../';
 })
 export class FaseDetailComponent implements OnInit, OnDestroy {
 
-    public tipoFase: Fase;
+    public fase: Fase;
     private subscriptionList: Subscription[] = [];
 
     constructor(
@@ -37,7 +37,7 @@ export class FaseDetailComponent implements OnInit, OnDestroy {
 
     load(id) {
         this.subscriptionList.push( this.tipoFaseService.find(id).subscribe((tipoFase) => {
-            this.tipoFase = tipoFase;
+            this.fase = tipoFase;
         }) );
     }
 

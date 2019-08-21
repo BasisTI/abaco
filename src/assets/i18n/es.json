@@ -101,7 +101,7 @@
         "msgCamposInvalidos": "Campos no válidos: "
       }
     },
-    "TipoFase": {
+    "Fase": {
       "CadastrarTipoFase": "Registro Tipo de Fase",
       "Codigo": "Código",
       "Descricao": "Descripción",
