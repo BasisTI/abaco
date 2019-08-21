@@ -1,7 +1,7 @@
 import {Routes } from '@angular/router';
-import { FaseComponent } from './fase.component';
-import { FaseDetailComponent } from './fase-detail.component';
-import { FaseFormComponent } from './fase-form.component';
+import { FaseComponent } from './components/fase.component';
+import { FaseDetailComponent } from './components/fase-detail.component';
+import { FaseFormComponent } from './components/fase-form.component';
 import { AuthGuard } from '@basis/angular-components';
 
 export const FaseRoute: Routes = [

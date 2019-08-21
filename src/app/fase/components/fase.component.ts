@@ -3,12 +3,10 @@ import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, DataTable } from 'primeng/primeng';
 
-import { Fase } from './model/fase.model';
-import { FaseService } from './fase.service';
-import { PageNotificationService } from '../shared';
+import { FaseService, Fase, FaseFilter } from '../';
+import { PageNotificationService } from '../../shared';
 import { TranslateService } from '@ngx-translate/core';
-import { Pageable } from '../util/pageable.util';
-import { FaseFilter } from './model/fase.filter';
+import { Pageable } from '../../util/pageable.util';
 
 @Component({
     selector: 'jhi-tipo-fase',

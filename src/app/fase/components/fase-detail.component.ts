@@ -1,10 +1,9 @@
 import { TranslateService } from '@ngx-translate/core';
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Subscription} from 'rxjs/Rx';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/Rx';
 
-import {Fase} from './model/fase.model';
-import {FaseService} from './fase.service';
+import { FaseService, Fase } from '../';
 
 @Component({
     selector: 'jhi-tipo-fase-detail',

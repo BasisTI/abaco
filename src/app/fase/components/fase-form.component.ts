@@ -4,9 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
 import { Observable, Subscription } from 'rxjs/Rx';
 
-import { Fase } from './model/fase.model';
-import { FaseService } from './fase.service';
-import { PageNotificationService } from '../shared';
+import { FaseService, Fase } from '../';
+import { PageNotificationService } from '../../shared';
 
 @Component({
     selector: 'jhi-tipo-fase-form',
