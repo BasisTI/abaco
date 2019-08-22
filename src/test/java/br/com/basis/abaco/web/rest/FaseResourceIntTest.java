@@ -1,22 +1,12 @@
 package br.com.basis.abaco.web.rest;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import javax.persistence.EntityManager;
-
+import br.com.basis.abaco.AbacoApp;
+import br.com.basis.abaco.repository.FaseRepository;
+import br.com.basis.abaco.service.FaseService;
+import br.com.basis.abaco.service.dto.FaseDTO;
+import br.com.basis.abaco.service.dto.filtro.FaseFiltroDTO;
 import br.com.basis.abaco.utils.CustomPageImpl;
+import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,12 +24,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.basis.abaco.AbacoApp;
-import br.com.basis.abaco.repository.FaseRepository;
-import br.com.basis.abaco.service.FaseService;
-import br.com.basis.abaco.service.dto.FaseDTO;
-import br.com.basis.abaco.service.dto.filtro.FaseFiltroDTO;
-import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
+import javax.persistence.EntityManager;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the FaseResource REST controller.
@@ -276,11 +272,17 @@ public class FaseResourceIntTest {
     }
 
     @Test
-    public void getRelatorio() throws Exception {
+    public void geenrateReport() throws Exception {
         postDTO(createFase());
 
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
+        
+        filtro.setNome(DEFAULT_NOME);
+        
         restFaseMockMvc.perform(
-                get(API + "/tipoFase/exportacao/pdf?query=**")
+                post(RESOURCE + "/exportacao/pdf")
+                    .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                    .content(TestUtil.convertObjectToJsonBytes(filtro))
             ).andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_OCTET_STREAM_VALUE));
     }

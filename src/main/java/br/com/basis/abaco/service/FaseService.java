@@ -1,5 +1,6 @@
 package br.com.basis.abaco.service;
 
+import br.com.basis.abaco.domain.novo.Fase;
 import br.com.basis.abaco.repository.FaseRepository;
 import br.com.basis.abaco.service.dto.FaseDTO;
 import br.com.basis.abaco.service.dto.filtro.FaseFiltroDTO;
@@ -13,6 +14,8 @@ import br.com.basis.dynamicexports.service.DynamicExportsService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -61,8 +64,11 @@ public class FaseService {
         return faseRepository.findFilter(filter, page);
     }
 
-    public ByteArrayOutputStream getRelatorioBAOS(String tipoRelatorio, Pageable pageable) throws RelatorioException {
-       return RelatorioUtil.getRelatorioBAOS(tipoRelatorio, pageable, faseRepository, dynamicExportsService, new RelatorioFaseColunas());
+    public ByteArrayOutputStream getRelatorioBAOS(String tipoRelatorio, FaseFiltroDTO filter, Pageable pageable) throws RelatorioException {
+        ExampleMatcher matcher = ExampleMatcher.matchingAll().withIgnoreCase();
+        Example<Fase> example = Example.of(faseMapper.toEntity(filter), matcher);
+        Page<Fase> fasePage = faseRepository.findAll(example, pageable);
+        return RelatorioUtil.getRelatorioBAOS(tipoRelatorio, fasePage, dynamicExportsService, new RelatorioFaseColunas());
     }
 
     public FaseDTO getFaseDTO(Long id) {
