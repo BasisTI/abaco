@@ -1,7 +1,8 @@
+import { map } from 'rxjs/operators';
 import { Headers, RequestOptions, ResponseContentType } from '@angular/http';
 import { HttpService } from '@basis/angular-components';
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { filter } from 'rxjs/operators';
+import { environment } from '../../../environments/environment.prod';
+import { Pageable } from '../pageable.util';
 
 export class ExportacaoUtilService {
 
@@ -11,8 +12,8 @@ export class ExportacaoUtilService {
     static PDF = 'pdf';
     static EXCEL = 'xls';
     static CSV = 'csv';
-    headers: Headers;
-    options: RequestOptions;
+
+    static resourceUrl = environment.apiUrl;
 
     static getContentType(tipoRelatorio: string): any {
         if (tipoRelatorio === this.PDF) {
@@ -37,6 +38,17 @@ export class ExportacaoUtilService {
         return options;
     }
 
+    // novo método que irá substituir o exportarRelatorio ao fim da refatoração
+    static exportReport(tipoRelatorio: string, http: HttpService, resourceName: string, params: Pageable, filter: any) {
+        return ExportacaoUtilService.generate(
+            `${this.resourceUrl}/${resourceName}/exportacao/${tipoRelatorio}`,
+            ExportacaoUtilService.getContentType(tipoRelatorio),
+            http,
+            params,
+            filter
+        );
+    }
+
     static exportarRelatorio(tipoRelatorio: string, resourceUrl: string, http: HttpService, query: string) {
         if(query == undefined){
             query = '?query=' + "*";
@@ -50,6 +62,17 @@ export class ExportacaoUtilService {
             `${resourceUrl}/exportacao/` + tipoRelatorio + query,
             ExportacaoUtilService.getContentType(tipoRelatorio),
             http
+        );
+    }
+
+    static generate(endpoint: string, tipo: string, http: HttpService, pageable: Pageable, filter: any): any {
+        const options = ExportacaoUtilService.getOptions();
+        options.body = pageable
+        return http.post(endpoint, filter, options )
+        .map((res: any) => {
+                const file = new Blob([res._body], { type: tipo });
+                return URL.createObjectURL(file);
+            }
         );
     }
 

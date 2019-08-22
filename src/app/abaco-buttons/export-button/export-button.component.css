@@ -1,0 +1,15 @@
+.abaco-white-btn {
+    background-color: #fff !important;
+    color: #373a3c !important;
+    border: solid;
+    border-width: thin;
+    border-color: #ccc;
+  }
+  
+  .abaco-white-btn:hover{
+    background-color: #f2f2f2 !important;
+    color: #373a3c !important;
+    border: solid;
+    border-width: thin;
+    border-color: #ccc;
+  }

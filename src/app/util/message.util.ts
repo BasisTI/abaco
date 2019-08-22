@@ -8,6 +8,7 @@ export class MessageUtil {
     public static CONFIRMAR_CLONE = 'Tem certeza que deseja clonar o registro ';
     public static ANALISE = 'Análise';
     public static ERROR_SALVAR_REGISTRO = 'Falha ao salvar registro';
+    public static BLOCKUI_RELATORIO = 'Gerando relatório...';
 
 
     public static INDICATIVA = 'INDICATIVA';
@@ -16,6 +17,9 @@ export class MessageUtil {
     public static DETALHADA_IFPUG = 'Detalhada (IFPUG)';
     public static INDICATIVA_NESMA = 'Indicativa (NESMA)';
     public static ESTIMADA_NESMA = 'Estimada (NESMA)';
+
+    // Erros
+    public static ERRO_RELATORIO = 'Erro ao exportar arquivo';
 
     // Análise Form
     public static NENHUM = 'Nenhum';
