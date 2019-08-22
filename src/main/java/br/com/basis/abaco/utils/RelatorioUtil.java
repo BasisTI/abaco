@@ -1,6 +1,7 @@
 package br.com.basis.abaco.utils;
 
-import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.web.rest.errors.CustomParameterizedException;
+import br.com.basis.abaco.web.rest.errors.ErrorConstants;
 import br.com.basis.dynamicexports.pojo.PropriedadesRelatorio;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
@@ -21,8 +22,7 @@ public class RelatorioUtil {
             String tipoRelatorio,
             Page<T> result,
             DynamicExportsService dynamicExportsService,
-            PropriedadesRelatorio propriedadesRelatorio)
-    throws RelatorioException {
+            PropriedadesRelatorio propriedadesRelatorio) {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             byteArrayOutputStream = dynamicExportsService.export(
@@ -30,7 +30,7 @@ public class RelatorioUtil {
                 Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             log.error(e.getMessage(), e);
-            throw new RelatorioException(e);
+            throw new CustomParameterizedException(ErrorConstants.ERROR_RELATORIO);
         }
         return byteArrayOutputStream;
     }

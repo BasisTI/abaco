@@ -10,6 +10,8 @@ public final class ErrorConstants {
 
     public static final String FASE_CADASTRADA = "fase.cadastrada";
     public static final String FASE_EM_USO = "fase.emUso";
+    
+    public static final String ERROR_RELATORIO = "erro.gerar.relatorio";
 
     private ErrorConstants() {
     }

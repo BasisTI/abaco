@@ -4,7 +4,6 @@ import br.com.basis.abaco.domain.novo.Fase;
 import br.com.basis.abaco.repository.FaseRepository;
 import br.com.basis.abaco.service.dto.FaseDTO;
 import br.com.basis.abaco.service.dto.filtro.FaseFiltroDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.mapper.FaseMapper;
 import br.com.basis.abaco.service.relatorio.RelatorioFaseColunas;
 import br.com.basis.abaco.utils.RelatorioUtil;
@@ -64,7 +63,7 @@ public class FaseService {
         return faseRepository.findFilter(filter, page);
     }
 
-    public ByteArrayOutputStream getRelatorioBAOS(String tipoRelatorio, FaseFiltroDTO filter, Pageable pageable) throws RelatorioException {
+    public ByteArrayOutputStream getRelatorioBAOS(String tipoRelatorio, FaseFiltroDTO filter, Pageable pageable) {
         ExampleMatcher matcher = ExampleMatcher.matchingAll().withIgnoreCase();
         Example<Fase> example = Example.of(faseMapper.toEntity(filter), matcher);
         Page<Fase> fasePage = faseRepository.findAll(example, pageable);
