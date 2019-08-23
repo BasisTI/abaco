@@ -2,6 +2,7 @@ package br.com.basis.abaco.service.dto;
 
 import java.io.Serializable;
 
+import br.com.basis.dynamicexports.pojo.ReportObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class FaseDTO implements Serializable {
+public class FaseDTO implements Serializable, ReportObject {
     private static final long serialVersionUID = 1L;
 
     private Long id;

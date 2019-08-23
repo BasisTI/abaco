@@ -1,6 +1,9 @@
 package br.com.basis.abaco.domain.novo;
 
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,20 +12,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import br.com.basis.dynamicexports.pojo.ReportObject;
-import lombok.Getter;
-import lombok.Setter;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "fase")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Getter
 @Setter
-public class Fase implements Serializable, ReportObject {
+public class Fase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

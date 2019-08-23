@@ -9,7 +9,7 @@ public final class ErrorConstants {
     public static final String ERR_INTERNAL_SERVER_ERROR = "error.internalServerError";
 
     public static final String FASE_CADASTRADA = "fase.cadastrada";
-    public static final String FASE_EM_USO = "fase.emUso";
+    public static final String FASE_EM_USO = "fase.em.uso";
     
     public static final String ERROR_RELATORIO = "erro.gerar.relatorio";
 

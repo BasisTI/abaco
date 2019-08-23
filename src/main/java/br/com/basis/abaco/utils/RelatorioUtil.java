@@ -26,8 +26,8 @@ public class RelatorioUtil {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             byteArrayOutputStream = dynamicExportsService.export(
-                propriedadesRelatorio, result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
-                Optional.ofNullable(AbacoUtil.getReportFooter()));
+                propriedadesRelatorio, result, tipoRelatorio, Optional.empty(), Optional.of(AbacoUtil.REPORT_LOGO_PATH),
+                Optional.of(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             log.error(e.getMessage(), e);
             throw new CustomParameterizedException(ErrorConstants.ERROR_RELATORIO);

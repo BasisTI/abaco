@@ -1,6 +1,8 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.AbacoApp;
+import br.com.basis.abaco.domain.EsforcoFase;
+import br.com.basis.abaco.domain.Fase;
 import br.com.basis.abaco.repository.FaseRepository;
 import br.com.basis.abaco.service.FaseService;
 import br.com.basis.abaco.service.dto.FaseDTO;
@@ -11,6 +13,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -26,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import java.math.BigDecimal;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
@@ -37,11 +42,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Test class for the FaseResource REST controller.
- *
- * @see FaseResource
- */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
 @Transactional
@@ -68,6 +68,9 @@ public class FaseResourceIntTest {
 
     @Autowired
     private FaseRepository repository;
+    
+    @Autowired
+    private EsforcoFaseResource esforcoFaseResource;
 
     private MockMvc restFaseMockMvc;
 
@@ -77,7 +80,7 @@ public class FaseResourceIntTest {
 
     @Before
     public void setup() {
-        //MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
             FaseResource faseResource = new FaseResource(faseService);
         this.restFaseMockMvc = MockMvcBuilders.standaloneSetup(faseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -110,17 +113,22 @@ public class FaseResourceIntTest {
         postDTO(createFase());
         FaseFiltroDTO filtro = new FaseFiltroDTO();
     
-        Page<FaseDTO> fases = jacksonMessageConverter.getObjectMapper().readValue(
+        Page<FaseDTO> fases = findPage(filtro);
+    
+        return fases.getContent().get(0);
+    }
+    
+    private Page<FaseDTO> findPage(FaseFiltroDTO filtro) throws Exception {
+        return jacksonMessageConverter.getObjectMapper().readValue(
             restFaseMockMvc.perform(
                 post(API + "search/fases")
                     .contentType(TestUtil.APPLICATION_JSON_UTF8)
                     .content(TestUtil.convertObjectToJsonBytes(filtro))
             ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()
-            , new TypeReference<CustomPageImpl<FaseDTO>>(){});
-        
-        return fases.getContent().get(0);
+            , new TypeReference<CustomPageImpl<FaseDTO>>() {
+            });
     }
-
+    
     @Test
     public void createAndFind() throws Exception {
 
@@ -130,14 +138,8 @@ public class FaseResourceIntTest {
 
         FaseFiltroDTO filtro = new FaseFiltroDTO();
     
-        Page<FaseDTO> fases = jacksonMessageConverter.getObjectMapper().readValue(
-            restFaseMockMvc.perform(
-                post(API + "search/fases")
-                    .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                    .content(TestUtil.convertObjectToJsonBytes(filtro))
-            ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()
-            , new TypeReference<CustomPageImpl<FaseDTO>>(){});
-
+        Page<FaseDTO> fases = findPage(filtro);
+    
         dto = fases.getContent().get(0);
 
         dto = getDTO(dto.getId());
@@ -200,8 +202,21 @@ public class FaseResourceIntTest {
         FaseDTO faseDTO = persistFaseDTO();
 
         // TODO REMOVER MOCK QUANDO ESFORÇO FASE ESTIVER INTEGRADA CORRETAMENTE
-        // mock
-
+        EsforcoFase esforcoFase = new EsforcoFase();
+        esforcoFase.setEsforco(new BigDecimal(10));
+    
+        // TODO Necessario pois o existem duas entidades fase, adaptar quando Esforço Fase for refeito
+        Fase fase = new Fase();
+        fase.setId(faseDTO.getId());
+        fase.setNome(faseDTO.getNome());
+        
+        esforcoFase.setFase(fase);
+        
+        esforcoFaseResource.createEsforcoFase(esforcoFase);
+        
+        restFaseMockMvc.perform(delete(RESOURCE + "/{id}", faseDTO.getId())
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isBadRequest());
     }
 
     @Test

@@ -41,7 +41,7 @@ public class FaseResource {
     @PostMapping("/fases")
     @Timed
     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
-    public ResponseEntity<Void> createFase(@RequestBody FaseDTO fase) {
+    public ResponseEntity<Void> saveFase(@RequestBody FaseDTO fase) {
         log.debug("REST request to save Fase : {}", fase);
         faseService.save(fase);
         return ResponseEntity.ok().build();

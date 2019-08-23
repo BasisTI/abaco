@@ -6,11 +6,10 @@ import br.com.basis.abaco.service.dto.filtro.FaseFiltroDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface FaseRepository extends JpaRepository<Fase, Long>, JpaSpecificationExecutor<Fase> {
+public interface FaseRepository extends JpaRepository<Fase, Long> {
 
     Boolean existsByNome(String nome);
 
@@ -19,5 +18,5 @@ public interface FaseRepository extends JpaRepository<Fase, Long>, JpaSpecificat
         " AND ( :#{#filtro.nome} IS NULL OR LOWER(f.nome) LIKE " +
                     "LOWER( CAST(CONCAT('%', :#{#filtro.nome}, '%') AS text) )" +
             ")")
-    Page<FaseDTO> findFilter(@Param("filtro") FaseFiltroDTO filtro, Pageable page);
+    Page<FaseDTO> findPage(@Param("filtro") FaseFiltroDTO filtro, Pageable page);
 }
