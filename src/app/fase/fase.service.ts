@@ -16,7 +16,7 @@ import { RequestUtil } from '../util/requestUtil';
 export class FaseService {
 
     resourceUrl = environment.apiUrl + '/fases';
-    searchUrl = environment.apiUrl + '/search/fases';
+    searchUrl = environment.apiUrl + '/fases/page';
 
     constructor(private http: HttpService, private pageNotificationService: PageNotificationService, private translate: TranslateService) {
     }
