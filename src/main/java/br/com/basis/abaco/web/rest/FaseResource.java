@@ -64,7 +64,7 @@ public class FaseResource {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/search/fases")
+    @PostMapping("fases/page")
     @Timed
     public ResponseEntity<Page<FaseDTO>> searchFases(@ApiParam Pageable pageable, @RequestBody FaseFiltroDTO filter) {
         log.debug("REST request to search Fases for query {}", filter);

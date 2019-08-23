@@ -71,44 +71,44 @@ public class FaseResourceIntTest {
     @Autowired
     private EsforcoFaseResource esforcoFaseResource;
 
-    private MockMvc restFaseMockMvc;
+    private MockMvc mockMvc;
 
-    private static final String API = "/api/";
-
-    private static final String RESOURCE = API + "fases";
+    private static final String RESOURCE = "/api/fases";
+    
+    private static final String RESOURCE_PAGE = "/api/fases/page";
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
             FaseResource faseResource = new FaseResource(faseService);
-        this.restFaseMockMvc = MockMvcBuilders.standaloneSetup(faseResource)
+        this.mockMvc = MockMvcBuilders.standaloneSetup(faseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setMessageConverters(jacksonMessageConverter, new ResourceHttpMessageConverter()).build();
     }
 
-    public static FaseDTO createFase() {
+    public static FaseDTO buildFaseDTO() {
         FaseDTO fase = new FaseDTO();
         fase.setNome(DEFAULT_NOME);
         return fase;
     }
 
-    public void postDTO(FaseDTO dto) throws Exception {
-        restFaseMockMvc.perform(post(RESOURCE)
+    public void postFaseDTO(FaseDTO dto) throws Exception {
+        mockMvc.perform(post(RESOURCE)
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(dto))).andExpect(status().isOk());
     }
 
-    public FaseDTO getDTO(Long id) throws Exception {
+    public FaseDTO getFaseDTO(Long id) throws Exception {
         return jacksonMessageConverter.getObjectMapper().readValue(
-            restFaseMockMvc.perform(
+            mockMvc.perform(
                 get(RESOURCE + "/" + id)
             ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()
         , FaseDTO.class);
     }
     
     public FaseDTO persistFaseDTO() throws Exception {
-        postDTO(createFase());
+        postFaseDTO(buildFaseDTO());
         FaseFiltroDTO filtro = new FaseFiltroDTO();
     
         Page<FaseDTO> fases = findPage(filtro);
@@ -118,8 +118,8 @@ public class FaseResourceIntTest {
     
     private Page<FaseDTO> findPage(FaseFiltroDTO filtro) throws Exception {
         return jacksonMessageConverter.getObjectMapper().readValue(
-            restFaseMockMvc.perform(
-                post(API + "search/fases")
+            mockMvc.perform(
+                post(RESOURCE_PAGE)
                     .contentType(TestUtil.APPLICATION_JSON_UTF8)
                     .content(TestUtil.convertObjectToJsonBytes(filtro))
             ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()
@@ -130,9 +130,9 @@ public class FaseResourceIntTest {
     @Test
     public void createAndFind() throws Exception {
 
-        FaseDTO dto = createFase();
+        FaseDTO dto = buildFaseDTO();
 
-        postDTO(dto);
+        postFaseDTO(dto);
 
         FaseFiltroDTO filtro = new FaseFiltroDTO();
     
@@ -140,7 +140,7 @@ public class FaseResourceIntTest {
     
         dto = fases.getContent().get(0);
 
-        dto = getDTO(dto.getId());
+        dto = getFaseDTO(dto.getId());
 
         assertNotNull(dto);
         assertNotNull(dto.getId());
@@ -151,12 +151,12 @@ public class FaseResourceIntTest {
     public void createWithExeption() throws Exception {
         FaseDTO dto = persistFaseDTO();
         dto.setId(null);
-        restFaseMockMvc.perform(post(RESOURCE)
+        mockMvc.perform(post(RESOURCE)
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(dto)))
             .andExpect(status().isBadRequest());
 
-        restFaseMockMvc.perform(
+        mockMvc.perform(
             post(RESOURCE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dto))
         ).andExpect(status().isBadRequest());
     }
@@ -168,18 +168,18 @@ public class FaseResourceIntTest {
 
         dto.setNome(UPDATED_NOME);
 
-        restFaseMockMvc.perform(
+        mockMvc.perform(
             post(RESOURCE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dto))
         ).andExpect(status().isOk());
 
-        dto = getDTO(dto.getId());
+        dto = getFaseDTO(dto.getId());
 
         assertEquals(UPDATED_NOME, dto.getNome());
     }
 
     @Test
     public void getNonExistingFase() throws Exception {
-        restFaseMockMvc.perform(get(RESOURCE + "/{id}", Long.MAX_VALUE))
+        mockMvc.perform(get(RESOURCE + "/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
 
@@ -187,11 +187,11 @@ public class FaseResourceIntTest {
     public void deleteFase() throws Exception {
         FaseDTO dto = persistFaseDTO();
 
-        restFaseMockMvc.perform(delete(RESOURCE + "/{id}", dto.getId())
+        mockMvc.perform(delete(RESOURCE + "/{id}", dto.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
-        restFaseMockMvc.perform(get(RESOURCE + "/{id}", dto.getId()))
+        mockMvc.perform(get(RESOURCE + "/{id}", dto.getId()))
             .andExpect(status().isNotFound());
     }
 
@@ -212,7 +212,7 @@ public class FaseResourceIntTest {
         
         esforcoFaseResource.createEsforcoFase(esforcoFase);
         
-        restFaseMockMvc.perform(delete(RESOURCE + "/{id}", faseDTO.getId())
+        mockMvc.perform(delete(RESOURCE + "/{id}", faseDTO.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isBadRequest());
     }
@@ -223,12 +223,12 @@ public class FaseResourceIntTest {
 
         FaseDTO dto2 = new FaseDTO();
         dto2.setNome(UPDATED_NOME);
-        postDTO(dto2);
+        postFaseDTO(dto2);
 
         FaseFiltroDTO filtro = new FaseFiltroDTO();
 
-        restFaseMockMvc.perform(
-                post(API + "search/fases")
+        mockMvc.perform(
+                post(RESOURCE_PAGE)
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(filtro))
             )
@@ -246,13 +246,13 @@ public class FaseResourceIntTest {
 
         FaseDTO dto2 = new FaseDTO();
         dto2.setNome(UPDATED_NOME);
-        postDTO(dto2);
+        postFaseDTO(dto2);
 
         FaseFiltroDTO filtro = new FaseFiltroDTO();
         filtro.setNome(DEFAULT_NOME);
 
-        restFaseMockMvc.perform(
-            post(API + "search/fases")
+        mockMvc.perform(
+            post(RESOURCE_PAGE)
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(filtro))
         )
@@ -265,16 +265,16 @@ public class FaseResourceIntTest {
 
     @Test
     public void getFases() throws Exception {
-        postDTO(createFase());
+        postFaseDTO(buildFaseDTO());
 
-        FaseDTO dto2 = createFase();
+        FaseDTO dto2 = buildFaseDTO();
         dto2.setNome(UPDATED_NOME);
-        postDTO(dto2);
+        postFaseDTO(dto2);
     
         FaseFiltroDTO filtro = new FaseFiltroDTO();
     
-        restFaseMockMvc.perform(
-            post(API + "search/fases")
+        mockMvc.perform(
+            post(RESOURCE_PAGE)
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(filtro))
         ).andExpect(status().isOk())
@@ -286,13 +286,13 @@ public class FaseResourceIntTest {
 
     @Test
     public void geenrateReport() throws Exception {
-        postDTO(createFase());
+        postFaseDTO(buildFaseDTO());
 
         FaseFiltroDTO filtro = new FaseFiltroDTO();
         
         filtro.setNome(DEFAULT_NOME);
         
-        restFaseMockMvc.perform(
+        mockMvc.perform(
                 post(RESOURCE + "/exportacao/pdf")
                     .contentType(TestUtil.APPLICATION_JSON_UTF8)
                     .content(TestUtil.convertObjectToJsonBytes(filtro))
