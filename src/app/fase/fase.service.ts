@@ -76,8 +76,8 @@ export class FaseService {
                 this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
-            if (error.status === 500) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.TipoFase.Mensagens.msgNaoEPossivelExcluirRegistrosVinculados'));
+            if (error.status === 400) {
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Fase.Mensagens.msgNaoEPossivelExcluirRegistrosVinculados'));
                 return Observable.throw(new Error(error.status));
             }
         });
