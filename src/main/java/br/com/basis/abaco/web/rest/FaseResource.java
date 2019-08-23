@@ -36,39 +36,39 @@ public class FaseResource {
 
     private final Logger log = LoggerFactory.getLogger(FaseResource.class);
 
-    private final FaseService faseService;
+    private final FaseService service;
 
     @PostMapping("/fases")
     @Timed
     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
-    public ResponseEntity<Void> saveFase(@RequestBody FaseDTO fase) {
+    public ResponseEntity<Void> save(@RequestBody FaseDTO fase) {
         log.debug("REST request to save Fase : {}", fase);
-        faseService.save(fase);
+        service.save(fase);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/fases/{id}")
     @Timed
-    public ResponseEntity<FaseDTO> getFaseDTO(@PathVariable Long id) {
+    public ResponseEntity<FaseDTO> get(@PathVariable Long id) {
         log.debug("REST request to get Fase : {}", id);
-        FaseDTO fase = faseService.getFaseDTO(id);
+        FaseDTO fase = service.get(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(fase));
     }
 
     @DeleteMapping("/fases/{id}")
     @Timed
     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
-    public ResponseEntity<Void> deleteFase(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete Fase : {}", id);
-        faseService.delete(id);
+        service.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("fases/page")
     @Timed
-    public ResponseEntity<Page<FaseDTO>> searchFases(@ApiParam Pageable pageable, @RequestBody FaseFiltroDTO filter) {
+    public ResponseEntity<Page<FaseDTO>> getPage(@ApiParam Pageable pageable, @RequestBody FaseFiltroDTO filter) {
         log.debug("REST request to search Fases for query {}", filter);
-        Page<FaseDTO> page = faseService.getFases(filter, pageable);
+        Page<FaseDTO> page = service.getPage(filter, pageable);
         return new ResponseEntity<Page<FaseDTO>>(page, HttpStatus.OK);
     }
 
@@ -78,7 +78,7 @@ public class FaseResource {
         @PathVariable String tipoRelatorio,
         @RequestBody FaseFiltroDTO filter,
         @ApiParam Pageable pageable) throws RelatorioException {
-        ByteArrayOutputStream byteArrayOutputStream = faseService.getRelatorioBAOS(tipoRelatorio, filter, pageable);
+        ByteArrayOutputStream byteArrayOutputStream = service.getRelatorioBAOS(tipoRelatorio, filter, pageable);
         return DynamicExporter.output(byteArrayOutputStream,
             "relatorio." + tipoRelatorio);
     }

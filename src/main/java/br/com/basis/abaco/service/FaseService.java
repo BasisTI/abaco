@@ -26,28 +26,28 @@ public class FaseService {
 
     private final Logger log = LoggerFactory.getLogger(FaseService.class);
 
-    private final FaseRepository faseRepository;
+    private final FaseRepository repository;
 
     private final DynamicExportsService dynamicExportsService;
 
     private final EsforcoFaseService esforcoFaseService;
 
-    private final FaseMapper faseMapper;
+    private final FaseMapper mapper;
 
     public void save(FaseDTO faseDTO) {
-        validaNomeFase(faseDTO);
-        faseRepository.save(faseMapper.toEntity(faseDTO));
+        validaNome(faseDTO);
+        repository.save(mapper.toEntity(faseDTO));
     }
 
-    private void validaNomeFase(FaseDTO faseDTO) {
-        if (faseRepository.existsByNome(faseDTO.getNome())) {
+    private void validaNome(FaseDTO faseDTO) {
+        if (repository.existsByNome(faseDTO.getNome())) {
             throw new CustomParameterizedException(ErrorConstants.FASE_CADASTRADA);
         }
     }
 
     public void delete(Long id) {
         validaRemocao(id);
-        faseRepository.delete(id);
+        repository.delete(id);
     }
 
     private void validaRemocao(Long id) {
@@ -56,17 +56,17 @@ public class FaseService {
         }
     }
 
-    public Page<FaseDTO> getFases(FaseFiltroDTO filter, Pageable page) {
-        return faseRepository.findPage(filter, page);
+    public Page<FaseDTO> getPage(FaseFiltroDTO filter, Pageable page) {
+        return repository.findPage(filter, page);
     }
 
     public ByteArrayOutputStream getRelatorioBAOS(String tipoRelatorio, FaseFiltroDTO filter, Pageable pageable) {
-        Page<FaseDTO> fasePage = faseRepository.findPage(filter, pageable);
+        Page<FaseDTO> fasePage = repository.findPage(filter, pageable);
         return RelatorioUtil.getRelatorioBAOS(tipoRelatorio, fasePage, dynamicExportsService, new RelatorioFaseColunas());
     }
 
-    public FaseDTO getFaseDTO(Long id) {
-        return faseMapper.toDto(faseRepository.findOne(id));
+    public FaseDTO get(Long id) {
+        return mapper.toDto(repository.findOne(id));
     }
 
 }

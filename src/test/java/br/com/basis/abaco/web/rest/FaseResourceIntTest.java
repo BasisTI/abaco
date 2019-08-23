@@ -51,7 +51,7 @@ public class FaseResourceIntTest {
     private static final String UPDATED_NOME = "BBBBBBBBBB";
 
     @Autowired
-    private FaseService faseService;
+    private FaseService service;
     
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -63,7 +63,7 @@ public class FaseResourceIntTest {
     private ExceptionTranslator exceptionTranslator;
 
     @Autowired
-    private EntityManager em;
+    private EntityManager entityManager;
 
     @Autowired
     private FaseRepository repository;
@@ -80,7 +80,7 @@ public class FaseResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            FaseResource faseResource = new FaseResource(faseService);
+            FaseResource faseResource = new FaseResource(service);
         this.mockMvc = MockMvcBuilders.standaloneSetup(faseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
