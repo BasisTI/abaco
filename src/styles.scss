@@ -50,5 +50,17 @@ li.ui-chips-token.ui-state-highlight.ui-corner-all.ng-star-inserted {
 
 .btn-table{
   margin: auto;
-  display: grid;
+  display: table-column
 }
+
+.form-fields-container {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding: 6px;;
+}
+
+.form-buttons-container {
+  justify-content: center;
+  margin-bottom: 10px;
+}
+

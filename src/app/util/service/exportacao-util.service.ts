@@ -1,4 +1,3 @@
-import { map } from 'rxjs/operators';
 import { Headers, RequestOptions, ResponseContentType } from '@angular/http';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../../environments/environment.prod';
@@ -69,11 +68,11 @@ export class ExportacaoUtilService {
         const options = ExportacaoUtilService.getOptions();
         options.body = pageable
         return http.post(endpoint, filter, options )
-        .map((res: any) => {
-                const file = new Blob([res._body], { type: tipo });
-                return URL.createObjectURL(file);
-            }
-        );
+            .map((res: any) => {
+                    const file = new Blob([res._body], { type: tipo });
+                    return URL.createObjectURL(file);
+                }
+            );
     }
 
     static gerar(endpoint: string, tipo: string, http: HttpService): any {

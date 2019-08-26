@@ -1,12 +1,12 @@
 import { MessageUtil } from '../../util/message.util';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { HttpClient } from '@angular/common/http';
 import { PageNotificationService, HttpService } from '@basis/angular-components';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ExportacaoUtil } from '../../util/exportacao.util'
 import { ExportacaoUtilService } from '../../util/service/exportacao-util.service';
 import { DataTable } from 'primeng/primeng';
 import { Pageable } from '../../util/pageable.util';
+import errorConstants from '../../shared/constants/errorConstants';
 
 @Component({
     selector: 'app-export-button',
@@ -53,12 +53,20 @@ export class ExportButtonComponent {
             downloadUrl => {
                 ExportacaoUtil.download(downloadUrl, this.resourceName + ExportacaoUtilService.getExtension(tipoRelatorio));
                 this.blockUI.stop();
-            }, () => {
-                this.pageNotificationService.addErrorMessage(MessageUtil.ERRO_RELATORIO);
-                this.blockUI.stop();
+            }, (responseError) => {
+                this.hanlderResponseError(responseError);
             }
         );
 
+    }
+
+    hanlderResponseError(response) {
+        const [status, _body] = response;
+        const message = JSON.parse(_body).message;
+        if (status == 400 && message == errorConstants.ERROR_RELATORIO) {
+            this.pageNotificationService.addErrorMessage(MessageUtil.ERRO_RELATORIO);
+            this.blockUI.stop();
+        }
     }
 
     imprimir(tipoRelatorio: string) {

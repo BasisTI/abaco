@@ -12,17 +12,14 @@ import { Pageable } from '../../util/pageable.util';
     selector: 'jhi-tipo-fase',
     templateUrl: './fase.component.html'
 })
-export class FaseComponent implements OnDestroy, OnInit {
+export class FaseComponent implements OnInit {
 
     @ViewChild(DataTable) dataTable: DataTable;
-    searchUrl: string = this.tipoFaseService.searchUrl;
+    searchUrl: string = this.tipoFaseService.resourceUrl + '/page';
     tipoFaseSelecionada: Fase;
     filtro: FaseFilter;
     rowsPerPageOptions: number[] = [5, 10, 20];
     fases: Fase[] = [];
-
-    // Lista de listeners para serem desabilitados no fim do ciclo de vida do componente
-    private subscriptionList: Subscription[] = [];
 
     constructor(
         private router: Router,
@@ -36,19 +33,19 @@ export class FaseComponent implements OnDestroy, OnInit {
 
     public ngOnInit() {
         this.obterTodaFases();
-        this.subscriptionList.push( this.dataTable.onRowSelect.subscribe((event) => {
+        this.dataTable.onRowSelect.subscribe((event) => {
             this.tipoFaseSelecionada = event.data;
-        }) );
-        this.subscriptionList.push( this.dataTable.onRowUnselect.subscribe(() => {
+        });
+        this.dataTable.onRowUnselect.subscribe(() => {
             this.tipoFaseSelecionada = undefined;
-        }) );
+        });
     }
 
     getLabel(label) {
         let str: any;
-        this.subscriptionList.push( this.translate.get(label).subscribe((res: string) => {
+        this.translate.get(label).subscribe((res: string) => {
             str = res;
-        }) );
+        });
         return str;
     }
 
@@ -59,10 +56,8 @@ export class FaseComponent implements OnDestroy, OnInit {
     obterTodaFases() {
         const pageable = new Pageable(this.dataTable.page, this.dataTable.rows);
         pageable.setSort(this.dataTable.sortOrder, this.dataTable.sortField);
-        this.subscriptionList.push(
-             this.tipoFaseService.query(this.filtro, this.dataTable)
-                .subscribe(tiposFase => this.fases = tiposFase) 
-        );           
+        this.tipoFaseService.query(this.filtro, this.dataTable)
+        .subscribe(tiposFase => this.fases = tiposFase);           
     }
 
     abrirEditar() {
@@ -77,11 +72,11 @@ export class FaseComponent implements OnDestroy, OnInit {
         this.confirmationService.confirm({
             message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
             accept: () => {
-                this.subscriptionList.push( this.tipoFaseService.delete(this.tipoFaseSelecionada.id).subscribe(() => {
+                this.tipoFaseService.delete(this.tipoFaseSelecionada.id).subscribe(() => {
                     this.pageNotificationService.addDeleteMsg();
                     this.tipoFaseSelecionada = null;
                     this.obterTodaFases();
-                }) );
+                });
             }
         });
     }
@@ -89,9 +84,5 @@ export class FaseComponent implements OnDestroy, OnInit {
     limparPesquisa() {
         this.filtro.nome = null;
         this.obterTodaFases();
-    }
-
-    ngOnDestroy() {
-        this.subscriptionList.forEach((sub) => sub.unsubscribe());
     }
 }

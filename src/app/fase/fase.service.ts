@@ -11,12 +11,12 @@ import { PageNotificationService } from '../shared';
 import { TranslateService } from '@ngx-translate/core';
 import { Page } from '../util/page';
 import { RequestUtil } from '../util/requestUtil';
+import errorConstants from '../shared/constants/errorConstants';
 
 @Injectable()
 export class FaseService {
 
     resourceUrl = environment.apiUrl + '/fases';
-    searchUrl = environment.apiUrl + '/fases/page';
 
     constructor(private http: HttpService, private pageNotificationService: PageNotificationService, private translate: TranslateService) {
     }
@@ -37,14 +37,19 @@ export class FaseService {
     }
 
     handlerError(error: any):Observable<any> {
+        const body = JSON.parse(error._body);
         switch (error.status) {
             case 400:
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
-                return Observable.throw(new Error(error.status));
+                if (body.message == errorConstants.FASE_CADASTRADA) {
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
+                    return Observable.throw(new Error(error.status));
+                }
 
             case 403:
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                return Observable.throw(new Error(error.status));
+                if (error.message == errorConstants.FASE_EM_USO) {
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    return Observable.throw(new Error(error.status));
+                }
         }
     }
 
@@ -60,7 +65,7 @@ export class FaseService {
         if (!filtro) {
             filtro = new FaseFilter();
         }
-        return this.http.post(this.searchUrl, filtro, options).map((res: Response) => {
+        return this.http.post(`${this.resourceUrl}/page`, filtro, options).map((res: Response) => {
             const tiposFaseJson: Page<Fase> = res.json();
             const tiposFase: Fase[] = [];
             tiposFaseJson.content.forEach(fase => {

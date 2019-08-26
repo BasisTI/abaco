@@ -9,10 +9,9 @@ import { FaseService, Fase } from '../';
     selector: 'jhi-tipo-fase-detail',
     templateUrl: './fase-detail.component.html'
 })
-export class FaseDetailComponent implements OnInit, OnDestroy {
+export class FaseDetailComponent implements OnInit {
 
     public fase: Fase;
-    private subscriptionList: Subscription[] = [];
 
     constructor(
         private tipoFaseService: FaseService,
@@ -21,27 +20,15 @@ export class FaseDetailComponent implements OnInit, OnDestroy {
     ) {
     }
 
-    getLabel(label) {
-        let str: any;
-        this.subscriptionList.push( this.translate.get(label).subscribe((res: string) => {
-          str = res;
-        }) );
-        return str;
-    }
-
     ngOnInit() {
-        this.subscriptionList.push( this.route.params.subscribe((params) => {
+         this.route.params.subscribe((params) => {
             this.load(params['id']);
-        }) );
+        });
     }
 
     load(id) {
-        this.subscriptionList.push( this.tipoFaseService.find(id).subscribe((fase) => {
+        this.tipoFaseService.find(id).subscribe((fase) => {
             this.fase = fase;
-        }) );
-    }
-
-    ngOnDestroy() {
-        this.subscriptionList.forEach((sub) => sub.unsubscribe());
+        });
     }
 }

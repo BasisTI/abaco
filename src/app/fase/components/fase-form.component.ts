@@ -11,11 +11,9 @@ import { PageNotificationService } from '../../shared';
     selector: 'jhi-tipo-fase-form',
     templateUrl: './fase-form.component.html'
 })
-export class FaseFormComponent implements OnInit, OnDestroy {
-    fase: Fase;
+export class FaseFormComponent implements OnInit {
+    fase: Fase = new Fase();
     isSaving: boolean;
-
-    private subscriptionList: Subscription[] = [];
 
     constructor(
         private route: ActivatedRoute,
@@ -28,20 +26,19 @@ export class FaseFormComponent implements OnInit, OnDestroy {
 
     getLabel(label) {
         let str: any;
-        this.subscriptionList.push( this.translate.get(label).subscribe((res: string) => {
+        this.translate.get(label).subscribe((res: string) => {
             str = res;
-        }) );
+        });
         return str;
     }
 
     ngOnInit() {
         this.isSaving = false;
-        this.subscriptionList.push( this.route.params.subscribe(params => {
-            this.fase = new Fase();
+        this.route.params.subscribe(params => {
             if (params['id']) {
                 this.tipoFaseService.find(params['id']).subscribe(fase => this.fase = fase);
             }
-        }) );
+        });
     }
 
     save(form) {
@@ -50,11 +47,11 @@ export class FaseFormComponent implements OnInit, OnDestroy {
             return;
         }
         this.isSaving = true;
-        this.subscribeToSaveResponse(this.tipoFaseService.create(this.fase));
+        this.handleCreateResponse(this.tipoFaseService.create(this.fase));
     }
 
-    private subscribeToSaveResponse(result: Observable<boolean>) {
-        this.subscriptionList.push( result.subscribe(() => {
+    private handleCreateResponse(result: Observable<boolean>) {
+        result.subscribe(() => {
             this.isSaving = false;
             this.router.navigate(['/fase']);
             (this.fase.id === undefined) ? (this.pageNotificationService.addCreateMsg()) :
@@ -71,10 +68,6 @@ export class FaseFormComponent implements OnInit, OnDestroy {
                         this.getLabel('Cadastros.fase.Mensagens.msgCamposInvalidos') + invalidFieldsString);
                 }
             }
-        }) );
-    }
-
-    ngOnDestroy() {
-        this.subscriptionList.forEach((sub) => sub.unsubscribe());
+        });
     }
 }

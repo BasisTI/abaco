@@ -1,41 +1,34 @@
 <div class="ui-g ui-fluid">
     <div class="ui-g-12">
         <div class="card card-w-title">
-            <h1>{{ fase.id ? this.getLabel('Cadastros.Fase.EditarTipoFase') : this.getLabel('Cadastros.Fase.CadastrarTipoFase') }}</h1>
+            <h1>{{ fase.id ? ('Cadastros.Fase.EditarTipoFase' | translate ) : ('Cadastros.Fase.CadastrarTipoFase' | translate) }}</h1>
 
-            <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
-                <div class="ui-g" style="margin-bottom: 25px; margin-top: 25px">
-                    <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                        <span class="md-inputfield">
-                            <input
-                                    type="text"
-                                    name="nomeTipoFase"
-                                    [(ngModel)]="fase.nome"
-                                    [maxlength]="250"
-                                    #nomeTipoFase='ngModel'
-                                    pInputText
-                                    id="idNomeTipoFase"
-                                    required/>
-                            <label translate="Cadastros.Fase.Nome">Nome</label>
-                            <div *ngIf="editForm.controls['nomeTipoFase'] 
-                                && !editForm.controls['nomeTipoFase'].valid 
-                                && (editForm.controls['nomeTipoFase'].touched 
-                                || editForm.submitted)"
-                                class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
-                                Campo obrigatório.
-                            </div>
-                        </span>
-                    </div>
+            <form name="form" (ngSubmit)="save(form)" #form="ngForm">
+                <div class="ui-g-12 ui-md-12 ui-sm-12 form-fields-container">
+                    <span class="md-inputfield">
+                        <input
+                            type="text"
+                            name="nomeTipoFase"
+                            [(ngModel)]="fase.nome"
+                            [maxlength]="250"
+                            pInputText
+                            required/>
+                        <label translate="Cadastros.Fase.Nome">Nome</label>
+                        <div *ngIf="form.controls['nomeTipoFase'] 
+                            && !form.controls['nomeTipoFase'].valid 
+                            && (form.controls['nomeTipoFase'].touched 
+                            || form.submitted)"
+                            class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                            Campo obrigatório.
+                        </div>
+                    </span>
                 </div>
-
-                <div class="ui-g ui-md-12" style="justify-content: center">
+                <div class="ui-g ui-md-12 form-buttons-container">
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-white-button [buttonLabel]="'Global.Botoes.Cancelar' | translate" routerLink="/fase"
-                                          id="idBtnCancelarFormTipoFase"></app-white-button>
+                        <app-white-button [buttonLabel]="'Global.Botoes.Cancelar' | translate" routerLink="/fase"></app-white-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-submit-button [buttonLabel]="'Global.Botoes.Salvar' | translate" [isDisabled]="editForm.invalid || isSaving"
-                                           id="idBtnSalvarFormTipoFase"></app-submit-button>
+                        <app-submit-button [buttonLabel]="'Global.Botoes.Salvar' | translate" [isDisabled]="form.invalid"></app-submit-button>
                     </div>
                 </div>
 

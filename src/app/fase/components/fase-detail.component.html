@@ -4,16 +4,15 @@
             <h1 translate="Cadastros.Fase.VisualizarFase">Visualizar Tipo Fase</h1>
             <div class="ui-g">
                 <div class="ui-g-6">
-                    <label>{{this.getLabel('Cadastros.Fase.ID')}} {{ fase.id }}</label>
+                    <label>{{ 'Cadastros.Fase.ID' | translate }} {{ fase.id }}</label>
                 </div>
                 <div class="ui-g-6">
-                    <label>{{this.getLabel('Cadastros.Fase.Nome:')}} {{ fase.nome }}</label>
+                    <label>{{ 'Cadastros.Fase.Nome:' | translate }} {{ fase.nome }}</label>
                 </div>
             </div>
             <div class="ui-g">
                 <div class="ui-g-2">
-                    <button pButton type="button" [label]="'Global.Botoes.Voltar' | translate" routerLink="/fase"
-                            id="IdbtnVoltarDetailTipoFase"></button>
+                    <button pButton type="button" [label]="'Global.Botoes.Voltar' | translate" routerLink="/fase"></button>
                 </div>
             </div>
         </div>

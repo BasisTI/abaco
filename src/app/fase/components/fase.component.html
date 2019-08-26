@@ -4,49 +4,49 @@
             <h1 translate="Cadastros.Fase.Fase">Tipo de Fase</h1>
             <div class="ui-g">
 
-                <div class="ui-g-12 ui-md-12 ui-sm-12">
-              <span class="md-inputfield">
-                <input type="text" pInputText class="ui-inputtext"
-                       name="filtroTipoFase"
-                       [(ngModel)]="filtro.nome"
-                       id="idDescricaoTipoFaseComponent"
-                       (keyup.enter)="obterTodaFases()"
-                       #filter maxlength="100" />
+            <div class="ui-g-12 ui-md-12 ui-sm-12 form-fields-container">
+                <span class="md-inputfield">
+                    <input type="text" pInputText class="ui-inputtext"
+                        name="filtroTipoFase"
+                        [(ngModel)]="filtro.nome"
+                        (keyup.enter)="obterTodaFases()"
+                        maxlength="100" />
                 <label translate="Cadastros.Fase.Descricao">Descrição</label>
               </span>
-                </div>
             </div>
+
             <div class="ui-g">
-                <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
+                <div class="ui-g ui-md-12 form-buttons-container">
+                    
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-white-button
                                 [buttonLabel]="'Global.Botoes.LimparPesquisa' | translate"
                                 buttonIcon="ui-icon-clear-all"
-                                id="idBtnLimparComponentTipoFase"
                                 (click)="limparPesquisa()">
                         </app-white-button>
                     </div>
+
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-blue-button
                                 [buttonLabel]="'Global.Botoes.Pesquisar' | translate"
                                 buttonIcon="ui-icon-search"
-                                id="idBtnPesquisarComponentTipoFase"
                                 (click)="obterTodaFases()">
                         </app-blue-button>
                     </div>
+
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-green-button
                                 [buttonLabel]="'Global.Botoes.Novo' | translate"
-                                id="idBtnNovoComponentTipoFase"
                                 routerLink="/fase/new"
                                 buttonIcon="ui-icon-add">
                         </app-green-button>
                     </div>
+
                 </div>
 
                 <div>
                     <div class="ui-g-11 ui-md-11">
-                        <p-dataTable id="idTabelaComponentTipoFase"
+                        <p-dataTable
                             (onRowDblclick)="editarClickEvent()"
                             [rows]="20"
                             [value]="fases"
@@ -56,10 +56,10 @@
                             dataKey="nome"
                             #datatable>
                             <p-column [header]="'Cadastros.Fase.Codigo' | translate" 
-                                field="id" id="idCodigoTabelaComponentTipoFase" [sortable]="true">
+                                field="id" [sortable]="true">
                             </p-column>
                             <p-column [header]="'Cadastros.Fase.Nome' | translate" 
-                                field="nome" id="idNomeTabelComponentTipoFase" [sortable]="true">
+                                field="nome" [sortable]="true">
                             </p-column>
                         </p-dataTable>
                     </div>
@@ -79,7 +79,7 @@
                 </div>
 
                 <div class="ui-g-12 ui-md-2">
-                    <app-export-button [dataTable]="dataTable" resourceName="fases" filter="filtro" id="idBtnExportacaoComponentTipoFase">
+                    <app-export-button [dataTable]="dataTable" resourceName="fases" filter="filtro">
                     </app-export-button>
                 </div>
 
@@ -87,11 +87,9 @@
         </div>
     </div>
 </div>
-<p-confirmDialog [header]="'Global.Mensagens.Confirmacao'  | translate" #dialog>
+<p-confirmDialog [header]="'Global.Mensagens.Confirmacao' | translate" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" [label]="'Global.Botoes.Nao' | translate" (click)="dialog.reject()"
-                id="idBtnNaoComponentTipoFase"></button>
-        <button type="button" pButton icon="fa-check" [label]="'Global.Botoes.Sim' | translate" (click)="dialog.accept()"
-                id="idBtnSimComponentTipoFase"></button>
+        <button type="button" pButton icon="fa-close" [label]="'Global.Botoes.Nao' | translate" (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="'Global.Botoes.Sim' | translate" (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>
