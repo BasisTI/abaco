@@ -12,10 +12,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EsforcoFaseService {
 
-    private final EsforcoFaseRepository esforcoFaseRepository;
+    private final EsforcoFaseRepository repository;
 
     public Boolean existFase(Long id) {
-        return esforcoFaseRepository.existsByFaseId(id);
+        return repository.existsByFaseId(id);
     }
 
 }

@@ -65,7 +65,7 @@ public class FaseService {
         return RelatorioUtil.getRelatorioBAOS(tipoRelatorio, fasePage, dynamicExportsService, new RelatorioFaseColunas());
     }
 
-    public FaseDTO get(Long id) {
+    public FaseDTO findOne(Long id) {
         return mapper.toDto(repository.findOne(id));
     }
 

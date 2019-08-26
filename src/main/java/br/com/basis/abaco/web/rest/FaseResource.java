@@ -49,9 +49,9 @@ public class FaseResource {
 
     @GetMapping("/fases/{id}")
     @Timed
-    public ResponseEntity<FaseDTO> get(@PathVariable Long id) {
+    public ResponseEntity<FaseDTO> findOne(@PathVariable Long id) {
         log.debug("REST request to get Fase : {}", id);
-        FaseDTO fase = service.get(id);
+        FaseDTO fase = service.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(fase));
     }
 
