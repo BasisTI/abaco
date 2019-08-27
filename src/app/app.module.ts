@@ -1,12 +1,12 @@
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {HttpModule, BrowserXhr, Http, RequestOptions, XHRBackend} from '@angular/http';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {NgProgressModule, NgProgressBrowserXhr} from 'ngx-progressbar';
-import {AuthHttp, JwtHelper} from 'angular2-jwt';
+import { JwtHelper} from 'angular2-jwt';
 import {ConfirmationService} from 'primeng/primeng';
 import {MessageService} from 'primeng/components/common/messageservice';
 import {PRIMENG_IMPORTS} from './primeng-imports';
@@ -69,6 +69,7 @@ import {UserGuard} from './user.guard';
 import {ObservadorGuard} from './observador.guard';
 import {GestorGuard} from './gestor.guard';
 import {  PesquisarFuncaoTransacaoModule } from './pesquisar-ft/pesquisar-ft.module';
+import { HttpConfigInterceptor } from './interceptor/http-config.interceptor';
 
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
@@ -138,6 +139,7 @@ export function createTranslateLoader(http: HttpClient) {
         {provide: BrowserXhr, useClass: NgProgressBrowserXhr},
         // para habilitar o JWT, descomentar a linha abaixo
         // { provide: HttpService, useClass: HttpService, deps: [AuthHttp] },
+        { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
         JhiDateUtils,
         BreadcrumbService,
         ConfirmationService,

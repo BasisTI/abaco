@@ -1,8 +1,7 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Response } from '@angular/http';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 
 import { FaseService, Fase } from '../';
 import { PageNotificationService } from '../../shared';
@@ -13,7 +12,6 @@ import { PageNotificationService } from '../../shared';
 })
 export class FaseFormComponent implements OnInit {
     fase: Fase = new Fase();
-    isSaving: boolean;
 
     constructor(
         private route: ActivatedRoute,
@@ -33,7 +31,6 @@ export class FaseFormComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.isSaving = false;
         this.route.params.subscribe(params => {
             if (params['id']) {
                 this.tipoFaseService.find(params['id']).subscribe(fase => this.fase = fase);
@@ -46,28 +43,16 @@ export class FaseFormComponent implements OnInit {
             this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
             return;
         }
-        this.isSaving = true;
         this.handleCreateResponse(this.tipoFaseService.create(this.fase));
     }
 
-    private handleCreateResponse(result: Observable<boolean>) {
+    private handleCreateResponse(result: Observable<any>) {
         result.subscribe(() => {
-            this.isSaving = false;
             this.router.navigate(['/fase']);
             (this.fase.id === undefined) ? (this.pageNotificationService.addCreateMsg()) :
             (this.pageNotificationService.addUpdateMsg());
 
-        }, (error: Response) => {
-            this.isSaving = false;
-
-            switch (error.status) {
-                case 400: {
-                    const fieldErrors = JSON.parse(error['_body']).fieldErrors;
-                    const invalidFieldsString = this.pageNotificationService.getInvalidFields(fieldErrors);
-                    this.pageNotificationService.addErrorMsg(
-                        this.getLabel('Cadastros.fase.Mensagens.msgCamposInvalidos') + invalidFieldsString);
-                }
-            }
-        });
+        }
+        );
     }
 }

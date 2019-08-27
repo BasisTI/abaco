@@ -817,7 +817,8 @@
       "EscolhaUmRegistroParaCriarCrud":"Escolha um registro para criar crud.",
       "Nenhum":"Nenhum",
       "DeflatorDeOrigen":"Manter deflator original",
-      "SemPermissaoAcao": "Você não possui permissão para esta ação."
+      "SemPermissaoAcao": "Você não possui permissão para esta ação.",
+      "ErrorExportar": "Ocorreu um erro ao gerar o relatório."
     },
     "Idiomas":{
       "Portugues":"Português",

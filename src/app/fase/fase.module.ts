@@ -13,7 +13,7 @@ import {
     RadioButtonModule,
     ConfirmDialogModule,
     ConfirmationService,
-    DataTableModule
+    DataTableModule,
 } from 'primeng/primeng';
 
 import {

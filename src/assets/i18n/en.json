@@ -820,7 +820,8 @@
       "EscolhaUmRegistroParaCriarCrud":"Choose a record to create crud.",
       "Nenhum":"None",
       "DeflatorDeOrigen":"Maintain original deflator",
-      "SemPermissaoAcao": "You do not have permission for this action."
+      "SemPermissaoAcao": "You do not have permission for this action.",
+      "ErrorExportar": "An error occurred while generating the report."
     },
     "Idiomas":{
       "Portugues":"Portuguese",

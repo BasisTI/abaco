@@ -815,7 +815,8 @@
       "EscolhaUmRegistroParaCriarCrud":"Elija un registro para crear crud.",
       "Nenhum":"Ningún",
       "DeflatorDeOrigen":"Mantener deflactor original",
-      "SemPermissaoAcao": "Usted no tiene permiso para esta acción."
+      "SemPermissaoAcao": "Usted no tiene permiso para esta acción.",
+      "ErrorExportar": "Se produjo un error al generar el informe."
     },
     "Idiomas":{
       "Portugues":"Portugués",

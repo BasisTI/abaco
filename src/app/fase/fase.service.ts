@@ -1,63 +1,33 @@
+import { map } from 'rxjs/operators';
 import { DataTable } from 'primeng/primeng';
 import { FaseFilter } from './model/fase.filter';
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-import { HttpService } from '@basis/angular-components';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 import { Fase } from './model/fase.model';
-import { PageNotificationService } from '../shared';
-import { TranslateService } from '@ngx-translate/core';
 import { Page } from '../util/page';
 import { RequestUtil } from '../util/requestUtil';
-import errorConstants from '../shared/constants/errorConstants';
+import { from } from 'rxjs/observable/from';
 
 @Injectable()
 export class FaseService {
 
     resourceUrl = environment.apiUrl + '/fases';
 
-    constructor(private http: HttpService, private pageNotificationService: PageNotificationService, private translate: TranslateService) {
-    }
+    constructor( private http: HttpClient ) {}
 
-    getLabel(label) {
-        let str: any;
-        this.translate.get(label).subscribe((res: string) => {
-            str = res;
-        }).unsubscribe();
-        return str;
-    }
-
-    create(fase: Fase): Observable<boolean> {
+    create(fase: Fase): Observable<any> {
         const copy = this.convert(fase);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            return res.ok;
-        }).catch((error: any) => this.handlerError(error));
-    }
-
-    handlerError(error: any):Observable<any> {
-        const body = JSON.parse(error._body);
-        switch (error.status) {
-            case 400:
-                if (body.message == errorConstants.FASE_CADASTRADA) {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
-                    return Observable.throw(new Error(error.status));
-                }
-
-            case 403:
-                if (error.message == errorConstants.FASE_EM_USO) {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                    return Observable.throw(new Error(error.status));
-                }
-        }
+        return Observable.from(
+            this.http.post(this.resourceUrl, copy)
+        );
     }
 
     find(id: number): Observable<Fase> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        }).catch((error: any) => this.handlerError(error));
+        return this.http.get(`${this.resourceUrl}/${id}`)
+        .map( (res: Fase) => this.convertItemFromServer(res) );
     }
 
     query(filtro?: FaseFilter, datatable?: DataTable): Observable<Fase[]> {
@@ -65,27 +35,18 @@ export class FaseService {
         if (!filtro) {
             filtro = new FaseFilter();
         }
-        return this.http.post(`${this.resourceUrl}/page`, filtro, options).map((res: Response) => {
-            const tiposFaseJson: Page<Fase> = res.json();
+        return this.http.post(`${this.resourceUrl}/page`, filtro, options).map((res: Page<Fase>) => {
+            const tiposFaseJson: Page<Fase> = res;
             const tiposFase: Fase[] = [];
             tiposFaseJson.content.forEach(fase => {
                 tiposFase.push( this.convertItemFromServer(fase) );
             });
             return tiposFase;
-        },(error: any) => this.handlerError(error));
+        });
     }
 
-    delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                return Observable.throw(new Error(error.status));
-            }
-            if (error.status === 400) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Fase.Mensagens.msgNaoEPossivelExcluirRegistrosVinculados'));
-                return Observable.throw(new Error(error.status));
-            }
-        });
+    delete(id: number): Observable<Object> {
+        return this.http.delete(`${this.resourceUrl}/${id}`);
     }
 
     private convertItemFromServer(json: any): Fase {

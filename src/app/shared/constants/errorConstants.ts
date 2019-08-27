@@ -1,6 +1,6 @@
-export default {
-    FASE_CADASTRADA: 'fase.cadastrada',
-    FASE_EM_USO: 'fase.em.uso',
+export enum ErrorConstants {
+    fase_cadastrada = 'Global.Mensagens.RegistroCadastrado',
+    fase_em_uso = 'Cadastros.Fase.Mensagens.msgNaoEPossivelExcluirRegistrosVinculados',
 
-    ERROR_RELATORIO: 'erro.gerar.relatorio'
+    erro_gerar_relatorio = 'Global.Mensagens.ErrorExportar'
 }

@@ -13,7 +13,7 @@ import { AnaliseSharedDataService } from './analise-shared-data.service';
         AnaliseService
     ],
     exports: [
-        FatorAjusteToSelectItemPipe
+        FatorAjusteToSelectItemPipe,
     ]
 })
 export class AbacoSharedModule { }

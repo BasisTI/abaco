@@ -1,7 +1,8 @@
-import { Headers, RequestOptions, ResponseContentType } from '@angular/http';
+import { Headers, RequestOptions, ResponseContentType, Response } from '@angular/http';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../../environments/environment.prod';
 import { Pageable } from '../pageable.util';
+import { Observable } from 'rxjs';
 
 export class ExportacaoUtilService {
 
@@ -64,15 +65,10 @@ export class ExportacaoUtilService {
         );
     }
 
-    static generate(endpoint: string, tipo: string, http: HttpService, pageable: Pageable, filter: any): any {
+    static generate(endpoint: string, tipo: string, http: HttpService, pageable: Pageable, filter: any): Observable<Response> {
         const options = ExportacaoUtilService.getOptions();
         options.body = pageable
-        return http.post(endpoint, filter, options )
-            .map((res: any) => {
-                    const file = new Blob([res._body], { type: tipo });
-                    return URL.createObjectURL(file);
-                }
-            );
+        return http.post(endpoint, filter, options );
     }
 
     static gerar(endpoint: string, tipo: string, http: HttpService): any {

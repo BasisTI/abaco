@@ -1,5 +1,4 @@
-import { Subscription } from 'rxjs/Subscription';
-import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, DataTable } from 'primeng/primeng';
 
