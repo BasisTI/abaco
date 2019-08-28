@@ -69,7 +69,7 @@ import {UserGuard} from './user.guard';
 import {ObservadorGuard} from './observador.guard';
 import {GestorGuard} from './gestor.guard';
 import {  PesquisarFuncaoTransacaoModule } from './pesquisar-ft/pesquisar-ft.module';
-import { HttpConfigInterceptor } from './interceptor/http-config.interceptor';
+import { HttpConfigInterceptor } from './interceptor';
 
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 

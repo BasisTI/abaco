@@ -1,4 +1,4 @@
-import { ExportButtonComponent } from './export-button/export-button.component';
+import { ExportButtonComponent } from './export-button';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GreenButtonComponent } from './green-button/green-button.component';
