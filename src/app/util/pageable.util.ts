@@ -1,3 +1,4 @@
+import { HttpParams } from '@angular/common/http';
 export class Pageable {
     page: number;
     size: number;
@@ -25,5 +26,9 @@ export class Pageable {
             const direction = sortOrder === 1 ? 'ASC' : 'DESC';
             this.sort = sortField + ',' + direction;
         }
+    }
+
+    toParams(): string {
+        return `?page=${this.page || '0'}&size=${this.size || '20'}&sort=${this.sort || ''}`;
     }
 }

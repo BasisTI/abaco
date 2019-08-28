@@ -1,12 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { MessageUtil } from '../../util/message.util';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { PageNotificationService, HttpService } from '@basis/angular-components';
 import { Component, Input } from '@angular/core';
 import { ExportacaoUtil } from '../../util/exportacao.util'
-import { ExportacaoUtilService } from '../../util/service/exportacao-util.service';
+import { ExportacaoUtilService } from './export-button.service';
 import { DataTable } from 'primeng/primeng';
 import { Pageable } from '../../util/pageable.util';
-import { ErrorConstants } from '../../shared';
 
 @Component({
     selector: 'app-export-button',
@@ -41,30 +40,18 @@ export class ExportButtonComponent {
         },
     ];
 
-    constructor(
-        private pageNotificationService: PageNotificationService,
-        private http: HttpService
-    ) { }
+    constructor( private http: HttpClient ) { }
 
     exportar(tipoRelatorio: string) {
 
         this.blockUI.start(MessageUtil.BLOCKUI_RELATORIO);
         ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, this.getParams(), this.filter)
             .finally( () => this.blockUI.stop())
-            .subscribe((res: any) => {
-                const file = new Blob([res._body], { type: tipoRelatorio });
+            .subscribe((res: Blob) => {
+                const file = new Blob([res], { type: tipoRelatorio });
                 const url = URL.createObjectURL(file);
                 ExportacaoUtil.download(url, this.resourceName + ExportacaoUtilService.getExtension(tipoRelatorio));
             });
-    }
-
-    handlderResponseError(response) {
-        const [status, _body] = response;
-        const message = JSON.parse(_body).message;
-        if (status == 400 && message == ErrorConstants.erro_gerar_relatorio) {
-            this.pageNotificationService.addErrorMessage(MessageUtil.ERRO_RELATORIO);
-            this.blockUI.stop();
-        }
     }
 
     imprimir(tipoRelatorio: string) {
