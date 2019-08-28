@@ -33,7 +33,6 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
     translateMessage(messageAddress: string) {
         this.translate.get(ErrorConstants[messageAddress]).subscribe((translateMessage: string) => {
-            console.log(`menssagens: ${ErrorConstants[messageAddress]} ${translateMessage}`);
             this.pageNotificationService.addErrorMsg(translateMessage);
         } )
     }

@@ -1,15 +1,13 @@
-import { map } from 'rxjs/operators';
 import { DataTable } from 'primeng/primeng';
 import { FaseFilter } from './model/fase.filter';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 import { Fase } from './model/fase.model';
 import { Page } from '../util/page';
 import { RequestUtil } from '../util/requestUtil';
-import { from } from 'rxjs/observable/from';
 
 @Injectable()
 export class FaseService {

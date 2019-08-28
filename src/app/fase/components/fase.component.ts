@@ -27,7 +27,7 @@ export class FaseComponent implements OnInit {
         private pageNotificationService: PageNotificationService,
         private translate: TranslateService
     ) {
-        this.filtro = new FaseFilter(null, null);
+        this.filtro = new FaseFilter(null);
     }
 
     public ngOnInit() {

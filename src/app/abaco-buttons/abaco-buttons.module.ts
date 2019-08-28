@@ -7,7 +7,7 @@ import { WhiteButtonComponent } from './white-button/white-button.component';
 import { GrayButtonComponent } from './gray-button/gray-button.component';
 import { RedButtonComponent } from './red-button/red-button.component';
 import {
-  ButtonModule, SplitButton, SplitButtonModule,
+  ButtonModule, SplitButtonModule,
 } from 'primeng/primeng';
 import { SubmitButtonComponent } from './submit-button/submit-button.component';
 
