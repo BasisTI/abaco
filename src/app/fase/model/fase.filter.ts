@@ -1,7 +1,9 @@
 export class FaseFilter {
 
+    nome: string;
+
     constructor(
-        public nome?: string
+        nome?: string
     ){
         this.nome = nome;
     }

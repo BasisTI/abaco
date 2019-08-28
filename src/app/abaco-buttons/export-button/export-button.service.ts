@@ -2,6 +2,7 @@ import { Pageable } from './../../util/pageable.util';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.prod';
 import { Observable } from 'rxjs';
+import { RequestUtil } from '../../util/requestUtil';
 
 export class ExportacaoUtilService {
 
@@ -27,8 +28,7 @@ export class ExportacaoUtilService {
         return null;
     }
 
-    // novo método que irá substituir o exportarRelatorio ao fim da refatoração
-    static exportReport(tipoRelatorio: string, http: HttpClient, resourceName: string, params: Pageable, filter: any): Observable<Blob> {
+    static exportReport(tipoRelatorio: string, http: HttpClient, resourceName: string, params: any, filter: any): Observable<Blob> {
         return ExportacaoUtilService.generate(
             `${this.resourceUrl}/${resourceName}/exportacao/${tipoRelatorio}`,
             http,
@@ -37,10 +37,8 @@ export class ExportacaoUtilService {
         );
     }
 
-    static generate(endpoint: string, http: HttpClient, pageable: Pageable, filter: any): Observable<Blob> {
-        let body = {};
-        body = Object.assign(body, filter);
-        return http.post(endpoint + pageable.toParams(), body, {responseType: 'blob'} );
+    static generate(endpoint: string, http: HttpClient, datatable: any, filter: any): Observable<Blob> {
+        return http.post(endpoint, filter, {responseType: 'blob', params: RequestUtil.getRequestParams(datatable) });
     }
 
     static getExtension(tipoRelatorio: string): string {

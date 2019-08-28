@@ -45,7 +45,7 @@ export class ExportButtonComponent {
     exportar(tipoRelatorio: string) {
 
         this.blockUI.start(MessageUtil.BLOCKUI_RELATORIO);
-        ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, this.getParams(), this.filter)
+        ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, this.dataTable, this.filter)
             .finally( () => this.blockUI.stop())
             .subscribe((res: Blob) => {
                 const file = new Blob([res], { type: tipoRelatorio });
@@ -57,14 +57,9 @@ export class ExportButtonComponent {
     imprimir(tipoRelatorio: string) {
 
         this.blockUI.start(MessageUtil.BLOCKUI_RELATORIO);
-        ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, this.getParams(), this.filter)
+        ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, this.dataTable, this.filter)
         .finally(() => this.blockUI.stop())
         .subscribe( downloadUrl =>  ExportacaoUtil.imprimir(downloadUrl)) ;
     }
 
-    private getParams(): Pageable{
-        const pageable = new Pageable(this.dataTable.page, this.dataTable.rows);
-        pageable.setSort(this.dataTable.sortOrder, this.dataTable.sortField);
-        return pageable;
-      }
 }

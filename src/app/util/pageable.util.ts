@@ -28,7 +28,4 @@ export class Pageable {
         }
     }
 
-    toParams(): string {
-        return `?page=${this.page || '0'}&size=${this.size || '20'}&sort=${this.sort || ''}`;
-    }
 }

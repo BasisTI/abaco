@@ -52,10 +52,9 @@ li.ui-chips-token.ui-state-highlight.ui-corner-all.ng-star-inserted {
   display: inline-flex;
 }
 
-.btn-table{
-  margin: auto;
+.btn-table > *  {
+  margin: 6px;
   display: grid;
-  float: right;
 }
 
 .table-container {
@@ -64,7 +63,7 @@ li.ui-chips-token.ui-state-highlight.ui-corner-all.ng-star-inserted {
 }
 
 .table-next-containter {
-  margin: 10px;
+  margin: 6px;
   display: inline-block;
 }
 

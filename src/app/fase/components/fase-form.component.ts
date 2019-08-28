@@ -41,14 +41,11 @@ export class FaseFormComponent implements OnInit {
             this.showTranslatedMessage('Global.Mensagens.FavorPreencherCampoObrigatorio');
             return;
         }
-        this.handleCreateResponse(this.tipoFaseService.create(this.fase));
-    }
-
-    private handleCreateResponse(result: Observable<any>) {
-        result.subscribe(() => {
+        this.tipoFaseService.create(this.fase).subscribe(() => {
             this.router.navigate(['/fase']);
             (this.fase.id === undefined) ? (this.pageNotificationService.addCreateMsg()) :
             (this.pageNotificationService.addUpdateMsg());
         });
     }
+   
 }

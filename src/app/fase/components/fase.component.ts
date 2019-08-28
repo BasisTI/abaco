@@ -6,6 +6,7 @@ import { FaseService, Fase, FaseFilter } from '../';
 import { PageNotificationService } from '../../shared';
 import { TranslateService } from '@ngx-translate/core';
 import { Pageable } from '../../util/pageable.util';
+import { Page } from '../../util/page';
 
 @Component({
     selector: 'jhi-tipo-fase',
@@ -14,9 +15,8 @@ import { Pageable } from '../../util/pageable.util';
 export class FaseComponent implements OnInit {
 
     @ViewChild(DataTable) dataTable: DataTable;
-    searchUrl: string = this.tipoFaseService.resourceUrl + '/page';
     tipoFaseSelecionada: Fase;
-    filtro: FaseFilter;
+    filtro: FaseFilter = new FaseFilter(null);
     rowsPerPageOptions: number[] = [5, 10, 20];
     fases: Fase[] = [];
 
@@ -26,9 +26,7 @@ export class FaseComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private pageNotificationService: PageNotificationService,
         private translate: TranslateService
-    ) {
-        this.filtro = new FaseFilter(null);
-    }
+    ) {}
 
     public ngOnInit() {
         this.obterTodaFases();
@@ -48,7 +46,7 @@ export class FaseComponent implements OnInit {
         const pageable = new Pageable(this.dataTable.page, this.dataTable.rows);
         pageable.setSort(this.dataTable.sortOrder, this.dataTable.sortField);
         this.tipoFaseService.query(this.filtro, this.dataTable)
-        .subscribe(tiposFase => this.fases = tiposFase);           
+        .subscribe(fases => this.fases = fases);           
     }
 
     abrirEditar() {

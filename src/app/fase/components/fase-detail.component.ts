@@ -9,7 +9,7 @@ import { FaseService, Fase } from '../';
 })
 export class FaseDetailComponent implements OnInit {
 
-    public fase: Fase;
+    public fase: Fase = new Fase();
 
     constructor(
         private tipoFaseService: FaseService,

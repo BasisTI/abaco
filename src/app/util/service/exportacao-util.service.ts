@@ -1,8 +1,6 @@
-import { Headers, RequestOptions, ResponseContentType, Response } from '@angular/http';
+import { Headers, RequestOptions, ResponseContentType } from '@angular/http';
 import { HttpService } from '@basis/angular-components';
 import { environment } from '../../../environments/environment.prod';
-import { Pageable } from '../pageable.util';
-import { Observable } from 'rxjs';
 
 export class ExportacaoUtilService {
 
@@ -38,17 +36,6 @@ export class ExportacaoUtilService {
         return options;
     }
 
-    // novo método que irá substituir o exportarRelatorio ao fim da refatoração
-    static exportReport(tipoRelatorio: string, http: HttpService, resourceName: string, params: Pageable, filter: any) {
-        return ExportacaoUtilService.generate(
-            `${this.resourceUrl}/${resourceName}/exportacao/${tipoRelatorio}`,
-            ExportacaoUtilService.getContentType(tipoRelatorio),
-            http,
-            params,
-            filter
-        );
-    }
-
     static exportarRelatorio(tipoRelatorio: string, resourceUrl: string, http: HttpService, query: string) {
         if(query == undefined){
             query = '?query=' + "*";
@@ -63,12 +50,6 @@ export class ExportacaoUtilService {
             ExportacaoUtilService.getContentType(tipoRelatorio),
             http
         );
-    }
-
-    static generate(endpoint: string, tipo: string, http: HttpService, pageable: Pageable, filter: any): Observable<Response> {
-        const options = ExportacaoUtilService.getOptions();
-        options.body = pageable
-        return http.post(endpoint, filter, options );
     }
 
     static gerar(endpoint: string, tipo: string, http: HttpService): any {

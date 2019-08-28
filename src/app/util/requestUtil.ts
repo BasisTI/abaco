@@ -6,10 +6,6 @@ export class RequestUtil {
 
   static getRequestParams = (datatable?: DataTable): HttpParams => {
     let params: HttpParams = new HttpParams();
-    if (datatable == null) {
-      const pageable = new Pageable(1, 20);
-      return params = Object.assign({params: pageable});
-    }
   
     params = params.append('page', Math.round(datatable.first / datatable.rows).toString());
     params = params.append('size', datatable.rows == null ? null : datatable.rows.toString());
