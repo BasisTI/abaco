@@ -40,14 +40,6 @@ export class FaseComponent implements OnInit {
         });
     }
 
-    getLabel(label) {
-        let str: any;
-        this.translate.get(label).subscribe((res: string) => {
-            str = res;
-        });
-        return str;
-    }
-
     editarClickEvent() {
         this.router.navigate(['/fase', this.tipoFaseSelecionada.id, 'edit']);
     }
@@ -68,15 +60,17 @@ export class FaseComponent implements OnInit {
     }
 
     confirmDelete() {
-        this.confirmationService.confirm({
-            message: this.getLabel('Global.Mensagens.CertezaExcluirRegistro'),
-            accept: () => {
-                this.tipoFaseService.delete(this.tipoFaseSelecionada.id).subscribe(() => {
-                    this.pageNotificationService.addDeleteMsg();
-                    this.tipoFaseSelecionada = null;
-                    this.obterTodaFases();
-                });
-            }
+        this.translate.get('Global.Mensagens.CertezaExcluirRegistro').subscribe((translatedMessage: string) => {
+            this.confirmationService.confirm({
+                message: translatedMessage,
+                accept: () => {
+                    this.tipoFaseService.delete(this.tipoFaseSelecionada.id).subscribe(() => {
+                        this.pageNotificationService.addDeleteMsg();
+                        this.tipoFaseSelecionada = null;
+                        this.obterTodaFases();
+                    });
+                }
+            });
         });
     }
 

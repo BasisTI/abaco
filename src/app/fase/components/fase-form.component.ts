@@ -22,12 +22,10 @@ export class FaseFormComponent implements OnInit {
     ) {
     }
 
-    getLabel(label) {
-        let str: any;
-        this.translate.get(label).subscribe((res: string) => {
-            str = res;
+    private showTranslatedMessage(label) {
+        this.translate.get(label).subscribe((translatedMessage: string) => {
+            this.pageNotificationService.addErrorMsg(translatedMessage);
         });
-        return str;
     }
 
     ngOnInit() {
@@ -40,7 +38,7 @@ export class FaseFormComponent implements OnInit {
 
     save(form) {
         if (!form.valid) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
+            this.showTranslatedMessage('Global.Mensagens.FavorPreencherCampoObrigatorio');
             return;
         }
         this.handleCreateResponse(this.tipoFaseService.create(this.fase));
@@ -51,8 +49,6 @@ export class FaseFormComponent implements OnInit {
             this.router.navigate(['/fase']);
             (this.fase.id === undefined) ? (this.pageNotificationService.addCreateMsg()) :
             (this.pageNotificationService.addUpdateMsg());
-
-        }
-        );
+        });
     }
 }

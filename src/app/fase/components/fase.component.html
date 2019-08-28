@@ -44,8 +44,8 @@
 
                 </div>
 
-                <div>
-                    <div class="ui-g-11 ui-md-11">
+                <div class="dynamic-table-container">
+                    <div class="table-container">
                         <p-dataTable
                             (onRowDblclick)="editarClickEvent()"
                             [rows]="20"
@@ -64,17 +64,19 @@
                         </p-dataTable>
                     </div>
 
-                    <div class="ui-g-1 btn-table">
-                        <button type="button" pButton class="green-btn side-button" name="edit" icon="ui-icon-edit" value="edit"
-                            [title]="'Global.Botoes.Editar' | translate" (click)="editarClickEvent()" [disabled]="tipoFaseSelecionada == null">
-                        </button>
-                        <button type="button" pButton class="side-button" name="view" icon="ui-icon-remove-red-eye"
-                            [title]="'Global.Botoes.Visualizar' | translate" (click)="abrirVisualizar()" [disabled]="tipoFaseSelecionada == null">
-                        </button>
-                        <button type="button" pButton class="ui-button-danger side-button" name="delete"
-                            icon="ui-icon-trash" [title]="'Global.Botoes.Excluir' | translate" (click)="confirmDelete()" 
-                            [disabled]="tipoFaseSelecionada == null">
-                        </button>
+                    <div class="table-next-containter">
+                        <div class="btn-table">
+                            <button type="button" pButton class="green-btn side-button" name="edit" icon="ui-icon-edit" value="edit"
+                                [title]="'Global.Botoes.Editar' | translate" (click)="editarClickEvent()" [disabled]="tipoFaseSelecionada == null">
+                            </button>
+                            <button type="button" pButton class="side-button" name="view" icon="ui-icon-remove-red-eye"
+                                [title]="'Global.Botoes.Visualizar' | translate" (click)="abrirVisualizar()" [disabled]="tipoFaseSelecionada == null">
+                            </button>
+                            <button type="button" pButton class="ui-button-danger side-button" name="delete"
+                                icon="ui-icon-trash" [title]="'Global.Botoes.Excluir' | translate" (click)="confirmDelete()" 
+                                [disabled]="tipoFaseSelecionada == null">
+                            </button>
+                        </div>
                     </div>
                 </div>
 

@@ -48,9 +48,24 @@ li.ui-chips-token.ui-state-highlight.ui-corner-all.ng-star-inserted {
   margin-bottom: 10%;
 }
 
+.dynamic-table-container {
+  display: inline-flex;
+}
+
 .btn-table{
   margin: auto;
-  display: table-column
+  display: grid;
+  float: right;
+}
+
+.table-container {
+  width: 100%;
+  margin: 5px;
+}
+
+.table-next-containter {
+  margin: 10px;
+  display: inline-block;
 }
 
 .form-fields-container {
