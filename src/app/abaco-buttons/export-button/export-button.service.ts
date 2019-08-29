@@ -41,15 +41,11 @@ export class ExportacaoUtilService {
     }
 
     static getExtension(tipoRelatorio: string): string {
-        if (tipoRelatorio === this.PDF) {
-            return '.pdf';
+        switch(tipoRelatorio) {
+            case this.PDF: return `.${this.PDF}`;
+            case this.EXCEL: return `.${this.EXCEL}`;
+            case this.CSV: return `.${this.CSV}`;
+            default: return `.${this.PDF}`; 
         }
-        if (tipoRelatorio === this.EXCEL) {
-            return '.xls';
-        }
-        if (tipoRelatorio === this.CSV) {
-            return '.csv';
-        }
-        return null;
     }
 }

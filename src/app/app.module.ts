@@ -71,8 +71,6 @@ import {GestorGuard} from './gestor.guard';
 import {  PesquisarFuncaoTransacaoModule } from './pesquisar-ft/pesquisar-ft.module';
 import { HttpConfigInterceptor } from './interceptor';
 
-/* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
-
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -122,7 +120,6 @@ export function createTranslateLoader(http: HttpClient) {
         }),
         VersionTagModule.forRoot(),
         BlockUIModule.forRoot()
-        /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [
         AppComponent,
@@ -137,8 +134,6 @@ export function createTranslateLoader(http: HttpClient) {
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
         {provide: BrowserXhr, useClass: NgProgressBrowserXhr},
-        // para habilitar o JWT, descomentar a linha abaixo
-        // { provide: HttpService, useClass: HttpService, deps: [AuthHttp] },
         { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
         JhiDateUtils,
         BreadcrumbService,
