@@ -5,7 +5,6 @@ import { Component, Input } from '@angular/core';
 import { ExportacaoUtil } from '../../util/exportacao.util'
 import { ExportacaoUtilService } from './export-button.service';
 import { DataTable } from 'primeng/primeng';
-import { Pageable } from '../../util/pageable.util';
 
 @Component({
     selector: 'app-export-button',

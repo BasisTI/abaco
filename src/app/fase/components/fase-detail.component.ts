@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FaseService, Fase } from '../';
 
 @Component({
-    selector: 'jhi-tipo-fase-detail',
+    selector: 'app-fase-detail',
     templateUrl: './fase-detail.component.html'
 })
 export class FaseDetailComponent implements OnInit {

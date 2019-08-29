@@ -1,13 +1,12 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
 
 import { FaseService, Fase } from '../';
 import { PageNotificationService } from '../../shared';
 
 @Component({
-    selector: 'jhi-tipo-fase-form',
+    selector: 'app-fase-form',
     templateUrl: './fase-form.component.html'
 })
 export class FaseFormComponent implements OnInit {
