@@ -49,10 +49,13 @@
                         <p-dataTable
                             (onRowDblclick)="editarClickEvent()"
                             [rows]="20"
-                            [value]="fases"
+                            [value]="fases.content"
                             [rowsPerPageOptions]="[5, 10, 20]"
+                            [totalRecords]="fases.totalElements"
                             [paginator]="true"
                             selectionMode="single"
+                            [lazy]="true"
+                            (onLazyLoad)="obterTodaFases()"
                             dataKey="nome"
                             #datatable>
                             <p-column [header]="'Cadastros.Fase.Codigo' | translate" 

@@ -1,4 +1,3 @@
-import { FaseFilter } from './../fase/model/fase.filter';
 import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -92,7 +91,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.tipoFaseService.query(new FaseFilter()).subscribe((fases: Fase[]) => {
+        this.tipoFaseService.findDropdown().subscribe((fases: Fase[]) => {
             this.fases = fases;
         });
         this.manual.versaoCPM = 431;

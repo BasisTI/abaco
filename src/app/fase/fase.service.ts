@@ -16,17 +16,20 @@ export class FaseService {
     constructor( private http: HttpClient ) {}
 
     create(fase: Fase): Observable<any> {
-        const copy = Object.assign({}, fase);
-        return this.http.post(this.resourceUrl, copy);
+        return this.http.post(this.resourceUrl, fase);
     }
 
     find(id: number): Observable<Fase> {
         return this.http.get(`${this.resourceUrl}/${id}`);
     }
 
-    query(filtro: FaseFilter, datatable?: DataTable): Observable<any> {
+    getPage(filtro: FaseFilter, datatable: DataTable): Observable<any> {
         const options = {params: RequestUtil.getRequestParams(datatable) };
-        return this.http.post(`${this.resourceUrl}/page`, filtro, options).map(res => res['content']);
+        return this.http.post(`${this.resourceUrl}/page`, filtro, options);
+    }
+
+    findDropdown(): Observable<any> {
+        return this.http.get(`${this.resourceUrl}/dropdown`);
     }
 
     delete(id: number): Observable<Object> {

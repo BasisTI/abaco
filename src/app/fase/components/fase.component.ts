@@ -9,7 +9,7 @@ import { Pageable } from '../../util/pageable.util';
 import { Page } from '../../util/page';
 
 @Component({
-    selector: 'jhi-tipo-fase',
+    selector: 'app-fase',
     templateUrl: './fase.component.html'
 })
 export class FaseComponent implements OnInit {
@@ -17,8 +17,7 @@ export class FaseComponent implements OnInit {
     @ViewChild(DataTable) dataTable: DataTable;
     tipoFaseSelecionada: Fase;
     filtro: FaseFilter = new FaseFilter(null);
-    rowsPerPageOptions: number[] = [5, 10, 20];
-    fases: Fase[] = [];
+    fases: Page<Fase> = new Page<Fase>();
 
     constructor(
         private router: Router,
@@ -45,7 +44,7 @@ export class FaseComponent implements OnInit {
     obterTodaFases() {
         const pageable = new Pageable(this.dataTable.page, this.dataTable.rows);
         pageable.setSort(this.dataTable.sortOrder, this.dataTable.sortField);
-        this.tipoFaseService.query(this.filtro, this.dataTable)
+        this.tipoFaseService.getPage(this.filtro, this.dataTable)
         .subscribe(fases => this.fases = fases);           
     }
 
