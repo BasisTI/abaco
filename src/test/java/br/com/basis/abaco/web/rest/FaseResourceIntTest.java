@@ -256,7 +256,8 @@ public class FaseResourceIntTest {
                 get(RESOURCE + "/dropdown")
             ).andExpect(status().isOk())
             .andExpect(jsonPath("$", Matchers.hasSize(2)))
-            .andExpect(jsonPath("$[*].id", everyItem(is(notNullValue()))));
+            .andExpect(jsonPath("$[*].id", everyItem(is(notNullValue()))))
+            .andExpect(jsonPath("$[*].nome").value(hasItem(DEFAULT_NOME)));
     }
 
     @Test

@@ -1,8 +1,8 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.service.FaseService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.FaseDTO;
-import br.com.basis.abaco.service.dto.dropdown.FaseDropdownDTO;
 import br.com.basis.abaco.service.dto.filter.FaseFiltroDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.dynamicexports.util.DynamicExporter;
@@ -59,9 +59,9 @@ public class FaseResource {
     
     @GetMapping("/fases/dropdown")
     @Timed
-    public ResponseEntity<List<FaseDropdownDTO>> getDropdown() {
+    public ResponseEntity<List<DropdownDTO>> getDropdown() {
         log.debug("REST request to get Fase drodown");
-        List<FaseDropdownDTO> dropdownDTOList = service.getFaseDropdown();
+        List<DropdownDTO> dropdownDTOList = service.getFaseDropdown();
         return ResponseEntity.ok().body(dropdownDTOList);
     }
 

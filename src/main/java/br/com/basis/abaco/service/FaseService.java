@@ -1,8 +1,8 @@
 package br.com.basis.abaco.service;
 
 import br.com.basis.abaco.repository.FaseRepository;
+import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.FaseDTO;
-import br.com.basis.abaco.service.dto.dropdown.FaseDropdownDTO;
 import br.com.basis.abaco.service.dto.filter.FaseFiltroDTO;
 import br.com.basis.abaco.service.mapper.FaseMapper;
 import br.com.basis.abaco.service.relatorio.RelatorioFaseColunas;
@@ -71,7 +71,7 @@ public class FaseService {
         return mapper.toDto(repository.findOne(id));
     }
     
-    public List<FaseDropdownDTO> getFaseDropdown() {
+    public List<DropdownDTO> getFaseDropdown() {
         return repository.getFaseDropdown();
     }
 }
