@@ -2,12 +2,15 @@ package br.com.basis.abaco.repository;
 
 import br.com.basis.abaco.domain.novo.Fase;
 import br.com.basis.abaco.service.dto.FaseDTO;
-import br.com.basis.abaco.service.dto.filtro.FaseFiltroDTO;
+import br.com.basis.abaco.service.dto.dropdown.FaseDropdownDTO;
+import br.com.basis.abaco.service.dto.filter.FaseFiltroDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface FaseRepository extends JpaRepository<Fase, Long> {
 
@@ -19,4 +22,7 @@ public interface FaseRepository extends JpaRepository<Fase, Long> {
                     "LOWER( CAST(CONCAT('%', :#{#filtro.nome}, '%') AS text) )" +
             ")")
     Page<FaseDTO> findPage(@Param("filtro") FaseFiltroDTO filtro, Pageable page);
+    
+    @Query("SELECT new br.com.basis.abaco.service.dto.dropdown.FaseDropdownDTO(f.id, f.nome) FROM Fase f")
+    List<FaseDropdownDTO> getFaseDropdown();
 }

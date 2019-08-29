@@ -1,4 +1,4 @@
-package br.com.basis.abaco.service.dto.filtro;
+package br.com.basis.abaco.service.dto.dropdown;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +9,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class FaseFiltroDTO implements Serializable {
+public class FaseDropdownDTO implements Serializable {
     private static final long serialVersionUID = 1L;
-
+    
     private Long id;
-
+    
     private String nome;
 }

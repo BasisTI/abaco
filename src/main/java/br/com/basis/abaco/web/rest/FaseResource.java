@@ -2,7 +2,8 @@ package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.service.FaseService;
 import br.com.basis.abaco.service.dto.FaseDTO;
-import br.com.basis.abaco.service.dto.filtro.FaseFiltroDTO;
+import br.com.basis.abaco.service.dto.dropdown.FaseDropdownDTO;
+import br.com.basis.abaco.service.dto.filter.FaseFiltroDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -53,6 +55,14 @@ public class FaseResource {
         log.debug("REST request to get Fase : {}", id);
         FaseDTO fase = service.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(fase));
+    }
+    
+    @GetMapping("/fases/dropdown")
+    @Timed
+    public ResponseEntity<List<FaseDropdownDTO>> getDropdown() {
+        log.debug("REST request to get Fase drodown");
+        List<FaseDropdownDTO> dropdownDTOList = service.getFaseDropdown();
+        return ResponseEntity.ok().body(dropdownDTOList);
     }
 
     @DeleteMapping("/fases/{id}")

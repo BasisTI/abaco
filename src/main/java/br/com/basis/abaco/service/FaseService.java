@@ -2,7 +2,8 @@ package br.com.basis.abaco.service;
 
 import br.com.basis.abaco.repository.FaseRepository;
 import br.com.basis.abaco.service.dto.FaseDTO;
-import br.com.basis.abaco.service.dto.filtro.FaseFiltroDTO;
+import br.com.basis.abaco.service.dto.dropdown.FaseDropdownDTO;
+import br.com.basis.abaco.service.dto.filter.FaseFiltroDTO;
 import br.com.basis.abaco.service.mapper.FaseMapper;
 import br.com.basis.abaco.service.relatorio.RelatorioFaseColunas;
 import br.com.basis.abaco.utils.RelatorioUtil;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 @Service
 @Transactional
@@ -68,5 +70,8 @@ public class FaseService {
     public FaseDTO findOne(Long id) {
         return mapper.toDto(repository.findOne(id));
     }
-
+    
+    public List<FaseDropdownDTO> getFaseDropdown() {
+        return repository.getFaseDropdown();
+    }
 }

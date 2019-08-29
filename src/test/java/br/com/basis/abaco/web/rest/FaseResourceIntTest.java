@@ -6,7 +6,7 @@ import br.com.basis.abaco.domain.Fase;
 import br.com.basis.abaco.repository.FaseRepository;
 import br.com.basis.abaco.service.FaseService;
 import br.com.basis.abaco.service.dto.FaseDTO;
-import br.com.basis.abaco.service.dto.filtro.FaseFiltroDTO;
+import br.com.basis.abaco.service.dto.filter.FaseFiltroDTO;
 import br.com.basis.abaco.utils.CustomPageImpl;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 import com.fasterxml.jackson.core.type.TypeReference;
