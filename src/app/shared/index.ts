@@ -12,5 +12,6 @@ export * from './jsonable';
 export * from './fator-ajuste-to-select-item.pipe';
 export * from './analise-shared-data.service';
 export { ErrorConstants } from './constants/errorConstants';
+export { GeneralConstants } from './constants/generalConstants';
 
 

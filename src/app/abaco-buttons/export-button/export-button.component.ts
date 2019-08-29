@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { MessageUtil } from '../../util/message.util';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Component, Input } from '@angular/core';
 import { ExportacaoUtil } from '../../util/exportacao.util'
 import { ExportacaoUtilService } from './export-button.service';
 import { DataTable } from 'primeng/primeng';
+import { GeneralConstants } from '../../shared';
 
 @Component({
     selector: 'app-export-button',
@@ -43,7 +43,7 @@ export class ExportButtonComponent {
 
     exportar(tipoRelatorio: string) {
 
-        this.blockUI.start(MessageUtil.BLOCKUI_RELATORIO);
+        this.blockUI.start(GeneralConstants.generate_report);
         ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, this.dataTable, this.filter)
             .finally( () => this.blockUI.stop())
             .subscribe((res: Blob) => {
@@ -55,7 +55,7 @@ export class ExportButtonComponent {
 
     imprimir(tipoRelatorio: string) {
 
-        this.blockUI.start(MessageUtil.BLOCKUI_RELATORIO);
+        this.blockUI.start(GeneralConstants.generate_report);
         ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, this.dataTable, this.filter)
         .finally(() => this.blockUI.stop())
         .subscribe( downloadUrl =>  ExportacaoUtil.imprimir(downloadUrl)) ;

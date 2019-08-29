@@ -821,7 +821,8 @@
       "Nenhum":"None",
       "DeflatorDeOrigen":"Maintain original deflator",
       "SemPermissaoAcao": "You do not have permission for this action.",
-      "ErrorExportar": "An error occurred while generating the report."
+      "ErrorExportar": "An error occurred while generating the report.",
+      "GerandoRelatorio": "Generating Report..."
     },
     "Idiomas":{
       "Portugues":"Portuguese",

@@ -816,7 +816,8 @@
       "Nenhum":"Ningún",
       "DeflatorDeOrigen":"Mantener deflactor original",
       "SemPermissaoAcao": "Usted no tiene permiso para esta acción.",
-      "ErrorExportar": "Se produjo un error al generar el informe."
+      "ErrorExportar": "Se produjo un error al generar el informe.",
+      "GerandoRelatorio": "Generando Informe..."
     },
     "Idiomas":{
       "Portugues":"Portugués",

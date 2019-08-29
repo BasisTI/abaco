@@ -10,8 +10,8 @@ export class ExportacaoUtilService {
     static PDF = 'pdf';
     static EXCEL = 'xls';
     static CSV = 'csv';
-
-    static resourceUrl = environment.apiUrl;
+    headers: Headers;
+    options: RequestOptions;
 
     static getContentType(tipoRelatorio: string): any {
         if (tipoRelatorio === this.PDF) {

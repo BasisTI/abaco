@@ -818,7 +818,8 @@
       "Nenhum":"Nenhum",
       "DeflatorDeOrigen":"Manter deflator original",
       "SemPermissaoAcao": "Você não possui permissão para esta ação.",
-      "ErrorExportar": "Ocorreu um erro ao gerar o relatório."
+      "ErrorExportar": "Ocorreu um erro ao gerar o relatório.",
+      "GerandoRelatorio": "Gerando Relatório..."
     },
     "Idiomas":{
       "Portugues":"Português",
