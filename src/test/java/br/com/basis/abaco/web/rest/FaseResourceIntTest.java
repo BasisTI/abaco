@@ -10,6 +10,7 @@ import br.com.basis.abaco.service.dto.filter.FaseFiltroDTO;
 import br.com.basis.abaco.utils.CustomPageImpl;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,10 @@ import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -238,6 +242,21 @@ public class FaseResourceIntTest {
             .andExpect(jsonPath("$.content.[*].id").value(hasItem(dto.getId().intValue())))
             .andExpect(jsonPath("$.content.[*].nome").value(hasItem(DEFAULT_NOME)))
             .andExpect(jsonPath("$.content.[*].nome").value(hasItem(UPDATED_NOME)));
+    }
+    
+    @Test
+    public void getFaseDropdown() throws Exception {
+        postFaseDTO(buildFaseDTO());
+    
+        FaseDTO faseDTO2 = buildFaseDTO();
+        faseDTO2.setNome(UPDATED_NOME);
+        postFaseDTO(faseDTO2);
+    
+        mockMvc.perform(
+                get(RESOURCE + "/dropdown")
+            ).andExpect(status().isOk())
+            .andExpect(jsonPath("$", Matchers.hasSize(2)))
+            .andExpect(jsonPath("$[*].id", everyItem(is(notNullValue()))));
     }
 
     @Test
