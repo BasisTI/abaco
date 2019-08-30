@@ -1,7 +1,7 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.service.FaseService;
-import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.novo.DropdownDTO;
 import br.com.basis.abaco.service.dto.FaseDTO;
 import br.com.basis.abaco.service.dto.filter.FaseFiltroDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
