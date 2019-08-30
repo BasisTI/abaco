@@ -15,7 +15,7 @@ import { ConfirmationService } from 'primeng/components/common/confirmationservi
 import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 import { PageNotificationService } from '../shared/page-notification.service';
 import { UploadService } from '../upload/upload.service';
-import { FileUpload } from 'primeng/primeng';
+import { FileUpload, SelectItem } from 'primeng/primeng';
 
 @Component({
     selector: 'jhi-manual-form',
@@ -91,8 +91,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.tipoFaseService.findDropdown().subscribe((fases: Fase[]) => {
-            this.fases = fases;
+        this.tipoFaseService.findDropdown().subscribe((fases: SelectItem[]) => {
+            // TODO remover essa conversão quando o DTO de manual for feito para se adequar ao DropdowDTO
+            this.fases = fases.map(item => new Fase(item.value, item.label));
         });
         this.manual.versaoCPM = 431;
     }
