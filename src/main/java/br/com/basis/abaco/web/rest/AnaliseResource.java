@@ -552,7 +552,6 @@ public class AnaliseResource {
                                                           Optional<String> metodo, Optional<String> organizacao, Optional<String> equipe, Pageable pageable,
                                                           List<Long> equipesIds, Optional<String> usuario) throws URISyntaxException {
         String usuarioPesquisa = getUsuarioPesquisa(usuario);
-
         List<BigInteger> idsAnalises;
       if (equipesIds.size() != 0) {
           idsAnalises = analiseRepository.listAnalisesEquipe(equipesIds);

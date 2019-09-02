@@ -1,57 +1,62 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.AbacoApp;
-
+import br.com.basis.abaco.domain.EsforcoFase;
 import br.com.basis.abaco.domain.Fase;
 import br.com.basis.abaco.repository.FaseRepository;
-import br.com.basis.abaco.repository.search.FaseSearchRepository;
+import br.com.basis.abaco.service.FaseService;
+import br.com.basis.abaco.service.dto.FaseDTO;
+import br.com.basis.abaco.service.dto.filter.FaseFiltroDTO;
+import br.com.basis.abaco.utils.CustomPageImpl;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
-
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import com.netflix.discovery.converters.Auto;
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.List;
+import java.math.BigDecimal;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Test class for the FaseResource REST controller.
- *
- * @see FaseResource
- */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
+@Transactional
+@WithMockUser
 public class FaseResourceIntTest {
 
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBB";
 
     @Autowired
-    private FaseRepository faseRepository;
-
-    @Autowired
-    private FaseSearchRepository faseSearchRepository;
-
-    @Autowired
-    private DynamicExportsService dynamicExportsService;
-
+    private FaseService service;
+    
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -62,205 +67,257 @@ public class FaseResourceIntTest {
     private ExceptionTranslator exceptionTranslator;
 
     @Autowired
-    private EntityManager em;
+    private EntityManager entityManager;
 
-    private MockMvc restFaseMockMvc;
+    @Autowired
+    private FaseRepository repository;
+    
+    @Autowired
+    private EsforcoFaseResource esforcoFaseResource;
 
-    private Fase fase;
+    private MockMvc mockMvc;
+
+    private static final String RESOURCE = "/api/fases";
+    
+    private static final String RESOURCE_PAGE = "/api/fases/page";
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            FaseResource faseResource = new FaseResource(faseRepository, faseSearchRepository, dynamicExportsService);
-        this.restFaseMockMvc = MockMvcBuilders.standaloneSetup(faseResource)
+            FaseResource faseResource = new FaseResource(service);
+        this.mockMvc = MockMvcBuilders.standaloneSetup(faseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setMessageConverters(jacksonMessageConverter, new ResourceHttpMessageConverter()).build();
     }
 
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static Fase createEntity(EntityManager em) {
-        Fase fase = new Fase()
-                .nome(DEFAULT_NOME);
+    public static FaseDTO buildDTO() {
+        FaseDTO fase = new FaseDTO();
+        fase.setNome(DEFAULT_NOME);
         return fase;
     }
 
-    @Before
-    public void initTest() {
-        faseSearchRepository.deleteAll();
-        fase = createEntity(em);
+    public void postDTO(FaseDTO dto) throws Exception {
+        mockMvc.perform(post(RESOURCE)
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(dto))).andExpect(status().isOk());
+    }
+
+    public FaseDTO getDTO(Long id) throws Exception {
+        return jacksonMessageConverter.getObjectMapper().readValue(
+            mockMvc.perform(
+                get(RESOURCE + "/" + id)
+            ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()
+        , FaseDTO.class);
+    }
+    
+    public FaseDTO persistDTO() throws Exception {
+        postDTO(buildDTO());
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
+    
+        Page<FaseDTO> fases = findPage(filtro);
+    
+        return fases.getContent().get(0);
+    }
+    
+    private Page<FaseDTO> findPage(FaseFiltroDTO filtro) throws Exception {
+        return jacksonMessageConverter.getObjectMapper().readValue(
+            mockMvc.perform(
+                post(RESOURCE_PAGE)
+                    .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                    .content(TestUtil.convertObjectToJsonBytes(filtro))
+            ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()
+            , new TypeReference<CustomPageImpl<FaseDTO>>() {
+            });
+    }
+    
+    @Test
+    public void createAndFind() throws Exception {
+
+        FaseDTO dto = buildDTO();
+
+        postDTO(dto);
+
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
+    
+        Page<FaseDTO> fases = findPage(filtro);
+    
+        dto = fases.getContent().get(0);
+
+        dto = getDTO(dto.getId());
+
+        assertNotNull(dto);
+        assertNotNull(dto.getId());
+        assertNotNull(dto.getNome());
     }
 
     @Test
-    @Transactional
-    public void createFase() throws Exception {
-        int databaseSizeBeforeCreate = faseRepository.findAll().size();
-
-        // Create the Fase
-
-        restFaseMockMvc.perform(post("/api/fases")
+    public void createWithExeption() throws Exception {
+        FaseDTO dto = persistDTO();
+        dto.setId(null);
+        mockMvc.perform(post(RESOURCE)
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(fase)))
-            .andExpect(status().isCreated());
-
-        // Validate the Fase in the database
-        List<Fase> faseList = faseRepository.findAll();
-        assertThat(faseList).hasSize(databaseSizeBeforeCreate + 1);
-        Fase testFase = faseList.get(faseList.size() - 1);
-        assertThat(testFase.getNome()).isEqualTo(DEFAULT_NOME);
-
-        // Validate the Fase in Elasticsearch
-        Fase faseEs = faseSearchRepository.findOne(testFase.getId());
-        assertThat(faseEs).isEqualToComparingFieldByField(testFase);
-    }
-
-    @Test
-    @Transactional
-    public void createFaseWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = faseRepository.findAll().size();
-
-        // Create the Fase with an existing ID
-        Fase existingFase = new Fase();
-        existingFase.setId(1L);
-
-        // An entity with an existing ID cannot be created, so this API call must fail
-        restFaseMockMvc.perform(post("/api/fases")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingFase)))
+            .content(TestUtil.convertObjectToJsonBytes(dto)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
-        List<Fase> faseList = faseRepository.findAll();
-        assertThat(faseList).hasSize(databaseSizeBeforeCreate);
+        mockMvc.perform(
+            post(RESOURCE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dto))
+        ).andExpect(status().isBadRequest());
     }
 
     @Test
-    @Transactional
-    public void getAllFases() throws Exception {
-        // Initialize the database
-        faseRepository.saveAndFlush(fase);
+    public void edit() throws Exception {
+        FaseDTO dto = persistDTO();
+        assertNotNull(dto.getId());
 
-        // Get all the faseList
-        restFaseMockMvc.perform(get("/api/fases?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(fase.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())));
+        dto.setNome(UPDATED_NOME);
+
+        mockMvc.perform(
+            post(RESOURCE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dto))
+        ).andExpect(status().isOk());
+
+        dto = getDTO(dto.getId());
+
+        assertEquals(UPDATED_NOME, dto.getNome());
     }
 
     @Test
-    @Transactional
-    public void getFase() throws Exception {
-        // Initialize the database
-        faseRepository.saveAndFlush(fase);
-
-        // Get the fase
-        restFaseMockMvc.perform(get("/api/fases/{id}", fase.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(fase.getId().intValue()))
-            .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()));
-    }
-
-    @Test
-    @Transactional
     public void getNonExistingFase() throws Exception {
-        // Get the fase
-        restFaseMockMvc.perform(get("/api/fases/{id}", Long.MAX_VALUE))
+        mockMvc.perform(get(RESOURCE + "/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
 
     @Test
-    @Transactional
-    public void updateFase() throws Exception {
-        // Initialize the database
-        faseRepository.saveAndFlush(fase);
-        faseSearchRepository.save(fase);
-        int databaseSizeBeforeUpdate = faseRepository.findAll().size();
+    public void delete() throws Exception {
+        FaseDTO dto = persistDTO();
 
-        // Update the fase
-        Fase updatedFase = faseRepository.findOne(fase.getId());
-        updatedFase
-                .nome(UPDATED_NOME);
-
-        restFaseMockMvc.perform(put("/api/fases")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedFase)))
-            .andExpect(status().isOk());
-
-        // Validate the Fase in the database
-        List<Fase> faseList = faseRepository.findAll();
-        assertThat(faseList).hasSize(databaseSizeBeforeUpdate);
-        Fase testFase = faseList.get(faseList.size() - 1);
-        assertThat(testFase.getNome()).isEqualTo(UPDATED_NOME);
-
-        // Validate the Fase in Elasticsearch
-        Fase faseEs = faseSearchRepository.findOne(testFase.getId());
-        assertThat(faseEs).isEqualToComparingFieldByField(testFase);
-    }
-
-    @Test
-    @Transactional
-    public void updateNonExistingFase() throws Exception {
-        int databaseSizeBeforeUpdate = faseRepository.findAll().size();
-
-        // Create the Fase
-
-        // If the entity doesn't have an ID, it will be created instead of just being updated
-        restFaseMockMvc.perform(put("/api/fases")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(fase)))
-            .andExpect(status().isCreated());
-
-        // Validate the Fase in the database
-        List<Fase> faseList = faseRepository.findAll();
-        assertThat(faseList).hasSize(databaseSizeBeforeUpdate + 1);
-    }
-
-    @Test
-    @Transactional
-    public void deleteFase() throws Exception {
-        // Initialize the database
-        faseRepository.saveAndFlush(fase);
-        faseSearchRepository.save(fase);
-        int databaseSizeBeforeDelete = faseRepository.findAll().size();
-
-        // Get the fase
-        restFaseMockMvc.perform(delete("/api/fases/{id}", fase.getId())
+        mockMvc.perform(MockMvcRequestBuilders.delete(RESOURCE + "/{id}", dto.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
-        // Validate Elasticsearch is empty
-        boolean faseExistsInEs = faseSearchRepository.exists(fase.getId());
-        assertThat(faseExistsInEs).isFalse();
-
-        // Validate the database is empty
-        List<Fase> faseList = faseRepository.findAll();
-        assertThat(faseList).hasSize(databaseSizeBeforeDelete - 1);
+        mockMvc.perform(get(RESOURCE + "/{id}", dto.getId()))
+            .andExpect(status().isNotFound());
     }
 
     @Test
-    @Transactional
-    public void searchFase() throws Exception {
-        // Initialize the database
-        faseRepository.saveAndFlush(fase);
-        faseSearchRepository.save(fase);
+    public void deleteWithExeption() throws Exception {
+        FaseDTO faseDTO = persistDTO();
 
-        // Search the fase
-        restFaseMockMvc.perform(get("/api/_search/fases?query=id:" + fase.getId()))
+        // TODO REMOVER MOCK QUANDO ESFORÇO FASE ESTIVER INTEGRADA CORRETAMENTE
+        EsforcoFase esforcoFase = new EsforcoFase();
+        esforcoFase.setEsforco(new BigDecimal(10));
+    
+        // TODO Necessario pois o existem duas entidades fase, adaptar quando Esforço Fase for refeito
+        Fase fase = new Fase();
+        fase.setId(faseDTO.getId());
+        fase.setNome(faseDTO.getNome());
+        
+        esforcoFase.setFase(fase);
+        
+        esforcoFaseResource.createEsforcoFase(esforcoFase);
+        
+        mockMvc.perform(MockMvcRequestBuilders.delete(RESOURCE + "/{id}", faseDTO.getId())
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void search() throws Exception {
+        FaseDTO dto = persistDTO();
+
+        FaseDTO dto2 = new FaseDTO();
+        dto2.setNome(UPDATED_NOME);
+        postDTO(dto2);
+
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
+
+        mockMvc.perform(
+                post(RESOURCE_PAGE)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(filtro))
+            )
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(fase.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())));
+            .andExpect(jsonPath("$.totalElements").value(2))
+            .andExpect(jsonPath("$.content.[*].id").value(hasItem(dto.getId().intValue())))
+            .andExpect(jsonPath("$.content.[*].nome").value(hasItem(DEFAULT_NOME)))
+            .andExpect(jsonPath("$.content.[*].nome").value(hasItem(UPDATED_NOME)));
+    }
+    
+    @Test
+    public void getDropdown() throws Exception {
+        postDTO(buildDTO());
+    
+        FaseDTO faseDTO2 = buildDTO();
+        faseDTO2.setNome(UPDATED_NOME);
+        postDTO(faseDTO2);
+    
+        mockMvc.perform(
+                get(RESOURCE + "/dropdown")
+            ).andExpect(status().isOk())
+            .andExpect(jsonPath("$", Matchers.hasSize(2)))
+            .andExpect(jsonPath("$[*].id", everyItem(is(notNullValue()))))
+            .andExpect(jsonPath("$[*].label").value(hasItem(DEFAULT_NOME)));
     }
 
     @Test
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Fase.class);
+    public void searchFiltered() throws Exception {
+        FaseDTO dto = persistDTO();
+
+        FaseDTO dto2 = new FaseDTO();
+        dto2.setNome(UPDATED_NOME);
+        postDTO(dto2);
+
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
+        filtro.setNome(DEFAULT_NOME);
+
+        mockMvc.perform(
+            post(RESOURCE_PAGE)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(filtro))
+        )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.totalElements").value(1))
+            .andExpect(jsonPath("$.content.[*].id").value(hasItem(dto.getId().intValue())))
+            .andExpect(jsonPath("$.content.[*].nome").value(hasItem(DEFAULT_NOME)));
     }
+
+    @Test
+    public void getDTO() throws Exception {
+        postDTO(buildDTO());
+
+        FaseDTO dto2 = buildDTO();
+        dto2.setNome(UPDATED_NOME);
+        postDTO(dto2);
+    
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
+    
+        mockMvc.perform(
+            post(RESOURCE_PAGE)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(filtro))
+        ).andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+        .andExpect(jsonPath("$.totalElements", equalTo(2)))
+        .andExpect(jsonPath("$.content.[*].nome").value(hasItem(DEFAULT_NOME)))
+        .andExpect(jsonPath("$.content.[*].nome").value(hasItem(UPDATED_NOME)));
+    }
+
+    @Test
+    public void genrateReport() throws Exception {
+        postDTO(buildDTO());
+
+        FaseFiltroDTO filtro = new FaseFiltroDTO();
+        
+        filtro.setNome(DEFAULT_NOME);
+        
+        mockMvc.perform(
+                post(RESOURCE + "/exportacao/pdf")
+                    .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                    .content(TestUtil.convertObjectToJsonBytes(filtro))
+            ).andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_OCTET_STREAM_VALUE));
+    }
+
 }

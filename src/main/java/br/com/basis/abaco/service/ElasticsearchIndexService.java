@@ -5,7 +5,6 @@ import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Contrato;
 import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.EsforcoFase;
-import br.com.basis.abaco.domain.Fase;
 import br.com.basis.abaco.domain.FatorAjuste;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
@@ -18,17 +17,16 @@ import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
-
 import br.com.basis.abaco.repository.AlrRepository;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.ContratoRepository;
 import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.EsforcoFaseRepository;
-import br.com.basis.abaco.repository.FaseRepository;
 import br.com.basis.abaco.repository.FatorAjusteRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.FuncionalidadeRepository;
+import br.com.basis.abaco.repository.ManualContratoRepository;
 import br.com.basis.abaco.repository.ManualRepository;
 import br.com.basis.abaco.repository.ModuloRepository;
 import br.com.basis.abaco.repository.OrganizacaoRepository;
@@ -36,17 +34,16 @@ import br.com.basis.abaco.repository.RlrRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.ManualContratoRepository;
 import br.com.basis.abaco.repository.search.AlrSearchRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.ContratoSearchRepository;
 import br.com.basis.abaco.repository.search.DerSearchRepository;
 import br.com.basis.abaco.repository.search.EsforcoFaseSearchRepository;
-import br.com.basis.abaco.repository.search.FaseSearchRepository;
 import br.com.basis.abaco.repository.search.FatorAjusteSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
 import br.com.basis.abaco.repository.search.FuncionalidadeSearchRepository;
+import br.com.basis.abaco.repository.search.ManualContratoSearchRepository;
 import br.com.basis.abaco.repository.search.ManualSearchRepository;
 import br.com.basis.abaco.repository.search.ModuloSearchRepository;
 import br.com.basis.abaco.repository.search.OrganizacaoSearchRepository;
@@ -54,8 +51,6 @@ import br.com.basis.abaco.repository.search.RlrSearchRepository;
 import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
-import br.com.basis.abaco.repository.search.ManualContratoSearchRepository;
-
 import com.codahale.metrics.annotation.Timed;
 import org.elasticsearch.indices.IndexAlreadyExistsException;
 import org.slf4j.Logger;
@@ -97,10 +92,6 @@ public class ElasticsearchIndexService {
     private final EsforcoFaseRepository esforcoFaseRepository;
 
     private final EsforcoFaseSearchRepository esforcoFaseSearchRepository;
-
-    private final FaseRepository faseRepository;
-
-    private final FaseSearchRepository faseSearchRepository;
 
     private final FatorAjusteRepository fatorAjusteRepository;
 
@@ -165,8 +156,6 @@ public class ElasticsearchIndexService {
         DerSearchRepository derSearchRepository,
         EsforcoFaseRepository esforcoFaseRepository,
         EsforcoFaseSearchRepository esforcoFaseSearchRepository,
-        FaseRepository faseRepository,
-        FaseSearchRepository faseSearchRepository,
         FatorAjusteRepository fatorAjusteRepository,
         FatorAjusteSearchRepository fatorAjusteSearchRepository,
         FuncaoDadosRepository funcaoDadosRepository,
@@ -196,7 +185,6 @@ public class ElasticsearchIndexService {
         this.contratoRepository = contratoRepository; this.contratoSearchRepository = contratoSearchRepository;
         this.derRepository = derRepository; this.derSearchRepository = derSearchRepository;
         this.esforcoFaseRepository = esforcoFaseRepository; this.esforcoFaseSearchRepository = esforcoFaseSearchRepository;
-        this.faseRepository = faseRepository; this.faseSearchRepository = faseSearchRepository;
         this.fatorAjusteRepository = fatorAjusteRepository; this.fatorAjusteSearchRepository = fatorAjusteSearchRepository;
         this.funcaoDadosRepository = funcaoDadosRepository; this.funcaoDadosSearchRepository = funcaoDadosSearchRepository;
         this.funcaoTransacaoRepository = funcaoTransacaoRepository; this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
@@ -245,7 +233,6 @@ public class ElasticsearchIndexService {
         reindexForClass(Contrato.class, contratoRepository, contratoSearchRepository);
         reindexForClass(Der.class, derRepository, derSearchRepository);
         reindexForClass(EsforcoFase.class, esforcoFaseRepository, esforcoFaseSearchRepository);
-        reindexForClass(Fase.class, faseRepository, faseSearchRepository);
         reindexForClass(FatorAjuste.class, fatorAjusteRepository, fatorAjusteSearchRepository);
         reindexForClass(FuncaoDados.class, funcaoDadosRepository, funcaoDadosSearchRepository);
         reindexForClass(FuncaoTransacao.class, funcaoTransacaoRepository, funcaoTransacaoSearchRepository);

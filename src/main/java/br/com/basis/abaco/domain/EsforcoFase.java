@@ -1,7 +1,6 @@
 package br.com.basis.abaco.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
