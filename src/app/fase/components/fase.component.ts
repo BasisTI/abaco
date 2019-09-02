@@ -28,9 +28,17 @@ export class FaseComponent implements OnInit {
 
     public ngOnInit() {
         this.obterTodaFases();
+        this.susbcribeSelectRow();
+        this.subscrbeUnselectRow(); 
+    }
+
+    susbcribeSelectRow() {
         this.dataTable.onRowSelect.subscribe((event) => {
             this.tipoFaseSelecionada = event.data;
         });
+    }
+
+    subscrbeUnselectRow() {
         this.dataTable.onRowUnselect.subscribe(() => {
             this.tipoFaseSelecionada = undefined;
         });
