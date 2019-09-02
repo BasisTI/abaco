@@ -71,7 +71,7 @@ public class FaseService {
         return mapper.toDto(repository.findOne(id));
     }
     
-    public List<DropdownDTO> getFaseDropdown() {
-        return repository.getFaseDropdown();
+    public List<DropdownDTO> getDropdown() {
+        return repository.getDropdown();
     }
 }

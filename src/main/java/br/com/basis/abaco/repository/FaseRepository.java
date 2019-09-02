@@ -24,5 +24,5 @@ public interface FaseRepository extends JpaRepository<Fase, Long> {
     Page<FaseDTO> findPage(@Param("filtro") FaseFiltroDTO filtro, Pageable page);
     
     @Query("SELECT new br.com.basis.abaco.service.dto.novo.DropdownDTO(f.id, f.nome) FROM Fase f")
-    List<DropdownDTO> getFaseDropdown();
+    List<DropdownDTO> getDropdown();
 }

@@ -61,7 +61,7 @@ public class FaseResource {
     @Timed
     public ResponseEntity<List<DropdownDTO>> getDropdown() {
         log.debug("REST request to get Fase drodown");
-        List<DropdownDTO> dropdownDTOList = service.getFaseDropdown();
+        List<DropdownDTO> dropdownDTOList = service.getDropdown();
         return ResponseEntity.ok().body(dropdownDTOList);
     }
 
