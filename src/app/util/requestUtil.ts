@@ -1,6 +1,5 @@
 import { HttpParams } from '@angular/common/http';
 import { DataTable } from 'primeng/primeng';
-import { Pageable } from './pageable.util';
 
 export class RequestUtil {
 

@@ -5,7 +5,6 @@ import { ConfirmationService, DataTable } from 'primeng/primeng';
 import { FaseService, Fase, FaseFilter } from '../';
 import { PageNotificationService } from '../../shared';
 import { TranslateService } from '@ngx-translate/core';
-import { Pageable } from '../../util/pageable.util';
 import { Page } from '../../util/page';
 
 @Component({
@@ -42,8 +41,6 @@ export class FaseComponent implements OnInit {
     }
 
     obterTodaFases() {
-        const pageable = new Pageable(this.dataTable.page, this.dataTable.rows);
-        pageable.setSort(this.dataTable.sortOrder, this.dataTable.sortField);
         this.tipoFaseService.getPage(this.filtro, this.dataTable)
         .subscribe(fases => this.fases = fases);           
     }
@@ -72,7 +69,7 @@ export class FaseComponent implements OnInit {
     }
 
     limparPesquisa() {
-        this.filtro.nome = null;
+        this.filtro = new FaseFilter();
         this.obterTodaFases();
     }
 }
