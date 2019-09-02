@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Component, Input } from '@angular/core';
@@ -39,11 +40,14 @@ export class ExportButtonComponent {
         },
     ];
 
-    constructor( private http: HttpClient ) { }
+    constructor( 
+        private http: HttpClient,
+        private translate: TranslateService    
+    ) { }
 
     exportar(tipoRelatorio: string) {
 
-        this.blockUI.start(GeneralConstants.generate_report);
+        this.exibirBlockUi(GeneralConstants.generate_report);
         ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, this.dataTable, this.filter)
             .finally( () => this.blockUI.stop())
             .subscribe((res: Blob) => {
@@ -55,10 +59,14 @@ export class ExportButtonComponent {
 
     imprimir(tipoRelatorio: string) {
 
-        this.blockUI.start(GeneralConstants.generate_report);
+        this.exibirBlockUi(GeneralConstants.generate_report);
         ExportacaoUtilService.exportReport(tipoRelatorio, this.http, this.resourceName, this.dataTable, this.filter)
         .finally(() => this.blockUI.stop())
         .subscribe( downloadUrl =>  ExportacaoUtil.imprimir(downloadUrl)) ;
+    }
+
+    exibirBlockUi(menssagem: string) {
+        this.translate.get(menssagem).subscribe(traducao => this.blockUI.start(traducao));
     }
 
 }
