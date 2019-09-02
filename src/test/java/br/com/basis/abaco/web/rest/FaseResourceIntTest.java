@@ -305,7 +305,7 @@ public class FaseResourceIntTest {
     }
 
     @Test
-    public void geenrateReport() throws Exception {
+    public void genrateReport() throws Exception {
         postDTO(buildDTO());
 
         FaseFiltroDTO filtro = new FaseFiltroDTO();

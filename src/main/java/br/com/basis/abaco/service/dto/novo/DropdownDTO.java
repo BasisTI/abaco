@@ -1,12 +1,14 @@
 package br.com.basis.abaco.service.dto.novo;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class DropdownDTO {
     
     private Long value;
