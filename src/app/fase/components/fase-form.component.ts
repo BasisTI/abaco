@@ -42,8 +42,11 @@ export class FaseFormComponent implements OnInit {
         }
         this.tipoFaseService.create(this.fase).subscribe(() => {
             this.router.navigate(['/fase']);
-            (this.fase.id === undefined) ? (this.pageNotificationService.addCreateMsg()) :
-            (this.pageNotificationService.addUpdateMsg());
+            if (this.fase.id == null) {
+                this.pageNotificationService.addCreateMsg();
+            } else {
+                this.pageNotificationService.addUpdateMsg();
+            }
         });
     }
    
