@@ -1,0 +1,20 @@
+<div class="ui-g ui-fluid" *ngIf="fase">
+    <div class="ui-g-12">
+        <div class="card card-w-title">
+            <h1 translate="Cadastros.Fase.VisualizarFase">Visualizar Tipo Fase</h1>
+            <div class="ui-g">
+                <div class="ui-g-6">
+                    <label>{{ 'Cadastros.Fase.ID' | translate }} {{ fase.id }}</label>
+                </div>
+                <div class="ui-g-6">
+                    <label>{{ 'Cadastros.Fase.Nome:' | translate }} {{ fase.nome }}</label>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-2">
+                    <button pButton type="button" [label]="'Global.Botoes.Voltar' | translate" routerLink="/fase"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

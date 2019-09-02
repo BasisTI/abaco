@@ -43,3 +43,38 @@ li.ui-chips-token.ui-state-highlight.ui-corner-all.ng-star-inserted {
   border-width: thin;
   border-color: #ccc;
 }
+
+.side-button {
+  margin-bottom: 10%;
+}
+
+.dynamic-table-container {
+  display: inline-flex;
+}
+
+.btn-table > *  {
+  margin: 6px;
+  display: grid;
+}
+
+.table-container {
+  width: 100%;
+  margin: 5px;
+}
+
+.table-next-containter {
+  margin: 6px;
+  display: inline-block;
+}
+
+.form-fields-container {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding: 6px;;
+}
+
+.form-buttons-container {
+  justify-content: center;
+  margin-bottom: 10px;
+}
+

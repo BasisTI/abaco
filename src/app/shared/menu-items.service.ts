@@ -26,7 +26,7 @@ export class MenuItemsService {
                 label: 'MenuPrincipal.Cadastros.Cadastros', icon: 'description',
                 visible: this.isLoggedCadastrosBasicos(),
                 items: [
-                    { label: 'MenuPrincipal.Cadastros.TipoFase', routerLink: 'tipoFase', icon: 'beenhere' },
+                    { label: 'MenuPrincipal.Cadastros.Fase', routerLink: 'fase', icon: 'beenhere' },
                     { label: 'MenuPrincipal.Cadastros.Manual', routerLink: 'manual', icon: 'description' },
                     { label: 'MenuPrincipal.Cadastros.Organizacao', routerLink: 'organizacao', icon: 'business' },
                     { label: 'MenuPrincipal.Cadastros.Sistema', routerLink: 'sistema', icon: 'laptop' },

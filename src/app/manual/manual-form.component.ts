@@ -9,14 +9,13 @@ import { ManualService } from './manual.service';
 import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
 import { ResponseWrapper } from '../shared';
 import { EsforcoFase } from '../esforco-fase/esforco-fase.model';
-import { TipoFaseService } from '../tipo-fase/tipo-fase.service';
-import { TipoFase } from '../tipo-fase/tipo-fase.model';
+import { FaseService, Fase } from '../fase';
 import { DatatableClickEvent } from '@basis/angular-components';
 import { ConfirmationService } from 'primeng/components/common/confirmationservice';
 import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
 import { PageNotificationService } from '../shared/page-notification.service';
 import { UploadService } from '../upload/upload.service';
-import { FileUpload } from 'primeng/primeng';
+import { FileUpload, SelectItem } from 'primeng/primeng';
 
 @Component({
     selector: 'jhi-manual-form',
@@ -33,7 +32,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     showDialogEditPhaseEffort = false;
     showDialogCreateAdjustFactor = false;
     showDialogEditAdjustFactor = false;
-    tipoFases: Array<TipoFase> = [];
+    fases: Fase[] = [];
     percentual: number;
     newPhaseEffort: EsforcoFase = new EsforcoFase();
     editedPhaseEffort: EsforcoFase = new EsforcoFase();
@@ -57,7 +56,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         private router: Router,
         private manualService: ManualService,
         private esforcoFaseService: EsforcoFaseService,
-        private tipoFaseService: TipoFaseService,
+        private tipoFaseService: FaseService,
         private confirmationService: ConfirmationService,
         private pageNotificationService: PageNotificationService,
         private uploadService: UploadService,
@@ -92,8 +91,9 @@ export class ManualFormComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.tipoFaseService.query().subscribe((response: ResponseWrapper) => {
-            this.tipoFases = response.json;
+        this.tipoFaseService.findDropdown().subscribe((fases: SelectItem[]) => {
+            // TODO remover essa conversão quando o DTO de manual for feito para se adequar ao DropdowDTO
+            this.fases = fases.map(item => new Fase(item.value, item.label));
         });
         this.manual.versaoCPM = 431;
     }
@@ -133,7 +133,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         })
     }
 
-    private checkIfManualAlreadyExists(registeredPhases: Array<TipoFase>): boolean {
+    private checkIfManualAlreadyExists(registeredPhases: Array<Fase>): boolean {
         let isAlreadyRegistered = false;
         if (registeredPhases) {
             registeredPhases.forEach(each => {

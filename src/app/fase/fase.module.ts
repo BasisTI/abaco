@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DatatableModule } from '@basis/angular-components';
-import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
+import { BotoesExportacaoModule } from '../botoes-exportacao/botoes-exportacao.module';
 import {
     ButtonModule,
     InputTextModule,
@@ -13,16 +12,17 @@ import {
     DropdownModule,
     RadioButtonModule,
     ConfirmDialogModule,
-    ConfirmationService
+    ConfirmationService,
+    DataTableModule,
 } from 'primeng/primeng';
 
 import {
-    TipoFaseService,
-    TipoFaseComponent,
-    TipoFaseDetailComponent,
-    TipoFaseFormComponent,
-    tipoFaseRoute
-} from './';
+    FaseService,
+    FaseComponent,
+    FaseDetailComponent,
+    FaseFormComponent,
+    FaseRoute
+} from '.';
 
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
 
@@ -39,8 +39,8 @@ export function createTranslateLoader(http: HttpClient) {
         CommonModule,
         HttpModule,
         FormsModule,
-        RouterModule.forRoot(tipoFaseRoute, { useHash: true }),
-        DatatableModule,
+        RouterModule.forRoot(FaseRoute, { useHash: true }),
+        DataTableModule,
         ButtonModule,
         SpinnerModule,
         CalendarModule,
@@ -59,15 +59,15 @@ export function createTranslateLoader(http: HttpClient) {
         })
     ],
     declarations: [
-        TipoFaseComponent,
-        TipoFaseDetailComponent,
-        TipoFaseFormComponent
+        FaseComponent,
+        FaseDetailComponent,
+        FaseFormComponent
     ],
     providers: [
-        TipoFaseService,
+        FaseService,
         ConfirmationService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AbacoTipoFaseModule {
+export class AbacoFaseModule {
 }

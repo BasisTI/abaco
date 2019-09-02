@@ -223,7 +223,7 @@
                     <div class="ui-g-12 ui-md-12 ui-sm-12" id="tabela-tipo-fase">
                         <app-memory-datatable [value]="manual.esforcoFases" id="idTabelaEsforcoFaseFormManual"
                                               (buttonClick)="datatableClick($event)" disableClone="true">
-                            <p-column [header]="this.getLabel('Cadastros.Manual.TipoFase')" field="fase.nome">
+                            <p-column [header]="this.getLabel('Cadastros.Manual.Fase')" field="fase.nome">
                             </p-column>
                             <p-column [header]="this.getLabel('Cadastros.Manual.Percentual(%)')" field="esforcoFormatado">
                             </p-column>
@@ -299,13 +299,13 @@
                           [width]="800">
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                            <label translate="Cadastros.Manual.TipoFase*">Tipo de Fase *</label>
+                            <label translate="Cadastros.Manual.Fase*">Tipo de Fase *</label>
                             <p-dropdown required
                                         [filter]="true"
                                         id="nome_fase"
-                                        [options]="tipoFases"
+                                        [options]="fases"
                                         [(ngModel)]="newPhaseEffort.fase"
-                                        [placeholder]="this.getLabel('Cadastros.Manual.TipoFase')"
+                                        [placeholder]="this.getLabel('Cadastros.Manual.Fase')"
                                         [autoWidth]="false"
                                         name="tipoFase"
                                         optionLabel="nome"
@@ -367,13 +367,13 @@
 
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                            <label translate="Cadastros.Manual.TipoFase*">Tipo de Fase*</label>
+                            <label translate="Cadastros.Manual.Fase" id=idLabelManualFormComponentFase>Fase*</label>
                             <p-dropdown [filter]="true"
-                                        id="nome_fase_edit"
-                                        [options]="tipoFases"
+                                        iid=idDropdownManualFormComponentFase
+                                        [options]="fases"
                                         [(ngModel)]="editedPhaseEffort.fase"
                                         optionLabel="nome"
-                                        [placeholder]="this.getLabel('Cadastros.Manual.TipoFase')"
+                                        [placeholder]="this.getLabel('Cadastros.Manual.Fase')"
                                         name="fase"
                                         dataKey="id"
                                         [autoWidth]="false">

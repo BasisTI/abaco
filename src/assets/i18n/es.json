@@ -101,7 +101,7 @@
         "msgCamposInvalidos": "Campos no válidos: "
       }
     },
-    "TipoFase": {
+    "Fase": {
       "CadastrarTipoFase": "Registro Tipo de Fase",
       "Codigo": "Código",
       "Descricao": "Descripción",
@@ -109,8 +109,8 @@
       "ID": "ID:",
       "Nome": "Nombre",
       "Nome:": "Nombre:",
-      "TipoFase": "Tipo de la Fase",
-      "VisualizarTipoFase": "Ver Tipo Fase",
+      "Fase": "Fase",
+      "VisualizarFase": "Ver Fase",
       "Mensagens": {
         "msgJaExisteTipoFaseCadastradoComEsseNome": "Ya existe un Tipo de Fase registrado con ese nombre!",
         "msgNomeFaseExcedeMaximoCaracteres": "El nombre de la fase supera el máximo de caracteres!",
@@ -167,9 +167,8 @@
       "TipoAjuste": "Tipo Ajuste",
       "TipoAJuste*":"Tipo AJuste *",
       "TipoDeflator": "Tipo Deflactor",
-      "TipoFase": "Tipo de la Fase",
-      "TipoDeFase": "Tipo de la Fase",
-      "TipoFase*": "Tipo de la Fase *",
+      "Fase": "Fase",
+      "Fase*": "Fase *",
       "Unitario":"Unitario",
       "ValorEstimada": "Valor Variación Estimada (%) *",
       "ValorIndicativa": "Valor Variación Indicativa (%) *",
@@ -203,7 +202,7 @@
     "CadastroEsforcoFase": {
       "Esforco(%)*": "Esfuerzo (%) *",
       "EsforcoFase": "Esfuerzo por Fase",
-      "TipoFase*": "Tipo de la Fase *"
+      "Fase*": "Fase *"
     },
     "CadastroDeflator": {
       "Codigo": "Código",
@@ -753,6 +752,7 @@
       "Desbloquear": "Desbloquear",
       "DesbloquearAnalise": "Desbloquear Análisis",
       "Editar": "Editar",
+      "Excluir": "Excluir",
       "Exportar": "Exportación",
       "Fechar": "Cerrar",
       "Gerar": "Generar",
@@ -776,7 +776,8 @@
       "SelecionarArquivo": "Seleccionar Archivo",
       "Sim": "Sí",
       "Unitario": "Unitario",
-      "Voltar": "Regreso"
+      "Voltar": "Regreso",
+      "Visualizar": "Ver"
     },
     "Mensagens": {
       "CampoObrigatorio": "Campo Obligatorio",
@@ -814,7 +815,9 @@
       "EscolhaUmRegistroParaCriarCrud":"Elija un registro para crear crud.",
       "Nenhum":"Ningún",
       "DeflatorDeOrigen":"Mantener deflactor original",
-      "SemPermissaoAcao": "Usted no tiene permiso para esta acción."
+      "SemPermissaoAcao": "Usted no tiene permiso para esta acción.",
+      "ErrorExportar": "Se produjo un error al generar el informe.",
+      "GerandoRelatorio": "Generando Informe..."
     },
     "Idiomas":{
       "Portugues":"Portugués",
@@ -847,7 +850,7 @@
       "Manual": "Manual",
       "Organizacao": "Organización",
       "Sistema": "Sistema",
-      "TipoFase": "Tipo de la Fase"
+      "Fase": "Fase"
     },
     "Analise": {
       "Analise": "Análisis",
