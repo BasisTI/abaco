@@ -15,7 +15,7 @@ export class FaseComponent implements OnInit {
 
     @ViewChild(DataTable) dataTable: DataTable;
     tipoFaseSelecionada: Fase = new Fase();
-    filtro: FaseFilter = new FaseFilter(null);
+    filtro: FaseFilter = new FaseFilter();
     fases: Page<Fase> = new Page<Fase>();
 
     constructor(
