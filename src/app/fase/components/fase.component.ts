@@ -14,7 +14,7 @@ import { Page } from '../../util/page';
 export class FaseComponent implements OnInit {
 
     @ViewChild(DataTable) dataTable: DataTable;
-    tipoFaseSelecionada: Fase;
+    tipoFaseSelecionada: Fase = new Fase();
     filtro: FaseFilter = new FaseFilter(null);
     fases: Page<Fase> = new Page<Fase>();
 
@@ -28,20 +28,14 @@ export class FaseComponent implements OnInit {
 
     public ngOnInit() {
         this.obterTodaFases();
-        this.susbcribeSelectRow();
-        this.subscrbeUnselectRow(); 
     }
 
-    susbcribeSelectRow() {
-        this.dataTable.onRowSelect.subscribe((event) => {
-            this.tipoFaseSelecionada = event.data;
-        });
+    susbcribeSelectRow(data): any {
+        this.tipoFaseSelecionada = data;
     }
 
     subscrbeUnselectRow() {
-        this.dataTable.onRowUnselect.subscribe(() => {
-            this.tipoFaseSelecionada = undefined;
-        });
+        this.tipoFaseSelecionada = new Fase();
     }
 
     editarClickEvent() {

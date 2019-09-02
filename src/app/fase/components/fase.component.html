@@ -50,6 +50,8 @@
                             (onRowDblclick)="editarClickEvent()"
                             [rows]="20"
                             [value]="fases.content"
+                            (onRowSelect)="susbcribeSelectRow($event.data)"
+                            (onRowUnselect)="subscrbeUnselectRow()"
                             [rowsPerPageOptions]="[5, 10, 20]"
                             [totalRecords]="fases.totalElements"
                             [paginator]="true"
