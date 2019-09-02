@@ -25,6 +25,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +39,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -91,19 +91,19 @@ public class FaseResourceIntTest {
             .setMessageConverters(jacksonMessageConverter, new ResourceHttpMessageConverter()).build();
     }
 
-    public static FaseDTO buildFaseDTO() {
+    public static FaseDTO buildDTO() {
         FaseDTO fase = new FaseDTO();
         fase.setNome(DEFAULT_NOME);
         return fase;
     }
 
-    public void postFaseDTO(FaseDTO dto) throws Exception {
+    public void postDTO(FaseDTO dto) throws Exception {
         mockMvc.perform(post(RESOURCE)
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(dto))).andExpect(status().isOk());
     }
 
-    public FaseDTO getFaseDTO(Long id) throws Exception {
+    public FaseDTO getDTO(Long id) throws Exception {
         return jacksonMessageConverter.getObjectMapper().readValue(
             mockMvc.perform(
                 get(RESOURCE + "/" + id)
@@ -111,8 +111,8 @@ public class FaseResourceIntTest {
         , FaseDTO.class);
     }
     
-    public FaseDTO persistFaseDTO() throws Exception {
-        postFaseDTO(buildFaseDTO());
+    public FaseDTO persistDTO() throws Exception {
+        postDTO(buildDTO());
         FaseFiltroDTO filtro = new FaseFiltroDTO();
     
         Page<FaseDTO> fases = findPage(filtro);
@@ -134,9 +134,9 @@ public class FaseResourceIntTest {
     @Test
     public void createAndFind() throws Exception {
 
-        FaseDTO dto = buildFaseDTO();
+        FaseDTO dto = buildDTO();
 
-        postFaseDTO(dto);
+        postDTO(dto);
 
         FaseFiltroDTO filtro = new FaseFiltroDTO();
     
@@ -144,7 +144,7 @@ public class FaseResourceIntTest {
     
         dto = fases.getContent().get(0);
 
-        dto = getFaseDTO(dto.getId());
+        dto = getDTO(dto.getId());
 
         assertNotNull(dto);
         assertNotNull(dto.getId());
@@ -153,7 +153,7 @@ public class FaseResourceIntTest {
 
     @Test
     public void createWithExeption() throws Exception {
-        FaseDTO dto = persistFaseDTO();
+        FaseDTO dto = persistDTO();
         dto.setId(null);
         mockMvc.perform(post(RESOURCE)
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -167,7 +167,7 @@ public class FaseResourceIntTest {
 
     @Test
     public void edit() throws Exception {
-        FaseDTO dto = persistFaseDTO();
+        FaseDTO dto = persistDTO();
         assertNotNull(dto.getId());
 
         dto.setNome(UPDATED_NOME);
@@ -176,7 +176,7 @@ public class FaseResourceIntTest {
             post(RESOURCE).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dto))
         ).andExpect(status().isOk());
 
-        dto = getFaseDTO(dto.getId());
+        dto = getDTO(dto.getId());
 
         assertEquals(UPDATED_NOME, dto.getNome());
     }
@@ -188,10 +188,10 @@ public class FaseResourceIntTest {
     }
 
     @Test
-    public void deleteFase() throws Exception {
-        FaseDTO dto = persistFaseDTO();
+    public void delete() throws Exception {
+        FaseDTO dto = persistDTO();
 
-        mockMvc.perform(delete(RESOURCE + "/{id}", dto.getId())
+        mockMvc.perform(MockMvcRequestBuilders.delete(RESOURCE + "/{id}", dto.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
@@ -200,8 +200,8 @@ public class FaseResourceIntTest {
     }
 
     @Test
-    public void deleteFaseWithExeption() throws Exception {
-        FaseDTO faseDTO = persistFaseDTO();
+    public void deleteWithExeption() throws Exception {
+        FaseDTO faseDTO = persistDTO();
 
         // TODO REMOVER MOCK QUANDO ESFORÇO FASE ESTIVER INTEGRADA CORRETAMENTE
         EsforcoFase esforcoFase = new EsforcoFase();
@@ -216,18 +216,18 @@ public class FaseResourceIntTest {
         
         esforcoFaseResource.createEsforcoFase(esforcoFase);
         
-        mockMvc.perform(delete(RESOURCE + "/{id}", faseDTO.getId())
+        mockMvc.perform(MockMvcRequestBuilders.delete(RESOURCE + "/{id}", faseDTO.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void searchFase() throws Exception {
-        FaseDTO dto = persistFaseDTO();
+    public void search() throws Exception {
+        FaseDTO dto = persistDTO();
 
         FaseDTO dto2 = new FaseDTO();
         dto2.setNome(UPDATED_NOME);
-        postFaseDTO(dto2);
+        postDTO(dto2);
 
         FaseFiltroDTO filtro = new FaseFiltroDTO();
 
@@ -245,12 +245,12 @@ public class FaseResourceIntTest {
     }
     
     @Test
-    public void getFaseDropdown() throws Exception {
-        postFaseDTO(buildFaseDTO());
+    public void getDropdown() throws Exception {
+        postDTO(buildDTO());
     
-        FaseDTO faseDTO2 = buildFaseDTO();
+        FaseDTO faseDTO2 = buildDTO();
         faseDTO2.setNome(UPDATED_NOME);
-        postFaseDTO(faseDTO2);
+        postDTO(faseDTO2);
     
         mockMvc.perform(
                 get(RESOURCE + "/dropdown")
@@ -261,12 +261,12 @@ public class FaseResourceIntTest {
     }
 
     @Test
-    public void searchFaseFiltered() throws Exception {
-        FaseDTO dto = persistFaseDTO();
+    public void searchFiltered() throws Exception {
+        FaseDTO dto = persistDTO();
 
         FaseDTO dto2 = new FaseDTO();
         dto2.setNome(UPDATED_NOME);
-        postFaseDTO(dto2);
+        postDTO(dto2);
 
         FaseFiltroDTO filtro = new FaseFiltroDTO();
         filtro.setNome(DEFAULT_NOME);
@@ -284,12 +284,12 @@ public class FaseResourceIntTest {
     }
 
     @Test
-    public void getFases() throws Exception {
-        postFaseDTO(buildFaseDTO());
+    public void getDTO() throws Exception {
+        postDTO(buildDTO());
 
-        FaseDTO dto2 = buildFaseDTO();
+        FaseDTO dto2 = buildDTO();
         dto2.setNome(UPDATED_NOME);
-        postFaseDTO(dto2);
+        postDTO(dto2);
     
         FaseFiltroDTO filtro = new FaseFiltroDTO();
     
@@ -306,7 +306,7 @@ public class FaseResourceIntTest {
 
     @Test
     public void geenrateReport() throws Exception {
-        postFaseDTO(buildFaseDTO());
+        postDTO(buildDTO());
 
         FaseFiltroDTO filtro = new FaseFiltroDTO();
         
