@@ -13,7 +13,8 @@ import { ResponseWrapper, AnaliseSharedDataService, PageNotificationService } fr
 import { Organizacao, OrganizacaoService } from '../organizacao';
 import { Contrato, ContratoService } from '../contrato';
 import { Sistema, SistemaService } from '../sistema';
-import { SelectItem, ConfirmationService } from 'primeng/primeng';
+import { ConfirmationService } from 'primeng/primeng';
+import { SelectItem } from 'primeng/api';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 import * as _ from 'lodash';
@@ -64,8 +65,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     metodosContagem: SelectItem[] = [];
 
     fatoresAjuste: SelectItem[] = [];
-
-    fatorAjuste: FatorAjuste;
 
     equipeResponsavel: SelectItem[] = [];
 
@@ -371,7 +370,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 const label = FatorAjusteLabelGenerator.generate(fa);
                 this.fatoresAjuste.push( { label, value: fa } );
             });
-            this.fatoresAjuste.unshift({ label: this.getLabel('Global.Mensagens.Nenhum'), value: undefined });
+            this.fatoresAjuste.unshift({ label: this.getLabel('Global.Mensagens.Nenhum'), value: null });
         }
     }
 
@@ -379,8 +378,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular os fatores de ajuste do Manual na Edicao
      */
     private carregaFatorAjusteNaEdicao() {
-        const fa: any = this.analise.fatorAjuste;
-        this.fatorAjuste = this.fatoresAjuste.find((f) => f.value.id === fa.value.id ).value;
+        this.analise.fatorAjuste = this.fatoresAjuste.find((f) => f.value != null && f.value.id == this.analise.fatorAjuste.id ).value;
     }
 
     /**
@@ -620,7 +618,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.analise.enviarBaseline = true;
         }
         // TODO O dropdown de deflator não esta funcionando com o analise.fatorAjuste
-        this.analise.fatorAjuste = this.fatorAjuste;
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
             this.analiseService.update(this.analise).subscribe(() => {
