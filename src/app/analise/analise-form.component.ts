@@ -378,11 +378,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
      * Método responsável por popular os fatores de ajuste do Manual na Edicao
      */
     private carregaFatorAjusteNaEdicao() {
-        this.analise.fatorAjuste = this.fatoresAjuste.find((f) => {
-            if(f.value)
-                return f.value.id == this.analise.fatorAjuste.id;
-            return false;
-         } ).value;
+        this.analise.fatorAjuste = this.fatoresAjuste.find((f) => f.value != null && f.value.id == this.analise.fatorAjuste.id ).value;
     }
 
     /**
