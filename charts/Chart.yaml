@@ -1,0 +1,13 @@
+name: abaco
+version: 1.0.0
+appVersion: 1.0.0
+description: abaco
+keywords:
+- ABACO
+home: 
+icon: https://rancher.basis.com.br/v1-catalog/templates/Basis:Abaco?image&projectId=1a3742
+sources:
+- https://gogs.basis.com.br/Basis/abaco_codigo_fonte.git
+maintainers:
+- name: Basis
+  email: basis@basis.com.br
