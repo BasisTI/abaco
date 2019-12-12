@@ -11,7 +11,6 @@
           <span class="md-inputfield">
             <input
               type="text"
-              (click)= "switchUrlSigla()"
               pInputText class="ui-inputtext"
               [(ngModel)]="searchParams.sigla"
               id="idSiglaComponentSistema"
@@ -26,7 +25,6 @@
           <span class="md-inputfield">
             <input
               type="text"
-              (click)= "switchUrlNomeSistema()"
               pInputText class="ui-inputtext"
               id="idNomeSistemaComponentSistema"
               [(ngModel)]="searchParams.nomeSistema"
@@ -40,7 +38,6 @@
         <div class="ui-g-4 ui-md-4 ui-sm-12">
           <p-dropdown
             [filter]="true"
-            (click)="switchUrlOrganizacao()"
             [options]="organizations"
             id="idOrganizacaoComponentSistema"
             optionLabel="nome"
