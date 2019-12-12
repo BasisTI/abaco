@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import br.com.basis.abaco.domain.*;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.slf4j.Logger;
@@ -42,11 +43,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
-import br.com.basis.abaco.domain.Modulo;
-import br.com.basis.abaco.domain.Organizacao;
-import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.SistemaRepository;
@@ -285,61 +281,11 @@ public class SistemaResource {
     public ResponseEntity<List<Sistema>> searchSistemas(@RequestParam(defaultValue = "*") String query,
                                                         @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size,
                                                         @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug(DBG_MSG_SIS, query);
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
 
         Page<Sistema> page = sistemaSearchRepository.search(queryStringQuery(query), newPageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/sistemas");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-
-
-    @GetMapping("/_searchSigla/sistemas")
-    @Timed
-    public ResponseEntity<List<Sistema>> searchSiglaSistemas(@RequestParam(defaultValue = "*") String query,
-                                                        @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size,
-                                                        @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug(DBG_MSG_SIS, query);
-        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-
-        QueryBuilder qb = QueryBuilders.matchPhraseQuery("sigla", query);
-
-        Page<Sistema> page = sistemaSearchRepository.search((qb), newPageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchSigla/sistemas");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-
-    @GetMapping("/_searchSistema/sistemas")
-    @Timed
-    public ResponseEntity<List<Sistema>> searchNomeSistemas(@RequestParam(defaultValue = "*") String query,
-                                                        @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size,
-                                                        @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug(DBG_MSG_SIS, query);
-        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-
-        QueryBuilder qb = QueryBuilders.matchPhraseQuery("nome", query);
-
-        Page<Sistema> page = sistemaSearchRepository.search((qb), newPageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchSistema/sistemas");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-
-    @GetMapping("/_searchOrganizacao/sistemas")
-    @Timed
-    public ResponseEntity<List<Sistema>> searchOrganizacaoSistemas(@RequestParam(defaultValue = "*") String query,
-                                                            @RequestParam String order, @RequestParam(name = PAGE) int pageNumber, @RequestParam int size,
-                                                            @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
-        log.debug(DBG_MSG_SIS, query);
-        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-
-        QueryBuilder qb = QueryBuilders.matchPhraseQuery("organizacao.nome", query);
-
-        Page<Sistema> page = sistemaSearchRepository.search((qb), newPageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_searchOrganizacao/sistemas");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
