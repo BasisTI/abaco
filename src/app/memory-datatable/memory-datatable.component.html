@@ -60,4 +60,12 @@
     icon="compare-arrows">
     </basis-datatable-button>
 
+    <basis-datatable-button
+      *ngIf="showView"
+      [tooltip]="selectedRow != null ? this.getLabel('Global.Mensagens.Visualizar') : this.getLabel('Global.Mensagens.EscolhaUmRegistroParaVisualizar')"
+      [disabled]="selectedRow == null"
+      (click)="onClick(viewEventName, $event)"
+      class="ui-button-gray"
+      icon="remove-red-eye">
+    </basis-datatable-button>
 </div>

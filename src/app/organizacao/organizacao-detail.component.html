@@ -1,101 +1,184 @@
 <div class="ui-g ui-fluid" *ngIf="organizacao">
-  <div class="ui-g-12">
-    <div class="card card-w-title">
+    <div class="ui-g-12">
+        <div class="card card-w-title">
+            <h1>Organização</h1>
+            <div class="ui-g">
+                <div class="ui-g-4">
+                    <img src="data:image/png;base64,{{logo}}" style="max-width:100%; height:auto;" alt="">
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                    <label>Sigla: {{ organizacao.sigla }}</label>
+                </div>
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                    <label>Nome: {{ organizacao.nome }}</label>
+                </div>
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                    <label>CNPJ: </label>
+                    <input id="idCNPJDetailOrganizacao" type="text" name="cnpj" mask="99.999.999/9999-99"
+                           [ngModel]="organizacao.cnpj" style="border-style: none" readonly/>
+                </div>
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                    <label>Número ocorrência: {{ organizacao.numeroOcorrencia }}</label>
+                </div>
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                    <label>Ativo: {{ organizacao.ativo ? 'Sim' : 'Não' }}</label>
+                </div>
+            </div>
 
-      <h1>Organização</h1>
+            <div class="ui-g bg-25">
+                <h4>Contratos</h4>
+                <app-memory-datatable
+                        [disableEdit]="true"
+                        [disableClone]="true"
+                        [disableDelete]="true"
+                        [showView]="true"
+                        [value]="organizacao.contracts"
+                        [immutable]="false"
+                        id="idTabelaOrganizacaoDetailOrganizacao"
+                        (buttonClick)="showViewDialog($event)"
+                        #contratosDataTable>
+                    <p-column
+                            header="Número do Contrato"
+                            field="numeroContrato">
+                    </p-column>
+                    <p-column
+                            header="Ínicio Vigência"
+                            field="dataInicioVigencia">
+                        <ng-template
+                                let-col
+                                let-dataInicioVigencia="rowData"
+                                pTemplate="body">
+                            {{ dataInicioVigencia[col.field] | date: 'dd/MM/y' }}
+                        </ng-template>
+                    </p-column>
+                    <p-column
+                            header="Final Vigência"
+                            field="dataFimVigencia">
+                        <ng-template
+                                let-col
+                                let-dataFimVigencia="rowData"
+                                pTemplate="body">
+                            {{ dataFimVigencia[col.field] | date: 'dd/MM/y' }}
+                        </ng-template>
+                    </p-column>
+                    <p-column
+                            header="Manuais"
+                            [sorteble]="true">
+                        <ng-template let-col let-row="rowData" pTemplate="body">
+                            <li *ngFor="let manualContrato of row.manualContrato">
+                                {{ manualContrato.manual.nome }}
+                            </li>
+                        </ng-template>
+                    </p-column>
+                    <p-column
+                            header="Ativo"
+                            field="ativo">
+                        <ng-template
+                                let-col
+                                let-ativo="rowData"
+                                pTemplate="body">
+                            {{ ativo[col.field] ? 'Sim' : 'Não' }}
+                        </ng-template>
+                    </p-column>
+                </app-memory-datatable>
+            </div>
+            <p-dialog [header]="this.getLabel('Cadastros.Organizacao.Contrato')"
+                      [(visible)]="mostrarDetalheDoContrato"
+                      [contentStyle]="{'overflow': 'visible'}"
+                      *ngIf="mostrarDetalheDoContrato"
+                      [width]="900">
+                <div class="ui-g">
+                    <div class="ui-g-6" style="margin-bottom: 25px">
+                        <span class="md-inputfield">
+                            <input type="text"
+                                  name="numeroContrato"
+                                  id="idNumeroContratoContrato"
+                                  [(ngModel)]="contratoSelecionado.numeroContrato"
+                                  pInputText readonly />
+                            <label translate="Cadastros.Organizacao.CadastroContrato.NumeroContrato*">Número do Contrato *</label>
+                        </span>
+                    </div>
+                    <div class="ui-g-6" style="margin-bottom: 25px">
+                        <span class="md-inputfield">
+                            <input type="text"
+                                   name="diasDeGarantia"
+                                   id="diasDeGarantia"
+                                   [(ngModel)] = "contratoSelecionado.diasDeGarantia"
+                                   pInputText readonly/>
+                            <label translate="Cadastros.Organizacao.DiasDeGarantia">Dias de Garantia</label>
+                        </span>
+                    </div>
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g-6" style="margin-bottom: 25px">
+                        <span class="md-inputfield">
+                            <input type="text"
+                                   name="dataInicioVigencia"
+                                   id="dataInicioVigencia"
+                                   ngModel = "{{contratoSelecionado.dataInicioVigencia | date:'dd/MM/y'}}"
+                                   pInputText readonly/>
+                            <label translate="Cadastros.Organizacao.DataInicioDaVigencia">Data Inicio Vigencia</label>
+                        </span>
 
-      <div class="ui-g">
-
-        <div class="ui-g-4">
-          <img src="data:image/png;base64,{{logo}}" style="max-width:100%; height:auto;" alt="" >
+                    </div>
+                    <div class="ui-g-6" style="margin-bottom: 25px">
+                        <span class="md-inputfield">
+                            <input type="text"
+                                   id="dataFimVigencia"
+                                   name="dataFimVigencia"
+                                   ngModel = "{{contratoSelecionado.dataFimVigencia | date:'dd/MM/y'}}"
+                                   pInputText readonly/>
+                            <label translate="Cadastros.Organizacao.DataFinalVigencia">Data Final da Vigência</label>
+                        </span>
+                    </div>
+                </div>
+                <div class="ui-g-12" style="margin-bottom: 25px">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-1">
+                            <label translate="Cadastros.Organizacao.Ativo">Ativo</label>
+                        </div>
+                        <p-checkbox name="contrato_ativo" id="ativo" binary="true"
+                                    [(ngModel)]="contratoSelecionado.ativo" disabled>
+                        </p-checkbox>
+                    </div>
+                </div>
+<!--                <div *ngIf="manual in contratoSelecionado.manual">-->
+<!--                    <h5>Manual</h5>-->
+<!--                    <app-memory-datatable [value]="novoContrato.manualContrato"-->
+<!--                                          (buttonClick)="manualContratoTableClickNovo($event)"-->
+<!--                                          disableClone="true">-->
+<!--                    <div class="ui-g" *ngFor="manual in contratoSelecionado.manual">-->
+<!--                        <div class="ui-g-6" style="margin-bottom: 25px">-->
+<!--                            <span class="md-inputfield">-->
+<!--                                <input type="text"-->
+<!--                                       name="nomeManual"-->
+<!--                                       id="nomeManual"-->
+<!--                                       [(ngModel)]="manual.nome"-->
+<!--                                       pInputText readonly />-->
+<!--                                <label translate="Cadastros.Organizacao.CadastroContrato.NumeroContrato*">Número do Contrato *</label>-->
+<!--                            </span>-->
+<!--                        </div>-->
+<!--                        <div class="ui-g-6" style="margin-bottom: 25px">-->
+<!--                            <span class="md-inputfield">-->
+<!--                                <input type="text"-->
+<!--                                       name="manual"-->
+<!--                                       id="diasDeGarantia"-->
+<!--                                       [(ngModel)] = "manual.in"-->
+<!--                                       pInputText readonly/>-->
+<!--                                <label translate="Cadastros.Organizacao.DiasDeGarantia">Dias de Garantia</label>-->
+<!--                            </span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </p-dialog>
+            <div class="ui-g">
+                <div class="ui-g-3">
+                    <button pButton type="button" id="idBtnVoltarDetailOrganizacao" label="Voltar"
+                            routerLink="/organizacao"></button>
+                </div>
+            </div>
         </div>
-
-      </div>
-
-      <div class="ui-g">
-
-        <div class="ui-g-12 ui-md-12 ui-sm-12">
-          <label>Sigla: {{ organizacao.sigla }}</label>
-        </div>
-        <div class="ui-g-12 ui-md-12 ui-sm-12">
-          <label>Nome: {{ organizacao.nome }}</label>
-        </div>
-        <div class="ui-g-12 ui-md-12 ui-sm-12">
-          <label>CNPJ: </label>
-          <input id="idCNPJDetailOrganizacao" type="text" name="cnpj" mask="99.999.999/9999-99" [ngModel]="organizacao.cnpj" style="border-style: none" readonly/>
-        </div>
-        <div class="ui-g-12 ui-md-12 ui-sm-12">
-          <label>Número ocorrência: {{ organizacao.numeroOcorrencia }}</label>
-        </div>
-        <div class="ui-g-12 ui-md-12 ui-sm-12">
-          <label>Ativo: {{ organizacao.ativo ? 'Sim' : 'Não' }}</label>
-        </div>
-      </div>
-
-      <div class="ui-g" style="margin-bottom: 25px">
-          <h4>Contratos</h4>
-
-          <app-memory-datatable
-            [value]="organizacao.contracts"
-            [immutable]="false" 
-            id="idTabelaOrganizacaoDetailOrganizacao"
-            #contratosDataTable>
-            
-            <p-column 
-              header="Número do Contrato" 
-              field="numeroContrato">
-            </p-column>
-            
-            <p-column
-              header="Ínicio Vigência" 
-              field="dataInicioVigencia">
-              <ng-template 
-                let-col 
-                let-dataInicioVigencia="rowData" 
-                pTemplate="body">
-                {{ dataInicioVigencia[col.field] | date: 'dd/MM/y' }}
-              </ng-template>
-            </p-column>
-            
-            <p-column 
-              header="Final Vigência" 
-              field="dataFimVigencia">
-              <ng-template 
-                let-col 
-                let-dataFimVigencia="rowData" 
-                pTemplate="body">
-                {{ dataFimVigencia[col.field] | date: 'dd/MM/y' }}
-              </ng-template>
-            </p-column>
-
-            <p-column 
-              header="Manuais" 
-              [sorteble]="true">
-              <ng-template let-col let-row="rowData" pTemplate="body">
-                <li *ngFor="let manualContrato of row.manualContrato">
-                  {{ manualContrato.manual.nome }}
-                </li>
-              </ng-template>
-            </p-column>
-            
-            <p-column 
-              header="Ativo" 
-              field="ativo">
-              <ng-template 
-                let-col 
-                let-ativo="rowData" 
-                pTemplate="body">
-                {{ ativo[col.field] ? 'Sim' : 'Não' }}
-              </ng-template>
-            </p-column>
-          </app-memory-datatable>
-
-        </div>
-      <div class="ui-g">
-        <div class="ui-g-3">
-          <button pButton type="button" id="idBtnVoltarDetailOrganizacao" label="Voltar" routerLink="/organizacao"></button>
-        </div>
-      </div>
     </div>
-  </div>
 </div>

@@ -95,15 +95,11 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }).unsubscribe();
         return str;
     }
-
-    /**
-     *
-     * */
     ngOnInit() {
         this.isEdit = false;
         this.cnpjValido = false;
         this.isSaving = false;
-        this.manualService.dropdown().subscribe((res: ResponseWrapper) => {
+        this.manualService.query().subscribe((res: ResponseWrapper) => {
             this.manuais = res.json;
         });
         this.routeSub = this.route.params.subscribe(params => {
@@ -112,7 +108,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
                 this.organizacaoService.find(params['id']).subscribe(organizacao => {
                     this.organizacao = organizacao;
-                    if (this.organizacao.logoId != undefined && this.organizacao.logoId != null)
+                    if (this.organizacao.logoId !== undefined && this.organizacao.logoId != null)
                         this.uploadService.getLogo(organizacao.logoId).subscribe(response => {
                             this.logo = response.logo;
                         });
@@ -122,42 +118,25 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         });
         this.organizacao.ativo = true;
     }
-
-    /**
-     *
-     * */
     abrirDialogCadastroContrato(editForm1) {
         this.mostrarDialogCadastroContrato = true;
         this.novoContrato.ativo = true;
         this.numeroContratoInvalido = false;
         this.novoContrato.diasDeGarantia = null;
     }
-
-    /**
-     *
-     * */
     fecharDialogCadastroContrato() {
         this.doFecharDialogCadastroContrato();
     }
-
-    /**
-     *
-     * */
     validarManual() {
         this.manualInvalido = false;
         this.numeroContratoInvalido = false;
     }
-
     validarDataInicio() {
         if (!(this.novoContrato.dataInicioValida()) || !(this.contratoEmEdicao.dataInicioValida())) {
             this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
             // document.getElementById('login').setAttribute('style', 'border-color: red;');
         }
     }
-
-    /**
-     *
-     * */
     private doFecharDialogCadastroContrato() {
         this.mostrarDialogCadastroContrato = false;
         this.novoContrato = new Contrato();
@@ -235,7 +214,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             if (
                 this.manualContratoNovo.artificialId !== undefined
                 &&
-                this.manualContratoNovo.artificialId != null
+                this.manualContratoNovo.artificialId !== null
             ) {
                 const manualContratoTemp = this.manualContratoNovo.clone();
                 this.novoContrato.updateManualContrato(manualContratoTemp);
@@ -253,7 +232,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             if (
                 this.manualContratoEdt.id !== undefined
                 &&
-                this.manualContratoEdt.id != null
+                this.manualContratoEdt.id !== null
             ) {
                 const manualContratoTemp = this.manualContratoEdt.clone();
                 this.contratoEmEdicao.updateManualContrato(manualContratoTemp);
@@ -264,10 +243,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             this.validaManual = false;
             this.manualContratoEdt = new ManualContrato();
         }
-    }
-
-    resetObj(manualContrato: ManualContrato) {
-        manualContrato = new ManualContrato();
     }
 
     setManualContrato(manualContrato: ManualContrato): ManualContrato {
@@ -597,16 +572,10 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     *
-     * */
     ngOnDestroy() {
         this.routeSub.unsubscribe();
     }
 
-    /**
-     *Método de upload de foto
-     * */
     fileUpload(event: any) {
         const imagem = event.files[0];
         if (this.mudouLogo(imagem)) {
@@ -614,14 +583,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     *
-     * */
-
-
-    /**
-     *
-     * */
     getFileInfo() {
         return this.uploadService.getFile(this.organizacao.logoId).subscribe(response => {
             return response;

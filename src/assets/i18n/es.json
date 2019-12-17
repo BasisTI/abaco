@@ -101,7 +101,7 @@
         "msgCamposInvalidos": "Campos no válidos: "
       }
     },
-    "Fase": {
+    "TipoFase": {
       "CadastrarTipoFase": "Registro Tipo de Fase",
       "Codigo": "Código",
       "Descricao": "Descripción",
@@ -109,8 +109,8 @@
       "ID": "ID:",
       "Nome": "Nombre",
       "Nome:": "Nombre:",
-      "Fase": "Fase",
-      "VisualizarFase": "Ver Fase",
+      "TipoFase": "Tipo de la Fase",
+      "VisualizarTipoFase": "Ver Tipo Fase",
       "Mensagens": {
         "msgJaExisteTipoFaseCadastradoComEsseNome": "Ya existe un Tipo de Fase registrado con ese nombre!",
         "msgNomeFaseExcedeMaximoCaracteres": "El nombre de la fase supera el máximo de caracteres!",
@@ -167,8 +167,9 @@
       "TipoAjuste": "Tipo Ajuste",
       "TipoAJuste*":"Tipo AJuste *",
       "TipoDeflator": "Tipo Deflactor",
-      "Fase": "Fase",
-      "Fase*": "Fase *",
+      "TipoFase": "Tipo de la Fase",
+      "TipoDeFase": "Tipo de la Fase",
+      "TipoFase*": "Tipo de la Fase *",
       "Unitario":"Unitario",
       "ValorEstimada": "Valor Variación Estimada (%) *",
       "ValorIndicativa": "Valor Variación Indicativa (%) *",
@@ -202,7 +203,7 @@
     "CadastroEsforcoFase": {
       "Esforco(%)*": "Esfuerzo (%) *",
       "EsforcoFase": "Esfuerzo por Fase",
-      "Fase*": "Fase *"
+      "TipoFase*": "Tipo de la Fase *"
     },
     "CadastroDeflator": {
       "Codigo": "Código",
@@ -752,7 +753,6 @@
       "Desbloquear": "Desbloquear",
       "DesbloquearAnalise": "Desbloquear Análisis",
       "Editar": "Editar",
-      "Excluir": "Excluir",
       "Exportar": "Exportación",
       "Fechar": "Cerrar",
       "Gerar": "Generar",
@@ -776,8 +776,7 @@
       "SelecionarArquivo": "Seleccionar Archivo",
       "Sim": "Sí",
       "Unitario": "Unitario",
-      "Voltar": "Regreso",
-      "Visualizar": "Ver"
+      "Voltar": "Regreso"
     },
     "Mensagens": {
       "CampoObrigatorio": "Campo Obligatorio",
@@ -813,11 +812,10 @@
       "EscolhaUmRegistroParaClonar":"Elija un registro para clonar.",
       "CriarCrud":"Crear Crud",
       "EscolhaUmRegistroParaCriarCrud":"Elija un registro para crear crud.",
+      "EscolhaUmRegistroParaVisualizar":"Elija un registro para ver .",
       "Nenhum":"Ningún",
       "DeflatorDeOrigen":"Mantener deflactor original",
-      "SemPermissaoAcao": "Usted no tiene permiso para esta acción.",
-      "ErrorExportar": "Se produjo un error al generar el informe.",
-      "GerandoRelatorio": "Generando Informe..."
+      "SemPermissaoAcao": "Usted no tiene permiso para esta acción."
     },
     "Idiomas":{
       "Portugues":"Portugués",
@@ -850,7 +848,7 @@
       "Manual": "Manual",
       "Organizacao": "Organización",
       "Sistema": "Sistema",
-      "Fase": "Fase"
+      "TipoFase": "Tipo de la Fase"
     },
     "Analise": {
       "Analise": "Análisis",

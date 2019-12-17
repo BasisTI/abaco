@@ -111,16 +111,16 @@ export class SistemaComponent {
             accept: () => {
                 this.blockUI.start(this.getLabel('Global.Mensagens.EXCLUINDO_REGISTRO'));
                 this.sistemaService.delete(id).subscribe(() => {
-                    this.limparPesquisa();
-                    this.pageNotificationService.addDeleteMsg();
-                    this.blockUI.stop();
-                }, (error) => {
-                    if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.analiseexists') {
-                        this.pageNotificationService.addErrorMsg(
-                            this.getLabel('Cadastros.Sistema.Mensagens.msgSistemaVinculadoNaoPodeSerExcluido')
-                        );
+                        this.limparPesquisa();
+                        this.pageNotificationService.addDeleteMsg();
+                        this.blockUI.stop();
+                    }, (error) => {
+                        if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.analiseexists') {
+                            this.pageNotificationService.addErrorMsg(
+                                this.getLabel('Cadastros.Sistema.Mensagens.msgSistemaVinculadoNaoPodeSerExcluido')
+                            );
+                        }
                     }
-                }
                 );
             }
         });
@@ -143,16 +143,16 @@ export class SistemaComponent {
             this.searchParams.nomeSistema === undefined &&
             this.searchParams.organizacao.nome === undefined) {
             (this.searchParams.sigla !== undefined || this.elasticQuery.value === '' ) ?
-                    (stringParamsArray.push('*' + this.searchParams.sigla + '*')) : (this);
+                (stringParamsArray.push('*' + this.searchParams.sigla + '*')) : (this);
         }else if (this.searchParams.nomeSistema !== undefined &&
             this.searchParams.sigla === undefined && this.searchParams.organizacao.nome === undefined) {
-                (this.searchParams.nomeSistema !== undefined || this.elasticQuery.value === '') ? (
-                    stringParamsArray.push('*' + this.searchParams.nomeSistema + '*')) : (this);
+            (this.searchParams.nomeSistema !== undefined || this.elasticQuery.value === '') ? (
+                stringParamsArray.push('*' + this.searchParams.nomeSistema + '*')) : (this);
         }else if (this.searchParams.organizacao.nome !== undefined &&
             this.searchParams.nomeSistema === undefined && this.searchParams.sigla === undefined) {
             (this.searchParams.organizacao.nome !== undefined ||
                 this.elasticQuery.value === '') ? (
-                    stringParamsArray.push('*' + this.searchParams.organizacao.nome + '*')) : (this);
+                stringParamsArray.push('*' + this.searchParams.organizacao.nome + '*')) : (this);
         }else if (this.searchParams.sigla === undefined &&
             this.searchParams.nomeSistema !== undefined &&
             this.searchParams.organizacao.nome !== undefined) {

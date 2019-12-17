@@ -38,6 +38,10 @@ export class MemoryDatatableComponent implements AfterViewInit {
   @Input()
   filterEventName = 'filter';
 
+  @Input()
+  viewEventName = 'view';
+
+
   selectedRow: any;
 
   @Input()
@@ -60,6 +64,9 @@ export class MemoryDatatableComponent implements AfterViewInit {
 
   @Input()
   showFilter: boolean = false;
+
+  @Input()
+  showView: boolean = false;
 
   @Input()
   responsive = true;
