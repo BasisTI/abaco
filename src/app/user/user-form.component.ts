@@ -1,20 +1,18 @@
-import { TranslateService } from '@ngx-translate/core';
-import { Component, OnInit, OnDestroy, OnChanges } from '@angular/core';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
-import { Response } from '@angular/http';
-import { Observable, Subscription } from 'rxjs/Rx';
+import {TranslateService} from '@ngx-translate/core';
+import {Component, OnInit, OnDestroy, OnChanges} from '@angular/core';
+import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
+import {Response} from '@angular/http';
+import {Observable, Subscription} from 'rxjs/Rx';
 
-import { AuthService } from '@basis/angular-components';
-import { User } from './user.model';
-import { UserService } from './user.service';
-import { TipoEquipe, TipoEquipeService } from '../tipo-equipe';
-import { Organizacao, OrganizacaoService } from '../organizacao';
-import { ResponseWrapper } from '../shared';
-import { Authority } from './authority.model';
-import { PageNotificationService } from '../shared/page-notification.service';
-import { ADMIN_ROLE } from '../shared/constants';
-
-import * as _ from 'lodash';
+import {AuthService} from '@basis/angular-components';
+import {User} from './user.model';
+import {UserService} from './user.service';
+import {TipoEquipe, TipoEquipeService} from '../tipo-equipe';
+import {Organizacao, OrganizacaoService} from '../organizacao';
+import {ResponseWrapper} from '../shared';
+import {Authority} from './authority.model';
+import {PageNotificationService} from '../shared/page-notification.service';
+import {ADMIN_ROLE} from '../shared/constants';
 
 @Component({
     selector: 'jhi-user-form',
@@ -23,24 +21,14 @@ import * as _ from 'lodash';
 export class UserFormComponent implements OnInit, OnDestroy {
 
     tipoEquipes: TipoEquipe[];
-
     organizacoes: Organizacao[];
-
     authorities: Authority[];
-
     user: User;
-
     isSaving: boolean;
-
     isEdit: boolean;
-
-    // O usuário logado é admin? - Flag utilizada para desabilitar os campos que usuário o comum não pode alterar.
     isAdmin: boolean;
-
     private routeSub: Subscription;
-    private urlSub: Subscription;     // Subscritor para capturar a URL ativa
-
-    // URL ativa - utilizado para verificar se o componente foi ativado pelo menu de administração ou de edição de usuário
+    private urlSub: Subscription;
     private url: string;
     emaild: any;
 
@@ -54,14 +42,13 @@ export class UserFormComponent implements OnInit, OnDestroy {
         private pageNotificationService: PageNotificationService,
         private translate: TranslateService
     ) {
-        this.isAdmin = this.isUserAdmin();    // Seta a flag de administrador (ou não) e...
-        this.recuperarUrl();                  // Capturando URL ativa
-        if (this.url === 'usuario,edit') {    // Se for uma edição de usuário..
-            this.loadCurrentUser();             // Carrrega os dados do usuário logado,
-            this.isEdit = true;                 // Levanta flag de edição,
+        this.isAdmin = this.isUserAdmin();
+        this.recuperarUrl();
+        if (this.url === 'usuario,edit') {
+            this.loadCurrentUser();
+            this.isEdit = true;
         }
     }
-
     getLabel(label) {
         let str: any;
         this.translate.get(label).subscribe((res: string) => {
@@ -69,38 +56,28 @@ export class UserFormComponent implements OnInit, OnDestroy {
         }).unsubscribe();
         return str;
     }
-
     ngOnInit() {
         this.isSaving = false;
         this.recuperarListaOrganizacao();
         this.recuperarListaPerfis();
         this.recuperarUsuarioPeloId();
     }
-
     private recuperarListaOrganizacao() {
         this.organizacaoService.dropDownActive().subscribe((res) => {
             this.organizacoes = res.json;
         });
     }
-
     private recuperarListaPerfis() {
         this.userService.authorities().subscribe((res: Authority[]) => {
             this.authorities = res;
             this.populateAuthoritiesArtificialIds();
         });
     }
-
-    /*
-     * Função parar recuperar a URL que ativou o componente.
-     * Utlizada para verificar se foi ativado pelo menu de administração
-     * ou pelo menu de edição de usuário
-     * */
     private recuperarUrl() {
         this.urlSub = this.route.url.subscribe((res: UrlSegment[]) => {
             this.url = res.toString();
         });
     }
-
     private recuperarUsuarioPeloId() {
         this.routeSub = this.route.params.subscribe(params => {
             this.user = new User();
@@ -114,7 +91,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
             }
         });
     }
-
     // FIXME parte da solução rápida e ruim, porém dinâmica
     // Horrível para muitas permissões
     private populateAuthoritiesArtificialIds() {
@@ -126,22 +102,18 @@ export class UserFormComponent implements OnInit, OnDestroy {
                         authority.description = this.getLabel('Cadastros.Usuarios.Administrador');
                         break;
                     }
-
                     case 1: {
                         authority.description = this.getLabel('Cadastros.Usuarios.Usuario');
                         break;
                     }
-
                     case 2: {
                         authority.description = this.getLabel('Cadastros.Usuarios.Observador');
                         break;
                     }
-
                     case 3: {
                         authority.description = this.getLabel('Cadastros.Usuarios.Analista');
                         break;
                     }
-
                     case 4: {
                         authority.description = this.getLabel('Cadastros.Usuarios.Gestor');
                         break;
@@ -150,7 +122,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
             });
         }
     }
-
     // FIXME Solução rápida e ruim. O(n^2) no pior caso
     // Funciona para qualquer autoridade que vier no banco
     // Em oposição a uma solução mais simples porém hardcoded.
@@ -190,10 +161,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
             });
         }
     }
-
-    /**
-     *
-     * */
     save(form) {
         if (!form.controls.email.valid && this.user.email) {
             this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.EmailInvalido'));
@@ -212,10 +179,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
             this.subscribeToSaveResponse(this.userService.create(this.user));
         }
     }
-
-    /**
-     *
-     * */
     private isUsernamesValid(): boolean {
         let isValid = false;
         this.returnInputToNormalStyle();
@@ -234,10 +197,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
         }
         return isValid;
     }
-
-    /**
-     *
-     * */
     private validarObjeto(text: string): boolean {
         if (text !== undefined && text !== null && text !== '') {
             return true;
@@ -246,34 +205,24 @@ export class UserFormComponent implements OnInit, OnDestroy {
             return false;
         }
     }
-
-    /**
-     *
-     * */
     private returnInputToNormalStyle() {
         document.getElementById('firstName').setAttribute('style', 'border-color: #bdbdbd;');
         document.getElementById('lastName').setAttribute('style', 'border-color: #bdbdbd;');
         document.getElementById('login').setAttribute('style', 'border-color: #bdbdbd;');
         document.getElementById('email').setAttribute('style', 'border-color: #bdbdbd;');
     }
-
-    /**
-     *
-     * */
     private subscribeToSaveResponse(result: Observable<User>) {
         result.subscribe((res: User) => {
             this.isSaving = false;
             this.router.navigate(['/admin/user']);
             if (this.isEdit) {
                 this.pageNotificationService.addUpdateMsg();
-            }
-            else {
+            } else {
                 this.pageNotificationService.addCreateMsg();
             }
 
         }, (error: Response) => {
             this.isSaving = false;
-
             switch (error.status) {
                 case 400: {
                     const EXISTING_USER = 'error.userexists';
@@ -297,16 +246,14 @@ export class UserFormComponent implements OnInit, OnDestroy {
                         let invalidFieldNamesString = '';
                         const fieldErrors = JSON.parse(error['_body']).fieldErrors;
                         invalidFieldNamesString = this.pageNotificationService.getInvalidFields(fieldErrors);
-                        this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Usuarios.Mensagens.msgCamposInvalidos') + invalidFieldNamesString);
+                        this.pageNotificationService.addErrorMsg(
+                            this.getLabel('Cadastros.Usuarios.Mensagens.msgCamposInvalidos') + invalidFieldNamesString
+                        );
                     }
                 }
             }
         });
     }
-
-    /*
-     * Função para recuperar dados do usuário logado para edição
-     * */
     loadCurrentUser() {
         this.userService.findCurrentUser().subscribe((res: User) => {
             this.user = res;
@@ -319,33 +266,22 @@ export class UserFormComponent implements OnInit, OnDestroy {
         this.routeSub.unsubscribe();
         this.urlSub.unsubscribe();
     }
-
-    /*
-     * Função que seta a flag de administração para controle dos campos que serão apresentados quando da edição de usuário.
-     * */
     private isUserAdmin(): boolean {
         return this.authService.isAuthenticated && this.authService.hasRole(ADMIN_ROLE);
     }
-
     desabilitado(): boolean {
         return !this.isAdmin;
     }
-
     disableEquipeDropdown() {
         if (this.user.organizacoes != null || this.user.organizacoes != undefined) {
             return this.user.organizacoes.length < 1;
         }
         return true;
     }
-
     setOrganizacao(org: Organizacao[]) {
         this.user.tipoEquipes = [];
         this.setEquipeOrganizacao(org);
     }
-
-    /**
-     * Método responsável por popular a equipe responsavel da organização
-     */
     setEquipeOrganizacao(org: Organizacao[]) {
         this.tipoEquipes = [];
         if (org) {
@@ -357,19 +293,13 @@ export class UserFormComponent implements OnInit, OnDestroy {
             });
         }
     }
-
     private TipoEquipeSemRepeticao(listaTipoEquipe: TipoEquipe[]): TipoEquipe[] {
-
         return listaTipoEquipe.filter(tipoEquipeComparacao => {
-
             for (const tipoEquipe of this.tipoEquipes) {
-
                 if (tipoEquipe.id === tipoEquipeComparacao.id) {
-
                     return false;
                 }
             }
-
             return true;
         });
     }

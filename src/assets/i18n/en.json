@@ -236,18 +236,18 @@
         "msgCamposInvalidos": "Invalid fields: "
       }
     },
-    "TipoFase": {
-      "CadastrarTipoFase": "Enter Phase Type",
+    "Fase": {
+      "CadastrarTipoFase": "Enter Phase",
       "Codigo": "Code",
       "Descricao": "Description",
-      "EditarTipoFase": "Edit Phase Type",
+      "EditarTipoFase": "Edit Phase",
       "ID": "ID:",
       "Nome": "Name",
       "Nome:": "Name: ",
-      "TipoFase": "Phase Type",
-      "VisualizarTipoFase": "View Phase Type",
+      "Fase": "Phase",
+      "VisualizarFase": "View Phase",
       "Mensagens": {
-        "msgJaExisteTipoFaseCadastradoComEsseNome": "There is already a Phase Type registered under this name!",
+        "msgJaExisteTipoFaseCadastradoComEsseNome": "There is already a Phase registered under this name!",
         "msgNomeFaseExcedeMaximoCaracteres": "Phase name exceeds maximum characters!",
         "msgFavorInformarCamposObrigatorios": "Please enter the required fields!",
         "msgCamposInvalidos": "Invalid fields: ",
@@ -330,9 +330,8 @@
       "TipoAjuste": "Adjustment Type",
       "TipoAjuste*":"Adjustment Type *",
       "TipoDeflator": "Deflator Type",
-      "TipoFase": "Phase Type",
-      "TipoDeFase": "Phase Type",
-      "TipoFase*": "Phase Type *",
+      "Fase": "Phase",
+      "Fase*": "Phase *",
       "Unitario":"Unit",
       "ValorEstimada": "Estimated Variation Value (%) *",
       "ValorIndicativa": "Indicative Variation Value (%) *",
@@ -366,7 +365,7 @@
     "CadastroEsforcoFase": {
       "Esforco(%)*": "Effort (%) *",
       "EsforcoFase": "Effort Per Phase",
-      "TipoFase*": "Phase Type *"
+      "Fase*": "Phase *"
     },
     "CadastroDeflator": {
       "Codigo": "Code",
@@ -759,6 +758,7 @@
       "DesbloquearAnalise": "Unlock Analysis",
       "Editar": "Edit",
       "Visualizar": "View",
+      "Excluir": "Delete",
       "Exportar": "Export",
       "Fechar": "Close",
       "Gerar": "Generate",
@@ -782,7 +782,8 @@
       "SelecionarArquivo": "Select File",
       "Sim": "Yes",
       "Unitario": "Unitary",
-      "Voltar": "Back"
+      "Voltar": "Back",
+      "Visualizar": "View"
     },
     "Mensagens": {
       "CampoObrigatorio": "Required field.",
@@ -811,6 +812,7 @@
       "ExcluidoComSucesso": " successfully deleted!",
       "Erro":"Erro!",
       "Editar":"Edit",
+      "EscolhaUmRegistroParaVisualizar":"Choose a record to View.",
       "Visualizar": "View",
       "EscolhaUmRegistroParaEditar":"Choose a record to edit.",
       "Excluir":"Delete",
@@ -819,10 +821,11 @@
       "EscolhaUmRegistroParaClonar":"Choose a record to clone.",
       "CriarCrud":"Create Crud",
       "EscolhaUmRegistroParaCriarCrud":"Choose a record to create crud.",
-      "EscolhaUmRegistroParaVisualizar":"Choose a record to View.",
       "Nenhum":"None",
       "DeflatorDeOrigen":"Maintain original deflator",
-      "SemPermissaoAcao": "You do not have permission for this action."
+      "SemPermissaoAcao": "You do not have permission for this action.",
+      "ErrorExportar": "An error occurred while generating the report.",
+      "GerandoRelatorio": "Generating Report..."
     },
     "Idiomas":{
       "Portugues":"Portuguese",
@@ -855,7 +858,7 @@
       "Manual": "Manual",
       "Organizacao": "Organization",
       "Sistema": "System",
-      "TipoFase": "Phase Type"
+      "Fase": "Phase"
     },
     "Analise": {
       "Analise": "Analyze",

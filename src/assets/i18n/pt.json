@@ -100,18 +100,18 @@
         "msgCamposInvalidos": "Campos inválidos: "
       }
     },
-    "TipoFase": {
-      "CadastrarTipoFase": "Cadastrar Tipo de Fase",
+    "Fase": {
+      "CadastrarTipoFase": "Cadastrar Fase",
       "Codigo": "Código",
       "Descricao": "Descrição",
-      "EditarTipoFase": "Editar Tipo de Fase",
+      "EditarTipoFase": "Editar Fase",
       "ID": "ID:",
       "Nome": "Nome",
       "Nome:": "Nome:",
-      "TipoFase": "Tipo de Fase",
-      "VisualizarTipoFase": "Visualizar Tipo Fase",
+      "Fase": "Fase",
+      "VisualizarFase": "Visualizar Fase",
       "Mensagens": {
-        "msgJaExisteTipoFaseCadastradoComEsseNome": "Já existe um Tipo de Fase cadastrado com esse nome!",
+        "msgJaExisteTipoFaseCadastradoComEsseNome": "Já existe um Fase cadastrado com esse nome!",
         "msgNomeFaseExcedeMaximoCaracteres": "O nome da fase excede o máximo de caracteres!",
         "msgFavorInformarCamposObrigatorios": "Favor, informar os campos obrigatórios!",
         "msgCamposInvalidos": "Campos inválidos: ",
@@ -206,7 +206,7 @@
     "CadastroEsforcoFase": {
       "Esforco(%)*": "Esforço (%) *",
       "EsforcoFase": "Esforço Por Fase",
-      "TipoFase*": "Tipo de Fase *"
+      "Fase*": "Fase *"
     },
     "CadastroDeflator": {
       "Codigo": "Código",
@@ -779,7 +779,8 @@
       "SelecionarArquivo": "Selecionar Arquivo",
       "Sim": "Sim",
       "Unitario": "Unitário",
-      "Voltar": "Voltar"
+      "Voltar": "Voltar",
+      "Visualizar": "Visualizar"
     },
     "Mensagens": {
       "CampoObrigatorio": "Campo Obrigatório.",
@@ -818,7 +819,9 @@
       "EscolhaUmRegistroParaVisualizar":"Escolha um registro para Visualizar.",
       "Nenhum":"Nenhum",
       "DeflatorDeOrigen":"Manter deflator original",
-      "SemPermissaoAcao": "Você não possui permissão para esta ação."
+      "SemPermissaoAcao": "Você não possui permissão para esta ação.",
+      "ErrorExportar": "Ocorreu um erro ao gerar o relatório.",
+      "GerandoRelatorio": "Gerando Relatório..."
     },
     "Idiomas":{
       "Portugues":"Português",
@@ -851,7 +854,7 @@
       "Manual": "Manual",
       "Organizacao": "Organização",
       "Sistema": "Sistema",
-      "TipoFase": "Tipo de Fase"
+      "Fase": "Fase"
     },
     "Analise": {
       "Analise": "Análise",
