@@ -115,11 +115,7 @@ export class SistemaComponent {
                         this.pageNotificationService.addDeleteMsg();
                         this.blockUI.stop();
                     }, (error) => {
-                        if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.analiseexists') {
-                            this.pageNotificationService.addErrorMsg(
-                                this.getLabel('Cadastros.Sistema.Mensagens.msgSistemaVinculadoNaoPodeSerExcluido')
-                            );
-                        }
+                        this.blockUI.stop();
                     }
                 );
             }

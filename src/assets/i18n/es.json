@@ -362,6 +362,7 @@
         "msgCampoNomeExcedeNumeroCaracteres": "El campo Nombre supera el número de caracteres.",
         "msgSistemaCadastradoComSucesso": "Sistema registrado con éxito!",
         "msgOcorreuErroNoSistema": "Se ha producido un error en el sistema!",
+        "msgOcorreuErroNaExclusaoDoSistema": "Se ha producido un error al eliminar el sistema.",
         "msgCamposInvalidos": "Campos no válidos: ",
         "msgAindaNaoCadastrado":"Todavía no registrado"
       },

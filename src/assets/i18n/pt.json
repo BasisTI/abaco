@@ -341,6 +341,7 @@
         "msgCampoNomeExcedeNumeroCaracteres": "O campo Nome excede o número de caracteres.",
         "msgSistemaCadastradoComSucesso": "Sistema cadastrado com sucesso!",
         "msgOcorreuErroNoSistema": "Ocorreu um erro no sistema!",
+        "msgOcorreuErroNaExclusaoDoSistema": "Ocorreu um erro ao excluir o sistema.",
         "msgCamposInvalidos": "Campos inválidos: ",
         "msgAindaNaoCadastrado":"Ainda não cadastrado"
       },

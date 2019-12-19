@@ -525,6 +525,7 @@
         "msgCampoNomeExcedeNumeroCaracteres": "The Name field exceeds the number of characters.",
         "msgSistemaCadastradoComSucesso": "System successfully registered!",
         "msgOcorreuErroNoSistema": "An error has occurred in the system!",
+        "msgOcorreuErroNaExclusaoDoSistema": "An error occurred while deleting the system.",
         "msgCamposInvalidos": "Invalid fields: ",
         "msgAindaNaoCadastrado":"Not yet registered"
       },
