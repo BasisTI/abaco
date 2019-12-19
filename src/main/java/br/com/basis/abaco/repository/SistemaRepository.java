@@ -27,7 +27,7 @@ public interface SistemaRepository extends JpaRepository<Sistema, Long> {
     Set<Sistema> findAllByOrganizacaoId(Long id);
 
     @Override
-    @EntityGraph(attributePaths = "modulos")
+    @EntityGraph(attributePaths = {"modulos", "analises"})
     Sistema findOne(Long id);
 
     @Query("SELECT new br.com.basis.abaco.service.dto.SistemaDropdownDTO(s.id, s.nome, s.organizacao.id) FROM Sistema s")

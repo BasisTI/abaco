@@ -32,80 +32,73 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-/**
- * A Sistema.
- */
 @Entity
 @Table(name = "sistema")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "sistema")
 public class Sistema implements Serializable, ReportObject {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-  @SequenceGenerator(name = "sequenceGenerator")
-  private Long id;
-
-  @Size(max = 255)
-  @Column(name = "sigla", length = 255)
-  private String sigla;
-
-  @NotNull
-  @Column(name = "nome", nullable = false)
-  private String nome;
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
+    private Long id;
+    @Size(max = 255)
+    @Column(name = "sigla", length = 255)
+    private String sigla;
+    @NotNull
+    @Column(name = "nome", nullable = false)
+    private String nome;
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_sistema")
     private TipoSistema tipoSistema;
+    @Column(name = "numero_ocorrencia")
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
+    private String numeroOcorrencia;
+    @ManyToOne
+    @JoinColumn(name = "organizacao_id")
+    private Organizacao organizacao;
+    @OneToMany(mappedBy = "sistema", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JsonManagedReference
+    private Set<Modulo> modulos = new HashSet<>();
+    @OneToMany(mappedBy = "sistema")
+    private Set<Analise> analises ;
 
-  @Column(name = "numero_ocorrencia")
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
-  private String numeroOcorrencia;
+    public Long getId() {
+        return id;
+    }
 
-  @ManyToOne
-  @JoinColumn(name = "organizacao_id")
-  private Organizacao organizacao;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  @OneToMany(mappedBy = "sistema", cascade = CascadeType.ALL, orphanRemoval = true)
-  @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-  @JsonManagedReference
-  private Set<Modulo> modulos = new HashSet<>();
+    public String getSigla() {
+        return sigla;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public Sistema sigla(String sigla) {
+        this.sigla = sigla;
+        return this;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setSigla(String sigla) {
+        this.sigla = sigla;
+    }
 
-  public String getSigla() {
-    return sigla;
-  }
+    public String getNome() {
+        return nome;
+    }
 
-  public Sistema sigla(String sigla) {
-    this.sigla = sigla;
-    return this;
-  }
+    public Sistema nome(String nome) {
+        this.nome = nome;
+        return this;
+    }
 
-  public void setSigla(String sigla) {
-    this.sigla = sigla;
-  }
-
-  public String getNome() {
-    return nome;
-  }
-
-  public Sistema nome(String nome) {
-    this.nome = nome;
-    return this;
-  }
-
-  public void setNome(String nome) {
-    this.nome = nome;
-  }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
     public TipoSistema getTipoSistema() {
         return tipoSistema;
@@ -116,95 +109,103 @@ public class Sistema implements Serializable, ReportObject {
     }
 
     public String getNumeroOcorrencia() {
-    return numeroOcorrencia;
-  }
+        return numeroOcorrencia;
+    }
 
-  public Sistema numeroOcorrencia(String numeroOcorrencia) {
-    this.numeroOcorrencia = numeroOcorrencia;
-    return this;
-  }
+    public Sistema numeroOcorrencia(String numeroOcorrencia) {
+        this.numeroOcorrencia = numeroOcorrencia;
+        return this;
+    }
 
-  public void setNumeroOcorrencia(String numeroOcorrencia) {
-    this.numeroOcorrencia = numeroOcorrencia;
-  }
+    public void setNumeroOcorrencia(String numeroOcorrencia) {
+        this.numeroOcorrencia = numeroOcorrencia;
+    }
 
-  public Organizacao getOrganizacao() {
-    return organizacao;
-  }
+    public Organizacao getOrganizacao() {
+        return organizacao;
+    }
 
-    public String getNomeOrg(){
+    public String getNomeOrg() {
         return organizacao.getNome();
     }
 
-  public Sistema organizacao(Organizacao organizacao) {
-    this.organizacao = organizacao;
-    return this;
-  }
-
-  public void setOrganizacao(Organizacao organizacao) {
-    this.organizacao = organizacao;
-  }
-
-  public Set<Modulo> getModulos() {
-    return Optional.ofNullable(this.modulos)
-        .map(lista -> new LinkedHashSet<Modulo>(lista))
-        .orElse(new LinkedHashSet<Modulo>());
-  }
-
-  public Sistema modulos(Set<Modulo> modulos) {
-    this.modulos = Optional.ofNullable(modulos)
-        .map(lista -> new LinkedHashSet<Modulo>(lista))
-        .orElse(new LinkedHashSet<Modulo>());
-    return this;
-  }
-
-  public Sistema addModulo(Modulo modulo) {
-      if (modulo == null) {
-          return this;
-      }
-    this.modulos.add(modulo);
-    modulo.setSistema(this);
-    return this;
-  }
-
-  public Sistema removeModulo(Modulo modulo) {
-      if (modulo == null) {
-          return this;
-      }
-    this.modulos.remove(modulo);
-    modulo.setSistema(null);
-    return this;
-  }
-
-  public void setModulos(Set<Modulo> modulos) {
-    this.modulos = Optional.ofNullable(modulos)
-        .map(lista -> new LinkedHashSet<Modulo>(lista))
-        .orElse(new LinkedHashSet<Modulo>());
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    public Sistema organizacao(Organizacao organizacao) {
+        this.organizacao = organizacao;
+        return this;
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Sistema sistema = (Sistema) o;
-    if (sistema.id == null || id == null) {
-      return false;
-    }
-    return Objects.equals(id, sistema.id);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(id);
-  }
+    public void setOrganizacao(Organizacao organizacao) {
+        this.organizacao = organizacao;
+    }
 
-  @Override
-  public String toString() {
-    return "Sistema{" + "id=" + id + ", sigla='" + sigla + "'" + ", nome='" + nome + "'" + ", numeroOcorrencia='"
-        + numeroOcorrencia + "'" + '}';
-  }
+    public Set<Modulo> getModulos() {
+        return Optional.ofNullable(this.modulos)
+                .map(lista -> new LinkedHashSet<Modulo>(lista))
+                .orElse(new LinkedHashSet<Modulo>());
+    }
+
+    public Sistema modulos(Set<Modulo> modulos) {
+        this.modulos = Optional.ofNullable(modulos)
+                .map(lista -> new LinkedHashSet<Modulo>(lista))
+                .orElse(new LinkedHashSet<Modulo>());
+        return this;
+    }
+
+    public Sistema addModulo(Modulo modulo) {
+        if (modulo == null) {
+            return this;
+        }
+        this.modulos.add(modulo);
+        modulo.setSistema(this);
+        return this;
+    }
+
+    public Sistema removeModulo(Modulo modulo) {
+        if (modulo == null) {
+            return this;
+        }
+        this.modulos.remove(modulo);
+        modulo.setSistema(null);
+        return this;
+    }
+
+    public void setModulos(Set<Modulo> modulos) {
+        this.modulos = Optional.ofNullable(modulos)
+                .map(lista -> new LinkedHashSet<Modulo>(lista))
+                .orElse(new LinkedHashSet<Modulo>());
+    }
+
+    public Set<Analise> getAnalises() {
+        return analises;
+    }
+
+    public void setAnalises(Set<Analise> analises) {
+        this.analises = analises;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Sistema sistema = (Sistema) o;
+        if (sistema.id == null || id == null) {
+            return false;
+        }
+        return Objects.equals(id, sistema.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Sistema{" + "id=" + id + ", sigla='" + sigla + "'" + ", nome='" + nome + "'" + ", numeroOcorrencia='"
+                + numeroOcorrencia + "'" + '}';
+    }
 }
