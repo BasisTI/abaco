@@ -2,6 +2,7 @@ package br.com.basis.abaco.domain;
 
 import br.com.basis.abaco.domain.enumeration.TipoSistema;
 import br.com.basis.dynamicexports.pojo.ReportObject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -63,6 +64,7 @@ public class Sistema implements Serializable, ReportObject {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonManagedReference
     private Set<Modulo> modulos = new HashSet<>();
+    @JsonIgnore
     @OneToMany(mappedBy = "sistema")
     private Set<Analise> analises ;
 
