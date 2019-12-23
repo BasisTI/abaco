@@ -15,7 +15,7 @@ import br.com.basis.abaco.service.dto.DropdownDTO;
 public interface DerRepository extends JpaRepository<Der, Long> {
 
     @Query(value = "SELECT new br.com.basis.abaco.service.dto.DropdownDTO(d.id, d.nome) FROM Der d "
-            + " WHERE d.funcaoDados.id = :idFuncaoDados ")
+            + " WHERE d.funcaoDados.id = :idFuncaoDados ORDER BY d.nome")
     List<DropdownDTO> getDerByFuncaoDadosIdDropdown(@Param("idFuncaoDados") Long idFuncaoDados);
 
 }
