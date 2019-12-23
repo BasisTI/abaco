@@ -474,16 +474,20 @@
                             <label *ngIf="newAdjustFactor.tipoAjuste === undefined" translate="Cadastros.Manual.Deflator*">Deflator *</label>
 
                             <p-spinner
-                                id="idDeflatorDeflatorFormManual"
-                                maxlength="8"
-                                [min]="0"
-                                [max]="9999"
-                                name="fator"
-                                step="0.01"
-                                [disabled]="habilitarDeflator()"
-                                required
-                                [(ngModel)]="newAdjustFactor.fatorFormatado"
-                                (onFocus)= "this.validaDeflator = false">
+                                    id="idDeflatorDeflatorFormManual"
+                                    maxlength="8"
+                                    [min]="0"
+                                    [max]="999"
+                                    name="fator"
+                                    step="0.01"
+                                    [disabled]="habilitarDeflator()"
+                                    required
+                                    [formatInput]="true"
+                                    thousandSeparator="."
+                                    decimalSeparator=","
+                                    [(ngModel)]="newAdjustFactor.fatorFormatado"
+                                    (onBlur)="formatNumberTwoDecimal($event)"
+                                    (onFocus)= "this.validaDeflator = false">
                             </p-spinner>
 
                             <div *ngIf="this.validaDeflator || (editForm2.controls['fator']

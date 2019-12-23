@@ -16,6 +16,7 @@ import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model
 import { PageNotificationService } from '../shared/page-notification.service';
 import { UploadService } from '../upload/upload.service';
 import { FileUpload, SelectItem } from 'primeng/primeng';
+import {InputMaskModule} from 'primeng/inputmask';
 
 @Component({
     selector: 'jhi-manual-form',
@@ -543,5 +544,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.showDialogPhaseEffort = false;
         this.validaEsforco = false;
         this.validaTipoFase = false;
+    }
+    public formatNumberTwoDecimal(event){
+        let formatNumber =  event.target.value.replace(',','.');
+        if(formatNumber){
+            formatNumber = parseFloat(formatNumber).toFixed(2).toString();
+            event.target.value = formatNumber.replace('.',',');
+        }
     }
 }

@@ -108,7 +108,6 @@ export class SistemaService {
 
     delete(id: number): Observable<Response> {
         return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
-            debugger;
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
