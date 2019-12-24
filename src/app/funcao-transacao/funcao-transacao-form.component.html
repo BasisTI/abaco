@@ -352,11 +352,14 @@
                         <label translate="Cadastros.FuncaoTransacao.Quantidade*">Quantidade *</label>
                         <input type="number" class="ui-inputtext" min="1"
                                id="idQuantidadeFormFuncaoTransacao"
+                               name="quantidade"
                                [(ngModel)]="currentFuncaoTransacao.quantidade">
-                        <div *ngIf="erroUnitario"
-                             class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                    Campo obrigatório.
-                        </div>
+                        <span class="md-inputfield">
+                            <div *ngIf="erroUnitario"
+                                 class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                        Campo obrigatório.
+                            </div>
+                        </span>
                     </div>
 
                 </div>
