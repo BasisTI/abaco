@@ -12,8 +12,6 @@ import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.GrupoRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
-import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
-import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
@@ -89,16 +87,10 @@ public class AnaliseResourceIntTest {
     private AnaliseSearchRepository analiseSearchRepository;
 
     @Autowired
-    private TipoEquipeSearchRepository tipoEquipeSearchRepository;
-
-    @Autowired
     private FuncaoDadosRepository funcaoDadosRepository;
 
     @Autowired
     private FuncaoTransacaoRepository funcaoTransacaoRepository;
-
-    @Autowired
-    private FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -141,15 +133,14 @@ public class AnaliseResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         AnaliseResource analiseResource = new AnaliseResource(analiseRepository,
-                analiseSearchRepository,
-                funcaoDadosVersionavelRepository,
-                dynamicExportsService,
-                userRepository, funcaoDadosRepository,
-                compartilhadaRepository,
-                grupoRepository,
-                funcaoTransacaoRepository,
-                userSearchRepository,
-                elasticsearchTemplate);
+                                                    analiseSearchRepository,
+                                                    funcaoDadosVersionavelRepository,
+                                                    dynamicExportsService,
+                                                    userRepository,
+                                                    funcaoDadosRepository,
+                                                    compartilhadaRepository,
+                                                    funcaoTransacaoRepository,
+                                                    elasticsearchTemplate);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();
