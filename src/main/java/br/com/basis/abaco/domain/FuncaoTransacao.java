@@ -91,7 +91,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Funcionalidade> getFuncionalidades() {
-        return funcionalidades;
+        return unmodifiableSet(funcionalidades);
     }
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {

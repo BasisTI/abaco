@@ -258,7 +258,7 @@ public class AnaliseResource {
 
     }
 
-    @GetMapping("/analises/baseline")
+    @GetMapping("/analises/baseline")git
     @Timed
     public List<Analise> getAllAnalisesBaseline() {
         return analiseRepository.findAllByBaseline();
