@@ -35,8 +35,8 @@ public interface AnaliseRepository extends JpaRepository<Analise,Long> {
 
     // ESAS QUERY UTILIZA UNION ALL E PRECISA SER NATIVA
     @Query(value = "SELECT a.id FROM analise a WHERE a.equipe_responsavel_id IN :equipes UNION ALL " +
-        "SELECT ac.analise_id FROM analise_compartilhada ac WHERE ac.equipe_id IN :equipes", nativeQuery = true)
-    List<BigInteger> listAnalisesEquipe(@Param("equipes") List<Long> equipes);
+            "SELECT ac.analise_id FROM analise_compartilhada ac WHERE ac.equipe_id IN :equipes", nativeQuery = true)
+    List<BigInteger> listAnalisesEquipeCompartilhada(@Param("equipes") List<Long> equipes);
 
     @Query(value = "SELECT count(*) FROM Analise a WHERE a.equipeResponsavel.id IN :equipes AND a.id = :idAnalise")
     int analiseEquipe(@Param("idAnalise") Long idAnalise, @Param("equipes") List<Long> equipes);

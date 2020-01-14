@@ -12,6 +12,8 @@ import java.util.List;
 public class ManualService {
 
     private final ManualRepository manualRepository;
+    private String descricao;
+    private String codigo;
 
     public ManualService(ManualRepository manualRepository) {
         this.manualRepository = manualRepository;
@@ -20,4 +22,5 @@ public class ManualService {
     public List<DropdownDTO> getManuaisDropdown() {
         return manualRepository.getManualDropdow();
     }
+
 }

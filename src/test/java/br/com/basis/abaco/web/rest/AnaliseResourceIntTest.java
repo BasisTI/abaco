@@ -1,15 +1,21 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.AbacoApp;
-
 import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.repository.*;
+import br.com.basis.abaco.domain.enumeration.MetodoContagem;
+import br.com.basis.abaco.domain.enumeration.TipoAnalise;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.CompartilhadaRepository;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
+import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.GrupoRepository;
+import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
-import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
+import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
-
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +23,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -31,11 +38,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import br.com.basis.abaco.domain.enumeration.MetodoContagem;
-import br.com.basis.abaco.domain.enumeration.TipoAnalise;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the AnaliseResource REST controller.
@@ -95,6 +104,9 @@ public class AnaliseResourceIntTest {
     private UserRepository userRepository;
 
     @Autowired
+    private UserSearchRepository userSearchRepository;
+
+    @Autowired
     private GrupoRepository grupoRepository;
 
     @Autowired
@@ -116,6 +128,9 @@ public class AnaliseResourceIntTest {
     private ExceptionTranslator exceptionTranslator;
 
     @Autowired
+    ElasticsearchTemplate elasticsearchTemplate;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restAnaliseMockMvc;
@@ -126,11 +141,15 @@ public class AnaliseResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         AnaliseResource analiseResource = new AnaliseResource(analiseRepository,
-                                                              analiseSearchRepository,
-                                                              funcaoDadosVersionavelRepository,
-                                                              dynamicExportsService,
-                                                              userRepository, funcaoDadosRepository,
-                                                              compartilhadaRepository, grupoRepository, funcaoTransacaoRepository);
+                analiseSearchRepository,
+                funcaoDadosVersionavelRepository,
+                dynamicExportsService,
+                userRepository, funcaoDadosRepository,
+                compartilhadaRepository,
+                grupoRepository,
+                funcaoTransacaoRepository,
+                userSearchRepository,
+                elasticsearchTemplate);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();
@@ -138,15 +157,21 @@ public class AnaliseResourceIntTest {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it, if
      * they test an entity which requires the current entity.
      */
     public static Analise createEntity(EntityManager em) {
-        Analise analise = new Analise().numeroOs(DEFAULT_NUMERO_OS).metodoContagem(DEFAULT_TIPO_CONTAGEM)
-                .valorAjuste(DEFAULT_VALOR_AJUSTE).pfTotal(DEFAULT_PF_TOTAL).escopo(DEFAULT_ESCOPO)
-                .fronteiras(DEFAULT_FRONTEIRAS).documentacao(DEFAULT_DOCUMENTACAO).tipoAnalise(DEFAULT_TIPO_ANALISE)
-                .propositoContagem(DEFAULT_PROPOSITO_CONTAGEM);
+        Analise analise = new Analise();
+        analise.setNumeroOs(DEFAULT_NUMERO_OS);
+        analise.setMetodoContagem(DEFAULT_TIPO_CONTAGEM);
+        analise.setValorAjuste(DEFAULT_VALOR_AJUSTE);
+        analise.setPfTotal(DEFAULT_PF_TOTAL);
+        analise.setEscopo(DEFAULT_ESCOPO);
+        analise.setFronteiras(DEFAULT_FRONTEIRAS);
+        analise.setDocumentacao(DEFAULT_DOCUMENTACAO);
+        analise.setTipoAnalise(DEFAULT_TIPO_ANALISE);
+        analise.setPropositoContagem(DEFAULT_PROPOSITO_CONTAGEM);
         return analise;
     }
 
@@ -264,10 +289,15 @@ public class AnaliseResourceIntTest {
 
         // Update the analise
         Analise updatedAnalise = analiseRepository.findOne(analise.getId());
-        updatedAnalise.numeroOs(UPDATED_NUMERO_OS).metodoContagem(UPDATED_TIPO_CONTAGEM).valorAjuste(UPDATED_VALOR_AJUSTE)
-                .pfTotal(UPDATED_PF_TOTAL).escopo(UPDATED_ESCOPO).fronteiras(UPDATED_FRONTEIRAS)
-                .documentacao(UPDATED_DOCUMENTACAO).tipoAnalise(UPDATED_TIPO_ANALISE)
-                .propositoContagem(UPDATED_PROPOSITO_CONTAGEM);
+        updatedAnalise.setNumeroOs(UPDATED_NUMERO_OS);
+        updatedAnalise.setMetodoContagem(UPDATED_TIPO_CONTAGEM);
+        updatedAnalise.setValorAjuste(UPDATED_VALOR_AJUSTE);
+        updatedAnalise.setPfTotal(UPDATED_PF_TOTAL);
+        updatedAnalise.setEscopo(UPDATED_ESCOPO);
+        updatedAnalise.setFronteiras(UPDATED_FRONTEIRAS);
+        updatedAnalise.setDocumentacao(UPDATED_DOCUMENTACAO);
+        updatedAnalise.setTipoAnalise(UPDATED_TIPO_ANALISE);
+        updatedAnalise.setPropositoContagem(UPDATED_PROPOSITO_CONTAGEM);
 
         restAnaliseMockMvc.perform(put("/api/analises").contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(updatedAnalise))).andExpect(status().isOk());

@@ -37,6 +37,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,10 +72,12 @@ public class UserResource {
     private final AuthorityRepository authorityRepository;
     private final DynamicExportsService dynamicExportsService;
     private String userexists = "userexists";
+    private final ElasticsearchIndexResource elasticSearchIndexService;
 
     public UserResource(UserRepository userRepository, MailService mailService, UserService userService,
                         UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository,
-                        DynamicExportsService dynamicExportsService, AnaliseRepository analiseRepository) {
+                        DynamicExportsService dynamicExportsService, AnaliseRepository analiseRepository,
+                        ElasticsearchIndexResource elasticSearchIndexService) {
         this.analiseRepository = analiseRepository;
         this.userRepository = userRepository;
         this.mailService = mailService;
@@ -81,10 +85,10 @@ public class UserResource {
         this.userSearchRepository = userSearchRepository;
         this.authorityRepository = authorityRepository;
         this.dynamicExportsService = dynamicExportsService;
-
+        this.elasticSearchIndexService = elasticSearchIndexService;
     }
 
-    @PostMapping("/users")
+    @PostMapping("")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
     public ResponseEntity createUser(@RequestBody User user) throws URISyntaxException {
@@ -230,6 +234,21 @@ public class UserResource {
         User updatedUser = userRepository.save(updatableUser);
         userSearchRepository.save(updatedUser);
         return updatedUser;
+    }
+
+    @GetMapping("/users/drop-down")
+    @Timed
+    @Transactional
+    public List<User> getOrganizacaoDropdown() {
+        return userRepository.getAllByFirstNameIsNotNull();
+    }
+
+    @GetMapping("/users/reindexar")
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
+    public void reindexarUSer() {
+        List<String> list = new ArrayList<>();
+        list.add("userList");
+        this.elasticSearchIndexService.reindexar(list);
     }
 
     private User bindUser(User user, Optional<User> oldUserdata, User loggedUser) {

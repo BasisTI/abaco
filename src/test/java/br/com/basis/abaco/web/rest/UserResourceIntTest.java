@@ -58,6 +58,9 @@ public class UserResourceIntTest {
 	@Autowired
 	private AuthorityRepository authorityRepository;
 
+	@Autowired
+	private ElasticsearchIndexResource elasticSearchIndexService;
+
 	private MockMvc restUserMockMvc;
 
 	/**
@@ -84,7 +87,7 @@ public class UserResourceIntTest {
 	@Before
 	public void setup() {
 		UserResource userResource = new UserResource(userRepository, mailService, userService, userSearchRepository,
-				authorityRepository, dynamicExportsService, analiseRepository);
+				authorityRepository, dynamicExportsService, analiseRepository, elasticSearchIndexService);
 		this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
 	}
 

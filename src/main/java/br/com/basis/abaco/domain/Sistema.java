@@ -2,8 +2,6 @@ package br.com.basis.abaco.domain;
 
 import br.com.basis.abaco.domain.enumeration.TipoSistema;
 import br.com.basis.dynamicexports.pojo.ReportObject;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -45,28 +43,33 @@ public class Sistema implements Serializable, ReportObject {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
+
     @Size(max = 255)
     @Column(name = "sigla", length = 255)
     private String sigla;
+
     @NotNull
     @Column(name = "nome", nullable = false)
     private String nome;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_sistema")
     private TipoSistema tipoSistema;
+
     @Column(name = "numero_ocorrencia")
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String numeroOcorrencia;
+
     @ManyToOne
     @JoinColumn(name = "organizacao_id")
     private Organizacao organizacao;
+
     @OneToMany(mappedBy = "sistema", cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JsonManagedReference
     private Set<Modulo> modulos = new HashSet<>();
-    @JsonIgnore
+
     @OneToMany(mappedBy = "sistema")
-    private Set<Analise> analises ;
+    private Set<Analise> analises;
 
     public Long getId() {
         return id;

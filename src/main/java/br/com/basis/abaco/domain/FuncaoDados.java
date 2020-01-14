@@ -34,7 +34,7 @@ import java.util.Set;
 @Entity
 @Table(name = "funcao_dados")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "funcaodados")
+@Document(indexName = "funcao_dados")
 public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -77,11 +77,11 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @JsonIgnore
     @ManyToOne
     private FuncaoDadosVersionavel funcaoDadosVersionavel;
-    
+
     @Enumerated(EnumType.STRING)
-    @Column(name="impacto")
+    @Column(name = "impacto")
     private ImpactoFatorAjuste impacto;
-    
+
     public TipoFuncaoDados getTipo() {
         return tipo;
     }
@@ -97,14 +97,14 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public Set<Funcionalidade> getFuncionalidades() {
         return Optional.ofNullable(this.funcionalidades)
-            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
-            .orElse(new LinkedHashSet<Funcionalidade>());
+                .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+                .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public FuncaoDados funcionalidades(Set<Funcionalidade> funcionalidades) {
         this.funcionalidades = Optional.ofNullable(funcionalidades)
-            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
-            .orElse(new LinkedHashSet<Funcionalidade>());
+                .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+                .orElse(new LinkedHashSet<Funcionalidade>());
         return this;
     }
 
@@ -128,20 +128,20 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
         this.funcionalidades = Optional.ofNullable(funcionalidades)
-            .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
-            .orElse(new LinkedHashSet<Funcionalidade>());
+                .map(lista -> new LinkedHashSet<Funcionalidade>(lista))
+                .orElse(new LinkedHashSet<Funcionalidade>());
     }
 
     public Set<Rlr> getRlrs() {
         return Optional.ofNullable(this.rlrs)
-            .map(lista -> new LinkedHashSet<Rlr>(lista))
-            .orElse(new LinkedHashSet<Rlr>());
+                .map(lista -> new LinkedHashSet<Rlr>(lista))
+                .orElse(new LinkedHashSet<Rlr>());
     }
 
     public FuncaoDados rlrs(Set<Rlr> rlrs) {
         this.rlrs = Optional.ofNullable(rlrs)
-            .map(lista -> new LinkedHashSet<Rlr>(lista))
-            .orElse(new LinkedHashSet<Rlr>());
+                .map(lista -> new LinkedHashSet<Rlr>(lista))
+                .orElse(new LinkedHashSet<Rlr>());
         return this;
     }
 
@@ -165,8 +165,8 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public void setRlrs(Set<Rlr> rlrs) {
         this.rlrs = Optional.ofNullable(rlrs)
-            .map(lista -> new LinkedHashSet<Rlr>(lista))
-            .orElse(new LinkedHashSet<Rlr>());
+                .map(lista -> new LinkedHashSet<Rlr>(lista))
+                .orElse(new LinkedHashSet<Rlr>());
     }
 
     public Alr getAlr() {
@@ -204,7 +204,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
         }
         return Objects.equals(getId(), funcaoDados.getId());
     }
-    
+
     @Override
     public int hashCode() {
         return super.hashCode();
@@ -228,8 +228,8 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public void setRlrValues(Set<String> rlrValues) {
         this.rlrValues = Optional.ofNullable(rlrValues)
-            .map((lista) -> new HashSet<String>(lista))
-            .orElse(new HashSet<String>());
+                .map((lista) -> new HashSet<String>(lista))
+                .orElse(new HashSet<String>());
     }
 
     public Set<Der> getDers() {
@@ -238,8 +238,8 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     public void setDers(Set<Der> ders) {
         this.ders = Optional.ofNullable(ders)
-        .map(LinkedHashSet::new)
-        .orElse(new LinkedHashSet<Der>());
+                .map(LinkedHashSet::new)
+                .orElse(new LinkedHashSet<Der>());
     }
 
     public FuncaoDadosVersionavel getFuncaoDadosVersionavel() {

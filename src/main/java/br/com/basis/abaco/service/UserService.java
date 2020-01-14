@@ -1,22 +1,5 @@
 package br.com.basis.abaco.service;
 
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import br.com.basis.abaco.config.Constants;
 import br.com.basis.abaco.domain.Authority;
 import br.com.basis.abaco.domain.User;
@@ -27,6 +10,22 @@ import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.UserDTO;
 import br.com.basis.abaco.service.util.RandomUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service class for managing users.
@@ -46,6 +45,7 @@ public class UserService {
     private final UserSearchRepository userSearchRepository;
 
     private final AuthorityRepository authorityRepository;
+
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, SocialService socialService,
                        UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository) {
@@ -83,7 +83,7 @@ public class UserService {
     }
 
     public Optional<User> requestPasswordReset(String mail) {
-        return userRepository.findOneByEmail(mail).filter(User::getActivated).map(user -> {
+        return userRepository.findOneByEmail(mail).filter(User::isActivated).map(user -> {
             user.setResetKey(RandomUtil.generateResetKey());
             user.setResetDate(ZonedDateTime.now());
             return user;
@@ -113,7 +113,8 @@ public class UserService {
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         userSearchRepository.save(newUser);
-        log.debug("Created Information for User: {}", newUser); return newUser;
+        log.debug("Created Information for User: {}", newUser);
+        return newUser;
     }
 
     public User createUser(UserDTO userDTO) {
@@ -128,7 +129,7 @@ public class UserService {
         if (userDTO.getAuthorities() != null) {
             Set<Authority> authorities = new HashSet<>();
             Optional.ofNullable(userDTO.getAuthorities()).orElse(Collections.emptySet())
-                .forEach(authority -> authorities.add(authorityRepository.findOne(authority)));
+                    .forEach(authority -> authorities.add(authorityRepository.findOne(authority)));
             user.setAuthorities(authorities);
         }
         setUserProperties(user);
@@ -191,7 +192,7 @@ public class UserService {
         copy.setFirstName(user.getFirstName());
         copy.setLastName(user.getLastName());
         copy.setEmail(user.getEmail());
-        copy.setActivated(user.getActivated());
+        copy.setActivated(user.isActivated());
         copy.setLangKey(user.getLangKey());
         copy.setImageUrl(user.getImageUrl());
         copy.setActivationKey(user.getActivationKey());
@@ -259,12 +260,12 @@ public class UserService {
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
         return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map(UserDTO::new);
     }
-    
+
     @Transactional(readOnly = true)
     public List<UserDTO> getAllUsersOrgEquip(Long idOrg, Long idEquip) {
         List<User> lista = userRepository.findAllUsersOrgEquip(idOrg, idEquip);
         List<UserDTO> lst = new ArrayList<>();
-        for(int i = 0; i<lista.size(); i++){
+        for (int i = 0; i < lista.size(); i++) {
             lst.add(new UserDTO(lista.get(i)));
         }
         return lst;
@@ -305,4 +306,5 @@ public class UserService {
     public Long getLoggedUserId() {
         return userRepository.getLoggedUserId(SecurityUtils.getCurrentUserLogin());
     }
+
 }

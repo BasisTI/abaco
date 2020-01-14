@@ -1,19 +1,12 @@
 package br.com.basis.abaco.web.rest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
-
-import javax.persistence.EntityManager;
-
+import br.com.basis.abaco.AbacoApp;
+import br.com.basis.abaco.domain.TipoEquipe;
+import br.com.basis.abaco.repository.TipoEquipeRepository;
+import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
+import br.com.basis.abaco.service.TipoEquipeService;
+import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,13 +21,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.basis.abaco.AbacoApp;
-import br.com.basis.abaco.domain.TipoEquipe;
-import br.com.basis.abaco.repository.TipoEquipeRepository;
-import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
-import br.com.basis.abaco.service.TipoEquipeService;
-import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
+import javax.persistence.EntityManager;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the TipoEquipeResource REST controller.
@@ -82,20 +80,20 @@ public class TipoEquipeResourceIntTest {
         final TipoEquipeResource tipoEquipeResource = new TipoEquipeResource(tipoEquipeRepository,
                 tipoEquipeSearchRepository, dynamicExportsService, tipoEquipeService);
         this.restTipoEquipeMockMvc = MockMvcBuilders.standaloneSetup(tipoEquipeResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
+                .setCustomArgumentResolvers(pageableArgumentResolver)
+                .setControllerAdvice(exceptionTranslator)
+                .setMessageConverters(jacksonMessageConverter).build();
     }
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
     public static TipoEquipe createEntity(EntityManager em) {
-        TipoEquipe tipoEquipe = new TipoEquipe()
-            .nome(DEFAULT_NOME);
+        TipoEquipe tipoEquipe = new TipoEquipe();
+        tipoEquipe.setNome(DEFAULT_NOME);
         return tipoEquipe;
     }
 
@@ -112,9 +110,9 @@ public class TipoEquipeResourceIntTest {
 
         // Create the TipoEquipe
         restTipoEquipeMockMvc.perform(post("/api/tipo-equipes")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(tipoEquipe)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(tipoEquipe)))
+                .andExpect(status().isCreated());
 
         // Validate the TipoEquipe in the database
         List<TipoEquipe> tipoEquipeList = tipoEquipeRepository.findAll();
@@ -137,9 +135,9 @@ public class TipoEquipeResourceIntTest {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restTipoEquipeMockMvc.perform(post("/api/tipo-equipes")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(tipoEquipe)))
-            .andExpect(status().isBadRequest());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(tipoEquipe)))
+                .andExpect(status().isBadRequest());
 
         // Validate the TipoEquipe in the database
         List<TipoEquipe> tipoEquipeList = tipoEquipeRepository.findAll();
@@ -156,9 +154,9 @@ public class TipoEquipeResourceIntTest {
         // Create the TipoEquipe, which fails.
 
         restTipoEquipeMockMvc.perform(post("/api/tipo-equipes")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(tipoEquipe)))
-            .andExpect(status().isBadRequest());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(tipoEquipe)))
+                .andExpect(status().isBadRequest());
 
         List<TipoEquipe> tipoEquipeList = tipoEquipeRepository.findAll();
         assertThat(tipoEquipeList).hasSize(databaseSizeBeforeTest);
@@ -172,10 +170,10 @@ public class TipoEquipeResourceIntTest {
 
         // Get all the tipoEquipeList
         restTipoEquipeMockMvc.perform(get("/api/tipo-equipes?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(tipoEquipe.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(tipoEquipe.getId().intValue())))
+                .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())));
     }
 
     @Test
@@ -186,10 +184,10 @@ public class TipoEquipeResourceIntTest {
 
         // Get the tipoEquipe
         restTipoEquipeMockMvc.perform(get("/api/tipo-equipes/{id}", tipoEquipe.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(tipoEquipe.getId().intValue()))
-            .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.id").value(tipoEquipe.getId().intValue()))
+                .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()));
     }
 
     @Test
@@ -197,7 +195,7 @@ public class TipoEquipeResourceIntTest {
     public void getNonExistingTipoEquipe() throws Exception {
         // Get the tipoEquipe
         restTipoEquipeMockMvc.perform(get("/api/tipo-equipes/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -213,12 +211,12 @@ public class TipoEquipeResourceIntTest {
         // Disconnect from session so that the updates on updatedTipoEquipe are not directly saved in db
         em.detach(updatedTipoEquipe);
         updatedTipoEquipe
-            .nome(UPDATED_NOME);
+                .setNome(UPDATED_NOME);
 
         restTipoEquipeMockMvc.perform(put("/api/tipo-equipes")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedTipoEquipe)))
-            .andExpect(status().isOk());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(updatedTipoEquipe)))
+                .andExpect(status().isOk());
 
         // Validate the TipoEquipe in the database
         List<TipoEquipe> tipoEquipeList = tipoEquipeRepository.findAll();
@@ -240,9 +238,9 @@ public class TipoEquipeResourceIntTest {
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restTipoEquipeMockMvc.perform(put("/api/tipo-equipes")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(tipoEquipe)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(tipoEquipe)))
+                .andExpect(status().isCreated());
 
         // Validate the TipoEquipe in the database
         List<TipoEquipe> tipoEquipeList = tipoEquipeRepository.findAll();
@@ -259,8 +257,8 @@ public class TipoEquipeResourceIntTest {
 
         // Get the tipoEquipe
         restTipoEquipeMockMvc.perform(delete("/api/tipo-equipes/{id}", tipoEquipe.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
+                .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
         boolean tipoEquipeExistsInEs = tipoEquipeSearchRepository.exists(tipoEquipe.getId());
@@ -280,10 +278,10 @@ public class TipoEquipeResourceIntTest {
 
         // Search the tipoEquipe
         restTipoEquipeMockMvc.perform(get("/api/_search/tipo-equipes?query=id:" + tipoEquipe.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(tipoEquipe.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(tipoEquipe.getId().intValue())))
+                .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())));
     }
 
     @Test

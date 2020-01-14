@@ -6,8 +6,6 @@ import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.AuthorityRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
-import br.com.basis.abaco.service.MailService;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +14,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.social.connect.*;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionKey;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.connect.UserProfile;
+import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -25,7 +27,13 @@ import org.springframework.util.MultiValueMap;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyObject;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AbacoApp.class)
@@ -70,11 +78,11 @@ public class SocialServiceIntTest {
     public void testDeleteUserSocialConnection() throws Exception {
         // Setup
         Connection<?> connection = createConnection("@LOGIN",
-            "mail@mail.com",
-            "FIRST_NAME",
-            "LAST_NAME",
-            "IMAGE_URL",
-            "PROVIDER");
+                "mail@mail.com",
+                "FIRST_NAME",
+                "LAST_NAME",
+                "IMAGE_URL",
+                "PROVIDER");
         socialService.createSocialUser(connection, "fr");
         MultiValueMap<String, Connection<?>> connectionsByProviderId = new LinkedMultiValueMap<>();
         connectionsByProviderId.put("PROVIDER", null);
@@ -97,11 +105,11 @@ public class SocialServiceIntTest {
     public void testCreateSocialUserShouldThrowExceptionIfConnectionHasNoEmailAndNoLogin() {
         // Setup
         Connection<?> connection = createConnection("",
-            "",
-            "FIRST_NAME",
-            "LAST_NAME",
-            "IMAGE_URL",
-            "PROVIDER");
+                "",
+                "FIRST_NAME",
+                "LAST_NAME",
+                "IMAGE_URL",
+                "PROVIDER");
 
         // Exercise
         socialService.createSocialUser(connection, "fr");
@@ -111,16 +119,16 @@ public class SocialServiceIntTest {
     public void testCreateSocialUserShouldThrowExceptionIfConnectionHasNoEmailAndLoginAlreadyExist() {
         // Setup
         User user = createExistingUser("@LOGIN",
-            "mail@mail.com",
-            "OTHER_FIRST_NAME",
-            "OTHER_LAST_NAME",
-            "OTHER_IMAGE_URL");
+                "mail@mail.com",
+                "OTHER_FIRST_NAME",
+                "OTHER_LAST_NAME",
+                "OTHER_IMAGE_URL");
         Connection<?> connection = createConnection("@LOGIN",
-            "",
-            "FIRST_NAME",
-            "LAST_NAME",
-            "IMAGE_URL",
-            "PROVIDER");
+                "",
+                "FIRST_NAME",
+                "LAST_NAME",
+                "IMAGE_URL",
+                "PROVIDER");
 
         // Exercise
         try {
@@ -136,11 +144,11 @@ public class SocialServiceIntTest {
     public void testCreateSocialUserShouldCreateUserIfNotExist() {
         // Setup
         Connection<?> connection = createConnection("@LOGIN",
-            "mail@mail.com",
-            "FIRST_NAME",
-            "LAST_NAME",
-            "IMAGE_URL",
-            "PROVIDER");
+                "mail@mail.com",
+                "FIRST_NAME",
+                "LAST_NAME",
+                "IMAGE_URL",
+                "PROVIDER");
 
         // Exercise
         socialService.createSocialUser(connection, "fr");
@@ -157,11 +165,11 @@ public class SocialServiceIntTest {
     public void testCreateSocialUserShouldCreateUserWithSocialInformation() {
         // Setup
         Connection<?> connection = createConnection("@LOGIN",
-            "mail@mail.com",
-            "FIRST_NAME",
-            "LAST_NAME",
-            "IMAGE_URL",
-            "PROVIDER");
+                "mail@mail.com",
+                "FIRST_NAME",
+                "LAST_NAME",
+                "IMAGE_URL",
+                "PROVIDER");
 
         // Exercise
         socialService.createSocialUser(connection, "fr");
@@ -180,18 +188,18 @@ public class SocialServiceIntTest {
     public void testCreateSocialUserShouldCreateActivatedUserWithRoleUserAndPassword() {
         // Setup
         Connection<?> connection = createConnection("@LOGIN",
-            "mail@mail.com",
-            "FIRST_NAME",
-            "LAST_NAME",
-            "IMAGE_URL",
-            "PROVIDER");
+                "mail@mail.com",
+                "FIRST_NAME",
+                "LAST_NAME",
+                "IMAGE_URL",
+                "PROVIDER");
 
         // Exercise
         socialService.createSocialUser(connection, "fr");
 
         //Verify
         User user = userRepository.findOneByEmail("mail@mail.com").get();
-        assertThat(user.getActivated()).isEqualTo(true);
+        assertThat(user.isActivated()).isEqualTo(true);
         assertThat(user.getPassword()).isNotEmpty();
         Authority userAuthority = authorityRepository.findOne("ROLE_USER");
         assertThat(user.getAuthorities().toArray()).containsExactly(userAuthority);
@@ -204,11 +212,11 @@ public class SocialServiceIntTest {
     public void testCreateSocialUserShouldCreateUserWithExactLangKey() {
         // Setup
         Connection<?> connection = createConnection("@LOGIN",
-            "mail@mail.com",
-            "FIRST_NAME",
-            "LAST_NAME",
-            "IMAGE_URL",
-            "PROVIDER");
+                "mail@mail.com",
+                "FIRST_NAME",
+                "LAST_NAME",
+                "IMAGE_URL",
+                "PROVIDER");
 
         // Exercise
         socialService.createSocialUser(connection, "fr");
@@ -225,11 +233,11 @@ public class SocialServiceIntTest {
     public void testCreateSocialUserShouldCreateUserWithLoginSameAsEmailIfNotTwitter() {
         // Setup
         Connection<?> connection = createConnection("@LOGIN",
-            "mail@mail.com",
-            "FIRST_NAME",
-            "LAST_NAME",
-            "IMAGE_URL",
-            "PROVIDER_OTHER_THAN_TWITTER");
+                "mail@mail.com",
+                "FIRST_NAME",
+                "LAST_NAME",
+                "IMAGE_URL",
+                "PROVIDER_OTHER_THAN_TWITTER");
 
         // Exercise
         socialService.createSocialUser(connection, "fr");
@@ -246,11 +254,11 @@ public class SocialServiceIntTest {
     public void testCreateSocialUserShouldCreateUserWithSocialLoginWhenIsTwitter() {
         // Setup
         Connection<?> connection = createConnection("@LOGIN",
-            "mail@mail.com",
-            "FIRST_NAME",
-            "LAST_NAME",
-            "IMAGE_URL",
-            "twitter");
+                "mail@mail.com",
+                "FIRST_NAME",
+                "LAST_NAME",
+                "IMAGE_URL",
+                "twitter");
 
         // Exercise
         socialService.createSocialUser(connection, "fr");
@@ -267,11 +275,11 @@ public class SocialServiceIntTest {
     public void testCreateSocialUserShouldCreateSocialConnection() {
         // Setup
         Connection<?> connection = createConnection("@LOGIN",
-            "mail@mail.com",
-            "FIRST_NAME",
-            "LAST_NAME",
-            "IMAGE_URL",
-            "PROVIDER");
+                "mail@mail.com",
+                "FIRST_NAME",
+                "LAST_NAME",
+                "IMAGE_URL",
+                "PROVIDER");
 
         // Exercise
         socialService.createSocialUser(connection, "fr");
@@ -288,17 +296,17 @@ public class SocialServiceIntTest {
     public void testCreateSocialUserShouldNotCreateUserIfEmailAlreadyExist() {
         // Setup
         createExistingUser("@OTHER_LOGIN",
-            "mail@mail.com",
-            "OTHER_FIRST_NAME",
-            "OTHER_LAST_NAME",
-            "OTHER_IMAGE_URL");
+                "mail@mail.com",
+                "OTHER_FIRST_NAME",
+                "OTHER_LAST_NAME",
+                "OTHER_IMAGE_URL");
         long initialUserCount = userRepository.count();
         Connection<?> connection = createConnection("@LOGIN",
-            "mail@mail.com",
-            "FIRST_NAME",
-            "LAST_NAME",
-            "IMAGE_URL",
-            "PROVIDER");
+                "mail@mail.com",
+                "FIRST_NAME",
+                "LAST_NAME",
+                "IMAGE_URL",
+                "PROVIDER");
 
         // Exercise
         socialService.createSocialUser(connection, "fr");
@@ -315,16 +323,16 @@ public class SocialServiceIntTest {
     public void testCreateSocialUserShouldNotChangeUserIfEmailAlreadyExist() {
         // Setup
         createExistingUser("@OTHER_LOGIN",
-            "mail@mail.com",
-            "OTHER_FIRST_NAME",
-            "OTHER_LAST_NAME",
-            "OTHER_IMAGE_URL");
+                "mail@mail.com",
+                "OTHER_FIRST_NAME",
+                "OTHER_LAST_NAME",
+                "OTHER_IMAGE_URL");
         Connection<?> connection = createConnection("@LOGIN",
-            "mail@mail.com",
-            "FIRST_NAME",
-            "LAST_NAME",
-            "IMAGE_URL",
-            "PROVIDER");
+                "mail@mail.com",
+                "FIRST_NAME",
+                "LAST_NAME",
+                "IMAGE_URL",
+                "PROVIDER");
 
         // Exercise
         socialService.createSocialUser(connection, "fr");
@@ -343,11 +351,11 @@ public class SocialServiceIntTest {
     public void testCreateSocialUserShouldSendRegistrationValidationEmail() {
         // Setup
         Connection<?> connection = createConnection("@LOGIN",
-            "mail@mail.com",
-            "FIRST_NAME",
-            "LAST_NAME",
-            "IMAGE_URL",
-            "PROVIDER");
+                "mail@mail.com",
+                "FIRST_NAME",
+                "LAST_NAME",
+                "IMAGE_URL",
+                "PROVIDER");
 
         // Exercise
         socialService.createSocialUser(connection, "fr");

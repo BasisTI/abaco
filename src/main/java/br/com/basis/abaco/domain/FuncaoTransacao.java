@@ -3,6 +3,8 @@ package br.com.basis.abaco.domain;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -13,31 +15,26 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
-/**
- * A FuncaoTransacao.
- */
 @Entity
 @Table(name = "funcao_transacao")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "funcaotransacao")
+@Document(indexName = "funcao_transacao")
+@JsonInclude(Include.NON_EMPTY)
 public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static  final String FUNCAOTRANSACAO = "funcaoTransacao";
+    private static final String FUNCAOTRANSACAO = "funcaoTransacao";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo")
@@ -75,13 +72,19 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Der> ders = new HashSet<>();
 
-    public TipoFuncaoTransacao getTipo() {
-        return tipo;
+    @ManyToOne
+    private Analise analise;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
-    public FuncaoTransacao tipo(TipoFuncaoTransacao tipo) {
-        this.tipo = tipo;
-        return this;
+    public static String getFUNCAOTRANSACAO() {
+        return FUNCAOTRANSACAO;
+    }
+
+    public TipoFuncaoTransacao getTipo() {
+        return tipo;
     }
 
     public void setTipo(TipoFuncaoTransacao tipo) {
@@ -89,77 +92,11 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Funcionalidade> getFuncionalidades() {
-        return Optional.ofNullable(this.funcionalidades)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<Funcionalidade>());
-    }
-
-    public FuncaoTransacao funcionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = Optional.ofNullable(funcionalidades)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<Funcionalidade>());
-        return this;
-    }
-
-    public FuncaoTransacao addFuncionalidade(Funcionalidade funcionalidade) {
-        if (funcionalidade == null) {
-            return this;
-        }
-        this.funcionalidades.add(funcionalidade);
-        funcionalidade.setFuncaoTransacao(this);
-        return this;
-    }
-
-    public FuncaoTransacao removeFuncionalidade(Funcionalidade funcionalidade) {
-        if (funcionalidade == null) {
-            return this;
-        }
-        this.funcionalidades.remove(funcionalidade);
-        funcionalidade.setFuncaoTransacao(null);
-        return this;
+        return funcionalidades;
     }
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = Optional.ofNullable(funcionalidades)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<Funcionalidade>());
-    }
-
-    public Set<Alr> getAlrs() {
-        return Optional.ofNullable(this.alrs)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<Alr>());
-    }
-
-    public FuncaoTransacao alrs(Set<Alr> alrs) {
-        this.alrs = Optional.ofNullable(alrs)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<Alr>());
-        return this;
-    }
-
-    public FuncaoTransacao addAlr(Alr alr) {
-        if (alr == null) {
-            return this;
-        }
-        this.alrs.add(alr);
-        alr.setFuncaoTransacao(this);
-        return this;
-    }
-
-    public FuncaoTransacao removeAlr(Alr alr) {
-        if (alr == null) {
-            return this;
-        }
-        this.alrs.remove(alr);
-        alr.setFuncaoTransacao(null);
-        return this;
-    }
-
-    public void setAlrs(Set<Alr> alrs) {
-        this.alrs = Optional.ofNullable(alrs)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<Alr>());
+        this.funcionalidades = funcionalidades;
     }
 
     public String getFtrStr() {
@@ -170,58 +107,36 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
         this.ftrStr = ftrStr;
     }
 
-    public Set<Der> getDers() {
-        return Optional.ofNullable(ders)
-               .map(HashSet::new)
-                .orElse(new HashSet<>());
+    public Integer getQuantidade() {
+        return quantidade;
     }
 
-    public void setDers(Set<Der> ders) {
-        this.ders = Optional.ofNullable(ders)
-            .map(HashSet::new)
-            .orElse(new HashSet<Der>());
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        FuncaoTransacao funcaoTransacao = (FuncaoTransacao) o;
-        if (funcaoTransacao.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), funcaoTransacao.getId());
+    public Set<Alr> getAlrs() {
+        return alrs;
     }
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
+    public void setAlrs(Set<Alr> alrs) {
+        this.alrs = alrs;
     }
 
     public List<UploadedFile> getFiles() {
-        return Optional.ofNullable(files)
-            .map(ArrayList::new)
-            .orElse(new ArrayList<>());
+        return files;
     }
 
     public void setFiles(List<UploadedFile> files) {
-        this.files = Optional.ofNullable(files)
-            .map(ArrayList::new)
-            .orElse(new ArrayList<>());
+        this.files = files;
     }
 
     public Set<String> getFtrValues() {
-        return Collections.unmodifiableSet(ftrValues);
+        return ftrValues;
     }
 
     public void setFtrValues(Set<String> ftrValues) {
-        this.ftrValues = Optional.ofNullable(ftrValues)
-            .map(HashSet::new)
-            .orElse(new HashSet<String>());
+        this.ftrValues = ftrValues;
     }
 
     public ImpactoFatorAjuste getImpacto() {
@@ -232,16 +147,12 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
         this.impacto = impacto;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public Set<Der> getDers() {
+        return ders;
     }
 
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
+    public void setDers(Set<Der> ders) {
+        this.ders = ders;
     }
 
 }

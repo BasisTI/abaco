@@ -1,0 +1,13 @@
+package br.com.basis.abaco.service.mapper;
+
+import br.com.basis.abaco.domain.novo.Fase;
+import br.com.basis.abaco.service.dto.FaseDTO;
+import org.mapstruct.Mapper;
+
+@Mapper(componentModel = "spring", uses = {})
+public interface UserListMapper {
+    Fase toEntity(FaseDTO dto);
+
+    FaseDTO toDto(Fase entity);
+
+}
