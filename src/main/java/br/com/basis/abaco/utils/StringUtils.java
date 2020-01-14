@@ -15,6 +15,10 @@ public final class StringUtils {
 
     public static final String UNKNOWN_FORMAT="OTHER";
 
+    public static boolean isEmptyString(String string) {
+        return string == null || string.isEmpty();
+    }
+
     //Disable default constructor
     private StringUtils(){
 

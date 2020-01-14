@@ -37,7 +37,7 @@ import java.util.Set;
 @Document(indexName = "sistema")
 public class Sistema implements Serializable, ReportObject {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")

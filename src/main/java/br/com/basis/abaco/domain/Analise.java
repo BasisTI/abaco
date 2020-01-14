@@ -11,8 +11,6 @@ import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
@@ -43,6 +41,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,7 +56,6 @@ import java.util.Set;
 public class Analise implements Serializable, ReportObject {
 
     private static final String ANALISE = "analise";
-    private static transient Logger log = LoggerFactory.getLogger(Analise.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -329,7 +327,7 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<User> getUsers() {
-        return users;
+        return users.;
     }
 
     public void setUsers(Set<User> users) {
@@ -393,7 +391,7 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<EsforcoFase> getEsforcoFases() {
-        return esforcoFases;
+        return Collections.unmodifiableSet(esforcoFases);
     }
 
     public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {

@@ -25,6 +25,7 @@ import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.utils.StringUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
@@ -563,22 +564,21 @@ public class AnaliseResource {
     }
 
     private SearchQuery getSearchQuery(@RequestParam(value = "identificador", required = false) String identificador, @RequestParam(value = "sistema", required = false) String sistema, @RequestParam(value = "metodo", required = false) String metodo, @RequestParam(value = "organizacao", required = false) String organizacao, @RequestParam(value = "equipe", required = false) String equipe, @RequestParam(value = "usuario", required = false) String usuario, Pageable pageable, Set<Long> equipesIds) {
-        String empty = "";
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
 
-        if (identificador != null && !(empty.equals(identificador))) {
+        if (StringUtils.isEmptyString(identificador)) {
             qb.must(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
         }
-        if (sistema != null && !(empty.equals(sistema))) {
+        if (StringUtils.isEmptyString((sistema))) {
             qb.must(QueryBuilders.termsQuery("sistema.id", sistema));
         }
-        if (metodo != null && !(empty.equals(metodo))) {
+        if (StringUtils.isEmptyString((metodo))) {
             qb.must(QueryBuilders.matchPhraseQuery("metodoContagem", metodo));
         }
-        if (organizacao != null && !(empty.equals(organizacao))) {
+        if (StringUtils.isEmptyString((organizacao))) {
             qb.must(QueryBuilders.termsQuery("organizacao.id", organizacao));
         }
-        if (equipe != null && !(empty.equals(equipe))) {
+        if (StringUtils.isEmptyString((equipe))) {
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                     .should(QueryBuilders.termsQuery("equipeResponsavel.id", equipe))
                     .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipe));
@@ -589,7 +589,7 @@ public class AnaliseResource {
                     .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipesIds));
             qb.must(boolQueryBuilder);
         }
-        if (usuario != null && !(empty.equals(usuario))) {
+        if (StringUtils.isEmptyString((usuario))) {
             qb.must(nestedQuery("users",QueryBuilders.boolQuery()
                     .should(QueryBuilders.termQuery("users.id",usuario))));
         }
