@@ -418,49 +418,12 @@ public class AnaliseResource {
             equipesIds.add(tipoEquipe.getId());
         });
 
-        String empty = "";
-        BoolQueryBuilder qb = QueryBuilders.boolQuery();
-
-        if (identificador != null && !(empty.equals(identificador))) {
-            qb.must(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
-        }
-        if (sistema != null && !(empty.equals(sistema))) {
-            qb.must(QueryBuilders.termsQuery("sistema.id", sistema));
-        }
-        if (metodo != null && !(empty.equals(metodo))) {
-            qb.must(QueryBuilders.matchPhraseQuery("metodoContagem", metodo));
-        }
-        if (organizacao != null && !(empty.equals(organizacao))) {
-            qb.must(QueryBuilders.termsQuery("organizacao.id", organizacao));
-        }
-        if (equipe != null && !(empty.equals(equipe))) {
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .should(QueryBuilders.termsQuery("equipeResponsavel.id", equipe))
-                    .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipe));
-            qb.must(boolQueryBuilder);
-        } else if (equipesIds != null && equipesIds.size() > 0) {
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .should(QueryBuilders.termsQuery("equipeResponsavel.id", equipesIds))
-                    .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipesIds));
-            qb.must(boolQueryBuilder);
-        }
-        if (usuario != null && !(empty.equals(usuario))) {
-            qb.must(nestedQuery("users",QueryBuilders.boolQuery()
-                    .should(QueryBuilders.termQuery("users.id",usuario))));
-        }
-
-        FetchSourceFilterBuilder sourceFilterBuilder = new FetchSourceFilterBuilder();
-        sourceFilterBuilder.withExcludes("tipoEquipes.usuarios", "contracts.manualContrato", "enviarBaseline");
-        sourceFilterBuilder.withIncludes("identificadorAnalise", "metodoContagem", "sistema");
-
-        SearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withQuery(qb)
-                .withPageable(pageable)
-                .build();
+        SearchQuery searchQuery = getSearchQuery(identificador, sistema, metodo, organizacao, equipe, usuario, pageable, equipesIds);
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
         return new ResponseEntity<List<Analise>>( page.getContent(), headers, HttpStatus.OK);
     }
+
 
     @Nullable
     private String getUsuarioPesquisa(Optional<String> usuario) {
@@ -597,6 +560,48 @@ public class AnaliseResource {
         Analise analiseCopiaSalva = analiseRepository.save(result);
         analiseSearchRepository.save(result);
         return analiseCopiaSalva;
+    }
+
+    private SearchQuery getSearchQuery(@RequestParam(value = "identificador", required = false) String identificador, @RequestParam(value = "sistema", required = false) String sistema, @RequestParam(value = "metodo", required = false) String metodo, @RequestParam(value = "organizacao", required = false) String organizacao, @RequestParam(value = "equipe", required = false) String equipe, @RequestParam(value = "usuario", required = false) String usuario, Pageable pageable, Set<Long> equipesIds) {
+        String empty = "";
+        BoolQueryBuilder qb = QueryBuilders.boolQuery();
+
+        if (identificador != null && !(empty.equals(identificador))) {
+            qb.must(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
+        }
+        if (sistema != null && !(empty.equals(sistema))) {
+            qb.must(QueryBuilders.termsQuery("sistema.id", sistema));
+        }
+        if (metodo != null && !(empty.equals(metodo))) {
+            qb.must(QueryBuilders.matchPhraseQuery("metodoContagem", metodo));
+        }
+        if (organizacao != null && !(empty.equals(organizacao))) {
+            qb.must(QueryBuilders.termsQuery("organizacao.id", organizacao));
+        }
+        if (equipe != null && !(empty.equals(equipe))) {
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                    .should(QueryBuilders.termsQuery("equipeResponsavel.id", equipe))
+                    .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipe));
+            qb.must(boolQueryBuilder);
+        } else if (equipesIds != null && equipesIds.size() > 0) {
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                    .should(QueryBuilders.termsQuery("equipeResponsavel.id", equipesIds))
+                    .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipesIds));
+            qb.must(boolQueryBuilder);
+        }
+        if (usuario != null && !(empty.equals(usuario))) {
+            qb.must(nestedQuery("users",QueryBuilders.boolQuery()
+                    .should(QueryBuilders.termQuery("users.id",usuario))));
+        }
+
+        FetchSourceFilterBuilder sourceFilterBuilder = new FetchSourceFilterBuilder();
+        sourceFilterBuilder.withExcludes("tipoEquipes.usuarios", "contracts.manualContrato", "enviarBaseline");
+        sourceFilterBuilder.withIncludes("identificadorAnalise", "metodoContagem", "sistema");
+
+        return new NativeSearchQueryBuilder()
+                .withQuery(qb)
+                .withPageable(pageable)
+                .build();
     }
 
 }
