@@ -24,6 +24,8 @@ import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.Set;
 
+import static java.util.Collections.unmodifiableSet;
+
 @MappedSuperclass
 @EntityListeners(AbacoAuditListener.class)
 public abstract class FuncaoAnalise implements AbacoAuditable {
@@ -154,11 +156,11 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     }
 
     public Set<String> getDerValues() {
-        return derValues;
+        return  unmodifiableSet(derValues);
     }
 
     public void setDerValues(Set<String> derValues) {
-        this.derValues = derValues;
+        this.derValues =  unmodifiableSet(derValues);
     }
 
     @Override

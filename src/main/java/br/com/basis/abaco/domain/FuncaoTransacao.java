@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Collections.unmodifiableSet;
+
 @Entity
 @Table(name = "funcao_transacao")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -96,7 +98,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = funcionalidades;
+        this.funcionalidades = unmodifiableSet(funcionalidades);
     }
 
     public String getFtrStr() {
@@ -120,7 +122,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public void setAlrs(Set<Alr> alrs) {
-        this.alrs = alrs;
+        this.alrs = unmodifiableSet(alrs);
     }
 
     public List<UploadedFile> getFiles() {
@@ -132,11 +134,11 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<String> getFtrValues() {
-        return ftrValues;
+        return  unmodifiableSet(ftrValues);
     }
 
     public void setFtrValues(Set<String> ftrValues) {
-        this.ftrValues = ftrValues;
+        this.ftrValues =  unmodifiableSet(ftrValues);
     }
 
     public ImpactoFatorAjuste getImpacto() {
@@ -148,11 +150,11 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Der> getDers() {
-        return ders;
+        return  unmodifiableSet(ders);
     }
 
     public void setDers(Set<Der> ders) {
-        this.ders = ders;
+        this.ders =  unmodifiableSet(ders);
     }
 
 }

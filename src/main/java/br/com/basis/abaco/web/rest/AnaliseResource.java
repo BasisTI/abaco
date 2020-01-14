@@ -20,7 +20,6 @@ import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
-import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -36,7 +35,6 @@ import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +44,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.query.FetchSourceFilterBuilder;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.http.HttpHeaders;
@@ -86,11 +83,8 @@ import java.util.stream.Collectors;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-import static org.elasticsearch.index.query.QueryBuilders.templateQuery;
 
-/**
- * REST controller for managing Analise.
- */
+
 @RestController
 @RequestMapping("/api")
 public class AnaliseResource {
@@ -104,10 +98,6 @@ public class AnaliseResource {
     private final AnaliseRepository analiseRepository;
 
     private final UserRepository userRepository;
-
-    private final UserSearchRepository userSearchRepository;
-
-    private final GrupoRepository grupoRepository;
 
     private final CompartilhadaRepository compartilhadaRepository;
 
@@ -148,10 +138,8 @@ public class AnaliseResource {
         this.dynamicExportsService = dynamicExportsService;
         this.userRepository = userRepository;
         this.compartilhadaRepository = compartilhadaRepository;
-        this.grupoRepository = grupoRepository;
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
-        this.userSearchRepository = userSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
@@ -396,43 +384,65 @@ public class AnaliseResource {
 
     @GetMapping("/analises")
     @Timed
-    public ResponseEntity<List<Analise>> getAllAnalisesEquipes(
-            @RequestParam(defaultValue = "ASC") String order,
-            @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
-            @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "id") String sort,
-            @RequestParam(value = "identificador", required = false) String identificador,
-            @RequestParam(value = "sistema", required = false) String sistema,
-            @RequestParam(value = "metodo", required = false) String metodo,
-            @RequestParam(value = "organizacao", required = false) String organizacao,
-            @RequestParam(value = "equipe", required = false) String equipe,
-            @RequestParam(value = "usuario", required = false) String usuario)
-
+    public ResponseEntity<List<Analise>> getAllAnalisesEquipes(@RequestParam(defaultValue = "ASC") String order,
+                                                               @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
+                                                               @RequestParam(defaultValue = "20") int size,
+                                                               @RequestParam(defaultValue = "id") String sort,
+                                                               @RequestParam(value = "identificador", required = false) String identificador,
+                                                               @RequestParam(value = "sistema", required = false) String sistema,
+                                                               @RequestParam(value = "metodo", required = false) String metodo,
+                                                               @RequestParam(value = "organizacao", required = false) String organizacao,
+                                                               @RequestParam(value = "equipe", required = false) String equipe,
+                                                               @RequestParam(value = "usuario", required = false) String usuario)
             throws URISyntaxException {
         Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
+        Set<Long> equipesIds = getIdEquipes();
 
+        BoolQueryBuilder qb = QueryBuilders.boolQuery();
+        if (!StringUtils.isEmptyString(identificador)) {
+            qb.must(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
+        }
+        if (!StringUtils.isEmptyString((sistema))) {
+            qb.must(QueryBuilders.termsQuery("sistema.id", sistema));
+        }
+        if (!StringUtils.isEmptyString((metodo))) {
+            qb.must(QueryBuilders.matchPhraseQuery("metodoContagem", metodo));
+        }
+        if (!StringUtils.isEmptyString((organizacao))) {
+            qb.must(QueryBuilders.termsQuery("organizacao.id", organizacao));
+        }
+
+        if (!StringUtils.isEmptyString((equipe))) {
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                    .should(QueryBuilders.termsQuery("equipeResponsavel.id", equipe))
+                    .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipe));
+            qb.must(boolQueryBuilder);
+        } else if (equipesIds != null && equipesIds.size() > 0) {
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                    .should(QueryBuilders.termsQuery("equipeResponsavel.id", equipesIds))
+                    .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipesIds));
+            qb.must(boolQueryBuilder);
+        }
+        if (!StringUtils.isEmptyString((usuario))) {
+            qb.must(nestedQuery("users", QueryBuilders.boolQuery()
+                    .should(QueryBuilders.termQuery("users.id", usuario))));
+        }
+
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
+        Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
+        return new ResponseEntity<List<Analise>>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    private Set<Long> getIdEquipes() {
         User user = userRepository.findByLogin(SecurityUtils.getCurrentUserLogin());
         Set<TipoEquipe> listaEquipes = user.getTipoEquipes();
         Set<Long> equipesIds = new HashSet<>();
         listaEquipes.forEach(tipoEquipe -> {
             equipesIds.add(tipoEquipe.getId());
         });
-
-        SearchQuery searchQuery = getSearchQuery(identificador, sistema, metodo, organizacao, equipe, usuario, pageable, equipesIds);
-        Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
-        return new ResponseEntity<List<Analise>>( page.getContent(), headers, HttpStatus.OK);
-    }
-
-
-    @Nullable
-    private String getUsuarioPesquisa(Optional<String> usuario) {
-        String usuarioPesquisa = usuario.orElse(null);
-        if (usuarioPesquisa != null) {
-            usuarioPesquisa = usuarioPesquisa.toUpperCase();
-        }
-        return usuarioPesquisa;
+        return equipesIds;
     }
 
     private Boolean checarPermissao(Long idAnalise) {
@@ -561,47 +571,6 @@ public class AnaliseResource {
         Analise analiseCopiaSalva = analiseRepository.save(result);
         analiseSearchRepository.save(result);
         return analiseCopiaSalva;
-    }
-
-    private SearchQuery getSearchQuery(@RequestParam(value = "identificador", required = false) String identificador, @RequestParam(value = "sistema", required = false) String sistema, @RequestParam(value = "metodo", required = false) String metodo, @RequestParam(value = "organizacao", required = false) String organizacao, @RequestParam(value = "equipe", required = false) String equipe, @RequestParam(value = "usuario", required = false) String usuario, Pageable pageable, Set<Long> equipesIds) {
-        BoolQueryBuilder qb = QueryBuilders.boolQuery();
-
-        if (StringUtils.isEmptyString(identificador)) {
-            qb.must(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
-        }
-        if (StringUtils.isEmptyString((sistema))) {
-            qb.must(QueryBuilders.termsQuery("sistema.id", sistema));
-        }
-        if (StringUtils.isEmptyString((metodo))) {
-            qb.must(QueryBuilders.matchPhraseQuery("metodoContagem", metodo));
-        }
-        if (StringUtils.isEmptyString((organizacao))) {
-            qb.must(QueryBuilders.termsQuery("organizacao.id", organizacao));
-        }
-        if (StringUtils.isEmptyString((equipe))) {
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .should(QueryBuilders.termsQuery("equipeResponsavel.id", equipe))
-                    .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipe));
-            qb.must(boolQueryBuilder);
-        } else if (equipesIds != null && equipesIds.size() > 0) {
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .should(QueryBuilders.termsQuery("equipeResponsavel.id", equipesIds))
-                    .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipesIds));
-            qb.must(boolQueryBuilder);
-        }
-        if (StringUtils.isEmptyString((usuario))) {
-            qb.must(nestedQuery("users",QueryBuilders.boolQuery()
-                    .should(QueryBuilders.termQuery("users.id",usuario))));
-        }
-
-        FetchSourceFilterBuilder sourceFilterBuilder = new FetchSourceFilterBuilder();
-        sourceFilterBuilder.withExcludes("tipoEquipes.usuarios", "contracts.manualContrato", "enviarBaseline");
-        sourceFilterBuilder.withIncludes("identificadorAnalise", "metodoContagem", "sistema");
-
-        return new NativeSearchQueryBuilder()
-                .withQuery(qb)
-                .withPageable(pageable)
-                .build();
     }
 
 }

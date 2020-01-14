@@ -33,6 +33,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import static java.util.Collections.unmodifiableSet;
+
 @Entity
 @Table(name = "jhi_user")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -232,7 +234,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
     public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
+        this.authorities = unmodifiableSet(authorities);
     }
 
     public Set<TipoEquipe> getTipoEquipes() {
@@ -240,7 +242,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
     public void setTipoEquipes(Set<TipoEquipe> tipoEquipes) {
-        this.tipoEquipes = tipoEquipes;
+        this.tipoEquipes = unmodifiableSet(tipoEquipes);
     }
 
     public Set<Analise> getAnalises() {
@@ -248,7 +250,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
     public void setAnalises(Set<Analise> analises) {
-        this.analises = analises;
+        this.analises = unmodifiableSet(analises);
     }
 
     public Set<Organizacao> getOrganizacoes() {
@@ -256,6 +258,6 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
     public void setOrganizacoes(Set<Organizacao> organizacoes) {
-        this.organizacoes = organizacoes;
+        this.organizacoes = unmodifiableSet(organizacoes);
     }
 }

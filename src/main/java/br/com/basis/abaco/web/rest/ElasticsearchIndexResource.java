@@ -14,23 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-/**
- * REST controller for managing Elasticsearch index.
- */
 @RestController
 @RequestMapping("/api")
 public class ElasticsearchIndexResource {
 
-
     private ElasticSearchIndexService elasticSearchIndexService;
-    private ElasticsearchIndexService elasticsearchIndexService;
 
-    public ElasticsearchIndexResource(ElasticSearchIndexService elasticSearchIndexService, ElasticsearchIndexService elasticsearchIndexService) {
+    public ElasticsearchIndexResource(ElasticSearchIndexService elasticSearchIndexService) {
         this.elasticSearchIndexService = elasticSearchIndexService;
-        this.elasticsearchIndexService = elasticsearchIndexService;
     }
-
-    private final Logger log = LoggerFactory.getLogger(ElasticsearchIndexResource.class);
 
     @GetMapping("/reindexar")
     @Secured({AuthoritiesConstants.ADMIN})
@@ -38,6 +30,5 @@ public class ElasticsearchIndexResource {
         this.elasticSearchIndexService.reindexar(lstIndexadores);
         return ResponseEntity.ok(null);
     }
-
 
 }

@@ -27,6 +27,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.util.Collections.unmodifiableSet;
+
 @Entity
 @Table(name = "tipo_equipe")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -75,7 +77,7 @@ public class TipoEquipe implements Serializable, ReportObject {
     }
 
     public void setOrganizacoes(Set<Organizacao> organizacoes) {
-        this.organizacoes = organizacoes;
+        this.organizacoes = unmodifiableSet(organizacoes);
     }
 
     public Set<User> getUsuarios() {
@@ -83,6 +85,6 @@ public class TipoEquipe implements Serializable, ReportObject {
     }
 
     public void setUsuarios(Set<User> usuarios) {
-        this.usuarios = usuarios;
+        this.usuarios = unmodifiableSet(usuarios);
     }
 }

@@ -45,6 +45,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.util.Collections.*;
+
 @ApiModel(description = "<Enter note text here>")
 @Entity
 @Table(name = "analise")
@@ -331,7 +333,7 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public void setUsers(Set<User> users) {
-        this.users = users;
+        this.users =  unmodifiableSet(users);
     }
 
     public User getCreatedBy() {
@@ -351,27 +353,27 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<Compartilhada> getCompartilhadas() {
-        return compartilhadas;
+        return  unmodifiableSet(compartilhadas);
     }
 
     public void setCompartilhadas(Set<Compartilhada> compartilhadas) {
-        this.compartilhadas = compartilhadas;
+        this.compartilhadas =  unmodifiableSet(compartilhadas);
     }
 
     public Set<FuncaoDados> getFuncaoDados() {
-        return funcaoDados;
+        return  unmodifiableSet(funcaoDados);
     }
 
     public void setFuncaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados = funcaoDados;
+        this.funcaoDados =  unmodifiableSet(funcaoDados);
     }
 
     public Set<FuncaoTransacao> getFuncaoTransacaos() {
-        return funcaoTransacaos;
+        return  unmodifiableSet(funcaoTransacaos);
     }
 
     public void setFuncaoTransacaos(Set<FuncaoTransacao> funcaoTransacaos) {
-        this.funcaoTransacaos = funcaoTransacaos;
+        this.funcaoTransacaos =  unmodifiableSet(funcaoTransacaos);
     }
 
     public Timestamp getDataCriacaoOrdemServico() {
@@ -391,7 +393,7 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<EsforcoFase> getEsforcoFases() {
-        return Collections.unmodifiableSet(esforcoFases);
+        return esforcoFases;
     }
 
     public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {

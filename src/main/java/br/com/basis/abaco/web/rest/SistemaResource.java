@@ -15,7 +15,6 @@ import java.util.Set;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;

@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,10 +21,11 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+
+@Getter
+@Setter
 public class ContratoDTO {
     private static final long serialVersionUID = 1L;
-
-    private static transient Logger log = LoggerFactory.getLogger(Contrato.class);
 
     @Id
     private Long id;
