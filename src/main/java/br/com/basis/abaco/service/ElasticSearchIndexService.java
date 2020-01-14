@@ -35,10 +35,6 @@ public class ElasticSearchIndexService {
         }
     }
 
-    public List<Indexador> listarIndexadores() {
-        return indexadores;
-    }
-
     @PostConstruct
     public void inicializaIndexadoresPorCodigo() {
         indexadoresPorCodigo = new HashMap<>();

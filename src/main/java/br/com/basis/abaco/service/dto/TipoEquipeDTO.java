@@ -4,6 +4,8 @@ import javax.persistence.Id;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.util.Collections.unmodifiableSet;
+
 public class TipoEquipeDTO {
 
     @Id
@@ -30,10 +32,10 @@ public class TipoEquipeDTO {
     }
 
     public Set<OrganizacaoDTO> getOrganizacoes() {
-        return organizacoes;
+        return unmodifiableSet(organizacoes);
     }
 
     public void setOrganizacoes(Set<OrganizacaoDTO> organizacoes) {
-        this.organizacoes = organizacoes;
+        this.organizacoes = unmodifiableSet(organizacoes);
     }
 }

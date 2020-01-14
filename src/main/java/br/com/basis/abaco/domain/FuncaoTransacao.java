@@ -64,7 +64,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     private List<UploadedFile> files = new ArrayList<>();
 
     @Transient
-    private Set<String> ftrValues;
+    private Set<String> ftrValues = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "impacto")

@@ -1,10 +1,14 @@
 package br.com.basis.abaco.service.dto;
 
 import br.com.basis.abaco.domain.enumeration.TipoSistema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Id;
 import java.util.Set;
 
+@Getter
+@Setter
 public class SistemaDTO {
     private static final long serialVersionUID = 1L;
 

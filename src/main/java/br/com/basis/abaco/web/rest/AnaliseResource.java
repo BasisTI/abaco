@@ -128,9 +128,7 @@ public class AnaliseResource {
                            UserRepository userRepository,
                            FuncaoDadosRepository funcaoDadosRepository,
                            CompartilhadaRepository compartilhadaRepository,
-                           GrupoRepository grupoRepository,
                            FuncaoTransacaoRepository funcaoTransacaoRepository,
-                           UserSearchRepository userSearchRepository,
                            ElasticsearchTemplate elasticsearchTemplate) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
@@ -400,6 +398,15 @@ public class AnaliseResource {
         Set<Long> equipesIds = getIdEquipes();
 
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
+        bindFilterSearch(identificador, sistema, metodo, organizacao, equipe, usuario, equipesIds, qb);
+
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
+        Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
+        return new ResponseEntity<List<Analise>>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    private void bindFilterSearch(String identificador, String sistema, String metodo, String organizacao, String equipe, String usuario, Set<Long> equipesIds, BoolQueryBuilder qb) {
         if (!StringUtils.isEmptyString(identificador)) {
             qb.must(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
         }
@@ -412,27 +419,16 @@ public class AnaliseResource {
         if (!StringUtils.isEmptyString((organizacao))) {
             qb.must(QueryBuilders.termsQuery("organizacao.id", organizacao));
         }
-
         if (!StringUtils.isEmptyString((equipe))) {
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .should(QueryBuilders.termsQuery("equipeResponsavel.id", equipe))
-                    .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipe));
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().should(QueryBuilders.termsQuery("equipeResponsavel.id", equipe)).should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipe));
             qb.must(boolQueryBuilder);
         } else if (equipesIds != null && equipesIds.size() > 0) {
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .should(QueryBuilders.termsQuery("equipeResponsavel.id", equipesIds))
-                    .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipesIds));
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().should(QueryBuilders.termsQuery("equipeResponsavel.id", equipesIds)).should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipesIds));
             qb.must(boolQueryBuilder);
         }
         if (!StringUtils.isEmptyString((usuario))) {
-            qb.must(nestedQuery("users", QueryBuilders.boolQuery()
-                    .should(QueryBuilders.termQuery("users.id", usuario))));
+            qb.must(nestedQuery("users", QueryBuilders.boolQuery().should(QueryBuilders.termQuery("users.id", usuario))));
         }
-
-        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
-        Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
-        return new ResponseEntity<List<Analise>>(page.getContent(), headers, HttpStatus.OK);
     }
 
     private Set<Long> getIdEquipes() {

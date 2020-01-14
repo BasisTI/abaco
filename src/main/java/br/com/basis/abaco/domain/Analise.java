@@ -150,7 +150,7 @@ public class Analise implements Serializable, ReportObject {
     @Field(type = FieldType.Nested, index = FieldIndex.not_analyzed)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_analise", joinColumns = @JoinColumn(name = "analise_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 
     @ManyToOne
     @JoinColumn
@@ -329,11 +329,11 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<User> getUsers() {
-        return users;
+        return unmodifiableSet(users);
     }
 
     public void setUsers(Set<User> users) {
-        this.users =  unmodifiableSet(users);
+        this.users = unmodifiableSet(users);
     }
 
     public User getCreatedBy() {
@@ -353,27 +353,27 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<Compartilhada> getCompartilhadas() {
-        return  unmodifiableSet(compartilhadas);
+        return unmodifiableSet(compartilhadas);
     }
 
     public void setCompartilhadas(Set<Compartilhada> compartilhadas) {
-        this.compartilhadas =  unmodifiableSet(compartilhadas);
+        this.compartilhadas = unmodifiableSet(compartilhadas);
     }
 
     public Set<FuncaoDados> getFuncaoDados() {
-        return  unmodifiableSet(funcaoDados);
+        return unmodifiableSet(funcaoDados);
     }
 
     public void setFuncaoDados(Set<FuncaoDados> funcaoDados) {
-        this.funcaoDados =  unmodifiableSet(funcaoDados);
+        this.funcaoDados = unmodifiableSet(funcaoDados);
     }
 
     public Set<FuncaoTransacao> getFuncaoTransacaos() {
-        return  unmodifiableSet(funcaoTransacaos);
+        return unmodifiableSet(funcaoTransacaos);
     }
 
     public void setFuncaoTransacaos(Set<FuncaoTransacao> funcaoTransacaos) {
-        this.funcaoTransacaos =  unmodifiableSet(funcaoTransacaos);
+        this.funcaoTransacaos = unmodifiableSet(funcaoTransacaos);
     }
 
     public Timestamp getDataCriacaoOrdemServico() {

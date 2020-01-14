@@ -68,7 +68,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     private List<UploadedFile> files = new ArrayList<>();
 
     @Transient
-    private Set<String> rlrValues;
+    private Set<String> rlrValues = new HashSet<>();
 
     @JsonManagedReference(value = FUNCAODADOS)
     @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)

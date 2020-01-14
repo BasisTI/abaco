@@ -69,7 +69,7 @@ public class Sistema implements Serializable, ReportObject {
     private Set<Modulo> modulos = new HashSet<>();
 
     @OneToMany(mappedBy = "sistema")
-    private Set<Analise> analises;
+    private Set<Analise> analises = new HashSet<>();
 
     public Long getId() {
         return id;

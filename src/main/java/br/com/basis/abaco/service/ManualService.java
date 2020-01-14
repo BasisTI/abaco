@@ -12,8 +12,6 @@ import java.util.List;
 public class ManualService {
 
     private final ManualRepository manualRepository;
-    private String descricao;
-    private String codigo;
 
     public ManualService(ManualRepository manualRepository) {
         this.manualRepository = manualRepository;

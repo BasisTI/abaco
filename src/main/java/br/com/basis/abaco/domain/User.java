@@ -114,7 +114,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
 
     @JsonIgnore
     @ManyToMany(mappedBy = "users")
-    private Set<Analise> analises;
+    private Set<Analise> analises = new HashSet<>();
 
 
     @Field(type = FieldType.Nested)
@@ -230,7 +230,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
     public Set<Authority> getAuthorities() {
-        return authorities;
+        return unmodifiableSet(authorities);
     }
 
     public void setAuthorities(Set<Authority> authorities) {
@@ -238,7 +238,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
     public Set<TipoEquipe> getTipoEquipes() {
-        return tipoEquipes;
+        return unmodifiableSet(tipoEquipes);
     }
 
     public void setTipoEquipes(Set<TipoEquipe> tipoEquipes) {
@@ -246,7 +246,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
     public Set<Analise> getAnalises() {
-        return analises;
+        return unmodifiableSet(analises);
     }
 
     public void setAnalises(Set<Analise> analises) {
@@ -254,7 +254,7 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
     }
 
     public Set<Organizacao> getOrganizacoes() {
-        return organizacoes;
+        return unmodifiableSet(organizacoes);
     }
 
     public void setOrganizacoes(Set<Organizacao> organizacoes) {

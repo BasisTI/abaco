@@ -2,6 +2,7 @@ package br.com.basis.abaco.service.dto;
 
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.dynamicexports.pojo.ReportObject;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +13,9 @@ import java.util.Set;
 
 @Getter
 @Setter
+@Data
 public class AnaliseDTO implements Serializable, ReportObject {
+    private static final long serialVersionUID = 1L;
 
     private Long id;
     @NotNull
