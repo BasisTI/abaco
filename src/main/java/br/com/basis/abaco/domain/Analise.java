@@ -41,11 +41,10 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static java.util.Collections.*;
+import static java.util.Collections.unmodifiableSet;
 
 @ApiModel(description = "<Enter note text here>")
 @Entity
