@@ -13,7 +13,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-@Data
 public class AnaliseDTO implements Serializable, ReportObject {
     private static final long serialVersionUID = 1L;
 
@@ -39,4 +38,23 @@ public class AnaliseDTO implements Serializable, ReportObject {
     @NotNull
     private Set<UserDTO> users;
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Timestamp getDataCriacaoOrdemServico() {
+        return (Timestamp) dataCriacaoOrdemServico.clone();
+    }
+
+    public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
+        this.dataCriacaoOrdemServico = (Timestamp) dataCriacaoOrdemServico.clone();
+    }
+
+    public Timestamp getDataHomologacao() {
+        return (Timestamp) dataHomologacao.clone();
+    }
+
+    public void setDataHomologacao(Timestamp dataHomologacao) {
+        this.dataHomologacao = (Timestamp) dataHomologacao.clone();
+    }
 }

@@ -405,20 +405,15 @@ public class AnaliseResource {
     }
 
     private void bindFilterSearch(String identificador, String sistema, String metodo, String organizacao, String equipe, String usuario, Set<Long> equipesIds, BoolQueryBuilder qb) {
-        if (!StringUtils.isEmptyString(identificador)) {
-            qb.must(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
-        }
-        if (!StringUtils.isEmptyString((sistema))) {
-            qb.must(QueryBuilders.termsQuery("sistema.id", sistema));
-        }
-        if (!StringUtils.isEmptyString((metodo))) {
-            qb.must(QueryBuilders.matchPhraseQuery("metodoContagem", metodo));
-        }
-        if (!StringUtils.isEmptyString((organizacao))) {
-            qb.must(QueryBuilders.termsQuery("organizacao.id", organizacao));
-        }
+        mustMatchPhaseQuery(identificador, qb, "identificadorAnalise");
+        mustTermQuery(sistema, qb, "sistema.id");
+        mustMatchPhaseQuery(metodo, qb, "metodoContagem");
+        mustTermQuery(organizacao, qb, "organizacao.id");
+
         if (!StringUtils.isEmptyString((equipe))) {
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().should(QueryBuilders.termsQuery("equipeResponsavel.id", equipe)).should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipe));
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                    .should(QueryBuilders.termsQuery("equipeResponsavel.id", equipe))
+                    .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipe));
             qb.must(boolQueryBuilder);
         } else if (equipesIds != null && equipesIds.size() > 0) {
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().should(QueryBuilders.termsQuery("equipeResponsavel.id", equipesIds)).should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipesIds));
@@ -427,7 +422,9 @@ public class AnaliseResource {
         if (!StringUtils.isEmptyString((usuario))) {
             qb.must(nestedQuery("users", QueryBuilders.boolQuery().should(QueryBuilders.termQuery("users.id", usuario))));
         }
+
     }
+
 
     private Set<Long> getIdEquipes() {
         User user = userRepository.findByLogin(SecurityUtils.getCurrentUserLogin());
@@ -566,6 +563,19 @@ public class AnaliseResource {
         analiseSearchRepository.save(result);
         return analiseCopiaSalva;
     }
+
+    private void mustTermQuery(String sistema, BoolQueryBuilder qb, String s) {
+        if (!StringUtils.isEmptyString((sistema))) {
+            qb.must(QueryBuilders.termsQuery(s, sistema));
+        }
+    }
+
+    private void mustMatchPhaseQuery(String identificador, BoolQueryBuilder qb, String identificadorAnalise) {
+        if (!StringUtils.isEmptyString(identificador)) {
+            qb.must(QueryBuilders.matchPhraseQuery(identificadorAnalise, identificador));
+        }
+    }
+
 
 }
 

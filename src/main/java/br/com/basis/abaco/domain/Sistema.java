@@ -31,13 +31,16 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.util.Collections.unmodifiableSet;
+
 @Entity
 @Table(name = "sistema")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "sistema")
 public class Sistema implements Serializable, ReportObject {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    private static final String SISTEMA = "sistema";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -64,11 +67,11 @@ public class Sistema implements Serializable, ReportObject {
     @JoinColumn(name = "organizacao_id")
     private Organizacao organizacao;
 
-    @OneToMany(mappedBy = "sistema", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = SISTEMA, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Modulo> modulos = new HashSet<>();
 
-    @OneToMany(mappedBy = "sistema")
+    @OneToMany(mappedBy = SISTEMA)
     private Set<Analise> analises = new HashSet<>();
 
     public Long getId() {
@@ -181,11 +184,11 @@ public class Sistema implements Serializable, ReportObject {
     }
 
     public Set<Analise> getAnalises() {
-        return analises;
+        return unmodifiableSet(analises);
     }
 
     public void setAnalises(Set<Analise> analises) {
-        this.analises = analises;
+        this.analises = unmodifiableSet(analises);
     }
 
     @Override

@@ -22,6 +22,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Collections.unmodifiableSet;
@@ -69,7 +70,7 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
 
     @JsonIgnore
     @Transient
-    private Set<String> derValues;
+    private Set<String> derValues = new HashSet<>();
 
     @Embedded
     // XXX deve ter o new() mesmo?

@@ -73,7 +73,7 @@ public class TipoEquipe implements Serializable, ReportObject {
     }
 
     public Set<Organizacao> getOrganizacoes() {
-        return organizacoes;
+        return unmodifiableSet(organizacoes);
     }
 
     public void setOrganizacoes(Set<Organizacao> organizacoes) {
@@ -81,7 +81,7 @@ public class TipoEquipe implements Serializable, ReportObject {
     }
 
     public Set<User> getUsuarios() {
-        return usuarios;
+        return unmodifiableSet(usuarios);
     }
 
     public void setUsuarios(Set<User> usuarios) {

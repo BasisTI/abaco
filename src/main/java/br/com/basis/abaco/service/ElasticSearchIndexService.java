@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static java.util.Collections.unmodifiableList;
+
 
 @Service
 @Transactional
@@ -20,7 +22,7 @@ public class ElasticSearchIndexService {
     private Map<String, Indexador> indexadoresPorCodigo;
 
     public ElasticSearchIndexService(List<Indexador> indexadores) {
-        this.indexadores = indexadores;
+        this.indexadores = unmodifiableList(indexadores);
     }
 
     public void reindexar(List<String> codigos) {
