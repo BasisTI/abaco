@@ -327,7 +327,7 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<User> getUsers() {
-        return users.;
+        return users;
     }
 
     public void setUsers(Set<User> users) {
