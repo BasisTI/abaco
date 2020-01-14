@@ -78,9 +78,6 @@ export class UserComponent implements OnInit {
         });
     }
 
-    /**
-     * Método responsável por recuperar as organizações.
-     */
     recuperarOrganizacoes() {
         this.organizacaoService.dropDown().subscribe(response => {
             this.organizations = response.json;
@@ -89,9 +86,6 @@ export class UserComponent implements OnInit {
         });
     }
 
-    /**
-     * Método responsável por recuperar as autorizações.
-     */
     recuperarAutorizacoes() {
         this.userService.authorities().subscribe(response => {
             this.authorities = response;
@@ -101,9 +95,6 @@ export class UserComponent implements OnInit {
         });
     }
 
-    /**
-     * Método responsável por recuperar as equipes.
-     */
     recuperarEquipe() {
         this.tipoEquipeService.dropDown().subscribe(response => {
             this.teams = response.json;

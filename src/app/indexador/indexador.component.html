@@ -1,0 +1,26 @@
+<div class="ui-g ui-fluid">
+
+    <div class="ui-g-12 ui-md-12 ui-sm-12">
+
+        <div class="card card-w-title">
+            <h1 translate="Configuracao.Reindexar.Reindexar">Reindexar</h1>
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-6">
+                    <p-multiSelect
+                            [options]="indexList"
+                            [(ngModel)]="indexToReindexar"
+                            [filter]="true"
+                    ></p-multiSelect>
+                </div>
+                <div class="ui-g-2 ui-md-2 ui-sm-6">
+                    <app-green-button
+                            (click)="submitIndexador()"
+                            [buttonLabel]="'Configuracao.Reindexar.Reindexar' | translate"
+                            routerLink="new">
+                    </app-green-button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

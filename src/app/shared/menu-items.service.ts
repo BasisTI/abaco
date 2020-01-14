@@ -17,7 +17,7 @@ export class MenuItemsService {
                 label: `MenuPrincipal.Configuracao.Configuracao`, icon: 'settings',
                 visible: this.authService.isAuthenticated(),
                 items: [
-                    { label: 'MenuPrincipal.Configuracao.Reindexar', routerLink: 'elasticsearch', icon: 'refresh' },
+                    { label: 'MenuPrincipal.Configuracao.Reindexar', routerLink: 'indexador', icon: 'refresh' },
                     { label: 'MenuPrincipal.Configuracao.EditarUsuario', routerLink: `usuario/edit`, icon: 'tag_faces' },
                     { label: 'MenuPrincipal.Configuracao.AlterarSenha', routerLink: `senha`, icon: 'security' }
                 ]

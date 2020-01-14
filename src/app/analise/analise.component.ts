@@ -4,13 +4,14 @@ import { DatatableClickEvent, DatatableComponent } from '@basis/angular-componen
 import { TranslateService } from '@ngx-translate/core';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ConfirmationService } from 'primeng/primeng';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import { PageNotificationService, ResponseWrapper } from '../shared';
 import { Analise, AnaliseService, AnaliseShareEquipe, GrupoService } from './';
 import { Organizacao, OrganizacaoService } from './../organizacao';
 import { Sistema, SistemaService } from './../sistema';
 import { TipoEquipe, TipoEquipeService } from './../tipo-equipe';
 import { Grupo, SearchGroup } from './grupo/grupo.model';
+import {User, UserService} from '../user';
 
 @Component({
     selector: 'jhi-analise',
@@ -31,6 +32,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     analiseSelecionada: any = new Grupo();
     searchGroup: SearchGroup = new SearchGroup();
     nomeSistemas: Array<Sistema>;
+    usuariosOptions: Array<User>
     organizations: Array<Organizacao>;
     teams: Array<TipoEquipe>;
     equipeShare; analiseShared: Array<AnaliseShareEquipe> = [];
@@ -64,6 +66,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         private translate: TranslateService,
         private grupoService: GrupoService,
         private equipeService: TipoEquipeService,
+        private usuarioService: UserService,
     ) { }
 
     public ngOnInit() {
@@ -83,10 +86,10 @@ export class AnaliseComponent implements OnInit, OnDestroy {
 
     estadoInicial() {
         this.getEquipesFromActiveLoggedUser();
-        this.recuperarAnalisesUsuario();            // Filtrando as análises que o usuário pode ver
         this.recuperarOrganizacoes();
         this.recuperarEquipe();
         this.recuperarSistema();
+        this.recuperarUsuarios();
         this.inicial = false;
 
         this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
@@ -98,16 +101,12 @@ export class AnaliseComponent implements OnInit, OnDestroy {
             this.analiseSelecionada = undefined;
         });
     }
-    
     getEquipesFromActiveLoggedUser() {
         this.equipeService.getEquipesActiveLoggedUser().subscribe(res => {
             this.tipoEquipesLoggedUser = res.json;
         });
     }
 
-    /*
-    *   Metodo responsavel por traduzir metricas de Analise
-    */
     traduzirmetsContagens() {
         this.translate.stream(['Analise.Analise.metsContagens.DETALHADA', 'Analise.Analise.metsContagens.ESTIMADA',
             'Analise.Analise.metsContagens.INDICATIVA']).subscribe((traducao) => {
@@ -116,24 +115,9 @@ export class AnaliseComponent implements OnInit, OnDestroy {
                     { label: traducao['Analise.Analise.metsContagens.ESTIMADA'], value: 'ESTIMADA' },
                     { label: traducao['Analise.Analise.metsContagens.INDICATIVA'], value: 'INDICATIVA' }
                 ];
-
-            })
+            }
+        )
     }
-
-
-    /**
-     * Função para recuperar análises da equipe do usuário
-     */
-    recuperarAnalisesUsuario() {
-        // this.blockUI.start('Carregando análises...');
-        // this.carregarDataTable();     // Buscando as benditas análises
-    }
-
-    /**
-     * Função que faz requisição das análises das equipes do usuário
-     * @param idUser id do usuário logado
-     */
-
     public carregarDataTable() {
         this.grupoService.all().subscribe((res: ResponseWrapper) => {
             this.datatable.value = res.json;
@@ -177,7 +161,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     recuperarOrganizacoes() {
         this.organizacaoService.dropDown().subscribe(response => {
             this.organizations = response.json;
-            let emptyOrg = new Organizacao();
+            const emptyOrg = new Organizacao();
             this.organizations.unshift(emptyOrg);
         });
     }
@@ -185,22 +169,27 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     recuperarSistema() {
         this.sistemaService.dropDown().subscribe(response => {
             this.nomeSistemas = response.json;
-            let emptySystem = new Sistema();
+            const emptySystem = new Sistema();
             this.nomeSistemas.unshift(emptySystem);
+        });
+    }
+
+    recuperarUsuarios() {
+        this.usuarioService.dropDown().subscribe(response => {
+        this.usuariosOptions = response.json;
+        const emptyUsuarioOption = new User();
+        this.usuariosOptions.unshift(emptyUsuarioOption);
         });
     }
 
     recuperarEquipe() {
         this.tipoEquipeService.dropDown().subscribe(response => {
             this.teams = response.json;
-            let emptyTeam = new TipoEquipe();
+            const emptyTeam = new TipoEquipe();
             this.teams.unshift(emptyTeam);
         });
     }
 
-    /**
-     * Clique na tabela análise
-     */
     public datatableClick(event: DatatableClickEvent) {
         if (!event.selection) {
             return;
@@ -242,7 +231,9 @@ export class AnaliseComponent implements OnInit, OnDestroy {
                 if (this.checkUserAnaliseEquipes()) {
                     this.openCompartilharDialog();
                 } else {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeCompartilharAnalise'));
+                    this.pageNotificationService.addErrorMsg(
+                        this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeCompartilharAnalise')
+                    );
                 }
                 break;
             case 'relatorioAnaliseContagem':
@@ -251,7 +242,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         }
     }
     checkUserAnaliseEquipes() {
-        let retorno: boolean = false;
+        let retorno = false;
         return this.analiseService.find(this.analiseSelecionada.idAnalise).subscribe((res: any) => {
             this.analiseTemp = res;
             if (this.tipoEquipesLoggedUser) {
@@ -265,12 +256,8 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         });
 
     }
-
-    /**
-     * Checa se o usuário tem permissão para editar a Análise!
-     */
     checkIfUserCanEdit() {
-        let retorno: boolean = false;
+        let retorno = false;
         if (this.tipoEquipesLoggedUser) {
             this.tipoEquipesLoggedUser.forEach(equipe => {
                 if (this.analiseSelecionada.compartilhadas) {
@@ -300,15 +287,13 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         this.router.navigate(['/analise', this.analiseSelecionada.idAnalise, 'edit']);
     }
 
-    /**
-     * Clonar análise
-     */
     public clonar(idAnalise: number) {
         this.confirmationService.confirm({
-            message: this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_CLONE').concat(this.analiseSelecionada.identificadorAnalise).concat('?'),
+            message: this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_CLONE')
+                .concat(this.analiseSelecionada.identificadorAnalise).concat('?'),
             accept: () => {
                 this.analiseService.find(idAnalise).subscribe((res: any) => {
-                    let analiseClonada = res.clone();
+                    const analiseClonada = res.clone();
 
                     analiseClonada.id = undefined;
                     analiseClonada.identificadorAnalise += this.getLabel('Analise.Analise.Mensagens.msgCONCAT_COPIA');
@@ -347,14 +332,14 @@ export class AnaliseComponent implements OnInit, OnDestroy {
                         });
                     }
 
-                    this.analiseService.create(analiseClonada).subscribe((res: any) => {
+                    this.analiseService.create(analiseClonada).subscribe((response: any) => {
                         const menssagem: string = this.getLabel('Analise.Analise.Analise').concat(' ').
                             concat(this.analiseSelecionada.identificadorAnalise).
                             concat(this.getLabel('Analise.Analise.Mensagens.msgCLONAGEM_SUCESSO'));
 
                         this.pageNotificationService.addSuccessMsg(menssagem);
                         this.recarregarDataTable();
-                        this.router.navigate(['/analise', res.id, 'edit']);
+                        this.router.navigate(['/analise', response.id, 'edit']);
                     });
                 });
             }
@@ -362,9 +347,6 @@ export class AnaliseComponent implements OnInit, OnDestroy {
 
     }
 
-    /**
-     * Confirmar deleção de uma análise
-     */
     public confirmDelete(analise: Grupo) {
         if (this.analiseSelecionada.bloqueado) {
             this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgERRO_EXCLUSAO_ANALISE_BLOQUEADA'));
@@ -384,9 +366,6 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * Limpa a pesquisa e recarrega a tabela
-     */
     public limparPesquisa() {
         this.searchGroup.organizacao = undefined;
         this.searchGroup.identificadorAnalise = undefined;
@@ -398,58 +377,31 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         this.recarregarDataTable();
     }
 
-    /**
-     * Recarrega a tabela de análise
-     */
     public recarregarDataTable() {
         this.datatable.url = this.userAnaliseUrl;
         this.datatable.reset();
     }
 
-    /**
-     * Método responsável por gerar o relatório diretamente sem a apresentação do relatório no browser.
-     * @param analise
-     */
     public gerarRelatorioPdfArquivo(analise: Analise) {
         this.analiseService.gerarRelatorioPdfArquivo(analise.id);
     }
 
-    /**
-     * Método responsável pela a apresentação do relatório no browser.
-     * @param analise
-     */
     public geraRelatorioPdfBrowser(analise: Analise) {
         this.analiseService.geraRelatorioPdfBrowser(analise.id);
     }
 
-    /**
-     * Método responsável por gerar o relatório detalhado da analise.
-     * @param analise
-     */
     public geraRelatorioPdfDetalhadoBrowser(analise: Grupo) {
         this.analiseService.geraRelatorioPdfDetalhadoBrowser(analise.idAnalise);
     }
 
-    /**
-     * Método responsável por gerar o relatório da analise em excel.
-     * @param analise
-     */
     public gerarRelatorioExcel(analise: Grupo) {
         this.analiseService.gerarRelatorioExcel(analise.idAnalise);
     }
 
-    /**
-    * Método responsável por gerar o relatório da baseline.
-    * @param analise
-    */
     public geraBaselinePdfBrowser() {
         this.analiseService.geraBaselinePdfBrowser();
     }
 
-    /**
-     * método responsável por gerar o relatório de Fundamentação de Contagem.
-     * @param analise
-     */
     public gerarRelatorioContagem(analise: Grupo) {
         this.analiseService.gerarRelatorioContagem(analise.idAnalise);
     }
@@ -457,21 +409,21 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     public changeUrl() {
 
         let querySearch = '?identificador=';
-        querySearch = querySearch.concat((this.searchGroup.identificadorAnalise) ? this.searchGroup.identificadorAnalise + '&' : '&');
+        querySearch = querySearch.concat((this.searchGroup.identificadorAnalise) ? `*${this.searchGroup.identificadorAnalise}*&` : '&');
 
-        querySearch = querySearch.concat((this.searchGroup.sistema && this.searchGroup.sistema.nome) ?
-        'sistema=' + this.searchGroup.sistema.nome + '&' : '');
+        querySearch = querySearch.concat((this.searchGroup.sistema && this.searchGroup.sistema.id) ?
+        `sistema=${this.searchGroup.sistema.id}&` : '');
 
-        querySearch = querySearch.concat((this.searchGroup.metodoContagem) ? 'metodo=' + this.searchGroup.metodoContagem + '&' : '');
+        querySearch = querySearch.concat((this.searchGroup.metodoContagem) ? `metodo=${this.searchGroup.metodoContagem}&` : '');
 
-        querySearch = querySearch.concat((this.searchGroup.organizacao && this.searchGroup.organizacao.nome) ?
-        'organizacao=' + this.searchGroup.organizacao.nome + '&' : '');
+        querySearch = querySearch.concat((this.searchGroup.organizacao && this.searchGroup.organizacao.id) ?
+        `organizacao=${this.searchGroup.organizacao.id}&` : '');
 
-        querySearch = querySearch.concat((this.searchGroup.equipe && this.searchGroup.equipe.nome) ?
-        'equipe=' + this.searchGroup.equipe.nome : '');
+        querySearch = querySearch.concat((this.searchGroup.equipe && this.searchGroup.equipe.id) ?
+        `equipe=${this.searchGroup.equipe.id}&` : '');
 
-        querySearch = querySearch.concat((this.searchGroup.usuario) ?
-        'usuario=' + this.searchGroup.usuario + '&' : '');
+        querySearch = querySearch.concat((this.searchGroup.usuario && this.searchGroup.usuario.id) ?
+        `usuario=${this.searchGroup.usuario.id}&` : '');
 
         querySearch = (querySearch === '?') ? '' : querySearch;
 
@@ -481,33 +433,38 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         return this.grupoService.grupoUrl + querySearch;
     }
 
-    recuperarQuery(searchGroup: SearchGroup){
+    recuperarQuery(searchGroup: SearchGroup) {
         this.query = '';
-
-        this.query = this.query.concat((this.searchGroup.identificadorAnalise) ? 'identificadorAnalise:*'+ this.searchGroup.identificadorAnalise + '*' : '');
-        
-        if(this.searchGroup.sistema && this.searchGroup.sistema.nome !== undefined && this.query == ''){
-            this.query = this.query + 'sistema.nome:*' + this.searchGroup.sistema.nome + '*';
-        } else if(this.searchGroup.sistema && this.searchGroup.sistema.nome !== undefined && this.query != ''){
-            this.query = this.query + ' AND sistema.nome:*' + this.searchGroup.sistema.nome + '*';
+        this.query = this.query.concat(
+                (this.searchGroup.identificadorAnalise) ? `identificadorAnalise:*${this.searchGroup.identificadorAnalise}*` : '');
+        if (this.searchGroup.sistema && this.searchGroup.sistema.nome !== undefined && this.query === '') {
+            this.query = `${this.query}sistema.nome:*${this.searchGroup.sistema.nome}*`;
+        } else if (this.searchGroup.sistema && this.searchGroup.sistema.nome !== undefined && this.query !== '') {
+            this.query = `${this.query} AND sistema.nome:*${this.searchGroup.sistema.nome}*`;
         }
 
-        if(this.searchGroup.metodoContagem !== undefined && this.query == ''){
-            this.query = 'metodoContagem:*' + this.searchGroup.metodoContagem + '*';
-        } else if(this.searchGroup.metodoContagem !== undefined && this.query != ''){
-            this.query = this.query + ' AND metodoContagem:*' + this.searchGroup.metodoContagem + '*';
+        if (this.searchGroup.metodoContagem !== undefined && this.query === '') {
+            this.query = `metodoContagem:*${this.searchGroup.metodoContagem}*`;
+        } else if (this.searchGroup.metodoContagem !== undefined && this.query !== '') {
+            this.query = `${this.query} AND metodoContagem:*${this.searchGroup.metodoContagem}*`;
         }
 
-        if(this.searchGroup.organizacao && this.searchGroup.organizacao.nome !== undefined && this.query == ''){
-            this.query = 'organizacao.nome:*' + this.searchGroup.organizacao.nome + '*';
-        } else if (this.searchGroup.organizacao && this.searchGroup.organizacao.nome !== undefined && this.query != ''){
-            this.query = this.query + ' AND organizacao.nome:*' + this.searchGroup.organizacao.nome + '*';
+        if (this.searchGroup.organizacao && this.searchGroup.organizacao.nome !== undefined && this.query === '') {
+            this.query = `organizacao.nome:*${this.searchGroup.organizacao.nome}*`;
+        } else if (this.searchGroup.organizacao && this.searchGroup.organizacao.nome !== undefined && this.query !== '') {
+            this.query = `${this.query} AND organizacao.nome:*${this.searchGroup.organizacao.nome}*`;
         }
 
-        if(this.searchGroup.equipe && this.searchGroup.equipe.nome !== undefined && this.query == ''){
-            this.query = 'equipeResponsavel.nome:*' + this.searchGroup.equipe.nome + '*';
-        } else if (this.searchGroup.equipe && this.searchGroup.equipe.nome !== undefined && this.query != ''){
-            this.query = this.query + ' AND equipeResponsavel.nome:*' + this.searchGroup.equipe.nome + '*';
+        if (this.searchGroup.equipe && this.searchGroup.equipe.nome !== undefined && this.query === '') {
+            this.query = `equipeResponsavel.nome:*${this.searchGroup.equipe.nome}*`;
+        } else if (this.searchGroup.equipe && this.searchGroup.equipe.nome !== undefined && this.query !== '') {
+            this.query = `${this.query} AND equipeResponsavel.nome:*${this.searchGroup.equipe.nome}*`;
+        }
+
+        if (this.searchGroup.usuario && this.searchGroup.usuario.id !== undefined && this.query === '') {
+            this.query = `usuario.id: ${this.searchGroup.usuario.id}`;
+        } else if (this.searchGroup.equipe && this.searchGroup.equipe.nome !== undefined && this.query !== '') {
+            this.query = `${this.query} AND equipeResponsavel.nome:*${this.searchGroup.equipe.nome}*`;
         }
 
     }
@@ -574,7 +531,11 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         this.equipeShare = [];
         this.analiseService.find(this.analiseSelecionada.idAnalise).subscribe((res: any) => {
             this.analiseTemp = res;
-            this.tipoEquipeService.findAllCompartilhaveis(this.analiseTemp.organizacao.id, this.analiseSelecionada.idAnalise, this.analiseTemp.equipeResponsavel.id).subscribe((equipes) => {
+            this.tipoEquipeService.findAllCompartilhaveis(
+                    this.analiseTemp.organizacao.id,
+                    this.analiseSelecionada.idAnalise,
+                    this.analiseTemp.equipeResponsavel.id)
+                    .subscribe((equipes) => {
                 if (equipes.json) {
                     equipes.json.forEach((equipe) => {
                         const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),

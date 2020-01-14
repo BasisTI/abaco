@@ -16,7 +16,10 @@
   },
   "Configuracao": {
     "Reindexar": {
-      "ElasticSearch": "ElasticSearch reindexed successfully!"
+      "ElasticSearch": "ElasticSearch",
+      "Reindexar": "Reindexar",
+      "Descricao": "Do you want reindexar the ElasticSearch index ?",
+      ""
     },
     "AlterarSenha": {
       "AlterarSenha": "Change Password",

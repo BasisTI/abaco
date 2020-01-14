@@ -1,6 +1,7 @@
 import { TipoEquipe } from "../../tipo-equipe";
 import { Organizacao } from "../../organizacao";
 import { Sistema } from "../../sistema";
+import {User} from '../../user';
 
 export class Grupo {
 
@@ -38,7 +39,7 @@ export class SearchGroup {
         public equipe?: TipoEquipe,
         public sistema?: Sistema,
         public metodoContagem?: string,
-        public usuario?: string,
+        public usuario?: User,
     ) {
     }
 

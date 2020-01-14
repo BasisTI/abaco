@@ -62,7 +62,7 @@ import {AdminGuard} from './admin.guard';
 import {HttpClient} from '@angular/common/http';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {AbacoElasticSearchModule} from './elasticsearch/elasticsearch.module';
+import {AbacoIndexadorModule} from './indexador/indexador.module';
 import {autenticacaoHttpFactory} from './shared/autenticacao/autenticacao-http';
 import {AnalistaGuard} from './analista.guard';
 import {UserGuard} from './user.guard';
@@ -94,7 +94,7 @@ export function createTranslateLoader(http: HttpClient) {
         AbacoOrganizacaoModule,
         AbacoContratoModule,
         AbacoTipoEquipeModule,
-        AbacoElasticSearchModule,
+        AbacoIndexadorModule,
         AbacoUserModule,
         AbacoFaseModule,
         AbacoSistemaModule,

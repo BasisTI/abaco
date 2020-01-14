@@ -16,7 +16,9 @@
   },
   "Configuracao": {
     "Reindexar": {
-      "ElasticSearch": "ElasticSearch reindexado con éxito!"
+      "ElasticSearch": "ElasticSearch",
+      "Reindexar": "Reindexar",
+      "Descricao": "¿Desea reindaxar los índices de ElasticSearch?"
     },
     "AlterarSenha": {
       "AlterarSenha": "Cambiar Contraseña",
