@@ -455,11 +455,9 @@ public class AnaliseResource {
 
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(qb)
-//                .withSourceFilter(sourceFilterBuilder.build())
                 .withPageable(pageable)
                 .build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
-//        Page<Analise> page = analiseSearchRepository.findAnaliseByUsers(searchQuery, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
         return new ResponseEntity<List<Analise>>( page.getContent(), headers, HttpStatus.OK);
     }
