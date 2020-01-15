@@ -108,8 +108,10 @@ public class SistemaResourceIntTest {
      * they test an entity which requires the current entity.
      */
     public static Sistema createEntity(EntityManager em) {
-        Sistema sistema = new Sistema().sigla(DEFAULT_SIGLA).nome(DEFAULT_NOME)
-                .numeroOcorrencia(DEFAULT_NUMERO_OCORRENCIA);
+        Sistema sistema = new Sistema();
+            sistema.setSigla(DEFAULT_SIGLA);
+            sistema.setNome(DEFAULT_NOME);
+            sistema.setNumeroOcorrencia(DEFAULT_NUMERO_OCORRENCIA);
         return sistema;
     }
 
@@ -225,8 +227,9 @@ public class SistemaResourceIntTest {
 
         // Update the sistema
         Sistema updatedSistema = sistemaRepository.findOne(sistema.getId());
-        updatedSistema.sigla(UPDATED_SIGLA).nome(UPDATED_NOME).numeroOcorrencia(UPDATED_NUMERO_OCORRENCIA);
-
+            updatedSistema.setSigla(UPDATED_SIGLA);
+            updatedSistema.setNome(UPDATED_NOME);
+            updatedSistema.setNumeroOcorrencia(UPDATED_NUMERO_OCORRENCIA);
         restSistemaMockMvc.perform(put("/api/sistemas").contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(updatedSistema))).andExpect(status().isOk());
 

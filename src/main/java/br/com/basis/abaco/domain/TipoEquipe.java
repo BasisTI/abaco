@@ -4,6 +4,9 @@ import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -33,6 +36,9 @@ import static java.util.Collections.unmodifiableSet;
 @Table(name = "tipo_equipe")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "tipo_equipe")
+@Getter
+@Setter
+@NoArgsConstructor
 public class TipoEquipe implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
@@ -56,35 +62,4 @@ public class TipoEquipe implements Serializable, ReportObject {
     @ManyToMany(mappedBy = "tipoEquipes")
     private Set<User> usuarios = new HashSet<>();
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public Set<Organizacao> getOrganizacoes() {
-        return organizacoes;
-    }
-
-    public void setOrganizacoes(Set<Organizacao> organizacoes) {
-        this.organizacoes = unmodifiableSet(organizacoes);
-    }
-
-    public Set<User> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(Set<User> usuarios) {
-        this.usuarios = unmodifiableSet(usuarios);
-    }
 }

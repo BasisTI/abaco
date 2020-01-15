@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -26,13 +29,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Collections.unmodifiableSet;
-
 @Entity
 @Table(name = "funcao_transacao")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "funcao_transacao")
 @JsonInclude(Include.NON_EMPTY)
+@Getter
+@Setter
+@NoArgsConstructor
 public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -77,84 +81,5 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     @ManyToOne
     private Analise analise;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public static String getFUNCAOTRANSACAO() {
-        return FUNCAOTRANSACAO;
-    }
-
-    public TipoFuncaoTransacao getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoFuncaoTransacao tipo) {
-        this.tipo = tipo;
-    }
-
-    public Set<Funcionalidade> getFuncionalidades() {
-        return funcionalidades;
-    }
-
-    public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
-        this.funcionalidades = unmodifiableSet(funcionalidades);
-    }
-
-    public String getFtrStr() {
-        return ftrStr;
-    }
-
-    public void setFtrStr(String ftrStr) {
-        this.ftrStr = ftrStr;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public Set<Alr> getAlrs() {
-        return alrs;
-    }
-
-    public void setAlrs(Set<Alr> alrs) {
-        this.alrs = unmodifiableSet(alrs);
-    }
-
-    public List<UploadedFile> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<UploadedFile> files) {
-        this.files = files;
-    }
-
-    public Set<String> getFtrValues() {
-        return  unmodifiableSet(ftrValues);
-    }
-
-    public void setFtrValues(Set<String> ftrValues) {
-        this.ftrValues =  unmodifiableSet(ftrValues);
-    }
-
-    public ImpactoFatorAjuste getImpacto() {
-        return impacto;
-    }
-
-    public void setImpacto(ImpactoFatorAjuste impacto) {
-        this.impacto = impacto;
-    }
-
-    public Set<Der> getDers() {
-        return  unmodifiableSet(ders);
-    }
-
-    public void setDers(Set<Der> ders) {
-        this.ders =  unmodifiableSet(ders);
-    }
 
 }

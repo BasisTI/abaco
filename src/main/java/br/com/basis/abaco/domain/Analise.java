@@ -196,19 +196,6 @@ public class Analise implements Serializable, ReportObject {
     @ManyToOne
     private Manual manual;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNumeroOs() {
-        return numeroOs;
-    }
-
     public Analise(String identificadorAnalise, String pfTotal, String adjustPFTotal, Sistema sistema,
                    Organizacao organizacao, Boolean baselineImediatamente, TipoEquipe equipeResponsavel, Manual manual) {
         this.id = null;
@@ -221,4 +208,24 @@ public class Analise implements Serializable, ReportObject {
         this.equipeResponsavel = equipeResponsavel;
         this.manual = manual;
     }
+
+    public void setDataHomologacao(Timestamp dataHomologacao) {
+        if(dataHomologacao != null)
+            this.dataHomologacao = new Timestamp(dataHomologacao.getTime());
+    }
+
+    public Timestamp getDataHomologacao() {
+        return this.dataCriacaoOrdemServico!=null? new Timestamp(this.dataCriacaoOrdemServico.getTime()) : null;
+    }
+
+    public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
+        if(dataHomologacao != null)
+            this.dataHomologacao = new Timestamp(dataCriacaoOrdemServico.getTime());
+    }
+
+    public Timestamp getDataCriacaoOrdemServico() {
+        return this.dataHomologacao !=null ? new Timestamp(this.dataHomologacao.getTime()) : null;
+    }
+
+
 }

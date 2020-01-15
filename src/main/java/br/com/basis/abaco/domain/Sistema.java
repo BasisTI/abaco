@@ -2,6 +2,9 @@ package br.com.basis.abaco.domain;
 
 import br.com.basis.abaco.domain.enumeration.TipoSistema;
 import br.com.basis.dynamicexports.pojo.ReportObject;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -37,6 +40,9 @@ import static java.util.Collections.unmodifiableSet;
 @Table(name = "sistema")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "sistema")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Sistema implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
@@ -73,123 +79,6 @@ public class Sistema implements Serializable, ReportObject {
 
     @OneToMany(mappedBy = SISTEMA)
     private Set<Analise> analises = new HashSet<>();
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getSigla() {
-        return sigla;
-    }
-
-    public Sistema sigla(String sigla) {
-        this.sigla = sigla;
-        return this;
-    }
-
-    public void setSigla(String sigla) {
-        this.sigla = sigla;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public Sistema nome(String nome) {
-        this.nome = nome;
-        return this;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public TipoSistema getTipoSistema() {
-        return tipoSistema;
-    }
-
-    public void setTipoSistema(TipoSistema tipoSistema) {
-        this.tipoSistema = tipoSistema;
-    }
-
-    public String getNumeroOcorrencia() {
-        return numeroOcorrencia;
-    }
-
-    public Sistema numeroOcorrencia(String numeroOcorrencia) {
-        this.numeroOcorrencia = numeroOcorrencia;
-        return this;
-    }
-
-    public void setNumeroOcorrencia(String numeroOcorrencia) {
-        this.numeroOcorrencia = numeroOcorrencia;
-    }
-
-    public Organizacao getOrganizacao() {
-        return organizacao;
-    }
-
-    public String getNomeOrg() {
-        return organizacao.getNome();
-    }
-
-    public Sistema organizacao(Organizacao organizacao) {
-        this.organizacao = organizacao;
-        return this;
-    }
-
-    public void setOrganizacao(Organizacao organizacao) {
-        this.organizacao = organizacao;
-    }
-
-    public Set<Modulo> getModulos() {
-        return Optional.ofNullable(this.modulos)
-                .map(lista -> new LinkedHashSet<Modulo>(lista))
-                .orElse(new LinkedHashSet<Modulo>());
-    }
-
-    public Sistema modulos(Set<Modulo> modulos) {
-        this.modulos = Optional.ofNullable(modulos)
-                .map(lista -> new LinkedHashSet<Modulo>(lista))
-                .orElse(new LinkedHashSet<Modulo>());
-        return this;
-    }
-
-    public Sistema addModulo(Modulo modulo) {
-        if (modulo == null) {
-            return this;
-        }
-        this.modulos.add(modulo);
-        modulo.setSistema(this);
-        return this;
-    }
-
-    public Sistema removeModulo(Modulo modulo) {
-        if (modulo == null) {
-            return this;
-        }
-        this.modulos.remove(modulo);
-        modulo.setSistema(null);
-        return this;
-    }
-
-    public void setModulos(Set<Modulo> modulos) {
-        this.modulos = Optional.ofNullable(modulos)
-                .map(lista -> new LinkedHashSet<Modulo>(lista))
-                .orElse(new LinkedHashSet<Modulo>());
-    }
-
-    public Set<Analise> getAnalises() {
-        return analises;
-    }
-
-    public void setAnalises(Set<Analise> analises) {
-        this.analises = analises;
-    }
 
     @Override
     public boolean equals(Object o) {
