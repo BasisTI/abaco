@@ -220,13 +220,13 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
-        if(dataHomologacao != null) {
+        if(dataCriacaoOrdemServico != null) {
             this.dataHomologacao = new Timestamp(dataCriacaoOrdemServico.getTime());
         }
     }
 
     public Timestamp getDataCriacaoOrdemServico() {
-        return this.dataHomologacao !=null ? new Timestamp(this.dataHomologacao.getTime()) : null;
+        return this.dataHomologacao != null ? new Timestamp(this.dataHomologacao.getTime()) : null;
     }
 
 
