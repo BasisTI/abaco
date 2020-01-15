@@ -210,8 +210,9 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public void setDataHomologacao(Timestamp dataHomologacao) {
-        if(dataHomologacao != null)
+        if(dataHomologacao != null) {
             this.dataHomologacao = new Timestamp(dataHomologacao.getTime());
+        }
     }
 
     public Timestamp getDataHomologacao() {
@@ -219,8 +220,9 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
-        if(dataHomologacao != null)
+        if(dataHomologacao != null) {
             this.dataHomologacao = new Timestamp(dataCriacaoOrdemServico.getTime());
+        }
     }
 
     public Timestamp getDataCriacaoOrdemServico() {
