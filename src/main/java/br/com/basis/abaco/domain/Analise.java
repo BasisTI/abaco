@@ -181,7 +181,7 @@ public class Analise implements Serializable, ReportObject {
 
     @JsonIgnore
     @ManyToMany
-    private Set<EsforcoFase> esforcoFases = new HashSet<>();
+    private Set<EsforcoFase> esforcoFases;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private TipoEquipe equipeResponsavel;
@@ -376,11 +376,11 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Timestamp getDataCriacaoOrdemServico() {
-        return (Timestamp) dataCriacaoOrdemServico.clone();
+        return dataCriacaoOrdemServico;
     }
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
-        this.dataCriacaoOrdemServico = (Timestamp) dataCriacaoOrdemServico.clone();
+        this.dataCriacaoOrdemServico = dataCriacaoOrdemServico;
     }
 
     public FatorAjuste getFatorAjuste() {
@@ -392,11 +392,11 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Set<EsforcoFase> getEsforcoFases() {
-        return unmodifiableSet(esforcoFases);
+        return esforcoFases;
     }
 
     public void setEsforcoFases(Set<EsforcoFase> esforcoFases) {
-        this.esforcoFases = unmodifiableSet(esforcoFases);
+        this.esforcoFases = esforcoFases;
     }
 
     public String getObservacoes() {
@@ -416,11 +416,11 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public Timestamp getDataHomologacao() {
-        return (Timestamp) dataHomologacao.clone();
+        return dataHomologacao;
     }
 
     public void setDataHomologacao(Timestamp dataHomologacao) {
-        this.dataHomologacao = (Timestamp) dataHomologacao.clone();
+        this.dataHomologacao = dataHomologacao;
     }
 
     public String getIdentificadorAnalise() {

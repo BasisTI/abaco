@@ -138,5 +138,6 @@ jhipster:
 # More documentation is available at:
 # https://jhipster.github.io/common-application-properties/
 # ===================================================================
-
-application:
+nuvem:
+    elasticsearch:
+        reindex.enabled: true

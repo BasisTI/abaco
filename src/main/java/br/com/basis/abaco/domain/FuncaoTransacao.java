@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 
 @Entity
@@ -82,6 +81,10 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
         return serialVersionUID;
     }
 
+    public static String getFUNCAOTRANSACAO() {
+        return FUNCAOTRANSACAO;
+    }
+
     public TipoFuncaoTransacao getTipo() {
         return tipo;
     }
@@ -91,7 +94,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Funcionalidade> getFuncionalidades() {
-        return unmodifiableSet(funcionalidades);
+        return funcionalidades;
     }
 
     public void setFuncionalidades(Set<Funcionalidade> funcionalidades) {
@@ -115,7 +118,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Alr> getAlrs() {
-        return unmodifiableSet(alrs);
+        return alrs;
     }
 
     public void setAlrs(Set<Alr> alrs) {
@@ -123,19 +126,19 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public List<UploadedFile> getFiles() {
-        return unmodifiableList(files);
+        return files;
     }
 
     public void setFiles(List<UploadedFile> files) {
-        this.files = unmodifiableList(files);
+        this.files = files;
     }
 
     public Set<String> getFtrValues() {
-        return unmodifiableSet(ftrValues);
+        return  unmodifiableSet(ftrValues);
     }
 
     public void setFtrValues(Set<String> ftrValues) {
-        this.ftrValues = unmodifiableSet(ftrValues);
+        this.ftrValues =  unmodifiableSet(ftrValues);
     }
 
     public ImpactoFatorAjuste getImpacto() {
@@ -147,11 +150,11 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     }
 
     public Set<Der> getDers() {
-        return unmodifiableSet(ders);
+        return  unmodifiableSet(ders);
     }
 
     public void setDers(Set<Der> ders) {
-        this.ders = unmodifiableSet(ders);
+        this.ders =  unmodifiableSet(ders);
     }
 
 }
