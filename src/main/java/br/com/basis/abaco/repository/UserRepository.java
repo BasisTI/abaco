@@ -60,6 +60,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByLogin(String login);
 
-    List<User> getAllByFirstNameIsNotNull();
+    List<User> getAllByFirstNameIsNotNullOrderByFirstName();
 
 }

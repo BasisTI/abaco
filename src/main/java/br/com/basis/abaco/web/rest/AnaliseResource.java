@@ -16,6 +16,7 @@ import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
+import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.exception.RelatorioException;
@@ -112,6 +113,9 @@ public class AnaliseResource {
     private DynamicExportsService dynamicExportsService;
 
     private ElasticsearchTemplate elasticsearchTemplate;
+
+    @Autowired
+    private UserSearchRepository userSearchRepository;
 
     @Autowired
     private HttpServletRequest request;
@@ -427,7 +431,7 @@ public class AnaliseResource {
 
 
     private Set<Long> getIdEquipes() {
-        User user = userRepository.findByLogin(SecurityUtils.getCurrentUserLogin());
+        User user = userSearchRepository.findByLogin(SecurityUtils.getCurrentUserLogin());
         Set<TipoEquipe> listaEquipes = user.getTipoEquipes();
         Set<Long> equipesIds = new HashSet<>();
         listaEquipes.forEach(tipoEquipe -> {

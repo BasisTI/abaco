@@ -27,5 +27,4 @@ public class SistemaDTO {
 
     private Set<ModuloDTO> modulos;
 
-    private Set<AnaliseDTO> analises;
 }

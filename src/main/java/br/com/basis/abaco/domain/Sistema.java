@@ -71,7 +71,7 @@ public class Sistema implements Serializable, ReportObject {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Modulo> modulos = new HashSet<>();
 
-    @OneToMany(mappedBy = "sistema")
+    @OneToMany(mappedBy = SISTEMA)
     private Set<Analise> analises = new HashSet<>();
 
     public Long getId() {

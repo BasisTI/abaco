@@ -240,7 +240,7 @@ public class UserResource {
     @Timed
     @Transactional
     public List<User> getOrganizacaoDropdown() {
-        return userRepository.getAllByFirstNameIsNotNull();
+        return userRepository.getAllByFirstNameIsNotNullOrderByFirstName();
     }
 
     @GetMapping("/users/reindexar")
