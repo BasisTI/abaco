@@ -22,7 +22,7 @@ public class ElasticSearchIndexService {
     private Map<String, Indexador> indexadoresPorCodigo;
 
     public ElasticSearchIndexService(List<Indexador> indexadores) {
-        this.indexadores = unmodifiableList(indexadores);
+        this.indexadores = indexadores;
     }
 
     public void reindexar(List<String> codigos) {

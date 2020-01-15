@@ -1,23 +1,23 @@
 package br.com.basis.abaco.domain.enumeration;
 
 public enum IndexadoresUtil {
-   ESFORCO_FASE("Esforço Fase"),
-   MANUAL_CONTRATO("Manual Contrato"),
-   ORGANIZACAO("Organização"),
-   ALR("Alr"),
-   SISTEMA("Sistema"),
-   FUNCIONALIDADE("Funcionalidade"),
-   CONTRATO("Contrato"),
-   MANUAL("Manual"),
-   TIPO_EQUIPE("Tipo Equipe"),
-   FATOR_AJUSTE("Fator Ajuste"),
-   DER("Der"),
-   ANALISE("Analise"),
-   RLR("Rlr"),
-   FUNCAO_DADOS("Funcao Dados"),
-   USER("User"),
-   MODULO("Modulo"),
-   FUNCAO_TRANSACAO("Função Transação");
+   ESFORCO_FASE("esforço_fase"),
+   MANUAL_CONTRATO("manual_contrato"),
+   ORGANIZACAO("organização"),
+   ALR("alr"),
+   SISTEMA("sistema"),
+   FUNCIONALIDADE("funcionalidade"),
+   CONTRATO("contrato"),
+   MANUAL("manual"),
+   TIPO_EQUIPE("tipo_equipe"),
+   FATOR_AJUSTE("fator_ajuste"),
+   DER("der"),
+   ANALISE("analise"),
+   RLR("rlr"),
+   FUNCAO_DADOS("funcao_dados"),
+   USER("user"),
+   MODULO("modulo"),
+   FUNCAO_TRANSACAO("função_transação");
 
    public final String label;
 
