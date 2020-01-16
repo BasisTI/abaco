@@ -128,11 +128,11 @@ public class OrganizacaoResource {
       i++;
     }
     /* Verifing if there is an existing Organizacao with same name */
-    Optional<Organizacao> existingOrganizacao = organizacaoRepository.findOneByNome(org.getNome());
+    Optional<Organizacao> existingOrganizacao = organizacaoSearchRepository.findOneByNome(org.getNome());
     if (existingOrganizacao.isPresent() && (!existingOrganizacao.get().getId().equals(org.getId()))) {
       return 4;
     }
-    existingOrganizacao = organizacaoRepository.findOneByCnpj(org.getCnpj());
+    existingOrganizacao = organizacaoSearchRepository.findOneByCnpj(org.getCnpj());
     if (org.getCnpj() != null && existingOrganizacao.isPresent()
         && (!existingOrganizacao.get().getId().equals(org.getId()))) {
       return 5;
