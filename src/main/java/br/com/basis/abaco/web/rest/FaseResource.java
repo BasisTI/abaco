@@ -1,5 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.novo.Fase;
 import br.com.basis.abaco.service.FaseService;
 import br.com.basis.abaco.service.dto.novo.DropdownDTO;
 import br.com.basis.abaco.service.dto.FaseDTO;
@@ -43,7 +44,7 @@ public class FaseResource {
     @PostMapping("/fases")
     @Timed
     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
-    public ResponseEntity<Void> save(@RequestBody FaseDTO fase) {
+    public ResponseEntity<Void> save(@RequestBody Fase fase) {
         log.debug("REST request to save Fase : {}", fase);
         service.save(fase);
         return ResponseEntity.ok().build();

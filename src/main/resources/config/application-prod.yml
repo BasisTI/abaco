@@ -49,7 +49,7 @@ spring:
     data:
         elasticsearch:
             cluster-name:
-            cluster-nodes: localhost:9300
+            cluster-nodes: abaco.tst.basis.com.br:39200
     mail:
         host: smtp.basis.intern
         port: 25

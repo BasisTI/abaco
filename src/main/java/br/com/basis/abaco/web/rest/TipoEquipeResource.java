@@ -136,8 +136,7 @@ public class TipoEquipeResource {
         if (tipoEquipe.getId() == null) {
             return createTipoEquipe(tipoEquipe);
         }
-        TipoEquipe result = tipoEquipeRepository.save(tipoEquipe);
-        tipoEquipeSearchRepository.save(result);
+        TipoEquipe result = tipoEquipeSearchRepository.save(tipoEquipe);
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, tipoEquipe.getId().toString())).body(result);
     }
@@ -160,7 +159,7 @@ public class TipoEquipeResource {
     @Timed
     public ResponseEntity<TipoEquipe> getTipoEquipe(@PathVariable Long id) {
         log.debug("REST request to get TipoEquipe : {}", id);
-        TipoEquipe tipoEquipe = tipoEquipeRepository.findOne(id);
+        TipoEquipe tipoEquipe = tipoEquipeRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoEquipe));
     }
 

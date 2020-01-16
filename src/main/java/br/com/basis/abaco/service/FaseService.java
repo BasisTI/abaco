@@ -1,5 +1,6 @@
 package br.com.basis.abaco.service;
 
+import br.com.basis.abaco.domain.novo.Fase;
 import br.com.basis.abaco.repository.FaseRepository;
 import br.com.basis.abaco.service.dto.novo.DropdownDTO;
 import br.com.basis.abaco.service.dto.FaseDTO;
@@ -40,9 +41,19 @@ public class FaseService {
         validaNome(faseDTO);
         repository.save(mapper.toEntity(faseDTO));
     }
+    public void save(Fase fase) {
+        validaNome(fase);
+        repository.save(fase);
+    }
 
     private void validaNome(FaseDTO faseDTO) {
         if (repository.existsByNome(faseDTO.getNome())) {
+            throw new CustomParameterizedException(ErrorConstants.FASE_CADASTRADA);
+        }
+    }
+
+    private void validaNome(Fase fase) {
+        if (repository.existsByNome(fase.getNome())) {
             throw new CustomParameterizedException(ErrorConstants.FASE_CADASTRADA);
         }
     }

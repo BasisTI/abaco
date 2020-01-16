@@ -239,7 +239,6 @@ public class OrganizacaoResource {
   public ResponseEntity<Organizacao> getOrganizacao(@PathVariable Long id) {
     log.debug("REST request to get Organizacao : {}", id);
     Organizacao organizacao = organizacaoRepository.findOne(id);
-
     return ResponseUtil.wrapOrNotFound(Optional.ofNullable(organizacao));
   }
 

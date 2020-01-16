@@ -88,7 +88,7 @@ public class UserResource {
         this.elasticSearchIndexService = elasticSearchIndexService;
     }
 
-    @PostMapping("")
+    @PostMapping("/users")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
     public ResponseEntity createUser(@RequestBody User user) throws URISyntaxException {
@@ -104,8 +104,7 @@ public class UserResource {
             user.setPassword(RandomUtil.generatePassword());
             mailService.sendCreationEmail(user);
             User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
-            User newUser = userRepository.save(userReadyToBeSaved);
-            userSearchRepository.save(newUser);
+            User newUser = userSearchRepository.save(userReadyToBeSaved);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
                     .headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin())).body(newUser);
         }
