@@ -47,8 +47,6 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-import static java.util.Collections.unmodifiableSet;
-
 @ApiModel(description = "<Enter note text here>")
 @Entity
 @Table(name = "analise")
@@ -134,24 +132,23 @@ public class Analise implements Serializable, ReportObject {
     @Column(name = "bloqueado")
     private boolean bloqueiaAnalise;
 
-    @JsonIgnore
     @Column(name = "enviar_baseline")
     private boolean enviarBaseline;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Sistema sistema;
 
-    @JsonIgnore
     @ManyToOne
     private Contrato contrato;
 
     @JsonInclude
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Organizacao organizacao;
 
     @Embedded
     private AbacoAudit audit = new AbacoAudit();
 
+    @JsonInclude
     @Field(type = FieldType.Nested, index = FieldIndex.not_analyzed)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_analise", joinColumns = @JoinColumn(name = "analise_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
@@ -168,31 +165,28 @@ public class Analise implements Serializable, ReportObject {
     @OneToMany(mappedBy = "analises")
     private Set<Compartilhada> compartilhadas = new HashSet<>();
 
+    @JsonInclude
     @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JsonIgnore
     @OrderBy("name ASC, funcionalidade ASC, id ASC")
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
 
+    @JsonInclude
     @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JsonIgnore
     @OrderBy("name ASC, funcionalidade ASC, id ASC")
     private Set<FuncaoTransacao> funcaoTransacaos = new HashSet<>();
 
-    @JsonIgnore
     @Nullable
     @ManyToOne
     private FatorAjuste fatorAjuste;
 
-    @JsonIgnore
     @ManyToMany
     private Set<EsforcoFase> esforcoFases;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private TipoEquipe equipeResponsavel;
 
-    @JsonIgnore
     @ManyToOne
     private Manual manual;
 
@@ -210,24 +204,22 @@ public class Analise implements Serializable, ReportObject {
     }
 
     public void setDataHomologacao(Timestamp dataHomologacao) {
-        if(dataHomologacao != null) {
+        if (dataHomologacao != null) {
             this.dataHomologacao = new Timestamp(dataHomologacao.getTime());
         }
     }
 
     public Timestamp getDataHomologacao() {
-        return this.dataCriacaoOrdemServico!=null? new Timestamp(this.dataCriacaoOrdemServico.getTime()) : null;
+        return this.dataHomologacao != null ? new Timestamp(this.dataHomologacao.getTime()) : null;
     }
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
-        if(dataCriacaoOrdemServico != null) {
-            this.dataHomologacao = new Timestamp(dataCriacaoOrdemServico.getTime());
+        if (dataCriacaoOrdemServico != null) {
+            this.dataCriacaoOrdemServico = new Timestamp(dataCriacaoOrdemServico.getTime());
         }
     }
 
     public Timestamp getDataCriacaoOrdemServico() {
-        return this.dataHomologacao != null ? new Timestamp(this.dataHomologacao.getTime()) : null;
+        return this.dataCriacaoOrdemServico != null ? new Timestamp(this.dataCriacaoOrdemServico.getTime()) : null;
     }
-
-
 }

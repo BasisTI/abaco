@@ -4,14 +4,13 @@ import br.com.basis.abaco.domain.audit.AbacoAudit;
 import br.com.basis.abaco.domain.audit.AbacoAuditListener;
 import br.com.basis.abaco.domain.audit.AbacoAuditable;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
-import org.springframework.cloud.cloudfoundry.com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,7 +50,7 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     @JoinColumn(name = "analise_id")
     private Analise analise;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "funcionalidade_id")
     @OrderBy("nome ASC")
     private Funcionalidade funcionalidade;

@@ -52,9 +52,9 @@ public class FaseResource {
 
     @GetMapping("/fases/{id}")
     @Timed
-    public ResponseEntity<FaseDTO> findOne(@PathVariable Long id) {
+    public ResponseEntity<Fase> findOne(@PathVariable Long id) {
         log.debug("REST request to get Fase : {}", id);
-        FaseDTO fase = service.findOne(id);
+        Fase fase = service.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(fase));
     }
     

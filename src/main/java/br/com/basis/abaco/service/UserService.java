@@ -209,6 +209,7 @@ public class UserService {
             user.setLastName(lastName);
             user.setEmail(email);
             user.setLangKey(langKey);
+            userRepository.save(user);
             userSearchRepository.save(user);
             log.debug("Changed Information for User: {}", user);
         });

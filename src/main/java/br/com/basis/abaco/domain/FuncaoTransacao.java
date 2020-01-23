@@ -78,6 +78,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Der> ders = new HashSet<>();
 
+    @JsonIgnore
     @ManyToOne
     private Analise analise;
 

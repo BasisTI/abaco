@@ -152,11 +152,12 @@ public class AnaliseResource {
                     HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
         }
         analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
-        Analise analiseData = this.salvaNovaData(analise);
-        linkFuncoesToAnalise(analiseData);
-        Analise result = analiseRepository.save(analiseData);
+        salvaNovaData(analise);
+        linkFuncoesToAnalise(analise);
+        Analise result = analiseRepository.save(analise);
         unlinkAnaliseFromFuncoes(result);
-        analiseSearchRepository.save(analiseData);
+        analiseRepository.save(analise);
+        analiseSearchRepository.save(analise);
         return ResponseEntity.created(new URI("/api/analises/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
@@ -172,26 +173,14 @@ public class AnaliseResource {
             return ResponseEntity.badRequest().headers(
                     HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
         }
-        analise.setCreatedBy(analiseRepository.findOne(analise.getId()).getCreatedBy());
-        Analise analiseData = this.salvaNovaData(analise);
-        linkFuncoesToAnalise(analiseData);
-        Analise result = analiseRepository.save(analiseData);
-        analiseSearchRepository.save(result);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analiseData.getId().toString()))
-                .body(result);
+        analise.setEditedBy(analiseRepository.findOne(analise.getId()).getCreatedBy());
+        salvaNovaData(analise);
+        linkFuncoesToAnalise(analise);
+        analiseRepository.save(analise);
+        analiseSearchRepository.save(analise);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
+                .body(analise);
     }
-
-    private Analise salvaNovaData(Analise analise) {
-        if (analise.getDataHomologacao() != null) {
-            Timestamp dataDeHoje = new Timestamp(System.currentTimeMillis());
-            Timestamp dataParam = analise.getDataHomologacao();
-            dataParam.setHours(dataDeHoje.getHours());
-            dataParam.setMinutes(dataDeHoje.getMinutes());
-            dataParam.setSeconds(dataDeHoje.getSeconds());
-        }
-        return analise;
-    }
-
 
     @PutMapping("/analises/{id}/block")
     @Timed
@@ -208,17 +197,14 @@ public class AnaliseResource {
             } else {
                 analise.setBloqueiaAnalise(true);
             }
-
+            unlinkAnaliseFromFuncoes(analise);
             Analise result = analiseRepository.save(analise);
-            unlinkAnaliseFromFuncoes(result);
             analiseSearchRepository.save(result);
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
                     .body(result);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Analise());
         }
-
-
     }
 
     @PostMapping("/analises/clonar/{id}")
@@ -462,7 +448,7 @@ public class AnaliseResource {
         boolean retorno = checarPermissao(id);
 
         if (retorno) {
-            return analiseRepository.findOne(id);
+            return analiseSearchRepository.findOne(id);
         } else {
             return null;
         }
@@ -567,6 +553,17 @@ public class AnaliseResource {
         analiseSearchRepository.save(result);
         return analiseCopiaSalva;
     }
+
+    private void salvaNovaData(Analise analise) {
+        if (analise.getDataHomologacao() != null) {
+            Timestamp dataDeHoje = new Timestamp(System.currentTimeMillis());
+            Timestamp dataParam = analise.getDataHomologacao();
+            dataParam.setHours(dataDeHoje.getHours());
+            dataParam.setMinutes(dataDeHoje.getMinutes());
+            dataParam.setSeconds(dataDeHoje.getSeconds());
+        }
+    }
+
 
     private void mustTermQuery(String sistema, BoolQueryBuilder qb, String s) {
         if (!StringUtils.isEmptyString((sistema))) {
