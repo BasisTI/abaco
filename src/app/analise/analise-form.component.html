@@ -3,12 +3,9 @@
         <div class="ui-g ui-fluid">
             <div class="ui-g-12">
                 <div class="card card-w-title">
-
                     <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
-
                         <div>
-                            <!-- Inicio dos campos para inclusão -->
-                            <div class="ui-g" *ngIf="!isEdicao">
+                            <div class="ui-g">
                                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
                                     <label translate="Analise.Analise.Organizacao">Organização</label>
                                     <p-dropdown
@@ -17,6 +14,7 @@
                                             id="idOrganizacaoSaveFormAnalise"
                                             name="organizacao"
                                             optionLabel="nome"
+                                            [disabled]="disabledOptionsforEdit()"
                                             [placeholder]="this.getLabel('Analise.Analise.Selecione')"
                                             [options]="organizacoes"
                                             [(ngModel)]="analise.organizacao"
@@ -24,7 +22,6 @@
                                             (onChange)="setSistemaOrganizacao($event.value)">
                                     </p-dropdown>
                                 </div>
-
                                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
                                     <label translate="Analise.Analise.Sistema">Sistema</label>
                                     <p-dropdown
@@ -32,8 +29,8 @@
                                             dataKey="id"
                                             id="idSistemaSaveFormAnalise"
                                             optionLabel="sigla"
-                                            disabled="{{ !disabledSistemaDropdown() }}"
-                                            placeholder="{{ sistemaDropdownPlaceholder() }}"
+                                            [disabled]="disabledOptionsforEdit()"
+                                            [placeholder]="this.getLabel('Analise.Analise.SelecioneUmContrato')"
                                             (onChange)="getSistemaSelecionado()"
                                             name="sistema"
                                             [options]="sistemas"
@@ -41,7 +38,6 @@
                                             [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
-
                                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
                                     <label translate="Analise.Analise.EquipeResponsavel">Equipe Responsável</label>
                                     <p-dropdown
@@ -50,6 +46,7 @@
                                             id="idEquipeResponsavelSaveFormAnalise"
                                             name="equipeResponsavel"
                                             optionLabel="nome"
+                                            [disabled]="disabledOptionsforEdit()"
                                             [placeholder]="this.getLabel('Analise.Analise.Selecione')"
                                             [disabled]="hideShowSelectEquipe"
                                             [options]="equipeResponsavel"
@@ -57,90 +54,13 @@
                                             [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
-
-                                <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: center; margin-top: 05px;">
-                                    <div class="ui-g-2 ui-md-2 ui-sm-12">
-
-                                        <app-white-button
-                                                [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
-                                                id="idBtnCancelarSaveFormAnalise"
-                                                routerLink="/analise">
-                                        </app-white-button>
-
-                                    </div>
-                                    <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                        <app-analise-botao-salvar></app-analise-botao-salvar>
-                                    </div>
-                                </div>
                             </div>
-                            <!-- Fim dos campos para inclusão -->
-
-                            <div class="ui-g" *ngIf="isEdicao">
-
-                                <!-- Inicio dos campos para alteração -->
-                                <div class="ui-g-12 ui-md-12 ui-sm-12">
-
-                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px">
-                                        <label translate="Analise.Analise.Organizacao">Organização</label>
-                                        <p-dropdown
-                                                [filter]="true"
-                                                dataKey="id"
-                                                id="idOrganizacaoEditFormAnalise"
-                                                name="organizacao"
-                                                optionLabel="nome"
-                                                placeholder="Selecione..."
-                                                disabled="true"
-                                                [options]="organizacoes"
-                                                [(ngModel)]="analise.organizacao"
-                                                [autoWidth]="false"
-                                                (onChange)="setSistamaOrganizacao($event.value)">
-                                        </p-dropdown>
-                                    </div>
-                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px">
-                                        <label translate="Analise.Analise.EquipeResponsavel">Equipe Responsável</label>
-                                        <p-dropdown
-                                                [filter]="true"
-                                                dataKey="id"
-                                                id="idEquipeResponsavelEditFormAnalise"
-                                                name="equipeResponsavel"
-                                                optionLabel="nome"
-                                                placeholder="Selecione..."
-                                                disabled="true"
-                                                [options]="equipeResponsavel"
-                                                [(ngModel)]="analise.equipeResponsavel"
-                                                [autoWidth]="false"
-                                                (onChange)="setSistamaOrganizacao($event.value)">
-                                        </p-dropdown>
-                                    </div>
-
-                                    <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px">
-                                        <label translate="Analise.Analise.Sistema">Sistema</label>
-                                        <p-dropdown
-                                                [filter]="true"
-                                                dataKey="id"
-                                                optionLabel="sigla"
-                                                disabled="true"
-                                                id="idSistemaEditFormAnalise"
-                                                placeholder="{{ sistemaDropdownPlaceholder() }}"
-                                                (onChange)="getSistemaSelecionado()"
-                                                name="sistema"
-                                                [options]="sistemas"
-                                                [(ngModel)]="analise.sistema"
-                                                [autoWidth]="false">
-                                        </p-dropdown>
-                                    </div>
-
-                                </div>
-                                <!-- Fim dos campos para alteração -->
-                            </div>
-
                         </div>
-
-                        <div style="margin-bottom: 05px; margin-top: 05px" *ngIf="isEdicao">
+                        <div style="margin-bottom: 05px; margin-top: 05px" *ngIf="analise.equipeResponsavel">
                             <div class="ui-g">
-
                                 <div class="ui-g-4 ui-md-3 ui-sm-12" style="margin-bottom: 05px">
-                                    <label translate="Analise.Analise.IdentificadorAnalise*">Identificador da Analise *</label>
+                                    <label translate="Analise.Analise.IdentificadorAnalise*">Identificador da Analise
+                                        *</label>
                                     <span class="md-inputfield">
                                         <input
                                                 required
@@ -152,21 +72,20 @@
                                                 pInputText/>
                                     </span>
                                 </div>
-                             
                                 <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 05px">
-                                    <label translate="Analise.Analise.DataCriacaoOrdemServico">Data Criação da O. S. *</label>
-                                     <span class="md-inputfield">
+                                    <label translate="Analise.Analise.DataCriacaoOrdemServico">Data Criação da O. S.
+                                        *</label>
+                                    <span class="md-inputfield">
                                         <p-calendar
-                                            required
-                                            name="dataCriacaoOrdemServico"
-                                            [(ngModel)]="analise.dataCriacaoOrdemServico"
-                                            id="idDataCriacaoOrdemServicoFormAnalise"
-                                            dateFormat="dd/mm/yy"
-                                            showIcon="true"
+                                                required
+                                                name="dataCriacaoOrdemServico"
+                                                [(ngModel)]="analise.dataCriacaoOrdemServico"
+                                                id="idDataCriacaoOrdemServicoFormAnalise"
+                                                dateFormat="dd/mm/yy"
+                                                showIcon="true"
                                         ></p-calendar>
                                      </span>
                                 </div>
-
                                 <div class="ui-g-3 ui-md-2 ui-sm-12" style="margin-bottom: 05px">
                                     <label translate="Analise.Analise.Contrato*">Contrato *</label>
                                     <p-dropdown
@@ -177,52 +96,49 @@
                                             optionLabel="numeroContrato"
                                             [placeholder]="this.getLabel('Analise.Analise.Selecione')"
                                             (onChange)="contratoSelected($event.value)"
+                                            [disabled]="disabledOptionsforEdit()"
                                             name="contrato"
                                             [options]="contratos"
                                             [(ngModel)]="analise.contrato"
                                             [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
-
                                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
                                     <label translate="Analise.Analise.Manual*">Manual *</label>
                                     <p-dropdown
-                                        required
-                                        [filter]="true"
-                                        id="idManual"
-                                        name="manual"
-                                        disabled="{{ !isContratoSelected() }}"
-                                        [options]="manuaisCombo"
-                                        (onChange)="setManual($event.value)"
-                                        [(ngModel)]="analise.manual"
-                                        [autoWidth]="false"
-                                        datakey="id">
-                                            <div class="row">
-                                                <ng-template let-manualSelc pTemplate="selectedItem">
-                                                    {{manualSelc.label}}
-                                                </ng-template>
-                                               
-                                            </div>
+                                            required
+                                            [filter]="true"
+                                            id="idManual"
+                                            name="manual"
+                                            [disabled]="disabledOptionsforEdit()"
+                                            [options]="manuaisCombo"
+                                            (onChange)="setManual($event.value)"
+                                            [(ngModel)]="analise.manual"
+                                            [autoWidth]="false"
+                                            datakey="id">
+                                        <div class="row">
+                                            <ng-template let-manualSelc pTemplate="selectedItem">
+                                                {{manualSelc.label}}
+                                            </ng-template>
+
+                                        </div>
                                     </p-dropdown>
                                 </div>
-                                
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" *ngIf="validacaoCampos">
+                                <div [ngClass]="(disabledOptionsforEdit())? '(ui-g-4 ui-md-4 ui-sm-12)' : '(ui-g-6 ui-md-6 ui-sm-12)'" style="margin-bottom: 05px" >
                                     <label translate="Analise.Analise.MetodoContagem*">Método de Contagem *</label>
                                     <p-dropdown
                                             [filter]="true"
                                             required
                                             id="idMetodoContagemFormAnalise"
-                                            placeholder="{{ needContratoDropdownPlaceholder() }}"
+                                            [placeholder]="this.getLabel('Analise.Analise.SelecioneUmContrato')"
                                             name="metodoContagem"
                                             [options]="metodosContagem"
-                                            [disabled]="!this.analise.contrato"
                                             [(ngModel)]="analise.metodoContagem"
-                                            [autoWidth]="false"
-                                            [disabled]="!this.analise.contrato">
+                                            [disabled]="disabledOptionsforEdit()"
+                                            [autoWidth]="false" >
                                     </p-dropdown>
                                 </div>
-
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" *ngIf="validacaoCampos">
+                                <div [ngClass]="(disabledOptionsforEdit())? '(ui-g-4 ui-md-4 ui-sm-12)' : '(ui-g-6 ui-md-6 ui-sm-12)'" style="margin-bottom: 05px">
                                     <label translate="Analise.Analise.TipoContagem*">Tipo de Contagem *</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -232,59 +148,18 @@
                                             [placeholder]="this.getLabel('Analise.Analise.Selecione')"
                                             [options]="tiposAnalise"
                                             [(ngModel)]="analise.tipoAnalise"
-                                            [autoWidth]="false">
-                                    </p-dropdown>
-                                </div>
-                                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 05px" *ngIf="!validacaoCampos">
-                                    <label translate="Analise.Analise.MetodoContagem*">Método de Contagem *</label>
-                                    <p-dropdown
-                                            [filter]="true"
-                                            required
-                                            id="idMetodoContagemFormAnalise"
-                                            placeholder="{{ needContratoDropdownPlaceholder() }}"
-                                            name="metodoContagem"
-                                            [options]="metodosContagem"
-                                            [disabled]="!this.analise.contrato"
-                                            [(ngModel)]="analise.metodoContagem"
-                                            [autoWidth]="false"
-                                            [disabled]="!this.analise.contrato">
+                                            [disabled]="disabledOptionsforEdit()"
+                                            [autoWidth]="false" >
                                     </p-dropdown>
                                 </div>
 
-                                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 05px" *ngIf="!validacaoCampos">
-                                    <label translate="Analise.Analise.TipoContagem*">Tipo de Contagem *</label>
-                                    <p-dropdown
-                                            [filter]="true"
-                                            required
-                                            id="idTipoContagemFormAnalise"
-                                            name="tiposAnalise"
-                                            [placeholder]="this.getLabel('Analise.Analise.Selecione')"
-                                            [options]="tiposAnalise"
-                                            [(ngModel)]="analise.tipoAnalise"
-                                            [autoWidth]="false">
-                                    </p-dropdown>
-                                </div>
-                                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
-                                    <label translate="Analise.Analise.Deflator">Deflator</label>
-                                    <p-dropdown
-                                            filter="true"
-                                            required
-                                            id="idDeflatorAnalise"
-                                            disabled="{{ !isContratoSelected() }}"
-                                            placeholder="{{ needContratoDropdownPlaceholder() }}"
-                                            name="deflator"
-                                            [options]="fatoresAjuste"
-                                            [(ngModel)]="analise.fatorAjuste"
-                                            [autoWidth]="false">
-                                    </p-dropdown>
-                                </div>
-                                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos" *ngIf="isEdicao">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px"
+                                     *ngIf="analise.id">
                                     <label translate="Analise.Analise.Usuarios">Usuários</label>
                                     <p-multiSelect
                                             [filter]="true"
                                             required
                                             id="idUserFormAnalise"
-                                            disabled="{{ !isContratoSelected() }}"
                                             name="usersMultiselect"
                                             [(options)]="users"
                                             [(ngModel)]="analise.users"
@@ -294,7 +169,8 @@
                                             #usersMultiselect='ngModel'>
                                     </p-multiSelect>
                                 </div>
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px"
+                                     >
                                     <label translate="Analise.Analise.PropositoContagem">Propósito da Contagem</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -306,7 +182,8 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px"
+                                     >
                                     <label translate="Analise.Analise.EscopoContagem">Escopo da Contagem</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -318,7 +195,8 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px"
+                                     >
                                     <label translate="Analise.Analise.Fronteira">Fronteira</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -330,7 +208,8 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
+                                <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px"
+                                     >
                                     <label translate="Analise.Analise.Documentacao">Documentação</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -343,14 +222,14 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-4 ui-md-4 ui-sm-12" [hidden]="validacaoCampos">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" >
 
                                     <div class="ui-g-6 ui-md-6 ui-sm-12">
                                         {{this.getLabel('Analise.Analise.AguardarPrazoGarantia')}} {{diasGarantia > 0 ? this.getLabel('Analise.Analise.De') + diasGarantia + this.getLabel('Analise.Analise.Dias')
-                                            : null}}?
+                                        : null}}?
                                     </div>
 
-                                    <div class="ui-g-3 ui-md-2 ui-sm-12" >
+                                    <div class="ui-g-3 ui-md-2 ui-sm-12">
                                         <p-radioButton
                                                 name="baseline_imediatamente"
                                                 [label]="this.getLabel('Global.Botoes.Sim')"
@@ -372,40 +251,36 @@
 
                                 </div>
 
-                                <div class="ui-g-4 ui-md-4 ui-sm-12" [hidden]="validacaoCampos">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" >
 
                                     <div class="ui-g-6 ui-md-6 ui-sm-12" translate="Analise.Analise.IncorporarBaseline">
                                         Incorporar a Baseline
                                     </div>
-                                    <div class="ui-g-3 ui-md-2 ui-sm-12" >
+                                    <div class="ui-g-3 ui-md-2 ui-sm-12">
                                         <p-radioButton
                                                 name="baseline_enviar_baseline"
                                                 [label]="this.getLabel('Global.Botoes.Sim')"
                                                 id="idEnviarBaselineSimFormAnalise"
                                                 [value]="true"
-                                                [(ngModel)]="analise.enviarBaseline"
-                                                (onClick)="save()">
+                                                [(ngModel)]="analise.enviarBaseline" >
                                         </p-radioButton>
                                     </div>
-
                                     <div class="ui-g-3 ui-md-2 ui-sm-12">
                                         <p-radioButton
                                                 name="baseline_enviar_baseline"
                                                 [label]="this.getLabel('Global.Botoes.Nao')"
                                                 id="idEnviarBaselineNaoFormAnalise"
                                                 [value]="false"
-                                                [(ngModel)]="analise.enviarBaseline"
-                                                (onClick)="save()">
+                                                [(ngModel)]="analise.enviarBaseline" >
                                         </p-radioButton>
                                     </div>
-
                                 </div>
-
-                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px" [hidden]="validacaoCampos">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px"
+                                     >
                                     <span class="md-inputfield">
                                         <p-calendar
-                                                [required] = analise.baselineImediatamente
-                                                name="dataHomol"
+                                                [required]="analise.baselineImediatamente"
+                                                name="dataHomologacao"
                                                 [(ngModel)]="analise.dataHomologacao"
                                                 id="idDataHomolagacaoFormAnalise"
                                                 dateFormat="dd/mm/yy"
@@ -413,52 +288,32 @@
                                         </p-calendar>
                                         <label>{{this.getLabel('Analise.Analise.DataHomologacao')}} {{analise.baselineImediatamente ? " *" : null}}</label>
                                     </span>
-                                    <!-- <div *ngIf="analise.dataHomologacao"
-                                         class="ui-message ui-messages-error">
-                                        Campo Obrigatório!
-                                    </div> -->
-
                                 </div>
-
-                                <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')" [toggleable]="true" [collapsed]="true" [hidden]="validacaoCampos">
+                                <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')" [toggleable]="true"
+                                            [collapsed]="true" >
                                     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
                                         <p-dataTable
-                                            dataKey="id"
-                                            [emptyMessage]="this.getLabel('Analise.Analise.Mensagens.msgSelecioneContratoParaEscolherFases')"
-                                            [value]="esforcoFases"
-                                            id="idTabelaFases"
-                                            [(selection)]="analise.esforcoFases"
-                                            (onHeaderCheckboxToggle)="save()"
-                                            (onRowSelect)="save()"
-                                            (onRowUnselect)="save()"
-                                            [headerCheckboxToggleAllPages]="true">
-                                        <p-header translate="Analise.Analise.Fases">Fases</p-header>
-                
-                                        <p-column
-                                            selectionMode="multiple"
-                                            [style]="{'width':'15%'}">
-                                        </p-column>
-                
-                                        <p-column
-                                            [header]="this.getLabel('Analise.Analise.Nome')"
-                                            field="fase.nome">
-                                        </p-column>
-                
-                                        <p-column
-                                            [header]="this.getLabel('Analise.Analise.Esforco')"
-                                            field="esforco">
-                                        </p-column>
-                
-                                        <p-footer
-                                            *ngIf="analise.contrato">
-                                            {{this.getLabel('Analise.Analise.Total')}} {{ totalEsforcoFases() }}%
-                                        </p-footer>
+                                                dataKey="id"
+                                                [emptyMessage]="this.getLabel('Analise.Analise.Mensagens.msgSelecioneContratoParaEscolherFases')"
+                                                [value]="esforcoFases"
+                                                id="idTabelaFases"
+                                                [(selection)]="analise.esforcoFases"
+                                                [headerCheckboxToggleAllPages]="true">
+                                            <p-header translate="Analise.Analise.Fases">Fases</p-header>
+
+                                            <p-column selectionMode="multiple" [style]="{'width':'15%'}"></p-column>
+
+                                            <p-column [header]="this.getLabel('Analise.Analise.Nome')" field="fase.nome"></p-column>
+
+                                            <p-column [header]="this.getLabel('Analise.Analise.Esforco')" field="esforco"></p-column>
+
+                                            <p-footer *ngIf="analise.contrato">
+                                                {{this.getLabel('Analise.Analise.Total')}} {{ totalEsforcoFases() }}%
+                                            </p-footer>
                                         </p-dataTable>
                                     </div>
                                 </p-fieldset>
-                                
-
-                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px" [hidden]="validacaoCampos">
+                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px" >
                                     <label translate="Analise.Analise.Observacoes">Observações</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -473,23 +328,24 @@
                                     </span>
                                 </div>
 
-                            <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 05px; margin-top: 05px">
-                                <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 05px">
-                                    <app-white-button
-                                            [buttonLabel]="'Global.Botoes.Voltar' | translate"
-                                            id="idBtnVoltarFormAnalise"
-                                            routerLink="/analise">
-                                    </app-white-button>
+                                <div class="ui-g ui-md-12"
+                                     style="justify-content: center; margin-bottom: 05px; margin-top: 05px">
+                                    <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 05px">
+                                        <app-white-button
+                                                [buttonLabel]="'Global.Botoes.Voltar' | translate"
+                                                id="idBtnVoltarFormAnalise"
+                                                routerLink="/analise">
+                                        </app-white-button>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 05px">
+                                        <app-green-button
+                                                type="submit"
+                                                id="idBtnSalvarFormAnalise"
+                                                [buttonLabel]="'Global.Botoes.Salvar' | translate"
+                                                (click)="save()">
+                                        </app-green-button>
+                                    </div>
                                 </div>
-                                <div class="ui-g-12 ui-md-12 ui-lg-2" style="margin-bottom: 05px">
-                                    <app-green-button
-                                            type="submit"
-                                            id="idBtnSalvarFormAnalise"
-                                            [buttonLabel]="'Global.Botoes.Salvar' | translate"
-                                            (click)="save()">
-                                    </app-green-button>
-                                </div>
-                            </div>
                             </div>
                         </div>
                     </form>
@@ -504,8 +360,8 @@
             *ngIf="isEdicao">
         <app-analise-funcao-dados [isView]="!this.isEdicao"></app-analise-funcao-dados>
         <app-white-button
-            [buttonLabel]="'Global.Botoes.Voltar' | translate"
-            routerLink="/analise">
+                [buttonLabel]="'Global.Botoes.Voltar' | translate"
+                routerLink="/analise">
         </app-white-button>
     </p-tabPanel>
 
@@ -515,8 +371,8 @@
             *ngIf="isEdicao">
         <app-analise-funcao-transacao [isView]="!this.isEdicao"></app-analise-funcao-transacao>
         <app-white-button
-            [buttonLabel]="this.getLabel('Global.Botoes.Voltar')"
-            routerLink="/analise">
+                [buttonLabel]="this.getLabel('Global.Botoes.Voltar')"
+                routerLink="/analise">
         </app-white-button>
     </p-tabPanel>
 
@@ -526,44 +382,41 @@
             *ngIf="isEdicao">
         <app-analise-resumo></app-analise-resumo>
         <app-white-button
-            [buttonLabel]="this.getLabel('Global.Botoes.Voltar')"
-            routerLink="/analise">
+                [buttonLabel]="this.getLabel('Global.Botoes.Voltar')"
+                routerLink="/analise">
         </app-white-button>
         <app-gray-button
-            [buttonLabel]="this.getLabel('Analise.Analise.Botoes.GerarRelatorio')"
-            (click)="geraRelatorioPdfDetalhadoBrowser()">
+                [buttonLabel]="this.getLabel('Analise.Analise.Botoes.GerarRelatorio')"
+                (click)="geraRelatorioPdfDetalhadoBrowser()">
         </app-gray-button>
         <app-red-button
-            [buttonLabel]="this.getLabel('Analise.Analise.Botoes.BloquearAnalise')"
-            (click)="bloquearAnalise()">
+                [buttonLabel]="this.getLabel('Analise.Analise.Botoes.BloquearAnalise')"
+                (click)="bloquearAnalise()">
         </app-red-button>
         <app-blue-button
-            [buttonLabel]="this.getLabel('Analise.Analise.Botoes.CompartilharAnalise')"
-            (click)="openCompartilharDialog()">
+                [buttonLabel]="this.getLabel('Analise.Analise.Botoes.CompartilharAnalise')"
+                (click)="openCompartilharDialog()">
         </app-blue-button>
     </p-tabPanel>
-
-    <p-dialog [header]="this.getLabel('Analise.Analise.CompartilharAnalise')" [(visible)]="mostrarDialog" [width]="800" [modal]="true" (onHide)="limparSelecaoCompartilhar()">
+    <p-dialog [header]="this.getLabel('Analise.Analise.CompartilharAnalise')" [(visible)]="mostrarDialog" [width]="800"
+              [modal]="true" (onHide)="limparSelecaoCompartilhar()">
         <p-dataTable
-        [(value)]="equipeShare"
-        [headerCheckboxToggleAllPages]="true"
-        [(selection)]="selectedEquipes"
-        dataKey="equipeId">
-
+                [(value)]="equipeShare"
+                [headerCheckboxToggleAllPages]="true"
+                [(selection)]="selectedEquipes"
+                dataKey="equipeId">
             <p-column
-                selectionMode="multiple"
-                [style]="{'width':'10%'}">
+                    selectionMode="multiple"
+                    [style]="{'width':'10%'}">
             </p-column>
-
             <p-column
-                [header]="this.getLabel('Analise.Analise.Equipe')"
-                field="nomeEquipe">
+                    [header]="this.getLabel('Analise.Analise.Equipe')"
+                    field="nomeEquipe">
             </p-column>
-
             <p-column
-                [header]="this.getLabel('Analise.Analise.SomenteVisualizar')"
-                field="viewOnly"
-                [style]="{'width':'12%'}">
+                    [header]="this.getLabel('Analise.Analise.SomenteVisualizar')"
+                    field="viewOnly"
+                    [style]="{'width':'12%'}">
                 <ng-template let-col let-equipeShare="rowData" pTemplate="body">
                     <p-toggleButton [(ngModel)]="equipeShare.viewOnly" onLabel="Sim" offLabel="Não"></p-toggleButton>
                 </ng-template>
@@ -577,37 +430,37 @@
         <hr/>
         <h3 translate="Analise.Analise.CompartilhadaCom">Compartilhada com:</h3>
         <p-dataTable
-        [(value)]="analise.compartilhadas"
-        selectionMode="single"
-        [(selection)]="selectedToDelete"
-        dataKey="equipeId">
+                *ngIf="analise.compartilhadas"
+                [(value)]="analise.compartilhadas"
+                selectionMode="single"
+                [(selection)]="selectedToDelete"
+                dataKey="equipeId">
             <p-column
-                [header]="this.getLabel('Analise.Analise.Equipe')"
-                field="nomeEquipe">
+                    [header]="this.getLabel('Analise.Analise.Equipe')"
+                    field="nomeEquipe">
             </p-column>
 
             <p-column
-                [header]="this.getLabel('Analise.Analise.SomenteVisualizar')"
-                field="viewOnly"
-                [style]="{'width':'12%'}">
+                    [header]="this.getLabel('Analise.Analise.SomenteVisualizar')"
+                    field="viewOnly"
+                    [style]="{'width':'12%'}">
                 <ng-template let-col let-analiseTemp="rowData" pTemplate="body">
-                    <p-toggleButton [(ngModel)]="analiseTemp.viewOnly" onLabel="Sim" offLabel="Não" (onChange)="updateViewOnly()"></p-toggleButton>
+                    <p-toggleButton [(ngModel)]="analiseTemp.viewOnly" onLabel="Sim" offLabel="Não"
+                                    (onChange)="updateViewOnly()"></p-toggleButton>
                 </ng-template>
             </p-column>
         </p-dataTable>
-
-        <app-red-button [buttonLabel]="this.getLabel('Global.Botoes.Remover')" (click)="deletarCompartilhar()" style="float:right; margin-top: 5px"></app-red-button>
-
+        <app-red-button [buttonLabel]="this.getLabel('Global.Botoes.Remover')" (click)="deletarCompartilhar()"
+                        style="float:right; margin-top: 5px"></app-red-button>
     </p-dialog>
-
-   
-
 </p-tabView>
 
 <!-- Dialog confirmação deleção -->
 <p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" [label]="'Global.Botoes.Nao' | translate" (click)="dialog.reject()"></button>
-        <button type="button" pButton icon="fa-check" [label]="'Global.Botoes.Sim' | translate" (click)="dialog.accept()"></button>
+        <button type="button" pButton icon="fa-close" [label]="'Global.Botoes.Nao' | translate"
+                (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="'Global.Botoes.Sim' | translate"
+                (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>

@@ -1,30 +1,31 @@
-import { Manual } from './../manual/manual.model';
-import { ManualContrato } from './../organizacao/ManualContrato.model';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { Response } from '@angular/http';
+import {Manual} from './../manual/manual.model';
+import {ManualContrato} from './../organizacao/ManualContrato.model';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Subscription} from 'rxjs/Rx';
+import {Response} from '@angular/http';
 
 
-import { Analise, AnaliseShareEquipe } from './';
-import { AnaliseService } from './analise.service';
-import { User, UserService } from '../user';
-import { ResponseWrapper, AnaliseSharedDataService, PageNotificationService } from '../shared';
-import { Organizacao, OrganizacaoService } from '../organizacao';
-import { Contrato, ContratoService } from '../contrato';
-import { Sistema, SistemaService } from '../sistema';
-import { ConfirmationService } from 'primeng/primeng';
-import { SelectItem } from 'primeng/api';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import {Analise, AnaliseShareEquipe} from './';
+import {AnaliseService} from './analise.service';
+import {User, UserService} from '../user';
+import {AnaliseSharedDataService, PageNotificationService, ResponseWrapper} from '../shared';
+import {Organizacao, OrganizacaoService} from '../organizacao';
+import {Contrato, ContratoService} from '../contrato';
+import {Sistema, SistemaService} from '../sistema';
+import {ConfirmationService} from 'primeng/primeng';
+import {SelectItem} from 'primeng/api';
+import {BlockUI, NgBlockUI} from 'ng-block-ui';
 
 import * as _ from 'lodash';
-import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
-import { TipoEquipeService, TipoEquipe } from '../tipo-equipe';
-import { MessageUtil } from '../util/message.util';
-import { FatorAjuste } from '../fator-ajuste';
-import { EsforcoFase } from '../esforco-fase';
-import { ManualService } from '../manual';
-import { TranslateService } from '@ngx-translate/core';
+import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
+import {TipoEquipe, TipoEquipeService} from '../tipo-equipe';
+import {MessageUtil} from '../util/message.util';
+import {FatorAjuste} from '../fator-ajuste';
+import {EsforcoFase} from '../esforco-fase';
+import {ManualService} from '../manual';
+import {TranslateService} from '@ngx-translate/core';
+import {Observable} from 'rxjs/Observable';
 
 
 @Component({
@@ -45,7 +46,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     isSaving: boolean;
     dataAnalise: any;
-    dataHomol: any;
+    dataHomologacao: any;
     dataCriacao: any;
     loggedUser: User;
     tipoEquipesLoggedUser: TipoEquipe[] = [];
@@ -78,22 +79,24 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     manuaisCombo: SelectItem[] = [];
 
+
     @BlockUI() blockUI: NgBlockUI;
 
     tiposAnalise: SelectItem[] = [
-        { label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO },
-        { label: MessageUtil.PROJETO_MELHORIA, value: MessageUtil.MELHORIA },
-        { label: MessageUtil.CONTAGEM_APLICACAO, value: MessageUtil.APLICACAO }
+        {label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO},
+        {label: MessageUtil.PROJETO_MELHORIA, value: MessageUtil.MELHORIA},
+        {label: MessageUtil.CONTAGEM_APLICACAO, value: MessageUtil.APLICACAO}
     ];
 
     metodoContagem: SelectItem[] = [
-        { label: MessageUtil.DETALHADA_IFPUG, value: MessageUtil.DETALHADA_IFPUG },
-        { label: MessageUtil.INDICATIVA_NESMA, value: MessageUtil.INDICATIVA_NESMA },
-        { label: MessageUtil.ESTIMADA_NESMA, value: MessageUtil.ESTIMADA_NESMA }
+        {label: MessageUtil.DETALHADA_IFPUG, value: MessageUtil.DETALHADA_IFPUG},
+        {label: MessageUtil.INDICATIVA_NESMA, value: MessageUtil.INDICATIVA_NESMA},
+        {label: MessageUtil.ESTIMADA_NESMA, value: MessageUtil.ESTIMADA_NESMA}
     ];
 
     private routeSub: Subscription;
     private subscription: Subscription;
+    private saveSubscription: Subscription;
     public hideShowSelectEquipe: boolean;
 
     constructor(
@@ -120,7 +123,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.analiseSharedDataService.init();
         this.isEdicao = false;
         this.isSaving = false;
-        this.dataHomol = new Date();
+        this.dataHomologacao = new Date();
         this.dataCriacao = new Date();
         this.getOrganizationsFromActiveLoggedUser();
         this.getLoggedUserId();
@@ -143,42 +146,33 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         return str;
     }
 
-    /*
-     *   Metodo responsavel por traduzir opções do dropdown Tipo de Analise
-    */
     traduzirtiposAnalise() {
         this.translate.stream(['Analise.Analise.TiposAnalise.ProjetoDesenvolvimento', 'Analise.Analise.TiposAnalise.ProjetoMelhoria',
             'Analise.Analise.TiposAnalise.ContagemAplicacao']).subscribe((traducao) => {
-                this.tiposAnalise = [
-                    { label: traducao['Analise.Analise.TiposAnalise.ProjetoDesenvolvimento'], value: 'DESENVOLVIMENTO' },
-                    { label: traducao['Analise.Analise.TiposAnalise.ProjetoMelhoria'], value: 'MELHORIA' },
-                    { label: traducao['Analise.Analise.TiposAnalise.ContagemAplicacao'], value: 'APLICACAO' }
-                ];
+            this.tiposAnalise = [
+                {label: traducao['Analise.Analise.TiposAnalise.ProjetoDesenvolvimento'], value: 'DESENVOLVIMENTO'},
+                {label: traducao['Analise.Analise.TiposAnalise.ProjetoMelhoria'], value: 'MELHORIA'},
+                {label: traducao['Analise.Analise.TiposAnalise.ContagemAplicacao'], value: 'APLICACAO'}
+            ];
 
-            })
+        });
     }
 
-    /*
-    *   Metodo responsavel por traduzir opções dos Metodos de Contagem de Analise
-    */
     traduzirMetodoContagem() {
         this.translate.stream(['Analise.Analise.metsContagens.DETALHADA_IFPUG', 'Analise.Analise.metsContagens.INDICATIVA_NESMA',
             'Analise.Analise.metsContagens.ESTIMADA_NESMA']).subscribe((traducao) => {
-                this.metodoContagem = [
-                    { label: traducao['Analise.Analise.metsContagens.DETALHADA_IFPUG'], value: 'DETALHADA' },
-                    { label: traducao['Analise.Analise.metsContagens.INDICATIVA_NESMA'], value: 'INDICATIVA' },
-                    { label: traducao['Analise.Analise.metsContagens.ESTIMADA_NESMA'], value: 'ESTIMADA' }
-                ];
+            this.metodoContagem = [
+                {label: traducao['Analise.Analise.metsContagens.DETALHADA_IFPUG'], value: 'DETALHADA'},
+                {label: traducao['Analise.Analise.metsContagens.INDICATIVA_NESMA'], value: 'INDICATIVA'},
+                {label: traducao['Analise.Analise.metsContagens.ESTIMADA_NESMA'], value: 'ESTIMADA'}
+            ];
 
-            })
+        });
     }
 
-    /**
-     * Função para recuperar os dados do usuário logado no momento
-     */
     getOrganizationsFromActiveLoggedUser() {
         this.organizacaoService.dropDownActiveLoggedUser().subscribe(res => {
-            this.populateOrgs(res.json);
+            this.organizacoes = res.json;
         });
     }
 
@@ -192,10 +186,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.equipeService.getEquipesActiveLoggedUser().subscribe(res => {
             this.tipoEquipesLoggedUser = res.json;
         });
-    }
-
-    populateOrgs(orgs) {
-        this.organizacoes = orgs;
     }
 
     checkUserAnaliseEquipes() {
@@ -212,7 +202,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     checkIfUserCanEdit() {
         let retorno = false;
-        if (this.tipoEquipesLoggedUser) {
+        if (this.tipoEquipesLoggedUser && this.analise.compartilhadas) {
             this.tipoEquipesLoggedUser.forEach(equipe => {
                 this.analise.compartilhadas.forEach(compartilhada => {
                     if (equipe.id === compartilhada.equipeId) {
@@ -225,9 +215,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         }
         return retorno;
     }
-    /**
-     * Obtêm uma análise através do ID
-     */
+
     getAnalise() {
         this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
@@ -242,7 +230,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                     this.setDataOrdemServico();
                     this.diasGarantia = this.getGarantia();
                     this.contratoSelected(this.analise.contrato);
-                    this.realizarValidacoes();
+                    this.populaComboUsers();
+                    this.validaCamposObrigatorios();
                 });
             } else {
                 this.analise = new Analise();
@@ -251,21 +240,15 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * Método responsável por popular a data de Homologação
-     */
     setDataHomologacao() {
         if (this.dataAnalise.dataHomologacao !== null) {
-            this.dataHomol.setMonth(Number(this.dataAnalise.dataHomologacao.substring(5, 7)) - 1);
-            this.dataHomol.setDate(Number(this.dataAnalise.dataHomologacao.substring(8, 10)));
-            this.dataHomol.setFullYear(Number(this.dataAnalise.dataHomologacao.substring(0, 4)));
-            this.analise.dataHomologacao = this.dataHomol;
+            this.dataHomologacao.setMonth(Number(this.dataAnalise.dataHomologacao.substring(5, 7)) - 1);
+            this.dataHomologacao.setDate(Number(this.dataAnalise.dataHomologacao.substring(8, 10)));
+            this.dataHomologacao.setFullYear(Number(this.dataAnalise.dataHomologacao.substring(0, 4)));
+            this.analise.dataHomologacao = this.dataHomologacao;
         }
     }
 
-    /**
-     * Método responsável por popular a data de Ordem de Servico
-     */
     setDataOrdemServico() {
         if (this.dataAnalise.dataCriacaoOrdemServico !== null) {
             this.dataCriacao.setMonth(Number(this.dataAnalise.dataCriacaoOrdemServico.substring(5, 7)) - 1);
@@ -275,16 +258,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * Método responsável por popular os dias de garantia do contrato
-     */
     getGarantia(): any {
         this.diasGarantia = this.diasGarantia !== undefined ? this.analise.contrato.diasDeGarantia : undefined;
     }
 
-    /**
-     * Carrega os dados da analise, organização e manual
-     */
     private inicializaValoresAposCarregamento(analiseCarregada: Analise) {
         if (analiseCarregada.bloqueiaAnalise) {
             this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgEDITAR_ANALISE_BLOQUEADA'));
@@ -297,41 +274,55 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.router.navigate([`/analise/${analiseCarregada.id}/view`]);
         }
         this.setSistemaOrganizacao(analiseCarregada.organizacao);
-        if (analiseCarregada.contrato != undefined && analiseCarregada.contrato.manualContrato) {
-            this.setManual(
-                analiseCarregada.manual ? analiseCarregada.manual : new Manual());
+        if (analiseCarregada.contrato !== undefined && analiseCarregada.contrato.manualContrato) {
+            this.setManual(analiseCarregada.manual ? analiseCarregada.manual : new Manual());
         }
-        this.isEdit = this.analise.identificadorAnalise == undefined ? true : false;
-        this.populaComboUsers();
     }
 
-    /**
-     * Retorna o sistema selecionado
-     */
     getSistemaSelecionado() {
         this.analiseSharedDataService.sistemaSelecionado();
     }
 
-    /**
-     * Método responsável por popular a lista de sistemas da organização selecionada.
-     */
     setSistemaOrganizacao(org: Organizacao) {
         if (!this.isEdicao) {
             this.analise.sistema = undefined;
             this.analise.equipeResponsavel = undefined;
-        };
+            this.analise.users = undefined;
+            this.analise.numeroOs = undefined;
+            this.analise.metodoContagem = undefined;
+            this.analise.fatorAjuste = undefined;
+            this.analise.valorAjuste = undefined;
+            this.analise.pfTotal = undefined;
+            this.analise.pfTotalEsforco = undefined;
+            this.analise.adjustPFTotal = undefined;
+            this.analise.escopo = undefined;
+            this.analise.fronteiras = undefined;
+            this.analise.documentacao = undefined;
+            this.analise.tipoAnalise = undefined;
+            this.analise.propositoContagem = undefined;
+            this.analise.funcaoDados = undefined;
+            this.analise.contrato = undefined;
+            this.analise.esforcoFases = undefined;
+            this.analise.observacoes = undefined;
+            this.analise.baselineImediatamente = undefined;
+            this.analise.dataHomologacao = undefined;
+            this.analise.identificadorAnalise = undefined;
+            this.analise.equipeResponsavel = undefined;
+            this.analise.createdBy = undefined;
+            this.analise.bloqueiaAnalise = undefined;
+            this.analise.compartilhadas = undefined;
+            this.analise.dataCriacaoOrdemServico = undefined;
+            this.analise.manual = undefined;
+        }
         this.contratoService.findAllContratoesByOrganization(org).subscribe((contracts) => {
             this.contratos = contracts;
-        })
+        });
         this.sistemaService.findAllSystemOrg(org.id).subscribe((res: ResponseWrapper) => {
             this.sistemas = res.json;
         });
         this.setEquipeOrganizacao(org);
     }
 
-    /**
-     * Método responsável por popular a equipe responsavel da organização
-     */
     setEquipeOrganizacao(org: Organizacao) {
         this.equipeService.findAllEquipesByOrganizacaoIdAndLoggedUser(org.id).subscribe((res: ResponseWrapper) => {
             this.equipeResponsavel = res.json;
@@ -341,13 +332,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * Método responsável por popular o manual do contrato
-     */
-    setManual(manual1: Manual) {
-
-        if (manual1) {
-            this.manualService.find(manual1.id).subscribe((manual) => {
+    setManual(manualSelected: Manual) {
+        if (manualSelected) {
+            this.manualService.find(manualSelected.id).subscribe((manual) => {
                 this.nomeManual = manual.nome;
                 this.carregarEsforcoFases(manual);
                 this.carregarMetodosContagem(manual);
@@ -359,31 +346,26 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * Método responsável por popular os fatores de ajuste do Manual
-     */
     private inicializaFatoresAjuste(manual: Manual) {
         this.fatoresAjuste = [];
         if (manual.fatoresAjuste) {
             const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
             faS.forEach(fa => {
                 const label = FatorAjusteLabelGenerator.generate(fa);
-                this.fatoresAjuste.push( { label, value: fa } );
+                this.fatoresAjuste.push({label, value: fa});
             });
-            this.fatoresAjuste.unshift({ label: this.getLabel('Global.Mensagens.Nenhum'), value: null });
+            this.fatoresAjuste.unshift({label: this.getLabel('Global.Mensagens.Nenhum'), value: null});
         }
     }
 
-    /**
-     * Método responsável por popular os fatores de ajuste do Manual na Edicao
-     */
     private carregaFatorAjusteNaEdicao() {
-        this.analise.fatorAjuste = this.fatoresAjuste.find((f) => f.value != null && f.value.id == this.analise.fatorAjuste.id ).value;
+        if (this.analise.fatorAjuste) {
+            this.analise.fatorAjuste = this.fatoresAjuste.find(
+                (f) => f !== null && f.value !== null && f.value.id === this.analise.fatorAjuste.id
+            ).value;
+        }
     }
 
-    /**
-     *  Método responsável por popular os Esforços de fases
-     */
     private carregarEsforcoFases(manual: Manual) {
         this.esforcoFases = _.cloneDeep(manual.esforcoFases);
 
@@ -393,9 +375,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     *  Método responsável por os metodos de contagem
-     */
     private carregarMetodosContagem(manual: Manual) {
         this.metodosContagem = [
             {
@@ -404,25 +383,23 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             },
             {
                 value: MessageUtil.INDICATIVA,
-                label: this.getLabelValorVariacao(this.getLabel('Analise.Analise.metsContagens.INDICATIVA_NESMA'), manual.valorVariacaoIndicativa)
+                label: this.getLabelValorVariacao(
+                    this.getLabel('Analise.Analise.metsContagens.INDICATIVA_NESMA'),
+                    manual.valorVariacaoIndicativa)
             },
             {
                 value: MessageUtil.ESTIMADA,
-                label: this.getLabelValorVariacao(this.getLabel('Analise.Analise.metsContagens.ESTIMADA_NESMA'), manual.valorVariacaoEstimada)
+                label: this.getLabelValorVariacao(
+                    this.getLabel('Analise.Analise.metsContagens.ESTIMADA_NESMA'),
+                    manual.valorVariacaoEstimada)
             }
         ];
     }
 
-    /**
-     * Atribui o rótulo para o valor de Variação
-     */
     private getLabelValorVariacao(label: string, valorVariacao: number): string {
         return label + ' - ' + valorVariacao.toLocaleString() + '%';
     }
 
-    /**
-     * Obtem o esforço de fase
-     */
     totalEsforcoFases() {
         const initialValue = 0;
         if (this.analise.esforcoFases) {
@@ -432,9 +409,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         return initialValue;
     }
 
-    /**
-     * Descrição do valor esperado no campo de entrada: Sistema
-     */
     sistemaDropdownPlaceholder() {
         if (this.sistemas) {
             if (this.sistemas.length > 0) {
@@ -447,18 +421,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * Gera o relatório detalhado PDF.
-     * @param analise
-     */
     public geraRelatorioPdfDetalhadoBrowser() {
         this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.analise.id);
     }
 
-    /**
-     * Bloqueia a análise aberta atualmente.
-     *
-     */
     public bloquearAnalise() {
         if (!this.analise.dataHomologacao) {
             this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_HOMOLOGACAO'));
@@ -466,7 +432,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
         if (this.analise.dataHomologacao) {
             this.confirmationService.confirm({
-                message: this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_BLOQUEIO').concat(this.analise.identificadorAnalise).concat('?'),
+                message: this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_BLOQUEIO')
+                    .concat(this.analise.identificadorAnalise)
+                    .concat('?'),
                 accept: () => {
                     const copy = this.analise.toJSONState();
                     this.analiseService.block(copy).subscribe(() => {
@@ -476,7 +444,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                         switch (error.status) {
                             case 400: {
                                 if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
-                                    this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteAdministradoresBloquearDesbloquear'));
+                                    this.pageNotificationService.addErrorMsg(
+                                        this.getLabel('Analise.Analise.Mensagens.msgSomenteAdministradoresBloquearDesbloquear')
+                                    );
                                 } else {
                                     this.pageNotificationService
                                         .addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeBloquearAnalise'));
@@ -490,63 +460,38 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     }
 
-
-    /**
-     * Atuva ou desativa o Dropdown de sistema (html)
-     * */
-    disabledSistemaDropdown() {
-        return this.sistemas && this.sistemas.length > 0;
+    disabledOptionsforEdit() {
+        if (this.analise.id && this.analise.id > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    /**
-     * Atuva ou desativa a tab Funcao de Transação
-     */
-    // disabledFuncaoTransacao() {
-    //     this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
-    // }
-
-    /**
-     * Verifica se algum contrato foi selecioando
-     *
-     */
     isContratoSelected(): boolean {
         return this.analiseSharedDataService.isContratoSelected();
     }
 
-    /**
-     * Atribui a instrução no campo  Deflator e Método de Contagem
-     */
-    needContratoDropdownPlaceholder() {
-        if (this.isContratoSelected()) {
-            return this.getLabel('Analise.Analise.Selecione');
-        } else {
-            return this.getLabel('Analise.Analise.SelecioneUmContrato');
-        }
-    }
-
-    /**
-     *
-     * Salva o contrato selecionado
-     * @param contrato
-     */
     contratoSelected(contrato: Contrato) {
         if (contrato && contrato.manualContrato) {
             this.setManuais(contrato);
-            var manualSelected = (typeof this.analise.manual.id !== "undefined") ? this.analise.manual : contrato.manualContrato[0].manual;
+            let manualSelected;
+            if ((this.analise.manual) && (typeof this.analise.manual.id !== 'undefined')) {
+                manualSelected = this.analise.manual;
+            } else {
+                manualSelected = contrato.manualContrato[0].manual;
+            }
             this.setManual(manualSelected);
             this.analise.manual = manualSelected;
             this.diasGarantia = this.analise.contrato.diasDeGarantia;
-            this.carregarMetodosContagem(manualSelected)
-            //this.analise.baselineImediatamente = true;
-            //this.analise.enviarBaseline = true;
+            this.carregarMetodosContagem(manualSelected);
         }
     }
 
     setManuais(contrato: Contrato) {
         contrato.manualContrato.forEach(item => {
-            //Método provisorio, deve ser iniciado durante a desserialização
-            item.dataInicioVigencia = new Date(item.dataInicioVigencia)
-            item.dataFimVigencia = new Date(item.dataFimVigencia)
+            item.dataInicioVigencia = new Date(item.dataInicioVigencia);
+            item.dataFimVigencia = new Date(item.dataFimVigencia);
         });
 
         this.ordenarManuais(contrato);
@@ -554,10 +499,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.populaComboManual(contrato);
     }
 
-    /**
-     * Popula o dropdown de manuais
-     * @param contrato Contrato de uma organização
-     */
     private populaComboManual(contrato: Contrato) {
         contrato.manualContrato.forEach((item: ManualContrato) => {
             const entity: Manual = new Manual();
@@ -567,18 +508,14 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 label: `${m.nome} ${this.formataData(item.dataInicioVigencia)} - ` +
                     `${this.formataData(item.dataFimVigencia)}`
                     + this.formataBoleano(item.ativo),
-                value: m.id === this.analise.manual.id ? this.analise.manual : m
+                value: this.analise.manual && m.id === this.analise.manual.id ? this.analise.manual : m
             });
         });
     }
 
-    /**
-     * Ordena os manuais referentes a um contrato
-     * @param contrato Contrato que terá seus manuais ordenados
-     */
     private ordenarManuais(contrato: Contrato) {
         contrato.manualContrato = contrato.manualContrato.sort((a, b): number => {
-            if ((a.dataInicioVigencia.getTime() == b.dataInicioVigencia.getTime())) {
+            if ((a.dataInicioVigencia.getTime() === b.dataInicioVigencia.getTime())) {
                 if (a.dataFimVigencia.getTime() < b.dataFimVigencia.getTime()) {
                     return -1;
                 } else {
@@ -602,7 +539,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     private formataData(data: Date): String {
-        let dt = `   ${data.getDay()}/${(data.getMonth() + 1)}/${data.getFullYear()}`;
+        const dt = `${data.getDay()}/${(data.getMonth() + 1)}/${data.getFullYear()}`;
         return dt;
     }
 
@@ -610,29 +547,19 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         return bool ? this.getLabel('Analise.Analise.Ativo') : this.getLabel('Analise.Analise.Inativo');
     }
 
-    /**
-     * Método responsável por persistir as informações das análises na edição.
-     **/
     save() {
-        if (!this.enviarParaBaseLine) {
-            this.analise.enviarBaseline = true;
-        }
-        // TODO O dropdown de deflator não esta funcionando com o analise.fatorAjuste
         this.validaCamposObrigatorios();
         if (this.verificarCamposObrigatorios()) {
-            this.analiseService.update(this.analise).subscribe(() => {
-                this.pageNotificationService.addSuccessMsg(
-                    this.isEdit ? this.getLabel('Analise.Analise.Mensagens.msgRegistroSalvoSucesso') :
-                    this.getLabel('Analise.Analise.Mensagens.msgDadosAlteradosSucesso'));
-                this.diasGarantia = this.analise.contrato.diasDeGarantia;
-            });
-        }
-    }
-
-    realizarValidacoes() {
-        this.validaCamposObrigatorios();
-        if (this.verificarCamposObrigatorios()) {
-            this.diasGarantia = this.analise.contrato.diasDeGarantia;
+            if (this.analise.id && this.analise.id > 0) {
+                this.analiseService.update(this.analise).subscribe(() => {
+                    this.pageNotificationService.addSuccessMsg(
+                        this.isEdit ? this.getLabel('Analise.Analise.Mensagens.msgRegistroSalvoSucesso') :
+                            this.getLabel('Analise.Analise.Mensagens.msgDadosAlteradosSucesso'));
+                    this.diasGarantia = this.analise.contrato.diasDeGarantia;
+                });
+            } else {
+                this.subscribeToSaveResponse(this.analiseService.create(this.analise));
+            }
         }
     }
 
@@ -657,60 +584,41 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * Método responsável por validar campos obrigatórios na persistência.
-     **/
     private verificarCamposObrigatorios(): boolean {
         let isValid = true;
-
         if (!this.analise.identificadorAnalise) {
             this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_IDENTIFICADOR'));
             isValid = false;
-            return isValid;
         }
         if (!this.analise.contrato) {
             this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgSELECIONE_CONTRATO_CONTINUAR'));
             isValid = false;
-            return isValid;
         }
         if (!this.analise.dataCriacaoOrdemServico) {
             this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_ORDEM_SERVICO'));
             isValid = false;
-            return isValid;
         }
         if (!this.analise.metodoContagem) {
             this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_METODO_CONTAGEM'));
             isValid = false;
-            return isValid;
+        }
+        if (!this.analise.manual) {
+            this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_TIPO_CONTAGEM'));
+            isValid = false;
         }
         if (!this.analise.tipoAnalise) {
             this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_TIPO_CONTAGEM'));
             isValid = false;
-            return isValid;
         }
-
-        if (!this.analise.users || this.analise.users.length <= 0) {
+        if ((!this.analise.users || this.analise.users.length <= 0) && this.analise.id && this.analise.id > 0) {
             this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_USUARIO'));
             isValid = false;
-            return isValid;
         }
-
         return isValid;
     }
 
-    /**
-     * Habilita ou Desabilita campos na aba Geral da análise
-     */
     public habilitarCamposIniciais() {
         return this.isEdicao;
-    }
-
-    /**
-     * Retorna o nome do Sistema
-     */
-    public nomeSistema(): string {
-        return this.analise.sistema.sigla +
-            ' - ' + this.analise.sistema.nome;
     }
 
     get analise(): Analise {
@@ -727,21 +635,21 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id,
                 this.analise.id,
                 this.analise.equipeResponsavel.id).subscribe((equipes) => {
-                    if (equipes.json) {
-                        equipes.json.forEach((equipe) => {
-                            const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
-                                {
-                                    id: undefined,
-                                    equipeId: equipe.id,
-                                    analiseId: this.analise.id,
-                                    viewOnly: false,
-                                    nomeEquipe: equipe.nome
-                                });
-                            this.equipeShare.push(entity);
-                        });
-                    }
-                    this.blockUI.stop();
-                });
+                if (equipes.json) {
+                    equipes.json.forEach((equipe) => {
+                        const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(),
+                            {
+                                id: undefined,
+                                equipeId: equipe.id,
+                                analiseId: this.analise.id,
+                                viewOnly: false,
+                                nomeEquipe: equipe.nome
+                            });
+                        this.equipeShare.push(entity);
+                    });
+                }
+                this.blockUI.stop();
+            });
             this.analiseService.findAllCompartilhadaByAnalise(this.analise.id).subscribe((shared) => {
                 this.analiseShared = shared.json;
             });
@@ -791,22 +699,36 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     }
 
     private populaComboUsers() {
-        this.userService.getAllUsers(this.analise.organizacao, this.analise.equipeResponsavel).subscribe(usuarios => {
-            this.verificaExistencia(usuarios);
-            this.users.forEach((user) => user.nome = user.firstName + ' ' + user.lastName );
-        });
+        if (this.analise.id) {
+            this.userService.getAllUsers(this.analise.organizacao, this.analise.equipeResponsavel).subscribe(usuarios => {
+                this.verificaExistencia(usuarios);
+                this.users.forEach((user) => user.nome = user.firstName + ' ' + user.lastName);
+            });
+        }
     }
 
     private verificaExistencia(usuarios: User[]) {
-        this.users = _.clone(this.analise.users);
-        this.users = this.users.concat(usuarios.filter(user => {
-            return !this.analise.users.some(usuario => user.id === usuario.id);
-        }));
-        // Nova analise
-        if (this.analise.users.length == 0) {
-            const user = _.find(this.users, {id: this.loggedUser.id})
+        if (this.users && this.users.length > 0) {
+            this.users = _.clone(this.analise.users);
+            this.users = this.users.concat(usuarios.filter(user => {
+                return !this.analise.users.some(usuario => user.id === usuario.id);
+            }));
+        } else {
+            this.users = usuarios;
+        }
+        if (this.analise.users && this.analise.users.length === 0) {
+            const user = _.find(this.users, {id: this.loggedUser.id});
             this.analise.users.push(user);
         }
+    }
+
+    private subscribeToSaveResponse(result: Observable<any>) {
+        this.saveSubscription = result.subscribe((res: Analise) => {
+            this.analise = res;
+            this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgAnaliseSalvaSucesso'));
+
+            this.router.navigate(['/analise', this.analise.id, 'edit']);
+        });
     }
 }
 

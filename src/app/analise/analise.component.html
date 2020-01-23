@@ -38,10 +38,9 @@
                             [options]="usuariosOptions"
                             optionLabel="nome"
                             [autoWidth]="false"
-                            [placeholder]="this.getLabel('Analise.Analise.Usuarios')"
                             [(ngModel)]="searchGroup.usuario"
-                            (keyup.enter)="performSearch()"
-                            maxlength="50">
+                            [placeholder]="this.getLabel('Analise.Analise.Usuarios')"
+                            >
                     </p-dropdown>
                 </div>
             </div>
@@ -53,8 +52,8 @@
                             [filter]="true"
                             [options]="organizations"
                             optionLabel="nome"
-                            [(ngModel)]="searchGroup.organizacao"
                             [autoWidth]="false"
+                            [(ngModel)]="searchGroup.organizacao"
                             [placeholder]="this.getLabel('Analise.Analise.Organizacao')">
                     </p-dropdown>
                 </div>
@@ -190,10 +189,12 @@
                               field="identificadorAnalise" [sortable]="true">
                     </p-column>
 
-                    <p-column [header]="this.getLabel('Analise.Analise.Equipe')" field="equipeResponsavel.nome" [sortable]="true">
+                    <p-column [header]="this.getLabel('Analise.Analise.Equipe')" field="equipeResponsavel.nome"
+                              [sortable]="true">
                     </p-column>
 
-                    <p-column [header]="this.getLabel('Analise.Analise.Sistema')" field="sistema.nome" [sortable]="true">
+                    <p-column [header]="this.getLabel('Analise.Analise.Sistema')" field="sistema.nome"
+                              [sortable]="true">
                     </p-column>
 
                     <p-column [header]="this.getLabel('Analise.Analise.MetodoContagem')" field="metodoContagem"
@@ -216,13 +217,15 @@
 
                     <p-column [header]="this.getLabel('Analise.Analise.DataCriacao')" field="dataCriacaoOrdemServico"
                               [sortable]="true">
-                        <ng-template let-col let-dataCriacaoOrdemServico="rowData.dataCriacaoOrdemServico" pTemplate="body">
+                        <ng-template let-col let-dataCriacaoOrdemServico="rowData.dataCriacaoOrdemServico"
+                                     pTemplate="body">
                             {{ dataCriacaoOrdemServico | date: 'dd/MM/y - HH:mm' }}
                         </ng-template>
                     </p-column>
 
 
-                    <p-column [header]="this.getLabel('Analise.Analise.Bloqueado')" field="bloqueiaAnalise" [sortable]="true">
+                    <p-column [header]="this.getLabel('Analise.Analise.Bloqueado')" field="bloqueiaAnalise"
+                              [sortable]="true">
                         <ng-template let-col let-bloqueado="rowData" pTemplate="body">
                             {{ bloqueado[col.field] ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
                         </ng-template>

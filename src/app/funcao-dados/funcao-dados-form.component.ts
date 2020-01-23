@@ -1,40 +1,50 @@
-import { MetodoContagem } from './../analise/analise.model';
-import { MemoryDatatableComponent } from './../memory-datatable/memory-datatable.component';
-import { Der } from './../der/der.model';
-import { TranslateService } from '@ngx-translate/core';
-import { FuncaoDados } from './funcao-dados.model';
-import { FatorAjuste } from '../fator-ajuste';
-import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
-import { BaselineAnalitico } from './../baseline/baseline-analitico.model';
-import { BaselineService } from './../baseline/baseline.service';
-import { AnaliseSharedDataService, PageNotificationService, ResponseWrapper } from '../shared';
-import { Analise, AnaliseService } from '../analise';
+import {MetodoContagem} from './../analise/analise.model';
+import {MemoryDatatableComponent} from './../memory-datatable/memory-datatable.component';
+import {Der} from './../der/der.model';
+import {TranslateService} from '@ngx-translate/core';
+import {FuncaoDados} from './funcao-dados.model';
+import {FatorAjuste} from '../fator-ajuste';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    QueryList,
+    ViewChildren
+} from '@angular/core';
+import {BaselineAnalitico} from './../baseline/baseline-analitico.model';
+import {BaselineService} from './../baseline/baseline.service';
+import {AnaliseSharedDataService, PageNotificationService, ResponseWrapper} from '../shared';
+import {Analise, AnaliseService} from '../analise';
 
 import * as _ from 'lodash';
-import { Funcionalidade } from '../funcionalidade/index';
-import { SelectItem, Column } from 'primeng/primeng';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Calculadora } from '../analise-shared/calculadora';
-import { DatatableClickEvent } from '@basis/angular-components';
-import { ConfirmationService } from 'primeng/primeng';
-import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
-import { Subscription } from 'rxjs/Subscription';
+import {Funcionalidade} from '../funcionalidade/index';
+import {Column, ConfirmationService, SelectItem} from 'primeng/primeng';
+import {BlockUI, NgBlockUI} from 'ng-block-ui';
+import {Calculadora} from '../analise-shared/calculadora';
+import {DatatableClickEvent} from '@basis/angular-components';
+import {ResumoFuncoes} from '../analise-shared/resumo-funcoes';
+import {Subscription} from 'rxjs/Subscription';
 
-import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
-import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
-import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
-import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
-import { FuncaoDadosService } from './funcao-dados.service';
-import { AnaliseSharedUtils } from '../analise-shared/analise-shared-utils';
-import { Manual } from '../manual';
-import { Modulo } from '../modulo';
-import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
-import { Impacto } from '../analise-shared/impacto-enum';
+import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
+import {DerChipItem} from '../analise-shared/der-chips/der-chip-item';
+import {DerChipConverter} from '../analise-shared/der-chips/der-chip-converter';
+import {AnaliseReferenciavel} from '../analise-shared/analise-referenciavel';
+import {FuncaoDadosService} from './funcao-dados.service';
+import {AnaliseSharedUtils} from '../analise-shared/analise-shared-utils';
+import {Manual} from '../manual';
+import {Modulo} from '../modulo';
+import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
+import {Impacto} from '../analise-shared/impacto-enum';
 
-import { FuncaoTransacao, TipoFuncaoTransacao, Editor } from './../funcao-transacao/funcao-transacao.model';
-import { CalculadoraTransacao } from './../analise-shared/calculadora-transacao';
-import { Alr } from '../alr/alr.model';
-import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
+import {Editor, FuncaoTransacao, TipoFuncaoTransacao} from './../funcao-transacao/funcao-transacao.model';
+import {CalculadoraTransacao} from './../analise-shared/calculadora-transacao';
+import {Alr} from '../alr/alr.model';
+import {ChangeEvent} from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Base64Upload from '../../ckeditor/Base64Upload';
 
@@ -51,8 +61,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     @Input()
     label: string;
     @Input() properties: Editor;
-    @Input() uploadImagem: boolean = true;
-    @Input() criacaoTabela: boolean = true;
+    @Input() uploadImagem = true;
+    @Input() criacaoTabela = true;
 
     @ViewChildren(MemoryDatatableComponent) tables: QueryList<MemoryDatatableComponent>;
 
@@ -64,9 +74,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
 
     textHeader: string;
     @Input() isView: boolean;
-    @BlockUI() blockUI: NgBlockUI;      // Usado para bloquear o sistema enquanto aguarda resolução das requisições do backend
+    @BlockUI() blockUI: NgBlockUI;
     isEdit: boolean;
-    crudExist: boolean = false;
+    crudExist = false;
     nomeInvalido: boolean;
     isSaving: boolean;
     listaFD: string[];
@@ -98,19 +108,19 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     translateSubscriptions: Subscription[] = [];
 
     impacto: SelectItem[] = [
-        { label: 'Inclusão', value: 'INCLUSAO' },
-        { label: 'Alteração', value: 'ALTERACAO' },
-        { label: 'Exclusão', value: 'EXCLUSAO' },
-        { label: 'Conversão', value: 'CONVERSAO' },
-        { label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS' }
+        {label: 'Inclusão', value: 'INCLUSAO'},
+        {label: 'Alteração', value: 'ALTERACAO'},
+        {label: 'Exclusão', value: 'EXCLUSAO'},
+        {label: 'Conversão', value: 'CONVERSAO'},
+        {label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS'}
     ];
 
     classificacoes: SelectItem[] = [
-        { label: 'ALI - Arquivo Lógico Interno', value: 'ALI' },
-        { label: 'AIE - Arquivo de Interface Externa', value: 'AIE' }
+        {label: 'ALI - Arquivo Lógico Interno', value: 'ALI'},
+        {label: 'AIE - Arquivo de Interface Externa', value: 'AIE'}
     ];
 
-    private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
+    private fatorAjusteNenhumSelectItem = {label: 'Nenhum', value: undefined};
     private analiseCarregadaSubscription: Subscription;
     private subscriptionSistemaSelecionado: Subscription;
     private nomeDasFuncoesDoSistema: string[] = [];
@@ -129,18 +139,17 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         ],
         heading: {
             options: [
-                { model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph' },
-                { model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1' },
-                { model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2' },
-                { model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3' }
+                {model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph'},
+                {model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1'},
+                {model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2'},
+                {model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3'}
             ]
         },
         alignment: {
             options: ['left', 'right', 'center', 'justify']
         },
         image: {
-            toolbar: [
-            ]
+            toolbar: []
         },
         table: {
             contentToolbar: [
@@ -161,7 +170,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         private analiseService: AnaliseService,
         private baselineService: BaselineService,
         private translate: TranslateService
-    ) {}
+    ) {
+    }
 
     getLabel(label: string | string[]) {
         let str: any;
@@ -189,7 +199,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.currentFuncaoDados = new FuncaoDados();
         this.subscribeToAnaliseCarregada();
         this.colunasAMostrar = [];
-        this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
+        if (this.colunasOptions) {
+            this.colunasOptions.map(selectItem => this.colunasAMostrar.push(selectItem.value));
+        }
         this.traduzirClassificacoes();
         this.traduzirImpactos();
     }
@@ -203,10 +215,13 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     }
 
     ngAfterViewInit() {
-       this.setSotableFields();
+        this.setSotableFields();
     }
 
     setSotableFields() {
+        if (this.colunasAMostrar) {
+            return;
+        }
         // este forEach rodará apenas 1 vez, devido ao @ViewChildren retornar um array
         this.tables.forEach(table => {
             table.cols.forEach(column => {
@@ -224,11 +239,16 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     sortColumn(event: any) {
         this.funcoesDados.sort((a, b) => {
             switch (event.field) {
-                case 'fatorAjuste': return this.sortByComposityField(a, b, event.field, 'nome');
-                case 'funcionalidade': return this.sortByComposityField(a, b, event.field, 'nome');
-                case 'sustantation': return this.sortByBinary(a, b, event.field);
-                case 'funcionaldiade.modulo.nome': return this.sortByComposityField2(a, b, 'funcionalidade', 'modulo', 'nome');
-                default: return this.sortByField(a, b, event.field);
+                case 'fatorAjuste':
+                    return this.sortByComposityField(a, b, event.field, 'nome');
+                case 'funcionalidade':
+                    return this.sortByComposityField(a, b, event.field, 'nome');
+                case 'sustantation':
+                    return this.sortByBinary(a, b, event.field);
+                case 'funcionaldiade.modulo.nome':
+                    return this.sortByComposityField2(a, b, 'funcionalidade', 'modulo', 'nome');
+                default:
+                    return this.sortByField(a, b, event.field);
             }
         });
         if (event.order < 0) {
@@ -238,18 +258,30 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
 
     getField(header: string): string {
         switch (header) {
-            case 'Nome': return 'name';
-            case 'Módulo': return 'funcionaldiade.modulo.nome';
-            case 'Impacto': return 'impacto';
-            case 'Deflator': return 'fatorAjuste';
-            case 'Funcionalidade': return 'funcionalidade';
-            case 'PF - Total': return 'pf';
-            case 'PF - Ajustado': return 'grossPF';
-            case 'Classificação': return 'tipo';
-            case 'DER (TD)': return 'der';
-            case 'RLR(TR)': return 'rlr';
-            case 'Complexidade': return 'complexidade';
-            case 'Possui Fundamentação': return 'sustantation';
+            case 'Nome':
+                return 'name';
+            case 'Módulo':
+                return 'funcionaldiade.modulo.nome';
+            case 'Impacto':
+                return 'impacto';
+            case 'Deflator':
+                return 'fatorAjuste';
+            case 'Funcionalidade':
+                return 'funcionalidade';
+            case 'PF - Total':
+                return 'pf';
+            case 'PF - Ajustado':
+                return 'grossPF';
+            case 'Classificação':
+                return 'tipo';
+            case 'DER (TD)':
+                return 'der';
+            case 'RLR(TR)':
+                return 'rlr';
+            case 'Complexidade':
+                return 'complexidade';
+            case 'Possui Fundamentação':
+                return 'sustantation';
         }
     }
 
@@ -279,7 +311,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     }
 
     sortByBinary(a: FuncaoDados, b: FuncaoDados, field: string): number {
-        if (a[field] === true &&  b[field] === false) {
+        if (a[field] === true && b[field] === false) {
             return 1;
         } else if (a[field] === false && b[field] === true) {
             return -1;
@@ -304,8 +336,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.isEdit = true;
         this.prepararParaEdicao(this.funcaoDadosEditar);
     }
-    
-    public onChange({ editor }: ChangeEvent) {
+
+    public onChange({editor}: ChangeEvent) {
         const data = editor.getData();
         return data;
     }
@@ -314,13 +346,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     *   Metodo responsavel por traduzir as classificacoes que ficam em função de dados
     */
     traduzirClassificacoes() {
-        this.translate.stream(['Cadastros.FuncaoDados.Classificacoes.ALI', 'Cadastros.FuncaoDados.Classificacoes.AIE']).subscribe((traducao) => {
-            this.classificacoes = [
-                { label: traducao['Cadastros.FuncaoDados.Classificacoes.ALI'], value: 'ALI' },
-                { label: traducao['Cadastros.FuncaoDados.Classificacoes.AIE'], value: 'AIE' },
-            ];
+        this.translate.stream(['Cadastros.FuncaoDados.Classificacoes.ALI', 'Cadastros.FuncaoDados.Classificacoes.AIE'])
+            .subscribe((traducao) => {
+                this.classificacoes = [
+                    {label: traducao['Cadastros.FuncaoDados.Classificacoes.ALI'], value: 'ALI'},
+                    {label: traducao['Cadastros.FuncaoDados.Classificacoes.AIE'], value: 'AIE'},
+                ];
 
-        })
+            });
     }
 
     /*
@@ -330,14 +363,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.translate.stream(['Cadastros.FuncaoDados.Impactos.Inclusao', 'Cadastros.FuncaoDados.Impactos.Alteracao',
             'Cadastros.FuncaoDados.Impactos.Exclusao', 'Cadastros.FuncaoDados.Impactos.Conversao',
             'Cadastros.FuncaoDados.Impactos.Outros']).subscribe((traducao) => {
-                this.impacto = [
-                    { label: traducao['Cadastros.FuncaoDados.Impactos.Inclusao'], value: 'INCLUSAO' },
-                    { label: traducao['Cadastros.FuncaoDados.Impactos.Alteracao'], value: 'ALTERACAO' },
-                    { label: traducao['Cadastros.FuncaoDados.Impactos.Exclusao'], value: 'EXCLUSAO' },
-                    { label: traducao['Cadastros.FuncaoDados.Impactos.Conversao'], value: 'CONVERSAO' },
-                    { label: traducao['Cadastros.FuncaoDados.Impactos.Outros'], value: 'ITENS_NAO_MENSURAVEIS' }
-                ];
-            })
+            this.impacto = [
+                {label: traducao['Cadastros.FuncaoDados.Impactos.Inclusao'], value: 'INCLUSAO'},
+                {label: traducao['Cadastros.FuncaoDados.Impactos.Alteracao'], value: 'ALTERACAO'},
+                {label: traducao['Cadastros.FuncaoDados.Impactos.Exclusao'], value: 'EXCLUSAO'},
+                {label: traducao['Cadastros.FuncaoDados.Impactos.Conversao'], value: 'CONVERSAO'},
+                {label: traducao['Cadastros.FuncaoDados.Impactos.Outros'], value: 'ITENS_NAO_MENSURAVEIS'}
+            ];
+        });
     }
 
     updateNameImpacto(impacto: string) {
@@ -350,13 +383,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
                 return this.getLabel('Cadastros.FuncaoDados.Exclusao');
             case 'CONVERSAO':
                 return this.getLabel('Cadastros.FuncaoDados.Conversao');
-            //break;
 
         }
     }
 
     public buttonSaveEdit() {
-
         if (this.isEdit) {
             this.editar();
         } else {
@@ -417,10 +448,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     }
 
     searchBaseline(event: { query: string; }): void {
-        let mdCache = this.moduloCache;
+        const mdCache = this.moduloCache;
         this.baselineResults = this.dadosBaselineFD.filter(function (fc) {
             const teste: string = event.query;
-            return fc.name.toLowerCase().includes(teste.toLowerCase()) && fc.idfuncionalidade == mdCache.id;
+            return fc.name.toLowerCase().includes(teste.toLowerCase()) && fc.idfuncionalidade === mdCache.id;
         });
     }
 
@@ -444,7 +475,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     }
 
     getTextDialog() {
-        this.textHeader = this.isEdit ? this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlterarFuncaoDados') : this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAdicionarFuncaoDados');
+        this.textHeader = this.isEdit ? this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlterarFuncaoDados')
+            : this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAdicionarFuncaoDados');
     }
 
     get currentFuncaoDados(): FuncaoDados {
@@ -474,7 +506,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
 
     set funcoesDados(funcaoDados: FuncaoDados[]) {
         this.analise.funcaoDados = funcaoDados;
-    };
+    }
 
     private get analise(): Analise {
         return this.analiseSharedDataService.analise;
@@ -555,11 +587,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     validarNameFuncaoTransacaos(ft: FuncaoTransacao) {
         const that = this;
         return new Promise(resolve => {
-            if (that.analise.funcaoTransacaos.length === 0) {
+            if (!(that.analise.funcaoTransacaos) || that.analise.funcaoTransacaos.length === 0) {
                 return resolve(true);
             }
             that.analise.funcaoTransacaos.forEach((data, index) => {
-                if (data.comprar(ft)) {
+                if (data.comparar(ft)) {
                     return resolve(false);
                 }
                 if (!that.analise.funcaoTransacaos[index + 1]) {
@@ -600,12 +632,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     validarNameFuncaoDados(fd: FuncaoDados) {
         const that = this;
         return new Promise(resolve => {
-            if (that.analise.funcaoDados.length === 0) {
+            if (!(that.analise.funcaoDados) || that.analise.funcaoDados.length === 0) {
                 return resolve(true);
             }
             if (that.analise.funcaoDados) {
                 that.analise.funcaoDados.forEach((data, index) => {
-                    if (data.comprar(fd)) {
+                    if (data.comparar(fd)) {
                         return resolve(false);
                     }
                     if (!that.analise.funcaoDados[index + 1]) {
@@ -641,13 +673,13 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         }
 
         if (this.currentFuncaoDados.impacto) {
-            if (this.currentFuncaoDados.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0 && this.currentFuncaoDados.fatorAjuste === undefined) {
+            if (this.currentFuncaoDados.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0 &&
+                this.currentFuncaoDados.fatorAjuste === undefined) {
                 this.erroDeflator = false;
                 retorno = false;
                 this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneDeflator'));
             }
-        }
-        else {
+        } else {
             this.erroDeflator = true;
         }
 
@@ -682,8 +714,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
             this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneModuloFuncionalidade'));
             this.erroModulo = true;
             retorno = false;
-        }
-        else {
+        } else {
             this.erroModulo = false;
         }
 
@@ -711,7 +742,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
             this.desconverterChips();
             this.verificarModulo();
             const funcaoDadosCalculada = Calculadora.calcular(
-            this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
+                this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
             this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
                 '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlteradaComSucesso')}`);
             this.analise.updateFuncaoDados(funcaoDadosCalculada);
@@ -805,7 +836,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
             return;
         }
 
-        let funcaoDadosSelecionada: FuncaoDados = event.selection.clone();
+        const funcaoDadosSelecionada: FuncaoDados = event.selection.clone();
         switch (event.button) {
             case 'edit':
                 this.isEdit = true;
@@ -822,7 +853,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
                 this.currentFuncaoDados.id = undefined;
                 this.currentFuncaoDados.artificialId = undefined;
                 this.currentFuncaoDados.impacto = Impacto.ALTERACAO;
-                this.textHeader = this.getLabel('Cadastros.FuncaoDados.Mensagens.msgClonarFuncaoDados')
+                this.textHeader = this.getLabel('Cadastros.FuncaoDados.Mensagens.msgClonarFuncaoDados');
                 break;
             case 'crud':
                 this.createCrud(funcaoDadosSelecionada);
@@ -924,7 +955,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.currentFuncaoDados = funcaoDadosSelecionada;
 
         this.carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada);
-        this.pageNotificationService.addInfoMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlterandoFuncaoDados')} '${funcaoDadosSelecionada.name}'`);
+        this.pageNotificationService.addInfoMsg(
+            `${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlterandoFuncaoDados')} '${funcaoDadosSelecionada.name}'`
+        );
     }
 
     // Prepara para clonar
@@ -932,7 +965,9 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.analiseSharedDataService.currentFuncaoDados = funcaoDadosSelecionada;
         this.currentFuncaoDados.name = this.currentFuncaoDados.name + this.getLabel('Cadastros.FuncaoDados.Copia');
         this.carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada);
-        this.pageNotificationService.addInfoMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgClonandoFuncaoDados')} '${funcaoDadosSelecionada.name}'`);
+        this.pageNotificationService.addInfoMsg(
+            `${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgClonandoFuncaoDados')} '${funcaoDadosSelecionada.name}'`
+        );
     }
 
     private carregarValoresNaPaginaParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
@@ -947,7 +982,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
         this.inicializaFatoresAjuste(this.analise.manual);
         if (funcaoSelecionada.fatorAjuste !== undefined) {
-            funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, { value: { 'id': funcaoSelecionada.fatorAjuste.id } }).value;
+            funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, {value: {'id': funcaoSelecionada.fatorAjuste.id}}).value;
         }
 
     }
@@ -966,7 +1001,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
 
     // Carregar Referencial
     private loadReference(referenciaveis: AnaliseReferenciavel[],
-        strValues: string[]): DerChipItem[] {
+                          strValues: string[]): DerChipItem[] {
 
         if (referenciaveis) {
             if (referenciaveis.length > 0) {
@@ -987,7 +1022,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
 
     confirmDelete(funcaoDadosSelecionada: FuncaoDados) {
         this.confirmationService.confirm({
-            message: `${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgCertezaDesejaExcluirFuncaoDados')} '${funcaoDadosSelecionada.name}'?`,
+            message: `${this.getLabel(
+                'Cadastros.FuncaoDados.Mensagens.msgCertezaDesejaExcluirFuncaoDados')} '${funcaoDadosSelecionada.name}'?`,
             accept: () => {
                 this.analise.deleteFuncaoDados(funcaoDadosSelecionada);
                 this.salvarAnalise();
@@ -1034,24 +1070,24 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     }
 
     private inicializaFatoresAjuste(manual: Manual) {
-        if (manual.fatoresAjuste) {
-            this.faS = _.cloneDeep(manual.fatoresAjuste);
-            this.faS.sort((n1, n2) => {
-                if (n1.fator < n2.fator)
-                    return 1;
-                if (n1.fator > n2.fator)
-                    return -1;
-                return 0;
-            });
-
-            this.fatoresAjuste =
-                this.faS.map(fa => {
-                    const label = FatorAjusteLabelGenerator.generate(fa);
-                    return { label: label, value: fa };
+        if (manual) {
+            if (manual.fatoresAjuste) {
+                this.faS = _.cloneDeep(manual.fatoresAjuste);
+                this.faS.sort((n1, n2) => {
+                    if (n1.fator < n2.fator) {
+                        return 1;
+                    }
+                    if (n1.fator > n2.fator) {
+                        return -1;
+                    }
+                    return 0;
                 });
-
-            //Label "Nenhum" comentada
-            //this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+                this.fatoresAjuste =
+                    this.faS.map(fa => {
+                        const label = FatorAjusteLabelGenerator.generate(fa);
+                        return {label: label, value: fa};
+                    });
+            }
         }
     }
 

@@ -1,15 +1,18 @@
-import { TranslateService } from '@ngx-translate/core';
-import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { HttpService } from '@basis/angular-components';
-import { environment } from '../../environments/environment';
+import {TranslateService} from '@ngx-translate/core';
+import {Injectable} from '@angular/core';
+import {Response} from '@angular/http';
+import {Observable} from 'rxjs/Rx';
+import {HttpService} from '@basis/angular-components';
+import {environment} from '../../environments/environment';
 
-import { Sistema } from './sistema.model';
-import { ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService } from '../shared';
+import {Sistema} from './sistema.model';
+import {PageNotificationService, ResponseWrapper} from '../shared';
+import {BlockUI, NgBlockUI} from 'ng-block-ui';
 
 @Injectable()
 export class SistemaService {
+
+    @BlockUI() blockUI: NgBlockUI;
 
     resourceUrl = environment.apiUrl + '/sistemas';
 
@@ -23,7 +26,8 @@ export class SistemaService {
 
     fieldSearchOrganizacaoUrl = environment.apiUrl + '/_searchOrganizacao/sistemas';
 
-    constructor(private http: HttpService, private pageNotificationService: PageNotificationService, private translate: TranslateService) { }
+    constructor(private http: HttpService, private pageNotificationService: PageNotificationService, private translate: TranslateService) {
+    }
 
     getLabel(label) {
         let str: any;
@@ -86,6 +90,7 @@ export class SistemaService {
      * Método responsável por popular a lista de sistemas da organização selecionada.
      */
     findAllSystemOrg(orgId: number): Observable<ResponseWrapper> {
+        this.blockUI.start();
         const url = `${this.findByOrganizacaoUrl}/${orgId}`;
         return this.http.get(url)
             .map((res: Response) => this.convertResponse(res)).catch((error: any) => {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConnectionBackend, Headers, Http, Request, RequestOptions, RequestOptionsArgs, Response, XHRBackend } from "@angular/http";
+import { ConnectionBackend, Headers, Http, Request, RequestOptions, RequestOptionsArgs, Response, XHRBackend } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { JwtHelper, AuthConfigConsts } from 'angular2-jwt';
 import { AuthConfig } from '@basis/angular-components';
@@ -13,7 +13,7 @@ declare var window: any;
 export class AutenticacaoHttp extends Http {
 
     constructor(
-        backend: ConnectionBackend,
+        backend: ConnectionBackend | XHRBackend,
         defaultOptions: RequestOptions,
         private jwtHelper: JwtHelper,
         private config: AuthConfig) {
@@ -21,8 +21,8 @@ export class AutenticacaoHttp extends Http {
     }
 
     private getCookie(nomeParametro: string): string {
-        let nome = nomeParametro + '=';
-        let cookie = document.cookie.split(';');
+        const nome = nomeParametro + '=';
+        const cookie = document.cookie.split(';');
         for (let i = 0; i < cookie.length; i++) {
             let c = cookie[i];
             while (c.charAt(0) == ' ') {
@@ -41,7 +41,7 @@ export class AutenticacaoHttp extends Http {
             return Observable.empty<Response>();
         }
 
-        let token: string = this.getCookie('Authentication');
+        const token: string = this.getCookie('Authentication');
         if (environment.auth.publicUrls.includes(url.url) || (token && !this.jwtHelper.isTokenExpired(token))) {
             return super.request(url, options);
         } else {

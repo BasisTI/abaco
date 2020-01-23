@@ -8,6 +8,7 @@ import { Contrato } from './contrato.model';
 import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
 import { GenericService } from '../util/service/generic.service';
 import { Organizacao } from '../organizacao';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Injectable()
 export class ContratoService {
@@ -15,6 +16,8 @@ export class ContratoService {
   resourceUrl = environment.apiUrl + '/contratoes';
 
   searchUrl = environment.apiUrl + '/_search/contratoes';
+
+  @BlockUI() blockUI: NgBlockUI;
 
   constructor(private http: HttpService, private dateUtils: JhiDateUtils, private genericService: GenericService) {}
 
@@ -35,8 +38,9 @@ export class ContratoService {
   }
 
   findAllContratoesByOrganization(org: Organizacao): Observable<Contrato[]> {
+    this.blockUI.start();
     return this.http.post(`${this.resourceUrl}/organizations`, org)
-      .map((res: Response) => res.json());
+      .map((res: Response) => res.json()).finally(() => this.blockUI.stop());
   }
 
   find(id: number): Observable<Contrato> {

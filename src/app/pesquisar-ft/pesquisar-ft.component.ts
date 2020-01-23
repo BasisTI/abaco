@@ -262,7 +262,9 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     }
 
     private inicializaValoresAposCarregamento() {
-        this.setSistamaOrganizacao(this.analise.organizacao);
+        if(this.analise.organizacao){
+            this.setSistamaOrganizacao(this.analise.organizacao);
+        }
         this.carregaFatorAjusteNaEdicao();
         this.subscribeFuncionalideBaseline();
     }

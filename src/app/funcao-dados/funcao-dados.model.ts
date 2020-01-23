@@ -95,7 +95,7 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, 
         return copy;
     }
 
-    comprar(funcaoDados: FuncaoDados): boolean {
+    comparar(funcaoDados: FuncaoDados): boolean {
         return funcaoDados.name === this.name &&
             funcaoDados.funcionalidade.id === this.funcionalidade.id &&
             funcaoDados.funcionalidade.modulo.id === this.funcionalidade.modulo.id;

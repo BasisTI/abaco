@@ -49,27 +49,29 @@ export class Manual implements BaseEntity, JSONable<Manual> {
         return copy;
     }
 
-    copyFromJSON(json: any) {
-        const fatoresAjuste: FatorAjuste[] = json.fatoresAjuste ? json.fatoresAjuste
-            .map(faJSON => new FatorAjuste().copyFromJSON(faJSON)) : [];
-        const esforcoFases: EsforcoFase[] = json.esforcoFases ? json.esforcoFases
-            .map(efJSON => new EsforcoFase().copyFromJSON(efJSON)) : [];
-        return new Manual(
-            json.id
-            , json.nome
-            , json.observacao
-            , json.valorVariacaoEstimada
-            , json.valorVariacaoIndicativa
-            , json.arquivoManualId
-            , fatoresAjuste
-            , esforcoFases
-            , undefined
-            , json.parametroInclusao
-            , json.parametroAlteracao
-            , json.parametroExclusao
-            , json.parametroConversao
-            , json.versaoCPM);
-    }
+    copyFromJSON(jsonObject: any) {
+        if (jsonObject) {
+                const fatoresAjuste: FatorAjuste[] = jsonObject.fatoresAjuste ? jsonObject.fatoresAjuste
+                    .map(faJSON => new FatorAjuste().copyFromJSON(faJSON)) : [];
+                const esforcoFases: EsforcoFase[] = jsonObject.esforcoFases ? jsonObject.esforcoFases
+                    .map(efJSON => new EsforcoFase().copyFromJSON(efJSON)) : [];
+                return new Manual(
+                    jsonObject.id
+                    , jsonObject.nome
+                    , jsonObject.observacao
+                    , jsonObject.valorVariacaoEstimada
+                    , jsonObject.valorVariacaoIndicativa
+                    , jsonObject.arquivoManualId
+                    , fatoresAjuste
+                    , esforcoFases
+                    , undefined
+                    , jsonObject.parametroInclusao
+                    , jsonObject.parametroAlteracao
+                    , jsonObject.parametroExclusao
+                    , jsonObject.parametroConversao
+                    , jsonObject.versaoCPM);
+            }
+        }
 
     get valorVariacaoIndicativaFormatado(): number {
         return this.valorVariacaoIndicativa;

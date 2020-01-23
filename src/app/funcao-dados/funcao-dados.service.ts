@@ -110,7 +110,6 @@ export class FuncaoDadosService {
     }
 
     private convertItem(json: any): FuncaoDados {
-        
         return FuncaoDados.convertJsonToObject(json);
     }
 

@@ -101,7 +101,7 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
                 this.funcoesDados = res.json;
 
                 this.funcoesDados.concat(this.funcoesDadosCache);
-                if (this.funcoesDados.length !== 0) {
+                if ( this.funcoesDados && this.funcoesDados.length !== 0 && this.funcoesDadosCache) {
                     for (const funcoes of this.funcoesDadosCache) {
                         if (this.funcoesDados.indexOf(funcoes) === -1) {
                             this.funcoesDados.push(funcoes);

@@ -546,7 +546,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     return resolve(true);
                 }
                 that.analise.funcaoTransacaos.forEach((data, index) => {
-                    if (data.comprar(ft)) {
+                    if (data.comparar(ft)) {
                         return resolve(false);
                     }
                     if (!that.analise.funcaoTransacaos[index + 1]) {
@@ -871,23 +871,23 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     private inicializaFatoresAjuste(manual: Manual) {
         if (manual.fatoresAjuste) {
-            this.faS = _.cloneDeep(this.analise.manual.fatoresAjuste);
-
-            this.faS.sort((n1, n2) => {
-                if (n1.fator < n2.fator)
-                    return 1;
-                if (n1.fator > n2.fator)
-                    return -1;
-                return 0;
-            });
-
-            this.fatoresAjuste =
-                this.faS.map(fa => {
-                    const label = FatorAjusteLabelGenerator.generate(fa);
-                    return { label: label, value: fa };
+            if (this.analise.manual) {
+                this.faS = _.cloneDeep(this.analise.manual.fatoresAjuste);
+                this.faS.sort((n1, n2) => {
+                    if (n1.fator < n2.fator)
+                        return 1;
+                    if (n1.fator > n2.fator)
+                        return -1;
+                    return 0;
                 });
+                this.fatoresAjuste =
+                    this.faS.map(fa => {
+                        const label = FatorAjusteLabelGenerator.generate(fa);
+                        return { label: label, value: fa };
+                    });
 
-            this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+                this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
+            }
         }
     }
 
