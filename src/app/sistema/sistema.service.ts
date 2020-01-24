@@ -86,19 +86,14 @@ export class SistemaService {
             });
     }
 
-    /**
-     * Método responsável por popular a lista de sistemas da organização selecionada.
-     */
     findAllSystemOrg(orgId: number): Observable<ResponseWrapper> {
         this.blockUI.start();
         const url = `${this.findByOrganizacaoUrl}/${orgId}`;
         return this.http.get(url)
-            .map((response: Response) => function () {
-                this.blockUI.stop();
-                this.convertResponse(response);
-            })
+            .map((response: Response) =>
+                this.convertResponse(response)
+            )
             .catch((error: any) => {
-                this.blockUI.stop();
                 if (error.status === 403) {
                     this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                     return Observable.throw(new Error(error.status));
