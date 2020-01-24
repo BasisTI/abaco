@@ -264,13 +264,6 @@
                                         (onChange)="validarManual()" dataKey="id" required [resetFilterOnHide]="false"
                                         #ctrl="ngModel">
                             </p-dropdown>
-                            <div *ngIf="this.validaManual || (editForm1.controls['manualDropdownNovo']
-                                    && !editForm1.controls['manualDropdownNovo'].valid
-                                    && (editForm1.controls['manualDropdownNovo'].touched
-                                    || editForm1.submitted))" class="ui-message ui-messages-error"
-                                 translate="Global.Mensagens.CampoObrigatorio">
-                                Campo obrigatório.
-                            </div>
                         </div>
                         <div class="ui-g-6" style="margin-bottom: 25px">
                             <span class="md-inputfield">

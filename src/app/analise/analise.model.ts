@@ -1,19 +1,20 @@
-import {UserService} from './../user/user.service';
-import {Manual} from './../manual/manual.model';
-import {BaseEntity, JSONable, MappableEntities} from '../shared';
-import {Contrato} from '../contrato';
-import {EsforcoFase} from '../esforco-fase/index';
-import {Sistema} from '../sistema/index';
-import {FuncaoDados} from '../funcao-dados/index';
-import {ResumoFuncoes, ResumoTotal} from '../analise-shared/resumo-funcoes';
-import {FuncaoTransacao} from '../funcao-transacao/funcao-transacao.model';
-import {FatorAjuste} from '../fator-ajuste';
-import {ModuloDaFuncionalidadeFinder} from './modulo-finder';
-import {FuncaoAnalise} from '../analise-shared/funcao-analise';
-import {Organizacao} from '../organizacao';
-import {TipoEquipe} from '../tipo-equipe';
-import {User} from '../user';
-import {AnaliseShareEquipe} from './analise-share-equipe.model';
+import { UserService } from './../user/user.service';
+import { Manual } from './../manual/manual.model';
+import { BaseEntity, MappableEntities, JSONable } from '../shared';
+import { Contrato } from '../contrato';
+import { EsforcoFase } from '../esforco-fase/index';
+import { Sistema } from '../sistema/index';
+import { FuncaoDados, TipoFuncaoDados, FuncaoDadosFormComponent } from '../funcao-dados/index';
+import { ResumoTotal, ResumoFuncoes } from '../analise-shared/resumo-funcoes';
+import { FuncaoTransacao } from '../funcao-transacao/funcao-transacao.model';
+import { FatorAjuste } from '../fator-ajuste';
+import { ModuloDaFuncionalidadeFinder } from './modulo-finder';
+import { FuncaoAnalise } from '../analise-shared/funcao-analise';
+import { Organizacao } from '../organizacao';
+import { TipoEquipe } from '../tipo-equipe';
+import { User } from '../user';
+import { AnaliseShareEquipe } from './analise-share-equipe.model';
+import { Observable } from 'rxjs/Rx';
 
 export enum MetodoContagem {
     'DETALHADA' = 'DETALHADA',
@@ -84,7 +85,6 @@ export class Analise implements BaseEntity, JSONable<Analise> {
             this.baselineImediatamente = false;
         }
     }
-
     private inicializaMappables(funcaoDados: FuncaoDados[], funcaoTransacaos: FuncaoTransacao[]) {
         if (funcaoDados) {
             this.mappableFuncaoDados = new MappableEntities<FuncaoDados>(funcaoDados);
@@ -97,24 +97,20 @@ export class Analise implements BaseEntity, JSONable<Analise> {
             this.mappableFuncaoTransacaos = new MappableEntities<FuncaoTransacao>();
         }
     }
-
     private inicializaResumos() {
         this._resumoFuncaoDados = new ResumoFuncoes(FuncaoDados.tipos());
         this._resumoFuncaoTransacao = new ResumoFuncoes(FuncaoTransacao.tipos());
         this.generateResumoTotal();
     }
-
     private generateResumoTotal() {
         this._resumoTotal = new ResumoTotal(this._resumoFuncaoDados, this._resumoFuncaoTransacao);
         this.calcularTotalPFs();
     }
-
     private calcularTotalPFs() {
         this.pfTotal = this._resumoTotal.getTotalGrossPf().toString();
         this.adjustPFTotal = this.aplicaTotalEsforco(this.ajustarPfTotal()).toFixed(2).toString();
         this.pfTotalEsforco = this.aplicaTotalEsforco(this._resumoTotal.getTotalGrossPf()).toFixed(2).toString();
     }
-
     /**
      * VERIFICAR CÁLCULO - Cálculo modificado par arefletir a nova forma de salvar
      * Porcentagens no banco
@@ -124,7 +120,6 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     private aplicaTotalEsforco(pf: number): number {
         return (pf * this.totalEsforcoFases()) / 100;
     }
-
     /**
      * Renomenando método de "pfTotalAjustadoSomentePorFatorAjuste()"
      * para "ajustarPfTotal()" por motivo de legibilidade e clareza
@@ -136,7 +131,6 @@ export class Analise implements BaseEntity, JSONable<Analise> {
         }
         return pfTotalAjustado;
     }
-
     aplicarFator(pf: number): number {
         if (this.fatorAjuste.tipoAjuste === 'UNITARIO') {
             return this.fatorAjuste.fator;
@@ -144,7 +138,6 @@ export class Analise implements BaseEntity, JSONable<Analise> {
             return pf * this.fatorAjuste.fator;
         }
     }
-
     private totalEsforcoFases(): number {
         const initialValue = 0;
         if (this.esforcoFases) {
@@ -414,7 +407,7 @@ class AnaliseCopyFromJSON {
     }
 
     private converteEsforcoFases() {
-        if (this._json.esforcoFases) {
+        if (this._json.esforcoFases){
             this._analiseConverted.esforcoFases = this._json.esforcoFases
                 .map(efJSON => new EsforcoFase().copyFromJSON(efJSON));
         }

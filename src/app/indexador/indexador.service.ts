@@ -24,7 +24,7 @@ export class IndexadorService {
             (res: Response) => {
                 this.blockUI.stop();
                 return res.json();
-            });
+            }).finally(() => this.blockUI.stop());
     }
 
 }

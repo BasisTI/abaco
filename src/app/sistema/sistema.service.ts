@@ -93,12 +93,17 @@ export class SistemaService {
         this.blockUI.start();
         const url = `${this.findByOrganizacaoUrl}/${orgId}`;
         return this.http.get(url)
-            .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+            .map((response: Response) => function () {
+                this.blockUI.stop();
+                this.convertResponse(response);
+            })
+            .catch((error: any) => {
+                this.blockUI.stop();
                 if (error.status === 403) {
                     this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                     return Observable.throw(new Error(error.status));
                 }
-            });
+            }).finally(() => this.blockUI.stop());
     }
 
     dropDown(): Observable<ResponseWrapper> {

@@ -1,26 +1,26 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Subscription} from 'rxjs/Rx';
 
-import { Analise, AnaliseShareEquipe } from './';
-import { AnaliseService } from './analise.service';
-import { User, UserService } from '../user';
-import { ResponseWrapper, AnaliseSharedDataService, PageNotificationService } from '../shared';
-import { Organizacao, OrganizacaoService } from '../organizacao';
-import { Contrato, ContratoService } from '../contrato';
-import { Sistema, SistemaService } from '../sistema';
-import { SelectItem, ConfirmationService } from 'primeng/primeng';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import {Analise, AnaliseShareEquipe} from './';
+import {AnaliseService} from './analise.service';
+import {UserService} from '../user';
+import {AnaliseSharedDataService, PageNotificationService, ResponseWrapper} from '../shared';
+import {Organizacao, OrganizacaoService} from '../organizacao';
+import {Contrato, ContratoService} from '../contrato';
+import {Sistema, SistemaService} from '../sistema';
+import {ConfirmationService, SelectItem} from 'primeng/primeng';
+import {BlockUI, NgBlockUI} from 'ng-block-ui';
 
 import * as _ from 'lodash';
-import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
-import { TipoEquipeService, TipoEquipe } from '../tipo-equipe';
-import { MessageUtil } from '../util/message.util';
-import { FatorAjuste } from '../fator-ajuste';
-import { EsforcoFase } from '../esforco-fase';
-import { Manual } from '../manual';
-import { Response } from '@angular/http';
-import { TranslateService } from '@ngx-translate/core';
+import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
+import {TipoEquipe, TipoEquipeService} from '../tipo-equipe';
+import {MessageUtil} from '../util/message.util';
+import {FatorAjuste} from '../fator-ajuste';
+import {EsforcoFase} from '../esforco-fase';
+import {Manual} from '../manual';
+import {Response} from '@angular/http';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     selector: 'jhi-analise-view',
@@ -41,7 +41,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     equipeShare; analiseShared: Array<AnaliseShareEquipe> = [];
     selectedEquipes: Array<AnaliseShareEquipe>;
     selectedToDelete: AnaliseShareEquipe;
-    mostrarDialog: boolean = false;
+    mostrarDialog = false;
     tipoEquipesLoggedUser: TipoEquipe[] = [];
     dataCriacao: any;
 
@@ -63,20 +63,20 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
 
     nomeManual = this.getLabel('Analise.SelecioneUmContrato');
 
-    private fatorAjusteNenhumSelectItem = { label: MessageUtil.NENHUM, value: undefined };
+    private fatorAjusteNenhumSelectItem = {label: MessageUtil.NENHUM, value: undefined};
 
     @BlockUI() blockUI: NgBlockUI;
 
     tiposAnalise: SelectItem[] = [
-        { label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO },
-        { label: MessageUtil.PROJETO_MELHORIA, value: MessageUtil.MELHORIA },
-        { label: MessageUtil.CONTAGEM_APLICACAO, value: MessageUtil.APLICACAO }
+        {label: MessageUtil.PROJETO_DESENVOLVIMENTO, value: MessageUtil.DESENVOLVIMENTO},
+        {label: MessageUtil.PROJETO_MELHORIA, value: MessageUtil.MELHORIA},
+        {label: MessageUtil.CONTAGEM_APLICACAO, value: MessageUtil.APLICACAO}
     ];
 
     metodoContagem: SelectItem[] = [
-        { label: MessageUtil.DETALHADA_IFPUG, value: MessageUtil.DETALHADA_IFPUG },
-        { label: MessageUtil.INDICATIVA_NESMA, value: MessageUtil.INDICATIVA_NESMA },
-        { label: MessageUtil.ESTIMADA_NESMA, value: MessageUtil.ESTIMADA_NESMA }
+        {label: MessageUtil.DETALHADA_IFPUG, value: MessageUtil.DETALHADA_IFPUG},
+        {label: MessageUtil.INDICATIVA_NESMA, value: MessageUtil.INDICATIVA_NESMA},
+        {label: MessageUtil.ESTIMADA_NESMA, value: MessageUtil.ESTIMADA_NESMA}
     ];
 
     private routeSub: Subscription;
@@ -97,7 +97,8 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         private pageNotificationService: PageNotificationService,
         private userService: UserService,
         private translate: TranslateService
-    ) { }
+    ) {
+    }
 
     ngOnInit() {
         this.disableAba = false;
@@ -134,9 +135,6 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * Obtêm uma análise através do ID
-     */
     getAnalise() {
         this.routeSub = this.route.params.subscribe(params => {
             this.analise = new Analise();
@@ -146,8 +144,8 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
                     this.inicializaValoresAposCarregamento(analise);
                     this.analiseSharedDataService.analiseCarregada();
                     this.dataAnalise = this.analise;
-                    this.setDataHomologacao();
-                    this.setDataCriacaoOrdemServico();
+                    this.setData(this.analise.dataHomologacao);
+                    this.setData(this.analise.dataCriacaoOrdemServico);
                     this.diasGarantia = this.getGarantia();
                 });
             } else {
@@ -156,56 +154,31 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         });
     }
 
-    /*
-     *   Metodo responsavel por traduzir opções do dropdown Tipo de Analise
-    */
     traduzirtiposAnalise() {
         this.translate.stream(['Analise.Analise.TiposAnalise.ProjetoDesenvolvimento', 'Analise.Analise.TiposAnalise.ProjetoMelhoria',
             'Analise.Analise.TiposAnalise.ContagemAplicacao']).subscribe((traducao) => {
-                this.tiposAnalise = [
-                    { label: traducao['Analise.Analise.TiposAnalise.ProjetoDesenvolvimento'], value: 'DESENVOLVIMENTO' },
-                    { label: traducao['Analise.Analise.TiposAnalise.ProjetoMelhoria'], value: 'MELHORIA' },
-                    { label: traducao['Analise.Analise.TiposAnalise.ContagemAplicacao'], value: 'APLICACAO' }
-                ];
+            this.tiposAnalise = [
+                {label: traducao['Analise.Analise.TiposAnalise.ProjetoDesenvolvimento'], value: 'DESENVOLVIMENTO'},
+                {label: traducao['Analise.Analise.TiposAnalise.ProjetoMelhoria'], value: 'MELHORIA'},
+                {label: traducao['Analise.Analise.TiposAnalise.ContagemAplicacao'], value: 'APLICACAO'}
+            ];
 
-            })
+        });
     }
 
-
-    /**
-     * Método responsável por popular a data de Homologação
-     */
-    setDataHomologacao() {
-        if (this.dataAnalise.dataHomologacao !== null) {
-            this.dataHomol.setMonth(Number(this.dataAnalise.dataHomologacao.substring(5, 7)) - 1);
-            this.dataHomol.setDate(Number(this.dataAnalise.dataHomologacao.substring(8, 10)));
-            this.dataHomol.setFullYear(Number(this.dataAnalise.dataHomologacao.substring(0, 4)));
+    setData(data) {
+        if (data !== null) {
+            this.dataHomol.setMonth(Number(data.substring(5, 7)) - 1);
+            this.dataHomol.setDate(Number(data.substring(8, 10)));
+            this.dataHomol.setFullYear(Number(data.substring(0, 4)));
             this.analise.dataHomologacao = this.dataHomol;
         }
     }
 
-    /**
-    * Método responsável por popular a data de Criacao Ordem Servico
-    */
-    setDataCriacaoOrdemServico() {
-        if (this.dataAnalise.dataCriacaoOrdemServico !== null) {
-            this.dataCriacao.setMonth(Number(this.dataAnalise.dataCriacaoOrdemServico.substring(5, 7)) - 1);
-            this.dataCriacao.setDate(Number(this.dataAnalise.dataCriacaoOrdemServico.substring(8, 10)));
-            this.dataCriacao.setFullYear(Number(this.dataAnalise.dataCriacaoOrdemServico.substring(0, 4)));
-            this.analise.dataCriacaoOrdemServico = this.dataCriacao;
-        }
-    }
-
-    /**
-     * Método responsável por popular os dias de garantia do contrato
-     */
     getGarantia(): any {
-        this.diasGarantia !== undefined ? this.diasGarantia = this.analise.contrato.diasDeGarantia : undefined;
+        this.diasGarantia !== undefined ? (this.diasGarantia = this.analise.contrato.diasDeGarantia) : undefined ;
     }
 
-    /**
-     * Método responsável por popular a lista de organizações.
-     */
     listOrganizacoes() {
         this.organizacaoService.searchActiveOrganizations().subscribe((res: ResponseWrapper) => {
             this.organizacoes = res.json;
@@ -214,9 +187,6 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * Carrega os dados da analise, organização e manual
-     */
     private inicializaValoresAposCarregamento(analiseCarregada: Analise) {
         if (!this.isView && analiseCarregada.bloqueiaAnalise) {
             this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgEDITAR_ANALISE_BLOQUEADA'));
@@ -228,16 +198,10 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         this.carregaFatorAjusteNaEdicao();
     }
 
-    /**
-     * Retorna o sistema selecionado
-     */
     getSistemaSelecionado() {
         this.analiseSharedDataService.sistemaSelecionado();
     }
 
-    /**
-     * Método responsável por popular a lista de sistemas da organização selecionada.
-     */
     setSistamaOrganizacao(org: Organizacao) {
         this.contratos = org.contracts;
         this.sistemaService.findAllSystemOrg(org.id).subscribe((res: ResponseWrapper) => {
@@ -246,9 +210,6 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         this.setEquipeOrganizacao(org);
     }
 
-    /**
-     * Método responsável por popular a equipe responsavel da organização
-     */
     setEquipeOrganizacao(org: Organizacao) {
         this.contratos = org.contracts;
         this.equipeService.findAllByOrganizacaoId(org.id).subscribe((res: ResponseWrapper) => {
@@ -259,9 +220,6 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * Método responsável por popular o manual do contrato
-     */
     setManual(manual: Manual) {
         if (manual) {
             this.nomeManual = manual.nome;
@@ -271,34 +229,25 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * Método responsável por popular os fatores de ajuste do Manual
-     */
     private inicializaFatoresAjuste(manual: Manual) {
         const faS: FatorAjuste[] = _.cloneDeep(manual.fatoresAjuste);
         this.fatoresAjuste =
             faS.map(fa => {
                 const label = FatorAjusteLabelGenerator.generate(fa);
-                return { label: label, value: fa };
+                return {label: label, value: fa};
             });
         this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
     }
 
-    /**
-     * Método responsável por popular os fatores de ajuste do Manual na Edicao
-     */
     private carregaFatorAjusteNaEdicao() {
         const fatorAjuste: FatorAjuste = this.analise.fatorAjuste;
         if (fatorAjuste) {
             const fatorAjusteSelectItem: SelectItem
-                = _.find(this.fatoresAjuste, { value: { id: fatorAjuste.id } });
+                = _.find(this.fatoresAjuste, {value: {id: fatorAjuste.id}});
             this.analise.fatorAjuste = fatorAjusteSelectItem.value;
         }
     }
 
-    /**
-     *  Método responsável por popular os Esforços de fases
-     */
     private carregarEsforcoFases(manual: Manual) {
         this.esforcoFases = _.cloneDeep(manual.esforcoFases);
 
@@ -308,9 +257,6 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     *  Método responsável por os metodos de contagem
-     */
     private carregarMetodosContagem(manual: Manual) {
         this.metodosContagem = [
             {
@@ -319,33 +265,30 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
             },
             {
                 value: MessageUtil.INDICATIVA,
-                label: this.getLabelValorVariacao(this.getLabel('Analise.Analise.metsContagens.INDICATIVA_NESMA'), manual.valorVariacaoIndicativaFormatado)
+                label: this.getLabelValorVariacao(
+                    this.getLabel('Analise.Analise.metsContagens.INDICATIVA_NESMA'),
+                    manual.valorVariacaoIndicativaFormatado)
             },
             {
                 value: MessageUtil.ESTIMADA,
-                label: this.getLabelValorVariacao(this.getLabel('Analise.Analise.metsContagens.ESTIMADA_NESMA'), manual.valorVariacaoEstimadaFormatado)
+                label: this.getLabelValorVariacao(
+                    this.getLabel('Analise.Analise.metsContagens.ESTIMADA_NESMA'),
+                    manual.valorVariacaoEstimadaFormatado)
             }
         ];
     }
 
-    /**
-     * Atribui o rótulo para o valor de Variação
-     */
     private getLabelValorVariacao(label: string, valorVariacao: number): string {
         return label + ' - ' + valorVariacao + '%';
     }
 
-    /**
-     * Obtem o esforço de fase
-     */
     totalEsforcoFases() {
         const initialValue = 0;
-        return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforcoFormatado, initialValue);
+        if (this.analise && this.analise.esforcoFases) {
+            return this.analise.esforcoFases.reduce((val, ef) => val + ef.esforcoFormatado, initialValue);
+        }
     }
 
-    /**
-     * Descrição do valor esperado no campo de entrada: Sistema
-     */
     sistemaDropdownPlaceholder() {
         if (this.sistemas) {
             if (this.sistemas.length > 0) {
@@ -358,24 +301,14 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * Atuva ou desativa o Dropdown de sistema (html)
-     * */
     disabledSistemaDropdown() {
         return this.sistemas && this.sistemas.length > 0;
     }
 
-    /**
-     * Verifica se algum contrato foi selecioando
-     *
-     */
     isContratoSelected(): boolean {
         return this.analiseSharedDataService.isContratoSelected();
     }
 
-    /**
-     * Atribui a instrução no campo  Deflator e Método de Contagem
-     */
     needContratoDropdownPlaceholder() {
         if (this.isContratoSelected()) {
             return this.getLabel('Analise.Analise.Selecione');
@@ -384,25 +317,15 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     *
-     * Salva o contrato selecionado
-     * @param contrato
-     */
     contratoSelected(contrato: Contrato) {
         this.setManual(this.analise.manual);
     }
 
-    /**
-     * Habilita ou Desabilita campos na aba Geral da análise
-     */
+
     public habilitarCamposIniciais() {
         return this.isEdicao;
     }
 
-    /**
-     * Retorna o nome do Sistema
-     */
     public nomeSistema(): string {
         return this.analise.sistema.sigla +
             ' - ' + this.analise.sistema.nome;
@@ -416,22 +339,15 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         this.analiseSharedDataService.analise = analise;
     }
 
-    /**
-     * Gera o relatório detalhado PDF.
-     * @param analise
-     */
     public geraRelatorioPdfDetalhadoBrowser() {
         this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.analise.id);
     }
 
-    /**
-    * Desbloqueia a análise aberta atualmente.
-    * 
-    */
     public desbloquearAnalise() {
         if (this.checkUserAnaliseEquipes()) {
             this.confirmationService.confirm({
-                message: this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_DESBLOQUEIO').concat(this.analise.identificadorAnalise).concat('?'),
+                message: this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_DESBLOQUEIO')
+                            .concat(this.analise.identificadorAnalise).concat('?'),
                 accept: () => {
                     const copy = this.analise.toJSONState();
                     this.analiseService.block(copy).subscribe(() => {
@@ -440,8 +356,10 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
                     }, (error: Response) => {
                         switch (error.status) {
                             case 400: {
-                                if (error.headers.toJSON()['x-abacoapp-error'][0] === "error.notadmin") {
-                                    this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteAdministradoresBloquearDesbloquear'));
+                                if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
+                                    this.pageNotificationService.addErrorMsg(
+                                        this.getLabel('Analise.Analise.Mensagens.msgSomenteAdministradoresBloquearDesbloquear')
+                                    );
                                 }
                             }
                         }
@@ -454,7 +372,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     }
 
     checkUserAnaliseEquipes() {
-        let retorno: boolean = false;
+        let retorno = false;
         if (this.tipoEquipesLoggedUser) {
             this.tipoEquipesLoggedUser.forEach(equipe => {
                 if (equipe.id === this.analise.equipeResponsavel.id) {
@@ -468,10 +386,19 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
     public openCompartilharDialog() {
         if (this.checkUserAnaliseEquipes()) {
             this.equipeShare = [];
-            this.equipeService.findAllCompartilhaveis(this.analise.organizacao.id, this.analise.id, this.analise.equipeResponsavel.id).subscribe((equipes) => {
+            this.equipeService.findAllCompartilhaveis(
+                    this.analise.organizacao.id,
+                    this.analise.id,
+                    this.analise.equipeResponsavel.id).subscribe((equipes) => {
                 if (equipes.json) {
                     equipes.json.forEach((equipe) => {
-                        const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(), { id: undefined, equipeId: equipe.id, analiseId: this.analise.id, viewOnly: false, nomeEquipe: equipe.nome });
+                        const entity: AnaliseShareEquipe = Object.assign(new AnaliseShareEquipe(), {
+                            id: undefined,
+                            equipeId: equipe.id,
+                            analiseId: this.analise.id,
+                            viewOnly: false,
+                            nomeEquipe: equipe.nome
+                        });
                         this.equipeShare.push(entity);
                     });
                 }
@@ -498,7 +425,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
                 this.mostrarDialog = false;
                 this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.msgAnaliseCompartilhadaSucesso'));
                 this.limparSelecaoCompartilhar();
-            })
+            });
         } else {
             this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgSelecioneRegistroAdicionarCliqueSair'));
         }
@@ -511,7 +438,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
                 this.mostrarDialog = false;
                 this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgCompartilhamentoRemovidoSucesso'));
                 this.limparSelecaoCompartilhar();
-            })
+            });
         } else {
             this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgSelecioneRegistroRemoverCliqueSair'));
         }
@@ -522,7 +449,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
             this.analiseService.atualizarCompartilhar(this.selectedToDelete).subscribe((res) => {
                 this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgRegistroAtualizadoSucesso'));
             });
-        }, 250)
+        }, 250);
     }
 
 }

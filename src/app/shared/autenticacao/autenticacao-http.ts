@@ -25,10 +25,10 @@ export class AutenticacaoHttp extends Http {
         const cookie = document.cookie.split(';');
         for (let i = 0; i < cookie.length; i++) {
             let c = cookie[i];
-            while (c.charAt(0) == ' ') {
+            while (c.charAt(0) === ' ') {
                 c = c.substring(1);
             }
-            if (c.indexOf(nome) == 0) {
+            if (c.indexOf(nome) === 0) {
                 return c.substring(nome.length, c.length);
             }
         }

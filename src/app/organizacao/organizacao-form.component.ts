@@ -1,27 +1,23 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Response } from '@angular/http';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { SelectItem } from 'primeng/primeng';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Response} from '@angular/http';
+import {Observable, Subscription} from 'rxjs/Rx';
+import {FileUpload, SelectItem} from 'primeng/primeng';
 
-import { Organizacao } from './organizacao.model';
-import { OrganizacaoService } from './organizacao.service';
-import { Contrato, ContratoService } from '../contrato';
-import { Manual, ManualService } from '../manual';
-import { ResponseWrapper } from '../shared';
-import { ConfirmationService } from 'primeng/components/common/confirmationservice';
-import { DatatableClickEvent } from '@basis/angular-components';
-import { environment } from '../../environments/environment';
-import { PageNotificationService } from '../shared/page-notification.service';
-import { UploadService } from '../upload/upload.service';
-import { FileUpload } from 'primeng/primeng';
-import { NgxMaskModule } from 'ngx-mask';
-import { ValidacaoUtil } from '../util/validacao.util';
-import { ValueTransformer } from '@angular/compiler/src/util';
-import { Upload } from '../upload/upload.model';
-import { EsforcoFase } from '../esforco-fase';
-import { ManualContrato } from './ManualContrato.model';
-import { TranslateService } from '@ngx-translate/core';
+import {Organizacao} from './organizacao.model';
+import {OrganizacaoService} from './organizacao.service';
+import {Contrato, ContratoService} from '../contrato';
+import {Manual, ManualService} from '../manual';
+import {ResponseWrapper} from '../shared';
+import {ConfirmationService} from 'primeng/components/common/confirmationservice';
+import {DatatableClickEvent} from '@basis/angular-components';
+import {environment} from '../../environments/environment';
+import {PageNotificationService} from '../shared/page-notification.service';
+import {UploadService} from '../upload/upload.service';
+import {ValidacaoUtil} from '../util/validacao.util';
+import {Upload} from '../upload/upload.model';
+import {ManualContrato} from './ManualContrato.model';
+import {TranslateService} from '@ngx-translate/core';
 
 
 @Component({
@@ -95,6 +91,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }).unsubscribe();
         return str;
     }
+
     ngOnInit() {
         this.isEdit = false;
         this.cnpjValido = false;
@@ -108,35 +105,40 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
 
                 this.organizacaoService.find(params['id']).subscribe(organizacao => {
                     this.organizacao = organizacao;
-                    if (this.organizacao.logoId !== undefined && this.organizacao.logoId != null)
+                    if (this.organizacao.logoId !== undefined && this.organizacao.logoId != null) {
                         this.uploadService.getLogo(organizacao.logoId).subscribe(response => {
                             this.logo = response.logo;
                         });
-                    // this.getFile();
+                    }
                 });
             }
         });
         this.organizacao.ativo = true;
     }
+
     abrirDialogCadastroContrato(editForm1) {
         this.mostrarDialogCadastroContrato = true;
         this.novoContrato.ativo = true;
         this.numeroContratoInvalido = false;
         this.novoContrato.diasDeGarantia = null;
     }
+
     fecharDialogCadastroContrato() {
         this.doFecharDialogCadastroContrato();
     }
+
     validarManual() {
         this.manualInvalido = false;
         this.numeroContratoInvalido = false;
     }
+
     validarDataInicio() {
         if (!(this.novoContrato.dataInicioValida()) || !(this.contratoEmEdicao.dataInicioValida())) {
             this.pageNotificationService.addErrorMsg('A data de início da vigência não pode ser posterior à data de término da vigência!');
             // document.getElementById('login').setAttribute('style', 'border-color: red;');
         }
     }
+
     private doFecharDialogCadastroContrato() {
         this.mostrarDialogCadastroContrato = false;
         this.novoContrato = new Contrato();
@@ -246,7 +248,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     }
 
     setManualContrato(manualContrato: ManualContrato): ManualContrato {
-        let manualContratoCopy = new ManualContrato(null, null,
+        const manualContratoCopy = new ManualContrato(this.contratoEmEdicao.id, null,
             manualContrato.manual,
             /**contrato deve ser null para não loop */null,
             manualContrato.dataInicioVigencia,
@@ -303,24 +305,15 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     *
-     * */
     abrirDialogEditarContrato() {
         this.mostrarDialogEdicaoContrato = true;
     }
 
-    /**
-     *
-     * */
     fecharDialogEditarContrato() {
         this.contratoEmEdicao = new Contrato();
         this.mostrarDialogEdicaoContrato = false;
     }
 
-    /**
-     *
-     * */
     editarContrato() {
         if (!this.manualContratoEdt.id === undefined
             && (this.manualContratoEdt.manual !== undefined && this.manualContratoEdt.manual !== null)
@@ -337,9 +330,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     *
-     * */
     confirmDeleteContrato() {
         this.confirmationService.confirm({
             message: `${this.getLabel('Cadastros.Organizacao.Mensagens.msgTemCertezaQueDesejaExcluirContrato')} '${this.contratoEmEdicao.numeroContrato}'
@@ -373,9 +363,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     *
-     * */
     save(form) {
         this.cnpjValido = false;
         if (!this.organizacao.nome) {

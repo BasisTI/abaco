@@ -67,10 +67,6 @@ export class TipoEquipeService {
     });
   }
 
-  /**
-   * Método responsável por recuperar todas as equipes pelo ID da organização.
-   * @param orgId
-   */
   findAllByOrganizacaoId(orgId: number): Observable<ResponseWrapper> {
     const url = `${this.findByOrganizacaoUrl}/${orgId}`;
     return this.http.get(url).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
@@ -81,10 +77,6 @@ export class TipoEquipeService {
     });
   }
 
-  /**
-   * Método responsável por recuperar todas as equipes pelo ID da organização.
-   * @param orgId
-   */
   findAllEquipesByOrganizacaoIdAndLoggedUser(orgId: number): Observable<ResponseWrapper> {
     const url = `${this.findByOrganizacaoAndUserUrl}/${orgId}`;
     return this.http.get(url).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
@@ -95,10 +87,6 @@ export class TipoEquipeService {
     });
   }
 
-  /**
-   * Método responsável por recuperar todas as equipes compartilhaveis ID da organização, analise e equipe.
-   * @param orgId
-   */
   findAllCompartilhaveis(orgId, analiseId, equipeId: number): Observable<ResponseWrapper> {
     const url = `${this.findAllCompartilhaveisUrl}/${orgId}/${analiseId}/${equipeId}`;
     return this.http.get(url).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
@@ -141,17 +129,11 @@ export class TipoEquipeService {
     return new ResponseWrapper(res.headers, result, res.status);
   }
 
-  /**
-   * Convert a returned JSON object to TipoEquipe.
-   */
   private convertItemFromServer(json: any): TipoEquipe {
     const entity: TipoEquipe = Object.assign(new TipoEquipe(), json);
     return entity;
   }
 
-  /**
-   * Convert a TipoEquipe to a JSON which can be sent to the server.
-   */
   private convert(tipoEquipe: TipoEquipe): TipoEquipe {
     const copy: TipoEquipe = Object.assign({}, tipoEquipe);
     return copy;
