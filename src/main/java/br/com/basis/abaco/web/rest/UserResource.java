@@ -104,6 +104,7 @@ public class UserResource {
             user.setPassword(RandomUtil.generatePassword());
             mailService.sendCreationEmail(user);
             User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
+            userRepository.save(userReadyToBeSaved);
             User newUser = userSearchRepository.save(userReadyToBeSaved);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
                     .headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin())).body(newUser);
@@ -240,14 +241,6 @@ public class UserResource {
     @Transactional
     public List<User> getOrganizacaoDropdown() {
         return userRepository.getAllByFirstNameIsNotNullOrderByFirstName();
-    }
-
-    @GetMapping("/users/reindexar")
-    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
-    public void reindexarUSer() {
-        List<String> list = new ArrayList<>();
-        list.add("userList");
-        this.elasticSearchIndexService.reindexar(list);
     }
 
     private User bindUser(User user, Optional<User> oldUserdata, User loggedUser) {
