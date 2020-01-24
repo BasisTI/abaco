@@ -164,9 +164,7 @@ public class OrganizacaoResource {
     if (i >= 0) {
       return this.createBadRequest(this.erro[i], this.mensagem[i]);
     }
-
     Organizacao result = organizacaoRepository.save(organizacao);
-
     organizacaoSearchRepository.save(result);
 
     return ResponseEntity.created(new URI("/api/organizacaos/" + result.getId()))

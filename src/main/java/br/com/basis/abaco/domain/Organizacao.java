@@ -2,6 +2,7 @@ package br.com.basis.abaco.domain;
 
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang3.BooleanUtils;
 import org.hibernate.annotations.Cache;
@@ -73,6 +74,7 @@ public class Organizacao implements Serializable, ReportObject, Cloneable {
     private Set<Sistema> sistemas = new HashSet<>();
 
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<Contrato> contracts = new HashSet<>();
 
     @JsonIgnore

@@ -3,7 +3,6 @@ package br.com.basis.abaco.domain;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +16,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,8 +29,6 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
-import static java.util.Collections.unmodifiableSet;
 
 @Entity
 @Table(name = "tipo_equipe")
@@ -53,8 +51,9 @@ public class TipoEquipe implements Serializable, ReportObject {
     @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
-    @JsonInclude(Include.NON_EMPTY)
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @Field(type = FieldType.Nested, index = FieldIndex.not_analyzed)
+    @JsonInclude
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "tipoequipe_organizacao", joinColumns = @JoinColumn(name = "tipoequipe_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
     private Set<Organizacao> organizacoes = new HashSet<>();
 
