@@ -149,19 +149,12 @@ export class UserService {
         }
         return new ResponseWrapper(res.headers, result, res.status);
     }
-
-    /**
-     * Convert a returned JSON object to User.
-     */
     private convertItemFromServer(json: any): User {
         const entity: User = Object.assign(new User(), json);
         entity.authorities = this.generateAuthorities(json);
         return entity;
     }
 
-    /**
-     * Convert a returned JSON object to User.
-     */
     private convertUsersFromServer(json: any): User[] {
         const users: User[] = [];
         json.map(item => {
