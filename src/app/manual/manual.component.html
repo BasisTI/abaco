@@ -63,8 +63,6 @@
                             disabled="desabilitarBotaoClonar()">
                     </basis-datatable-button>
 
-                    <!--<p-column header="Código" field="id" [sortable]="true"></p-column>-->
-
                     <p-column [header]="this.getLabel('Cadastros.Manual.Nome')" field="nome" [sortable]="true" [style]="{'width': '15%'}"></p-column>
                     <p-column [header]="this.getLabel('Cadastros.Manual.Estimada')" field="valorVariacaoEstimada" [sortable]="true">
                         <ng-template let-col let-valorVariacaoEstimada="rowData" pTemplate="body">

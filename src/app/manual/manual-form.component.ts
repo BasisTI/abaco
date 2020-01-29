@@ -1,22 +1,20 @@
-import { TranslateService } from '@ngx-translate/core';
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Response } from '@angular/http';
-import { Observable, Subscription } from 'rxjs/Rx';
+import {TranslateService} from '@ngx-translate/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Response} from '@angular/http';
+import {Observable, Subscription} from 'rxjs/Rx';
 
-import { Manual } from './manual.model';
-import { ManualService } from './manual.service';
-import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
-import { ResponseWrapper } from '../shared';
-import { EsforcoFase } from '../esforco-fase/esforco-fase.model';
-import { FaseService, Fase } from '../fase';
-import { DatatableClickEvent } from '@basis/angular-components';
-import { ConfirmationService } from 'primeng/components/common/confirmationservice';
-import { FatorAjuste, TipoFatorAjuste } from '../fator-ajuste/fator-ajuste.model';
-import { PageNotificationService } from '../shared/page-notification.service';
-import { UploadService } from '../upload/upload.service';
-import { FileUpload, SelectItem } from 'primeng/primeng';
-import {InputMaskModule} from 'primeng/inputmask';
+import {Manual} from './manual.model';
+import {ManualService} from './manual.service';
+import {EsforcoFaseService} from '../esforco-fase/esforco-fase.service';
+import {EsforcoFase} from '../esforco-fase/esforco-fase.model';
+import {Fase, FaseService} from '../fase';
+import {DatatableClickEvent} from '@basis/angular-components';
+import {ConfirmationService} from 'primeng/components/common/confirmationservice';
+import {FatorAjuste, TipoFatorAjuste} from '../fator-ajuste/fator-ajuste.model';
+import {PageNotificationService} from '../shared/page-notification.service';
+import {UploadService} from '../upload/upload.service';
+import {FileUpload, SelectItem} from 'primeng/primeng';
 
 @Component({
     selector: 'jhi-manual-form',
@@ -25,7 +23,13 @@ import {InputMaskModule} from 'primeng/inputmask';
 export class ManualFormComponent implements OnInit, OnDestroy {
     manual: Manual;
     isSaving;
-    isEdit; newUpload; validaEsforco; validaTipoFase; validaNomeDeflator; validaTipoDeflator; validaDeflator: boolean;
+    isEdit;
+    newUpload;
+    validaEsforco;
+    validaTipoFase;
+    validaNomeDeflator;
+    validaTipoDeflator;
+    validaDeflator: boolean;
     private routeSub: Subscription;
     arquivoManual: File;
     esforcoFases: Array<EsforcoFase>;
@@ -41,17 +45,14 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     editedAdjustFactor: FatorAjuste = new FatorAjuste();
 
     adjustTypes: Array<any> = [
-        { label: 'Percentual', value: 'PERCENTUAL' },
-        { label: 'Unitário', value: 'UNITARIO' }
+        {label: 'Percentual', value: 'PERCENTUAL'},
+        {label: 'Unitário', value: 'UNITARIO'}
     ];
 
     invalidFields: Array<string> = [];
 
     @ViewChild('fileInput') fileInput: FileUpload;
 
-    /**
-     *
-     */
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -99,9 +100,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.manual.versaoCPM = 431;
     }
 
-    /**
-     *
-     */
     save(form: any) {
         if (!this.checkRequiredFields()) {
             this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'));
@@ -122,16 +120,13 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    /*
-    *   Metodo responsavel por traduzir as adjustTypes
-    */
     traduzirClassificacoes() {
         this.translate.stream(['Cadastros.Manual.Percentual', 'Cadastros.Manual.Unitario']).subscribe((traducao) => {
             this.adjustTypes = [
-                { label: traducao['Cadastros.Manual.Percentual'], value: 'PERCENTUAL' },
-                { label: traducao['Cadastros.Manual.Unitario'], value: 'UNITARIO' },
+                {label: traducao['Cadastros.Manual.Percentual'], value: 'PERCENTUAL'},
+                {label: traducao['Cadastros.Manual.Unitario'], value: 'UNITARIO'},
             ];
-        })
+        });
     }
 
     private checkIfManualAlreadyExists(registeredPhases: Array<Fase>): boolean {
@@ -257,10 +252,10 @@ export class ManualFormComponent implements OnInit, OnDestroy {
 
     private subscribeToSaveResponse(result: Observable<Manual>) {
         result.subscribe((res: Manual) => {
-            this.isSaving = false;
-            this.router.navigate(['/manual']);
-            this.isEdit ? this.pageNotificationService.addUpdateMsg() : this.pageNotificationService.addCreateMsg();
-        },
+                this.isSaving = false;
+                this.router.navigate(['/manual']);
+                this.isEdit ? this.pageNotificationService.addUpdateMsg() : this.pageNotificationService.addCreateMsg();
+            },
             (error: Response) => {
                 this.isSaving = false;
 
@@ -385,8 +380,13 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     }
 
     addPhaseEffort() {
-        this.newPhaseEffort.esforco = this.newPhaseEffort.esforco;
-        if (this.checkPhaseEffortRequiredFields(this.newPhaseEffort)) {
+        let totalPhase = this.newPhaseEffort.esforco;
+        this.manual.esforcoFases.forEach(function (esforcoFase) {
+            totalPhase = totalPhase + esforcoFase.esforco;
+        });
+        if (totalPhase > 100) {
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.LimiteEsfocoExcedido'));
+        }else if (this.checkPhaseEffortRequiredFields(this.newPhaseEffort)) {
             this.manual.addEsforcoFases(this.newPhaseEffort);
             this.pageNotificationService.addCreateMsg();
             this.closeDialogPhaseEffort();
@@ -509,25 +509,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         return isAdjustFactorValid;
     }
 
-    private checkRequiredField(field: any) {
-        let isValid = false;
-
-        (field) ? (isValid = true) : (isValid = false);
-
-        return isValid;
-    }
-
     getFile() {
         this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
             this.arquivoManual = response;
         });
     }
 
-    getFileInfo() {
-        return this.uploadService.getFile(this.manual.arquivoManualId).subscribe(response => {
-            return response;
-        });
-    }
 
     public habilitarDeflator(): boolean {
         if (this.newAdjustFactor.tipoAjuste !== undefined) {
@@ -545,11 +532,12 @@ export class ManualFormComponent implements OnInit, OnDestroy {
         this.validaEsforco = false;
         this.validaTipoFase = false;
     }
-    public formatNumberTwoDecimal(event){
-        let formatNumber =  event.target.value.replace(',','.');
-        if(formatNumber){
+
+    public formatNumberTwoDecimal(event) {
+        let formatNumber = event.target.value.replace(',', '.');
+        if (formatNumber) {
             formatNumber = parseFloat(formatNumber).toFixed(2).toString();
-            event.target.value = formatNumber.replace('.',',');
+            event.target.value = formatNumber.replace('.', ',');
         }
     }
 }

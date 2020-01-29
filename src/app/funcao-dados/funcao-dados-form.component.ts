@@ -251,9 +251,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
                     return this.sortByField(a, b, event.field);
             }
         });
-        if (event.order < 0) {
-            this.funcoesDados = this.funcoesDados.reverse();
-        }
     }
 
     getField(header: string): string {
@@ -502,10 +499,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
             'fatorAjusteFilter': {value: this.formataFatorAjuste(fd.fatorAjuste), writable: true},
             'impactoFilter': {value: this.updateNameImpacto(fd.impacto), writable: true}
         }));
-    }
-
-    set funcoesDados(funcaoDados: FuncaoDados[]) {
-        this.analise.funcaoDados = funcaoDados;
     }
 
     private get analise(): Analise {
@@ -988,9 +981,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     }
 
     private carregarDerERlr(fd: FuncaoDados) {
-        let ders = this.loadReference(fd.ders, fd.derValues);
-
-        this.dersChips = ders.filter(der => {
+        const ders = this.loadReference(fd.ders, fd.derValues);
+            this.dersChips = ders.filter(der => {
             return !(der.text === 'Mensagem' || der.text === 'Ação');
         });
         this.rlrsChips = this.loadReference(fd.rlrs, fd.rlrValues);

@@ -26,6 +26,7 @@ import {EsforcoFase} from '../esforco-fase';
 import {ManualService} from '../manual';
 import {TranslateService} from '@ngx-translate/core';
 import {Observable} from 'rxjs/Observable';
+import {FuncaoDadosService} from '../funcao-dados/funcao-dados.service';
 
 
 @Component({
@@ -105,6 +106,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private analiseService: AnaliseService,
         private sistemaService: SistemaService,
+        private funcaoDadosService: FuncaoDadosService,
         private analiseSharedDataService: AnaliseSharedDataService,
         private equipeService: TipoEquipeService,
         private organizacaoService: OrganizacaoService,

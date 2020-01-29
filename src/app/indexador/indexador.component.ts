@@ -13,23 +13,23 @@ export class IndexadorComponent implements OnInit, OnDestroy {
     private subscription: Subscription;
     public indexToReindexar: string[];
     indexList = [
-        {value: 'ESFORCO_FASE', label: 'Esforço de Fase'},
-        {value: 'MANUAL_CONTRATO', label: 'Manual Contrato'},
-        {value: 'ORGANIZACAO', label: 'Organização'},
         {value: 'ALR', label: 'Alr'},
-        {value: 'SISTEMA', label: 'Sistema'},
-        {value: 'FUNCIONALIDADE', label: 'Funcionalidade'},
-        {value: 'CONTRATO', label: 'Contrato'},
-        {value: 'MANUAL', label: 'Manual'},
-        {value: 'TIPO_EQUIPE', label: 'Tipo Equipe'},
-        {value: 'FATOR_AJUSTE', label: 'Fator de Ajuste'},
-        {value: 'DER', label: 'Der'},
         {value: 'ANALISE', label: 'Analise'},
-        {value: 'RLR', label: 'Rlr'},
+        {value: 'CONTRATO', label: 'Contrato'},
+        {value: 'DER', label: 'Der'},
+        {value: 'ESFORCO_FASE', label: 'Esforço de Fase'},
+        {value: 'FATOR_AJUSTE', label: 'Fator de Ajuste'},
+        {value: 'FUNCIONALIDADE', label: 'Funcionalidade'},
         {value: 'FUNCAO_DADOS', label: 'Funcao de Dados'},
-        {value: 'USER', label: 'User'},
+        {value: 'FUNCAO_TRANSACAO', label: 'Função de Transação'},
+        {value: 'MANUAL', label: 'Manual'},
+        {value: 'MANUAL_CONTRATO', label: 'Manual Contrato'},
         {value: 'MODULO', label: 'Modulo'},
-        {value: 'FUNCAO_TRANSACAO', label: 'Função de Transação'}];
+        {value: 'ORGANIZACAO', label: 'Organização'},
+        {value: 'TIPO_EQUIPE', label: 'Tipo Equipe'},
+        {value: 'RLR', label: 'Rlr'},
+        {value: 'SISTEMA', label: 'Sistema'},
+        {value: 'USER', label: 'User'}];
 
     constructor(
         private indexadorSearchService: IndexadorService,

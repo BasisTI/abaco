@@ -1,18 +1,15 @@
-import { Manual } from './../manual/manual.model';
-import { FuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
+import {Manual} from './../manual/manual.model';
+import {FuncaoTransacao} from './../funcao-transacao/funcao-transacao.model';
 import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
 import {Observable, Subject} from 'rxjs/Rx';
 import {HttpService} from '@basis/angular-components';
 import {environment} from '../../environments/environment';
 
-import {ResponseWrapper, createRequestOption, JhiDateUtils} from '../shared';
+import {ResponseWrapper} from '../shared';
 import {FuncaoDados} from '.';
-import {Analise} from '../analise/analise.model';
-import {tap} from 'rxjs/operators';
-import {HttpResponse} from '@angular/common/http';
-import {BaselineSintetico} from '../baseline/baseline-sintetico.model';
-import { Funcionalidade } from '../funcionalidade';
+import {Funcionalidade} from '../funcionalidade';
+import {BlockUI, NgBlockUI} from 'ng-block-ui';
 
 @Injectable()
 export class FuncaoDadosService {
@@ -22,7 +19,9 @@ export class FuncaoDadosService {
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
 
     manualResourceUrl = environment.apiUrl + '/manuals';
-    
+
+    @BlockUI() blockUI: NgBlockUI;
+
     /*
     Subject criado para Buscar funcionalidade da Baseline.
     Preencher o Dropdown do componente 'modulo-funcionalidade.component' com modulo e submodulo.
@@ -37,6 +36,7 @@ export class FuncaoDadosService {
     }
 
     findAllNamesBySistemaId(sistemaId: number): Observable<string[]> {
+        this.blockUI.start();
         const url = `${this.resourceUrl}/${sistemaId}/funcao-dados`;
         return this.http.get(url)
             .map((res: Response) => res.json().map(json => json.nome));
@@ -57,6 +57,12 @@ export class FuncaoDadosService {
         const url = `${this.resourceUrl}/analise/${id}`;
         return this.http.get(url).map((res: Response) => {
             return this.convertResponseFuncaoDados(res);
+        });
+    }
+    public getFuncaoDadosByAnalise(id: number): Observable<FuncaoDados[]> {
+        const url = `${this.resourceUrl}/analise/${id}`;
+        return this.http.get(url).map((res: Response) => {
+            return res.json();
         });
     }
 

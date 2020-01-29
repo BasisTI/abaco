@@ -27,10 +27,6 @@ export class UserComponent implements OnInit {
 
     usuarioSelecionado: User;
 
-    paginationParams = { contentIndex: null };
-
-    query: String = "*";
-
     rowsPerPageOptions: number[] = [5, 10, 20];
 
     searchParams: any = {
@@ -41,7 +37,7 @@ export class UserComponent implements OnInit {
         profile: undefined,
         team: undefined,
     };
-
+    query: string;
     organizations: Array<Organizacao>;
     authorities: Array<Authority>;
     teams: Array<TipoEquipe>;
@@ -70,6 +66,7 @@ export class UserComponent implements OnInit {
         this.recuperarOrganizacoes();
         this.recuperarAutorizacoes();
         this.recuperarEquipe();
+        this.query = this.changeUrl();
         this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
             this.usuarioSelecionado = event.data;
         });
@@ -186,33 +183,8 @@ export class UserComponent implements OnInit {
             }
         });
     }
-
-    private checkUndefinedParams() {
-        (this.searchParams.fullName === '') ? (this.searchParams.fullName = undefined) : (this);
-        (this.searchParams.login === '') ? (this.searchParams.login = undefined) : (this);
-        (this.searchParams.email === '') ? (this.searchParams.email = undefined) : (this);
-        (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome === '') ? (this.searchParams.organization.nome = undefined) : (null)) : (this);
-        (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name === '') ? (this.searchParams.profile.nome = undefined) : (this)) : (this);
-        (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome === '') ? (this.searchParams.team.nome = undefined) : (this)) : (this);
-    }
-
-    private createStringParamsArray(): Array<string> {
-        const arrayParams: Array<string> = [];
-
-        (this.searchParams.fullName !== undefined) ? (arrayParams.push('+firstName:' + "*" + this.searchParams.fullName + "*" )) : (this);
-        (this.searchParams.login !== undefined) ? (arrayParams.push('+login:' + "*" + this.searchParams.login + "*" )) : (this);
-        (this.searchParams.email !== undefined) ? (arrayParams.push('+email:' + "*" + this.searchParams.email + "*" )) : (this);
-        (this.searchParams.organization !== undefined) ? ((this.searchParams.organization.nome !== undefined) ? (arrayParams.push('+organizacoes.nome:' + "*" + this.searchParams.organization.nome+ "*")) : (this)) : (this);
-        (this.searchParams.profile !== undefined) ? ((this.searchParams.profile.name !== undefined) ? (arrayParams.push('+authorities.name:'+ "*"+ this.searchParams.profile.name+ "*")) : (this)) : (this);
-        (this.searchParams.team !== undefined) ? ((this.searchParams.team.nome !== undefined) ? (arrayParams.push('+tipoEquipes.nome:'+ "*" + this.searchParams.team.nome+ "*")) : (this)) : (this);
-
-        return arrayParams;
-    }
-
-
     performSearch() {
-        this.checkUndefinedParams();
-        this.query = this.stringConcatService.concatResults(this.createStringParamsArray()).slice(1);
+        this.query = this.changeUrl();
         this.recarregarDataTable();
     }
 
@@ -225,12 +197,37 @@ export class UserComponent implements OnInit {
             profile: undefined,
             team: undefined,
         };
-        this.query = "*";
         this.recarregarDataTable();
     }
 
     recarregarDataTable() {
-        this.datatable.refresh(this.query ? this.query : "*");
+        this.datatable.url = this.changeUrl();
+        this.datatable.reset();
+    }
+
+    public changeUrl() {
+
+        let querySearch = '?nome=';
+        querySearch = querySearch.concat((this.searchParams.fullName) ? `*${this.searchParams.fullName}*` : '');
+
+        querySearch = querySearch.concat((this.searchParams.login) ? `&login=*${this.searchParams.login}*` : '');
+
+        querySearch = querySearch.concat((this.searchParams.email) ? `&email=*${this.searchParams.email}*` : '');
+
+        querySearch = querySearch.concat((this.searchParams.organizacao && this.searchParams.organizacao.id) ?
+            `&organizacao=${this.searchParams.organizacao.id}` : '');
+
+        querySearch = querySearch.concat((this.searchParams.profile && this.searchParams.profile.name) ?
+            `&perfil=${this.searchParams.profile.name}` : '');
+
+        querySearch = querySearch.concat((this.searchParams.team && this.searchParams.team.id) ?
+            `&equipe=${this.searchParams.team.id}` : '');
+
+        querySearch = (querySearch === '?') ? '' : querySearch;
+
+        querySearch = (querySearch.endsWith('&')) ? querySearch.slice(0, -1) : querySearch;
+
+        return this.userService.searchUrl + querySearch;
     }
 
 }

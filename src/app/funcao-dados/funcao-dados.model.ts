@@ -10,6 +10,7 @@ import { Rlr } from '../rlr/rlr.model';
 import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
 import { Impacto } from '../analise-shared/impacto-enum';
 import { FuncaoResumivel } from '../analise-shared';
+import {Modulo} from '../modulo';
 
 export enum TipoFuncaoDados {
     'ALI' = 'ALI',
@@ -50,7 +51,8 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, 
         public ders?: Der[],
         public rlrs?: Rlr[],
         public impacto?: Impacto,
-        public quantidade?: number
+        public quantidade?: number,
+        public modulo?: Modulo,
     ) {
         if (!pf) {
             this.pf = 0;
