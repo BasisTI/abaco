@@ -24,6 +24,8 @@ import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiParam;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -31,7 +33,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -51,7 +55,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,12 +75,16 @@ public class UserResource {
     private final AuthorityRepository authorityRepository;
     private final DynamicExportsService dynamicExportsService;
     private String userexists = "userexists";
-    private final ElasticsearchIndexResource elasticSearchIndexService;
+    private final ElasticsearchOperations elasticsearchTemplate;
 
-    public UserResource(UserRepository userRepository, MailService mailService, UserService userService,
-                        UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository,
-                        DynamicExportsService dynamicExportsService, AnaliseRepository analiseRepository,
-                        ElasticsearchIndexResource elasticSearchIndexService) {
+    public UserResource(UserRepository userRepository,
+                        MailService mailService,
+                        UserService userService,
+                        UserSearchRepository userSearchRepository,
+                        AuthorityRepository authorityRepository,
+                        DynamicExportsService dynamicExportsService,
+                        AnaliseRepository analiseRepository,
+                        ElasticsearchOperations elasticsearchTemplate) {
         this.analiseRepository = analiseRepository;
         this.userRepository = userRepository;
         this.mailService = mailService;
@@ -85,7 +92,7 @@ public class UserResource {
         this.userSearchRepository = userSearchRepository;
         this.authorityRepository = authorityRepository;
         this.dynamicExportsService = dynamicExportsService;
-        this.elasticSearchIndexService = elasticSearchIndexService;
+        this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
     @PostMapping("/users")
@@ -104,7 +111,6 @@ public class UserResource {
             user.setPassword(RandomUtil.generatePassword());
             mailService.sendCreationEmail(user);
             User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
-            userRepository.save(userReadyToBeSaved);
             User newUser = userSearchRepository.save(userReadyToBeSaved);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
                     .headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin())).body(newUser);
@@ -187,13 +193,23 @@ public class UserResource {
     @GetMapping("/_search/users")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
-    public ResponseEntity<List<User>> search(@RequestParam(defaultValue = "*") String query, @RequestParam String order,
-                                             @RequestParam(name = "page") int pageNumber, @RequestParam int size,
+    public ResponseEntity<List<User>> search(@RequestParam String order,
+                                             @RequestParam(name = "page") int pageNumber,
+                                             @RequestParam int size,
+                                             @RequestParam(value = "nome", required = false) String nome,
+                                             @RequestParam(value = "login", required = false) String login,
+                                             @RequestParam(value = "email", required = false) String email,
+                                             @RequestParam(value = "organizacao", required = false) String organizacao,
+                                             @RequestParam(value = "perfil", required = false) String perfil,
+                                             @RequestParam(value = "equipe", required = false) String equipe,
                                              @RequestParam(defaultValue = "id") String sort) throws URISyntaxException {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
-        Pageable newPageable = new PageRequest(pageNumber, size, sortOrder, sort);
-        Page<User> page = userSearchRepository.search(queryStringQuery(query), newPageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/users");
+        Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
+        BoolQueryBuilder qb = QueryBuilders.boolQuery();
+        userService.bindFilterSearch(nome, login, email, organizacao, perfil, equipe, qb);
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
+        Page<User> page = userSearchRepository.search(searchQuery);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page,"/api/_search/users");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
@@ -242,6 +258,7 @@ public class UserResource {
     public List<User> getOrganizacaoDropdown() {
         return userRepository.getAllByFirstNameIsNotNullOrderByFirstName();
     }
+
 
     private User bindUser(User user, Optional<User> oldUserdata, User loggedUser) {
         User userTmp;

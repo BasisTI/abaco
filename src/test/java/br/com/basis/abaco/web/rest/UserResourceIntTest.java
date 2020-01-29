@@ -6,9 +6,8 @@ import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.AuthorityRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
-import br.com.basis.abaco.service.UserService;
 import br.com.basis.abaco.service.MailService;
-
+import br.com.basis.abaco.service.UserService;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
@@ -16,17 +15,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
 import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the UserResource REST controller.
@@ -37,104 +39,104 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AbacoApp.class)
 public class UserResourceIntTest {
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private AnaliseRepository analiseRepository;
 
-	@Autowired
-	private MailService mailService;
+    @Autowired
+    private MailService mailService;
 
-	@Autowired
+    @Autowired
     private DynamicExportsService dynamicExportsService;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@Autowired
-	private UserSearchRepository userSearchRepository;
+    @Autowired
+    private UserSearchRepository userSearchRepository;
 
-	@Autowired
-	private AuthorityRepository authorityRepository;
+    @Autowired
+    private AuthorityRepository authorityRepository;
 
-	@Autowired
-	private ElasticsearchIndexResource elasticSearchIndexService;
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
 
-	private MockMvc restUserMockMvc;
+    private MockMvc restUserMockMvc;
 
-	/**
-	 * Create a User.
-	 *
-	 * This is a static method, as tests for other entities might also need it, if
-	 * they test an entity which has a required relationship to the User entity.
-	 */
-	public static User createEntity(EntityManager em) {
-		User user = new User();
-		user.setLogin("test");
-		user.setPassword(RandomStringUtils.random(60));
-		user.setActivated(true);
-		user.setEmail("test@test.com");
-		user.setFirstName("test");
-		user.setLastName("test");
-		user.setImageUrl("http://placehold.it/50x50");
-		user.setLangKey("en");
-		em.persist(user);
-		em.flush();
-		return user;
-	}
+    /**
+     * Create a User.
+     * <p>
+     * This is a static method, as tests for other entities might also need it, if
+     * they test an entity which has a required relationship to the User entity.
+     */
+    public static User createEntity(EntityManager em) {
+        User user = new User();
+        user.setLogin("test");
+        user.setPassword(RandomStringUtils.random(60));
+        user.setActivated(true);
+        user.setEmail("test@test.com");
+        user.setFirstName("test");
+        user.setLastName("test");
+        user.setImageUrl("http://placehold.it/50x50");
+        user.setLangKey("en");
+        em.persist(user);
+        em.flush();
+        return user;
+    }
 
-	@Before
-	public void setup() {
-		UserResource userResource = new UserResource(userRepository, mailService, userService, userSearchRepository,
-				authorityRepository, dynamicExportsService, analiseRepository, elasticSearchIndexService);
-		this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
-	}
+    @Before
+    public void setup() {
+        UserResource userResource = new UserResource(userRepository, mailService, userService, userSearchRepository,
+                authorityRepository, dynamicExportsService, analiseRepository, elasticsearchTemplate);
+        this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
+    }
 
-	@Test
-	public void testGetExistingUser() throws Exception {
-		restUserMockMvc.perform(get("/api/users/admin").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-				.andExpect(jsonPath("$.lastName").value("Administrator"));
-	}
+    @Test
+    public void testGetExistingUser() throws Exception {
+        restUserMockMvc.perform(get("/api/users/admin").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.lastName").value("Administrator"));
+    }
 
-	@Test
-	public void testGetUnknownUser() throws Exception {
-		restUserMockMvc.perform(get("/api/users/unknown").accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isNotFound());
-	}
+    @Test
+    public void testGetUnknownUser() throws Exception {
+        restUserMockMvc.perform(get("/api/users/unknown").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 
-	@Test
-	public void testGetExistingUserWithAnEmailLogin() throws Exception {
-		User user = userService.createUser("john.doe@localhost.com", "johndoe", "John", "Doe", "john.doe@localhost.com",
-				"http://placehold.it/50x50", "en-US");
+    @Test
+    public void testGetExistingUserWithAnEmailLogin() throws Exception {
+        User user = userService.createUser("john.doe@localhost.com", "johndoe", "John", "Doe", "john.doe@localhost.com",
+                "http://placehold.it/50x50", "en-US");
 
-		restUserMockMvc.perform(get("/api/users/john.doe@localhost.com").accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-				.andExpect(jsonPath("$.login").value("john.doe@localhost.com"));
+        restUserMockMvc.perform(get("/api/users/john.doe@localhost.com").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.login").value("john.doe@localhost.com"));
 
-		userRepository.delete(user);
-	}
+        userRepository.delete(user);
+    }
 
-	@Test
-	public void testDeleteExistingUserWithAnEmailLogin() throws Exception {
-		User user = userService.createUser("john.doe@localhost.com", "johndoe", "John", "Doe", "john.doe@localhost.com",
-				"http://placehold.it/50x50", "en-US");
+    @Test
+    public void testDeleteExistingUserWithAnEmailLogin() throws Exception {
+        User user = userService.createUser("john.doe@localhost.com", "johndoe", "John", "Doe", "john.doe@localhost.com",
+                "http://placehold.it/50x50", "en-US");
 
-		restUserMockMvc.perform(delete("/api/users/john.doe@localhost.com").accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk());
+        restUserMockMvc.perform(delete("/api/users/john.doe@localhost.com").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
-		assertThat(userRepository.findOneByLogin("john.doe@localhost.com").isPresent()).isFalse();
+        assertThat(userRepository.findOneByLogin("john.doe@localhost.com").isPresent()).isFalse();
 
-		userRepository.delete(user);
-	}
+        userRepository.delete(user);
+    }
 
-	@Test
-	public void equalsVerifier() throws Exception {
-		User userA = new User();
-		userA.setLogin("AAA");
-		User userB = new User();
-		userB.setLogin("BBB");
-		assertThat(userA).isNotEqualTo(userB);
-	}
+    @Test
+    public void equalsVerifier() throws Exception {
+        User userA = new User();
+        userA.setLogin("AAA");
+        User userB = new User();
+        userB.setLogin("BBB");
+        assertThat(userA).isNotEqualTo(userB);
+    }
 }

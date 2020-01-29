@@ -10,6 +10,9 @@ import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.UserDTO;
 import br.com.basis.abaco.service.util.RandomUtil;
+import br.com.basis.abaco.utils.StringUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -27,12 +30,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
+
 /**
  * Service class for managing users.
  */
 @Service
 @Transactional
-public class UserService {
+public class UserService extends BaseService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
@@ -282,12 +287,6 @@ public class UserService {
         return userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).orElse(null);
     }
 
-    /**
-     * Not activated users should be automatically deleted after 3 days.
-     * <p>
-     * This is scheduled to get fired everyday, at 01:00 (am).
-     * </p>
-     */
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
         ZonedDateTime now = ZonedDateTime.now();
@@ -297,6 +296,15 @@ public class UserService {
             userRepository.delete(user);
             userSearchRepository.delete(user);
         }
+    }
+
+    public void bindFilterSearch(String nome, String login, String email, String organizacao, String perfil, String equipeId, BoolQueryBuilder qb) {
+        mustMatchFuzzyQuery(nome, qb, "firstName");
+        mustMatchFuzzyQuery(login, qb, "login");
+        mustMatchFuzzyQuery(email, qb, "email");
+        mustNestedTermQuery(organizacao, qb, "id","organizacoes");
+        mustMatchPhaseQuery(perfil, qb, "authorities.name");
+        mustNestedTermQuery(equipeId, qb, "id","tipoEquipes");
     }
 
     public Long getLoggedUserId() {

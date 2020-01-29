@@ -4,8 +4,8 @@ public class OrganizacaoDropdownDTO extends DropdownDTO {
 
     private String cnpj;
 
-    public OrganizacaoDropdownDTO(Long id, String nome, String cnpj) {
-        super(id, nome);
+    public OrganizacaoDropdownDTO(Long id, String nome, String sigla, String cnpj) {
+        super(id, sigla + " - " + nome);
         this.cnpj = cnpj;
     }
 

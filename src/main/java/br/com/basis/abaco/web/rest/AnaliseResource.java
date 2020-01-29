@@ -19,11 +19,11 @@ import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.service.AnaliseService;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.utils.StringUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
@@ -80,7 +80,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 
@@ -89,37 +88,23 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 public class AnaliseResource {
 
     private final Logger log = LoggerFactory.getLogger(AnaliseResource.class);
-
     private static final String ENTITY_NAME = "analise";
-
     private static final String PAGE = "page";
-
     private final AnaliseRepository analiseRepository;
-
     private final UserRepository userRepository;
-
+    private final AnaliseService analiseService;
     private final CompartilhadaRepository compartilhadaRepository;
-
     private final AnaliseSearchRepository analiseSearchRepository;
-
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
-
     private final FuncaoDadosRepository funcaoDadosRepository;
-
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
-
     private RelatorioAnaliseRest relatorioAnaliseRest;
-
     private DynamicExportsService dynamicExportsService;
-
     private ElasticsearchTemplate elasticsearchTemplate;
-
     @Autowired
     private UserSearchRepository userSearchRepository;
-
     @Autowired
     private HttpServletRequest request;
-
     @Autowired
     private HttpServletResponse response;
 
@@ -131,7 +116,8 @@ public class AnaliseResource {
                            FuncaoDadosRepository funcaoDadosRepository,
                            CompartilhadaRepository compartilhadaRepository,
                            FuncaoTransacaoRepository funcaoTransacaoRepository,
-                           ElasticsearchTemplate elasticsearchTemplate) {
+                           ElasticsearchTemplate elasticsearchTemplate,
+                           AnaliseService analiseService) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
@@ -141,6 +127,7 @@ public class AnaliseResource {
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
+        this.analiseService = analiseService;
     }
 
     @PostMapping("/analises")
@@ -384,35 +371,12 @@ public class AnaliseResource {
         Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
         Set<Long> equipesIds = getIdEquipes();
-
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
-        bindFilterSearch(identificador, sistema, metodo, organizacao, equipe, usuario, equipesIds, qb);
-
+        analiseService.bindFilterSearch(identificador, sistema, metodo, organizacao, equipe, usuario, equipesIds, qb);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
         return new ResponseEntity<List<Analise>>(page.getContent(), headers, HttpStatus.OK);
-    }
-
-    private void bindFilterSearch(String identificador, String sistema, String metodo, String organizacao, String equipe, String usuario, Set<Long> equipesIds, BoolQueryBuilder qb) {
-        mustMatchPhaseQuery(identificador, qb, "identificadorAnalise");
-        mustTermQuery(sistema, qb, "sistema.id");
-        mustMatchPhaseQuery(metodo, qb, "metodoContagem");
-        mustTermQuery(organizacao, qb, "organizacao.id");
-
-        if (!StringUtils.isEmptyString((equipe))) {
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .should(QueryBuilders.termsQuery("equipeResponsavel.id", equipe))
-                    .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipe));
-            qb.must(boolQueryBuilder);
-        } else if (equipesIds != null && equipesIds.size() > 0) {
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().should(QueryBuilders.termsQuery("equipeResponsavel.id", equipesIds)).should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipesIds));
-            qb.must(boolQueryBuilder);
-        }
-        if (!StringUtils.isEmptyString((usuario))) {
-            qb.must(nestedQuery("users", QueryBuilders.boolQuery().should(QueryBuilders.termQuery("users.id", usuario))));
-        }
-
     }
 
 
@@ -448,7 +412,7 @@ public class AnaliseResource {
         boolean retorno = checarPermissao(id);
 
         if (retorno) {
-            return analiseSearchRepository.findOne(id);
+            return analiseRepository.findOne(id);
         } else {
             return null;
         }
@@ -563,21 +527,6 @@ public class AnaliseResource {
             dataParam.setSeconds(dataDeHoje.getSeconds());
         }
     }
-
-
-    private void mustTermQuery(String sistema, BoolQueryBuilder qb, String s) {
-        if (!StringUtils.isEmptyString((sistema))) {
-            qb.must(QueryBuilders.termsQuery(s, sistema));
-        }
-    }
-
-    private void mustMatchPhaseQuery(String identificador, BoolQueryBuilder qb, String identificadorAnalise) {
-        if (!StringUtils.isEmptyString(identificador)) {
-            qb.must(QueryBuilders.matchPhraseQuery(identificadorAnalise, identificador));
-        }
-    }
-
-
 }
 
 

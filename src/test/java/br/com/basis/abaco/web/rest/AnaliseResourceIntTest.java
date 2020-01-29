@@ -13,6 +13,7 @@ import br.com.basis.abaco.repository.GrupoRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
+import br.com.basis.abaco.service.AnaliseService;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import org.junit.Before;
@@ -129,18 +130,20 @@ public class AnaliseResourceIntTest {
 
     private Analise analise;
 
+    private AnaliseService analiseService;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         AnaliseResource analiseResource = new AnaliseResource(analiseRepository,
-                                                    analiseSearchRepository,
-                                                    funcaoDadosVersionavelRepository,
-                                                    dynamicExportsService,
-                                                    userRepository,
-                                                    funcaoDadosRepository,
-                                                    compartilhadaRepository,
-                                                    funcaoTransacaoRepository,
-                                                    elasticsearchTemplate);
+                analiseSearchRepository,
+                funcaoDadosVersionavelRepository,
+                dynamicExportsService,
+                userRepository,
+                funcaoDadosRepository,
+                compartilhadaRepository,
+                funcaoTransacaoRepository,
+                elasticsearchTemplate, analiseService);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();

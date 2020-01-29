@@ -1,14 +1,14 @@
 package br.com.basis.abaco.web.rest;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.repository.FuncaoDadosRepository;
+import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
+import br.com.basis.abaco.service.FuncaoDadosService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import com.codahale.metrics.annotation.Timed;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,16 +24,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codahale.metrics.annotation.Timed;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
-import br.com.basis.abaco.service.FuncaoDadosService;
-import br.com.basis.abaco.service.dto.DropdownDTO;
-import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing FuncaoDados.
@@ -53,7 +51,7 @@ public class FuncaoDadosResource {
     private final FuncaoDadosService funcaoDadosService;
 
     public FuncaoDadosResource(FuncaoDadosRepository funcaoDadosRepository,
-            FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoDadosService funcaoDadosService) {
+                               FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoDadosService funcaoDadosService) {
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoDadosSearchRepository = funcaoDadosSearchRepository;
         this.funcaoDadosService = funcaoDadosService;
@@ -83,8 +81,8 @@ public class FuncaoDadosResource {
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
         funcaoDadosSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/funcao-dados/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+                .body(result);
     }
 
     /**
@@ -107,8 +105,8 @@ public class FuncaoDadosResource {
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
         funcaoDadosSearchRepository.save(result);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoDados.getId().toString()))
-            .body(result);
+                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoDados.getId().toString()))
+                .body(result);
     }
 
     /**
@@ -168,7 +166,7 @@ public class FuncaoDadosResource {
     public List<FuncaoDados> getFuncaoDadosAnalise(@PathVariable Long id) {
         log.debug("REST request to get FuncaoDados : {}", id);
         List<FuncaoDados> funcaoDados = null;
-        funcaoDados = funcaoDadosRepository.findByAnalise(id);
+        funcaoDados = funcaoDadosRepository.findByAnalise_Id(id);
         return funcaoDados;
     }
 
@@ -200,8 +198,8 @@ public class FuncaoDadosResource {
     public List<FuncaoDados> searchFuncaoDados(@RequestParam(defaultValue = "*") String query) {
         log.debug("REST request to search FuncaoDados for query {}", query);
         return StreamSupport
-            .stream(funcaoDadosSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-            .collect(Collectors.toList());
+                .stream(funcaoDadosSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/funcao-dados/drop-down")
