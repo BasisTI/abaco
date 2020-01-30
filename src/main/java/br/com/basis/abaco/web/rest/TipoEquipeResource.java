@@ -136,7 +136,9 @@ public class TipoEquipeResource {
         if (tipoEquipe.getId() == null) {
             return createTipoEquipe(tipoEquipe);
         }
-        TipoEquipe result = tipoEquipeSearchRepository.save(tipoEquipe);
+
+        TipoEquipe result = tipoEquipeRepository.save(tipoEquipe);
+        tipoEquipeSearchRepository.save(result);
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, tipoEquipe.getId().toString())).body(result);
     }

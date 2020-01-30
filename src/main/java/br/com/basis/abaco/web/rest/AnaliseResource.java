@@ -141,12 +141,11 @@ public class AnaliseResource {
         analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
         salvaNovaData(analise);
         linkFuncoesToAnalise(analise);
-        Analise result = analiseRepository.save(analise);
-        unlinkAnaliseFromFuncoes(result);
+        unlinkAnaliseFromFuncoes(analise);
         analiseRepository.save(analise);
         analiseSearchRepository.save(analise);
-        return ResponseEntity.created(new URI("/api/analises/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+        return ResponseEntity.created(new URI("/api/analises/" + analise.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, analise.getId().toString())).body(analise);
     }
 
     @PutMapping("/analises")
