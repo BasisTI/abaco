@@ -500,7 +500,7 @@
 
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                            <label translate="Cadastros.Manual.Descricao">Descrição</label>
+                            <label class="ui-md-12" translate="Cadastros.Manual.Descricao">Descrição</label>
                             <textarea [rows]="15" [cols]="90" id="idDescricaoSaveFormManual" pInputTextarea
                                       maxlength="2000" name="descricaoFatorAjuste"
                                       [(ngModel)]="newAdjustFactor.descricao">
@@ -604,7 +604,7 @@
 
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                            <label translate="Cadastros.Manual.Descricao">Descrição</label>
+                            <label class="ui-md-12" translate="Cadastros.Manual.Descricao">Descrição</label>
                             <textarea [rows]="15" [cols]="90" id="idDescricaoEditFormManual" pInputTextarea
                                       name="descricaoEdicaoFatorAjuste"
                                       [(ngModel)]="editedAdjustFactor.descricao" maxlength="2000">
@@ -613,13 +613,12 @@
                     </div>
 
                     <div class="ui-g">
-                        <!--<div class="ui-g-5 ui-md-5 ui-sm-12" style="padding-top: 01px">
+                        <div class="ui-g-4 ui-md-4 ui-sm-12" style="padding-top: 25px">
                             <label>Código</label>
                             <input id="codigo_fator" type="text" name="codigo" [(ngModel)]="editedAdjustFactor.codigo"
                                    pInputText maxlength="255"/>
-                        </div>-->
-
-                        <div class="ui-g-7 ui-md-7 ui-sm-12" style="padding-top: 25px">
+                        </div>
+                        <div class="ui-g-8 ui-md-8 ui-sm-12" style="padding-top: 25px">
                             <label translate="Cadastros.Manual.Origem">Origem</label>
                             <input id="origem_fator" type="text" name="origem" [(ngModel)]="editedAdjustFactor.origem"
                                    pInputText maxlength="255"/>
