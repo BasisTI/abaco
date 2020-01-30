@@ -67,6 +67,7 @@ public class UserService extends BaseService {
             // activate given user for the registration key.
             user.setActivated(true);
             user.setActivationKey(null);
+            userRepository.save(user);
             userSearchRepository.save(user);
             log.debug("Activated user: {}", user);
             return user;

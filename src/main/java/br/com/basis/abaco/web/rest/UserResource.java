@@ -111,6 +111,7 @@ public class UserResource {
             user.setPassword(RandomUtil.generatePassword());
             mailService.sendCreationEmail(user);
             User userReadyToBeSaved = userService.prepareUserToBeSaved(user);
+            userRepository.save(userReadyToBeSaved);
             User newUser = userSearchRepository.save(userReadyToBeSaved);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
                     .headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin())).body(newUser);
