@@ -27,6 +27,9 @@ import {ManualService} from '../manual';
 import {TranslateService} from '@ngx-translate/core';
 import {Observable} from 'rxjs/Observable';
 import {FuncaoDadosService} from '../funcao-dados/funcao-dados.service';
+import {FuncaoDados} from '../funcao-dados';
+import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.service';
+import {FuncaoTransacao} from '../funcao-transacao';
 
 
 @Component({
@@ -44,7 +47,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     selectedToDelete: AnaliseShareEquipe;
     mostrarDialog = false;
     isEdit: boolean;
-
     isSaving: boolean;
     dataAnalise: any;
     dataHomologacao: any;
@@ -57,29 +59,18 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     enviarParaBaseLine: boolean;
 
     organizacoes: Organizacao[];
-
     contratos: Contrato[];
-
     sistemas: Sistema[];
-
     esforcoFases: EsforcoFase[] = [];
-
     metodosContagem: SelectItem[] = [];
-
     fatoresAjuste: SelectItem[] = [];
-
     equipeResponsavel: SelectItem[] = [];
-
+    lstfuncaoDadosDto: FuncaoDados[];
     nomeManual = this.getLabel('Analise.SelecioneUmContrato');
-
     manual: Manual;
-
     manuais: Manual[] = [];
-
     users: User[] = [];
-
     manuaisCombo: SelectItem[] = [];
-
 
     @BlockUI() blockUI: NgBlockUI;
 
@@ -107,6 +98,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         private analiseService: AnaliseService,
         private sistemaService: SistemaService,
         private funcaoDadosService: FuncaoDadosService,
+        private funcaoTransacaoService: FuncaoTransacaoService,
         private analiseSharedDataService: AnaliseSharedDataService,
         private equipeService: TipoEquipeService,
         private organizacaoService: OrganizacaoService,
@@ -223,6 +215,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             if (params['id']) {
                 this.isEdicao = true;
                 this.analiseService.find(params['id']).subscribe(analise => {
+                    analise.funcaoTransacaos = [];
+                    analise.funcaoDados = [];
                     this.inicializaValoresAposCarregamento(analise);
                     this.analiseSharedDataService.analiseCarregada();
                     this.dataAnalise = this.analise;
@@ -234,10 +228,15 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                     this.contratoSelected(this.analise.contrato);
                     this.populaComboUsers();
                     this.validaCamposObrigatorios();
+                    this.getFuncaoDados();
+                    this.getFuncaoTrasacao();
+
                 });
             } else {
                 this.analise = new Analise();
                 this.analise.esforcoFases = [];
+                this.analise.baselineImediatamente = false;
+                this.analise.enviarBaseline = true;
             }
         });
     }
@@ -731,6 +730,23 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
             this.router.navigate(['/analise', this.analise.id, 'edit']);
         });
+    }
+
+    private getFuncaoDados() {
+        this.funcaoDadosService.getFuncaoDadosByAnalise(this.analise.id)
+            .subscribe(response => (
+                response.forEach(value => (
+                    this.analise.funcaoDados.push(FuncaoDados.convertJsonToObject(value)))
+                )
+            ));
+    }
+    private getFuncaoTrasacao() {
+        this.funcaoTransacaoService.getFuncaoTransacaoByAnalise(this.analise.id)
+            .subscribe(response => (
+                response.forEach(value => (
+                    this.analise.funcaoTransacaos.push(FuncaoTransacao.convertTransacaoJsonToObject(value)))
+                )
+            ));
     }
 }
 

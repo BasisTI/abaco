@@ -5,10 +5,14 @@ import {Response} from '@angular/http';
 import {Observable, Subject} from 'rxjs/Rx';
 import {HttpService} from '@basis/angular-components';
 import {environment} from '../../environments/environment';
+import {FuncaoDados} from '../funcao-dados';
+import {BlockUI, NgBlockUI} from 'ng-block-ui';
 
 
 @Injectable()
 export class FuncaoTransacaoService {
+
+    @BlockUI() blockUI: NgBlockUI;
 
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
 
@@ -30,5 +34,14 @@ export class FuncaoTransacaoService {
         const entity: FuncaoTransacao = FuncaoTransacao.convertTransacaoJsonToObject(json);
         return entity;
     }
+
+    public getFuncaoTransacaoByAnalise(id: number): Observable<FuncaoDados[]> {
+        this.blockUI.start();
+        const url = `${this.funcaoTransacaoResourceUrl}-dto/analise/${id}`;
+        return this.http.get(url).map((res: Response) => {
+            return res.json();
+        }).finally(() => (this.blockUI.stop()));
+    }
+
 
 }

@@ -60,10 +60,11 @@ export class FuncaoDadosService {
         });
     }
     public getFuncaoDadosByAnalise(id: number): Observable<FuncaoDados[]> {
-        const url = `${this.resourceUrl}/analise/${id}`;
+        this.blockUI.start();
+        const url = `${this.resourceUrl}-dto/analise/${id}`;
         return this.http.get(url).map((res: Response) => {
             return res.json();
-        });
+        }).finally(() => (this.blockUI.stop()));
     }
 
     getFuncaoDadosBaseline(id: number): Observable<FuncaoDados> {
