@@ -1,8 +1,10 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
+import br.com.basis.abaco.service.dto.FuncaoTransacaoAnaliseDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -69,8 +72,8 @@ public class FuncaoTransacaoResource {
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
         funcaoTransacaoSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/funcao-transacaos/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+                .body(result);
     }
 
     /**
@@ -93,8 +96,8 @@ public class FuncaoTransacaoResource {
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
         funcaoTransacaoSearchRepository.save(result);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoTransacao.getId().toString()))
-            .body(result);
+                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoTransacao.getId().toString()))
+                .body(result);
     }
 
     /**
@@ -117,8 +120,8 @@ public class FuncaoTransacaoResource {
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
         funcaoTransacaoSearchRepository.save(result);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoTransacao.getId().toString()))
-            .body(result);
+                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoTransacao.getId().toString()))
+                .body(result);
     }
 
     /**
@@ -131,7 +134,7 @@ public class FuncaoTransacaoResource {
     public List<FuncaoTransacao> getAllFuncaoTransacaos() {
         log.debug("REST request to get all FuncaoTransacaos");
         List<FuncaoTransacao> funcaoTransacaos = funcaoTransacaoRepository.findAll();
-        funcaoTransacaos.stream().filter(f->f.getAnalise()!=null).forEach(f -> {
+        funcaoTransacaos.stream().filter(f -> f.getAnalise() != null).forEach(f -> {
             if (f.getAnalise().getFuncaoDados() != null) {
                 f.getAnalise().getFuncaoDados().clear();
             }
@@ -165,6 +168,17 @@ public class FuncaoTransacaoResource {
         FuncaoTransacaoApiDTO funcaoDadosDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoApiDTO.class);
 
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
+    }
+
+    @GetMapping("/funcao-transacaos-dto/analise/{id}")
+    @Timed
+    public ResponseEntity<List<FuncaoTransacaoAnaliseDTO>> getFuncaoTransacaoByAnalise(@PathVariable Long id) {
+        log.debug("REST request to get FuncaoTransacao : {}", id);
+        List<FuncaoTransacao> lstFuncadoTransacao = funcaoTransacaoRepository.findAllByAnalise_Id(id);
+        List<FuncaoTransacaoAnaliseDTO> lstFuncaoDadosDTO = lstFuncadoTransacao.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(lstFuncaoDadosDTO));
     }
 
     /**
@@ -214,9 +228,21 @@ public class FuncaoTransacaoResource {
     public List<FuncaoTransacao> searchFuncaoTransacaos(@RequestParam(defaultValue = "*") String query) {
         log.debug("REST request to search FuncaoTransacaos for query {}", query);
         return StreamSupport
-            .stream(funcaoTransacaoSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-            .collect(Collectors.toList());
+                .stream(funcaoTransacaoSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+                .collect(Collectors.toList());
     }
 
+    private FuncaoTransacaoAnaliseDTO convertToDto(FuncaoTransacao funcaoTransacao) {
+        FuncaoTransacaoAnaliseDTO funcaoTransacaoAnaliseDTO = new ModelMapper().map(funcaoTransacao, FuncaoTransacaoAnaliseDTO.class);
+        return funcaoTransacaoAnaliseDTO;
+    }
 
+    private FuncaoDados convertToEntity(FuncaoTransacaoAnaliseDTO funcaoTransacaoAnaliseDTO) throws ParseException {
+        FuncaoDados funcaoDados = new ModelMapper().map(funcaoTransacaoAnaliseDTO, FuncaoDados.class);
+        if (funcaoTransacaoAnaliseDTO.getId() != null) {
+            FuncaoTransacao oldPost = funcaoTransacaoRepository.findOne(funcaoTransacaoAnaliseDTO.getId());
+        }
+        return funcaoDados;
+
+    }
 }

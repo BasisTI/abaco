@@ -411,7 +411,7 @@ public class AnaliseResource {
         boolean retorno = checarPermissao(id);
 
         if (retorno) {
-            return analiseRepository.findOne(id);
+            return analiseRepository.findById(id);
         } else {
             return null;
         }

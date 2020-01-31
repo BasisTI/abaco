@@ -1,16 +1,23 @@
 package br.com.basis.abaco.web.rest;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
+import br.com.basis.abaco.domain.TipoEquipe;
+import br.com.basis.abaco.repository.TipoEquipeRepository;
+import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
+import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.service.TipoEquipeService;
+import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.relatorio.RelatorioEquipeColunas;
+import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.utils.PageUtils;
+import br.com.basis.abaco.web.rest.util.HeaderUtil;
+import br.com.basis.abaco.web.rest.util.PaginationUtil;
+import br.com.basis.dynamicexports.service.DynamicExportsService;
+import br.com.basis.dynamicexports.util.DynamicExporter;
+import com.codahale.metrics.annotation.Timed;
+import io.github.jhipster.web.util.ResponseUtil;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -34,25 +41,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codahale.metrics.annotation.Timed;
+import javax.validation.Valid;
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
-import br.com.basis.abaco.domain.TipoEquipe;
-import br.com.basis.abaco.repository.TipoEquipeRepository;
-import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
-import br.com.basis.abaco.security.SecurityUtils;
-import br.com.basis.abaco.service.TipoEquipeService;
-import br.com.basis.abaco.service.dto.DropdownDTO;
-import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.relatorio.RelatorioEquipeColunas;
-import br.com.basis.abaco.utils.AbacoUtil;
-import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.abaco.web.rest.util.HeaderUtil;
-import br.com.basis.abaco.web.rest.util.PaginationUtil;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
-import br.com.basis.dynamicexports.util.DynamicExporter;
-import io.github.jhipster.web.util.ResponseUtil;
-import net.sf.dynamicreports.report.exception.DRException;
-import net.sf.jasperreports.engine.JRException;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing TipoEquipe.
@@ -83,8 +80,8 @@ public class TipoEquipeResource {
 
 
     public TipoEquipeResource(TipoEquipeRepository tipoEquipeRepository,
-            TipoEquipeSearchRepository tipoEquipeSearchRepository, DynamicExportsService dynamicExportsService,
-            TipoEquipeService tipoEquipeService) {
+                              TipoEquipeSearchRepository tipoEquipeSearchRepository, DynamicExportsService dynamicExportsService,
+                              TipoEquipeService tipoEquipeService) {
 
         this.tipoEquipeRepository = tipoEquipeRepository;
         this.tipoEquipeSearchRepository = tipoEquipeSearchRepository;
@@ -136,7 +133,6 @@ public class TipoEquipeResource {
         if (tipoEquipe.getId() == null) {
             return createTipoEquipe(tipoEquipe);
         }
-
         TipoEquipe result = tipoEquipeRepository.save(tipoEquipe);
         tipoEquipeSearchRepository.save(result);
         return ResponseEntity.ok()
@@ -151,6 +147,7 @@ public class TipoEquipeResource {
     }
 
     /**
+     * x
      * GET /tipo-equipes/:id : get the "id" tipoEquipe.
      *
      * @param id the id of the tipoEquipe to retrieve
@@ -181,7 +178,6 @@ public class TipoEquipeResource {
     }
 
     /**
-     *
      * @param idOrganizacao
      * @return
      */
@@ -193,7 +189,6 @@ public class TipoEquipeResource {
     }
 
     /**
-     *
      * @param idOrganizacao
      * @return
      */
@@ -256,19 +251,19 @@ public class TipoEquipeResource {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-            Page<TipoEquipe> result =  tipoEquipeSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
+            Page<TipoEquipe> result = tipoEquipeSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioEquipeColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             log.error(e.getMessage(), e);
             throw new RelatorioException(e);
         }
         return DynamicExporter.output(byteArrayOutputStream,
-            "relatorio." + tipoRelatorio);
+                "relatorio." + tipoRelatorio);
     }
 
     @GetMapping("/tipo-equipes/active-user")
     @Timed
-    public List<DropdownDTO> findActiveUserTipoEquipes() {
+    public List<DropdownDTO> ActiveUserTipoEquipes() {
         return tipoEquipeService.findActiveUserTipoEquipes();
     }
 }

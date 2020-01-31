@@ -5,6 +5,7 @@ import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
 import br.com.basis.abaco.service.FuncaoDadosService;
 import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -155,6 +157,18 @@ public class FuncaoDadosResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
     }
 
+
+    @GetMapping("/funcao-dados-dto/analise/{id}")
+    @Timed
+    public ResponseEntity<List<FuncaoDadoAnaliseDTO>> getFuncaoDadosByAnalise(@PathVariable Long id) {
+        log.debug("REST request to get FuncaoDados : {}", id);
+        List<FuncaoDados> lstFuncaoDados = funcaoDadosRepository.findByAnalise_Id(id);
+        List<FuncaoDadoAnaliseDTO> lstFuncaoDadosDTO = lstFuncaoDados.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(lstFuncaoDadosDTO));
+    }
+
     /**
      * GET  /funcao-dados/analise/:id : get the "id" analise.
      *
@@ -207,6 +221,19 @@ public class FuncaoDadosResource {
     public List<DropdownDTO> getFuncaoDadosDropdown() {
         log.debug("REST request to get dropdown FuncaoDados");
         return funcaoDadosService.getFuncaoDadosDropdown();
+    }
+
+    private FuncaoDadoAnaliseDTO convertToDto(FuncaoDados funcaoDados) {
+        FuncaoDadoAnaliseDTO funcaoDadoAnaliseDTO = new ModelMapper().map(funcaoDados, FuncaoDadoAnaliseDTO.class);
+        return funcaoDadoAnaliseDTO;
+    }
+
+    private FuncaoDados convertToEntity(FuncaoDadoAnaliseDTO funcaoDadoAnaliseDTO) throws ParseException {
+        FuncaoDados funcaoDados = new ModelMapper().map(funcaoDadoAnaliseDTO, FuncaoDados.class);
+        if (funcaoDadoAnaliseDTO.getId() != null) {
+            FuncaoDados oldPost = funcaoDadosRepository.findById(funcaoDadoAnaliseDTO.getId());
+        }
+        return funcaoDados;
     }
 
 }
