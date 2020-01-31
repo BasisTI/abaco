@@ -232,8 +232,7 @@ public class FuncaoTransacaoResource {
     }
 
     private FuncaoTransacaoAnaliseDTO convertToDto(FuncaoTransacao funcaoTransacao) {
-        FuncaoTransacaoAnaliseDTO funcaoTransacaoAnaliseDTO = new ModelMapper().map(funcaoTransacao, FuncaoTransacaoAnaliseDTO.class);
-        return funcaoTransacaoAnaliseDTO;
+        return new ModelMapper().map(funcaoTransacao, FuncaoTransacaoAnaliseDTO.class);
     }
 
 }
