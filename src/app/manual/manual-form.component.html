@@ -500,8 +500,8 @@
 
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                            <label class="ui-md-12" translate="Cadastros.Manual.Descricao">Descrição</label>
-                            <textarea [rows]="15" [cols]="90" id="idDescricaoSaveFormManual" pInputTextarea
+                            <label class="ui-g-12" translate="Cadastros.Manual.Descricao">Descrição</label>
+                            <textarea [rows]="15" [cols]="90" id="idDescricaoSaveFormManual" pInputTextarea style="resize: vertical;"
                                       maxlength="2000" name="descricaoFatorAjuste"
                                       [(ngModel)]="newAdjustFactor.descricao">
                             </textarea>
@@ -604,11 +604,11 @@
 
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-12 ui-sm-12" style="padding-top: 25px">
-                            <label class="ui-md-12" translate="Cadastros.Manual.Descricao">Descrição</label>
-                            <textarea [rows]="15" [cols]="90" id="idDescricaoEditFormManual" pInputTextarea
+                            <label class="ui-g-12" translate="Cadastros.Manual.Descricao">Descrição</label>
+                            <textarea [rows]="15" [cols]="90" id="idDescricaoEditFormManual" pInputTextarea style="resize: vertical;"
                                       name="descricaoEdicaoFatorAjuste"
                                       [(ngModel)]="editedAdjustFactor.descricao" maxlength="2000">
-            </textarea>
+                            </textarea>
                         </div>
                     </div>
 
