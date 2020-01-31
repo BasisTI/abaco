@@ -263,7 +263,7 @@ public class TipoEquipeResource {
 
     @GetMapping("/tipo-equipes/active-user")
     @Timed
-    public List<DropdownDTO> ActiveUserTipoEquipes() {
+    public List<DropdownDTO> activeUserTipoEquipes() {
         return tipoEquipeService.findActiveUserTipoEquipes();
     }
 }

@@ -236,12 +236,4 @@ public class FuncaoTransacaoResource {
         return funcaoTransacaoAnaliseDTO;
     }
 
-    private FuncaoDados convertToEntity(FuncaoTransacaoAnaliseDTO funcaoTransacaoAnaliseDTO) throws ParseException {
-        FuncaoDados funcaoDados = new ModelMapper().map(funcaoTransacaoAnaliseDTO, FuncaoDados.class);
-        if (funcaoTransacaoAnaliseDTO.getId() != null) {
-            FuncaoTransacao oldPost = funcaoTransacaoRepository.findOne(funcaoTransacaoAnaliseDTO.getId());
-        }
-        return funcaoDados;
-
-    }
 }

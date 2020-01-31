@@ -75,7 +75,7 @@ public class UserResource {
     private final AuthorityRepository authorityRepository;
     private final DynamicExportsService dynamicExportsService;
     private String userexists = "userexists";
-    private final ElasticsearchOperations elasticsearchTemplate;
+    private final ElasticsearchOperations elasticsearchOperations;
 
     public UserResource(UserRepository userRepository,
                         MailService mailService,
@@ -84,7 +84,7 @@ public class UserResource {
                         AuthorityRepository authorityRepository,
                         DynamicExportsService dynamicExportsService,
                         AnaliseRepository analiseRepository,
-                        ElasticsearchOperations elasticsearchTemplate) {
+                        ElasticsearchOperations elasticsearchOperations) {
         this.analiseRepository = analiseRepository;
         this.userRepository = userRepository;
         this.mailService = mailService;
@@ -92,7 +92,7 @@ public class UserResource {
         this.userSearchRepository = userSearchRepository;
         this.authorityRepository = authorityRepository;
         this.dynamicExportsService = dynamicExportsService;
-        this.elasticsearchTemplate = elasticsearchTemplate;
+        this.elasticsearchOperations = elasticsearchOperations;
     }
 
     @PostMapping("/users")
