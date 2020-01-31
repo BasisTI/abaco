@@ -161,7 +161,6 @@ public class FuncaoDadosResource {
     @GetMapping("/funcao-dados-dto/analise/{id}")
     @Timed
     public ResponseEntity<List<FuncaoDadoAnaliseDTO>> getFuncaoDadosByAnalise(@PathVariable Long id) {
-        log.debug("REST request to get FuncaoDados : {}", id);
         List<FuncaoDados> lstFuncaoDados = funcaoDadosRepository.findByAnalise_Id(id);
         List<FuncaoDadoAnaliseDTO> lstFuncaoDadosDTO = lstFuncaoDados.stream()
                 .map(this::convertToDto)
