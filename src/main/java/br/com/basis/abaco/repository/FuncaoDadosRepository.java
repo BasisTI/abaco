@@ -39,5 +39,5 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
     List<DropdownDTO> getFuncaoDadosDropdown();
 
     @Query("SELECT fb FROM FuncaoDados fb JOIN fb.funcionalidade fun JOIN fun.modulo m WHERE fb.analise.id = ?1")
-    List<FuncaoDados> findByAnalise_Id(Long idAnalise);
+    Set<FuncaoDados> findByAnalise_Id(Long idAnalise);
 }

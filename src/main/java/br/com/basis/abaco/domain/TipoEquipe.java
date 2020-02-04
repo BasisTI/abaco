@@ -53,7 +53,7 @@ public class TipoEquipe implements Serializable, ReportObject {
 
     @Field(type = FieldType.Nested, index = FieldIndex.not_analyzed)
     @JsonInclude
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tipoequipe_organizacao", joinColumns = @JoinColumn(name = "tipoequipe_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "organizacao_id", referencedColumnName = "id"))
     private Set<Organizacao> organizacoes = new HashSet<>();
 

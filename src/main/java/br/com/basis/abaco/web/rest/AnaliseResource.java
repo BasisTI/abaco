@@ -223,7 +223,6 @@ public class AnaliseResource {
     @Timed
     public ResponseEntity<Analise> getAnalise(@PathVariable Long id) {
         Analise analise = recuperarAnalise(id);
-
         if (analise != null) {
             return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
         } else {

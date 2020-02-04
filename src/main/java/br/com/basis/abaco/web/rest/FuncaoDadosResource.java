@@ -30,6 +30,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -161,7 +162,7 @@ public class FuncaoDadosResource {
     @GetMapping("/funcao-dados-dto/analise/{id}")
     @Timed
     public ResponseEntity<List<FuncaoDadoAnaliseDTO>> getFuncaoDadosByAnalise(@PathVariable Long id) {
-        List<FuncaoDados> lstFuncaoDados = funcaoDadosRepository.findByAnalise_Id(id);
+        Set<FuncaoDados> lstFuncaoDados = funcaoDadosRepository.findByAnalise_Id(id);
         List<FuncaoDadoAnaliseDTO> lstFuncaoDadosDTO = lstFuncaoDados.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -176,9 +177,9 @@ public class FuncaoDadosResource {
      */
     @GetMapping("/funcao-dados/analise/{id}")
     @Timed
-    public List<FuncaoDados> getFuncaoDadosAnalise(@PathVariable Long id) {
+    public Set<FuncaoDados> getFuncaoDadosAnalise(@PathVariable Long id) {
         log.debug("REST request to get FuncaoDados : {}", id);
-        List<FuncaoDados> funcaoDados = null;
+        Set<FuncaoDados> funcaoDados = null;
         funcaoDados = funcaoDadosRepository.findByAnalise_Id(id);
         return funcaoDados;
     }

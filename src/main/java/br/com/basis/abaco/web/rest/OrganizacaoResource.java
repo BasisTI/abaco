@@ -100,7 +100,7 @@ public class OrganizacaoResource {
 
   /**
    * Function to format a bad request URL to be returned to frontend
-   * 
+   *
    * @param errorKey       The key identifing the error occured
    * @param defaultMessage Default message to display to user
    * @return The bad request URL
@@ -294,9 +294,8 @@ public class OrganizacaoResource {
       new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
       Page<Organizacao> result = organizacaoSearchRepository.search(queryStringQuery(query),
           dynamicExportsService.obterPageableMaximoExportacao());
-      byteArrayOutputStream = dynamicExportsService.export(new RelatorioOrganizacaoColunas(), result,
-          tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH),
-          Optional.ofNullable(AbacoUtil.getReportFooter()));
+
+      byteArrayOutputStream = dynamicExportsService.export(new RelatorioOrganizacaoColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
     } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
       log.error(e.getMessage(), e);
       throw new RelatorioException(e);

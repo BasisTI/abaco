@@ -26,5 +26,5 @@ public interface FuncaoTransacaoRepository extends JpaRepository<FuncaoTransacao
     @Query(value = "SELECT f FROM FuncaoTransacao f WHERE f.analise.id = :analiseId AND f.funcionalidade.id = :funcionalidadeId ORDER BY f.name asc, f.id asc")
     Set<FuncaoTransacao> findByAnaliseFuncionalidade(@Param("analiseId") Long analiseId, @Param("funcionalidadeId") Long funcionalidadeId);
 
-    List<FuncaoTransacao> findAllByAnalise_Id(Long id);
+    Set<FuncaoTransacao> findAllByAnalise_Id(Long id);
 }
