@@ -9,6 +9,10 @@ import {Analise, AnaliseShareEquipe} from './';
 import {createRequestOption, PageNotificationService, ResponseWrapper} from '../shared';
 import {BlockUI, NgBlockUI} from 'ng-block-ui';
 import {GenericService} from '../util/service/generic.service';
+import {FuncaoTransacao} from '../funcao-transacao';
+import {FuncaoDados} from '../funcao-dados';
+import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.service';
+import {FuncaoDadosService} from '../funcao-dados/funcao-dados.service';
 
 @Injectable()
 export class AnaliseService {
@@ -67,7 +71,21 @@ export class AnaliseService {
 
     public atualizaAnalise(analise: Analise) {
         this.update(analise)
-            .subscribe();
+            .subscribe(() => (function () {
+                this.funcaoTransacaoService.getFuncaoTransacaoByAnalise(this.analise.id)
+                    .subscribe(response => (
+                        response.forEach(value => (
+                            this.analise.funcaoTransacaos.push(FuncaoTransacao.convertTransacaoJsonToObject(value)))
+                        )
+                    )).then(
+                    this.funcaoDadosService.getFuncaoDadosByAnalise(this.analise.id)
+                    .subscribe(response => (
+                        response.forEach(value => (
+                            this.analise.funcaoDados.push(FuncaoDados.convertJsonToObject(value)))
+                        )
+                    ))
+                );
+            }));
     }
 
     public update(analise: Analise): Observable<Analise> {
@@ -75,14 +93,13 @@ export class AnaliseService {
         const copy = this.convert(analise);
         return this.http.put(this.resourceUrl, copy).map((res: Response) => {
             const jsonResponse = res.json();
-            this.blockUI.stop();
             return this.convertItemFromServer(jsonResponse);
         }).catch((error: any) => {
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
-        });
+        }).finally(() => ( this.blockUI.stop()));
     }
 
     public block(analise: Analise): Observable<Analise> {

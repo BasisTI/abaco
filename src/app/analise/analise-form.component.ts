@@ -215,22 +215,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
             if (params['id']) {
                 this.isEdicao = true;
                 this.analiseService.find(params['id']).subscribe(analise => {
-                    analise.funcaoTransacaos = [];
-                    analise.funcaoDados = [];
-                    this.inicializaValoresAposCarregamento(analise);
-                    this.analiseSharedDataService.analiseCarregada();
-                    this.dataAnalise = this.analise;
-                    this.aguardarGarantia = this.analise.baselineImediatamente;
-                    this.enviarParaBaseLine = this.analise.enviarBaseline;
-                    this.setDataHomologacao();
-                    this.setDataOrdemServico();
-                    this.diasGarantia = this.getGarantia();
-                    this.contratoSelected(this.analise.contrato);
-                    this.populaComboUsers();
-                    this.validaCamposObrigatorios();
-                    this.getFuncaoDados();
-                    this.getFuncaoTrasacao();
-
+                    this.getFuncaoDados(analise);
+                    this.getFuncaoTrasacao(analise);
                 });
             } else {
                 this.analise = new Analise();
@@ -553,6 +539,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         if (this.verificarCamposObrigatorios()) {
             if (this.analise.id && this.analise.id > 0) {
                 this.analiseService.update(this.analise).subscribe(() => {
+
                     this.pageNotificationService.addSuccessMsg(
                         this.isEdit ? this.getLabel('Analise.Analise.Mensagens.msgRegistroSalvoSucesso') :
                             this.getLabel('Analise.Analise.Mensagens.msgDadosAlteradosSucesso'));
@@ -732,21 +719,39 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    private getFuncaoDados() {
-        this.funcaoDadosService.getFuncaoDadosByAnalise(this.analise.id)
-            .subscribe(response => (
-                response.forEach(value => (
-                    this.analise.funcaoDados.push(FuncaoDados.convertJsonToObject(value)))
-                )
-            ));
+    private  getFuncaoDados(analise: Analise) {
+        const funcaoDados: FuncaoDados[] = new Array();
+        this.funcaoDadosService.getFuncaoDadosByAnalise(analise.id)
+            .subscribe(response => {
+                    response.forEach(value => (
+                        funcaoDados.push(FuncaoDados.convertJsonToObject(value)))
+                    );
+                    analise.funcaoDados = funcaoDados;
+                    this.getFuncaoTrasacao(analise);
+                }
+            );
     }
-    private getFuncaoTrasacao() {
-        this.funcaoTransacaoService.getFuncaoTransacaoByAnalise(this.analise.id)
-            .subscribe(response => (
-                response.forEach(value => (
-                    this.analise.funcaoTransacaos.push(FuncaoTransacao.convertTransacaoJsonToObject(value)))
-                )
-            ));
+
+    private  getFuncaoTrasacao(analise: Analise) {
+        const funcaoTransacaos: FuncaoTransacao[] = new Array();
+        this.funcaoTransacaoService.getFuncaoTransacaoByAnalise(analise.id)
+            .subscribe(response => {
+                    response.forEach(value => (
+                        funcaoTransacaos.push(FuncaoTransacao.convertTransacaoJsonToObject(value)))
+                    );
+                    analise.funcaoTransacaos = funcaoTransacaos;
+                    this.inicializaValoresAposCarregamento(analise);
+                    this.analiseSharedDataService.analiseCarregada();
+                    this.dataAnalise = this.analise;
+                    this.aguardarGarantia = this.analise.baselineImediatamente;
+                    this.enviarParaBaseLine = this.analise.enviarBaseline;
+                    this.setDataHomologacao();
+                    this.setDataOrdemServico();
+                    this.diasGarantia = this.getGarantia();
+                    this.contratoSelected(this.analise.contrato);
+                    this.populaComboUsers();
+                    this.validaCamposObrigatorios();
+            });
     }
 }
 

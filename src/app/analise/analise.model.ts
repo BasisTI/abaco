@@ -104,9 +104,6 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     }
     private generateResumoTotal() {
         this._resumoTotal = new ResumoTotal(this._resumoFuncaoDados, this._resumoFuncaoTransacao);
-        this.calcularTotalPFs();
-    }
-    private calcularTotalPFs() {
         this.pfTotal = this._resumoTotal.getTotalGrossPf().toString();
         this.adjustPFTotal = this.aplicaTotalEsforco(this.ajustarPfTotal()).toFixed(2).toString();
         this.pfTotalEsforco = this.aplicaTotalEsforco(this._resumoTotal.getTotalGrossPf()).toFixed(2).toString();
@@ -207,7 +204,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     }
 
     private atualizarFuncoesDados() {
-        this.funcaoDados = this.mappableFuncaoDados.values();
+        /*this.funcaoDados = this.mappableFuncaoDados.values();*/
         this.generateResumoFuncoesDados();
         this.generateResumoTotal();
     }
@@ -240,7 +237,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     }
 
     private atualizarFuncoesTransacao() {
-        this.funcaoTransacaos = this.mappableFuncaoTransacaos.values();
+        /*this.funcaoTransacaos = this.mappableFuncaoTransacaos.values();*/
         this.generateResumoFuncoesTransacao();
         this.generateResumoTotal();
     }

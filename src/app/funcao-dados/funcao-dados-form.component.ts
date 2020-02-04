@@ -434,7 +434,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
 
     private atualizaResumo() {
         this.resumo = this.analise.resumoFuncaoDados;
-        this.changeDetectorRef.detectChanges();
     }
 
     private subscribeToSistemaSelecionado() {
@@ -736,12 +735,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
             this.verificarModulo();
             const funcaoDadosCalculada = Calculadora.calcular(
                 this.analise.metodoContagem, this.currentFuncaoDados, this.analise.contrato.manual);
-            this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
-                '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlteradaComSucesso')}`);
             this.analise.updateFuncaoDados(funcaoDadosCalculada);
             this.atualizaResumo();
             this.resetarEstadoPosSalvar();
             this.salvarAnalise();
+            this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
+                '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlteradaComSucesso')}`);
             this.fecharDialog();
         }
     }

@@ -88,8 +88,8 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, 
         copy.funcionalidade = Funcionalidade.toNonCircularJson(copy.funcionalidade);
 
         if (this.ders !== undefined && this.rlrs) {
-            copy.ders = this.ders.map(der => der.toJSONState());
-            copy.rlrs = this.rlrs.map(rlr => rlr.toJSONState());
+            copy.ders = this.ders.map(der =>  Object.assign({}, der));
+            copy.rlrs = this.rlrs.map(rlr => Object.assign({}, rlr));
         }
 
 
@@ -107,8 +107,6 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, 
         return new FuncaoDadosCopyFromJSON(json).copy();
     }
 
-    // XXX eficiente obter vários ParseResult em lugares diferentes?
-    // refletir possiveis mudanças em FuncaoTransacao
     derValue(): number {
         if (this.ders && this.ders.length > 0) {
             return DerChipConverter.valor(this.ders);
