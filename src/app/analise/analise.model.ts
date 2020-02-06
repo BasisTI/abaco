@@ -204,7 +204,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     }
 
     private atualizarFuncoesDados() {
-        /*this.funcaoDados = this.mappableFuncaoDados.values();*/
+        this.funcaoDados = this.mappableFuncaoDados.values();
         this.generateResumoFuncoesDados();
         this.generateResumoTotal();
     }
@@ -237,7 +237,7 @@ export class Analise implements BaseEntity, JSONable<Analise> {
     }
 
     private atualizarFuncoesTransacao() {
-        /*this.funcaoTransacaos = this.mappableFuncaoTransacaos.values();*/
+        this.funcaoTransacaos = this.mappableFuncaoTransacaos.values();
         this.generateResumoFuncoesTransacao();
         this.generateResumoTotal();
     }
@@ -389,8 +389,10 @@ class AnaliseCopyFromJSON {
     private populaModuloDasFuncionalidadesDasFuncoes(funcoes: FuncaoAnalise[], sistema: Sistema) {
         if (funcoes) {
             funcoes.forEach(f => {
-                const modulo = ModuloDaFuncionalidadeFinder.find(sistema, f.funcionalidade.id);
-                f.funcionalidade.modulo = modulo;
+                if (!(f.funcionalidade.modulo && f.funcionalidade.modulo.nome )) {
+                    const modulo = ModuloDaFuncionalidadeFinder.find(sistema, f.funcionalidade.id);
+                    f.funcionalidade.modulo = modulo;
+                }
             });
         }
     }
