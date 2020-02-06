@@ -80,9 +80,7 @@ export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnali
     copy.funcionalidade = Funcionalidade.toNonCircularJson(copy.funcionalidade);
 
     if (this.der) { copy.ders = this.ders.map(der => der.toJSONState()); }
-    if (this.alrs) {
-      copy.alrs = this.alrs.map(alr => Object.assign({}, alr));
-    }
+    if (this.alrs) { copy.alrs = this.alrs.map(alr => alr.toJSONState()); }
 
     return copy;
   }

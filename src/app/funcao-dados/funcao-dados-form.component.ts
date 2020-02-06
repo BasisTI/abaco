@@ -867,7 +867,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
                 this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
                 this.atualizaResumo();
                 this.resetarEstadoPosSalvar();
-                // this.persistirFuncaoTransacao(funcaoTransacaoCalculada);
+                this.persistirFuncaoTransacao(funcaoTransacaoCalculada);
                 this.salvarAnalise();
                 this.estadoInicial();
             } else {

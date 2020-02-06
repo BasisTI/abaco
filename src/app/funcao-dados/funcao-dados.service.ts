@@ -10,6 +10,7 @@ import {ResponseWrapper} from '../shared';
 import {FuncaoDados} from '.';
 import {Funcionalidade} from '../funcionalidade';
 import {BlockUI, NgBlockUI} from 'ng-block-ui';
+import {Analise} from '../analise';
 
 @Injectable()
 export class FuncaoDadosService {
@@ -59,12 +60,12 @@ export class FuncaoDadosService {
             return this.convertResponseFuncaoDados(res);
         });
     }
-    public getFuncaoDadosByAnalise(id: number): Observable<FuncaoDados[]> {
-        this.blockUI.start();
-        const url = `${this.resourceUrl}-dto/analise/${id}`;
+
+    public getFuncaoDadosByAnalise(analise: Analise): Observable<Analise> {
+        const url = `${this.resourceUrl}-dto/analise/${analise.id}`;
         return this.http.get(url).map((res: Response) => {
             return res.json();
-        }).finally(() => (this.blockUI.stop()));
+        });
     }
 
     getFuncaoDadosBaseline(id: number): Observable<FuncaoDados> {

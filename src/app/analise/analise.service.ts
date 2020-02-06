@@ -43,6 +43,8 @@ export class AnaliseService {
         private http: HttpService,
         private pageNotificationService: PageNotificationService,
         private genericService: GenericService,
+        private funcaoDadosService: FuncaoDadosService,
+        private funcaoTransacaoService: FuncaoTransacaoService,
         private translate: TranslateService) {
     }
 
@@ -277,6 +279,22 @@ export class AnaliseService {
             this.blockUI.stop();
             return analiseJson;
         });
+    }
+
+    public findWithFuncaos(id: number): Observable<Analise> {
+        this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.ProcurandoAnalise'));
+        let analise: Analise = new Analise();
+        analise.id = id;
+        return Observable.forkJoin(this.http.get(`${this.resourceUrl}/${id}`),
+            this.funcaoDadosService.getFuncaoDadosByAnalise(analise),
+            this.funcaoTransacaoService.getFuncaoTransacaoByAnalise(analise)).map(response => {
+            const jsonResponse = response[0].json();
+            jsonResponse['funcaoDados'] = response[1];
+            jsonResponse['funcaoTransacaos'] = response[2];
+            analise = this.convertItemFromServer(jsonResponse);
+            analise.createdBy = jsonResponse.createdBy;
+            return analise;
+        }).finally(() => (this.blockUI.stop()));
     }
 
     findAllByOrganizacaoId(orgId: number): Observable<ResponseWrapper> {

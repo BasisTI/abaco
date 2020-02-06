@@ -7,6 +7,7 @@ import {HttpService} from '@basis/angular-components';
 import {environment} from '../../environments/environment';
 import {FuncaoDados} from '../funcao-dados';
 import {BlockUI, NgBlockUI} from 'ng-block-ui';
+import {Analise} from '../analise';
 
 
 @Injectable()
@@ -35,12 +36,11 @@ export class FuncaoTransacaoService {
         return entity;
     }
 
-    public getFuncaoTransacaoByAnalise(id: number): Observable<FuncaoDados[]> {
-        this.blockUI.start();
-        const url = `${this.funcaoTransacaoResourceUrl}-dto/analise/${id}`;
+    public getFuncaoTransacaoByAnalise(analise: Analise): Observable<Analise> {
+        const url = `${this.funcaoTransacaoResourceUrl}-dto/analise/${analise.id}`;
         return this.http.get(url).map((res: Response) => {
             return res.json();
-        }).finally(() => (this.blockUI.stop()));
+        });
     }
 
 

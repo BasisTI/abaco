@@ -88,8 +88,8 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, 
         copy.funcionalidade = Funcionalidade.toNonCircularJson(copy.funcionalidade);
 
         if (this.ders !== undefined && this.rlrs) {
-            copy.ders = this.ders.map(der =>  Object.assign({}, der));
-            copy.rlrs = this.rlrs.map(rlr => Object.assign({}, rlr));
+            copy.ders = this.ders.map(der => der.toJSONState());
+            copy.rlrs = this.rlrs.map(rlr => rlr.toJSONState());
         }
 
 

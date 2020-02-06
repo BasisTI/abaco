@@ -657,11 +657,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.resetarEstadoPosSalvar();
             this.salvarAnalise();
             this.fecharDialog();
+            this.atualizaResumo();
+            this.resetarEstadoPosSalvar();
             this.pageNotificationService
                 .addSuccessMsg(`${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgFuncaoDeTransacao')}
                 '${funcaoTransacaoCalculada.name}' ${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlteradaComSucesso')}`);
-            this.atualizaResumo();
-            this.resetarEstadoPosSalvar();
         }
     }
 

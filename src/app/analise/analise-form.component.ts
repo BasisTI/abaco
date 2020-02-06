@@ -214,9 +214,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
                 this.isEdicao = true;
-                this.analiseService.find(params['id']).subscribe(analise => {
-                    this.getFuncaoDados(analise);
-                    this.getFuncaoTrasacao(analise);
+                this.analiseService.findWithFuncaos(params['id']).subscribe(analise => {
+                    this.loadDataAnalise(analise);
                 });
             } else {
                 this.analise = new Analise();
@@ -272,34 +271,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     setSistemaOrganizacao(org: Organizacao) {
         if (!this.isEdicao) {
-            this.analise.sistema = undefined;
-            this.analise.equipeResponsavel = undefined;
-            this.analise.users = undefined;
-            this.analise.numeroOs = undefined;
-            this.analise.metodoContagem = undefined;
-            this.analise.fatorAjuste = undefined;
-            this.analise.valorAjuste = undefined;
-            this.analise.pfTotal = undefined;
-            this.analise.pfTotalEsforco = undefined;
-            this.analise.adjustPFTotal = undefined;
-            this.analise.escopo = undefined;
-            this.analise.fronteiras = undefined;
-            this.analise.documentacao = undefined;
-            this.analise.tipoAnalise = undefined;
-            this.analise.propositoContagem = undefined;
-            this.analise.funcaoDados = undefined;
-            this.analise.contrato = undefined;
-            this.analise.esforcoFases = undefined;
-            this.analise.observacoes = undefined;
-            this.analise.baselineImediatamente = undefined;
-            this.analise.dataHomologacao = undefined;
-            this.analise.identificadorAnalise = undefined;
-            this.analise.equipeResponsavel = undefined;
-            this.analise.createdBy = undefined;
-            this.analise.bloqueiaAnalise = undefined;
-            this.analise.compartilhadas = undefined;
-            this.analise.dataCriacaoOrdemServico = undefined;
-            this.analise.manual = undefined;
+           this.analise = new Analise();
+           this.analise.manual = new Manual();
+           this.analise.organizacao = org;
         }
         this.contratoService.findAllContratoesByOrganization(org).subscribe((contracts) => {
             this.contratos = contracts;
@@ -719,39 +693,18 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    private  getFuncaoDados(analise: Analise) {
-        const funcaoDados: FuncaoDados[] = new Array();
-        this.funcaoDadosService.getFuncaoDadosByAnalise(analise.id)
-            .subscribe(response => {
-                    response.forEach(value => (
-                        funcaoDados.push(FuncaoDados.convertJsonToObject(value)))
-                    );
-                    analise.funcaoDados = funcaoDados;
-                    this.getFuncaoTrasacao(analise);
-                }
-            );
-    }
-
-    private  getFuncaoTrasacao(analise: Analise) {
-        const funcaoTransacaos: FuncaoTransacao[] = new Array();
-        this.funcaoTransacaoService.getFuncaoTransacaoByAnalise(analise.id)
-            .subscribe(response => {
-                    response.forEach(value => (
-                        funcaoTransacaos.push(FuncaoTransacao.convertTransacaoJsonToObject(value)))
-                    );
-                    analise.funcaoTransacaos = funcaoTransacaos;
-                    this.inicializaValoresAposCarregamento(analise);
-                    this.analiseSharedDataService.analiseCarregada();
-                    this.dataAnalise = this.analise;
-                    this.aguardarGarantia = this.analise.baselineImediatamente;
-                    this.enviarParaBaseLine = this.analise.enviarBaseline;
-                    this.setDataHomologacao();
-                    this.setDataOrdemServico();
-                    this.diasGarantia = this.getGarantia();
-                    this.contratoSelected(this.analise.contrato);
-                    this.populaComboUsers();
-                    this.validaCamposObrigatorios();
-            });
+    private loadDataAnalise(analise: Analise) {
+        this.inicializaValoresAposCarregamento(analise);
+        this.dataAnalise = this.analise;
+        this.aguardarGarantia = this.analise.baselineImediatamente;
+        this.enviarParaBaseLine = this.analise.enviarBaseline;
+        this.setDataHomologacao();
+        this.setDataOrdemServico();
+        this.diasGarantia = this.getGarantia();
+        this.contratoSelected(this.analise.contrato);
+        this.populaComboUsers();
+        this.validaCamposObrigatorios();
+        this.analiseSharedDataService.analiseCarregada();
     }
 }
 
