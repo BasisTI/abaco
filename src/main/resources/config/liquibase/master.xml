@@ -20,7 +20,7 @@
     <include file="classpath:config/liquibase/changelog/20170307193249_added_entity_FuncaoDados.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170307193250_added_entity_FuncaoTransacao.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170307193251_added_entity_Alr.xml" relativeToChangelogFile="false"/>
-	
+
     <include file="config/liquibase/changelog/20171226112345_added_entity_TipoEquipe.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171227105647_added_entity_TipoFase.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
@@ -41,7 +41,7 @@
     <include file="classpath:config/liquibase/changelog/20170726130657_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170728130657_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20171010130657_changelog.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20171220143354_changelog.xml" relativeToChangelogFile="false"/>	
+    <include file="classpath:config/liquibase/changelog/20171220143354_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20171221165751_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20171226185404_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180108112700_added_column_entity_Organizacao.xml" relativeToChangelogFile="false"/>
@@ -64,7 +64,7 @@
     <include file="classpath:config/liquibase/changelog/20180306202515_ADD_diasDeGarantia_Contrato_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180306212435_ADD_baselineImediatamente_Analise_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180315141925_ADD_versaoCPM_Analise_changelog.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20180315143848_RENAME_COLUMN_TipoContagem_Para_MetodoContagem_Analise_changelog.xml" relativeToChangelogFile="false"/>  
+    <include file="classpath:config/liquibase/changelog/20180315143848_RENAME_COLUMN_TipoContagem_Para_MetodoContagem_Analise_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180320134014_ADD_versao_do_Guia_de_referencia_Local_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180320180515_ADD_data_versao_software_changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180326205727_ADD_identificador_analise_changelog.xml" relativeToChangelogFile="false"/>
@@ -105,5 +105,6 @@
     <include file="classpath:config/liquibase/changelog/ALTER_drop_contraint_funcao_dados_versionavel.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/ALTER_Funcoes.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/201905079385651_CREATE_table_compartilhado_UserAnalise.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/CREATE_VIEW_pe_analatico.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
