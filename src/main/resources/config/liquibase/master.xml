@@ -105,6 +105,5 @@
     <include file="classpath:config/liquibase/changelog/ALTER_drop_contraint_funcao_dados_versionavel.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/ALTER_Funcoes.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/201905079385651_CREATE_table_compartilhado_UserAnalise.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/CREATE_VIEW_pe_analatico.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
