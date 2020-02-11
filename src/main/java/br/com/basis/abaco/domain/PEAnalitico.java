@@ -1,5 +1,7 @@
 package br.com.basis.abaco.domain;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Immutable;
 import org.springframework.data.elasticsearch.annotations.Document;
 
@@ -17,6 +19,8 @@ import java.math.BigDecimal;
 @Table(name = "pe_analitico")
 @Document(indexName = "pe_analitico")
 @Immutable
+@Getter
+@Setter
 public class PEAnalitico implements Serializable {
 
     @Id
@@ -77,155 +81,4 @@ public class PEAnalitico implements Serializable {
     @Column(name = "nome_modulo")
     private String nomeModulo;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getIdfuncaodados() {
-        return idfuncaodados;
-    }
-
-    public void setIdfuncaodados(Long idfuncaodados) {
-        this.idfuncaodados = idfuncaodados;
-    }
-
-    public Long getIdsistema() {
-        return idsistema;
-    }
-
-    public void setIdsistema(Long idsistema) {
-        this.idsistema = idsistema;
-    }
-
-    public Long getEquipeResponsavelId() {
-        return equipeResponsavelId;
-    }
-
-    public void setEquipeResponsavelId(Long equipeResponsavelId) {
-        this.equipeResponsavelId = equipeResponsavelId;
-    }
-
-    public String getNomeFuncionalidade() {
-        return nomeFuncionalidade;
-    }
-
-    public void setNomeFuncionalidade(String nomeFuncionalidade) {
-        this.nomeFuncionalidade = nomeFuncionalidade;
-    }
-
-    public String getNomeModulo() {
-        return nomeModulo;
-    }
-
-    public void setNomeModulo(String nomeModulo) {
-        this.nomeModulo = nomeModulo;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public String getImpacto() {
-        return impacto;
-    }
-
-    public void setImpacto(String impacto) {
-        this.impacto = impacto;
-    }
-
-    public String getClassificacao() {
-        return classificacao;
-    }
-
-    public void setClassificacao(String classificacao) {
-        this.classificacao = classificacao;
-    }
-
-    public Long getAnaliseid() {
-        return analiseid;
-    }
-
-    public void setAnaliseid(Long analiseid) {
-        this.analiseid = analiseid;
-    }
-
-    public String getDataHomologacao() {
-        return dataHomologacao;
-    }
-
-    public void setDataHomologacao(String dataHomologacao) {
-        this.dataHomologacao = dataHomologacao;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getNomeEquipe() {
-        return nomeEquipe;
-    }
-
-    public void setNomeEquipe(String nomeEquipe) {
-        this.nomeEquipe = nomeEquipe;
-    }
-
-    public String getSigla() {
-        return sigla;
-    }
-
-    public void setSigla(String sigla) {
-        this.sigla = sigla;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BigDecimal getPf() {
-        return pf;
-    }
-
-    public void setPf(BigDecimal pf) {
-        this.pf = pf;
-    }
-
-    public String getComplexidade() {
-        return complexidade;
-    }
-
-    public void setComplexidade(String complexidade) {
-        this.complexidade = complexidade;
-    }
-
-    public BigDecimal getDer() {
-        return der;
-    }
-
-    public void setDer(BigDecimal der) {
-        this.der = der;
-    }
-
-    public BigDecimal getRlralr() {
-        return rlralr;
-    }
-
-    public void setRlralr(BigDecimal rlralr) {
-        this.rlralr = rlralr;
-    }
 }

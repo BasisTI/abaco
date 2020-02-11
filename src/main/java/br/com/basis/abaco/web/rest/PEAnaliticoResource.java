@@ -18,14 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * REST controller for managing BaseLineAnalitico.
- */
 @RestController
 @RequestMapping("/api")
 public class PEAnaliticoResource {
 
-    private final Logger log = LoggerFactory.getLogger(PEAnaliticoResource.class);
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final PEAnaliticoRepository peAnaliticoRepository;
 
@@ -45,8 +41,7 @@ public class PEAnaliticoResource {
     @Timed
     public Set<DropdownDTO> getFuncaoDadosByAnalise(@PathVariable Long id) {
         Set<PEAnalitico> peAnaliticos = peAnaliticoRepository.findAllByidsistema(id);
-        Set<DropdownDTO> lstDropdownPEAnaliticos = peAnaliticos.stream().map(this::convertToDto).collect(Collectors.toSet());
-        return lstDropdownPEAnaliticos;
+        return peAnaliticos.stream().map(this::convertToDto).collect(Collectors.toSet());
     }
 
     private DropdownDTO convertToDto(PEAnalitico peAnalitico) {
