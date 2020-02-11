@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="edivaldo.melo" id="202002111019">
+        <createView viewName="pe_analitico"
+                    fullDefinition="true"
+                    replaceIfExists="false"
+                    schemaName="public" >CREATE OR REPLACE VIEW public.pe_analitico
+            AS SELECT row_number() OVER (ORDER BY fdt.id_funcao_dados) AS row_number,
+            fdt.tipo,
+            fdt.classificacao,
+            fdt.impacto,
+            fdt.analise_id,
+            fdt.data_homologacao_software,
+            fdt.id_sistema,
+            fdt.nome,
+            fdt.sigla,
+            fdt.name,
+            fdt.pf,
+            fdt.id_funcao_dados,
+            fdt.complexidade,
+            fdt.nome_equipe,
+            fdt.equipe_responsavel_id,
+            fdt.nome_funcionalidade,
+            fdt.nome_modulo,
+            fdt.der,
+            fdt.rlr_alr
+            FROM ( SELECT 'fd'::text AS tipo,
+            c.tipo AS classificacao,
+            c.impacto,
+            c.analise_id,
+            a.data_homologacao_software,
+            b.id AS id_sistema,
+            b.nome,
+            b.sigla,
+            c.name,
+            c.grosspf AS pf,
+            c.id AS id_funcao_dados,
+            c.complexidade,
+            f.nome AS nome_equipe,
+            a.equipe_responsavel_id,
+            fc.nome AS nome_funcionalidade,
+            m.nome AS nome_modulo,
+            ( SELECT count(d_1.id) AS count
+            FROM der d_1
+            WHERE d_1.funcao_dados_id = c.id) AS der,
+            ( SELECT count(e_1.id) AS count
+            FROM rlr e_1
+            WHERE e_1.funcao_dados_id = c.id) AS rlr_alr
+            FROM analise a
+            JOIN sistema b ON a.sistema_id = b.id
+            JOIN funcao_dados c ON c.analise_id = a.id AND c.impacto::text <> 'EXCLUSAO'::text
+            JOIN tipo_equipe f ON a.equipe_responsavel_id = f.id
+            LEFT JOIN funcionalidade fc ON c.funcionalidade_id = fc.id
+            LEFT JOIN modulo m ON fc.modulo_id = m.id
+            WHERE c.grosspf > 0::numeric AND upper(a.metodo_contagem::text) = 'DETALHADA'::text AND (c.id IN ( SELECT max(fds.id) AS max
+            FROM funcao_dados fds
+            WHERE fds.name::text = c.name::text AND c.funcionalidade_id = fds.funcionalidade_id))
+            UNION
+            SELECT 'ft'::text AS tipo,
+            c.tipo AS classificacao,
+            c.impacto,
+            c.analise_id,
+            a.data_homologacao_software,
+            b.id AS id_sistema,
+            b.nome,
+            b.sigla,
+            c.name,
+            c.grosspf AS pf,
+            c.id AS id_funcao_dados,
+            c.complexidade,
+            f.nome AS nome_equipe,
+            a.equipe_responsavel_id,
+            fc.nome AS nome_funcionalidade,
+            m.nome AS nome_modulo,
+            ( SELECT count(d.id) AS count
+            FROM der d
+            WHERE d.funcao_transacao_id = c.id) AS der,
+            ( SELECT count(e.id) AS count
+            FROM alr e
+            WHERE e.funcao_transacao_id = c.id) AS rlr_alr
+            FROM analise a
+            JOIN sistema b ON a.sistema_id = b.id
+            JOIN funcao_transacao c ON c.analise_id = a.id AND c.impacto::text <> 'EXCLUSAO'::text
+            JOIN tipo_equipe f ON a.equipe_responsavel_id = f.id
+            LEFT JOIN funcionalidade fc ON c.funcionalidade_id = fc.id
+            LEFT JOIN modulo m ON fc.modulo_id = m.id
+            WHERE c.grosspf > 0::numeric AND upper(a.metodo_contagem::text) = 'DETALHADA'::text) fdt;
+
+            -- Permissions
+
+            ALTER TABLE public.pe_analitico OWNER TO postgres;
+            GRANT ALL ON TABLE public.pe_analitico TO postgres;
+        </createView>
+
+    </changeSet>
+
+</databaseChangeLog>
