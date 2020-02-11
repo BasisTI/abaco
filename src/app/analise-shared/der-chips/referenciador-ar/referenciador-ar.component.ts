@@ -1,29 +1,24 @@
-import { DerService } from './../../../der/der.service';
-import { FuncaoDadosService } from './../../../funcao-dados/funcao-dados.service';
-import { TranslateService } from '@ngx-translate/core';
-import {
-    Component,
-    Input,
-    Output,
-    EventEmitter,
-    OnInit,
-    OnDestroy,
-} from '@angular/core';
+import {DerService} from './../../../der/der.service';
+import {FuncaoDadosService} from './../../../funcao-dados/funcao-dados.service';
+import {TranslateService} from '@ngx-translate/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output,} from '@angular/core';
 
 import {AnaliseSharedDataService} from '../../../shared/analise-shared-data.service';
-import {Analise} from '../../../analise/analise.model';
-import { AnaliseService } from './../../../analise/analise.service';
+import {AnaliseService} from './../../../analise/analise.service';
 import {FuncaoDados} from '../../../funcao-dados/funcao-dados.model';
 import {Der} from '../../../der/der.model';
 import {Subscription} from 'rxjs/Subscription';
 import {ResponseWrapper} from '../../../shared';
 import {BaselineService} from '../../../baseline';
+import {BlockUI, NgBlockUI} from 'ng-block-ui';
 
 @Component({
     selector: 'app-analise-referenciador-ar',
     templateUrl: './referenciador-ar.component.html'
 })
 export class ReferenciadorArComponent implements OnInit, OnDestroy {
+
+    @BlockUI() blockUI: NgBlockUI;
 
     @Output()
     dersReferenciadosEvent: EventEmitter<Der[]> = new EventEmitter<Der[]>();
@@ -71,22 +66,20 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        // TODO quais eventos observar?
-        // precisa de um evento de funcaoDados adicionada  
-        this.subscribeAnaliseCarregada();     
+        // TODO quais eventos observar? precisa de um evento de funcaoDados adicionada
+        this.subscribeAnaliseCarregada();
     }
 
     private getFuncoesDados() {
-        if (this.funcoesDados.length > 0) {
-            return;
-        }
-        this.funcaoDadosService.dropDown().subscribe(res => {
+        this.blockUI.start();
+        this.funcaoDadosService.dropDownPEAnalitico(this.analiseSharedDataService.analise.sistema.id).subscribe(res => {
             this.funcoesDados = this.funcoesDados.concat(res.map((item: any) => {
-                let fd = new FuncaoDados();
+                const fd = new FuncaoDados();
                 fd.id = item.id;
                 fd.name = item.nome;
                 return fd;
             }));
+            this.blockUI.stop();
         });
     }
 
@@ -98,7 +91,7 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
                 this.funcoesDados = res.json;
 
                 this.funcoesDados.concat(this.funcoesDadosCache);
-                if ( this.funcoesDados && this.funcoesDados.length !== 0 && this.funcoesDadosCache) {
+                if (this.funcoesDados && this.funcoesDados.length !== 0 && this.funcoesDadosCache) {
                     for (const funcoes of this.funcoesDadosCache) {
                         if (this.funcoesDados.indexOf(funcoes) === -1) {
                             this.funcoesDados.push(funcoes);
@@ -139,10 +132,10 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
     funcaoDadosSelected(fd: FuncaoDados) {
         this.funcaoDadosSelecionada = fd;
-
+        debugger;
         this.derService.dropDownByFuncaoDadosId(fd.id).subscribe(res => {
             this.ders = res;
-            if( !this.ders.some( der => (der.nome === 'Mensagem' || der.nome === 'Ação'))){
+            if (!this.ders.some(der => (der.nome === 'Mensagem' || der.nome === 'Ação'))) {
                 this.ders.push(this.derMsg, this.derAcao);
             }
         });
@@ -153,7 +146,7 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
             return this.getLabel('Analise.Analise.Mensagens.msgSelecioneFuncaoDadosParaSelecionarDERsReferenciar');
         }
         return this.getLabel('Analise.Analise.Mensagens.msgSelecioneQuaisDERsReferenciar');
-        
+
     }
 
     relacionar() {

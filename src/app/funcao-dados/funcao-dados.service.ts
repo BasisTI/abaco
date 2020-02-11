@@ -16,7 +16,7 @@ import {Analise} from '../analise';
 export class FuncaoDadosService {
 
     resourceUrl = environment.apiUrl + '/funcao-dados';
-
+    resourceUrlPEAnalitico = environment.apiUrl + '/peanalitico'
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
 
     manualResourceUrl = environment.apiUrl + '/manuals';
@@ -45,6 +45,11 @@ export class FuncaoDadosService {
 
     dropDown(): Observable<any> {
         return this.http.get(this.resourceUrl + '/drop-down')
+            .map((res: Response) => res.json());
+    }
+    dropDownPEAnalitico(idSistema): Observable<any> {
+        this.blockUI.start();
+        return this.http.get(this.resourceUrlPEAnalitico + '/drop-down/' + idSistema)
             .map((res: Response) => res.json());
     }
 
