@@ -20,9 +20,7 @@ export class DerChipConverter {
 
     private static desconverter<T extends AnaliseReferenciavel>(
         chips: DerChipItem[], type: { new(): T; }): T[] {
-
         const referenciavel: T[] = [];
-
         if (chips) {
             chips.forEach(chipItem => {
                 const ref = new type();
@@ -36,7 +34,6 @@ export class DerChipConverter {
                 } else {
                     ref.nome = chipItem.text;
                 }
-
                 referenciavel.push(ref);
             });
         }
@@ -45,6 +42,9 @@ export class DerChipConverter {
 
     static converterReferenciaveis(refs: AnaliseReferenciavel[]) {
         return refs.map(ref => new DerChipItem(ref.id, this.retrieveTextFromDER(ref)));
+    }
+    static convertertReferenciaveisToClone(refs: AnaliseReferenciavel[]) {
+        return refs.map(ref => new DerChipItem(null, this.retrieveTextFromDER(ref)));
     }
 
     private static retrieveTextFromDER(ref: AnaliseReferenciavel): string {

@@ -48,7 +48,7 @@ export class DerChipsComponent implements OnChanges {
     validaMultiplos = false;
     validaMultiplosRegistrados = false;
     funcaoTransacao: FuncaoTransacao;
-    tamanhoChip: boolean = false;
+    tamanhoChip = false;
 
     mostrarDialogEdicao = false;
     textoEdicao = '';
@@ -77,22 +77,16 @@ export class DerChipsComponent implements OnChanges {
     }
 
     private addItem(derChipItem: DerChipItem) {
-
         if (this.values !== undefined && this.values.length <= 255) {
             const valores: string[] = this.values.map(chipItem => chipItem.text);
             if (valores.indexOf(derChipItem.text) === -1 && derChipItem.text.length <= 50) {
                 this.values.push(derChipItem);
-                this.valuesChanged();
+                this.valuesChange.emit(this.values);;
                 this.tamanhoChip = false;
-            }else{
+            }else {
                 this.tamanhoChip = true;
             }
         }
-    }
-
-    private valuesChanged() {
-        // this.recalculaDuplicatas();
-        this.valuesChange.emit(this.values);
     }
 
     private recalculaDuplicatas() {
@@ -101,7 +95,7 @@ export class DerChipsComponent implements OnChanges {
     }
 
     onRemove(value: string) {
-        this.valuesChanged();
+        this.valuesChange.emit(this.values);
     }
 
     showTotal(): string {
@@ -134,7 +128,7 @@ export class DerChipsComponent implements OnChanges {
          if (this.verificaMultiplosDuplicados(this.addMultiplosTexto)) {
              if (this.verificaMultiplosCadastrados(this.addMultiplosTexto)) {
                 this.values = this.values.concat(this.converteMultiplos());
-                this.valuesChanged();
+                 this.valuesChange.emit(this.values);
                 this.fecharDialogAddMultiplos();
                 this.validaMultiplos = false;
                 this.validaMultiplosRegistrados = false;

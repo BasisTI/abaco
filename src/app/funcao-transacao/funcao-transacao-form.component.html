@@ -367,28 +367,35 @@
 
                 <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                     <h2 translate="Cadastros.FuncaoTransacao.FTR(AR)">FTR (AR)</h2>
-                    <app-analise-der-chips
-                            [(values)]="alrsChips"
-                            id="idFTRFormFuncaoTransacao"
-                            [relacionarDers]="true"
-                            (dersReferenciadosEvent)="dersReferenciados($event)">
-                    </app-analise-der-chips>
-
-                    <span class="md-inputfield">
-                        <div *ngIf="erroTR && alrsChips.length == 0" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                    Campo obrigatório.
-                        </div>
-                    </span>
+                    <div class="ui-g-12" style="padding: 0px">
+                        <app-analise-der-chips
+                                [(values)]="alrsChips"
+                                id="idFTRFormFuncaoTransacao"
+                                [relacionarDers]="true"
+                                (dersReferenciadosEvent)="dersReferenciados($event)">
+                        </app-analise-der-chips>
+                    </div>
+                    <div class="ui-g-12" style="padding: 0px">
+                        <span class="md-inputfield">
+                            <div *ngIf="erroTR && alrsChips.length == 0" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                        Campo obrigatório.
+                            </div>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                     <h2 translate="Cadastros.FuncaoTransacao.DER(TD)">DER (TD)</h2>
-                    <app-analise-der-chips id="idDERFormFuncaoTransacao" [(values)]="dersChips"></app-analise-der-chips>
-                    <span class="md-inputfield">
-                        <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                    Campo obrigatório.
-                        </div>
-                    </span>
+                    <div class="ui-g-12" style="padding: 0px">
+                        <app-analise-der-chips id="idDERFormFuncaoTransacao" [(values)]="dersChips"></app-analise-der-chips>
+                    </div>
+                    <div class="ui-g-12" style="padding: 0px">
+                        <span class="md-inputfield">
+                            <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                        Campo obrigatório.
+                            </div>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12">

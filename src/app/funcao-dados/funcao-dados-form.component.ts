@@ -47,6 +47,7 @@ import {Alr} from '../alr/alr.model';
 import {ChangeEvent} from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Base64Upload from '../../ckeditor/Base64Upload';
+import {debug} from 'util';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -993,10 +994,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     // Carregar Referencial
     private loadReference(referenciaveis: AnaliseReferenciavel[],
                           strValues: string[]): DerChipItem[] {
-
         if (referenciaveis) {
             if (referenciaveis.length > 0) {
-                return DerChipConverter.converterReferenciaveis(referenciaveis);
+                if (this.isEdit) {
+                    return DerChipConverter.converterReferenciaveis(referenciaveis);
+                } else {
+                    return DerChipConverter.convertertReferenciaveisToClone(referenciaveis);
+
+                }
             } else {
                 return DerChipConverter.converter(strValues);
             }

@@ -806,7 +806,12 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
         if (referenciaveis) {
             if (referenciaveis.length > 0) {
-                return DerChipConverter.converterReferenciaveis(referenciaveis);
+                if (this.isEdit) {
+                    return DerChipConverter.converterReferenciaveis(referenciaveis);
+                } else {
+                    return DerChipConverter.convertertReferenciaveisToClone(referenciaveis);
+
+                }
             } else {
                 return DerChipConverter.converter(strValues);
             }
