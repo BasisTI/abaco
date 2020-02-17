@@ -388,6 +388,7 @@
 	<detail>
 		<band height="88">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<printWhenExpression><![CDATA[$P{LISTAFUNCAOFD}.size() != 0]]></printWhenExpression>
 			<staticText>
 				<reportElement x="0" y="8" width="250" height="19" uuid="4b1af94b-726f-4afe-bfda-e0d928bc002c"/>
 				<box>
@@ -678,7 +679,7 @@
 		</band>
 		<band height="114">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
-			<printWhenExpression><![CDATA[$P{METODOCONTAGEM} ==  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
+			<printWhenExpression><![CDATA[$P{LISTAFUNCAOFT}.size() != 0]]></printWhenExpression>
 			<staticText>
 				<reportElement positionType="Float" x="0" y="34" width="611" height="18" uuid="4513f641-9471-4ab0-ab6e-a345ff7bbaf4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
