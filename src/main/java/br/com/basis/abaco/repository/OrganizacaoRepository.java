@@ -39,7 +39,7 @@ public interface OrganizacaoRepository extends JpaRepository<Organizacao, Long> 
     @Query("SELECT new br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO(o.id, o.nome, o.sigla, o.cnpj) FROM Organizacao o WHERE  o.ativo IS TRUE")
     List<OrganizacaoDropdownDTO> getOrganizacaoDropdownAtivo();
 
-    @Query(value = "SELECT new br.com.basis.abaco.service.dto.DropdownDTO(o.id, o.nome) FROM User u JOIN u.organizacoes o "
+    @Query(value = "SELECT new br.com.basis.abaco.service.dto.OrganizacaoDropdownDTO(o.id, o.nome, o.sigla, o.cnpj) FROM User u JOIN u.organizacoes o "
             + " WHERE u.login = :currentUserLogin AND u.activated IS TRUE AND o.ativo IS TRUE ")
     List<DropdownDTO> findActiveUserOrganizations(@Param("currentUserLogin") String currentUserLogin);
 

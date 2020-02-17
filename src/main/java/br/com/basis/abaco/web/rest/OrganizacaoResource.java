@@ -306,6 +306,7 @@ public class OrganizacaoResource {
     @GetMapping("/organizacaos/active-user")
     @Timed
     public List<DropdownDTO> findActiveUserOrganizations() {
+
         return organizacaoService.findActiveUserOrganizations();
     }
 }
