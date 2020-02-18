@@ -6,7 +6,7 @@ import {Subscription} from 'rxjs/Rx';
 import {Response} from '@angular/http';
 
 
-import {Analise, AnaliseShareEquipe} from './';
+import {Analise, AnaliseShareEquipe, MetodoContagem} from './';
 import {AnaliseService} from './analise.service';
 import {User, UserService} from '../user';
 import {AnaliseSharedDataService, PageNotificationService, ResponseWrapper} from '../shared';
@@ -29,7 +29,6 @@ import {Observable} from 'rxjs/Observable';
 import {FuncaoDadosService} from '../funcao-dados/funcao-dados.service';
 import {FuncaoDados} from '../funcao-dados';
 import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.service';
-import {FuncaoTransacao} from '../funcao-transacao';
 
 
 @Component({
@@ -271,9 +270,9 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     setSistemaOrganizacao(org: Organizacao) {
         if (!this.isEdicao) {
-           this.analise = new Analise();
-           this.analise.manual = new Manual();
-           this.analise.organizacao = org;
+            this.analise = new Analise();
+            this.analise.manual = new Manual();
+            this.analise.organizacao = org;
         }
         this.contratoService.findAllContratoesByOrganization(org).subscribe((contracts) => {
             this.contratos = contracts;
@@ -513,7 +512,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         if (this.verificarCamposObrigatorios()) {
             if (this.analise.id && this.analise.id > 0) {
                 this.analiseService.update(this.analise).subscribe(() => {
-
                     this.pageNotificationService.addSuccessMsg(
                         this.isEdit ? this.getLabel('Analise.Analise.Mensagens.msgRegistroSalvoSucesso') :
                             this.getLabel('Analise.Analise.Mensagens.msgDadosAlteradosSucesso'));
@@ -691,6 +689,15 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
 
             this.router.navigate(['/analise', this.analise.id, 'edit']);
         });
+    }
+
+    alterarMetodoContagem() {
+        if (this.isEdicao) {
+            if (this.analise.metodoContagem !== MetodoContagem.INDICATIVA) {
+                this.analise.funcaoTransacaos = [];
+            }
+            this.save();
+        }
     }
 
     private loadDataAnalise(analise: Analise) {

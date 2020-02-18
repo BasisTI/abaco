@@ -449,10 +449,6 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     public desabilitarBotaoRelatorio(): boolean {
         return !this.analiseSelecionada;
     }
-
-    /**
-     * Bloquear Análise
-     */
     public bloqueiaAnalise(bloquear: boolean) {
         this.analiseService.find(this.analiseSelecionada.id).subscribe((res: any) => {
             this.analiseTemp = res;

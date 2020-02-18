@@ -134,8 +134,8 @@
                                             name="metodoContagem"
                                             [options]="metodosContagem"
                                             [(ngModel)]="analise.metodoContagem"
-                                            [disabled]="disabledOptionsforEdit()"
-                                            [autoWidth]="false" >
+                                            [autoWidth]="false"
+                                            (onChange)="alterarMetodoContagem()" >
                                     </p-dropdown>
                                 </div>
                                 <div [ngClass]="(disabledOptionsforEdit())? '(ui-g-4 ui-md-4 ui-sm-12)' : '(ui-g-6 ui-md-6 ui-sm-12)'" style="margin-bottom: 05px">

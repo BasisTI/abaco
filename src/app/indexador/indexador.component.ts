@@ -29,7 +29,7 @@ export class IndexadorComponent implements OnInit, OnDestroy {
         {value: 'TIPO_EQUIPE', label: 'Tipo Equipe'},
         {value: 'RLR', label: 'Rlr'},
         {value: 'SISTEMA', label: 'Sistema'},
-        {value: 'USER', label: 'User'}];
+        {value: 'USER', label: 'Usuário'}];
 
     constructor(
         private indexadorSearchService: IndexadorService,
