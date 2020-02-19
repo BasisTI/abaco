@@ -79,22 +79,6 @@
                             </p-column>
 
                             <p-column
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Impacto')"
-                                    sortable="custom"
-                                    filter="true" 
-                                    filterMatchMode="contains"
-                                    (sortFunction)="sortColumn($event)"
-                                    [style]="{'width': '200px'}"
-                                    field="updateImpacto(impacto)"
-                                    filterField="impacto">
-                                <ng-template
-                                        let-impacto="rowData.impacto"
-                                        pTemplate="body">
-                                    {{ impacto ? updateImpacto(impacto) : this.getLabel('Global.Mensagens.Nenhum') }}
-                                </ng-template>
-                            </p-column>
-
-                            <p-column
                                     field="tipo"
                                     filterField="tipo"
                                     [header]="this.getLabel('Cadastros.FuncaoTransacao.Classificacao')"
@@ -222,8 +206,6 @@
                                     [suggestions]="baselineResultados"
                                     id="idNomeProcessoElementarFormFuncaoTransacao"
                                     (completeMethod)="searchBaseline($event)"
-                                    (keyup.backspace)="limparDados()"
-                                    (keyup.delete)="limparDados()"
                                     (onSelect)="recuperarNomeSelecionado($event)">
                                     <ng-template let-currentFuncaoTransacao pTemplate="name">
                                         <div class="ui-helper-clearfix" >
@@ -287,7 +269,7 @@
 
 
                 <div class="ui-g">
-                    <div class="ui-g-3 ui-md-6 ui-sm-12">
+                    <div class="ui-g-6 ui-md-12 ui-sm-12">
                         <label translate="Cadastros.FuncaoTransacao.Classificacao*">Classificação *</label>
                         <p-dropdown
                                 [filter]="true"
@@ -305,29 +287,9 @@
                             </div>
                         </span>
                     </div>
-
-                    <div class="ui-g-3 ui-md-6 ui-sm-12">
-                        <label translate="Cadastros.FuncaoTransacao.Impacto*">Impacto *</label>
-                        <p-dropdown
-                                [filter]="true"
-                                [options]="impacto"
-                                [(ngModel)]="currentFuncaoTransacao.impacto"
-                                [placeholder]="this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgSelecione')"
-                                name="impacto"
-                                id="idImpactoFormFuncaoTransacao"
-                                [autoWidth]="false"
-                                (onChange)="impactoValido()">
-                        </p-dropdown>
-                        <span class="md-inputfield">
-                            <div *ngIf="impactoInvalido" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
-                                Campo obrigatório.
-                            </div>
-                        </span>
-                    </div>
-
                 </div>
                 <div class="ui-g">
-                    <div class="ui-g-3 ui-md-6 ui-sm-12">
+                    <div class="ui-g-6 ui-md-12 ui-sm-12">
                         <label translate="Cadastros.FuncaoTransacao.Deflator*">Deflator *</label>
                         <p-dropdown
                                 [filter]="true"
@@ -346,9 +308,7 @@
                             </div>
                         </span>
                     </div>
-
-
-                    <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
+                    <div class="ui-g-6 ui-md-12 ui-sm-12" [hidden]="hideShowQuantidade">
                         <label translate="Cadastros.FuncaoTransacao.Quantidade*">Quantidade *</label>
                         <input type="number" class="ui-inputtext" min="1"
                                id="idQuantidadeFormFuncaoTransacao"
@@ -361,10 +321,7 @@
                             </div>
                         </span>
                     </div>
-
                 </div>
-
-
                 <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                     <h2 translate="Cadastros.FuncaoTransacao.FTR(AR)">FTR (AR)</h2>
                     <div class="ui-g-12" style="padding: 0px">
@@ -383,7 +340,6 @@
                         </span>
                     </div>
                 </div>
-
                 <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                     <h2 translate="Cadastros.FuncaoTransacao.DER(TD)">DER (TD)</h2>
                     <div class="ui-g-12" style="padding: 0px">
