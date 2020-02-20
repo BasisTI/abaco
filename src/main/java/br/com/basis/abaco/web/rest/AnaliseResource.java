@@ -1,6 +1,14 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.*;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.domain.TipoEquipe;
+import br.com.basis.abaco.domain.Compartilhada;
+import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
+
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
@@ -42,7 +50,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.elasticsearch.core.DefaultEntityMapper;
 import org.springframework.data.elasticsearch.core.DefaultResultMapper;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.EntityMapper;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.http.HttpHeaders;
@@ -72,7 +79,13 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.ArrayList;
+
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
