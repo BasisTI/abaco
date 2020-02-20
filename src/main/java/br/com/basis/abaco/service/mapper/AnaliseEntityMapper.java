@@ -25,7 +25,6 @@ public class AnaliseEntityMapper extends DefaultEntityMapper {
     public <T> T mapToObject(String source, Class<T> clazz) throws IOException {
         Analise retorno = (Analise) super.mapToObject(source, clazz);
         final ObjectNode node = mapper.readValue(source, ObjectNode.class);
-
         JsonNode user = node.get("users.firstName");
         Set<User> users = new HashSet<>();
         if (user.isArray()) {
@@ -35,17 +34,10 @@ public class AnaliseEntityMapper extends DefaultEntityMapper {
         } else {
             users.add(newUser(user.textValue()));
         }
-
         retorno.setUsers(users);
-        retorno.setSistema(Sistema.builder()
-            .nome(node.get("sistema.nome")
-                .textValue()).build());
-        retorno.setEquipeResponsavel(TipoEquipe.builder()
-            .nome(node.get("equipeResponsavel.nome")
-                .textValue()).build());
-        retorno.setOrganizacao(Organizacao.builder()
-            .nome(node.get("organizacao.nome")
-                .textValue()).build());
+        retorno.setSistema(Sistema.builder().nome(node.get("sistema.nome").textValue()).build());
+        retorno.setEquipeResponsavel(TipoEquipe.builder().nome(node.get("equipeResponsavel.nome").textValue()).build());
+        retorno.setOrganizacao(Organizacao.builder().nome(node.get("organizacao.nome").textValue()).build());
         return (T) retorno;
     }
 
