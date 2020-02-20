@@ -14,9 +14,7 @@ import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.AnaliseService;
-import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.mapper.AnaliseMapper;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.PageUtils;
@@ -105,8 +103,6 @@ public class AnaliseResource {
     private HttpServletRequest request;
     @Autowired
     private HttpServletResponse response;
-    @Autowired
-    private AnaliseMapper analiseMapper;
 
     public AnaliseResource(AnaliseRepository analiseRepository,
                            AnaliseSearchRepository analiseSearchRepository,
