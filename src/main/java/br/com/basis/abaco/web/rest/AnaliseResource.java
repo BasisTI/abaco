@@ -141,7 +141,6 @@ public class AnaliseResource {
         analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
         salvaNovaData(analise);
         linkFuncoesToAnalise(analise);
-        unlinkAnaliseFromFuncoes(analise);
         analiseRepository.save(analise);
         analiseSearchRepository.save(analise);
         return ResponseEntity.created(new URI("/api/analises/" + analise.getId()))
