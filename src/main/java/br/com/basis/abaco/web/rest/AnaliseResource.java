@@ -23,6 +23,7 @@ import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.AnaliseService;
 import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.mapper.AnaliseEntityMapper;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.PageUtils;
@@ -384,48 +385,7 @@ public class AnaliseResource {
             .withFields("id", "organizacao.nome", "identificadorAnalise", "equipeResponsavel.nome", "sistema.nome", "metodoContagem", "pfTotal", "adjustPFTotal", "dataCriacaoOrdemServico", "bloqueiaAnalise", "users.firstName")
             .withPageable(pageable).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class,
-            new DefaultResultMapper(new DefaultEntityMapper() {
-                private ObjectMapper mapper = new ObjectMapper();
-                @Override
-                public <T> T mapToObject(String source, Class<T> clazz) throws IOException {
-                    Analise retorno = (Analise) super.mapToObject(source, clazz);
-                    final ObjectNode node = mapper.readValue(source, ObjectNode.class);
-
-                    JsonNode user = node.get("users.firstName");
-                    Set<User> users = new HashSet<>();
-                    if (user.isArray()) {
-                        for (Object userName : mapper.convertValue(users, ArrayList.class)) {
-                            users.add(User.builder()
-                                .firstName(userName.toString())
-                                .authorities(Collections.emptySet())
-                                .tipoEquipes(Collections.emptySet())
-                                .analises(Collections.emptySet())
-                                .organizacoes(Collections.emptySet())
-                                .build());
-                        }
-                    } else {
-                        users.add(User.builder()
-                            .firstName(user.textValue())
-                            .authorities(Collections.emptySet())
-                            .tipoEquipes(Collections.emptySet())
-                            .analises(Collections.emptySet())
-                            .organizacoes(Collections.emptySet())
-                            .build());
-                    }
-
-                    retorno.setUsers(users);
-                    retorno.setSistema(Sistema.builder()
-                        .nome(node.get("sistema.nome")
-                        .textValue()).build());
-                    retorno.setEquipeResponsavel(TipoEquipe.builder()
-                        .nome(node.get("equipeResponsavel.nome")
-                        .textValue()).build());
-                    retorno.setOrganizacao(Organizacao.builder()
-                        .nome(node.get("organizacao.nome")
-                        .textValue()).build());
-                    return (T) retorno;
-                }
-            }));
+            new DefaultResultMapper(new AnaliseEntityMapper()));
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
