@@ -371,7 +371,10 @@ public class AnaliseResource {
         Set<Long> equipesIds = getIdEquipes();
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
         analiseService.bindFilterSearch(identificador, sistema, metodo, organizacao, equipe, usuario, equipesIds, qb);
-        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
+        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+            .withQuery(qb)
+            .withFields("organizacao.nome", "identificadorAnalise", "equipeResponsavel.nome", "sistema.nome", "metodoContagem", "pfTotal", "adjustPFTotal", "dataCriacaoOrdemServico", "bloqueiaAnalise", "users.firstName")
+            .withPageable(pageable).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
         return new ResponseEntity<List<Analise>>(page.getContent(), headers, HttpStatus.OK);
