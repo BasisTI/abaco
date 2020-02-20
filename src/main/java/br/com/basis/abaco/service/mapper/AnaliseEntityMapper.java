@@ -12,10 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.data.elasticsearch.core.DefaultEntityMapper;
 
 import java.io.IOException;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 public class AnaliseEntityMapper extends DefaultEntityMapper {
 
@@ -27,7 +24,7 @@ public class AnaliseEntityMapper extends DefaultEntityMapper {
         final ObjectNode node = mapper.readValue(source, ObjectNode.class);
         JsonNode user = node.get("users.firstName");
         Set<User> users = new HashSet<>();
-        if (user.isArray()) {
+        if (Optional.ofNullable(user).isPresent() && user.isArray()) {
             for (Object userName : mapper.convertValue(users, ArrayList.class)) {
                 users.add(newUser(userName.toString()));
             }
