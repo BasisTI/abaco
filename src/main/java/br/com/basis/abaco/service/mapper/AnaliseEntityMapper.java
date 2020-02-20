@@ -12,7 +12,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.data.elasticsearch.core.DefaultEntityMapper;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class AnaliseEntityMapper extends DefaultEntityMapper {
 
