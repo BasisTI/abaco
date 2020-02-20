@@ -4,6 +4,9 @@ import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -41,6 +44,9 @@ import java.util.Set;
 @Table(name = "organizacao")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "organizacao")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Organizacao implements Serializable, ReportObject, Cloneable {
 
     private static final long serialVersionUID = 1L;

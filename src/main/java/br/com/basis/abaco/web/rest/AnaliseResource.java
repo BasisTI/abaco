@@ -1,12 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
-import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.Compartilhada;
-import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
-import br.com.basis.abaco.domain.Sistema;
-import br.com.basis.abaco.domain.TipoEquipe;
-import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.domain.*;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
@@ -20,7 +14,9 @@ import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.AnaliseService;
+import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
+import br.com.basis.abaco.service.mapper.AnaliseMapper;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.PageUtils;
@@ -29,6 +25,9 @@ import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.jhipster.web.util.ResponseUtil;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
@@ -42,7 +41,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.elasticsearch.core.DefaultEntityMapper;
+import org.springframework.data.elasticsearch.core.DefaultResultMapper;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.EntityMapper;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.http.HttpHeaders;
@@ -72,11 +74,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
@@ -107,6 +105,8 @@ public class AnaliseResource {
     private HttpServletRequest request;
     @Autowired
     private HttpServletResponse response;
+    @Autowired
+    private AnaliseMapper analiseMapper;
 
     public AnaliseResource(AnaliseRepository analiseRepository,
                            AnaliseSearchRepository analiseSearchRepository,
@@ -373,10 +373,53 @@ public class AnaliseResource {
         analiseService.bindFilterSearch(identificador, sistema, metodo, organizacao, equipe, usuario, equipesIds, qb);
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
             .withQuery(qb)
+            .withFields("id", "organizacao.nome", "identificadorAnalise", "equipeResponsavel.nome", "sistema.nome", "metodoContagem", "pfTotal", "adjustPFTotal", "dataCriacaoOrdemServico", "bloqueiaAnalise", "users.firstName")
             .withPageable(pageable).build();
-        Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
+        Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class,
+            new DefaultResultMapper(new DefaultEntityMapper() {
+                private ObjectMapper mapper = new ObjectMapper();
+                @Override
+                public <T> T mapToObject(String source, Class<T> clazz) throws IOException {
+                    Analise retorno = (Analise) super.mapToObject(source, clazz);
+                    final ObjectNode node = mapper.readValue(source, ObjectNode.class);
+
+                    JsonNode user = node.get("users.firstName");
+                    Set<User> users = new HashSet<>();
+                    if (user.isArray()) {
+                        for (Object userName : mapper.convertValue(users, ArrayList.class)) {
+                            users.add(User.builder()
+                                .firstName(userName.toString())
+                                .authorities(Collections.emptySet())
+                                .tipoEquipes(Collections.emptySet())
+                                .analises(Collections.emptySet())
+                                .organizacoes(Collections.emptySet())
+                                .build());
+                        }
+                    } else {
+                        users.add(User.builder()
+                            .firstName(user.textValue())
+                            .authorities(Collections.emptySet())
+                            .tipoEquipes(Collections.emptySet())
+                            .analises(Collections.emptySet())
+                            .organizacoes(Collections.emptySet())
+                            .build());
+                    }
+
+                    retorno.setUsers(users);
+                    retorno.setSistema(Sistema.builder()
+                        .nome(node.get("sistema.nome")
+                        .textValue()).build());
+                    retorno.setEquipeResponsavel(TipoEquipe.builder()
+                        .nome(node.get("equipeResponsavel.nome")
+                        .textValue()).build());
+                    retorno.setOrganizacao(Organizacao.builder()
+                        .nome(node.get("organizacao.nome")
+                        .textValue()).build());
+                    return (T) retorno;
+                }
+            }));
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
-        return new ResponseEntity<List<Analise>>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
 

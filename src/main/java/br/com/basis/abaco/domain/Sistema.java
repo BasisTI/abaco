@@ -3,9 +3,7 @@ package br.com.basis.abaco.domain;
 import br.com.basis.abaco.domain.enumeration.TipoSistema;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -43,7 +41,9 @@ import static java.util.Collections.unmodifiableSet;
 @Document(indexName = "sistema")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Sistema implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;

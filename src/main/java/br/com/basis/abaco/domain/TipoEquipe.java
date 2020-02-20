@@ -3,9 +3,7 @@ package br.com.basis.abaco.domain;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -36,7 +34,9 @@ import java.util.Set;
 @Document(indexName = "tipo_equipe")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class TipoEquipe implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;

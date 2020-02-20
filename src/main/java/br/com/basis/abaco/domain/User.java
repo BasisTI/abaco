@@ -4,6 +4,9 @@ import br.com.basis.abaco.config.Constants;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -38,6 +41,9 @@ import static java.util.Collections.unmodifiableSet;
 @Table(name = "jhi_user")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "user")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User extends AbstractAuditingEntity implements Serializable, ReportObject {
 
     private static final long serialVersionUID = 1L;
