@@ -140,7 +140,7 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
             this.analise = new Analise();
             if (params['id']) {
                 this.isEdicao = true;
-                this.analiseService.find(params['id']).subscribe(analise => {
+                this.analiseService.findWithFuncaos(params['id']).subscribe(analise => {
                     this.inicializaValoresAposCarregamento(analise);
                     this.analiseSharedDataService.analiseCarregada();
                     this.dataAnalise = this.analise;

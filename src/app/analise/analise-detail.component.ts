@@ -27,7 +27,7 @@ export class AnaliseDetailComponent implements OnInit, OnDestroy {
   }
 
   load(id) {
-    this.analiseService.find(id).subscribe((analise) => {
+    this.analiseService.findWithFuncaos(id).subscribe((analise) => {
       this.analise = analise;
     });
   }

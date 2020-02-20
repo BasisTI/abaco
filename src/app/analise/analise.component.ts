@@ -298,7 +298,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
             message: this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_CLONE')
                 .concat(this.analiseSelecionada.identificadorAnalise).concat('?'),
             accept: () => {
-                this.analiseService.find(id).subscribe((res: any) => {
+                this.analiseService.findWithFuncaos(id).subscribe((res: any) => {
                     const analiseClonada = res.clone();
 
                     analiseClonada.id = undefined;
