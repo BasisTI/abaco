@@ -2,6 +2,8 @@ package br.com.basis.abaco.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -32,6 +34,8 @@ import java.util.Set;
 @Table(name = "rlr")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "rlr")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Rlr implements Serializable {
 
     private static final long serialVersionUID = 1L;

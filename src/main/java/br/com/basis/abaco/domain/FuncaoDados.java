@@ -1,5 +1,6 @@
 package br.com.basis.abaco.domain;
 
+import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,6 +20,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -81,6 +83,39 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "impacto")
     private ImpactoFatorAjuste impacto;
+
+    public FuncaoDados() {
+    }
+
+    public FuncaoDados(FuncaoDados funcaoDados) {
+
+        this.tipo = funcaoDados.getTipo();
+        this.funcionalidades = funcaoDados.getFuncionalidades();
+        this.retStr = funcaoDados.getRetStr();
+        this.quantidade = funcaoDados.getQuantidade();
+        this.rlrs = funcaoDados.getRlrs();
+        this.alr = funcaoDados.getAlr();
+        this.files = funcaoDados.getFiles();
+        this.ders = funcaoDados.getDers();
+        this.funcaoDadosVersionavel = funcaoDados.getFuncaoDadosVersionavel();
+        this.impacto = funcaoDados.getImpacto();
+
+    }
+
+    public void bindFuncaoDados(Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Analise analise, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues, Object o, TipoFuncaoDados tipo, Set<Funcionalidade> funcionalidades, String retStr, Integer quantidade, Set<Rlr> rlrs, Alr alr, List<UploadedFile> files, Set<String> rlrValues, Set<Der> ders, FuncaoDadosVersionavel funcaoDadosVersionavel, ImpactoFatorAjuste impacto) {
+        this.tipo = tipo;
+        this.funcionalidades = funcionalidades;
+        this.retStr = retStr;
+        this.quantidade = quantidade;
+        this.rlrs = rlrs;
+        this.alr = alr;
+        this.files = files;
+        this.rlrValues = rlrValues;
+        this.ders = ders;
+        this.funcaoDadosVersionavel = funcaoDadosVersionavel;
+        this.impacto = impacto;
+        bindFuncaoAnalise(null, complexidade, pf, grossPF, analise, funcionalidade, detStr, fatorAjuste, name, sustantation, derValues, null);
+    }
 
     public TipoFuncaoDados getTipo() {
         return tipo;

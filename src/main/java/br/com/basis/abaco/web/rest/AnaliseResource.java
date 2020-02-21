@@ -1,21 +1,26 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.Analise;
-import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.Compartilhada;
-import br.com.basis.abaco.domain.Sistema;
-import br.com.basis.abaco.domain.Organizacao;
+import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
-
+import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.Rlr;
+import br.com.basis.abaco.domain.Sistema;
+import br.com.basis.abaco.domain.TipoEquipe;
+import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
+import br.com.basis.abaco.repository.AlrRepository;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
+import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.RlrRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
@@ -23,7 +28,6 @@ import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.AnaliseService;
 import br.com.basis.abaco.service.exception.RelatorioException;
-import br.com.basis.abaco.service.mapper.AnaliseEntityMapper;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
 import br.com.basis.abaco.utils.PageUtils;
@@ -32,9 +36,6 @@ import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.jhipster.web.util.ResponseUtil;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
@@ -48,8 +49,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.elasticsearch.core.DefaultEntityMapper;
-import org.springframework.data.elasticsearch.core.DefaultResultMapper;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
@@ -81,12 +80,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
-import java.util.ArrayList;
-
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
@@ -148,7 +145,7 @@ public class AnaliseResource {
             return ResponseEntity.badRequest().headers(
                     HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
         }
-        bindUserOnAnalise(analise);
+        analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
         salvaNovaData(analise);
         linkFuncoesToAnalise(analise);
         analiseRepository.save(analise);
@@ -201,23 +198,20 @@ public class AnaliseResource {
         }
     }
 
-    @PostMapping("/analises/clonar/{id}")
+    @GetMapping("/analises/clonar/{id}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Analise> cloneAnalise(@PathVariable Long id) {
         Analise analise = recuperarAnalise(id);
-
         if (analise != null) {
-            Analise analiseCopia = new Analise(analise.getIdentificadorAnalise(),
-                    analise.getPfTotal(), analise.getAdjustPFTotal(), analise.getSistema(),
-                    analise.getOrganizacao(), analise.getBaselineImediatamente(), analise.getEquipeResponsavel(), analise.getManual());
-
-            Analise analiseCopiaSalva = analiseRepository.save(analiseCopia);
-            analiseSearchRepository.save(analiseCopiaSalva);
-
-            Analise analiseRetorno = unlinkAnaliseFDFT(analise);
-            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseRetorno.getId().toString()))
-                    .body(analiseRetorno);
+            Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+            salvaNovaData(analiseClone);
+            analiseClone.setFuncaoDados(bindCloneFuncaoDados(analise, analiseClone));
+            analiseClone.setFuncaoTransacaos(bindCloneFuncaoTransacaos(analise, analiseClone));
+            analiseRepository.save(analiseClone);
+            analiseSearchRepository.save(analiseClone);
+            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseClone.getId().toString()))
+                    .body(analiseClone);
         } else {
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
@@ -379,12 +373,8 @@ public class AnaliseResource {
         Set<Long> equipesIds = getIdEquipes();
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
         analiseService.bindFilterSearch(identificador, sistema, metodo, organizacao, equipe, usuario, equipesIds, qb);
-        SearchQuery searchQuery = new NativeSearchQueryBuilder()
-            .withQuery(qb)
-            .withFields("id", "organizacao.nome", "identificadorAnalise", "equipeResponsavel.nome", "sistema.nome", "metodoContagem", "pfTotal", "adjustPFTotal", "dataCriacaoOrdemServico", "bloqueiaAnalise", "users.firstName")
-            .withPageable(pageable).build();
-        Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class,
-            new DefaultResultMapper(new AnaliseEntityMapper()));
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
+        Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -526,11 +516,52 @@ public class AnaliseResource {
         }
     }
 
-    private void bindUserOnAnalise(@RequestBody @Valid Analise analise) {
-        analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
-        Set<User> users = new HashSet<>();
-        users.add(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
-        analise.setUsers(users);
+    private Set<FuncaoDados> bindCloneFuncaoDados(Analise analise, Analise analiseClone) {
+        Set<FuncaoDados> funcaoDados = new HashSet<>();
+        analise.getFuncaoDados().forEach(fd -> {
+            Set<Rlr> rlrs = new HashSet<>();
+            Set<Der> ders = new HashSet<>();
+            FuncaoDados funcaoDado = new FuncaoDados();
+            funcaoDado.bindFuncaoDados(fd.getComplexidade(), fd.getPf(), fd.getGrossPF(), analiseClone, fd.getFuncionalidade(), fd.getDetStr(), fd.getFatorAjuste(), fd.getName(), fd.getSustantation(), fd.getDerValues(), null, fd.getTipo(), fd.getFuncionalidades(), fd.getRetStr(), fd.getQuantidade(), rlrs, fd.getAlr(), fd.getFiles(), fd.getRlrValues(), ders, fd.getFuncaoDadosVersionavel(), fd.getImpacto());
+            Optional.ofNullable(fd.getDers()).orElse(Collections.emptySet())
+                    .forEach(der -> {
+                        Rlr rlr = null;
+                        if (der.getRlr() != null) {
+                            rlr = new Rlr(null, der.getRlr().getNome(), der.getRlr().getValor(), der.getRlr().getDers(), funcaoDado);
+                        }
+                        Der derClone = new Der(null, der.getNome(), der.getValor(), rlr, funcaoDado, null);
+                        ders.add(derClone);
+                    });
+            Optional.ofNullable(fd.getRlrs()).orElse(Collections.emptySet())
+                    .forEach(rlr -> {
+                        Rlr rlrClone = new Rlr(null, rlr.getNome(), rlr.getValor(), ders, funcaoDado);
+                        rlrs.add(rlrClone);
+                    });
+            funcaoDado.setDers(ders);
+            funcaoDado.setRlrs(rlrs);
+            funcaoDados.add(funcaoDado);
+        });
+        return funcaoDados;
+    }
+
+    private Set<FuncaoTransacao> bindCloneFuncaoTransacaos(Analise analise, Analise analiseClone) {
+        Set<FuncaoTransacao> funcaoTransacoes = new HashSet<>();
+        analise.getFuncaoTransacaos().forEach(ft -> {
+            Set<Alr> alrs = new HashSet<>();
+            Set<Der> ders = new HashSet<>();
+            FuncaoTransacao funcaoTransacao = new FuncaoTransacao();
+            funcaoTransacao.bindFuncaoTransacao(ft.getTipo(), null, ft.getFtrStr(), ft.getQuantidade(), alrs, null, ft.getFtrValues(), ft.getImpacto(), ders, analiseClone, null, ft.getComplexidade(), ft.getPf(), ft.getGrossPF(), ft.getFuncionalidade(), ft.getDetStr(), ft.getFatorAjuste(), ft.getName(), ft.getSustantation(), ft.getDerValues(), null);
+            ft.getAlrs().forEach(alr -> {
+                Alr alrClone = new Alr(null, alr.getNome(), alr.getValor(), funcaoTransacao, null);
+                alrs.add(alrClone);
+            });
+            ft.getDers().forEach(der -> {
+                Der derClone = new Der(null, der.getNome(), der.getValor(), der.getRlr(), null, funcaoTransacao);
+                ders.add(derClone);
+            });
+            funcaoTransacoes.add(funcaoTransacao);
+        });
+        return funcaoTransacoes;
     }
 }
 

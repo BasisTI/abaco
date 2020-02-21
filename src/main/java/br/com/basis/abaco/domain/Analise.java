@@ -19,27 +19,26 @@ import org.springframework.data.elasticsearch.annotations.FieldIndex;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.EntityListeners;
-import javax.persistence.Embeddable;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.GenerationType;
-import javax.persistence.EnumType;
-import javax.persistence.ManyToOne;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.JoinTable;
-import javax.persistence.Embedded;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OrderBy;
 import javax.persistence.CascadeType;
-
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -190,17 +189,31 @@ public class Analise implements Serializable, ReportObject {
     @ManyToOne
     private Manual manual;
 
-    public Analise(String identificadorAnalise, String pfTotal, String adjustPFTotal, Sistema sistema,
-                   Organizacao organizacao, Boolean baselineImediatamente, TipoEquipe equipeResponsavel, Manual manual) {
+    public Analise(Analise analise, User user) {
         this.id = null;
-        this.identificadorAnalise = identificadorAnalise.concat(" - CÓPIA");
-        this.pfTotal = pfTotal;
-        this.adjustPFTotal = adjustPFTotal;
-        this.sistema = sistema;
-        this.organizacao = organizacao;
-        this.baselineImediatamente = baselineImediatamente;
-        this.equipeResponsavel = equipeResponsavel;
-        this.manual = manual;
+        this.identificadorAnalise = analise.identificadorAnalise + " - CÓPIA";
+        this.metodoContagem = analise.getMetodoContagem();
+        this.valorAjuste = analise.getValorAjuste();
+        this.pfTotal = analise.getPfTotal();
+        this.adjustPFTotal = analise.getAdjustPFTotal();
+        this.escopo = analise.getEscopo();
+        this.fronteiras = analise.getFronteiras();
+        this.documentacao = analise.getDocumentacao();
+        this.tipoAnalise = analise.getTipoAnalise();
+        this.propositoContagem = analise.getPropositoContagem();
+        this.observacoes = analise.getObservacoes();
+        this.baselineImediatamente = analise.getBaselineImediatamente();
+        this.dataHomologacao = analise.getDataHomologacao();
+        this.dataCriacaoOrdemServico = analise.getDataCriacaoOrdemServico();
+        this.bloqueiaAnalise = analise.isBloqueiaAnalise();
+        this.enviarBaseline = analise.isEnviarBaseline();
+        this.sistema = analise.getSistema();
+        this.contrato = analise.getContrato();
+        this.organizacao = analise.getOrganizacao();
+        this.createdBy = user;
+        this.fatorAjuste = analise.getFatorAjuste();
+        this.equipeResponsavel = analise.getEquipeResponsavel();
+        this.manual = analise.getManual();
     }
 
     public void setDataHomologacao(Timestamp dataHomologacao) {

@@ -2,6 +2,8 @@ package br.com.basis.abaco.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -32,6 +34,8 @@ import java.util.Set;
 @Table(name = "alr")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "alr")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Alr implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,7 +46,7 @@ public class Alr implements Serializable {
     private Long id;
 
     @Column(name = "nome")
-    @Field (index = FieldIndex.not_analyzed, type = FieldType.String)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
     private Integer valor;
@@ -80,27 +84,27 @@ public class Alr implements Serializable {
 
     public Set<FuncaoDados> getFuncaoDados() {
         return Optional.ofNullable(this.funcaoDados)
-            .map(LinkedHashSet::new)
-            .orElse(new LinkedHashSet<>());
+                .map(LinkedHashSet::new)
+                .orElse(new LinkedHashSet<>());
     }
 
     public Alr funcaoDados(Set<FuncaoDados> funcaoDados) {
-        if (funcaoDados == null){
+        if (funcaoDados == null) {
             this.funcaoDados = null;
-        }else {
+        } else {
             Set<FuncaoDados> cp = new LinkedHashSet<>();
             cp.addAll(funcaoDados);
             this.funcaoDados = Optional.ofNullable(funcaoDados)
-                .map(LinkedHashSet::new)
-                .orElse(new LinkedHashSet<>());
+                    .map(LinkedHashSet::new)
+                    .orElse(new LinkedHashSet<>());
         }
         return this;
     }
 
     public Alr addFuncaoDados(FuncaoDados funcaoDados) {
-        if (funcaoDados == null){
+        if (funcaoDados == null) {
             return this;
-        }else {
+        } else {
             this.funcaoDados.add(funcaoDados);
             funcaoDados.setAlr(this);
         }
@@ -108,7 +112,7 @@ public class Alr implements Serializable {
     }
 
     public Alr removeFuncaoDados(FuncaoDados funcaoDados) {
-        if (funcaoDados == null){
+        if (funcaoDados == null) {
             return this;
         }
         this.funcaoDados.remove(funcaoDados);
@@ -118,8 +122,8 @@ public class Alr implements Serializable {
 
     public void setFuncaoDados(Set<FuncaoDados> funcaoDados) {
         this.funcaoDados = Optional.ofNullable(funcaoDados)
-        .map(LinkedHashSet::new)
-        .orElse(new LinkedHashSet<>());
+                .map(LinkedHashSet::new)
+                .orElse(new LinkedHashSet<>());
     }
 
     public String getNome() {

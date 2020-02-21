@@ -71,9 +71,29 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     @Transient
     private Set<String> derValues = new HashSet<>();
 
+
     @Embedded
     // XXX deve ter o new() mesmo?
     private AbacoAudit audit = new AbacoAudit();
+
+    protected void bindFuncaoAnalise(Long id, Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Analise analise, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues, AbacoAudit audit) {
+        this.id = id;
+        this.complexidade = complexidade;
+        this.pf = pf;
+        this.grossPF = grossPF;
+        this.analise = analise;
+        this.funcionalidade = funcionalidade;
+        this.detStr = detStr;
+        this.fatorAjuste = fatorAjuste;
+        this.name = name;
+        this.sustantation = sustantation;
+        this.derValues = derValues;
+        this.audit = audit;
+        this.analise = analise;
+    }
+
+    public FuncaoAnalise() {
+    }
 
     public Long getId() {
         return id;
@@ -156,11 +176,11 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
     }
 
     public Set<String> getDerValues() {
-        return  unmodifiableSet(derValues);
+        return unmodifiableSet(derValues);
     }
 
     public void setDerValues(Set<String> derValues) {
-        this.derValues =  unmodifiableSet(derValues);
+        this.derValues = unmodifiableSet(derValues);
     }
 
     @Override
