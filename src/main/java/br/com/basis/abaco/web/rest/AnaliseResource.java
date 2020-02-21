@@ -148,7 +148,7 @@ public class AnaliseResource {
             return ResponseEntity.badRequest().headers(
                     HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
         }
-        analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+        bindUserOnAnalise(analise);
         salvaNovaData(analise);
         linkFuncoesToAnalise(analise);
         analiseRepository.save(analise);
@@ -192,7 +192,6 @@ public class AnaliseResource {
             } else {
                 analise.setBloqueiaAnalise(true);
             }
-            unlinkAnaliseFromFuncoes(analise);
             Analise result = analiseRepository.save(analise);
             analiseSearchRepository.save(result);
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
@@ -537,6 +536,13 @@ public class AnaliseResource {
             dataParam.setMinutes(dataDeHoje.getMinutes());
             dataParam.setSeconds(dataDeHoje.getSeconds());
         }
+    }
+
+    private void bindUserOnAnalise(@RequestBody @Valid Analise analise) {
+        analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+        Set<User> users = new HashSet<>();
+        users.add(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+        analise.setUsers(users);
     }
 }
 

@@ -28,12 +28,14 @@ public class AnaliseEntityMapper extends DefaultEntityMapper {
         final ObjectNode node = mapper.readValue(source, ObjectNode.class);
         JsonNode user = node.get("users.firstName");
         Set<User> users = new HashSet<>();
-        if (Optional.ofNullable(user).isPresent() && user.isArray()) {
-            for (Object userName : mapper.convertValue(users, ArrayList.class)) {
-                users.add(newUser(userName.toString()));
+        if (Optional.ofNullable(user).isPresent()) {
+            if (user.isArray()) {
+                for (Object userName : mapper.convertValue(users, ArrayList.class)) {
+                    users.add(newUser(userName.toString()));
+                }
+            } else {
+                users.add(newUser(user.textValue()));
             }
-        } else {
-            users.add(newUser(user.textValue()));
         }
         retorno.setUsers(users);
         retorno.setSistema(Sistema.builder().nome(node.get("sistema.nome").textValue()).build());
