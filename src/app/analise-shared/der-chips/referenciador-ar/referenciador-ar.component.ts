@@ -132,7 +132,6 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
     funcaoDadosSelected(fd: FuncaoDados) {
         this.funcaoDadosSelecionada = fd;
-        debugger;
         this.derService.dropDownByFuncaoDadosId(fd.id).subscribe(res => {
             this.ders = res;
             if (!this.ders.some(der => (der.nome === 'Mensagem' || der.nome === 'Ação'))) {
