@@ -529,7 +529,7 @@ public class AnaliseResource {
     private void bindUserOnAnalise(@RequestBody @Valid Analise analise) {
         analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
         Set<User> users = new HashSet<>();
-        users.add(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+        users.add(analise.getCreatedBy());
         analise.setUsers(users);
     }
 }
