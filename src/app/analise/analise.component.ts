@@ -248,7 +248,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
 
     checkUserAnaliseEquipes() {
         let retorno = false;
-        return this.analiseService.find(this.analiseSelecionada.id).subscribe((res: any) => {
+        return this.analiseService.findWithFuncaos(this.analiseSelecionada.id).subscribe((res: any) => {
             this.analiseTemp = res;
             if (this.tipoEquipesLoggedUser) {
                 this.tipoEquipesLoggedUser.forEach(equipe => {
@@ -450,7 +450,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         return !this.analiseSelecionada;
     }
     public bloqueiaAnalise(bloquear: boolean) {
-        this.analiseService.find(this.analiseSelecionada.id).subscribe((res: any) => {
+        this.analiseService.findWithFuncaos(this.analiseSelecionada.id).subscribe((res: any) => {
             this.analiseTemp = res;
             if (!this.analiseTemp.dataHomologacao && !bloquear) {
                 this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_HOMOLOGACAO'));
@@ -494,7 +494,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
 
     public openCompartilharDialog() {
         this.equipeShare = [];
-        this.analiseService.find(this.analiseSelecionada.id).subscribe((res: any) => {
+        this.analiseService.findWithFuncaos(this.analiseSelecionada.id).subscribe((res: any) => {
             this.analiseTemp = res;
             this.tipoEquipeService.findAllCompartilhaveis(
                 this.analiseTemp.organizacao.id,
