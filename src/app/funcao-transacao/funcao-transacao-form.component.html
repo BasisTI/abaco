@@ -269,7 +269,7 @@
 
 
                 <div class="ui-g">
-                    <div class="ui-g-6 ui-md-12 ui-sm-12">
+                    <div class="ui-g-3 ui-md-6 ui-sm-12">
                         <label translate="Cadastros.FuncaoTransacao.Classificacao*">Classificação *</label>
                         <p-dropdown
                                 [filter]="true"
@@ -287,9 +287,29 @@
                             </div>
                         </span>
                     </div>
+
+                    <div class="ui-g-3 ui-md-6 ui-sm-12">
+                        <label translate="Cadastros.FuncaoTransacao.Impacto*">Impacto *</label>
+                        <p-dropdown
+                                [filter]="true"
+                                [options]="impacto"
+                                [(ngModel)]="currentFuncaoTransacao.impacto"
+                                [placeholder]="this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgSelecione')"
+                                name="impacto"
+                                id="idImpactoFormFuncaoTransacao"
+                                [autoWidth]="false"
+                                (onChange)="impactoValido()">
+                        </p-dropdown>
+                        <span class="md-inputfield">
+                            <div *ngIf="impactoInvalido" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                                Campo obrigatório.
+                            </div>
+                        </span>
+                    </div>
+
                 </div>
                 <div class="ui-g">
-                    <div class="ui-g-6 ui-md-12 ui-sm-12">
+                    <div class="ui-g-3 ui-md-6 ui-sm-12">
                         <label translate="Cadastros.FuncaoTransacao.Deflator*">Deflator *</label>
                         <p-dropdown
                                 [filter]="true"
@@ -308,7 +328,9 @@
                             </div>
                         </span>
                     </div>
-                    <div class="ui-g-6 ui-md-12 ui-sm-12" [hidden]="hideShowQuantidade">
+
+
+                    <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
                         <label translate="Cadastros.FuncaoTransacao.Quantidade*">Quantidade *</label>
                         <input type="number" class="ui-inputtext" min="1"
                                id="idQuantidadeFormFuncaoTransacao"
@@ -324,34 +346,27 @@
                 </div>
                 <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                     <h2 translate="Cadastros.FuncaoTransacao.FTR(AR)">FTR (AR)</h2>
-                    <div class="ui-g-12" style="padding: 0px">
-                        <app-analise-der-chips
-                                [(values)]="alrsChips"
-                                id="idFTRFormFuncaoTransacao"
-                                [relacionarDers]="true"
-                                (dersReferenciadosEvent)="dersReferenciados($event)">
-                        </app-analise-der-chips>
-                    </div>
-                    <div class="ui-g-12" style="padding: 0px">
-                        <span class="md-inputfield">
-                            <div *ngIf="erroTR && alrsChips.length == 0" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                        Campo obrigatório.
-                            </div>
-                        </span>
-                    </div>
+                    <app-analise-der-chips
+                            [(values)]="alrsChips"
+                            id="idFTRFormFuncaoTransacao"
+                            [relacionarDers]="true"
+                            (dersReferenciadosEvent)="dersReferenciados($event)">
+                    </app-analise-der-chips>
+
+                    <span class="md-inputfield">
+                        <div *ngIf="erroTR && alrsChips.length == 0" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
+                        </div>
+                    </span>
                 </div>
                 <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
                     <h2 translate="Cadastros.FuncaoTransacao.DER(TD)">DER (TD)</h2>
-                    <div class="ui-g-12" style="padding: 0px">
-                        <app-analise-der-chips id="idDERFormFuncaoTransacao" [(values)]="dersChips"></app-analise-der-chips>
-                    </div>
-                    <div class="ui-g-12" style="padding: 0px">
-                        <span class="md-inputfield">
-                            <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                        Campo obrigatório.
-                            </div>
-                        </span>
-                    </div>
+                    <app-analise-der-chips id="idDERFormFuncaoTransacao" [(values)]="dersChips"></app-analise-der-chips>
+                    <span class="md-inputfield">
+                        <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
+                        </div>
+                    </span>
                 </div>
 
                 <!--<div class="ui-g-12 ui-md-12 ui-sm-12">

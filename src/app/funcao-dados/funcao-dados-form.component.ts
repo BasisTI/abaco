@@ -657,10 +657,23 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         } else {
             this.classInvalida = false;
         }
-        if (this.currentFuncaoDados.fatorAjuste === undefined) {
-            this.erroDeflator = false;
+
+        if (!this.currentFuncaoDados.impacto) {
+            this.impactoInvalido = true;
             retorno = false;
-            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneDeflator'));
+        } else {
+            this.impactoInvalido = false;
+        }
+
+        if (this.currentFuncaoDados.impacto) {
+            if (this.currentFuncaoDados.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0 &&
+                this.currentFuncaoDados.fatorAjuste === undefined) {
+                this.erroDeflator = false;
+                retorno = false;
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneDeflator'));
+            }
+        } else {
+            this.erroDeflator = true;
         }
 
         if (this.currentFuncaoDados.fatorAjuste) {

@@ -47,6 +47,18 @@
                                         </p-column>
             
                                         <p-column
+                                            field="impactoFilter"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            name="impactoFuncaoDadosFormComponent"
+                                            id="idImpaqctoFuncaoDadosFormComponent"
+                                            [header]="this.getLabel('Cadastros.FuncaoDados.Impacto')"
+                                            sortable="true"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                        </p-column>
+
+                                        <p-column
                                             field="funcionalidade.modulo.nome"
                                             filter="true"
                                             filterMatchMode="contains"
@@ -256,7 +268,7 @@
 
 
                 <div class="ui-g">
-                    <div class="ui-g-3 ui-md-12 ui-sm-12">
+                    <div class="ui-g-3 ui-md-6 ui-sm-12">
                         <label translate="Cadastros.FuncaoDados.Classificacao*">Classificação *</label>
                         <p-dropdown [filter]="true" [options]="classificacoes" id="idClassificacoesFormFuncaoDados"
                                     [(ngModel)]="currentFuncaoDados.tipo" [placeholder]="this.getLabel('Cadastros.FuncaoDados.SelecioneClass')"
@@ -270,10 +282,23 @@
                         </span>
                     </div>
 
+                    <div class="ui-g-3 ui-md-6 ui-sm-12">
+                        <label translate="Cadastros.FuncaoDados.Impacto*">Impacto *</label>
+                        <p-dropdown [filter]="true" [options]="impacto" id="idImpactoFormFuncaoDados"
+                                    [(ngModel)]="currentFuncaoDados.impacto"
+                                    [placeholder]="this.getLabel('Cadastros.FuncaoDados.Selecione')" name="impacto" [autoWidth]="false"
+                                    (onChange)="impactoValido()">
+                        </p-dropdown>
+                        <span class="md-inputfield">
+                            <div *ngIf="impactoInvalido" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                                Campo obrigatório.
+                            </div>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="ui-g">
-                    <div class="ui-g-3 ui-md-12 ui-sm-12">
+                    <div class="ui-g-3 ui-md-6 ui-sm-12">
                         <label translate="Cadastros.FuncaoDados.Deflator*">Deflator *</label>
                         <p-dropdown
                                     [filter]="true"
