@@ -502,18 +502,6 @@ public class AnaliseResource {
                 });
     }
 
-    private void unlinkAnaliseFromFuncoes(Analise result) {
-        Optional.ofNullable(result.getFuncaoDados()).orElse(Collections.emptySet())
-                .forEach(entry -> {
-                    entry.setAnalise(null);
-                });
-        Optional.ofNullable(result.getFuncaoTransacaos()).orElse(Collections.emptySet())
-                .forEach(entry -> {
-                    entry.setAnalise(null);
-                });
-    }
-
-
     private Analise unlinkAnaliseFDFT(Analise result) {
         Optional.ofNullable(result.getFuncaoTransacaos()).orElse(Collections.emptySet())
                 .forEach(ft -> {
