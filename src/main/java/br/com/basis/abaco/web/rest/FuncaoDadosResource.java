@@ -162,7 +162,7 @@ public class FuncaoDadosResource {
     @GetMapping("/funcao-dados-dto/analise/{id}")
     @Timed
     public ResponseEntity<List<FuncaoDadoAnaliseDTO>> getFuncaoDadosByAnalise(@PathVariable Long id) {
-        Set<FuncaoDados> lstFuncaoDados = funcaoDadosRepository.findByAnalise_Id(id);
+        Set<FuncaoDados> lstFuncaoDados = funcaoDadosRepository.findByAnaliseId(id);
         List<FuncaoDadoAnaliseDTO> lstFuncaoDadosDTO = lstFuncaoDados.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -180,7 +180,7 @@ public class FuncaoDadosResource {
     public Set<FuncaoDados> getFuncaoDadosAnalise(@PathVariable Long id) {
         log.debug("REST request to get FuncaoDados : {}", id);
         Set<FuncaoDados> funcaoDados = null;
-        funcaoDados = funcaoDadosRepository.findByAnalise_Id(id);
+        funcaoDados = funcaoDadosRepository.findByAnaliseId(id);
         return funcaoDados;
     }
 
