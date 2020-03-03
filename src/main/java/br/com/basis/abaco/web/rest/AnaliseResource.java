@@ -13,14 +13,12 @@ import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
-import br.com.basis.abaco.repository.AlrRepository;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
-import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.RlrRepository;
+import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
@@ -108,6 +106,8 @@ public class AnaliseResource {
     private RelatorioAnaliseRest relatorioAnaliseRest;
     private DynamicExportsService dynamicExportsService;
     private ElasticsearchTemplate elasticsearchTemplate;
+    @Autowired
+    private TipoEquipeRepository tipoEquipeRepository;
     @Autowired
     private UserSearchRepository userSearchRepository;
     @Autowired
@@ -203,7 +203,7 @@ public class AnaliseResource {
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Analise> cloneAnalise(@PathVariable Long id) {
         Analise analise = recuperarAnalise(id);
-        if (analise != null) {
+        if (analise.getId() != null) {
             Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
             salvaNovaData(analiseClone);
             analiseClone.setFuncaoDados(bindCloneFuncaoDados(analise, analiseClone));
@@ -217,8 +217,26 @@ public class AnaliseResource {
                     .status(HttpStatus.FORBIDDEN)
                     .body(new Analise());
         }
+    }
 
-
+    @GetMapping("/analises/clonar/{id}/{idEquipe}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<Analise> cloneAnaliseToEquipe(@PathVariable Long id, @PathVariable Long idEquipe) {
+        Analise analise = recuperarAnalise(id);
+        TipoEquipe tipoEquipe = tipoEquipeRepository.findById(idEquipe);
+        if (analise.getId() != null && tipoEquipe.getId() != null) {
+            Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+            bindAnaliseCloneForTipoEquipe(analise, tipoEquipe, analiseClone);
+            analiseRepository.save(analiseClone);
+            analiseSearchRepository.save(analiseClone);
+            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseClone.getId().toString()))
+                    .body(analiseClone);
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(new Analise());
+        }
     }
 
     @GetMapping("/analises/{id}")
@@ -492,20 +510,6 @@ public class AnaliseResource {
                 });
     }
 
-    private Analise unlinkAnaliseFDFT(Analise result) {
-        Optional.ofNullable(result.getFuncaoTransacaos()).orElse(Collections.emptySet())
-                .forEach(ft -> {
-                    ft.setAnalise(null);
-                    Optional.ofNullable(ft.getAlrs()).orElse(Collections.emptySet())
-                            .forEach(rlr -> rlr.setId(null));
-                    Optional.ofNullable(ft.getDers()).orElse(Collections.emptySet())
-                            .forEach(ders -> ders.setId(null));
-                });
-        Analise analiseCopiaSalva = analiseRepository.save(result);
-        analiseSearchRepository.save(result);
-        return analiseCopiaSalva;
-    }
-
     private void salvaNovaData(Analise analise) {
         if (analise.getDataHomologacao() != null) {
             Timestamp dataDeHoje = new Timestamp(System.currentTimeMillis());
@@ -522,21 +526,7 @@ public class AnaliseResource {
             Set<Rlr> rlrs = new HashSet<>();
             Set<Der> ders = new HashSet<>();
             FuncaoDados funcaoDado = new FuncaoDados();
-            funcaoDado.bindFuncaoDados(fd.getComplexidade(), fd.getPf(), fd.getGrossPF(), analiseClone, fd.getFuncionalidade(), fd.getDetStr(), fd.getFatorAjuste(), fd.getName(), fd.getSustantation(), fd.getDerValues(), null, fd.getTipo(), fd.getFuncionalidades(), fd.getRetStr(), fd.getQuantidade(), rlrs, fd.getAlr(), fd.getFiles(), fd.getRlrValues(), ders, fd.getFuncaoDadosVersionavel(), fd.getImpacto());
-            Optional.ofNullable(fd.getDers()).orElse(Collections.emptySet())
-                    .forEach(der -> {
-                        Rlr rlr = null;
-                        if (der.getRlr() != null) {
-                            rlr = new Rlr(null, der.getRlr().getNome(), der.getRlr().getValor(), der.getRlr().getDers(), funcaoDado);
-                        }
-                        Der derClone = new Der(null, der.getNome(), der.getValor(), rlr, funcaoDado, null);
-                        ders.add(derClone);
-                    });
-            Optional.ofNullable(fd.getRlrs()).orElse(Collections.emptySet())
-                    .forEach(rlr -> {
-                        Rlr rlrClone = new Rlr(null, rlr.getNome(), rlr.getValor(), ders, funcaoDado);
-                        rlrs.add(rlrClone);
-                    });
+            bindFuncaoDados(analiseClone, fd, rlrs, ders, funcaoDado);
             funcaoDado.setDers(ders);
             funcaoDado.setRlrs(rlrs);
             funcaoDados.add(funcaoDado);
@@ -563,6 +553,33 @@ public class AnaliseResource {
         });
         return funcaoTransacoes;
     }
+
+    private void bindAnaliseCloneForTipoEquipe(Analise analise, TipoEquipe tipoEquipe, Analise analiseClone) {
+        analiseClone.setPfTotal("0");
+        analiseClone.setAdjustPFTotal("0");
+        analiseClone.setEquipeResponsavel(tipoEquipe);
+        salvaNovaData(analiseClone);
+        analiseClone.setDataCriacaoOrdemServico(analise.getDataHomologacao());
+    }
+
+    private void bindFuncaoDados(Analise analiseClone, FuncaoDados fd, Set<Rlr> rlrs, Set<Der> ders, FuncaoDados funcaoDado) {
+        funcaoDado.bindFuncaoDados(fd.getComplexidade(), fd.getPf(), fd.getGrossPF(), analiseClone, fd.getFuncionalidade(), fd.getDetStr(), fd.getFatorAjuste(), fd.getName(), fd.getSustantation(), fd.getDerValues(), fd.getTipo(), fd.getFuncionalidades(), fd.getRetStr(), fd.getQuantidade(), rlrs, fd.getAlr(), fd.getFiles(), fd.getRlrValues(), ders, fd.getFuncaoDadosVersionavel(), fd.getImpacto());
+        Optional.ofNullable(fd.getDers()).orElse(Collections.emptySet())
+                .forEach(der -> {
+                    Rlr rlr = null;
+                    if (der.getRlr() != null) {
+                        rlr = new Rlr(null, der.getRlr().getNome(), der.getRlr().getValor(), der.getRlr().getDers(), funcaoDado);
+                    }
+                    Der derClone = new Der(null, der.getNome(), der.getValor(), rlr, funcaoDado, null);
+                    ders.add(derClone);
+                });
+        Optional.ofNullable(fd.getRlrs()).orElse(Collections.emptySet())
+                .forEach(rlr -> {
+                    Rlr rlrClone = new Rlr(null, rlr.getNome(), rlr.getValor(), ders, funcaoDado);
+                    rlrs.add(rlrClone);
+                });
+    }
+
 }
 
 

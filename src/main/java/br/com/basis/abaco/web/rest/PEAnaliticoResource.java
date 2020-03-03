@@ -22,18 +22,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class PEAnaliticoResource {
 
-    private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final PEAnaliticoRepository peAnaliticoRepository;
 
-    @Autowired
-    private HttpServletRequest request;
-
-    @Autowired
-    private HttpServletResponse response;
-
-
-    public PEAnaliticoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, PEAnaliticoRepository peAnaliticoRepository) {
-        this.funcaoTransacaoRepository = funcaoTransacaoRepository;
+    public PEAnaliticoResource(PEAnaliticoRepository peAnaliticoRepository) {
         this.peAnaliticoRepository = peAnaliticoRepository;
     }
 

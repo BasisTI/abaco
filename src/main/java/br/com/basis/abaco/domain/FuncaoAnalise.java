@@ -21,6 +21,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -87,7 +88,7 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
         this.fatorAjuste = fatorAjuste;
         this.name = name;
         this.sustantation = sustantation;
-        this.derValues = derValues;
+        this.derValues = Collections.unmodifiableSet(derValues);
         this.audit = audit;
         this.analise = analise;
     }

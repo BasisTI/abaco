@@ -102,16 +102,16 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     }
 
-    public void bindFuncaoDados(Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Analise analise, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues, Object o, TipoFuncaoDados tipo, Set<Funcionalidade> funcionalidades, String retStr, Integer quantidade, Set<Rlr> rlrs, Alr alr, List<UploadedFile> files, Set<String> rlrValues, Set<Der> ders, FuncaoDadosVersionavel funcaoDadosVersionavel, ImpactoFatorAjuste impacto) {
+    public void bindFuncaoDados(Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Analise analise, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues, TipoFuncaoDados tipo, Set<Funcionalidade> funcionalidades, String retStr, Integer quantidade, Set<Rlr> rlrs, Alr alr, List<UploadedFile> files, Set<String> rlrValues, Set<Der> ders, FuncaoDadosVersionavel funcaoDadosVersionavel, ImpactoFatorAjuste impacto) {
         this.tipo = tipo;
-        this.funcionalidades = funcionalidades;
+        this.funcionalidades = Collections.unmodifiableSet(funcionalidades);
         this.retStr = retStr;
         this.quantidade = quantidade;
-        this.rlrs = rlrs;
+        this.rlrs = Collections.unmodifiableSet(rlrs);
         this.alr = alr;
-        this.files = files;
-        this.rlrValues = rlrValues;
-        this.ders = ders;
+        this.files = Collections.unmodifiableList(files);
+        this.rlrValues = Collections.unmodifiableSet(rlrValues);
+        this.ders = Collections.unmodifiableSet(ders);
         this.funcaoDadosVersionavel = funcaoDadosVersionavel;
         this.impacto = impacto;
         bindFuncaoAnalise(null, complexidade, pf, grossPF, analise, funcionalidade, detStr, fatorAjuste, name, sustantation, derValues, null);
