@@ -13,6 +13,7 @@ import {FuncaoTransacao} from '../funcao-transacao';
 import {FuncaoDados} from '../funcao-dados';
 import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.service';
 import {FuncaoDadosService} from '../funcao-dados/funcao-dados.service';
+import {TipoEquipe} from '../tipo-equipe';
 
 @Injectable()
 export class AnaliseService {
@@ -307,6 +308,15 @@ export class AnaliseService {
             let analise: Analise = new Analise();
             analise = this.convertItemFromServer(jsonResponse);
             return analise;
+        }).finally(() => {
+            this.blockUI.stop();
+        });
+    }
+    public clonarAnaliseToEquipe(id: number, equipe: TipoEquipe): Observable<any> {
+        this.blockUI.start();
+        const url = this.clonarAnaliseUrl + id + '/' + equipe.id;
+        return this.http.get(url).map(response => {
+            return response.json();
         }).finally(() => {
             this.blockUI.stop();
         });

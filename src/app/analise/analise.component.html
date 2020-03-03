@@ -9,7 +9,7 @@
             <div class="ui-g">
                 <div class="ui-g-4 ui-md-4 ui-sm-12">
                     <span class="md-inputfield">
-                      <input
+                        <input
                               type="text"
                               pInputText class="ui-inputtext"
                               [(ngModel)]="searchGroup.identificadorAnalise"
@@ -181,6 +181,15 @@
                             class="ui-button-danger">
                     </basis-datatable-button>-->
 
+                    <basis-datatable-button
+                            name="cloneParaEquipe"
+                            [tooltip]="clonarTooltip()"
+                            icon="content-copy"
+                            disabled="desabilitarBotaoRelatorio()"
+                            class="ui-button-success">
+                    </basis-datatable-button>
+
+
                     <p-column [header]="this.getLabel('Analise.Analise.Organizacao')" field="organizacao.nome"
                               [sortable]="true">
                     </p-column>
@@ -322,4 +331,23 @@
 
     <app-red-button [buttonLabel]="this.getLabel('Global.Botoes.Remover')" (click)="deletarCompartilhar()"
                     style="float:right; margin-top: 5px"></app-red-button>
+</p-dialog>
+<p-dialog [header]="this.getLabel('Analise.Analise.CompartilharAnalise')" [(visible)]="showDialogAnaliseCloneTipoEquipe" [width]="500" [minHeight]="300" [modal]="true" >
+    <div style="min-height:300px">
+        <div class="ui-g" >
+            <div class="ui-g-12 ui-md-12 ui-sm-12">
+                <p-dropdown
+                        [style]="{'width':'100%'}"
+                        [filter]="true"
+                        [options]="teams"
+                        optionLabel="nome"
+                        id="idCloneToTipoEquipe"
+                        [autoWidth]="false"
+                        [(ngModel)]="equipeToClone"
+                        [placeholder]="this.getLabel('Analise.Analise.Equipe')">
+                </p-dropdown>
+            </div>
+        </div>
+        <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Adicionar')" (click)="cloneAnaliseToEquipe()" style="float:right; margin-top: 5px"></app-green-button>
+    </div>
 </p-dialog>

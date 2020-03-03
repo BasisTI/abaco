@@ -41,8 +41,12 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     selectedToDelete: AnaliseShareEquipe;
     analiseTemp: Analise = new Analise();
     tipoEquipesLoggedUser: TipoEquipe[] = [];
+    tipoEquipesToClone: TipoEquipe[] = [];
     query: String;
     usuarios: String[] = [];
+
+    idAnaliseCloneToEquipe: number;
+    public equipeToClone?: TipoEquipe;
 
     translateSusbscriptions: Subscription[] = [];
 
@@ -55,6 +59,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
 
     blocked;
     inicial: boolean;
+    showDialogAnaliseCloneTipoEquipe = false;
     mostrarDialog = false;
 
     constructor(
@@ -189,6 +194,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     recuperarEquipe() {
         this.tipoEquipeService.dropDown().subscribe(response => {
             this.teams = response.json;
+            this.tipoEquipesToClone = response.json;
             const emptyTeam = new TipoEquipe();
             this.teams.unshift(emptyTeam);
         });
@@ -230,6 +236,9 @@ export class AnaliseComponent implements OnInit, OnDestroy {
                 break;
             case 'geraBaselinePdfBrowser':
                 this.geraBaselinePdfBrowser();
+                break;
+            case 'cloneParaEquipe':
+                this.openModalCloneAnaliseEquipe(event.selection.id);
                 break;
             case 'compartilhar':
                 if (this.checkUserAnaliseEquipes()) {
@@ -298,7 +307,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
             message: this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_CLONE')
                 .concat(this.analiseSelecionada.identificadorAnalise).concat('?'),
             accept: () => {
-                this.analiseService.clonarAnalise(id).subscribe(response  => {
+                this.analiseService.clonarAnalise(id).subscribe(response => {
                     const menssagem: string = this.getLabel('Analise.Analise.Analise')
                         .concat(' ').concat(this.analiseSelecionada.identificadorAnalise)
                         .concat(this.getLabel('Analise.Analise.Mensagens.msgCLONAGEM_SUCESSO'));
@@ -405,6 +414,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     public desabilitarBotaoRelatorio(): boolean {
         return !this.analiseSelecionada;
     }
+
     public bloqueiaAnalise(bloquear: boolean) {
         this.analiseService.findWithFuncaos(this.analiseSelecionada.id).subscribe((res: any) => {
             this.analiseTemp = res;
@@ -515,6 +525,24 @@ export class AnaliseComponent implements OnInit, OnDestroy {
                 this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgRegistroAtualizadoSucesso'));
             });
         }, 250);
+    }
+
+
+    public openModalCloneAnaliseEquipe(id: number) {
+        this.equipeToClone = undefined;
+        this.idAnaliseCloneToEquipe = id;
+        this.showDialogAnaliseCloneTipoEquipe = true;
+    }
+
+    public cloneAnaliseToEquipe() {
+        if (this.idAnaliseCloneToEquipe && this.equipeToClone) {
+            this.analiseService.clonarAnaliseToEquipe(this.idAnaliseCloneToEquipe, this.equipeToClone).subscribe(value => {
+                this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgRegistroAtualizadoSucesso'));
+                this.showDialogAnaliseCloneTipoEquipe = false;
+                this.equipeToClone = undefined;
+                this.idAnaliseCloneToEquipe = undefined;
+            });
+        }
     }
 
     ngOnDestroy() {
