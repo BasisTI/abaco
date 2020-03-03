@@ -41,7 +41,7 @@ public class PEAnaliticoResource {
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public Set<DropdownDTO> getFuncaoDadosByAnalise(@PathVariable Long id) {
-        Set<PEAnalitico> peAnaliticos = peAnaliticoRepository.findAllByidsistema(id);
+        Set<PEAnalitico> peAnaliticos = peAnaliticoRepository.findAllByidsistemaAndTipoOrderByName(id, "fd");
         return peAnaliticos.stream().map(this::convertToDto).collect(Collectors.toSet());
     }
 

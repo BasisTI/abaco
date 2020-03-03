@@ -14,5 +14,5 @@ import java.util.Set;
 @Repository
 public interface PEAnaliticoRepository extends JpaRepository<PEAnalitico, Long> {
 
-    Set<PEAnalitico> findAllByidsistema(Long idsistema);
+    Set<PEAnalitico> findAllByidsistemaAndTipoOrderByName(Long idsistema, String tipo);
 }
