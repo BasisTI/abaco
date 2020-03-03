@@ -138,6 +138,19 @@ public class User extends AbstractAuditingEntity implements Serializable, Report
         return temResposta;
     }
 
+    public String getNomeOrg(){
+        String ponto = ". ";
+        String nomeOrg = "";
+
+        if (organizacoes != null) {
+            for (Organizacao org : organizacoes) {
+                nomeOrg = nomeOrg.concat(org.getNome()).concat(ponto);
+            }
+        }
+
+        return nomeOrg;
+    }
+
     public Long getId() {
         return id;
     }

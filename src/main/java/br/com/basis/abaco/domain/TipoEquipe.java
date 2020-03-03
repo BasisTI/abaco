@@ -65,4 +65,17 @@ public class TipoEquipe implements Serializable, ReportObject {
     @ManyToMany(mappedBy = "tipoEquipes")
     private Set<User> usuarios = new HashSet<>();
 
+    public String getNomeOrg(){
+        String ponto = ". ";
+        String nomeOrg = "";
+
+        if (organizacoes != null) {
+            for(Organizacao org : organizacoes){
+                nomeOrg = nomeOrg.concat(org.getNome()).concat(ponto);
+            }
+        }
+
+        return nomeOrg;
+    }
+
 }
