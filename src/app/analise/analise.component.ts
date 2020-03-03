@@ -298,55 +298,11 @@ export class AnaliseComponent implements OnInit, OnDestroy {
             message: this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_CLONE')
                 .concat(this.analiseSelecionada.identificadorAnalise).concat('?'),
             accept: () => {
-                this.analiseService.findWithFuncaos(id).subscribe((res: any) => {
-                    const analiseClonada = res.clone();
-
-                    analiseClonada.id = undefined;
-                    analiseClonada.identificadorAnalise += this.getLabel('Analise.Analise.Mensagens.msgCONCAT_COPIA');
-                    analiseClonada.bloqueiaAnalise = false;
-                    analiseClonada.compartilhadas = undefined;
-
-                    if (analiseClonada.funcaoDados) {
-                        analiseClonada.funcaoDados.forEach(FuncaoDados => {
-                            FuncaoDados.id = undefined;
-                            if (FuncaoDados.ders) {
-                                FuncaoDados.ders.forEach(Ders => {
-                                    Ders.id = undefined;
-                                });
-                            }
-                            if (FuncaoDados.rlrs) {
-                                FuncaoDados.rlrs.forEach(rlrs => {
-                                    rlrs.id = undefined;
-                                });
-                            }
-                        });
-                    }
-
-                    if (analiseClonada.funcaoTransacaos) {
-                        analiseClonada.funcaoTransacaos.forEach(funcaoTransacaos => {
-                            funcaoTransacaos.id = undefined;
-                            if (funcaoTransacaos.ders) {
-                                funcaoTransacaos.ders.forEach(ders => {
-                                    ders.id = undefined;
-                                });
-                            }
-                            if (funcaoTransacaos.alrs) {
-                                funcaoTransacaos.alrs.forEach(alrs => {
-                                    alrs.id = undefined;
-                                });
-                            }
-                        });
-                    }
-
-                    this.analiseService.create(analiseClonada).subscribe((response: any) => {
-                        const menssagem: string = this.getLabel('Analise.Analise.Analise')
-                                                        .concat(' ').concat(this.analiseSelecionada.identificadorAnalise)
-                                                        .concat(this.getLabel('Analise.Analise.Mensagens.msgCLONAGEM_SUCESSO'));
-
-                        this.pageNotificationService.addSuccessMsg(menssagem);
-                        this.recarregarDataTable();
-                        this.router.navigate(['/analise', response.id, 'edit']);
-                    });
+                this.analiseService.clonarAnalise(id).subscribe(response  => {
+                    const menssagem: string = this.getLabel('Analise.Analise.Analise')
+                        .concat(' ').concat(this.analiseSelecionada.identificadorAnalise)
+                        .concat(this.getLabel('Analise.Analise.Mensagens.msgCLONAGEM_SUCESSO'));
+                    this.router.navigate(['/analise', response.id, 'edit']);
                 });
             }
         });

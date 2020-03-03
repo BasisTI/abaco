@@ -37,6 +37,8 @@ export class AnaliseService {
 
     relatorioContagemUrl = environment.apiUrl + '/relatorioContagemPdf';
 
+    clonarAnaliseUrl = this.resourceUrl + '/clonar/';
+
     @BlockUI() blockUI: NgBlockUI;
 
     constructor(
@@ -81,11 +83,11 @@ export class AnaliseService {
                         )
                     )).then(
                     this.funcaoDadosService.getFuncaoDadosByAnalise(this.analise.id)
-                    .subscribe(response => (
-                        response.forEach(value => (
-                            this.analise.funcaoDados.push(FuncaoDados.convertJsonToObject(value)))
-                        )
-                    ))
+                        .subscribe(response => (
+                            response.forEach(value => (
+                                this.analise.funcaoDados.push(FuncaoDados.convertJsonToObject(value)))
+                            )
+                        ))
                 );
             }));
     }
@@ -101,7 +103,7 @@ export class AnaliseService {
                 this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
-        }).finally(() => ( this.blockUI.stop()));
+        }).finally(() => (this.blockUI.stop()));
     }
 
     public block(analise: Analise): Observable<Analise> {
@@ -295,6 +297,19 @@ export class AnaliseService {
             analise.createdBy = jsonResponse.createdBy;
             return analise;
         }).finally(() => (this.blockUI.stop()));
+    }
+
+    public clonarAnalise(id: number): Observable<Analise> {
+        this.blockUI.start();
+        const url = this.clonarAnaliseUrl + id;
+        return this.http.get(url).map(response => {
+            const jsonResponse = response.json();
+            let analise: Analise = new Analise();
+            analise = this.convertItemFromServer(jsonResponse);
+            return analise;
+        }).finally(() => {
+            this.blockUI.stop();
+        });
     }
 
     findAllByOrganizacaoId(orgId: number): Observable<ResponseWrapper> {

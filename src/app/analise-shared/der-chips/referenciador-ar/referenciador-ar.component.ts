@@ -66,8 +66,6 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        // TODO quais eventos observar? precisa de um evento de funcaoDados adicionada
-        this.subscribeAnaliseCarregada();
     }
 
     private getFuncoesDados() {
@@ -89,7 +87,6 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
             this.baselineService.analiticosFuncaoDados(
                 this.analiseSharedDataService.analise.sistema.id).subscribe((res: ResponseWrapper) => {
                 this.funcoesDados = res.json;
-
                 this.funcoesDados.concat(this.funcoesDadosCache);
                 if (this.funcoesDados && this.funcoesDados.length !== 0 && this.funcoesDadosCache) {
                     for (const funcoes of this.funcoesDadosCache) {

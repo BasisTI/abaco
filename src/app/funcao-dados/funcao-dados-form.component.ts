@@ -925,14 +925,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         ft.ders = [];
         fdSelecionada.ders.forEach(item => ft.ders.push(item));
         if (this.analise.metodoContagem === MetodoContagem.DETALHADA) {
-            this.criarDersMenssagemAcao(ft.ders);
+            this.criarDersMensagemAcao(ft.ders);
             this.gerarAlr(ft, fdSelecionada);
         }
         return ft;
     }
 
-    private criarDersMenssagemAcao(ders: Der[]) {
-        ders.push(new Der(undefined, 'Menssagem'));
+    private criarDersMensagemAcao(ders: Der[]) {
+        ders.push(new Der(undefined, 'Mensagem'));
         ders.push(new Der(undefined, 'Ação'));
     }
 
