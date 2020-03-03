@@ -416,7 +416,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     }
 
     public bloqueiaAnalise(bloquear: boolean) {
-        this.analiseService.findWithFuncaos(this.analiseSelecionada.id).subscribe((res: any) => {
+        this.analiseService.findWithFuncaos(this.analiseSelecionada.id).subscribe((res) => {
             this.analiseTemp = res;
             if (!this.analiseTemp.dataHomologacao && !bloquear) {
                 this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_HOMOLOGACAO'));
