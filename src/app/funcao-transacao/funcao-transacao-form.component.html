@@ -269,7 +269,7 @@
 
 
                 <div class="ui-g">
-                    <div class="ui-g-3 ui-md-6 ui-sm-12">
+                    <div class="ui-g-6 ui-md-12 ui-sm-12">
                         <label translate="Cadastros.FuncaoTransacao.Classificacao*">Classificação *</label>
                         <p-dropdown
                                 [filter]="true"
@@ -287,29 +287,9 @@
                             </div>
                         </span>
                     </div>
-
-                    <div class="ui-g-3 ui-md-6 ui-sm-12">
-                        <label translate="Cadastros.FuncaoTransacao.Impacto*">Impacto *</label>
-                        <p-dropdown
-                                [filter]="true"
-                                [options]="impacto"
-                                [(ngModel)]="currentFuncaoTransacao.impacto"
-                                [placeholder]="this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgSelecione')"
-                                name="impacto"
-                                id="idImpactoFormFuncaoTransacao"
-                                [autoWidth]="false"
-                                (onChange)="impactoValido()">
-                        </p-dropdown>
-                        <span class="md-inputfield">
-                            <div *ngIf="impactoInvalido" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
-                                Campo obrigatório.
-                            </div>
-                        </span>
-                    </div>
-
                 </div>
                 <div class="ui-g">
-                    <div class="ui-g-3 ui-md-6 ui-sm-12">
+                    <div class="ui-g-6 ui-md-12 ui-sm-12">
                         <label translate="Cadastros.FuncaoTransacao.Deflator*">Deflator *</label>
                         <p-dropdown
                                 [filter]="true"

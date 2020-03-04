@@ -658,13 +658,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
             this.classInvalida = false;
         }
 
-        if (!this.currentFuncaoDados.impacto) {
-            this.impactoInvalido = true;
-            retorno = false;
-        } else {
-            this.impactoInvalido = false;
-        }
-
         if (this.currentFuncaoDados.impacto) {
             if (this.currentFuncaoDados.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0 &&
                 this.currentFuncaoDados.fatorAjuste === undefined) {
