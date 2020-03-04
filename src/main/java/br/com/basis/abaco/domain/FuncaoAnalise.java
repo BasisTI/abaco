@@ -88,7 +88,7 @@ public abstract class FuncaoAnalise implements AbacoAuditable {
         this.fatorAjuste = fatorAjuste;
         this.name = name;
         this.sustantation = sustantation;
-        this.derValues = Collections.unmodifiableSet(derValues);
+        this.derValues = derValues == null ? null:Collections.unmodifiableSet(derValues);
         this.audit = audit;
         this.analise = analise;
     }

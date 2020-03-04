@@ -205,6 +205,7 @@ public class AnaliseResource {
         Analise analise = recuperarAnalise(id);
         if (analise.getId() != null) {
             Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+            analiseClone.setIdentificadorAnalise(analise.getIdentificadorAnalise() + " - CÓPIA");
             salvaNovaData(analiseClone);
             analiseClone.setFuncaoDados(bindCloneFuncaoDados(analise, analiseClone));
             analiseClone.setFuncaoTransacaos(bindCloneFuncaoTransacaos(analise, analiseClone));

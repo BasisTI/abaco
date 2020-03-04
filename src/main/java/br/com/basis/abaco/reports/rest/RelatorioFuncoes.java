@@ -129,8 +129,8 @@ public class RelatorioFuncoes {
      * @param f
      */
     private void popularImpacto(FuncaoTransacao f) {
-        funcoes.setImpactoFt(f.getImpacto() == null
-                && !f.getImpacto().toString().isEmpty()? dash : f.getImpacto().toString());
+        funcoes.setImpactoFt((f.getImpacto() == null
+                || !f.getImpacto().toString().isEmpty())? dash : f.getImpacto().toString());
     }
 
     /**
@@ -139,7 +139,7 @@ public class RelatorioFuncoes {
      */
     private void popularModulo(FuncaoTransacao f) {
         funcoes.setModuloFt(f.getFuncionalidade() == null
-                && f.getFuncionalidade().getModulo() == null ? dash : f.getFuncionalidade().getModulo().getNome());
+                || f.getFuncionalidade().getModulo() == null ? dash : f.getFuncionalidade().getModulo().getNome());
     }
 
     /**
@@ -148,7 +148,7 @@ public class RelatorioFuncoes {
      */
     private void popularNome(FuncaoTransacao f) {
         funcoes.setNomeFt(f.getName() == null
-                && !f.getName().isEmpty() ? dash : f.getName());
+                || !f.getName().isEmpty() ? dash : f.getName());
     }
 
     /**
@@ -357,7 +357,7 @@ public class RelatorioFuncoes {
         funcoes.setTipoFd(f.getTipo() == null ? dash : f.getTipo().toString());
         funcoes.setComplexidadeFd(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
         funcoes.setNomeFd(f.getName() == null ? dash : f.getName());
-        funcoes.setImpactoFd(f.getImpacto().toString());
+        funcoes.setImpactoFd(f.getImpacto()==null ? dash : f.getImpacto().toString());
         if (f.getGrossPF() != null){
             funcoes.setPfTotalFd(f.getGrossPF().stripTrailingZeros().toPlainString());
         } else {
@@ -377,7 +377,7 @@ public class RelatorioFuncoes {
      */
     private void popularImpactoFd(FuncaoDados f) {
         funcoes.setImpactoFd(f.getImpacto() == null
-                && !f.getImpacto().toString().isEmpty()
+                || !f.getImpacto().toString().isEmpty()
                 ? dash : f.getImpacto().toString());
     }
 
@@ -387,7 +387,7 @@ public class RelatorioFuncoes {
      */
     private void popularModuloFd(FuncaoDados f) {
         funcoes.setModuloFd(f.getFuncionalidade() == null
-                && f.getFuncionalidade().getModulo() == null
+                || f.getFuncionalidade().getModulo() == null
                 ? dash : f.getFuncionalidade().getModulo().getNome());
     }
 
@@ -397,7 +397,7 @@ public class RelatorioFuncoes {
      */
     private void popularNomeFd(FuncaoDados f) {
         funcoes.setNomeFd(f.getName() == null
-                && !f.getName().isEmpty() ? dash : f.getName());
+                || !f.getName().isEmpty() ? dash : f.getName());
     }
 
     /**

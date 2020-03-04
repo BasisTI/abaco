@@ -191,7 +191,7 @@ public class Analise implements Serializable, ReportObject {
 
     public Analise(Analise analise, User user) {
         this.id = null;
-        this.identificadorAnalise = analise.identificadorAnalise + " - CÓPIA";
+        this.identificadorAnalise = analise.identificadorAnalise;
         this.metodoContagem = analise.getMetodoContagem();
         this.valorAjuste = analise.getValorAjuste();
         this.pfTotal = analise.getPfTotal();

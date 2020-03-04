@@ -89,16 +89,15 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     private Analise analise;
 
 
-
     public void bindFuncaoTransacao(TipoFuncaoTransacao tipo, Set<Funcionalidade> funcionalidades, String ftrStr, Integer quantidade, Set<Alr> alrs, List<UploadedFile> files, Set<String> ftrValues, ImpactoFatorAjuste impacto, Set<Der> ders, Analise analise, Long id, Complexidade complexidade, BigDecimal pf, BigDecimal grossPF, Funcionalidade funcionalidade, String detStr, FatorAjuste fatorAjuste, String name, String sustantation, Set<String> derValues, AbacoAudit audit) {
         this.tipo = tipo;
         this.ftrStr = ftrStr;
         this.quantidade = quantidade;
-        this.alrs = Collections.unmodifiableSet(alrs);
-        this.files = Collections.unmodifiableList(files);
-        this.ftrValues = Collections.unmodifiableSet(ftrValues);
+        this.alrs = alrs == null ? null : Collections.unmodifiableSet(alrs);
+        this.files = files == null ? null : Collections.unmodifiableList(files);
+        this.ftrValues = ftrValues == null ? null: Collections.unmodifiableSet(ftrValues);
         this.impacto = impacto;
-        this.ders = Collections.unmodifiableSet(ders);
+        this.ders = ders == null ? null : Collections.unmodifiableSet(ders);
         this.analise = analise;
         bindFuncaoAnalise(null, complexidade, pf, grossPF, analise, funcionalidade, detStr, fatorAjuste, name, sustantation, derValues, null);
     }
