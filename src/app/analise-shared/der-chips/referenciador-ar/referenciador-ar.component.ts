@@ -71,7 +71,7 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
     private getFuncoesDados() {
         this.blockUI.start();
         this.funcaoDadosService.dropDownPEAnalitico(this.analiseSharedDataService.analise.sistema.id).subscribe(res => {
-            this.funcoesDados = this.funcoesDados.concat(res.map((item: any) => {
+           this.funcoesDados.concat(res.map((item: any) => {
                 const fd = new FuncaoDados();
                 fd.id = item.id;
                 fd.name = item.nome;
