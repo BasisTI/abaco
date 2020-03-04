@@ -567,15 +567,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.nomeInvalido = false;
         }
 
-        if (this.currentFuncaoTransacao.impacto === undefined) {
-            this.impactoInvalido = true;
-            retorno = false;
-        } else {
-            this.impactoInvalido = false;
-        }
-
-        if (this.currentFuncaoTransacao.impacto.indexOf('ITENS_NAO_MENSURAVEIS') === 0
-            && this.currentFuncaoTransacao.fatorAjuste === undefined) {
+        if (this.currentFuncaoTransacao.fatorAjuste === undefined) {
             this.erroDeflator = true;
             retorno = false;
             this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgSelecioneUmDeflator'));
@@ -740,7 +732,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 this.prepareToClone(funcaoTransacaoSelecionada);
                 this.currentFuncaoTransacao.id = undefined;
                 this.currentFuncaoTransacao.artificialId = undefined;
-                this.currentFuncaoTransacao.impacto = Impacto.ALTERACAO;
                 this.textHeader = this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgClonarFuncaoDeTransacao');
                 break;
             case 'filter':
