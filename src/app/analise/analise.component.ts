@@ -308,9 +308,6 @@ export class AnaliseComponent implements OnInit, OnDestroy {
                 .concat(this.analiseSelecionada.identificadorAnalise).concat('?'),
             accept: () => {
                 this.analiseService.clonarAnalise(id).subscribe(response => {
-                    const menssagem: string = this.getLabel('Analise.Analise.Analise')
-                        .concat(' ').concat(this.analiseSelecionada.identificadorAnalise)
-                        .concat(this.getLabel('Analise.Analise.Mensagens.msgCLONAGEM_SUCESSO'));
                     this.router.navigate(['/analise', response.id, 'edit']);
                 });
             }
@@ -537,7 +534,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     public cloneAnaliseToEquipe() {
         if (this.idAnaliseCloneToEquipe && this.equipeToClone) {
             this.analiseService.clonarAnaliseToEquipe(this.idAnaliseCloneToEquipe, this.equipeToClone).subscribe(value => {
-                this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgRegistroAtualizadoSucesso'));
+                this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgCLONAGEM_SUCESSO'));
                 this.showDialogAnaliseCloneTipoEquipe = false;
                 this.equipeToClone = undefined;
                 this.idAnaliseCloneToEquipe = undefined;

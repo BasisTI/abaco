@@ -332,7 +332,7 @@
     <app-red-button [buttonLabel]="this.getLabel('Global.Botoes.Remover')" (click)="deletarCompartilhar()"
                     style="float:right; margin-top: 5px"></app-red-button>
 </p-dialog>
-<p-dialog [header]="this.getLabel('Analise.Analise.CompartilharAnalise')" [(visible)]="showDialogAnaliseCloneTipoEquipe" [width]="500" [minHeight]="300" [modal]="true" >
+<p-dialog [header]="this.getLabel('Analise.Analise.ClonarParaEquipe')" [(visible)]="showDialogAnaliseCloneTipoEquipe" [width]="500" [minHeight]="300" [modal]="true" >
     <div style="min-height:300px">
         <div class="ui-g" >
             <div class="ui-g-12 ui-md-12 ui-sm-12">
@@ -344,7 +344,7 @@
                         id="idCloneToTipoEquipe"
                         [autoWidth]="false"
                         [(ngModel)]="equipeToClone"
-                        [placeholder]="this.getLabel('Analise.Analise.Equipe')">
+                        [placeholder]="this.getLabel('Analise.Analise.Mensagens.msgSelecioneEquipeResponsavel')">
                 </p-dropdown>
             </div>
         </div>

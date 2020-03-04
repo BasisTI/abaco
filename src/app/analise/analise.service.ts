@@ -305,14 +305,14 @@ export class AnaliseService {
         const url = this.clonarAnaliseUrl + id;
         return this.http.get(url).map(response => {
             const jsonResponse = response.json();
-            let analise: Analise = new Analise();
+            let analise: Analise;
             analise = this.convertItemFromServer(jsonResponse);
             return analise;
         }).finally(() => {
             this.blockUI.stop();
         });
     }
-    public clonarAnaliseToEquipe(id: number, equipe: TipoEquipe): Observable<any> {
+    public clonarAnaliseToEquipe(id: number, equipe: TipoEquipe) {
         this.blockUI.start();
         const url = this.clonarAnaliseUrl + id + '/' + equipe.id;
         return this.http.get(url).map(response => {
