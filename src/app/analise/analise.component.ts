@@ -195,8 +195,11 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         this.tipoEquipeService.dropDown().subscribe(response => {
             this.teams = response.json;
             this.tipoEquipesToClone = response.json;
-            const emptyTeam = new TipoEquipe();
-            this.teams.unshift(emptyTeam);
+            this.tipoEquipeService.dropDownByUser().subscribe(res => {
+                this.teams = res.json;
+                const emptyTeam = new TipoEquipe();
+                this.teams.unshift(emptyTeam);
+            });
         });
     }
 
