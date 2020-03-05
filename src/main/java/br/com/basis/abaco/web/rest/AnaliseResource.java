@@ -25,6 +25,7 @@ import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.AnaliseService;
+import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -39,6 +40,7 @@ import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -378,16 +380,16 @@ public class AnaliseResource {
 
     @GetMapping("/analises")
     @Timed
-    public ResponseEntity<List<Analise>> getAllAnalisesEquipes(@RequestParam(defaultValue = "ASC") String order,
-                                                               @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
-                                                               @RequestParam(defaultValue = "20") int size,
-                                                               @RequestParam(defaultValue = "id") String sort,
-                                                               @RequestParam(value = "identificador", required = false) String identificador,
-                                                               @RequestParam(value = "sistema", required = false) String sistema,
-                                                               @RequestParam(value = "metodo", required = false) String metodo,
-                                                               @RequestParam(value = "organizacao", required = false) String organizacao,
-                                                               @RequestParam(value = "equipe", required = false) String equipe,
-                                                               @RequestParam(value = "usuario", required = false) String usuario)
+    public ResponseEntity<List<AnaliseDTO>> getAllAnalisesEquipes(@RequestParam(defaultValue = "ASC") String order,
+                                                                  @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
+                                                                  @RequestParam(defaultValue = "20") int size,
+                                                                  @RequestParam(defaultValue = "id") String sort,
+                                                                  @RequestParam(value = "identificador", required = false) String identificador,
+                                                                  @RequestParam(value = "sistema", required = false) String sistema,
+                                                                  @RequestParam(value = "metodo", required = false) String metodo,
+                                                                  @RequestParam(value = "organizacao", required = false) String organizacao,
+                                                                  @RequestParam(value = "equipe", required = false) String equipe,
+                                                                  @RequestParam(value = "usuario", required = false) String usuario)
             throws URISyntaxException {
         Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
@@ -396,8 +398,9 @@ public class AnaliseResource {
         analiseService.bindFilterSearch(identificador, sistema, metodo, organizacao, equipe, usuario, equipesIds, qb);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
+        Page<AnaliseDTO> dtoPage = page.map(analise -> this.convertToDto(analise));
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(dtoPage.getContent(), headers, HttpStatus.OK);
     }
 
 
@@ -581,6 +584,10 @@ public class AnaliseResource {
                     Rlr rlrClone = new Rlr(null, rlr.getNome(), rlr.getValor(), ders, funcaoDado);
                     rlrs.add(rlrClone);
                 });
+    }
+
+    private AnaliseDTO convertToDto(Analise analise) {
+        return new ModelMapper().map(analise, AnaliseDTO.class);
     }
 
 }
