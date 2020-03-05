@@ -31,7 +31,7 @@ public class AnaliseDTO {
     private boolean bloqueiaAnalise;
     private Set<UserAnaliseDTO> users = new HashSet<>();
 
-    public void setdataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
+    public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
         this.dataCriacaoOrdemServico = new Timestamp(dataCriacaoOrdemServico.getTime());
     }
 
