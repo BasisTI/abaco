@@ -140,6 +140,12 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         }
         return this.getLabel('Analise.Analise.Clonar');
     }
+    clonarParaEquipeTooltip() {
+        if (!this.analiseSelecionada.id) {
+            return this.getLabel('Analise.Analise.Mensagens.msgRegistroClonar');
+        }
+        return this.getLabel('Analise.Analise.ClonarParaEquipe');
+    }
 
     compartilharTooltip() {
         if (!this.analiseSelecionada.id) {
