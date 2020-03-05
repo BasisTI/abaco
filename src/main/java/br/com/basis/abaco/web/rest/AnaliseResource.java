@@ -245,12 +245,14 @@ public class AnaliseResource {
     public ResponseEntity<Analise> getAnalise(@PathVariable Long id) {
         Analise analise = recuperarAnalise(id);
         if (analise != null) {
-            return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
-        } else {
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(null);
+            User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
+            if (user.getOrganizacoes().contains(analise.getOrganizacao()) && user.getTipoEquipes().contains(analise.getEquipeResponsavel())) {
+                return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
+            }
         }
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(null);
 
     }
 

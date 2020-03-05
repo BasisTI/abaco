@@ -1,7 +1,9 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.TipoEquipe;
+import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
+import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.TipoEquipeService;
@@ -45,6 +47,7 @@ import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,6 +73,8 @@ public class TipoEquipeResource {
 
     private final TipoEquipeService tipoEquipeService;
 
+    private final UserRepository userRepository;
+
     private static final String ROLE_ANALISTA = "ROLE_ANALISTA";
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -80,13 +85,16 @@ public class TipoEquipeResource {
 
 
     public TipoEquipeResource(TipoEquipeRepository tipoEquipeRepository,
-                              TipoEquipeSearchRepository tipoEquipeSearchRepository, DynamicExportsService dynamicExportsService,
-                              TipoEquipeService tipoEquipeService) {
+                              TipoEquipeSearchRepository tipoEquipeSearchRepository,
+                              DynamicExportsService dynamicExportsService,
+                              TipoEquipeService tipoEquipeService,
+                              UserRepository userRepository) {
 
         this.tipoEquipeRepository = tipoEquipeRepository;
         this.tipoEquipeSearchRepository = tipoEquipeSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
         this.tipoEquipeService = tipoEquipeService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -265,5 +273,16 @@ public class TipoEquipeResource {
     @Timed
     public List<DropdownDTO> activeUserTipoEquipes() {
         return tipoEquipeService.findActiveUserTipoEquipes();
+    }
+
+    @GetMapping("/tipo-equipes/user")
+    @Timed
+    public List<DropdownDTO> getTipoEquipesByUser() {
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
+        List<DropdownDTO> dropdownDTOList = new ArrayList<>();
+        user.getTipoEquipes().forEach(tipoEquipe -> {
+            dropdownDTOList.add(new DropdownDTO(tipoEquipe.getId(), tipoEquipe.getNome()));
+        });
+        return dropdownDTOList;
     }
 }
