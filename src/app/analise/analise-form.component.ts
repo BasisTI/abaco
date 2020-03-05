@@ -215,7 +215,11 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 this.isEdicao = true;
                 this.analiseService.findWithFuncaos(params['id']).subscribe(analise => {
                     this.loadDataAnalise(analise);
-                });
+                },
+                err => {
+                        this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSemPermissaoParaEditarAnalise'));
+                        this.router.navigate(['/analise']);
+                    });
             } else {
                 this.analise = new Analise();
                 this.analise.esforcoFases = [];

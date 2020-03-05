@@ -117,6 +117,15 @@ export class TipoEquipeService {
         });
     }
 
+    dropDownByUser(): Observable<ResponseWrapper> {
+        return this.http.get(this.resourceUrl + '/user').map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                return Observable.throw(new Error(error.status));
+            }
+        });
+    }
+
     getEquipesActiveLoggedUser(req?: any): Observable<ResponseWrapper> {
         const options = createRequestOption(req);
         return this.http.get(this.resourceUrl + '/active-user', options)
