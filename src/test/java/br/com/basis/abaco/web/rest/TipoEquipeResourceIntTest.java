@@ -3,6 +3,7 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.AbacoApp;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
+import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.service.TipoEquipeService;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
@@ -70,6 +71,9 @@ public class TipoEquipeResourceIntTest {
     @Autowired
     private TipoEquipeService tipoEquipeService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private MockMvc restTipoEquipeMockMvc;
 
     private TipoEquipe tipoEquipe;
@@ -78,7 +82,7 @@ public class TipoEquipeResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final TipoEquipeResource tipoEquipeResource = new TipoEquipeResource(tipoEquipeRepository,
-                tipoEquipeSearchRepository, dynamicExportsService, tipoEquipeService);
+                tipoEquipeSearchRepository, dynamicExportsService, tipoEquipeService, userRepository);
         this.restTipoEquipeMockMvc = MockMvcBuilders.standaloneSetup(tipoEquipeResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver)
                 .setControllerAdvice(exceptionTranslator)
