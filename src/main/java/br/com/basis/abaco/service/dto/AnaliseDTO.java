@@ -33,7 +33,7 @@ public class AnaliseDTO {
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
         this.dataCriacaoOrdemServico = new Timestamp(dataCriacaoOrdemServico.getTime());
     }
-    public Timestamp getDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
+    public Timestamp getDataCriacaoOrdemServico() {
        return new Timestamp(this.dataCriacaoOrdemServico.getTime());
     }
 
