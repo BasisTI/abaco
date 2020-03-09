@@ -209,6 +209,7 @@ public class AnaliseResource {
             Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
             analiseClone.setIdentificadorAnalise(analise.getIdentificadorAnalise() + " - CÓPIA");
             salvaNovaData(analiseClone);
+            analiseClone.setDataCriacaoOrdemServico(analise.getDataHomologacao());
             analiseClone.setFuncaoDados(bindCloneFuncaoDados(analise, analiseClone));
             analiseClone.setFuncaoTransacaos(bindCloneFuncaoTransacaos(analise, analiseClone));
             analiseRepository.save(analiseClone);
@@ -228,11 +229,14 @@ public class AnaliseResource {
     public ResponseEntity<Analise> cloneAnaliseToEquipe(@PathVariable Long id, @PathVariable Long idEquipe) {
         Analise analise = recuperarAnalise(id);
         TipoEquipe tipoEquipe = tipoEquipeRepository.findById(idEquipe);
-        if (analise.getId() != null && tipoEquipe.getId() != null) {
+        if (analise.getId() != null && tipoEquipe.getId() != null && !(analise.getClonadaParaEquipe())) {
+            analise.setClonadaParaEquipe(true);
             Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
             bindAnaliseCloneForTipoEquipe(analise, tipoEquipe, analiseClone);
             analiseRepository.save(analiseClone);
             analiseSearchRepository.save(analiseClone);
+            analiseRepository.save(analise);
+            analiseSearchRepository.save(analise);
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseClone.getId().toString()))
                     .body(analiseClone);
         } else {
@@ -564,6 +568,9 @@ public class AnaliseResource {
         analiseClone.setPfTotal("0");
         analiseClone.setAdjustPFTotal("0");
         analiseClone.setEquipeResponsavel(tipoEquipe);
+        analiseClone.setUsers(new HashSet<>());
+        analiseClone.setBloqueiaAnalise(false);
+        analiseClone.setClonadaParaEquipe(true);
         salvaNovaData(analiseClone);
         analiseClone.setDataCriacaoOrdemServico(analise.getDataHomologacao());
     }

@@ -26,6 +26,7 @@ public class AnaliseDTO {
     private Timestamp dataCriacaoOrdemServico;
     private TipoAnalise tipoAnalise;
     private boolean bloqueiaAnalise;
+    private boolean clonadaParaEquipe;
     private Set<UserAnaliseDTO> users = new HashSet<>();
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {

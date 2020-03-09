@@ -106,5 +106,6 @@
     <include file="classpath:config/liquibase/changelog/ALTER_Funcoes.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/201905079385651_CREATE_table_compartilhado_UserAnalise.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20200305140103_added_entity_Pe_Analitico.xml" relativeToChangelogFile="false" />
+    <include file="classpath:config/liquibase/changelog/20200309124713_ADD_column_ Clonada_Para_Equipe.xml" relativeToChangelogFile="false" />
 
 </databaseChangeLog>
