@@ -232,8 +232,14 @@
                         </ng-template>
                     </p-column>
 
-
                     <p-column [header]="this.getLabel('Analise.Analise.Bloqueado')" field="bloqueiaAnalise"
+                              [sortable]="true">
+                        <ng-template let-col let-bloqueado="rowData" pTemplate="body">
+                            {{ bloqueado[col.field] ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
+                        </ng-template>
+                    </p-column>
+
+                    <p-column [header]="this.getLabel('Analise.Analise.ClonadaParaEquipe')" field="clonadaParaEquipe"
                               [sortable]="true">
                         <ng-template let-col let-bloqueado="rowData" pTemplate="body">
                             {{ bloqueado[col.field] ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
