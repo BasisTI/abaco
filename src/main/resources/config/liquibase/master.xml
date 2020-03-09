@@ -93,7 +93,6 @@
     <include file="classpath:config/liquibase/changelog/201902069385655_ALTER_sistema_org_contrato_fator_changelog.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180823220848_added_entity_BaseLineSintetico.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180824144515_added_entity_BaseLineAnalitico.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/201809219385653_added_entity_Grupo.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20190218_ALTER_Analise_added_column_DataCriacaoOrdemServico.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/added_entity_manual_contrato.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/ALTER_manual_contrato.xml" relativeToChangelogFile="false"/>
@@ -102,7 +101,6 @@
     <include file="classpath:config/liquibase/changelog/ALTER_entity_contrato.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20190423_DROP_view_baseline_analitico.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20190423_added_entity_BaseLineAnalitico.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/ALTER_drop_contraint_funcao_dados_versionavel.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/ALTER_Funcoes.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/201905079385651_CREATE_table_compartilhado_UserAnalise.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20200305140103_added_entity_Pe_Analitico.xml" relativeToChangelogFile="false" />

@@ -18,7 +18,7 @@
     -->
     <changeSet id="20180823220848-1" author="jhipster">
         <createView catalogName="baseline_sintetico"
-                    replaceIfExists="false"
+                    replaceIfExists="true"
                     schemaName="public"
                     viewName="baseline_sintetico">
             <![CDATA[

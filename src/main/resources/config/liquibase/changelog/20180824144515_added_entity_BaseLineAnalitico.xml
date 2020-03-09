@@ -18,7 +18,7 @@
     -->
     <changeSet id="20180824144515-1" author="jhipster">
         <createView catalogName="baseline_analitico"
-                    replaceIfExists="false"
+                    replaceIfExists="true"
                     schemaName="public"
                     viewName="baseline_analitico"> <![CDATA[
                     SELECT ROW_NUMBER () OVER (ORDER BY FDT.id_funcao_dados ), FDT.* from
