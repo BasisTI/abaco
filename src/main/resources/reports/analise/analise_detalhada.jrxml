@@ -663,11 +663,11 @@
 						<datasetRun subDataset="DSfuncaoDados" uuid="1d72a203-d76a-4895-8a48-3dea046c8e96">
 							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFUNCAOFD})]]></dataSourceExpression>
 						</datasetRun>
-						<jr:column width="239" uuid="fde02c80-e227-477f-bb90-d5b6576e7b0a">
+						<jr:column width="144" uuid="fde02c80-e227-477f-bb90-d5b6576e7b0a">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 							<jr:columnHeader style="Table 6_CH" height="30" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="239" height="30" isRemoveLineWhenBlank="true" uuid="5acef62f-edc4-428a-9182-7eb7b8a75c20"/>
+									<reportElement x="0" y="0" width="144" height="30" isRemoveLineWhenBlank="true" uuid="5acef62f-edc4-428a-9182-7eb7b8a75c20"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
@@ -677,7 +677,7 @@
 							<jr:detailCell style="Table 6_TD" height="15" rowSpan="1">
 								<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement x="0" y="0" width="239" height="15" isRemoveLineWhenBlank="true" uuid="ec048953-169f-41f1-91b8-53711d920cfc"/>
+									<reportElement x="0" y="0" width="144" height="15" isRemoveLineWhenBlank="true" uuid="ec048953-169f-41f1-91b8-53711d920cfc"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<paragraph lineSpacing="Proportional"/>
 									</textElement>
@@ -750,8 +750,30 @@
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="30" uuid="eec707e8-4209-466e-8d10-06536e75cfa4">
+						<jr:column width="95" uuid="c32461ac-304b-4b94-acec-4a8f7451b79a">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+							<jr:columnHeader style="Table 6_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="95" height="30" isRemoveLineWhenBlank="true" uuid="38245831-50c1-4649-9f1f-fbac50f36229"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+									</textElement>
+									<text><![CDATA[Nome]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 6_TD" height="15">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="c09f6e4c-21ea-4d44-8d80-35806c5cc8f7"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="9"/>
+										<paragraph lineSpacing="Proportional"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{nomeFd}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="30" uuid="eec707e8-4209-466e-8d10-06536e75cfa4">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 							<jr:columnHeader style="Table 6_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="30" height="30" isRemoveLineWhenBlank="true" uuid="2f384503-28ab-407e-b074-6e9bcb62bae2"/>
@@ -772,7 +794,7 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="30" uuid="015a55ce-cde3-4e3b-9169-32b2ecaac603">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
 							<jr:columnHeader style="Table 6_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="30" height="30" isRemoveLineWhenBlank="true" uuid="129cc432-7c9f-4dfb-8610-80632462e414"/>
@@ -793,7 +815,7 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="50" uuid="fe221d05-cf54-4bb8-97ae-8f87d5f5b039">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
 							<jr:columnHeader style="Table 6_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="50" height="30" isRemoveLineWhenBlank="true" uuid="520e67c5-bba3-4153-9ed5-0c3e5fbf3512"/>
@@ -814,7 +836,7 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="70" uuid="1179aeef-800a-477a-9984-b76978d0452a">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
 							<jr:columnHeader style="Table 6_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="70" height="30" isRemoveLineWhenBlank="true" uuid="65b2ffaa-1777-4556-9751-0f53d08b01ef"/>
@@ -835,7 +857,7 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="70" uuid="88473fdd-5e2e-44a1-8b48-65e0e1269da5">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
 							<jr:columnHeader style="Table 6_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="70" height="30" isRemoveLineWhenBlank="true" uuid="43a6c538-5dc1-425f-a986-aadc117323f9"/>
@@ -856,7 +878,7 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="70" uuid="1ced76b8-f37c-46e2-8c35-95c2f20f4024">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
 							<jr:columnHeader style="Table 6_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="70" height="30" isRemoveLineWhenBlank="true" uuid="eb187ffd-074b-4fac-9b5f-65dfc46ec310"/>
@@ -904,11 +926,11 @@
 						<datasetRun subDataset="DSfuncaoTransacao" uuid="23401d29-111d-4310-a233-e078babfbb1a">
 							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFUNCAOFT})]]></dataSourceExpression>
 						</datasetRun>
-						<jr:column width="240" uuid="87b6a482-e116-4913-9614-5a0ce6e32c04">
+						<jr:column width="144" uuid="87b6a482-e116-4913-9614-5a0ce6e32c04">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 							<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="240" height="30" isRemoveLineWhenBlank="true" uuid="d0415fdc-b917-4c84-bfc0-b8f76a4af07c"/>
+									<reportElement x="0" y="0" width="144" height="30" isRemoveLineWhenBlank="true" uuid="d0415fdc-b917-4c84-bfc0-b8f76a4af07c"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
@@ -917,7 +939,7 @@
 							</jr:columnHeader>
 							<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
 								<textField isBlankWhenNull="true">
-									<reportElement x="0" y="0" width="240" height="15" isRemoveLineWhenBlank="true" uuid="f90166d0-d733-47ff-ac14-73dab8f2c67b"/>
+									<reportElement x="0" y="0" width="144" height="15" isRemoveLineWhenBlank="true" uuid="f90166d0-d733-47ff-ac14-73dab8f2c67b"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<paragraph lineSpacing="Proportional"/>
 									</textElement>
@@ -990,8 +1012,30 @@
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="30" uuid="4817a773-8e67-470c-9426-c1f0abbe8f7d">
+						<jr:column width="95" uuid="d2fa72e2-47b4-4763-b81c-b7de3e67793f">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+							<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="95" height="30" isRemoveLineWhenBlank="true" uuid="3a0da180-6896-469e-adf3-3c26f349c093"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+									</textElement>
+									<text><![CDATA[Nome]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 1_TD" height="15">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="95" height="15" isRemoveLineWhenBlank="true" uuid="52c6bec9-9d2f-473a-9177-4bf9c2661926"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="9"/>
+										<paragraph lineSpacing="Proportional"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{nomeFt}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="30" uuid="4817a773-8e67-470c-9426-c1f0abbe8f7d">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 							<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="30" height="30" isRemoveLineWhenBlank="true" uuid="2624ffdc-89f9-4aa4-93ed-d327ad9b3ded"/>
@@ -1012,7 +1056,7 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="30" uuid="f0b80d0b-9a3a-4d08-b94f-d6d659eba0f9">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
 							<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="30" height="30" isRemoveLineWhenBlank="true" uuid="58b928d0-80ce-4682-8339-b8004ee7e13c"/>
@@ -1033,7 +1077,7 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="50" uuid="0b2d7178-dd9c-4fa1-bdcc-eff565f072a2">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
 							<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="50" height="30" isRemoveLineWhenBlank="true" uuid="ad7ca056-1d40-46f6-aaa5-d970f54ba67e"/>
@@ -1054,7 +1098,7 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="70" uuid="cc84e7b7-e4e3-4b90-8d06-cecbe8ed374e">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
 							<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="70" height="30" isRemoveLineWhenBlank="true" uuid="4f3f0808-be5f-4c48-96d1-549b8c1eae60"/>
@@ -1075,7 +1119,7 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="70" uuid="04a23e48-6eb3-4af5-b542-982d36dcdb5d">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
 							<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="70" height="30" isRemoveLineWhenBlank="true" uuid="15a7b0c3-b09a-4ff2-bd1a-6824f2ae4b15"/>
@@ -1096,7 +1140,7 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="70" uuid="5519d782-0f86-4bb2-8947-2263e760c355">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
 							<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="70" height="30" isRemoveLineWhenBlank="true" uuid="fa7f12d5-5f09-4d02-a39c-947917a52096"/>
@@ -1120,9 +1164,10 @@
 				</componentElement>
 			</frame>
 		</band>
-		<band height="266">
+		<band height="270">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<frame>
-				<reportElement x="0" y="0" width="802" height="259" uuid="d2e6791c-4dd3-4346-ad36-6a9d047d9083"/>
+				<reportElement x="0" y="0" width="802" height="270" uuid="d2e6791c-4dd3-4346-ad36-6a9d047d9083"/>
 				<staticText>
 					<reportElement positionType="Float" x="3" y="114" width="535" height="21" uuid="175e04be-c069-4e45-bcad-3181c2a016ef"/>
 					<textElement verticalAlignment="Middle">

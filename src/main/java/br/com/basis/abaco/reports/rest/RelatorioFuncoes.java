@@ -130,7 +130,7 @@ public class RelatorioFuncoes {
      */
     private void popularImpacto(FuncaoTransacao f) {
         funcoes.setImpactoFt((f.getImpacto() == null
-                || !f.getImpacto().toString().isEmpty())? dash : f.getImpacto().toString());
+                || f.getImpacto().toString().isEmpty())? dash : f.getImpacto().toString());
     }
 
     /**
@@ -148,7 +148,7 @@ public class RelatorioFuncoes {
      */
     private void popularNome(FuncaoTransacao f) {
         funcoes.setNomeFt(f.getName() == null
-                || !f.getName().isEmpty() ? dash : f.getName());
+                || f.getName().isEmpty() ? dash : f.getName());
     }
 
     /**
@@ -367,7 +367,7 @@ public class RelatorioFuncoes {
      */
     private void popularImpactoFd(FuncaoDados f) {
         funcoes.setImpactoFd(f.getImpacto() == null
-                || !f.getImpacto().toString().isEmpty()
+                || f.getImpacto().toString().isEmpty()
                 ? dash : f.getImpacto().toString());
     }
 
@@ -387,7 +387,7 @@ public class RelatorioFuncoes {
      */
     private void popularNomeFd(FuncaoDados f) {
         funcoes.setNomeFd(f.getName() == null
-                || !f.getName().isEmpty() ? dash : f.getName());
+                || f.getName().isEmpty() ? dash : f.getName());
     }
 
     /**
