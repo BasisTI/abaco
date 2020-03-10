@@ -129,7 +129,7 @@ public class Analise implements Serializable, ReportObject {
     private String identificadorAnalise;
 
     @Column(name = "clonada_para_equipe")
-    private Boolean clonadaParaEquipe;
+    private Boolean clonadaParaEquipe = false;
 
     @Column(name = "bloqueado")
     private boolean bloqueiaAnalise;
