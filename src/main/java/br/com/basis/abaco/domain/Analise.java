@@ -43,6 +43,9 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -167,12 +170,12 @@ public class Analise implements Serializable, ReportObject {
     @OneToMany(mappedBy = "analises")
     private Set<Compartilhada> compartilhadas = new HashSet<>();
 
+
     @JsonInclude
     @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OrderBy("name ASC, funcionalidade ASC, id ASC")
     private Set<FuncaoDados> funcaoDados = new HashSet<>();
-
     @JsonInclude
     @OneToMany(mappedBy = ANALISE, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -237,5 +240,37 @@ public class Analise implements Serializable, ReportObject {
 
     public Timestamp getDataCriacaoOrdemServico() {
         return this.dataCriacaoOrdemServico != null ? new Timestamp(this.dataCriacaoOrdemServico.getTime()) : null;
+    }
+
+    public String getMetodoContagemString() {
+        if (metodoContagem == null) {
+            return "";
+        }
+        return metodoContagem.toString();
+    }
+
+    public Long getGarantiaRestante() throws ParseException {
+        if (contrato == null || dataHomologacao == null) {
+            return 0l;
+        }
+        Integer garantia = contrato.getDiasDeGarantia();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateWithoutTime = sdf.parse(sdf.format(new Date()));
+        Long diferenca = dateWithoutTime.getTime() - dataHomologacao.getTime();
+        if (garantia - (diferenca / 86400000) < 0) {
+            return 0l;
+        }
+        return garantia - (diferenca / 86400000);
+    }
+
+    public String getCreatedOn() {
+        return this.dataCriacaoOrdemServico == null ? "" : new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(this.dataCriacaoOrdemServico);
+    }
+
+    public String getBloqueiaString() {
+        if (bloqueiaAnalise) {
+            return "Sim";
+        }
+        return "Não";
     }
 }

@@ -1,22 +1,21 @@
 package br.com.basis.abaco.service.mapper;
 
-import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.domain.TipoEquipe;
-import br.com.basis.abaco.domain.Organizacao;
-
+import br.com.basis.abaco.domain.User;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.data.elasticsearch.core.DefaultEntityMapper;
 
 import java.io.IOException;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 public class AnaliseEntityMapper extends DefaultEntityMapper {
 
@@ -26,7 +25,7 @@ public class AnaliseEntityMapper extends DefaultEntityMapper {
     public <T> T mapToObject(String source, Class<T> clazz) throws IOException {
         Analise retorno = (Analise) super.mapToObject(source, clazz);
         final ObjectNode node = mapper.readValue(source, ObjectNode.class);
-        JsonNode user = node.get("users.firstName");
+        JsonNode user = node.get("users");
         Set<User> users = new HashSet<>();
         if (Optional.ofNullable(user).isPresent()) {
             if (user.isArray()) {
@@ -46,12 +45,12 @@ public class AnaliseEntityMapper extends DefaultEntityMapper {
 
     private User newUser(String firstName) {
         return User.builder()
-            .firstName(firstName)
-            .authorities(Collections.emptySet())
-            .tipoEquipes(Collections.emptySet())
-            .analises(Collections.emptySet())
-            .organizacoes(Collections.emptySet())
-            .build();
+                .firstName(firstName)
+                .authorities(Collections.emptySet())
+                .tipoEquipes(Collections.emptySet())
+                .analises(Collections.emptySet())
+                .organizacoes(Collections.emptySet())
+                .build();
     }
 
 }

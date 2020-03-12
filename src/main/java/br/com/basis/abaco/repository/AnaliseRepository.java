@@ -59,4 +59,7 @@ public interface AnaliseRepository extends JpaRepository<Analise, Long> {
     @EntityGraph(attributePaths = {"compartilhadas", "funcaoDados", "funcaoTransacaos", "esforcoFases", "users"})
     Optional<Analise> findOneById(Long id);
 
+    List<Analise> findAll();
+
+
 }

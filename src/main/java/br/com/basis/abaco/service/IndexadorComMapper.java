@@ -38,7 +38,6 @@ public class IndexadorComMapper<A, B, C extends Serializable, D> extends Abstrac
             List list = classMapper.toEntity(dto);
             elasticsearchClassRepository.save(list);
         }
-
     }
 
 }

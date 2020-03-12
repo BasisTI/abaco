@@ -86,9 +86,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
 
 @RestController
 @RequestMapping("/api")
@@ -151,7 +148,7 @@ public class AnaliseResource {
         salvaNovaData(analise);
         linkFuncoesToAnalise(analise);
         analiseRepository.save(analise);
-        analiseSearchRepository.save(analise);
+        analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         return ResponseEntity.created(new URI("/api/analises/" + analise.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, analise.getId().toString())).body(analise);
     }
@@ -171,7 +168,7 @@ public class AnaliseResource {
         salvaNovaData(analise);
         linkFuncoesToAnalise(analise);
         analiseRepository.save(analise);
-        analiseSearchRepository.save(analise);
+        analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
                 .body(analise);
     }
@@ -192,7 +189,7 @@ public class AnaliseResource {
                 analise.setBloqueiaAnalise(true);
             }
             Analise result = analiseRepository.save(analise);
-            analiseSearchRepository.save(result);
+            analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
                     .body(result);
         } else {
@@ -213,7 +210,7 @@ public class AnaliseResource {
             analiseClone.setFuncaoDados(bindCloneFuncaoDados(analise, analiseClone));
             analiseClone.setFuncaoTransacaos(bindCloneFuncaoTransacaos(analise, analiseClone));
             analiseRepository.save(analiseClone);
-            analiseSearchRepository.save(analiseClone);
+            analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseClone.getId().toString()))
                     .body(analiseClone);
         } else {
@@ -234,9 +231,9 @@ public class AnaliseResource {
             Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
             bindAnaliseCloneForTipoEquipe(analise, tipoEquipe, analiseClone);
             analiseRepository.save(analiseClone);
-            analiseSearchRepository.save(analiseClone);
+            analiseSearchRepository.save(convertToEntity(convertToDto(analiseClone)));
             analiseRepository.save(analise);
-            analiseSearchRepository.save(analise);
+            analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseClone.getId().toString()))
                     .body(analiseClone);
         } else {
@@ -368,12 +365,27 @@ public class AnaliseResource {
 
     @GetMapping(value = "/analise/exportacao/{tipoRelatorio}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @Timed
-    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio, @RequestParam(defaultValue = "*") String query) throws RelatorioException {
+    public ResponseEntity<InputStreamResource> gerarRelatorioExportacao(@PathVariable String tipoRelatorio,
+                                                                        @RequestParam(defaultValue = "ASC") String order,
+                                                                        @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
+                                                                        @RequestParam(defaultValue = "20") int size,
+                                                                        @RequestParam(defaultValue = "id") String sort,
+                                                                        @RequestParam(value = "identificador", required = false) String identificador,
+                                                                        @RequestParam(value = "sistema", required = false) String sistema,
+                                                                        @RequestParam(value = "metodo", required = false) String metodo,
+                                                                        @RequestParam(value = "organizacao", required = false) String organizacao,
+                                                                        @RequestParam(value = "equipe", required = false) String equipe,
+                                                                        @RequestParam(value = "usuario", required = false) String usuario) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
-            new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-            Page<Analise> result = analiseSearchRepository.search(queryStringQuery(query), dynamicExportsService.obterPageableMaximoExportacao());
-            byteArrayOutputStream = dynamicExportsService.export(new RelatorioAnaliseColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
+            Direction sortOrder = PageUtils.getSortDirection(order);
+            Pageable pageable = dynamicExportsService.obterPageableMaximoExportacao();
+            Set<Long> equipesIds = getIdEquipes();
+            BoolQueryBuilder qb = QueryBuilders.boolQuery();
+            analiseService.bindFilterSearch(identificador, sistema, metodo, organizacao, equipe, usuario, equipesIds, qb);
+            SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
+            Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
+            byteArrayOutputStream = dynamicExportsService.export(new RelatorioAnaliseColunas(), page, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             log.error(e.getMessage(), e);
             throw new RelatorioException(e);
@@ -597,6 +609,9 @@ public class AnaliseResource {
         return new ModelMapper().map(analise, AnaliseDTO.class);
     }
 
+    private Analise convertToEntity(AnaliseDTO analiseDTO) {
+        return new ModelMapper().map(analiseDTO, Analise.class);
+    }
 }
 
 

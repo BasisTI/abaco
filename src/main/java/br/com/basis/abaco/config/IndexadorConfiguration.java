@@ -53,7 +53,10 @@ import br.com.basis.abaco.repository.search.SistemaSearchRepository;
 import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.service.Indexador;
+import br.com.basis.abaco.service.IndexadorComMapper;
 import br.com.basis.abaco.service.IndexadorSemMapper;
+import br.com.basis.abaco.service.dto.AnaliseDTO;
+import br.com.basis.abaco.service.mapper.AnaliseMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -101,9 +104,6 @@ public class IndexadorConfiguration {
     private RlrSearchRepository rlrSearchRepository;
     private TipoEquipeSearchRepository tipoEquipeSearchRepository;
 
-
-
-
     @Bean
     public Indexador indexadorUser() {
         IndexadorSemMapper<User, Long> indexador = new IndexadorSemMapper<>(userRepository,
@@ -112,6 +112,7 @@ public class IndexadorConfiguration {
         indexador.setDescricao(IndexadoresUtil.USER.label);
         return indexador;
     }
+
     @Bean
     public Indexador indexadorSistema() {
         IndexadorSemMapper<Sistema, Long> indexador = new IndexadorSemMapper<>(sistemaRepository,
@@ -120,6 +121,7 @@ public class IndexadorConfiguration {
         indexador.setDescricao(IndexadoresUtil.SISTEMA.label);
         return indexador;
     }
+
     @Bean
     public Indexador indexadorAlr() {
         IndexadorSemMapper<Alr, Long> indexador = new IndexadorSemMapper<>(alrRepository,
@@ -128,22 +130,28 @@ public class IndexadorConfiguration {
         indexador.setDescricao(IndexadoresUtil.ALR.label);
         return indexador;
     }
+
     @Bean
-    public Indexador indexadorAnalise(){
-        IndexadorSemMapper<Analise, Long> indexador = new IndexadorSemMapper<>(analiseRepository,
-                analiseSearchRepository, elasticsearchTemplate);
+    public Indexador indexadorAnalise() {
+        AnaliseMapper analiseMapper = new AnaliseMapper();
+        IndexadorComMapper<Analise, Analise, Long, AnaliseDTO> indexador = new IndexadorComMapper<>(analiseRepository
+                , analiseSearchRepository
+                , analiseMapper
+                , elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.ANALISE.name());
         indexador.setDescricao(IndexadoresUtil.ANALISE.label);
         return indexador;
     }
+
     @Bean
-    public Indexador indexadorContrato(){
+    public Indexador indexadorContrato() {
         IndexadorSemMapper<Contrato, Long> indexador = new IndexadorSemMapper<>(contratoRepository,
                 contratoSearchRepository, elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.CONTRATO.name());
         indexador.setDescricao(IndexadoresUtil.CONTRATO.label);
         return indexador;
     }
+
     @Bean
     public Indexador indexadorDer() {
         IndexadorSemMapper<Der, Long> indexador = new IndexadorSemMapper<>(derRepository,
@@ -152,6 +160,7 @@ public class IndexadorConfiguration {
         indexador.setDescricao(IndexadoresUtil.DER.label);
         return indexador;
     }
+
     @Bean
     public Indexador indexadorEsforcoFase() {
         IndexadorSemMapper<EsforcoFase, Long> indexador = new IndexadorSemMapper<>(esforcoFaseRepository,
@@ -160,6 +169,7 @@ public class IndexadorConfiguration {
         indexador.setDescricao(IndexadoresUtil.ESFORCO_FASE.label);
         return indexador;
     }
+
     @Bean
     public Indexador indexadorFatorAjuste() {
         IndexadorSemMapper<FatorAjuste, Long> indexador = new IndexadorSemMapper<>(fatorAjusteRepository,
@@ -167,63 +177,81 @@ public class IndexadorConfiguration {
         indexador.setCodigo(IndexadoresUtil.FATOR_AJUSTE.name());
         indexador.setDescricao(IndexadoresUtil.FATOR_AJUSTE.label);
         return indexador;
-    }    @Bean
+    }
+
+    @Bean
     public Indexador indexadorFuncaoDados() {
         IndexadorSemMapper<FuncaoDados, Long> indexador = new IndexadorSemMapper<>(funcaoDadosRepository,
                 funcaoDadosSearchRepository, elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.FUNCAO_DADOS.name());
         indexador.setDescricao(IndexadoresUtil.FUNCAO_DADOS.label);
         return indexador;
-    }    @Bean
+    }
+
+    @Bean
     public Indexador indexadorFuncaoTransacao() {
         IndexadorSemMapper<FuncaoTransacao, Long> indexador = new IndexadorSemMapper<>(funcaoTransacaoRepository,
                 funcaoTransacaoSearchRepository, elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.FUNCAO_TRANSACAO.name());
         indexador.setDescricao(IndexadoresUtil.FUNCAO_TRANSACAO.label);
         return indexador;
-    }    @Bean
+    }
+
+    @Bean
     public Indexador indexadorFuncionalidade() {
         IndexadorSemMapper<Funcionalidade, Long> indexador = new IndexadorSemMapper<>(funcionalidadeRepository,
                 funcionalidadeSearchRepository, elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.FUNCIONALIDADE.name());
         indexador.setDescricao(IndexadoresUtil.FUNCIONALIDADE.label);
         return indexador;
-    }    @Bean
+    }
+
+    @Bean
     public Indexador indexadorManual() {
         IndexadorSemMapper<Manual, Long> indexador = new IndexadorSemMapper<>(manualRepository,
                 manualSearchRepository, elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.MANUAL.name());
         indexador.setDescricao(IndexadoresUtil.MANUAL.label);
         return indexador;
-    }    @Bean
+    }
+
+    @Bean
     public Indexador indexadorManualContrato() {
         IndexadorSemMapper<ManualContrato, Long> indexador = new IndexadorSemMapper<>(manualContratoRepository,
                 manualContratoSearchRepository, elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.MANUAL_CONTRATO.name());
         indexador.setDescricao(IndexadoresUtil.MANUAL_CONTRATO.label);
         return indexador;
-    }    @Bean
+    }
+
+    @Bean
     public Indexador indexadorModulo() {
         IndexadorSemMapper<Modulo, Long> indexador = new IndexadorSemMapper<>(moduloRepository,
                 moduloSearchRepository, elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.MODULO.name());
         indexador.setDescricao(IndexadoresUtil.MODULO.label);
         return indexador;
-    }    @Bean
+    }
+
+    @Bean
     public Indexador indexadorOrganizacao() {
         IndexadorSemMapper<Organizacao, Long> indexador = new IndexadorSemMapper<>(organizacaoRepository,
                 organizacaoSearchRepository, elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.ORGANIZACAO.name());
         indexador.setDescricao(IndexadoresUtil.ORGANIZACAO.label);
         return indexador;
-    }    @Bean
+    }
+
+    @Bean
     public Indexador indexadorRlr() {
         IndexadorSemMapper<Rlr, Long> indexador = new IndexadorSemMapper<>(rlrRepository,
                 rlrSearchRepository, elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.RLR.name());
         indexador.setDescricao(IndexadoresUtil.RLR.label);
         return indexador;
-    }    @Bean
+    }
+
+    @Bean
     public Indexador indexadorTipoEquipe() {
         IndexadorSemMapper<TipoEquipe, Long> indexador = new IndexadorSemMapper<>(tipoEquipeRepository,
                 tipoEquipeSearchRepository, elasticsearchTemplate);
