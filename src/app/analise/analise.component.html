@@ -256,7 +256,7 @@
                 </basis-datatable>
 
                 <div class="ui-g-12 ui-md-2">
-                    <app-botoes-exportacao [query]="query" resourceName="analise" id="idBtnExportacaoComponentAnalise"
+                    <app-botoes-exportacao [query]="changeUrl()" resourceName="analise" id="idBtnExportacaoComponentAnalise"
                                            fileName="analise">
                     </app-botoes-exportacao>
                 </div>
@@ -345,7 +345,7 @@
                 <p-dropdown
                         [style]="{'width':'100%'}"
                         [filter]="true"
-                        [options]="teams"
+                        [options]="tipoEquipesToClone"
                         optionLabel="nome"
                         id="idCloneToTipoEquipe"
                         [autoWidth]="false"

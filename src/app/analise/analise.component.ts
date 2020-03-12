@@ -79,7 +79,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.blockUI.stop();
-        this.userAnaliseUrl = this.changeUrl();
+        this.userAnaliseUrl = this.grupoService.grupoUrl + this.changeUrl();
         this.estadoInicial();
         this.traduzirmetsContagens();
     }
@@ -199,11 +199,11 @@ export class AnaliseComponent implements OnInit, OnDestroy {
 
     recuperarEquipe() {
         this.tipoEquipeService.dropDown().subscribe(response => {
-            this.teams = response.json;
             this.tipoEquipesToClone = response.json;
+            const emptyTeam = new TipoEquipe();
+            this.tipoEquipesToClone.unshift(emptyTeam);
             this.tipoEquipeService.dropDownByUser().subscribe(res => {
                 this.teams = res.json;
-                const emptyTeam = new TipoEquipe();
                 this.teams.unshift(emptyTeam);
             });
         });
@@ -350,7 +350,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         this.searchGroup.metodoContagem = undefined;
         this.searchGroup.equipe = undefined;
         this.searchGroup.usuario = undefined;
-        this.userAnaliseUrl = this.changeUrl();
+        this.userAnaliseUrl = this.grupoService.grupoUrl + this.changeUrl();
         this.recarregarDataTable();
     }
 
@@ -406,11 +406,11 @@ export class AnaliseComponent implements OnInit, OnDestroy {
 
         querySearch = (querySearch.endsWith('&')) ? querySearch.slice(0, -1) : querySearch;
 
-        return this.grupoService.grupoUrl + querySearch;
+        return querySearch;
     }
 
     public performSearch() {
-        this.userAnaliseUrl = this.changeUrl();
+        this.userAnaliseUrl = this.grupoService.grupoUrl + this.changeUrl();
         this.recarregarDataTable();
     }
 
