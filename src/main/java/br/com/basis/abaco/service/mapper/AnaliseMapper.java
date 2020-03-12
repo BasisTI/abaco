@@ -14,14 +14,12 @@ public class AnaliseMapper implements EntityMapper<AnaliseDTO, Analise> {
 
     @Override
     public Analise toEntity(AnaliseDTO dto) {
-        Analise analise = modelMapper.map(dto, Analise.class);
-        return analise;
+        return modelMapper.map(dto, Analise.class);
     }
 
     @Override
     public AnaliseDTO toDto(Analise entity) {
-        AnaliseDTO analiseDTO = modelMapper.map(entity, AnaliseDTO.class);
-        return analiseDTO;
+        return modelMapper.map(entity, AnaliseDTO.class);
     }
 
     @Override

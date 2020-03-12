@@ -378,7 +378,6 @@ public class AnaliseResource {
                                                                         @RequestParam(value = "usuario", required = false) String usuario) throws RelatorioException {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
-            Direction sortOrder = PageUtils.getSortDirection(order);
             Pageable pageable = dynamicExportsService.obterPageableMaximoExportacao();
             Set<Long> equipesIds = getIdEquipes();
             BoolQueryBuilder qb = QueryBuilders.boolQuery();

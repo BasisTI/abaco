@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Id;
+import java.io.Serializable;
 
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SistemaAnaliseDTO {
+public class SistemaAnaliseDTO implements Serializable {
 
     @Id
     private Long id;
