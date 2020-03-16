@@ -341,12 +341,9 @@
 	<title>
 		<band height="60">
 			<frame>
-				<reportElement x="0" y="1" width="802" height="50" uuid="9775374a-c1f4-411b-8879-1e3298140499"/>
+				<reportElement x="0" y="1" width="802" height="50" isRemoveLineWhenBlank="true" uuid="9775374a-c1f4-411b-8879-1e3298140499"/>
 				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<pen lineWidth="0.0"/>
 				</box>
 				<image scaleImage="RetainShape" hAlign="Center">
 					<reportElement x="0" y="5" width="90" height="45" uuid="6083be52-346d-49fc-851a-6a8338d0e636"/>
@@ -360,7 +357,7 @@
 					<imageExpression><![CDATA[$P{IMAGEMLOGO}]]></imageExpression>
 				</image>
 				<textField>
-					<reportElement x="385" y="25" width="417" height="20" uuid="396788b4-27e0-4647-9343-1154cd278a3f">
+					<reportElement x="200" y="25" width="417" height="20" uuid="396788b4-27e0-4647-9343-1154cd278a3f">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
@@ -370,7 +367,7 @@
 					<textFieldExpression><![CDATA[$P{SISTEMASG} + " - " + $P{SISTEMANM}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="385" y="10" width="417" height="15" uuid="8393959d-5831-47aa-aa57-1bc80547219a">
+					<reportElement x="200" y="10" width="417" height="15" uuid="8393959d-5831-47aa-aa57-1bc80547219a">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<box>
@@ -382,6 +379,56 @@
 					<textElement textAlignment="Center"/>
 					<text><![CDATA[Contagem de Pontos de Função]]></text>
 				</staticText>
+				<staticText>
+					<reportElement x="681" y="10" width="60" height="15" uuid="6102eece-8d5a-4443-a27e-53783047c21b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[PF Total]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="741" y="10" width="60" height="15" uuid="68e2a8df-c355-44ef-ae7e-5317eb950279">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[PF Ajust.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="631" y="25" width="50" height="20" isRemoveLineWhenBlank="true" uuid="a869e798-75f4-4408-8a82-4ae8eaea318b"/>
+					<box>
+						<pen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField evaluationTime="Auto" isBlankWhenNull="true">
+					<reportElement x="681" y="25" width="60" height="20" isRemoveLineWhenBlank="true" uuid="fee7b271-1244-43c0-8b42-b35f66e1eedb">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.25"/>
+					</box>
+					<textFieldExpression><![CDATA[$V{sumTotalPFFD}+$V{sumTotalPFFT} ]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Auto" isBlankWhenNull="true">
+					<reportElement x="741" y="25" width="60" height="20" isRemoveLineWhenBlank="true" uuid="600ac5bc-b736-4e92-b2ed-67d51c19d77c">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.25"/>
+					</box>
+					<textFieldExpression><![CDATA[$V{sumTotalAJUSTPFFD}+$V{sumTotalAJUSTPFFT}]]></textFieldExpression>
+				</textField>
 			</frame>
 		</band>
 	</title>
@@ -655,14 +702,14 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
-			<textField evaluationTime="Report">
+			<textField evaluationTime="Report" isBlankWhenNull="false">
 				<reportElement x="681" y="9" width="60" height="18" uuid="33d65031-0a06-4dfd-933e-d6d9e0facbc8">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{sumTotalPFFD}]]></textFieldExpression>
 			</textField>
-			<textField evaluationTime="Report">
+			<textField evaluationTime="Report" isBlankWhenNull="false">
 				<reportElement x="741" y="9" width="61" height="18" uuid="798e3f2f-6f2a-4ea5-a882-ad3a90362211">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -984,14 +1031,14 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Total:]]></text>
 			</staticText>
-			<textField evaluationTime="Report">
+			<textField evaluationTime="Report" isBlankWhenNull="false">
 				<reportElement positionType="Float" x="681" y="34" width="60" height="18" uuid="b9074f6a-acb7-420a-a252-6d9c5b8e5eae">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{sumTotalPFFT}]]></textFieldExpression>
 			</textField>
-			<textField evaluationTime="Report">
+			<textField evaluationTime="Report" isBlankWhenNull="false">
 				<reportElement positionType="Float" x="741" y="34" width="61" height="18" uuid="ad91f52d-043a-44de-be3e-2e6f45df9643">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
