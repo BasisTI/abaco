@@ -5,7 +5,7 @@ abacoui:
     tag: teste
   replicaCount: 1
   ingress:
-    url: "abaco.tst.basis.com.br"
+    url: "abaco.basis.com.br"
   ports:
     port: 80
   imagePullSecrets:
@@ -13,6 +13,13 @@ abacoui:
   proxy:
     locations:
     - abaco
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+  tls:
+  - hosts:
+    - abaco.basis.com.br
+    secretName: abaco-cert
 
 abaco:
   name: abaco
@@ -26,6 +33,16 @@ abaco:
     disabled: true
   imagePullSecrets:
   - name: basis-registry
+  memory:
+    min: "1024"
+    max: "4096"
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "250m"
+    limits:
+      memory: "4Gi"
+      cpu: "1000m"
   configmap:
     spring:
       profiles:
@@ -54,22 +71,46 @@ elasticsearch:
     persistence:
       size: 4Gi
       storageClass: nfs-name
+    heapSize: "2g"
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "250m"
+      limits:
+        memory: "4Gi"
+        cpu: "1000m"
   master:
     replicas: 2
     persistence:
       storageClass: nfs-name
       size: 4Gi
+    heapSize: "2g"
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "250m"
+      limits:
+        memory: "4Gi"
+        cpu: "1000m"
   client:
     replicas: 1
     exposeTransportPort: true
+    heapSize: "2g"
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "250m"
+      limits:
+        memory: "4Gi"
+        cpu: "1000m"
 
 postgresql:
   install: true
-  imageTag: 11.4.0
   fullnameOverride: pgsql-abaco
   postgresqlUsername: abaco
   postgresqlPassword: abaco
   postgresqlDatabase: basis
+  postgresqlPostgresPassword: asdfqwerzxcv
   persistence:
     storageClass: nfs-name
     size: 10Gi
