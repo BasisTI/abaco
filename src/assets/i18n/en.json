@@ -724,6 +724,7 @@
       },
       "Botoes":{
         "GerarRelatorio": "Generate Report",
+        "GerarRelatorioExcel": "Generate Excel Report",
         "CompartilharAnalise": "Shared Analysis",
         "BloquearAnalise": "Block Analysis",
         "SalvarAnalise": "Save Analyze",

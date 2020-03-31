@@ -389,6 +389,10 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.analise.id);
     }
 
+    public geraRelatorioExcel() {
+        this.analiseService.gerarRelatorioExcel(this.analise.id);
+    }
+
     public bloquearAnalise() {
         if (!this.analise.dataHomologacao) {
             this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_HOMOLOGACAO'));

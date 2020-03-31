@@ -722,6 +722,7 @@
       },
       "Botoes": {
         "GerarRelatorio": "Gerar Relatório",
+        "GerarRelatorioExcel": "Gerar Relatório Excel",
         "CompartilharAnalise": "Compartilhar Análise",
         "BloquearAnalise": "Bloquear Análise",
         "SalvarAnalise": "Salvar Análise",
