@@ -8,11 +8,13 @@ import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
+import br.com.basis.abaco.service.dto.UserAnaliseDTO;
 import br.com.basis.abaco.service.dto.UserDTO;
 import br.com.basis.abaco.service.util.RandomUtil;
 import br.com.basis.abaco.utils.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -269,6 +271,16 @@ public class UserService extends BaseService {
         List<UserDTO> lst = new ArrayList<>();
         for (int i = 0; i < lista.size(); i++) {
             lst.add(new UserDTO(lista.get(i)));
+        }
+        return lst;
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserAnaliseDTO> getAllUserDtosOrgEquip(Long idOrg, Long idEquip) {
+        List<User> lista = userRepository.findAllUsersOrgEquip(idOrg, idEquip);
+        List<UserAnaliseDTO> lst = new ArrayList<>();
+        for (int i = 0; i < lista.size(); i++) {
+            lst.add( new ModelMapper().map(lista.get(i), UserAnaliseDTO.class));
         }
         return lst;
     }

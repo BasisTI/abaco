@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.util.List;
 
 @AllArgsConstructor
-
 public class IndexadorComMapper<A, B, C extends Serializable, D> extends AbstractIndexador {
 
     private  JpaRepository<A, C> jpaRepository;

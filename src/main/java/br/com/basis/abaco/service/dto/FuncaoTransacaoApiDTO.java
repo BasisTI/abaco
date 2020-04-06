@@ -35,7 +35,7 @@ public class FuncaoTransacaoApiDTO {
 
     private Integer quantidade;
 
-    private Set<AlrFtDTO> alrs = new HashSet<>();
+    private Set<AlrDTO> alrs = new HashSet<>();
 
     private ImpactoFatorAjuste impacto;
 
@@ -137,12 +137,12 @@ public class FuncaoTransacaoApiDTO {
         this.quantidade = quantidade;
     }
 
-    public Set<AlrFtDTO> getAlrs() {
-        return new LinkedHashSet<AlrFtDTO>(alrs);
+    public Set<AlrDTO> getAlrs() {
+        return new LinkedHashSet<AlrDTO>(alrs);
     }
 
-    public void setAlrs(Set<AlrFtDTO> alrs) {
-        this.alrs = new LinkedHashSet<AlrFtDTO>(alrs);
+    public void setAlrs(Set<AlrDTO> alrs) {
+        this.alrs = new LinkedHashSet<AlrDTO>(alrs);
     }
 
     public ImpactoFatorAjuste getImpacto() {

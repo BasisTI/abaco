@@ -1,12 +1,14 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.AbacoApp;
-
 import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.enumeration.Complexidade;
+import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
+import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
 import br.com.basis.abaco.web.rest.errors.ExceptionTranslator;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,11 +29,14 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
-import br.com.basis.abaco.domain.enumeration.Complexidade;
 /**
  * Test class for the FuncaoTransacaoResource REST controller.
  *
@@ -68,6 +73,13 @@ public class FuncaoTransacaoResourceIntTest {
     @Autowired
     private EntityManager em;
 
+    @Autowired
+    private AnaliseRepository analiseRepository;
+
+    @Autowired
+    private AnaliseSearchRepository analiseSearchRepository;
+
+
     private MockMvc restFuncaoTransacaoMockMvc;
 
     private FuncaoTransacao funcaoTransacao;
@@ -75,16 +87,16 @@ public class FuncaoTransacaoResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            FuncaoTransacaoResource funcaoTransacaoResource = new FuncaoTransacaoResource(funcaoTransacaoRepository, funcaoTransacaoSearchRepository);
+        FuncaoTransacaoResource funcaoTransacaoResource = new FuncaoTransacaoResource(funcaoTransacaoRepository, funcaoTransacaoSearchRepository, analiseRepository, analiseSearchRepository);
         this.restFuncaoTransacaoMockMvc = MockMvcBuilders.standaloneSetup(funcaoTransacaoResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
+                .setCustomArgumentResolvers(pageableArgumentResolver)
+                .setControllerAdvice(exceptionTranslator)
+                .setMessageConverters(jacksonMessageConverter).build();
     }
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -110,9 +122,9 @@ public class FuncaoTransacaoResourceIntTest {
         // Create the FuncaoTransacao
 
         restFuncaoTransacaoMockMvc.perform(post("/api/funcao-transacaos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(funcaoTransacao)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(funcaoTransacao)))
+                .andExpect(status().isCreated());
 
         // Validate the FuncaoTransacao in the database
         List<FuncaoTransacao> funcaoTransacaoList = funcaoTransacaoRepository.findAll();
@@ -138,9 +150,9 @@ public class FuncaoTransacaoResourceIntTest {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restFuncaoTransacaoMockMvc.perform(post("/api/funcao-transacaos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingFuncaoTransacao)))
-            .andExpect(status().isBadRequest());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(existingFuncaoTransacao)))
+                .andExpect(status().isBadRequest());
 
         // Validate the Alice in the database
         List<FuncaoTransacao> funcaoTransacaoList = funcaoTransacaoRepository.findAll();
@@ -155,12 +167,12 @@ public class FuncaoTransacaoResourceIntTest {
 
         // Get all the funcaoTransacaoList
         restFuncaoTransacaoMockMvc.perform(get("/api/funcao-transacaos?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(funcaoTransacao.getId().intValue())))
-            .andExpect(jsonPath("$.[*].tipo").value(hasItem(DEFAULT_TIPO.toString())))
-            .andExpect(jsonPath("$.[*].complexidade").value(hasItem(DEFAULT_COMPLEXIDADE.toString())))
-            .andExpect(jsonPath("$.[*].pf").value(hasItem(DEFAULT_PF.intValue())));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(funcaoTransacao.getId().intValue())))
+                .andExpect(jsonPath("$.[*].tipo").value(hasItem(DEFAULT_TIPO.toString())))
+                .andExpect(jsonPath("$.[*].complexidade").value(hasItem(DEFAULT_COMPLEXIDADE.toString())))
+                .andExpect(jsonPath("$.[*].pf").value(hasItem(DEFAULT_PF.intValue())));
     }
 
     @Test
@@ -171,12 +183,12 @@ public class FuncaoTransacaoResourceIntTest {
 
         // Get the funcaoTransacao
         restFuncaoTransacaoMockMvc.perform(get("/api/funcao-transacaos/{id}", funcaoTransacao.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(funcaoTransacao.getId().intValue()))
-            .andExpect(jsonPath("$.tipo").value(DEFAULT_TIPO.toString()))
-            .andExpect(jsonPath("$.complexidade").value(DEFAULT_COMPLEXIDADE.toString()))
-            .andExpect(jsonPath("$.pf").value(DEFAULT_PF.intValue()));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.id").value(funcaoTransacao.getId().intValue()))
+                .andExpect(jsonPath("$.tipo").value(DEFAULT_TIPO.toString()))
+                .andExpect(jsonPath("$.complexidade").value(DEFAULT_COMPLEXIDADE.toString()))
+                .andExpect(jsonPath("$.pf").value(DEFAULT_PF.intValue()));
     }
 
     @Test
@@ -184,7 +196,7 @@ public class FuncaoTransacaoResourceIntTest {
     public void getNonExistingFuncaoTransacao() throws Exception {
         // Get the funcaoTransacao
         restFuncaoTransacaoMockMvc.perform(get("/api/funcao-transacaos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -202,9 +214,9 @@ public class FuncaoTransacaoResourceIntTest {
         updatedFuncaoTransacao.setPf(UPDATED_PF);
 
         restFuncaoTransacaoMockMvc.perform(put("/api/funcao-transacaos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedFuncaoTransacao)))
-            .andExpect(status().isOk());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(updatedFuncaoTransacao)))
+                .andExpect(status().isOk());
 
         // Validate the FuncaoTransacao in the database
         List<FuncaoTransacao> funcaoTransacaoList = funcaoTransacaoRepository.findAll();
@@ -228,9 +240,9 @@ public class FuncaoTransacaoResourceIntTest {
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restFuncaoTransacaoMockMvc.perform(put("/api/funcao-transacaos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(funcaoTransacao)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(funcaoTransacao)))
+                .andExpect(status().isCreated());
 
         // Validate the FuncaoTransacao in the database
         List<FuncaoTransacao> funcaoTransacaoList = funcaoTransacaoRepository.findAll();
@@ -247,8 +259,8 @@ public class FuncaoTransacaoResourceIntTest {
 
         // Get the funcaoTransacao
         restFuncaoTransacaoMockMvc.perform(delete("/api/funcao-transacaos/{id}", funcaoTransacao.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
+                .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
         boolean funcaoTransacaoExistsInEs = funcaoTransacaoSearchRepository.exists(funcaoTransacao.getId());
@@ -268,12 +280,12 @@ public class FuncaoTransacaoResourceIntTest {
 
         // Search the funcaoTransacao
         restFuncaoTransacaoMockMvc.perform(get("/api/_search/funcao-transacaos?query=id:" + funcaoTransacao.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(funcaoTransacao.getId().intValue())))
-            .andExpect(jsonPath("$.[*].tipo").value(hasItem(DEFAULT_TIPO.toString())))
-            .andExpect(jsonPath("$.[*].complexidade").value(hasItem(DEFAULT_COMPLEXIDADE.toString())))
-            .andExpect(jsonPath("$.[*].pf").value(hasItem(DEFAULT_PF.intValue())));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(funcaoTransacao.getId().intValue())))
+                .andExpect(jsonPath("$.[*].tipo").value(hasItem(DEFAULT_TIPO.toString())))
+                .andExpect(jsonPath("$.[*].complexidade").value(hasItem(DEFAULT_COMPLEXIDADE.toString())))
+                .andExpect(jsonPath("$.[*].pf").value(hasItem(DEFAULT_PF.intValue())));
     }
 
     @Test

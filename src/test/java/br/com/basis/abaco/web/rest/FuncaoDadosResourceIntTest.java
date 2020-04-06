@@ -15,6 +15,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,19 +78,24 @@ public class FuncaoDadosResourceIntTest {
     @Autowired
     private FuncaoDadosService funcaoDadosService;
 
+    private AnaliseRepository analiseRepository;
+
     private MockMvc restFuncaoDadosMockMvc;
 
     private FuncaoDados funcaoDados;
+
+    @Autowired
+    private AnaliseSearchRepository analiseSearchRepository;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         FuncaoDadosResource funcaoDadosResource = new FuncaoDadosResource(funcaoDadosRepository,
-                funcaoDadosSearchRepository, funcaoDadosService);
+                funcaoDadosSearchRepository, funcaoDadosService, analiseRepository, analiseSearchRepository);
         this.restFuncaoDadosMockMvc = MockMvcBuilders.standaloneSetup(funcaoDadosResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
+                .setCustomArgumentResolvers(pageableArgumentResolver)
+                .setControllerAdvice(exceptionTranslator)
+                .setMessageConverters(jacksonMessageConverter).build();
     }
 
     /**

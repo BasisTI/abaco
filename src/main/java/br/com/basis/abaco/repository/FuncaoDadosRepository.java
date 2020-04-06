@@ -1,11 +1,15 @@
 package br.com.basis.abaco.repository;
 
 import br.com.basis.abaco.domain.FuncaoDados;
+import br.com.basis.abaco.domain.enumeration.Complexidade;
+import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.FuncionalidadeDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -38,6 +42,15 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
             + " WHERE a.enviarBaseline = true AND a.bloqueiaAnalise = true")
     List<DropdownDTO> getFuncaoDadosDropdown();
 
-    @Query("SELECT fb FROM FuncaoDados fb JOIN fb.funcionalidade fun JOIN fun.modulo m WHERE fb.analise.id = ?1")
-    Set<FuncaoDados> findByAnaliseId(Long idAnalise);
+    @Query("SELECT fd FROM FuncaoDados fd WHERE fd.analise.id = :idAnalise")
+    Set<FuncaoDados> findByAnaliseId(@Param("idAnalise") Long idAnalise);
+
+    Boolean existsByNameAndAnalise_IdAndFuncionalidade_IdAndFuncionalidade_Modulo_Id(String name, Long analiseId, Long idFuncionalidade, Long idModulo);
+
+    Boolean existsByNameAndAnalise_IdAndFuncionalidade_IdAndFuncionalidade_Modulo_IdAndIdNot(String name, Long analiseId, Long idFuncionalidade, Long idModulo, Long id);
+
+    @Query("SELECT fd.id, fd.name, fd.fatorAjuste, fd.funcionalidade, fd.tipo, fd.ders, fd.rlrs,fd.complexidade, fd.pf, fd.grossPF, fd.sustantation FROM FuncaoDados fd WHERE fd.analise.id = :idAnalise")
+    Set<FuncaoDados> findByAnalise_Id(@Param("idAnalise") Long idAnalise);
+
+
 }

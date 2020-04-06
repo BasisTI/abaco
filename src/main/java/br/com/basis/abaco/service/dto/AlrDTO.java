@@ -1,6 +1,5 @@
 package br.com.basis.abaco.service.dto;
 
-import br.com.basis.abaco.domain.Rlr;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,13 +9,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class DerFtDTO {
-
+public class AlrDTO {
     private Long id;
-
     private String nome;
-
     private Integer valor;
-
-    private Rlr rlr;
 }

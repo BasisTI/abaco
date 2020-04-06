@@ -10,6 +10,7 @@ import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.MailService;
 import br.com.basis.abaco.service.UserService;
+import br.com.basis.abaco.service.dto.UserAnaliseDTO;
 import br.com.basis.abaco.service.dto.UserDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioUserColunas;
@@ -147,6 +148,12 @@ public class UserResource {
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public List<UserDTO> getAllUsersFronSistemaAndOrganizacao(@PathVariable Long organizacaoId, @PathVariable Long equipeId) throws URISyntaxException {
         return userService.getAllUsersOrgEquip(organizacaoId, equipeId);
+    }
+    @GetMapping("/users-dto/{organizacaoId}/{equipeId}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public List<UserAnaliseDTO> getAllUserDtosFronSistemaAndOrganizacao(@PathVariable Long organizacaoId, @PathVariable Long equipeId) throws URISyntaxException {
+        return userService.getAllUserDtosOrgEquip(organizacaoId, equipeId);
     }
 
     @GetMapping("/users/{id}")

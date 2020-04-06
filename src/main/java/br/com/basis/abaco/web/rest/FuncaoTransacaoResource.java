@@ -1,9 +1,18 @@
 package br.com.basis.abaco.web.rest;
 
+import br.com.basis.abaco.domain.Alr;
+import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
+import br.com.basis.abaco.domain.Rlr;
+import br.com.basis.abaco.repository.AnaliseRepository;
+import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
+import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
+import br.com.basis.abaco.service.dto.AnaliseDTO;
+import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoAnaliseDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
@@ -12,6 +21,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,9 +34,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -41,18 +52,21 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 @RestController
 @RequestMapping("/api")
 public class FuncaoTransacaoResource {
-
+    private static final int decimalPlace = 2;
     private final Logger log = LoggerFactory.getLogger(FuncaoTransacaoResource.class);
-
     private static final String ENTITY_NAME = "funcaoTransacao";
-
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
-
     private final FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository;
+    private final AnaliseRepository analiseRepository;
+    private final AnaliseSearchRepository analiseSearchRepository;
+    @Autowired
+    private DerRepository derRepository;
 
-    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository) {
+    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository, AnaliseSearchRepository analiseSearchRepository) {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
+        this.analiseRepository = analiseRepository;
+        this.analiseSearchRepository = analiseSearchRepository;
     }
 
     /**
@@ -62,16 +76,37 @@ public class FuncaoTransacaoResource {
      * @return the ResponseEntity with status 201 (Created) and with body the new funcaoTransacao, or with status 400 (Bad Request) if the funcaoTransacao has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/funcao-transacaos")
+    @PostMapping("/funcao-transacaos/{idAnalise}")
     @Timed
     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
-    public ResponseEntity<FuncaoTransacao> createFuncaoTransacao(@RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
+    public ResponseEntity<FuncaoTransacao> createFuncaoTransacao(@PathVariable Long idAnalise, @RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
         log.debug("REST request to save FuncaoTransacao : {}", funcaoTransacao);
+        Analise analise = analiseRepository.findOne(idAnalise);
+        funcaoTransacao.setAnalise(analise);
         if (funcaoTransacao.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoTransacao cannot already have an ID")).body(null);
         }
+        Set<Der> ders = new HashSet<>();
+        funcaoTransacao.getDers().forEach(der -> {
+            if (der.getId() != null) {
+                funcaoTransacao.getDers().remove(der);
+                der = derRepository.findOne(der.getId());
+                funcaoTransacao.getDers().add(der);
+            } else {
+                ders.add(der);
+            }
+        });
+        funcaoTransacao.setDers(ders);
+        BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace);
+        BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace);
+        pfTotal = pfTotal.add(funcaoTransacao.getGrossPF());
+        pfAdjust = pfAdjust.add(funcaoTransacao.getPf());
+        analise.setPfTotal(pfTotal.toString());
+        analise.setAdjustPFTotal(pfAdjust.toString());
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
         funcaoTransacaoSearchRepository.save(result);
+        analiseRepository.save(analise);
+        analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         return ResponseEntity.created(new URI("/api/funcao-transacaos/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
                 .body(result);
@@ -86,40 +121,27 @@ public class FuncaoTransacaoResource {
      * or with status 500 (Internal Server Error) if the funcaoTransacao couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/funcao-transacaos")
+    @PutMapping("/funcao-transacaos/{id}")
     @Timed
     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
-    public ResponseEntity<FuncaoTransacao> updateFuncaoTransacao(@RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
+    public ResponseEntity<FuncaoTransacao> updateFuncaoTransacao(@PathVariable Long id, @RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
         log.debug("REST request to update FuncaoTransacao : {}", funcaoTransacao);
+        FuncaoTransacao funcaoTransacaoOld = funcaoTransacaoRepository.findOne(id);
+        Analise analise = analiseRepository.findOne(funcaoTransacaoOld.getAnalise().getId());
         if (funcaoTransacao.getId() == null) {
-            return createFuncaoTransacao(funcaoTransacao);
+            return createFuncaoTransacao(analise.getId(), funcaoTransacao);
         }
+        BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace);
+        BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace);
+        pfTotal = pfTotal.add(funcaoTransacao.getGrossPF()).subtract(funcaoTransacaoOld.getPf());
+        pfAdjust = pfAdjust.add(funcaoTransacao.getPf()).subtract(funcaoTransacaoOld.getPf());
+        analise.setPfTotal(pfTotal.toString());
+        analise.setAdjustPFTotal(pfAdjust.toString());
+        funcaoTransacao.setAnalise(analise);
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
         funcaoTransacaoSearchRepository.save(result);
-        return ResponseEntity.ok()
-                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoTransacao.getId().toString()))
-                .body(result);
-    }
-
-    /**
-     * PUT  /funcao-transacaos : Updates an existing funcaoTransacao.
-     *
-     * @param funcaoTransacao the funcaoTransacao to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated funcaoTransacao,
-     * or with status 400 (Bad Request) if the funcaoTransacao is not valid,
-     * or with status 500 (Internal Server Error) if the funcaoTransacao couldnt be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PutMapping("/funcao-transacaos/crud")
-    @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
-    public ResponseEntity<FuncaoTransacao> gerarCrud(@RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
-        log.debug("REST request to update FuncaoTransacao : {}", funcaoTransacao);
-        if (funcaoTransacao.getId() == null) {
-            return createFuncaoTransacao(funcaoTransacao);
-        }
-        FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
-        funcaoTransacaoSearchRepository.save(result);
+        analiseRepository.save(analise);
+        analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoTransacao.getId().toString()))
                 .body(result);
@@ -211,6 +233,19 @@ public class FuncaoTransacaoResource {
     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Void> deleteFuncaoTransacao(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoTransacao : {}", id);
+        FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
+        Analise analise = analiseRepository.findOne(funcaoTransacao.getAnalise().getId());
+        BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace);
+        BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace);
+        pfTotal = pfTotal.subtract(funcaoTransacao.getPf());
+        pfAdjust = pfAdjust.subtract(funcaoTransacao.getPf());
+        analise.setPfTotal(pfTotal.setScale(decimalPlace).toString());
+        analise.setAdjustPFTotal(pfAdjust.setScale(decimalPlace).toString());
+        funcaoTransacao.setAnalise(analise);
+        FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
+        funcaoTransacaoSearchRepository.save(result);
+        analiseRepository.save(analise);
+        analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         funcaoTransacaoRepository.delete(id);
         funcaoTransacaoSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
@@ -232,8 +267,56 @@ public class FuncaoTransacaoResource {
                 .collect(Collectors.toList());
     }
 
-    private FuncaoTransacaoAnaliseDTO convertToDto(FuncaoTransacao funcaoTransacao) {
-        return new ModelMapper().map(funcaoTransacao, FuncaoTransacaoAnaliseDTO.class);
+    @GetMapping("/funcao-transacaos/{idAnalise}/{idfuncionalidade}/{idModulo}")
+    @Timed
+    public ResponseEntity<Boolean> existFuncaoDados(@PathVariable Long idAnalise, @PathVariable Long idfuncionalidade, @PathVariable Long idModulo, @RequestParam String name, @RequestParam(required = false) Long id) {
+        log.debug("REST request to exist FuncaoDados");
+        Boolean existInAnalise;
+        if (id != null && id > 0) {
+
+            existInAnalise = funcaoTransacaoRepository.existsByNameAndAnalise_IdAndFuncionalidade_IdAndFuncionalidade_Modulo_IdAndIdNot(name, idAnalise, idfuncionalidade, idModulo, id);
+        } else {
+            existInAnalise = funcaoTransacaoRepository.existsByNameAndAnalise_IdAndFuncionalidade_IdAndFuncionalidade_Modulo_Id(name, idAnalise, idfuncionalidade, idModulo);
+        }
+        return ResponseEntity.ok(existInAnalise);
     }
 
+    private FuncaoTransacaoAnaliseDTO convertToDto(FuncaoTransacao funcaoTransacao) {
+        FuncaoTransacaoAnaliseDTO funcaoTransacaoAnaliseDTO = new ModelMapper().map(funcaoTransacao, FuncaoTransacaoAnaliseDTO.class);
+        funcaoTransacaoAnaliseDTO.setFtrFilter(getValueFtr(funcaoTransacao));
+        funcaoTransacaoAnaliseDTO.setDerFilter(getValueDer(funcaoTransacao));
+        funcaoTransacaoAnaliseDTO.setHasSustantation(getSustantation(funcaoTransacao));
+        return funcaoTransacaoAnaliseDTO;
+    }
+    public AnaliseDTO convertToDto(Analise analise) {
+        return new ModelMapper().map(analise, AnaliseDTO.class);
+    }
+
+    private Analise convertToEntity(AnaliseDTO analiseDTO) {
+        return new ModelMapper().map(analiseDTO, Analise.class);
+    }
+
+    private Integer getValueDer(FuncaoTransacao funcaoTransacao) {
+        int dersValues = funcaoTransacao.getDers().size();
+        if (dersValues == 1) {
+            Der der = funcaoTransacao.getDers().iterator().next();
+            return der.getValor() == null ? dersValues : der.getValor();
+        } else {
+            return dersValues;
+        }
+    }
+
+    private Integer getValueFtr(FuncaoTransacao funcaoTransacao) {
+        int alrValues = funcaoTransacao.getAlrs().size();
+        if (alrValues > 1) {
+            Alr alr = funcaoTransacao.getAlrs().iterator().next();
+            return alr.getValor() == null ? alrValues : alr.getValor();
+        } else {
+            return alrValues;
+        }
+    }
+
+    private Boolean getSustantation(FuncaoTransacao funcaoTransacao) {
+        return funcaoTransacao.getSustantation() != null && !(funcaoTransacao.getSustantation().isEmpty());
+    }
 }

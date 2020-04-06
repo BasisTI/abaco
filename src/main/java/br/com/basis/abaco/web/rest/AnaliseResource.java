@@ -146,9 +146,9 @@ public class AnaliseResource {
         }
         analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
         salvaNovaData(analise);
-        linkFuncoesToAnalise(analise);
-        analiseRepository.save(analise);
-        analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
+//        linkFuncoesToAnalise(analise);
+            analiseRepository.save(analise);
+            analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         return ResponseEntity.created(new URI("/api/analises/" + analise.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, analise.getId().toString())).body(analise);
     }
@@ -156,17 +156,18 @@ public class AnaliseResource {
     @PutMapping("/analises")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<Analise> updateAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
-        if (analise.getId() == null) {
-            return createAnalise(analise);
+    public ResponseEntity<Analise> updateAnalise(@Valid @RequestBody Analise analiseUpdate) throws URISyntaxException {
+        if (analiseUpdate.getId() == null) {
+            return createAnalise(analiseUpdate);
         }
+        Analise analise  =  analiseRepository.findOne(analiseUpdate.getId());
+        bindAnalise(analiseUpdate, analise);
         if (analise.isBloqueiaAnalise()) {
             return ResponseEntity.badRequest().headers(
                     HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
         }
         analise.setEditedBy(analiseRepository.findOne(analise.getId()).getCreatedBy());
-        salvaNovaData(analise);
-        linkFuncoesToAnalise(analise);
+//        linkFuncoesToAnalise(analise);
         analiseRepository.save(analise);
         analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
@@ -610,6 +611,23 @@ public class AnaliseResource {
 
     private Analise convertToEntity(AnaliseDTO analiseDTO) {
         return new ModelMapper().map(analiseDTO, Analise.class);
+    }
+
+    private void bindAnalise(@RequestBody @Valid Analise analiseUpdate, Analise analise) {
+        salvaNovaData(analiseUpdate);
+        analise.setIdentificadorAnalise(analiseUpdate.getIdentificadorAnalise());
+        analise.setDataCriacaoOrdemServico(analiseUpdate.getDataCriacaoOrdemServico());
+        analise.setMetodoContagem(analiseUpdate.getMetodoContagem());
+        analise.setUsers(analiseUpdate.getUsers());
+        analise.setPropositoContagem(analiseUpdate.getPropositoContagem());
+        analise.setEscopo(analiseUpdate.getEscopo());
+        analise.setFronteiras(analiseUpdate.getFronteiras());
+        analise.setDocumentacao(analiseUpdate.getDocumentacao());
+        analise.setBaselineImediatamente(analiseUpdate.getBaselineImediatamente());
+        analise.setDataHomologacao(analiseUpdate.getDataHomologacao());
+        analise.setEnviarBaseline(analiseUpdate.isEnviarBaseline());
+        analise.setObservacoes(analiseUpdate.getObservacoes());
+        analise.setEsforcoFases(analiseUpdate.getEsforcoFases());
     }
 }
 
