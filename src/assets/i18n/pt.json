@@ -417,6 +417,7 @@
       "Inserir":"Inserir",
       "Pesquisar":"Pesquisar",
       "Copia":" - Cópia",
+      "PossuiFundamentacao": "Possui Fundamentação",
       "Mensagens": {
         "msgAdicionarFuncaoDados": "Adicionar Função de Dados",
         "msgAlterarFuncaoDados": "Alterar Função de Dados",
@@ -722,6 +723,7 @@
       },
       "Botoes": {
         "GerarRelatorio": "Gerar Relatório",
+        "GerarRelatorioExcel": "Gerar Relatório Excel",
         "CompartilharAnalise": "Compartilhar Análise",
         "BloquearAnalise": "Bloquear Análise",
         "SalvarAnalise": "Salvar Análise",

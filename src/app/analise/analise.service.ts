@@ -273,7 +273,7 @@ export class AnaliseService {
         return null;
     }
 
-    public find(id: number): Observable<Analise> {
+    public find(id: Number): Observable<Analise> {
         this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.ProcurandoAnalise'));
         return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
             const jsonResponse = res.json();

@@ -52,6 +52,8 @@ import { GenericService } from '../util/service/generic.service';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import {FuncaoDados} from '../funcao-dados';
+import {FuncaoTransacao} from '../funcao-transacao';
 
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');

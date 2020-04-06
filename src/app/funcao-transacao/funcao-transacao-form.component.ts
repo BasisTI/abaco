@@ -1,38 +1,39 @@
-import { MemoryDatatableComponent } from './../memory-datatable/memory-datatable.component';
-import { TranslateService } from '@ngx-translate/core';
-import { AnaliseSharedUtils } from './../analise-shared/analise-shared-utils';
-import { BaselineService } from './../baseline/baseline.service';
-import { FuncaoDadosService } from './../funcao-dados/funcao-dados.service';
-import { BaselineAnalitico } from './../baseline/baseline-analitico.model';
-import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter, QueryList, ViewChildren } from '@angular/core';
-import { AnaliseSharedDataService, PageNotificationService, ResponseWrapper, EntityToJSON } from '../shared';
-import { Analise, AnaliseService } from '../analise';
-import { FatorAjuste } from '../fator-ajuste';
+import {MemoryDatatableComponent} from './../memory-datatable/memory-datatable.component';
+import {TranslateService} from '@ngx-translate/core';
+import {AnaliseSharedUtils} from './../analise-shared/analise-shared-utils';
+import {BaselineService} from './../baseline/baseline.service';
+import {FuncaoDadosService} from './../funcao-dados/funcao-dados.service';
+import {BaselineAnalitico} from './../baseline/baseline-analitico.model';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, ViewChildren} from '@angular/core';
+import {AnaliseSharedDataService, PageNotificationService, ResponseWrapper} from '../shared';
+import {Analise, AnaliseService} from '../analise';
+import {FatorAjuste} from '../fator-ajuste';
 
 import * as _ from 'lodash';
-import { Funcionalidade } from '../funcionalidade/index';
-import { SelectItem } from 'primeng/primeng';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { DatatableClickEvent } from '@basis/angular-components';
-import { ConfirmationService } from 'primeng/primeng';
-import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
-import { Subscription } from 'rxjs/Subscription';
+import {Funcionalidade} from '../funcionalidade/index';
+import {ConfirmationService, SelectItem} from 'primeng/primeng';
+import {BlockUI, NgBlockUI} from 'ng-block-ui';
+import {DatatableClickEvent} from '@basis/angular-components';
+import {ResumoFuncoes} from '../analise-shared/resumo-funcoes';
+import {Subscription} from 'rxjs/Subscription';
 
-import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
-import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
-import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
-import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
-import { Manual } from '../manual';
-import { Modulo } from '../modulo';
-import { CalculadoraTransacao } from '../analise-shared';
-import { FuncaoTransacao, TipoFuncaoTransacao, Editor } from './funcao-transacao.model';
-import { Der } from '../der/der.model';
-import { Impacto } from '../analise-shared/impacto-enum';
-import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
-import { FuncaoTransacaoService } from './funcao-transacao.service';
-import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
+import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
+import {DerChipItem} from '../analise-shared/der-chips/der-chip-item';
+import {DerChipConverter} from '../analise-shared/der-chips/der-chip-converter';
+import {AnaliseReferenciavel} from '../analise-shared/analise-referenciavel';
+import {Manual} from '../manual';
+import {Modulo} from '../modulo';
+import {CalculadoraTransacao} from '../analise-shared';
+import {Editor, FuncaoTransacao, TipoFuncaoTransacao} from './funcao-transacao.model';
+import {Der} from '../der/der.model';
+import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
+import {FuncaoTransacaoService} from './funcao-transacao.service';
+import {ChangeEvent} from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Base64Upload from '../../ckeditor/Base64Upload';
+import {ActivatedRoute, Router} from '@angular/router';
+import {el} from '@angular/platform-browser/testing/src/browser_util';
+import {MessageUtil} from '../util/message.util';
 
 @Component({
     selector: 'app-analise-funcao-transacao',
@@ -69,18 +70,18 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     dadosBaselineFT: BaselineAnalitico[] = [];
     dadosserviceBL: BaselineService[] = [];
     funcoesTransacaoList: FuncaoTransacao[] = [];
-    FuncaoTransacaoEditar: FuncaoTransacao;
+    FuncaoTransacaoEditar: FuncaoTransacao = new FuncaoTransacao();
 
     translateSubscriptions: Subscription[] = [];
 
     defaultSort = [{field: 'funcionalidade.nome', order: 1}];
 
     impacto: SelectItem[] = [
-        { label: 'Inclusão', value: 'INCLUSAO' },
-        { label: 'Alteração', value: 'ALTERACAO' },
-        { label: 'Exclusão', value: 'EXCLUSAO' },
-        { label: 'Conversão', value: 'CONVERSAO' },
-        { label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS' }
+        {label: 'Inclusão', value: 'INCLUSAO'},
+        {label: 'Alteração', value: 'ALTERACAO'},
+        {label: 'Exclusão', value: 'EXCLUSAO'},
+        {label: 'Conversão', value: 'CONVERSAO'},
+        {label: 'Outros', value: 'ITENS_NAO_MENSURAVEIS'}
     ];
 
     baselineResultados: any[] = [];
@@ -104,7 +105,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     public isDisabled = false;
 
-    private fatorAjusteNenhumSelectItem = { label: 'Nenhum', value: undefined };
+    private fatorAjusteNenhumSelectItem = {label: 'Nenhum', value: undefined};
     private analiseCarregadaSubscription: Subscription;
     private subscriptionSistemaSelecionado: Subscription;
     private nomeDasFuncoesDoSistema: string[] = [];
@@ -123,18 +124,17 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         ],
         heading: {
             options: [
-                { model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph' },
-                { model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1' },
-                { model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2' },
-                { model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3' }
+                {model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph'},
+                {model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1'},
+                {model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2'},
+                {model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3'}
             ]
         },
         alignment: {
             options: ['left', 'right', 'center', 'justify']
         },
         image: {
-            toolbar: [
-            ]
+            toolbar: []
         },
         table: {
             contentToolbar: [
@@ -143,7 +143,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 'mergeTableCells'
             ]
         }
-    }
+    };
+    private idAnalise: Number;
+    private analise: Analise;
+    public funcoesTransacoes: FuncaoTransacao[];
+    public currentFuncaoTransacao: FuncaoTransacao = new FuncaoTransacao();
 
 
     constructor(
@@ -156,6 +160,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         private baselineService: BaselineService,
         private funcaoTransacaoService: FuncaoTransacaoService,
         private translate: TranslateService,
+        private router: Router,
+        private route: ActivatedRoute,
     ) {
     }
 
@@ -168,19 +174,29 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.estadoInicial();
-        this.hideShowQuantidade = true;
-        this.currentFuncaoTransacao = new FuncaoTransacao();
-        this.subscribeToAnaliseCarregada();
-        this.initClassificacoes();
-        this.impactos = AnaliseSharedUtils.impactos;
+        this.route.params.subscribe(params => {
+            this.idAnalise = params['id'];
+            this.funcaoTransacaoService.getFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
+                this.analiseService.find(this.idAnalise).subscribe(analise => {
+                    this.analise = analise;
+                    this.funcoesTransacoes = value;
+                    this.disableAba =  this.analise.metodoContagem === MessageUtil.INDICATIVA;
+                    this.hideShowQuantidade = true;
+                    this.estadoInicial();
+                    this.currentFuncaoTransacao = new FuncaoTransacao();
+                    this.subscribeToAnaliseCarregada();
+                    this.initClassificacoes();
+                    this.impactos = AnaliseSharedUtils.impactos;
 
-        if (!this.uploadImagem) {
-            this.config.toolbar.splice(this.config.toolbar.indexOf('imageUpload'));
-        }
-        if (!this.criacaoTabela) {
-            this.config.toolbar.splice(this.config.toolbar.indexOf('insertTable'));
-        }
+                    if (!this.uploadImagem) {
+                        this.config.toolbar.splice(this.config.toolbar.indexOf('imageUpload'));
+                    }
+                    if (!this.criacaoTabela) {
+                        this.config.toolbar.splice(this.config.toolbar.indexOf('insertTable'));
+                    }
+                });
+            });
+        });
     }
 
     estadoInicial() {
@@ -195,11 +211,16 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     sortColumn(event: any) {
         this.funcoesTransacoes.sort((a, b) => {
             switch (event.field) {
-                case 'fatorAjuste': return this.sortByComposityField(a, b, event.field, 'nome');
-                case 'funcionalidade': return this.sortByComposityField(a, b, event.field, 'nome');
-                case 'sustantation': return this.sortByBinary(a, b, event.field);
-                case 'funcionaldiade.modulo.nome': return this.sortByComposityField2(a, b, 'funcionalidade', 'modulo', 'nome');
-                default: return this.sortByField(a, b, event.field);
+                case 'fatorAjuste':
+                    return this.sortByComposityField(a, b, event.field, 'nome');
+                case 'funcionalidade':
+                    return this.sortByComposityField(a, b, event.field, 'nome');
+                case 'sustantation':
+                    return this.sortByBinary(a, b, event.field);
+                case 'funcionaldiade.modulo.nome':
+                    return this.sortByComposityField2(a, b, 'funcionalidade', 'modulo', 'nome');
+                default:
+                    return this.sortByField(a, b, event.field);
             }
         });
         if (event.order < 0) {
@@ -226,7 +247,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     sortByBinary(a: FuncaoTransacao, b: FuncaoTransacao, field: string): number {
-        if (a[field] === true &&  b[field] === false) {
+        if (a[field] === true && b[field] === false) {
             return 1;
         } else if (a[field] === false && b[field] === true) {
             return -1;
@@ -246,7 +267,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     private subscribeDisplay() {
         this.funcaoTransacaoService.display$.subscribe(
             (data: boolean) => {
-               this.display = data;
+                this.display = data;
             });
     }
 
@@ -259,13 +280,14 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     selectRow(event) {
-        this.FuncaoTransacaoEditar = event.data.clone();
+        this.FuncaoTransacaoEditar.id = event.data.id;
     }
 
     abrirEditar() {
         this.isEdit = true;
         this.prepararParaEdicao(this.FuncaoTransacaoEditar);
     }
+
     /*
     *   Metodo responsavel por traduzir os tipos de impacto em função de dados
     */
@@ -273,23 +295,24 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         this.translate.stream(['Cadastros.FuncaoDados.Impactos.Inclusao', 'Cadastros.FuncaoDados.Impactos.Alteracao',
             'Cadastros.FuncaoDados.Impactos.Exclusao', 'Cadastros.FuncaoDados.Impactos.Conversao',
             'Cadastros.FuncaoDados.Impactos.Outros']).subscribe((traducao) => {
-                this.impacto = [
-                    { label: traducao['Cadastros.FuncaoDados.Impactos.Inclusao'], value: 'INCLUSAO' },
-                    { label: traducao['Cadastros.FuncaoDados.Impactos.Alteracao'], value: 'ALTERACAO' },
-                    { label: traducao['Cadastros.FuncaoDados.Impactos.Exclusao'], value: 'EXCLUSAO' },
-                    { label: traducao['Cadastros.FuncaoDados.Impactos.Conversao'], value: 'CONVERSAO' },
-                    { label: traducao['Cadastros.FuncaoDados.Impactos.Outros'], value: 'ITENS_NAO_MENSURAVEIS' }
-                ];
+            this.impacto = [
+                {label: traducao['Cadastros.FuncaoDados.Impactos.Inclusao'], value: 'INCLUSAO'},
+                {label: traducao['Cadastros.FuncaoDados.Impactos.Alteracao'], value: 'ALTERACAO'},
+                {label: traducao['Cadastros.FuncaoDados.Impactos.Exclusao'], value: 'EXCLUSAO'},
+                {label: traducao['Cadastros.FuncaoDados.Impactos.Conversao'], value: 'CONVERSAO'},
+                {label: traducao['Cadastros.FuncaoDados.Impactos.Outros'], value: 'ITENS_NAO_MENSURAVEIS'}
+            ];
 
-            });
+        });
     }
-    public onChange({ editor }: ChangeEvent) {
+
+    public onChange({editor}: ChangeEvent) {
         const data = editor.getData();
         return data;
     }
 
-    public onReady(eventData) {}
-
+    public onReady(eventData) {
+    }
 
 
     updateImpacto(impacto: string) {
@@ -302,7 +325,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 return this.getLabel('Cadastros.FuncaoTransacao.Exclusao');
             case 'CONVERSAO':
                 return this.getLabel('Cadastros.FuncaoTransacao.Conversao');
-            default: return this.getLabel('Global.Mensagens.Nenhum');
+            default:
+                return this.getLabel('Global.Mensagens.Nenhum');
         }
     }
 
@@ -311,7 +335,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         // TODO pipe generico?
         if (classificacoes) {
             classificacoes.forEach(c => {
-                this.classificacoes.push({ label: c, value: c });
+                this.classificacoes.push({label: c, value: c});
             });
         }
     }
@@ -336,9 +360,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     this.fecharDialog();
                 }
             } else {
-                if (this.adicionar()) {
-                    this.fecharDialog();
-                }
+                this.adicionar();
             }
         }
         if (this.blockUI.isActive) {
@@ -366,8 +388,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     disableTRDER() {
-        this.hideElementTDTR = this.analiseSharedDataService.analise.metodoContagem === 'INDICATIVA'
-            || this.analiseSharedDataService.analise.metodoContagem === 'ESTIMADA';
+        this.hideElementTDTR = this.analise.metodoContagem === 'INDICATIVA'
+            || this.analise.metodoContagem === 'ESTIMADA';
     }
 
     private subscribeToAnaliseCarregada() {
@@ -383,59 +405,43 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     getTextDialog() {
-        this.textHeader = this.isEdit ? this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlterarFuncaoDeTransacao') : this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAdicionarFuncaoDeTransacao');
+        this.textHeader = this.isEdit ?
+            this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlterarFuncaoDeTransacao')
+            : this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAdicionarFuncaoDeTransacao');
     }
 
-    get currentFuncaoTransacao(): FuncaoTransacao {
-        return this.analiseSharedDataService.currentFuncaoTransacao;
-    }
-
-    set currentFuncaoTransacao(currentFuncaoTransacao: FuncaoTransacao) {
-        this.analiseSharedDataService.currentFuncaoTransacao = currentFuncaoTransacao;
-    }
-
-    get funcoesTransacoes(): FuncaoTransacao[] {
-        if (!this.analise.funcaoTransacaos) {
-            return [];
-        }
-        this.createPropertiesFlters();
-        return this.analise.funcaoTransacaos;
-    }
 
     /**
      * Este método gera os campos dinâmicos necessários para realizar filtros
      */
     private createPropertiesFlters() {
-        this.analise.funcaoTransacaos.forEach(ft => Object.defineProperties(ft, {
+        this.funcoesTransacoes.forEach(ft => this.setFields(ft));
+    }
+
+    private setFields(ft: FuncaoTransacao) {
+        return Object.defineProperties(ft, {
             'derFilter': {value: ft.derValue(), writable: true},
             'ftrFilter': {value: ft.ftrValue(), writable: true}
-        }));
-    }
-
-    set funcoesTransacoes(funcoesTransacaoes: FuncaoTransacao[]) {
-        this.analise.funcaoTransacaos = funcoesTransacaoes;
-    }
-
-    private get analise(): Analise {
-        return this.analiseSharedDataService.analise;
+        });
     }
 
     private get manual() {
-        if (this.analiseSharedDataService.analise.contrato &&
-            this.analiseSharedDataService.analise.contrato.manualContrato) {
-            return this.analiseSharedDataService.analise.contrato.manualContrato[0].manual;
+        if (this.analise.contrato &&
+            this.analise.contrato.manualContrato) {
+            return this.analise.contrato.manualContrato[0].manual;
         }
         return undefined;
     }
 
     isContratoSelected(): boolean {
-        const isContratoSelected = this.analiseSharedDataService.isContratoSelected();
-        if (isContratoSelected) {
+        if (this.analise && this.analise.contrato) {
             if (this.fatoresAjuste.length === 0) {
-                this.inicializaFatoresAjuste(this.manual);
+                this.inicializaFatoresAjuste(this.analise.manual);
             }
+            return true;
+        } else {
+            return false;
         }
-        return isContratoSelected;
     }
 
     contratoSelecionado() {
@@ -486,11 +492,11 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     searchBaseline(event): void {
 
-        let mdCache = this.moduloCache;
+        const mdCache = this.moduloCache;
 
         this.baselineResultados = this.dadosBaselineFT.filter(function (fd) {
-            var teste: string = event.query;
-            return fd.name.toLowerCase().includes(teste.toLowerCase()) && fd.idfuncionalidade == mdCache.id;
+            const teste: string = event.query;
+            return fd.name.toLowerCase().includes(teste.toLowerCase()) && fd.idfuncionalidade === mdCache.id;
         });
 
     }
@@ -516,45 +522,38 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
                 this.desconverterChips();
                 this.verificarModulo();
-                const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem,
+                const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(this.analise.metodoContagem,
                     this.currentFuncaoTransacao,
                     this.analise.contrato.manual);
-
-                this.validarFuncaoTransacaos(this.currentFuncaoTransacao).then(resolve => {
-                    if (resolve) {
-                        this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
-                        this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
-                        this.atualizaResumo();
-                        this.resetarEstadoPosSalvar();
-                        this.salvarAnalise();
-                        this.estadoInicial();
-                    } else {
-                        this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgRegistroCadastrado'));
-                    }
-                });
+                this.blockUI.start();
+                this.funcaoTransacaoService.existsWithName(
+                    this.currentFuncaoTransacao.name,
+                    this.analise.id,
+                    this.currentFuncaoTransacao.funcionalidade.id,
+                    this.currentFuncaoTransacao.funcionalidade.modulo.id)
+                    .subscribe(existFuncaoTransaco => {
+                        if (!existFuncaoTransaco) {
+                            this.funcaoTransacaoService.create(funcaoTransacaoCalculada, this.analise.id).subscribe(value => {
+                                funcaoTransacaoCalculada.id = value.id;
+                                this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoCalculada.name);
+                                this.setFields(funcaoTransacaoCalculada);
+                                this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+                                this.fecharDialog();
+                                this.atualizaResumo();
+                                this.resetarEstadoPosSalvar();
+                                this.estadoInicial();
+                                this.blockUI.stop();
+                                return retorno;
+                            });
+                        } else {
+                            this.pageNotificationService.addErrorMsg(
+                                this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgRegistroCadastrado')
+                            );
+                            this.blockUI.stop();
+                        }
+                    });
             }
         }
-        return retorno;
-    }
-
-
-    validarFuncaoTransacaos(ft: FuncaoTransacao) {
-        const that = this;
-        return new Promise(resolve => {
-            if (that.analise.funcaoTransacaos) {
-                if (that.analise.funcaoTransacaos.length === 0) {
-                    return resolve(true);
-                }
-                that.analise.funcaoTransacaos.forEach((data, index) => {
-                    if (data.comparar(ft)) {
-                        return resolve(false);
-                    }
-                    if (!that.analise.funcaoTransacaos[index + 1]) {
-                        return resolve(true);
-                    }
-                });
-            }
-        });
     }
 
     private verifyDataRequire(): boolean {
@@ -575,10 +574,10 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.erroDeflator = false;
         }
 
-        if (this.currentFuncaoTransacao.fatorAjuste === undefined){
+        if (this.currentFuncaoTransacao.fatorAjuste === undefined) {
             this.deflatorVazio = true;
             retorno = false;
-        }else{
+        } else {
             this.deflatorVazio = false;
         }
 
@@ -593,7 +592,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             }
         }
 
-        if (this.analiseSharedDataService.analise.metodoContagem === 'DETALHADA') {
+        if (this.analise.metodoContagem === 'DETALHADA') {
 
             if (this.alrsChips.length === 0) {
                 this.erroTR = true;
@@ -611,7 +610,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
 
         if (this.currentFuncaoTransacao.funcionalidade === undefined) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgSelecioneUmModuloEFuncionalidade'));
+            this.pageNotificationService.addErrorMsg(
+                this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgSelecioneUmModuloEFuncionalidade')
+            );
             retorno = false;
         }
 
@@ -640,20 +641,40 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
             return;
         } else {
-            this.desconverterChips();
-            this.verificarModulo();
-            const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
-            this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
-            this.analise.updateFuncaoTransacao(funcaoTransacaoCalculada);
-            this.atualizaResumo();
-            this.resetarEstadoPosSalvar();
-            this.salvarAnalise();
-            this.fecharDialog();
-            this.atualizaResumo();
-            this.resetarEstadoPosSalvar();
-            this.pageNotificationService
-                .addSuccessMsg(`${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgFuncaoDeTransacao')}
+            this.blockUI.start();
+            this.funcaoTransacaoService.existsWithName(
+                this.currentFuncaoTransacao.name,
+                this.analise.id,
+                this.currentFuncaoTransacao.funcionalidade.id,
+                this.currentFuncaoTransacao.funcionalidade.modulo.id,
+                this.currentFuncaoTransacao.id).subscribe(existFuncaoTransacao => {
+                if (!existFuncaoTransacao) {
+                    this.desconverterChips();
+                    this.verificarModulo();
+                    const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(
+                        this.analise.metodoContagem, this.currentFuncaoTransacao, this.analise.contrato.manual);
+                    this.funcaoTransacaoService.update(funcaoTransacaoCalculada).subscribe(value => {
+                        this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
+                            funcaoTransacao.id !== funcaoTransacaoCalculada.id
+                        ));
+                        this.setFields(funcaoTransacaoCalculada);
+                        this.funcoesTransacoes.push(funcaoTransacaoCalculada);
+                        this.atualizaResumo();
+                        this.resetarEstadoPosSalvar();
+                        this.fecharDialog();
+                        this.blockUI.stop();
+                        this.pageNotificationService
+                            .addSuccessMsg(`${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgFuncaoDeTransacao')}
                 '${funcaoTransacaoCalculada.name}' ${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlteradaComSucesso')}`);
+                    });
+
+                } else {
+                    this.blockUI.stop();
+                    this.pageNotificationService.addErrorMsg(
+                        this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgRegistroCadastrado')
+                    );
+                }
+            });
         }
     }
 
@@ -708,13 +729,14 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     datatableClick(event: DatatableClickEvent) {
         const button = event.button;
-        if (button!== 'filter' && !event.selection) {
+        if (button !== 'filter' && !event.selection) {
             return;
         }
 
-        let funcaoTransacaoSelecionada: FuncaoTransacao;
-        if(button !== 'filter' ) {
-            funcaoTransacaoSelecionada = event.selection.clone();
+        const funcaoTransacaoSelecionada : FuncaoTransacao = new FuncaoTransacao() ;
+        if (button !== 'filter') {
+            funcaoTransacaoSelecionada.id = event.selection.id;
+            funcaoTransacaoSelecionada.name = event.selection.name;
         }
 
         switch (button) {
@@ -735,21 +757,22 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 this.textHeader = this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgClonarFuncaoDeTransacao');
                 break;
             case 'filter':
-            this.display = true;
-            break;
+                this.display = true;
+                break;
         }
     }
 
     private prepararParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
-
-        this.disableTRDER();
-        this.configurarDialog();
-
-
-        this.currentFuncaoTransacao = funcaoTransacaoSelecionada;
-
-        this.carregarValoresNaPaginaParaEdicao(funcaoTransacaoSelecionada);
-        this.pageNotificationService.addInfoMsg(`${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlterandoFuncaoDeTransacao')} '${funcaoTransacaoSelecionada.name}'`);
+        this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
+            this.disableTRDER();
+            this.configurarDialog();
+            this.currentFuncaoTransacao = funcaoTransacao;
+            this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
+            this.pageNotificationService.addInfoMsg(
+                `${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlterandoFuncaoDeTransacao')} '${this.currentFuncaoTransacao.name}'`
+            );
+            this.blockUI.stop();
+        });
     }
 
     private carregarDersAlrs() {
@@ -761,15 +784,22 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     // Prepara para clonar
     private prepareToClone(funcaoTransacaoSelecionada: FuncaoTransacao) {
-        this.analiseSharedDataService.currentFuncaoTransacao = funcaoTransacaoSelecionada;
-        this.currentFuncaoTransacao.name = this.currentFuncaoTransacao.name + ' - Cópia';
-        this.carregarValoresNaPaginaParaEdicao(funcaoTransacaoSelecionada);
-        this.pageNotificationService.addInfoMsg(`${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgClonandoFuncaoDeTransacao')} '${funcaoTransacaoSelecionada.name}'`);
+        this.funcaoTransacaoService.getById(funcaoTransacaoSelecionada.id).subscribe(funcaoTransacao => {
+            this.disableTRDER();
+            this.configurarDialog();
+            this.currentFuncaoTransacao = funcaoTransacao;
+            this.currentFuncaoTransacao.id = undefined;
+            this.currentFuncaoTransacao.name = this.currentFuncaoTransacao.name + ' - Cópia';
+            this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
+            this.pageNotificationService.addInfoMsg(
+                `${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgClonandoFuncaoDeTransacao')} '${this.currentFuncaoTransacao.name}'`
+            );
+            this.blockUI.stop();
+        });
     }
 
     private carregarValoresNaPaginaParaEdicao(funcaoTransacaoSelecionada: FuncaoTransacao) {
         this.funcaoDadosService.mod.next(funcaoTransacaoSelecionada.funcionalidade);
-
         this.analiseSharedDataService.funcaoAnaliseCarregada();
         this.carregarDerEAlr(funcaoTransacaoSelecionada);
         this.carregarFatorDeAjusteNaEdicao(funcaoTransacaoSelecionada);
@@ -778,7 +808,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
         this.inicializaFatoresAjuste(this.manual);
         if (funcaoSelecionada.fatorAjuste !== undefined) {
-            funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, { value: { 'id': funcaoSelecionada.fatorAjuste.id } }).value;
+            funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, {value: {'id': funcaoSelecionada.fatorAjuste.id}}).value;
         }
 
     }
@@ -792,8 +822,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
     }
 
     // Carregar Referencial
+    disableAba: any;
     private loadReference(referenciaveis: AnaliseReferenciavel[],
-        strValues: string[]): DerChipItem[] {
+                          strValues: string[]): DerChipItem[] {
 
         if (referenciaveis) {
             if (referenciaveis.length > 0) {
@@ -819,11 +850,16 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     confirmDelete(funcaoTransacaoSelecionada: FuncaoTransacao) {
         this.confirmationService.confirm({
-            message: `${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgTemCertezaQueDesejaExcluirFuncaoDeTransacao')} '${funcaoTransacaoSelecionada.name}'?`,
+            message: `${
+                this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgTemCertezaQueDesejaExcluirFuncaoDeTransacao')
+            } '${funcaoTransacaoSelecionada.name}'?`,
             accept: () => {
-                this.analise.deleteFuncaoTransacao(funcaoTransacaoSelecionada);
-                this.salvarAnalise();
-                this.pageNotificationService.addDeleteMsgWithName(funcaoTransacaoSelecionada.name);
+                this.funcaoTransacaoService.delete(funcaoTransacaoSelecionada.id).subscribe(value => {
+                    this.funcoesTransacoes = this.funcoesTransacoes.filter((funcaoTransacao) => (
+                        funcaoTransacao.id !== funcaoTransacaoSelecionada.id
+                    ));
+                    this.pageNotificationService.addDeleteMsgWithName(funcaoTransacaoSelecionada.name);
+                });
             }
         });
     }
@@ -852,7 +888,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    openDialogAdcFT(param: boolean){
+    openDialogAdcFT(param: boolean) {
         this.isFilter = param;
         this.configurarDialog();
     }
@@ -870,16 +906,18 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             if (this.analise.manual) {
                 this.faS = _.cloneDeep(this.analise.manual.fatoresAjuste);
                 this.faS.sort((n1, n2) => {
-                    if (n1.fator < n2.fator)
+                    if (n1.fator < n2.fator) {
                         return 1;
-                    if (n1.fator > n2.fator)
+                    }
+                    if (n1.fator > n2.fator) {
                         return -1;
+                    }
                     return 0;
                 });
                 this.fatoresAjuste =
                     this.faS.map(fa => {
                         const label = FatorAjusteLabelGenerator.generate(fa);
-                        return { label: label, value: fa };
+                        return {label: label, value: fa};
                     });
 
                 this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
@@ -894,6 +932,25 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     buttonMultiplos() {
         this.showMultiplos = !this.showMultiplos;
+    }
+
+    handleChange(e) {
+        const index = e.index;
+        let link;
+        switch (index) {
+            case 0:
+                link = ['/analise/' + this.idAnalise + '/edit'];
+                break;
+            case 1:
+                link = ['/analise/' + this.idAnalise + '/funcao-dados'];
+                break;
+            case 2:
+                return;
+            case 3:
+                link = ['/analise/' + this.idAnalise + '/resumo'];
+                break;
+        }
+        this.router.navigate(link);
     }
 
 }

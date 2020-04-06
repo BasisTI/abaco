@@ -18,6 +18,8 @@ export class UserService {
 
     resourceUrl = environment.apiUrl + '/users/';
 
+    resourceDtoUrl = environment.apiUrl + '/users-dto/';
+
     authoritiesUrl = this.resourceUrl + '/authorities';
 
     searchUrl = environment.apiUrl + '/_search/users';
@@ -97,7 +99,7 @@ export class UserService {
     }
 
     getAllUsers(org: Organizacao, tipoequip: TipoEquipe): Observable<User[]> {
-        return this.http.get(`${this.resourceUrl}/${org.id}/${tipoequip.id}`).map((res: Response) => {
+        return this.http.get(`${this.resourceDtoUrl}/${org.id}/${tipoequip.id}`).map((res: Response) => {
             const jsonResponse = res.json();
             return this.convertUsersFromServer(jsonResponse);
         });

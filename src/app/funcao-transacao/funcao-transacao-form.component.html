@@ -1,408 +1,427 @@
-<div class="ui-g ui-fluid">
-    <div class="ui-g-12">
-        <div class="card card-w-title">
+<p-tabView (onChange)="handleChange($event)">
+    <p-tabPanel [header]="this.getLabel('Analise.Analise.Geral')"></p-tabPanel>
 
-            <div class="ui-g">
-                <div class="ui-g-12">
-                    <div class="ui-g ui-md-12" style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
-                        <div class="ui-md-2" *ngIf="!isView">
-                            <app-green-button
-                                    [buttonLabel]="'Global.Botoes.Novo' | translate"
-                                    id="idBtnNovoFormFuncaoTransacao"
-                                    buttonIcon="ui-icon-add"
-                                    (click)="openDialog(false)">
-                            </app-green-button>
-                        </div>
-                    </div>
+    <p-tabPanel [header]="this.getLabel('Analise.Analise.FuncoesDados')"></p-tabPanel>
 
-                    <!-- Inicio da tabela -->
-                    <div>
-                        <app-memory-datatable
-                                [disableDelete]="this.isView"
-                                [disableEdit]="this.isView"
-                                [disableClone]="this.isView"
-                                [showFilter]="true"
-                                id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
-                                [value]="funcoesTransacoes"
-                                (buttonClick)="datatableClick($event)"
-                                (selectRow)="selectRow($event)"
-                                (dblclick)="onRowDblclick($event)"
-                                [responsive]="true"
-                                scrollable="true"
-                                scrollWidth="100%"
-                                [multiSortMeta]="defaultSort">
-                            <p-column
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
-                                    [style]="{'width': '200px'}"
-                                    field="funcionalidade.modulo.nome"
-                                    sortable="custom"
-                                    filter="true" 
-                                    filterMatchMode="contains"
-                                    (sortFunction)="sortColumn($event)">
-                            </p-column>
+    <p-tabPanel [header]="this.getLabel('Analise.Analise.FuncoesTransacao')" [selected]="true"  [disabled]="disableAba" >
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12">
+                <div class="card card-w-title">
 
-
-                            <p-column
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
-                                    field="funcionalidade.nome"
-                                    [style]="{'width': '200px'}"
-                                    sortable="custom" 
-                                    filter="true"
-                                    filterMatchMode="contains"
-                                    (sortFunction)="sortColumn($event)">
-                            </p-column>
-
-                            <p-column
-                                    sortable="custom" 
-                                    (sortFunction)="sortColumn($event)"
-                                    field="name"
-                                    filterField="name"
-                                    filter="true"
-                                    filterMatchMode="contains"
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Nome')"
-                                    [style]="{'width': '200px'}">
-                            </p-column>
-
-                            <p-column
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Deflator')"
-                                    field="fatorAjuste.nome"
-                                    sortable="custom" 
-                                    filter="true"
-                                    filterMatchMode="contains"
-                                    (sortFunction)="sortColumn($event)"
-                                    [style]="{'width': '200px'}">
-                                <ng-template
-                                        let-fatorAjuste="rowData.fatorAjuste"
-                                        pTemplate="body">
-                                    {{ fatorAjuste ? fatorAjuste.nome : this.getLabel('Global.Mensagens.Nenhum') }}
-                                </ng-template>
-                            </p-column>
-
-                            <p-column
-                                    field="tipo"
-                                    filterField="tipo"
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Classificacao')"
-                                    sortable="custom" 
-                                    filter="true"
-                                    filterMatchMode="contains"
-                                    (sortFunction)="sortColumn($event)"
-                                    [style]="{'width': '200px'}">
-                            </p-column>
-
-                            <p-column
-                                    field="derFilter"
-                                    filter="true"
-                                    filterMatchMode="contains"
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.DER(TD)')"
-                                    sortable="custom" 
-                                    (sortFunction)="sortColumn($event)"
-                                    [style]="{'width': '200px'}">
-                            </p-column>
-
-                            <p-column
-                                    field="ftrFilter"
-                                    filter="true"
-                                    filterMatchMode="contains"
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.FTR(AR)')"
-                                    sortable="custom" 
-                                    (sortFunction)="sortColumn($event)"
-                                    [style]="{'width': '200px'}">
-                            </p-column>
-
-                            <p-column
-                                    field="complexidade"
-                                    filterField="complexidade"
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.Complexidade')"
-                                    sortable="custom" 
-                                    filter="true"
-                                    filterMatchMode="contains"
-                                    (sortFunction)="sortColumn($event)"
-                                    [style]="{'width': '200px'}">
-                            </p-column>
-
-                            <p-column
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.PFBruto')"
-                                    sortable="custom" 
-                                    (sortFunction)="sortColumn($event)"
-                                    field="grossPF"
-                                    filterField="grossPF"
-                                    filter="true"
-                                    filterMatchMode="contains"
-                                    [style]="{'width': '200px'}">
-                                <ng-template
-                                        let-grossPF="rowData.grossPF"
-                                        pTemplate="body">
-                                    {{ grossPF | number }}
-                                </ng-template>
-                            </p-column>
-
-                            <p-column
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.PFLiquido')"
-                                    sortable="custom" 
-                                    (sortFunction)="sortColumn($event)"
-                                    field="pf"
-                                    filterField="pf"
-                                    filter="true"
-                                    filterMatchMode="contains"
-                                    [style]="{'width': '200px'}">
-                                <ng-template
-                                        let-pf="rowData.pf"
-                                        pTemplate="body">
-                                    {{ pf | number }}
-                                </ng-template>
-                            </p-column>
-
-                            <!--<p-column
-                                    [header]="this.getLabel('Cadastros.FuncaoTransacao.PossuiFundamentacao')"
-                                    sortable="custom" 
-                                    (sortFunction)="sortColumn($event)"
-                                    field="sustantation"
-                                    filter="true"
-                                    filterMatchMode="contains"
-                                    [style]="{'width': '200px'}">
-                                <ng-template
-                                        let-sustantation="rowData.sustantation"
-                                        pTemplate="body">
-                                        {{ sustantation ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
-                                </ng-template>
-                            </p-column>-->
-
-                        </app-memory-datatable>
-                    </div>
-                    <!-- fim table -->
-                </div>
-            </div>
-
-            <!-- DIALOG: COPIAR FUNÇÕES DE TRANSAÇÃO -->
-            <div>
-                <p-dialog [header]="this.getLabel('Cadastros.FuncaoTransacao.ClonarFuncoesDeTransacao')" [(visible)]="display" [width]="1400" [closable]="false">
-                    <app-pesquisar-ft></app-pesquisar-ft>
-                </p-dialog>
-            </div>
-
-
-
-
-            <!-- DIALOG: ADICIONAR E EDITAR FUNÇÃO DE DADOS -->
-            <p-dialog
-                    [closable]="false"
-                    [(visible)]="showDialog"
-                    [(header)]="textHeader"
-                    [contentStyle]="{'height': ['windowHeightDialog']}"
-                    [width]="[windowWidthDialog]">
-
-                <app-analise-modulo-funcionalidade
-                    [erroModulo]="erroModulo" [isFuncaoDados]="false"
-                    (moduloSelectedEvent)="moduloSelected($event)"
-                    (funcionalidadeSelectedEvent)="functionalitySelected($event)">
-                </app-analise-modulo-funcionalidade>
-
-                <div *ngIf="!isEdit">
-                    <div class="ui-g" *ngIf="!showMultiplos">
-                        <div class="ui-g-9">
-                            <label translate="Cadastros.FuncaoTransacao.NomeProcessoElementar">Nome do Processo Elementar *</label>
-                            <p-autoComplete
-                                    [(ngModel)]="currentFuncaoTransacao.name"
-                                    [suggestions]="baselineResultados"
-                                    id="idNomeProcessoElementarFormFuncaoTransacao"
-                                    (completeMethod)="searchBaseline($event)"
-                                    (onSelect)="recuperarNomeSelecionado($event)">
-                                    <ng-template let-currentFuncaoTransacao pTemplate="name">
-                                        <div class="ui-helper-clearfix" >
-                                            <div style="font-size:15px;float:left;margin:10px 10px 0 0">{{currentFuncaoTransacao.name}}</div>
-                                        </div>
-                                    </ng-template>
-                            </p-autoComplete>
-                            <span class="md-inputfield">
-                                <div *ngIf="nomeInvalido && !currentFuncaoTransacao.name"
-                                     class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                    Campo obrigatório.
-                                </div>
-                            </span>
-                        </div>
-
-                        <div class="ui-g-12 ui-md-3 ui-lg-3">
-                            <app-blue-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.Multiplos')"
-                                    id="idBtnMultiplosFormFuncaoTransacao"
-                                    (click)="buttonMultiplos()">
-                            </app-blue-button>
-                        </div>
-                    </div>
-
-                    <div class="ui-g" *ngIf="showMultiplos">
-                        <div class="ui-g-9">
-                            <label translate="Cadastros.FuncaoTransacao.NomeProcessos">Nomes dos Processos *</label>
-                            <textarea pInputTextarea
-                                      [(ngModel)]="text"
-                                      style="white-space: nowrap; overflow: auto;"
-                                      [autoResize]="false"
-                                      (keyup.enter)="textChanged()"
-                                      id="idNomesFormFuncaoTransacao"
-                                      (keyup.backspace)="textChanged()"
-                                      (keyup.delete)="textChanged()"
-                                      (change)="textChanged()"
-                                      [rows]="6" [cols]="180"
-                                      name="{{ label }}">
-                         </textarea>
-                        </div>
-                        <div class="ui-g-3">
-                            <app-blue-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.Unitario')"
-                                    id="idUnitarioFormFuncaoTransacao"
-                                    (click)="buttonMultiplos()">
-                            </app-blue-button>
-                        </div>
-                    </div>
-                </div>
-
-                <div *ngIf="isEdit">
                     <div class="ui-g">
-                        <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                            <label translate="Cadastros.FuncaoTransacao.NomeProcessoElementar">Nome do Processo Elementar *</label>
-                            <input type="text" class="ui-inputtext"
-                                   id="idNomesFormFuncaoTransacao"
-                                   [(ngModel)]="currentFuncaoTransacao.name">
+                        <div class="ui-g-12">
+                            <div class="ui-g ui-md-12"
+                                 style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
+                                <div class="ui-md-2" *ngIf="!isView">
+                                    <app-green-button
+                                            [buttonLabel]="'Global.Botoes.Novo' | translate"
+                                            id="idBtnNovoFormFuncaoTransacao"
+                                            buttonIcon="ui-icon-add"
+                                            (click)="openDialog(false)">
+                                    </app-green-button>
+                                </div>
+                            </div>
+
+                            <!-- Inicio da tabela -->
+                            <div>
+                                <app-memory-datatable
+                                        [disableDelete]="this.isView"
+                                        [disableEdit]="this.isView"
+                                        [disableClone]="this.isView"
+                                        [showFilter]="true"
+                                        id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
+                                        [value]="this.funcoesTransacoes"
+                                        (buttonClick)="datatableClick($event)"
+                                        (selectRow)="selectRow($event)"
+                                        (dblclick)="onRowDblclick($event)"
+                                        [responsive]="true"
+                                        scrollable="true"
+                                        scrollWidth="100%"
+                                        [multiSortMeta]="defaultSort">
+                                    <p-column
+                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
+                                            [style]="{'width': '200px'}"
+                                            field="funcionalidade.modulo.nome"
+                                            sortable="custom"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            (sortFunction)="sortColumn($event)">
+                                    </p-column>
+
+
+                                    <p-column
+                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
+                                            field="funcionalidade.nome"
+                                            [style]="{'width': '200px'}"
+                                            sortable="custom"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            (sortFunction)="sortColumn($event)">
+                                    </p-column>
+
+                                    <p-column
+                                            sortable="custom"
+                                            (sortFunction)="sortColumn($event)"
+                                            field="name"
+                                            filterField="name"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.Nome')"
+                                            [style]="{'width': '200px'}">
+                                    </p-column>
+
+                                    <p-column
+                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.Deflator')"
+                                            field="fatorAjuste.nome"
+                                            sortable="custom"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                        <ng-template
+                                                let-fatorAjuste="rowData.fatorAjuste"
+                                                pTemplate="body">
+                                            {{ fatorAjuste ? fatorAjuste.nome : this.getLabel('Global.Mensagens.Nenhum') }}
+                                        </ng-template>
+                                    </p-column>
+
+                                    <p-column
+                                            field="tipo"
+                                            filterField="tipo"
+                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.Classificacao')"
+                                            sortable="custom"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                    </p-column>
+
+                                    <p-column
+                                            field="derFilter"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.DER(TD)')"
+                                            sortable="custom"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                    </p-column>
+
+                                    <p-column
+                                            field="ftrFilter"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.FTR(AR)')"
+                                            sortable="custom"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                    </p-column>
+
+                                    <p-column
+                                            field="complexidade"
+                                            filterField="complexidade"
+                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.Complexidade')"
+                                            sortable="custom"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            (sortFunction)="sortColumn($event)"
+                                            [style]="{'width': '200px'}">
+                                    </p-column>
+
+                                    <p-column
+                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.PFBruto')"
+                                            sortable="custom"
+                                            (sortFunction)="sortColumn($event)"
+                                            field="grossPF"
+                                            filterField="grossPF"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            [style]="{'width': '200px'}">
+                                        <ng-template
+                                                let-grossPF="rowData.grossPF"
+                                                pTemplate="body">
+                                            {{ grossPF | number }}
+                                        </ng-template>
+                                    </p-column>
+
+                                    <p-column
+                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.PFLiquido')"
+                                            sortable="custom"
+                                            (sortFunction)="sortColumn($event)"
+                                            field="pf"
+                                            filterField="pf"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            [style]="{'width': '200px'}">
+                                        <ng-template
+                                                let-pf="rowData.pf"
+                                                pTemplate="body">
+                                            {{ pf | number }}
+                                        </ng-template>
+                                    </p-column>
+
+                                    <p-column
+                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.PossuiFundamentacao')"
+                                            sortable="custom"
+                                            (sortFunction)="sortColumn($event)"
+                                            field="hasSustantation"
+                                            filter="true"
+                                            filterMatchMode="contains"
+                                            [style]="{'width': '200px'}">
+                                        <ng-template let-hasSustantation="rowData.hasSustantation"
+                                                     pTemplate="body">
+                                            {{ hasSustantation ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
+                                        </ng-template>
+                                    </p-column>
+
+                                </app-memory-datatable>
+                            </div>
+                            <!-- fim table -->
                         </div>
                     </div>
-                </div>
 
-
-                <div class="ui-g">
-                    <div class="ui-g-6 ui-md-12 ui-sm-12">
-                        <label translate="Cadastros.FuncaoTransacao.Classificacao*">Classificação *</label>
-                        <p-dropdown
-                                [filter]="true"
-                                [options]="classificacoes"
-                                id="idClassificacoesFormFuncaoTransacao"
-                                [(ngModel)]="currentFuncaoTransacao.tipo"
-                                [placeholder]="this.getLabel('Cadastros.FuncaoTransacao.SelecioneClass')"
-                                name="classificacao"
-                                [autoWidth]="false"
-                                (onChange)="classValida()">
-                        </p-dropdown>
-                        <span class="md-inputfield">
-                            <div *ngIf="classInvalida" class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
-                                Campo obrigatório.
-                            </div>
-                        </span>
+                    <!-- DIALOG: COPIAR FUNÇÕES DE TRANSAÇÃO -->
+                    <!--<div>
+                        <p-dialog [header]="this.getLabel('Cadastros.FuncaoTransacao.ClonarFuncoesDeTransacao')"
+                                  [(visible)]="display" [width]="1400" [closable]="false">
+                            <app-pesquisar-ft></app-pesquisar-ft>
+                        </p-dialog>
                     </div>
-                </div>
-                <div class="ui-g">
-                    <div class="ui-g-6 ui-md-12 ui-sm-12">
-                        <label translate="Cadastros.FuncaoTransacao.Deflator*">Deflator *</label>
-                        <p-dropdown
-                                [filter]="true"
-                                [options]="fatoresAjuste"
-                                id="idDeflatorFormFuncaoTransacao"
-                                [(ngModel)]="currentFuncaoTransacao.fatorAjuste"
-                                [disabled]="!isContratoSelected()"
-                                [placeholder]="fatoresAjusteDropdownPlaceholder()"
-                                (onChange)="contratoSelecionado()"
-                                name="fatorAjuste"
-                                [autoWidth]="false">
-                        </p-dropdown>
-                        <span class="md-inputfield">
-                            <div *ngIf="deflatorVazio" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+-->
+
+                    <!-- &lt;!&ndash; DIALOG: ADICIONAR E EDITAR FUNÇÃO DE DADOS &ndash;&gt;-->
+                    <p-dialog
+                            [closable]="false"
+                            [(visible)]="showDialog"
+                            [(header)]="textHeader"
+                            [contentStyle]="{'height': ['windowHeightDialog']}"
+                            [width]="[windowWidthDialog]">
+
+                        <app-analise-modulo-funcionalidade
+                                [erroModulo]="erroModulo" [isFuncaoDados]="false"
+                                (moduloSelectedEvent)="moduloSelected($event)"
+                                (funcionalidadeSelectedEvent)="functionalitySelected($event)">
+                        </app-analise-modulo-funcionalidade>
+
+                        <div *ngIf="!isEdit">
+                            <div class="ui-g" *ngIf="!showMultiplos">
+                                <div class="ui-g-9">
+                                    <label translate="Cadastros.FuncaoTransacao.NomeProcessoElementar">Nome do Processo
+                                        Elementar *</label>
+                                    <p-autoComplete
+                                            [(ngModel)]="currentFuncaoTransacao.name"
+                                            [suggestions]="baselineResultados"
+                                            id="idNomeProcessoElementarFormFuncaoTransacao"
+                                            (completeMethod)="searchBaseline($event)"
+                                            (onSelect)="recuperarNomeSelecionado($event)">
+                                        <ng-template let-currentFuncaoTransacao pTemplate="name">
+                                            <div class="ui-helper-clearfix">
+                                                <div style="font-size:15px;float:left;margin:10px 10px 0 0">{{currentFuncaoTransacao.name}}</div>
+                                            </div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <span class="md-inputfield">
+                                        <div *ngIf="nomeInvalido && !currentFuncaoTransacao.name"
+                                             class="ui-message ui-messages-error"
+                                             translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                    <app-blue-button
+                                            [buttonLabel]="this.getLabel('Global.Botoes.Multiplos')"
+                                            id="idBtnMultiplosFormFuncaoTransacao"
+                                            (click)="buttonMultiplos()">
+                                    </app-blue-button>
+                                </div>
+                            </div>
+
+                            <div class="ui-g" *ngIf="showMultiplos">
+                                <div class="ui-g-9">
+                                    <label translate="Cadastros.FuncaoTransacao.NomeProcessos">Nomes dos
+                                        Processos*</label>
+                                    <textarea pInputTextarea
+                                              [(ngModel)]="text"
+                                              style="white-space: nowrap; overflow: auto;"
+                                              [autoResize]="false"
+                                              (keyup.enter)="textChanged()"
+                                              id="idNomesFormFuncaoTransacao"
+                                              (keyup.backspace)="textChanged()"
+                                              (keyup.delete)="textChanged()"
+                                              (change)="textChanged()"
+                                              [rows]="6" [cols]="180"
+                                              name="{{ label }}">
+                                    </textarea>
+                                </div>
+                                <div class="ui-g-3">
+                                    <app-blue-button
+                                            [buttonLabel]="this.getLabel('Global.Botoes.Unitario')"
+                                            id="idUnitarioFormFuncaoTransacao"
+                                            (click)="buttonMultiplos()">
+                                    </app-blue-button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="isEdit">
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
+                                    <label translate="Cadastros.FuncaoTransacao.NomeProcessoElementar">Nome do Processo
+                                        Elementar *</label>
+                                    <input type="text" class="ui-inputtext"
+                                           id="idNomesFormFuncaoTransacao"
+                                           [(ngModel)]="currentFuncaoTransacao.name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 ui-md-12 ui-sm-12">
+                                <label translate="Cadastros.FuncaoTransacao.Classificacao*">Classificação *</label>
+                                <p-dropdown
+                                        [filter]="true"
+                                        [options]="classificacoes"
+                                        id="idClassificacoesFormFuncaoTransacao"
+                                        [(ngModel)]="currentFuncaoTransacao.tipo"
+                                        [placeholder]="this.getLabel('Cadastros.FuncaoTransacao.SelecioneClass')"
+                                        name="classificacao"
+                                        [autoWidth]="false"
+                                        (onChange)="classValida()">
+                                </p-dropdown>
+                                <span class="md-inputfield">
+                                    <div *ngIf="classInvalida" class="ui-message ui-messages-error"
+                                         translate="Global.Mensagens.CampoObrigatorio">
                                     Campo obrigatório.
+                                    </div>
+                                </span>
                             </div>
-                        </span>
-                    </div>
-
-
-                    <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
-                        <label translate="Cadastros.FuncaoTransacao.Quantidade*">Quantidade *</label>
-                        <input type="number" class="ui-inputtext" min="1"
-                               id="idQuantidadeFormFuncaoTransacao"
-                               name="quantidade"
-                               [(ngModel)]="currentFuncaoTransacao.quantidade">
-                        <span class="md-inputfield">
-                            <div *ngIf="erroUnitario"
-                                 class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                        Campo obrigatório.
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 ui-md-12 ui-sm-12">
+                                <label translate="Cadastros.FuncaoTransacao.Deflator*">Deflator *</label>
+                                <p-dropdown
+                                        [filter]="true"
+                                        [options]="fatoresAjuste"
+                                        id="idDeflatorFormFuncaoTransacao"
+                                        [(ngModel)]="currentFuncaoTransacao.fatorAjuste"
+                                        [placeholder]="fatoresAjusteDropdownPlaceholder()"
+                                        (onChange)="contratoSelecionado()"
+                                        name="fatorAjuste"
+                                        [autoWidth]="false">
+                                </p-dropdown>
+                                <span class="md-inputfield">
+                                    <div *ngIf="deflatorVazio" class="ui-message ui-messages-error"
+                                         translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
+                                    </div>
+                                </span>
                             </div>
-                        </span>
-                    </div>
-                </div>
-                <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
-                    <h2 translate="Cadastros.FuncaoTransacao.FTR(AR)">FTR (AR)</h2>
-                    <div class="ui-g-12" style="padding: 0px">
-                        <app-analise-der-chips
-                                [(values)]="alrsChips"
-                                id="idFTRFormFuncaoTransacao"
-                                [relacionarDers]="true"
-                                (dersReferenciadosEvent)="dersReferenciados($event)">
-                        </app-analise-der-chips>
-                    </div>
-                    <div class="ui-g-12" style="padding: 0px">
-                        <span class="md-inputfield">
-                            <div *ngIf="erroTR && alrsChips.length == 0" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                        Campo obrigatório.
+                            <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
+                                <label translate="Cadastros.FuncaoTransacao.Quantidade*">Quantidade *</label>
+                                <input type="number" class="ui-inputtext" min="1"
+                                       id="idQuantidadeFormFuncaoTransacao"
+                                       name="quantidade"
+                                       [(ngModel)]="currentFuncaoTransacao.quantidade">
+                                <span class="md-inputfield">
+                                    <div *ngIf="erroUnitario"
+                                         class="ui-message ui-messages-error"
+                                         translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
+                                    </div>
+                                </span>
                             </div>
-                        </span>
-                    </div>
-                </div>
-                <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
-                    <h2 translate="Cadastros.FuncaoTransacao.DER(TD)">DER (TD)</h2>
-                    <div class="ui-g-12" style="padding: 0px">
-                        <app-analise-der-chips id="idDERFormFuncaoTransacao" [(values)]="dersChips"></app-analise-der-chips>
-                    </div>
-                    <div class="ui-g-12" style="padding: 0px">
-                        <span class="md-inputfield">
-                            <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                        Campo obrigatório.
+                        </div>
+                        <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
+                            <h2 translate="Cadastros.FuncaoTransacao.FTR(AR)">FTR (AR)</h2>
+                            <div class="ui-g-12" style="padding: 0px">
+                                <app-analise-der-chips
+                                        [(values)]="alrsChips"
+                                        id="idFTRFormFuncaoTransacao"
+                                        [relacionarDers]="true"
+                                        (dersReferenciadosEvent)="dersReferenciados($event)">
+                                </app-analise-der-chips>
                             </div>
-                        </span>
-                    </div>
+                            <div class="ui-g-12" style="padding: 0px">
+                                <span class="md-inputfield">
+                                    <div *ngIf="erroTR && alrsChips.length == 0" class="ui-message ui-messages-error"
+                                         translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
+                            <h2 translate="Cadastros.FuncaoTransacao.DER(TD)">DER (TD)</h2>
+                            <div class="ui-g-12" style="padding: 0px">
+                                <app-analise-der-chips id="idDERFormFuncaoTransacao"
+                                                       [(values)]="dersChips"></app-analise-der-chips>
+                            </div>
+                            <div class="ui-g-12" style="padding: 0px">
+                                <span class="md-inputfield">
+                                    <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error"
+                                         translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-12 ui-sm-12">
+                            <label translate="Cadastros.FuncaoTransacao.Fundamentacao">Fundamentação</label>
+                            <span class="md-inputfield">
+                                                <ckeditor
+                                                        [rows]="3"
+                                                        id="idFundamentacaoFormFuncaoTransacao"
+                                                        [cols]="180"
+                                                        [editor]="Editor"
+                                                        [config]="config"
+                                                        [disabled]="isDisabled"
+                                                        pInputTextarea name="funcaoDadosSustentacao"
+                                                        [(ngModel)]="currentFuncaoTransacao.sustantation">
+                                                </ckeditor>
+                                            </span>
+                        </div>
+
+                        <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
+                            <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
+                                <app-white-button
+                                        [buttonLabel]="'Global.Botoes.Cancelar' | translate"
+                                        id="idBtnCancelarFormFuncaoTransacao"
+                                        (click)="cancelar()">
+                                </app-white-button>
+                            </div>
+
+                            <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
+                                <app-white-button
+                                        [buttonLabel]="'Global.Botoes.Fechar' | translate"
+                                        id="idBtnFecharFormFuncaoTransacao"
+                                        (click)="cancelar()">
+                                </app-white-button>
+                            </div>
+
+                            <div class="ui-md-3 ui-sm-12">
+                                <app-blue-button
+                                        [buttonLabel]="'Global.Botoes.Salvar' | translate"
+                                        id="idBtnSalvarFormFuncaoTransacao"
+                                        buttonIcon="ui-icon-add"
+                                        (click)="buttonSaveEdit()">
+                                </app-blue-button>
+                            </div>
+                        </div>
+                    </p-dialog>
+                    <!-- Fim Dialog adicionar função de dados  -->
                 </div>
-
-                <!--<div class="ui-g-12 ui-md-12 ui-sm-12">
-                    <label translate="Cadastros.FuncaoTransacao.Fundamentacao">Fundamentação</label>
-                    <span class="md-inputfield">
-                        <ckeditor
-                                [rows]="3"
-                                id="idFundamentacaoFormFuncaoTransacao"
-                                [cols]="180"
-                                [editor]="Editor"
-                                [config]="config"
-                                [disabled]="isDisabled"
-                                pInputTextarea name="funcaoDadosSustentacao"
-                                [(ngModel)]="currentFuncaoTransacao.sustantation">
-                        </ckeditor>
-                    </span>
-                </div>-->
-
-                <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
-                    <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
-                        <app-white-button
-                                [buttonLabel]="'Global.Botoes.Cancelar' | translate"
-                                id="idBtnCancelarFormFuncaoTransacao"
-                                (click)="cancelar()">
-                        </app-white-button>
-                    </div>
-
-                    <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
-                        <app-white-button
-                                [buttonLabel]="'Global.Botoes.Fechar' | translate"
-                                id="idBtnFecharFormFuncaoTransacao"
-                                (click)="cancelar()">
-                        </app-white-button>
-                    </div>
-
-                    <div class="ui-md-3 ui-sm-12">
-                        <app-blue-button
-                                [buttonLabel]="'Global.Botoes.Salvar' | translate"
-                                id="idBtnSalvarFormFuncaoTransacao"
-                                buttonIcon="ui-icon-add"
-                                (click)="buttonSaveEdit()">
-                        </app-blue-button>
-                    </div>
-                </div>
-            </p-dialog>
-            <!-- Fim Dialog adicionar função de dados  -->
-
-
-
+            </div>
         </div>
-    </div>
-</div>
+    </p-tabPanel>
+    <p-tabPanel [header]="this.getLabel('Analise.Analise.Resumo')"></p-tabPanel>
+</p-tabView>
+
+<!-- Dialog confirmação deleção -->
+<p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" [label]="'Global.Botoes.Nao' | translate"
+                (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="'Global.Botoes.Sim' | translate"
+                (click)="dialog.accept()"></button>
+    </p-footer>
+</p-confirmDialog>
+
