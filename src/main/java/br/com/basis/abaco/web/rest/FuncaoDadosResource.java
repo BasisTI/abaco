@@ -259,9 +259,9 @@ public class FuncaoDadosResource {
         Boolean existInAnalise;
         if (id != null && id > 0) {
 
-            existInAnalise = funcaoDadosRepository.existsByNameAndAnalise_IdAndFuncionalidade_IdAndFuncionalidade_Modulo_IdAndIdNot(name, idAnalise, idfuncionalidade, idModulo, id);
+            existInAnalise = funcaoDadosRepository.existsByNameAndAnaliseIdAndFuncionalidadeIdAndFuncionalidadeModuloIdAndIdNot(name, idAnalise, idfuncionalidade, idModulo, id);
         } else {
-            existInAnalise = funcaoDadosRepository.existsByNameAndAnalise_IdAndFuncionalidade_IdAndFuncionalidade_Modulo_Id(name, idAnalise, idfuncionalidade, idModulo);
+            existInAnalise = funcaoDadosRepository.existsByNameAndAnaliseIdAndFuncionalidadeIdAndFuncionalidadeModuloId(name, idAnalise, idfuncionalidade, idModulo);
         }
         return ResponseEntity.ok(existInAnalise);
     }

@@ -45,12 +45,8 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
     @Query("SELECT fd FROM FuncaoDados fd WHERE fd.analise.id = :idAnalise")
     Set<FuncaoDados> findByAnaliseId(@Param("idAnalise") Long idAnalise);
 
-    Boolean existsByNameAndAnalise_IdAndFuncionalidade_IdAndFuncionalidade_Modulo_Id(String name, Long analiseId, Long idFuncionalidade, Long idModulo);
+    Boolean existsByNameAndAnaliseIdAndFuncionalidadeIdAndFuncionalidadeModuloId(String name, Long analiseId, Long idFuncionalidade, Long idModulo);
 
-    Boolean existsByNameAndAnalise_IdAndFuncionalidade_IdAndFuncionalidade_Modulo_IdAndIdNot(String name, Long analiseId, Long idFuncionalidade, Long idModulo, Long id);
-
-   /* @Query("SELECT fd.id, fd.name, fd.fatorAjuste, fd.funcionalidade, fd.tipo, fd.ders, fd.rlrs,fd.complexidade, fd.pf, fd.grossPF, fd.sustantation FROM FuncaoDados fd WHERE fd.analise.id = :idAnalise")
-    * Set<FuncaoDados> findByAnalise_Id(@Param("idAnalise") Long idAnalise);
-    */
+    Boolean existsByNameAndAnaliseIdAndFuncionalidadeIdAndFuncionalidadeModuloIdAndIdNot(String name, Long analiseId, Long idFuncionalidade, Long idModulo, Long id);
 
 }

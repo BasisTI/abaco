@@ -61,7 +61,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Analise implements Serializable, ReportObject {
 
     private static final String ANALISE = "analise";

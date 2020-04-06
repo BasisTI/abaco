@@ -242,9 +242,9 @@ public class FuncaoTransacaoResource {
         Boolean existInAnalise;
         if (id != null && id > 0) {
 
-            existInAnalise = funcaoTransacaoRepository.existsByNameAndAnalise_IdAndFuncionalidade_IdAndFuncionalidade_Modulo_IdAndIdNot(name, idAnalise, idfuncionalidade, idModulo, id);
+            existInAnalise = funcaoTransacaoRepository.existsByNameAndAnaliseIdAndFuncionalidadeIdAndFuncionalidadeModuloIdAndIdNot(name, idAnalise, idfuncionalidade, idModulo, id);
         } else {
-            existInAnalise = funcaoTransacaoRepository.existsByNameAndAnalise_IdAndFuncionalidade_IdAndFuncionalidade_Modulo_Id(name, idAnalise, idfuncionalidade, idModulo);
+            existInAnalise = funcaoTransacaoRepository.existsByNameAndAnaliseIdAndFuncionalidadeIdAndFuncionalidadeModuloId(name, idAnalise, idfuncionalidade, idModulo);
         }
         return ResponseEntity.ok(existInAnalise);
     }
