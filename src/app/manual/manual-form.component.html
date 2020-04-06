@@ -25,28 +25,27 @@
                                      && (editForm.controls['nome'].touched
                                      || editForm.submitted)"
                                   class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
-                Campo obrigatório.
-              </div>
+                                Campo obrigatório.
+                            </div>
                         </span>
-
                     </div>
 
                     <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 25px">
                         <span class="md-inputfield">
                             <p-spinner required step="0.010"
-                                   maxlength="5"
-                                   id="idValorVariacaoEstimadaFormManual"
-                                   name="valorVariacaoEstimada"
-                                   [(ngModel)]="manual.valorVariacaoEstimadaFormatado"
-                                       #valorVariacaoEstimada='ngModel'>
+                                    maxlength="5"
+                                    id="idValorVariacaoEstimadaFormManual"
+                                    name="valorVariacaoEstimada"
+                                    [(ngModel)]="manual.valorVariacaoEstimadaFormatado"
+                                    #valorVariacaoEstimada='ngModel'>
                             </p-spinner>
                             <label translate="Cadastros.Manual.ValorEstimada">Valor Variação Estimada (%) *</label>
                             <div *ngIf="editForm.controls['valorVariacaoEstimada']
-                                        && !editForm.controls['valorVariacaoEstimada'].valid
-                                        && (editForm.controls['valorVariacaoEstimada'].touched
-                                        || editForm.submitted)"
-                                 class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
-                                    Campo obrigatório.
+                                && !editForm.controls['valorVariacaoEstimada'].valid
+                                && (editForm.controls['valorVariacaoEstimada'].touched
+                                || editForm.submitted)"
+                                class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                                Campo obrigatório.
                             </div>
                         </span>
                     </div>
@@ -60,11 +59,11 @@
                                    [(ngModel)]="manual.valorVariacaoIndicativaFormatado"></p-spinner>
                             <label translate="Cadastros.Manual.ValorIndicativa">Valor Variação Indicativa (%) *</label>
                             <div *ngIf="editForm.controls['valorVariacaoIndicativa']
-                                        && !editForm.controls['valorVariacaoIndicativa'].valid
-                                        && (editForm.controls['valorVariacaoIndicativa'].touched
-                                        || editForm.submitted)"
-                                 class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
-                                    Campo obrigatório.
+                                && !editForm.controls['valorVariacaoIndicativa'].valid
+                                && (editForm.controls['valorVariacaoIndicativa'].touched
+                                || editForm.submitted)"
+                                class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                Campo obrigatório.
                             </div>
                         </span>
                     </div>
