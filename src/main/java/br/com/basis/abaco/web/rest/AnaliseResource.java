@@ -228,7 +228,9 @@ public class AnaliseResource {
         TipoEquipe tipoEquipe = tipoEquipeRepository.findById(idEquipe);
         if (analise.getId() != null && tipoEquipe.getId() != null && !(analise.getClonadaParaEquipe())) {
             analise.setClonadaParaEquipe(true);
-            Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+            Analise analiseClone = new Analise(
+                    analise,
+                    userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
             bindAnaliseCloneForTipoEquipe(analise, tipoEquipe, analiseClone);
             analiseRepository.save(analiseClone);
             analiseSearchRepository.save(convertToEntity(convertToDto(analiseClone)));
@@ -561,7 +563,7 @@ public class AnaliseResource {
             Set<Alr> alrs = new HashSet<>();
             Set<Der> ders = new HashSet<>();
             FuncaoTransacao funcaoTransacao = new FuncaoTransacao();
-            funcaoTransacao.bindFuncaoTransacao(ft.getTipo(), null, ft.getFtrStr(), ft.getQuantidade(), alrs, null, ft.getFtrValues(), ft.getImpacto(), ders, analiseClone, null, ft.getComplexidade(), ft.getPf(), ft.getGrossPF(), ft.getFuncionalidade(), ft.getDetStr(), ft.getFatorAjuste(), ft.getName(), ft.getSustantation(), ft.getDerValues(), null);
+            funcaoTransacao.bindFuncaoTransacao(ft.getTipo(),  ft.getFtrStr(), ft.getQuantidade(), alrs, null, ft.getFtrValues(), ft.getImpacto(), ders, analiseClone, null, ft.getComplexidade(), ft.getPf(), ft.getGrossPF(), ft.getFuncionalidade(), ft.getDetStr(), ft.getFatorAjuste(), ft.getName(), ft.getSustantation(), ft.getDerValues(), null);
             ft.getAlrs().forEach(alr -> {
                 Alr alrClone = new Alr(null, alr.getNome(), alr.getValor(), funcaoTransacao, null);
                 alrs.add(alrClone);
