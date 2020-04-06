@@ -719,6 +719,7 @@
       "Botoes": {
         "GerarRelatorio": "Generar Informe",
         "GerarRelatorioExcel": "Generar Informe Excel",
+        "GerarRelatorioExcel": "Generar informe de Excel",
         "CompartilharAnalise": "Compartir Análisis",
         "BloquearAnalise": "Bloquear Análisis",
         "SalvarAnalise": "Guardar Análisis",
