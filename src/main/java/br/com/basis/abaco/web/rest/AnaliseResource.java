@@ -210,6 +210,7 @@ public class AnaliseResource {
             analiseClone.setDataCriacaoOrdemServico(analise.getDataHomologacao());
             analiseClone.setFuncaoDados(bindCloneFuncaoDados(analise, analiseClone));
             analiseClone.setFuncaoTransacaos(bindCloneFuncaoTransacaos(analise, analiseClone));
+            analiseClone.setBloqueiaAnalise(false);
             analiseRepository.save(analiseClone);
             analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseClone.getId().toString()))
@@ -346,7 +347,7 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
     }
 
-    @GetMapping("/downloadRelatorioExcel/{id}")
+    @GetMapping("/downloadRelator1ioExcel/{id}")
     @Timed
     public @ResponseBody
     byte[] downloadRelatorioExcel(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
