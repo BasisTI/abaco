@@ -16,7 +16,6 @@ import br.com.basis.abaco.service.dto.FuncaoDadoApiDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,12 +120,7 @@ public class FuncaoDadosResource {
             return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDados);
         }
         Analise analise = analiseRepository.findOne(funcaoDadosOld.getAnalise().getId());
-        BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace);
-        BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace);
-        pfTotal = pfTotal.add(funcaoDados.getGrossPF()).subtract(funcaoDadosOld.getGrossPF());
-        pfAdjust = pfAdjust.add(funcaoDados.getPf()).subtract(funcaoDadosOld.getPf());
-        analise.setPfTotal(pfTotal.toString());
-        analise.setAdjustPFTotal(pfAdjust.toString());
+        updatePfAnalise(funcaoDados, funcaoDadosOld, analise);
         funcaoDados.setAnalise(analise);
         analiseRepository.save(analise);
         analiseSearchRepository.save(analise);
@@ -284,19 +278,15 @@ public class FuncaoDadosResource {
     private String getFatorAjusteFilter(FuncaoDados funcaoDados) {
         StringBuilder fatorAjustFilterSB = new StringBuilder();
         if (!(funcaoDados.getFatorAjuste().getCodigo().isEmpty())) {
-            fatorAjustFilterSB.append(funcaoDados.getFatorAjuste().getCodigo());
-            fatorAjustFilterSB.append(WHITE_SPACE);
+            fatorAjustFilterSB.append(funcaoDados.getFatorAjuste().getCodigo()).append(WHITE_SPACE);
         }
         if (!(funcaoDados.getFatorAjuste().getOrigem().isEmpty())) {
-            fatorAjustFilterSB.append(funcaoDados.getFatorAjuste().getOrigem());
-            fatorAjustFilterSB.append(WHITE_SPACE);
+            fatorAjustFilterSB.append(funcaoDados.getFatorAjuste().getOrigem()).append(WHITE_SPACE);
         }
         if (!(funcaoDados.getFatorAjuste().getNome().isEmpty())) {
-            fatorAjustFilterSB.append(funcaoDados.getFatorAjuste().getNome());
-            fatorAjustFilterSB.append(WHITE_SPACE);
+            fatorAjustFilterSB.append(funcaoDados.getFatorAjuste().getNome()).append(WHITE_SPACE);
         }
-        fatorAjustFilterSB.append(funcaoDados.getFatorAjuste().getFator().setScale(decimalPlace));
-        fatorAjustFilterSB.append(WHITE_SPACE);
+        fatorAjustFilterSB.append(funcaoDados.getFatorAjuste().getFator().setScale(decimalPlace)).append(WHITE_SPACE);
 
         if (funcaoDados.getFatorAjuste().getTipoAjuste() == TipoFatorAjuste.PERCENTUAL) {
             fatorAjustFilterSB.append(PERCENTUAL);
@@ -310,23 +300,35 @@ public class FuncaoDadosResource {
         int dersValues = funcaoDados.getDers().size();
         if (dersValues == 1) {
             Der der = funcaoDados.getDers().iterator().next();
-            return der.getValor() == null ? dersValues : der.getValor();
-        } else {
-            return dersValues;
+            if (der.getValor() != null) {
+                dersValues = der.getValor();
+            }
         }
+        return dersValues;
     }
 
     private Integer getValueRlr(FuncaoDados funcaoDados) {
         int rlrsValues = funcaoDados.getRlrs().size();
         if (rlrsValues == 1) {
             Rlr rlr = funcaoDados.getRlrs().iterator().next();
-            return rlr.getValor() == null ? rlrsValues : rlr.getValor();
-        } else {
-            return rlrsValues;
+            if (rlr.getValor() != null) {
+                rlrsValues = rlr.getValor();
+            }
         }
+        return rlrsValues;
     }
 
     private Boolean getSustantation(FuncaoDados funcaoDados) {
         return funcaoDados.getSustantation() != null && !(funcaoDados.getSustantation().isEmpty());
     }
+
+    private void updatePfAnalise(@RequestBody FuncaoDados funcaoDados, FuncaoDados funcaoDadosOld, Analise analise) {
+        BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace);
+        BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace);
+        pfTotal = pfTotal.add(funcaoDados.getGrossPF()).subtract(funcaoDadosOld.getGrossPF());
+        pfAdjust = pfAdjust.add(funcaoDados.getPf()).subtract(funcaoDadosOld.getPf());
+        analise.setPfTotal(pfTotal.toString());
+        analise.setAdjustPFTotal(pfAdjust.toString());
+    }
+
 }

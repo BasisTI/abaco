@@ -146,7 +146,6 @@ public class AnaliseResource {
         }
         analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
         salvaNovaData(analise);
-//        linkFuncoesToAnalise(analise);
             analiseRepository.save(analise);
             analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         return ResponseEntity.created(new URI("/api/analises/" + analise.getId()))
@@ -167,7 +166,6 @@ public class AnaliseResource {
                     HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
         }
         analise.setEditedBy(analiseRepository.findOne(analise.getId()).getCreatedBy());
-//        linkFuncoesToAnalise(analise);
         analiseRepository.save(analise);
         analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
