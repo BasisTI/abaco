@@ -1,15 +1,15 @@
-import { FuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
-import { BaseEntity, JSONable } from '../shared';
-import { Funcionalidade } from '../funcionalidade/index';
-import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
-import { FatorAjuste } from '../fator-ajuste/index';
-import { Complexidade } from '../analise-shared/complexidade-enum';
-import { FuncaoAnalise } from '../analise-shared/funcao-analise';
-import { Der } from '../der/der.model';
-import { Rlr } from '../rlr/rlr.model';
-import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
-import { Impacto } from '../analise-shared/impacto-enum';
-import { FuncaoResumivel } from '../analise-shared';
+import {FuncaoTransacao} from './../funcao-transacao/funcao-transacao.model';
+import {BaseEntity, JSONable} from '../shared';
+import {Funcionalidade} from '../funcionalidade/index';
+import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
+import {FatorAjuste} from '../fator-ajuste/index';
+import {Complexidade} from '../analise-shared/complexidade-enum';
+import {FuncaoAnalise} from '../analise-shared/funcao-analise';
+import {Der} from '../der/der.model';
+import {Rlr} from '../rlr/rlr.model';
+import {DerChipConverter} from '../analise-shared/der-chips/der-chip-converter';
+import {Impacto} from '../analise-shared/impacto-enum';
+import {FuncaoResumivel} from '../analise-shared';
 import {Modulo} from '../modulo';
 
 export enum TipoFuncaoDados {
@@ -20,9 +20,10 @@ export enum TipoFuncaoDados {
 
 export class Editor {
     constructor(public label?: string,
-        public placeholder?: string,
-        public formControlName?: string
-    ) { }
+                public placeholder?: string,
+                public formControlName?: string
+    ) {
+    }
 }
 
 export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, JSONable<FuncaoDados> {
@@ -51,7 +52,7 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, 
         public ders?: Der[],
         public rlrs?: Rlr[],
         public impacto?: Impacto,
-        public quantidade?: number,
+        public quantidade: number = 0,
         public modulo?: Modulo,
     ) {
         if (!pf) {
@@ -91,7 +92,6 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, 
             copy.ders = this.ders.map(der => der.toJSONState());
             copy.rlrs = this.rlrs.map(rlr => rlr.toJSONState());
         }
-
 
 
         return copy;
@@ -139,7 +139,8 @@ class FuncaoDadosCopyFromJSON {
 
     private _json: any;
 
-    private _funcaoDados; FuncaoDados;
+    private _funcaoDados;
+    FuncaoDados;
 
     constructor(json: any) {
         this._json = json;

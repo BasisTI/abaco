@@ -76,6 +76,7 @@
       "Inserir":"Insert",
       "Pesquisar":"Search",
       "Copia":" - Copy",
+      "PossuiFundamentacao": "Has Foundation",
       "Mensagens": {
         "msgAdicionarFuncaoDados": "Add Data Role",
         "msgAlterarFuncaoDados": "Change Data Function",
@@ -724,6 +725,7 @@
       },
       "Botoes":{
         "GerarRelatorio": "Generate Report",
+        "GerarRelatorioExcel": "Generate Report Excel",
         "GerarRelatorioExcel": "Generate Excel Report",
         "CompartilharAnalise": "Shared Analysis",
         "BloquearAnalise": "Block Analysis",

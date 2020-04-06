@@ -1,5 +1,5 @@
-<p-tabView>
-    <p-tabPanel [header]="this.getLabel('Analise.Analise.Geral')">
+<p-tabView (onChange)="handleChange($event)">
+    <p-tabPanel [header]="this.getLabel('Analise.Analise.Geral')" [selected]= "true">
         <div class="ui-g ui-fluid">
             <div class="ui-g-12">
                 <div class="card card-w-title">
@@ -137,7 +137,8 @@
                                         </div>
                                     </p-dropdown>
                                 </div>
-                                <div [ngClass]="(disabledOptionsforEdit())? '(ui-g-4 ui-md-4 ui-sm-12)' : '(ui-g-6 ui-md-6 ui-sm-12)'" style="margin-bottom: 05px" >
+                                <div [ngClass]="(disabledOptionsforEdit())? '(ui-g-4 ui-md-4 ui-sm-12)' : '(ui-g-6 ui-md-6 ui-sm-12)'"
+                                     style="margin-bottom: 05px">
                                     <label translate="Analise.Analise.MetodoContagem*">Método de Contagem *</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -148,10 +149,11 @@
                                             [options]="metodosContagem"
                                             [(ngModel)]="analise.metodoContagem"
                                             [autoWidth]="false"
-                                            (onChange)="alterarMetodoContagem()" >
+                                            (onChange)="alterarMetodoContagem()">
                                     </p-dropdown>
                                 </div>
-                                <div [ngClass]="(disabledOptionsforEdit())? '(ui-g-4 ui-md-4 ui-sm-12)' : '(ui-g-6 ui-md-6 ui-sm-12)'" style="margin-bottom: 05px">
+                                <div [ngClass]="(disabledOptionsforEdit())? '(ui-g-4 ui-md-4 ui-sm-12)' : '(ui-g-6 ui-md-6 ui-sm-12)'"
+                                     style="margin-bottom: 05px">
                                     <label translate="Analise.Analise.TipoContagem*">Tipo de Contagem *</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -162,7 +164,7 @@
                                             [options]="tiposAnalise"
                                             [(ngModel)]="analise.tipoAnalise"
                                             [disabled]="disabledOptionsforEdit()"
-                                            [autoWidth]="false" >
+                                            [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
 
@@ -172,7 +174,7 @@
                                     <p-multiSelect
                                             [filter]="true"
                                             required
-                                            id="idUserFormAnalise"
+                                            dataKey="id"
                                             name="usersMultiselect"
                                             [(options)]="users"
                                             [(ngModel)]="analise.users"
@@ -183,7 +185,7 @@
                                     </p-multiSelect>
                                 </div>
                                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px"
-                                     >
+                                >
                                     <label translate="Analise.Analise.PropositoContagem">Propósito da Contagem</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -196,7 +198,7 @@
                                 </div>
 
                                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px"
-                                     >
+                                >
                                     <label translate="Analise.Analise.EscopoContagem">Escopo da Contagem</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -209,7 +211,7 @@
                                 </div>
 
                                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px"
-                                     >
+                                >
                                     <label translate="Analise.Analise.Fronteira">Fronteira</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -222,7 +224,7 @@
                                 </div>
 
                                 <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 05px"
-                                     >
+                                >
                                     <label translate="Analise.Analise.Documentacao">Documentação</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -235,7 +237,7 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-g-4 ui-md-4 ui-sm-12" >
+                                <div class="ui-g-4 ui-md-4 ui-sm-12">
 
                                     <div class="ui-g-6 ui-md-6 ui-sm-12">
                                         {{this.getLabel('Analise.Analise.AguardarPrazoGarantia')}} {{diasGarantia > 0 ? this.getLabel('Analise.Analise.De') + diasGarantia + this.getLabel('Analise.Analise.Dias')
@@ -264,7 +266,7 @@
 
                                 </div>
 
-                                <div class="ui-g-4 ui-md-4 ui-sm-12" >
+                                <div class="ui-g-4 ui-md-4 ui-sm-12">
 
                                     <div class="ui-g-6 ui-md-6 ui-sm-12" translate="Analise.Analise.IncorporarBaseline">
                                         Incorporar a Baseline
@@ -275,7 +277,7 @@
                                                 [label]="this.getLabel('Global.Botoes.Sim')"
                                                 id="idEnviarBaselineSimFormAnalise"
                                                 [value]="true"
-                                                [(ngModel)]="analise.enviarBaseline" >
+                                                [(ngModel)]="analise.enviarBaseline">
                                         </p-radioButton>
                                     </div>
                                     <div class="ui-g-3 ui-md-2 ui-sm-12">
@@ -284,12 +286,12 @@
                                                 [label]="this.getLabel('Global.Botoes.Nao')"
                                                 id="idEnviarBaselineNaoFormAnalise"
                                                 [value]="false"
-                                                [(ngModel)]="analise.enviarBaseline" >
+                                                [(ngModel)]="analise.enviarBaseline">
                                         </p-radioButton>
                                     </div>
                                 </div>
                                 <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px"
-                                     >
+                                >
                                     <span class="md-inputfield">
                                         <p-calendar
                                                 [required]="analise.baselineImediatamente"
@@ -303,22 +305,23 @@
                                     </span>
                                 </div>
                                 <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')" [toggleable]="true"
-                                            [collapsed]="true" >
+                                            [collapsed]="true">
                                     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
                                         <p-dataTable
                                                 dataKey="id"
                                                 [emptyMessage]="this.getLabel('Analise.Analise.Mensagens.msgSelecioneContratoParaEscolherFases')"
                                                 [value]="esforcoFases"
                                                 id="idTabelaFases"
-                                                [(selection)]="analise.esforcoFases"
-                                                [headerCheckboxToggleAllPages]="true">
+                                                [(selection)]="analise.esforcoFases">
                                             <p-header translate="Analise.Analise.Fases">Fases</p-header>
 
                                             <p-column selectionMode="multiple" [style]="{'width':'15%'}"></p-column>
 
-                                            <p-column [header]="this.getLabel('Analise.Analise.Nome')" field="fase.nome"></p-column>
+                                            <p-column [header]="this.getLabel('Analise.Analise.Nome')"
+                                                      field="fase.nome"></p-column>
 
-                                            <p-column [header]="this.getLabel('Analise.Analise.Esforco')" field="esforco"></p-column>
+                                            <p-column [header]="this.getLabel('Analise.Analise.Esforco')"
+                                                      field="esforco"></p-column>
 
                                             <p-footer *ngIf="analise.contrato">
                                                 {{this.getLabel('Analise.Analise.Total')}} {{ totalEsforcoFases() }}%
@@ -326,7 +329,7 @@
                                         </p-dataTable>
                                     </div>
                                 </p-fieldset>
-                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px" >
+                                <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 05px">
                                     <label translate="Analise.Analise.Observacoes">Observações</label>
                                     <span class="md-inputfield">
                                         <textarea
@@ -367,109 +370,11 @@
         </div>
     </p-tabPanel>
 
-    <p-tabPanel
-            [disabled]="disableAba"
-            [header]="this.getLabel('Analise.Analise.FuncoesDados')"
-            *ngIf="isEdicao">
-        <app-analise-funcao-dados [isView]="!this.isEdicao"></app-analise-funcao-dados>
-        <app-white-button
-                [buttonLabel]="'Global.Botoes.Voltar' | translate"
-                routerLink="/analise">
-        </app-white-button>
-    </p-tabPanel>
+    <p-tabPanel [header]="this.getLabel('Analise.Analise.FuncoesDados')" [disabled]="disableAba" ></p-tabPanel>
 
-    <p-tabPanel
-            [disabled]="!disableFuncaoTrasacao"
-            [header]="this.getLabel('Analise.Analise.FuncoesTransacao')"
-            *ngIf="isEdicao">
-        <app-analise-funcao-transacao [isView]="!this.isEdicao"></app-analise-funcao-transacao>
-        <app-white-button
-                [buttonLabel]="this.getLabel('Global.Botoes.Voltar')"
-                routerLink="/analise">
-        </app-white-button>
-    </p-tabPanel>
+    <p-tabPanel [header]="this.getLabel('Analise.Analise.FuncoesTransacao')"[disabled]="disableFuncaoTrasacao"></p-tabPanel>
 
-    <p-tabPanel
-            [disabled]="disableAba"
-            [header]="this.getLabel('Analise.Analise.Resumo')"
-            *ngIf="isEdicao">
-        <app-analise-resumo></app-analise-resumo>
-        <app-white-button
-                [buttonLabel]="this.getLabel('Global.Botoes.Voltar')"
-                routerLink="/analise">
-        </app-white-button>
-        <app-gray-button
-                [buttonLabel]="this.getLabel('Analise.Analise.Botoes.GerarRelatorio')"
-                (click)="geraRelatorioPdfDetalhadoBrowser()">
-        </app-gray-button>
-        <app-green-button
-                [buttonLabel]="this.getLabel('Analise.Analise.Botoes.GerarRelatorioExcel')"
-                (click)="geraRelatorioExcel()">
-        </app-green-button>
-        <app-red-button
-                [buttonLabel]="this.getLabel('Analise.Analise.Botoes.BloquearAnalise')"
-                (click)="bloquearAnalise()">
-        </app-red-button>
-        <app-blue-button
-                [buttonLabel]="this.getLabel('Analise.Analise.Botoes.CompartilharAnalise')"
-                (click)="openCompartilharDialog()">
-        </app-blue-button>
-    </p-tabPanel>
-    <p-dialog [header]="this.getLabel('Analise.Analise.CompartilharAnalise')" [(visible)]="mostrarDialog" [width]="800"
-              [modal]="true" (onHide)="limparSelecaoCompartilhar()">
-        <p-dataTable
-                [(value)]="equipeShare"
-                [headerCheckboxToggleAllPages]="true"
-                [(selection)]="selectedEquipes"
-                dataKey="equipeId">
-            <p-column
-                    selectionMode="multiple"
-                    [style]="{'width':'10%'}">
-            </p-column>
-            <p-column
-                    [header]="this.getLabel('Analise.Analise.Equipe')"
-                    field="nomeEquipe">
-            </p-column>
-            <p-column
-                    [header]="this.getLabel('Analise.Analise.SomenteVisualizar')"
-                    field="viewOnly"
-                    [style]="{'width':'12%'}">
-                <ng-template let-col let-equipeShare="rowData" pTemplate="body">
-                    <p-toggleButton [(ngModel)]="equipeShare.viewOnly" onLabel="Sim" offLabel="Não"></p-toggleButton>
-                </ng-template>
-            </p-column>
-        </p-dataTable>
-
-        <app-green-button [buttonLabel]="'Global.Botoes.Adicionar' | translate" (click)="salvarCompartilhar()" style="float:right; margin-top: 5px"></app-green-button>
-        <br/>
-        <br/>
-
-        <hr/>
-        <h3 translate="Analise.Analise.CompartilhadaCom">Compartilhada com:</h3>
-        <p-dataTable
-                *ngIf="analise.compartilhadas"
-                [(value)]="analise.compartilhadas"
-                selectionMode="single"
-                [(selection)]="selectedToDelete"
-                dataKey="equipeId">
-            <p-column
-                    [header]="this.getLabel('Analise.Analise.Equipe')"
-                    field="nomeEquipe">
-            </p-column>
-
-            <p-column
-                    [header]="this.getLabel('Analise.Analise.SomenteVisualizar')"
-                    field="viewOnly"
-                    [style]="{'width':'12%'}">
-                <ng-template let-col let-analiseTemp="rowData" pTemplate="body">
-                    <p-toggleButton [(ngModel)]="analiseTemp.viewOnly" onLabel="Sim" offLabel="Não"
-                                    (onChange)="updateViewOnly()"></p-toggleButton>
-                </ng-template>
-            </p-column>
-        </p-dataTable>
-        <app-red-button [buttonLabel]="this.getLabel('Global.Botoes.Remover')" (click)="deletarCompartilhar()"
-                        style="float:right; margin-top: 5px"></app-red-button>
-    </p-dialog>
+    <p-tabPanel [header]="this.getLabel('Analise.Analise.Resumo')" [disabled]="disableAba" ></p-tabPanel>
 </p-tabView>
 
 <!-- Dialog confirmação deleção -->

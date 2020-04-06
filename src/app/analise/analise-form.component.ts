@@ -71,6 +71,8 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     users: User[] = [];
     manuaisCombo: SelectItem[] = [];
 
+    showFuncaoDados: Boolean = false;
+
     @BlockUI() blockUI: NgBlockUI;
 
     tiposAnalise: SelectItem[] = [
@@ -213,11 +215,14 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.routeSub = this.route.params.subscribe(params => {
             if (params['id']) {
                 this.isEdicao = true;
-                this.analiseService.findWithFuncaos(params['id']).subscribe(analise => {
-                    this.loadDataAnalise(analise);
-                },
-                err => {
-                        this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSemPermissaoParaEditarAnalise'));
+                this.analiseService.find(params['id']).subscribe(analise => {
+                        this.loadDataAnalise(analise);
+                        this.disableFuncaoTrasacao =  analise.metodoContagem === MessageUtil.INDICATIVA;
+                    },
+                    err => {
+                        this.pageNotificationService.addErrorMsg(
+                            this.getLabel('Analise.Analise.Mensagens.msgSemPermissaoParaEditarAnalise')
+                        );
                         this.router.navigate(['/analise']);
                     });
             } else {
@@ -385,49 +390,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    public geraRelatorioPdfDetalhadoBrowser() {
-        this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.analise.id);
-    }
-
-    public geraRelatorioExcel() {
-        this.analiseService.gerarRelatorioExcel(this.analise.id);
-    }
-
-    public bloquearAnalise() {
-        if (!this.analise.dataHomologacao) {
-            this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_HOMOLOGACAO'));
-        }
-
-        if (this.analise.dataHomologacao) {
-            this.confirmationService.confirm({
-                message: this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_BLOQUEIO')
-                    .concat(this.analise.identificadorAnalise)
-                    .concat('?'),
-                accept: () => {
-                    const copy = this.analise.toJSONState();
-                    this.analiseService.block(copy).subscribe(() => {
-                        this.pageNotificationService.addBlockMsgWithName(this.analise.identificadorAnalise);
-                        this.router.navigate(['analise/']);
-                    }, (error: Response) => {
-                        switch (error.status) {
-                            case 400: {
-                                if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
-                                    this.pageNotificationService.addErrorMsg(
-                                        this.getLabel('Analise.Analise.Mensagens.msgSomenteAdministradoresBloquearDesbloquear')
-                                    );
-                                } else {
-                                    this.pageNotificationService
-                                        .addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeBloquearAnalise'));
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        }
-
-    }
-
     disabledOptionsforEdit() {
         if (this.analise.id && this.analise.id > 0) {
             return true;
@@ -548,7 +510,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     enableDisableAba() {
         if (this.validacaoCampos === false) {
             this.disableAba = false;
-            this.disableFuncaoTrasacao = this.analise.metodoContagem !== MessageUtil.INDICATIVA;
+            this.disableFuncaoTrasacao = this.analise.metodoContagem === MessageUtil.INDICATIVA;
         }
     }
 
@@ -669,24 +631,19 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
     private populaComboUsers() {
         if (this.analise.id) {
             this.userService.getAllUsers(this.analise.organizacao, this.analise.equipeResponsavel).subscribe(usuarios => {
-                this.verificaExistencia(usuarios);
-                this.users.forEach((user) => user.nome = user.firstName + ' ' + user.lastName);
+                if (this.users && this.users.length > 0) {
+                    this.users = _.clone(this.analise.users);
+                    this.users = this.users.concat(usuarios.filter(user => {
+                        return !this.analise.users.some(usuario => user.id === usuario.id);
+                    }));
+                } else {
+                    this.users = usuarios;
+                }
+                if (this.analise.users && this.analise.users.length === 0) {
+                    const user = _.find(this.users, {id: this.loggedUser.id});
+                    this.analise.users.push(user);
+                }
             });
-        }
-    }
-
-    private verificaExistencia(usuarios: User[]) {
-        if (this.users && this.users.length > 0) {
-            this.users = _.clone(this.analise.users);
-            this.users = this.users.concat(usuarios.filter(user => {
-                return !this.analise.users.some(usuario => user.id === usuario.id);
-            }));
-        } else {
-            this.users = usuarios;
-        }
-        if (this.analise.users && this.analise.users.length === 0) {
-            const user = _.find(this.users, {id: this.loggedUser.id});
-            this.analise.users.push(user);
         }
     }
 
@@ -720,6 +677,25 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.populaComboUsers();
         this.validaCamposObrigatorios();
         this.analiseSharedDataService.analiseCarregada();
+    }
+
+    handleChange(e) {
+        const index = e.index;
+        let link;
+        switch (index) {
+            case 0:
+                return;
+            case 1:
+                link = ['/analise/' + this.analise.id + '/funcao-dados'];
+                break;
+            case 2:
+                link = ['/analise/' + this.analise.id + '/funcao-transacao'];
+                break;
+            case 3:
+                link = ['/analise/' + this.analise.id + '/resumo'];
+                break;
+        }
+        this.router.navigate(link);
     }
 }
 

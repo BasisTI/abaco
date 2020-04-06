@@ -1,19 +1,13 @@
-import { TranslateService } from '@ngx-translate/core';
-import {
-    Component, OnInit, Input, Output,
-    EventEmitter, ChangeDetectorRef, OnDestroy
-} from '@angular/core';
-import { AnaliseSharedDataService, PageNotificationService } from '../shared';
-import { Analise } from '../analise';
-import { Manual } from '../manual';
-import { FatorAjuste } from '../fator-ajuste';
-import { Sistema, SistemaService } from '../sistema/index';
-import { Modulo, ModuloService } from '../modulo';
-import { Funcionalidade, FuncionalidadeService } from '../funcionalidade';
-import { Subscription } from 'rxjs/Subscription';
+import {TranslateService} from '@ngx-translate/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AnaliseSharedDataService, PageNotificationService} from '../shared';
+import {Sistema, SistemaService} from '../sistema/index';
+import {Modulo, ModuloService} from '../modulo';
+import {Funcionalidade, FuncionalidadeService} from '../funcionalidade';
+import {Subscription} from 'rxjs/Subscription';
 
 import * as _ from 'lodash';
-import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
+import {FuncaoDadosService} from '../funcao-dados/funcao-dados.service';
 
 @Component({
     selector: 'app-analise-modulo-funcionalidade',
@@ -89,13 +83,16 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.subscribeFuncaoAnaliseCarregada();
         this.subscribeFuncaoAnaliseDescarregada();
         this.subscribeFuncionalideBaseline();
+        this.carregarModulosQuandoTiverSistemaDisponivel();
     }
 
     private subscribeFuncionalideBaseline() {
         this.funcaoDadosService.dataModd$.subscribe(
             (data: Funcionalidade) => {
-                this.funcionalidades = data.modulo.funcionalidades;
-                this.selecionarModuloBaseline(data.modulo.id, data.id);
+                if (data && data.modulo && data.modulo.funcionalidades) {
+                    this.funcionalidades = data.modulo.funcionalidades;
+                    this.selecionarModuloBaseline(data.modulo.id, data.id);
+                }
             });
     }
 
@@ -108,6 +105,9 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     // TODO Refatorar, pode estar gerando requisições multiplas.
     private carregarModulosQuandoTiverSistemaDisponivel() {
+        if (!this.sistema) {
+            return;
+        }
         const sistemaId = this.sistema.id;
         this.sistemaService.find(sistemaId).subscribe((sistemaRecarregado: Sistema) => {
             this.recarregarSistema(sistemaRecarregado);
@@ -117,7 +117,10 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
     }
 
     private get sistema(): Sistema {
-        return this.analiseSharedDataService.analise.sistema;
+        if (this.analiseSharedDataService.analise && this.analiseSharedDataService.analise.sistema) {
+            return this.analiseSharedDataService.analise.sistema;
+        }
+        return null;
     }
 
     private subscribeAnaliseCarregada() {
@@ -160,14 +163,14 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     // Para selecionar no dropdown, o objeto selecionado tem que ser o mesmo da lista de opções
     private selecionarModulo(moduloId: number) {
-        this.moduloSelecionado = _.find(this.modulos, { 'id': moduloId });
+        this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
         this.moduloSelected(this.moduloSelecionado);
     }
 
     /* Seleciona no dropdown o modulo da Baseline recebido do componente funcao-dados-form-component.ts*/
     private selecionarModuloBaseline(moduloId: number, funcionalideId: number) {
-        this.moduloSelecionado = _.find(this.modulos, { 'id': moduloId });
-        this.funcionalidadeSelecionada = _.find(this.funcionalidades, { 'id': funcionalideId });
+        this.moduloSelecionado = _.find(this.modulos, {'id': moduloId});
+        this.funcionalidadeSelecionada = _.find(this.funcionalidades, {'id': funcionalideId});
     }
 
     private subscribeFuncaoAnaliseCarregada() {
@@ -185,7 +188,11 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     private isCurrentFuncaoAnaliseDefined(): boolean {
         // TODO inappropriate intimacy. Pode ir pra interface FuncaoAnalise
-        return !_.isUndefined(this.currentFuncaoAnalise.id) || !_.isUndefined(this.currentFuncaoAnalise.artificialId);
+        if (this.currentFuncaoAnalise === undefined || this.currentFuncaoAnalise.id === undefined || this.currentFuncaoAnalise.artificialId === undefined) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     // TODO avaliar duplicacoes e refatorar
@@ -197,14 +204,17 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         this.selecionarModulo(currentModulo.id);
 
         this.funcionalidades = currentModulo.funcionalidades;
-        this.funcionalidadeSelecionada = _.find(this.funcionalidades, { 'id': currentFuncionalidade.id });
+        this.funcionalidadeSelecionada = _.find(this.funcionalidades, {'id': currentFuncionalidade.id});
         this.funcionalidadeSelected(this.funcionalidadeSelecionada);
     }
 
     private selecionaFuncionalidadeFromCurrentAnalise() {
+        if (!(this.currentFuncaoAnalise && this.currentFuncaoAnalise.funcionalidade)) {
+            return;
+        }
         const currentFuncionalidade: Funcionalidade = this.currentFuncaoAnalise.funcionalidade;
         if (currentFuncionalidade != null) {
-            this.funcionalidadeSelecionada = _.find(this.funcionalidades, { 'id': currentFuncionalidade.id });
+            this.funcionalidadeSelecionada = _.find(this.funcionalidades, {'id': currentFuncionalidade.id});
         }
     }
 
@@ -374,12 +384,14 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
                     this.funcionalidadeSelectedEvent.emit(funcionalidade);
                 }
             );
-        } else { this.funcionalidadeSelectedEvent.emit(funcionalidade); }
+        } else {
+            this.funcionalidadeSelectedEvent.emit(funcionalidade);
+        }
     }
 
     private selecionarFuncionalidadeRecemCriada(funcionalidadeCriada: Funcionalidade) {
         this.funcionalidadeSelecionada = _.find(this.moduloSelecionado.funcionalidades,
-            { 'id': funcionalidadeCriada.id });
+            {'id': funcionalidadeCriada.id});
         this.funcionalidadeSelected(this.funcionalidadeSelecionada);
     }
 

@@ -1,25 +1,109 @@
-<div class="ui-g ui-fluid">
-  <div class="card card-w-title">
-    <div class="ui-g-12">
+<p-tabView (onChange)="handleChange($event)" *ngIf="analise && analise.pfTotalEsforco">
+    <p-tabPanel [header]="this.getLabel('Analise.Analise.Geral')"></p-tabPanel>
 
-      <h2>{{this.getLabel('Analise.Analise.PfFinalTotal')}} {{ analise.pfTotalEsforco }}</h2>
-      <h2>{{this.getLabel('Analise.Analise.PfFinalAjustado')}} {{ analise.adjustPFTotal }}</h2>
+    <p-tabPanel [header]="this.getLabel('Analise.Analise.FuncoesDados')"></p-tabPanel>
 
-      <app-analise-funcao-resumo-table [linhasResumo]="analise.resumoTotal.all">
-      </app-analise-funcao-resumo-table>
+    <p-tabPanel [header]="this.getLabel('Analise.Analise.FuncoesTransacao')"
+                [disabled]="disableAba" ></p-tabPanel>
 
-      <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')" [toggleable]="true" [collapsed]="true">
-        <h2 translate="Analise.Analise.Fases">Fases</h2>
-        <p-dataTable id="idTabelaFasesComponentAnaliseResumo" [value]="esforcoFases">
+    <p-tabPanel [header]="this.getLabel('Analise.Analise.Resumo')" [selected]="true">
+        <div class="ui-g ui-fluid">
+            <div class="card card-w-title">
+                <div class="ui-g-12">
+                    <h2>{{this.getLabel('Analise.Analise.PfFinalTotal')}} {{ analise.pfTotalEsforco }}</h2>
+                    <h2>{{this.getLabel('Analise.Analise.PfFinalAjustado')}} {{ analise.adjustPFTotal }}</h2>
+                    <app-analise-funcao-resumo-table [linhasResumo]="analise.resumoTotal.all"
+                                                     *ngIf="showResumo()"></app-analise-funcao-resumo-table>
+                    <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')" [toggleable]="true"
+                                [collapsed]="true">
+                        <h2 translate="Analise.Analise.Fases">Fases</h2>
+                        <p-dataTable id="idTabelaFasesComponentAnaliseResumo" [value]="esforcoFases">
 
-          <p-column [header]="this.getLabel('Analise.Analise.Nome')" field="fase.nome">
-          </p-column>
+                            <p-column [header]="this.getLabel('Analise.Analise.Nome')" field="fase.nome">
+                            </p-column>
 
-          <p-column [header]="this.getLabel('Analise.Analise.Esforco')" field="esforcoFormatado">
-          </p-column>
-        </p-dataTable>
-      </p-fieldset>
+                            <p-column [header]="this.getLabel('Analise.Analise.Esforco')" field="esforcoFormatado">
+                            </p-column>
+                        </p-dataTable>
+                    </p-fieldset>
+                </div>
+            </div>
+        </div>
+        <app-white-button
+                [buttonLabel]="this.getLabel('Global.Botoes.Voltar')"
+                routerLink="/analise">
+        </app-white-button>
+        <app-green-button
+                [buttonLabel]="this.getLabel('Analise.Analise.Botoes.GerarRelatorioExcel')"
+                (click)="geraRelatorioExcelBrowser()">
+        </app-green-button>
+        <app-gray-button
+                [buttonLabel]="this.getLabel('Analise.Analise.Botoes.GerarRelatorio')"
+                (click)="geraRelatorioPdfDetalhadoBrowser()">
+        </app-gray-button>
+        <app-red-button
+                [buttonLabel]="this.getLabel('Analise.Analise.Botoes.BloquearAnalise')"
+                (click)="bloquearAnalise()">
+        </app-red-button>
+        <app-blue-button
+                [buttonLabel]="this.getLabel('Analise.Analise.Botoes.CompartilharAnalise')"
+                (click)="openCompartilharDialog()">
+        </app-blue-button>
+    </p-tabPanel>
+</p-tabView>
+<p-dialog [header]="this.getLabel('Analise.Analise.CompartilharAnalise')" [(visible)]="mostrarDialog" [width]="800"
+          [modal]="true" (onHide)="limparSelecaoCompartilhar()" *ngIf="equipeShare">
+    <p-dataTable
+            [(value)]="equipeShare"
+            [headerCheckboxToggleAllPages]="true"
+            [(selection)]="selectedEquipes"
+            dataKey="equipeId">
+        <p-column
+                selectionMode="multiple"
+                [style]="{'width':'10%'}">
+        </p-column>
+        <p-column
+                [header]="this.getLabel('Analise.Analise.Equipe')"
+                field="nomeEquipe">
+        </p-column>
+        <p-column
+                [header]="this.getLabel('Analise.Analise.SomenteVisualizar')"
+                field="viewOnly"
+                [style]="{'width':'12%'}">
+            <ng-template let-col let-equipeShare="rowData" pTemplate="body">
+                <p-toggleButton [(ngModel)]="equipeShare.viewOnly" onLabel="Sim" offLabel="Não"></p-toggleButton>
+            </ng-template>
+        </p-column>
+    </p-dataTable>
 
-    </div>
-  </div>
-</div>
+    <app-green-button [buttonLabel]="'Global.Botoes.Adicionar' | translate" (click)="salvarCompartilhar()"
+                      style="float:right; margin-top: 5px"></app-green-button>
+    <br/>
+    <br/>
+
+    <hr/>
+    <h3 translate="Analise.Analise.CompartilhadaCom">Compartilhada com:</h3>
+    <p-dataTable
+            *ngIf="analise && analise.compartilhadas"
+            [(value)]="analise.compartilhadas"
+            selectionMode="single"
+            [(selection)]="selectedToDelete"
+            dataKey="equipeId">
+        <p-column
+                [header]="this.getLabel('Analise.Analise.Equipe')"
+                field="nomeEquipe">
+        </p-column>
+
+        <p-column
+                [header]="this.getLabel('Analise.Analise.SomenteVisualizar')"
+                field="viewOnly"
+                [style]="{'width':'12%'}">
+            <ng-template let-col let-analiseTemp="rowData" pTemplate="body">
+                <p-toggleButton [(ngModel)]="analiseTemp.viewOnly" onLabel="Sim" offLabel="Não"
+                                (onChange)="updateViewOnly()"></p-toggleButton>
+            </ng-template>
+        </p-column>
+    </p-dataTable>
+    <app-red-button [buttonLabel]="this.getLabel('Global.Botoes.Remover')" (click)="deletarCompartilhar()"
+                    style="float:right; margin-top: 5px"></app-red-button>
+</p-dialog>

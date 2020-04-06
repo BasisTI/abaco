@@ -413,6 +413,7 @@
       "Inserir":"Insertar",
       "Pesquisar":"Buscar",
       "Copia":" - Copia",
+      "PossuiFundamentacao": "Tiene fundación",
       "Mensagens": {
         "msgAdicionarFuncaoDados": "Agregar función de datos",
         "msgAlterarFuncaoDados": "Cambio de la función de datos",
@@ -717,6 +718,7 @@
       },
       "Botoes": {
         "GerarRelatorio": "Generar Informe",
+        "GerarRelatorioExcel": "Generar Informe Excel",
         "GerarRelatorioExcel": "Generar informe de Excel",
         "CompartilharAnalise": "Compartir Análisis",
         "BloquearAnalise": "Bloquear Análisis",

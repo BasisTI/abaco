@@ -7,7 +7,23 @@ import { SecurityModule } from '@basis/angular-components';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { AutoCompleteModule, ButtonModule, CalendarModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, DropdownModule, InputTextareaModule, InputTextModule, MultiSelectModule, RadioButtonModule, SpinnerModule, TabViewModule } from 'primeng/primeng';
+import {
+    AutoCompleteModule,
+    ButtonModule,
+    CalendarModule,
+    ConfirmationService,
+    ConfirmDialogModule,
+    DataTableModule,
+    DialogModule,
+    DropdownModule,
+    EditorModule,
+    InputTextareaModule,
+    InputTextModule,
+    MultiSelectModule,
+    RadioButtonModule,
+    SpinnerModule,
+    TabViewModule
+} from 'primeng/primeng';
 import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
 import { AbacoAnaliseSharedModule } from '../analise-shared/analise-shared.module';
 import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
@@ -28,41 +44,42 @@ export function createTranslateLoader(http: HttpClient) {
   }
 
 @NgModule({
-  imports: [
-    CommonModule,
-    HttpModule,
-    FormsModule,
-    ButtonModule,
-    SpinnerModule,
-    CalendarModule,
-    DropdownModule,
-    RadioButtonModule,
-    InputTextModule,
-    DataTableModule,
-    ConfirmDialogModule,
-    AbacoButtonsModule,
-    TabViewModule,
-    InputTextareaModule,
-    AbacoSharedModule,
-    DialogModule,
-    AbacoAnaliseSharedModule,
-    MemoryDataTableModule,
-    AbacoAnaliseBotaoSalvarModule,
-    AbacoEllipsisTooltipModule,
-    MultiSelectModule,
-    AbacoDerChipsModule,
-    AutoCompleteModule,
-    CKEditorModule,
-    SecurityModule,
-    ReactiveFormsModule,
-    TranslateModule.forChild({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    })
-  ],
+    imports: [
+        CommonModule,
+        HttpModule,
+        FormsModule,
+        ButtonModule,
+        SpinnerModule,
+        CalendarModule,
+        DropdownModule,
+        RadioButtonModule,
+        InputTextModule,
+        DataTableModule,
+        ConfirmDialogModule,
+        AbacoButtonsModule,
+        TabViewModule,
+        InputTextareaModule,
+        AbacoSharedModule,
+        DialogModule,
+        AbacoAnaliseSharedModule,
+        MemoryDataTableModule,
+        AbacoAnaliseBotaoSalvarModule,
+        AbacoEllipsisTooltipModule,
+        MultiSelectModule,
+        AbacoDerChipsModule,
+        AutoCompleteModule,
+        CKEditorModule,
+        SecurityModule,
+        ReactiveFormsModule,
+        TranslateModule.forChild({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: (createTranslateLoader),
+                deps: [HttpClient]
+            }
+        }),
+        EditorModule
+    ],
   declarations: [
     FuncaoDadosFormComponent
   ],
