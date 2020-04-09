@@ -15,4 +15,10 @@ import java.util.Set;
 public interface PEAnaliticoRepository extends JpaRepository<PEAnalitico, Long> {
 
     Set<PEAnalitico> findAllByidsistemaAndTipoOrderByName(Long idsistema, String tipo);
+
+    Set<PEAnalitico> findByIdFuncionalidadeAndTipoAndNameContainingIgnoreCaseOrderByName(Long idFuncionalidade, String tipo, String name);
+
+    Set<PEAnalitico> findAllByIdModuloAndTipoOrderByName(Long idModulo, String tipo);
+
+    Set<PEAnalitico> findAllByIdFuncionalidadeAndTipoOrderByName(Long idFuncionalidade, String tipo);
 }

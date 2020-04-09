@@ -75,8 +75,14 @@ public class PEAnalitico implements Serializable {
     @Column(name = "rlr_alr")
     private BigDecimal rlralr;
 
+    @Column(name = "id_funcionalidade")
+    private Long idFuncionalidade;
+
     @Column(name = "nome_funcionalidade")
     private String nomeFuncionalidade;
+
+    @Column(name = "id_modulo")
+    private Long idModulo;
 
     @Column(name = "nome_modulo")
     private String nomeModulo;

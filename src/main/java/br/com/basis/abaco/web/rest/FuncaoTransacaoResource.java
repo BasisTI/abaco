@@ -305,9 +305,9 @@ public class FuncaoTransacaoResource {
         Set<Der> ders = new HashSet<>();
         funcaoTransacao.getDers().forEach(der -> {
             if (der.getId() != null) {
-                funcaoTransacao.getDers().remove(der);
                 der = derRepository.findOne(der.getId());
-                funcaoTransacao.getDers().add(der);
+                der = new Der(null, der.getNome(), der.getValor(),der.getRlr(),der.getFuncaoDados(), funcaoTransacao);
+                ders.add(der);
             } else {
                 ders.add(der);
             }

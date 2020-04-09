@@ -345,7 +345,7 @@ public class AnaliseResource {
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
     }
 
-    @GetMapping("/downloadRelator1ioExcel/{id}")
+    @GetMapping("/downloadRelatorioExcel/{id}")
     @Timed
     public @ResponseBody
     byte[] downloadRelatorioExcel(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
