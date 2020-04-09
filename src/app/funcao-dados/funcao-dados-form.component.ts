@@ -200,7 +200,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
                 this.analiseService.find(this.idAnalise).subscribe(analise => {
                     this.analise = analise;
                     this.funcoesDados = value;
-                    this.disableAba =  this.analise.metodoContagem === MessageUtil.INDICATIVA;
+                    this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
                     this.estadoInicial();
                     this.impactos = AnaliseSharedUtils.impactos;
                     if (!this.uploadImagem) {
@@ -464,11 +464,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     }
 
     searchBaseline(event: { query: string; }): void {
-        const mdCache = this.moduloCache;
-        this.baselineResults = this.dadosBaselineFD.filter(function (fc) {
-            const teste: string = event.query;
-            return fc.name.toLowerCase().includes(teste.toLowerCase()) && fc.idfuncionalidade === mdCache.id;
-        });
+        if (this.seletedFuncaoDados && this.seletedFuncaoDados.funcionalidade && this.seletedFuncaoDados.funcionalidade.id) {
+            this.funcaoDadosService.autoCompletePEAnalitico(
+                event.query, this.seletedFuncaoDados.funcionalidade.id).subscribe(
+                value => {
+                    this.baselineResults = value;
+                }
+            );
+        }
     }
 
     // Carrega nome das funçeõs de dados
@@ -787,24 +790,15 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
      * Método responsável por recuperar o nome selecionado no combo.
      * @param nome
      */
-    recuperarNomeSelecionado(baselineAnalitico: BaselineAnalitico) {
-        this.funcaoDadosService.getFuncaoDadosBaseline(baselineAnalitico.idfuncaodados)
+    recuperarNomeSelecionado(funcaoDados: FuncaoDados) {
+        this.funcaoDadosService.getFuncaoDadosBaseline(funcaoDados.id)
             .subscribe((res: FuncaoDados) => {
-                if (res.fatorAjuste === null) {
-                    res.fatorAjuste = undefined;
-                }
-                res.id = undefined;
-                if (res.ders) {
-                    res.ders.forEach(Ders => {
-                        Ders.id = undefined;
-                    });
-                }
-                if (res.rlrs) {
-                    res.rlrs.forEach(rlrs => {
-                        rlrs.id = undefined;
-                    });
-                }
-                this.prepararParaEdicao(res);
+                this.seletedFuncaoDados = res;
+                this.seletedFuncaoDados.id = null;
+                this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
+                this.disableTRDER();
+                this.configurarDialog();
+                this.blockUI.stop();
             });
     }
 
@@ -882,7 +876,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         if (tipo === 'Pesquisar') {
             ft.tipo = TipoFuncaoTransacao.CE;
         } else if (tipo === 'Consultar') {
-            ft.tipo = TipoFuncaoTransacao.SE;
+            ft.tipo = TipoFuncaoTransacao.CE;
         } else {
             ft.tipo = TipoFuncaoTransacao.EE;
         }
@@ -969,7 +963,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     moduloSelected(modulo: Modulo) {
     }
 
-    disableAba: Boolean = false
+    disableAba: Boolean = false;
 
     // Carregar Referencial
     private loadReference(referenciaveis: AnaliseReferenciavel[],

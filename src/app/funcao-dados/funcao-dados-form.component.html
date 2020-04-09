@@ -188,23 +188,21 @@
                         <div *ngIf="!isEdit">
                             <div class="ui-g" *ngIf="!showMultiplos">
                                 <div class="ui-g-9">
-                                    <label translate="Cadastros.FuncaoDados.NomeProcessoElementar">Nome do Processo
-                                        Elementar
-                                        *</label>
-                                    <p-autoComplete
-                                            maxlength="2000"
-                                            [(ngModel)]="seletedFuncaoDados.name"
-                                            [suggestions]="baselineResults"
-                                            id="idNomeFormFuncaoDados"
-                                            (completeMethod)="searchBaseline($event)"
-                                            (onSelect)="recuperarNomeSelecionado($event)"
-                                            datakey="id">
-                                        <ng-template let-seletedFuncaoDados pTemplate="name">
-                                            <div class="ui-helper-clearfix">
-                                                <div style="font-size:15px;float:left;margin:10px 10px 0 0">{{seletedFuncaoDados.name}}</div>
-                                            </div>
-                                        </ng-template>
-                                    </p-autoComplete>
+                                    <label translate="Cadastros.FuncaoDados.NomeProcessoElementar">Nome do Processo Elementar*</label>
+                                        <p-autoComplete
+                                                maxlength="2000"
+                                                [(ngModel)]="seletedFuncaoDados.name"
+                                                [suggestions]="baselineResults"
+                                                id="idNomeFormFuncaoDados"
+                                                (completeMethod)="searchBaseline($event)"
+                                                (onSelect)="recuperarNomeSelecionado($event)"
+                                                datakey="id">
+                                            <ng-template let-seletedFuncaoDados pTemplate="name">
+                                                <div class="ui-helper-clearfix">
+                                                    <div style="font-size:15px;float:left;margin:10px 10px 0 0">{{seletedFuncaoDados.name}}</div>
+                                                </div>
+                                            </ng-template>
+                                        </p-autoComplete>
                                     <span class="md-inputfield">
                                 <div *ngIf="nomeInvalido && !seletedFuncaoDados.name"
                                      class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">

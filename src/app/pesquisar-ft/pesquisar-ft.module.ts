@@ -12,7 +12,7 @@ import {
   RadioButtonModule,
   ConfirmDialogModule,
   DialogModule,
-  DataTableModule
+  DataTableModule, FieldsetModule
 } from 'primeng/primeng';
 
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
@@ -52,7 +52,8 @@ const rotas: Routes = [
         useFactory: (createTranslateLoader),
         deps: [HttpClient]
       }
-    })
+    }),
+    FieldsetModule
   ],
   declarations: [
     PesquisarFtComponent

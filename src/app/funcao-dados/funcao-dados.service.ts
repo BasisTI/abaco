@@ -16,11 +16,9 @@ import {Analise} from '../analise';
 export class FuncaoDadosService {
 
     resourceUrl = environment.apiUrl + '/funcao-dados';
-    resourceUrlPEAnalitico = environment.apiUrl + '/peanalitico';
+    resourceUrlPEAnalitico = environment.apiUrl + '/peanalitico/fd';
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
-
     manualResourceUrl = environment.apiUrl + '/manuals';
-
     @BlockUI() blockUI: NgBlockUI;
 
     /*
@@ -52,6 +50,12 @@ export class FuncaoDadosService {
     dropDownPEAnalitico(idSistema): Observable<any> {
         this.blockUI.start();
         return this.http.get(this.resourceUrlPEAnalitico + '/drop-down/' + idSistema)
+            .map((res: Response) => res.json());
+    }
+
+    autoCompletePEAnalitico(name: String, idFuncionalidade: number): Observable<any> {
+        const url = `${this.resourceUrlPEAnalitico}?name=${name}&idFuncionalidade=${idFuncionalidade}`;
+        return this.http.get(url)
             .map((res: Response) => res.json());
     }
 
@@ -93,8 +97,7 @@ export class FuncaoDadosService {
 
     getFuncaoDadosBaseline(id: number): Observable<FuncaoDados> {
         return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const resposta = this.convertJsonToSintetico(res.json());
-            return resposta;
+            return this.convertItemFromServer(res.json());
         });
     }
 

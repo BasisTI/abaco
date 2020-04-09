@@ -8,19 +8,19 @@ import { AbacoSharedModule } from '../shared/abaco-shared.module';
 import { AbacoAnaliseSharedModule } from '../analise-shared/analise-shared.module';
 import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
 import {
-  ButtonModule,
-  InputTextModule,
-  SpinnerModule,
-  CalendarModule,
-  DropdownModule,
-  RadioButtonModule,
-  ConfirmDialogModule,
-  DataTableModule,
-  ConfirmationService,
-  TabViewModule,
-  InputTextareaModule,
-  DialogModule,
-  AutoCompleteModule
+    ButtonModule,
+    InputTextModule,
+    SpinnerModule,
+    CalendarModule,
+    DropdownModule,
+    RadioButtonModule,
+    ConfirmDialogModule,
+    DataTableModule,
+    ConfirmationService,
+    TabViewModule,
+    InputTextareaModule,
+    DialogModule,
+    AutoCompleteModule, EditorModule
 } from 'primeng/primeng';
 
 import {
@@ -40,40 +40,41 @@ export function createTranslateLoader(http: HttpClient) {
   }
 
 @NgModule({
-  imports: [
-    CommonModule,
-    HttpModule,
-    FormsModule,
-    ButtonModule,
-    SpinnerModule,
-    CalendarModule,
-    DropdownModule,
-    RadioButtonModule,
-    InputTextModule,
-    DataTableModule,
-    ConfirmDialogModule,
-    AbacoButtonsModule,
-    TabViewModule,
-    InputTextareaModule,
-    CKEditorModule,
-    SecurityModule,
-    ReactiveFormsModule,
-    AbacoSharedModule,
-    DialogModule,
-    AbacoAnaliseSharedModule,
-    MemoryDataTableModule,
-    AbacoAnaliseBotaoSalvarModule,
-    AbacoDerChipsModule,
-    AutoCompleteModule,
-    PesquisarFuncaoTransacaoModule,
-    TranslateModule.forChild({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    })
-  ],
+    imports: [
+        CommonModule,
+        HttpModule,
+        FormsModule,
+        ButtonModule,
+        SpinnerModule,
+        CalendarModule,
+        DropdownModule,
+        RadioButtonModule,
+        InputTextModule,
+        DataTableModule,
+        ConfirmDialogModule,
+        AbacoButtonsModule,
+        TabViewModule,
+        InputTextareaModule,
+        CKEditorModule,
+        SecurityModule,
+        ReactiveFormsModule,
+        AbacoSharedModule,
+        DialogModule,
+        AbacoAnaliseSharedModule,
+        MemoryDataTableModule,
+        AbacoAnaliseBotaoSalvarModule,
+        AbacoDerChipsModule,
+        AutoCompleteModule,
+        PesquisarFuncaoTransacaoModule,
+        TranslateModule.forChild({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: (createTranslateLoader),
+                deps: [HttpClient]
+            }
+        }),
+        EditorModule
+    ],
   declarations: [
     FuncaoTransacaoFormComponent
   ],

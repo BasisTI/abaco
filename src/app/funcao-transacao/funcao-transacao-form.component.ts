@@ -145,7 +145,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
     };
     private idAnalise: Number;
-    private analise: Analise;
+    public analise: Analise;
     public funcoesTransacoes: FuncaoTransacao[];
     public currentFuncaoTransacao: FuncaoTransacao = new FuncaoTransacao();
 
@@ -179,8 +179,9 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.funcaoTransacaoService.getFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
                 this.analiseService.find(this.idAnalise).subscribe(analise => {
                     this.analise = analise;
+                    this.analiseSharedDataService.analise = analise;
                     this.funcoesTransacoes = value;
-                    this.disableAba =  this.analise.metodoContagem === MessageUtil.INDICATIVA;
+                    this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
                     this.hideShowQuantidade = true;
                     this.estadoInicial();
                     this.currentFuncaoTransacao = new FuncaoTransacao();
@@ -469,11 +470,14 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     }
 
-    recuperarNomeSelecionado(baselineAnalitico: BaselineAnalitico) {
+    recuperarNomeSelecionado(baselineAnalitico: FuncaoTransacao) {
 
-        this.funcaoDadosService.getFuncaoTransacaoBaseline(baselineAnalitico.idfuncaodados)
+        this.funcaoTransacaoService.getById(baselineAnalitico.id)
             .subscribe((res: FuncaoTransacao) => {
-                if (res.fatorAjuste === null) { res.fatorAjuste = undefined; }
+                res.id = null;
+                if (res.fatorAjuste === null) {
+                    res.fatorAjuste = undefined;
+                }
                 res.id = undefined;
                 if (res.ders) {
                     res.ders.forEach(ders => {
@@ -485,21 +489,26 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                         alrs.id = undefined;
                     });
                 }
-                this.prepararParaEdicao(res);
+                this.disableTRDER();
+                this.configurarDialog();
+                this.currentFuncaoTransacao = res;
+                this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
+                this.blockUI.stop();
             });
 
     }
 
-    searchBaseline(event): void {
-
-        const mdCache = this.moduloCache;
-
-        this.baselineResultados = this.dadosBaselineFT.filter(function (fd) {
-            const teste: string = event.query;
-            return fd.name.toLowerCase().includes(teste.toLowerCase()) && fd.idfuncionalidade === mdCache.id;
-        });
-
+    searchBaseline(event: { query: string; }): void {
+        if (this.currentFuncaoTransacao && this.currentFuncaoTransacao.funcionalidade && this.currentFuncaoTransacao.funcionalidade.id) {
+            this.funcaoTransacaoService.autoCompletePEAnalitico(
+                event.query, this.currentFuncaoTransacao.funcionalidade.id).subscribe(
+                value => {
+                    this.baselineResultados = value;
+                }
+            );
+        }
     }
+
 
     // Funcionalidade Selecionada
     functionalitySelected(funcionalidade: Funcionalidade) {
@@ -733,7 +742,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const funcaoTransacaoSelecionada : FuncaoTransacao = new FuncaoTransacao() ;
+        const funcaoTransacaoSelecionada: FuncaoTransacao = new FuncaoTransacao();
         if (button !== 'filter') {
             funcaoTransacaoSelecionada.id = event.selection.id;
             funcaoTransacaoSelecionada.name = event.selection.name;
@@ -823,6 +832,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     // Carregar Referencial
     disableAba: any;
+
     private loadReference(referenciaveis: AnaliseReferenciavel[],
                           strValues: string[]): DerChipItem[] {
 
