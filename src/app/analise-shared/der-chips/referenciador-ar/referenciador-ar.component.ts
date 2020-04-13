@@ -74,7 +74,7 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
             this.funcoesDados = this.funcoesDados.concat(res.map((item) => {
                 const fd = new FuncaoDados();
                 fd.id = item.id;
-                fd.name = item.nome;
+                fd.name = item.name;
                 return fd;
             }));
             this.blockUI.stop();
