@@ -39,7 +39,7 @@ import {MessageUtil} from '../util/message.util';
     selector: 'app-analise-funcao-transacao',
     templateUrl: './funcao-transacao-form.component.html'
 })
-export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
+export class FuncaoTransacaoFormComponent implements OnInit {
 
     @BlockUI() blockUI: NgBlockUI;      // Usado para bloquear o sistema enquanto aguarda resolução das requisições do backend
 
@@ -157,7 +157,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
         private funcaoDadosService: FuncaoDadosService,
         private analiseService: AnaliseService,
-        private baselineService: BaselineService,
         private funcaoTransacaoService: FuncaoTransacaoService,
         private translate: TranslateService,
         private router: Router,
@@ -187,8 +186,7 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                     this.currentFuncaoTransacao = new FuncaoTransacao();
                     this.subscribeToAnaliseCarregada();
                     this.initClassificacoes();
-                    this.impactos = AnaliseSharedUtils.impactos;
-
+                    this.estadoInicial();
                     if (!this.uploadImagem) {
                         this.config.toolbar.splice(this.config.toolbar.indexOf('imageUpload'));
                     }
@@ -356,7 +354,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
                 }
                 if (retorno) {
                     this.analise.funcaoTransacaos.concat(this.funcoesTransacaoList);
-                    this.salvarAnalise();
                     this.subscribeToAnaliseCarregada();
                     this.fecharDialog();
                 }
@@ -463,13 +460,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    public carregarDadosBaseline() {
-        this.baselineService.baselineAnaliticoFT(this.analise.sistema.id).subscribe((res: ResponseWrapper) => {
-            this.dadosBaselineFT = res.json;
-        });
-
-    }
-
     recuperarNomeSelecionado(baselineAnalitico: FuncaoTransacao) {
 
         this.funcaoTransacaoService.getById(baselineAnalitico.id)
@@ -517,7 +507,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
             this.moduloCache = funcionalidade;
         }
         this.currentFuncaoTransacao.funcionalidade = funcionalidade;
-        this.carregarDadosBaseline();
     }
 
 
@@ -628,10 +617,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
         return retorno;
     }
 
-    salvarAnalise() {
-        this.analiseService.atualizaAnalise(this.analise);
-    }
-
     private desconverterChips() {
         if (this.dersChips != null && this.alrsChips != null) {
             this.currentFuncaoTransacao.ders = DerChipConverter.desconverterEmDers(this.dersChips);
@@ -641,7 +626,8 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     dersReferenciados(ders: Der[]) {
         const dersReferenciadosChips: DerChipItem[] = DerChipConverter.converterReferenciaveis(ders);
-        this.dersChips = this.dersChips.concat(dersReferenciadosChips);
+        this.dersChips = this.dersChips ? this.dersChips.concat(dersReferenciadosChips) : dersReferenciadosChips;
+        this.alrsChips = this.alrsChips ? this.dersChips.concat(dersReferenciadosChips) : dersReferenciadosChips;
     }
 
     private editar() {
@@ -876,12 +862,6 @@ export class FuncaoTransacaoFormComponent implements OnInit, OnDestroy {
 
     formataFatorAjuste(fatorAjuste: FatorAjuste): string {
         return fatorAjuste ? FatorAjusteLabelGenerator.generate(fatorAjuste) : this.getLabel('Global.Mensagens.Nenhum');
-    }
-
-    ngOnDestroy() {
-        this.changeDetectorRef.detach();
-        this.analiseCarregadaSubscription.unsubscribe();
-        this.translateSubscriptions.forEach(susbscription => susbscription.unsubscribe());
     }
 
     openDialog(param: boolean) {
