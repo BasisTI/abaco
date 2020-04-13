@@ -16,7 +16,7 @@ import {Analise} from '../analise';
 export class FuncaoDadosService {
 
     resourceUrl = environment.apiUrl + '/funcao-dados';
-    resourceUrlPEAnalitico = environment.apiUrl + '/peanalitico/fd';
+    resourceUrlPEAnalitico = environment.apiUrl + '/peanalitico/';
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
     manualResourceUrl = environment.apiUrl + '/manuals';
     @BlockUI() blockUI: NgBlockUI;
@@ -54,7 +54,7 @@ export class FuncaoDadosService {
     }
 
     autoCompletePEAnalitico(name: String, idFuncionalidade: number): Observable<any> {
-        const url = `${this.resourceUrlPEAnalitico}?name=${name}&idFuncionalidade=${idFuncionalidade}`;
+        const url = `${this.resourceUrlPEAnalitico}/fd?name=${name}&idFuncionalidade=${idFuncionalidade}`;
         return this.http.get(url)
             .map((res: Response) => res.json());
     }
