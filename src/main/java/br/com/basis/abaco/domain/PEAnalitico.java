@@ -39,9 +39,6 @@ public class PEAnalitico implements Serializable {
     @Column(name = "tipo")
     private String tipo;
 
-    @Column(name = "impacto")
-    private String impacto;
-
     @Column(name = "classificacao")
     private String classificacao;
 
@@ -68,12 +65,6 @@ public class PEAnalitico implements Serializable {
 
     @Column(name = "complexidade")
     private String complexidade;
-
-    @Column(name = "der")
-    private BigDecimal der;
-
-    @Column(name = "rlr_alr")
-    private BigDecimal rlralr;
 
     @Column(name = "id_funcionalidade")
     private Long idFuncionalidade;

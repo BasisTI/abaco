@@ -6,5 +6,6 @@
 
     <include file="classpath:config/liquibase/changelog/20200313194758_abaco_producao.changelog.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20200407203324_alter_view_pe_analitico.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20200414123450_add_index_pe_analitico.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
