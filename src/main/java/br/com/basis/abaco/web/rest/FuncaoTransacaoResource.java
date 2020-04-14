@@ -3,6 +3,7 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Der;
+import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.DerRepository;
@@ -306,7 +307,7 @@ public class FuncaoTransacaoResource {
         funcaoTransacao.getDers().forEach(der -> {
             if (der.getId() != null) {
                 der = derRepository.findOne(der.getId());
-                der = new Der(null, der.getNome(), der.getValor(),der.getRlr(),der.getFuncaoDados(), funcaoTransacao);
+                der = new Der(null, der.getNome(), der.getValor(),der.getRlr(),null, funcaoTransacao);
                 ders.add(der);
             } else {
                 ders.add(der);
