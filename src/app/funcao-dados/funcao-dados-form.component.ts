@@ -880,8 +880,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         } else {
             ft.tipo = TipoFuncaoTransacao.EE;
         }
-        ft.tipo = TipoFuncaoTransacao.EE;
-        ft.impacto = Impacto.INCLUSAO;
         ft.fatorAjuste = fdSelecionada.fatorAjuste;
         ft.ders = [];
         fdSelecionada.ders.forEach(item => ft.ders.push(item));

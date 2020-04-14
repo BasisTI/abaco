@@ -379,7 +379,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 this.analise.contrato.manual);
             this.funcoesTransacaoList.push(funcaoTransacaoCalculada);
             this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
-            this.atualizaResumo();
             this.resetarEstadoPosSalvar();
             return true;
         }
@@ -392,14 +391,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
     private subscribeToAnaliseCarregada() {
         this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
-            this.atualizaResumo();
             //  this.loadDataFunctionsName();
         });
-    }
-
-    private atualizaResumo() {
-        this.resumo = this.analise.resumoFuncaoTransacoes;
-        this.changeDetectorRef.detectChanges();
     }
 
     getTextDialog() {
@@ -537,7 +530,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                                 this.setFields(funcaoTransacaoCalculada);
                                 this.funcoesTransacoes.push(funcaoTransacaoCalculada);
                                 this.fecharDialog();
-                                this.atualizaResumo();
                                 this.resetarEstadoPosSalvar();
                                 this.estadoInicial();
                                 this.blockUI.stop();
@@ -654,7 +646,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         ));
                         this.setFields(funcaoTransacaoCalculada);
                         this.funcoesTransacoes.push(funcaoTransacaoCalculada);
-                        this.atualizaResumo();
                         this.resetarEstadoPosSalvar();
                         this.fecharDialog();
                         this.blockUI.stop();

@@ -115,7 +115,7 @@ export class FuncaoTransacaoService {
     }
 
     public getFuncaoTransacaoByModuloOrFuncionalidade(idModulo: Number, idFuncionalida: Number = 0 ): Observable<any[]> {
-        const url = `${this.resourceUrlPEAnalitico}/funcaoTransacao/${idModulo}?idFuncionalida=${idFuncionalida}`;
+        const url = `${this.resourceUrlPEAnalitico}/funcaoTransacao/${idModulo}?idFuncionalidade=${idFuncionalida}`;
         return this.http.get(url).map((res) => {
             return res.json();
         });

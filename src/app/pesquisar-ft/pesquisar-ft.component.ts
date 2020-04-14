@@ -344,6 +344,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
             const moduloId = modulo.id;
             this.funcionalidadeService.findFuncionalidadesDropdownByModulo(moduloId).subscribe((funcionalidades: Funcionalidade[]) => {
                 this.funcionalidades = funcionalidades;
+                this.funcionalidadeAtual = null;
             });
         }
     }
@@ -355,7 +356,7 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     private deselecionaFuncionalidadeSeModuloSelecionadoForDiferente() {
         if (this.moduloSelecionado !== undefined) {
             if (this.moduloSelecionado.id !== this.oldModuloSelectedId) {
-                this.funcionalidadeSelecionada = undefined;
+                this.funcionalidadeSelecionada = null;
             }
         }
 

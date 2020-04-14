@@ -95,7 +95,6 @@ export class AnaliseResumoComponent implements OnInit {
                         this.pageNotificationService.addErrorMsg(
                             this.getLabel('Analise.Analise.Mensagens.msgSemPermissaoParaEditarAnalise')
                         );
-                        this.router.navigate(['/analise']);
                     });
             }
         });
