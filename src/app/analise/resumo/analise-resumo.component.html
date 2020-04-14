@@ -107,3 +107,11 @@
     <app-red-button [buttonLabel]="this.getLabel('Global.Botoes.Remover')" (click)="deletarCompartilhar()"
                     style="float:right; margin-top: 5px"></app-red-button>
 </p-dialog>
+<p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" [label]="'Global.Botoes.Nao' | translate"
+                (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="'Global.Botoes.Sim' | translate"
+                (click)="dialog.accept()"></button>
+    </p-footer>
+</p-confirmDialog>

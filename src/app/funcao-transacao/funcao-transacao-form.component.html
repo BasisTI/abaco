@@ -41,7 +41,7 @@
                                     <p-column
                                             [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
                                             [style]="{'width': '200px'}"
-                                            field="modulo"
+                                            field="funcionalidade.modulo.nome"
                                             sortable="custom"
                                             filter="true"
                                             filterMatchMode="contains"
@@ -51,7 +51,7 @@
 
                                     <p-column
                                             [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
-                                            field="funcionalidade"
+                                            field="funcionalidade.nome"
                                             [style]="{'width': '200px'}"
                                             sortable="custom"
                                             filter="true"

@@ -26,7 +26,7 @@ import {MessageUtil} from '../../util/message.util';
     selector: 'app-analise-resumo',
     templateUrl: './analise-resumo.component.html'
 })
-export class AnaliseResumoComponent implements OnInit, OnDestroy {
+export class AnaliseResumoComponent implements OnInit {
 
     resumoTotal: ResumoTotal;
 
@@ -101,11 +101,6 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy() {
-        this.changeDetectorRef.detach();
-        this.analiseCarregadaSubscription.unsubscribe();
-    }
-
     handleChange(e) {
         const index = e.index;
         let link;
@@ -134,7 +129,7 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
     }
 
     public bloquearAnalise() {
-        /*if (!this.analise.dataHomologacao) {
+        if (!this.analise.dataHomologacao) {
             this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_HOMOLOGACAO'));
         }
 
@@ -151,7 +146,7 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
                     }, (error: Response) => {
                         switch (error.status) {
                             case 400: {
-                                if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
+                                if (error) {
                                     this.pageNotificationService.addErrorMsg(
                                         this.getLabel('Analise.Analise.Mensagens.msgSomenteAdministradoresBloquearDesbloquear')
                                     );
@@ -164,7 +159,7 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
                     });
                 }
             });
-        }*/
+        }
 
     }
 

@@ -38,7 +38,7 @@ import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.servi
 export class AnaliseFormComponent implements OnInit, OnDestroy {
 
     isEdicao: boolean;
-    disableFuncaoTrasacao: boolean;
+    disableFuncaoTrasacao = true;
     disableAba: boolean;
     equipeShare = [];
     analiseShared: Array<AnaliseShareEquipe> = [];
@@ -217,7 +217,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 this.isEdicao = true;
                 this.analiseService.find(params['id']).subscribe(analise => {
                         this.loadDataAnalise(analise);
-                        this.disableFuncaoTrasacao =  analise.metodoContagem === MessageUtil.INDICATIVA;
+                        this.disableFuncaoTrasacao = analise.metodoContagem === MessageUtil.INDICATIVA;
                     },
                     err => {
                         this.pageNotificationService.addErrorMsg(
