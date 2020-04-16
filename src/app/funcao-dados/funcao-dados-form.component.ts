@@ -196,6 +196,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     ngOnInit() {
         this.route.params.subscribe(params => {
             this.idAnalise = params['id'];
+            this.isView = params['view'] !== undefined;
             this.funcaoDadosService.getFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
                 this.analiseService.find(this.idAnalise).subscribe(analise => {
                     this.analise = analise;
@@ -1073,15 +1074,27 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         let link;
         switch (index) {
             case 0:
-                link = ['/analise/' + this.analise.id + '/edit'];
+                if (this.isView) {
+                    link = ['/analise/' + this.analise.id + '/view'];
+                }else {
+                    link = ['/analise/' + this.analise.id + '/edit'];
+                }
                 break;
             case 1:
                 return;
             case 2:
-                link = ['/analise/' + this.analise.id + '/funcao-transacao'];
+                if (this.isView) {
+                    link = ['/analise/' + this.analise.id + '/funcao-transacao/view'];
+                }else {
+                    link = ['/analise/' + this.analise.id + '/funcao-transacao'];
+                }
                 break;
             case 3:
-                link = ['/analise/' + this.analise.id + '/resumo'];
+                if (this.isView) {
+                    link = ['/analise/' + this.analise.id + '/resumo/view'];
+                }else {
+                    link = ['/analise/' + this.analise.id + '/resumo'];
+                }
                 break;
         }
         this.router.navigate(link);

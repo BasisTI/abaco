@@ -7,6 +7,7 @@ import {AuthGuard} from '@basis/angular-components';
 import {FuncaoDadosFormComponent} from '../funcao-dados';
 import {FuncaoTransacaoFormComponent} from '../funcao-transacao';
 import {AnaliseResumoComponent} from './resumo/analise-resumo.component';
+import {AnaliseViewComponent} from './analise-view.component';
 
 export const analiseRoute: Routes = [
     {
@@ -30,6 +31,11 @@ export const analiseRoute: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: 'analise/:id/view',
+        component: AnaliseViewComponent,
+        canActivate: [AuthGuard]
+    },
+    {
         path: 'analise/:id/funcao-dados',
         component: FuncaoDadosFormComponent,
         canActivate: [AuthGuard]
@@ -41,6 +47,21 @@ export const analiseRoute: Routes = [
     },
     {
         path: 'analise/:id/resumo',
+        component: AnaliseResumoComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'analise/:id/funcao-dados/:view',
+        component: FuncaoDadosFormComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'analise/:id/funcao-transacao/:view',
+        component: FuncaoTransacaoFormComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'analise/:id/resumo/:view',
         component: AnaliseResumoComponent,
         canActivate: [AuthGuard]
     },

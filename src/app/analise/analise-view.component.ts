@@ -26,7 +26,7 @@ import {TranslateService} from '@ngx-translate/core';
     selector: 'jhi-analise-view',
     templateUrl: './analise-view.component.html'
 })
-export class AnaliseViewComponent implements OnInit, OnDestroy {
+export class AnaliseViewComponent implements OnInit {
 
     isEdicao: boolean;
     isView: boolean;
@@ -115,10 +115,6 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
         this.listOrganizacoes();
         this.getAnalise();
         this.traduzirtiposAnalise();
-    }
-
-    ngOnDestroy() {
-        this.routeSub.unsubscribe();
     }
 
     getLabel(label) {
@@ -451,6 +447,23 @@ export class AnaliseViewComponent implements OnInit, OnDestroy {
             });
         }, 250);
     }
-
+    handleChange(e) {
+        const index = e.index;
+        let link;
+        switch (index) {
+            case 0:
+                return;
+            case 1:
+                link = ['/analise/' + this.analise.id + '/funcao-dados/view'];
+                break;
+            case 2:
+                link = ['/analise/' + this.analise.id + '/funcao-transacao/view'];
+                break;
+            case 3:
+                link = ['/analise/' + this.analise.id + '/resumo/view'];
+                break;
+        }
+        this.router.navigate(link);
+    }
 }
 

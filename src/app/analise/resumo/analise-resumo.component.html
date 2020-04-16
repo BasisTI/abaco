@@ -33,19 +33,19 @@
                 [buttonLabel]="this.getLabel('Global.Botoes.Voltar')"
                 routerLink="/analise">
         </app-white-button>
-        <app-green-button
+        <app-green-button *ngIf="!this.isView"
                 [buttonLabel]="this.getLabel('Analise.Analise.Botoes.GerarRelatorioExcel')"
                 (click)="geraRelatorioExcelBrowser()">
         </app-green-button>
-        <app-gray-button
+        <app-gray-button *ngIf="!this.isView"
                 [buttonLabel]="this.getLabel('Analise.Analise.Botoes.GerarRelatorio')"
                 (click)="geraRelatorioPdfDetalhadoBrowser()">
         </app-gray-button>
-        <app-red-button
+        <app-red-button *ngIf="!this.isView"
                 [buttonLabel]="this.getLabel('Analise.Analise.Botoes.BloquearAnalise')"
                 (click)="bloquearAnalise()">
         </app-red-button>
-        <app-blue-button
+        <app-blue-button *ngIf="!this.isView"
                 [buttonLabel]="this.getLabel('Analise.Analise.Botoes.CompartilharAnalise')"
                 (click)="openCompartilharDialog()">
         </app-blue-button>

@@ -397,7 +397,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     private criarMensagemDeSucessoDaCriacaoDaFuncionalidade(nomeFunc: string, nomeModulo: string, nomeSistema: string) {
         this.pageNotificationService
-            .addSuccessMsg(`${this.getLabel('Analise.Analise.Mensagens.msgSubmodulo')} ${nomeFunc} ${this.getLabel('Analise.Analise.Mensagens.msgCriadoNoModulo')} ${nomeModulo} ${this.getLabel('Analise.Analise.Mensagens.msgDoSistema')} ${nomeSistema}`);
+            .addSuccessMsg(`${this.getLabel('Analise.Analise.Mensagens.msgFuncionalidade')} ${nomeFunc} ${this.getLabel('Analise.Analise.Mensagens.msgCriadoNoModulo')} ${nomeModulo} ${this.getLabel('Analise.Analise.Mensagens.msgNoSistema')} ${nomeSistema}`);
     }
 
     ngOnDestroy() {

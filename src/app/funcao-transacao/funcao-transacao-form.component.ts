@@ -175,6 +175,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(params => {
             this.idAnalise = params['id'];
+            this.isView = params['view'] !== undefined;
             this.funcaoTransacaoService.getFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
                 this.analiseService.find(this.idAnalise).subscribe(analise => {
                     this.analise = analise;
@@ -920,15 +921,27 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         let link;
         switch (index) {
             case 0:
-                link = ['/analise/' + this.idAnalise + '/edit'];
+                if (this.isView) {
+                    link = ['/analise/' + this.analise.id + '/view'];
+                }else {
+                    link = ['/analise/' + this.analise.id + '/edit'];
+                }
                 break;
             case 1:
-                link = ['/analise/' + this.idAnalise + '/funcao-dados'];
+                if (this.isView) {
+                    link = ['/analise/' + this.analise.id + '/funcao-dados/view'];
+                }else {
+                    link = ['/analise/' + this.analise.id + '/funcao-dados'];
+                }
                 break;
             case 2:
                 return;
             case 3:
-                link = ['/analise/' + this.idAnalise + '/resumo'];
+                if (this.isView) {
+                    link = ['/analise/' + this.analise.id + '/resumo/view'];
+                }else {
+                    link = ['/analise/' + this.idAnalise + '/resumo'];
+                }
                 break;
         }
         this.router.navigate(link);
