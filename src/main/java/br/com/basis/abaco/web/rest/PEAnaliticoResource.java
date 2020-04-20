@@ -50,6 +50,7 @@ public class PEAnaliticoResource {
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public Set<PEAnalitico> getFuncaoTransacaoByModuloOrFuncionalidade(@PathVariable Long idModulo, @RequestParam(required = false) Long idFuncionalidade) {
         Set<PEAnalitico> peAnaliticos;
+
         if (idFuncionalidade != null && idFuncionalidade > 0) {
             peAnaliticos = peAnaliticoRepository.findAllByIdFuncionalidadeAndTipoOrderByName(idFuncionalidade, FUNCAO_TRANSACAO);
         } else {
