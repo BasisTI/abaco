@@ -16,6 +16,7 @@ import {Analise} from '../analise';
 export class FuncaoDadosService {
 
     resourceUrl = environment.apiUrl + '/funcao-dados';
+    vwresourceUrl = environment.apiUrl + '/vw-funcao-dados';
     resourceUrlPEAnalitico = environment.apiUrl + '/peanalitico/';
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
     manualResourceUrl = environment.apiUrl + '/manuals';
@@ -199,5 +200,12 @@ export class FuncaoDadosService {
         const url = `${this.resourceUrl}/${idAnalise}/${idFuncionalade}/${idModulo}?name=${name}&id=${id}`;
         return this.http.get(url)
             .map(res => res.json());
+    }
+    public getVWFuncaoDadosByIdAnalise(id: Number): Observable<any[]> {
+        this.blockUI.start();
+        const url = `${this.vwresourceUrl}/${id}`;
+        return this.http.get(url).map((res) => {
+            return res.json();
+        }).finally(() => this.blockUI.stop());
     }
 }

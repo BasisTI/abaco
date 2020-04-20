@@ -14,7 +14,7 @@ import {PageNotificationService} from '../shared';
 export class FuncaoTransacaoService {
 
     @BlockUI() blockUI: NgBlockUI;
-
+    vwFuncaoTransacaoResourceUrl = environment.apiUrl + '/vw-funcao-transacaos';
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
     resourceUrlPEAnalitico = environment.apiUrl + '/peanalitico/';
     allFuncaoTransacaosUrl = this.funcaoTransacaoResourceUrl + '/completa';
@@ -119,5 +119,12 @@ export class FuncaoTransacaoService {
         return this.http.get(url).map((res) => {
             return res.json();
         });
+    }
+    public getVwFuncaoTransacaoByIdAnalise(id: Number): Observable<any[]> {
+        this.blockUI.start();
+        const url = `${this.vwFuncaoTransacaoResourceUrl}/${id}`;
+        return this.http.get(url).map((res) => {
+            return res.json();
+        }).finally(() => this.blockUI.stop());
     }
 }

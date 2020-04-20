@@ -35,7 +35,7 @@ import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.servi
     selector: 'jhi-analise-form',
     templateUrl: './analise-form.component.html'
 })
-export class AnaliseFormComponent implements OnInit, OnDestroy {
+export class AnaliseFormComponent implements OnInit {
 
     isEdicao: boolean;
     disableFuncaoTrasacao = true;
@@ -127,10 +127,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.getAnalise();
         this.traduzirtiposAnalise();
         this.traduzirMetodoContagem();
-    }
-
-    ngOnDestroy() {
-        this.routeSub.unsubscribe();
     }
 
     getLabel(label) {

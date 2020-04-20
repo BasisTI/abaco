@@ -176,7 +176,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         this.route.params.subscribe(params => {
             this.idAnalise = params['id'];
             this.isView = params['view'] !== undefined;
-            this.funcaoTransacaoService.getFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
+            this.funcaoTransacaoService.getVwFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
                 this.analiseService.find(this.idAnalise).subscribe(analise => {
                     this.analise = analise;
                     this.analiseSharedDataService.analise = analise;
@@ -412,8 +412,11 @@ export class FuncaoTransacaoFormComponent implements OnInit {
 
     private setFields(ft: FuncaoTransacao) {
         return Object.defineProperties(ft, {
-            'derFilter': {value: ft.derValue(), writable: true},
-            'ftrFilter': {value: ft.ftrValue(), writable: true}
+            'totalDers': {value: ft.derValue(), writable: true},
+            'totalAlrs]]': {value: ft.ftrValue(), writable: true},
+            'deflator': {value: this.formataFatorAjuste(ft.fatorAjuste), writable: true},
+            'nomeModulo': {value: ft.funcionalidade.nome, writable: true},
+            'nomeFuncionalidade': {value: ft.funcionalidade.modulo.nome, writable: true}
         });
     }
 
@@ -573,9 +576,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         }
 
         this.classInvalida = this.currentFuncaoTransacao.tipo === undefined;
-        if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
+        if (this.currentFuncaoTransacao.fatorAjuste ) {
             if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO' &&
-                this.currentFuncaoTransacao.quantidade === undefined) {
+                !(this.currentFuncaoTransacao.quantidade && this.currentFuncaoTransacao.quantidade > 0) ) {
                 this.erroUnitario = true;
                 retorno = false;
             } else {
@@ -583,7 +586,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             }
         }
 
-        if (this.analise.metodoContagem === 'DETALHADA') {
+        if (this.analise.metodoContagem === 'DETALHADA' && !(this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO')) {
 
             if (this.alrsChips.length === 0) {
                 this.erroTR = true;
@@ -754,6 +757,13 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             this.disableTRDER();
             this.configurarDialog();
             this.currentFuncaoTransacao = funcaoTransacao;
+            if (this.currentFuncaoTransacao.fatorAjuste !== undefined) {
+                if (this.currentFuncaoTransacao.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
+                    this.hideShowQuantidade = false;
+                } else {
+                    this.hideShowQuantidade = true;
+                }
+            }
             this.carregarValoresNaPaginaParaEdicao(this.currentFuncaoTransacao);
             this.pageNotificationService.addInfoMsg(
                 `${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlterandoFuncaoDeTransacao')} '${this.currentFuncaoTransacao.name}'`
@@ -923,14 +933,14 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             case 0:
                 if (this.isView) {
                     link = ['/analise/' + this.analise.id + '/view'];
-                }else {
+                } else {
                     link = ['/analise/' + this.analise.id + '/edit'];
                 }
                 break;
             case 1:
                 if (this.isView) {
                     link = ['/analise/' + this.analise.id + '/funcao-dados/view'];
-                }else {
+                } else {
                     link = ['/analise/' + this.analise.id + '/funcao-dados'];
                 }
                 break;
@@ -939,7 +949,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             case 3:
                 if (this.isView) {
                     link = ['/analise/' + this.analise.id + '/resumo/view'];
-                }else {
+                } else {
                     link = ['/analise/' + this.idAnalise + '/resumo'];
                 }
                 break;

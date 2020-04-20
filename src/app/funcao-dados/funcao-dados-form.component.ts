@@ -55,7 +55,7 @@ import {MessageUtil} from '../util/message.util';
     selector: 'app-analise-funcao-dados',
     templateUrl: './funcao-dados-form.component.html'
 })
-export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewInit {
+export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     @Output()
     valueChange: EventEmitter<string> = new EventEmitter<string>();
@@ -197,11 +197,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.route.params.subscribe(params => {
             this.idAnalise = params['id'];
             this.isView = params['view'] !== undefined;
-            this.funcaoDadosService.getFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
+            this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
                 this.analiseService.find(this.idAnalise).subscribe(analise => {
                     this.analise = analise;
                     this.funcoesDados = value;
                     this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
+                    this.hideShowQuantidade = true;
                     this.estadoInicial();
                     this.impactos = AnaliseSharedUtils.impactos;
                     if (!this.uploadImagem) {
@@ -506,10 +507,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
 
     private setFields(fd: FuncaoDados) {
         return Object.defineProperties(fd, {
-            'derFilter': {value: fd.derValue(), writable: true},
-            'rlrFilter': {value: fd.rlrValue(), writable: true},
-            'fatorAjusteFilter': {value: this.formataFatorAjuste(fd.fatorAjuste), writable: true},
-            'impactoFilter': {value: this.updateNameImpacto(fd.impacto), writable: true}
+            'totalDers': {value: fd.derValue(), writable: true},
+            'totalRlrs': {value: fd.rlrValue(), writable: true},
+            'deflator': {value: this.formataFatorAjuste(fd.fatorAjuste), writable: true},
+            'impactoFilter': {value: this.updateNameImpacto(fd.impacto), writable: true},
+            'nomeModulo': {value: fd.funcionalidade.nome, writable: true},
+            'nomeFuncionalidade': {value: fd.funcionalidade.modulo.nome, writable: true}
         });
     }
 
@@ -660,7 +663,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
 
         if (this.seletedFuncaoDados.fatorAjuste) {
             if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' &&
-                this.seletedFuncaoDados.quantidade === undefined) {
+                !(this.seletedFuncaoDados.quantidade && this.seletedFuncaoDados.quantidade > 0)) {
                 this.erroUnitario = true;
                 retorno = false;
             } else {
@@ -668,7 +671,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
             }
         }
 
-        if (this.analise.metodoContagem === 'DETALHADA') {
+        if (this.analise.metodoContagem === 'DETALHADA' && !(this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO')) {
 
             if (!this.rlrsChips || this.rlrsChips.length < 1) {
                 this.erroTR = true;
@@ -908,6 +911,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
             this.seletedFuncaoDados = funcaoDados;
+            if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
+                this.hideShowQuantidade = false;
+            } else {
+                this.hideShowQuantidade = true;
+            }
             this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
             this.disableTRDER();
             this.configurarDialog();
@@ -1011,12 +1019,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.colunasAMostrar = _.sortBy(this.colunasAMostrar, col => col.index);
     }
 
-    ngOnDestroy() {
-        this.changeDetectorRef.detach();
-        this.analiseCarregadaSubscription.unsubscribe();
-        this.translateSubscriptions.forEach(susbscription => susbscription.unsubscribe());
-    }
-
     openDialog(param: boolean) {
         this.subscribeToAnaliseCarregada();
         this.isEdit = param;
@@ -1051,6 +1053,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
                     }
                     return 0;
                 });
+                this.faS = this.faS.filter(value => value.tipoAjuste !== 'UNITARIO');
                 this.fatoresAjuste =
                     this.faS.map(fa => {
                         const label = FatorAjusteLabelGenerator.generate(fa);
@@ -1069,6 +1072,17 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.showMultiplos = !this.showMultiplos;
     }
 
+    contratoSelecionado() {
+        if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO') {
+            this.hideShowQuantidade = this.seletedFuncaoDados.fatorAjuste === undefined;
+        } else {
+            this.seletedFuncaoDados.quantidade = undefined;
+            this.hideShowQuantidade = true;
+            this.seletedFuncaoDados.quantidade = undefined;
+        }
+    }
+
+
     handleChange(e) {
         const index = e.index;
         let link;
@@ -1076,7 +1090,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
             case 0:
                 if (this.isView) {
                     link = ['/analise/' + this.analise.id + '/view'];
-                }else {
+                } else {
                     link = ['/analise/' + this.analise.id + '/edit'];
                 }
                 break;
@@ -1085,17 +1099,20 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
             case 2:
                 if (this.isView) {
                     link = ['/analise/' + this.analise.id + '/funcao-transacao/view'];
-                }else {
+                } else {
                     link = ['/analise/' + this.analise.id + '/funcao-transacao'];
                 }
                 break;
             case 3:
                 if (this.isView) {
-                    link = ['/analise/' + this.analise.id + '/resumo/view'];
-                }else {
+                    link = ['/analise/' + this.analise.id + '/resumo'];
+                } else {
                     link = ['/analise/' + this.analise.id + '/resumo'];
                 }
                 break;
+        }
+        if (this.isView) {
+            link = link + '/view';
         }
         this.router.navigate(link);
     }

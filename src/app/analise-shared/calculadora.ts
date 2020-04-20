@@ -116,6 +116,7 @@ export class Calculadora {
         this.funcaoDadosCalculada.pf = CalculadoraFator.aplicarFator(
             this.funcaoDadosCalculada.pf, this._fatorAjuste, this.funcaoDados.quantidade
         );
+        this.funcaoDadosCalculada.grossPF = this.funcaoDadosCalculada.grossPF > 0 ? this.funcaoDadosCalculada.grossPF : this.funcaoDadosCalculada.pf;
     }
 
 }

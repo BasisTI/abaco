@@ -40,7 +40,7 @@
                                     </p-column>
 
                                     <p-column
-                                            field="fatorAjusteFilter"
+                                            field="deflator"
                                             filter="true"
                                             filterMatchMode="contains"
                                             name="fatorAjusteFuncaoDadosFormComponent"
@@ -52,7 +52,7 @@
                                     </p-column>
 
                                     <p-column
-                                            field="funcionalidade.modulo.nome"
+                                            field="nomeModulo"
                                             filter="true"
                                             filterMatchMode="contains"
                                             name="nomeModuloFuncaoDadosFormComponent"
@@ -64,7 +64,7 @@
                                     </p-column>
 
                                     <p-column
-                                            field="funcionalidade.nome"
+                                            field="nomeFuncionalidade"
                                             filter="true"
                                             filterMatchMode="contains"
                                             name="nomeFuncionalidadeFuncaoDadosFormComponent"
@@ -88,7 +88,7 @@
                                     </p-column>
 
                                     <p-column
-                                            field="derFilter"
+                                            field="totalDers"
                                             filter="true"
                                             filterMatchMode="contains"
                                             name="derFuncaoDadosFormComponent"
@@ -100,7 +100,7 @@
                                     </p-column>
 
                                     <p-column
-                                            field="rlrFilter"
+                                            field="totalRlrs"
                                             filter="true"
                                             filterMatchMode="contains"
                                             name="rlrFuncaoDadosFormComponent"
@@ -141,7 +141,7 @@
                                             filterMatchMode="contains"
                                             name="pfFuncaoDadosFormComponent"
                                             id="idPfFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Cadastros.FuncaoDados.RLR(TR)')"
+                                            [header]="this.getLabel('Cadastros.FuncaoDados.PFLiquido')"
                                             sortable="true"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
@@ -291,6 +291,7 @@
                                         [placeholder]="fatoresAjusteDropdownPlaceholder()"
                                         name="fatorAjuste"
                                         [(ngModel)]="seletedFuncaoDados.fatorAjuste"
+                                        (onChange)="contratoSelecionado()"
                                         [autoWidth]="false">
                                 </p-dropdown>
                                 <span class="md-inputfield">
