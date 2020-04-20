@@ -293,12 +293,16 @@ public class FuncaoTransacaoResource {
     }
 
     private void sumPfAnalise(@RequestBody FuncaoTransacao funcaoTransacao, Analise analise) {
-        BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace);
-        BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace);
-        pfTotal = pfTotal.add(funcaoTransacao.getGrossPF());
-        pfAdjust = pfAdjust.add(funcaoTransacao.getPf());
-        analise.setPfTotal(pfTotal.toString());
-        analise.setAdjustPFTotal(pfAdjust.toString());
+        if (funcaoTransacao.getGrossPF() != null) {
+            BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace);
+            pfTotal = pfTotal.add(funcaoTransacao.getGrossPF());
+            analise.setPfTotal(pfTotal.toString());
+        }
+        if (funcaoTransacao.getPf() != null) {
+            BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace);
+            pfAdjust = pfAdjust.add(funcaoTransacao.getPf());
+            analise.setAdjustPFTotal(pfAdjust.toString());
+        }
     }
 
     @NotNull
@@ -307,7 +311,7 @@ public class FuncaoTransacaoResource {
         funcaoTransacao.getDers().forEach(der -> {
             if (der.getId() != null) {
                 der = derRepository.findOne(der.getId());
-                der = new Der(null, der.getNome(), der.getValor(),der.getRlr(),null, funcaoTransacao);
+                der = new Der(null, der.getNome(), der.getValor(), der.getRlr(), null, funcaoTransacao);
                 ders.add(der);
             } else {
                 ders.add(der);
@@ -317,21 +321,27 @@ public class FuncaoTransacaoResource {
     }
 
     private void subpfAnalise(FuncaoTransacao funcaoTransacao, Analise analise) {
-        BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace);
-        BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace);
-        pfTotal = pfTotal.subtract(funcaoTransacao.getPf());
-        pfAdjust = pfAdjust.subtract(funcaoTransacao.getPf());
-        analise.setPfTotal(pfTotal.setScale(decimalPlace).toString());
-        analise.setAdjustPFTotal(pfAdjust.setScale(decimalPlace).toString());
+        if (funcaoTransacao.getPf() != null) {
+            BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace).setScale(decimalPlace, BigDecimal.ROUND_HALF_DOWN);
+            pfTotal = pfTotal.subtract(funcaoTransacao.getGrossPF());
+            analise.setPfTotal(pfTotal.setScale(decimalPlace).toString());
+        }
+        if (funcaoTransacao.getPf() != null) {
+            BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace).setScale(decimalPlace, BigDecimal.ROUND_HALF_DOWN);
+            pfAdjust = pfAdjust.subtract(funcaoTransacao.getPf());
+            analise.setAdjustPFTotal(pfAdjust.setScale(decimalPlace).toString());
+        }
+
         funcaoTransacao.setAnalise(analise);
     }
 
     private void updatePfAnalise(@RequestBody FuncaoTransacao funcaoTransacao, FuncaoTransacao funcaoTransacaoOld, Analise analise) {
-        BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace);
-        BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace);
+
+        BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace, BigDecimal.ROUND_HALF_DOWN);
         pfTotal = pfTotal.add(funcaoTransacao.getGrossPF()).subtract(funcaoTransacaoOld.getPf());
-        pfAdjust = pfAdjust.add(funcaoTransacao.getPf()).subtract(funcaoTransacaoOld.getPf());
         analise.setPfTotal(pfTotal.toString());
+        BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace, BigDecimal.ROUND_HALF_DOWN);
+        pfAdjust = pfAdjust.add(funcaoTransacao.getPf()).subtract(funcaoTransacaoOld.getPf());
         analise.setAdjustPFTotal(pfAdjust.toString());
         funcaoTransacao.setAnalise(analise);
     }

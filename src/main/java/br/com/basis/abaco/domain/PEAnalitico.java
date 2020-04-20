@@ -12,9 +12,6 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-/**
- * A BaseLineAnalitico.
- */
 @Entity
 @Table(name = "pe_analitico")
 @Document(indexName = "pe_analitico")
