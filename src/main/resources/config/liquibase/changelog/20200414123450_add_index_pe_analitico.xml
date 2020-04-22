@@ -19,7 +19,7 @@
       </createIndex>
    </changeSet>
    <changeSet author="basis (generated)" id="1586867709453-4">
-      <dropView schemaName="public" viewName="pe_analitico"/>
+      <dropView viewName="pe_analitico"/>
    </changeSet>
    <changeSet author="basis (generated)" id="1586867709453-5">
       <createView fullDefinition="false" viewName="pe_analitico">

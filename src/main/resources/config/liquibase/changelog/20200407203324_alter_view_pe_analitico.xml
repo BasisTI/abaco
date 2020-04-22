@@ -4,7 +4,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
    <changeSet author="basis (generated)" id="1586291619076-1">
-      <dropView schemaName="public" viewName="pe_analitico"/>
+      <dropView  viewName="pe_analitico"/>
    </changeSet>
    <changeSet author="basis (generated)" id="1586291619076-2">
       <createView fullDefinition="false" viewName="pe_analitico">
