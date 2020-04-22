@@ -415,8 +415,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             'totalDers': {value: ft.derValue(), writable: true},
             'totalAlrs]]': {value: ft.ftrValue(), writable: true},
             'deflator': {value: this.formataFatorAjuste(ft.fatorAjuste), writable: true},
-            'nomeModulo': {value: ft.funcionalidade.nome, writable: true},
-            'nomeFuncionalidade': {value: ft.funcionalidade.modulo.nome, writable: true}
+            'nomeFuncionalidade': {value: ft.funcionalidade.nome, writable: true},
+            'nomeModulo': {value: ft.funcionalidade.modulo.nome, writable: true}
         });
     }
 
