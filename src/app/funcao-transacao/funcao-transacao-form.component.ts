@@ -16,6 +16,7 @@ import {BlockUI, NgBlockUI} from 'ng-block-ui';
 import {DatatableClickEvent} from '@basis/angular-components';
 import {ResumoFuncoes} from '../analise-shared/resumo-funcoes';
 import {Subscription} from 'rxjs/Subscription';
+import {Observable, Subject} from 'rxjs/Rx';
 
 import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
 import {DerChipItem} from '../analise-shared/der-chips/der-chip-item';
@@ -34,6 +35,7 @@ import Base64Upload from '../../ckeditor/Base64Upload';
 import {ActivatedRoute, Router} from '@angular/router';
 import {el} from '@angular/platform-browser/testing/src/browser_util';
 import {MessageUtil} from '../util/message.util';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 @Component({
     selector: 'app-analise-funcao-transacao',
@@ -345,19 +347,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             this.editar();
         } else {
             if (this.showMultiplos) {
-                let retorno = true;
-                for (const nome of this.parseResult.textos) {
-                    this.currentFuncaoTransacao.name = nome;
-                    if (!this.multiplos()) {
-                        retorno = false;
-                        break;
-                    }
-                }
-                if (retorno) {
-                    this.analise.funcaoTransacaos.concat(this.funcoesTransacaoList);
-                    this.subscribeToAnaliseCarregada();
-                    this.fecharDialog();
-                }
+                this.multiplos();
             } else {
                 this.adicionar();
             }
@@ -368,21 +358,56 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     multiplos(): boolean {
-        const retorno: boolean = this.verifyDataRequire();
-        if (!retorno) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
-            return false;
-        } else {
+            let lstFuncaotransacao: Observable<any>[] = [];
+            let lstFuncaotransacaoWithExist: Observable<Boolean>[] = [];
+            let retorno: boolean = !this.verifyDataRequire();
             this.desconverterChips();
             this.verificarModulo();
-            const funcaoTransacaoCalculada = CalculadoraTransacao.calcular(this.analise.metodoContagem,
+            const funcaoTransacaoCalculada: FuncaoTransacao = CalculadoraTransacao.calcular(this.analise.metodoContagem,
                 this.currentFuncaoTransacao,
                 this.analise.contrato.manual);
-            this.funcoesTransacaoList.push(funcaoTransacaoCalculada);
-            this.analise.addFuncaoTransacao(funcaoTransacaoCalculada);
-            this.resetarEstadoPosSalvar();
-            return true;
-        }
+            for (const nome of this.parseResult.textos) {
+                lstFuncaotransacaoWithExist.push(
+                    this.funcaoTransacaoService.existsWithName(
+                        nome,
+                        this.analise.id,
+                        this.currentFuncaoTransacao.funcionalidade.id,
+                        this.currentFuncaoTransacao.funcionalidade.modulo.id)
+                );
+                const funcaoTransacaoMultp: FuncaoTransacao = funcaoTransacaoCalculada.clone();
+                funcaoTransacaoMultp.name = nome;
+                lstFuncaotransacao.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id));
+            }
+            forkJoin(lstFuncaotransacaoWithExist).subscribe(respFind => {
+                for(let value of  respFind){
+                    if (value !== false) {
+                        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
+                        retorno = false;
+                        break;
+                    }
+    
+                }
+                if(retorno){
+                    forkJoin(lstFuncaotransacao).subscribe(respCreate => {
+                        respCreate.forEach((funcaoDados) => {
+                            this.pageNotificationService.addCreateMsgWithName(funcaoDados.name);
+                            let funcaoDadosTable: FuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoDados);
+                            funcaoDadosTable.funcionalidade = funcaoTransacaoCalculada.funcionalidade;
+                            this.setFields(funcaoDadosTable);
+                            this.funcoesTransacoes.push(funcaoDadosTable);
+                        });
+                        this.fecharDialog();
+                        this.estadoInicial();
+                        this.resetarEstadoPosSalvar();
+                        this.blockUI.stop();
+                        return true;
+                    });
+                }else{
+                    this.blockUI.stop();
+                    return false;
+                }
+            });
+            return retorno;
     }
 
     disableTRDER() {

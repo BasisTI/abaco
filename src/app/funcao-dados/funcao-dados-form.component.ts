@@ -51,6 +51,10 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.service';
 import {MessageUtil} from '../util/message.util';
 
+import {Observable, Subject} from 'rxjs/Rx';
+import { ForkJoinObservable } from 'rxjs/observable/ForkJoinObservable';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+
 @Component({
     selector: 'app-analise-funcao-dados',
     templateUrl: './funcao-dados-form.component.html'
@@ -413,20 +417,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.editar();
         } else {
             if (this.showMultiplos) {
-                let retorno = true;
-                for (const nome of this.parseResult.textos) {
-                    this.seletedFuncaoDados.name = nome;
-                    if (!this.multiplos()) {
-                        retorno = false;
-                        break;
-                    }
-                }
-                if (retorno) {
-                    this.funcoesDados.concat(this.funcoesDadosList);
-                    this.salvarAnalise();
-                    this.subscribeToAnaliseCarregada();
-                    this.fecharDialog();
-                }
+                this.multiplos();
+              
             } else {
                 this.adicionar();
             }
@@ -511,8 +503,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             'totalRlrs': {value: fd.rlrValue(), writable: true},
             'deflator': {value: this.formataFatorAjuste(fd.fatorAjuste), writable: true},
             'impactoFilter': {value: this.updateNameImpacto(fd.impacto), writable: true},
-            'nomeModulo': {value: fd.funcionalidade.nome, writable: true},
-            'nomeFuncionalidade': {value: fd.funcionalidade.modulo.nome, writable: true}
+            'nomeFuncionalidade': {value: fd.funcionalidade.nome, writable: true},
+            'nomeModulo': {value: fd.funcionalidade.modulo.nome, writable: true}
         });
     }
 
@@ -562,22 +554,57 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.carregarDadosBaseline();
     }
 
-    multiplos(): boolean {
-        const retorno: boolean = this.verifyDataRequire();
-        if (!retorno) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
-            return false;
-        } else {
-            this.desconverterChips();
-            this.verificarModulo();
-            const funcaoDadosCalculada = Calculadora.calcular(
-                this.analise.metodoContagem, this.seletedFuncaoDados, this.analise.contrato.manual);
-            this.funcoesDadosList.push(funcaoDadosCalculada);
-            this.analise.addFuncaoDados(funcaoDadosCalculada);
-            this.atualizaResumo();
-            this.resetarEstadoPosSalvar();
-            return true;
+    multiplos(): Boolean {
+        let lstFuncaoDados: Observable<any>[] = [];
+        let lstFuncaoDadosWithExist: Observable<Boolean>[] = [];
+        let retorno: boolean = !this.verifyDataRequire();
+        this.desconverterChips();
+        this.verificarModulo();
+        const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem,
+                this.seletedFuncaoDados,
+                this.analise.contrato.manual);
+        for (const nome of this.parseResult.textos) {
+            lstFuncaoDadosWithExist.push(
+                this.funcaoDadosService.existsWithName(
+                    nome,
+                    this.analise.id,
+                    this.seletedFuncaoDados.funcionalidade.id,
+                    this.seletedFuncaoDados.funcionalidade.modulo.id)
+            );
+            const funcaoDadosMultp: FuncaoDados = funcaoDadosCalculada.clone();
+            funcaoDadosMultp.name = nome;
+            lstFuncaoDados.push(this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id));
         }
+        forkJoin(lstFuncaoDadosWithExist).subscribe(respFind => {
+            for(let value of  respFind){
+                if (value !== false) {
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
+                    retorno = false;
+                    break;
+                }
+
+            }
+            if(retorno){
+                forkJoin(lstFuncaoDados).subscribe(respCreate => {
+                    respCreate.forEach((funcaoDados) => {
+                        this.pageNotificationService.addCreateMsgWithName(funcaoDados.name);
+                        let funcaoDadosTable: FuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
+                        funcaoDadosTable.funcionalidade = funcaoDadosCalculada.funcionalidade;
+                        this.setFields(funcaoDadosTable);
+                        this.funcoesDados.push(funcaoDadosTable);
+                    });
+                    this.fecharDialog();
+                    this.estadoInicial();
+                    this.resetarEstadoPosSalvar();
+                    this.blockUI.stop();
+                    return true;
+                });
+            }else{
+                this.blockUI.stop();
+                return false;
+            }
+        });
+        return retorno;
     }
 
     validarNameFuncaoTransacaos(ft: FuncaoTransacao) {
@@ -614,8 +641,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.seletedFuncaoDados.funcionalidade.id,
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
                 if (value === false) {
-                    this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
                     this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id).subscribe((funcaoDados) => {
+                        this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
                         funcaoDadosCalculada.id = funcaoDados.id;
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
@@ -826,7 +853,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.prepareToClone(funcaoDadosSelecionada);
                 this.seletedFuncaoDados.id = undefined;
                 this.seletedFuncaoDados.artificialId = undefined;
-                this.seletedFuncaoDados.impacto = Impacto.ALTERACAO;
                 this.textHeader = this.getLabel('Cadastros.FuncaoDados.Mensagens.msgClonarFuncaoDados');
                 break;
             case 'crud':
