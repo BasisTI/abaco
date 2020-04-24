@@ -30,7 +30,7 @@ import {Router} from '@angular/router';
     selector: 'app-pesquisar-ft',
     templateUrl: './pesquisar-ft.component.html',
 })
-export class PesquisarFtComponent implements OnInit, OnDestroy {
+export class PesquisarFtComponent implements OnInit {
 
     translateSubscriptions: Subscription[] = [];
 
@@ -45,6 +45,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     funcPesquisa: boolean = true;
 
     deflaPesquisa: boolean = true;
+
+    hideShowQuantidade: boolean = true;
 
     isEdit: boolean;
 
@@ -92,6 +94,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
 
     novoDeflator: FatorAjuste;
 
+    quantidadeINM: number = 1;
+
     moduloSelecionado: Modulo;
 
     funcionalidadeAtual: Funcionalidade;
@@ -99,6 +103,8 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     funcionalidadeSelecionada: Funcionalidade;
 
     basilineAnaliticosList: any;
+
+    erroUnitario: boolean = false;
 
     deflaPadrao: SelectItem = {label: 'Não Alterar', value: 'original-bAsis'};
 
@@ -124,10 +130,6 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
         this.inicializaValoresAposCarregamento();
         this.analiseSharedDataService.analiseCarregada();
         this.estadoInicial();
-    }
-
-    ngOnDestroy() {
-        this.translateSubscriptions.pop().unsubscribe();
     }
 
     tiposAnalise: SelectItem[] = [
@@ -380,29 +382,35 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
     montarFuncoesTransacao() {
         const getFuncaoTransacoes: Observable<FuncaoTransacao>[] = [];
         const saveFuncaoTransacoes: Observable<FuncaoTransacao>[] = [];
-        if (this.novoDeflator === undefined) {
+        if (!(this.novoDeflator)) {
             this.deflaPesquisa = false;
+        }else if(this.novoDeflator.tipoAjuste === 'UNITARIO'&& this.quantidadeINM <= 0 ){
+            this.erroUnitario = true;
         } else {
+            this.erroUnitario = false;
             this.deflaPesquisa = true;
             this.selections.forEach(ft => {
                 getFuncaoTransacoes.push(this.funcaoTransacaoService.getById(ft.idfuncaodados));
             });
             Observable.forkJoin(getFuncaoTransacoes).subscribe(result => {
-                result.forEach(value => {
-                    value['id'] = undefined;
-                    value.ders.forEach(vd => {
+                result.forEach(funcaoTransacaoResp => {
+                    funcaoTransacaoResp['id'] = undefined;
+                    funcaoTransacaoResp.ders.forEach(vd => {
                         vd.id = undefined;
                     });
-                    value.alrs.forEach(vd => {
+                    funcaoTransacaoResp.alrs.forEach(vd => {
                         vd.id = undefined;
                     });
                     if (this.novoDeflator != null) {
-                        value.fatorAjuste = this.novoDeflator;
-                        value = CalculadoraTransacao.calcular(this.analise.metodoContagem, value, this.analise.manual);
+                        funcaoTransacaoResp.fatorAjuste = this.novoDeflator;
+                        if(this.novoDeflator.tipoAjuste === 'UNITARIO'){
+                            funcaoTransacaoResp.quantidade = this.quantidadeINM;
+                        }
+                        funcaoTransacaoResp = CalculadoraTransacao.calcular(this.analise.metodoContagem, funcaoTransacaoResp, this.analise.manual);
                     }
                     this.validaCamposObrigatorios();
                     if (this.verificarCamposObrigatorios()) {
-                        saveFuncaoTransacoes.push(this.funcaoTransacaoService.create(value, this.analise.id));
+                        saveFuncaoTransacoes.push(this.funcaoTransacaoService.create(funcaoTransacaoResp, this.analise.id));
                     }
                 });
                 Observable.forkJoin(saveFuncaoTransacoes).finally(() => {
@@ -515,12 +523,17 @@ export class PesquisarFtComponent implements OnInit, OnDestroy {
         return isContratoSelected;
     }
 
-    mudarDeflator(event) {
-        if (event === 'original-bAsis') {
-            this.novoDeflator = null;
+    mudarDeflator(event:FatorAjuste) {
+        this.novoDeflator = event;
+        if(event.tipoAjuste === 'UNITARIO'){
+            this.hideShowQuantidade = false;
         } else {
-            this.novoDeflator = event;
+            this.hideShowQuantidade = true;
         }
+    }
+
+    alterarQuatindade(event) {
+       this.quantidadeINM = event;
     }
 
     calcularComNovoDeflator(funcao: FuncaoTransacao) {

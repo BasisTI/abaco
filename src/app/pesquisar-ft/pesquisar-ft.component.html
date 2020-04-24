@@ -88,21 +88,7 @@
                         </p-column>
 
                         <p-column field="classificacao" header="Classif." [style]="{'width': '10%'}">
-                        </p-column>
-
-                        <p-column field="der" [header]="this.getLabel('Cadastros.FuncaoTransacao.DER(TD)')"
-                            [style]="{'width': '10%'}">
-                            <ng-template let-der="rowData.der" pTemplate="body">
-                                {{ der }}
-                            </ng-template>
-                        </p-column>
-
-                        <p-column [header]="this.getLabel('Cadastros.FuncaoTransacao.FTR(AR)')"
-                            [style]="{'width': '10%'}">
-                            <ng-template let-rlralr="rowData.rlralr" pTemplate="body">
-                                {{ rlralr }}
-                            </ng-template>
-                        </p-column>
+                        </p-column>                        
                     </p-dataTable>
                 </div>
 
@@ -114,13 +100,23 @@
                             [placeholder]="this.getLabel('Analise.Analise.Selecione')" name="fatorAjuste"
                             [autoWidth]="false" (onChange)="mudarDeflator($event.value)" [(ngModel)]="novoDeflator">
                         </p-dropdown>
+                        <span class="md-inputfield">
+                                <div *ngIf="!deflaPesquisa" class="ui-message ui-messages-error"
+                                    translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
+                                </div>
+                        </span>
                     </div>
-                    <span class="md-inputfield">
-                            <div *ngIf="!deflaPesquisa" class="ui-message ui-messages-error"
-                                translate="Global.Mensagens.CampoObrigatorio">
+                    <div class="ui-g-3 ui-md-4 ui-sm-6" [hidden]="hideShowQuantidade">
+                        <label translate="Cadastros.FuncaoDados.Quantidade*">Quantidade *</label>
+                        <input type="number" class="ui-inputtext" min="1" name="quantidadeINM" (input)="alterarQuatindade($event.target.value)" >
+                        <span class="md-inputfield">
+                            <div *ngIf="erroUnitario" class="ui-message ui-messages-error"
+                                 translate="Global.Mensagens.CampoObrigatorio">
                                 Campo obrigatório.
                             </div>
-                    </span>
+                        </span>
+                    </div>
                 </div>
 
             </p-fieldset>
