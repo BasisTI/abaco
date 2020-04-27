@@ -22,14 +22,12 @@
                     </div>
                     <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
                         <span class="md-inputfield">
-                            <input type="text" name="nomeOrganizacao" maxlength="80" id="idNomeFormOrganizacao"
-                                   [(ngModel)]="organizacao.nome"
-                                   pInputText #nomeOrganizacao='ngModel' required />
+                            <input type="text" name="nome" maxlength="80" id="idNomeFormOrganizacao" [(ngModel)]="organizacao.nome" pInputText #nome='ngModel' required />
                             <label translate="Cadastros.Organizacao.Nome*">Nome *</label>
-                            <div *ngIf="editForm.controls['nomeOrganizacao']
-                                    && !editForm.controls['nomeOrganizacao'].valid
-                                    && (editForm.controls['nomeOrganizacao'].touched
-                                    || editForm.submitted)"
+                            <div *ngIf="editForm.controls['nome']
+                                        && !editForm.controls['nome'].valid
+                                        && (editForm.controls['nome'].touched
+                                        || editForm.submitted)"
                                  class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                             Campo obrigatório.
                             </div>
@@ -61,8 +59,8 @@
                                     && !editForm.controls['cnpjOrganizacao'].valid
                                     && (editForm.controls['cnpjOrganizacao'].touched
                                     || editForm.submitted)" class="ui-message ui-messages-error"
-                                 translate="Cadastros.Organizacao.Mensagens.msgCNPJInvalido">
-                                    CNPJ Inválido!
+                                 translate="Global.Mensagens.CampoObrigatorio">
+                                    Campo obrigatório.
                             </div>
                         </span>
                     </div>
@@ -558,7 +556,7 @@
                         </p-column>
                     </app-memory-datatable>
                 </div>
-                <div class="ui-g ui-md-12" style="justify-content: flex-end">
+                <div class="ui-g ui-md-12" style='justify-content: flex-end'>
                     <div class="ui-g-2">
                         <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
                                           id="idBtnCancelarContratoEditFormOrganizacao"

@@ -17,14 +17,13 @@
                 <div class="ui-g">
                     <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px">
                         <span class="md-inputfield">
-                            <input id="nome_manual" type="text" name="nome" maxlength="250" [(ngModel)]="manual.nome"
-                                   pInputText #nome='ngModel' required/>
+                            <input id="nome_manual" type="text" name="nome" maxlength="250" [(ngModel)]="manual.nome" pInputText #nome='ngModel' required/>
                             <label translate="Cadastros.Manual.Nome*">Nome *</label>
-                             <div *ngIf="editForm.controls['nome']
-                                     && !editForm.controls['nome'].valid
-                                     && (editForm.controls['nome'].touched
-                                     || editForm.submitted)"
-                                  class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                            <div *ngIf="editForm.controls['nome']
+                                    && !editForm.controls['nome'].valid
+                                    && (editForm.controls['nome'].touched
+                                    || editForm.submitted)"
+                                class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                                 Campo obrigatório.
                             </div>
                         </span>
@@ -41,9 +40,9 @@
                             </p-spinner>
                             <label translate="Cadastros.Manual.ValorEstimada">Valor Variação Estimada (%) *</label>
                             <div *ngIf="editForm.controls['valorVariacaoEstimada']
-                                && !editForm.controls['valorVariacaoEstimada'].valid
-                                && (editForm.controls['valorVariacaoEstimada'].touched
-                                || editForm.submitted)"
+                                    && !editForm.controls['valorVariacaoEstimada'].valid
+                                    && (editForm.controls['valorVariacaoEstimada'].touched
+                                    || editForm.submitted)"
                                 class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
                                 Campo obrigatório.
                             </div>

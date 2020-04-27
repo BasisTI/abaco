@@ -18,6 +18,7 @@ import {ValidacaoUtil} from '../util/validacao.util';
 import {Upload} from '../upload/upload.model';
 import {ManualContrato} from './ManualContrato.model';
 import {TranslateService} from '@ngx-translate/core';
+import { forEach } from '@angular/router/src/utils/collection';
 
 
 @Component({
@@ -362,26 +363,37 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
             }
         });
     }
-
-    save(form) {
+    
+    save(form: any) {
         this.cnpjValido = false;
+
+        if (!this.checkRequiredFields()) {
+            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'));
+            form.controls.nome.markAsTouched();
+            form.controls.siglaOrganizacao.markAsTouched();
+            form.controls.cnpjOrganizacao.markAsTouched();
+            return;
+        }
+        
         if (!this.organizacao.nome) {
+            // form.controls.nome.markAsTouched();
             this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgCampoNomeObrigatorio'));
             return;
         }
 
         if (!this.organizacao.sigla) {
+            // form.controls.siglaOrganizacao.markAsTouched();
             this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgCampoSiglaObrigatorio'));
             return;
         }
 
-        this.isSaving = true;
         if (!this.organizacao.cnpj) {
             this.cnpjValido = true;
+            // form.controls.cnpjOrganizacao.markAsTouched();
             this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgCampoCNPJObrigatorio'));
             return;
         }
-
+        
         if (this.organizacao.cnpj !== ' ') {
             if (!ValidacaoUtil.validarCNPJ(this.organizacao.cnpj)) {
                 this.cnpjValido = true;
@@ -389,15 +401,17 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
                 return;
             }
         }
-
+        
         if (this.organizacao.contracts.length === 0 || this.organizacao.contracts === undefined) {
             document.getElementById('tabela-contrato').setAttribute('style', 'border: 1px dotted red;');
             this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.Mensagens.msgPeloMenosUmContratoObrigatorioPorOrganizacao'));
             return;
         }
-
+            
+        this.isSaving = true;
         this.organizacaoService.dropDown().subscribe(response => {
             const todasOrganizacoes = response;
+
             if (!this.checkIfOrganizacaoAlreadyExists(todasOrganizacoes.json)
                 && !this.checkIfCnpjAlreadyExists(todasOrganizacoes.json)) {
 
@@ -431,7 +445,7 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
                 this.isEdit = true;
                 this.subscribeToSaveResponse(this.organizacaoService.update(this.organizacao));
             }
-        });
+        }); 
     }
 
     novo() {
@@ -443,6 +457,51 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
         } else {
             this.subscribeToSaveResponse(this.organizacaoService.create(this.organizacao));
         }
+    }
+
+    private checkRequiredFields(): boolean {
+        this.invalidFields = [];
+        let isFieldsValid = false;
+
+        if (!this.organizacao.nome || this.organizacao.nome === undefined) {
+            this.invalidFields.push(this.getLabel('Cadastros.Organizacao.Nome*'));
+        }
+        if (!this.organizacao.sigla || this.organizacao.sigla === undefined) {
+            this.invalidFields.push(this.getLabel('Cadastros.Organizacao.Sigla'));
+        }
+        if (!this.organizacao.cnpj || this.organizacao.cnpj === undefined) {
+            this.invalidFields.push(this.getLabel('Cadastros.Organizacao.CNPJ'));
+        }
+
+        isFieldsValid = (this.invalidFields.length === 0);
+        return isFieldsValid;
+    }
+
+    privateExibirMensagemCamposInvalidos(codErro: number) {
+        switch (codErro) {
+            case 1:
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Mensagens.msgCamposInvalidos') + this.getInvalidFieldsString());
+                this.invalidFields = [];
+                return;
+            case 2:
+                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.Organizacao.msgCampoArquivoManualEstaInvalido'));
+                return;
+        }
+    }
+
+    private getInvalidFieldsString(): string {
+        let invalidFieldsString = '';
+        if (this.invalidFields) {
+            this.invalidFields.forEach(invalidField => {
+                if (invalidField === this.invalidFields[this.invalidFields.length - 1]) {
+                    invalidFieldsString = invalidFieldsString + invalidField;
+                } else {
+                    invalidFieldsString = invalidFieldsString + invalidField + ', ';
+                }
+            });
+        }
+        console.log(invalidFieldsString);
+        return invalidFieldsString;
     }
 
     checkIfOrganizacaoAlreadyExists(organizacoesRegistradas: Array<Organizacao>): boolean {
@@ -481,20 +540,6 @@ export class OrganizacaoFormComponent implements OnInit, OnDestroy {
     /**
      *
      * */
-    private getInvalidFieldsString(): string {
-        let invalidFieldsString = '';
-        if (this.invalidFields) {
-            this.invalidFields.forEach(invalidField => {
-                if (invalidField === this.invalidFields[this.invalidFields.length - 1]) {
-                    invalidFieldsString = invalidFieldsString + invalidField;
-                } else {
-                    invalidFieldsString = invalidFieldsString + invalidField + ', ';
-                }
-            });
-        }
-
-        return invalidFieldsString;
-    }
 
     /**
      *
