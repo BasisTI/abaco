@@ -3,7 +3,7 @@
 
     <p-tabPanel [header]="this.getLabel('Analise.Analise.FuncoesDados')"></p-tabPanel>
 
-    <p-tabPanel [header]="this.getLabel('Analise.Analise.FuncoesTransacao')" [selected]="true"  [disabled]="disableAba" >
+    <p-tabPanel [header]="this.getLabel('Analise.Analise.FuncoesTransacao')" [selected]="true" [disabled]="disableAba">
         <div class="ui-g ui-fluid">
             <div class="ui-g-12">
                 <div class="card card-w-title">
@@ -41,7 +41,7 @@
                                     <p-column
                                             [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
                                             [style]="{'width': '200px'}"
-                                            field="funcionalidade.modulo.nome"
+                                            field="nomeModulo"
                                             sortable="custom"
                                             filter="true"
                                             filterMatchMode="contains"
@@ -51,7 +51,7 @@
 
                                     <p-column
                                             [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
-                                            field="funcionalidade.nome"
+                                            field="nomeFuncionalidade"
                                             [style]="{'width': '200px'}"
                                             sortable="custom"
                                             filter="true"
@@ -72,17 +72,12 @@
 
                                     <p-column
                                             [header]="this.getLabel('Cadastros.FuncaoTransacao.Deflator')"
-                                            field="fatorAjuste.nome"
+                                            field="deflator"
                                             sortable="custom"
                                             filter="true"
                                             filterMatchMode="contains"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
-                                        <ng-template
-                                                let-fatorAjuste="rowData.fatorAjuste"
-                                                pTemplate="body">
-                                            {{ fatorAjuste ? fatorAjuste.nome : this.getLabel('Global.Mensagens.Nenhum') }}
-                                        </ng-template>
                                     </p-column>
 
                                     <p-column
@@ -97,7 +92,7 @@
                                     </p-column>
 
                                     <p-column
-                                            field="derFilter"
+                                            field="totalDers"
                                             filter="true"
                                             filterMatchMode="contains"
                                             [header]="this.getLabel('Cadastros.FuncaoTransacao.DER(TD)')"
@@ -107,7 +102,7 @@
                                     </p-column>
 
                                     <p-column
-                                            field="ftrFilter"
+                                            field="totalAlrs"
                                             filter="true"
                                             filterMatchMode="contains"
                                             [header]="this.getLabel('Cadastros.FuncaoTransacao.FTR(AR)')"
@@ -131,7 +126,7 @@
                                             [header]="this.getLabel('Cadastros.FuncaoTransacao.PFBruto')"
                                             sortable="custom"
                                             (sortFunction)="sortColumn($event)"
-                                            field="grossPF"
+                                            field="grossPf"
                                             filterField="grossPF"
                                             filter="true"
                                             filterMatchMode="contains"
@@ -180,13 +175,12 @@
                     </div>
 
                     <!-- DIALOG: COPIAR FUNÇÕES DE TRANSAÇÃO -->
-                    <!--<div>
+                    <div *ngIf="analise && analise.organizacao" >
                         <p-dialog [header]="this.getLabel('Cadastros.FuncaoTransacao.ClonarFuncoesDeTransacao')"
-                                  [(visible)]="display" [width]="1400" [closable]="false">
+                                  [(visible)]="display" [width]="1200" [closable]="false">
                             <app-pesquisar-ft></app-pesquisar-ft>
                         </p-dialog>
                     </div>
--->
 
                     <!-- &lt;!&ndash; DIALOG: ADICIONAR E EDITAR FUNÇÃO DE DADOS &ndash;&gt;-->
                     <p-dialog
@@ -367,17 +361,15 @@
                         <div class="ui-g-12 ui-md-12 ui-sm-12">
                             <label translate="Cadastros.FuncaoTransacao.Fundamentacao">Fundamentação</label>
                             <span class="md-inputfield">
-                                                <ckeditor
-                                                        [rows]="3"
-                                                        id="idFundamentacaoFormFuncaoTransacao"
-                                                        [cols]="180"
-                                                        [editor]="Editor"
-                                                        [config]="config"
-                                                        [disabled]="isDisabled"
-                                                        pInputTextarea name="funcaoDadosSustentacao"
-                                                        [(ngModel)]="currentFuncaoTransacao.sustantation">
-                                                </ckeditor>
-                                            </span>
+                                 <p-editor
+                                         [rows]="3"
+                                         id="idFundamentacaoFormFuncaoTransacao"
+                                         [cols]="180"
+                                         [disabled]="isDisabled"
+                                         pInputTextarea name="funcaoDadosSustentacao"
+                                         [(ngModel)]="currentFuncaoTransacao.sustantation">
+                                 </p-editor>
+                            </span>
                         </div>
 
                         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">

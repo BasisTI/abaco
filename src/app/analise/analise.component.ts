@@ -102,7 +102,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
 
         this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
             this.analiseSelecionada = event.data;
-            this.blocked = event.data.bloqueado;
+            this.blocked = event.data.bloqueiaAnalise;
             this.inicial = true;
         });
         this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
@@ -215,7 +215,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         }
         switch (event.button) {
             case 'edit':
-                if (event.selection.bloqueado) {
+                if (event.selection.bloqueiaAnalise) {
                     this.pageNotificationService.addErrorMsg(
                         this.getLabel('Analise.Analise.Mensagens.msgEDITAR_ANALISE_BLOQUEADA'));
                     return;

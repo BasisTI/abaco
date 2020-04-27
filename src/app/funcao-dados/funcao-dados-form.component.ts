@@ -51,11 +51,15 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.service';
 import {MessageUtil} from '../util/message.util';
 
+import {Observable, Subject} from 'rxjs/Rx';
+import { ForkJoinObservable } from 'rxjs/observable/ForkJoinObservable';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+
 @Component({
     selector: 'app-analise-funcao-dados',
     templateUrl: './funcao-dados-form.component.html'
 })
-export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewInit {
+export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     @Output()
     valueChange: EventEmitter<string> = new EventEmitter<string>();
@@ -196,11 +200,13 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     ngOnInit() {
         this.route.params.subscribe(params => {
             this.idAnalise = params['id'];
-            this.funcaoDadosService.getFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
+            this.isView = params['view'] !== undefined;
+            this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
                 this.analiseService.find(this.idAnalise).subscribe(analise => {
                     this.analise = analise;
                     this.funcoesDados = value;
-                    this.disableAba =  this.analise.metodoContagem === MessageUtil.INDICATIVA;
+                    this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
+                    this.hideShowQuantidade = true;
                     this.estadoInicial();
                     this.impactos = AnaliseSharedUtils.impactos;
                     if (!this.uploadImagem) {
@@ -411,20 +417,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
             this.editar();
         } else {
             if (this.showMultiplos) {
-                let retorno = true;
-                for (const nome of this.parseResult.textos) {
-                    this.seletedFuncaoDados.name = nome;
-                    if (!this.multiplos()) {
-                        retorno = false;
-                        break;
-                    }
-                }
-                if (retorno) {
-                    this.funcoesDados.concat(this.funcoesDadosList);
-                    this.salvarAnalise();
-                    this.subscribeToAnaliseCarregada();
-                    this.fecharDialog();
-                }
+                this.multiplos();
+              
             } else {
                 this.adicionar();
             }
@@ -464,11 +458,14 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     }
 
     searchBaseline(event: { query: string; }): void {
-        const mdCache = this.moduloCache;
-        this.baselineResults = this.dadosBaselineFD.filter(function (fc) {
-            const teste: string = event.query;
-            return fc.name.toLowerCase().includes(teste.toLowerCase()) && fc.idfuncionalidade === mdCache.id;
-        });
+        if (this.seletedFuncaoDados && this.seletedFuncaoDados.funcionalidade && this.seletedFuncaoDados.funcionalidade.id) {
+            this.funcaoDadosService.autoCompletePEAnalitico(
+                event.query, this.seletedFuncaoDados.funcionalidade.id).subscribe(
+                value => {
+                    this.baselineResults = value;
+                }
+            );
+        }
     }
 
     // Carrega nome das funçeõs de dados
@@ -502,10 +499,12 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
 
     private setFields(fd: FuncaoDados) {
         return Object.defineProperties(fd, {
-            'derFilter': {value: fd.derValue(), writable: true},
-            'rlrFilter': {value: fd.rlrValue(), writable: true},
-            'fatorAjusteFilter': {value: this.formataFatorAjuste(fd.fatorAjuste), writable: true},
-            'impactoFilter': {value: this.updateNameImpacto(fd.impacto), writable: true}
+            'totalDers': {value: fd.derValue(), writable: true},
+            'totalRlrs': {value: fd.rlrValue(), writable: true},
+            'deflator': {value: this.formataFatorAjuste(fd.fatorAjuste), writable: true},
+            'impactoFilter': {value: this.updateNameImpacto(fd.impacto), writable: true},
+            'nomeFuncionalidade': {value: fd.funcionalidade.nome, writable: true},
+            'nomeModulo': {value: fd.funcionalidade.modulo.nome, writable: true}
         });
     }
 
@@ -555,22 +554,57 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.carregarDadosBaseline();
     }
 
-    multiplos(): boolean {
-        const retorno: boolean = this.verifyDataRequire();
-        if (!retorno) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
-            return false;
-        } else {
-            this.desconverterChips();
-            this.verificarModulo();
-            const funcaoDadosCalculada = Calculadora.calcular(
-                this.analise.metodoContagem, this.seletedFuncaoDados, this.analise.contrato.manual);
-            this.funcoesDadosList.push(funcaoDadosCalculada);
-            this.analise.addFuncaoDados(funcaoDadosCalculada);
-            this.atualizaResumo();
-            this.resetarEstadoPosSalvar();
-            return true;
+    multiplos(): Boolean {
+        let lstFuncaoDados: Observable<any>[] = [];
+        let lstFuncaoDadosWithExist: Observable<Boolean>[] = [];
+        let retorno: boolean = !this.verifyDataRequire();
+        this.desconverterChips();
+        this.verificarModulo();
+        const funcaoDadosCalculada = Calculadora.calcular(this.analise.metodoContagem,
+                this.seletedFuncaoDados,
+                this.analise.contrato.manual);
+        for (const nome of this.parseResult.textos) {
+            lstFuncaoDadosWithExist.push(
+                this.funcaoDadosService.existsWithName(
+                    nome,
+                    this.analise.id,
+                    this.seletedFuncaoDados.funcionalidade.id,
+                    this.seletedFuncaoDados.funcionalidade.modulo.id)
+            );
+            const funcaoDadosMultp: FuncaoDados = funcaoDadosCalculada.clone();
+            funcaoDadosMultp.name = nome;
+            lstFuncaoDados.push(this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id));
         }
+        forkJoin(lstFuncaoDadosWithExist).subscribe(respFind => {
+            for(let value of  respFind){
+                if (value !== false) {
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
+                    retorno = false;
+                    break;
+                }
+
+            }
+            if(retorno){
+                forkJoin(lstFuncaoDados).subscribe(respCreate => {
+                    respCreate.forEach((funcaoDados) => {
+                        this.pageNotificationService.addCreateMsgWithName(funcaoDados.name);
+                        let funcaoDadosTable: FuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
+                        funcaoDadosTable.funcionalidade = funcaoDadosCalculada.funcionalidade;
+                        this.setFields(funcaoDadosTable);
+                        this.funcoesDados.push(funcaoDadosTable);
+                    });
+                    this.fecharDialog();
+                    this.estadoInicial();
+                    this.resetarEstadoPosSalvar();
+                    this.blockUI.stop();
+                    return true;
+                });
+            }else{
+                this.blockUI.stop();
+                return false;
+            }
+        });
+        return retorno;
     }
 
     validarNameFuncaoTransacaos(ft: FuncaoTransacao) {
@@ -607,8 +641,8 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
                 this.seletedFuncaoDados.funcionalidade.id,
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
                 if (value === false) {
-                    this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
                     this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id).subscribe((funcaoDados) => {
+                        this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
                         funcaoDadosCalculada.id = funcaoDados.id;
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
@@ -656,7 +690,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
 
         if (this.seletedFuncaoDados.fatorAjuste) {
             if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' &&
-                this.seletedFuncaoDados.quantidade === undefined) {
+                !(this.seletedFuncaoDados.quantidade && this.seletedFuncaoDados.quantidade > 0)) {
                 this.erroUnitario = true;
                 retorno = false;
             } else {
@@ -664,7 +698,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
             }
         }
 
-        if (this.analise.metodoContagem === 'DETALHADA') {
+        if (this.analise.metodoContagem === 'DETALHADA' && !(this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO')) {
 
             if (!this.rlrsChips || this.rlrsChips.length < 1) {
                 this.erroTR = true;
@@ -787,24 +821,15 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
      * Método responsável por recuperar o nome selecionado no combo.
      * @param nome
      */
-    recuperarNomeSelecionado(baselineAnalitico: BaselineAnalitico) {
-        this.funcaoDadosService.getFuncaoDadosBaseline(baselineAnalitico.idfuncaodados)
+    recuperarNomeSelecionado(funcaoDados: FuncaoDados) {
+        this.funcaoDadosService.getFuncaoDadosBaseline(funcaoDados.id)
             .subscribe((res: FuncaoDados) => {
-                if (res.fatorAjuste === null) {
-                    res.fatorAjuste = undefined;
-                }
-                res.id = undefined;
-                if (res.ders) {
-                    res.ders.forEach(Ders => {
-                        Ders.id = undefined;
-                    });
-                }
-                if (res.rlrs) {
-                    res.rlrs.forEach(rlrs => {
-                        rlrs.id = undefined;
-                    });
-                }
-                this.prepararParaEdicao(res);
+                this.seletedFuncaoDados = res;
+                this.seletedFuncaoDados.id = null;
+                this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
+                this.disableTRDER();
+                this.configurarDialog();
+                this.blockUI.stop();
             });
     }
 
@@ -828,7 +853,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
                 this.prepareToClone(funcaoDadosSelecionada);
                 this.seletedFuncaoDados.id = undefined;
                 this.seletedFuncaoDados.artificialId = undefined;
-                this.seletedFuncaoDados.impacto = Impacto.ALTERACAO;
                 this.textHeader = this.getLabel('Cadastros.FuncaoDados.Mensagens.msgClonarFuncaoDados');
                 break;
             case 'crud':
@@ -882,12 +906,10 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         if (tipo === 'Pesquisar') {
             ft.tipo = TipoFuncaoTransacao.CE;
         } else if (tipo === 'Consultar') {
-            ft.tipo = TipoFuncaoTransacao.SE;
+            ft.tipo = TipoFuncaoTransacao.CE;
         } else {
             ft.tipo = TipoFuncaoTransacao.EE;
         }
-        ft.tipo = TipoFuncaoTransacao.EE;
-        ft.impacto = Impacto.INCLUSAO;
         ft.fatorAjuste = fdSelecionada.fatorAjuste;
         ft.ders = [];
         fdSelecionada.ders.forEach(item => ft.ders.push(item));
@@ -915,6 +937,11 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
             this.seletedFuncaoDados = funcaoDados;
+            if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
+                this.hideShowQuantidade = false;
+            } else {
+                this.hideShowQuantidade = true;
+            }
             this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
             this.disableTRDER();
             this.configurarDialog();
@@ -969,7 +996,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
     moduloSelected(modulo: Modulo) {
     }
 
-    disableAba: Boolean = false
+    disableAba: Boolean = false;
 
     // Carregar Referencial
     private loadReference(referenciaveis: AnaliseReferenciavel[],
@@ -1018,12 +1045,6 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.colunasAMostrar = _.sortBy(this.colunasAMostrar, col => col.index);
     }
 
-    ngOnDestroy() {
-        this.changeDetectorRef.detach();
-        this.analiseCarregadaSubscription.unsubscribe();
-        this.translateSubscriptions.forEach(susbscription => susbscription.unsubscribe());
-    }
-
     openDialog(param: boolean) {
         this.subscribeToAnaliseCarregada();
         this.isEdit = param;
@@ -1058,6 +1079,7 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
                     }
                     return 0;
                 });
+                this.faS = this.faS.filter(value => value.tipoAjuste !== 'UNITARIO');
                 this.fatoresAjuste =
                     this.faS.map(fa => {
                         const label = FatorAjusteLabelGenerator.generate(fa);
@@ -1076,21 +1098,47 @@ export class FuncaoDadosFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.showMultiplos = !this.showMultiplos;
     }
 
+    contratoSelecionado() {
+        if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO') {
+            this.hideShowQuantidade = this.seletedFuncaoDados.fatorAjuste === undefined;
+        } else {
+            this.seletedFuncaoDados.quantidade = undefined;
+            this.hideShowQuantidade = true;
+            this.seletedFuncaoDados.quantidade = undefined;
+        }
+    }
+
+
     handleChange(e) {
         const index = e.index;
         let link;
         switch (index) {
             case 0:
-                link = ['/analise/' + this.analise.id + '/edit'];
+                if (this.isView) {
+                    link = ['/analise/' + this.analise.id + '/view'];
+                } else {
+                    link = ['/analise/' + this.analise.id + '/edit'];
+                }
                 break;
             case 1:
                 return;
             case 2:
-                link = ['/analise/' + this.analise.id + '/funcao-transacao'];
+                if (this.isView) {
+                    link = ['/analise/' + this.analise.id + '/funcao-transacao/view'];
+                } else {
+                    link = ['/analise/' + this.analise.id + '/funcao-transacao'];
+                }
                 break;
             case 3:
-                link = ['/analise/' + this.analise.id + '/resumo'];
+                if (this.isView) {
+                    link = ['/analise/' + this.analise.id + '/resumo'];
+                } else {
+                    link = ['/analise/' + this.analise.id + '/resumo'];
+                }
                 break;
+        }
+        if (this.isView) {
+            link = link + '/view';
         }
         this.router.navigate(link);
     }

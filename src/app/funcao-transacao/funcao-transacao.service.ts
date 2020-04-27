@@ -14,15 +14,21 @@ import {PageNotificationService} from '../shared';
 export class FuncaoTransacaoService {
 
     @BlockUI() blockUI: NgBlockUI;
-
+    vwFuncaoTransacaoResourceUrl = environment.apiUrl + '/vw-funcao-transacaos';
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
-
+    resourceUrlPEAnalitico = environment.apiUrl + '/peanalitico/';
     allFuncaoTransacaosUrl = this.funcaoTransacaoResourceUrl + '/completa';
 
     public display = new Subject<boolean>();
     display$ = this.display.asObservable();
 
     constructor(private http: HttpService, private pageNotificationService: PageNotificationService) {
+    }
+
+    autoCompletePEAnalitico(name: String, idFuncionalidade : number): Observable<any> {
+        const url = `${this.resourceUrlPEAnalitico}ft?name=${name}&idFuncionalidade=${idFuncionalidade}`;
+        return this.http.get(url)
+            .map((res: Response) => res.json());
     }
 
     getFuncaoTransacaosCompleta(analiseId: number): Observable<FuncaoTransacao> {
@@ -52,7 +58,7 @@ export class FuncaoTransacaoService {
         }).finally(() => this.blockUI.stop());
     }
 
-    private convertItemFromServer(json: any): FuncaoTransacao {
+    public convertItemFromServer(json: any): FuncaoTransacao {
         return new FuncaoTransacao().copyFromJSON(json);
     }
 
@@ -108,5 +114,17 @@ export class FuncaoTransacaoService {
         });
     }
 
-
+    public getFuncaoTransacaoByModuloOrFuncionalidade(idModulo: Number, idFuncionalida: Number = 0 ): Observable<any[]> {
+        const url = `${this.resourceUrlPEAnalitico}/funcaoTransacao/${idModulo}?idFuncionalidade=${idFuncionalida}`;
+        return this.http.get(url).map((res) => {
+            return res.json();
+        });
+    }
+    public getVwFuncaoTransacaoByIdAnalise(id: Number): Observable<any[]> {
+        this.blockUI.start();
+        const url = `${this.vwFuncaoTransacaoResourceUrl}/${id}`;
+        return this.http.get(url).map((res) => {
+            return res.json();
+        }).finally(() => this.blockUI.stop());
+    }
 }

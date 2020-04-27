@@ -33,19 +33,19 @@
                 [buttonLabel]="this.getLabel('Global.Botoes.Voltar')"
                 routerLink="/analise">
         </app-white-button>
-        <app-green-button
+        <app-green-button *ngIf="!this.isView"
                 [buttonLabel]="this.getLabel('Analise.Analise.Botoes.GerarRelatorioExcel')"
                 (click)="geraRelatorioExcelBrowser()">
         </app-green-button>
-        <app-gray-button
+        <app-gray-button *ngIf="!this.isView"
                 [buttonLabel]="this.getLabel('Analise.Analise.Botoes.GerarRelatorio')"
                 (click)="geraRelatorioPdfDetalhadoBrowser()">
         </app-gray-button>
-        <app-red-button
+        <app-red-button *ngIf="!this.isView"
                 [buttonLabel]="this.getLabel('Analise.Analise.Botoes.BloquearAnalise')"
                 (click)="bloquearAnalise()">
         </app-red-button>
-        <app-blue-button
+        <app-blue-button *ngIf="!this.isView"
                 [buttonLabel]="this.getLabel('Analise.Analise.Botoes.CompartilharAnalise')"
                 (click)="openCompartilharDialog()">
         </app-blue-button>
@@ -107,3 +107,11 @@
     <app-red-button [buttonLabel]="this.getLabel('Global.Botoes.Remover')" (click)="deletarCompartilhar()"
                     style="float:right; margin-top: 5px"></app-red-button>
 </p-dialog>
+<p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" [label]="'Global.Botoes.Nao' | translate"
+                (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="'Global.Botoes.Sim' | translate"
+                (click)="dialog.accept()"></button>
+    </p-footer>
+</p-confirmDialog>

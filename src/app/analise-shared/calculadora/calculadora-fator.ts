@@ -13,7 +13,7 @@ export class CalculadoraFator {
         if (fatorAjuste.tipoAjuste === 'PERCENTUAL') {
             return (pf * fatorAjuste.fator) / 100;
         } else { // UNITÁRIO
-            return fatorAjuste.fator * quantidade;
+            return Number((fatorAjuste.fator * quantidade).toFixed(2));
         }
     }
 

@@ -16,11 +16,10 @@ import {Analise} from '../analise';
 export class FuncaoDadosService {
 
     resourceUrl = environment.apiUrl + '/funcao-dados';
-    resourceUrlPEAnalitico = environment.apiUrl + '/peanalitico';
+    vwresourceUrl = environment.apiUrl + '/vw-funcao-dados';
+    resourceUrlPEAnalitico = environment.apiUrl + '/peanalitico/';
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
-
     manualResourceUrl = environment.apiUrl + '/manuals';
-
     @BlockUI() blockUI: NgBlockUI;
 
     /*
@@ -52,6 +51,12 @@ export class FuncaoDadosService {
     dropDownPEAnalitico(idSistema): Observable<any> {
         this.blockUI.start();
         return this.http.get(this.resourceUrlPEAnalitico + '/drop-down/' + idSistema)
+            .map((res: Response) => res.json());
+    }
+
+    autoCompletePEAnalitico(name: String, idFuncionalidade: number): Observable<any> {
+        const url = `${this.resourceUrlPEAnalitico}/fd?name=${name}&idFuncionalidade=${idFuncionalidade}`;
+        return this.http.get(url)
             .map((res: Response) => res.json());
     }
 
@@ -93,8 +98,7 @@ export class FuncaoDadosService {
 
     getFuncaoDadosBaseline(id: number): Observable<FuncaoDados> {
         return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const resposta = this.convertJsonToSintetico(res.json());
-            return resposta;
+            return this.convertItemFromServer(res.json());
         });
     }
 
@@ -196,5 +200,12 @@ export class FuncaoDadosService {
         const url = `${this.resourceUrl}/${idAnalise}/${idFuncionalade}/${idModulo}?name=${name}&id=${id}`;
         return this.http.get(url)
             .map(res => res.json());
+    }
+    public getVWFuncaoDadosByIdAnalise(id: Number): Observable<any[]> {
+        this.blockUI.start();
+        const url = `${this.vwresourceUrl}/${id}`;
+        return this.http.get(url).map((res) => {
+            return res.json();
+        }).finally(() => this.blockUI.stop());
     }
 }

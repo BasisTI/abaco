@@ -125,6 +125,7 @@ export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, 
         return DerTextParser.parse(this.rlr).total();
     }
 
+
     clone(): FuncaoDados {
         return new FuncaoDados(this.id, this.artificialId, this.tipo, this.complexidade,
             this.pf, this.analise, this.funcionalidades, this.funcionalidade,

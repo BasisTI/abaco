@@ -35,10 +35,10 @@ import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.servi
     selector: 'jhi-analise-form',
     templateUrl: './analise-form.component.html'
 })
-export class AnaliseFormComponent implements OnInit, OnDestroy {
+export class AnaliseFormComponent implements OnInit {
 
     isEdicao: boolean;
-    disableFuncaoTrasacao: boolean;
+    disableFuncaoTrasacao = true;
     disableAba: boolean;
     equipeShare = [];
     analiseShared: Array<AnaliseShareEquipe> = [];
@@ -129,10 +129,6 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
         this.traduzirMetodoContagem();
     }
 
-    ngOnDestroy() {
-        this.routeSub.unsubscribe();
-    }
-
     getLabel(label) {
         let str: any;
         this.translate.get(label).subscribe((res: string) => {
@@ -217,7 +213,7 @@ export class AnaliseFormComponent implements OnInit, OnDestroy {
                 this.isEdicao = true;
                 this.analiseService.find(params['id']).subscribe(analise => {
                         this.loadDataAnalise(analise);
-                        this.disableFuncaoTrasacao =  analise.metodoContagem === MessageUtil.INDICATIVA;
+                        this.disableFuncaoTrasacao = analise.metodoContagem === MessageUtil.INDICATIVA;
                     },
                     err => {
                         this.pageNotificationService.addErrorMsg(

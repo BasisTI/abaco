@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ResumoTotal} from '../../analise-shared/resumo-funcoes';
 import {AnaliseSharedUtils} from '../../analise-shared/analise-shared-utils';
 import {AnaliseSharedDataService, PageNotificationService} from '../../shared';
@@ -12,40 +12,51 @@ import {AnaliseShareEquipe} from '../analise-share-equipe.model';
 import {BlockUI, NgBlockUI} from 'ng-block-ui';
 import {User, UserService} from '../../user';
 import {ConfirmationService} from 'primeng/primeng';
-import {SistemaService} from '../../sistema';
+import {Sistema, SistemaService} from '../../sistema';
 import {FuncaoDadosService} from '../../funcao-dados/funcao-dados.service';
 import {FuncaoTransacaoService} from '../../funcao-transacao/funcao-transacao.service';
-import {TipoEquipeService} from '../../tipo-equipe';
-import {OrganizacaoService} from '../../organizacao';
-import {ContratoService} from '../../contrato';
+import {TipoEquipe, TipoEquipeService} from '../../tipo-equipe';
+import {Organizacao, OrganizacaoService} from '../../organizacao';
+import {Contrato, ContratoService} from '../../contrato';
 import {Manual, ManualService} from '../../manual';
 import * as _ from 'lodash';
 import {MessageUtil} from '../../util/message.util';
+import {SelectItem} from 'primeng/api';
 
 @Component({
     selector: 'app-analise-resumo',
     templateUrl: './analise-resumo.component.html'
 })
-export class AnaliseResumoComponent implements OnInit, OnDestroy {
+export class AnaliseResumoComponent implements OnInit {
 
     resumoTotal: ResumoTotal;
 
     complexidades: string[];
 
-    esforcoFases: EsforcoFase[];
-
     private analiseCarregadaSubscription: Subscription;
 
     public analise: Analise;
-    selectedToDelete: any;
-    equipeShare: any;
-    mostrarDialog: any;
-    selectedEquipes: any;
     @BlockUI() blockUI: NgBlockUI;
-    private analiseShared: any;
-    private users: User[] = [];
-    private tipoEquipesLoggedUser: any;
-    disableAba: Boolean = false ;
+    disableAba: Boolean = false;
+    analiseShared: Array<AnaliseShareEquipe> = [];
+    selectedEquipes: Array<AnaliseShareEquipe>;
+    selectedToDelete: AnaliseShareEquipe;
+    mostrarDialog = false;
+    isEdit: boolean;
+    isSaving: boolean;
+    dataHomologacao: any;
+    loggedUser: User;
+    tipoEquipesLoggedUser: TipoEquipe[] = [];
+    organizacoes: Organizacao[];
+    contratos: Contrato[];
+    sistemas: Sistema[];
+    esforcoFases: EsforcoFase[] = [];
+    fatoresAjuste: SelectItem[] = [];
+    equipeResponsavel: SelectItem[] = [];
+    manual: Manual;
+    users: User[] = [];
+    equipeShare = [];
+    public isView: boolean;
 
     constructor(
         private confirmationService: ConfirmationService,
@@ -76,12 +87,16 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.getOrganizationsFromActiveLoggedUser();
+        this.getLoggedUserId();
+        this.getEquipesFromActiveLoggedUser();
         this.analiseSharedDataService.init();
         this.route.params.subscribe(params => {
+            this.isView = params['view'] !== undefined;
             if (params['id']) {
                 this.analiseService.findWithFuncaos(params['id']).subscribe(analise => {
                         this.analiseSharedDataService.analise = analise;
-                        this.disableAba =  analise.metodoContagem === MessageUtil.INDICATIVA;
+                        this.disableAba = analise.metodoContagem === MessageUtil.INDICATIVA;
                         this.analise = this.analiseSharedDataService.analise;
                         this.carregarEsforcoFases(analise.manual);
                         this.esforcoFases = analise.esforcoFases;
@@ -95,15 +110,9 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
                         this.pageNotificationService.addErrorMsg(
                             this.getLabel('Analise.Analise.Mensagens.msgSemPermissaoParaEditarAnalise')
                         );
-                        this.router.navigate(['/analise']);
                     });
             }
         });
-    }
-
-    ngOnDestroy() {
-        this.changeDetectorRef.detach();
-        this.analiseCarregadaSubscription.unsubscribe();
     }
 
     handleChange(e) {
@@ -111,13 +120,25 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
         let link;
         switch (index) {
             case 0:
-                link = ['/analise/' + this.analise.id + '/edit'];
+                if (this.isView) {
+                    link = ['/analise/' + this.analise.id + '/view'];
+                }else {
+                    link = ['/analise/' + this.analise.id + '/edit'];
+                }
                 break;
             case 1:
-                link = ['/analise/' + this.analise.id + ' /funcao-dados'];
+                if (this.isView) {
+                    link = ['/analise/' + this.analise.id + '/funcao-dados/view'];
+                }else {
+                    link = ['/analise/' + this.analise.id + '/funcao-dados'];
+                }
                 break;
             case 2:
-                link = ['/analise/' + this.analise.id + '/funcao-transacao'];
+                if (this.isView) {
+                    link = ['/analise/' + this.analise.id + '/funcao-transacao/view'];
+                }else {
+                    link = ['/analise/' + this.analise.id + '/funcao-transacao'];
+                }
                 break;
             case 3:
                 return;
@@ -134,7 +155,7 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
     }
 
     public bloquearAnalise() {
-        /*if (!this.analise.dataHomologacao) {
+        if (!this.analise.dataHomologacao) {
             this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_HOMOLOGACAO'));
         }
 
@@ -151,7 +172,7 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
                     }, (error: Response) => {
                         switch (error.status) {
                             case 400: {
-                                if (error.headers.toJSON()['x-abacoapp-error'][0] === 'error.notadmin') {
+                                if (error) {
                                     this.pageNotificationService.addErrorMsg(
                                         this.getLabel('Analise.Analise.Mensagens.msgSomenteAdministradoresBloquearDesbloquear')
                                     );
@@ -164,7 +185,7 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
                     });
                 }
             });
-        }*/
+        }
 
     }
 
@@ -258,5 +279,24 @@ export class AnaliseResumoComponent implements OnInit, OnDestroy {
     private carregarEsforcoFases(manual: Manual) {
         this.esforcoFases = _.cloneDeep(manual.esforcoFases);
     }
+
+    getOrganizationsFromActiveLoggedUser() {
+        this.organizacaoService.dropDownActiveLoggedUser().subscribe(res => {
+            this.organizacoes = res.json;
+        });
+    }
+
+    getLoggedUserId() {
+        this.userService.getLoggedUserWithId().subscribe(res => {
+            this.loggedUser = res;
+        });
+    }
+
+    getEquipesFromActiveLoggedUser() {
+        this.equipeService.getEquipesActiveLoggedUser().subscribe(res => {
+            this.tipoEquipesLoggedUser = res.json;
+        });
+    }
+
 
 }
