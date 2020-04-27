@@ -153,7 +153,7 @@
                 <p-dialog [header]="this.getLabel('Cadastros.Organizacao.Contrato')"
                           [(visible)]="mostrarDialogCadastroContrato"
                           (onHide)="fecharContrato(editForm1.resetForm())"
-                          [contentStyle]="{'overflow':'visible'}"
+                          [contentStyle]="{'overflow':'auto'}"
                           [width]="900">
                     <div class="ui-g">
                         <div class="ui-g-12" style="margin-bottom: 25px">
@@ -556,7 +556,7 @@
                         </p-column>
                     </app-memory-datatable>
                 </div>
-                <div class="ui-g ui-md-12" style='justify-content: flex-end'>
+                <div class="ui-g ui-md-12" style="justify-content: flex-end">
                     <div class="ui-g-2">
                         <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
                                           id="idBtnCancelarContratoEditFormOrganizacao"
