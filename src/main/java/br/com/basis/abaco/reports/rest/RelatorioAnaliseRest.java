@@ -29,8 +29,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author eduardo.andrade
@@ -75,12 +80,11 @@ public class RelatorioAnaliseRest {
     private void init() {
         listFuncoes = new ArrayList<FuncoesDTO>();
         analise = new Analise();
-        relatorio = new RelatorioUtil( this.response, this.request);
+        relatorio = new RelatorioUtil(this.response, this.request);
         relatorioFuncoes = new RelatorioFuncoes();
     }
 
     /**
-     *
      * @param analise
      */
     private void popularObjeto(Analise analise) {
@@ -88,7 +92,6 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     *
      * @param analise
      * @throws FileNotFoundException
      * @throws JRException
@@ -97,14 +100,15 @@ public class RelatorioAnaliseRest {
         init();
         popularObjeto(analise);
 
-        switch(tipo){
+        switch (tipo) {
             case ANALISE:
                 return relatorio.downloadPdfArquivo(analise, caminhoRalatorioAnalise, popularParametroAnalise());
 
             case ANALISE_DETALHADA:
                 return relatorio.downloadPdfArquivo(analise, caminhoAnaliseDetalhada, popularParametroAnalise());
 
-            default: return null;
+            default:
+                return null;
         }
     }
 
@@ -114,17 +118,19 @@ public class RelatorioAnaliseRest {
         return relatorio.buildReport(analise);
     }
 
-    /**empolgação
+    /**
+     * empolgação
      *
      * @param analise
      * @throws FileNotFoundException
      * @throws JRException
      */
-    public @ResponseBody byte[] downloadPdfBrowser(Analise analise, TipoRelatorio tipo) throws FileNotFoundException, JRException {
+    public @ResponseBody
+    byte[] downloadPdfBrowser(Analise analise, TipoRelatorio tipo) throws FileNotFoundException, JRException {
         init();
         popularObjeto(analise);
 
-        switch(tipo) {
+        switch (tipo) {
             case ANALISE:
                 return relatorio.downloadPdfBrowser(analise, caminhoRalatorioAnalise, popularParametroAnalise());
 
@@ -134,17 +140,20 @@ public class RelatorioAnaliseRest {
             case CONTAGEM:
                 return relatorio.downloadPdfBrowser(analise, caminhoAnaliseContagem, construirDataSource(analise));
 
-            default: return null;
+            default:
+                return null;
         }
     }
 
-    /**Gera o relatório para excel
+    /**
+     * Gera o relatório para excel
      *
      * @param analise
      * @throws FileNotFoundException
      * @throws JRException
      */
-    public @ResponseBody byte[] downloadExcel(Analise analise) throws FileNotFoundException, JRException {
+    public @ResponseBody
+    byte[] downloadExcel(Analise analise) throws FileNotFoundException, JRException {
         init();
         popularObjeto(analise);
 
@@ -183,17 +192,17 @@ public class RelatorioAnaliseRest {
      *
      */
     private void popularUsuarios() {
-        if(validarObjetosNulos(analise.getCreatedBy())) {
+        if (validarObjetosNulos(analise.getCreatedBy())) {
             parametro.put("CRIADOPOR", analise.getCreatedBy().getLogin());
         }
-        if(validarObjetosNulos(analise.getEditedBy())) {
+        if (validarObjetosNulos(analise.getEditedBy())) {
             parametro.put("EDITADOPOR", analise.getEditedBy().getLogin());
         }
     }
 
     /**
      * Método responsável por acessar o caminho da imagem da logo do relatório e popular o parâmetro.
-    */
+     */
     private void popularImagemRelatorio() {
         InputStream reportStream = getClass().getClassLoader().getResourceAsStream(caminhoImagemBasis);
         parametro.put("IMAGEMLOGO", reportStream);
@@ -233,7 +242,7 @@ public class RelatorioAnaliseRest {
      *
      */
     private void popularOrganizacao() {
-        if(validarObjetosNulos(analise.getContrato().getOrganization())) {
+        if (validarObjetosNulos(analise.getContrato().getOrganization())) {
             parametro.put("ORGANIZACAO", analise.getContrato().getOrganization().getSigla());
             parametro.put("ORGANIZACAONM", analise.getContrato().getOrganization().getNome());
         }
@@ -271,7 +280,7 @@ public class RelatorioAnaliseRest {
 
     /**
      *
-    */
+     */
     private void popularDadosBasicos() {
         parametro.put("DATACRIADO", analise.getAudit().getCreatedOn().toString());
         parametro.put("DATAALTERADO", analise.getAudit().getUpdatedOn().toString());
@@ -296,11 +305,11 @@ public class RelatorioAnaliseRest {
         List<FuncaoDadosDTO> listFuncaoFD = new ArrayList<>();
 
 
-        for(FuncoesDTO f : listFuncoes) {
-            if(f.getNomeFd() != null) {
+        for (FuncoesDTO f : listFuncoes) {
+            if (f.getNomeFd() != null) {
                 listFuncaoFD.add(popularObjetoFd(f));
             }
-            if(f.getNomeFt() != null) {
+            if (f.getNomeFt() != null) {
                 listFuncaoFT.add(popularObjetoFt(f));
             }
         }
@@ -309,15 +318,14 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     *
      * @return
      */
     private int countQuantidadeDerFd(Long id) {
         int total = 0;
         Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
         if (funcaoDados != null && analise.getMetodoContagem() != MetodoContagem.ESTIMADA) {
-            for(FuncaoDados fd : funcaoDados) {
-                if(fd.getId().equals(id)) {
+            for (FuncaoDados fd : funcaoDados) {
+                if (fd.getId().equals(id)) {
                     total = fd.getDers().size();
                 }
             }
@@ -326,15 +334,14 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     *
      * @return
      */
     private int countQuantidadeRlrFd(Long id) {
         int total = 0;
         Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
         if (funcaoDados != null && analise.getMetodoContagem() != MetodoContagem.ESTIMADA) {
-            for(FuncaoDados fd : funcaoDados) {
-                if(fd.getId().equals(id)) {
+            for (FuncaoDados fd : funcaoDados) {
+                if (fd.getId().equals(id)) {
                     total = fd.getRlrs().size();
                 }
             }
@@ -343,15 +350,14 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     *
      * @return
      */
     private int countQuantidadeFtrFt(Long id) {
         int total = 0;
         Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
         if (funcaoTransacaos != null && analise.getMetodoContagem() != MetodoContagem.ESTIMADA) {
-            for(FuncaoTransacao ft : funcaoTransacaos) {
-                if(ft.getId().equals(id)) {
+            for (FuncaoTransacao ft : funcaoTransacaos) {
+                if (ft.getId().equals(id)) {
                     total = ft.getAlrs().size();
                 }
             }
@@ -360,15 +366,14 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     *
      * @return
      */
     private int countQuantidadeDerFt(Long id) {
         int total = 0;
         Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
         if (funcaoTransacaos != null && analise.getMetodoContagem() != MetodoContagem.ESTIMADA) {
-            for(FuncaoTransacao ft : funcaoTransacaos) {
-                if(ft.getId().equals(id)) {
+            for (FuncaoTransacao ft : funcaoTransacaos) {
+                if (ft.getId().equals(id)) {
                     total = ft.getDers().size();
                 }
             }
@@ -408,7 +413,7 @@ public class RelatorioAnaliseRest {
 
     private void verificaFuncaoTransacao(List<ListaFdFtDTO> listaFdFt, Set<FuncaoTransacao> funcaoTransacaos) {
         if (funcaoTransacaos != null) {
-            for(FuncaoTransacao ft : funcaoTransacaos) {
+            for (FuncaoTransacao ft : funcaoTransacaos) {
                 String der = "", alrTr = "";
                 ListaFdFtDTO objeto = new ListaFdFtDTO();
                 objeto.setNome(ft.getName());
@@ -427,7 +432,7 @@ public class RelatorioAnaliseRest {
 
     private void verificaFuncaodados(List<ListaFdFtDTO> listaFdFt, Set<FuncaoDados> funcaoDados) {
         if (funcaoDados != null) {
-            for(FuncaoDados fd : funcaoDados) {
+            for (FuncaoDados fd : funcaoDados) {
                 ListaFdFtDTO objeto = new ListaFdFtDTO();
                 String der = "", alrTr = "";
 
@@ -470,7 +475,7 @@ public class RelatorioAnaliseRest {
                 }
             }
         }
-        if(!alrTrAux.equals("")){
+        if (!alrTrAux.equals("")) {
             alrTrAux = alrTrAux.substring(0, (alrTrAux.length() - 2));
         }
         return alrTrAux;
@@ -486,8 +491,8 @@ public class RelatorioAnaliseRest {
                 }
             }
         }
-        if(!alrTrAux.equals("")){
-            alrTrAux = alrTrAux.substring(0, (alrTrAux.length()-2));
+        if (!alrTrAux.equals("")) {
+            alrTrAux = alrTrAux.substring(0, (alrTrAux.length() - 2));
         }
         return alrTrAux;
     }
@@ -503,13 +508,12 @@ public class RelatorioAnaliseRest {
             }
         }
         if (!derAux.equals("")) {
-            derAux = derAux.substring(0, (derAux.length()-2));
+            derAux = derAux.substring(0, (derAux.length() - 2));
         }
         return derAux;
     }
 
     /**
-     *
      * @param f
      * @return
      */
@@ -531,7 +535,6 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     *
      * @param f
      * @return
      */
@@ -556,10 +559,10 @@ public class RelatorioAnaliseRest {
      * Método responsável por popular os parâmetros de ajustes para relatório detalhado.
      */
     private void popularAjustes() {
-        parametro.put("AJUSTESINCLUSAO",  funcao(ImpactoFatorAjuste.INCLUSAO.toString()) + deflator + " - Funções incluídas");
-        parametro.put("AJUSTESALTERACAO",  funcao(ImpactoFatorAjuste.ALTERACAO.toString()) + deflator + " - Funções alteradas");
-        parametro.put("AJUSTESEXCLUSAO",  funcao(ImpactoFatorAjuste.EXCLUSAO.toString()) + deflator + " - Funções excluídas");
-        parametro.put("AJUSTESCONVERSAO",  funcao(ImpactoFatorAjuste.CONVERSAO.toString()) + deflator + " - Funções convertidas");
+        parametro.put("AJUSTESINCLUSAO", funcao(ImpactoFatorAjuste.INCLUSAO.toString()) + deflator + " - Funções incluídas");
+        parametro.put("AJUSTESALTERACAO", funcao(ImpactoFatorAjuste.ALTERACAO.toString()) + deflator + " - Funções alteradas");
+        parametro.put("AJUSTESEXCLUSAO", funcao(ImpactoFatorAjuste.EXCLUSAO.toString()) + deflator + " - Funções excluídas");
+        parametro.put("AJUSTESCONVERSAO", funcao(ImpactoFatorAjuste.CONVERSAO.toString()) + deflator + " - Funções convertidas");
     }
 
     /**
@@ -591,7 +594,6 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     *
      * @param fd
      */
     private void popularComplexidadeAli(FuncoesDTO fd) {
@@ -600,16 +602,15 @@ public class RelatorioAnaliseRest {
         parametro.put("ALIMEDIA", transformarInteiro(fd.getComplexidadeDtoFd().getAliMedia()));
         parametro.put("ALIALTA", transformarInteiro(fd.getComplexidadeDtoFd().getAliAlta()));
         parametro.put("ALIQUANDIDADE", transformarInteiro(somaQuantidades(
-                 fd.getComplexidadeDtoFd().getAliSem()
-                ,fd.getComplexidadeDtoFd().getAliBaixa()
-                ,fd.getComplexidadeDtoFd().getAliMedia()
-                ,fd.getComplexidadeDtoFd().getAliAlta())));
+            fd.getComplexidadeDtoFd().getAliSem()
+            , fd.getComplexidadeDtoFd().getAliBaixa()
+            , fd.getComplexidadeDtoFd().getAliMedia()
+            , fd.getComplexidadeDtoFd().getAliAlta())));
         parametro.put("ALIPFTOTAL", transformarBigDecimal(fd.getComplexidadeDtoFd().getPfTotalAli()));
         parametro.put("ALIPFAJUSTADO", transformarBigDecimal(fd.getComplexidadeDtoFd().getPfAjustadoAli()));
     }
 
     /**
-     *
      * @param fd
      */
     private void popularComplexidadeAie(FuncoesDTO fd) {
@@ -618,16 +619,15 @@ public class RelatorioAnaliseRest {
         parametro.put("AIEMEDIA", transformarInteiro(fd.getComplexidadeDtoFd().getAieMedia()));
         parametro.put("AIEALTA", transformarInteiro(fd.getComplexidadeDtoFd().getAieAlta()));
         parametro.put("AIEQUANTIDADE", transformarInteiro(somaQuantidades(
-                 fd.getComplexidadeDtoFd().getAieSem()
-                ,fd.getComplexidadeDtoFd().getAieBaixa()
-                ,fd.getComplexidadeDtoFd().getAieMedia()
-                ,fd.getComplexidadeDtoFd().getAieAlta())));
+            fd.getComplexidadeDtoFd().getAieSem()
+            , fd.getComplexidadeDtoFd().getAieBaixa()
+            , fd.getComplexidadeDtoFd().getAieMedia()
+            , fd.getComplexidadeDtoFd().getAieAlta())));
         parametro.put("AIEPFTOTAL", transformarBigDecimal(fd.getComplexidadeDtoFd().getPfTotalAie()));
         parametro.put("AIEPFAJUSTADO", transformarBigDecimal(fd.getComplexidadeDtoFd().getPfAjustadoAie()));
     }
 
     /**
-     *
      * @param fd
      */
     private void popularComplexidadeInmFd(FuncoesDTO fd) {
@@ -636,49 +636,45 @@ public class RelatorioAnaliseRest {
         parametro.put("INMMEDIA", transformarInteiro(fd.getComplexidadeDtoFd().getInmMediaFd()));
         parametro.put("INMALTA", transformarInteiro(fd.getComplexidadeDtoFd().getInmAltaFd()));
         parametro.put("INMQUANTIDADE", transformarInteiro(somaQuantidades(
-                 fd.getComplexidadeDtoFd().getInmSemFd()
-                ,fd.getComplexidadeDtoFd().getInmBaixaFd()
-                ,fd.getComplexidadeDtoFd().getInmMediaFd()
-                ,fd.getComplexidadeDtoFd().getInmAltaFd())));
+            fd.getComplexidadeDtoFd().getInmSemFd()
+            , fd.getComplexidadeDtoFd().getInmBaixaFd()
+            , fd.getComplexidadeDtoFd().getInmMediaFd()
+            , fd.getComplexidadeDtoFd().getInmAltaFd())));
         parametro.put("INMPFTOTAL", transformarBigDecimal(fd.getComplexidadeDtoFd().getPfTotalInmFd()));
         parametro.put("INMPFAJUSTADO", transformarBigDecimal(fd.getComplexidadeDtoFd().getPfAjustadoInmFd()));
     }
 
     /**
-     *
      * @param fd
      */
     private void popularImpactoAli(FuncoesDTO fd) {
-      parametro.put("ALIINCLUSAO", transformarInteiro(fd.getImpactoDtoFd().getAliInclusao()));
-      parametro.put("ALIALTERACAO", transformarInteiro(fd.getImpactoDtoFd().getAliAlteracao()));
-      parametro.put("ALIEXCLUSAO", transformarInteiro(fd.getImpactoDtoFd().getAliExclusao()));
-      parametro.put("ALICONVERSAO", transformarInteiro(fd.getImpactoDtoFd().getAliConversao()));
+        parametro.put("ALIINCLUSAO", transformarInteiro(fd.getImpactoDtoFd().getAliInclusao()));
+        parametro.put("ALIALTERACAO", transformarInteiro(fd.getImpactoDtoFd().getAliAlteracao()));
+        parametro.put("ALIEXCLUSAO", transformarInteiro(fd.getImpactoDtoFd().getAliExclusao()));
+        parametro.put("ALICONVERSAO", transformarInteiro(fd.getImpactoDtoFd().getAliConversao()));
     }
 
     /**
-     *
      * @param fd
      */
     private void popularImpactoAie(FuncoesDTO fd) {
-      parametro.put("AIEINCLUSAO", transformarInteiro(fd.getImpactoDtoFd().getAieInclusao()));
-      parametro.put("AIEALTERACAO", transformarInteiro(fd.getImpactoDtoFd().getAieAlteracao()));
-      parametro.put("AIEEXCLUSAO", transformarInteiro(fd.getImpactoDtoFd().getAieExclusao()));
-      parametro.put("AIECONVERSAO", transformarInteiro(fd.getImpactoDtoFd().getAieConversao()));
+        parametro.put("AIEINCLUSAO", transformarInteiro(fd.getImpactoDtoFd().getAieInclusao()));
+        parametro.put("AIEALTERACAO", transformarInteiro(fd.getImpactoDtoFd().getAieAlteracao()));
+        parametro.put("AIEEXCLUSAO", transformarInteiro(fd.getImpactoDtoFd().getAieExclusao()));
+        parametro.put("AIECONVERSAO", transformarInteiro(fd.getImpactoDtoFd().getAieConversao()));
     }
 
     /**
-     *
      * @param fd
      */
     private void popularImpactoInmFd(FuncoesDTO fd) {
-      parametro.put("INMINCLUSAO", transformarInteiro(fd.getImpactoDtoFd().getInmInclusaoFd()));
-      parametro.put("INMALTERACAO", transformarInteiro(fd.getImpactoDtoFd().getInmAlteracaoFd()));
-      parametro.put("INMEXCLUSAO", transformarInteiro(fd.getImpactoDtoFd().getInmExclusaoFd()));
-      parametro.put("INMCONVERSAO", transformarInteiro(fd.getImpactoDtoFd().getInmConversaoFd()));
+        parametro.put("INMINCLUSAO", transformarInteiro(fd.getImpactoDtoFd().getInmInclusaoFd()));
+        parametro.put("INMALTERACAO", transformarInteiro(fd.getImpactoDtoFd().getInmAlteracaoFd()));
+        parametro.put("INMEXCLUSAO", transformarInteiro(fd.getImpactoDtoFd().getInmExclusaoFd()));
+        parametro.put("INMCONVERSAO", transformarInteiro(fd.getImpactoDtoFd().getInmConversaoFd()));
     }
 
     /**
-     *
      * @param ft
      */
     private void popularComplexidadeEe(FuncoesDTO ft) {
@@ -687,16 +683,15 @@ public class RelatorioAnaliseRest {
         parametro.put("EEMEDIA", transformarInteiro(ft.getComplexidadeDtoFt().getEeMedia()));
         parametro.put("EEALTA", transformarInteiro(ft.getComplexidadeDtoFt().getEeAlta()));
         parametro.put("EEQUANTIDADE", transformarInteiro(somaQuantidades(
-                 ft.getComplexidadeDtoFt().getEeSem()
-                ,ft.getComplexidadeDtoFt().getEeBaixa()
-                ,ft.getComplexidadeDtoFt().getEeMedia()
-                ,ft.getComplexidadeDtoFt().getEeAlta())));
+            ft.getComplexidadeDtoFt().getEeSem()
+            , ft.getComplexidadeDtoFt().getEeBaixa()
+            , ft.getComplexidadeDtoFt().getEeMedia()
+            , ft.getComplexidadeDtoFt().getEeAlta())));
         parametro.put("EEPFTOTAL", transformarBigDecimal(ft.getComplexidadeDtoFt().getPfTotalEe()));
         parametro.put("EEPFAJUSTADO", transformarBigDecimal(ft.getComplexidadeDtoFt().getPfAjustadoEe()));
     }
 
     /**
-     *
      * @param ft
      */
     private void popularComplexidadeSe(FuncoesDTO ft) {
@@ -705,16 +700,15 @@ public class RelatorioAnaliseRest {
         parametro.put("SEMEDIA", transformarInteiro(ft.getComplexidadeDtoFt().getSeMedia()));
         parametro.put("SEALTA", transformarInteiro(ft.getComplexidadeDtoFt().getSeAlta()));
         parametro.put("SEQUANTIDADE", transformarInteiro(somaQuantidades(
-                 ft.getComplexidadeDtoFt().getSeSem()
-                ,ft.getComplexidadeDtoFt().getSeBaixa()
-                ,ft.getComplexidadeDtoFt().getSeMedia()
-                ,ft.getComplexidadeDtoFt().getSeAlta())));
+            ft.getComplexidadeDtoFt().getSeSem()
+            , ft.getComplexidadeDtoFt().getSeBaixa()
+            , ft.getComplexidadeDtoFt().getSeMedia()
+            , ft.getComplexidadeDtoFt().getSeAlta())));
         parametro.put("SEPFTOTAL", transformarBigDecimal(ft.getComplexidadeDtoFt().getPfTotalSe()));
         parametro.put("SEPFAJUSTADO", transformarBigDecimal(ft.getComplexidadeDtoFt().getPfAjustadoSe()));
     }
 
     /**
-     *
      * @param ft
      */
     private void popularComplexidadeCe(FuncoesDTO ft) {
@@ -723,16 +717,15 @@ public class RelatorioAnaliseRest {
         parametro.put("CEMEDIA", transformarInteiro(ft.getComplexidadeDtoFt().getCeMedia()));
         parametro.put("CEALTA", transformarInteiro(ft.getComplexidadeDtoFt().getCeAlta()));
         parametro.put("CEQUANTIDADE", transformarInteiro(somaQuantidades(
-                 ft.getComplexidadeDtoFt().getCeSem()
-                ,ft.getComplexidadeDtoFt().getCeBaixa()
-                ,ft.getComplexidadeDtoFt().getCeMedia()
-                ,ft.getComplexidadeDtoFt().getCeAlta())));
+            ft.getComplexidadeDtoFt().getCeSem()
+            , ft.getComplexidadeDtoFt().getCeBaixa()
+            , ft.getComplexidadeDtoFt().getCeMedia()
+            , ft.getComplexidadeDtoFt().getCeAlta())));
         parametro.put("CEPFTOTAL", transformarBigDecimal(ft.getComplexidadeDtoFt().getPfTotalCe()));
         parametro.put("CEPFAJUSTADO", transformarBigDecimal(ft.getComplexidadeDtoFt().getPfAjustadoCe()));
     }
 
     /**
-     *
      * @param ft
      */
     private void popularComplexidadeInmFt(FuncoesDTO ft) {
@@ -741,16 +734,15 @@ public class RelatorioAnaliseRest {
         parametro.put("INMFTMEDIA", transformarInteiro(ft.getComplexidadeDtoFt().getInmMediaFt()));
         parametro.put("INMFTALTA", transformarInteiro(ft.getComplexidadeDtoFt().getInmAltaFt()));
         parametro.put("INMFTQUANTIDADE", transformarInteiro(somaQuantidades(
-                 ft.getComplexidadeDtoFt().getInmSemFt()
-                ,ft.getComplexidadeDtoFt().getInmBaixaFt()
-                ,ft.getComplexidadeDtoFt().getInmMediaFt()
-                ,ft.getComplexidadeDtoFt().getInmAltaFt())));
+            ft.getComplexidadeDtoFt().getInmSemFt()
+            , ft.getComplexidadeDtoFt().getInmBaixaFt()
+            , ft.getComplexidadeDtoFt().getInmMediaFt()
+            , ft.getComplexidadeDtoFt().getInmAltaFt())));
         parametro.put("INMFTPFTOTAL", transformarBigDecimal(ft.getComplexidadeDtoFt().getPfTotalInmFt()));
         parametro.put("INMFTPFAJUSTADO", transformarBigDecimal(ft.getComplexidadeDtoFt().getPfAjustadoInmFt()));
     }
 
     /**
-     *
      * @param ft
      */
     private void popularImpactoEe(FuncoesDTO ft) {
@@ -761,7 +753,6 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     *
      * @param ft
      */
     private void popularImpactoSe(FuncoesDTO ft) {
@@ -772,7 +763,6 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     *
      * @param ft
      */
     private void popularImpactoCe(FuncoesDTO ft) {
@@ -783,7 +773,6 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     *
      * @param ft
      */
     private void popularImpactoInmFt(FuncoesDTO ft) {
@@ -794,34 +783,40 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     *
      * @param valor
      * @return
      */
     private String funcao(String valor) {
-        if (valor.equals("INCLUSAO")){ return Integer.toString(analise.getManual().getParametroInclusao().intValue()) + "%"; }
-        if (valor.equals("ALTERACAO")){ return Integer.toString(analise.getManual().getParametroAlteracao().intValue()) + "%"; }
-        if (valor.equals("EXCLUSAO")){ return Integer.toString(analise.getManual().getParametroExclusao().intValue()) + "%"; }
-        if (valor.equals("CONVERSAO")){ return Integer.toString(analise.getManual().getParametroConversao().intValue()) + "%"; }
+        if (valor.equals("INCLUSAO")) {
+            return Integer.toString(analise.getManual().getParametroInclusao().intValue()) + "%";
+        }
+        if (valor.equals("ALTERACAO")) {
+            return Integer.toString(analise.getManual().getParametroAlteracao().intValue()) + "%";
+        }
+        if (valor.equals("EXCLUSAO")) {
+            return Integer.toString(analise.getManual().getParametroExclusao().intValue()) + "%";
+        }
+        if (valor.equals("CONVERSAO")) {
+            return Integer.toString(analise.getManual().getParametroConversao().intValue()) + "%";
+        }
         return null;
     }
 
     /**
-     *
      * @param
      */
     private Integer somaQuantidades(Integer sem, Integer baixa, Integer media, Integer alta) {
         Integer sem2 = sem, baixa2 = baixa, media2 = media, alta2 = alta;
-        if(sem2 == null) {
+        if (sem2 == null) {
             sem2 = 0;
         }
-        if(baixa2 == null ) {
+        if (baixa2 == null) {
             baixa2 = 0;
         }
-        if(media2 == null) {
+        if (media2 == null) {
             media2 = 0;
         }
-        if(alta2 == null) {
+        if (alta2 == null) {
             alta2 = 0;
         }
         return sem2 + baixa2 + media2 + alta2;
@@ -831,7 +826,7 @@ public class RelatorioAnaliseRest {
      *
      */
     private String verificarFatorAjuste(FatorAjuste valor) {
-        if(valor == null) {
+        if (valor == null) {
             return "Nenhum";
         } else {
             return valor.getNome();
@@ -842,10 +837,10 @@ public class RelatorioAnaliseRest {
      *
      */
     private String verificarVersaoCPM(Long valor) {
-        if(valor == 431) {
+        if (valor == 431) {
             return "4.3.1";
         }
-        if(valor == 421) {
+        if (valor == 421) {
             return "4.2.1";
         }
         return null;
@@ -871,12 +866,13 @@ public class RelatorioAnaliseRest {
 
     /**
      * Método responsável por formatar a data par dia/mês/ano.
+     *
      * @param data
      * @return
      */
     public String formatarData(Date data) {
         SimpleDateFormat dataFormatada = new SimpleDateFormat("dd/MM/yyyy");
-        if(data != null) {
+        if (data != null) {
             return dataFormatada.format(data);
         } else {
             return null;
@@ -886,6 +882,7 @@ public class RelatorioAnaliseRest {
     /**
      * Método responsável por verificar a condição do valor,
      * valor true = Sim, valor false = Não.
+     *
      * @param valor
      * @return
      */
@@ -894,40 +891,37 @@ public class RelatorioAnaliseRest {
     }
 
     /**
-     *
      * @param valor
      * @return
      */
     private String transformarInteiro(Integer valor) {
         Integer valor2 = valor;
-        if(valor2 == null) {
+        if (valor2 == null) {
             valor2 = 0;
         }
         return valor2.toString();
     }
 
     /**
-     *
      * @param valor
      * @return
      */
     private String transformarBigDecimal(Double valor) {
         Double valor2 = valor;
-        if(valor2 == null) {
+        if (valor2 == null) {
             valor2 = 0.0;
         }
         return valor2.toString().replace(".", ",");
     }
 
     /**
-     *
      * @param valor1
      * @param valor2
      * @return
      */
     private String calcularPFsAjustado(String valor1, String valor2) {
         Double valorCalculado = 0.0;
-        if(valor1 != null && valor2 != null) {
+        if (valor1 != null && valor2 != null) {
             valorCalculado = Double.parseDouble(valor1) - Double.parseDouble(valor2);
         }
         DecimalFormat df = new DecimalFormat("#.##");
