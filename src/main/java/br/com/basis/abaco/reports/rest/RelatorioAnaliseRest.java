@@ -400,13 +400,17 @@ public class RelatorioAnaliseRest {
     private void popularListaFdFt() {
         List<ListaFdFtDTO> listaFt = new ArrayList<>();
         List<ListaFdFtDTO> listaFd = new ArrayList<>();
+        List<ListaFdFtDTO> listaFdFt = new ArrayList<>();
 
         Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
         verificaFuncaodados(listaFd, funcaoDados);
+        verificaFuncaodados(listaFdFt, funcaoDados);
 
         Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
         verificaFuncaoTransacao(listaFt, funcaoTransacaos);
+        verificaFuncaoTransacao(listaFdFt, funcaoTransacaos);
 
+        parametro.put("LISTAFDFT", listaFdFt);
         parametro.put("LISTAFD", listaFd);
         parametro.put("LISTAFT", listaFt);
     }
