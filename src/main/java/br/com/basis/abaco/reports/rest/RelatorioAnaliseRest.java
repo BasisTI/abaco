@@ -29,13 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author eduardo.andrade
@@ -398,28 +393,34 @@ public class RelatorioAnaliseRest {
      * Método responsável por popular a lista função de dados.
      */
     private void popularListaFdFt() {
-        List<ListaFdFtDTO> listaFdFt = new ArrayList<>();
+        List<ListaFdFtDTO> listaFt = new ArrayList<>();
+        List<ListaFdFtDTO> listaFd = new ArrayList<>();
 
         Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
-        verificaFuncaodados(listaFdFt, funcaoDados);
+        verificaFuncaodados(listaFd, funcaoDados);
 
         Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
-        verificaFuncaoTransacao(listaFdFt, funcaoTransacaos);
-        parametro.put("LISTAFDFT", listaFdFt);
+        verificaFuncaoTransacao(listaFt, funcaoTransacaos);
+
+        parametro.put("LISTAFD", listaFd);
+        parametro.put("LISTAFT", listaFt);
     }
 
     private void verificaFuncaoTransacao(List<ListaFdFtDTO> listaFdFt, Set<FuncaoTransacao> funcaoTransacaos) {
         if (funcaoTransacaos != null) {
             for(FuncaoTransacao ft : funcaoTransacaos) {
-                String der = "", alrTr = ""; ListaFdFtDTO objeto = new ListaFdFtDTO();
+                String der = "", alrTr = "";
+                ListaFdFtDTO objeto = new ListaFdFtDTO();
                 objeto.setNome(ft.getName());
 
                 alrTr = popularAlrFt(ft, alrTr);
                 objeto.setAlrtr(alrTr);
 
                 der = popularDerFt(ft, der);
-                objeto.setDer(der); listaFdFt.add(objeto);
-
+                objeto.setFuncionalidade(ft.getFuncionalidade().getNome());
+                objeto.setModulo(ft.getFuncionalidade().getModulo().getNome());
+                objeto.setDer(der);
+                listaFdFt.add(objeto);
             }
         }
     }
@@ -431,10 +432,14 @@ public class RelatorioAnaliseRest {
                 String der = "", alrTr = "";
 
                 der = popularDersFd(fd, der);
-                objeto.setDer(der); objeto.setNome(fd.getName());
+                objeto.setDer(der);
+                objeto.setNome(fd.getName());
 
                 alrTr = popularAlrtrFd(fd, alrTr);
-                objeto.setAlrtr(alrTr); listaFdFt.add(objeto);
+                objeto.setAlrtr(alrTr);
+                objeto.setFuncionalidade(fd.getFuncionalidade().getNome());
+                objeto.setModulo(fd.getFuncionalidade().getModulo().getNome());
+                listaFdFt.add(objeto);
             }
         }
     }

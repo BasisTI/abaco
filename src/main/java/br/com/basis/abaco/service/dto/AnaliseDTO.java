@@ -1,5 +1,6 @@
 package br.com.basis.abaco.service.dto;
 
+import br.com.basis.abaco.domain.Compartilhada;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.TipoAnalise;
 import br.com.basis.dynamicexports.pojo.ReportObject;
@@ -30,6 +31,7 @@ public class AnaliseDTO implements ReportObject, Serializable {
     private boolean bloqueiaAnalise;
     private boolean clonadaParaEquipe;
     private Set<UserAnaliseDTO> users = new HashSet<>();
+    private Set<Compartilhada> compartilhadas = new HashSet<>();
 
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
         this.dataCriacaoOrdemServico = dataCriacaoOrdemServico == null ? null : new Timestamp(dataCriacaoOrdemServico.getTime());
