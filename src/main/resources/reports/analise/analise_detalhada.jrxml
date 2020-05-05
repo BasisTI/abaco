@@ -648,7 +648,7 @@
 					<textElement verticalAlignment="Middle">
 						<font size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Total de PF (Deflação):]]]></text>
+					<text><![CDATA[Total de PF (Deflação):]]></text>
 				</staticText>
 				<textField>
 					<reportElement x="691" y="2" width="110" height="19" uuid="15cd80ef-8dc4-4cac-8d08-a8c916f93a07"/>
