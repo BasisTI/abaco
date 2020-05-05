@@ -693,7 +693,7 @@
 						<property name="com.jaspersoft.studio.table.style.detail" value="Table 6_TD"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
-					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
 						<datasetRun subDataset="DSfuncaoDados" uuid="1d72a203-d76a-4895-8a48-3dea046c8e96">
 							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFUNCAOFD})]]></dataSourceExpression>
 						</datasetRun>
@@ -965,7 +965,7 @@
 						<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
-					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
 						<datasetRun subDataset="DSfuncaoTransacao" uuid="23401d29-111d-4310-a233-e078babfbb1a">
 							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFUNCAOFT})]]></dataSourceExpression>
 						</datasetRun>
@@ -1221,7 +1221,7 @@
 					<textElement verticalAlignment="Middle">
 						<font size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Listagem Nominal de RLRs e DERs]]></text>
+					<text><![CDATA[Listagem Nominal de TDs e TRs]]></text>
 				</staticText>
 				<componentElement>
 					<reportElement stretchType="RelativeToTallestObject" x="0" y="22" width="802" height="45" uuid="828486f4-85cd-427e-97eb-64cb95a84965">
@@ -1237,12 +1237,54 @@
 						<datasetRun subDataset="LISTAFD" uuid="a82b8160-49c9-4d9a-83be-fb3c77580ee2">
 							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFD})]]></dataSourceExpression>
 						</datasetRun>
-						<jr:column width="301" uuid="78e588aa-d268-4e00-a1f7-2196b07c0c79">
+						<jr:column width="100" uuid="ce81f96e-5ea0-40a5-8944-ee7c7cc55633">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+							<jr:tableHeader style="Table 3_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="100" height="30" uuid="2b46129a-ddb6-4d55-961e-0cad25af7dab"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+									</textElement>
+									<text><![CDATA[Modulo]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:detailCell style="Table 3_TD" height="15">
+								<textField isStretchWithOverflow="true">
+									<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="100" height="15" uuid="552d9fd9-591c-4131-ae62-d83d593a44b5"/>
+									<textElement textAlignment="Left" verticalAlignment="Top">
+										<paragraph leftIndent="2" rightIndent="6" spacingBefore="2" spacingAfter="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{modulo}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="120" uuid="e94634f8-adc9-4e5e-877b-aacc309b482f">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+							<jr:tableHeader style="Table 3_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="120" height="30" uuid="d5baa986-f159-4ffc-ac7f-34c9a227df0b"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+									</textElement>
+									<text><![CDATA[funcionalidade]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:detailCell style="Table 3_TD" height="15">
+								<textField isStretchWithOverflow="true">
+									<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="120" height="15" uuid="160043b7-7b04-4fee-95c7-c9fc121cff29"/>
+									<textElement textAlignment="Left" verticalAlignment="Top">
+										<paragraph leftIndent="2" rightIndent="6" spacingBefore="2" spacingAfter="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{funcionalidade}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="160" uuid="78e588aa-d268-4e00-a1f7-2196b07c0c79">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 							<jr:tableHeader style="Table 3_TH" height="30" rowSpan="1">
 								<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 								<staticText>
-									<reportElement x="0" y="0" width="301" height="30" uuid="d063a843-53f9-480e-a6b6-9e6acf1c0391"/>
+									<reportElement x="0" y="0" width="160" height="30" uuid="d063a843-53f9-480e-a6b6-9e6acf1c0391"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
@@ -1252,28 +1294,28 @@
 							<jr:detailCell style="Table 3_TD" height="15" rowSpan="1">
 								<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 								<textField isStretchWithOverflow="true">
-									<reportElement x="0" y="0" width="301" height="15" uuid="7bf0a2ba-8b50-4ee0-920e-91f42f7073f2"/>
+									<reportElement x="0" y="0" width="160" height="15" uuid="7bf0a2ba-8b50-4ee0-920e-91f42f7073f2"/>
 									<textElement verticalAlignment="Middle">
 										<paragraph leftIndent="2"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$F{modulo}.concat(" - ").concat( $F{funcionalidade}).concat(" - ").concat( $F{nome} )]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="250" uuid="e64565b7-8cc1-4b9b-a1db-dbc8e5d28538">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:column width="210" uuid="e64565b7-8cc1-4b9b-a1db-dbc8e5d28538">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 							<jr:tableHeader style="Table 3_TH" height="30" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="250" height="30" uuid="42429b7e-e52a-457b-b92f-d79a1dacba82"/>
+									<reportElement x="0" y="0" width="210" height="30" uuid="42429b7e-e52a-457b-b92f-d79a1dacba82"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<text><![CDATA[DER(TD)]]></text>
+									<text><![CDATA[TD]]></text>
 								</staticText>
 							</jr:tableHeader>
 							<jr:detailCell style="Table 3_TD" height="15" rowSpan="1">
 								<textField isStretchWithOverflow="true">
-									<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="250" height="15" uuid="ca98c8f0-f6e8-40f9-9076-38358cad034f"/>
+									<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="210" height="15" uuid="ca98c8f0-f6e8-40f9-9076-38358cad034f"/>
 									<textElement textAlignment="Left" verticalAlignment="Top">
 										<paragraph leftIndent="2" rightIndent="6" spacingBefore="2" spacingAfter="2"/>
 									</textElement>
@@ -1281,20 +1323,20 @@
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="250" uuid="508afa6b-67d1-4f01-8080-7f8d75473791">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:column width="212" uuid="508afa6b-67d1-4f01-8080-7f8d75473791">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 							<jr:tableHeader style="Table 3_TH" height="30" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="250" height="30" uuid="c75340d6-dc5d-4d6a-a573-886a144fcec9"/>
+									<reportElement x="0" y="0" width="212" height="30" uuid="c75340d6-dc5d-4d6a-a573-886a144fcec9"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<text><![CDATA[RLR(TR)]]></text>
+									<text><![CDATA[TR]]></text>
 								</staticText>
 							</jr:tableHeader>
 							<jr:detailCell style="Table 3_TD" height="15" rowSpan="1">
 								<textField isStretchWithOverflow="true">
-									<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="250" height="15" uuid="dc925071-2c69-4e8b-97f8-61e394815d48"/>
+									<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="212" height="15" uuid="dc925071-2c69-4e8b-97f8-61e394815d48"/>
 									<textElement textAlignment="Left" verticalAlignment="Top">
 										<paragraph leftIndent="2" rightIndent="6" spacingBefore="2" spacingAfter="2"/>
 									</textElement>
@@ -1321,7 +1363,7 @@
 					<textElement verticalAlignment="Middle">
 						<font size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Listagem Nominal de ALRs e DERs]]></text>
+					<text><![CDATA[Listagem Nominal de ARs e TDs]]></text>
 				</staticText>
 				<componentElement>
 					<reportElement stretchType="RelativeToTallestObject" x="0" y="22" width="802" height="45" uuid="4a6012f3-4e86-4ec3-8f02-52f2d9c33255">
@@ -1337,12 +1379,54 @@
 						<datasetRun subDataset="LISTAFD" uuid="84415047-4681-41dd-801f-c9cd3e01737c">
 							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFT})]]></dataSourceExpression>
 						</datasetRun>
-						<jr:column width="301" uuid="dd4a1cea-0a57-42ba-85f5-8b246ce34024">
+						<jr:column width="100" uuid="753450fc-4a7c-42d4-a6d2-575dc0781e09">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+							<jr:tableHeader style="Table 3_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="100" height="30" uuid="4928e715-73d4-4d07-ae3f-534c4d77d706"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+									</textElement>
+									<text><![CDATA[Modulo]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:detailCell style="Table 3_TD" height="15">
+								<textField isStretchWithOverflow="true">
+									<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="100" height="15" uuid="4569a6ee-be04-4404-b8b0-641aadc690db"/>
+									<textElement textAlignment="Left" verticalAlignment="Top">
+										<paragraph leftIndent="2" rightIndent="6" spacingBefore="2" spacingAfter="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{modulo}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="120" uuid="3858ecfc-5137-417a-af27-0a6a3c142f0c">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+							<jr:tableHeader style="Table 3_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="120" height="30" uuid="26cab91f-3c77-4e04-ab04-cee87929e4e3"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+									</textElement>
+									<text><![CDATA[Funcionalidade]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:detailCell style="Table 3_TD" height="15">
+								<textField isStretchWithOverflow="true">
+									<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="120" height="15" uuid="4e346f3d-4036-42f4-a3f0-c819ab76c479"/>
+									<textElement textAlignment="Left" verticalAlignment="Top">
+										<paragraph leftIndent="2" rightIndent="6" spacingBefore="2" spacingAfter="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{funcionalidade}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="160" uuid="dd4a1cea-0a57-42ba-85f5-8b246ce34024">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 							<jr:tableHeader style="Table 3_TH" height="30" rowSpan="1">
 								<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 								<staticText>
-									<reportElement x="0" y="0" width="301" height="30" uuid="901c5b2f-f2d2-49e0-ba14-4f1cc45a50ae"/>
+									<reportElement x="0" y="0" width="160" height="30" uuid="901c5b2f-f2d2-49e0-ba14-4f1cc45a50ae"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
@@ -1352,28 +1436,28 @@
 							<jr:detailCell style="Table 3_TD" height="15" rowSpan="1">
 								<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 								<textField isStretchWithOverflow="true">
-									<reportElement x="0" y="0" width="301" height="15" uuid="bb0131bb-c880-416c-b3fe-8c2a355ea976"/>
+									<reportElement x="0" y="0" width="160" height="15" uuid="bb0131bb-c880-416c-b3fe-8c2a355ea976"/>
 									<textElement verticalAlignment="Middle">
 										<paragraph leftIndent="2"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$F{modulo}.concat(" - ").concat( $F{funcionalidade}).concat(" - ").concat( $F{nome} )]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="250" uuid="07c25059-fec4-466b-aaea-427d1fd158de">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:column width="210" uuid="07c25059-fec4-466b-aaea-427d1fd158de">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 							<jr:tableHeader style="Table 3_TH" height="30" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="250" height="30" uuid="9693bacf-2a54-48c1-b967-a17c9d1ae026"/>
+									<reportElement x="0" y="0" width="210" height="30" uuid="9693bacf-2a54-48c1-b967-a17c9d1ae026"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<text><![CDATA[DER(TD)]]></text>
+									<text><![CDATA[TD]]></text>
 								</staticText>
 							</jr:tableHeader>
 							<jr:detailCell style="Table 3_TD" height="15" rowSpan="1">
 								<textField isStretchWithOverflow="true">
-									<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="250" height="15" uuid="b64eda55-83ac-4e33-802c-3040f78daa8e"/>
+									<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="210" height="15" uuid="b64eda55-83ac-4e33-802c-3040f78daa8e"/>
 									<textElement textAlignment="Left" verticalAlignment="Top">
 										<paragraph leftIndent="2" rightIndent="6" spacingBefore="2" spacingAfter="2"/>
 									</textElement>
@@ -1381,20 +1465,20 @@
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="250" uuid="209da948-541d-42b4-98e8-5d5c160f6c47">
-							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:column width="212" uuid="209da948-541d-42b4-98e8-5d5c160f6c47">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 							<jr:tableHeader style="Table 3_TH" height="30" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="250" height="30" uuid="66bf312a-d8e4-4840-8bca-9c07c96e9cf7"/>
+									<reportElement x="0" y="0" width="212" height="30" uuid="66bf312a-d8e4-4840-8bca-9c07c96e9cf7"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<text><![CDATA[FTR(AR)]]></text>
+									<text><![CDATA[AR]]></text>
 								</staticText>
 							</jr:tableHeader>
 							<jr:detailCell style="Table 3_TD" height="15" rowSpan="1">
 								<textField isStretchWithOverflow="true">
-									<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="250" height="15" uuid="0a8aa121-2c28-4f45-bf56-f2f97cf85112"/>
+									<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="212" height="15" uuid="0a8aa121-2c28-4f45-bf56-f2f97cf85112"/>
 									<textElement textAlignment="Left" verticalAlignment="Top">
 										<paragraph leftIndent="2" rightIndent="6" spacingBefore="2" spacingAfter="2"/>
 									</textElement>

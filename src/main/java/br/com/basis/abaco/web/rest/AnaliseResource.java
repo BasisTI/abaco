@@ -11,6 +11,7 @@ import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.domain.VwAnaliseSomaPf;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
@@ -20,6 +21,7 @@ import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
@@ -92,6 +94,7 @@ import java.util.stream.Collectors;
 public class AnaliseResource {
 
     private final Logger log = LoggerFactory.getLogger(AnaliseResource.class);
+    private static final int decimalPlace = 2;
     private static final String ENTITY_NAME = "analise";
     private static final String PAGE = "page";
     private final AnaliseRepository analiseRepository;
@@ -102,6 +105,7 @@ public class AnaliseResource {
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
+    private final VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
     private RelatorioAnaliseRest relatorioAnaliseRest;
     private DynamicExportsService dynamicExportsService;
     private ElasticsearchTemplate elasticsearchTemplate;
@@ -123,7 +127,8 @@ public class AnaliseResource {
                            CompartilhadaRepository compartilhadaRepository,
                            FuncaoTransacaoRepository funcaoTransacaoRepository,
                            ElasticsearchTemplate elasticsearchTemplate,
-                           AnaliseService analiseService) {
+                           AnaliseService analiseService,
+                           VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
@@ -134,6 +139,7 @@ public class AnaliseResource {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.analiseService = analiseService;
+        this.vwAnaliseSomaPfRepository = vwAnaliseSomaPfRepository;
     }
 
     @PostMapping("/analises")
@@ -142,14 +148,14 @@ public class AnaliseResource {
     public ResponseEntity<Analise> createAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         if (analise.getId() != null) {
             return ResponseEntity.badRequest().headers(
-                    HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
+                HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
         }
         analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
         salvaNovaData(analise);
-            analiseRepository.save(analise);
-            analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
+        analiseRepository.save(analise);
+        analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         return ResponseEntity.created(new URI("/api/analises/" + analise.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, analise.getId().toString())).body(analise);
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, analise.getId().toString())).body(analise);
     }
 
     @PutMapping("/analises")
@@ -159,17 +165,17 @@ public class AnaliseResource {
         if (analiseUpdate.getId() == null) {
             return createAnalise(analiseUpdate);
         }
-        Analise analise  =  analiseRepository.findOne(analiseUpdate.getId());
+        Analise analise = analiseRepository.findOne(analiseUpdate.getId());
         bindAnalise(analiseUpdate, analise);
         if (analise.isBloqueiaAnalise()) {
             return ResponseEntity.badRequest().headers(
-                    HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
+                HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
         }
         analise.setEditedBy(analiseRepository.findOne(analise.getId()).getCreatedBy());
         analiseRepository.save(analise);
         analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
-                .body(analise);
+            .body(analise);
     }
 
     @PutMapping("/analises/{id}/block")
@@ -190,7 +196,7 @@ public class AnaliseResource {
             Analise result = analiseRepository.save(analise);
             analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
-                    .body(result);
+                .body(result);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Analise());
         }
@@ -210,13 +216,13 @@ public class AnaliseResource {
             analiseClone.setFuncaoTransacaos(bindCloneFuncaoTransacaos(analise, analiseClone));
             analiseClone.setBloqueiaAnalise(false);
             analiseRepository.save(analiseClone);
-            analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
+            analiseSearchRepository.save(convertToEntity(convertToDto(analiseClone)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseClone.getId().toString()))
-                    .body(analiseClone);
+                .body(analiseClone);
         } else {
             return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(new Analise());
+                .status(HttpStatus.FORBIDDEN)
+                .body(new Analise());
         }
     }
 
@@ -228,18 +234,18 @@ public class AnaliseResource {
         TipoEquipe tipoEquipe = tipoEquipeRepository.findById(idEquipe);
         if (analise.getId() != null && tipoEquipe.getId() != null && !(analise.getClonadaParaEquipe())) {
             analise.setClonadaParaEquipe(true);
-            Analise analiseClone = new Analise( analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+            Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
             bindAnaliseCloneForTipoEquipe(analise, tipoEquipe, analiseClone);
             analiseRepository.save(analiseClone);
             analiseSearchRepository.save(convertToEntity(convertToDto(analiseClone)));
             analiseRepository.save(analise);
             analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseClone.getId().toString()))
-                    .body(analiseClone);
+                .body(analiseClone);
         } else {
             return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(new Analise());
+                .status(HttpStatus.FORBIDDEN)
+                .body(new Analise());
         }
     }
 
@@ -254,8 +260,8 @@ public class AnaliseResource {
             }
         }
         return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(null);
+            .status(HttpStatus.FORBIDDEN)
+            .body(null);
 
     }
 
@@ -277,8 +283,8 @@ public class AnaliseResource {
             analiseSearchRepository.delete(id);
         } else {
             return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(null);
+                .status(HttpStatus.FORBIDDEN)
+                .body(null);
         }
 
 
@@ -298,7 +304,7 @@ public class AnaliseResource {
     public ResponseEntity<List<Compartilhada>> popularCompartilhar(@Valid @RequestBody List<Compartilhada> compartilhadaList) throws URISyntaxException {
         List<Compartilhada> result = compartilhadaRepository.save(compartilhadaList);
         return ResponseEntity.created(new URI("/api/analises/compartilhar"))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, "created")).body(result);
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, "created")).body(result);
     }
 
     @DeleteMapping("/analises/compartilhar/delete/{id}")
@@ -315,7 +321,7 @@ public class AnaliseResource {
     public ResponseEntity<Compartilhada> viewOnly(@Valid @RequestBody Compartilhada compartilhada) throws URISyntaxException {
         Compartilhada result = compartilhadaRepository.save(compartilhada);
         return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, compartilhada.getId().toString()))
-                .body(result);
+            .body(result);
     }
 
 
@@ -341,6 +347,8 @@ public class AnaliseResource {
     public @ResponseBody
     byte[] downloadPdfDetalhadoBrowser(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = recuperarAnalise(id);
+        analise.setFuncaoDados(funcaoDadosRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
+        analise.setFuncaoTransacaos(funcaoTransacaoRepository.findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(id));
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
         return relatorioAnaliseRest.downloadPdfBrowser(analise, TipoRelatorio.ANALISE_DETALHADA);
     }
@@ -390,7 +398,7 @@ public class AnaliseResource {
             throw new RelatorioException(e);
         }
         return DynamicExporter.output(byteArrayOutputStream,
-                "relatorio." + tipoRelatorio);
+            "relatorio." + tipoRelatorio);
     }
 
     @GetMapping("/analises")
@@ -405,7 +413,7 @@ public class AnaliseResource {
                                                                   @RequestParam(value = "organizacao", required = false) String organizacao,
                                                                   @RequestParam(value = "equipe", required = false) String equipe,
                                                                   @RequestParam(value = "usuario", required = false) String usuario)
-            throws URISyntaxException {
+        throws URISyntaxException {
         Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
         Set<Long> equipesIds = getIdEquipes();
@@ -416,6 +424,26 @@ public class AnaliseResource {
         Page<AnaliseDTO> dtoPage = page.map(analise -> this.convertToDto(analise));
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");
         return new ResponseEntity<>(dtoPage.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/analises/update-pf/{id}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
+    public ResponseEntity<Analise> updateSomaPf(@PathVariable Long id) {
+        Analise analise = recuperarAnalise(id);
+        VwAnaliseSomaPf vwAnaliseSomaPf = vwAnaliseSomaPfRepository.findByAnaliseId(id);
+        if (analise.getId() != null && vwAnaliseSomaPf.getAnaliseId() != null) {
+            analise.setPfTotal(vwAnaliseSomaPf.getPfGross().setScale(decimalPlace).toString());
+            analise.setAdjustPFTotal(vwAnaliseSomaPf.getPfTotal().setScale(decimalPlace).toString());
+            analiseRepository.save(analise);
+            analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
+            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
+                .body(analise);
+        } else {
+            return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new Analise());
+        }
     }
 
 
@@ -487,26 +515,26 @@ public class AnaliseResource {
 
     private void linkAnaliseToFuncaoDados(Analise analise) {
         Optional.ofNullable(analise.getFuncaoDados()).orElse(Collections.emptySet())
-                .forEach(funcaoDados -> {
-                    funcaoDados.setAnalise(analise);
-                    linkFuncaoDadosRelationships(funcaoDados);
-                    handleVersionFuncaoDados(funcaoDados, analise.getSistema());
-                });
+            .forEach(funcaoDados -> {
+                funcaoDados.setAnalise(analise);
+                linkFuncaoDadosRelationships(funcaoDados);
+                handleVersionFuncaoDados(funcaoDados, analise.getSistema());
+            });
     }
 
     private void linkFuncaoDadosRelationships(FuncaoDados funcaoDados) {
         Optional.ofNullable(funcaoDados.getFiles()).orElse(Collections.emptyList())
-                .forEach(file -> file.setFuncaoDados(funcaoDados));
+            .forEach(file -> file.setFuncaoDados(funcaoDados));
         Optional.ofNullable(funcaoDados.getDers()).orElse(Collections.emptySet())
-                .forEach(der -> der.setFuncaoDados(funcaoDados));
+            .forEach(der -> der.setFuncaoDados(funcaoDados));
         Optional.ofNullable(funcaoDados.getRlrs()).orElse(Collections.emptySet())
-                .forEach(rlr -> rlr.setFuncaoDados(funcaoDados));
+            .forEach(rlr -> rlr.setFuncaoDados(funcaoDados));
     }
 
     private void handleVersionFuncaoDados(FuncaoDados funcaoDados, Sistema sistema) {
         String nome = funcaoDados.getName();
         Optional<FuncaoDadosVersionavel> funcaoDadosVersionavel =
-                funcaoDadosVersionavelRepository.findOneByNomeIgnoreCaseAndSistemaId(nome, sistema.getId());
+            funcaoDadosVersionavelRepository.findOneByNomeIgnoreCaseAndSistemaId(nome, sistema.getId());
         if (funcaoDadosVersionavel.isPresent()) {
             funcaoDados.setFuncaoDadosVersionavel(funcaoDadosVersionavel.get());
         } else {
@@ -520,15 +548,15 @@ public class AnaliseResource {
 
     private void linkAnaliseToFuncaoTransacaos(Analise analise) {
         Optional.ofNullable(analise.getFuncaoTransacaos()).orElse(Collections.emptySet())
-                .forEach(funcaoTransacao -> {
-                    funcaoTransacao.setAnalise(analise);
-                    Optional.ofNullable(funcaoTransacao.getFiles()).orElse(Collections.emptyList())
-                            .forEach(file -> file.setFuncaoTransacao(funcaoTransacao));
-                    Optional.ofNullable(funcaoTransacao.getDers()).orElse(Collections.emptySet())
-                            .forEach(der -> der.setFuncaoTransacao(funcaoTransacao));
-                    Optional.ofNullable(funcaoTransacao.getAlrs()).orElse(Collections.emptySet())
-                            .forEach(alr -> alr.setFuncaoTransacao(funcaoTransacao));
-                });
+            .forEach(funcaoTransacao -> {
+                funcaoTransacao.setAnalise(analise);
+                Optional.ofNullable(funcaoTransacao.getFiles()).orElse(Collections.emptyList())
+                    .forEach(file -> file.setFuncaoTransacao(funcaoTransacao));
+                Optional.ofNullable(funcaoTransacao.getDers()).orElse(Collections.emptySet())
+                    .forEach(der -> der.setFuncaoTransacao(funcaoTransacao));
+                Optional.ofNullable(funcaoTransacao.getAlrs()).orElse(Collections.emptySet())
+                    .forEach(alr -> alr.setFuncaoTransacao(funcaoTransacao));
+            });
     }
 
     private void salvaNovaData(Analise analise) {
@@ -561,7 +589,7 @@ public class AnaliseResource {
             Set<Alr> alrs = new HashSet<>();
             Set<Der> ders = new HashSet<>();
             FuncaoTransacao funcaoTransacao = new FuncaoTransacao();
-            funcaoTransacao.bindFuncaoTransacao(ft.getTipo(),  ft.getFtrStr(), ft.getQuantidade(), alrs, null, ft.getFtrValues(), ft.getImpacto(), ders, analiseClone, ft.getComplexidade(), ft.getPf(), ft.getGrossPF(), ft.getFuncionalidade(), ft.getDetStr(), ft.getFatorAjuste(), ft.getName(), ft.getSustantation(), ft.getDerValues());
+            funcaoTransacao.bindFuncaoTransacao(ft.getTipo(), ft.getFtrStr(), ft.getQuantidade(), alrs, null, ft.getFtrValues(), ft.getImpacto(), ders, analiseClone, ft.getComplexidade(), ft.getPf(), ft.getGrossPF(), ft.getFuncionalidade(), ft.getDetStr(), ft.getFatorAjuste(), ft.getName(), ft.getSustantation(), ft.getDerValues());
             ft.getAlrs().forEach(alr -> {
                 Alr alrClone = new Alr(null, alr.getNome(), alr.getValor(), funcaoTransacao, null);
                 alrs.add(alrClone);
@@ -589,19 +617,19 @@ public class AnaliseResource {
     private void bindFuncaoDados(Analise analiseClone, FuncaoDados fd, Set<Rlr> rlrs, Set<Der> ders, FuncaoDados funcaoDado) {
         funcaoDado.bindFuncaoDados(fd.getComplexidade(), fd.getPf(), fd.getGrossPF(), analiseClone, fd.getFuncionalidade(), fd.getDetStr(), fd.getFatorAjuste(), fd.getName(), fd.getSustantation(), fd.getDerValues(), fd.getTipo(), fd.getFuncionalidades(), fd.getRetStr(), fd.getQuantidade(), rlrs, fd.getAlr(), fd.getFiles(), fd.getRlrValues(), ders, fd.getFuncaoDadosVersionavel(), fd.getImpacto());
         Optional.ofNullable(fd.getDers()).orElse(Collections.emptySet())
-                .forEach(der -> {
-                    Rlr rlr = null;
-                    if (der.getRlr() != null) {
-                        rlr = new Rlr(null, der.getRlr().getNome(), der.getRlr().getValor(), der.getRlr().getDers(), funcaoDado);
-                    }
-                    Der derClone = new Der(null, der.getNome(), der.getValor(), rlr, funcaoDado, null);
-                    ders.add(derClone);
-                });
+            .forEach(der -> {
+                Rlr rlr = null;
+                if (der.getRlr() != null) {
+                    rlr = new Rlr(null, der.getRlr().getNome(), der.getRlr().getValor(), der.getRlr().getDers(), funcaoDado);
+                }
+                Der derClone = new Der(null, der.getNome(), der.getValor(), rlr, funcaoDado, null);
+                ders.add(derClone);
+            });
         Optional.ofNullable(fd.getRlrs()).orElse(Collections.emptySet())
-                .forEach(rlr -> {
-                    Rlr rlrClone = new Rlr(null, rlr.getNome(), rlr.getValor(), ders, funcaoDado);
-                    rlrs.add(rlrClone);
-                });
+            .forEach(rlr -> {
+                Rlr rlrClone = new Rlr(null, rlr.getNome(), rlr.getValor(), ders, funcaoDado);
+                rlrs.add(rlrClone);
+            });
     }
 
     private AnaliseDTO convertToDto(Analise analise) {

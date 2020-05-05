@@ -460,6 +460,8 @@ public class RelatorioAnaliseRest {
             for (Der derFt : ders) {
                 if (derFt.getNome() != null) {
                     derAux = derAux.concat(derFt.getNome() + ", ");
+                }else if (derFt.getValor() != null) {
+                    derAux = derAux.concat(derFt.getValor() + ", ");
                 }
             }
         }
@@ -476,6 +478,8 @@ public class RelatorioAnaliseRest {
             for (Alr alr : alrs) {
                 if (alr.getNome() != null) {
                     alrTrAux = alrTrAux.concat(alr.getNome() + ", ");
+                }else if (alr.getValor()!= null){
+                    alrTrAux = alrTrAux.concat(alr.getValor() + ", ");
                 }
             }
         }
@@ -492,6 +496,8 @@ public class RelatorioAnaliseRest {
             for (Rlr rlr : rlrs) {
                 if (rlr.getNome() != null) {
                     alrTrAux = alrTrAux.concat(rlr.getNome() + ", ");
+                }else if (rlr.getValor() != null) {
+                    alrTrAux = alrTrAux.concat(rlr.getValor() + ", ");
                 }
             }
         }
@@ -508,6 +514,8 @@ public class RelatorioAnaliseRest {
             for (Der derFd : ders) {
                 if (derFd.getNome() != null) {
                     derAux = derAux.concat(derFd.getNome() + ", ");
+                }else if (derFd.getValor() != null) {
+                    derAux = derAux.concat(derFd.getValor() + ", ");
                 }
             }
         }

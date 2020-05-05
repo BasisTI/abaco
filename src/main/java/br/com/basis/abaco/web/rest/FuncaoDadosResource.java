@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -40,7 +39,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing FuncaoDados.
@@ -87,14 +86,6 @@ public class FuncaoDadosResource {
         if (funcaoDados.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
         }
-        BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace);
-        BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace);
-        pfTotal = pfTotal.add(funcaoDados.getGrossPF());
-        pfAdjust = pfAdjust.add(funcaoDados.getPf());
-        analise.setPfTotal(pfTotal.toString());
-        analise.setAdjustPFTotal(pfAdjust.toString());
-        analiseRepository.save(analise);
-        analiseSearchRepository.save(analise);
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
         return ResponseEntity.created(new URI("/api/funcao-dados/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -120,10 +111,7 @@ public class FuncaoDadosResource {
             return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDados);
         }
         Analise analise = analiseRepository.findOne(funcaoDadosOld.getAnalise().getId());
-        updatePfAnalise(funcaoDados, funcaoDadosOld, analise);
         funcaoDados.setAnalise(analise);
-        analiseRepository.save(analise);
-        analiseSearchRepository.save(analise);
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
         funcaoDadosSearchRepository.save(result);
         return ResponseEntity.ok()
@@ -214,16 +202,6 @@ public class FuncaoDadosResource {
     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Void> deleteFuncaoDados(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoDados : {}", id);
-        FuncaoDados funcaoDados = funcaoDadosRepository.findById(id);
-        Analise analise = analiseRepository.findOne(funcaoDados.getAnalise().getId());
-        BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace);
-        BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace);
-        pfTotal = pfTotal.subtract(funcaoDados.getGrossPF());
-        pfAdjust = pfAdjust.subtract(funcaoDados.getPf());
-        analise.setPfTotal(pfTotal.toString());
-        analise.setAdjustPFTotal(pfAdjust.toString());
-        analiseRepository.save(analise);
-        analiseSearchRepository.save(analise);
         funcaoDadosRepository.delete(id);
         funcaoDadosSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
@@ -322,13 +300,5 @@ public class FuncaoDadosResource {
         return funcaoDados.getSustantation() != null && !(funcaoDados.getSustantation().isEmpty());
     }
 
-    private void updatePfAnalise(@RequestBody FuncaoDados funcaoDados, FuncaoDados funcaoDadosOld, Analise analise) {
-        BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace);
-        BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace);
-        pfTotal = pfTotal.add(funcaoDados.getGrossPF()).subtract(funcaoDadosOld.getGrossPF());
-        pfAdjust = pfAdjust.add(funcaoDados.getPf()).subtract(funcaoDadosOld.getPf());
-        analise.setPfTotal(pfTotal.toString());
-        analise.setAdjustPFTotal(pfAdjust.toString());
-    }
 
 }

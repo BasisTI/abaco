@@ -1,17 +1,10 @@
 package br.com.basis.abaco.repository;
 
 import br.com.basis.abaco.domain.FuncaoTransacao;
-import br.com.basis.abaco.domain.enumeration.Complexidade;
-import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
-import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
-import br.com.basis.abaco.service.dto.FatorAjusteDTO;
-import br.com.basis.abaco.service.dto.FuncionalidadeDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.math.BigDecimal;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,5 +31,7 @@ public interface FuncaoTransacaoRepository extends JpaRepository<FuncaoTransacao
     Boolean existsByNameAndAnaliseIdAndFuncionalidadeIdAndFuncionalidadeModuloId(String name, Long analiseId, Long idFuncionalidade, Long idModulo);
 
     Boolean existsByNameAndAnaliseIdAndFuncionalidadeIdAndFuncionalidadeModuloIdAndIdNot(String name, Long analiseId, Long idFuncionalidade, Long idModulo, Long id);
+
+    Set<FuncaoTransacao> findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(Long id);
 
 }

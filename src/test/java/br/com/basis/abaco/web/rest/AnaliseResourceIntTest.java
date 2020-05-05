@@ -11,6 +11,7 @@ import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.GrupoRepository;
 import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.service.AnaliseService;
@@ -124,6 +125,9 @@ public class AnaliseResourceIntTest {
     ElasticsearchTemplate elasticsearchTemplate;
 
     @Autowired
+    private  VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restAnaliseMockMvc;
@@ -131,6 +135,7 @@ public class AnaliseResourceIntTest {
     private Analise analise;
 
     private AnaliseService analiseService;
+
 
     @Before
     public void setup() {
@@ -143,7 +148,7 @@ public class AnaliseResourceIntTest {
                 funcaoDadosRepository,
                 compartilhadaRepository,
                 funcaoTransacaoRepository,
-                elasticsearchTemplate, analiseService);
+                elasticsearchTemplate, analiseService, vwAnaliseSomaPfRepository);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
                 .setMessageConverters(jacksonMessageConverter).build();

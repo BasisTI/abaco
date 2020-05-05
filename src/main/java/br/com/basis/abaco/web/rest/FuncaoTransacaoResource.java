@@ -3,7 +3,6 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Der;
-import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.DerRepository;
@@ -33,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashSet;
@@ -43,7 +41,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing FuncaoTransacao.
@@ -86,11 +84,8 @@ public class FuncaoTransacaoResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoTransacao cannot already have an ID")).body(null);
         }
         funcaoTransacao.setDers(bindDers(funcaoTransacao));
-        sumPfAnalise(funcaoTransacao, analise);
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
         funcaoTransacaoSearchRepository.save(result);
-        analiseRepository.save(analise);
-        analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         return ResponseEntity.created(new URI("/api/funcao-transacaos/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
                 .body(result);
@@ -115,10 +110,7 @@ public class FuncaoTransacaoResource {
         if (funcaoTransacao.getId() == null) {
             return createFuncaoTransacao(analise.getId(), funcaoTransacao);
         }
-        updatePfAnalise(funcaoTransacao, funcaoTransacaoOld, analise);
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
-        analiseRepository.save(analise);
-        analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoTransacao.getId().toString())).body(result);
     }
 
@@ -209,12 +201,6 @@ public class FuncaoTransacaoResource {
     public ResponseEntity<Void> deleteFuncaoTransacao(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoTransacao : {}", id);
         FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
-        Analise analise = analiseRepository.findOne(funcaoTransacao.getAnalise().getId());
-        subpfAnalise(funcaoTransacao, analise);
-        FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
-        funcaoTransacaoSearchRepository.save(result);
-        analiseRepository.save(analise);
-        analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
         funcaoTransacaoRepository.delete(id);
         funcaoTransacaoSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
@@ -292,18 +278,6 @@ public class FuncaoTransacaoResource {
         return funcaoTransacao.getSustantation() != null && !(funcaoTransacao.getSustantation().isEmpty());
     }
 
-    private void sumPfAnalise(@RequestBody FuncaoTransacao funcaoTransacao, Analise analise) {
-        if (funcaoTransacao.getGrossPF() != null) {
-            BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace);
-            pfTotal = pfTotal.add(funcaoTransacao.getGrossPF());
-            analise.setPfTotal(pfTotal.toString());
-        }
-        if (funcaoTransacao.getPf() != null) {
-            BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace);
-            pfAdjust = pfAdjust.add(funcaoTransacao.getPf());
-            analise.setAdjustPFTotal(pfAdjust.toString());
-        }
-    }
 
     @NotNull
     private Set<Der> bindDers(@RequestBody FuncaoTransacao funcaoTransacao) {
@@ -320,29 +294,4 @@ public class FuncaoTransacaoResource {
         return ders;
     }
 
-    private void subpfAnalise(FuncaoTransacao funcaoTransacao, Analise analise) {
-        if (funcaoTransacao.getPf() != null) {
-            BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace).setScale(decimalPlace, BigDecimal.ROUND_HALF_DOWN);
-            pfTotal = pfTotal.subtract(funcaoTransacao.getGrossPF());
-            analise.setPfTotal(pfTotal.setScale(decimalPlace).toString());
-        }
-        if (funcaoTransacao.getPf() != null) {
-            BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace).setScale(decimalPlace, BigDecimal.ROUND_HALF_DOWN);
-            pfAdjust = pfAdjust.subtract(funcaoTransacao.getPf());
-            analise.setAdjustPFTotal(pfAdjust.setScale(decimalPlace).toString());
-        }
-
-        funcaoTransacao.setAnalise(analise);
-    }
-
-    private void updatePfAnalise(@RequestBody FuncaoTransacao funcaoTransacao, FuncaoTransacao funcaoTransacaoOld, Analise analise) {
-
-        BigDecimal pfTotal = new BigDecimal(analise.getPfTotal()).setScale(decimalPlace, BigDecimal.ROUND_HALF_DOWN);
-        pfTotal = pfTotal.add(funcaoTransacao.getGrossPF()).subtract(funcaoTransacaoOld.getPf());
-        analise.setPfTotal(pfTotal.toString());
-        BigDecimal pfAdjust = new BigDecimal(analise.getAdjustPFTotal()).setScale(decimalPlace, BigDecimal.ROUND_HALF_DOWN);
-        pfAdjust = pfAdjust.add(funcaoTransacao.getPf()).subtract(funcaoTransacaoOld.getPf());
-        analise.setAdjustPFTotal(pfAdjust.toString());
-        funcaoTransacao.setAnalise(analise);
-    }
 }

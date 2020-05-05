@@ -1,15 +1,11 @@
 package br.com.basis.abaco.repository;
 
 import br.com.basis.abaco.domain.FuncaoDados;
-import br.com.basis.abaco.domain.enumeration.Complexidade;
-import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 import br.com.basis.abaco.service.dto.DropdownDTO;
-import br.com.basis.abaco.service.dto.FuncionalidadeDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -21,7 +17,7 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
 
 
     Optional<FuncaoDados> findFirstByFuncaoDadosVersionavelIdOrderByAuditUpdatedOnDesc(
-            Long funcaoDadosVersionavelId);
+        Long funcaoDadosVersionavelId);
 
     @Query(value = "SELECT f FROM FuncaoDados f WHERE f.analise.id = ?1 AND f.name = ?2")
     FuncaoDados findName(Long idAnalise, String name);
@@ -39,11 +35,13 @@ public interface FuncaoDadosRepository extends JpaRepository<FuncaoDados, Long> 
     Set<FuncaoDados> findByAnaliseFuncionalidade(@Param("analiseId") Long analiseId, @Param("funcionalidadeId") Long funcionalidadeId);
 
     @Query(value = "SELECT new br.com.basis.abaco.service.dto.DropdownDTO(f.id, f.name) FROM Analise a JOIN a.funcaoDados f"
-            + " WHERE a.enviarBaseline = true AND a.bloqueiaAnalise = true")
+        + " WHERE a.enviarBaseline = true AND a.bloqueiaAnalise = true")
     List<DropdownDTO> getFuncaoDadosDropdown();
 
-    @Query("SELECT fd FROM FuncaoDados fd WHERE fd.analise.id = :idAnalise")
+    @Query("SELECT fd FROM FuncaoDados fd WHERE fd.analise.id = :idAnalise Order by fd.funcionalidade.modulo.nome ")
     Set<FuncaoDados> findByAnaliseId(@Param("idAnalise") Long idAnalise);
+
+    Set<FuncaoDados> findByAnaliseIdOrderByFuncionalidadeModuloNomeAscFuncionalidadeNomeAscNameAsc(Long idAnalise);
 
     Boolean existsByNameAndAnaliseIdAndFuncionalidadeIdAndFuncionalidadeModuloId(String name, Long analiseId, Long idFuncionalidade, Long idModulo);
 
