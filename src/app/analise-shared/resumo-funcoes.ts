@@ -98,6 +98,19 @@ export interface LinhaResumo {
 
 }
 
+export interface LineResume {
+  readonly pfAjustada: number;
+  readonly pfTotal: number;
+  readonly quantidadeTipo: number;
+  readonly sem: number;
+  readonly baixa: number;
+  readonly media: number;
+  readonly alta: number;
+  readonly inm: number;
+  readonly tipo: String;
+  readonly label: number;
+}
+
 // TODO ResumoGrupoLogico / UltimaLinhaTotal podem herdar de uma classe abstrata comum
 export class ResumoGrupoLogico implements LinhaResumo {
 

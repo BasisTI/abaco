@@ -1,3 +1,5 @@
+import { forEach } from '@angular/router/src/utils/collection';
+import { LinhaResumo } from './../../analise-shared/resumo-funcoes';
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ResumoTotal} from '../../analise-shared/resumo-funcoes';
 import {AnaliseSharedUtils} from '../../analise-shared/analise-shared-utils';
@@ -22,7 +24,7 @@ import {Manual, ManualService} from '../../manual';
 import * as _ from 'lodash';
 import {MessageUtil} from '../../util/message.util';
 import {SelectItem} from 'primeng/api';
-
+import {Resumo} from './resumo.model';
 @Component({
     selector: 'app-analise-resumo',
     templateUrl: './analise-resumo.component.html'
@@ -30,12 +32,12 @@ import {SelectItem} from 'primeng/api';
 export class AnaliseResumoComponent implements OnInit {
 
     resumoTotal: ResumoTotal;
-
+    public linhaResumo: Resumo[] = [];
+    public pfTotal: string;
+    public pfAjustada: string;
     complexidades: string[];
 
-    private analiseCarregadaSubscription: Subscription;
-
-    public analise: Analise;
+    public analise: Analise = null;
     @BlockUI() blockUI: NgBlockUI;
     disableAba: Boolean = false;
     analiseShared: Array<AnaliseShareEquipe> = [];
@@ -90,28 +92,27 @@ export class AnaliseResumoComponent implements OnInit {
         this.getOrganizationsFromActiveLoggedUser();
         this.getLoggedUserId();
         this.getEquipesFromActiveLoggedUser();
-        this.analiseSharedDataService.init();
         this.route.params.subscribe(params => {
             this.isView = params['view'] !== undefined;
             if (params['id']) {
-                this.analiseService.findWithFuncaos(params['id']).subscribe(analise => {
+                this.analiseService.find(params['id']).subscribe(analise => {
                         this.analiseSharedDataService.analise = analise;
+                        this.analise = analise;
+                        this.pfTotal = analise.pfTotal;
+                        this.pfAjustada = analise.adjustPFTotal;
                         this.disableAba = analise.metodoContagem === MessageUtil.INDICATIVA;
-                        this.analise = this.analiseSharedDataService.analise;
-                        this.carregarEsforcoFases(analise.manual);
-                        this.esforcoFases = analise.esforcoFases;
-                        this.analiseCarregadaSubscription = this.analiseSharedDataService.getLoadSubject().subscribe(() => {
-                            this.resumoTotal = this.analiseSharedDataService.analise.resumoTotal;
-                            this.changeDetectorRef.detectChanges();
-                            this.complexidades = AnaliseSharedUtils.complexidades;
+                        this.analiseService.getResumo(params['id']).subscribe(res =>{
+                            this.linhaResumo = res;
+                            this.linhaResumo = Resumo.addTotalLine(this.linhaResumo);
                         });
                     },
                     err => {
                         this.pageNotificationService.addErrorMsg(
                             this.getLabel('Analise.Analise.Mensagens.msgSemPermissaoParaEditarAnalise')
                         );
-                    });
+                });
             }
+            
         });
     }
 
@@ -297,6 +298,5 @@ export class AnaliseResumoComponent implements OnInit {
             this.tipoEquipesLoggedUser = res.json;
         });
     }
-
-
 }
+

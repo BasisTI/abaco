@@ -358,7 +358,8 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     multiplos(): boolean {
-            let lstFuncaotransacao: Observable<any>[] = [];
+            let lstFuncaotransacao:FuncaoTransacao[] = [];
+            let lstFuncaotransacaoToSave: Observable<Boolean>[] = [];
             let lstFuncaotransacaoWithExist: Observable<Boolean>[] = [];
             let retorno: boolean = !this.verifyDataRequire();
             this.desconverterChips();
@@ -376,21 +377,24 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 );
                 const funcaoTransacaoMultp: FuncaoTransacao = funcaoTransacaoCalculada.clone();
                 funcaoTransacaoMultp.name = nome;
-                lstFuncaotransacao.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id));
+                lstFuncaotransacao.push(funcaoTransacaoMultp);
             }
             forkJoin(lstFuncaotransacaoWithExist).subscribe(respFind => {
                 for(let value of  respFind){
-                    if (value !== false) {
+                    if (value) {
                         this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
                         retorno = false;
                         break;
                     }
-    
                 }
                 if(retorno){
-                    forkJoin(lstFuncaotransacao).subscribe(respCreate => {
+                    lstFuncaotransacao.forEach( funcaoTransacaoMultp =>{
+                        lstFuncaotransacaoToSave.push(this.funcaoTransacaoService.create(funcaoTransacaoMultp, this.analise.id));
+                    });
+
+                    forkJoin(lstFuncaotransacaoToSave).subscribe(respCreate => {
                         respCreate.forEach((funcaoDados) => {
-                            this.pageNotificationService.addCreateMsgWithName(funcaoDados.name);
+                            this.pageNotificationService.addCreateMsgWithName(funcaoDados['name']);
                             let funcaoDadosTable: FuncaoTransacao = new FuncaoTransacao().copyFromJSON(funcaoDados);
                             funcaoDadosTable.funcionalidade = funcaoTransacaoCalculada.funcionalidade;
                             this.setFields(funcaoDadosTable);
@@ -399,7 +403,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         this.fecharDialog();
                         this.estadoInicial();
                         this.resetarEstadoPosSalvar();
-                        this.blockUI.stop();
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
                         return true;
                     });
                 }else{
@@ -561,7 +565,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                                 this.fecharDialog();
                                 this.resetarEstadoPosSalvar();
                                 this.estadoInicial();
-                                this.blockUI.stop();
+                                this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
                                 return retorno;
                             });
                         } else {
@@ -677,7 +681,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         this.funcoesTransacoes.push(funcaoTransacaoCalculada);
                         this.resetarEstadoPosSalvar();
                         this.fecharDialog();
-                        this.blockUI.stop();
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
                         this.pageNotificationService
                             .addSuccessMsg(`${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgFuncaoDeTransacao')}
                 '${funcaoTransacaoCalculada.name}' ${this.getLabel('Cadastros.FuncaoTransacao.Mensagens.msgAlteradaComSucesso')}`);
@@ -882,6 +886,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         funcaoTransacao.id !== funcaoTransacaoSelecionada.id
                     ));
                     this.pageNotificationService.addDeleteMsgWithName(funcaoTransacaoSelecionada.name);
+                    this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
                 });
             }
         });

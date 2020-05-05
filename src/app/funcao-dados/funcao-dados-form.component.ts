@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import {MetodoContagem} from './../analise/analise.model';
 import {MemoryDatatableComponent} from './../memory-datatable/memory-datatable.component';
 import {Der} from './../der/der.model';
@@ -54,6 +55,8 @@ import {MessageUtil} from '../util/message.util';
 import {Observable, Subject} from 'rxjs/Rx';
 import { ForkJoinObservable } from 'rxjs/observable/ForkJoinObservable';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { exists } from 'fs';
+import { repeat } from 'rxjs/operator/repeat';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -555,7 +558,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     multiplos(): Boolean {
-        let lstFuncaoDados: Observable<any>[] = [];
+        let lstFuncaoDados: FuncaoDados[] = [];
+        let lstFuncaoDadosToSave: Observable<any>[] = [];
         let lstFuncaoDadosWithExist: Observable<Boolean>[] = [];
         let retorno: boolean = !this.verifyDataRequire();
         this.desconverterChips();
@@ -573,11 +577,11 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             );
             const funcaoDadosMultp: FuncaoDados = funcaoDadosCalculada.clone();
             funcaoDadosMultp.name = nome;
-            lstFuncaoDados.push(this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id));
+            lstFuncaoDados.push(funcaoDadosMultp);
         }
-        forkJoin(lstFuncaoDadosWithExist).subscribe(respFind => {
-            for(let value of  respFind){
-                if (value !== false) {
+        forkJoin(lstFuncaoDadosWithExist).subscribe(listExistWithName => {
+            for(let value of listExistWithName){
+                if (value) {
                     this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
                     retorno = false;
                     break;
@@ -585,7 +589,16 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
             }
             if(retorno){
-                forkJoin(lstFuncaoDados).subscribe(respCreate => {
+                this.fecharDialog();
+                this.estadoInicial();
+                this.resetarEstadoPosSalvar();
+                this.blockUI.stop();
+                lstFuncaoDados.forEach( funcaoDadosMultp => {
+                    lstFuncaoDadosToSave.push(
+                        this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id)
+                        );
+                })
+                forkJoin(lstFuncaoDadosToSave).subscribe(respCreate => {
                     respCreate.forEach((funcaoDados) => {
                         this.pageNotificationService.addCreateMsgWithName(funcaoDados.name);
                         let funcaoDadosTable: FuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
@@ -593,10 +606,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.setFields(funcaoDadosTable);
                         this.funcoesDados.push(funcaoDadosTable);
                     });
-                    this.fecharDialog();
-                    this.estadoInicial();
-                    this.resetarEstadoPosSalvar();
-                    this.blockUI.stop();
+                    this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
                     return true;
                 });
             }else{
@@ -650,7 +660,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.atualizaResumo();
                         this.estadoInicial();
                         this.resetarEstadoPosSalvar();
-                        this.blockUI.stop();
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
                     });
                 } else {
                     this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
@@ -726,10 +736,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         return retorno;
     }
 
-    salvarAnalise() {
-
-    }
-
     private desconverterChips() {
         if (this.dersChips != null && this.rlrsChips != null) {
             this.seletedFuncaoDados.ders = DerChipConverter.desconverterEmDers(this.dersChips);
@@ -762,6 +768,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
                 '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlteradaComSucesso')}`);
                         this.fecharDialog();
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
                     });
                 });
         }
@@ -871,8 +878,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     this.funcaoTransacaoService.create(funcaoTransacaoAtual, this.analise.id).subscribe(() => {
                         this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoAtual.name);
                         this.resetarEstadoPosSalvar();
-                        this.persistirFuncaoTransacao(funcaoTransacaoAtual);
                         this.estadoInicial();
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
                     });
                 } else {
                     this.pageNotificationService.addErrorMsg('CRUD já cadastrado!');
@@ -892,9 +899,44 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     private createCrud(funcaoDadosSelecionada) {
+        let lstFuncaoTransacaoCrud: FuncaoTransacao[] = [];
+        let lstFuncaoTransacaoToVerify: Observable<any>[] = [];
+        let lstFuncaoTransacaoToInclud: Observable<any>[] = [];
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
             this.crud.forEach(element => {
-                this.inserirCrud(this.gerarFuncaoTransacao(element, funcaoDados));
+                lstFuncaoTransacaoCrud.push(this.gerarFuncaoTransacao(element, funcaoDados));
+            });
+            lstFuncaoTransacaoCrud.forEach(funcaoTransacaoAtual => {
+                lstFuncaoTransacaoToVerify.push(
+                    this.funcaoTransacaoService.existsWithName(
+                        funcaoTransacaoAtual.name,
+                        this.analise.id,
+                        funcaoTransacaoAtual.funcionalidade.id,
+                        funcaoTransacaoAtual.funcionalidade.modulo.id)
+                    );
+                    
+            });
+            forkJoin(lstFuncaoTransacaoToVerify).subscribe(lstFuncaoTranscao => {
+                let index=0;
+                for(let existFuncaoTranasacao of lstFuncaoTranscao){
+                    if (!existFuncaoTranasacao) {
+                        lstFuncaoTransacaoToInclud.push(
+                            this.funcaoTransacaoService.create(lstFuncaoTransacaoCrud[index], this.analise.id)
+                            );
+                    } else {
+                        this.pageNotificationService.addErrorMsg('CRUD já cadastrado!');
+                    }
+                    index++;
+                }
+                forkJoin(lstFuncaoTransacaoToInclud).subscribe(funcoesTransacoes => {
+                    funcoesTransacoes.forEach(
+                        () => {
+                            this.pageNotificationService.addCreateMsgWithName(funcoesTransacoes['name']);
+                            this.resetarEstadoPosSalvar();
+                            this.estadoInicial();
+                            this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
+                    })
+                })
             });
         });
     }
@@ -930,9 +972,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         ders.push(new Der(undefined, 'Ação'));
     }
 
-    private persistirFuncaoTransacao(ft: FuncaoTransacao) {
-        this.funcaoDadosService.gerarCrud(ft);
-    }
 
     private prepararParaEdicao(funcaoDadosSelecionada: FuncaoDados) {
         this.funcaoDadosService.getById(funcaoDadosSelecionada.id).subscribe(funcaoDados => {
@@ -1031,6 +1070,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.funcaoDadosService.delete(funcaoDadosSelecionada.id).subscribe(value => {
                     this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosSelecionada.id));
                     this.pageNotificationService.addDeleteMsgWithName(funcaoDadosSelecionada.name);
+                    this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
                 });
             }
         });

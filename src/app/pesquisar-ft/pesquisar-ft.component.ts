@@ -422,6 +422,7 @@ export class PesquisarFtComponent implements OnInit {
                                 this.getLabel('Analise.Analise.Mensagens.msgDadosAlteradosSucesso'));
                         this.diasGarantia = this.analise.contrato.diasDeGarantia;
                     });
+                    this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
                 });
 
             });

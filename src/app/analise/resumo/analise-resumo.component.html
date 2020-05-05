@@ -9,23 +9,61 @@
     <p-tabPanel [header]="this.getLabel('Analise.Analise.Resumo')" [selected]="true">
         <div class="ui-g ui-fluid">
             <div class="card card-w-title">
-                <div class="ui-g-12">
-                    <h2>{{this.getLabel('Analise.Analise.PfFinalTotal')}} {{ analise.pfTotalEsforco }}</h2>
-                    <h2>{{this.getLabel('Analise.Analise.PfFinalAjustado')}} {{ analise.adjustPFTotal }}</h2>
-                    <app-analise-funcao-resumo-table [linhasResumo]="analise.resumoTotal.all"
-                                                     *ngIf="showResumo()"></app-analise-funcao-resumo-table>
-                    <p-fieldset [legend]="this.getLabel('Analise.Analise.Fases')" [toggleable]="true"
-                                [collapsed]="true">
-                        <h2 translate="Analise.Analise.Fases">Fases</h2>
-                        <p-dataTable id="idTabelaFasesComponentAnaliseResumo" [value]="esforcoFases">
-
-                            <p-column [header]="this.getLabel('Analise.Analise.Nome')" field="fase.nome">
+                <div class="ui-g-12" *ngIf="analise && analise.pfTotal ">
+                    <h2>{{this.getLabel('Analise.Analise.PfFinalTotal')}} {{ pfTotal }}</h2>
+                    <h2>{{this.getLabel('Analise.Analise.PfFinalAjustado')}} {{ pfAjustada }}</h2>
+                    <div class="ui-g-12 ui-md-12 ui-sm-12">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12">
+                          <h2 translate="Cadastros.FuncaoDados.Complexidade">Complexidade</h2>
+                          <p-dataTable  [value]="linhaResumo" [responsive]="true" scrollable="true" scrollWidth="100%">
+                            <p-column >
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo['tipo']}}
+                                </ng-template>
                             </p-column>
-
-                            <p-column [header]="this.getLabel('Analise.Analise.Esforco')" field="esforcoFormatado">
+                            <p-column [header]="this.getLabel('Analise.Analise.lstComplexidades.SEM')">
+                              <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                {{ linhaResumo['sem']}}
+                              </ng-template>
                             </p-column>
-                        </p-dataTable>
-                    </p-fieldset>
+                            <p-column [header]="this.getLabel('Analise.Analise.lstComplexidades.Baixa')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo['baixa']}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Analise.Analise.lstComplexidades.Media')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo['media']}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Analise.Analise.lstComplexidades.Alta')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo['alta']}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Analise.Analise.lstComplexidades.INM')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo['inm']}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Cadastros.FuncaoDados.Qtd')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo['quantidadeTipo']}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Cadastros.FuncaoDados.PFTotal')">
+                              <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                {{ linhaResumo['pfTotal'] | number }}
+                              </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Cadastros.FuncaoDados.PFAjustado')">
+                              <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                {{ linhaResumo['pfAjustada'] | number }}
+                              </ng-template>
+                            </p-column>
+                          </p-dataTable>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

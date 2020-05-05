@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import {TranslateService} from '@ngx-translate/core';
 import {Injectable} from '@angular/core';
 import {RequestMethod, Response, ResponseContentType} from '@angular/http';
@@ -14,6 +15,7 @@ import {FuncaoDados} from '../funcao-dados';
 import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.service';
 import {FuncaoDadosService} from '../funcao-dados/funcao-dados.service';
 import {TipoEquipe} from '../tipo-equipe';
+import { Resumo } from './resumo/resumo.model';
 
 @Injectable()
 export class AnaliseService {
@@ -39,6 +41,8 @@ export class AnaliseService {
     relatorioContagemUrl = environment.apiUrl + '/relatorioContagemPdf';
 
     clonarAnaliseUrl = this.resourceUrl + '/clonar/';
+
+    resourceResumoUrl = environment.apiUrl + '/vw-resumo';
 
     @BlockUI() blockUI: NgBlockUI;
 
@@ -278,6 +282,8 @@ export class AnaliseService {
         return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
             const jsonResponse = res.json();
             const analiseJson = this.convertItemFromServer(jsonResponse);
+            analiseJson.pfTotal = jsonResponse.pfTotal;
+            analiseJson.adjustPFTotal = jsonResponse.adjustPFTotal;
             analiseJson.createdBy = jsonResponse.createdBy;
             this.blockUI.stop();
             return analiseJson;
@@ -427,6 +433,32 @@ export class AnaliseService {
         return this.http.put(`${this.resourceUrl}/compartilhar/viewonly/${copy.id}`, copy).map((res: Response) => {
             this.blockUI.stop();
             return null;
+        }).catch((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                return Observable.throw(new Error(error.status));
+            }
+        });
+    }
+
+    updateSomaPf(analiseId:number): Observable<Response> {
+        this.blockUI.start();
+        const url = `${this.resourceUrl}/update-pf/${analiseId}`;
+        return this.http.get(url);
+    }
+
+    getResumo(analiseId:number): Observable<Resumo[]>{
+        this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.ProcurandoAnalise'));
+        return this.http.get(`${this.resourceResumoUrl}/${analiseId}`,).map((res: Response) => {
+            const jsonResponse = res.json();
+            let lstResumo: Resumo[] = [];
+            jsonResponse.forEach(elem => {
+              let rsm: Resumo = new Resumo( elem.pfAjustada, elem.pfTotal, elem.quantidadeTipo, elem.sem, elem.baixa, elem.media, elem.alta, elem.inm, elem.tipo).clone();
+              lstResumo.push(rsm);
+            });
+            
+            this.blockUI.stop();
+            return lstResumo;
         }).catch((error: any) => {
             if (error.status === 403) {
                 this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
