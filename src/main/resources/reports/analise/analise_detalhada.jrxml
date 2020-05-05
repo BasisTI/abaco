@@ -381,7 +381,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{SISTEMASG} + " - " + $P{SISTEMANM}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{SISTEMANM}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="195" y="2" width="413" height="19" uuid="e9dab4f0-8d5c-46b8-8280-8c1ecdb5a66f"/>
@@ -641,28 +641,40 @@
 					<textFieldExpression><![CDATA[$P{VERSAOCPM}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="547" y="21" width="144" height="19" uuid="2bba01ef-7889-43b1-8b1b-26e572f51966"/>
+					<reportElement x="530" y="21" width="161" height="19" uuid="2bba01ef-7889-43b1-8b1b-26e572f51966"/>
+					<box>
+						<pen lineWidth="0.25" lineStyle="Solid"/>
+					</box>
 					<textElement verticalAlignment="Middle">
 						<font size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Valor final ajustado:]]></text>
+					<text><![CDATA[Total de PF (Deflação):]]]></text>
 				</staticText>
 				<textField>
 					<reportElement x="691" y="2" width="110" height="19" uuid="15cd80ef-8dc4-4cac-8d08-a8c916f93a07"/>
+					<box>
+						<pen lineWidth="0.25" lineStyle="Solid"/>
+					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$P{PFTOTAL}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="691" y="21" width="110" height="19" uuid="508fe559-2ee7-43a5-8980-83108e6aa6ee"/>
+					<box>
+						<pen lineWidth="0.25" lineStyle="Solid"/>
+					</box>
 					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$P{PFAJUSTADO}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="531" y="2" width="160" height="19" uuid="1f44cd6c-e66d-4275-b107-53f8542f347b"/>
+					<reportElement x="530" y="2" width="161" height="19" uuid="1f44cd6c-e66d-4275-b107-53f8542f347b"/>
+					<box>
+						<pen lineWidth="0.25" lineStyle="Solid"/>
+					</box>
 					<textElement verticalAlignment="Middle">
 						<font size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Ponto de Função total:]]></text>
+					<text><![CDATA[Total de PF:]]></text>
 				</staticText>
 			</frame>
 		</band>
@@ -814,7 +826,7 @@
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<text><![CDATA[DER]]></text>
+									<text><![CDATA[TD]]></text>
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="Table 6_TD" height="15" rowSpan="1">
@@ -835,7 +847,7 @@
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<text><![CDATA[ALR]]></text>
+									<text><![CDATA[TR]]></text>
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="Table 6_TD" height="15" rowSpan="1">
@@ -1106,7 +1118,7 @@
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<text><![CDATA[FTR]]></text>
+									<text><![CDATA[ALR]]></text>
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="Table 1_TD" height="15" rowSpan="1">
@@ -1363,7 +1375,7 @@
 					<textElement verticalAlignment="Middle">
 						<font size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Listagem Nominal de ARs e TDs]]></text>
+					<text><![CDATA[Listagem Nominal de ALRs e DERs]]></text>
 				</staticText>
 				<componentElement>
 					<reportElement stretchType="RelativeToTallestObject" x="0" y="22" width="802" height="45" uuid="4a6012f3-4e86-4ec3-8f02-52f2d9c33255">
@@ -1452,7 +1464,7 @@
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<text><![CDATA[TD]]></text>
+									<text><![CDATA[DER]]></text>
 								</staticText>
 							</jr:tableHeader>
 							<jr:detailCell style="Table 3_TD" height="15" rowSpan="1">
@@ -1473,7 +1485,7 @@
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<text><![CDATA[AR]]></text>
+									<text><![CDATA[ALR]]></text>
 								</staticText>
 							</jr:tableHeader>
 							<jr:detailCell style="Table 3_TD" height="15" rowSpan="1">
