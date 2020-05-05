@@ -49,21 +49,18 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 @RestController
 @RequestMapping("/api")
 public class FuncaoTransacaoResource {
-    private static final int decimalPlace = 2;
     private final Logger log = LoggerFactory.getLogger(FuncaoTransacaoResource.class);
     private static final String ENTITY_NAME = "funcaoTransacao";
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository;
     private final AnaliseRepository analiseRepository;
-    private final AnaliseSearchRepository analiseSearchRepository;
     @Autowired
     private DerRepository derRepository;
 
-    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository, AnaliseSearchRepository analiseSearchRepository) {
+    public FuncaoTransacaoResource(FuncaoTransacaoRepository funcaoTransacaoRepository, FuncaoTransacaoSearchRepository funcaoTransacaoSearchRepository, AnaliseRepository analiseRepository) {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.funcaoTransacaoSearchRepository = funcaoTransacaoSearchRepository;
         this.analiseRepository = analiseRepository;
-        this.analiseSearchRepository = analiseSearchRepository;
     }
 
     /**
@@ -200,7 +197,6 @@ public class FuncaoTransacaoResource {
     @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
     public ResponseEntity<Void> deleteFuncaoTransacao(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoTransacao : {}", id);
-        FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
         funcaoTransacaoRepository.delete(id);
         funcaoTransacaoSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
@@ -244,13 +240,6 @@ public class FuncaoTransacaoResource {
         return funcaoTransacaoAnaliseDTO;
     }
 
-    public AnaliseDTO convertToDto(Analise analise) {
-        return new ModelMapper().map(analise, AnaliseDTO.class);
-    }
-
-    private Analise convertToEntity(AnaliseDTO analiseDTO) {
-        return new ModelMapper().map(analiseDTO, Analise.class);
-    }
 
     private Integer getValueDer(FuncaoTransacao funcaoTransacao) {
         int dersValues = funcaoTransacao.getDers().size();

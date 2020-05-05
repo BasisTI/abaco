@@ -58,15 +58,13 @@ public class FuncaoDadosResource {
     private final FuncaoDadosSearchRepository funcaoDadosSearchRepository;
     private final FuncaoDadosService funcaoDadosService;
     private final AnaliseRepository analiseRepository;
-    private final AnaliseSearchRepository analiseSearchRepository;
 
     public FuncaoDadosResource(FuncaoDadosRepository funcaoDadosRepository,
-                               FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoDadosService funcaoDadosService, AnaliseRepository analiseRepository, AnaliseSearchRepository analiseSearchRepository) {
+                               FuncaoDadosSearchRepository funcaoDadosSearchRepository, FuncaoDadosService funcaoDadosService, AnaliseRepository analiseRepository) {
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoDadosSearchRepository = funcaoDadosSearchRepository;
         this.funcaoDadosService = funcaoDadosService;
         this.analiseRepository = analiseRepository;
-        this.analiseSearchRepository = analiseSearchRepository;
     }
 
     /**

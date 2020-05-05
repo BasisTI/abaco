@@ -84,14 +84,11 @@ public class FuncaoDadosResourceIntTest {
 
     private FuncaoDados funcaoDados;
 
-    @Autowired
-    private AnaliseSearchRepository analiseSearchRepository;
-
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         FuncaoDadosResource funcaoDadosResource = new FuncaoDadosResource(funcaoDadosRepository,
-                funcaoDadosSearchRepository, funcaoDadosService, analiseRepository, analiseSearchRepository);
+                funcaoDadosSearchRepository, funcaoDadosService, analiseRepository);
         this.restFuncaoDadosMockMvc = MockMvcBuilders.standaloneSetup(funcaoDadosResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver)
                 .setControllerAdvice(exceptionTranslator)

@@ -1,7 +1,6 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.VwResumo;
-import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.VwResumoRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
 import com.codahale.metrics.annotation.Timed;
@@ -17,11 +16,9 @@ import java.util.Set;
 @RequestMapping("/api")
 public class VwAnaliseSomaPfResource {
     private final VwResumoRepository vwResumoRepository;
-    private final AnaliseRepository analiseRepository;
 
-    public VwAnaliseSomaPfResource(VwResumoRepository vwResumoRepository, AnaliseRepository analiseRepository) {
+    public VwAnaliseSomaPfResource(VwResumoRepository vwResumoRepository) {
         this.vwResumoRepository = vwResumoRepository;
-        this.analiseRepository = analiseRepository;
     }
 
     @GetMapping("/analise-pf/{analiseId}")

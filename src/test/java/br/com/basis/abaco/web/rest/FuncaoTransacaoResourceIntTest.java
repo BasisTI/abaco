@@ -76,10 +76,6 @@ public class FuncaoTransacaoResourceIntTest {
     @Autowired
     private AnaliseRepository analiseRepository;
 
-    @Autowired
-    private AnaliseSearchRepository analiseSearchRepository;
-
-
     private MockMvc restFuncaoTransacaoMockMvc;
 
     private FuncaoTransacao funcaoTransacao;
@@ -87,7 +83,7 @@ public class FuncaoTransacaoResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        FuncaoTransacaoResource funcaoTransacaoResource = new FuncaoTransacaoResource(funcaoTransacaoRepository, funcaoTransacaoSearchRepository, analiseRepository, analiseSearchRepository);
+        FuncaoTransacaoResource funcaoTransacaoResource = new FuncaoTransacaoResource(funcaoTransacaoRepository, funcaoTransacaoSearchRepository, analiseRepository);
         this.restFuncaoTransacaoMockMvc = MockMvcBuilders.standaloneSetup(funcaoTransacaoResource)
                 .setCustomArgumentResolvers(pageableArgumentResolver)
                 .setControllerAdvice(exceptionTranslator)
