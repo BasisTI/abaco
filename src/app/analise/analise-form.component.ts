@@ -224,7 +224,7 @@ export class AnaliseFormComponent implements OnInit {
             } else {
                 this.analise = new Analise();
                 this.analise.esforcoFases = [];
-                this.analise.baselineImediatamente = false;
+                this.analise.baselineImediatamente = true;
                 this.analise.enviarBaseline = true;
             }
         });
