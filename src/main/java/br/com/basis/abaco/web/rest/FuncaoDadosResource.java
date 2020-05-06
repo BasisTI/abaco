@@ -81,7 +81,7 @@ public class FuncaoDadosResource {
         log.debug("REST request to save FuncaoDados : {}", funcaoDados);
         Analise analise = analiseRepository.findOne(idAnalise);
         funcaoDados.setAnalise(analise);
-        if (funcaoDados.getId() != null) {
+        if (funcaoDados.getId() != null || funcaoDados.getAnalise() == null || funcaoDados.getAnalise().getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
         }
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
@@ -108,10 +108,12 @@ public class FuncaoDadosResource {
         if (funcaoDados.getId() == null) {
             return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDados);
         }
+        if (funcaoDados.getAnalise() == null || funcaoDados.getAnalise().getId() == null) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
+        }
         Analise analise = analiseRepository.findOne(funcaoDadosOld.getAnalise().getId());
         funcaoDados.setAnalise(analise);
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
-        funcaoDadosSearchRepository.save(result);
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoDados.getId().toString()))
                 .body(result);

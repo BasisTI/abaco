@@ -77,12 +77,11 @@ public class FuncaoTransacaoResource {
         log.debug("REST request to save FuncaoTransacao : {}", funcaoTransacao);
         Analise analise = analiseRepository.findOne(idAnalise);
         funcaoTransacao.setAnalise(analise);
-        if (funcaoTransacao.getId() != null) {
+        if (funcaoTransacao.getId() != null || analise.getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoTransacao cannot already have an ID")).body(null);
         }
         funcaoTransacao.setDers(bindDers(funcaoTransacao));
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
-        funcaoTransacaoSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/funcao-transacaos/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
                 .body(result);
@@ -104,8 +103,12 @@ public class FuncaoTransacaoResource {
         log.debug("REST request to update FuncaoTransacao : {}", funcaoTransacao);
         FuncaoTransacao funcaoTransacaoOld = funcaoTransacaoRepository.findOne(id);
         Analise analise = analiseRepository.findOne(funcaoTransacaoOld.getAnalise().getId());
+        funcaoTransacao.setAnalise(analise);
         if (funcaoTransacao.getId() == null) {
             return createFuncaoTransacao(analise.getId(), funcaoTransacao);
+        }
+        if (funcaoTransacao.getAnalise() == null || funcaoTransacao.getAnalise().getId() == null) {
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoTransacao cannot already have an ID")).body(null);
         }
         FuncaoTransacao result = funcaoTransacaoRepository.save(funcaoTransacao);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoTransacao.getId().toString())).body(result);
@@ -143,17 +146,8 @@ public class FuncaoTransacaoResource {
     public ResponseEntity<FuncaoTransacaoApiDTO> getFuncaoTransacao(@PathVariable Long id) {
         log.debug("REST request to get FuncaoTransacao : {}", id);
         FuncaoTransacao funcaoTransacao = funcaoTransacaoRepository.findOne(id);
-        if (funcaoTransacao.getAnalise().getFuncaoDados() != null) {
-            funcaoTransacao.getAnalise().getFuncaoDados().clear();
-        }
-        if (funcaoTransacao.getAnalise().getFuncaoTransacaos() != null) {
-            funcaoTransacao.getAnalise().getFuncaoTransacaos().clear();
-        }
-
         ModelMapper modelMapper = new ModelMapper();
-
         FuncaoTransacaoApiDTO funcaoDadosDTO = modelMapper.map(funcaoTransacao, FuncaoTransacaoApiDTO.class);
-
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDadosDTO));
     }
 
