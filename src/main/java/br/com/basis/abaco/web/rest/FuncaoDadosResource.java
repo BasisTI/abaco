@@ -7,7 +7,6 @@ import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
 import br.com.basis.abaco.service.FuncaoDadosService;
 import br.com.basis.abaco.service.dto.DropdownDTO;
@@ -108,11 +107,11 @@ public class FuncaoDadosResource {
         if (funcaoDados.getId() == null) {
             return createFuncaoDados(funcaoDados.getAnalise().getId(), funcaoDados);
         }
+        Analise analise = analiseRepository.findOne(funcaoDadosOld.getAnalise().getId());
+        funcaoDados.setAnalise(analise);
         if (funcaoDados.getAnalise() == null || funcaoDados.getAnalise().getId() == null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new funcaoDados cannot already have an ID")).body(null);
         }
-        Analise analise = analiseRepository.findOne(funcaoDadosOld.getAnalise().getId());
-        funcaoDados.setAnalise(analise);
         FuncaoDados result = funcaoDadosRepository.save(funcaoDados);
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, funcaoDados.getId().toString()))
