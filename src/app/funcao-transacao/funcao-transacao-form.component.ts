@@ -69,8 +69,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     alrsChips: DerChipItem[];
     resumo: ResumoFuncoes;
     fatoresAjuste: SelectItem[] = [];
-    dadosBaselineFT: BaselineAnalitico[] = [];
-    dadosserviceBL: BaselineService[] = [];
     funcoesTransacaoList: FuncaoTransacao[] = [];
     FuncaoTransacaoEditar: FuncaoTransacao = new FuncaoTransacao();
 

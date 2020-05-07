@@ -153,15 +153,6 @@ export class PesquisarFtComponent implements OnInit {
         return str;
     }
 
-    getTodasAnalisesBaseline() {
-        // TODO REMOVER REQUEST
-        this.analiseService.findAllBaseline().subscribe(dado => {
-                this.analises = this.analiseService.convertJsonToAnalise(dado);
-                this.getBaselineAnalitico();
-            }
-        );
-
-    }
 
     getBaselineAnalitico() {
         this.baselineFT.baselineAnaliticoFT(this.analise.sistema.id).subscribe(dado => {
@@ -307,8 +298,6 @@ export class PesquisarFtComponent implements OnInit {
                 return {label: label, value: fa};
             });
         this.carregarModulosQuandoTiverSistemaDisponivel();
-        this.getTodasAnalisesBaseline();
-
     }
 
     private carregarModulosQuandoTiverSistemaDisponivel() {
