@@ -51,7 +51,7 @@ public class RelatorioAnaliseRest {
 
     private static String caminhoAnaliseExcel = "reports/analise/analise_excel.jasper";
 
-    private static String caminhoImagemBasis = "reports/img/logo_basis.gif";
+    private static String caminhoImagemBasis = "reports/img/logo_abaco.png";
 
     private HttpServletRequest request;
 
@@ -68,6 +68,10 @@ public class RelatorioAnaliseRest {
     private List<FuncoesDTO> listFuncoes;
 
     private static String deflator = " Deflator em Projetos de Melhoria";
+
+    private final Double fatorEstimado = 1.35;
+
+    private final Double fatorIndicativa = 1.5;
 
     public RelatorioAnaliseRest(HttpServletResponse response, HttpServletRequest request) {
         this.response = response;
@@ -274,6 +278,11 @@ public class RelatorioAnaliseRest {
      */
     private void popularResumo() {
         parametro.put("PFTOTAL", analise.getPfTotal());
+        if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)){
+            parametro.put("PFESCOPESCREEP", calcularScopeCreep(analise.getAdjustPFTotal(), this.fatorEstimado));
+        }else if(analise.getMetodoContagem().equals(MetodoContagem.ESTIMADA)) {
+            parametro.put("PFESCOPESCREEP", calcularScopeCreep(analise.getAdjustPFTotal(), this.fatorIndicativa));
+        }
         parametro.put("AJUSTESPF", calcularPFsAjustado(analise.getPfTotal(), analise.getAdjustPFTotal()));
         parametro.put("PFAJUSTADO", analise.getAdjustPFTotal());
     }
@@ -935,6 +944,16 @@ public class RelatorioAnaliseRest {
         Double valorCalculado = 0.0;
         if (valor1 != null && valor2 != null) {
             valorCalculado = Double.parseDouble(valor1) - Double.parseDouble(valor2);
+        }
+        DecimalFormat df = new DecimalFormat("#.##");
+
+        return df.format(valorCalculado);
+    }
+
+    private String calcularScopeCreep(String valor1, Double valor2) {
+        Double valorCalculado = 0.0;
+        if (valor1 != null && valor2 != null) {
+            valorCalculado = Double.parseDouble(valor1) * valor2;
         }
         DecimalFormat df = new DecimalFormat("#.##");
 

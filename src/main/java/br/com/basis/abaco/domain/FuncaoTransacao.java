@@ -1,6 +1,5 @@
 package br.com.basis.abaco.domain;
 
-import br.com.basis.abaco.domain.audit.AbacoAudit;
 import br.com.basis.abaco.domain.enumeration.Complexidade;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
@@ -68,6 +67,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
     @JsonManagedReference(value = FUNCAOTRANSACAO)
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @OrderBy("nome")
     private Set<Alr> alrs = new HashSet<>();
 
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -82,6 +82,7 @@ public class FuncaoTransacao extends FuncaoAnalise implements Serializable {
 
     @JsonManagedReference(value = FUNCAOTRANSACAO)
     @OneToMany(mappedBy = FUNCAOTRANSACAO, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("nome")
     private Set<Der> ders = new HashSet<>();
 
     @JsonIgnore

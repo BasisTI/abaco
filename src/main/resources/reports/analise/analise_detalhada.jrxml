@@ -14,6 +14,8 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<import value="java.lang.*"/>
+	<import value="br.com.basis.abaco.domain.enumeration.MetodoContagem"/>
 	<style name="Table 2_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -363,6 +365,7 @@
 	<parameter name="AJUSTESCONVERSAO" class="java.lang.String"/>
 	<parameter name="LISTAFD" class="java.util.List"/>
 	<parameter name="LISTAFT" class="java.util.List"/>
+	<parameter name="PFESCOPESCREEP" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -426,14 +429,18 @@
 					<text><![CDATA[Geral]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="3" y="40" width="57" height="16" uuid="9f992b1f-a79e-4053-b7d9-6627939db0fe"/>
+					<reportElement x="538" y="40" width="44" height="16" uuid="9f992b1f-a79e-4053-b7d9-6627939db0fe">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Equipe:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="280" y="40" width="147" height="16" uuid="dfcdc6c5-fd01-4999-91c8-041aad266935"/>
+					<reportElement x="0" y="40" width="147" height="16" uuid="dfcdc6c5-fd01-4999-91c8-041aad266935">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" isBold="true"/>
 					</textElement>
@@ -475,14 +482,16 @@
 					<text><![CDATA[Aguardar prazo de garantia?:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement x="60" y="40" width="220" height="16" uuid="d5bf219a-9a95-4afa-a019-4511edfccc09"/>
+					<reportElement x="582" y="40" width="219" height="16" uuid="d5bf219a-9a95-4afa-a019-4511edfccc09"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{EQUIPE}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement x="427" y="40" width="375" height="16" uuid="426ab294-abfd-4722-9e24-319ebb1aaac9"/>
+					<reportElement x="147" y="40" width="391" height="16" uuid="426ab294-abfd-4722-9e24-319ebb1aaac9">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif"/>
 					</textElement>
@@ -641,41 +650,87 @@
 					<textFieldExpression><![CDATA[$P{VERSAOCPM}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="530" y="21" width="161" height="19" uuid="2bba01ef-7889-43b1-8b1b-26e572f51966"/>
+					<reportElement x="559" y="13" width="143" height="13" uuid="2bba01ef-7889-43b1-8b1b-26e572f51966">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
 					<box>
 						<pen lineWidth="0.25" lineStyle="Solid"/>
 					</box>
-					<textElement verticalAlignment="Middle">
-						<font size="12" isBold="true"/>
+					<textElement textAlignment="Justified" verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Total de PF (Deflação):]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="691" y="2" width="110" height="19" uuid="15cd80ef-8dc4-4cac-8d08-a8c916f93a07"/>
+					<reportElement x="702" y="26" width="100" height="13" uuid="15cd80ef-8dc4-4cac-8d08-a8c916f93a07">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$P{METODOCONTAGEM} !=  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
+					</reportElement>
 					<box>
 						<pen lineWidth="0.25" lineStyle="Solid"/>
 					</box>
-					<textElement textAlignment="Left" verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$P{PFTOTAL}]]></textFieldExpression>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="11"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{PFESCOPESCREEP}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="691" y="21" width="110" height="19" uuid="508fe559-2ee7-43a5-8980-83108e6aa6ee"/>
+					<reportElement x="702" y="13" width="100" height="13" uuid="508fe559-2ee7-43a5-8980-83108e6aa6ee">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
 					<box>
 						<pen lineWidth="0.25" lineStyle="Solid"/>
 					</box>
-					<textElement verticalAlignment="Middle"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="11"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$P{PFAJUSTADO}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="530" y="2" width="161" height="19" uuid="1f44cd6c-e66d-4275-b107-53f8542f347b"/>
+					<reportElement x="559" y="26" width="143" height="13" uuid="1f44cd6c-e66d-4275-b107-53f8542f347b">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<printWhenExpression><![CDATA[$P{METODOCONTAGEM} !=  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
+					</reportElement>
 					<box>
 						<pen lineWidth="0.25" lineStyle="Solid"/>
 					</box>
-					<textElement verticalAlignment="Middle">
-						<font size="12" isBold="true"/>
+					<textElement textAlignment="Justified" verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total c/ Scope Creep:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="559" y="0" width="143" height="13" uuid="6284182e-c198-49cb-b831-452fefb0c7c7">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.25" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Justified" verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Total de PF:]]></text>
 				</staticText>
+				<textField>
+					<reportElement x="702" y="0" width="100" height="13" uuid="9084a34b-65dd-47f2-b670-99cf6459f7ea">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.25" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="11"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{PFTOTAL}]]></textFieldExpression>
+				</textField>
 			</frame>
 		</band>
 		<band height="66">
@@ -810,7 +865,8 @@
 							<jr:detailCell style="Table 6_TD" height="15">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 									<reportElement x="0" y="0" width="139" height="15" isRemoveLineWhenBlank="true" uuid="c09f6e4c-21ea-4d44-8d80-35806c5cc8f7"/>
-									<textElement textAlignment="Center" verticalAlignment="Middle">
+									<box leftPadding="2"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle">
 										<font size="9"/>
 										<paragraph lineSpacing="Proportional"/>
 									</textElement>
@@ -820,6 +876,7 @@
 						</jr:column>
 						<jr:column width="30" uuid="eec707e8-4209-466e-8d10-06536e75cfa4">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+							<printWhenExpression><![CDATA[$P{METODOCONTAGEM} ==  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
 							<jr:columnHeader style="Table 6_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="30" height="30" isRemoveLineWhenBlank="true" uuid="2f384503-28ab-407e-b074-6e9bcb62bae2"/>
@@ -841,6 +898,7 @@
 						</jr:column>
 						<jr:column width="30" uuid="015a55ce-cde3-4e3b-9169-32b2ecaac603">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+							<printWhenExpression><![CDATA[$P{METODOCONTAGEM} ==  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
 							<jr:columnHeader style="Table 6_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="30" height="30" isRemoveLineWhenBlank="true" uuid="129cc432-7c9f-4dfb-8610-80632462e414"/>
@@ -1081,7 +1139,8 @@
 							<jr:detailCell style="Table 1_TD" height="15">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 									<reportElement x="0" y="0" width="139" height="15" isRemoveLineWhenBlank="true" uuid="52c6bec9-9d2f-473a-9177-4bf9c2661926"/>
-									<textElement textAlignment="Center" verticalAlignment="Middle">
+									<box leftPadding="2"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle">
 										<font size="9"/>
 										<paragraph lineSpacing="Proportional"/>
 									</textElement>
@@ -1091,6 +1150,7 @@
 						</jr:column>
 						<jr:column width="30" uuid="4817a773-8e67-470c-9426-c1f0abbe8f7d">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+							<printWhenExpression><![CDATA[$P{METODOCONTAGEM} ==  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
 							<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="30" height="30" isRemoveLineWhenBlank="true" uuid="2624ffdc-89f9-4aa4-93ed-d327ad9b3ded"/>
@@ -1112,6 +1172,7 @@
 						</jr:column>
 						<jr:column width="30" uuid="f0b80d0b-9a3a-4d08-b94f-d6d659eba0f9">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+							<printWhenExpression><![CDATA[$P{METODOCONTAGEM} ==  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
 							<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 								<staticText>
 									<reportElement x="0" y="0" width="30" height="30" isRemoveLineWhenBlank="true" uuid="58b928d0-80ce-4682-8339-b8004ee7e13c"/>
@@ -1221,6 +1282,7 @@
 		</band>
 		<band height="66">
 			<property name="com.jaspersoft.studio.layout" value="java.lang.String"/>
+			<printWhenExpression><![CDATA[$P{METODOCONTAGEM} ==  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
 			<frame>
 				<reportElement x="0" y="0" width="802" height="66" uuid="d2e6791c-4dd3-4346-ad36-6a9d047d9083"/>
 				<staticText>
@@ -1322,7 +1384,7 @@
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<text><![CDATA[TD]]></text>
+									<text><![CDATA[TD - Descrição]]></text>
 								</staticText>
 							</jr:tableHeader>
 							<jr:detailCell style="Table 3_TD" height="15" rowSpan="1">
@@ -1343,7 +1405,7 @@
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<text><![CDATA[TR]]></text>
+									<text><![CDATA[TR - Descrição]]></text>
 								</staticText>
 							</jr:tableHeader>
 							<jr:detailCell style="Table 3_TD" height="15" rowSpan="1">
@@ -1363,6 +1425,7 @@
 		<band height="66">
 			<property name="com.jaspersoft.studio.layout" value="java.lang.String"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$P{METODOCONTAGEM} ==  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
 			<frame>
 				<reportElement x="0" y="0" width="802" height="66" uuid="915fa178-5aeb-4df2-9c84-340bde6d2d54"/>
 				<staticText>
@@ -1464,7 +1527,7 @@
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<text><![CDATA[DER]]></text>
+									<text><![CDATA[DER - Descrição]]></text>
 								</staticText>
 							</jr:tableHeader>
 							<jr:detailCell style="Table 3_TD" height="15" rowSpan="1">
@@ -1485,7 +1548,7 @@
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font isBold="true"/>
 									</textElement>
-									<text><![CDATA[ALR]]></text>
+									<text><![CDATA[ALR - Descrição]]></text>
 								</staticText>
 							</jr:tableHeader>
 							<jr:detailCell style="Table 3_TD" height="15" rowSpan="1">
@@ -1504,7 +1567,7 @@
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="27">
+		<band height="41">
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement key="textField" x="577" y="8" width="187" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="0c5e36dd-6ec7-45e2-9c52-4c57800c0796"/>
 				<box>
@@ -1519,7 +1582,7 @@
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
-				<reportElement key="textField" x="765" y="7" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="aa9a798f-a284-4266-870d-ab0056fe5f08"/>
+				<reportElement key="textField" x="764" y="8" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="aa9a798f-a284-4266-870d-ab0056fe5f08"/>
 				<box>
 					<topPen lineWidth="0.0" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineColor="#000000"/>
@@ -1531,6 +1594,10 @@
 				</textElement>
 				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="112" y="9" width="238" height="16" uuid="154525ef-a6b1-4d28-be30-8b67bf4ed146"/>
+				<text><![CDATA[Abaco - Desenvolvido por Basis Tecnologia S.A.]]></text>
+			</staticText>
 		</band>
 	</pageFooter>
 </jasperReport>

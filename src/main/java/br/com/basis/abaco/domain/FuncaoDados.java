@@ -61,6 +61,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
     @JsonManagedReference(value = FUNCAODADOS)
     @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @OrderBy("nome")
     private Set<Rlr> rlrs = new HashSet<>();
 
     @ManyToOne
@@ -74,6 +75,7 @@ public class FuncaoDados extends FuncaoAnalise implements Serializable {
 
     @JsonManagedReference(value = FUNCAODADOS)
     @OneToMany(mappedBy = FUNCAODADOS, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("nome")
     private Set<Der> ders = new LinkedHashSet<>();
 
     @JsonIgnore
