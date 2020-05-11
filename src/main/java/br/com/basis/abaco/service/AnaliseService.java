@@ -17,8 +17,6 @@ import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
-import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
@@ -32,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
@@ -48,60 +45,55 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Service
 public class AnaliseService extends BaseService {
-
+    public static final String ORGANIZACAO_ID = "organizacao.id";
+    public static final String EQUIPE_RESPONSAVEL_ID = "equipeResponsavel.id";
+    public static final String COMPARTILHADAS_EQUIPE_ID = "compartilhadas.equipeId";
 
     private final AnaliseRepository analiseRepository;
     private final UserRepository userRepository;
     private final CompartilhadaRepository compartilhadaRepository;
-    private final AnaliseSearchRepository analiseSearchRepository;
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
-    private final VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
     @Autowired
     private UserSearchRepository userSearchRepository;
-    @Autowired
-    private HttpServletResponse response;
+
 
     public AnaliseService(AnaliseRepository analiseRepository,
-                           AnaliseSearchRepository analiseSearchRepository,
-                           FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
-                           UserRepository userRepository,
-                           FuncaoDadosRepository funcaoDadosRepository,
-                           CompartilhadaRepository compartilhadaRepository,
-                           FuncaoTransacaoRepository funcaoTransacaoRepository,
-                           VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository) {
+                          FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
+                          UserRepository userRepository,
+                          FuncaoDadosRepository funcaoDadosRepository,
+                          CompartilhadaRepository compartilhadaRepository,
+                          FuncaoTransacaoRepository funcaoTransacaoRepository) {
         this.analiseRepository = analiseRepository;
-        this.analiseSearchRepository = analiseSearchRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.userRepository = userRepository;
         this.compartilhadaRepository = compartilhadaRepository;
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
-        this.vwAnaliseSomaPfRepository = vwAnaliseSomaPfRepository;
     }
 
     public void bindFilterSearch(String identificador, String sistema, String metodo, String organizacao, String equipe, String usuario, Set<Long> equipesIds, Set<Long> organizacoes, BoolQueryBuilder qb) {
         mustMatchPhaseQuery(identificador, qb, "identificadorAnalise");
         mustTermQuery(sistema, qb, "sistema.id");
         mustMatchPhaseQuery(metodo, qb, "metodoContagem");
-        mustTermQuery(organizacao, qb, "organizacao.id");
+        mustTermQuery(organizacao, qb, ORGANIZACAO_ID);
 
         if (!StringUtils.isEmptyString((equipe))) {
             BoolQueryBuilder boolQueryBuilderEdquipe = QueryBuilders.boolQuery()
-                .must(QueryBuilders.termsQuery("equipeResponsavel.id", equipe))
-                .must(QueryBuilders.termsQuery("organizacao.id", organizacoes));
+                .must(QueryBuilders.termsQuery(EQUIPE_RESPONSAVEL_ID, equipe))
+                .must(QueryBuilders.termsQuery(ORGANIZACAO_ID, organizacoes));
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                    .should(boolQueryBuilderEdquipe)
-                    .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipe));
+                .should(boolQueryBuilderEdquipe)
+                .should(QueryBuilders.termsQuery(COMPARTILHADAS_EQUIPE_ID, equipe));
             qb.must(boolQueryBuilder);
         } else if (equipesIds != null && equipesIds.size() > 0) {
             BoolQueryBuilder boolQueryBuilderEdquipe = QueryBuilders.boolQuery()
-                .must(QueryBuilders.termsQuery("equipeResponsavel.id", equipesIds))
-                .must(QueryBuilders.termsQuery("organizacao.id", organizacoes));
+                .must(QueryBuilders.termsQuery(EQUIPE_RESPONSAVEL_ID, equipesIds))
+                .must(QueryBuilders.termsQuery(ORGANIZACAO_ID, organizacoes));
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                 .should(boolQueryBuilderEdquipe)
-                .should(QueryBuilders.termsQuery("compartilhadas.equipeId", equipesIds));
+                .should(QueryBuilders.termsQuery(COMPARTILHADAS_EQUIPE_ID, equipesIds));
             qb.must(boolQueryBuilder);
         }
         if (!StringUtils.isEmptyString((usuario))) {
@@ -118,6 +110,7 @@ public class AnaliseService extends BaseService {
         });
         return equipesIds;
     }
+
     private Set<Long> getIdOrganizacoes(User user) {
         Set<Organizacao> organizacaos = user.getOrganizacoes();
         Set<Long> organizacoesIds = new HashSet<>();
@@ -326,12 +319,13 @@ public class AnaliseService extends BaseService {
         analise.setObservacoes(analiseUpdate.getObservacoes());
         analise.setEsforcoFases(analiseUpdate.getEsforcoFases());
     }
+
     public BoolQueryBuilder getBoolQueryBuilder(@RequestParam(value = "identificador", required = false) String identificador, @RequestParam(value = "sistema", required = false) String sistema, @RequestParam(value = "metodo", required = false) String metodo, @RequestParam(value = "organizacao", required = false) String organizacao, @RequestParam(value = "equipe", required = false) String equipe, @RequestParam(value = "usuario", required = false) String usuario) {
         User user = userSearchRepository.findByLogin(SecurityUtils.getCurrentUserLogin());
         Set<Long> equipesIds = getIdEquipes(user);
         Set<Long> organicoesIds = getIdOrganizacoes(user);
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
-        bindFilterSearch(identificador, sistema, metodo, organizacao, equipe, usuario, equipesIds, organicoesIds,qb);
+        bindFilterSearch(identificador, sistema, metodo, organizacao, equipe, usuario, equipesIds, organicoesIds, qb);
         return qb;
     }
 
