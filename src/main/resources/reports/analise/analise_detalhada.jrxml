@@ -1595,7 +1595,7 @@
 				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="112" y="9" width="238" height="16" uuid="154525ef-a6b1-4d28-be30-8b67bf4ed146"/>
+				<reportElement x="112" y="9" width="258" height="16" uuid="154525ef-a6b1-4d28-be30-8b67bf4ed146"/>
 				<text><![CDATA[Abaco - Desenvolvido por Basis Tecnologia S.A.]]></text>
 			</staticText>
 		</band>
