@@ -472,6 +472,7 @@
 
                             <p-spinner
                                     id="idDeflatorDeflatorFormManual"
+                                    [precision]="3"
                                     maxlength="8"
                                     [min]="0"
                                     [max]="999"
@@ -580,15 +581,18 @@
 
                             <p-spinner
                                 [step]="0.01"
-                                [precision]="2"
-                                [disabled]="habilitarDeflator()"
+                                [min]="0.00"
+                                [max]="999"
+                                [precision]="3"
                                 required
                                 (onFocus)= "this.validaDeflator = false"
-                                id="valor_fator"
-                                maxlength="4"
-                                name="fatorEdit"
                                 [disabled]="habilitarDeflator()"
-                                [(ngModel)]="editedAdjustFactor.fatorFormatado">
+                                id="valor_fator"
+                                maxlength="5"
+                                name="fatorEdit"
+                                [(ngModel)]="editedAdjustFactor.fatorFormatado"
+                                decimalSeparator=","
+                                thousandSeparator=".">
                             </p-spinner>
 
                             <div *ngIf="this.validaDeflator || (editForm.controls['fatorEdit']
