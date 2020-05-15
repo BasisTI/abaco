@@ -1,11 +1,8 @@
 import {MemoryDatatableComponent} from './../memory-datatable/memory-datatable.component';
 import {TranslateService} from '@ngx-translate/core';
-import {AnaliseSharedUtils} from './../analise-shared/analise-shared-utils';
-import {BaselineService} from './../baseline/baseline.service';
 import {FuncaoDadosService} from './../funcao-dados/funcao-dados.service';
-import {BaselineAnalitico} from './../baseline/baseline-analitico.model';
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, ViewChildren} from '@angular/core';
-import {AnaliseSharedDataService, PageNotificationService, ResponseWrapper} from '../shared';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren} from '@angular/core';
+import {AnaliseSharedDataService, PageNotificationService} from '../shared';
 import {Analise, AnaliseService} from '../analise';
 import {FatorAjuste} from '../fator-ajuste';
 
@@ -16,7 +13,7 @@ import {BlockUI, NgBlockUI} from 'ng-block-ui';
 import {DatatableClickEvent} from '@basis/angular-components';
 import {ResumoFuncoes} from '../analise-shared/resumo-funcoes';
 import {Subscription} from 'rxjs/Subscription';
-import {Observable, Subject} from 'rxjs/Rx';
+import {Observable} from 'rxjs/Rx';
 
 import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
 import {DerChipItem} from '../analise-shared/der-chips/der-chip-item';
@@ -33,7 +30,6 @@ import {ChangeEvent} from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Base64Upload from '../../ckeditor/Base64Upload';
 import {ActivatedRoute, Router} from '@angular/router';
-import {el} from '@angular/platform-browser/testing/src/browser_util';
 import {MessageUtil} from '../util/message.util';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 
@@ -62,7 +58,7 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     windowHeightDialog: any;
     windowWidthDialog: any;
     impactos: string[];
-
+    displayDescriptionDeflator: boolean = false;
     display: boolean = false;
     moduloCache: Funcionalidade;
     dersChips: DerChipItem[];
@@ -832,7 +828,10 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoTransacao) {
         this.inicializaFatoresAjuste(this.manual);
         if (funcaoSelecionada.fatorAjuste !== undefined) {
-            funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, {value: {'id': funcaoSelecionada.fatorAjuste.id}}).value;
+            const item : SelectItem = this.fatoresAjuste.find(item => {
+                 return item.value && funcaoSelecionada.fatorAjuste.id === item.value['id'];
+            });
+            funcaoSelecionada.fatorAjuste = item.value;
         }
 
     }
@@ -939,7 +938,6 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                         const label = FatorAjusteLabelGenerator.generate(fa);
                         return {label: label, value: fa};
                     });
-
                 this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
             }
         }
@@ -983,6 +981,20 @@ export class FuncaoTransacaoFormComponent implements OnInit {
                 break;
         }
         this.router.navigate(link);
+    }
+
+    showDeflator() {
+        if(this.currentFuncaoTransacao.fatorAjuste){
+            this.displayDescriptionDeflator = true;
+        }
+    }
+    copyToEvidence(){
+        if(this.currentFuncaoTransacao.sustantation){
+            this.currentFuncaoTransacao.sustantation = this.currentFuncaoTransacao.sustantation + this.currentFuncaoTransacao.fatorAjuste.descricao;
+        }else{
+            this.currentFuncaoTransacao.sustantation = this.currentFuncaoTransacao.fatorAjuste.descricao;
+        }
+        this.displayDescriptionDeflator = false;
     }
 
 }

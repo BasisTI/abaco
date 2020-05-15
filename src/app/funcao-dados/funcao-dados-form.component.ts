@@ -142,7 +142,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     public erroTD: boolean;
     public erroUnitario: boolean;
     public erroDeflator: boolean;
-
+    public displayDescriptionDeflator: boolean = false;
     public funcoesDados: FuncaoDados[];
 
     public config = {
@@ -1018,7 +1018,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     private carregarFatorDeAjusteNaEdicao(funcaoSelecionada: FuncaoDados) {
         this.inicializaFatoresAjuste(this.analise.manual);
         if (funcaoSelecionada.fatorAjuste !== undefined) {
-            funcaoSelecionada.fatorAjuste = _.find(this.fatoresAjuste, {value: {'id': funcaoSelecionada.fatorAjuste.id}}).value;
+            const item : SelectItem = this.fatoresAjuste.find(item => {
+                return item.value && funcaoSelecionada.fatorAjuste.id === item.value['id'];
+            });
+            funcaoSelecionada.fatorAjuste = item.value;
         }
     }
 
@@ -1090,9 +1093,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.isEdit = param;
         this.disableTRDER();
         this.configurarDialog();
-        this.seletedFuncaoDados.fatorAjuste = this.faS[0];
         this.seletedFuncaoDados.sustantation = null;
-        if (this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
+        if (this.seletedFuncaoDados.fatorAjuste && this.seletedFuncaoDados.fatorAjuste.tipoAjuste === 'UNITARIO' && this.faS[0]) {
             this.hideShowQuantidade = false;
         } else {
             this.hideShowQuantidade = true;
@@ -1110,6 +1112,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         if (manual) {
             if (manual.fatoresAjuste) {
                 this.faS = _.cloneDeep(manual.fatoresAjuste);
+                this.faS = this.faS.filter(value => value.tipoAjuste !== 'UNITARIO');
                 this.faS.sort((n1, n2) => {
                     if (n1.fator < n2.fator) {
                         return 1;
@@ -1119,12 +1122,12 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                     }
                     return 0;
                 });
-                this.faS = this.faS.filter(value => value.tipoAjuste !== 'UNITARIO');
                 this.fatoresAjuste =
                     this.faS.map(fa => {
                         const label = FatorAjusteLabelGenerator.generate(fa);
                         return {label: label, value: fa};
                     });
+                this.fatoresAjuste.unshift(this.fatorAjusteNenhumSelectItem);
             }
         }
     }
@@ -1181,6 +1184,19 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             link = link + '/view';
         }
         this.router.navigate(link);
+    }
+    showDeflator() {
+        if(this.seletedFuncaoDados.fatorAjuste){
+            this.displayDescriptionDeflator = true;
+        }
+    }
+    copyToEvidence(){
+        if(this.seletedFuncaoDados.sustantation){
+            this.seletedFuncaoDados.sustantation = this.seletedFuncaoDados.sustantation + this.seletedFuncaoDados.fatorAjuste.descricao;
+        }else{
+            this.seletedFuncaoDados.sustantation = this.seletedFuncaoDados.fatorAjuste.descricao;
+        }
+        this.displayDescriptionDeflator = false;
     }
 
 }

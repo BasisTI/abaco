@@ -289,7 +289,7 @@
                             </div>
                         </div>
                         <div class="ui-g">
-                            <div class="ui-g-6 ui-md-12 ui-sm-12">
+                            <div class="ui-g-11 ui-md-11 ui-sm-11">
                                 <label translate="Cadastros.FuncaoTransacao.Deflator*">Deflator *</label>
                                 <p-dropdown
                                         [filter]="true"
@@ -307,6 +307,12 @@
                                     Campo obrigatório.
                                     </div>
                                 </span>
+                            </div>
+                            <div class="ui-g-1 ui-md-1 ui-sm-1" >
+                                <app-blue-button
+                                        buttonIcon="ui-icon-info-outline"
+                                        (click)="showDeflator()">
+                                </app-blue-button>
                             </div>
                             <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
                                 <label translate="Cadastros.FuncaoTransacao.Quantidade*">Quantidade *</label>
@@ -416,4 +422,10 @@
                 (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>
+<p-dialog [header]="this.getLabel('Descrição')" [(visible)]="displayDescriptionDeflator" [width]="400" *ngIf="currentFuncaoTransacao.fatorAjuste">
+    {{currentFuncaoTransacao.fatorAjuste.descricao}}
+    <p-footer>
+        <app-white-button buttonLabel="Copiar para Evidência" buttonIcon="ui-icon-add"(click)="copyToEvidence()"></app-white-button>
+    </p-footer>
+</p-dialog>
 
