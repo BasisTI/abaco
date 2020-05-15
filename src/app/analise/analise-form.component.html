@@ -58,7 +58,7 @@
                         </div>
                         <div style="margin-bottom: 05px; margin-top: 05px" *ngIf="analise.equipeResponsavel">
                             <div class="ui-g">
-                                <div class="ui-g-4 ui-md-3 ui-sm-12" style="margin-bottom: 05px">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
                                     <label translate="Analise.Analise.IdentificadorAnalise*">Identificador da Analise *</label>
                                         <span class="md-inputfield">
                                         <input
@@ -79,7 +79,28 @@
                                          </div>
                                     </span>
                                 </div>
-                                <div class="ui-g-3 ui-md-3 ui-sm-12" style="margin-bottom: 05px">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                    <label translate="Analise.Analise.numeroOS">Número O.S.*</label>
+                                        <span class="md-inputfield">
+                                        <input
+                                            required
+                                            type="text"
+                                            maxlength="100"
+                                            id="idnumeroOsAnaliseFormAnalise"
+                                            name="numeroOsAnalise"
+                                            [(ngModel)]="analise.numeroOs"
+                                            pInputText
+                                        />
+                                        <div *ngIf="editForm.controls['numeroOsAnalise']
+                                            && !editForm.controls['numeroOsAnalise'].valid
+                                            && (editForm.controls['numeroOsAnalise'].touched
+                                            || editForm.submitted)"
+                                            class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                                                Campo obrigatório.
+                                         </div>
+                                    </span>
+                                </div>
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
                                     <label translate="Analise.Analise.DataCriacaoOrdemServico">Data Criação da O.S. *</label>
                                         <span class="md-inputfield">
                                         <p-calendar
@@ -99,7 +120,7 @@
                                          </div>
                                      </span>
                                 </div>
-                                <div class="ui-g-3 ui-md-2 ui-sm-12" style="margin-bottom: 05px">
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
                                     <label translate="Analise.Analise.Contrato*">Contrato *</label>
                                     <p-dropdown
                                             [filter]="true"
@@ -116,7 +137,7 @@
                                             [autoWidth]="false">
                                     </p-dropdown>
                                 </div>
-                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px">
+                                <div class="ui-g-8 ui-md-8 ui-sm-12" style="margin-bottom: 05px">
                                     <label translate="Analise.Analise.Manual*">Manual *</label>
                                     <p-dropdown
                                             required
@@ -290,8 +311,7 @@
                                         </p-radioButton>
                                     </div>
                                 </div>
-                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px"
-                                >
+                                <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 05px; margin-top: 05px" >
                                     <span class="md-inputfield">
                                         <p-calendar
                                                 [required]="analise.baselineImediatamente"

@@ -224,7 +224,6 @@ export class AnaliseFormComponent implements OnInit {
             } else {
                 this.analise = new Analise();
                 this.analise.esforcoFases = [];
-                this.analise.baselineImediatamente = true;
                 this.analise.enviarBaseline = true;
             }
         });
@@ -658,6 +657,13 @@ export class AnaliseFormComponent implements OnInit {
                 this.analise.funcaoTransacaos = [];
             }
             this.save();
+        }else{
+            if(this.analise.metodoContagem === MetodoContagem.DETALHADA){
+                this.analise.enviarBaseline = true;
+            }else{
+                this.analise.enviarBaseline = false;
+            }
+
         }
     }
 
