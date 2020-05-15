@@ -18,7 +18,7 @@
           </div>
           <div class="ui-g-6">
             <span class="md-inputfield">
-              <p-spinner size="30" name="fator" [(ngModel)]="fatorAjuste.fator" decimalSeparator="" thousandSeparator=""></p-spinner>
+              <p-spinner size="30" name="fator" [(ngModel)]="fatorAjuste.fator" [min]="0" decimalSeparator="" thousandSeparator=""></p-spinner>
               <label translate="Cadastros.FatorAjuste.Deflator">Deflator</label>
             </span>
           </div>

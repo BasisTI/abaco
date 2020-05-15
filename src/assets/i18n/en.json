@@ -18,8 +18,7 @@
     "Reindexar": {
       "ElasticSearch": "ElasticSearch",
       "Reindexar": "Reindexar",
-      "Descricao": "Do you want reindexar the ElasticSearch index ?",
-      ""
+      "Descricao": "Do you want reindexar the ElasticSearch index ?"
     },
     "AlterarSenha": {
       "AlterarSenha": "Change Password",
@@ -48,6 +47,7 @@
       "DER(TD)": "DER(TD)",
       "DER(TD)*": "DER (TD) *",
       "FTR(AR)": "FTR (AR)",
+      "Evidência": "Evidence",
       "Funcionalidade": "Functionality",
       "Fundamentacao": "Fundamention",
       "Impacto": "Impact",
@@ -114,6 +114,7 @@
       "Deflator*": "Deflator *",
       "DER(TD)": "DER (TD)",
       "FTR(AR)": "FTR (AR)",
+      "Evidência": "Evidence",
       "Funcionalidade": "Functionality",
       "Fundamentacao": "Fundamention",
       "Impacto": "Impact",
