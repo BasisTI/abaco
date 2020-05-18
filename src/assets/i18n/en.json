@@ -639,6 +639,7 @@
         "msgSomenteEquipeCompartilharAnalise": "Only responsible team members can share this review!",
         "msgSomenteEquipeDesbloquearAnalise": "Only members of the responsible team can unlock this review!",
         "msgSomenteEquipeBloquearAnalise": "Only responsible team members can block this review!",
+        "msgSomenteEquipeExcluirAnalise": "Only responsible team members can delete this review!",
         "msgAnaliseCompartilhadaSucesso": "Analysis shared successfully!",
         "msgSelecioneRegistroAdicionarCliqueSair": "Please select at least one record in order to add or click the X to exit!",
         "msgCompartilhamentoRemovidoSucesso": "Sharing removed successfully!",

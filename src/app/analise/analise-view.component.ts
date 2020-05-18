@@ -136,7 +136,7 @@ export class AnaliseViewComponent implements OnInit {
             this.analise = new Analise();
             if (params['id']) {
                 this.isEdicao = true;
-                this.analiseService.findWithFuncaos(params['id']).subscribe(analise => {
+                this.analiseService.findView(params['id']).subscribe(analise => {
                     this.inicializaValoresAposCarregamento(analise);
                     this.analiseSharedDataService.analiseCarregada();
                     this.dataAnalise = this.analise;

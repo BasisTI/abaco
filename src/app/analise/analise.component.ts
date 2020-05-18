@@ -1,3 +1,4 @@
+import { indexadorRoute } from './../indexador/indexador.router';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {DatatableClickEvent, DatatableComponent} from '@basis/angular-components';
@@ -329,18 +330,23 @@ export class AnaliseComponent implements OnInit, OnDestroy {
             this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgERRO_EXCLUSAO_ANALISE_BLOQUEADA'));
             return;
         }
-
-        this.confirmationService.confirm({
-            message: this.getLabel('Analise.Analise.Mensagens.msgCertezaExcluirRegistro').concat(analise.identificadorAnalise).concat('?'),
-            accept: () => {
-                this.blockUI.start(this.getLabel('Global.Mensagens.EXCLUINDO_REGISTRO'));
-                this.analiseService.delete(analise.id).subscribe(() => {
-                    this.recarregarDataTable();
-                    this.blockUI.stop();
-                    this.pageNotificationService.addDeleteMsgWithName(analise.identificadorAnalise);
-                });
-            }
-        });
+        const tipoEquipe = this.tipoEquipesLoggedUser.find(tipoEquipe => tipoEquipe.id === this.analiseSelecionada.equipeResponsavel['id']);
+        if(tipoEquipe){
+            this.confirmationService.confirm({
+                message: this.getLabel('Analise.Analise.Mensagens.msgCertezaExcluirRegistro').concat(analise.identificadorAnalise).concat('?'),
+                accept: () => {
+                    this.blockUI.start(this.getLabel('Global.Mensagens.EXCLUINDO_REGISTRO'));
+                    this.analiseService.delete(analise.id).subscribe(() => {
+                        this.recarregarDataTable();
+                        this.blockUI.stop();
+                        this.pageNotificationService.addDeleteMsgWithName(analise.identificadorAnalise);
+                    });
+                }
+            });
+        }else{
+            this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeExcluirAnalise'));
+            return;
+        }
     }
 
     public limparPesquisa() {
@@ -441,7 +447,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
                         }
                     });
                 } else {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeBloquearAnalise'));
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeExcluirAnalise'));
                 }
             }
         });

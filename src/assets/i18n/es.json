@@ -632,6 +632,7 @@
         "msgRegistroGerarRelatorio": "Seleccione un registro para generar el informe",
         "msgSomenteEquipeCompartilharAnalise": "Sólo los miembros del equipo responsable pueden compartir este análisis!",
         "msgSomenteEquipeBloquearAnalise": "Sólo miembros del equipo responsable pueden bloquear este análisis!!",
+        "msgSomenteEquipeExcluirAnalise": "Sólo miembros del equipo responsable pueden borrada este análisis!!",
         "msgSomenteEquipeDesbloquearAnalise": "Sólo miembros del equipo responsable pueden desbloquear este análisis!",
         "msgAnaliseCompartilhadaSucesso": "Análisis compartido con éxito!",
         "msgSelecioneRegistroAdicionarCliqueSair": "Seleccione al menos un registro para poder agregar o haga clic en la X para salir!",

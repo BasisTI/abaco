@@ -638,6 +638,7 @@
         "msgSomenteEquipeCompartilharAnalise": "Somente membros da equipe responsável podem compartilhar esta análise!",
         "msgSomenteEquipeDesbloquearAnalise": "Somente membros da equipe responsável podem desbloquear esta análise!",
         "msgSomenteEquipeBloquearAnalise": "Somente membros da equipe responsável podem bloquear esta análise!",
+        "msgSomenteEquipeExcluirAnalise": "Somente membros da equipe responsável podem excluir esta análise!",
         "msgAnaliseCompartilhadaSucesso": "Análise compartilhada com sucesso!",
         "msgSelecioneRegistroAdicionarCliqueSair": "Selecione pelo menos um registro para poder adicionar ou clique no X para sair!",
         "msgCompartilhamentoRemovidoSucesso": "Compartilhamento removido com sucesso!",
