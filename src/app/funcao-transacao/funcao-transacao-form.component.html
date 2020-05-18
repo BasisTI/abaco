@@ -28,7 +28,7 @@
                                         [disableDelete]="this.isView"
                                         [disableEdit]="this.isView"
                                         [disableClone]="this.isView"
-                                        [showFilter]="true"
+                                        [showFilter]="!this.isView"
                                         id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
                                         [value]="this.funcoesTransacoes"
                                         (buttonClick)="datatableClick($event)"

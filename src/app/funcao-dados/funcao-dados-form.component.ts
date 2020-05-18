@@ -132,7 +132,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     crud: string [] = ['Excluir', 'Editar', 'Inserir', 'Pesquisar', 'Consultar'];
 
-    idAnalise: Number;
+    idAnalise: number;
     private fatorAjusteNenhumSelectItem = {label: 'Nenhum', value: undefined};
     private analiseCarregadaSubscription: Subscription;
     private subscriptionSistemaSelecionado: Subscription;
@@ -205,20 +205,22 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.idAnalise = params['id'];
             this.isView = params['view'] !== undefined;
             this.funcaoDadosService.getVWFuncaoDadosByIdAnalise(this.idAnalise).subscribe(value => {
-                this.analiseService.find(this.idAnalise).subscribe(analise => {
-                    this.analise = analise;
-                    this.funcoesDados = value;
-                    this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
-                    this.hideShowQuantidade = true;
-                    this.estadoInicial();
-                    this.impactos = AnaliseSharedUtils.impactos;
-                    if (!this.uploadImagem) {
-                        this.config.toolbar.splice(this.config.toolbar.indexOf('imageUpload'));
-                    }
-                    if (!this.criacaoTabela) {
-                        this.config.toolbar.splice(this.config.toolbar.indexOf('insertTable'));
-                    }
-                });
+                this.funcoesDados = value;
+                if(!this.isView){
+                    this.analiseService.find(this.idAnalise).subscribe(analise => {
+                        this.analise = analise;
+                        this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
+                        this.hideShowQuantidade = true;
+                        this.estadoInicial();
+                        this.impactos = AnaliseSharedUtils.impactos;
+                        if (!this.uploadImagem) {
+                            this.config.toolbar.splice(this.config.toolbar.indexOf('imageUpload'));
+                        }
+                        if (!this.criacaoTabela) {
+                            this.config.toolbar.splice(this.config.toolbar.indexOf('insertTable'));
+                        }
+                    });
+                }
             });
         });
     }
@@ -1158,30 +1160,27 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         switch (index) {
             case 0:
                 if (this.isView) {
-                    link = ['/analise/' + this.analise.id + '/view'];
+                    link = ['/analise/' + this.idAnalise + '/view'];
                 } else {
-                    link = ['/analise/' + this.analise.id + '/edit'];
+                    link = ['/analise/' + this.idAnalise + '/edit'];
                 }
                 break;
             case 1:
                 return;
             case 2:
                 if (this.isView) {
-                    link = ['/analise/' + this.analise.id + '/funcao-transacao/view'];
+                    link = ['/analise/' + this.idAnalise + '/funcao-transacao/view'];
                 } else {
-                    link = ['/analise/' + this.analise.id + '/funcao-transacao'];
+                    link = ['/analise/' + this.idAnalise + '/funcao-transacao'];
                 }
                 break;
             case 3:
                 if (this.isView) {
-                    link = ['/analise/' + this.analise.id + '/resumo'];
+                    link = ['/analise/' + this.idAnalise + '/resumo/view'];
                 } else {
-                    link = ['/analise/' + this.analise.id + '/resumo'];
+                    link = ['/analise/' + this.idAnalise + '/resumo'];
                 }
                 break;
-        }
-        if (this.isView) {
-            link = link + '/view';
         }
         this.router.navigate(link);
     }

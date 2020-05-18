@@ -59,6 +59,7 @@ export class AnaliseResumoComponent implements OnInit {
     users: User[] = [];
     equipeShare = [];
     public isView: boolean;
+    idAnalise: Number;
 
     constructor(
         private confirmationService: ConfirmationService,
@@ -94,23 +95,44 @@ export class AnaliseResumoComponent implements OnInit {
         this.getEquipesFromActiveLoggedUser();
         this.route.params.subscribe(params => {
             this.isView = params['view'] !== undefined;
-            if (params['id']) {
-                this.analiseService.find(params['id']).subscribe(analise => {
+            this.idAnalise = params['id'];
+            if (this.idAnalise) {
+                if(!this.isView){
+                    this.analiseService.find(this.idAnalise).subscribe(analise => {
                         this.analiseSharedDataService.analise = analise;
                         this.analise = analise;
                         this.pfTotal = analise.pfTotal;
                         this.pfAjustada = analise.adjustPFTotal;
                         this.disableAba = analise.metodoContagem === MessageUtil.INDICATIVA;
-                        this.analiseService.getResumo(params['id']).subscribe(res =>{
+                        this.analiseService.getResumo(this.idAnalise).subscribe(res =>{
                             this.linhaResumo = res;
                             this.linhaResumo = Resumo.addTotalLine(this.linhaResumo);
                         });
                     },
-                    err => {
-                        this.pageNotificationService.addErrorMsg(
-                            this.getLabel('Analise.Analise.Mensagens.msgSemPermissaoParaEditarAnalise')
-                        );
-                });
+                        err => {
+                            this.pageNotificationService.addErrorMsg(
+                                this.getLabel('Analise.Analise.Mensagens.msgSemPermissaoParaEditarAnalise')
+                            );
+                    });
+                }else {
+                    this.analiseService.findView(this.idAnalise).subscribe(analise => {
+                        this.analiseSharedDataService.analise = analise;
+                        this.analise = analise;
+                        this.pfTotal = analise.pfTotal;
+                        this.pfAjustada = analise.adjustPFTotal;
+                        this.disableAba = analise.metodoContagem === MessageUtil.INDICATIVA;
+                        this.analiseService.getResumo(this.idAnalise).subscribe(res =>{
+                            this.linhaResumo = res;
+                            this.linhaResumo = Resumo.addTotalLine(this.linhaResumo);
+                        });
+                    },
+                        err => {
+                            this.pageNotificationService.addErrorMsg(
+                                this.getLabel('Analise.Analise.Mensagens.msgSemPermissaoParaEditarAnalise')
+                            );
+                    });
+
+                }
             }
             
         });
@@ -122,23 +144,23 @@ export class AnaliseResumoComponent implements OnInit {
         switch (index) {
             case 0:
                 if (this.isView) {
-                    link = ['/analise/' + this.analise.id + '/view'];
+                    link = ['/analise/' + this.idAnalise + '/view'];
                 }else {
-                    link = ['/analise/' + this.analise.id + '/edit'];
+                    link = ['/analise/' + this.idAnalise + '/edit'];
                 }
                 break;
             case 1:
                 if (this.isView) {
-                    link = ['/analise/' + this.analise.id + '/funcao-dados/view'];
+                    link = ['/analise/' + this.idAnalise + '/funcao-dados/view'];
                 }else {
-                    link = ['/analise/' + this.analise.id + '/funcao-dados'];
+                    link = ['/analise/' + this.idAnalise + '/funcao-dados'];
                 }
                 break;
             case 2:
                 if (this.isView) {
-                    link = ['/analise/' + this.analise.id + '/funcao-transacao/view'];
+                    link = ['/analise/' + this.idAnalise + '/funcao-transacao/view'];
                 }else {
-                    link = ['/analise/' + this.analise.id + '/funcao-transacao'];
+                    link = ['/analise/' + this.idAnalise + '/funcao-transacao'];
                 }
                 break;
             case 3:
@@ -148,11 +170,11 @@ export class AnaliseResumoComponent implements OnInit {
     }
 
     public geraRelatorioExcelBrowser() {
-        this.analiseService.gerarRelatorioExcel(this.analise.id);
+        this.analiseService.gerarRelatorioExcel(this.idAnalise);
     }
 
     public geraRelatorioPdfDetalhadoBrowser() {
-        this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.analise.id);
+        this.analiseService.geraRelatorioPdfDetalhadoBrowser(this.idAnalise);
     }
 
     public bloquearAnalise() {

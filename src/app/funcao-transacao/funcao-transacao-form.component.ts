@@ -173,24 +173,26 @@ export class FuncaoTransacaoFormComponent implements OnInit {
             this.idAnalise = params['id'];
             this.isView = params['view'] !== undefined;
             this.funcaoTransacaoService.getVwFuncaoTransacaoByIdAnalise(this.idAnalise).subscribe(value => {
-                this.analiseService.find(this.idAnalise).subscribe(analise => {
-                    this.analise = analise;
-                    this.analiseSharedDataService.analise = analise;
-                    this.funcoesTransacoes = value;
-                    this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
-                    this.hideShowQuantidade = true;
-                    this.estadoInicial();
-                    this.currentFuncaoTransacao = new FuncaoTransacao();
-                    this.subscribeToAnaliseCarregada();
-                    this.initClassificacoes();
-                    this.estadoInicial();
-                    if (!this.uploadImagem) {
-                        this.config.toolbar.splice(this.config.toolbar.indexOf('imageUpload'));
-                    }
-                    if (!this.criacaoTabela) {
-                        this.config.toolbar.splice(this.config.toolbar.indexOf('insertTable'));
-                    }
-                });
+                this.funcoesTransacoes = value;
+                if(!this.isView){
+                    this.analiseService.find(this.idAnalise).subscribe(analise => {
+                        this.analise = analise;
+                        this.analiseSharedDataService.analise = analise;
+                        this.disableAba = this.analise.metodoContagem === MessageUtil.INDICATIVA;
+                        this.hideShowQuantidade = true;
+                        this.estadoInicial();
+                        this.currentFuncaoTransacao = new FuncaoTransacao();
+                        this.subscribeToAnaliseCarregada();
+                        this.initClassificacoes();
+                        this.estadoInicial();
+                        if (!this.uploadImagem) {
+                            this.config.toolbar.splice(this.config.toolbar.indexOf('imageUpload'));
+                        }
+                        if (!this.criacaoTabela) {
+                            this.config.toolbar.splice(this.config.toolbar.indexOf('insertTable'));
+                        }
+                    });
+                }
             });
         });
     }
@@ -958,23 +960,23 @@ export class FuncaoTransacaoFormComponent implements OnInit {
         switch (index) {
             case 0:
                 if (this.isView) {
-                    link = ['/analise/' + this.analise.id + '/view'];
+                    link = ['/analise/' + this.idAnalise + '/view'];
                 } else {
-                    link = ['/analise/' + this.analise.id + '/edit'];
+                    link = ['/analise/' + this.idAnalise + '/edit'];
                 }
                 break;
             case 1:
                 if (this.isView) {
-                    link = ['/analise/' + this.analise.id + '/funcao-dados/view'];
+                    link = ['/analise/' + this.idAnalise + '/funcao-dados/view'];
                 } else {
-                    link = ['/analise/' + this.analise.id + '/funcao-dados'];
+                    link = ['/analise/' + this.idAnalise + '/funcao-dados'];
                 }
                 break;
             case 2:
                 return;
             case 3:
                 if (this.isView) {
-                    link = ['/analise/' + this.analise.id + '/resumo/view'];
+                    link = ['/analise/' + this.idAnalise + '/resumo/view'];
                 } else {
                     link = ['/analise/' + this.idAnalise + '/resumo'];
                 }

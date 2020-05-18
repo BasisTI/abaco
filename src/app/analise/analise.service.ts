@@ -163,7 +163,7 @@ export class AnaliseService {
     /**
      *
      */
-    public geraRelatorioPdfDetalhadoBrowser(id: number): Observable<string> {
+    public geraRelatorioPdfDetalhadoBrowser(id: Number): Observable<string> {
         this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.GerandoRelatorio'));
         this.http.get(`${this.relatoriosDetalhadoUrl}/${id}`, {
             method: RequestMethod.Get,
@@ -193,7 +193,7 @@ export class AnaliseService {
     /**
      *
      */
-    public gerarRelatorioExcel(id: number): Observable<string> {
+    public gerarRelatorioExcel(id: Number): Observable<string> {
         this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.GerandoRelatorio'));
         this.http.get(`${this.relatorioExcelUrl}/${id}`, {
             method: RequestMethod.Get,
@@ -280,6 +280,19 @@ export class AnaliseService {
     public find(id: Number): Observable<Analise> {
         this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.ProcurandoAnalise'));
         return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
+            const jsonResponse = res.json();
+            const analiseJson = this.convertItemFromServer(jsonResponse);
+            analiseJson.pfTotal = jsonResponse.pfTotal;
+            analiseJson.adjustPFTotal = jsonResponse.adjustPFTotal;
+            analiseJson.createdBy = jsonResponse.createdBy;
+            this.blockUI.stop();
+            return analiseJson;
+        });
+    }
+
+    public findView(id: Number): Observable<Analise> {
+        this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.ProcurandoAnalise'));
+        return this.http.get(`${this.resourceUrl}/view/${id}`).map((res: Response) => {
             const jsonResponse = res.json();
             const analiseJson = this.convertItemFromServer(jsonResponse);
             analiseJson.pfTotal = jsonResponse.pfTotal;
@@ -447,7 +460,7 @@ export class AnaliseService {
         return this.http.get(url);
     }
 
-    getResumo(analiseId:number): Observable<Resumo[]>{
+    getResumo(analiseId:Number): Observable<Resumo[]>{
         this.blockUI.start(this.getLabel('Analise.Analise.Mensagens.ProcurandoAnalise'));
         return this.http.get(`${this.resourceResumoUrl}/${analiseId}`,).map((res: Response) => {
             const jsonResponse = res.json();
