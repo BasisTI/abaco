@@ -310,6 +310,7 @@ public class AnaliseService extends BaseService {
 
     public void bindAnalise(@RequestBody @Valid Analise analiseUpdate, Analise analise) {
         salvaNovaData(analiseUpdate);
+        analise.setNumeroOs(analiseUpdate.getNumeroOs());
         analise.setIdentificadorAnalise(analiseUpdate.getIdentificadorAnalise());
         analise.setDataCriacaoOrdemServico(analiseUpdate.getDataCriacaoOrdemServico());
         analise.setMetodoContagem(analiseUpdate.getMetodoContagem());
@@ -360,5 +361,4 @@ public class AnaliseService extends BaseService {
         }
         return canEdit;
     }
-
 }

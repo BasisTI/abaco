@@ -271,10 +271,12 @@ public class AnaliseResource {
     public ResponseEntity<Void> deleteAnalise(@PathVariable Long id) {
 
         Analise analise = analiseService.recuperarAnalise(id);
-
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
         if (analise != null) {
-            analiseRepository.delete(id);
-            analiseSearchRepository.delete(id);
+            if (user.getOrganizacoes().contains(analise.getOrganizacao()) && user.getTipoEquipes().contains(analise.getEquipeResponsavel())) {
+                analiseRepository.delete(id);
+                analiseSearchRepository.delete(id);
+            }
         } else {
             return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
