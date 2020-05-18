@@ -251,7 +251,6 @@ public class AnaliseResource {
     public ResponseEntity<Analise> getAnaliseView(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnalise(id);
         if (analise != null) {
-            User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
             return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
         }
         return ResponseEntity
