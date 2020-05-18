@@ -67,6 +67,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @RestController
@@ -235,9 +236,23 @@ public class AnaliseResource {
         Analise analise = analiseService.recuperarAnalise(id);
         if (analise != null) {
             User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
-            if (user.getOrganizacoes().contains(analise.getOrganizacao()) && user.getTipoEquipes().contains(analise.getEquipeResponsavel())) {
+            if (analiseService.permissionToEdit(user, analise)) {
                 return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
             }
+        }
+        return ResponseEntity
+            .status(HttpStatus.FORBIDDEN)
+            .body(null);
+
+    }
+
+    @GetMapping("/analises/view/{id}")
+    @Timed
+    public ResponseEntity<Analise> getAnaliseView(@PathVariable Long id) {
+        Analise analise = analiseService.recuperarAnalise(id);
+        if (analise != null) {
+            User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
+            return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
         }
         return ResponseEntity
             .status(HttpStatus.FORBIDDEN)
@@ -281,16 +296,24 @@ public class AnaliseResource {
     @PostMapping("/analises/compartilhar")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<List<Compartilhada>> popularCompartilhar(@Valid @RequestBody List<Compartilhada> compartilhadaList) throws URISyntaxException {
-        List<Compartilhada> result = compartilhadaRepository.save(compartilhadaList);
+    public ResponseEntity<Set<Compartilhada>> popularCompartilhar(@Valid @RequestBody Set<Compartilhada> compartilhadaList) throws URISyntaxException {
+        compartilhadaList.forEach(compartilhada -> {
+            compartilhadaRepository.save(compartilhada);
+        });
+        analiseService.bindAnaliseCompartilhada(compartilhadaList);
         return ResponseEntity.created(new URI("/api/analises/compartilhar"))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, "created")).body(result);
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, "created")).body(compartilhadaList);
     }
 
     @DeleteMapping("/analises/compartilhar/delete/{id}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Void> deleteCompartilharAnalise(@PathVariable Long id) {
+        Compartilhada compartilhada =  compartilhadaRepository.getOne(id);
+        Analise analise = analiseRepository.getOne(compartilhada.getAnaliseId());
+        analise.getCompartilhadas().remove(compartilhada);
+        analiseRepository.save(analise);
+        analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
         compartilhadaRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
@@ -300,6 +323,7 @@ public class AnaliseResource {
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Compartilhada> viewOnly(@Valid @RequestBody Compartilhada compartilhada) throws URISyntaxException {
         Compartilhada result = compartilhadaRepository.save(compartilhada);
+
         return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, compartilhada.getId().toString()))
             .body(result);
     }

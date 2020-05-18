@@ -2,6 +2,7 @@ package br.com.basis.abaco.service;
 
 import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.Analise;
+import br.com.basis.abaco.domain.Compartilhada;
 import br.com.basis.abaco.domain.Der;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
@@ -17,6 +18,7 @@ import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
@@ -50,6 +52,7 @@ public class AnaliseService extends BaseService {
     public static final String COMPARTILHADAS_EQUIPE_ID = "compartilhadas.equipeId";
 
     private final AnaliseRepository analiseRepository;
+    private final AnaliseSearchRepository analiseSearchRepository;
     private final UserRepository userRepository;
     private final CompartilhadaRepository compartilhadaRepository;
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
@@ -64,13 +67,15 @@ public class AnaliseService extends BaseService {
                           UserRepository userRepository,
                           FuncaoDadosRepository funcaoDadosRepository,
                           CompartilhadaRepository compartilhadaRepository,
-                          FuncaoTransacaoRepository funcaoTransacaoRepository) {
+                          FuncaoTransacaoRepository funcaoTransacaoRepository,
+                          AnaliseSearchRepository analiseSearchRepository) {
         this.analiseRepository = analiseRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.userRepository = userRepository;
         this.compartilhadaRepository = compartilhadaRepository;
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
+        this.analiseSearchRepository = analiseSearchRepository;
     }
 
     public void bindFilterSearch(String identificador, String sistema, String metodo, String organizacao, String equipe, String usuario, Set<Long> equipesIds, Set<Long> organizacoes, BoolQueryBuilder qb) {
@@ -327,6 +332,33 @@ public class AnaliseService extends BaseService {
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
         bindFilterSearch(identificador, sistema, metodo, organizacao, equipe, usuario, equipesIds, organicoesIds, qb);
         return qb;
+    }
+
+    public void bindAnaliseCompartilhada(Set<Compartilhada> lstCompartilhadas){
+        if(lstCompartilhadas != null && lstCompartilhadas.size() > 0){
+            long idAnalise = lstCompartilhadas.stream().findFirst().get().getAnaliseId();
+            Analise analise = analiseRepository.findOne(idAnalise);
+            analise.setCompartilhadas(lstCompartilhadas);
+            analiseRepository.save(analise);
+            analiseSearchRepository.save(convertToEntity(convertToDto(analise)));
+        }
+    }
+    public boolean permissionToEdit(User user, Analise analise){
+        boolean canEdit = false;
+        if(user.getOrganizacoes().contains(analise.getOrganizacao())){
+            if(user.getTipoEquipes().contains(analise.getEquipeResponsavel())){
+                return true;
+            }else {
+                for (TipoEquipe tipoEquipe:user.getTipoEquipes()) {
+                    for(Compartilhada compartilhada:analise.getCompartilhadas()){
+                        if(compartilhada.getEquipeId().longValue() == tipoEquipe.getId().longValue() && !compartilhada.isViewOnly()){
+                            canEdit = true;
+                        }
+                    }
+                }
+            }
+        }
+        return canEdit;
     }
 
 }
