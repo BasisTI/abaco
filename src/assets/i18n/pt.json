@@ -677,7 +677,7 @@
         "msgNenhumaFuncionalidadeCadastrado": "Nenhuma Funcionalidade Cadastrada",
         "msgCONCAT_COPIA": " - CÓPIA",
         "msgCLONAGEM_SUCESSO": " clonada com sucesso!",
-        "msgCONFIRMAR_BLOQUEIO": "Tem certeza que deseja bloquear o registro ",
+        "msgCONFIRMAR_BLOQUEIO": "Tem certeza que deseja bloquear o registro ?",
         "msgCONFIRMAR_DESBLOQUEIO": "Tem certeza que deseja desbloquear o registro ",
         "msgErroListar": "Ocorreu algum erro",
         "msgCONFIRMAR_CLONE":"Tem certeza que deseja clonar o registro ",
@@ -697,7 +697,8 @@
         "BuscandoAnalisesBaseline":"Buscando análises baseline",
         "CompartilhandoAnalise":"Compartilhando análise",
         "AtualizandoCompartilhamento":"Atualizando compartilhamento",
-        "AguardeUmMomento":"Aguarde um momento"
+        "AguardeUmMomento":"Aguarde um momento",
+        "DesejaAtualizarBaseline":"Desejar atualizar a Baseline dos Sistemas?"
       },
       "lstComplexidades":{
         "Media": "MÉD",
@@ -760,6 +761,7 @@
     "Botoes": {
       "Adicionar": "Adicionar",
       "AdicionarMultiplos": "Adicionar Múltiplos",
+      "Atualizar":"Atualizar",
       "Bloquear": "Bloquear",
       "BloquearAnalise": "Bloquear Análise",
       "Cancelar": "Cancelar",

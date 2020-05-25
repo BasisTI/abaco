@@ -19,9 +19,9 @@ import {User, UserService} from '../user';
     templateUrl: './analise.component.html',
     providers: [GrupoService]
 })
-export class AnaliseComponent implements OnInit, OnDestroy {
+export class AnaliseComponent implements OnInit {
 
-    @ViewChild(DatatableComponent) datatable: DatatableComponent;
+    @ViewChild(DatatableComponent) datatable: DatatableComponent ;
     @BlockUI() blockUI: NgBlockUI;
 
     searchUrl: string = this.grupoService.grupoUrl;
@@ -31,6 +31,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     rowsPerPageOptions: number[] = [5, 10, 20, 50, 100];
 
     analiseSelecionada: any = new Analise();
+    analiseTableSelecionada: Analise = new Analise();
     searchGroup: SearchGroup = new SearchGroup();
     nomeSistemas: Array<Sistema>;
     usuariosOptions: Array<User>;
@@ -61,7 +62,9 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     blocked;
     inicial: boolean;
     showDialogAnaliseCloneTipoEquipe = false;
+    showDialogAnaliseBlock = false;
     mostrarDialog = false;
+    enableTable:boolean = false;
 
     constructor(
         private router: Router,
@@ -100,15 +103,6 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         this.recuperarSistema();
         this.recuperarUsuarios();
         this.inicial = false;
-
-        this.datatable.pDatatableComponent.onRowSelect.subscribe((event) => {
-            this.analiseSelecionada = event.data;
-            this.blocked = event.data.bloqueiaAnalise;
-            this.inicial = true;
-        });
-        this.datatable.pDatatableComponent.onRowUnselect.subscribe((event) => {
-            this.analiseSelecionada = undefined;
-        });
     }
 
     getEquipesFromActiveLoggedUser() {
@@ -300,7 +294,6 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     }
 
     public onRowDblclick(event) {
-
         if (event.target.nodeName === 'TD') {
             this.abrirEditar();
         } else if (event.target.parentNode.nodeName === 'TD') {
@@ -315,7 +308,7 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     public clonar(id: number) {
         this.confirmationService.confirm({
             message: this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_CLONE')
-                .concat(this.analiseSelecionada.identificadorAnalise).concat('?'),
+                .concat(this.analiseSelecionada.identificadorAnalise),
             accept: () => {
                 this.analiseService.clonarAnalise(id).subscribe(response => {
                     this.router.navigate(['/analise', response.id, 'edit']);
@@ -357,12 +350,21 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         this.searchGroup.equipe = undefined;
         this.searchGroup.usuario = undefined;
         this.userAnaliseUrl = this.grupoService.grupoUrl + this.changeUrl();
+        this.enableTable = false;
         this.recarregarDataTable();
     }
 
+    public selectAnalise() {
+        this.inicial = true;
+        this.analiseSelecionada = this.datatable.selectedRow;
+        this.blocked =this.datatable.selectedRow.bloqueiaAnalise;
+    }
+
     public recarregarDataTable() {
-        this.datatable.url = this.userAnaliseUrl;
-        this.datatable.reset();
+        if(this.datatable){
+            this.datatable.url = this.userAnaliseUrl;
+            this.datatable.reset();
+        }
     }
 
     public gerarRelatorioPdfArquivo(analise: Analise) {
@@ -416,48 +418,57 @@ export class AnaliseComponent implements OnInit, OnDestroy {
     }
 
     public performSearch() {
+        this.enableTable = true ;
         this.userAnaliseUrl = this.grupoService.grupoUrl + this.changeUrl();
         this.recarregarDataTable();
     }
 
-    /**
-     * Desabilita botão relatório
-     */
     public desabilitarBotaoRelatorio(): boolean {
         return !this.analiseSelecionada;
     }
 
     public bloqueiaAnalise(bloquear: boolean) {
-        this.analiseService.findWithFuncaos(this.analiseSelecionada.id).subscribe((res) => {
+        this.analiseService.find(this.analiseSelecionada.id).subscribe((res) => {
             this.analiseTemp = res;
             if (!this.analiseTemp.dataHomologacao && !bloquear) {
-                this.pageNotificationService.addInfoMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_DATA_HOMOLOGACAO'));
+                this.analiseTemp.dataHomologacao  =  new Date();
+                this.showDialogAnaliseBlock = true;
             } else {
                 if (this.checkUserAnaliseEquipes()) {
                     this.confirmationService.confirm({
                         message: this.mensagemDialogBloquear(bloquear),
                         accept: () => {
-                            const copy = this.analiseTemp.toJSONState();
-                            this.analiseService.block(copy).subscribe(() => {
-                                const nome = this.analiseTemp.identificadorAnalise;
-                                const bloqueado = this.analiseTemp.bloqueiaAnalise;
-                                this.mensagemAnaliseBloqueada(bloqueado, nome);
-                                this.recarregarDataTable();
-                            });
+                            this.alterAnaliseBlock();
                         }
                     });
                 } else {
                     this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeExcluirAnalise'));
                 }
             }
+        }, 
+        err => {
+            this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgSomenteEquipeExcluirAnalise'));
+            this.blockUI.stop();
         });
+    }
+
+    public alterAnaliseBlock() {
+        if(this.analiseTemp && this.analiseTemp.dataHomologacao){
+            const copy = this.analiseTemp.toJSONState();
+            this.analiseService.block(copy).subscribe(() => {
+                const nome = this.analiseTemp.identificadorAnalise;
+                const bloqueado = this.analiseTemp.bloqueiaAnalise;
+                this.mensagemAnaliseBloqueada(bloqueado, nome);
+                this.recarregarDataTable();
+            });
+        }
     }
 
     private mensagemDialogBloquear(retorno: boolean) {
         if (retorno) {
             return this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_DESBLOQUEIO').concat('?');
         } else {
-            return this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_BLOQUEIO').concat('?');
+            return this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_BLOQUEIO');
         }
     }
 
@@ -539,7 +550,6 @@ export class AnaliseComponent implements OnInit, OnDestroy {
         }, 250);
     }
 
-
     public openModalCloneAnaliseEquipe(id: number) {
         this.equipeToClone = undefined;
         this.idAnaliseCloneToEquipe = id;
@@ -555,9 +565,5 @@ export class AnaliseComponent implements OnInit, OnDestroy {
                 this.idAnaliseCloneToEquipe = undefined;
             });
         }
-    }
-
-    ngOnDestroy() {
-        this.translateSusbscriptions.forEach(subscription => subscription.unsubscribe());
     }
 }

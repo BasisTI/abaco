@@ -698,7 +698,8 @@
         "BuscandoAnalisesBaseline":"Searching for baseline analysis",
         "CompartilhandoAnalise":"Sharing analysis",
         "AtualizandoCompartilhamento":"Updating sharing",
-        "AguardeUmMomento":"Wait a moment"
+        "AguardeUmMomento":"Wait a moment",
+        "DesejaAtualizarBaseline": "Want to update Baseline Systems?"
       },
       "lstComplexidades":{
         "Media": "MED",
@@ -762,6 +763,7 @@
     "Botoes": {
       "Adicionar": "Add",
       "AdicionarMultiplos": "Add Multiple",
+      "Atualizar":"Update",
       "Bloquear": "Block",
       "BloquearAnalise": "Block Analysis",
       "Cancelar": "Cancel",

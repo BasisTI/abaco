@@ -692,7 +692,8 @@
         "BuscandoAnalisesBaseline":"Buscando análisis baseline",
         "CompartilhandoAnalise":"Compartiendo análisis",
         "AtualizandoCompartilhamento":"Actualización de recursos compartidos",
-        "AguardeUmMomento":"Espera un momento"
+        "AguardeUmMomento":"Espera un momento",
+        "DesejaAtualizarBaseline":"¿Quiere actualizar los sistemas de línea base?"
       },
       "lstComplexidades":{
         "Media": "MÉD",
@@ -756,6 +757,7 @@
     "Botoes": {
       "Adicionar": "Añadir",
       "AdicionarMultiplos": "Agregar Múltiples",
+      "Atualizar":"Actualizar",
       "Bloquear": "Bloquear",
       "BloquearAnalise": "Bloquear Análisis",
       "Cancelar": "Cancelar",

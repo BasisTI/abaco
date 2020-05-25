@@ -39,8 +39,7 @@
                             optionLabel="nome"
                             [autoWidth]="false"
                             [(ngModel)]="searchGroup.usuario"
-                            [placeholder]="this.getLabel('Analise.Analise.Usuarios')"
-                            >
+                            [placeholder]="this.getLabel('Analise.Analise.Usuarios')" >
                     </p-dropdown>
                 </div>
             </div>
@@ -111,161 +110,159 @@
                                 routerLink="new">
                         </app-green-button>
                     </div>
-
                 </div>
+                <div *ngIf="enableTable">
+                    <basis-datatable
+                            [url]="userAnaliseUrl"
+                            (dblclick)="onRowDblclick($event)"
+                            (buttonClick)="datatableClick($event)"
+                            [rows]="20"
+                            id="idTabelaComponentAnalise"
+                            [rowsPerPageOptions]="rowsPerPageOptions"
+                            [showPaginationFooter]="true"
+                            (click) = "selectAnalise($event)"
+                            resizableColumns="true"
+                            #datatable>
 
-                <basis-datatable
-                        [url]="userAnaliseUrl"
-                        (dblclick)="onRowDblclick($event)"
-                        (buttonClick)="datatableClick($event)"
-                        [rows]="20"
-                        id="idTabelaComponentAnalise"
-                        [rowsPerPageOptions]="rowsPerPageOptions"
-                        [showPaginationFooter]="true"
-                        resizableColumns="true"
-                        #datatable>
+                        <basis-datatable-button
+                                *ngIf="blocked"
+                                name="desbloquear"
+                                [tooltip]="this.getLabel('Global.Botoes.Desbloquear')"
+                                icon="block"
+                                (click)="bloqueiaAnalise(blocked)"
+                                class="ui-button-success">
+                        </basis-datatable-button>
 
-                    <basis-datatable-button
-                            *ngIf="blocked"
-                            name="desbloquear"
-                            [tooltip]="this.getLabel('Global.Botoes.Desbloquear')"
-                            icon="block"
-                            (click)="bloqueiaAnalise(blocked)"
-                            class="ui-button-success">
-                    </basis-datatable-button>
+                        <basis-datatable-button
+                                *ngIf="!blocked && inicial"
+                                name="bloquear"
+                                [tooltip]="this.getLabel('Global.Botoes.Bloquear')"
+                                icon="block"
+                                (click)="bloqueiaAnalise(blocked)"
+                                class="ui-button-danger">
+                        </basis-datatable-button>
 
-                    <basis-datatable-button
-                            *ngIf="!blocked && inicial"
-                            name="bloquear"
-                            [tooltip]="this.getLabel('Global.Botoes.Bloquear')"
-                            icon="block"
-                            (click)="bloqueiaAnalise(blocked)"
-                            class="ui-button-danger">
-                    </basis-datatable-button>
+                        <basis-datatable-button
+                                name="compartilhar"
+                                [tooltip]="compartilharTooltip()"
+                                icon="share"
+                                class="ui-button-info"
+                                disabled="desabilitarBotaoRelatorio()">
+                        </basis-datatable-button>
 
-                    <basis-datatable-button
-                            name="compartilhar"
-                            [tooltip]="compartilharTooltip()"
-                            icon="share"
-                            class="ui-button-info"
-                            disabled="desabilitarBotaoRelatorio()">
-                    </basis-datatable-button>
+                        <basis-datatable-button
+                                name="clone"
+                                [tooltip]="clonarTooltip()"
+                                icon="content-copy"
+                                disabled="desabilitarBotaoRelatorio()">
+                        </basis-datatable-button>
 
-                    <basis-datatable-button
-                            name="clone"
-                            [tooltip]="clonarTooltip()"
-                            icon="content-copy"
-                            disabled="desabilitarBotaoRelatorio()">
-                    </basis-datatable-button>
+                        <basis-datatable-button
+                                name="relatorioBrowserDetalhado"
+                                [tooltip]="relatorioTooltip()"
+                                icon="description"
+                                disabled="desabilitarBotaoRelatorio()">
+                        </basis-datatable-button>
 
-                    <basis-datatable-button
-                            name="relatorioBrowserDetalhado"
-                            [tooltip]="relatorioTooltip()"
-                            icon="description"
-                            disabled="desabilitarBotaoRelatorio()">
-                    </basis-datatable-button>
+                        <basis-datatable-button
+                                name="relatorioExcelDetalhado"
+                                [tooltip]="relatorioExcelTooltip()"
+                                icon="description"
+                                disabled="desabilitarBotaoRelatorio()"
+                                class="ui-button-success">
+                        </basis-datatable-button>
 
-                    <basis-datatable-button
-                            name="relatorioExcelDetalhado"
-                            [tooltip]="relatorioExcelTooltip()"
-                            icon="description"
-                            disabled="desabilitarBotaoRelatorio()"
-                            class="ui-button-success">
-                    </basis-datatable-button>
+                        <!--<basis-datatable-button
+                                name="relatorioAnaliseContagem"
+                                [tooltip]="relatorioContagemTooltip()"
+                                icon="description"
+                                disabled="desabilitarBotaoRelatorio()"
+                                class="ui-button-danger">
+                        </basis-datatable-button>-->
 
-                    <!--<basis-datatable-button
-                            name="relatorioAnaliseContagem"
-                            [tooltip]="relatorioContagemTooltip()"
-                            icon="description"
-                            disabled="desabilitarBotaoRelatorio()"
-                            class="ui-button-danger">
-                    </basis-datatable-button>-->
-
-                    <basis-datatable-button
-                            name="cloneParaEquipe"
-                            [tooltip]="clonarParaEquipeTooltip()"
-                            icon="content-copy"
-                            disabled="desabilitarBotaoRelatorio()"
-                            class="ui-button-success">
-                    </basis-datatable-button>
-
-
-                    <p-column [header]="this.getLabel('Analise.Analise.Organizacao')" field="organizacao.nome"
-                              [sortable]="true">
-                    </p-column>
-
-                    <p-column [header]="this.getLabel('Analise.Analise.IdentificadorAnalise')"
-                              field="identificadorAnalise" [sortable]="true">
-                    </p-column>
-
-                    <p-column [header]="this.getLabel('Analise.Analise.Equipe')" field="equipeResponsavel.nome"
-                              [sortable]="true">
-                    </p-column>
-
-                    <p-column [header]="this.getLabel('Analise.Analise.Sistema')" field="sistema.nome"
-                              [sortable]="true">
-                    </p-column>
-
-                    <p-column [header]="this.getLabel('Analise.Analise.MetodoContagem')" field="metodoContagem"
-                              [sortable]="true">
-                    </p-column>
-
-                    <p-column [header]="this.getLabel('Analise.Analise.PFTotal')" field="pfTotal" [sortable]="true">
-                        <ng-template let-col let-pfTotal="rowData.pfTotal" pTemplate="body">
-                            {{ pfTotal > 0 ? pfTotal : 0 | number: '00.00'}}
-                        </ng-template>
-                    </p-column>
-
-                    <p-column [header]="this.getLabel('Analise.Analise.PFAjustado')" field="adjustPFTotal"
-                              [sortable]="true">
-                        <ng-template let-col let-adjustPFTotal="rowData.adjustPFTotal" pTemplate="body">
-                            {{ adjustPFTotal > 0 ? adjustPFTotal : 0 | number: '00.00'}}
-                        </ng-template>
-                    </p-column>
+                        <basis-datatable-button
+                                name="cloneParaEquipe"
+                                [tooltip]="clonarParaEquipeTooltip()"
+                                icon="content-copy"
+                                disabled="desabilitarBotaoRelatorio()"
+                                class="ui-button-success">
+                        </basis-datatable-button>
 
 
-                    <p-column [header]="this.getLabel('Analise.Analise.DataCriacao')" field="dataCriacaoOrdemServico"
-                              [sortable]="true">
-                        <ng-template let-col let-dataCriacaoOrdemServico="rowData.dataCriacaoOrdemServico"
-                                     pTemplate="body">
-                            {{ dataCriacaoOrdemServico | date: 'dd/MM/y - HH:mm' }}
-                        </ng-template>
-                    </p-column>
+                        <p-column [header]="this.getLabel('Analise.Analise.Organizacao')" field="organizacao.nome"
+                                [sortable]="true">
+                        </p-column>
 
-                    <p-column [header]="this.getLabel('Analise.Analise.Bloqueado')" field="bloqueiaAnalise"
-                              [sortable]="true">
-                        <ng-template let-col let-bloqueado="rowData" pTemplate="body">
-                            {{ bloqueado[col.field] ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
-                        </ng-template>
-                    </p-column>
+                        <p-column [header]="this.getLabel('Analise.Analise.IdentificadorAnalise')"
+                                field="identificadorAnalise" [sortable]="true">
+                        </p-column>
 
-                    <p-column [header]="this.getLabel('Analise.Analise.ClonadaParaEquipe')" field="clonadaParaEquipe"
-                              [sortable]="true">
-                        <ng-template let-col let-bloqueado="rowData" pTemplate="body">
-                            {{ bloqueado[col.field] ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
-                        </ng-template>
-                    </p-column>
+                        <p-column [header]="this.getLabel('Analise.Analise.Equipe')" field="equipeResponsavel.nome"
+                                [sortable]="true">
+                        </p-column>
 
-                    <p-column [header]="this.getLabel('Analise.Analise.Usuarios')" field="users" [sortable]="false">
-                        <ng-template let-col let-row="rowData" pTemplate="body">
-                            <li *ngFor="let user of row.users">
-                                {{ user.firstName }}
-                            </li>
-                        </ng-template>
-                    </p-column>
-                </basis-datatable>
+                        <p-column [header]="this.getLabel('Analise.Analise.Sistema')" field="sistema.nome"
+                                [sortable]="true">
+                        </p-column>
 
-                <div class="ui-g-12 ui-md-2">
-                    <app-botoes-exportacao [query]="changeUrl()" resourceName="analise" id="idBtnExportacaoComponentAnalise"
-                                           fileName="analise">
-                    </app-botoes-exportacao>
+                        <p-column [header]="this.getLabel('Analise.Analise.MetodoContagem')" field="metodoContagem"
+                                [sortable]="true">
+                        </p-column>
+
+                        <p-column [header]="this.getLabel('Analise.Analise.PFTotal')" field="pfTotal" [sortable]="true">
+                            <ng-template let-col let-pfTotal="rowData.pfTotal" pTemplate="body">
+                                {{ pfTotal > 0 ? pfTotal : 0 | number: '00.00'}}
+                            </ng-template>
+                        </p-column>
+
+                        <p-column [header]="this.getLabel('Analise.Analise.PFAjustado')" field="adjustPFTotal"
+                                [sortable]="true">
+                            <ng-template let-col let-adjustPFTotal="rowData.adjustPFTotal" pTemplate="body">
+                                {{ adjustPFTotal > 0 ? adjustPFTotal : 0 | number: '00.00'}}
+                            </ng-template>
+                        </p-column>
+
+
+                        <p-column [header]="this.getLabel('Analise.Analise.DataCriacao')" field="dataCriacaoOrdemServico"
+                                [sortable]="true">
+                            <ng-template let-col let-dataCriacaoOrdemServico="rowData.dataCriacaoOrdemServico"
+                                        pTemplate="body">
+                                {{ dataCriacaoOrdemServico | date: 'dd/MM/y - HH:mm' }}
+                            </ng-template>
+                        </p-column>
+
+                        <p-column [header]="this.getLabel('Analise.Analise.Bloqueado')" field="bloqueiaAnalise"
+                                [sortable]="true">
+                            <ng-template let-col let-bloqueado="rowData" pTemplate="body">
+                                {{ bloqueado[col.field] ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
+                            </ng-template>
+                        </p-column>
+
+                        <p-column [header]="this.getLabel('Analise.Analise.ClonadaParaEquipe')" field="clonadaParaEquipe"
+                                [sortable]="true">
+                            <ng-template let-col let-bloqueado="rowData" pTemplate="body">
+                                {{ bloqueado[col.field] ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
+                            </ng-template>
+                        </p-column>
+
+                        <p-column [header]="this.getLabel('Analise.Analise.Usuarios')" field="users" [sortable]="false">
+                            <ng-template let-col let-row="rowData" pTemplate="body">
+                                <li *ngFor="let user of row.users">
+                                    {{ user.firstName }}
+                                </li>
+                            </ng-template>
+                        </p-column>
+                    </basis-datatable>
+                    
+                    <div class="ui-g-12 ui-md-2">
+                        <app-botoes-exportacao [query]="changeUrl()" resourceName="analise" id="idBtnExportacaoComponentAnalise"
+                        fileName="analise">
+                        </app-botoes-exportacao>
+                    </div>
                 </div>
-
             </div>
-
         </div>
     </div>
-
 </div>
 
 <p-confirmDialog [header]="getLabel('Global.Mensagens.Confirmacao')" #dialog>
@@ -356,4 +353,21 @@
         </div>
         <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Adicionar')" (click)="cloneAnaliseToEquipe()" style="float:right; margin-top: 5px"></app-green-button>
     </div>
+</p-dialog>
+<p-dialog [header]="this.getLabel('Analise.Analise.Mensagens.msgCONFIRMAR_BLOQUEIO')" [(visible)]="showDialogAnaliseBlock" [width]="410" [minHeight]="500" [modal]="true" >
+    <div *ngIf="analiseTemp && analiseTemp">
+        <div class="ui-g-12 ui-md-12 ui-sm-12 ui-label" style="margin-bottom: 05px; margin-top: 05px; min-height:350px;" >
+                <label>{{this.getLabel('Analise.Analise.DataHomologacao')}}</label>
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                    <p-calendar
+                    name="dataHomologacao"
+                    [(ngModel)]="analiseTemp.dataHomologacao"
+                    dateFormat="dd/mm/yy"
+                    showIcon="true">
+                </p-calendar>
+            </div>
+        </div>
+    </div>
+    <button type="button" pButton icon="fa-close" (click)="showDialogAnaliseBlock=false" [label]="this.getLabel('Global.Botoes.Cancelar')" style="float:right; margin-top: 5px"></button>
+    <button type="button" pButton icon="fa-check" (click)="alterAnaliseBlock()" [label]="this.getLabel('Global.Botoes.Bloquear')" style="float:right; margin-top: 5px"></button>
 </p-dialog>
