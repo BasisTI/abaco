@@ -162,12 +162,13 @@ public class AnaliseResource {
     @PutMapping("/analises/{id}/block")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<Analise> blockUnblockAnalise(@PathVariable Long id) throws URISyntaxException {
+    public ResponseEntity<Analise> blockUnblockAnalise(@PathVariable Long id, @Valid @RequestBody Analise analiseUpdate) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", id);
-
         Analise analise = analiseService.recuperarAnalise(id);
-
-        if (analise != null) {
+        if (analise != null && !(analise.getDataHomologacao() == null && analiseUpdate.getDataHomologacao() == null)) {
+            if (analise.getDataHomologacao() == null && analiseUpdate.getDataHomologacao() != null) {
+                analise.setDataHomologacao(analiseUpdate.getDataHomologacao());
+            }
             analiseService.linkFuncoesToAnalise(analise);
             if (analise.isBloqueiaAnalise()) {
                 analise.setBloqueiaAnalise(false);
@@ -261,7 +262,7 @@ public class AnaliseResource {
 
     @GetMapping("/analises/baseline")
     @Timed
-    public List<Analise> getAllAnalisesBaseline() {
+    public List<Analise> getAllAnalisesBaseline(@RequestParam(value = "sistema", required = true) String sistema) {
         return analiseRepository.findAllByBaseline();
     }
 
@@ -310,7 +311,7 @@ public class AnaliseResource {
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Void> deleteCompartilharAnalise(@PathVariable Long id) {
-        Compartilhada compartilhada =  compartilhadaRepository.getOne(id);
+        Compartilhada compartilhada = compartilhadaRepository.getOne(id);
         Analise analise = analiseRepository.getOne(compartilhada.getAnaliseId());
         analise.getCompartilhadas().remove(compartilhada);
         analiseRepository.save(analise);

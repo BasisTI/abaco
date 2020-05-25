@@ -7,7 +7,6 @@ import br.com.basis.dynamicexports.pojo.ReportObject;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import io.swagger.annotations.ApiModel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -225,11 +224,11 @@ public class Analise implements Serializable, ReportObject {
     }
 
 
-
-
     public void setDataHomologacao(Timestamp dataHomologacao) {
         if (dataHomologacao != null) {
             this.dataHomologacao = new Timestamp(dataHomologacao.getTime());
+        } else {
+            this.dataHomologacao = null;
         }
     }
 
@@ -240,6 +239,8 @@ public class Analise implements Serializable, ReportObject {
     public void setDataCriacaoOrdemServico(Timestamp dataCriacaoOrdemServico) {
         if (dataCriacaoOrdemServico != null) {
             this.dataCriacaoOrdemServico = new Timestamp(dataCriacaoOrdemServico.getTime());
+        } else {
+            this.dataCriacaoOrdemServico = null;
         }
     }
 
