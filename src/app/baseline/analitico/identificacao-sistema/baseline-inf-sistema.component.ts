@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'jhi-baseline-inf-sistema',
     templateUrl: './baseline-inf-sistema.component.html'
 })
-export class BaselineInfSistemaComponent implements OnInit, OnDestroy {
+export class BaselineInfSistemaComponent {
 
     @Input() sistema: BaselineSintetico = new BaselineSintetico();
 
@@ -21,13 +21,6 @@ export class BaselineInfSistemaComponent implements OnInit, OnDestroy {
             str = res;
         }).unsubscribe();
         return str;
-    }
-
-
-    ngOnDestroy(): void {
-    }
-
-    ngOnInit(): void {
     }
 
 }

@@ -4,37 +4,88 @@
 
             <h1 translate="Analise.Baseline.Baseline">Baseline</h1>
             <div class="ui-g">
+                <div class="ui-g-12 ui-md-12 ui-sm-12">
+                    <p-dropdown
+                            [filter]="true"
+                            [options]="nomeSistemas"
+                            optionLabel="nome"
+                            id="idNomeSistemaComponentAnalise"
+                            [(ngModel)]="sistema"
+                            [autoWidth]="false"
+                            [placeholder]="this.getLabel('Analise.Analise.Sistema')">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
+
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-white-button
+                                [buttonLabel]="'Global.Botoes.LimparPesquisa' | translate"
+                                id="idBtnLimparPesquisaComponentAnalise"
+                                buttonIcon="ui-icon-clear-all"
+                                (click)="limparPesquisa()">
+                        </app-white-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-blue-button
+                                [buttonLabel]="'Global.Botoes.Pesquisar' | translate"
+                                id="idBtnPesquisarComponentAnalise"
+                                buttonIcon="ui-icon-search"
+                                (click)="performSearch()">
+                        </app-blue-button>
+                    </div>
+                    <div class="ui-g-2 ui-md-2 ui-sm-12">
+                        <app-green-button 
+                            [buttonLabel]="'Global.Botoes.Atualizar' | translate"
+                            buttonIcon="ui-icon-update"
+                            (click)="atualizarAnalise()">
+                        </app-green-button>
+                    </div>
+                </div>
                 <div class="ui-g">
-                    <basis-datatable
-                            type="memory"
-                            (buttonClick)="datatableClick($event)"
-                            [rows]="20"
-                            [disableDelete]="true"
-                            [disableEdit]="true"
-                            [rowsPerPageOptions]="rowsPerPageOptions"
-                            [showPaginationFooter]="true"
-                            #memory>
+                    <div class="ui-g">
+                        <div *ngIf="enableTable">
+                            <basis-datatable
+                                    [url]="userAnaliseUrl"
+                                    (buttonClick)="datatableClick($event)"
+                                    [rows]="20"
+                                    [disableDelete]="true"
+                                    [disableEdit]="true"
+                                    [rowsPerPageOptions]="rowsPerPageOptions"
+                                    [showPaginationFooter]="true"
+                                    type="memory"
+                                    #memory>
 
-                        <basis-datatable-button
-                          name="geraBaselinePdfBrowser"
-                          tooltip="Relatório Baseline"
-                          icon="description"
-                          disabled="selecionada">
-                        </basis-datatable-button>
+                                <basis-datatable-button
+                                    name="geraBaselinePdfBrowser"
+                                    tooltip="Relatório Baseline"
+                                    icon="description"
+                                    disabled="selecionada">
+                                </basis-datatable-button>
 
-                        <p-column [header]="this.getLabel('Analise.Baseline.Nome')" field="nome" [sortable]="true"></p-column>
-                        <p-column [header]="this.getLabel('Analise.Baseline.Sigla')" field="sigla" [sortable]="true"></p-column>
-                        <p-column [header]="this.getLabel('Analise.Baseline.NumeroOcorrencia')" field="numeroocorrencia" [sortable]="true"></p-column>
-                        <p-column [header]="this.getLabel('Analise.Baseline.PontosFuncao')" field="sum" [sortable]="true"></p-column>
-                        <p-column [header]="this.getLabel('Analise.Baseline.Equipe')" field="nomeEquipe" [sortable]="true"></p-column>
-                    </basis-datatable>
-
-                    <div class="ui-g-12 ui-md-2">
-                        <app-botoes-exportacao resourceName="baseline" fileName="baseline">
-                        </app-botoes-exportacao>
+                                <p-column [header]="this.getLabel('Analise.Baseline.Nome')" field="nome" [sortable]="true"></p-column>
+                                <p-column [header]="this.getLabel('Analise.Baseline.Sigla')" field="sigla" [sortable]="true"></p-column>
+                                <p-column [header]="this.getLabel('Analise.Baseline.NumeroOcorrencia')" field="numeroocorrencia" [sortable]="true"></p-column>
+                                <p-column [header]="this.getLabel('Analise.Baseline.PontosFuncao')" field="sum" [sortable]="true"></p-column>
+                                <p-column [header]="this.getLabel('Analise.Baseline.Equipe')" field="nomeEquipe" [sortable]="true"></p-column>
+                            </basis-datatable>
+                        </div>
+                        <div class="ui-g-12 ui-md-2" *ngIf="enableTable">
+                            <app-botoes-exportacao resourceName="baseline" fileName="baseline">
+                            </app-botoes-exportacao>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<p-confirmDialog [header]="getLabel('Global.Mensagens.Confirmacao')" #dialog>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao')"
+                (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim')"
+                (click)="dialog.accept()"></button>
+    </p-footer>
+</p-confirmDialog>

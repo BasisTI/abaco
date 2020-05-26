@@ -1,3 +1,4 @@
+import { Sistema } from './../sistema/sistema.model';
 import {Injectable} from '@angular/core';
 import {HttpService} from '@basis/angular-components';
 import {environment} from '../../environments/environment';
@@ -6,7 +7,6 @@ import {Response, RequestMethod, ResponseContentType, } from '@angular/http';
 import {Observable} from '../../../node_modules/rxjs';
 import {BaselineSintetico} from './baseline-sintetico.model';
 import {BaselineAnalitico} from './baseline-analitico.model';
-import {Sistema} from '../sistema/sistema.model';
 import {FuncaoDados} from '../funcao-dados';
 
 
@@ -24,8 +24,12 @@ export class BaselineService {
     constructor(private http: HttpService) {
     }
 
-    allBaselineSintetico(): Observable<ResponseWrapper> {
-        return this.http.get(`${this.sinteticosUrl}`).map((res: Response) => {
+    allBaselineSintetico(sistema : Sistema): Observable<ResponseWrapper> {
+        let url = `${this.sinteticosUrl}?idSistema=`;
+        if(sistema && sistema.id){
+            url = url+ sistema.id.valueOf()    ;
+        }
+        return this.http.get(url).map((res: Response) => {
             return this.convertResponseSintetico(res);
         });
     }
@@ -54,13 +58,6 @@ export class BaselineService {
             return this.convertResponseFuncaoDados(res);
         });
     }
-
-    baselineAnaliticoFT(id: number): Observable<ResponseWrapper> {
-        return this.http.get(`${this.analiticosFTUrl}${id}`).map((res: Response) => {    
-            return this.convertResponseAnalitico(res);
-        });
-    }
-
 
     // POR EQUIPE
 

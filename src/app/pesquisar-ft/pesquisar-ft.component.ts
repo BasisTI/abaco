@@ -153,14 +153,6 @@ export class PesquisarFtComponent implements OnInit {
         return str;
     }
 
-
-    getBaselineAnalitico() {
-        this.baselineFT.baselineAnaliticoFT(this.analise.sistema.id).subscribe(dado => {
-            this.basilineAnaliticosList = dado.json;
-            this.getFuncoesTransacoes();
-        });
-    }
-
     updateImpacto(impacto: string) {
         switch (impacto) {
             case 'INCLUSAO':

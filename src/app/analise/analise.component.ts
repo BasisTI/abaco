@@ -355,9 +355,11 @@ export class AnaliseComponent implements OnInit {
     }
 
     public selectAnalise() {
-        this.inicial = true;
-        this.analiseSelecionada = this.datatable.selectedRow;
-        this.blocked =this.datatable.selectedRow.bloqueiaAnalise;
+        if(this.datatable && this.datatable.selectedRow){
+            this.inicial = true;
+            this.analiseSelecionada = this.datatable.selectedRow;
+            this.blocked =this.datatable.selectedRow.bloqueiaAnalise;
+        }
     }
 
     public recarregarDataTable() {

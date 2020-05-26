@@ -1,5 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaselineService } from '../../baseline.service';
 import { Subscription } from '../../../../../node_modules/rxjs/Rx';
@@ -10,15 +10,15 @@ import { DatatableComponent } from '@basis/angular-components';
     selector: 'jhi-baseline-funcao-transacao',
     templateUrl: './baseline-funcao-transacao.component.html'
 })
-export class BaselineFuncaoTransacaoComponent implements OnInit, OnDestroy {
+export class BaselineFuncaoTransacaoComponent implements OnInit {
 
     private routeSub: Subscription;
     public idSistema: number;
     public idEquipe: number;
-    public urlFt: String;
+    public urlFt: string;
 
     rowsPerPageOptionsFT: number[] = [5, 10, 20];
-    @ViewChild(DatatableComponent) datatable: DatatableComponent;
+    @ViewChild(DatatableComponent) datatableFT: DatatableComponent;
 
     constructor(
         private route: ActivatedRoute,
@@ -35,9 +35,6 @@ export class BaselineFuncaoTransacaoComponent implements OnInit, OnDestroy {
         return str;
     }
 
-    ngOnDestroy(): void {
-    }
-
     ngOnInit(): void {
         this.routeSub = this.route.params.subscribe(params => {
             this.idSistema = params['id'];
@@ -45,5 +42,4 @@ export class BaselineFuncaoTransacaoComponent implements OnInit, OnDestroy {
         });
         this.urlFt = `${this.baselineService.analiticosFTUrl}${this.idSistema}/equipe/${this.idEquipe}`;
     }
-
 }
