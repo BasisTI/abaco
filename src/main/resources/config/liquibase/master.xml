@@ -11,5 +11,6 @@
     <include file="classpath:config/liquibase/changelog/20200505133057_add_view_pf_soma_and_resumo.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20200520202407_alter_view_baseline_sintetico.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20200521154704_alter_view_baseline_analitico.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20200526123641_alter_view_baseline_analitico.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
