@@ -9,7 +9,6 @@ import java.util.Set;
 public interface BaseLineAnaliticoSearchRepository extends ElasticsearchRepository<BaseLineAnalitico, Long> {
 
     List<BaseLineAnalitico> findByIdsistemaAndTipoOrderByNameAsc(Long idsistema, String tipo);
-    List<BaseLineAnalitico> getAllByIdsistemaAndEquipeResponsavelIdAndTipo(Long Idsistema, Long idEquipe, String tipo);
     Set<BaseLineAnalitico> findAll();
 
 }

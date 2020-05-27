@@ -10,7 +10,6 @@ import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
-import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.UserRepository;
@@ -86,7 +85,6 @@ public class AnaliseResource {
     private final AnaliseService analiseService;
     private final CompartilhadaRepository compartilhadaRepository;
     private final AnaliseSearchRepository analiseSearchRepository;
-    private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
@@ -104,7 +102,6 @@ public class AnaliseResource {
 
     public AnaliseResource(AnaliseRepository analiseRepository,
                            AnaliseSearchRepository analiseSearchRepository,
-                           FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository,
                            DynamicExportsService dynamicExportsService,
                            UserRepository userRepository,
                            FuncaoDadosRepository funcaoDadosRepository,
@@ -115,7 +112,6 @@ public class AnaliseResource {
                            VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
-        this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.dynamicExportsService = dynamicExportsService;
         this.userRepository = userRepository;
         this.compartilhadaRepository = compartilhadaRepository;
@@ -173,15 +169,10 @@ public class AnaliseResource {
                 analise.setDataHomologacao(analiseUpdate.getDataHomologacao());
             }
             analiseService.linkFuncoesToAnalise(analise);
-            if (analise.isBloqueiaAnalise()) {
-                analise.setBloqueiaAnalise(false);
-            } else {
-                analise.setBloqueiaAnalise(true);
-            }
+            analise.setBloqueiaAnalise(! analise.isBloqueiaAnalise());
             Analise result = analiseRepository.save(analise);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
-            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
-                .body(result);
+            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString())).body(result);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Analise());
         }
