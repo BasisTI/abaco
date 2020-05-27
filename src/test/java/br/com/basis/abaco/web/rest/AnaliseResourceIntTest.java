@@ -36,15 +36,10 @@ import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.*;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the AnaliseResource REST controller.
@@ -125,7 +120,7 @@ public class AnaliseResourceIntTest {
     ElasticsearchTemplate elasticsearchTemplate;
 
     @Autowired
-    private  VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
+    private VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
 
     @Autowired
     private EntityManager em;
@@ -141,17 +136,18 @@ public class AnaliseResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         AnaliseResource analiseResource = new AnaliseResource(analiseRepository,
-                analiseSearchRepository,
-                funcaoDadosVersionavelRepository,
-                dynamicExportsService,
-                userRepository,
-                funcaoDadosRepository,
-                compartilhadaRepository,
-                funcaoTransacaoRepository,
-                elasticsearchTemplate, analiseService, vwAnaliseSomaPfRepository);
+            analiseSearchRepository,
+            dynamicExportsService,
+            userRepository,
+            funcaoDadosRepository,
+            compartilhadaRepository,
+            funcaoTransacaoRepository,
+            elasticsearchTemplate,
+            analiseService,
+            vwAnaliseSomaPfRepository);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
-                .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
-                .setMessageConverters(jacksonMessageConverter).build();
+            .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
+            .setMessageConverters(jacksonMessageConverter).build();
     }
 
     /**
@@ -188,7 +184,7 @@ public class AnaliseResourceIntTest {
         // Create the Analise
 
         restAnaliseMockMvc.perform(post("/api/analises").contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(analise))).andExpect(status().isCreated());
+            .content(TestUtil.convertObjectToJsonBytes(analise))).andExpect(status().isCreated());
 
         // Validate the Analise in the database
         List<Analise> analiseList = analiseRepository.findAll();
@@ -220,9 +216,9 @@ public class AnaliseResourceIntTest {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restAnaliseMockMvc
-                .perform(post("/api/analises").contentType(TestUtil.APPLICATION_JSON_UTF8)
-                        .content(TestUtil.convertObjectToJsonBytes(existingAnalise)))
-                .andExpect(status().isBadRequest());
+            .perform(post("/api/analises").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(existingAnalise)))
+            .andExpect(status().isBadRequest());
 
         // Validate the Alice in the database
         List<Analise> analiseList = analiseRepository.findAll();
@@ -237,17 +233,17 @@ public class AnaliseResourceIntTest {
 
         // Get all the analiseList
         restAnaliseMockMvc.perform(get("/api/analises?sort=id,desc")).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(analise.getId().intValue())))
-                .andExpect(jsonPath("$.[*].numeroOs").value(hasItem(DEFAULT_NUMERO_OS.toString())))
-                .andExpect(jsonPath("$.[*].tipoContagem").value(hasItem(DEFAULT_TIPO_CONTAGEM.toString())))
-                .andExpect(jsonPath("$.[*].valorAjuste").value(hasItem(DEFAULT_VALOR_AJUSTE.intValue())))
-                .andExpect(jsonPath("$.[*].pfTotal").value(hasItem(DEFAULT_PF_TOTAL.toString())))
-                .andExpect(jsonPath("$.[*].escopo").value(hasItem(DEFAULT_ESCOPO.toString())))
-                .andExpect(jsonPath("$.[*].fronteiras").value(hasItem(DEFAULT_FRONTEIRAS.toString())))
-                .andExpect(jsonPath("$.[*].documentacao").value(hasItem(DEFAULT_DOCUMENTACAO.toString())))
-                .andExpect(jsonPath("$.[*].tipoAnalise").value(hasItem(DEFAULT_TIPO_ANALISE.toString())))
-                .andExpect(jsonPath("$.[*].propositoContagem").value(hasItem(DEFAULT_PROPOSITO_CONTAGEM.toString())));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(analise.getId().intValue())))
+            .andExpect(jsonPath("$.[*].numeroOs").value(hasItem(DEFAULT_NUMERO_OS.toString())))
+            .andExpect(jsonPath("$.[*].tipoContagem").value(hasItem(DEFAULT_TIPO_CONTAGEM.toString())))
+            .andExpect(jsonPath("$.[*].valorAjuste").value(hasItem(DEFAULT_VALOR_AJUSTE.intValue())))
+            .andExpect(jsonPath("$.[*].pfTotal").value(hasItem(DEFAULT_PF_TOTAL.toString())))
+            .andExpect(jsonPath("$.[*].escopo").value(hasItem(DEFAULT_ESCOPO.toString())))
+            .andExpect(jsonPath("$.[*].fronteiras").value(hasItem(DEFAULT_FRONTEIRAS.toString())))
+            .andExpect(jsonPath("$.[*].documentacao").value(hasItem(DEFAULT_DOCUMENTACAO.toString())))
+            .andExpect(jsonPath("$.[*].tipoAnalise").value(hasItem(DEFAULT_TIPO_ANALISE.toString())))
+            .andExpect(jsonPath("$.[*].propositoContagem").value(hasItem(DEFAULT_PROPOSITO_CONTAGEM.toString())));
     }
 
     @Test
@@ -258,17 +254,17 @@ public class AnaliseResourceIntTest {
 
         // Get the analise
         restAnaliseMockMvc.perform(get("/api/analises/{id}", analise.getId())).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.id").value(analise.getId().intValue()))
-                .andExpect(jsonPath("$.numeroOs").value(DEFAULT_NUMERO_OS.toString()))
-                .andExpect(jsonPath("$.tipoContagem").value(DEFAULT_TIPO_CONTAGEM.toString()))
-                .andExpect(jsonPath("$.valorAjuste").value(DEFAULT_VALOR_AJUSTE.intValue()))
-                .andExpect(jsonPath("$.pfTotal").value(DEFAULT_PF_TOTAL.toString()))
-                .andExpect(jsonPath("$.escopo").value(DEFAULT_ESCOPO.toString()))
-                .andExpect(jsonPath("$.fronteiras").value(DEFAULT_FRONTEIRAS.toString()))
-                .andExpect(jsonPath("$.documentacao").value(DEFAULT_DOCUMENTACAO.toString()))
-                .andExpect(jsonPath("$.tipoAnalise").value(DEFAULT_TIPO_ANALISE.toString()))
-                .andExpect(jsonPath("$.propositoContagem").value(DEFAULT_PROPOSITO_CONTAGEM.toString()));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.id").value(analise.getId().intValue()))
+            .andExpect(jsonPath("$.numeroOs").value(DEFAULT_NUMERO_OS.toString()))
+            .andExpect(jsonPath("$.tipoContagem").value(DEFAULT_TIPO_CONTAGEM.toString()))
+            .andExpect(jsonPath("$.valorAjuste").value(DEFAULT_VALOR_AJUSTE.intValue()))
+            .andExpect(jsonPath("$.pfTotal").value(DEFAULT_PF_TOTAL.toString()))
+            .andExpect(jsonPath("$.escopo").value(DEFAULT_ESCOPO.toString()))
+            .andExpect(jsonPath("$.fronteiras").value(DEFAULT_FRONTEIRAS.toString()))
+            .andExpect(jsonPath("$.documentacao").value(DEFAULT_DOCUMENTACAO.toString()))
+            .andExpect(jsonPath("$.tipoAnalise").value(DEFAULT_TIPO_ANALISE.toString()))
+            .andExpect(jsonPath("$.propositoContagem").value(DEFAULT_PROPOSITO_CONTAGEM.toString()));
     }
 
     @Test
@@ -299,7 +295,7 @@ public class AnaliseResourceIntTest {
         updatedAnalise.setPropositoContagem(UPDATED_PROPOSITO_CONTAGEM);
 
         restAnaliseMockMvc.perform(put("/api/analises").contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedAnalise))).andExpect(status().isOk());
+            .content(TestUtil.convertObjectToJsonBytes(updatedAnalise))).andExpect(status().isOk());
 
         // Validate the Analise in the database
         List<Analise> analiseList = analiseRepository.findAll();
@@ -330,7 +326,7 @@ public class AnaliseResourceIntTest {
         // If the entity doesn't have an ID, it will be created instead of just being
         // updated
         restAnaliseMockMvc.perform(put("/api/analises").contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(analise))).andExpect(status().isCreated());
+            .content(TestUtil.convertObjectToJsonBytes(analise))).andExpect(status().isCreated());
 
         // Validate the Analise in the database
         List<Analise> analiseList = analiseRepository.findAll();
@@ -347,7 +343,7 @@ public class AnaliseResourceIntTest {
 
         // Get the analise
         restAnaliseMockMvc.perform(delete("/api/analises/{id}", analise.getId()).accept(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
+            .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
         boolean analiseExistsInEs = analiseSearchRepository.exists(analise.getId());
@@ -367,17 +363,17 @@ public class AnaliseResourceIntTest {
 
         // Search the analise
         restAnaliseMockMvc.perform(get("/api/_search/analises?query=id:" + analise.getId())).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(analise.getId().intValue())))
-                .andExpect(jsonPath("$.[*].numeroOs").value(hasItem(DEFAULT_NUMERO_OS.toString())))
-                .andExpect(jsonPath("$.[*].tipoContagem").value(hasItem(DEFAULT_TIPO_CONTAGEM.toString())))
-                .andExpect(jsonPath("$.[*].valorAjuste").value(hasItem(DEFAULT_VALOR_AJUSTE.intValue())))
-                .andExpect(jsonPath("$.[*].pfTotal").value(hasItem(DEFAULT_PF_TOTAL.toString())))
-                .andExpect(jsonPath("$.[*].escopo").value(hasItem(DEFAULT_ESCOPO.toString())))
-                .andExpect(jsonPath("$.[*].fronteiras").value(hasItem(DEFAULT_FRONTEIRAS.toString())))
-                .andExpect(jsonPath("$.[*].documentacao").value(hasItem(DEFAULT_DOCUMENTACAO.toString())))
-                .andExpect(jsonPath("$.[*].tipoAnalise").value(hasItem(DEFAULT_TIPO_ANALISE.toString())))
-                .andExpect(jsonPath("$.[*].propositoContagem").value(hasItem(DEFAULT_PROPOSITO_CONTAGEM.toString())));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(analise.getId().intValue())))
+            .andExpect(jsonPath("$.[*].numeroOs").value(hasItem(DEFAULT_NUMERO_OS.toString())))
+            .andExpect(jsonPath("$.[*].tipoContagem").value(hasItem(DEFAULT_TIPO_CONTAGEM.toString())))
+            .andExpect(jsonPath("$.[*].valorAjuste").value(hasItem(DEFAULT_VALOR_AJUSTE.intValue())))
+            .andExpect(jsonPath("$.[*].pfTotal").value(hasItem(DEFAULT_PF_TOTAL.toString())))
+            .andExpect(jsonPath("$.[*].escopo").value(hasItem(DEFAULT_ESCOPO.toString())))
+            .andExpect(jsonPath("$.[*].fronteiras").value(hasItem(DEFAULT_FRONTEIRAS.toString())))
+            .andExpect(jsonPath("$.[*].documentacao").value(hasItem(DEFAULT_DOCUMENTACAO.toString())))
+            .andExpect(jsonPath("$.[*].tipoAnalise").value(hasItem(DEFAULT_TIPO_ANALISE.toString())))
+            .andExpect(jsonPath("$.[*].propositoContagem").value(hasItem(DEFAULT_PROPOSITO_CONTAGEM.toString())));
     }
 
     @Test
