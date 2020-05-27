@@ -24,6 +24,7 @@ import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
+import br.com.basis.abaco.utils.PageUtils;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
 import br.com.basis.abaco.web.rest.util.PaginationUtil;
 import br.com.basis.dynamicexports.service.DynamicExportsService;
@@ -38,7 +39,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
@@ -87,9 +90,9 @@ public class AnaliseResource {
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
+    private final DynamicExportsService dynamicExportsService;
+    private final ElasticsearchTemplate elasticsearchTemplate;
     private RelatorioAnaliseRest relatorioAnaliseRest;
-    private DynamicExportsService dynamicExportsService;
-    private ElasticsearchTemplate elasticsearchTemplate;
     @Autowired
     private TipoEquipeRepository tipoEquipeRepository;
     @Autowired
@@ -418,7 +421,8 @@ public class AnaliseResource {
                                                                   @RequestParam(value = "equipe", required = false) String equipe,
                                                                   @RequestParam(value = "usuario", required = false) String usuario)
         throws URISyntaxException {
-        Pageable pageable = dynamicExportsService.obterPageableMaximoExportacao();
+        Sort.Direction sortOrder = PageUtils.getSortDirection(order);
+        Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
         BoolQueryBuilder qb = analiseService.getBoolQueryBuilder(identificador, sistema, metodo, organizacao, equipe, usuario);
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);

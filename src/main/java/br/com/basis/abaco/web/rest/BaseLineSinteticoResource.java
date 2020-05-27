@@ -1,7 +1,7 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.BaseLineSintetico;
-import br.com.basis.abaco.repository.BaseLineSinteticoRepository;
+import br.com.basis.abaco.repository.search.BaseLineSinteticoSearchRepository;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioBaselineSinteticoColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -25,10 +25,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing BaseLineSintetico.
@@ -38,28 +39,34 @@ import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 public class BaseLineSinteticoResource {
 
     private final Logger log = LoggerFactory.getLogger(BaseLineSinteticoResource.class);
-    private final BaseLineSinteticoRepository baseLineSinteticoRepository;
-
+    private final BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository;
     private final DynamicExportsService dynamicExportsService;
 
-
-    public BaseLineSinteticoResource(BaseLineSinteticoRepository baseLineSinteticoRepository, DynamicExportsService dynamicExportsService) {
-        this.baseLineSinteticoRepository = baseLineSinteticoRepository;
+    public BaseLineSinteticoResource(DynamicExportsService dynamicExportsService,
+                                     BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository) {
         this.dynamicExportsService = dynamicExportsService;
+        this.baseLineSinteticoSearchRepository = baseLineSinteticoSearchRepository;
     }
 
     @GetMapping("/baseline-sinteticos")
     @Timed
-    public List<BaseLineSintetico> getAllBaseLineSinteticos() {
-        log.debug("REST request to get all BaseLineSinteticos");
-        return baseLineSinteticoRepository.findAll();
+    public List<BaseLineSintetico> getAllBaseLineSinteticos(@RequestParam(value = "idSistema", required = false) Long idSistema) {
+         log.debug("REST request to get all BaseLineSinteticos");
+        if(idSistema != null){
+            return baseLineSinteticoSearchRepository.findAllByIdsistema(idSistema);
+        }else {
+            Iterable<BaseLineSintetico> lst  = baseLineSinteticoSearchRepository.findAll();
+            List<BaseLineSintetico> lstBaseLineSintetico = new ArrayList<>();
+            lst.forEach(lstBaseLineSintetico::add);
+            return lstBaseLineSintetico;
+        }
     }
 
     @GetMapping("/baseline-sinteticos/{id}")
     @Timed
     public ResponseEntity<BaseLineSintetico> getBaseLineSintetico(@PathVariable Long id) {
         log.debug("REST request to get all BaseLineSinteticos: {}", id);
-        BaseLineSintetico funcaoDados = baseLineSinteticoRepository.findOneByIdsistema(id);
+        BaseLineSintetico funcaoDados = baseLineSinteticoSearchRepository.findOneByIdsistema(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDados));
     }
 
@@ -68,7 +75,7 @@ public class BaseLineSinteticoResource {
     public ResponseEntity<BaseLineSintetico> getBaseLineSinteticoEquipe(
         @PathVariable Long id,@PathVariable Long idEquipe) {
         log.debug("REST request to get all BaseLineSinteticos: {}", id);
-        BaseLineSintetico funcaoDados = baseLineSinteticoRepository.findOneByIdsistemaAndEquipeResponsavelId(id,idEquipe);
+        BaseLineSintetico funcaoDados = baseLineSinteticoSearchRepository.findOneByIdsistemaAndEquipeResponsavelId(id,idEquipe);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(funcaoDados));
     }
 
@@ -78,7 +85,7 @@ public class BaseLineSinteticoResource {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             new NativeSearchQueryBuilder().withQuery(multiMatchQuery(query)).build();
-            Page<BaseLineSintetico> result =  baseLineSinteticoRepository.findAll(dynamicExportsService.obterPageableMaximoExportacao());
+            Page<BaseLineSintetico> result =  baseLineSinteticoSearchRepository.findAll(dynamicExportsService.obterPageableMaximoExportacao());
             byteArrayOutputStream = dynamicExportsService.export(new RelatorioBaselineSinteticoColunas(), result, tipoRelatorio, Optional.empty(), Optional.ofNullable(AbacoUtil.REPORT_LOGO_PATH), Optional.ofNullable(AbacoUtil.getReportFooter()));
         } catch (DRException | ClassNotFoundException | JRException | NoClassDefFoundError e) {
             log.error(e.getMessage(), e);

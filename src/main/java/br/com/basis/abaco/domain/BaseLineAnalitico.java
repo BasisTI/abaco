@@ -1,10 +1,19 @@
 package br.com.basis.abaco.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -15,8 +24,15 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "baseline_analitico")
-@Document(indexName = "baselineanalitico")
+@Document(indexName = "baseline_analitico")
 @Immutable
+@Getter
+@Setter
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@EntityListeners(AuditingEntityListener.class)
+@Embeddable
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class BaseLineAnalitico implements Serializable {
 
     @Id

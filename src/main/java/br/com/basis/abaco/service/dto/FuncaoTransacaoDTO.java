@@ -3,7 +3,6 @@ package br.com.basis.abaco.service.dto;
 /**
  * @author eduardo.andrade
  * @since 28/06/2018
- *
  */
 public class FuncaoTransacaoDTO {
 
@@ -55,9 +54,13 @@ public class FuncaoTransacaoDTO {
         this.submodulo = submodulo;
     }
 
-    public String getFatorAjusteFt() { return fatorAjusteFt; }
+    public String getFatorAjusteFt() {
+        return fatorAjusteFt;
+    }
 
-    public void setFatorAjusteFt(String fatorAjusteFt) { this.fatorAjusteFt = fatorAjusteFt; }
+    public void setFatorAjusteFt(String fatorAjusteFt) {
+        this.fatorAjusteFt = fatorAjusteFt;
+    }
 
     public String getNomeFt() {
         return nomeFt;
