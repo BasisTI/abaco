@@ -194,7 +194,7 @@ public class BaseLineAnaliticoResource {
         BoolQueryBuilder qb = baselineAnaliseService.getBoolQueryBuilder(id, idEquipe, "fd");
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
         Page<BaseLineAnalitico> lstPage = elasticsearchTemplate.queryForPage(searchQuery, BaseLineAnalitico.class);
-        return new PageImpl<>(lstPage.getContent());
+        return new PageImpl(lstPage.getContent(), pageable, lstPage.getTotalPages());
     }
 
     @GetMapping("/baseline-analiticos/ft/{id}/equipe/{idEquipe}")
@@ -209,6 +209,6 @@ public class BaseLineAnaliticoResource {
         BoolQueryBuilder qb = baselineAnaliseService.getBoolQueryBuilder(id, idEquipe, "ft");
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
         Page<BaseLineAnalitico> lstPage = elasticsearchTemplate.queryForPage(searchQuery, BaseLineAnalitico.class);
-        return new PageImpl<>(lstPage.getContent());
+        return new PageImpl(lstPage.getContent(), pageable, lstPage.getTotalPages());
     }
 }
