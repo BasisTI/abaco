@@ -184,7 +184,9 @@ public class BaseLineAnaliticoResource {
 
     @GetMapping("/baseline-analiticos/fd/{id}/equipe/{idEquipe}")
     @Timed
-    public Page<BaseLineAnalitico> getBaseLineAnaliticoFDEquipe(@PathVariable String id, @PathVariable String idEquipe, @RequestParam(defaultValue = "ASC") String order,
+    public Page<BaseLineAnalitico> getBaseLineAnaliticoFDEquipe(@PathVariable String id,
+                                                                @PathVariable String idEquipe,
+                                                                @RequestParam(defaultValue = "ASC") String order,
                                                                 @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
                                                                 @RequestParam(defaultValue = "20") int size,
                                                                 @RequestParam(defaultValue = "id") String sort) {
@@ -194,12 +196,14 @@ public class BaseLineAnaliticoResource {
         BoolQueryBuilder qb = baselineAnaliseService.getBoolQueryBuilder(id, idEquipe, "fd");
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
         Page<BaseLineAnalitico> lstPage = elasticsearchTemplate.queryForPage(searchQuery, BaseLineAnalitico.class);
-        return new PageImpl(lstPage.getContent(), pageable, lstPage.getTotalPages());
+        return new PageImpl(lstPage.getContent(), pageable, lstPage.getTotalElements());
     }
 
     @GetMapping("/baseline-analiticos/ft/{id}/equipe/{idEquipe}")
     @Timed
-    public Page<BaseLineAnalitico> getBaseLineAnaliticoFTEquipe(@PathVariable String id, @PathVariable String idEquipe, @RequestParam(defaultValue = "ASC") String order,
+    public Page<BaseLineAnalitico> getBaseLineAnaliticoFTEquipe(@PathVariable String id,
+                                                                @PathVariable String idEquipe,
+                                                                @RequestParam(defaultValue = "ASC") String order,
                                                                 @RequestParam(defaultValue = "0", name = PAGE) int pageNumber,
                                                                 @RequestParam(defaultValue = "20") int size,
                                                                 @RequestParam(defaultValue = "id") String sort) {
@@ -209,6 +213,6 @@ public class BaseLineAnaliticoResource {
         BoolQueryBuilder qb = baselineAnaliseService.getBoolQueryBuilder(id, idEquipe, "ft");
         SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
         Page<BaseLineAnalitico> lstPage = elasticsearchTemplate.queryForPage(searchQuery, BaseLineAnalitico.class);
-        return new PageImpl(lstPage.getContent(), pageable, lstPage.getTotalPages());
+        return new PageImpl(lstPage.getContent(), pageable, lstPage.getTotalElements());
     }
 }
