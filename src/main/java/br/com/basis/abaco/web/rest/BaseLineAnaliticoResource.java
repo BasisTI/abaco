@@ -5,10 +5,10 @@ import br.com.basis.abaco.domain.BaseLineSintetico;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.reports.rest.RelatorioBaselineRest;
 import br.com.basis.abaco.repository.BaseLineAnaliticoRepository;
-import br.com.basis.abaco.repository.BaseLineSinteticoRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.search.BaseLineAnaliticoSearchRepository;
+import br.com.basis.abaco.repository.search.BaseLineSinteticoSearchRepository;
 import br.com.basis.abaco.service.BaselineAnaliseService;
 import br.com.basis.abaco.service.dto.BaselineAnaliticoDTO;
 import br.com.basis.abaco.utils.PageUtils;
@@ -55,7 +55,7 @@ public class BaseLineAnaliticoResource {
     private final BaseLineAnaliticoSearchRepository baseLineAnaliticoSearchRepository;
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
-    private final BaseLineSinteticoRepository baseLineSinteticoRepository;
+    private final BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository;
     private final BaselineAnaliseService baselineAnaliseService;
     private RelatorioBaselineRest relatorioBaselineRest;
     private static final String PAGE = "page";
@@ -71,13 +71,13 @@ public class BaseLineAnaliticoResource {
     public BaseLineAnaliticoResource(BaseLineAnaliticoRepository baseLineAnaliticoRepository,
                                      FuncaoDadosRepository funcaoDadosRepository,
                                      FuncaoTransacaoRepository funcaoTransacaoRepository,
-                                     BaseLineSinteticoRepository baseLineSinteticoRepository,
+                                     BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository,
                                      BaseLineAnaliticoSearchRepository baseLineAnaliticoSearchRepository,
                                      DynamicExportsService dynamicExportsService,
                                      BaselineAnaliseService baselineAnaliseService,
                                      ElasticsearchTemplate elasticsearchTemplate) {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
-        this.baseLineSinteticoRepository = baseLineSinteticoRepository;
+        this.baseLineSinteticoSearchRepository = baseLineSinteticoSearchRepository;
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.baseLineAnaliticoSearchRepository = baseLineAnaliticoSearchRepository;
         this.baselineAnaliseService = baselineAnaliseService;
@@ -85,7 +85,7 @@ public class BaseLineAnaliticoResource {
     }
 
     private BaseLineSintetico recuperarBaselinePorSistema(Long id) {
-        return baseLineSinteticoRepository.findOneByIdsistema(id);
+        return baseLineSinteticoSearchRepository.findOneByIdsistema(id);
     }
 
 
