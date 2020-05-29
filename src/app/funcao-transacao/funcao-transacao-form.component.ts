@@ -339,6 +339,9 @@ export class FuncaoTransacaoFormComponent implements OnInit {
     }
 
     public buttonSaveEdit() {
+        if(!(this.currentFuncaoTransacao.sustantation)){
+            this.currentFuncaoTransacao.sustantation = document.querySelector('.ql-editor').innerHTML;
+        }
         if (this.isEdit) {
             this.editar();
         } else {

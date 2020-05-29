@@ -11,7 +11,6 @@ import {
     Component,
     EventEmitter,
     Input,
-    OnDestroy,
     OnInit,
     Output,
     QueryList,
@@ -42,11 +41,9 @@ import {Modulo} from '../modulo';
 import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
 import {Impacto} from '../analise-shared/impacto-enum';
 
-import {Editor, FuncaoTransacao, TipoFuncaoTransacao} from './../funcao-transacao/funcao-transacao.model';
+import {FuncaoTransacao, TipoFuncaoTransacao} from './../funcao-transacao/funcao-transacao.model';
 import {CalculadoraTransacao} from './../analise-shared/calculadora-transacao';
 import {Alr} from '../alr/alr.model';
-import {ChangeEvent} from '@ckeditor/ckeditor5-angular/ckeditor.component';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Base64Upload from '../../ckeditor/Base64Upload';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.service';
@@ -57,6 +54,7 @@ import { ForkJoinObservable } from 'rxjs/observable/ForkJoinObservable';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { exists } from 'fs';
 import { repeat } from 'rxjs/operator/repeat';
+import { EditorModule } from 'primeng/editor';
 
 @Component({
     selector: 'app-analise-funcao-dados',
@@ -70,13 +68,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     text: string;
     @Input()
     label: string;
-    @Input() properties: Editor;
     @Input() uploadImagem = true;
     @Input() criacaoTabela = true;
 
     @ViewChildren(MemoryDatatableComponent) tables: QueryList<MemoryDatatableComponent>;
-
-    public Editor = ClassicEditor;
 
     public isDisabled = false;
 
@@ -145,35 +140,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     public displayDescriptionDeflator: boolean = false;
     public funcoesDados: FuncaoDados[];
 
-    public config = {
-        extraPlugins: [Base64Upload],
-        language: 'pt-br',
-        toolbar: [
-            'heading', '|', 'bold', 'italic', 'hiperlink', 'underline', 'bulletedList', 'numberedList', 'alignment', 'blockQuote', '|',
-            'imageUpload', 'insertTable', 'imageStyle:side', 'imageStyle:full', 'mediaEmbed', '|', 'undo', 'redo'
-        ],
-        heading: {
-            options: [
-                {model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph'},
-                {model: 'heading1', view: 'h1', title: 'Título 1', class: 'ck-heading_heading1'},
-                {model: 'heading2', view: 'h2', title: 'Título 2', class: 'ck-heading_heading2'},
-                {model: 'heading3', view: 'h3', title: 'Título 3', class: 'ck-heading_heading3'}
-            ]
-        },
-        alignment: {
-            options: ['left', 'right', 'center', 'justify']
-        },
-        image: {
-            toolbar: []
-        },
-        table: {
-            contentToolbar: [
-                'tableColumn',
-                'tableRow',
-                'mergeTableCells'
-            ]
-        }
-    };
     private analise: Analise;
     public seletedFuncaoDados: FuncaoDados = new FuncaoDados();
 
@@ -213,12 +179,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.hideShowQuantidade = true;
                         this.estadoInicial();
                         this.impactos = AnaliseSharedUtils.impactos;
-                        if (!this.uploadImagem) {
-                            this.config.toolbar.splice(this.config.toolbar.indexOf('imageUpload'));
-                        }
-                        if (!this.criacaoTabela) {
-                            this.config.toolbar.splice(this.config.toolbar.indexOf('insertTable'));
-                        }
                     });
                 }
             });
@@ -367,7 +327,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         this.prepararParaEdicao(this.funcaoDadosEditar);
     }
 
-    public onChange({editor}: ChangeEvent) {
+    public onChange(editor) {
         const data = editor.getData();
         return data;
     }
@@ -418,6 +378,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     public buttonSaveEdit() {
+        if(!(this.seletedFuncaoDados.sustantation)){
+            this.seletedFuncaoDados.sustantation = document.querySelector('.ql-editor').innerHTML;
+        }
         if (this.isEdit) {
             this.editar();
         } else {
@@ -1197,5 +1160,4 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         }
         this.displayDescriptionDeflator = false;
     }
-
 }
