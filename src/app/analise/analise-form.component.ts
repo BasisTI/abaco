@@ -335,7 +335,7 @@ export class AnaliseFormComponent implements OnInit {
 
         if (!this.isEdicao) {
             // Traz todos esforcos de fases selecionados
-            this.analise.esforcoFases = _.cloneDeep(manual.esforcoFases);
+            this.esforcoFases = _.cloneDeep(manual.esforcoFases);
         }
     }
 
@@ -460,7 +460,7 @@ export class AnaliseFormComponent implements OnInit {
     }
 
     manualSelecionado(manual: Manual) {
-        this.analise.esforcoFases = _.cloneDeep(manual.esforcoFases);
+        this.esforcoFases = _.cloneDeep(manual.esforcoFases);
     }
 
     private formataData(data: Date): String {
