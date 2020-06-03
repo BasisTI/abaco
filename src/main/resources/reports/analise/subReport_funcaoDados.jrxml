@@ -41,17 +41,7 @@
 				<text><![CDATA[Tipo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="-20" y="59" width="80" height="30" backcolor="#FFCA9E" uuid="7eb4f371-c0ed-4b61-ab24-06f74120ceb4"/>
-				<box>
-					<pen lineWidth="0.75"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[Impacto]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="-20" y="89" width="80" height="30" backcolor="#FFCA9E" uuid="2320ec94-8233-4d43-8cd6-6b15338514f4"/>
+				<reportElement positionType="Float" mode="Opaque" x="-20" y="59" width="80" height="30" backcolor="#FFCA9E" uuid="2320ec94-8233-4d43-8cd6-6b15338514f4"/>
 				<box>
 					<pen lineWidth="0.75"/>
 				</box>
@@ -61,7 +51,7 @@
 				<text><![CDATA[Deflator]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="-20" y="119" width="300" height="30" backcolor="#FFCA9E" uuid="f0c80904-1674-4a18-a327-3507440771f8"/>
+				<reportElement positionType="Float" mode="Opaque" x="-20" y="89" width="300" height="30" backcolor="#FFCA9E" uuid="f0c80904-1674-4a18-a327-3507440771f8"/>
 				<box>
 					<pen lineWidth="0.75"/>
 				</box>
@@ -71,7 +61,7 @@
 				<text><![CDATA[Entidades Dependentes Relacionadas]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="280" y="119" width="260" height="30" backcolor="#FFCA9E" uuid="78795520-fba9-483b-aa64-850b6c052073"/>
+				<reportElement positionType="Float" mode="Opaque" x="280" y="89" width="260" height="30" backcolor="#FFCA9E" uuid="78795520-fba9-483b-aa64-850b6c052073"/>
 				<box>
 					<pen lineWidth="0.75"/>
 				</box>
@@ -81,7 +71,7 @@
 				<text><![CDATA[Campos]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="-20" y="180" width="560" height="30" backcolor="#FFCA9E" uuid="4cc2ef4b-e360-4482-a02f-14aa3ff2d993"/>
+				<reportElement positionType="Float" mode="Opaque" x="-20" y="150" width="560" height="30" backcolor="#FFCA9E" uuid="4cc2ef4b-e360-4482-a02f-14aa3ff2d993"/>
 				<box>
 					<pen lineWidth="0.75"/>
 				</box>
@@ -101,17 +91,7 @@
 				<textFieldExpression><![CDATA[""+$F{tipo}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="60" y="59" width="480" height="30" uuid="2f1a5bc8-e286-4802-bcab-17dfebf82422">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box leftPadding="5" rightPadding="2">
-					<pen lineWidth="0.75"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[""+$F{impacto}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="60" y="89" width="480" height="30" uuid="e841fa16-4d7c-499e-a3c0-7b5bf931a667">
+				<reportElement positionType="Float" x="60" y="59" width="480" height="30" uuid="e841fa16-4d7c-499e-a3c0-7b5bf931a667">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="4">
@@ -146,7 +126,7 @@
 					<pen lineWidth="0.75"/>
 				</box>
 				<componentElement>
-					<reportElement positionType="Float" x="0" y="0" width="300" height="31" uuid="c95c3e0b-f179-48ae-b043-4778bff40cd1">
+					<reportElement positionType="Float" x="0" y="-30" width="300" height="31" uuid="c95c3e0b-f179-48ae-b043-4778bff40cd1">
 						<property name="net.sf.jasperreports.export.headertoolbar.table.name" value="rlr_List"/>
 						<property name="com.jaspersoft.studio.unit.CONTENTS.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -168,7 +148,7 @@
 					</jr:list>
 				</componentElement>
 				<componentElement>
-					<reportElement positionType="Float" x="300" y="0" width="260" height="31" uuid="3e3f0c79-cba2-4b8a-90ca-8b6369229fc4">
+					<reportElement positionType="Float" x="300" y="-30" width="260" height="31" uuid="3e3f0c79-cba2-4b8a-90ca-8b6369229fc4">
 						<property name="net.sf.jasperreports.export.headertoolbar.table.name" value="derList"/>
 						<property name="com.jaspersoft.studio.unit.CONTENTS.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -193,7 +173,7 @@
 				</componentElement>
 			</frame>
 			<componentElement>
-				<reportElement x="-20" y="210" width="560" height="50" uuid="4327fb65-0914-485e-bccd-4e17b56acc7f"/>
+				<reportElement x="-20" y="180" width="560" height="50" uuid="4327fb65-0914-485e-bccd-4e17b56acc7f"/>
 				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" scaleType="RetainShape" horizontalAlign="Left" verticalAlign="Middle">
 					<hc:htmlContentExpression><![CDATA[$F{sustantation}]]></hc:htmlContentExpression>
 				</hc:html>

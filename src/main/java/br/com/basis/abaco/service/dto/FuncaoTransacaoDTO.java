@@ -30,6 +30,8 @@ public class FuncaoTransacaoDTO {
 
     private String submodulo;
 
+    private Integer identificador;
+
     public String getFatorAjusteValor() {
         return fatorAjusteValor;
     }
@@ -126,4 +128,11 @@ public class FuncaoTransacaoDTO {
         this.pfAjustadoFt = pfAjustadoFt;
     }
 
+    public Integer getIdentificador() {
+        return identificador;
+    }
+
+    public void setIdentificador(Integer identificador) {
+        this.identificador = identificador;
+    }
 }

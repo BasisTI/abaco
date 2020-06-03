@@ -3,24 +3,23 @@ package br.com.basis.abaco.service.dto;
 /**
  * @author eduardo.andrade
  * @since 28/06/2018
- *
  */
 public class FuncaoDadosDTO {
 
     private String nomeFd;
-    
+
     private String classificacaoFd;
-    
+
     private String impactoFd;
-    
+
     private String rlrFd;
-    
+
     private String derFd;
-    
+
     private String complexidadeFd;
-    
+
     private String pfTotalFd;
-    
+
     private String pfAjustadoFd;
 
     private String fatorAjusteFd;
@@ -30,6 +29,8 @@ public class FuncaoDadosDTO {
     private String modulo;
 
     private String submodulo;
+
+    private Integer identificador;
 
     public String getFatorAjusteValor() {
         return fatorAjusteValor;
@@ -55,9 +56,13 @@ public class FuncaoDadosDTO {
         this.submodulo = submodulo;
     }
 
-    public String getFatorAjusteFd() { return fatorAjusteFd; }
+    public String getFatorAjusteFd() {
+        return fatorAjusteFd;
+    }
 
-    public void setFatorAjusteFd(String fatorAjusteFd) { this.fatorAjusteFd = fatorAjusteFd; }
+    public void setFatorAjusteFd(String fatorAjusteFd) {
+        this.fatorAjusteFd = fatorAjusteFd;
+    }
 
     public String getNomeFd() {
         return nomeFd;
@@ -123,4 +128,11 @@ public class FuncaoDadosDTO {
         this.pfAjustadoFd = pfAjustadoFd;
     }
 
+    public Integer getIdentificador() {
+        return identificador;
+    }
+
+    public void setIdentificador(Integer identificador) {
+        this.identificador = identificador;
+    }
 }

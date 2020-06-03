@@ -278,6 +278,9 @@ public class RelatorioUtil {
     }
 
     private String translateFD(ImpactoFatorAjuste impacto) {
+        if(impacto == null){
+            return "";
+        }
         switch (impacto){
             case INCLUSAO: return "Entidade incluída nesta demanda";
             case ALTERACAO: return "Entidade alterada nesta demanda";
@@ -289,6 +292,9 @@ public class RelatorioUtil {
     }
 
     private String translateFT(ImpactoFatorAjuste impacto) {
+        if(impacto == null){
+            return "";
+        }
         switch (impacto){
             case INCLUSAO: return "Funcionalidade/cenário incluído nesta demanda";
             case ALTERACAO: return "Funcionalidade/cenário alterado nesta demanda";

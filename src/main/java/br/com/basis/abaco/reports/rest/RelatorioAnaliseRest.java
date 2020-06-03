@@ -73,6 +73,8 @@ public class RelatorioAnaliseRest {
 
     private final Double fatorIndicativa = 1.5;
 
+    private Integer identificador = 1;
+
     public RelatorioAnaliseRest(HttpServletResponse response, HttpServletRequest request) {
         this.response = response;
         this.request = request;
@@ -312,19 +314,23 @@ public class RelatorioAnaliseRest {
     private void popularListaParametro() {
         List<FuncaoTransacaoDTO> listFuncaoFT = new ArrayList<>();
         List<FuncaoDadosDTO> listFuncaoFD = new ArrayList<>();
-
+        Integer indentificadorFd = 1;
+        Integer indentificadorFT = 1;
 
         for (FuncoesDTO f : listFuncoes) {
             if (f.getNomeFd() != null) {
-                listFuncaoFD.add(popularObjetoFd(f));
+                listFuncaoFD.add(popularObjetoFd(f, indentificadorFd));
+                indentificadorFd++;
             }
             if (f.getNomeFt() != null) {
-                listFuncaoFT.add(popularObjetoFt(f));
-            }
+                listFuncaoFT.add(popularObjetoFt(f, indentificadorFT));
+                indentificadorFT++;            }
         }
         parametro.put("LISTAFUNCAOFT", listFuncaoFT);
         parametro.put("LISTAFUNCAOFD", listFuncaoFD);
     }
+
+
 
     /**
      * @return
@@ -412,19 +418,19 @@ public class RelatorioAnaliseRest {
         List<ListaFdFtDTO> listaFdFt = new ArrayList<>();
 
         Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
-        verificaFuncaodados(listaFd, funcaoDados);
-        verificaFuncaodados(listaFdFt, funcaoDados);
+        verificaFuncaodados(listaFd, funcaoDados, identificador);
+        verificaFuncaodados(listaFdFt, funcaoDados, 0);
 
         Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
-        verificaFuncaoTransacao(listaFt, funcaoTransacaos);
-        verificaFuncaoTransacao(listaFdFt, funcaoTransacaos);
+        verificaFuncaoTransacao(listaFt, funcaoTransacaos, identificador);
+        verificaFuncaoTransacao(listaFdFt, funcaoTransacaos, 0);
 
         parametro.put("LISTAFDFT", listaFdFt);
         parametro.put("LISTAFD", listaFd);
         parametro.put("LISTAFT", listaFt);
     }
 
-    private void verificaFuncaoTransacao(List<ListaFdFtDTO> listaFdFt, Set<FuncaoTransacao> funcaoTransacaos) {
+    private void verificaFuncaoTransacao(List<ListaFdFtDTO> listaFdFt, Set<FuncaoTransacao> funcaoTransacaos, Integer identificador) {
         if (funcaoTransacaos != null) {
             for (FuncaoTransacao ft : funcaoTransacaos) {
                 String der = "", alrTr = "";
@@ -438,12 +444,14 @@ public class RelatorioAnaliseRest {
                 objeto.setFuncionalidade(ft.getFuncionalidade().getNome());
                 objeto.setModulo(ft.getFuncionalidade().getModulo().getNome());
                 objeto.setDer(der);
+                objeto.setIdentificador(identificador);
                 listaFdFt.add(objeto);
+                identificador ++;
             }
         }
     }
 
-    private void verificaFuncaodados(List<ListaFdFtDTO> listaFdFt, Set<FuncaoDados> funcaoDados) {
+    private void verificaFuncaodados(List<ListaFdFtDTO> listaFdFt, Set<FuncaoDados> funcaoDados, Integer identifacador) {
         if (funcaoDados != null) {
             for (FuncaoDados fd : funcaoDados) {
                 ListaFdFtDTO objeto = new ListaFdFtDTO();
@@ -457,7 +465,9 @@ public class RelatorioAnaliseRest {
                 objeto.setAlrtr(alrTr);
                 objeto.setFuncionalidade(fd.getFuncionalidade().getNome());
                 objeto.setModulo(fd.getFuncionalidade().getModulo().getNome());
+                objeto.setIdentificador(identifacador);
                 listaFdFt.add(objeto);
+                identifacador ++;
             }
         }
     }
@@ -538,7 +548,7 @@ public class RelatorioAnaliseRest {
      * @param f
      * @return
      */
-    private FuncaoDadosDTO popularObjetoFd(FuncoesDTO f) {
+    private FuncaoDadosDTO popularObjetoFd(FuncoesDTO f, Integer identifacador) {
         FuncaoDadosDTO fd = new FuncaoDadosDTO();
         fd.setNomeFd(f.getNomeFd());
         fd.setClassificacaoFd(f.getTipoFd());
@@ -552,6 +562,7 @@ public class RelatorioAnaliseRest {
         fd.setFatorAjusteValor(f.getFatorAjusteValor());
         fd.setModulo(f.getModuloFd());
         fd.setSubmodulo(f.getFuncionalidadeFd());
+        fd.setIdentificador(identifacador);
         return fd;
     }
 
@@ -559,7 +570,7 @@ public class RelatorioAnaliseRest {
      * @param f
      * @return
      */
-    private FuncaoTransacaoDTO popularObjetoFt(FuncoesDTO f) {
+    private FuncaoTransacaoDTO popularObjetoFt(FuncoesDTO f, Integer identifacador) {
         FuncaoTransacaoDTO ft = new FuncaoTransacaoDTO();
         ft.setNomeFt(f.getNomeFt());
         ft.setClassificacaoFt(f.getTipoFt());
@@ -573,6 +584,7 @@ public class RelatorioAnaliseRest {
         ft.setFatorAjusteValor(f.getFatorAjusteValor());
         ft.setModulo(f.getModuloFt());
         ft.setSubmodulo(f.getFuncionalidadeFt());
+        ft.setIdentificador(identifacador);
         return ft;
     }
 
