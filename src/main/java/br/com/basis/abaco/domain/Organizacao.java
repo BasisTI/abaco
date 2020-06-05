@@ -58,7 +58,7 @@ public class Organizacao implements Serializable, ReportObject, Cloneable {
 
     @Size(max = 80)
     @Column(name = "nome", length = 80)
-    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
+    @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
     private String nome;
 
     @Size(max = 19)

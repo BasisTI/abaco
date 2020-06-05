@@ -61,6 +61,7 @@ public class Sistema implements Serializable, ReportObject {
 
     @NotNull
     @Column(name = "nome", nullable = false)
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String nome;
 
     @Enumerated(EnumType.STRING)

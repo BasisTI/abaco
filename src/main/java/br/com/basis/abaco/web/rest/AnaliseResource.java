@@ -33,6 +33,8 @@ import io.github.jhipster.web.util.ResponseUtil;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +133,7 @@ public class AnaliseResource {
                 HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
         }
         analise.setCreatedBy(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+        analise.getUsers().add(analise.getCreatedBy());
         analiseService.salvaNovaData(analise);
         analiseRepository.save(analise);
         analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
@@ -414,8 +417,9 @@ public class AnaliseResource {
         throws URISyntaxException {
         Sort.Direction sortOrder = PageUtils.getSortDirection(order);
         Pageable pageable = new PageRequest(pageNumber, size, sortOrder, sort);
+        FieldSortBuilder sortBuilder = new FieldSortBuilder(sort).order(SortOrder.ASC);
         BoolQueryBuilder qb = analiseService.getBoolQueryBuilder(identificador, sistema, metodo, organizacao, equipe, usuario);
-        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).build();
+        SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(qb).withPageable(pageable).withSort(sortBuilder).build();
         Page<Analise> page = elasticsearchTemplate.queryForPage(searchQuery, Analise.class);
         Page<AnaliseDTO> dtoPage = page.map(analise -> analiseService.convertToDto(analise));
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/analises/");

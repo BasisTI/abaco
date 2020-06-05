@@ -128,6 +128,7 @@ public class Analise implements Serializable, ReportObject {
     @Field(type = FieldType.Date)
     private Timestamp dataCriacaoOrdemServico;
 
+    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     @Column(name = "identificador_analise", length = 100)
     private String identificadorAnalise;
 
