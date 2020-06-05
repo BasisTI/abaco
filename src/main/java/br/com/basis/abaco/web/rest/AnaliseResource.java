@@ -4,7 +4,6 @@ import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Compartilhada;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
-import br.com.basis.abaco.domain.VwAnaliseSomaPf;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
 import br.com.basis.abaco.repository.AnaliseRepository;
@@ -150,6 +149,7 @@ public class AnaliseResource {
         }
         Analise analise = analiseRepository.findOne(analiseUpdate.getId());
         analiseService.bindAnalise(analiseUpdate, analise);
+        analiseService.updatePf(analise);
         if (analise.isBloqueiaAnalise()) {
             return ResponseEntity.badRequest().headers(
                 HeaderUtil.createFailureAlert(ENTITY_NAME, "analiseblocked", "You cannot edit an blocked analise")).body(null);
@@ -431,10 +431,8 @@ public class AnaliseResource {
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Analise> updateSomaPf(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnalise(id);
-        VwAnaliseSomaPf vwAnaliseSomaPf = vwAnaliseSomaPfRepository.findByAnaliseId(id);
-        if (analise.getId() != null && vwAnaliseSomaPf.getAnaliseId() != null) {
-            analise.setPfTotal(vwAnaliseSomaPf.getPfGross().setScale(decimalPlace).toString());
-            analise.setAdjustPFTotal(vwAnaliseSomaPf.getPfTotal().setScale(decimalPlace).toString());
+        if (analise.getId() != null ) {
+            analiseService.updatePf(analise);
             analiseRepository.save(analise);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))

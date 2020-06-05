@@ -4,6 +4,7 @@ import br.com.basis.abaco.domain.Alr;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Compartilhada;
 import br.com.basis.abaco.domain.Der;
+import br.com.basis.abaco.domain.EsforcoFase;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoDadosVersionavel;
 import br.com.basis.abaco.domain.FuncaoTransacao;
@@ -12,12 +13,14 @@ import br.com.basis.abaco.domain.Rlr;
 import br.com.basis.abaco.domain.Sistema;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
+import br.com.basis.abaco.domain.VwAnaliseSomaPf;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.CompartilhadaRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoDadosVersionavelRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.UserRepository;
+import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
@@ -34,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -50,6 +54,8 @@ public class AnaliseService extends BaseService {
     public static final String ORGANIZACAO_ID = "organizacao.id";
     public static final String EQUIPE_RESPONSAVEL_ID = "equipeResponsavel.id";
     public static final String COMPARTILHADAS_EQUIPE_ID = "compartilhadas.equipeId";
+    private BigDecimal percent  = new BigDecimal("100");
+    private static final int decimalPlace = 2;
 
     private final AnaliseRepository analiseRepository;
     private final AnaliseSearchRepository analiseSearchRepository;
@@ -58,6 +64,7 @@ public class AnaliseService extends BaseService {
     private final FuncaoDadosVersionavelRepository funcaoDadosVersionavelRepository;
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
+    private final VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
     @Autowired
     private UserSearchRepository userSearchRepository;
 
@@ -68,7 +75,8 @@ public class AnaliseService extends BaseService {
                           FuncaoDadosRepository funcaoDadosRepository,
                           CompartilhadaRepository compartilhadaRepository,
                           FuncaoTransacaoRepository funcaoTransacaoRepository,
-                          AnaliseSearchRepository analiseSearchRepository) {
+                          AnaliseSearchRepository analiseSearchRepository,
+                          VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository) {
         this.analiseRepository = analiseRepository;
         this.funcaoDadosVersionavelRepository = funcaoDadosVersionavelRepository;
         this.userRepository = userRepository;
@@ -76,6 +84,7 @@ public class AnaliseService extends BaseService {
         this.funcaoDadosRepository = funcaoDadosRepository;
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.analiseSearchRepository = analiseSearchRepository;
+        this.vwAnaliseSomaPfRepository = vwAnaliseSomaPfRepository;
     }
 
     public void bindFilterSearch(String identificador, String sistema, String metodo, String organizacao, String equipe, String usuario, Set<Long> equipesIds, Set<Long> organizacoes, BoolQueryBuilder qb) {
@@ -360,5 +369,15 @@ public class AnaliseService extends BaseService {
             }
         }
         return canEdit;
+    }
+    public void updatePf(Analise analise) {
+        VwAnaliseSomaPf vwAnaliseSomaPf = vwAnaliseSomaPfRepository.findByAnaliseId(analise.getId());
+        BigDecimal sumFase = new BigDecimal(0).setScale(decimalPlace);
+        for (EsforcoFase esforcoFase : analise.getEsforcoFases()) {
+            sumFase = sumFase.add(esforcoFase.getEsforco());
+        }
+        sumFase = sumFase.divide(percent);
+        analise.setPfTotal(vwAnaliseSomaPf.getPfGross().setScale(decimalPlace).toString());
+        analise.setAdjustPFTotal(vwAnaliseSomaPf.getPfTotal().multiply(sumFase).setScale(decimalPlace).toString());
     }
 }
