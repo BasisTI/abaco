@@ -655,6 +655,7 @@
         "msgINFORME_DATA_HOMOLOGACAO": "Enter the date of completion to continue",
         "msgINFORME_DATA_ORDEM_SERVICO": "Enter the creation date of the work order to continue",
         "msgINFORME_USUARIO": "There must be at least one user to continue",
+        "msgINFORME_FASE": "There must be at least one phase to continue",
         "msgRegistroSalvoSucesso": "Registry saved successfully!",
         "msgDadosAlteradosSucesso": "Successfully changed data!",
         "msgORGANIZACAO_SEM_SISTEMA": "Organization does not have any System",

@@ -333,9 +333,9 @@ export class AnaliseFormComponent implements OnInit {
     private carregarEsforcoFases(manual: Manual) {
         this.esforcoFases = _.cloneDeep(manual.esforcoFases);
 
-        if (!this.isEdicao) {
+        if (!this.isEdicao && this.analise.esforcoFases) {
             // Traz todos esforcos de fases selecionados
-            this.esforcoFases = _.cloneDeep(manual.esforcoFases);
+            this.analise.esforcoFases = _.cloneDeep(manual.esforcoFases);
         }
     }
 
@@ -537,6 +537,10 @@ export class AnaliseFormComponent implements OnInit {
         }
         if ((!this.analise.users || this.analise.users.length <= 0) && this.analise.id && this.analise.id > 0) {
             this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_USUARIO'));
+            isValid = false;
+        }
+        if ((!this.analise.esforcoFases || this.analise.esforcoFases.length <= 0) && this.analise.id && this.analise.id > 0) {
+            this.pageNotificationService.addErrorMsg(this.getLabel('Analise.Analise.Mensagens.msgINFORME_FASE'));
             isValid = false;
         }
         return isValid;
