@@ -34,7 +34,7 @@ export class AnaliseResumoComponent implements OnInit {
     resumoTotal: ResumoTotal;
     public linhaResumo: Resumo[] = [];
     public pfTotal: string;
-    public pfAjustada: number;
+    public pfAjustada: string;
     complexidades: string[];
 
     public analise: Analise = null;
@@ -100,7 +100,7 @@ export class AnaliseResumoComponent implements OnInit {
                         this.resumoTotal = this.analiseSharedDataService.analise.resumoTotal;
                         this.esforcoFases = this.analiseSharedDataService.analise.esforcoFases;
                         this.pfTotal = analise.pfTotal;
-                        this.pfAjustada = this.aplicaTotalEsforco(parseFloat(analise.adjustPFTotal));
+                        this.pfAjustada = analise.adjustPFTotal;
                         this.analiseService.getResumo(this.idAnalise).subscribe(res =>{
                             this.linhaResumo = res;
                             this.linhaResumo = Resumo.addTotalLine(this.linhaResumo);
@@ -116,7 +116,7 @@ export class AnaliseResumoComponent implements OnInit {
                         this.analiseSharedDataService.analise = analise;
                         this.analise = analise;
                         this.pfTotal = analise.pfTotal;
-                        this.pfAjustada = parseFloat(analise.adjustPFTotal);
+                        this.pfAjustada = analise.adjustPFTotal;
                         this.disableAba = analise.metodoContagem === MessageUtil.INDICATIVA;
                         this.analiseService.getResumo(this.idAnalise).subscribe(res =>{
                             this.linhaResumo = res;
