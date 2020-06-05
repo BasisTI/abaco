@@ -143,8 +143,7 @@ public class AnaliseResourceIntTest {
             compartilhadaRepository,
             funcaoTransacaoRepository,
             elasticsearchTemplate,
-            analiseService,
-            vwAnaliseSomaPfRepository);
+            analiseService);
         this.restAnaliseMockMvc = MockMvcBuilders.standaloneSetup(analiseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver).setControllerAdvice(exceptionTranslator)
             .setMessageConverters(jacksonMessageConverter).build();

@@ -12,7 +12,6 @@ import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
 import br.com.basis.abaco.repository.UserRepository;
-import br.com.basis.abaco.repository.VwAnaliseSomaPfRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.AuthoritiesConstants;
@@ -78,7 +77,6 @@ import java.util.Set;
 public class AnaliseResource {
 
     private final Logger log = LoggerFactory.getLogger(AnaliseResource.class);
-    private static final int decimalPlace = 2;
     private static final String ENTITY_NAME = "analise";
     private static final String PAGE = "page";
     private final AnaliseRepository analiseRepository;
@@ -88,7 +86,6 @@ public class AnaliseResource {
     private final AnaliseSearchRepository analiseSearchRepository;
     private final FuncaoDadosRepository funcaoDadosRepository;
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
-    private final VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository;
     private final DynamicExportsService dynamicExportsService;
     private final ElasticsearchTemplate elasticsearchTemplate;
     private RelatorioAnaliseRest relatorioAnaliseRest;
@@ -109,8 +106,7 @@ public class AnaliseResource {
                            CompartilhadaRepository compartilhadaRepository,
                            FuncaoTransacaoRepository funcaoTransacaoRepository,
                            ElasticsearchTemplate elasticsearchTemplate,
-                           AnaliseService analiseService,
-                           VwAnaliseSomaPfRepository vwAnaliseSomaPfRepository) {
+                           AnaliseService analiseService) {
         this.analiseRepository = analiseRepository;
         this.analiseSearchRepository = analiseSearchRepository;
         this.dynamicExportsService = dynamicExportsService;
@@ -120,7 +116,6 @@ public class AnaliseResource {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.analiseService = analiseService;
-        this.vwAnaliseSomaPfRepository = vwAnaliseSomaPfRepository;
     }
 
     @PostMapping("/analises")
@@ -172,7 +167,7 @@ public class AnaliseResource {
                 analise.setDataHomologacao(analiseUpdate.getDataHomologacao());
             }
             analiseService.linkFuncoesToAnalise(analise);
-            analise.setBloqueiaAnalise(! analise.isBloqueiaAnalise());
+            analise.setBloqueiaAnalise(!analise.isBloqueiaAnalise());
             Analise result = analiseRepository.save(analise);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString())).body(result);
@@ -431,7 +426,7 @@ public class AnaliseResource {
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Analise> updateSomaPf(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnalise(id);
-        if (analise.getId() != null ) {
+        if (analise.getId() != null) {
             analiseService.updatePf(analise);
             analiseRepository.save(analise);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));

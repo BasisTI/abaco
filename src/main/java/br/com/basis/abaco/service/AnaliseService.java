@@ -372,7 +372,7 @@ public class AnaliseService extends BaseService {
     }
     public void updatePf(Analise analise) {
         VwAnaliseSomaPf vwAnaliseSomaPf = vwAnaliseSomaPfRepository.findByAnaliseId(analise.getId());
-        BigDecimal sumFase = new BigDecimal(0).setScale(decimalPlace);
+        BigDecimal sumFase = new BigDecimal(BigInteger.ZERO).setScale(decimalPlace);
         for (EsforcoFase esforcoFase : analise.getEsforcoFases()) {
             sumFase = sumFase.add(esforcoFase.getEsforco());
         }

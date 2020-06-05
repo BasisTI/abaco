@@ -4,7 +4,6 @@ import br.com.basis.abaco.domain.BaseLineAnalitico;
 import br.com.basis.abaco.domain.BaseLineSintetico;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.reports.rest.RelatorioBaselineRest;
-import br.com.basis.abaco.repository.BaseLineAnaliticoRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.search.BaseLineAnaliticoSearchRepository;
@@ -12,7 +11,6 @@ import br.com.basis.abaco.repository.search.BaseLineSinteticoSearchRepository;
 import br.com.basis.abaco.service.BaselineAnaliseService;
 import br.com.basis.abaco.service.dto.BaselineAnaliticoDTO;
 import br.com.basis.abaco.utils.PageUtils;
-import br.com.basis.dynamicexports.service.DynamicExportsService;
 import com.codahale.metrics.annotation.Timed;
 import net.sf.jasperreports.engine.JRException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -68,12 +66,11 @@ public class BaseLineAnaliticoResource {
     private HttpServletResponse response;
 
 
-    public BaseLineAnaliticoResource(BaseLineAnaliticoRepository baseLineAnaliticoRepository,
+    public BaseLineAnaliticoResource(
                                      FuncaoDadosRepository funcaoDadosRepository,
                                      FuncaoTransacaoRepository funcaoTransacaoRepository,
                                      BaseLineSinteticoSearchRepository baseLineSinteticoSearchRepository,
                                      BaseLineAnaliticoSearchRepository baseLineAnaliticoSearchRepository,
-                                     DynamicExportsService dynamicExportsService,
                                      BaselineAnaliseService baselineAnaliseService,
                                      ElasticsearchTemplate elasticsearchTemplate) {
         this.funcaoTransacaoRepository = funcaoTransacaoRepository;
