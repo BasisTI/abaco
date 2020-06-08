@@ -184,7 +184,7 @@ public class AnaliseResource {
         if (analise.getId() != null) {
             Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
             analiseClone.setIdentificadorAnalise(analise.getIdentificadorAnalise() + " - CÓPIA");
-            analiseService.salvaNovaData(analiseClone);
+            analiseService.setFundamentacao(analiseClone);
             analiseClone.setDataCriacaoOrdemServico(analise.getDataHomologacao());
             analiseClone.setFuncaoDados(analiseService.bindCloneFuncaoDados(analise, analiseClone));
             analiseClone.setFuncaoTransacaos(analiseService.bindCloneFuncaoTransacaos(analise, analiseClone));

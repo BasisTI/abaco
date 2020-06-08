@@ -56,6 +56,7 @@ public class AnaliseService extends BaseService {
     public static final String COMPARTILHADAS_EQUIPE_ID = "compartilhadas.equipeId";
     private BigDecimal percent  = new BigDecimal("100");
     private static final int decimalPlace = 2;
+    private final static  String EMPTY_STRING = "";
 
     private final AnaliseRepository analiseRepository;
     private final AnaliseSearchRepository analiseSearchRepository;
@@ -379,5 +380,13 @@ public class AnaliseService extends BaseService {
         sumFase = sumFase.divide(percent);
         analise.setPfTotal(vwAnaliseSomaPf.getPfGross().setScale(decimalPlace).toString());
         analise.setAdjustPFTotal(vwAnaliseSomaPf.getPfTotal().multiply(sumFase).setScale(decimalPlace).toString());
+    }
+    public Analise setFundamentacao(Analise analiseClone ){
+        salvaNovaData(analiseClone);
+        analiseClone.setDocumentacao(EMPTY_STRING);
+        analiseClone.setFronteiras(EMPTY_STRING);
+        analiseClone.setPropositoContagem(EMPTY_STRING);
+        analiseClone.setEscopo(EMPTY_STRING);
+        return analiseClone;
     }
 }
