@@ -193,11 +193,11 @@
                 </div>
                 <div class="ui-g" style="justify-content: center; margin-top: 25px;">
                     <div class="ui-g-2 ui-md-2 ui-sm-12" *ngIf="this.isAdmin">
-                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
-                                          routerLink="/admin/user"></app-white-button>
+                        <app-white-button   [buttonLabel]="'Global.Botoes.Cancelar' | translate"
+                                            routerLink="/admin/user"></app-white-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-submit-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
+                        <app-submit-button [buttonLabel]="'Global.Botoes.Salvar' | translate" 
                                            [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
                     </div>
                 </div>

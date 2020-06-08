@@ -122,7 +122,7 @@
                     <div class="ui-g ui-md-12" style="justify-content: flex-end">
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-blue-button
-                                    [buttonLabel]="getLabel('Global.Botoes.NovoModulo')"
+                                    [buttonLabel]="'Global.Botoes.NovoModulo' | translate"
                                     buttonIcon="ui-icon-add"
                                     id="idBtnNovoModuloFormSistema"
                                     (click)="abrirDialogModulo()">
@@ -160,7 +160,7 @@
                     <div class="ui-g ui-md-12" style="justify-content: flex-end">
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-blue-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.NovaFuncionalidade')"
+                                    [buttonLabel]="'Global.Botoes.NovaFuncionalidade' | translate"
                                     buttonIcon="ui-icon-add"
                                     id="idBtnNovoSubmoduloFormSistema"
                                     (click)="abrirDialogFuncionalidade()"
@@ -186,11 +186,11 @@
                 <!-- Botões salvar e cancelar do fim da página -->
                 <div class="ui-g" style="justify-content: center; padding-top: 25px;">
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
+                        <app-white-button [buttonLabel]="'Global.Botoes.Cancelar' | translate"
                                           id="idBtnCancelarFormSistema" routerLink="/sistema"></app-white-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-submit-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
+                        <app-submit-button [buttonLabel]="'Global.Botoes.Salvar' | translate"
                                            id="idBtnSalvarFormSistema"
                                            [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
                     </div>
@@ -230,14 +230,14 @@
                     <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-white-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
+                                    [buttonLabel]="'Global.Botoes.Cancelar' | translate"
                                     id="idBtnCancelarModuloSaveFormSistema"
                                     (click)="fecharDialogModulo()">
                             </app-white-button>
                         </div>
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-green-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
+                                    [buttonLabel]="'Global.Botoes.Salvar' | translate"
                                     id="idBtnSalvarModuloSaveFormSistema"
                                     (click)="adicionarModulo()">
                             </app-green-button>
@@ -278,7 +278,7 @@
 
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-white-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
+                                    [buttonLabel]="'Global.Botoes.Cancelar' | translate"
                                     id="idBtnCancelarModuloEditFormSistema"
                                     (click)="fecharDialogEditarModulo()">
                             </app-white-button>
@@ -286,7 +286,7 @@
 
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-green-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
+                                    [buttonLabel]="'Global.Botoes.Salvar' | translate"
                                     id="idBtnSalvarModuloEditFormSistema"
                                     (click)="editarModulo()">
                             </app-green-button>
@@ -363,7 +363,7 @@
 
                         <div class="ui-g-2 ui-md-2 ui-sm-12">
                             <app-white-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
+                                    [buttonLabel]="'Global.Botoes.Cancelar' | translate"
                                     id="idBtnCancelarFuncionalidadeSaveFormSistema"
                                     (click)="fecharDialogFuncionalidade()">
                             </app-white-button>
@@ -371,7 +371,7 @@
 
                         <div class="ui-g-2">
                             <app-green-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
+                                    [buttonLabel]="'Global.Botoes.Salvar' | translate"
                                     id="idSalvarFuncionalidadeSaveFormSistema"
                                     (click)="adicionarFuncionalidade()">
                             </app-green-button>
@@ -438,7 +438,7 @@
 
                         <div class="ui-g-2">
                             <app-white-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
+                                    [buttonLabel]="'Global.Botoes.Cancelar' | translate"
                                     id="idBtnCancelarFuncionalidadeEditFormSistema"
                                     (click)="fecharDialogEditarFuncionalidade()">
                             </app-white-button>
@@ -446,7 +446,7 @@
 
                         <div class="ui-g-2">
                             <app-green-button
-                                    [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
+                                    [buttonLabel]="'Global.Botoes.Salvar' | translate"
                                     id="idBtnSalvarFuncionalidadeEditFormSistema"
                                     (click)="editarFuncionalidade()">
                             </app-green-button>

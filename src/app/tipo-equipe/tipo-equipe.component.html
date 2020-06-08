@@ -23,17 +23,17 @@
         <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
 
           <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.LimparPesquisa')" buttonIcon="ui-icon-clear-all" (click)="limparPesquisa()">
+            <app-white-button [buttonLabel]="'Global.Botoes.LimparPesquisa' | translate" buttonIcon="ui-icon-clear-all" (click)="limparPesquisa()">
             </app-white-button>
           </div>
 
           <div class="ui-g-2 ui-md-2 ui-sm-12">
-            <app-blue-button [buttonLabel]="this.getLabel('Global.Botoes.Pesquisar')" buttonIcon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)">
+            <app-blue-button [buttonLabel]="'Global.Botoes.Pesquisar' | translate" buttonIcon="ui-icon-search" (click)="datatable.refresh(elasticQuery.query)">
             </app-blue-button>
           </div>
 
           <div class="uui-g-2 ui-md-2 ui-sm-12">
-            <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Novo')" buttonIcon="ui-icon-add" routerLink="/admin/tipoEquipe/new">
+            <app-green-button [buttonLabel]="'Global.Botoes.Novo' | translate" buttonIcon="ui-icon-add" routerLink="/admin/tipoEquipe/new">
             </app-green-button>
           </div>
           

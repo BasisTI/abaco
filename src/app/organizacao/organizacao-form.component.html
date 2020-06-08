@@ -7,7 +7,7 @@
                     <div class="ui-g-12" style="margin-bottom: 25px">
                         <label translate="Cadastros.Organizacao.LogoOrganizacao">Logo da Organização</label>
                         <p-fileUpload #fileInput maxFileSize="5242880"
-                                      [chooseLabel]="this.getLabel('Cadastros.Organizacao.SelecionarArquivo')"
+                                      [chooseLabel]="'Cadastros.Organizacao.SelecionarArquivo'|translate"
                                       (onSelect)="fileUpload($event)"
                                       accept="image/*" id="idLogoOrganizacaoFormOrganizacao" [showUploadButton]="false"
                                       [showCancelButton]="false"
@@ -96,7 +96,7 @@
                         <div class="ui-g ui-md-12" style="justify-content: flex-end">
                             <div class="ui-md-2">
                                 <app-blue-button
-                                        [buttonLabel]="this.getLabel('Cadastros.Organizacao.Botoes.NovoContrato')"
+                                        [buttonLabel]="'Cadastros.Organizacao.Botoes.NovoContrato' | translate"
                                         buttonIcon="ui-icon-add"
                                         id="idBtnNovoContratoFormOrganizacao"
                                         (click)="abrirDialogCadastroContrato(editForm1.resetForm())">
@@ -136,15 +136,16 @@
                 </div>
                 <div class="ui-g ui-md-12" style="justify-content: center; margin-bottom: 25px; margin-top: 25px">
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
-                                          id="idBtnCancelarFormOrganizacao"
-                                          routerLink="/organizacao">
+                        <app-white-button [buttonLabel]="'Global.Botoes.Cancelar' | translate"
+                                            id="idBtnCancelarFormOrganizacao"
+                                            routerLink="/organizacao">
                         </app-white-button>
                     </div>
 
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarOrg"
-                                          (click)="save(editForm)" buttonIcon="ui-icon-save">
+                        <app-green-button id="idBtnSalvarOrg"
+                                            [buttonLabel]="'Global.Botoes.Salvar' | translate"
+                                            (click)="save(editForm)" buttonIcon="ui-icon-save">
                         </app-green-button>
                     </div>
                 </div>
@@ -329,7 +330,7 @@
                             <div class="ui-g">
                                 <div class="ui-md-4">
                                     <app-green-button
-                                            [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
+                                            [buttonLabel]="'Global.Botoes.Salvar' | translate"
                                             id="idBtnSalvarManualFormOrganizacao"
                                             buttonIcon="ui-icon-save"
                                             (click)="adicionarManual()">
@@ -368,15 +369,15 @@
                     </div>
                     <div class="ui-g ui-md-12" style="justify-content: center">
                         <div class="ui-g-2">
-                            <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
-                                              id="idBtnCancelarContratoSaveFormOrganizacao"
-                                              (click)="fecharDialogCadastroContrato()">
+                            <app-white-button [buttonLabel]="'Global.Botoes.Cancelar' | translate"
+                                                id="idBtnCancelarContratoSaveFormOrganizacao"
+                                                (click)="fecharDialogCadastroContrato()">
                             </app-white-button>
                         </div>
                         <div class="ui-g-2">
-                            <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
-                                              id="idBtnSalvarContratoSaveFormOrganizacao"
-                                              (click)="adicionarContrato()" buttonIcon="ui-icon-save">
+                            <app-green-button [buttonLabel]="'Global.Botoes.Salvar' | translate"
+                                                id="idBtnSalvarContratoSaveFormOrganizacao"
+                                                (click)="adicionarContrato()" buttonIcon="ui-icon-save">
                             </app-green-button>
                         </div>
                     </div>
@@ -526,7 +527,7 @@
                         <div class="ui-g">
                             <div class="ui-md-4">
                                 <app-green-button
-                                        [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
+                                        [buttonLabel]="'Global.Botoes.Salvar' | translate"
                                         id="idBtnSalvarManualEdtFormOrganizacao"
                                         buttonIcon="ui-icon-save"
                                         (click)="adicionarManualEdt()">
@@ -558,13 +559,13 @@
                 </div>
                 <div class="ui-g ui-md-12" style="justify-content: flex-end">
                     <div class="ui-g-2">
-                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')"
+                        <app-white-button [buttonLabel]="'Global.Botoes.Cancelar' | translate"
                                           id="idBtnCancelarContratoEditFormOrganizacao"
                                           (click)="fecharDialogEditarContrato()" buttonIcon="ui-arrow-back">
                         </app-white-button>
                     </div>
                     <div class="ui-g-2">
-                        <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')"
+                        <app-green-button [buttonLabel]="'Global.Botoes.Salvar' | translate"
                                           id="idBtnSalvarContratoEditFormOrganizacao" buttonIcon="ui-icon-save"
                                           (click)="editarContrato()">
                         </app-green-button>

@@ -209,7 +209,7 @@
                 <div class="ui-g">
                     <div class="ui-g ui-md-12" style="justify-content: flex-end">
                         <div class="ui-g-3 ui-md-3 ui-sm-12">
-                            <app-blue-button [buttonLabel]="this.getLabel('Cadastros.Manual.Botoes.NovoEsforcoFase')" buttonIcon="ui-icon-add"
+                            <app-blue-button [buttonLabel]="'Cadastros.Manual.Botoes.NovoEsforcoFase' | translate" buttonIcon="ui-icon-add"
                                              id="idBtnNovoEsforcoFaseFormManual"
                                              (click)="openDialogPhaseEffort(editForm1.resetForm())">
                             </app-blue-button>
@@ -238,7 +238,7 @@
                 <div class="ui-g">
                     <div class="ui-g ui-md-12" style="justify-content: flex-end">
                         <div class="ui-g-3 ui-md-3 ui-sm-12">
-                            <app-blue-button [buttonLabel]="this.getLabel('Cadastros.Manual.Botoes.NovoDeflator')" buttonIcon="ui-icon-add"
+                            <app-blue-button [buttonLabel]="'Cadastros.Manual.Botoes.NovoDeflator' | translate" buttonIcon="ui-icon-add"
                                              id="idBtnNovoDeflatorFormManual"
                                              (click)="openDialogCreateAdjustFactor(editForm2.resetForm())">
                             </app-blue-button>
@@ -275,11 +275,11 @@
 
                 <div class="ui-g" style="justify-content: center; margin-top: 25px;">
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCancelarFormManual"
+                        <app-white-button  [buttonLabel]="'Global.Botoes.Cancelar' | translate" id="idBtnCancelarFormManual"
                                           routerLink="/manual"></app-white-button>
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
-                        <app-submit-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarFormManual"
+                        <app-submit-button  [buttonLabel]="'Global.Botoes.Salvar' | translate" id="idBtnSalvarFormManual"
                                            [disabled]="editForm.form.invalid || isSaving"></app-submit-button>
                     </div>
                 </div>
@@ -340,13 +340,13 @@
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCAncelarSaveEsforcoFormManual"
+                                <app-white-button  [buttonLabel]="'Global.Botoes.Cancelar' | translate"  id="idBtnCAncelarSaveEsforcoFormManual"
                                                   (click)="closeDialogPhaseEffort()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarSaveEsforcoFormManual"
+                                <app-green-button  [buttonLabel]="'Global.Botoes.Salvar' | translate" id="idBtnSalvarSaveEsforcoFormManual"
                                                   buttonIcon="ui-icon-add"
                                                   (click)="addPhaseEffort()">
                                 </app-green-button>
@@ -408,13 +408,13 @@
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCancelarEditFormManual"
+                                <app-white-button  [buttonLabel]="'Global.Botoes.Cancelar' | translate" id="idBtnCancelarEditFormManual"
                                                   (click)="closeDialogEditPhaseEffort()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarEditFormManual"
+                                <app-green-button  [buttonLabel]="'Global.Botoes.Salvar' | translate" id="idBtnSalvarEditFormManual"
                                                   buttonIcon="ui-icon-add"
                                                   (click)="editPhaseEffort()">
                                 </app-green-button>
@@ -524,13 +524,13 @@
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCancelarDeflatorSaveFormManual"
+                                <app-white-button  [buttonLabel]="'Global.Botoes.Cancelar' | translate" id="idBtnCancelarDeflatorSaveFormManual"
                                                   (click)="closeDialogCreateAdjustFactor()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-2 ui-md-2 ui-sm-12">
-                                <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarDeflatorSaveFormManual"
+                                <app-green-button  [buttonLabel]="'Global.Botoes.Salvar' | translate" id="idBtnSalvarDeflatorSaveFormManual"
                                                   buttonIcon="ui-icon-add" (click)="addAdjustFactor()">
                                 </app-green-button>
                             </div>
@@ -632,13 +632,13 @@
                     <div class="ui-g">
                         <div class="ui-g ui-md-12" style="justify-content: flex-end; padding-top: 25px">
                             <div class="ui-g-3 ui-md-3 ui-sm-12">
-                                <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" id="idBtnCancelarEditFormManual"
+                                <app-white-button  [buttonLabel]="'Global.Botoes.Cancelar' | translate" id="idBtnCancelarEditFormManual"
                                                   (click)="closeDialogEditAdjustFactor()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-3 ui-md-3 ui-sm-12">
-                                <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" id="idBtnSalvarEditFormManual"
+                                <app-green-button  [buttonLabel]="'Global.Botoes.Salvar' | translate" id="idBtnSalvarEditFormManual"
                                                   buttonIcon="ui-icon-add"
                                                   (click)="editAdjustFactor()">
                                 </app-green-button>
@@ -650,9 +650,9 @@
 
                 <p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
                     <p-footer>
-                        <app-white-button [buttonLabel]="this.getLabel('Global.Botoes.Nao')" id="idBtnNaoFormManual" buttonIcon="fa-close"
+                        <app-white-button [buttonLabel]="'Global.Botoes.Nao' | translate" id="idBtnNaoFormManual" buttonIcon="fa-close"
                                           (click)="dialog.reject()"></app-white-button>
-                        <app-green-button [buttonLabel]="this.getLabel('Global.Botoes.Sim')" id="idBtnSimFormManual" buttonIcon="fa-check"
+                        <app-green-button  [buttonLabel]="'Global.Botoes.Sim' | translate" id="idBtnSimFormManual" buttonIcon="fa-check"
                                           (click)="dialog.accept()"></app-green-button>
                     </p-footer>
                 </p-confirmDialog>

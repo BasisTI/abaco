@@ -57,7 +57,7 @@
           
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-white-button 
-              [buttonLabel]="this.getLabel('Global.Botoes.Cancelar')" 
+              [buttonLabel]="'Global.Botoes.Cancelar' | translate"
               routerLink="/admin/tipoEquipe">
             </app-white-button>
           </div>
@@ -65,7 +65,7 @@
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-submit-button 
               (click)="editForm.submit"
-              [buttonLabel]="this.getLabel('Global.Botoes.Salvar')" 
+              [buttonLabel]="'Global.Botoes.Salvar' | translate"
               [disabled]="editForm.form.invalid || isSaving">
             </app-submit-button>
           </div>
