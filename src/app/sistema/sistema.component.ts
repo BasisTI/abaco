@@ -149,51 +149,24 @@ export class SistemaComponent {
         const stringParamsArray: Array<string> = [];
         this.searchParams.sigla = this.formatFieldForSearch(this.searchParams.sigla);
         this.searchParams.nomeSistema = this.formatFieldForSearch(this.searchParams.nomeSistema);
-        if (this.searchParams.sigla !== undefined && this.searchParams.sigla !== '' &&
-            this.searchParams.nomeSistema === undefined &&
-            this.searchParams.organizacao.id === undefined) {
-            (this.searchParams.sigla !== undefined || this.elasticQuery.value === '') ?
-                (stringParamsArray.push('sigla:*' + this.searchParams.sigla + '*')) : (this);
-        } else if (this.searchParams.nomeSistema !== undefined &&
-            this.searchParams.sigla === undefined && this.searchParams.organizacao.id === undefined) {
-            (this.searchParams.nomeSistema !== undefined || this.elasticQuery.value === '') ? (
-                stringParamsArray.push('nome: *' + this.searchParams.nomeSistema + '*')) : (this);
-        } else if (this.searchParams.organizacao.id !== undefined &&
-            this.searchParams.nomeSistema === undefined && this.searchParams.sigla === undefined) {
-            (this.searchParams.organizacao.id !== undefined ||
-                this.elasticQuery.value === '') ? (
-                stringParamsArray.push('organizacao.id:' + this.searchParams.organizacao.id)) : (this);
-        } else if (this.searchParams.sigla === undefined &&
-            this.searchParams.nomeSistema !== undefined &&
-            this.searchParams.organizacao.id !== undefined) {
-            (this.searchParams.nomeSistema !== undefined || this.elasticQuery.value === '') ? (
-                stringParamsArray.push('nome: *' + this.searchParams.nomeSistema + '*')) : (this);
-            (this.searchParams.organizacao.id !== undefined || this.elasticQuery.value === '') ? (
-                stringParamsArray.push('AND organizacao.id:' + this.searchParams.organizacao.id)) : (this);
-        } else if (this.searchParams.nomeSistema === undefined &&
-            this.searchParams.sigla !== undefined &&
-            this.searchParams.organizacao.id !== undefined) {
-            (this.searchParams.sigla !== undefined || this.elasticQuery.value === '') ?
-                (stringParamsArray.push('sigla:*' + this.searchParams.sigla + '*')) : (this);
-            (this.searchParams.organizacao.id !== undefined || this.elasticQuery.value === '') ?
-                (stringParamsArray.push('AND organizacao.id:' + this.searchParams.organizacao.id)) : (this);
-        } else if (this.searchParams.organizacao.id === undefined &&
-            this.searchParams.sigla !== undefined &&
-            this.searchParams.nomeSistema !== undefined) {
-            (this.searchParams.sigla !== undefined || this.elasticQuery.value === '') ?
-                (stringParamsArray.push('sigla:*' + this.searchParams.sigla + '*')) : (this);
-            (this.searchParams.nomeSistema !== undefined || this.elasticQuery.value !== '') ?
-                (stringParamsArray.push('AND nome: *' + this.searchParams.nomeSistema + '*')) : (this);
-        } else if (this.searchParams.sigla !== undefined &&
-            this.searchParams.nomeSistema !== undefined &&
-            this.searchParams.organizacao.id !== undefined) {
-            (this.searchParams.sigla !== undefined || this.elasticQuery.value === '') ?
-                (stringParamsArray.push('sigla:*' + this.searchParams.sigla + '*')) : (this);
-            (this.searchParams.nomeSistema !== undefined || this.elasticQuery.value === '') ?
-                (stringParamsArray.push('AND nome: *' + this.searchParams.nomeSistema + '*')) : (this);
-            (this.searchParams.organizacao.id !== undefined || this.elasticQuery.value === '') ?
-                (stringParamsArray.push('AND organizacao.id:' + this.searchParams.organizacao.id)) : (this);
+        if(this.searchParams.sigla !== undefined && this.searchParams.sigla !== ''){
+            if(this.searchParams.sigla.includes(' ')){
+                stringParamsArray.length > 0 ? stringParamsArray.push(' AND sigla:\"' + this.searchParams.sigla + '\"') : stringParamsArray.push('sigla:\"' + this.searchParams.sigla + '\"'); 
+            }else{
+                stringParamsArray.length > 0 ? stringParamsArray.push(' AND sigla:*' + this.searchParams.sigla + '*') :  stringParamsArray.push('sigla:*' + this.searchParams.sigla + '*'); 
+            }
         }
+        if(this.searchParams.nomeSistema !== undefined && this.searchParams.nomeSistema !== ''){
+            if(this.searchParams.nomeSistema.includes(' ')){
+                stringParamsArray.length > 0 ? stringParamsArray.push(' AND nome:\"' + this.searchParams.nomeSistema + '\"') : stringParamsArray.push('nome:\"' + this.searchParams.nomeSistema + '\"'); 
+            }else{
+                stringParamsArray.length > 0 ? stringParamsArray.push(' AND nome:*' + this.searchParams.nomeSistema + '*') :  stringParamsArray.push(this.searchParams.nomeSistema); 
+            }
+        }
+        if(this.searchParams.organizacao.id !== undefined && this.searchParams.organizacao.id !== ''){
+                stringParamsArray.length > 0 ? stringParamsArray.push(' AND organizacao.id: '+ this.searchParams.sigla ) : stringParamsArray.push(' organizacao.id:' + this.searchParams.organizacao.id); 
+        }
+       
         return stringParamsArray;
     }
 
