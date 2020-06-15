@@ -227,6 +227,7 @@ export class AnaliseFormComponent implements OnInit {
                 this.analise = new Analise();
                 this.analise.esforcoFases = [];
                 this.analise.enviarBaseline = true;
+                this.canEditMetodo = true;
             }
         });
     }
