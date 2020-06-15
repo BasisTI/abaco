@@ -311,7 +311,7 @@ export class AnaliseComponent implements OnInit {
                 .concat(this.analiseSelecionada.identificadorAnalise),
             accept: () => {
                 this.analiseService.clonarAnalise(id).subscribe(response => {
-                    this.router.navigate(['/analise', response.id, 'edit']);
+                    this.router.navigate(['/analise', response.id, 'edit',{clone:true}]);
                 });
             }
         });

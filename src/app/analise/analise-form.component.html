@@ -170,6 +170,7 @@
                                             [options]="metodosContagem"
                                             [(ngModel)]="analise.metodoContagem"
                                             [autoWidth]="false"
+                                            [disabled]="disabledTipoContagemEdit()"
                                             (onChange)="alterarMetodoContagem()">
                                     </p-dropdown>
                                 </div>
@@ -183,6 +184,7 @@
                                             name="tiposAnalise"
                                             [placeholder]="this.getLabel('Analise.Analise.Selecione')"
                                             [options]="tiposAnalise"
+                                            [disabled]="disabledTipoContagemEdit()"
                                             [(ngModel)]="analise.tipoAnalise"
                                             [autoWidth]="false">
                                     </p-dropdown>

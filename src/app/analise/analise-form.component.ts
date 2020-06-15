@@ -38,6 +38,7 @@ import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.servi
 export class AnaliseFormComponent implements OnInit {
 
     isEdicao: boolean;
+    canEditMetodo: boolean = false ;
     disableFuncaoTrasacao = true;
     disableAba: boolean;
     equipeShare = [];
@@ -212,8 +213,9 @@ export class AnaliseFormComponent implements OnInit {
             if (params['id']) {
                 this.isEdicao = true;
                 this.analiseService.find(params['id']).subscribe(analise => {
-                        this.loadDataAnalise(analise);
-                        this.disableFuncaoTrasacao = analise.metodoContagem === MessageUtil.INDICATIVA;
+                    this.loadDataAnalise(analise);
+                    this.disableFuncaoTrasacao = analise.metodoContagem === MessageUtil.INDICATIVA;
+                    this.canEditMetodo = !(this.isEdicao) || (this.route.snapshot.paramMap.get('clone')) && this.analise.metodoContagem === MetodoContagem.ESTIMADA;
                     },
                     err => {
                         this.pageNotificationService.addErrorMsg(
@@ -333,7 +335,7 @@ export class AnaliseFormComponent implements OnInit {
     private carregarEsforcoFases(manual: Manual) {
         this.esforcoFases = _.cloneDeep(manual.esforcoFases);
 
-        if (!this.isEdicao && this.analise.esforcoFases) {
+        if (this.isEdicao && !(this.analise.esforcoFases)) {
             // Traz todos esforcos de fases selecionados
             this.analise.esforcoFases = _.cloneDeep(manual.esforcoFases);
         }
@@ -390,6 +392,14 @@ export class AnaliseFormComponent implements OnInit {
             return true;
         } else {
             return false;
+        }
+    }
+    disabledTipoContagemEdit() {
+        if (this.canEditMetodo){
+            return false;
+        } else {
+            return true;
+
         }
     }
 
@@ -461,6 +471,10 @@ export class AnaliseFormComponent implements OnInit {
 
     manualSelecionado(manual: Manual) {
         this.esforcoFases = _.cloneDeep(manual.esforcoFases);
+        if (!this.isEdicao && !(this.analise.esforcoFases)) {
+            // Traz todos esforcos de fases selecionados
+            this.analise.esforcoFases = _.cloneDeep(manual.esforcoFases);
+        }
     }
 
     private formataData(data: Date): String {
@@ -660,7 +674,6 @@ export class AnaliseFormComponent implements OnInit {
             if (this.analise.metodoContagem !== MetodoContagem.INDICATIVA) {
                 this.analise.funcaoTransacaos = [];
             }
-            this.save();
         }else{
             if(this.analise.metodoContagem === MetodoContagem.DETALHADA){
                 this.analise.enviarBaseline = true;
