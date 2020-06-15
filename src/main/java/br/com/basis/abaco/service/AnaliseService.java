@@ -40,6 +40,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -381,12 +382,18 @@ public class AnaliseService extends BaseService {
         analise.setPfTotal(vwAnaliseSomaPf.getPfGross().setScale(decimalPlace).toString());
         analise.setAdjustPFTotal(vwAnaliseSomaPf.getPfTotal().multiply(sumFase).setScale(decimalPlace).toString());
     }
-    public Analise setFundamentacao(Analise analiseClone ){
+    public Analise bindCloneAnalise(Analise analiseClone, Analise analise, User user){
+        List<User> lstUsers = new ArrayList<>();
+        lstUsers.add(analiseClone.getCreatedBy());
         salvaNovaData(analiseClone);
         analiseClone.setDocumentacao(EMPTY_STRING);
         analiseClone.setFronteiras(EMPTY_STRING);
         analiseClone.setPropositoContagem(EMPTY_STRING);
         analiseClone.setEscopo(EMPTY_STRING);
+        analiseClone.setDataCriacaoOrdemServico(analise.getDataHomologacao());
+        analiseClone.setFuncaoDados(bindCloneFuncaoDados(analise, analiseClone));
+        analiseClone.setFuncaoTransacaos(bindCloneFuncaoTransacaos(analise, analiseClone));
+        analiseClone.setBloqueiaAnalise(false);
         return analiseClone;
     }
 }

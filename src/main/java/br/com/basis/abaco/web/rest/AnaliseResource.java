@@ -182,13 +182,10 @@ public class AnaliseResource {
     public ResponseEntity<Analise> cloneAnalise(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnalise(id);
         if (analise.getId() != null) {
-            Analise analiseClone = new Analise(analise, userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+            User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
+            Analise analiseClone = new Analise(analise, user);
             analiseClone.setIdentificadorAnalise(analise.getIdentificadorAnalise() + " - CÓPIA");
-            analiseService.setFundamentacao(analiseClone);
-            analiseClone.setDataCriacaoOrdemServico(analise.getDataHomologacao());
-            analiseClone.setFuncaoDados(analiseService.bindCloneFuncaoDados(analise, analiseClone));
-            analiseClone.setFuncaoTransacaos(analiseService.bindCloneFuncaoTransacaos(analise, analiseClone));
-            analiseClone.setBloqueiaAnalise(false);
+            analiseService.bindCloneAnalise(analiseClone, analise, user);
             analiseRepository.save(analiseClone);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analiseClone)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseClone.getId().toString()))
