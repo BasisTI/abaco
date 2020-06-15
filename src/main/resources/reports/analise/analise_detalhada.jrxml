@@ -14,6 +14,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<import value="java.lang.*"/>
 	<import value="br.com.basis.abaco.domain.enumeration.MetodoContagem"/>
 	<style name="Table 2_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -408,7 +409,7 @@
 					<imageExpression><![CDATA[$P{IMAGEMLOGO}]]></imageExpression>
 				</image>
 				<textField>
-					<reportElement x="195" y="21" width="413" height="19" uuid="1a813095-0499-41d5-9f68-0f18dd97787a">
+					<reportElement x="107" y="21" width="413" height="19" uuid="1a813095-0499-41d5-9f68-0f18dd97787a">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -417,25 +418,40 @@
 					<textFieldExpression><![CDATA[$P{SISTEMANM}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="195" y="2" width="413" height="19" uuid="e9dab4f0-8d5c-46b8-8280-8c1ecdb5a66f"/>
+					<reportElement x="107" y="2" width="413" height="19" uuid="e9dab4f0-8d5c-46b8-8280-8c1ecdb5a66f"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{ORGANIZACAONM}]]></textFieldExpression>
 				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement x="652" y="0" width="147" height="20" uuid="8bf0c797-9b61-46d5-84fd-46b4038e937a"/>
+					<textElement textAlignment="Right">
+						<font fontName="SansSerif" size="9" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="629" y="22" width="172" height="18" uuid="18f00aa4-e8f6-4cb1-b0b5-3f960149b140"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[Fabíola Carolinne Lins Gatto e Sá]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="521" y="22" width="108" height="18" uuid="268d1638-9a57-49e2-a596-6aea8dad1ae6">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CFPS Responsável:]]></text>
+				</staticText>
 			</frame>
 		</band>
 	</title>
 	<pageHeader>
-		<band splitType="Stretch">
-			<textField isBlankWhenNull="false">
-				<reportElement x="630" y="-32" width="147" height="20" uuid="8bf0c797-9b61-46d5-84fd-46b4038e937a"/>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="9" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
-			</textField>
-		</band>
+		<band splitType="Stretch"/>
 	</pageHeader>
 	<detail>
 		<band height="193" splitType="Stretch">
