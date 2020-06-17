@@ -49,7 +49,9 @@
       "Nome:": "Nombre:",
       "Organizacao": "Organización",
       "Organizacao*": "Organización *",
+      "cfpsResponsavel": "CFPS Responsable",
       "SelecioneOrganizacao": "Seleccione al menos una organización",
+      "SelecioneCFPS": "Seleccione Responsable CFPS",
       "TipoEquipe": "Tipo de Equipo",
       "Visualizar": "Ver Tipo Equipo",
       "Mensagens": {

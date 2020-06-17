@@ -1,5 +1,5 @@
+import { User } from './../user/user.model';
 import { BaseEntity } from '../shared';
-import {User} from '../user';
 
 
 export class TipoEquipe implements BaseEntity {
@@ -8,6 +8,7 @@ export class TipoEquipe implements BaseEntity {
     public id?: number,
     public nome?: string,
     public nomeOrg?: string,
+    public cfpsResponsavel?: User,
     public organizacoes?: BaseEntity[]
   ) {}
 }

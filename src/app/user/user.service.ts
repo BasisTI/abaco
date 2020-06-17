@@ -190,4 +190,17 @@ export class UserService {
                 }
             });
     }
+
+    getUsersFromOrganização(organizacoes: any[]): Observable<ResponseWrapper>{
+        this.blockUI.start();
+        return this.http.post(this.resourceUrl + 'drop-down/organizacao',organizacoes)
+            .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+                if (error.status === 403) {
+                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    return Observable.throw(new Error(error.status));
+                }
+            }).finally(
+                ()=>{this.blockUI.stop();}
+            );
+    }
 }

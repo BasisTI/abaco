@@ -6,7 +6,7 @@
         
         <div class="ui-g">
 
-          <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+          <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
             <span class="md-inputfield">
               <input 
                 type="text" 
@@ -27,7 +27,7 @@
             </span>
           </div>
 
-          <div class="ui-g-6 ui-md-6 ui-sm-12" style="margin-bottom: 25px; margin-top: -25px">
+          <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: -25px">
             <span>
               <h3 class="first" translate="Cadastros.TipoEquipe.Organizacao*">Organização *</h3>
               <p-multiSelect
@@ -39,6 +39,7 @@
                 optionLabel="nome"
                 selectedItemsLabel="{0} organizações selecionadas"
                 #organizacoesMultiSelect='ngModel'
+                (onChange)="loadUserCFPS()"
                 required>
               </p-multiSelect>
               <div *ngIf="editForm.controls['organizacoesMultiSelect'] 
@@ -50,11 +51,23 @@
             </div>
             </span>
           </div>
-
+          <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: -25px">
+            <span>
+              <h3 class="first" translate="Cadastros.TipoEquipe.cfpsResponsavel">CFPS Responsável</h3>
+              <p-dropdown
+                [filter]="true"
+                [placeholder]="getLabel('Cadastros.TipoEquipe.SelecioneCFPS')"
+                name="cfpsResponsavel"
+                [options]="users"
+                [(ngModel)]="tipoEquipe.cfpsResponsavel"
+                dataKey="id"
+                optionLabel="nome"
+                [autoWidth]="false">
+              </p-dropdown>
+            </span>
+          </div>
         </div>
-
         <div class="ui-g ui-md-12" style="justify-content: center">
-          
           <div class="ui-g-2 ui-md-2 ui-sm-12">
             <app-white-button 
               [buttonLabel]="'Global.Botoes.Cancelar' | translate"
@@ -69,9 +82,7 @@
               [disabled]="editForm.form.invalid || isSaving">
             </app-submit-button>
           </div>
-
         </div>
-        
       </form>
     </div>
   </div>

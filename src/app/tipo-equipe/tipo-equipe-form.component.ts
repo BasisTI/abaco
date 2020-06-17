@@ -1,3 +1,6 @@
+import { BlockUI } from 'ng-block-ui';
+import { UserService } from './../user/user.service';
+import { User } from './../user/user.model';
 import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,12 +13,16 @@ import { TipoEquipeService } from './tipo-equipe.service';
 import { PageNotificationService } from '../shared';
 import { Organizacao, OrganizacaoService } from '../organizacao';
 
+import {NgBlockUI} from 'ng-block-ui';
+
 @Component({
   selector: 'jhi-tipo-equipe-form',
   templateUrl: './tipo-equipe-form.component.html'
 })
 
 export class TipoEquipeFormComponent implements OnInit, OnDestroy {
+
+  @BlockUI() blockUI: NgBlockUI;
 
   tipoEquipe: TipoEquipe;
 
@@ -24,6 +31,7 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
   private routeSub: Subscription;
 
   organizacoes: Organizacao[];
+  users:User[];
 
   constructor(
     private route: ActivatedRoute,
@@ -31,7 +39,8 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     private tipoEquipeService: TipoEquipeService,
     private pageNotificationService: PageNotificationService,
     private organizacaoService: OrganizacaoService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private userService: UserService,
   ) { }
 
   getLabel(label) {
@@ -47,7 +56,13 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     this.routeSub = this.route.params.subscribe(params => {
       this.tipoEquipe = new TipoEquipe();
       if (params['id']) {
-        this.tipoEquipeService.find(params['id']).subscribe(tipoEquipe => this.tipoEquipe = tipoEquipe);
+        this.tipoEquipeService.find(params['id'])
+        .subscribe(tipoEquipe => {
+          this.tipoEquipe = tipoEquipe;
+          this.userService.getUsersFromOrganização(this.tipoEquipe.organizacoes).subscribe(response => {
+            this.users = response.json;
+          });
+        });
       }
     });
     this.organizacaoService.dropDownActive().subscribe((res) => {
@@ -143,6 +158,13 @@ export class TipoEquipeFormComponent implements OnInit, OnDestroy {
     if (!this.tipoEquipe.organizacoes) {
       return this.getLabel('Cadastros.TipoEquipe.Mensagens.msgCampoObrigatorio');
     }
+  }
+  public loadUserCFPS(){
+    this.tipoEquipe.cfpsResponsavel = null;
+    this.userService.getUsersFromOrganização(this.tipoEquipe.organizacoes).subscribe(response => {
+      this.users = null;
+      this.users = response.json;
+  });
   }
 
 }

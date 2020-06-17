@@ -48,8 +48,12 @@
 
           <p-column [header]="getLabel('Cadastros.TipoEquipe.Nome')" field="nome" [sortable]="true" [style]="{'word-wrap':'break-word', 'width': '35%'}">
           </p-column>
-
-          <p-column [header]="getLabel('Cadastros.TipoEquipe.Organizacao')" [style]="{'word-wrap':'break-word', 'width': '50%'}" [sortable]="true" field="organizacoes.nome">
+          <p-column [header]="getLabel('Cadastros.TipoEquipe.cfpsResponsavel')" field="cfpsResponsavel" [sortable]="false" [style]="{'word-wrap':'break-word', 'width': '35%'}">
+            <ng-template let-col let-cfpsResponsavel="rowData.cfpsResponsavel" pTemplate="body">
+              {{ cfpsResponsavel && cfpsResponsavel.firstName ? cfpsResponsavel.firstName : null }} {{ cfpsResponsavel && cfpsResponsavel.lastName ? cfpsResponsavel.lastName : null}}
+            </ng-template>
+          </p-column>
+          <p-column [header]="getLabel('Cadastros.TipoEquipe.Organizacao')" [style]="{'word-wrap':'break-word', 'width': '50%'}" [sortable]="false" field="organizacoes.nome">
             <ng-template let-col let-row="rowData" pTemplate="body">
               <li *ngFor="let org of row.organizacoes">
                 {{ org.nome }}

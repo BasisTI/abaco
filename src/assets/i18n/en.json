@@ -270,7 +270,9 @@
       "Nome:": "Name: ",
       "Organizacao": "Organization",
       "Organizacao*": "Organization *",
+      "cfpsResponsavel": "CFPS Responsible",
       "SelecioneOrganizacao": "Select at least one organization",
+      "SelecioneCFPS": "Select Responsible CFPS",
       "TipoEquipe": "Team Type",
       "Visualizar": "View Team Type",
       "Mensagens": {
