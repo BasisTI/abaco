@@ -8,6 +8,7 @@ import br.com.basis.abaco.repository.search.TipoEquipeSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.TipoEquipeService;
 import br.com.basis.abaco.service.dto.DropdownDTO;
+import br.com.basis.abaco.service.dto.TipoEquipeDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioEquipeColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -117,7 +118,7 @@ public class TipoEquipeResource {
                     "A new TipoEquipe cannot already have an ID")).body(null);
         }
         TipoEquipe result = tipoEquipeRepository.save(tipoEquipe);
-        tipoEquipeSearchRepository.save(result);
+        tipoEquipeSearchRepository.save(tipoEquipeService.setEntityToElatischSearch(result));
         return ResponseEntity.created(new URI("/api/tipo-equipes/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
@@ -141,7 +142,8 @@ public class TipoEquipeResource {
         if (tipoEquipe.getId() == null) {
             return createTipoEquipe(tipoEquipe);
         }
-        TipoEquipe result = tipoEquipeRepository.save(tipoEquipe);
+        tipoEquipeRepository.save(tipoEquipe);
+        TipoEquipe result = tipoEquipeService.setEntityToElatischSearch(tipoEquipe);
         tipoEquipeSearchRepository.save(result);
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, tipoEquipe.getId().toString())).body(result);
@@ -164,10 +166,11 @@ public class TipoEquipeResource {
      */
     @GetMapping("/tipo-equipes/{id}")
     @Timed
-    public ResponseEntity<TipoEquipe> getTipoEquipe(@PathVariable Long id) {
+    public ResponseEntity<TipoEquipeDTO> getTipoEquipe(@PathVariable Long id) {
         log.debug("REST request to get TipoEquipe : {}", id);
         TipoEquipe tipoEquipe = tipoEquipeRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoEquipe));
+        TipoEquipeDTO tipoEquipeEditDTO = tipoEquipeService.convertToDto(tipoEquipe);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoEquipeEditDTO));
     }
 
     /**

@@ -397,6 +397,7 @@
 	<parameter name="LISTAFD" class="java.util.List"/>
 	<parameter name="LISTAFT" class="java.util.List"/>
 	<parameter name="PFESCOPESCREEP" class="java.lang.String"/>
+	<parameter name="CFPS" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -432,13 +433,6 @@
 					<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="629" y="22" width="172" height="18" uuid="18f00aa4-e8f6-4cb1-b0b5-3f960149b140"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="10"/>
-					</textElement>
-					<text><![CDATA[Fabíola Carolinne Lins Gatto e Sá]]></text>
-				</staticText>
-				<staticText>
 					<reportElement x="521" y="22" width="108" height="18" uuid="268d1638-9a57-49e2-a596-6aea8dad1ae6">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -447,6 +441,10 @@
 					</textElement>
 					<text><![CDATA[CFPS Responsável:]]></text>
 				</staticText>
+				<textField>
+					<reportElement x="629" y="22" width="173" height="18" uuid="4a44f7b8-5c4b-4edd-b80c-60fffb24ee85"/>
+					<textFieldExpression><![CDATA[$P{CFPS}]]></textFieldExpression>
+				</textField>
 			</frame>
 		</band>
 	</title>

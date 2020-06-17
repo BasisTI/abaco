@@ -1,5 +1,6 @@
 package br.com.basis.abaco.repository;
 
+import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.TipoEquipe;
 import br.com.basis.abaco.domain.User;
 import org.springframework.data.domain.Page;
@@ -61,5 +62,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByLogin(String login);
 
     List<User> getAllByFirstNameIsNotNullOrderByFirstName();
+
+    List<User> findDistinctByOrganizacoesInOrderByFirstName(List<Organizacao> organizacoes);
 
 }

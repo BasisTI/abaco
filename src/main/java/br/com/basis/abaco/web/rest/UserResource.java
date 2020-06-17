@@ -1,6 +1,7 @@
 package br.com.basis.abaco.web.rest;
 
 import br.com.basis.abaco.domain.Authority;
+import br.com.basis.abaco.domain.Organizacao;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.AuthorityRepository;
@@ -27,6 +28,7 @@ import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -34,7 +36,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.http.HttpHeaders;
@@ -58,6 +59,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -263,6 +265,20 @@ public class UserResource {
     public List<User> getOrganizacaoDropdown() {
         return userRepository.getAllByFirstNameIsNotNullOrderByFirstName();
     }
+
+    @PostMapping("/users/drop-down/organizacao")
+    @Timed
+    @Transactional
+    public List<UserAnaliseDTO> getUserInOrganizacao(@RequestBody List<Organizacao>organizacoes) {
+        List<User> lstUser =  userRepository.findDistinctByOrganizacoesInOrderByFirstName(organizacoes);
+        ModelMapper modelMapper = new ModelMapper();
+        List<UserAnaliseDTO> lstUserDto = lstUser.stream()
+            .map(user -> modelMapper.map(user, UserAnaliseDTO.class))
+            .collect(Collectors.toList());
+        return lstUserDto;
+    }
+
+
 
 
     private User bindUser(User user, Optional<User> oldUserdata, User loggedUser) {

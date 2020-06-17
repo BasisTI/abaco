@@ -1,11 +1,15 @@
 package br.com.basis.abaco.service.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Id;
 import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Collections.unmodifiableSet;
-
+@Getter
+@Setter
 public class TipoEquipeDTO {
 
     @Id
@@ -14,6 +18,8 @@ public class TipoEquipeDTO {
     private String nome;
 
     private Set<OrganizacaoDTO> organizacoes = new HashSet<>();
+
+    private UserTipoEquipeDTO cfpsResponsavel;
 
     public Long getId() {
         return id;
