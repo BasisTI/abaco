@@ -7,9 +7,8 @@ import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.DerRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
-import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.FuncaoTransacaoSearchRepository;
-import br.com.basis.abaco.service.dto.AnaliseDTO;
+import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoAnaliseDTO;
 import br.com.basis.abaco.service.dto.FuncaoTransacaoApiDTO;
 import br.com.basis.abaco.web.rest.util.HeaderUtil;
@@ -72,7 +71,7 @@ public class FuncaoTransacaoResource {
      */
     @PostMapping("/funcao-transacaos/{idAnalise}")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<FuncaoTransacao> createFuncaoTransacao(@PathVariable Long idAnalise, @RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
         log.debug("REST request to save FuncaoTransacao : {}", funcaoTransacao);
         Analise analise = analiseRepository.findOne(idAnalise);
@@ -98,7 +97,7 @@ public class FuncaoTransacaoResource {
      */
     @PutMapping("/funcao-transacaos/{id}")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<FuncaoTransacao> updateFuncaoTransacao(@PathVariable Long id, @RequestBody FuncaoTransacao funcaoTransacao) throws URISyntaxException {
         log.debug("REST request to update FuncaoTransacao : {}", funcaoTransacao);
         FuncaoTransacao funcaoTransacaoOld = funcaoTransacaoRepository.findOne(id);

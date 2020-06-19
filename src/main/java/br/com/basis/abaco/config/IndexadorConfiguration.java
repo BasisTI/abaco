@@ -63,8 +63,10 @@ import br.com.basis.abaco.service.IndexadorComMapper;
 import br.com.basis.abaco.service.IndexadorSemMapper;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
 import br.com.basis.abaco.service.dto.TipoEquipeDTO;
+import br.com.basis.abaco.service.dto.UserEditDTO;
 import br.com.basis.abaco.service.mapper.AnaliseMapper;
 import br.com.basis.abaco.service.mapper.TipoEquipeMapper;
+import br.com.basis.abaco.service.mapper.UserElasticSearchMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -118,8 +120,12 @@ public class IndexadorConfiguration {
 
     @Bean
     public Indexador indexadorUser() {
-        IndexadorSemMapper<User, Long> indexador = new IndexadorSemMapper<>(userRepository,
-            userSearchRepository, elasticsearchTemplate);
+        UserElasticSearchMapper userElasticSearchMapper = new UserElasticSearchMapper();
+        IndexadorComMapper<User, User, Long, UserEditDTO> indexador = new IndexadorComMapper<>(
+            userRepository,
+            userSearchRepository,
+            userElasticSearchMapper,
+            elasticsearchTemplate);
         indexador.setCodigo(IndexadoresUtil.USER.name());
         indexador.setDescricao(IndexadoresUtil.USER.label);
         return indexador;

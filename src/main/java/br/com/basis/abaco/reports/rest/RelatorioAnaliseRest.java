@@ -342,6 +342,9 @@ public class RelatorioAnaliseRest {
             for (FuncaoDados fd : funcaoDados) {
                 if (fd.getId().equals(id)) {
                     total = fd.getDers().size();
+                    if(total == 1 && fd.getDers().iterator().next().getValor() != null){
+                        total = fd.getDers().iterator().next().getValor();
+                    }
                 }
             }
         }
@@ -358,6 +361,9 @@ public class RelatorioAnaliseRest {
             for (FuncaoDados fd : funcaoDados) {
                 if (fd.getId().equals(id)) {
                     total = fd.getRlrs().size();
+                    if(total == 1 && fd.getRlrs().iterator().next().getValor() != null){
+                        total = fd.getRlrs().iterator().next().getValor();
+                    }
                 }
             }
         }
@@ -374,6 +380,9 @@ public class RelatorioAnaliseRest {
             for (FuncaoTransacao ft : funcaoTransacaos) {
                 if (ft.getId().equals(id)) {
                     total = ft.getAlrs().size();
+                    if(total == 1 && ft.getAlrs().iterator().next().getValor() != null){
+                        total = ft.getAlrs().iterator().next().getValor();
+                    }
                 }
             }
         }
@@ -390,6 +399,9 @@ public class RelatorioAnaliseRest {
             for (FuncaoTransacao ft : funcaoTransacaos) {
                 if (ft.getId().equals(id)) {
                     total = ft.getDers().size();
+                    if(total == 1 && ft.getDers().iterator().next().getValor() != null){
+                        total = ft.getDers().iterator().next().getValor();
+                    }
                 }
             }
         }

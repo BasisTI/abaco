@@ -13,6 +13,7 @@ import br.com.basis.abaco.service.MailService;
 import br.com.basis.abaco.service.UserService;
 import br.com.basis.abaco.service.dto.UserAnaliseDTO;
 import br.com.basis.abaco.service.dto.UserDTO;
+import br.com.basis.abaco.service.dto.UserEditDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioUserColunas;
 import br.com.basis.abaco.service.util.RandomUtil;
@@ -132,7 +133,7 @@ public class UserResource {
             return ResponseEntity.badRequest()
                     .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, userexists, "Login already in use")).body(null);
         }
-        User updatedUser = getUser(user);
+        User updatedUser = userService.setUserToSave(user);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedUser.getId().toString())).body(updatedUser);
     }
 
@@ -161,8 +162,8 @@ public class UserResource {
     @GetMapping("/users/{id}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.GESTOR})
-    public User getUser(@PathVariable Long id) {
-        return userService.getUserWithAuthorities(id);
+    public UserEditDTO getUser(@PathVariable Long id) {
+        return  userService.convertToDto(userService.getUserWithAuthorities(id));
     }
 
     @GetMapping("/users/logged")
@@ -245,25 +246,16 @@ public class UserResource {
         return userService.getLoggedUserId();
     }
 
-    private User getUser(User user) {
-        Authority adminAuth = new Authority();
-        adminAuth.setName(AuthoritiesConstants.ADMIN);
-        adminAuth.setDescription("Administrador");
-        Optional<User> oldUserdata = userRepository.findOneById(user.getId());
-        User loggedUser = this.getLoggedUser();
-        User userTmp;
-        userTmp = bindUser(user, oldUserdata, loggedUser);
-        User updatableUser = userService.generateUpdatableUser(userTmp);
-        User updatedUser = userRepository.save(updatableUser);
-        userSearchRepository.save(updatedUser);
-        return updatedUser;
-    }
-
     @GetMapping("/users/drop-down")
     @Timed
     @Transactional
-    public List<User> getOrganizacaoDropdown() {
-        return userRepository.getAllByFirstNameIsNotNullOrderByFirstName();
+    public List<UserAnaliseDTO> getOrganizacaoDropdown() {
+        List<User> lstUser =  userRepository.getAllByFirstNameIsNotNullOrderByFirstName();
+        ModelMapper modelMapper = new ModelMapper();
+        List<UserAnaliseDTO> lstUserDto = lstUser.stream()
+            .map(user -> modelMapper.map(user, UserAnaliseDTO.class))
+            .collect(Collectors.toList());
+        return lstUserDto;
     }
 
     @PostMapping("/users/drop-down/organizacao")
@@ -276,25 +268,6 @@ public class UserResource {
             .map(user -> modelMapper.map(user, UserAnaliseDTO.class))
             .collect(Collectors.toList());
         return lstUserDto;
-    }
-
-
-
-
-    private User bindUser(User user, Optional<User> oldUserdata, User loggedUser) {
-        User userTmp;
-        if (!loggedUser.verificarAuthority() && oldUserdata.isPresent()) {
-            String newFirstName = user.getFirstName();
-            String newLastName = user.getLastName();
-            String newEmail = user.getEmail();
-            userTmp = oldUserdata.get();
-            userTmp.setFirstName(newFirstName);
-            userTmp.setLastName(newLastName);
-            userTmp.setEmail(newEmail);
-        } else {
-            userTmp = user;
-        }
-        return userTmp;
     }
 
     private ResponseEntity createBadRequest(String errorKey, String defaultMessage) {

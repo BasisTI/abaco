@@ -8,6 +8,7 @@ import br.com.basis.abaco.domain.enumeration.TipoFatorAjuste;
 import br.com.basis.abaco.repository.AnaliseRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.search.FuncaoDadosSearchRepository;
+import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.service.FuncaoDadosService;
 import br.com.basis.abaco.service.dto.DropdownDTO;
 import br.com.basis.abaco.service.dto.FuncaoDadoAnaliseDTO;
@@ -75,7 +76,7 @@ public class FuncaoDadosResource {
      */
     @PostMapping("/funcao-dados/{idAnalise}")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<FuncaoDados> createFuncaoDados(@PathVariable Long idAnalise, @RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
         log.debug("REST request to save FuncaoDados : {}", funcaoDados);
         Analise analise = analiseRepository.findOne(idAnalise);
@@ -100,7 +101,7 @@ public class FuncaoDadosResource {
      */
     @PutMapping("/funcao-dados/{id}")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<FuncaoDados> updateFuncaoDados(@PathVariable Long id, @RequestBody FuncaoDados funcaoDados) throws URISyntaxException {
         log.debug("REST request to update FuncaoDados : {}", funcaoDados);
         FuncaoDados funcaoDadosOld = funcaoDadosRepository.findById(id);
@@ -198,7 +199,7 @@ public class FuncaoDadosResource {
      */
     @DeleteMapping("/funcao-dados/{id}")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Void> deleteFuncaoDados(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoDados : {}", id);
         funcaoDadosRepository.delete(id);

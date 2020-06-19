@@ -10,16 +10,14 @@ import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.UserAnaliseDTO;
 import br.com.basis.abaco.service.dto.UserDTO;
+import br.com.basis.abaco.service.dto.UserEditDTO;
 import br.com.basis.abaco.service.util.RandomUtil;
-import br.com.basis.abaco.utils.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
 
 /**
  * Service class for managing users.
@@ -52,7 +48,6 @@ public class UserService extends BaseService {
     private final UserSearchRepository userSearchRepository;
 
     private final AuthorityRepository authorityRepository;
-
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, SocialService socialService,
                        UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository) {
@@ -132,7 +127,7 @@ public class UserService extends BaseService {
         if (userDTO.getAuthorities() != null) {
             Set<Authority> authorities = new HashSet<>();
             Optional.ofNullable(userDTO.getAuthorities()).orElse(Collections.emptySet())
-                    .forEach(authority -> authorities.add(authorityRepository.findOne(authority)));
+                .forEach(authority -> authorities.add(authorityRepository.findOne(authority)));
             user.setAuthorities(authorities);
         }
         setUserProperties(user);
@@ -280,7 +275,7 @@ public class UserService extends BaseService {
         List<User> lista = userRepository.findAllUsersOrgEquip(idOrg, idEquip);
         List<UserAnaliseDTO> lst = new ArrayList<>();
         for (int i = 0; i < lista.size(); i++) {
-            lst.add( new ModelMapper().map(lista.get(i), UserAnaliseDTO.class));
+            lst.add(new ModelMapper().map(lista.get(i), UserAnaliseDTO.class));
         }
         return lst;
     }
@@ -300,28 +295,62 @@ public class UserService extends BaseService {
         return userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).orElse(null);
     }
 
-    @Scheduled(cron = "0 0 1 * * ?")
-    public void removeNotActivatedUsers() {
-        ZonedDateTime now = ZonedDateTime.now();
-        List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
-        for (User user : users) {
-            log.debug("Deleting not activated user {}", user.getLogin());
-            userRepository.delete(user);
-            userSearchRepository.delete(user);
-        }
-    }
-
     public void bindFilterSearch(String nome, String login, String email, String organizacao, String perfil, String equipeId, BoolQueryBuilder qb) {
         mustMatchFuzzyQuery(nome, qb, "firstName");
         mustMatchFuzzyQuery(login, qb, "login");
         mustMatchFuzzyQuery(email, qb, "email");
-        mustNestedTermQuery(organizacao, qb, "id","organizacoes");
+        mustNestedTermQuery(organizacao, qb, "id", "organizacoes");
         mustMatchPhaseQuery(perfil, qb, "authorities.name");
-        mustNestedTermQuery(equipeId, qb, "id","tipoEquipes");
+        mustNestedTermQuery(equipeId, qb, "id", "tipoEquipes");
     }
 
     public Long getLoggedUserId() {
         return userRepository.getLoggedUserId(SecurityUtils.getCurrentUserLogin());
+    }
+
+    public UserEditDTO convertToDto(User user) {
+        return new ModelMapper().map(user, UserEditDTO.class);
+    }
+
+    public User convertToEntity(UserEditDTO userEditDTO) {
+        return new ModelMapper().map(userEditDTO, User.class);
+    }
+
+    public User bindUserForSaveElatiscSearch(User user){
+        return convertToEntity(convertToDto(user));
+    }
+
+    public User setUserToSave(User user) {
+        Authority adminAuth = new Authority();
+        adminAuth.setName(AuthoritiesConstants.ADMIN);
+        adminAuth.setDescription("Administrador");
+        Optional<User> oldUserdata = userRepository.findOneById(user.getId());
+        User loggedUser = getLoggedUser();
+        User userTmp = bindUser(user, oldUserdata, loggedUser);
+        User updatableUser = generateUpdatableUser(userTmp);
+        User updatedUser = userRepository.save(updatableUser);
+        return userSearchRepository.save(bindUserForSaveElatiscSearch(updatedUser));
+    }
+
+    private User bindUser(User user, Optional<User> oldUserdata, User loggedUser) {
+        User userTmp;
+        if (!loggedUser.verificarAuthority() && oldUserdata.isPresent()) {
+            String newFirstName = user.getFirstName();
+            String newLastName = user.getLastName();
+            String newEmail = user.getEmail();
+            userTmp = oldUserdata.get();
+            userTmp.setFirstName(newFirstName);
+            userTmp.setLastName(newLastName);
+            userTmp.setEmail(newEmail);
+        } else {
+            userTmp = user;
+        }
+        return userTmp;
+    }
+
+    public User getLoggedUser() {
+        String login = SecurityUtils.getCurrentUserLogin();
+        return userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
     }
 
 }

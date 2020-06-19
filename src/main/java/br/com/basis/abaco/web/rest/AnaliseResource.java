@@ -18,6 +18,7 @@ import br.com.basis.abaco.security.AuthoritiesConstants;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.AnaliseService;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
+import br.com.basis.abaco.service.dto.AnaliseEditDTO;
 import br.com.basis.abaco.service.exception.RelatorioException;
 import br.com.basis.abaco.service.relatorio.RelatorioAnaliseColunas;
 import br.com.basis.abaco.utils.AbacoUtil;
@@ -121,7 +122,7 @@ public class AnaliseResource {
     @PostMapping("/analises")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<Analise> createAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
+    public ResponseEntity<AnaliseEditDTO> createAnalise(@Valid @RequestBody Analise analise) throws URISyntaxException {
         if (analise.getId() != null) {
             return ResponseEntity.badRequest().headers(
                 HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new analise cannot already have an ID")).body(null);
@@ -130,15 +131,16 @@ public class AnaliseResource {
         analise.getUsers().add(analise.getCreatedBy());
         analiseService.salvaNovaData(analise);
         analiseRepository.save(analise);
+        AnaliseEditDTO analiseEditDTO =  analiseService.convertToAnaliseEditDTO(analise);
         analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
         return ResponseEntity.created(new URI("/api/analises/" + analise.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, analise.getId().toString())).body(analise);
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, analise.getId().toString())).body(analiseEditDTO);
     }
 
     @PutMapping("/analises")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<Analise> updateAnalise(@Valid @RequestBody Analise analiseUpdate) throws URISyntaxException {
+    public ResponseEntity<AnaliseEditDTO> updateAnalise(@Valid @RequestBody Analise analiseUpdate) throws URISyntaxException {
         if (analiseUpdate.getId() == null) {
             return createAnalise(analiseUpdate);
         }
@@ -151,15 +153,16 @@ public class AnaliseResource {
         }
         analise.setEditedBy(analiseRepository.findOne(analise.getId()).getCreatedBy());
         analiseRepository.save(analise);
+        AnaliseEditDTO analiseEditDTO =  analiseService.convertToAnaliseEditDTO(analise);
         analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
-            .body(analise);
+            .body(analiseEditDTO);
     }
 
     @PutMapping("/analises/{id}/block")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<Analise> blockUnblockAnalise(@PathVariable Long id, @Valid @RequestBody Analise analiseUpdate) throws URISyntaxException {
+    public ResponseEntity<AnaliseEditDTO> blockUnblockAnalise(@PathVariable Long id, @Valid @RequestBody Analise analiseUpdate) throws URISyntaxException {
         log.debug("REST request to block Analise : {}", id);
         Analise analise = analiseService.recuperarAnalise(id);
         if (analise != null && !(analise.getDataHomologacao() == null && analiseUpdate.getDataHomologacao() == null)) {
@@ -170,16 +173,16 @@ public class AnaliseResource {
             analise.setBloqueiaAnalise(!analise.isBloqueiaAnalise());
             Analise result = analiseRepository.save(analise);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
-            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString())).body(result);
+            return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString())).body(analiseService.convertToAnaliseEditDTO(result));
         } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Analise());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AnaliseEditDTO());
         }
     }
 
     @GetMapping("/analises/clonar/{id}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<Analise> cloneAnalise(@PathVariable Long id) {
+    public ResponseEntity<AnaliseEditDTO> cloneAnalise(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnalise(id);
         if (analise.getId() != null) {
             User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
@@ -189,18 +192,18 @@ public class AnaliseResource {
             analiseRepository.save(analiseClone);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analiseClone)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseClone.getId().toString()))
-                .body(analiseClone);
+                .body(analiseService.convertToAnaliseEditDTO(analiseClone));
         } else {
             return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new Analise());
+                .body(new AnaliseEditDTO());
         }
     }
 
     @GetMapping("/analises/clonar/{id}/{idEquipe}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<Analise> cloneAnaliseToEquipe(@PathVariable Long id, @PathVariable Long idEquipe) {
+    public ResponseEntity<AnaliseEditDTO> cloneAnaliseToEquipe(@PathVariable Long id, @PathVariable Long idEquipe) {
         Analise analise = analiseService.recuperarAnalise(id);
         TipoEquipe tipoEquipe = tipoEquipeRepository.findById(idEquipe);
         if (analise.getId() != null && tipoEquipe.getId() != null && !(analise.getClonadaParaEquipe())) {
@@ -212,22 +215,23 @@ public class AnaliseResource {
             analiseRepository.save(analise);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analiseClone.getId().toString()))
-                .body(analiseClone);
+                .body(analiseService.convertToAnaliseEditDTO(analiseClone));
         } else {
             return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new Analise());
+                .body(new AnaliseEditDTO());
         }
     }
 
     @GetMapping("/analises/{id}")
     @Timed
-    public ResponseEntity<Analise> getAnalise(@PathVariable Long id) {
+    public ResponseEntity<AnaliseEditDTO> getAnalise(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnalise(id);
         if (analise != null) {
             User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
             if (analiseService.permissionToEdit(user, analise)) {
-                return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
+                AnaliseEditDTO analiseEditDTO = analiseService.convertToAnaliseEditDTO(analise);
+                return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analiseEditDTO));
             }
         }
         return ResponseEntity
@@ -238,10 +242,10 @@ public class AnaliseResource {
 
     @GetMapping("/analises/view/{id}")
     @Timed
-    public ResponseEntity<Analise> getAnaliseView(@PathVariable Long id) {
+    public ResponseEntity<AnaliseEditDTO> getAnaliseView(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnalise(id);
         if (analise != null) {
-            return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analise));
+            return ResponseUtil.wrapOrNotFound(Optional.ofNullable(analiseService.convertToAnaliseEditDTO(analise)));
         }
         return ResponseEntity
             .status(HttpStatus.FORBIDDEN)
@@ -421,18 +425,18 @@ public class AnaliseResource {
     @GetMapping("/analises/update-pf/{id}")
     @Timed
     @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
-    public ResponseEntity<Analise> updateSomaPf(@PathVariable Long id) {
+    public ResponseEntity<AnaliseEditDTO> updateSomaPf(@PathVariable Long id) {
         Analise analise = analiseService.recuperarAnalise(id);
         if (analise.getId() != null) {
             analiseService.updatePf(analise);
             analiseRepository.save(analise);
             analiseSearchRepository.save(analiseService.convertToEntity(analiseService.convertToDto(analise)));
             return ResponseEntity.ok().headers(HeaderUtil.blockEntityUpdateAlert(ENTITY_NAME, analise.getId().toString()))
-                .body(analise);
+                .body(analiseService.convertToAnaliseEditDTO(analise));
         } else {
             return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new Analise());
+                .body(new AnaliseEditDTO());
         }
     }
 }

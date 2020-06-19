@@ -1,23 +1,22 @@
 package br.com.basis.abaco.service;
 
 import br.com.basis.abaco.AbacoApp;
-import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.config.Constants;
+import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.service.dto.UserDTO;
-import java.time.ZonedDateTime;
 import br.com.basis.abaco.service.util.RandomUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.ZonedDateTime;
 import java.util.Optional;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -108,14 +107,6 @@ public class UserServiceIntTest {
         assertThat(maybeUser.get().getPassword()).isNotEqualTo(oldPassword);
 
         userRepository.delete(user);
-    }
-
-    @Test
-    public void testFindNotActivatedUsersByCreationDateBefore() {
-        userService.removeNotActivatedUsers();
-        ZonedDateTime now = ZonedDateTime.now();
-        List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
-        assertThat(users).isEmpty();
     }
 
     @Test

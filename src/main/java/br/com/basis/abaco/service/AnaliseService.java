@@ -25,6 +25,7 @@ import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
 import br.com.basis.abaco.security.SecurityUtils;
 import br.com.basis.abaco.service.dto.AnaliseDTO;
+import br.com.basis.abaco.service.dto.AnaliseEditDTO;
 import br.com.basis.abaco.utils.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -318,6 +319,15 @@ public class AnaliseService extends BaseService {
     public Analise convertToEntity(AnaliseDTO analiseDTO) {
         return new ModelMapper().map(analiseDTO, Analise.class);
     }
+
+    public AnaliseEditDTO convertToAnaliseEditDTO(Analise analise) {
+        return new ModelMapper().map(analise, AnaliseEditDTO.class);
+    }
+
+    public Analise convertToEntity(AnaliseEditDTO analiseEditDTO) {
+        return new ModelMapper().map(analiseEditDTO, Analise.class);
+    }
+
 
     public void bindAnalise(@RequestBody @Valid Analise analiseUpdate, Analise analise) {
         salvaNovaData(analiseUpdate);

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -41,6 +42,10 @@ public class TipoEquipeService {
 
     public TipoEquipe setEntityToElatischSearch(TipoEquipe tipoEquipe){
         return convertToEntity(convertToDto(tipoEquipe));
+    }
+    public List<TipoEquipeDTO> convert(List<TipoEquipe> lstTipoEquipe) {
+        return lstTipoEquipe.stream().map(this::convertToDto)
+            .collect(Collectors.toList());
     }
 
 }
