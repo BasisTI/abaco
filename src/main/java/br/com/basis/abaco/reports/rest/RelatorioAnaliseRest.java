@@ -218,6 +218,12 @@ public class RelatorioAnaliseRest {
      * Método responsável por popular as informações Gerais do relatório.
      */
     private void popularDadosGerais() {
+
+        String cpfsResponsavel = "";
+        if(analise.getEquipeResponsavel().getCfpsResponsavel() != null){
+            cpfsResponsavel = analise.getEquipeResponsavel().getCfpsResponsavel().getFirstName() + " " + analise.getEquipeResponsavel().getCfpsResponsavel().getLastName();
+        }
+        parametro.put("CFPS",cpfsResponsavel);
         parametro.put("EQUIPE", analise.getEquipeResponsavel().getNome());
         parametro.put("IDENTIFICADOR", analise.getIdentificadorAnalise());
         parametro.put("TIPOANALISE", analise.getTipoAnalise().toString());
