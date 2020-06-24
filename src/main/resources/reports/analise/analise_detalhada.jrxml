@@ -1707,7 +1707,7 @@
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Listagem de Evidência]]></text>
+				<text><![CDATA[Listagem de Evidência Função de Dados]]></text>
 			</staticText>
 			<componentElement>
 				<reportElement stretchType="RelativeToTallestObject" x="0" y="22" width="802" height="45" uuid="25eff670-7121-4510-9193-bb0c33e203ea">
@@ -1751,7 +1751,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
-								<text><![CDATA[Nome]]></text>
+								<text><![CDATA[Função de Dados]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 6_TD" height="15">
@@ -1846,7 +1846,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font isBold="true"/>
 								</textElement>
-								<text><![CDATA[Nome]]></text>
+								<text><![CDATA[Função de Transação]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="15">
