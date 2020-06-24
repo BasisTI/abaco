@@ -91,18 +91,21 @@ public class AnaliseService extends BaseService {
     }
 
     public void bindFilterSearch(String identificador, String sistema, String metodo, String organizacao, String equipe, String usuario, Set<Long> equipesIds, Set<Long> organizacoes, BoolQueryBuilder qb) {
-        mustMatchPhaseQuery(identificador, qb, "identificadorAnalise");
         mustTermQuery(sistema, qb, "sistema.id");
         mustMatchPhaseQuery(metodo, qb, "metodoContagem");
         mustTermQuery(organizacao, qb, ORGANIZACAO_ID);
-
+        if (!identificador.isEmpty()) {
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                .should(QueryBuilders.matchPhraseQuery("numeroOs", identificador))
+                .should(QueryBuilders.matchPhraseQuery("identificadorAnalise", identificador));
+            qb.must(boolQueryBuilder);
+        }
         if (!StringUtils.isEmptyString((equipe))) {
             BoolQueryBuilder boolQueryBuilderEdquipe = QueryBuilders.boolQuery()
                 .must(QueryBuilders.termsQuery(EQUIPE_RESPONSAVEL_ID, equipe))
                 .must(QueryBuilders.termsQuery(ORGANIZACAO_ID, organizacoes));
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                .should(boolQueryBuilderEdquipe)
-                .should(QueryBuilders.termsQuery(COMPARTILHADAS_EQUIPE_ID, equipe));
+                .should(boolQueryBuilderEdquipe);
             qb.must(boolQueryBuilder);
         } else if (equipesIds != null && equipesIds.size() > 0) {
             BoolQueryBuilder boolQueryBuilderEdquipe = QueryBuilders.boolQuery()

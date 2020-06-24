@@ -32,6 +32,8 @@ public class FuncaoDadosDTO {
 
     private Integer identificador;
 
+    private String sustantation;
+
     public String getFatorAjusteValor() {
         return fatorAjusteValor;
     }
@@ -134,5 +136,13 @@ public class FuncaoDadosDTO {
 
     public void setIdentificador(Integer identificador) {
         this.identificador = identificador;
+    }
+
+    public String getSustantation() {
+        return sustantation;
+    }
+
+    public void setSustantation(String sustantation) {
+        this.sustantation = sustantation;
     }
 }

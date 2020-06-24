@@ -70,7 +70,6 @@ public class Analise implements Serializable, ReportObject {
     private Long id;
 
     @Column(name = "numero_os")
-    @Field(index = FieldIndex.not_analyzed, type = FieldType.String)
     private String numeroOs;
 
     @Enumerated(EnumType.STRING)

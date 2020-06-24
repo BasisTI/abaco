@@ -20,6 +20,7 @@ public class AnaliseDTO implements ReportObject, Serializable {
 
     private Long id;
     private String identificadorAnalise;
+    private String numeroOs;
     private OrganizacaoAnaliseDTO organizacao;
     private TipoEquipeAnaliseDTO equipeResponsavel;
     private SistemaAnaliseDTO sistema;

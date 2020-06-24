@@ -581,6 +581,7 @@ public class RelatorioAnaliseRest {
         fd.setModulo(f.getModuloFd());
         fd.setSubmodulo(f.getFuncionalidadeFd());
         fd.setIdentificador(identifacador);
+        fd.setSustantation(f.getSustantation());
         return fd;
     }
 
@@ -603,6 +604,7 @@ public class RelatorioAnaliseRest {
         ft.setModulo(f.getModuloFt());
         ft.setSubmodulo(f.getFuncionalidadeFt());
         ft.setIdentificador(identifacador);
+        ft.setSustantation(f.getSustantation());
         return ft;
     }
 

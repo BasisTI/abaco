@@ -122,6 +122,7 @@ public class RelatorioFuncoes {
         funcoes.setComplexidadeFt(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
         funcoes.setPfTotalFt(f.getGrossPF() == null ? dash : f.getGrossPF().stripTrailingZeros().toPlainString());
         funcoes.setPfAjustadoFt(f.getPf() == null ? dash : f.getPf().stripTrailingZeros().toPlainString());
+        funcoes.setSustantation(f.getSustantation() == null ? dash : f.getSustantation());
     }
 
     /**
@@ -359,6 +360,7 @@ public class RelatorioFuncoes {
         funcoes.setNomeFd(f.getName() == null ? dash : f.getName());
         funcoes.setPfTotalFd(f.getGrossPF() != null ? f.getGrossPF().stripTrailingZeros().toPlainString() : "0");
         funcoes.setPfAjustadoFd(f.getPf() != null ? f.getPf().stripTrailingZeros().toPlainString() : "0" );
+        funcoes.setSustantation(f.getSustantation() == null ? dash : f.getSustantation());
     }
 
     /**

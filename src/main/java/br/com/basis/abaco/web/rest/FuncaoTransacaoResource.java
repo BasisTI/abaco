@@ -187,7 +187,7 @@ public class FuncaoTransacaoResource {
      */
     @DeleteMapping("/funcao-transacaos/{id}")
     @Timed
-    @Secured({"ROLE_ADMIN", "ROLE_USER", "ROLE_GESTOR"})
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER, AuthoritiesConstants.GESTOR, AuthoritiesConstants.ANALISTA})
     public ResponseEntity<Void> deleteFuncaoTransacao(@PathVariable Long id) {
         log.debug("REST request to delete FuncaoTransacao : {}", id);
         funcaoTransacaoRepository.delete(id);
