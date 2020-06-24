@@ -397,7 +397,7 @@ public class AnaliseService extends BaseService {
     }
     public Analise bindCloneAnalise(Analise analiseClone, Analise analise, User user){
         List<User> lstUsers = new ArrayList<>();
-        lstUsers.add(analiseClone.getCreatedBy());
+        lstUsers.add(user);
         salvaNovaData(analiseClone);
         analiseClone.setDocumentacao(EMPTY_STRING);
         analiseClone.setFronteiras(EMPTY_STRING);

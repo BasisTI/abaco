@@ -357,10 +357,9 @@ public class RelatorioFuncoes {
         funcoes.setFuncionalidadeFd(f.getFuncionalidade() == null ? dash : f.getFuncionalidade().getNome());
         funcoes.setTipoFd(f.getTipo() == null ? dash : f.getTipo().toString());
         funcoes.setComplexidadeFd(f.getComplexidade() == null ? dash : f.getComplexidade().toString());
-        funcoes.setNomeFd(f.getName() == null ? dash : f.getName());
         funcoes.setPfTotalFd(f.getGrossPF() != null ? f.getGrossPF().stripTrailingZeros().toPlainString() : "0");
         funcoes.setPfAjustadoFd(f.getPf() != null ? f.getPf().stripTrailingZeros().toPlainString() : "0" );
-        funcoes.setSustantation(f.getSustantation() == null ? dash : f.getSustantation());
+        funcoes.setSustantation(f.getSustantation());
     }
 
     /**
