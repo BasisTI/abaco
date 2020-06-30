@@ -163,7 +163,7 @@ public class RelatorioAnaliseRest {
         init();
         popularObjeto(analise);
 
-        return relatorio.downloadOnePagePerSheetExcel(analise, caminhoAnaliseExcel, popularParametroAnalise());
+        return relatorio.downloadExcel(analise, caminhoAnaliseExcel, popularParametroAnalise());
     }
 
 
@@ -211,8 +211,7 @@ public class RelatorioAnaliseRest {
      */
     private void popularImagemRelatorio() {
         InputStream reportStream = getClass().getClassLoader().getResourceAsStream(caminhoImagemBasis);
-        parametro.put("IMAGEMLOGO", analise.getOrganizacao().getLogoId());
-        parametro.put("IMAGEMLOGO", analise.getOrganizacao().getLogoId());
+        parametro.put("IMAGEMLOGO", reportStream);
     }
 
     /**
