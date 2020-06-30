@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AnaliseEditDTO implements ReportObject, Serializable {
+public class AnaliseEditDTO implements ReportObject {
 
     private Long id;
     private String numeroOs;
@@ -30,7 +29,7 @@ public class AnaliseEditDTO implements ReportObject, Serializable {
     private MetodoContagem metodoContagem;
     private String pfTotal;
     private String adjustPFTotal;
-    private Timestamp dataCriacaoOrdemServico;
+    private Timestamp dataCriacaoOrdemServico ;
     private TipoAnalise tipoAnalise;
     private boolean bloqueiaAnalise;
     private boolean clonadaParaEquipe;
