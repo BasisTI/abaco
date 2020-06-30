@@ -34,6 +34,10 @@ public class FuncaoTransacaoDTO {
 
     private String sustantation;
 
+    private String der;
+
+    private String ftr;
+
     public String getFatorAjusteValor() {
         return fatorAjusteValor;
     }
@@ -144,5 +148,21 @@ public class FuncaoTransacaoDTO {
 
     public void setSustantation(String sustantation) {
         this.sustantation = sustantation;
+    }
+
+    public String getDer() {
+        return der;
+    }
+
+    public void setDer(String der) {
+        this.der = der;
+    }
+
+    public String getFtr() {
+        return ftr;
+    }
+
+    public void setFtr(String ftr) {
+        this.ftr = ftr;
     }
 }

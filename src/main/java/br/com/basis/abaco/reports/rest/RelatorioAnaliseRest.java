@@ -163,7 +163,7 @@ public class RelatorioAnaliseRest {
         init();
         popularObjeto(analise);
 
-        return relatorio.downloadExcel(analise, caminhoAnaliseExcel, popularParametroAnalise());
+        return relatorio.downloadOnePagePerSheetExcel(analise, caminhoAnaliseExcel, popularParametroAnalise());
     }
 
 
@@ -211,7 +211,8 @@ public class RelatorioAnaliseRest {
      */
     private void popularImagemRelatorio() {
         InputStream reportStream = getClass().getClassLoader().getResourceAsStream(caminhoImagemBasis);
-        parametro.put("IMAGEMLOGO", reportStream);
+        parametro.put("IMAGEMLOGO", analise.getOrganizacao().getLogoId());
+        parametro.put("IMAGEMLOGO", analise.getOrganizacao().getLogoId());
     }
 
     /**
@@ -341,8 +342,9 @@ public class RelatorioAnaliseRest {
     /**
      * @return
      */
-    private int countQuantidadeDerFd(Long id) {
+    private void countQuantidadeDerFd(Long id,FuncaoDadosDTO funcaoDadosDTO) {
         int total = 0;
+        String der = "";
         Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
         if (funcaoDados != null && analise.getMetodoContagem() != MetodoContagem.ESTIMADA) {
             for (FuncaoDados fd : funcaoDados) {
@@ -351,17 +353,20 @@ public class RelatorioAnaliseRest {
                     if(total == 1 && fd.getDers().iterator().next().getValor() != null){
                         total = fd.getDers().iterator().next().getValor();
                     }
+                    der = this.popularDersFd(fd, der);
                 }
             }
         }
-        return total;
+        funcaoDadosDTO.setDer(der);
+        funcaoDadosDTO.setDerFd(Integer.toString(total));
     }
 
     /**
      * @return
      */
-    private int countQuantidadeRlrFd(Long id) {
+    private void countQuantidadeRlrFd(Long id, FuncaoDadosDTO funcaoDadosDTO) {
         int total = 0;
+        String rlr = "";
         Set<FuncaoDados> funcaoDados = analise.getFuncaoDados();
         if (funcaoDados != null && analise.getMetodoContagem() != MetodoContagem.ESTIMADA) {
             for (FuncaoDados fd : funcaoDados) {
@@ -370,17 +375,20 @@ public class RelatorioAnaliseRest {
                     if(total == 1 && fd.getRlrs().iterator().next().getValor() != null){
                         total = fd.getRlrs().iterator().next().getValor();
                     }
+                    rlr = this.popularAlrtrFd(fd, rlr);
                 }
             }
         }
-        return total;
+        funcaoDadosDTO.setRlr(rlr);
+        funcaoDadosDTO.setRlrFd(Integer.toString(total));
     }
 
     /**
      * @return
      */
-    private int countQuantidadeFtrFt(Long id) {
+    private void  countQuantidadeFtrFt(Long id, FuncaoTransacaoDTO funcaoTransacaoDTO ) {
         int total = 0;
+        String ftr = "";
         Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
         if (funcaoTransacaos != null && analise.getMetodoContagem() != MetodoContagem.ESTIMADA) {
             for (FuncaoTransacao ft : funcaoTransacaos) {
@@ -389,17 +397,20 @@ public class RelatorioAnaliseRest {
                     if(total == 1 && ft.getAlrs().iterator().next().getValor() != null){
                         total = ft.getAlrs().iterator().next().getValor();
                     }
+                    ftr = this.popularAlrFt(ft,ftr);
                 }
             }
         }
-        return total;
+        funcaoTransacaoDTO.setFtr(ftr);
+        funcaoTransacaoDTO.setFtrFt(Integer.toString(total));
     }
 
     /**
      * @return
      */
-    private int countQuantidadeDerFt(Long id) {
+    private void countQuantidadeDerFt(Long id, FuncaoTransacaoDTO funcaoTransacaoDTO) {
         int total = 0;
+        String der = "";
         Set<FuncaoTransacao> funcaoTransacaos = analise.getFuncaoTransacaos();
         if (funcaoTransacaos != null && analise.getMetodoContagem() != MetodoContagem.ESTIMADA) {
             for (FuncaoTransacao ft : funcaoTransacaos) {
@@ -408,10 +419,12 @@ public class RelatorioAnaliseRest {
                     if(total == 1 && ft.getDers().iterator().next().getValor() != null){
                         total = ft.getDers().iterator().next().getValor();
                     }
+                   der = this.popularDerFt(ft,der);
                 }
             }
         }
-        return total;
+        funcaoTransacaoDTO.setDer(der);
+        funcaoTransacaoDTO.setDerFt(Integer.toString(total));
     }
 
     /**
@@ -574,14 +587,14 @@ public class RelatorioAnaliseRest {
         fd.setComplexidadeFd(f.getComplexidadeFd());
         fd.setPfTotalFd(f.getPfTotalFd());
         fd.setPfAjustadoFd(f.getPfAjustadoFd());
-        fd.setDerFd(Integer.toString(this.countQuantidadeDerFd(f.getIdFd())));
-        fd.setRlrFd(Integer.toString(this.countQuantidadeRlrFd(f.getIdFd())));
         fd.setFatorAjusteFd(f.getFatorAjusteFd());
         fd.setFatorAjusteValor(f.getFatorAjusteValor());
         fd.setModulo(f.getModuloFd());
         fd.setSubmodulo(f.getFuncionalidadeFd());
         fd.setIdentificador(identifacador);
         fd.setSustantation(f.getSustantation());
+        this.countQuantidadeDerFd(f.getIdFd(),fd);
+        this.countQuantidadeRlrFd(f.getIdFd(),fd);
         return fd;
     }
 
@@ -597,14 +610,14 @@ public class RelatorioAnaliseRest {
         ft.setComplexidadeFt(f.getComplexidadeFt());
         ft.setPfTotalFt(f.getPfTotalFt());
         ft.setPfAjustadoFt(f.getPfAjustadoFt());
-        ft.setDerFt(Integer.toString(this.countQuantidadeDerFt(f.getIdFt())));
-        ft.setFtrFt(Integer.toString(this.countQuantidadeFtrFt(f.getIdFt())));
         ft.setFatorAjusteFt(f.getFatorAjusteFt());
         ft.setFatorAjusteValor(f.getFatorAjusteValor());
         ft.setModulo(f.getModuloFt());
         ft.setSubmodulo(f.getFuncionalidadeFt());
         ft.setIdentificador(identifacador);
         ft.setSustantation(f.getSustantation());
+        this.countQuantidadeDerFt(f.getIdFt(),ft);
+        this.countQuantidadeFtrFt(f.getIdFt(),ft);
         return ft;
     }
 

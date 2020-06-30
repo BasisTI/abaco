@@ -8,7 +8,6 @@ import br.com.basis.abaco.domain.Modulo;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoDados;
 import br.com.basis.abaco.domain.enumeration.TipoFuncaoTransacao;
-
 import br.com.basis.abaco.reports.util.itextutils.ReportFactory;
 import br.com.basis.dynamicexports.util.DynamicExporter;
 import com.itextpdf.kernel.geom.PageSize;
@@ -391,6 +390,39 @@ public class RelatorioUtil {
 
         return outputStream.toByteArray();
     }
+
+
+    /**
+     * Método responsável por gerar EXCEL.
+     * @param analise
+     * @param caminhoJasperResolucao
+     * @param parametrosJasper
+     * @return
+     * @throws FileNotFoundException
+     * @throws JRException
+     */
+    @SuppressWarnings({ RAW_TYPES, UNCHECKED })
+    public @ResponseBody byte[] downloadOnePagePerSheetExcel(Analise analise, String caminhoJasperResolucao, Map parametrosJasper) throws  JRException {
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(caminhoJasperResolucao);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(stream, parametrosJasper, new JREmptyDataSource());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        JRXlsExporter exporter = new JRXlsExporter();
+        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+        SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+        configuration.setOnePagePerSheet(true);
+        configuration.setDetectCellType(true);
+        configuration.setCollapseRowSpan(false);
+        configuration.setWhitePageBackground(true);
+        configuration.setRemoveEmptySpaceBetweenRows(true);
+        configuration.setIgnoreCellBackground(true);
+        exporter.setConfiguration(configuration);
+        exporter.exportReport();
+        response.setContentType(EXCEL);
+        response.setHeader(CONTENT_DISP, INLINE_FILENAME + analise.getIdentificadorAnalise().trim() + ".xls");
+        return outputStream.toByteArray();
+    }
+
 
     /**
      * Método responsável por exibir o PDF da base line no browser.

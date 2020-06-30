@@ -34,6 +34,10 @@ public class FuncaoDadosDTO {
 
     private String sustantation;
 
+    private String der;
+
+    private String rlr;
+
     public String getFatorAjusteValor() {
         return fatorAjusteValor;
     }
@@ -144,5 +148,21 @@ public class FuncaoDadosDTO {
 
     public void setSustantation(String sustantation) {
         this.sustantation = sustantation;
+    }
+
+    public String getDer() {
+        return der;
+    }
+
+    public void setDer(String der) {
+        this.der = der;
+    }
+
+    public String getRlr() {
+        return rlr;
+    }
+
+    public void setRlr(String rlr) {
+        this.rlr = rlr;
     }
 }
