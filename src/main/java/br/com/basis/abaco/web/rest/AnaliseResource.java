@@ -3,6 +3,7 @@ package br.com.basis.abaco.web.rest;
 import br.com.basis.abaco.domain.Analise;
 import br.com.basis.abaco.domain.Compartilhada;
 import br.com.basis.abaco.domain.TipoEquipe;
+import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.domain.User;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
 import br.com.basis.abaco.reports.rest.RelatorioAnaliseRest;
@@ -11,6 +12,7 @@ import br.com.basis.abaco.repository.CompartilhadaRepository;
 import br.com.basis.abaco.repository.FuncaoDadosRepository;
 import br.com.basis.abaco.repository.FuncaoTransacaoRepository;
 import br.com.basis.abaco.repository.TipoEquipeRepository;
+import br.com.basis.abaco.repository.UploadedFilesRepository;
 import br.com.basis.abaco.repository.UserRepository;
 import br.com.basis.abaco.repository.search.AnaliseSearchRepository;
 import br.com.basis.abaco.repository.search.UserSearchRepository;
@@ -89,6 +91,7 @@ public class AnaliseResource {
     private final FuncaoTransacaoRepository funcaoTransacaoRepository;
     private final DynamicExportsService dynamicExportsService;
     private final ElasticsearchTemplate elasticsearchTemplate;
+
     private RelatorioAnaliseRest relatorioAnaliseRest;
     @Autowired
     private TipoEquipeRepository tipoEquipeRepository;
@@ -98,6 +101,8 @@ public class AnaliseResource {
     private HttpServletRequest request;
     @Autowired
     private HttpServletResponse response;
+    @Autowired
+    private UploadedFilesRepository uploadedFilesRepository;
 
     public AnaliseResource(AnaliseRepository analiseRepository,
                            AnaliseSearchRepository analiseSearchRepository,
@@ -358,7 +363,12 @@ public class AnaliseResource {
     byte[] downloadRelatorioExcel(@PathVariable Long id) throws URISyntaxException, IOException, JRException {
         Analise analise = analiseService.recuperarAnalise(id);
         relatorioAnaliseRest = new RelatorioAnaliseRest(this.response, this.request);
-        return relatorioAnaliseRest.downloadExcel(analise);
+        Long idLogo = analise.getOrganizacao().getLogoId();
+        UploadedFile uploadedFiles = new UploadedFile();
+        if(idLogo!= null && idLogo > 0 ) {
+            uploadedFiles = uploadedFilesRepository.findOne(idLogo);
+        }
+        return relatorioAnaliseRest.downloadExcel(analise, uploadedFiles);
     }
 
     @GetMapping("/relatorioContagemPdf/{id}")

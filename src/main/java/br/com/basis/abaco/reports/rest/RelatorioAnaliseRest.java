@@ -7,6 +7,7 @@ import br.com.basis.abaco.domain.FatorAjuste;
 import br.com.basis.abaco.domain.FuncaoDados;
 import br.com.basis.abaco.domain.FuncaoTransacao;
 import br.com.basis.abaco.domain.Rlr;
+import br.com.basis.abaco.domain.UploadedFile;
 import br.com.basis.abaco.domain.enumeration.ImpactoFatorAjuste;
 import br.com.basis.abaco.domain.enumeration.MetodoContagem;
 import br.com.basis.abaco.domain.enumeration.TipoRelatorio;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,6 +77,10 @@ public class RelatorioAnaliseRest {
 
     private Integer identificador = 1;
 
+    private UploadedFile uploadedFiles;
+
+
+
     public RelatorioAnaliseRest(HttpServletResponse response, HttpServletRequest request) {
         this.response = response;
         this.request = request;
@@ -93,10 +99,14 @@ public class RelatorioAnaliseRest {
     /**
      * @param analise
      */
+    private void popularObjeto(Analise analise, UploadedFile uploadedFiles) {
+        this.analise = analise;
+        this.uploadedFiles = uploadedFiles;
+    }
+
     private void popularObjeto(Analise analise) {
         this.analise = analise;
     }
-
     /**
      * @param analise
      * @throws FileNotFoundException
@@ -159,10 +169,9 @@ public class RelatorioAnaliseRest {
      * @throws JRException
      */
     public @ResponseBody
-    byte[] downloadExcel(Analise analise) throws FileNotFoundException, JRException {
+    byte[] downloadExcel(Analise analise, UploadedFile uploadedFiles) throws FileNotFoundException, JRException {
         init();
-        popularObjeto(analise);
-
+        popularObjeto(analise, uploadedFiles);
         return relatorio.downloadExcel(analise, caminhoAnaliseExcel, popularParametroAnalise());
     }
 
@@ -210,8 +219,14 @@ public class RelatorioAnaliseRest {
      * Método responsável por acessar o caminho da imagem da logo do relatório e popular o parâmetro.
      */
     private void popularImagemRelatorio() {
-        InputStream reportStream = getClass().getClassLoader().getResourceAsStream(caminhoImagemBasis);
-        parametro.put("IMAGEMLOGO", reportStream);
+        InputStream reportStream;
+        if(this.uploadedFiles!= null && this.uploadedFiles.getId() != null && this.uploadedFiles.getId() >0 ) {
+            reportStream = new ByteArrayInputStream(uploadedFiles.getLogo());
+            parametro.put("IMAGEMLOGO",reportStream);
+        }else{
+            reportStream = getClass().getClassLoader().getResourceAsStream(caminhoImagemBasis);
+            parametro.put("IMAGEMLOGO", reportStream);
+        }
     }
 
     /**

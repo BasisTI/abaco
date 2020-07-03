@@ -168,9 +168,9 @@ public class UserResource {
 
     @GetMapping("/users/logged")
     @Timed
-    public User getLoggedUser() {
+    public UserEditDTO getLoggedUser() {
         String login = SecurityUtils.getCurrentUserLogin();
-        return userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
+        return userService.convertToDto(userRepository.findOneWithAuthoritiesByLogin(login).orElse(null));
     }
 
     @GetMapping("/users/authorities")

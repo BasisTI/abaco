@@ -348,7 +348,7 @@
 	<title>
 		<band height="60">
 			<frame>
-				<reportElement x="0" y="1" width="1959" height="50" isRemoveLineWhenBlank="true" uuid="9775374a-c1f4-411b-8879-1e3298140499"/>
+				<reportElement x="0" y="0" width="1959" height="50" isRemoveLineWhenBlank="true" uuid="9775374a-c1f4-411b-8879-1e3298140499"/>
 				<box>
 					<pen lineWidth="0.0"/>
 				</box>
@@ -364,7 +364,7 @@
 					<imageExpression><![CDATA[$P{IMAGEMLOGO}]]></imageExpression>
 				</image>
 				<textField>
-					<reportElement x="163" y="25" width="442" height="20" uuid="396788b4-27e0-4647-9343-1154cd278a3f">
+					<reportElement x="163" y="25" width="443" height="20" uuid="396788b4-27e0-4647-9343-1154cd278a3f">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
@@ -374,7 +374,7 @@
 					<textFieldExpression><![CDATA[$P{SISTEMANM}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="163" y="10" width="442" height="15" uuid="8393959d-5831-47aa-aa57-1bc80547219a">
+					<reportElement x="163" y="10" width="443" height="15" uuid="8393959d-5831-47aa-aa57-1bc80547219a">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<box>
@@ -444,7 +444,7 @@
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 			<printWhenExpression><![CDATA[$P{LISTAFUNCAOFD}.size() != 0]]></printWhenExpression>
 			<staticText>
-				<reportElement x="1" y="8" width="934" height="19" uuid="4b1af94b-726f-4afe-bfda-e0d928bc002c"/>
+				<reportElement x="0" y="8" width="936" height="19" uuid="4b1af94b-726f-4afe-bfda-e0d928bc002c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -803,7 +803,7 @@
 		<band height="114">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 			<staticText>
-				<reportElement positionType="Float" x="0" y="34" width="935" height="18" uuid="4513f641-9471-4ab0-ab6e-a345ff7bbaf4">
+				<reportElement positionType="Float" x="0" y="34" width="936" height="18" uuid="4513f641-9471-4ab0-ab6e-a345ff7bbaf4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle">
