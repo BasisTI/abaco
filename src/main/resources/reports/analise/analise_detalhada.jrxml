@@ -1863,7 +1863,6 @@
 					</jr:column>
 					<jr:column width="512" uuid="8321588b-c3f3-4d48-a57c-143eacca56f0">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
-						<printWhenExpression><![CDATA[$P{METODOCONTAGEM} ==  MetodoContagem.DETALHADA.toString()]]></printWhenExpression>
 						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="512" height="30" isRemoveLineWhenBlank="true" uuid="ecf0c638-df9e-4ae8-8c8c-715d3385499e"/>

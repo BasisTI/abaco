@@ -465,8 +465,8 @@
 					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value="FD"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
-					<datasetRun subDataset="DSfuncaoDados" uuid="2123ae5a-12c7-4399-8c03-3f6f4b3ba36a">
-						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTAFUNCAOFD})]]></dataSourceExpression>
+					<datasetRun subDataset="DSfuncaoDados" uuid="8cad639c-6b50-4cb4-85f0-b081d502330e">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource() ]]></dataSourceExpression>
 						<returnValue fromVariable="sumPfTotalFD" toVariable="sumTotalPFFD" calculation="Sum"/>
 						<returnValue fromVariable="sumAjustPfTotalFD" toVariable="sumTotalAJUSTPFFD" calculation="Sum"/>
 					</datasetRun>
