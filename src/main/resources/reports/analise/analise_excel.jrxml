@@ -442,7 +442,6 @@
 	<detail>
 		<band height="88">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
-			<printWhenExpression><![CDATA[$P{LISTAFUNCAOFD}.size() != 0]]></printWhenExpression>
 			<staticText>
 				<reportElement x="0" y="8" width="936" height="19" uuid="4b1af94b-726f-4afe-bfda-e0d928bc002c"/>
 				<box>
