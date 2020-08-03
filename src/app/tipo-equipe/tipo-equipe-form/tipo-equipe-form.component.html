@@ -1,0 +1,89 @@
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1>{{ tipoEquipe.id ? 'Editar Tipo de Equipe' : 'Cadastrar Tipo Equipe'}}</h1>
+      <form name="editForm" role="form" novalidate (ngSubmit)="save(editForm)" #editForm="ngForm">
+        
+        <div class="ui-g">
+
+          <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: 25px">
+            <span class="md-inputfield">
+              <input 
+                type="text" 
+                name="nomeTipoEquipe" 
+                maxlength="250" 
+                [(ngModel)]="tipoEquipe.nome" 
+                pInputText
+                #nomeTipoEquipe='ngModel'
+                required/>
+              <label >Nome *</label>
+              <div *ngIf="editForm.controls['nomeTipoEquipe'] 
+              && !editForm.controls['nomeTipoEquipe'].valid 
+              && (editForm.controls['nomeTipoEquipe'].touched 
+              || editForm.submitted)" 
+              class="ui-message ui-messages-error" >
+              Campo obrigatório.
+            </div>
+            </span>
+          </div>
+
+          <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: -25px">
+            <span>
+              <h3 class="first">Organização *</h3>
+              <p-multiSelect
+                name= "organizacoesMultiSelect"
+                [options]="organizacoes"
+                [(ngModel)]="tipoEquipe.organizacoes"
+                dataKey="id"
+                defaultLabel="Selecione ao menos uma organização" 
+                optionLabel="nome"
+                selectedItemsLabel="{0} organizações selecionadas"
+                #organizacoesMultiSelect='ngModel'
+                (onChange)="loadUserCFPS()"
+                required>
+              </p-multiSelect>
+              <div *ngIf="editForm.controls['organizacoesMultiSelect'] 
+              && !editForm.controls['organizacoesMultiSelect'].valid 
+              && (editForm.controls['organizacoesMultiSelect'].touched 
+              || editForm.submitted)" 
+              style="color: red; font-size: 10px;" >
+              Campo obrigatório.
+            </div>
+            </span>
+          </div>
+          <div class="ui-g-4 ui-md-4 ui-sm-12" style="margin-bottom: 25px; margin-top: -25px">
+            <span>
+              <h3 class="first">CFPS Responsável</h3>
+              <p-dropdown
+                [filter]="true"
+                [placeholder]="'Selecione CFPS Responsável'"
+                name="cfpsResponsavel"
+                [options]="users"
+                [(ngModel)]="tipoEquipe.cfpsResponsavel"
+                dataKey="id"
+                optionLabel="nome"
+                >
+              </p-dropdown>
+            </span>
+          </div>
+        </div>
+        <div class="ui-g ui-md-12" style="justify-content: center">
+          <div class="ui-g-2 ui-md-2 ui-sm-12">
+            <app-white-button 
+              [buttonLabel]="'Cancelar'"
+              routerLink="/admin/tipoEquipe">
+            </app-white-button>
+          </div>
+          
+          <div class="ui-g-2 ui-md-2 ui-sm-12">
+            <app-submit-button 
+              (click)="editForm.submit"
+              [buttonLabel]="'Salvar'"
+              [disabled]="editForm.form.invalid || isSaving">
+            </app-submit-button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

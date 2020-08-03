@@ -1,7 +1,7 @@
 <p-tabView (onChange)="handleChange($event)">
-    <p-tabPanel [header]="this.getLabel('Analise.Analise.Geral')"></p-tabPanel>
+    <p-tabPanel header="Geral"></p-tabPanel>
 
-    <p-tabPanel [header]="this.getLabel('Analise.Analise.FuncoesDados')" [selected]="true">
+    <p-tabPanel header="Funções de Dados" [selected]="true">
         <div class="ui-g ui-fluid">
             <div class="ui-g-12">
                 <div class="card card-w-title">
@@ -10,7 +10,7 @@
                             <div class="ui-g ui-md-12"
                                  style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
                                 <div class="ui-md-2" *ngIf="!isView">
-                                    <app-green-button [buttonLabel]="'Global.Botoes.Novo' | translate"
+                                    <app-green-button [buttonLabel]="'Novo'"
                                                       id="idNovoFormFuncaoDados" buttonIcon="ui-icon-add"
                                                       (click)="openDialog(false)">
                                     </app-green-button>
@@ -18,7 +18,7 @@
                             </div>
 
                             <div>
-                                <app-memory-datatable [disableDelete]="this.isView" [disableEdit]="this.isView"
+                                <basis-datatable type="memory" [disableDelete]="this.isView" [disableEdit]="this.isView"
                                                       [disableClone]="this.isView" [disableCrud]="this.isView"
                                                       [showCrud]="true"
                                                       [value]="this.funcoesDados" id="idTabelaFuncaoDados"
@@ -27,13 +27,31 @@
                                                       (dblclick)="onRowDblclick($event)"
                                                       [responsive]="true" scrollable="true" scrollWidth="100%">
 
+                                        <basis-datatable-button
+                                            name="crud"
+                                            *ngIf="!isView"
+                                            [tooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')" 
+                                            [disabled]="funcaoDadosEditar.id == null"
+                                            class="ui-button-success"
+                                            icon="input">
+                                        </basis-datatable-button>
+                                        
+                                        <basis-datatable-button
+                                            name="clone"
+                                            *ngIf="!isView"
+                                            [tooltip]="funcaoDadosEditar.id != null ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')" 
+                                            [disabled]="funcaoDadosEditar.id == null"
+                                            class="ui-button-dark"
+                                            icon="content-copy">
+                                        </basis-datatable-button>
+
                                     <p-column
                                             field="name"
                                             filter="true"
                                             filterMatchMode="contains"
                                             name="nomeFuncaoDadosFormComponent"
                                             id="idNomeFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Cadastros.FuncaoDados.Nome')"
+                                            [header]="this.getLabel('Nome')"
                                             sortable="true"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
@@ -42,10 +60,10 @@
                                     <p-column
                                             field="deflator"
                                             filter="true"
-                                            filterMatchMode="contains"
+                                            filterMatchMode="contains"S
                                             name="fatorAjusteFuncaoDadosFormComponent"
                                             id="idFatorAjusteFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Cadastros.FuncaoDados.Deflator')"
+                                            [header]="this.getLabel('Deflator')"
                                             sortable="true"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
@@ -57,7 +75,7 @@
                                             filterMatchMode="contains"
                                             name="nomeModuloFuncaoDadosFormComponent"
                                             id="idNomeModuloFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Cadastros.FuncaoDados.Modulo')"
+                                            [header]="this.getLabel('Módulo')"
                                             sortable="true"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
@@ -69,7 +87,7 @@
                                             filterMatchMode="contains"
                                             name="nomeFuncionalidadeFuncaoDadosFormComponent"
                                             id="idNomeFuncionalidadeFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Cadastros.FuncaoDados.Funcionalidade')"
+                                            [header]="this.getLabel('Funcionalidade')"
                                             sortable="true"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
@@ -81,7 +99,7 @@
                                             filterMatchMode="contains"
                                             name="tipoFuncaoDadosFormComponent"
                                             id="idTipoFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Cadastros.FuncaoDados.Classificacao')"
+                                            [header]="this.getLabel('Classificação')"
                                             sortable="true"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
@@ -93,7 +111,7 @@
                                             filterMatchMode="contains"
                                             name="derFuncaoDadosFormComponent"
                                             id="idDerFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Cadastros.FuncaoDados.DER(TD)')"
+                                            [header]="this.getLabel('DER (TD)')"
                                             sortable="true"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
@@ -105,7 +123,7 @@
                                             filterMatchMode="contains"
                                             name="rlrFuncaoDadosFormComponent"
                                             id="idRlrFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Cadastros.FuncaoDados.RLR(TR)')"
+                                            [header]="this.getLabel('RLR (TR)')"
                                             sortable="true"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
@@ -117,7 +135,7 @@
                                             filterMatchMode="contains"
                                             name="complexidadeFuncaoDadosFormComponent"
                                             id="idComplexidadeFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Cadastros.FuncaoDados.Complexidade')"
+                                            [header]="this.getLabel('Complexidade')"
                                             sortable="true"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
@@ -129,7 +147,7 @@
                                             filterMatchMode="contains"
                                             name="pfTotalFuncaoDadosFormComponent"
                                             id="idPfTotalFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Cadastros.FuncaoDados.PFAjustado')"
+                                            [header]="this.getLabel('PF Ajustado')"
                                             sortable="true"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
@@ -141,7 +159,7 @@
                                             filterMatchMode="contains"
                                             name="pfFuncaoDadosFormComponent"
                                             id="idPfFuncaoDadosFormComponent"
-                                            [header]="this.getLabel('Cadastros.FuncaoDados.PFLiquido')"
+                                            [header]="this.getLabel('PF Líquido')"
                                             sortable="true"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
@@ -153,20 +171,20 @@
                                          filterMatchMode="contains"
                                          name="sustentantionFuncaoDadosFormComponent"
                                          id="idSustentantionFuncaoDadosFormComponent"
-                                         [header]="this.getLabel('Cadastros.FuncaoDados.PossuiFundamentacao')"
+                                         [header]="this.getLabel('Possui Fundamentação ?')"
                                          sortable="true"
                                          (sortFunction)="sortColumn($event)"
                                          [style]="{'width': '200px'}">
                                          <ng-template let-hasSustantation="rowData.hasSustantation"
                                                              pTemplate="body">
-                                             {{ hasSustantation ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
+                                             {{ hasSustantation ? this.getLabel('Sim') : this.getLabel('Não') }}
                                          </ng-template>
                                      </p-column>
-                                </app-memory-datatable>
+                                </basis-datatable>
                             </div>
                         </div>
                     </div>
-                    <!--<div [hidden]="[true]">
+                    <!-- <div [hidden]="[true]">
                         <div class="ui-g" *ngIf="funcoesDados">
                             <hr>
                             <div class="ui-g-12">
@@ -177,7 +195,7 @@
                     </div> -->
                     <p-dialog [closable]="false" [(visible)]="showDialog" [(header)]="textHeader"
                               [contentStyle]="{'height': ['windowHeightDialog']}"
-                              [width]="[windowWidthDialog]">
+                              >
 
 
                         <app-analise-modulo-funcionalidade [erroModulo]="erroModulo" [isFuncaoDados]="true"
@@ -188,7 +206,7 @@
                         <div *ngIf="!isEdit">
                             <div class="ui-g" *ngIf="!showMultiplos">
                                 <div class="ui-g-9">
-                                    <label translate="Cadastros.FuncaoDados.NomeProcessoElementar">Nome do Processo Elementar*</label>
+                                    <label >Nome do Processo Elementar*</label>
                                         <p-autoComplete
                                                 maxlength="2000"
                                                 [(ngModel)]="seletedFuncaoDados.name"
@@ -205,13 +223,13 @@
                                         </p-autoComplete>
                                     <span class="md-inputfield">
                                 <div *ngIf="nomeInvalido && !seletedFuncaoDados.name"
-                                     class="ui-message ui-messages-error" translate="Global.Mensagens.CampoObrigatorio">
+                                     class="ui-message ui-messages-error">
                                     Campo obrigatório.
                                 </div>
                             </span>
                                 </div>
                                 <div class="ui-g-12 ui-md-3 ui-lg-3">
-                                    <app-blue-button [buttonLabel]="this.getLabel('Global.Botoes.Multiplos')"
+                                    <app-blue-button [buttonLabel]="this.getLabel('Multiplos')"
                                                      id="idBtnMultiplosFormFuncaoDados"
                                                      (click)="buttonMultiplos()">
                                     </app-blue-button>
@@ -220,7 +238,7 @@
 
                             <div class="ui-g" *ngIf="showMultiplos">
                                 <div class="ui-g-9">
-                                    <label translate="Cadastros.FuncaoDados.NomeProcessos">Nomes dos Processos *</label>
+                                    <label>Nomes dos Processos *</label>
                                     <textarea pInputTextarea
                                               maxlength="2000"
                                               [(ngModel)]="text"
@@ -236,7 +254,7 @@
                          </textarea>
                                 </div>
                                 <div class="ui-g-3">
-                                    <app-blue-button [buttonLabel]="this.getLabel('Global.Botoes.Unitario')"
+                                    <app-blue-button [buttonLabel]="this.getLabel('Unitario')"
                                                      id="idBtnUnitarioFormFuncaoDados"
                                                      (click)="buttonMultiplos()">
                                     </app-blue-button>
@@ -247,7 +265,7 @@
                         <div *ngIf="isEdit">
                             <div class="ui-g">
                                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                                    <label translate="Cadastros.FuncaoDados.NomeProcessoElementar">Nome do Processo
+                                    <label>Nome do Processo
                                         Elementar
                                         *</label>
                                     <input
@@ -262,17 +280,16 @@
 
                         <div class="ui-g">
                             <div class="ui-g-3 ui-md-12 ui-sm-12">
-                                <label translate="Cadastros.FuncaoDados.Classificacao*">Classificação *</label>
+                                <label>Classificação *</label>
                                 <p-dropdown [filter]="true" [options]="classificacoes"
                                             id="idClassificacoesFormFuncaoDados"
                                             [(ngModel)]="seletedFuncaoDados.tipo"
-                                            [placeholder]="this.getLabel('Cadastros.FuncaoDados.SelecioneClass')"
+                                            [placeholder]="this.getLabel('Selecione Classificação')"
                                             name="classificacao"
-                                            [autoWidth]="false" (onChange)="classValida()">
+                                             (onChange)="classValida()">
                                 </p-dropdown>
                                 <span class="md-inputfield">
-                            <div *ngIf="classInvalida" class="ui-message ui-messages-error"
-                                 translate="Global.Mensagens.CampoObrigatorio">
+                            <div *ngIf="classInvalida" class="ui-message ui-messages-error">
                                 Campo obrigatório.
                             </div>
                         </span>
@@ -283,7 +300,7 @@
 
                         <div class="ui-g">
                             <div class="ui-g-11 ui-md-11 ui-sm-11">
-                                <label translate="Cadastros.FuncaoDados.Deflator*">Deflator *</label>
+                                <label>Deflator *</label>
                                 <p-dropdown
                                         [filter]="true"
                                         [options]="fatoresAjuste"
@@ -292,11 +309,10 @@
                                         name="fatorAjuste"
                                         [(ngModel)]="seletedFuncaoDados.fatorAjuste"
                                         (onChange)="contratoSelecionado()"
-                                        [autoWidth]="false">
+                                        >
                                 </p-dropdown>
                                 <span class="md-inputfield">
-                                    <div *ngIf="erroDeflator" class="ui-message ui-messages-error"
-                                         translate="Global.Mensagens.CampoObrigatorio">
+                                    <div *ngIf="erroDeflator" class="ui-message ui-messages-error">
                                         Campo obrigatório.
                                     </div>
                                 </span>
@@ -308,13 +324,12 @@
                                 </app-blue-button>
                             </div>
                             <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
-                                <label translate="Cadastros.FuncaoDados.Quantidade*">Quantidade *</label>
+                                <label >Quantidade *</label>
                                 <input type="number" class="ui-inputtext" min="1"
                                        [(ngModel)]="seletedFuncaoDados.quantidade"
                                        id="idQuantidadeFormFuncaoDados">
                                 <span class="md-inputfield">
-                                    <div *ngIf="erroUnitario" class="ui-message ui-messages-error"
-                                         translate="Global.Mensagens.CampoObrigatorio">
+                                    <div *ngIf="erroUnitario" class="ui-message ui-messages-error">
                                         Campo obrigatório.
                                     </div>
                                 </span>
@@ -322,7 +337,7 @@
                         </div>
 
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
-                            <h2 translate="Cadastros.FuncaoDados.RLR(TR)*">RLR (TR) *</h2>
+                            <h2>RLR (TR) *</h2>
                             <div class="ui-g-12" style="padding: 0px">
                                 <app-analise-der-chips [(values)]="rlrsChips" (onChange)="adicionar()"
                                                        id="idRLRFormFuncaoDados">
@@ -330,8 +345,7 @@
                             </div>
                             <div class="ui-g-12" style="padding: 0px">
                         <span class="md-inputfield">
-                            <div *ngIf="erroTR && rlrsChips.length == 0" class="ui-message ui-messages-error"
-                                 translate="Global.Mensagens.CampoObrigatorio">
+                            <div *ngIf="erroTR && rlrsChips.length == 0" class="ui-message ui-messages-error">
                                 Campo obrigatório.
                             </div>
                         </span>
@@ -339,7 +353,7 @@
                         </div>
 
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
-                            <h2 translate="Cadastros.FuncaoDados.DER(TD)*">DER (TD) *</h2>
+                            <h2>DER (TD) *</h2>
                             <div class="ui-g-12" style="padding: 0px">
                                 <app-analise-der-chips [(values)]="dersChips" id="idDERFormFuncaoDados"
                                                        (onChange)="adicionar()">
@@ -347,8 +361,7 @@
                             </div>
                             <div class="ui-g-12" style="padding: 0px">
                         <span class="md-inputfield">
-                            <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error"
-                                 translate="Global.Mensagens.CampoObrigatorio">
+                            <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error">
                                 Campo obrigatório.
                             </div>
                         </span>
@@ -356,7 +369,7 @@
                         </div>
 
                         <div class="ui-g-12 ui-md-12 ui-sm-12">
-                            <label translate="Cadastros.FuncaoDados.Evidência">Evidência</label>
+                            <label>Evidência</label>
                             <span class="md-inputfield">
                                 <p-editor
                                         maxlength="5000"
@@ -372,21 +385,21 @@
 
                         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                             <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
-                                <app-white-button [buttonLabel]="'Global.Botoes.Cancelar' | translate"
+                                <app-white-button [buttonLabel]="'Cancelar' "
                                                   id="idBtmCancelarFormFuncaoDados"
                                                   (click)="cancelar()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
-                                <app-white-button [buttonLabel]="'Global.Botoes.Fechar' | translate"
+                                <app-white-button [buttonLabel]="'Fechar' "
                                                   id="idBtnFecharFormFuncaoDados"
                                                   (click)="cancelar()">
                                 </app-white-button>
                             </div>
 
                             <div class="ui-md-3 ui-sm-12">
-                                <app-blue-button [buttonLabel]="'Global.Botoes.Salvar' | translate"
+                                <app-blue-button [buttonLabel]="'Salvar' "
                                                  id="idSalvarFormFuncaoDados"
                                                  buttonIcon="ui-icon-add"
                                                  (click)="buttonSaveEdit()">
@@ -399,21 +412,21 @@
         </div>
     </p-tabPanel>
 
-    <p-tabPanel [header]="this.getLabel('Analise.Analise.FuncoesTransacao')" [disabled]="disableAba" ></p-tabPanel>
+    <p-tabPanel [header]="this.getLabel('Funções de transação')" [disabled]="disableAba" ></p-tabPanel>
 
-    <p-tabPanel [header]="this.getLabel('Analise.Analise.Resumo')"></p-tabPanel>
+    <p-tabPanel [header]="this.getLabel('Resumo')"></p-tabPanel>
 </p-tabView>
 
 <!-- Dialog confirmação deleção -->
 <p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" [label]="'Global.Botoes.Nao' | translate"
+        <button type="button" pButton icon="fa-close" [label]="'Nao'"
                 (click)="dialog.reject()"></button>
-        <button type="button" pButton icon="fa-check" [label]="'Global.Botoes.Sim' | translate"
+        <button type="button" pButton icon="fa-check" [label]="'Sim' "
                 (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>
-<p-dialog [header]="this.getLabel('Descrição')" [(visible)]="displayDescriptionDeflator" [width]="400" *ngIf="seletedFuncaoDados.fatorAjuste">
+<p-dialog [header]="this.getLabel('Descrição')" [(visible)]="displayDescriptionDeflator" *ngIf="seletedFuncaoDados.fatorAjuste">
     {{seletedFuncaoDados.fatorAjuste.descricao}}
     <p-footer>
         <app-white-button buttonLabel="Copiar para Evidência" buttonIcon="ui-icon-add"(click)="copyToEvidence()"></app-white-button>

@@ -1,7 +1,8 @@
-import { BaseEntity, MappableEntities, JSONable } from '../shared';
+import { BaseEntity} from '../shared';
 import { Contrato } from '../contrato';
+import { MappableEntities } from '../shared/mappable-entities';
 
-export class Organizacao implements BaseEntity, JSONable<Organizacao> {
+export class Organizacao implements BaseEntity {
 
   private mappableContracts: MappableEntities<Contrato>;
 

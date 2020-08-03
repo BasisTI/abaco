@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
-import { HttpService } from '@basis/angular-components';
-import { Observable } from 'rxjs/Rx';
 import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 
 @Injectable()
@@ -10,12 +9,11 @@ export class DerService {
 
     resourceUrl = environment.apiUrl + '/ders';
 
-    constructor(private http: HttpService) {
+    constructor(private http: HttpClient) {
     }
 
     dropDownByFuncaoDadosId(idFuncaoDados: number): Observable<any> {
-        return this.http.get(this.resourceUrl + '/drop-down/' + idFuncaoDados)
-            .map((res: Response) => res.json());
+        return this.http.get<any>(this.resourceUrl + '/drop-down/' + idFuncaoDados);
     }
 
 }

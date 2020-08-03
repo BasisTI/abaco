@@ -1,0 +1,70 @@
+<div class="ui-g ui-fluid" *ngIf="user">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1 translate="Cadastros.Usuarios.Visualizar">Visualizar Usuário</h1>
+      <div class="ui-g">
+          <div class="ui-g-4" style="margin-bottom: 25px">
+            <label>Primeiro Nome: {{ user.firstName }}</label>
+          </div>
+          <div class="ui-g-4" style="margin-bottom: 25px">
+            <label>Último Nome: {{ user.lastName }}</label>
+          </div>
+          <div class="ui-g-4" style="margin-bottom: 25px">
+            <label>Login: {{ user.login }}</label>
+          </div>
+          <div class="ui-g-4" style="margin-bottom: 25px">
+            <label>Email: {{ user.email }}</label>
+          </div>
+          <div class="ui-g-4">
+            <label>Ativo: {{ user.activated ? 'Sim' : 'Não' }}</label>
+          </div>
+          <div class="ui-g-4"></div>
+
+          <div class="ui-g-6" style="margin-bottom: 25px">
+            <h3 class="first">Perfil</h3>
+            <basis-datatable
+                type="memory"
+                [value]="user.authorities"
+                disableEdit="true"
+                disableView="true"
+                disableDelete="true"
+                disableClone="true">
+              <p-column field="description" header="Nome"></p-column>
+            </basis-datatable>
+          </div>
+
+          <div class="ui-g-6" style="margin-bottom: 25px">
+            <h3 class="first" >Organização</h3>
+            <basis-datatable 
+                  type="memory"
+                  [value]="user.organizacoes"
+                  disableEdit="true"
+                  disableView="true"
+                  disableDelete="true"
+                  disableClone="true"
+                  >
+              <p-column field="nome" header="Nome"></p-column>
+            </basis-datatable>
+          </div>
+
+        <div class="ui-g-6" style="margin-bottom: 25px">
+          <h3 class="first" >Equipe</h3>
+          <basis-datatable
+                type="memory"
+                [value]="user.tipoEquipes"
+                disableEdit="true"
+                disableView="true"
+                disableDelete="true"
+                disableClone="true">
+            <p-column field="nome" header="Nome"></p-column>
+          </basis-datatable>
+        </div>
+      </div>
+      <div class="ui-g">
+        <div class="ui-g-2">
+          <button pButton type="button" label="Voltar" routerLink="/admin/user"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

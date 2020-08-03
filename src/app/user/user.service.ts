@@ -1,17 +1,16 @@
 import {TipoEquipe} from './../tipo-equipe/tipo-equipe.model';
 import {Organizacao} from './../organizacao/organizacao.model';
 import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
-import {Observable} from 'rxjs/Rx';
-import {HttpService} from '@basis/angular-components';
 import {environment} from '../../environments/environment';
-import {TranslateService} from '@ngx-translate/core';
-import {createRequestOption, PageNotificationService, ResponseWrapper} from '../shared';
 
-import {BlockUI, NgBlockUI} from 'ng-block-ui';
 
-import {User} from './user.model';
+import { User } from './user.model';
 import {Authority} from './authority.model';
+import { HttpClient } from '@angular/common/http';
+import { PageNotificationService } from '@nuvem/primeng-components';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { ResponseWrapper, createRequestOption } from '../shared';
 
 @Injectable()
 export class UserService {
@@ -24,46 +23,24 @@ export class UserService {
 
     searchUrl = environment.apiUrl + '/_search/users';
 
-    @BlockUI() blockUI: NgBlockUI;
 
-    constructor(private http: HttpService, private translate: TranslateService, private pageNotificationService: PageNotificationService) {
+    constructor(private http: HttpClient, private pageNotificationService: PageNotificationService) {
     }
 
     getLabel(label) {
-        let str: any;
-        this.translate.get(label).subscribe((res: string) => {
-            str = res;
-        }).unsubscribe();
-        return str;
+        return label;
     }
 
     create(user: User): Observable<User> {
-        this.blockUI.start(this.getLabel('Usuario.Cadastrando'));
         const copy = this.convert(user);
-        return this.http.post(this.resourceUrl, copy).catch((error: any) => {
-            this.blockUI.stop();
-            return this.handlerError(error);
-        })
-            .map((res: Response) => {
-                const jsonResponse = res.json();
-                this.blockUI.stop();
-                return this.convertItemFromServer(jsonResponse);
-            });
+        return this.http.post<User>(this.resourceUrl, copy).pipe(catchError((error: any) => {
+            return this.handlerError(error)}));
     }
 
     update(user: User): Observable<User> {
-        this.blockUI.start(this.getLabel('Usuario.Editando'));
         const copy = this.convert(user);
-        return this.http.put(this.resourceUrl, copy).catch((error: any) => {
-            this.blockUI.stop();
-            return this.handlerError(error);
-        })
-            .map((res: Response) => {
-                const jsonResponse = res.json();
-                this.blockUI.stop();
-                return this.convertItemFromServer(jsonResponse);
-
-            });
+        return this.http.put<User>(this.resourceUrl, copy).pipe(catchError((error: any) => {
+            return this.handlerError(error)}));
     }
 
     private handlerError(error: any) {
@@ -72,7 +49,7 @@ export class UserService {
                 this.handlerUserExistsError(error.headers);
                 return Observable.throw(new Error(error.status));
             case 403:
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.SemPermissaoAcao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.SemPermissaoAcao'));
                 return Observable.throw(new Error(error.status));
         }
     }
@@ -80,84 +57,75 @@ export class UserService {
     private handlerUserExistsError(header: Headers) {
         switch (header.get('x-abacoapp-error')) {
             case 'error.userexists':
-                this.pageNotificationService.addErrorMsg(this.getLabel('Usuario.UsuarioExistente'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Usuario.UsuarioExistente'));
                 break;
             case 'error.emailexists':
-                this.pageNotificationService.addErrorMsg(this.getLabel('Usuario.EmailCadastrado'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Usuario.EmailCadastrado'));
                 break;
             case 'error.fullnameexists':
-                this.pageNotificationService.addErrorMsg(this.getLabel('Usuario.NomeEmUso'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Usuario.NomeEmUso'));
                 break;
         }
     }
 
     find(id: number): Observable<User> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.get<User>(`${this.resourceUrl}/${id}`).pipe(catchError((error: any) => {
+            return this.handlerError(error)}));
     }
 
     getAllUsers(org: Organizacao, tipoequip: TipoEquipe): Observable<User[]> {
-        return this.http.get(`${this.resourceDtoUrl}/${org.id}/${tipoequip.id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertUsersFromServer(jsonResponse);
-        });
+        return this.http.get<User[]>(`${this.resourceDtoUrl}/${org.id}/${tipoequip.id}`).pipe(
+            catchError((error: any) => {
+            return this.handlerError(error)}));
     }
 
     /**
      * Função que retorna dados do usuário logado
      */
     findCurrentUser(): Observable<User> {
-        return this.http.get(`${this.resourceUrl}/logged`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        });
+        return this.http.get<User>(`${this.resourceUrl}/logged`).pipe(
+            catchError((error: any) => {
+            return this.handlerError(error)}));
     }
 
     query(req?: any): Observable<ResponseWrapper> {
         const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            .map((res: Response) => this.convertResponse(res));
+        return this.http.get<ResponseWrapper>(this.resourceUrl).pipe(
+            catchError((error: any) => {
+            return this.handlerError(error)}));
     }
 
     delete(user: User): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${user.id}`);
+        return this.http.delete<Response>(`${this.resourceUrl}/${user.id}`);
     }
 
     authorities(): Observable<Authority[]> {
-        return this.http.get(`${this.authoritiesUrl}`)
-            .map(res => {
-                return res.json().map(item => {
-                    return new Authority(item.name);
-                });
-            });
+        return this.http.get<Authority[]>(`${this.authoritiesUrl}`).pipe(
+            catchError((error: any) => {
+            return this.handlerError(error)}));
     }
 
     getLoggedUserWithId(): Observable<User> {
-        return this.http.get(this.resourceUrl + '/active-user')
-            .map(res => {
-                const user = new User();
-                user.id = res.json();
-                return user;
-            });
+        return this.http.get<User>(this.resourceUrl + '/active-user').pipe(
+        catchError((error: any) => {
+            return this.handlerError(error)}));
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
+    public convertResponse(res:any): User[]{
+        const result:User[] = [];
+        for (let i = 0; i < res.length; i++) {
+            result.push(this.convertItemFromServer(res[i]));
         }
-        return new ResponseWrapper(res.headers, result, res.status);
+        return result;
     }
+
     private convertItemFromServer(json: any): User {
         const entity: User = Object.assign(new User(), json);
         entity.authorities = this.generateAuthorities(json);
         return entity;
     }
 
-    private convertUsersFromServer(json: any): User[] {
+    public convertUsersFromServer(json: any): User[] {
         const users: User[] = [];
         json.map(item => {
             const entity: User = Object.assign(new User(), item);
@@ -181,26 +149,15 @@ export class UserService {
         return copy;
     }
 
-    dropDown(): Observable<ResponseWrapper> {
-        return this.http.get(this.resourceUrl + '/drop-down')
-            .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
-                if (error.status === 403) {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                    return Observable.throw(new Error(error.status));
-                }
-            });
+    dropDown(): Observable<User[]> {
+        return this.http.get<User[]>(this.resourceUrl + '/drop-down').pipe(
+            catchError((error: any) => {
+            return this.handlerError(error)}));
     }
 
-    getUsersFromOrganização(organizacoes: any[]): Observable<ResponseWrapper>{
-        this.blockUI.start();
-        return this.http.post(this.resourceUrl + 'drop-down/organizacao',organizacoes)
-            .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
-                if (error.status === 403) {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                    return Observable.throw(new Error(error.status));
-                }
-            }).finally(
-                ()=>{this.blockUI.stop();}
-            );
+    getUsersFromOrganização(organizacoes: any[]): Observable<User[]>{
+        return this.http.post<User[]>(this.resourceUrl + 'drop-down/organizacao',organizacoes)
+        .pipe(catchError((error: any) => {
+            return this.handlerError(error)}));
     }
 }

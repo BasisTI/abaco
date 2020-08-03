@@ -1,26 +1,9 @@
-import {
-    Component,
-    Input,
-    Output,
-    EventEmitter,
-    OnChanges,
-    SimpleChanges
-} from '@angular/core';
-
-import {DerChipItem} from './der-chip-item';
-import {DerChipConverter} from './der-chip-converter';
-
-import {DerTextParser, ParseResult} from '../der-text/der-text-parser';
-
-import {
-    DuplicatesResult,
-    StringArrayDuplicatesFinder
-} from '../string-array-duplicates-finder';
-import {Der} from '../../der/der.model';
-import { element } from 'protractor';
-import { PageNotificationService } from '../../shared/';
-import { FuncaoTransacao } from '../../funcao-transacao';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { DerChipItem } from './der-chip-item';
+import { DerTextParser, ParseResult } from '../der-text/der-text-parser';
+import { DuplicatesResult, StringArrayDuplicatesFinder } from '../string-array-duplicates-finder';
+import { Der } from '../../der/der.model';
+import { FuncaoTransacao } from 'src/app/funcao-transacao';
 
 
 @Component({
@@ -55,15 +38,10 @@ export class DerChipsComponent implements OnChanges {
     indexChipEmEdicao: number;
 
     constructor(
-        private translate: TranslateService
     ){}
     
     getLabel(label) {
-        let str: any;
-        this.translate.get(label).subscribe((res: string) => {
-            str = res;
-        }).unsubscribe();
-        return str;
+        return label;
     }
 
     ngOnChanges(changes: SimpleChanges) {

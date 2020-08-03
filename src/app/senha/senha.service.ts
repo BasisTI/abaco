@@ -1,47 +1,39 @@
 import { Injectable } from '@angular/core';
-import { RequestOptions, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { HttpService, AuthService } from '@basis/angular-components';
-import { User } from '../user';
 import { environment } from '../../environments/environment';
-import { PageNotificationService, ResponseWrapper } from '../shared';
-import { TranslateService } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { AuthorizationService } from '@nuvem/angular-base';
+import { PageNotificationService } from '@nuvem/primeng-components';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class SenhaService {
 
     private changeUrl = environment.apiUrl + '/account/change_password';
 
-    constructor(private http: HttpService, private authService: AuthService<User>,
-        private pageNotificationService: PageNotificationService, private translate: TranslateService) { }
+    constructor(private http: HttpClient, private authService: AuthorizationService,
+        private pageNotificationService: PageNotificationService) { }
 
  
 getLabel(label) {
-    let str: any;
-    this.translate.get(label).subscribe((res: string) => {
-        str = res;
-    }).unsubscribe();
-    return str;
+    return label;
 }
 
 changePassword(newPassword: string): Observable < any > {
-    return this.http.post(this.changeUrl, newPassword).map(
-        (res: Response) => {
-            return res;
-        }).catch((error: any) => {
+    return this.http.post(this.changeUrl, newPassword).pipe(catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
-        });
+        }));
 }
 
-getLogin(): Observable < Response > {
-    return this.http.get(`api/authenticate`).catch((error: any) => {
+getLogin(): Observable <string> {
+    return this.http.get<string>(`api/authenticate`).pipe(catchError((error: any) => {
         if (error.status === 403) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('VoceNaoPossuiPermissao'));
             return Observable.throw(new Error(error.status));
         }
-    });
+    }));
 }
 }

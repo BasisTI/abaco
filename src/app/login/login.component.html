@@ -1,4 +1,4 @@
-<div class="ui-g ui-fluid login-template" *ngIf="!authenticated">
+<div class="ui-g ui-fluid login-template" *ngIf="!authenticated" >
   <div class="ui-g-12 container-login">
 
     <div class="card card-w-title login-panel">
@@ -12,7 +12,7 @@
           <!--<i class="fa ui-icon-landscape">logo</i>-->
         </span>
 
-        <h1 class="title p-b-34 p-t-27" translate="Login.LOGIN">LOGIN</h1>
+        <h1 class="title p-b-34 p-t-27">LOGIN</h1>
 
         <div class="ui-g">
 
@@ -30,7 +30,7 @@
           <div *ngIf="(loginForm.controls['username']
                                         && !loginForm.controls['username'].valid
                                         && (loginForm.controls['username'].touched
-                                        || loginForm.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                        || loginForm.submitted))" class="ui-message ui-messages-error">
                                     Campo obrigatório.
                 </div>
           <div class="ui-g-12 ui-md-12 ui-sm-12 input">
@@ -48,7 +48,7 @@
           <div *ngIf="(loginForm.controls['password']
                                         && !loginForm.controls['password'].valid
                                         && (loginForm.controls['password'].touched
-                                        || loginForm.submitted))" class="ui-message ui-messages-error"  translate="Global.Mensagens.CampoObrigatorio">
+                                        || loginForm.submitted))" class="ui-message ui-messages-error">
                                     Campo obrigatório.
                 </div>
         </div>
@@ -70,8 +70,8 @@
     <div class="card login-panel" style="margin: 0px auto 0 auto; min-height: 50px;">
       <span style="font-size: 20px;"> {{ authenticatedUserFullName() }} </span>
 
-      <p style="font-size: 20px;">{{this.getLabel('Login.BemVindo')}}</p>
-      <i class="material-icons" style="font-size: 200px; color: #618849;">blur_linear</i>
+      <p style="font-size: 20px;">{{this.getLabel('Bem-vindo ao Ábaco.')}}</p>
+      <div class="logo"></div>
     </div>
     <!-- Fim Após a autenticação exibir o campo abaixo-->
   </div>

@@ -1,36 +1,34 @@
-<block-ui></block-ui>
-<div class="layout-wrapper" [ngClass]="{'layout-compact':layoutCompact}" (click)="onLayoutClick()">
-  <ng-progress></ng-progress>
-  <div #layoutContainer class="layout-container" 
-      [ngClass]="{'menu-layout-static': !isOverlay(),
-      'menu-layout-overlay': isOverlay(),
-      'layout-menu-overlay-active': overlayMenuActive,
-      'menu-layout-horizontal': isHorizontal(),
-      'menu-layout-slim': isSlim(),
-      'layout-menu-static-inactive': staticMenuDesktopInactive,
-      'layout-menu-static-active': staticMenuMobileActive}">
-
-    <app-topbar></app-topbar>
-
-    <div class="layout-menu" [ngClass]="{'layout-menu-dark':darkMenu}" (click)="onMenuClick($event)">
-      <div #layoutMenuScroller class="nano">
-        <div class="nano-content menu-scroll-content">
-          <app-menu [reset]="resetMenu"></app-menu>
+<div class="layout-wrapper"
+    [ngClass]="{ 'layout-compact': layoutCompact }"
+    (click)="onLayoutClick()">
+    <div #layoutContainer
+        class="layout-container"
+        [ngClass]="{
+            'menu-layout-static': !menuService.isOverlay(),
+            'menu-layout-overlay': menuService.isOverlay(),
+            'layout-menu-overlay-active': menuService.overlayMenuActive,
+            'menu-layout-horizontal': menuService.isHorizontal(),
+            'menu-layout-slim': menuService.isSlim(),
+            'layout-menu-static-inactive': menuService.staticMenuDesktopInactive,
+            'layout-menu-static-active': menuService.staticMenuMobileActive
+        }">
+        <app-topbar></app-topbar>
+        <basis-block-ui></basis-block-ui>
+        <div class="layout-menu" [ngClass]="{ 'layout-menu-dark': darkMenu }" (click)="onMenuClick($event)">
+            <p-scrollPanel #scrollPanel [style]="{ height: '100%' }">
+                <app-menu></app-menu>
+            </p-scrollPanel>
         </div>
-      </div>
-    </div>
-      
-    <div class="layout-main">
-      <!-- <app-breadcrumb></app-breadcrumb> -->
-      <div class="layout-content">
-        <p-growl [life]="4500"></p-growl>
-        <router-outlet></router-outlet>
-        <app-footer></app-footer>
-      </div>
-    </div>
 
-    <app-rightpanel></app-rightpanel>
-      
-    <div class="layout-mask"></div>
-  </div>
+        <div class="layout-main">
+            <breadcrumb></breadcrumb>
+            <div class="layout-content">
+                <router-outlet></router-outlet>
+                <app-footer></app-footer>
+            </div>
+        </div>
+        <app-rightpanel></app-rightpanel>
+        <basis-page-notification></basis-page-notification>
+        <div class="layout-mask"></div>
+    </div>
 </div>

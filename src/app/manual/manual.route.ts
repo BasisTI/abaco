@@ -1,16 +1,15 @@
-import {Injectable} from '@angular/core';
-import {Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes} from '@angular/router';
+import { Routes } from '@angular/router';
+import { AuthGuard } from '@nuvem/angular-base';
+import { ManualDetailComponent } from './manual-detail/manual-detail.component';
+import { ManualFormComponent } from './manual-form/manual-form.component';
+import { ManualListComponent } from './manual-list/manual-list.component';
 
-import {ManualComponent} from './manual.component';
-import {ManualDetailComponent} from './manual-detail.component';
-import {ManualFormComponent} from './manual-form.component';
 
-import {AuthGuard} from '@basis/angular-components';
 
 export const manualRoute: Routes = [
     {
         path: 'manual',
-        component: ManualComponent,
+        component: ManualListComponent,
         canActivate: [AuthGuard]
     },
     {
@@ -24,7 +23,7 @@ export const manualRoute: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'manual/:id',
+        path: 'manual/:id/view',
         component: ManualDetailComponent,
         canActivate: [AuthGuard]
     },

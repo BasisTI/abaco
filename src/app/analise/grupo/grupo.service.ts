@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpService} from '@basis/angular-components';
 import {environment} from '../../../environments/environment';
 import {ResponseWrapper} from '../../shared';
-import {Response,} from '@angular/http';
 import {Observable} from '../../../../node_modules/rxjs';
 import {Grupo} from './grupo.model';
+import { HttpClient } from '@angular/common/http';
 
 
 @Injectable()
@@ -13,16 +12,14 @@ export class GrupoService {
     resourceUrl = environment.apiUrl + '/';
     grupoUrl = this.resourceUrl + 'analises';
 
-    constructor(private http: HttpService) {
+    constructor(private http: HttpClient) {
     }
 
     all(): Observable<ResponseWrapper> {
-        return this.http.get(`${this.grupoUrl}`).map((res: Response) => {
-            return this.convertResponse(res);
-        });
+        return this.http.get<ResponseWrapper>(`${this.grupoUrl}`);
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
+    private convertResponse(res): ResponseWrapper {
         const jsonResponse = res.json();
         const result = [];
         for (let i = 0; i < jsonResponse.length; i++) {

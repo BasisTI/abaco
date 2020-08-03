@@ -1,14 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
+import { ContratoDetailComponent } from './contrato-detail/contrato-detail.component';
+import { ContratoFormComponent } from './contrato-form/contrato-form.component';
+import { ContratoListComponent } from './contrato-list/contrato-list.component';
 
-import { ContratoComponent } from './contrato.component';
-import { ContratoDetailComponent } from './contrato-detail.component';
-import { ContratoFormComponent } from './contrato-form.component';
 
 export const contratoRoute: Routes = [
   {
     path: 'contrato',
-    component: ContratoComponent
+    component: ContratoListComponent
   },
   {
     path: 'contrato/new',

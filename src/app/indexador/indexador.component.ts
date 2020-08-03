@@ -1,16 +1,15 @@
-import {TranslateService} from '@ngx-translate/core';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs/Rx';
+import {Component} from '@angular/core';
+import {Router} from '@angular/router';
 import {IndexadorService} from './indexador.service';
 
 
 @Component({
-    templateUrl: './indexador.component.html'
+    selector: 'app-indexador',
+    templateUrl: './indexador.component.html',
+    providers: [IndexadorService]
 })
-export class IndexadorComponent implements OnInit, OnDestroy {
+export class IndexadorComponent {
 
-    private subscription: Subscription;
     public indexToReindexar: string[];
     indexList = [
         {value: 'ALR', label: 'Alr'},
@@ -33,22 +32,16 @@ export class IndexadorComponent implements OnInit, OnDestroy {
 
     constructor(
         private indexadorSearchService: IndexadorService,
-        private route: ActivatedRoute,
         private router: Router,
-        private translate: TranslateService
-    ) {
-    }
+    ) { }
 
-    ngOnInit() {
-    }
 
     submitIndexador() {
         this.indexadorSearchService.reindexar(this.indexToReindexar).subscribe(
             err => console.log('HTTP Error', err),
-            () => console.log('HTTP request completed.'));
-    }
-
-    ngOnDestroy() {
+            () => {
+                console.log('HTTP request completed.');
+            });
     }
 
     public return() {

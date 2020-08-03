@@ -9,7 +9,7 @@
   [header]="this.getLabel('Analise.Analise.ReferenciarAR')"
   [(visible)]="mostrarDialog"
   [contentStyle]="{'overflow': 'visible'}" 
-  [width]="800">
+ >
 
   <div class="ui-g">
     
@@ -20,7 +20,6 @@
         [(ngModel)]="funcaoDadosSelecionada"
         (onChange)="funcaoDadosSelected($event.value)"
         [placeholder]="funcoesDadosDropdownPlaceholder()"
-        [autoWidth]="false"
         optionLabel="name">
       </p-dropdown>
     </div>

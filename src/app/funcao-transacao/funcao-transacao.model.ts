@@ -1,4 +1,4 @@
-import {BaseEntity, JSONable} from '../shared';
+import {BaseEntity} from '../shared';
 import {FatorAjuste} from '../fator-ajuste/index';
 import {Funcionalidade} from '../funcionalidade/index';
 import {Complexidade} from '../analise-shared/complexidade-enum';
@@ -24,7 +24,7 @@ export class Editor {
     ) { }
 }
 
-export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnalise, JSONable<FuncaoTransacao> {
+export class FuncaoTransacao implements FuncaoResumivel, BaseEntity, FuncaoAnalise {
 
   detStr: string;
   ftrStr: string;

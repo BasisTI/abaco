@@ -1,8 +1,8 @@
-import { BaseEntity, JSONable } from '../shared';
+import { BaseEntity } from '../shared';
 import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
-import { FuncaoDados } from '../funcao-dados/funcao-dados.model';
+import { FuncaoDados } from '../funcao-dados';
 
-export class Rlr implements BaseEntity, AnaliseReferenciavel, JSONable<Rlr> {
+export class Rlr implements BaseEntity, AnaliseReferenciavel{
 
   constructor(
     public id?: number,

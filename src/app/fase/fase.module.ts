@@ -1,73 +1,41 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BotoesExportacaoModule } from '../botoes-exportacao/botoes-exportacao.module';
-import {
-    ButtonModule,
-    InputTextModule,
-    SpinnerModule,
-    CalendarModule,
-    DropdownModule,
-    RadioButtonModule,
-    ConfirmDialogModule,
-    ConfirmationService,
-    DataTableModule,
-} from 'primeng/primeng';
-
-import {
-    FaseService,
-    FaseComponent,
-    FaseDetailComponent,
-    FaseFormComponent,
-    FaseRoute
-} from '.';
-
-import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
-
-import { HttpClient } from '@angular/common/http';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
-export function createTranslateLoader(http: HttpClient) {
-    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
+import { DatatableModule } from '@nuvem/primeng-components';
+import { AbacoButtonsModule } from '../components/abaco-buttons/abaco-buttons.module';
+import { SharedModule } from './../shared/shared.module';
+import { FaseDetailComponent } from './fase-detail/fase-detail.component';
+import { FaseFormComponent } from './fase-form/fase-form.component';
+import { FaseListComponent } from './fase-list/fase-list.component';
+import { FaseRoute } from './fase.route';
+import { FaseService } from './fase.service';
 
 @NgModule({
     imports: [
         CommonModule,
-        HttpModule,
+        HttpClientModule,
         FormsModule,
         RouterModule.forRoot(FaseRoute, { useHash: true }),
-        DataTableModule,
-        ButtonModule,
-        SpinnerModule,
-        CalendarModule,
-        DropdownModule,
-        RadioButtonModule,
-        InputTextModule,
-        ConfirmDialogModule,
+        BrowserModule,
         AbacoButtonsModule,
-        BotoesExportacaoModule,
-        TranslateModule.forChild({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: (createTranslateLoader),
-                deps: [HttpClient]
-            }
-        })
+        SharedModule,
+        CommonModule,
+        SharedModule,
+        DatatableModule,
+
     ],
     declarations: [
-        FaseComponent,
+        FaseListComponent,
         FaseDetailComponent,
         FaseFormComponent
     ],
     providers: [
         FaseService,
-        ConfirmationService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AbacoFaseModule {
+export class FaseModule {
 }

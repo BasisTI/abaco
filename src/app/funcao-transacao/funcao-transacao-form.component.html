@@ -1,9 +1,9 @@
 <p-tabView (onChange)="handleChange($event)">
-    <p-tabPanel [header]="this.getLabel('Analise.Analise.Geral')"></p-tabPanel>
+    <p-tabPanel [header]="this.getLabel('Geral')"></p-tabPanel>
 
-    <p-tabPanel [header]="this.getLabel('Analise.Analise.FuncoesDados')"></p-tabPanel>
+    <p-tabPanel [header]="this.getLabel('Funções de Dados')"></p-tabPanel>
 
-    <p-tabPanel [header]="this.getLabel('Analise.Analise.FuncoesTransacao')" [selected]="true" [disabled]="disableAba">
+    <p-tabPanel [header]="this.getLabel('Funções de Transação')" [selected]="true" [disabled]="disableAba">
         <div class="ui-g ui-fluid">
             <div class="ui-g-12">
                 <div class="card card-w-title">
@@ -14,7 +14,7 @@
                                  style="justify-content: flex-end; margin-bottom: 25px; margin-top: 25px">
                                 <div class="ui-md-2" *ngIf="!isView">
                                     <app-green-button
-                                            [buttonLabel]="'Global.Botoes.Novo' | translate"
+                                            [buttonLabel]="'Novo'"
                                             id="idBtnNovoFormFuncaoTransacao"
                                             buttonIcon="ui-icon-add"
                                             (click)="openDialog(false)">
@@ -24,11 +24,10 @@
 
                             <!-- Inicio da tabela -->
                             <div>
-                                <app-memory-datatable
+                                <basis-datatable
+                                        type="memory"
                                         [disableDelete]="this.isView"
                                         [disableEdit]="this.isView"
-                                        [disableClone]="this.isView"
-                                        [showFilter]="!this.isView"
                                         id="idTabelaFuncaoTransacaoFormFuncaoTransacao"
                                         [value]="this.funcoesTransacoes"
                                         (buttonClick)="datatableClick($event)"
@@ -38,8 +37,31 @@
                                         scrollable="true"
                                         scrollWidth="100%"
                                         [multiSortMeta]="defaultSort">
+
+
+                                        <basis-datatable-button
+                                            name="clone"
+                                            *ngIf="!isView"
+                                            [tooltip]="FuncaoTransacaoEditar && FuncaoTransacaoEditar.id != null ? this.getLabel('Criar Crud') : this.getLabel('Escolha um registro para criar crud.')" 
+                                            [disabled]="FuncaoTransacaoEditar.id == null"
+                                            class="ui-button-dark"
+                                            icon="content-copy">
+                                        </basis-datatable-button>
+
+
+
+                                        <basis-datatable-button
+                                            name="filter"
+                                            *ngIf="!isView"
+                                            tooltip="Copiar funções de transação." 
+                                            [disabled]="FuncaoTransacaoEditar.id == null"
+                                            class="ui-button-info"
+                                            icon="compare-arrows">
+                                        </basis-datatable-button>
+
+
                                     <p-column
-                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.Modulo')"
+                                            [header]="this.getLabel('Módulo')"
                                             [style]="{'width': '200px'}"
                                             field="nomeModulo"
                                             sortable="custom"
@@ -50,7 +72,7 @@
 
 
                                     <p-column
-                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.Funcionalidade')"
+                                            [header]="this.getLabel('Funcionalidade')"
                                             field="nomeFuncionalidade"
                                             [style]="{'width': '200px'}"
                                             sortable="custom"
@@ -66,12 +88,12 @@
                                             filterField="name"
                                             filter="true"
                                             filterMatchMode="contains"
-                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.Nome')"
+                                            [header]="this.getLabel('Nome')"
                                             [style]="{'width': '200px'}">
                                     </p-column>
 
                                     <p-column
-                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.Deflator')"
+                                            [header]="this.getLabel('Deflator')"
                                             field="deflator"
                                             sortable="custom"
                                             filter="true"
@@ -83,7 +105,7 @@
                                     <p-column
                                             field="tipo"
                                             filterField="tipo"
-                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.Classificacao')"
+                                            [header]="this.getLabel('Classificação')"
                                             sortable="custom"
                                             filter="true"
                                             filterMatchMode="contains"
@@ -95,7 +117,7 @@
                                             field="totalDers"
                                             filter="true"
                                             filterMatchMode="contains"
-                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.DER(TD)')"
+                                            [header]="this.getLabel('DER (TD)')"
                                             sortable="custom"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
@@ -105,7 +127,7 @@
                                             field="totalAlrs"
                                             filter="true"
                                             filterMatchMode="contains"
-                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.FTR(AR)')"
+                                            [header]="this.getLabel('FTR (AR)')"
                                             sortable="custom"
                                             (sortFunction)="sortColumn($event)"
                                             [style]="{'width': '200px'}">
@@ -114,7 +136,7 @@
                                     <p-column
                                             field="complexidade"
                                             filterField="complexidade"
-                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.Complexidade')"
+                                            [header]="this.getLabel('Complexidade')"
                                             sortable="custom"
                                             filter="true"
                                             filterMatchMode="contains"
@@ -123,7 +145,7 @@
                                     </p-column>
 
                                     <p-column
-                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.PFBruto')"
+                                            [header]="this.getLabel('PF Bruto')"
                                             sortable="custom"
                                             (sortFunction)="sortColumn($event)"
                                             field="grossPf"
@@ -139,7 +161,7 @@
                                     </p-column>
 
                                     <p-column
-                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.PFLiquido')"
+                                            [header]="this.getLabel('PF Liquído')"
                                             sortable="custom"
                                             (sortFunction)="sortColumn($event)"
                                             field="pf"
@@ -155,7 +177,7 @@
                                     </p-column>
 
                                     <p-column
-                                            [header]="this.getLabel('Cadastros.FuncaoTransacao.PossuiFundamentacao')"
+                                            [header]="this.getLabel('Possui Fundamentação ?')"
                                             sortable="custom"
                                             (sortFunction)="sortColumn($event)"
                                             field="hasSustantation"
@@ -164,11 +186,11 @@
                                             [style]="{'width': '200px'}">
                                         <ng-template let-hasSustantation="rowData.hasSustantation"
                                                      pTemplate="body">
-                                            {{ hasSustantation ? this.getLabel('Global.Botoes.Sim') : this.getLabel('Global.Botoes.Nao') }}
+                                            {{ hasSustantation ? this.getLabel('Sim') : this.getLabel('Não') }}
                                         </ng-template>
                                     </p-column>
 
-                                </app-memory-datatable>
+                                </basis-datatable>
                             </div>
                             <!-- fim table -->
                         </div>
@@ -176,7 +198,7 @@
 
                     <!-- DIALOG: COPIAR FUNÇÕES DE TRANSAÇÃO -->
                     <div *ngIf="analise && analise.organizacao" >
-                        <p-dialog [header]="this.getLabel('Cadastros.FuncaoTransacao.ClonarFuncoesDeTransacao')"
+                        <p-dialog [header]="this.getLabel('Clonar funções de transação')"
                                   [(visible)]="display" [width]="1200" [closable]="false">
                             <app-pesquisar-ft></app-pesquisar-ft>
                         </p-dialog>
@@ -199,8 +221,7 @@
                         <div *ngIf="!isEdit">
                             <div class="ui-g" *ngIf="!showMultiplos">
                                 <div class="ui-g-9">
-                                    <label translate="Cadastros.FuncaoTransacao.NomeProcessoElementar">Nome do Processo
-                                        Elementar *</label>
+                                    <label>Nome do Processo Elementar *</label>
                                     <p-autoComplete
                                             [(ngModel)]="currentFuncaoTransacao.name"
                                             [suggestions]="baselineResultados"
@@ -216,13 +237,13 @@
                                     <span class="md-inputfield">
                                         <div *ngIf="nomeInvalido && !currentFuncaoTransacao.name"
                                              class="ui-message ui-messages-error"
-                                             translate="Global.Mensagens.CampoObrigatorio">Campo obrigatório.
+                                             >Campo obrigatório.
                                         </div>
                                     </span>
                                 </div>
                                 <div class="ui-g-12 ui-md-3 ui-lg-3">
                                     <app-blue-button
-                                            [buttonLabel]="this.getLabel('Global.Botoes.Multiplos')"
+                                            [buttonLabel]="this.getLabel('Multiplos')"
                                             id="idBtnMultiplosFormFuncaoTransacao"
                                             (click)="buttonMultiplos()">
                                     </app-blue-button>
@@ -231,7 +252,7 @@
 
                             <div class="ui-g" *ngIf="showMultiplos">
                                 <div class="ui-g-9">
-                                    <label translate="Cadastros.FuncaoTransacao.NomeProcessos">Nomes dos
+                                    <label >Nomes dos
                                         Processos*</label>
                                     <textarea pInputTextarea
                                               [(ngModel)]="text"
@@ -248,7 +269,7 @@
                                 </div>
                                 <div class="ui-g-3">
                                     <app-blue-button
-                                            [buttonLabel]="this.getLabel('Global.Botoes.Unitario')"
+                                            [buttonLabel]="this.getLabel('Unitario')"
                                             id="idUnitarioFormFuncaoTransacao"
                                             (click)="buttonMultiplos()">
                                     </app-blue-button>
@@ -259,7 +280,7 @@
                         <div *ngIf="isEdit">
                             <div class="ui-g">
                                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px">
-                                    <label translate="Cadastros.FuncaoTransacao.NomeProcessoElementar">Nome do Processo
+                                    <label>Nome do Processo
                                         Elementar *</label>
                                     <input type="text" class="ui-inputtext"
                                            id="idNomesFormFuncaoTransacao"
@@ -269,20 +290,20 @@
                         </div>
                         <div class="ui-g">
                             <div class="ui-g-6 ui-md-12 ui-sm-12">
-                                <label translate="Cadastros.FuncaoTransacao.Classificacao*">Classificação *</label>
+                                <label >Classificação *</label>
                                 <p-dropdown
                                         [filter]="true"
                                         [options]="classificacoes"
                                         id="idClassificacoesFormFuncaoTransacao"
                                         [(ngModel)]="currentFuncaoTransacao.tipo"
-                                        [placeholder]="this.getLabel('Cadastros.FuncaoTransacao.SelecioneClass')"
+                                        [placeholder]="this.getLabel('Selecione Classificação')"
                                         name="classificacao"
-                                        [autoWidth]="false"
+                                        
                                         (onChange)="classValida()">
                                 </p-dropdown>
                                 <span class="md-inputfield">
                                     <div *ngIf="classInvalida" class="ui-message ui-messages-error"
-                                         translate="Global.Mensagens.CampoObrigatorio">
+                                        >
                                     Campo obrigatório.
                                     </div>
                                 </span>
@@ -290,7 +311,7 @@
                         </div>
                         <div class="ui-g">
                             <div class="ui-g-11 ui-md-11 ui-sm-11">
-                                <label translate="Cadastros.FuncaoTransacao.Deflator*">Deflator *</label>
+                                <label>Deflator *</label>
                                 <p-dropdown
                                         [filter]="true"
                                         [options]="fatoresAjuste"
@@ -299,11 +320,11 @@
                                         [placeholder]="fatoresAjusteDropdownPlaceholder()"
                                         (onChange)="contratoSelecionado()"
                                         name="fatorAjuste"
-                                        [autoWidth]="false">
+                                        >
                                 </p-dropdown>
                                 <span class="md-inputfield">
                                     <div *ngIf="deflatorVazio" class="ui-message ui-messages-error"
-                                         translate="Global.Mensagens.CampoObrigatorio">
+                                        >
                                     Campo obrigatório.
                                     </div>
                                 </span>
@@ -315,7 +336,7 @@
                                 </app-blue-button>
                             </div>
                             <div class="ui-g-3 ui-md-6 ui-sm-12" [hidden]="hideShowQuantidade">
-                                <label translate="Cadastros.FuncaoTransacao.Quantidade*">Quantidade *</label>
+                                <label >Quantidade *</label>
                                 <input type="number" class="ui-inputtext" min="1"
                                        id="idQuantidadeFormFuncaoTransacao"
                                        name="quantidade"
@@ -323,14 +344,14 @@
                                 <span class="md-inputfield">
                                     <div *ngIf="erroUnitario"
                                          class="ui-message ui-messages-error"
-                                         translate="Global.Mensagens.CampoObrigatorio">
+                                         >
                                     Campo obrigatório.
                                     </div>
                                 </span>
                             </div>
                         </div>
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
-                            <h2 translate="Cadastros.FuncaoTransacao.FTR(AR)">FTR (AR)</h2>
+                            <h2 >FTR (AR)</h2>
                             <div class="ui-g-12" style="padding: 0px">
                                 <app-analise-der-chips
                                         [(values)]="alrsChips"
@@ -342,14 +363,14 @@
                             <div class="ui-g-12" style="padding: 0px">
                                 <span class="md-inputfield">
                                     <div *ngIf="erroTR && alrsChips.length == 0" class="ui-message ui-messages-error"
-                                         translate="Global.Mensagens.CampoObrigatorio">
+                                        >
                                     Campo obrigatório.
                                     </div>
                                 </span>
                             </div>
                         </div>
                         <div class="ui-g-6 ui-md-6 ui-sm-12" [hidden]="hideElementTDTR">
-                            <h2 translate="Cadastros.FuncaoTransacao.DER(TD)">DER (TD)</h2>
+                            <h2 >DER (TD)</h2>
                             <div class="ui-g-12" style="padding: 0px">
                                 <app-analise-der-chips id="idDERFormFuncaoTransacao"
                                                        [(values)]="dersChips"></app-analise-der-chips>
@@ -357,7 +378,7 @@
                             <div class="ui-g-12" style="padding: 0px">
                                 <span class="md-inputfield">
                                     <div *ngIf="erroTD && dersChips.length == 0" class="ui-message ui-messages-error"
-                                         translate="Global.Mensagens.CampoObrigatorio">
+                                        >
                                     Campo obrigatório.
                                     </div>
                                 </span>
@@ -365,7 +386,7 @@
                         </div>
 
                         <div class="ui-g-12 ui-md-12 ui-sm-12">
-                            <label translate="Cadastros.FuncaoTransacao.Evidência">Evidência</label>
+                            <label>Evidência</label>
                             <span class="md-inputfield">
                                  <p-editor
                                          [rows]="3"
@@ -381,7 +402,7 @@
                         <div class="ui-g ui-md-12 ui-sm-12" style="justify-content: flex-end">
                             <div class="ui-md-3 ui-sm-12" *ngIf="isEdit">
                                 <app-white-button
-                                        [buttonLabel]="'Global.Botoes.Cancelar' | translate"
+                                        [buttonLabel]="'Cancelar'"
                                         id="idBtnCancelarFormFuncaoTransacao"
                                         (click)="cancelar()">
                                 </app-white-button>
@@ -389,7 +410,7 @@
 
                             <div class="ui-g-3 ui-md-3 ui-sm-12" *ngIf="!isEdit">
                                 <app-white-button
-                                        [buttonLabel]="'Global.Botoes.Fechar' | translate"
+                                        [buttonLabel]="'Fechar'"
                                         id="idBtnFecharFormFuncaoTransacao"
                                         (click)="cancelar()">
                                 </app-white-button>
@@ -397,7 +418,7 @@
 
                             <div class="ui-md-3 ui-sm-12">
                                 <app-blue-button
-                                        [buttonLabel]="'Global.Botoes.Salvar' | translate"
+                                        [buttonLabel]="'Salvar'"
                                         id="idBtnSalvarFormFuncaoTransacao"
                                         buttonIcon="ui-icon-add"
                                         (click)="buttonSaveEdit()">
@@ -410,15 +431,15 @@
             </div>
         </div>
     </p-tabPanel>
-    <p-tabPanel [header]="this.getLabel('Analise.Analise.Resumo')"></p-tabPanel>
+    <p-tabPanel [header]="this.getLabel('Resumo')"></p-tabPanel>
 </p-tabView>
 
 <!-- Dialog confirmação deleção -->
-<p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
+<p-confirmDialog [header]="this.getLabel('Confirmacao')" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" [label]="'Global.Botoes.Nao' | translate"
+        <button type="button" pButton icon="fa-close" [label]="'Não'"
                 (click)="dialog.reject()"></button>
-        <button type="button" pButton icon="fa-check" [label]="'Global.Botoes.Sim' | translate"
+        <button type="button" pButton icon="fa-check" [label]="'Sim'"
                 (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>

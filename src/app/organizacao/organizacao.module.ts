@@ -1,97 +1,43 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DatatableModule } from '@basis/angular-components';
-import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
-import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
-import { NgxMaskModule } from 'ngx-mask';
-import { UtilModule } from '../util/util.module';
-import { TableModule } from 'primeng/table';
-import { PanelModule } from 'primeng/panel';
+import { RouterModule } from '@angular/router';
 import { FieldsetModule } from 'primeng/fieldset';
-
+import { SharedModule } from '../shared/shared.module';
 import {
-  ButtonModule,
-  InputTextModule,
-  SpinnerModule,
-  CalendarModule,
-  DropdownModule,
-  RadioButtonModule,
-  ConfirmDialogModule,
-  ConfirmationService,
-  DataTableModule,
-  DialogModule,
-  CheckboxModule,
-  FileUploadModule,
-} from 'primeng/primeng';
-
-import {
-  OrganizacaoService,
-  OrganizacaoComponent,
+  OrganizacaoListComponent,
   OrganizacaoDetailComponent,
   OrganizacaoFormComponent,
-  organizacaoRoute
+  organizacaoRoute, OrganizacaoService
 } from './';
+import { AbacoButtonsModule } from '../components/abaco-buttons/abaco-buttons.module';
+import { DatatableModule } from '@nuvem/primeng-components';
 
-import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
-import { TextMaskModule } from 'angular2-text-mask';
 
-import { HttpClient } from '@angular/common/http';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
 
 @NgModule({
   imports: [
     CommonModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     RouterModule.forRoot(organizacaoRoute, { useHash: true }),
-    DatatableModule,
-    ButtonModule,
-    SpinnerModule,
-    CalendarModule,
-    DropdownModule,
-    RadioButtonModule,
-    InputTextModule,
-    ConfirmDialogModule,
-    DataTableModule,
-    DialogModule,
-    MemoryDataTableModule,
-    CheckboxModule,
-    FileUploadModule,
-    NgxMaskModule.forRoot(),
     AbacoButtonsModule,
-    TextMaskModule,
-    BotoesExportacaoModule,
-    UtilModule,
-    PanelModule,
-    TableModule,
+    DatatableModule,
     FieldsetModule,
-    TranslateModule.forChild({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    })
+    SharedModule,
   ],
   declarations: [
-    OrganizacaoComponent,
+    OrganizacaoListComponent,
     OrganizacaoDetailComponent,
     OrganizacaoFormComponent,
   ],
   providers: [
-    OrganizacaoService,
-    ConfirmationService
+    OrganizacaoService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 
-export class AbacoOrganizacaoModule { }
+export class OrganizacaoModule { }

@@ -1,12 +1,12 @@
-import { DataTable } from 'primeng/primeng';
+import { DatatableComponent } from '@nuvem/primeng-components';
 import { FaseFilter } from './model/fase.filter';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 import { Fase } from './model/fase.model';
-import { RequestUtil } from '../util/requestUtil';
+import { createRequestOption } from '../shared/request-util';
 
 @Injectable()
 export class FaseService {
@@ -23,9 +23,9 @@ export class FaseService {
         return this.http.get(`${this.resourceUrl}/${id}`);
     }
 
-    getPage(filtro: FaseFilter, datatable: DataTable): Observable<any> {
-        const options = {params: RequestUtil.getRequestParams(datatable) };
-        return this.http.post(`${this.resourceUrl}/page`, filtro, options);
+    getPage(filtro: FaseFilter, datatable: DatatableComponent): Observable<any> {
+        const options = createRequestOption(datatable);
+        return this.http.post(`${this.resourceUrl}/page`, options);
     }
 
     findDropdown(): Observable<any> {

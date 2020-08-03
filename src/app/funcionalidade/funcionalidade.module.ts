@@ -1,67 +1,28 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DatatableModule } from '@basis/angular-components';
-import {
-  ButtonModule,
-  InputTextModule,
-  SpinnerModule,
-  CalendarModule,
-  DropdownModule,
-  RadioButtonModule,
-  ConfirmDialogModule,
-  ConfirmationService
-} from 'primeng/primeng';
-
-import {
-  FuncionalidadeService,
-  FuncionalidadeComponent,
-  FuncionalidadeDetailComponent,
-  FuncionalidadeFormComponent,
-  funcionalidadeRoute
-} from './';
-
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
+import { RouterModule } from '@angular/router';
+import { SharedModule } from '../shared/shared.module';
+import { FuncionalidadeDetailComponent, FuncionalidadeFormComponent, funcionalidadeRoute, FuncionalidadeService } from './';
+import { FuncionalidadeListComponent } from './funcionalidade-list/funcionalidade-list.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     RouterModule.forRoot(funcionalidadeRoute, { useHash: true }),
-    DatatableModule,
-    ButtonModule,
-    SpinnerModule,
-    CalendarModule,
-    DropdownModule,
-    RadioButtonModule,
-    InputTextModule,
-    ConfirmDialogModule,
-    TranslateModule.forChild({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    })
+    SharedModule,
   ],
   declarations: [
-    FuncionalidadeComponent,
+    FuncionalidadeListComponent,
     FuncionalidadeDetailComponent,
     FuncionalidadeFormComponent
   ],
   providers: [
     FuncionalidadeService,
-    ConfirmationService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AbacoFuncionalidadeModule { }
+export class FuncionalidadeModule{ }

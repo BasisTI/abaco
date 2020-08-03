@@ -1,13 +1,13 @@
 import { IndexadorService } from './../../indexador/indexador.service';
-import { TranslateService } from '@ngx-translate/core';
 import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
-import { ElasticQuery, PageNotificationService, ResponseWrapper } from '../../shared';
-import { DatatableClickEvent, DatatableComponent } from '@basis/angular-components';
 import { Router } from '@angular/router';
 import { SistemaService } from '../../sistema/sistema.service';
-import { ConfirmationService } from '../../../../node_modules/primeng/primeng';
 import { BaselineService } from '../baseline.service';
 import { Sistema } from '../../sistema';
+import { ElasticQuery } from 'src/app/shared/elastic-query';
+import { DatatableComponent, DatatableClickEvent } from '@nuvem/primeng-components';
+import { ResponseWrapper } from 'src/app/shared';
+import { ConfirmationService } from 'primeng';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -30,7 +30,6 @@ export class BaselineComponent implements OnInit {
     constructor(
         private router: Router,
         private baselineService: BaselineService,
-        private translate: TranslateService,
         private sistemaService: SistemaService,
         private confirmationService: ConfirmationService,
         private indexadorService: IndexadorService,
@@ -38,11 +37,7 @@ export class BaselineComponent implements OnInit {
     }
 
     getLabel(label) {
-        let str: any;
-        this.translate.get(label).subscribe((res: string) => {
-            str = res;
-        }).unsubscribe();
-        return str;
+        return label;
     }
 
     ngOnInit(): void {
@@ -78,11 +73,11 @@ export class BaselineComponent implements OnInit {
     }
 
     public geraBaselinePdfBrowser(id) {
-        this.baselineService.geraBaselinePdfBrowser(id);
+        // this.baselineService.geraBaselinePdfBrowser(id);
     }
     recuperarSistema() {
         this.sistemaService.dropDown().subscribe(response => {
-            this.nomeSistemas = response.json;
+            this.nomeSistemas = response;
             const emptySystem = new Sistema();
             this.nomeSistemas.unshift(emptySystem);
         });
@@ -102,12 +97,14 @@ export class BaselineComponent implements OnInit {
 
     public performSearch() {
         this.enableTable = true ;
-        this.urlBaseline = this.baselineService.resourceUrl + this.changeUrl();
-        this.carregarDataTable();
+        this.urlBaseline = this.baselineService.sinteticosUrl + this.changeUrl();
+        this.recarregarDataTable();
     }
+
+
     public limparPesquisa() {
         this.sistema = undefined;
-        this.urlBaseline = this.baselineService.resourceUrl + this.changeUrl();
+        this.urlBaseline = this.baselineService.sinteticosUrl + this.changeUrl();
         this.enableTable = false;
         this.recarregarDataTable();
     }
@@ -120,7 +117,7 @@ export class BaselineComponent implements OnInit {
     }
     public atualizarAnalise() {
         this.confirmationService.confirm({
-            message: this.getLabel('Analise.Analise.Mensagens.DesejaAtualizarBaseline'),
+            message: this.getLabel('Desejar atualizar a Baseline dos Sistemas?'),
             accept: () => {
                 this.indexadorService.reindexar(this.indexList).subscribe(()=>{
                 });

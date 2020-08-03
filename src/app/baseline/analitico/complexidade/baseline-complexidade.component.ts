@@ -1,8 +1,7 @@
-import { TranslateService } from '@ngx-translate/core';
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BaselineService} from '../../baseline.service';
-import {Subscription} from '../../../../../node_modules/rxjs/Rx';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -18,7 +17,6 @@ export class BaselineComplexidadeComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
         private baselineService: BaselineService,
-        private translate: TranslateService
     ) {
     }
 

@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { LinhaResumo } from '../analise-shared/resumo-funcoes';
 import { Complexidade } from './complexidade-enum';
 import { AnaliseSharedUtils } from './analise-shared-utils';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-analise-funcao-resumo-table',
@@ -11,15 +10,10 @@ import { TranslateService } from '@ngx-translate/core';
 export class FuncaoResumoTableComponent implements OnInit {
 
   constructor(
-    private translate: TranslateService
   ) { }
 
   getLabel(label) {
-    let str: any;
-    this.translate.get(label).subscribe((res: string) => {
-      str = res;
-    }).unsubscribe();
-    return str;
+    return label;
   }
 
   @Input()

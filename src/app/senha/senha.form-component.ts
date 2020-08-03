@@ -1,18 +1,16 @@
-import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
-import {Response} from '@angular/http';
-import {SenhaService} from './senha.service';
-import {LoginService} from '../login';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, Subscription} from 'rxjs/Rx';
-import {AuthService, HttpService} from '@basis/angular-components';
-import {environment} from '../../environments/environment';
-import {User} from '../user';
-import {PageNotificationService} from '../shared/page-notification.service';
-import {TranslateService} from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthorizationService } from '@nuvem/angular-base';
+import { PageNotificationService } from '@nuvem/primeng-components';
+import { Subscription } from 'rxjs';
+import { LoginService } from '../login';
+import { SenhaService } from './senha.service';
 
 @Component({
     selector: 'app-form-senha',
     templateUrl: './senha.form-component.html',
+    providers:[LoginService]
 })
 export class SenhaFormComponent implements OnInit, OnDestroy {
 
@@ -31,25 +29,20 @@ export class SenhaFormComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
         private senhaService: SenhaService,
-        private authService: AuthService<User>,
+        private authService: AuthorizationService,
         private loginService: LoginService,
-        private http: HttpService,
+        private http: HttpClient,
         private zone: NgZone,
         private pageNotificationService: PageNotificationService,
-        private translate: TranslateService
     ) {
     }
 
     getLabel(label) {
-        let str: any;
-        this.translate.get(label).subscribe((res: string) => {
-            str = res;
-        }).unsubscribe();
-        return str;
+        return label;
     }
 
     ngOnInit() {
-        this.authenticated = this.authService.isAuthenticated();
+        this.authenticated = true;
         this.recuperarLogin();
     }
 
@@ -57,11 +50,9 @@ export class SenhaFormComponent implements OnInit, OnDestroy {
     }
 
     private recuperarLogin() {
-        this.urlSub = this.route.params.subscribe(params => {
-            if (params['login']) {
-                this.login = params['login'];
-            }
-        });
+        this.senhaService.getLogin().subscribe(response => {
+            this.login = response;
+          });
     }
 
 
@@ -70,7 +61,7 @@ export class SenhaFormComponent implements OnInit, OnDestroy {
             this.loginService.login(this.login, this.oldPassword).subscribe(() => {
                 this.senhaService.changePassword(this.newPassword).subscribe(() => {
                     const msg = this.getLabel('Configuracao.AlterarSenha.Mensagens.msgSenhaAlteradaComSucessoParaUsuario') + this.login + '!';
-                    this.pageNotificationService.addSuccessMsg(msg);
+                    this.pageNotificationService.addSuccessMessage(msg);
                     this.router.navigate(['/']);
                 }, error => {
                     if (error.status === 400) {
@@ -92,22 +83,22 @@ export class SenhaFormComponent implements OnInit, OnDestroy {
 
         switch (tipoErro) {
             case 'error.passwdNotEqual': {
-                msgErro = this.getLabel('Configuracao.AlterarSenha.Mensagens.msgNovaSenhaNaoConfereComConfirmacao');
+                msgErro = this.getLabel('Nova senha não confere com a confirmação!');
             }
                 break;
             case 'error.passwdMismatch': {
-                msgErro = this.getLabel('Configuracao.AlterarSenha.Mensagens.msgSenhaAtualIncorreta');
+                msgErro = this.getLabel('Senha atual incorreta!');
             }
                 break;
             case 'error.badPasswdLimits': {
-                msgErro = this.getLabel('Configuracao.AlterarSenha.Mensagens.msgNovaSenhaMuitoPequenaOuMuitoGrande');
+                msgErro = this.getLabel('Nova senha é muito pequena ou muito grande!');
             }
                 break;
             default: {
                 msgErro = this.getLabel('Configuracao.AlterarSenha.Mensagens.msgEntreiNoDefaultAlgoEstaErrado');
             }
         }
-        this.pageNotificationService.addErrorMsg(msgErro);
+        this.pageNotificationService.addErrorMessage(msgErro);
 
     }
 

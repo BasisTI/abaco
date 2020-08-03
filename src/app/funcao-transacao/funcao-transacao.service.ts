@@ -1,19 +1,16 @@
-import {FuncaoTransacao} from './../funcao-transacao/funcao-transacao.model';
-
-import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
-import {Observable, Subject} from 'rxjs/Rx';
-import {HttpService} from '@basis/angular-components';
-import {environment} from '../../environments/environment';
-import {BlockUI, NgBlockUI} from 'ng-block-ui';
-import {Analise} from '../analise';
-import {PageNotificationService} from '../shared';
+import { FuncaoTransacao } from './funcao-transacao.model';
+import { Injectable } from '@angular/core';
+import { Subject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { PageNotificationService } from '@nuvem/primeng-components';
+import { catchError } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
+import { Analise } from '../analise/analise.model';
 
 
 @Injectable()
 export class FuncaoTransacaoService {
 
-    @BlockUI() blockUI: NgBlockUI;
     vwFuncaoTransacaoResourceUrl = environment.apiUrl + '/vw-funcao-transacaos';
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
     resourceUrlPEAnalitico = environment.apiUrl + '/peanalitico/';
@@ -22,20 +19,16 @@ export class FuncaoTransacaoService {
     public display = new Subject<boolean>();
     display$ = this.display.asObservable();
 
-    constructor(private http: HttpService, private pageNotificationService: PageNotificationService) {
+    constructor(private http: HttpClient, private pageNotificationService: PageNotificationService) {
     }
 
     autoCompletePEAnalitico(name: String, idFuncionalidade : number): Observable<any> {
         const url = `${this.resourceUrlPEAnalitico}ft?name=${name}&idFuncionalidade=${idFuncionalidade}`;
-        return this.http.get(url)
-            .map((res: Response) => res.json());
+        return this.http.get(url);
     }
 
     getFuncaoTransacaosCompleta(analiseId: number): Observable<FuncaoTransacao> {
-        return this.http.get(`${this.allFuncaoTransacaosUrl}/${analiseId}`).map((res: Response) => {
-            const resposta = this.convertJsonToSinteticoTransacao(res.json());
-            return resposta;
-        });
+        return this.http.get<FuncaoTransacao>(`${this.allFuncaoTransacaosUrl}/${analiseId}`);
     }
 
     private convertJsonToSinteticoTransacao(json: any): FuncaoTransacao {
@@ -45,17 +38,12 @@ export class FuncaoTransacaoService {
 
     public getFuncaoTransacaoByAnalise(analise: Analise): Observable<FuncaoTransacao[]> {
         const url = `${this.funcaoTransacaoResourceUrl}-dto/analise/${analise.id}`;
-        return this.http.get(url).map((res: Response) => {
-            return res.json();
-        });
+        return this.http.get<FuncaoTransacao[]>(url);
     }
 
     public getFuncaoTransacaoByIdAnalise(id: Number): Observable<any[]> {
-        this.blockUI.start();
         const url = `${this.funcaoTransacaoResourceUrl}-dto/analise/${id}`;
-        return this.http.get(url).map((res) => {
-            return res.json();
-        }).finally(() => this.blockUI.stop());
+        return this.http.get<any[]>(url);
     }
 
     public convertItemFromServer(json: any): FuncaoTransacao {
@@ -72,59 +60,40 @@ export class FuncaoTransacaoService {
     }
 
     create(funcaoTransacao: FuncaoTransacao, idAnalise: Number): Observable<any> {
-        this.blockUI.start();
         const json = funcaoTransacao.toJSONState();
-        return this.http.post(`${this.funcaoTransacaoResourceUrl}/${idAnalise}`, json).map((res: Response) => {
-            return res.json();
-        });
+        return this.http.post(`${this.funcaoTransacaoResourceUrl}/${idAnalise}`, json);
     }
 
     update(funcaoTransacao: FuncaoTransacao) {
-        this.blockUI.start();
         const copy = funcaoTransacao.toJSONState();
-        return this.http.put(`${this.funcaoTransacaoResourceUrl}/${copy.id}`, copy).map((res: Response) => {
-            return null;
-        }).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg();
-                this.blockUI.stop();
+        return this.http.put(`${this.funcaoTransacaoResourceUrl}/${copy.id}`, copy).pipe(catchError((error: any) => {
+            if (error.name === 403) {
+                this.pageNotificationService.addErrorMessage(error);
                 return Observable.throw(new Error(error.status));
             }
-        });
+        }));
     }
 
     delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.funcaoTransacaoResourceUrl}/${id}`);
+        return this.http.delete<Response>(`${this.funcaoTransacaoResourceUrl}/${id}`);
     }
 
     existsWithName(name: String, idAnalise: number, idFuncionalade: number, idModulo: number, id: Number = 0): Observable<Boolean> {
-        this.blockUI.start();
         const url = `${this.funcaoTransacaoResourceUrl}/${idAnalise}/${idFuncionalade}/${idModulo}?name=${name}&id=${id}`;
-        return this.http.get(url)
-            .map(res => res.json()).finally(() => {
-                this.blockUI.stop();
-            });
+        return this.http.get<Boolean>(url);
     }
 
     public getById(id: Number): Observable<FuncaoTransacao> {
         const url = `${this.funcaoTransacaoResourceUrl}/${id}`;
-        this.blockUI.start();
-        return this.http.get(url).map((res) => {
-            return this.convertItemFromServer(res.json());
-        });
+        return this.http.get<FuncaoTransacao>(url);
     }
 
     public getFuncaoTransacaoByModuloOrFuncionalidade(idModulo: Number, idFuncionalida: Number = 0 ): Observable<any[]> {
         const url = `${this.resourceUrlPEAnalitico}/funcaoTransacao/${idModulo}?idFuncionalidade=${idFuncionalida}`;
-        return this.http.get(url).map((res) => {
-            return res.json();
-        });
+        return this.http.get<[]>(url);
     }
     public getVwFuncaoTransacaoByIdAnalise(id: Number): Observable<any[]> {
-        this.blockUI.start();
         const url = `${this.vwFuncaoTransacaoResourceUrl}/${id}`;
-        return this.http.get(url).map((res) => {
-            return res.json();
-        }).finally(() => this.blockUI.stop());
+        return this.http.get<[]>(url);
     }
 }

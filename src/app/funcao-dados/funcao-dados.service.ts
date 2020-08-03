@@ -1,16 +1,16 @@
-import {Manual} from './../manual/manual.model';
 import {FuncaoTransacao} from './../funcao-transacao/funcao-transacao.model';
 import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
-import {Observable, Subject} from 'rxjs/Rx';
-import {HttpService} from '@basis/angular-components';
-import {environment} from '../../environments/environment';
 
-import {PageNotificationService, ResponseWrapper} from '../shared';
 import {FuncaoDados} from '.';
-import {Funcionalidade} from '../funcionalidade';
-import {BlockUI, NgBlockUI} from 'ng-block-ui';
-import {Analise} from '../analise';
+import { environment } from 'src/environments/environment';
+import { Subject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { PageNotificationService } from '@nuvem/primeng-components';
+import { catchError } from 'rxjs/operators';
+import { Funcionalidade } from 'src/app/funcionalidade';
+import { ResponseWrapper } from 'src/app/shared';
+import { Manual } from 'src/app/manual';
+import { Analise } from '../analise';
 
 @Injectable()
 export class FuncaoDadosService {
@@ -20,8 +20,6 @@ export class FuncaoDadosService {
     resourceUrlPEAnalitico = environment.apiUrl + '/peanalitico/';
     funcaoTransacaoResourceUrl = environment.apiUrl + '/funcao-transacaos';
     manualResourceUrl = environment.apiUrl + '/manuals';
-    @BlockUI() blockUI: NgBlockUI;
-
     /*
     Subject criado para Buscar funcionalidade da Baseline.
     Preencher o Dropdown do componente 'modulo-funcionalidade.component' com modulo e submodulo.
@@ -29,7 +27,7 @@ export class FuncaoDadosService {
     public mod = new Subject<Funcionalidade>();
     dataModd$ = this.mod.asObservable();
 
-    constructor(private http: HttpService,
+    constructor(private http: HttpClient,
                 private pageNotificationService: PageNotificationService) {
     }
 
@@ -37,83 +35,58 @@ export class FuncaoDadosService {
     }
 
     findAllNamesBySistemaId(sistemaId: number): Observable<string[]> {
-        this.blockUI.start();
         const url = `${this.resourceUrl}/${sistemaId}/funcao-dados`;
-        return this.http.get(url)
-            .map((res: Response) => res.json().map(json => json.nome));
+        return this.http.get<string[]>(url);
     }
 
     dropDown(): Observable<any> {
-        return this.http.get(this.resourceUrl + '/drop-down')
-            .map((res: Response) => res.json());
+        return this.http.get(this.resourceUrl + '/drop-down');
     }
 
     dropDownPEAnalitico(idSistema): Observable<any> {
-        this.blockUI.start();
-        return this.http.get(this.resourceUrlPEAnalitico + '/drop-down/' + idSistema)
-            .map((res: Response) => res.json());
+        return this.http.get(this.resourceUrlPEAnalitico + '/drop-down/' + idSistema);
     }
 
     autoCompletePEAnalitico(name: String, idFuncionalidade: number): Observable<any> {
         const url = `${this.resourceUrlPEAnalitico}/fd?name=${name}&idFuncionalidade=${idFuncionalidade}`;
-        return this.http.get(url)
-            .map((res: Response) => res.json());
+        return this.http.get(url);
     }
 
     recuperarFuncaoDadosPorIdNome(id: number, nome: string): Observable<FuncaoDados> {
         const url = `${this.resourceUrl}/${id}/funcao-dados-versionavel/${nome}`;
-        return this.http.get(url)
-            .map((res: Response) => res.json());
+        return this.http.get<FuncaoDados>(url);
     }
 
     public getById(id: Number): Observable<FuncaoDados> {
         const url = `${this.resourceUrl}/${id}`;
-        this.blockUI.start();
-        return this.http.get(url).map((res) => {
-            return this.convertItemFromServer(res.json());
-        });
+        return this.http.get<FuncaoDados>(url);
     }
 
     public getFuncaoDadosAnalise(id: number): Observable<ResponseWrapper> {
         const url = `${this.resourceUrl}/analise/${id}`;
-        return this.http.get(url).map((res: Response) => {
-            return this.convertResponseFuncaoDados(res);
-        });
+        return this.http.get<ResponseWrapper>(url);
     }
 
     public getFuncaoDadosByAnalise(analise: Analise): Observable<FuncaoDados[]> {
         const url = `${this.resourceUrl}-dto/analise/${analise.id}`;
-        return this.http.get(url).map((res) => {
-            return this.convertJsonToFucaoDados(res);
-        });
+        return this.http.get<FuncaoDados[]>(url);
     }
 
     public getFuncaoDadosByIdAnalise(id: Number): Observable<any[]> {
-        this.blockUI.start();
         const url = `${this.resourceUrl}-dto/analise/${id}`;
-        return this.http.get(url).map((res) => {
-            return res.json();
-        }).finally(() => this.blockUI.stop());
+        return this.http.get<any[]>(url);
     }
 
     getFuncaoDadosBaseline(id: number): Observable<FuncaoDados> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            return this.convertItemFromServer(res.json());
-        });
+        return this.http.get<FuncaoDados>(`${this.resourceUrl}/${id}`);
     }
 
     getFuncaoTransacaoBaseline(id: number): Observable<FuncaoTransacao> {
-        return this.http.get(`${this.funcaoTransacaoResourceUrl}/${id}`).map((res: Response) => {
-            const resposta = this.convertJsonToSinteticoTransacao(res.json());
-            return resposta;
-        });
+        return this.http.get<FuncaoTransacao>(`${this.funcaoTransacaoResourceUrl}/${id}`);
     }
 
     getManualDeAnalise(id: number): Observable<Manual> {
-        return this.http.get(`${this.manualResourceUrl}/${id}`).map((res: Response) => {
-            const resposta = this.convertJsonManual(res.json());
-            return resposta;
-        });
+        return this.http.get<Manual>(`${this.manualResourceUrl}/${id}`);
     }
 
     private convertJsonToSintetico(json: any): FuncaoDados {
@@ -132,14 +105,11 @@ export class FuncaoDadosService {
     }
 
     public delete(id: number): Observable<Response> {
-        this.blockUI.start();
-        return this.http.delete(`${this.resourceUrl}/${id}`).finally(() => {
-            this.blockUI.stop();
-        });
+        return this.http.delete<Response>(`${this.resourceUrl}/${id}`);
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
+    private convertResponse(res): ResponseWrapper {
+        const jsonResponse = res;
         const result = [];
         for (let i = 0; i < jsonResponse.length; i++) {
             result.push(this.convertItem(jsonResponse[i]));
@@ -151,8 +121,8 @@ export class FuncaoDadosService {
         return FuncaoDados.convertJsonToObject(json);
     }
 
-    private convertResponseFuncaoDados(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
+    private convertResponseFuncaoDados(res): ResponseWrapper {
+        const jsonResponse = res;
         const result = [];
         for (let i = 0; i < jsonResponse.length; i++) {
             result.push(this.convertItem(jsonResponse[i]));
@@ -174,38 +144,26 @@ export class FuncaoDadosService {
     }
 
     create(funcaoDados: FuncaoDados, idAnalise: Number): Observable<any> {
-        this.blockUI.start();
         const json = funcaoDados.toJSONState();
-        return this.http.post(`${this.resourceUrl}/${idAnalise}`, json).map((res: Response) => {
-            return res.json();
-        });
+        return this.http.post(`${this.resourceUrl}/${idAnalise}`, json);
     }
 
     update(funcaoDados: FuncaoDados) {
-        this.blockUI.start();
         const copy = funcaoDados.toJSONState();
-        return this.http.put(`${this.resourceUrl}/${copy.id}`, copy).map((res: Response) => {
-            return null;
-        }).catch((error: any) => {
+        return this.http.put(`${this.resourceUrl}/${copy.id}`, copy).pipe(catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg();
+                this.pageNotificationService.addErrorMessage(error);
                 return Observable.throw(new Error(error.status));
             }
-        }).finally(() => {
-            this.blockUI.stop();
-        });
+        }));
     }
 
     existsWithName(name: String, idAnalise: number, idFuncionalade: number, idModulo: number, id: number = 0): Observable<Boolean> {
         const url = `${this.resourceUrl}/${idAnalise}/${idFuncionalade}/${idModulo}?name=${name}&id=${id}`;
-        return this.http.get(url)
-            .map(res => res.json());
+        return this.http.get<Boolean>(url);
     }
     public getVWFuncaoDadosByIdAnalise(id: Number): Observable<any[]> {
-        this.blockUI.start();
         const url = `${this.vwresourceUrl}/${id}`;
-        return this.http.get(url).map((res) => {
-            return res.json();
-        }).finally(() => this.blockUI.stop());
+        return this.http.get<[]>(url);
     }
 }

@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
 
-import { TipoEquipeComponent } from './tipo-equipe.component';
-import { TipoEquipeDetailComponent } from './tipo-equipe-detail.component';
-import { TipoEquipeFormComponent } from './tipo-equipe-form.component';
-import { AuthGuard } from '@basis/angular-components';
-import { AdminGuard } from '../admin.guard';
+import { TipoEquipeFormComponent } from './tipo-equipe-form/tipo-equipe-form.component';
+import { AuthGuard } from '@nuvem/angular-base';
+import { TipoEquipeDetailComponent } from './tipo-equipe-detail/tipo-equipe-detail.component';
+import { AdminGuard } from '../util/admin.guard';
+import { TipoEquipeListComponent } from './tipo-equipe-list/tipo-equipe-list.component';
 
 export const tipoEquipeRoute: Routes = [
   {
     path: 'admin/tipoEquipe',
-    component: TipoEquipeComponent,
+    component: TipoEquipeListComponent,
     canActivate: [AuthGuard, AdminGuard]
   },
   {

@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { HttpService } from '@basis/angular-components';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 import { Contrato } from './contrato.model';
 import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
-import { GenericService } from '../util/service/generic.service';
 import { Organizacao } from '../organizacao';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class ContratoService {
@@ -17,64 +14,51 @@ export class ContratoService {
 
   searchUrl = environment.apiUrl + '/_search/contratoes';
 
-  @BlockUI() blockUI: NgBlockUI;
-
-  constructor(private http: HttpService, private dateUtils: JhiDateUtils, private genericService: GenericService) {}
+  constructor(private http: HttpClient, private dateUtils: JhiDateUtils) {}
 
   create(contrato: Contrato): Observable<Contrato> {
     const copy = this.convert(contrato);
-    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+    return this.http.post<Contrato>(this.resourceUrl, copy);
   }
 
   update(contrato: Contrato): Observable<Contrato> {
     const copy = this.convert(contrato);
-    return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+    return this.http.put<Contrato>(this.resourceUrl, copy);
   }
 
   findAllContratoesByOrganization(org: Organizacao): Observable<Contrato[]> {
-    this.blockUI.start();
-    return this.http.post(`${this.resourceUrl}/organizations`, org)
-      .map((res: Response) => res.json()).finally(() => this.blockUI.stop());
+    return this.http.post<Contrato[]>(`${this.resourceUrl}/organizations`, org);
   }
 
   find(id: number): Observable<Contrato> {
-    return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+    return this.http.get<Contrato>(`${this.resourceUrl}/${id}`);
   }
 
-  query(req?: any): Observable<ResponseWrapper> {
-    const options = createRequestOption(req);
-    return this.http.get(this.resourceUrl, options)
-      .map((res: Response) => this.convertResponse(res));
-  }
+  // query(req?: any): Observable<ResponseWrapper> {
+  //   const options = createRequestOption(req);
+  //   return this.http.get(this.resourceUrl, options)
+  //     .map((res: Response) => this.convertResponse(res));
+  // }
 
   delete(id: number): Observable<Response> {
-    return this.http.delete(`${this.resourceUrl}/${id}`);
+    return this.http.delete<Response>(`${this.resourceUrl}/${id}`);
   }
 
-  private convertResponse(res: Response): ResponseWrapper {
-    const jsonResponse = res.json();
-    const result = [];
-    for (let i = 0; i < jsonResponse.length; i++) {
-      result.push(this.convertItemFromServer(jsonResponse[i]));
-    }
-    return new ResponseWrapper(res.headers, result, res.status);
-  }
+  // private convertResponse(res: Response): ResponseWrapper {
+  //   const jsonResponse = res.json();
+  //   const result = [];
+  //   for (let i = 0; i < jsonResponse.length; i++) {
+  //     result.push(this.convertItemFromServer(jsonResponse[i]));
+  //   }
+  //   return new ResponseWrapper(res.headers, result, res.status);
+  // }
 
-  /**
-   * Convert a returned JSON object to Contrato.
-   */
-  private convertItemFromServer(json: any): Contrato {
-    return this.genericService.convertJsonToObject(json, new Contrato());
-  }
+  // /**
+  //  * Convert a returned JSON object to Contrato.
+  //  */
+  // private convertItemFromServer(json: any): Contrato {
+  //   return this.genericService.convertJsonToObject(json, new Contrato());
+  // }
 
   /**
    * Convert a Contrato to a JSON which can be sent to the server.

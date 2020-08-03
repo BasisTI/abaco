@@ -1,78 +1,42 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DatatableModule } from '@basis/angular-components';
-import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
-import {
-  ButtonModule,
-  InputTextModule,
-  SpinnerModule,
-  CalendarModule,
-  DropdownModule,
-  RadioButtonModule,
-  ConfirmDialogModule,
-  DataTableModule,
-  ConfirmationService,
-  MultiSelectModule
-} from 'primeng/primeng';
 
 import {
   UserService,
-  UserComponent,
+  UserListComponent,
   UserDetailComponent,
   UserFormComponent,
   userRoute
 } from './';
-import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
 
-import { StringConcatService } from '../shared/string-concat.service';
 
-import { HttpClient } from '@angular/common/http';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AbacoButtonsModule } from '../components/abaco-buttons/abaco-buttons.module';
+import { DatatableModule } from '@nuvem/primeng-components';
+import { SharedModule } from '../shared/shared.module';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
 
 @NgModule({
   imports: [
     CommonModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     RouterModule.forRoot(userRoute, { useHash: true }),
     DatatableModule,
-    ButtonModule,
-    SpinnerModule,
-    CalendarModule,
-    DropdownModule,
-    RadioButtonModule,
-    InputTextModule,
-    DataTableModule,
-    ConfirmDialogModule,
+    DatatableModule,
     AbacoButtonsModule,
-    MultiSelectModule,
-    BotoesExportacaoModule,
-    TranslateModule.forChild({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    })
+    SharedModule
   ],
   declarations: [
-    UserComponent,
+    UserListComponent,
     UserDetailComponent,
     UserFormComponent
   ],
   providers: [
     UserService,
-    ConfirmationService,
-    StringConcatService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AbacoUserModule {}
+export class UserModule {}

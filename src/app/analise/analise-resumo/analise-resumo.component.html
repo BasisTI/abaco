@@ -1,0 +1,174 @@
+<p-tabView (onChange)="handleChange($event)" *ngIf="analise">
+    <p-tabPanel [header]="this.getLabel('Geral')"></p-tabPanel>
+
+    <p-tabPanel [header]="this.getLabel('Funções de Dados')"></p-tabPanel>
+
+    <p-tabPanel [header]="this.getLabel('Funções de Transações')" [disabled]="disableAba" ></p-tabPanel>
+
+    <p-tabPanel [header]="this.getLabel('Resumo')" [selected]="true">
+        <div class="ui-g ui-fluid">
+            <div class="card card-w-title">
+                <div class="ui-g-12" *ngIf="analise">
+                    <h2>{{this.getLabel('PF Final Total:')}} {{ pfTotal }}</h2>
+                    <h2>{{this.getLabel('PF Final Ajustado:')}} {{ pfAjustada }}</h2>
+                    <div class="ui-g-12 ui-md-12 ui-sm-12">
+                        <div class="ui-g-12 ui-md-12 ui-sm-12">
+                          <h2>Complexidade</h2>
+                          <basis-datatable
+                              [value]="linhaResumo"
+                              [paginator]="false"
+                              disableEdit="true"
+                              disableView="true"
+                              disableDelete="true"
+                              disableClone="true"
+                              >
+                            <p-column >
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo.tipo}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('SEM')">
+                              <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                {{ linhaResumo.sem}}
+                              </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Baixa')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo.baixa}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Média')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo.media}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Alta')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo.alta}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('INM')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo.inm}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('Qtd')">
+                                <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                  {{ linhaResumo.quantidadeTipo}}
+                                </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('PF Total')">
+                              <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                {{ linhaResumo.pfTotal | number }}
+                              </ng-template>
+                            </p-column>
+                            <p-column [header]="this.getLabel('PF Ajustado')">
+                              <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                {{ linhaResumo.pfAjustada | number }}
+                              </ng-template>
+                            </p-column>
+                          </basis-datatable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g">
+          <div class="ui-g ui-md-12" >
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+              <app-white-button
+                      [buttonLabel]="this.getLabel('Voltar')"
+                      routerLink="/analise">
+              </app-white-button>
+            </div>
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+              <app-green-button *ngIf="!this.isView"
+                      [buttonLabel]="this.getLabel('Gerar Relatório Excel')"
+                      (click)="geraRelatorioExcelBrowser()">
+              </app-green-button>
+            </div>
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+              <app-gray-button *ngIf="!this.isView"
+                      [buttonLabel]="this.getLabel('Gerar Relatório')"
+                      (click)="geraRelatorioPdfDetalhadoBrowser()">
+              </app-gray-button>
+            </div>
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+              <app-red-button *ngIf="!this.isView"
+                      [buttonLabel]="this.getLabel('Bloquear Analise')"
+                      (click)="bloquearAnalise()">
+              </app-red-button>
+            </div>
+            <div class="ui-g-2 ui-md-2 ui-sm-12">
+              <app-blue-button *ngIf="!this.isView"
+                      [buttonLabel]="this.getLabel('Compartilhar Analise')"
+                      (click)="openCompartilharDialog()">
+              </app-blue-button>
+            </div>
+          </div>
+      </div>
+    </p-tabPanel>
+</p-tabView>
+<p-dialog [header]="this.getLabel('CompartilharAnalise')" [(visible)]="mostrarDialog"
+          [modal]="true" (onHide)="limparSelecaoCompartilhar()" *ngIf="equipeShare">
+    <basis-datatable
+            [(value)]="equipeShare"
+            [(selection)]="selectedEquipes"
+            dataKey="equipeId">
+        <p-column
+                selectionMode="multiple"
+                [style]="{'width':'10%'}">
+        </p-column>
+        <p-column
+                [header]="this.getLabel('Equipe')"
+                field="nomeEquipe">
+        </p-column>
+        <p-column
+                [header]="this.getLabel('SomenteVisualizar')"
+                field="viewOnly"
+                [style]="{'width':'12%'}">
+            <ng-template let-col let-equipeShare="rowData" pTemplate="body">
+                <p-toggleButton [(ngModel)]="equipeShare.viewOnly" onLabel="Sim" offLabel="Não"></p-toggleButton>
+            </ng-template>
+        </p-column>
+    </basis-datatable>
+
+    <app-green-button [buttonLabel]="'Adicionar'" (click)="salvarCompartilhar()"
+                      style="float:right; margin-top: 5px"></app-green-button>
+    <br/>
+    <br/>
+
+    <hr/>
+    <h3>Compartilhada com:</h3>
+    <basis-datatable
+            *ngIf="analise && analise.compartilhadas"
+            [(value)]="analise.compartilhadas"
+            selectionMode="single"
+            [(selection)]="selectedToDelete"
+            dataKey="equipeId">
+        <p-column
+                [header]="this.getLabel('Equipe')"
+                field="nomeEquipe">
+        </p-column>
+
+        <p-column
+                [header]="this.getLabel('SomenteVisualizar')"
+                field="viewOnly"
+                [style]="{'width':'12%'}">
+            <ng-template let-col let-analiseTemp="rowData" pTemplate="body">
+                <p-toggleButton [(ngModel)]="analiseTemp.viewOnly" onLabel="Sim" offLabel="Não"
+                                (onChange)="updateViewOnly()"></p-toggleButton>
+            </ng-template>
+        </p-column>
+    </basis-datatable>
+    <app-red-button [buttonLabel]="this.getLabel('Remover')" (click)="deletarCompartilhar()"
+                    style="float:right; margin-top: 5px"></app-red-button>
+</p-dialog>
+<p-confirmDialog [header]="this.getLabel('Global.Mensagens.Confirmacao')" #dialog>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" [label]="'Não'"
+                (click)="dialog.reject()"></button>
+        <button type="button" pButton icon="fa-check" [label]="'Sim'"
+                (click)="dialog.accept()"></button>
+    </p-footer>
+</p-confirmDialog>

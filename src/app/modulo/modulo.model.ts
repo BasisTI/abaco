@@ -1,6 +1,6 @@
-import { BaseEntity, MappableEntities } from '../shared';
-import { Sistema } from '../sistema';
+import { BaseEntity } from '../shared';
 import { Funcionalidade } from '../funcionalidade';
+import { MappableEntities } from '../shared/mappable-entities';
 
 export class Modulo implements BaseEntity {
 

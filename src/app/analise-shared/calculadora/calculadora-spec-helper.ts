@@ -1,8 +1,8 @@
+import { FuncaoDados } from 'src/app/funcao-dados';
+import { FuncaoTransacao } from 'src/app/funcao-transacao';
 import { FatorAjuste } from '../../fator-ajuste/index';
-import { Complexidade } from '../complexidade-enum';
 import { FatorAjusteLabelGenerator } from '../../shared/fator-ajuste-label-generator';
-import { FuncaoDados } from '../../funcao-dados';
-import { FuncaoTransacao } from '../../funcao-transacao';
+import { Complexidade } from '../complexidade-enum';
 
 export class CalculadoraSpecHelper {
 

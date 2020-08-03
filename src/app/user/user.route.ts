@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { UserListComponent } from './user-list/user-list.component';
+import { AuthGuard } from '@nuvem/angular-base';
+import { AdminGuard } from '../util/admin.guard';
+import { UserFormComponent } from './user-form/user-form.component';
+import { UserDetailComponent } from './user-detail/user-detail.component';
 
-import { UserComponent } from './user.component';
-import { UserDetailComponent } from './user-detail.component';
-import { UserFormComponent } from './user-form.component';
-import { AuthGuard } from '@basis/angular-components';
-import { AdminGuard } from '../admin.guard';
 
 export const userRoute: Routes = [
   {
     path: 'admin/user',
-    component: UserComponent,
+    component: UserListComponent,
     canActivate: [AuthGuard, AdminGuard]
   },
   {

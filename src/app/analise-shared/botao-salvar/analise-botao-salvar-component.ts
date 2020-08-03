@@ -1,13 +1,11 @@
-import { TranslateService } from '@ngx-translate/core';
 import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 
 import { Analise, AnaliseService } from '../../analise';
-import { ResponseWrapper, AnaliseSharedDataService, PageNotificationService } from '../../shared';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-
 import * as _ from 'lodash';
 import { Router } from '@angular/router';
+import { AnaliseSharedDataService } from 'src/app/shared/analise-shared-data.service';
+import { PageNotificationService } from '@nuvem/primeng-components';
+import { Subscription, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-analise-botao-salvar',
@@ -26,15 +24,10 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
     private pageNotificationService: PageNotificationService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
-    private translate: TranslateService
   ) { }
 
   getLabel(label) {
-    let str: any;
-    this.translate.get(label).subscribe((res: string) => {
-        str = res;
-    }).unsubscribe();
-    return str;
+    return label;
   }
 
   habilitarBotaoSalvar(): boolean {
@@ -96,7 +89,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   private subscribeToUpdateResponse(result: Observable<any>) {
     this.updateSubscription = result.subscribe((res: Analise) => {
       this.analise = res;
-      this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgAnaliseAtualizadaSucesso'));
+      this.pageNotificationService.addSuccessMessage(this.getLabel('Analise.Analise.Mensagens.msgAnaliseAtualizadaSucesso'));
     });
   }
 
@@ -108,7 +101,7 @@ export class AnaliseBotaoSalvarComponent implements OnDestroy {
   private subscribeToSaveResponse(result: Observable<any>) {
     this.saveSubscription = result.subscribe((res: Analise) => {
       this.analise = res;
-      this.pageNotificationService.addSuccessMsg(this.getLabel('Analise.Analise.Mensagens.msgAnaliseSalvaSucesso'));
+      this.pageNotificationService.addSuccessMessage(this.getLabel('Análise salva com sucesso'));
 
       this.router.navigate(['/analise', this.analise.id, 'edit']);
     });

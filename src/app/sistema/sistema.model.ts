@@ -1,6 +1,7 @@
-import { BaseEntity, MappableEntities } from '../shared';
-import { Modulo } from '../modulo';
+import { MappableEntities } from '../shared/mappable-entities';
+import { BaseEntity } from '../shared';
 import { Funcionalidade } from '../funcionalidade';
+import { Modulo } from '../modulo';
 
 export enum TipoSistema {
   'NOVO' = 'NOVO',

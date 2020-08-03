@@ -1,13 +1,13 @@
-import {TranslateService} from '@ngx-translate/core';
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {AnaliseSharedDataService, PageNotificationService} from '../shared';
 import {Sistema, SistemaService} from '../sistema/index';
 import {Modulo, ModuloService} from '../modulo';
 import {Funcionalidade, FuncionalidadeService} from '../funcionalidade';
-import {Subscription} from 'rxjs/Subscription';
 
 import * as _ from 'lodash';
-import {FuncaoDadosService} from '../funcao-dados/funcao-dados.service';
+import { Subscription } from 'rxjs';
+import { AnaliseSharedDataService } from '../shared/analise-shared-data.service';
+import { PageNotificationService } from '@nuvem/primeng-components';
+import { FuncaoDadosService } from '../funcao-dados/funcao-dados.service';
 
 @Component({
     selector: 'app-analise-modulo-funcionalidade',
@@ -57,16 +57,11 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
         private pageNotificationService: PageNotificationService,
         private funcaoDadosService: FuncaoDadosService,
-        private translate: TranslateService
     ) {
     }
 
     getLabel(label) {
-        let str: any;
-        this.translate.get(label).subscribe((res: string) => {
-            str = res;
-        }).unsubscribe();
-        return str;
+        return label;
     }
 
     ngOnInit() {
@@ -296,7 +291,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     adicionarModulo() {
         if (!this.novoModulo.nome) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
             return;
         }
         const sistemaId = this.sistema.id;
@@ -320,22 +315,22 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     private criarMensagemDeSucessoDaCriacaoDoModulo(nomeModulo: string, nomeSistema: string) {
         this.pageNotificationService
-            .addSuccessMsg(`${this.getLabel('Cadastros.Modulo.Mensagens.msgModulo')} ${nomeModulo} ${this.getLabel('Cadastros.Modulo.Mensagens.msgCriadoParaSistema')} ${nomeSistema}`);
+            .addSuccessMessage(`${this.getLabel('Módulo ')} ${nomeModulo} ${this.getLabel(' criado para o Sistema')} ${nomeSistema}`);
     }
 
     funcionalidadeDropdownPlaceholder() {
         if (this.isModuloSelected()) {
             return this.funcionalidadeDropdownPlaceHolderComModuloSelecionado();
         } else {
-            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneModuloCarregarFuncionalidades');
+            return this.getLabel('Selecione um Módulo para carregar as Funcionalidades');
         }
     }
 
     private funcionalidadeDropdownPlaceHolderComModuloSelecionado(): string {
         if (this.moduloSelecionadoTemFuncionalidade()) {
-            return this.getLabel('Analise.Analise.Mensagens.msgSelecioneFuncionalidade');
+            return this.getLabel('Selecione uma Funcionalidade');
         } else {
-            return this.getLabel('Analise.Analise.Mensagens.msgNenhumaFuncionalidadeCadastrado');
+            return this.getLabel('Nenhuma Funcionalidade Cadastrada');
         }
     }
 
@@ -356,7 +351,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     adicionarFuncionalidade() {
         if (this.novaFuncionalidade.nome === undefined) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
             return;
         }
         const moduloId = this.moduloSelecionado.id;
@@ -397,7 +392,7 @@ export class ModuloFuncionalidadeComponent implements OnInit, OnDestroy {
 
     private criarMensagemDeSucessoDaCriacaoDaFuncionalidade(nomeFunc: string, nomeModulo: string, nomeSistema: string) {
         this.pageNotificationService
-            .addSuccessMsg(`${this.getLabel('Analise.Analise.Mensagens.msgFuncionalidade')} ${nomeFunc} ${this.getLabel('Analise.Analise.Mensagens.msgCriadoNoModulo')} ${nomeModulo} ${this.getLabel('Analise.Analise.Mensagens.msgNoSistema')} ${nomeSistema}`);
+            .addSuccessMessage(`${this.getLabel('Analise.Analise.Mensagens.msgFuncionalidade')} ${nomeFunc} ${this.getLabel('Analise.Analise.Mensagens.msgCriadoNoModulo')} ${nomeModulo} ${this.getLabel('Analise.Analise.Mensagens.msgNoSistema')} ${nomeSistema}`);
     }
 
     ngOnDestroy() {

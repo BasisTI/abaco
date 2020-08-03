@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
-
+import { Routes } from '@angular/router';
 import { SenhaComponent } from './senha.component';
 import { SenhaFormComponent } from './senha.form-component';
+
 
 export const senhaRoute: Routes = [
   {
     path: 'senha',
-    component: SenhaComponent
+    component: SenhaFormComponent
   },
   {
-    path: 'senha/edit/:login',
+    path: 'senha',
     component: SenhaFormComponent
   }
 ];

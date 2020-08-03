@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { Analise } from '../analise/';
 
 import * as _ from 'lodash';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { FuncaoDados } from '../funcao-dados/index';
-import { FuncaoTransacao } from '../funcao-transacao/index';
+import { Subject, Observable } from 'rxjs';
+import { FuncaoDados } from '../funcao-dados';
+import { FuncaoTransacao } from '../funcao-transacao';
 
 @Injectable()
 export class AnaliseSharedDataService {

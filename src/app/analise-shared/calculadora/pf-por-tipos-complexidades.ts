@@ -1,6 +1,6 @@
 import { Complexidade } from '../complexidade-enum';
-import { TipoFuncaoDados } from '../../funcao-dados/funcao-dados.model';
-import { TipoFuncaoTransacao } from '../../funcao-transacao/funcao-transacao.model';
+import { TipoFuncaoDados } from 'src/app/funcao-dados';
+import { TipoFuncaoTransacao } from 'src/app/funcao-transacao';
 
 class PFPorComplexidade {
 

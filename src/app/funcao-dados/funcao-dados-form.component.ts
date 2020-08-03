@@ -1,10 +1,3 @@
-import { element } from 'protractor';
-import {MetodoContagem} from './../analise/analise.model';
-import {MemoryDatatableComponent} from './../memory-datatable/memory-datatable.component';
-import {Der} from './../der/der.model';
-import {TranslateService} from '@ngx-translate/core';
-import {FuncaoDados} from './funcao-dados.model';
-import {FatorAjuste} from '../fator-ajuste';
 import {
     AfterViewInit,
     ChangeDetectorRef,
@@ -16,49 +9,42 @@ import {
     QueryList,
     ViewChildren
 } from '@angular/core';
-import {BaselineAnalitico} from './../baseline/baseline-analitico.model';
-import {BaselineService} from './../baseline/baseline.service';
-import {AnaliseSharedDataService, PageNotificationService, ResponseWrapper} from '../shared';
-import {Analise, AnaliseService} from '../analise';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { Column, DatatableClickEvent, DatatableComponent, DatatableModule, PageNotificationService } from '@nuvem/primeng-components';
 import * as _ from 'lodash';
-import {Funcionalidade} from '../funcionalidade/index';
-import {Column, ConfirmationService, SelectItem} from 'primeng/primeng';
-import {BlockUI, NgBlockUI} from 'ng-block-ui';
-import {Calculadora} from '../analise-shared/calculadora';
-import {DatatableClickEvent} from '@basis/angular-components';
-import {ResumoFuncoes} from '../analise-shared/resumo-funcoes';
-import {Subscription} from 'rxjs/Subscription';
-
-import {FatorAjusteLabelGenerator} from '../shared/fator-ajuste-label-generator';
-import {DerChipItem} from '../analise-shared/der-chips/der-chip-item';
-import {DerChipConverter} from '../analise-shared/der-chips/der-chip-converter';
-import {AnaliseReferenciavel} from '../analise-shared/analise-referenciavel';
-import {FuncaoDadosService} from './funcao-dados.service';
-import {AnaliseSharedUtils} from '../analise-shared/analise-shared-utils';
-import {Manual} from '../manual';
-import {Modulo} from '../modulo';
-import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
-import {Impacto} from '../analise-shared/impacto-enum';
-
-import {FuncaoTransacao, TipoFuncaoTransacao} from './../funcao-transacao/funcao-transacao.model';
-import {CalculadoraTransacao} from './../analise-shared/calculadora-transacao';
-import {Alr} from '../alr/alr.model';
-import Base64Upload from '../../ckeditor/Base64Upload';
-import {ActivatedRoute, Router} from '@angular/router';
-import {FuncaoTransacaoService} from '../funcao-transacao/funcao-transacao.service';
-import {MessageUtil} from '../util/message.util';
-
-import {Observable, Subject} from 'rxjs/Rx';
-import { ForkJoinObservable } from 'rxjs/observable/ForkJoinObservable';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { exists } from 'fs';
-import { repeat } from 'rxjs/operator/repeat';
-import { EditorModule } from 'primeng/editor';
+import { ConfirmationService, SelectItem } from 'primeng';
+import { forkJoin, Observable, Subscription } from 'rxjs';
+import { Alr } from '../alr/alr.model';
+import { Analise, AnaliseService } from '../analise';
+import { AnaliseReferenciavel } from '../analise-shared/analise-referenciavel';
+import { AnaliseSharedUtils } from '../analise-shared/analise-shared-utils';
+import { Calculadora } from '../analise-shared/calculadora';
+import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
+import { DerChipItem } from '../analise-shared/der-chips/der-chip-item';
+import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
+import { ResumoFuncoes } from '../analise-shared/resumo-funcoes';
+import { FatorAjuste } from '../fator-ajuste';
+import { Funcionalidade } from '../funcionalidade/index';
+import { Manual } from '../manual';
+import { Modulo } from '../modulo';
+import { ResponseWrapper } from '../shared';
+import { AnaliseSharedDataService } from '../shared/analise-shared-data.service';
+import { FatorAjusteLabelGenerator } from '../shared/fator-ajuste-label-generator';
+import { MessageUtil } from '../util/message.util';
+import { FuncaoTransacaoService } from '../funcao-transacao/funcao-transacao.service';
+import { CalculadoraTransacao } from './../analise-shared/calculadora-transacao';
+import { MetodoContagem } from './../analise/analise.model';
+import { BaselineAnalitico } from './../baseline/baseline-analitico.model';
+import { BaselineService } from './../baseline/baseline.service';
+import { Der } from './../der/der.model';
+import { FuncaoTransacao, TipoFuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
+import { FuncaoDados } from './funcao-dados.model';
+import { FuncaoDadosService } from './funcao-dados.service';
 
 @Component({
     selector: 'app-analise-funcao-dados',
-    templateUrl: './funcao-dados-form.component.html'
+    templateUrl: './funcao-dados-form.component.html',
+    providers:[ConfirmationService]
 })
 export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
@@ -71,7 +57,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     @Input() uploadImagem = true;
     @Input() criacaoTabela = true;
 
-    @ViewChildren(MemoryDatatableComponent) tables: QueryList<MemoryDatatableComponent>;
+    @ViewChildren(DatatableModule) tables: QueryList<DatatableComponent>;
 
     public isDisabled = false;
 
@@ -79,7 +65,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
 
     textHeader: string;
     @Input() isView: boolean;
-    @BlockUI() blockUI: NgBlockUI;
     isEdit: boolean;
     crudExist = false;
     nomeInvalido: boolean;
@@ -153,17 +138,12 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         private funcaoTransacaoService: FuncaoTransacaoService,
         private analiseService: AnaliseService,
         private baselineService: BaselineService,
-        private translate: TranslateService,
         private router: Router,
     ) {
     }
 
-    getLabel(label: string | string[]) {
-        let str: any;
-        this.translateSubscriptions.push(this.translate.get(label).subscribe((res: string) => {
-            str = res;
-        }));
-        return str;
+    getLabel(label) {
+        return label;
     }
 
     ngOnInit() {
@@ -217,7 +197,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         }
         // este forEach rodará apenas 1 vez, devido ao @ViewChildren retornar um array
         this.tables.forEach(table => {
-            table.cols.forEach(column => {
+            table.columns.forEach(column => {
                 const item = this.colunasAMostrar.find(element =>
                     (element.header === column.header)
                 );
@@ -336,31 +316,31 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     *   Metodo responsavel por traduzir as classificacoes que ficam em função de dados
     */
     traduzirClassificacoes() {
-        this.translate.stream(['Cadastros.FuncaoDados.Classificacoes.ALI', 'Cadastros.FuncaoDados.Classificacoes.AIE'])
-            .subscribe((traducao) => {
-                this.classificacoes = [
-                    {label: traducao['Cadastros.FuncaoDados.Classificacoes.ALI'], value: 'ALI'},
-                    {label: traducao['Cadastros.FuncaoDados.Classificacoes.AIE'], value: 'AIE'},
-                ];
+        // this.translate.stream(['Cadastros.FuncaoDados.Classificacoes.ALI', 'Cadastros.FuncaoDados.Classificacoes.AIE'])
+        //     .subscribe((traducao) => {
+        //         this.classificacoes = [
+        //             {label: traducao['Cadastros.FuncaoDados.Classificacoes.ALI'], value: 'ALI'},
+        //             {label: traducao['Cadastros.FuncaoDados.Classificacoes.AIE'], value: 'AIE'},
+        //         ];
 
-            });
+        //     });
     }
 
     /*
     *   Metodo responsavel por traduzir os tipos de impacto em função de dados
     */
     traduzirImpactos() {
-        this.translate.stream(['Cadastros.FuncaoDados.Impactos.Inclusao', 'Cadastros.FuncaoDados.Impactos.Alteracao',
-            'Cadastros.FuncaoDados.Impactos.Exclusao', 'Cadastros.FuncaoDados.Impactos.Conversao',
-            'Cadastros.FuncaoDados.Impactos.Outros']).subscribe((traducao) => {
-            this.impacto = [
-                {label: traducao['Cadastros.FuncaoDados.Impactos.Inclusao'], value: 'INCLUSAO'},
-                {label: traducao['Cadastros.FuncaoDados.Impactos.Alteracao'], value: 'ALTERACAO'},
-                {label: traducao['Cadastros.FuncaoDados.Impactos.Exclusao'], value: 'EXCLUSAO'},
-                {label: traducao['Cadastros.FuncaoDados.Impactos.Conversao'], value: 'CONVERSAO'},
-                {label: traducao['Cadastros.FuncaoDados.Impactos.Outros'], value: 'ITENS_NAO_MENSURAVEIS'}
-            ];
-        });
+        // this.translate.stream(['Cadastros.FuncaoDados.Impactos.Inclusao', 'Cadastros.FuncaoDados.Impactos.Alteracao',
+        //     'Cadastros.FuncaoDados.Impactos.Exclusao', 'Cadastros.FuncaoDados.Impactos.Conversao',
+        //     'Cadastros.FuncaoDados.Impactos.Outros']).subscribe((traducao) => {
+        //     this.impacto = [
+        //         {label: traducao['Cadastros.FuncaoDados.Impactos.Inclusao'], value: 'INCLUSAO'},
+        //         {label: traducao['Cadastros.FuncaoDados.Impactos.Alteracao'], value: 'ALTERACAO'},
+        //         {label: traducao['Cadastros.FuncaoDados.Impactos.Exclusao'], value: 'EXCLUSAO'},
+        //         {label: traducao['Cadastros.FuncaoDados.Impactos.Conversao'], value: 'CONVERSAO'},
+        //         {label: traducao['Cadastros.FuncaoDados.Impactos.Outros'], value: 'ITENS_NAO_MENSURAVEIS'}
+        //     ];
+        // });
     }
 
     updateNameImpacto(impacto: string) {
@@ -390,9 +370,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             } else {
                 this.adicionar();
             }
-        }
-        if (this.blockUI.isActive) {
-            this.blockUI.stop();
         }
     }
 
@@ -456,8 +433,8 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     }
 
     getTextDialog() {
-        this.textHeader = this.isEdit ? this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlterarFuncaoDados')
-            : this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAdicionarFuncaoDados');
+        this.textHeader = this.isEdit ? this.getLabel('Alterar Função de Dados')
+            : this.getLabel('Adicionar Função de Dados');
     }
 
     private setFieldsFilter() {
@@ -547,7 +524,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         forkJoin(lstFuncaoDadosWithExist).subscribe(listExistWithName => {
             for(let value of listExistWithName){
                 if (value) {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.RegistroCadastrado'));
                     retorno = false;
                     break;
                 }
@@ -557,7 +534,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.fecharDialog();
                 this.estadoInicial();
                 this.resetarEstadoPosSalvar();
-                this.blockUI.stop();
                 lstFuncaoDados.forEach( funcaoDadosMultp => {
                     lstFuncaoDadosToSave.push(
                         this.funcaoDadosService.create(funcaoDadosMultp, this.analise.id)
@@ -565,17 +541,16 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 })
                 forkJoin(lstFuncaoDadosToSave).subscribe(respCreate => {
                     respCreate.forEach((funcaoDados) => {
-                        this.pageNotificationService.addCreateMsgWithName(funcaoDados.name);
+                        this.pageNotificationService.addCreateMsg(funcaoDados.name);
                         let funcaoDadosTable: FuncaoDados = new FuncaoDados().copyFromJSON(funcaoDados);
                         funcaoDadosTable.funcionalidade = funcaoDadosCalculada.funcionalidade;
                         this.setFields(funcaoDadosTable);
                         this.funcoesDados.push(funcaoDadosTable);
                     });
-                    this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
+                    this.analiseService.updateSomaPf(this.analise.id).subscribe()
                     return true;
                 });
             }else{
-                this.blockUI.stop();
                 return false;
             }
         });
@@ -602,7 +577,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     adicionar(): boolean {
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
             return retorno;
         } else {
             this.desconverterChips();
@@ -617,7 +592,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.seletedFuncaoDados.funcionalidade.modulo.id).subscribe(value => {
                 if (value === false) {
                     this.funcaoDadosService.create(funcaoDadosCalculada, this.analise.id).subscribe((funcaoDados) => {
-                        this.pageNotificationService.addCreateMsgWithName(funcaoDadosCalculada.name);
+                        this.pageNotificationService.addCreateMsg(funcaoDadosCalculada.name);
                         funcaoDadosCalculada.id = funcaoDados.id;
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
@@ -625,10 +600,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.atualizaResumo();
                         this.estadoInicial();
                         this.resetarEstadoPosSalvar();
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{})
                     });
                 } else {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.RegistroCadastrado'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.RegistroCadastrado'));
                 }
                 return retorno;
             });
@@ -657,7 +632,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.seletedFuncaoDados.fatorAjuste === undefined) {
                 this.erroDeflator = false;
                 retorno = false;
-                this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneDeflator'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneDeflator'));
             }
         } else {
             this.erroDeflator = true;
@@ -691,7 +666,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
         }
 
         if (this.seletedFuncaoDados.funcionalidade === undefined) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneModuloFuncionalidade'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Cadastros.FuncaoDados.Mensagens.msgSelecioneModuloFuncionalidade'));
             this.erroModulo = true;
             retorno = false;
         } else {
@@ -711,7 +686,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     private editar() {
         const retorno: boolean = this.verifyDataRequire();
         if (!retorno) {
-            this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCampoObrigatorio'));
+            this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher o campo obrigatório!'));
             return;
         } else {
             this.funcaoDadosService.existsWithName(
@@ -730,10 +705,10 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                         this.setFields(funcaoDadosCalculada);
                         this.funcoesDados.push(funcaoDadosCalculada);
                         this.resetarEstadoPosSalvar();
-                        this.pageNotificationService.addSuccessMsg(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
-                '${funcaoDadosCalculada.name}' ${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlteradaComSucesso')}`);
+                        this.pageNotificationService.addSuccessMessage(`${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgFuncaoDados')}
+                '${funcaoDadosCalculada.name}' ${this.getLabel(' alterada com sucesso')}`);
                         this.fecharDialog();
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{})
                     });
                 });
         }
@@ -801,7 +776,6 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
                 this.disableTRDER();
                 this.configurarDialog();
-                this.blockUI.stop();
             });
     }
 
@@ -825,7 +799,7 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                 this.prepareToClone(funcaoDadosSelecionada);
                 this.seletedFuncaoDados.id = undefined;
                 this.seletedFuncaoDados.artificialId = undefined;
-                this.textHeader = this.getLabel('Cadastros.FuncaoDados.Mensagens.msgClonarFuncaoDados');
+                this.textHeader = this.getLabel('Clonar Função de Dados');
                 break;
             case 'crud':
                 this.createCrud(funcaoDadosSelecionada);
@@ -841,13 +815,13 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             .subscribe(existFuncaoTranasacao => {
                 if (!existFuncaoTranasacao) {
                     this.funcaoTransacaoService.create(funcaoTransacaoAtual, this.analise.id).subscribe(() => {
-                        this.pageNotificationService.addCreateMsgWithName(funcaoTransacaoAtual.name);
+                        this.pageNotificationService.addCreateMsg(funcaoTransacaoAtual.name);
                         this.resetarEstadoPosSalvar();
                         this.estadoInicial();
-                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
+                        this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{})
                     });
                 } else {
-                    this.pageNotificationService.addErrorMsg('CRUD já cadastrado!');
+                    this.pageNotificationService.addErrorMessage('CRUD já cadastrado!');
                 }
             });
     }
@@ -889,17 +863,17 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
                             this.funcaoTransacaoService.create(lstFuncaoTransacaoCrud[index], this.analise.id)
                             );
                     } else {
-                        this.pageNotificationService.addErrorMsg('CRUD já cadastrado!');
+                        this.pageNotificationService.addErrorMessage('CRUD já cadastrado!');
                     }
                     index++;
                 }
                 forkJoin(lstFuncaoTransacaoToInclud).subscribe(funcoesTransacoes => {
                     funcoesTransacoes.forEach(
                         () => {
-                            this.pageNotificationService.addCreateMsgWithName(funcoesTransacoes['name']);
+                            this.pageNotificationService.addCreateMsg(funcoesTransacoes['name']);
                             this.resetarEstadoPosSalvar();
                             this.estadoInicial();
-                            this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
+                            this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{})
                     })
                 })
             });
@@ -949,10 +923,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
             this.disableTRDER();
             this.configurarDialog();
-            this.pageNotificationService.addInfoMsg(
-                `${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgAlterandoFuncaoDados')} '${funcaoDadosSelecionada.name}'`
+            this.pageNotificationService.addInfoMessage(
+                `${this.getLabel('Alterando Função de Dados ')} '${funcaoDadosSelecionada.name}'`
             );
-            this.blockUI.stop();
         });
     }
 
@@ -965,10 +938,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             this.carregarValoresNaPaginaParaEdicao(this.seletedFuncaoDados);
             this.disableTRDER();
             this.configurarDialog();
-            this.pageNotificationService.addInfoMsg(
-                `${this.getLabel('Cadastros.FuncaoDados.Mensagens.msgClonandoFuncaoDados')} '${funcaoDadosSelecionada.name}'`
+            this.pageNotificationService.addInfoMessage(
+                `${this.getLabel('Clonando Função de Dados ')} '${funcaoDadosSelecionada.name}'`
             );
-            this.blockUI.stop();
         });
     }
 
@@ -986,7 +958,9 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
             const item : SelectItem = this.fatoresAjuste.find(item => {
                 return item.value && funcaoSelecionada.fatorAjuste.id === item.value['id'];
             });
-            funcaoSelecionada.fatorAjuste = item.value;
+            if(item && item.value){
+                funcaoSelecionada.fatorAjuste = item.value;
+            }
         }
     }
 
@@ -1033,19 +1007,19 @@ export class FuncaoDadosFormComponent implements OnInit, AfterViewInit {
     confirmDelete(funcaoDadosSelecionada: FuncaoDados) {
         this.confirmationService.confirm({
             message: `${this.getLabel(
-                'Cadastros.FuncaoDados.Mensagens.msgCertezaDesejaExcluirFuncaoDados')} '${funcaoDadosSelecionada.name}'?`,
+                'Tem certeza que deseja excluir a Função de Dados ')} '${funcaoDadosSelecionada.name}'?`,
             accept: () => {
                 this.funcaoDadosService.delete(funcaoDadosSelecionada.id).subscribe(value => {
                     this.funcoesDados = this.funcoesDados.filter((funcaoDados) => (funcaoDados.id !== funcaoDadosSelecionada.id));
-                    this.pageNotificationService.addDeleteMsgWithName(funcaoDadosSelecionada.name);
-                    this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{this.blockUI.stop();})
+                    this.pageNotificationService.addDeleteMsg(funcaoDadosSelecionada.name);
+                    this.analiseService.updateSomaPf(this.analise.id).subscribe(()=>{})
                 });
             }
         });
     }
 
     formataFatorAjuste(fatorAjuste: FatorAjuste): string {
-        return fatorAjuste ? FatorAjusteLabelGenerator.generate(fatorAjuste) : this.getLabel('Global.Mensagens.Nenhum');
+        return fatorAjuste ? FatorAjusteLabelGenerator.generate(fatorAjuste) : this.getLabel('Nenhum');
     }
 
     ordenarColunas(colunasAMostrarModificada: SelectItem[]) {

@@ -1,116 +1,51 @@
-import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {HttpModule} from '@angular/http';
-import {RouterModule} from '@angular/router';
-import {FormsModule} from '@angular/forms';
-import {DatatableModule} from '@basis/angular-components';
+import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { DatatableModule } from '@nuvem/primeng-components';
 import { FieldsetModule } from 'primeng/fieldset';
-
-
-import {BotoesExportacaoModule} from './../botoes-exportacao/botoes-exportacao.module';
-
-import {AbacoButtonsModule} from '../abaco-buttons/abaco-buttons.module';
-
-import {MemoryDataTableModule} from '../memory-datatable/memory-datatable.module';
-
+import { AbacoAnaliseBotaoSalvarModule } from '../analise-shared/botao-salvar/analise-botao-salvar.module';
+import { AbacoButtonsModule } from '../components/abaco-buttons/abaco-buttons.module';
+import { SharedModule } from '../shared/shared.module';
 import {
-    ButtonModule,
-    InputTextModule,
-    SpinnerModule,
-    CalendarModule,
-    DropdownModule,
-    RadioButtonModule,
-    ConfirmDialogModule,
-    ToggleButtonModule,
-    DialogModule,
-    CheckboxModule,
-    DataTableModule,
-    ConfirmationService,
-    TabViewModule,
-    InputTextareaModule,
-    MultiSelectModule
-} from 'primeng/primeng';
-
-import {
-    AnaliseService,
-    GrupoService,
-    AnaliseComponent,
     AnaliseDetailComponent,
-    AnaliseFormComponent,
-    AnaliseViewComponent,
-    analiseRoute
+    AnaliseFormComponent, AnaliseListComponent,
+    analiseRoute, AnaliseService,
+    AnaliseViewComponent, GrupoService
 } from './';
+import { FuncaoDadosModule } from '../funcao-dados/funcao-dados.module';
+import { FuncaoTransacaoModule } from '../funcao-transacao/funcao-transacao.module';
+import { AnaliseResumoComponent } from './analise-resumo/analise-resumo.component';
 
-import {AbacoFuncaoDadosModule} from '../funcao-dados/funcao-dados.module';
-import {AbacoSharedModule} from '../shared/abaco-shared.module';
-import {AbacoFuncaoTransacaoModule} from '../funcao-transacao/funcao-transacao.module';
-import {AbacoAnaliseResumoModule} from './resumo/analise-resumo.module';
-import {AbacoAnaliseBotaoSalvarModule} from '../analise-shared/botao-salvar/analise-botao-salvar.module';
-import {UtilModule} from '../util/util.module';
-import { GenericService } from '../util/service/generic.service';
 
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import {FuncaoDados} from '../funcao-dados';
-import {FuncaoTransacao} from '../funcao-transacao';
 
-export function createTranslateLoader(http: HttpClient) {
-    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-  }
+
 
 @NgModule({
     imports: [
         CommonModule,
-        HttpModule,
         FormsModule,
         RouterModule.forRoot(analiseRoute, {useHash: true}),
         DatatableModule,
-        ButtonModule,
-        SpinnerModule,
-        CalendarModule,
-        DropdownModule,
-        MultiSelectModule,
-        RadioButtonModule,
-        InputTextModule,
-        DataTableModule,
-        ConfirmDialogModule,
-        DialogModule,
-        ToggleButtonModule,
-        CheckboxModule,
         AbacoButtonsModule,
-        TabViewModule,
-        InputTextareaModule,
-        AbacoFuncaoDadosModule,
-        AbacoSharedModule,
-        AbacoFuncaoTransacaoModule,
-        AbacoAnaliseResumoModule,
+        FuncaoDadosModule,
+        FuncaoTransacaoModule,
         AbacoAnaliseBotaoSalvarModule,
-        BotoesExportacaoModule,
-        UtilModule,
-        MemoryDataTableModule,
         FieldsetModule,
-        TranslateModule.forChild({
-            loader: {
-              provide: TranslateLoader,
-              useFactory: (createTranslateLoader),
-              deps: [HttpClient]
-            }
-          })
+        SharedModule,
     ],
     declarations: [
-        AnaliseComponent,
+        AnaliseListComponent,
         AnaliseDetailComponent,
         AnaliseFormComponent,
         AnaliseViewComponent,
+        AnaliseResumoComponent,
     ],
     providers: [
         AnaliseService,
         GrupoService,
-        ConfirmationService,
-        GenericService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AbacoAnaliseModule {
+export class AnaliseModule {
 }

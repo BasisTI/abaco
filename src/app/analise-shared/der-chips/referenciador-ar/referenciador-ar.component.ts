@@ -1,16 +1,14 @@
 import {DerService} from './../../../der/der.service';
-import {FuncaoDadosService} from './../../../funcao-dados/funcao-dados.service';
-import {TranslateService} from '@ngx-translate/core';
 import {Component, EventEmitter, OnDestroy, OnInit, Output,} from '@angular/core';
 
 import {AnaliseSharedDataService} from '../../../shared/analise-shared-data.service';
 import {AnaliseService} from './../../../analise/analise.service';
-import {FuncaoDados} from '../../../funcao-dados/funcao-dados.model';
 import {Der} from '../../../der/der.model';
-import {Subscription} from 'rxjs/Subscription';
 import {ResponseWrapper} from '../../../shared';
-import {BaselineService} from '../../../baseline';
-import {BlockUI, NgBlockUI} from 'ng-block-ui';
+import { Subscription } from 'rxjs';
+import { BaselineService } from 'src/app/baseline';
+import { FuncaoDados } from 'src/app/funcao-dados';
+import { FuncaoDadosService } from 'src/app/funcao-dados/funcao-dados.service';
 
 @Component({
     selector: 'app-analise-referenciador-ar',
@@ -18,7 +16,6 @@ import {BlockUI, NgBlockUI} from 'ng-block-ui';
 })
 export class ReferenciadorArComponent implements OnInit, OnDestroy {
 
-    @BlockUI() blockUI: NgBlockUI;
 
     @Output()
     dersReferenciadosEvent: EventEmitter<Der[]> = new EventEmitter<Der[]>();
@@ -51,25 +48,19 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
         private analiseSharedDataService: AnaliseSharedDataService,
         private analiseService: AnaliseService,
         private baselineService: BaselineService,
-        private translate: TranslateService,
         private funcaoDadosService: FuncaoDadosService,
         private derService: DerService
     ) {
     }
 
     getLabel(label) {
-        let str: any;
-        this.translate.get(label).subscribe((res: string) => {
-            str = res;
-        }).unsubscribe();
-        return str;
+        return label;
     }
 
     ngOnInit() {
     }
 
     private getFuncoesDados() {
-        this.blockUI.start();
         this.funcoesDados = [];
         this.funcaoDadosService.dropDownPEAnalitico(this.analiseSharedDataService.analise.sistema.id).subscribe(res => {
             this.funcoesDados = this.funcoesDados.concat(res.map((item) => {
@@ -78,7 +69,6 @@ export class ReferenciadorArComponent implements OnInit, OnDestroy {
                 fd.name = item.name;
                 return fd;
             }));
-            this.blockUI.stop();
         });
     }
 

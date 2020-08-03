@@ -4,70 +4,77 @@ import { Injectable } from '@angular/core';
 /**
  * An utility service for date.
  */
-@Injectable()
+@Injectable({
+    providedIn: "root"
+})
 export class JhiDateUtils {
 
-  private pattern = 'yyyy-MM-dd';
+    private readonly _pattern = 'yyyy-MM-dd';
 
-  private datePipe: DatePipe;
+    private readonly _datePipe: DatePipe;
 
-  constructor() {
-    this.datePipe = new DatePipe('en');
-  }
-
-  /**
-   * Method to convert the date time from server into JS date object
-   */
-  convertDateTimeFromServer(date: any) {
-    if (date) {
-      return new Date(date);
-    } else {
-      return null;
+    constructor() {
+        this._datePipe = new DatePipe('en');
     }
-  }
 
-  /**
-   * Method to convert the date from server into JS date object
-   */
-  convertLocalDateFromServer(date: any) {
-    if (date) {
-      const dateString = date.split('-');
-      return new Date(dateString[0], dateString[1] - 1, dateString[2]);
-    }
-    return null;
-  }
+    /**
+     * Method to convert the date time from server into JS date object
+     * @param date yyyy-mm-dd h:i:s
+     */
+    convertDateTimeFromServer(date: string): Date | null {
+        if (date) {
+            return new Date(date);
+        }
 
-  /**
-   * Method to convert the JS date object into specified date pattern
-   */
-  convertLocalDateToServer(date: any, pattern = this.pattern) {
-    if (date) {
-      const newDate = new Date(date);
-      return this.datePipe.transform(newDate, pattern);
-    } else {
-      return null;
+        return null;
     }
-  }
 
-  /**
-   * Method to get the default date pattern
-   */
-  dateformat() {
-    return this.pattern;
-  }
+    /**
+     * Method to convert the date from server into JS date object
+     * @param date yyyy/mm/dd
+     */
+    convertLocalDateFromServer(date: string) {
+        if (date) {
+            return new Date(`${date} 00:00:00`);
+        }
 
-  // TODO Change this method when moving from datetime-local input to NgbDatePicker
-  toDate(date: any): Date {
-    if (date === undefined || date === null) {
-      return null;
+        return null;
     }
-    const dateParts = date.split(/\D+/);
-    if (dateParts.length === 7) {
-      return new Date(dateParts[0], dateParts[1] - 1, dateParts[2], dateParts[3], dateParts[4], dateParts[5], dateParts[6]);
+
+    /**
+     * Method to convert the JS date object into specified date pattern
+     */
+    convertLocalDateToServer(date: string, pattern = this._pattern) {
+        if (date) {
+            const newDate = new Date(date);
+            return this._datePipe.transform(newDate, pattern);
+        } else {
+            return null;
+        }
     }
-    if (dateParts.length === 6) {
-      return new Date(dateParts[0], dateParts[1] - 1, dateParts[2], dateParts[3], dateParts[4], dateParts[5]);
+
+    /**
+     * Method to get the default date pattern
+     */
+    dateformat() {
+        return this._pattern;
     }
-    return new Date(dateParts[0], dateParts[1] - 1, dateParts[2], dateParts[3], dateParts[4]);
-  }
+
+    // TODO Change this method when moving from datetime-local input to NgbDatePicker
+    toDate(date: string): Date {
+
+        if (date) {
+            const dateParts = date.split(/\D+/);
+            const minDateTimeSize = 5;
+
+            if (dateParts.length >= minDateTimeSize) {
+                return new Date(date);
+            } else {
+                return new Date(`${date} 00:00:00`);
+            }
+        }
+
+        return null;
+
+    }
 }

@@ -1,19 +1,18 @@
-import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit, OnDestroy, NgZone} from '@angular/core';
-import { Response } from '@angular/http';
 import { LoginService } from './login.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { AuthService, HttpService } from '@basis/angular-components';
 import { environment } from '../../environments/environment';
 import { User } from '../user';
-import { PageNotificationService } from '../shared/page-notification.service';
+import { Subscription, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { PageNotificationService } from '@nuvem/primeng-components';
+import { AuthenticationService } from '@nuvem/angular-base';
 
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls:['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
@@ -28,19 +27,14 @@ export class LoginComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private loginService: LoginService,
-    private authService: AuthService<User>,
-    private http: HttpService,
+    private authService: AuthenticationService<User>,
+    private http: HttpClient,
     private zone: NgZone,
     private pageNotificationService: PageNotificationService,
-    private translate: TranslateService
   ) { }
 
   getLabel(label) {
-    let str: any;
-    this.translate.get(label).subscribe((res: string) => {
-      str = res;
-    }).unsubscribe();
-    return str;
+    return label;
   }
 
   ngOnInit() {
@@ -53,17 +47,17 @@ export class LoginComponent implements OnInit, OnDestroy {
   login() {
 
     if (!this.username || !this.password) {
-      this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.FavorPreencherCamposObrigatorios'));
+      this.pageNotificationService.addErrorMessage(this.getLabel('Por favor preencher os campos Obrigatórios!'));
       return;
     }
 
     if (this.password.length < 4) {
-      this.pageNotificationService.addErrorMsg(this.getLabel('Login.Mensagens.msgASenhaPrecisaTerNoMinimo4Caracteres'));
+      this.pageNotificationService.addErrorMessage(this.getLabel('A senha precisa ter no mínimo 4 caracteres!'));
       return;
     }
 
     this.loginService.login(this.username, this.password).subscribe(() => {
-      // this.authService.loginSuccess();
+      this.authService.login();
 
       // FIXME Bypassando o componente para funcionar com o firefox
       this.getUserDetails().subscribe(response => {
@@ -76,19 +70,17 @@ export class LoginComponent implements OnInit, OnDestroy {
     }, error => {
       switch (error.status) {
         case 401: {
-          this.pageNotificationService.addErrorMsg(this.getLabel('Login.Mensagens.msgUsuarioOuSenhaInvalidos'));
+          this.pageNotificationService.addErrorMessage(this.getLabel('Login.Mensagens.msgUsuarioOuSenhaInvalidos'));
         } break;
         case 400: {
-          this.pageNotificationService.addErrorMsg(this.getLabel('Login.Mensagens.msgUsuarioOuSenhaInvalidos'));
+          this.pageNotificationService.addErrorMessage(this.getLabel('Login.Mensagens.msgUsuarioOuSenhaInvalidos'));
         } break;
       }
     });
   }
 
   protected getUserDetails(): Observable<any> {
-    return this.http.get(`${environment.auth.detailsUrl}`).map((response: Response) => {
-      return response.json();
-    });
+    return this.http.get<any>(`${environment.auth.detailsUrl}`);
   }
 
   authenticatedUserFullName(): string {
@@ -97,6 +89,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       return;
     }
     return storageUser.firstName + ' ' + storageUser.lastName;
+    return ;
   }
 
   private sleepFor(sleepDuration) {

@@ -1,18 +1,16 @@
-import {Routes} from '@angular/router';
 
-import {AnaliseComponent} from './analise.component';
-import {AnaliseDetailComponent} from './analise-detail.component';
-import {AnaliseFormComponent} from './analise-form.component';
-import {AuthGuard} from '@basis/angular-components';
-import {FuncaoDadosFormComponent} from '../funcao-dados';
-import {FuncaoTransacaoFormComponent} from '../funcao-transacao';
-import {AnaliseResumoComponent} from './resumo/analise-resumo.component';
-import {AnaliseViewComponent} from './analise-view.component';
+import { AuthGuard } from '@nuvem/angular-base';
+import { Routes } from '@angular/router';
+import { AnaliseListComponent } from './analise-list/analise-list.component';
+import { AnaliseFormComponent } from './analise-form/analise-form.component';
+import { AnaliseDetailComponent } from './analise-detail/analise-detail.component';
+import { AnaliseViewComponent } from './analise-view/analise-view.component';
+import { AnaliseResumoComponent } from './analise-resumo/analise-resumo.component';
 
 export const analiseRoute: Routes = [
     {
         path: 'analise',
-        component: AnaliseComponent,
+        component: AnaliseListComponent,
         canActivate: [AuthGuard]
     },
     {
@@ -36,28 +34,8 @@ export const analiseRoute: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'analise/:id/funcao-dados',
-        component: FuncaoDadosFormComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'analise/:id/funcao-transacao',
-        component: FuncaoTransacaoFormComponent,
-        canActivate: [AuthGuard]
-    },
-    {
         path: 'analise/:id/resumo',
         component: AnaliseResumoComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'analise/:id/funcao-dados/:view',
-        component: FuncaoDadosFormComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'analise/:id/funcao-transacao/:view',
-        component: FuncaoTransacaoFormComponent,
         canActivate: [AuthGuard]
     },
     {

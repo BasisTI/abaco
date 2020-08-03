@@ -1,42 +1,24 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { IndexadorService } from './indexador.service';
-import { indexadorRoute } from './indexador.router';
-import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { IndexadorComponent } from './indexador.component';
+import { IndexadorService } from './indexador.service';
+import { SharedModule } from '../shared/shared.module';
 
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import {AbacoButtonsModule} from '../abaco-buttons/abaco-buttons.module';
-import {MultiSelectModule} from 'primeng/multiselect';
-import {FormsModule} from '@angular/forms';
-
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
 
 @NgModule({
     imports: [
-        RouterModule.forRoot(indexadorRoute, {useHash: true}),
-        TranslateModule.forChild({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: (createTranslateLoader),
-                deps: [HttpClient]
-            }
-        }),
-        AbacoButtonsModule,
-        MultiSelectModule,
-        FormsModule
+        HttpClientModule,
+        FormsModule,
+        SharedModule
     ],
     declarations: [
         IndexadorComponent
     ],
     providers: [
-        IndexadorService,
+        IndexadorService
       ],
-        schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 
-export class AbacoIndexadorModule {}
+export class IndexadorModule {}

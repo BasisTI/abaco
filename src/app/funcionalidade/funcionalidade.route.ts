@@ -1,14 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
+import { FuncionalidadeListComponent } from './funcionalidade-list/funcionalidade-list.component';
+import { FuncionalidadeFormComponent } from './funcionalidade-form/funcionalidade-form.component';
+import { FuncionalidadeDetailComponent } from './funcionalidade-detail/funcionalidade-detail.component';
 
-import { FuncionalidadeComponent } from './funcionalidade.component';
-import { FuncionalidadeDetailComponent } from './funcionalidade-detail.component';
-import { FuncionalidadeFormComponent } from './funcionalidade-form.component';
 
 export const funcionalidadeRoute: Routes = [
   {
     path: 'funcionalidade',
-    component: FuncionalidadeComponent
+    component: FuncionalidadeListComponent
   },
   {
     path: 'funcionalidade/new',

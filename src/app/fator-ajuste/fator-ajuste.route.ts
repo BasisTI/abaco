@@ -1,14 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
+import { FatorAjusteListComponent } from './fator-ajuste-list/fator-ajuste-list.component';
+import { FatorAjusteDetailComponent } from './fator-ajuste-detail/fator-ajuste-detail.component';
+import { FatorAjusteFormComponent } from './fator-ajuste-form/fator-ajuste-form.component';
 
-import { FatorAjusteComponent } from './fator-ajuste.component';
-import { FatorAjusteDetailComponent } from './fator-ajuste-detail.component';
-import { FatorAjusteFormComponent } from './fator-ajuste-form.component';
 
 export const fatorAjusteRoute: Routes = [
   {
     path: 'fatorAjuste',
-    component: FatorAjusteComponent
+    component: FatorAjusteListComponent
   },
   {
     path: 'fatorAjuste/new',

@@ -1,6 +1,6 @@
 import { BaseEntity } from '../shared';
-import { FuncaoDados } from '../funcao-dados';
-import { FuncaoTransacao } from '../funcao-transacao';
+// import { FuncaoDados } from '../funcao-dados';
+// import { FuncaoTransacao } from '../funcao-transacao';
 
 
 export class Upload implements BaseEntity {
@@ -13,7 +13,7 @@ export class Upload implements BaseEntity {
     public dateOf?: Date,
     public sizeOf?: number,
     public processType?: number,
-    public funcaoDados?:FuncaoDados,
-    public funcaoTRansacao?:FuncaoTransacao,
+    // public funcaoDados?:FuncaoDados,
+    // public funcaoTRansacao?:FuncaoTransacao,
   ) {}
 }

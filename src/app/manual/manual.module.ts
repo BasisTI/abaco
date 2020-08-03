@@ -1,83 +1,36 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DatatableModule } from '@basis/angular-components';
-import { MemoryDataTableModule } from '../memory-datatable/memory-datatable.module';
-import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
+import { RouterModule } from '@angular/router';
+import { DatatableModule } from '@nuvem/primeng-components';
+import { AbacoButtonsModule } from '../components/abaco-buttons/abaco-buttons.module';
+import { SharedModule } from '../shared/shared.module';
 import {
-  ButtonModule,
-  InputTextModule,
-  SpinnerModule,
-  CalendarModule,
-  DropdownModule,
-  RadioButtonModule,
-  DataTableModule,
-  DialogModule,
-  ConfirmDialogModule,
-  ConfirmationService,
-  FileUploadModule
-} from 'primeng/primeng';
-
-import {
-  ManualService,
-  ManualComponent,
-  ManualDetailComponent,
-  ManualFormComponent,
-  manualRoute
+  ManualListComponent,
+  manualRoute, ManualService
 } from './';
-
-import { EsforcoFaseService } from '../esforco-fase/esforco-fase.service';
-import { ActiveBooleanPipe } from '../shared/active-boolean.pipe';
-import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
-import {HttpClient} from '@angular/common/http';
-import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
+import { ManualDetailComponent } from './manual-detail/manual-detail.component';
+import { ManualFormComponent } from './manual-form/manual-form.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     RouterModule.forRoot(manualRoute, { useHash: true }),
     DatatableModule,
-    DataTableModule,
-    ButtonModule,
-    SpinnerModule,
-    CalendarModule,
-    DropdownModule,
-    RadioButtonModule,
-    InputTextModule,
-    FileUploadModule,
-    DialogModule,
-    ConfirmDialogModule,
-    MemoryDataTableModule,
     AbacoButtonsModule,
-    BotoesExportacaoModule,
-    TranslateModule.forChild({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    })
+    SharedModule
   ],
   declarations: [
-    ManualComponent,
+    ManualListComponent,
     ManualDetailComponent,
     ManualFormComponent,
-    ActiveBooleanPipe,
   ],
   providers: [
     ManualService,
-    ConfirmationService,
-    EsforcoFaseService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AbacoManualModule {}
+export class ManualModule {}

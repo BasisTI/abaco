@@ -1,28 +1,31 @@
 import {Routes } from '@angular/router';
-import { FaseComponent } from './components/fase.component';
-import { FaseDetailComponent } from './components/fase-detail.component';
-import { FaseFormComponent } from './components/fase-form.component';
-import { AuthGuard } from '@basis/angular-components';
+import { FaseListComponent } from './fase-list/fase-list.component';
+import { FaseDetailComponent } from './fase-detail/fase-detail.component';
+import { FaseFormComponent } from './fase-form/fase-form.component';
+import { AuthGuard } from '@nuvem/angular-base';
 
 export const FaseRoute: Routes = [
   {
     path: 'fase',
-    component: FaseComponent,
-    canActivate: [AuthGuard]
+    component: FaseListComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'fase/new',
     component: FaseFormComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'fase/:id/edit',
-    component: FaseFormComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Fase'} 
   },
   {
     path: 'fase/:id',
+    component: FaseFormComponent,
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Fase'} 
+  },
+  {
+    path: 'fase/:id/view',
     component: FaseDetailComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Fase'} 
   },
 ];

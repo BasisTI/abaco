@@ -1,13 +1,11 @@
-import { Funcionalidade } from './../funcionalidade/funcionalidade.model';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { HttpService } from '@basis/angular-components';
-import { environment } from '../../environments/environment';
-
+import { PageNotificationService } from '@nuvem/primeng-components';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { environment } from 'src/environments/environment.prod';
+import { createRequestOption, ResponseWrapper } from '../shared';
 import { Modulo } from './modulo.model';
-import { ResponseWrapper, createRequestOption, JhiDateUtils, PageNotificationService } from '../shared';
-import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ModuloService {
@@ -16,28 +14,21 @@ export class ModuloService {
 
   searchUrl = environment.apiUrl + '/_search/modulos';
 
-  constructor(private http: HttpService, private pageNotificationService: PageNotificationService, private translate: TranslateService) { }
+  constructor(private http: HttpClient, private pageNotificationService: PageNotificationService) { }
 
   getLabel(label) {
-    let str: any;
-    this.translate.get(label).subscribe((res: string) => {
-      str = res;
-    }).unsubscribe();
-    return str;
+    return label;
   }
 
   create(modulo: Modulo, sistemaId?: number): Observable<Modulo> {
     const copy = this.convert(modulo);
     const moduloToBeCreated = this.linkToSistema(copy, sistemaId);
-    return this.http.post(this.resourceUrl, moduloToBeCreated).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    }).catch((error: any) => {
+    return this.http.post<Modulo>(this.resourceUrl, moduloToBeCreated).pipe(catchError((error: any) => {
       if (error.status === 403) {
-        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
         return Observable.throw(new Error(error.status));
       }
-    }).delay(1000);
+    }));
   }
 
   private linkToSistema(modulo: Modulo, sistemaId: number) {
@@ -49,69 +40,59 @@ export class ModuloService {
 
   update(modulo: Modulo): Observable<Modulo> {
     const copy = this.convert(modulo);
-    return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    }).catch((error: any) => {
+    return this.http.put<Modulo>(this.resourceUrl, copy).pipe(catchError((error: any) => {
       if (error.status === 403) {
-        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
         return Observable.throw(new Error(error.status));
       }
-    });
+    }));
   }
 
   find(id: number): Observable<Modulo> {
-    return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    }).catch((error: any) => {
+    return this.http.get<Modulo>(`${this.resourceUrl}/${id}`).pipe(catchError((error: any) => {
       if (error.status === 403) {
-        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
         return Observable.throw(new Error(error.status));
       }
-    });
+    }));
   }
 
   query(req?: any): Observable<ResponseWrapper> {
     const options = createRequestOption(req);
-    return this.http.get(this.resourceUrl, options)
-      .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
-        if (error.status === 403) {
-          this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-          return Observable.throw(new Error(error.status));
-        }
-      });
+    return this.http.get<ResponseWrapper>(this.resourceUrl).pipe(catchError((error: any) => {
+      if (error.status === 403) {
+        this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        return Observable.throw(new Error(error.status));
+      }
+    }));
   }
 
   delete(id: number): Observable<Response> {
-    return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
+    return this.http.delete<Response>(`${this.resourceUrl}/${id}`).pipe(catchError((error: any) => {
       if (error.status === 403) {
-        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
         return Observable.throw(new Error(error.status));
       }
-    });
+    }));
   }
 
   findByFuncionalidade(id: number): Observable<Modulo> {
-    return this.http.get(`${this.resourceUrl}/funcionalidade/${id}`).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    }).catch((error: any) => {
+    return this.http.get<Modulo>(`${this.resourceUrl}/funcionalidade/${id}`).pipe(catchError((error: any) => {
       if (error.status === 403) {
-        this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+        this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
         return Observable.throw(new Error(error.status));
       }
-    });
+    }));
   }
 
-  private convertResponse(res: Response): ResponseWrapper {
-    const jsonResponse = res.json();
-    const result = [];
-    for (let i = 0; i < jsonResponse.length; i++) {
-      result.push(this.convertItemFromServer(jsonResponse[i]));
-    }
-    return new ResponseWrapper(res.headers, result, res.status);
-  }
+  // private convertResponse(res: Response): ResponseWrapper {
+  //   const jsonResponse = res.json();
+  //   const result = [];
+  //   for (let i = 0; i < jsonResponse.length; i++) {
+  //     result.push(this.convertItemFromServer(jsonResponse[i]));
+  //   }
+  //   return new ResponseWrapper(res.headers, result, res.status);
+  // }
 
   /**
    * Convert a returned JSON object to Modulo.

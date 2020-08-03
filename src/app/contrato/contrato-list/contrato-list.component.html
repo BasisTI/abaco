@@ -1,0 +1,43 @@
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12">
+    <div class="card card-w-title">
+      <h1 translate="Contratos">Contratos</h1>
+      <div class="ui-g">
+        <div class="ui-g-12 ui-md-4">
+            <span class="md-inputfield">
+              <input type="text" pInputText class="ui-inputtext" #filter/>
+              <label translate="Cadastros.Contrato.Filtro">Filtro</label>
+            </span>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+          <button pButton [label]="'Pesquisar'" icon="ui-icon-search" (click)="datatable.refresh(filter.value)"></button>
+        </div>
+        <div class="ui-g-12 ui-md-2">
+          <button pButton type="button" [label]="'Cadastrar'" routerLink="/contrato/new" icon="ui-icon-add"></button>
+        </div>
+        <basis-datatable [url]="searchUrl" 
+          (buttonClick)="datatableClick($event)" #datatable>
+          <p-column header="#" field="id"></p-column>
+          <p-column header="Número Contrato" field="numeroContrato"></p-column>
+          <p-column header="Data início vigência" field="dataInicioVigencia">
+            <ng-template let-col let-dataInicioVigencia="rowData" pTemplate="body">
+              {{ dataInicioVigencia[col.field]|date:'dd/MM/y' }}
+            </ng-template>
+          </p-column>
+          <p-column [header]="'DataFimVigencia'" field="dataFimVigencia">
+            <ng-template let-col let-dataFimVigencia="rowData" pTemplate="body">
+              {{ dataFimVigencia[col.field]|date:'dd/MM/y' }}
+            </ng-template>
+          </p-column>
+          <p-column [header]="'Manual'" field="manual.nome"></p-column>
+        </basis-datatable>
+      </div>
+    </div>
+  </div>
+</div>
+<p-confirmDialog [header]="'Global.Mensagens.Confirmacao'" #dialog>
+  <p-footer>
+    <button type="button" pButton icon="fa-close" [label]="'Nao'" (click)="dialog.reject()"></button>
+    <button type="button" pButton icon="fa-check" [label]="'Sim'" (click)="dialog.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

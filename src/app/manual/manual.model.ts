@@ -1,11 +1,13 @@
-import {BaseEntity, MappableEntities, JSONable} from '../shared';
-import {EsforcoFase} from '../esforco-fase/index';
-import {FatorAjuste} from '../fator-ajuste/fator-ajuste.model';
+import {BaseEntity} from '../shared';
+import { FatorAjuste } from '../fator-ajuste';
+import { EsforcoFase } from '../esforco-fase';
+import { MappableEntities } from '../shared/mappable-entities';
 
-export class Manual implements BaseEntity, JSONable<Manual> {
-
+export class Manual implements BaseEntity{
+    
     private mappablePhaseEfforts: MappableEntities<EsforcoFase>;
     private mappableAdjustFactors: MappableEntities<FatorAjuste>;
+
 
     constructor(
         public id?: number,
@@ -69,7 +71,8 @@ export class Manual implements BaseEntity, JSONable<Manual> {
                     , jsonObject.parametroAlteracao
                     , jsonObject.parametroExclusao
                     , jsonObject.parametroConversao
-                    , jsonObject.versaoCPM);
+                    , jsonObject.versaoCPM
+                    );
             }
         }
 
@@ -167,7 +170,6 @@ export class Manual implements BaseEntity, JSONable<Manual> {
             this.parametroExclusao,
             this.parametroConversao,
             this.versaoCPM);
-
     }
 
 }

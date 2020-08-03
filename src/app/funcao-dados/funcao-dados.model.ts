@@ -1,16 +1,15 @@
 import {FuncaoTransacao} from './../funcao-transacao/funcao-transacao.model';
-import {BaseEntity, JSONable} from '../shared';
-import {Funcionalidade} from '../funcionalidade/index';
-import {DerTextParser, ParseResult} from '../analise-shared/der-text/der-text-parser';
-import {FatorAjuste} from '../fator-ajuste/index';
-import {Complexidade} from '../analise-shared/complexidade-enum';
-import {FuncaoAnalise} from '../analise-shared/funcao-analise';
-import {Der} from '../der/der.model';
-import {Rlr} from '../rlr/rlr.model';
-import {DerChipConverter} from '../analise-shared/der-chips/der-chip-converter';
-import {Impacto} from '../analise-shared/impacto-enum';
-import {FuncaoResumivel} from '../analise-shared';
-import {Modulo} from '../modulo';
+import { FuncaoResumivel, Complexidade } from 'src/app/analise-shared';
+import { Impacto } from 'src/app/analise-shared/impacto-enum';
+import { Modulo } from 'src/app/modulo';
+import { BaseEntity } from '../shared';
+import { FuncaoAnalise } from '../analise-shared/funcao-analise';
+import { Funcionalidade } from '../funcionalidade';
+import { FatorAjuste } from '../fator-ajuste';
+import { Der } from '../der/der.model';
+import { Rlr } from '../rlr/rlr.model';
+import { DerTextParser, ParseResult } from '../analise-shared/der-text/der-text-parser';
+import { DerChipConverter } from '../analise-shared/der-chips/der-chip-converter';
 
 export enum TipoFuncaoDados {
     'ALI' = 'ALI',
@@ -26,7 +25,7 @@ export class Editor {
     }
 }
 
-export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise, JSONable<FuncaoDados> {
+export class FuncaoDados implements FuncaoResumivel, BaseEntity, FuncaoAnalise{
 
     detStr: string;
     retStr: string;

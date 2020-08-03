@@ -1,11 +1,11 @@
-import { JSONable, BaseEntity, MappableEntities } from './../shared';
 import { Contrato } from './../contrato/contrato.model';
 import { Manual } from './../manual/manual.model';
+import { BaseEntity } from './../shared';
 
 /**
  * Classe que mapeia a ligação de Contratos com Manual
  */
-export class ManualContrato implements BaseEntity, JSONable<ManualContrato> {
+export class ManualContrato implements BaseEntity {
 
     constructor(
         public id?: any,

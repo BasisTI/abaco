@@ -1,18 +1,16 @@
-import {TranslateService} from '@ngx-translate/core';
 import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
-import {Observable} from 'rxjs/Rx';
-import {HttpService} from '@basis/angular-components';
 import {environment} from '../../environments/environment';
 
 import {Sistema} from './sistema.model';
-import {PageNotificationService, ResponseWrapper} from '../shared';
-import {BlockUI, NgBlockUI} from 'ng-block-ui';
+import { HttpClient } from '@angular/common/http';
+import { PageNotificationService } from '@nuvem/primeng-components';
+import { Observable } from 'rxjs';
+import { ResponseWrapper } from '../shared';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class SistemaService {
 
-    @BlockUI() blockUI: NgBlockUI;
 
     resourceUrl = environment.apiUrl + '/sistemas';
 
@@ -26,121 +24,101 @@ export class SistemaService {
 
     fieldSearchOrganizacaoUrl = environment.apiUrl + '/_searchOrganizacao/sistemas';
 
-    constructor(private http: HttpService, private pageNotificationService: PageNotificationService, private translate: TranslateService) {
+    constructor(private http: HttpClient, private pageNotificationService: PageNotificationService) {
     }
 
     getLabel(label) {
-        let str: any;
-        this.translate.get(label).subscribe((res: string) => {
-            str = res;
-        }).unsubscribe();
-        return str;
+        return label;
     }
 
     create(sistema: Sistema): Observable<Sistema> {
         const copy = this.convert(sistema);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        }).catch((error: any) => {
+        return this.http.post<Sistema>(this.resourceUrl, copy).pipe(catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
-        });
+        }));
     }
 
     update(sistema: Sistema): Observable<Sistema> {
         const copy = this.convert(sistema);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        }).catch((error: any) => {
+        return this.http.put<Sistema>(this.resourceUrl, copy).pipe(catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
-        });
+        }));
     }
 
     find(id: number): Observable<Sistema> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        }).catch((error: any) => {
+        return this.http.get<Sistema>(`${this.resourceUrl}/${id}`).pipe(catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
-        });
+        }));
     }
 
     findAllByOrganizacaoId(orgId: number): Observable<ResponseWrapper> {
         const url = `${this.findByOrganizacaoUrl}/${orgId}`;
-        return this.http.get(url)
-            .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
-                if (error.status === 403) {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                    return Observable.throw(new Error(error.status));
-                }
-            });
+        return this.http.get<ResponseWrapper>(url).pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
     }
 
-    findAllSystemOrg(orgId: number): Observable<ResponseWrapper> {
-        this.blockUI.start();
+    findAllSystemOrg(orgId: number): Observable<Sistema[]> {
         const url = `${this.findByOrganizacaoUrl}/${orgId}`;
-        return this.http.get(url)
-            .map((response: Response) =>
-                this.convertResponse(response)
-            )
-            .catch((error: any) => {
-                if (error.status === 403) {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                    return Observable.throw(new Error(error.status));
-                }
-            }).finally(() => this.blockUI.stop());
+        return this.http.get<Sistema[]>(url).pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
     }
 
-    dropDown(): Observable<ResponseWrapper> {
-        return this.http.get(this.resourceUrl + '/drop-down')
-            .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
-                if (error.status === 403) {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                    return Observable.throw(new Error(error.status));
-                }
-            });
+    dropDown(): Observable<Sistema[]> {
+        return this.http.get<Sistema[]>(this.resourceUrl + '/drop-down').pipe(catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
     }
 
     delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`).catch((error: any) => {
+        return this.http.delete<Response>(`${this.resourceUrl}/${id}`).pipe(catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
             if (error) {
                 const msgError = error.headers.get('x-abacoapp-error');
                 if (msgError === 'error.not_found_system') {
-                    this.pageNotificationService.addErrorMsg(this.getLabel(
+                    this.pageNotificationService.addErrorMessage(this.getLabel(
                         'Cadastros.Sistema.Mensagens.msgOcorreuErroNaExclusaoDoSistema')
                     );
                 } else if (msgError === 'error.analise_exists') {
-                    this.pageNotificationService.addErrorMsg(this.getLabel(
+                    this.pageNotificationService.addErrorMessage(this.getLabel(
                         'Cadastros.Sistema.Mensagens.msgSistemaVinculadoNaoPodeSerExcluido')
                     );
                 }
                 return Observable.throw(new Error(error.status));
             }
-        });
+        }));
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return new ResponseWrapper(res.headers, result, res.status);
-    }
+    // private convertResponse(res: Response): ResponseWrapper {
+    //     const jsonResponse = res.json();
+    //     const result = [];
+    //     for (let i = 0; i < jsonResponse.length; i++) {
+    //         result.push(this.convertItemFromServer(jsonResponse[i]));
+    //     }
+    //     return new ResponseWrapper(res.headers, result, res.status);
+    // }
 
     /**
      * Convert a returned JSON object to Sistema.

@@ -1,6 +1,5 @@
-import { FuncaoTransacao } from './../funcao-transacao/funcao-transacao.model';
-import { BaseEntity } from '../shared';
 import { Modulo } from '../modulo';
+import { BaseEntity } from '../shared';
 
 export class Funcionalidade implements BaseEntity {
 

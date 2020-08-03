@@ -1,16 +1,14 @@
-import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
+import { AuthGuard } from '@nuvem/angular-base';
+import { OrganizacaoDetailComponent } from './organizacao-detail/organizacao-detail.component';
+import { OrganizacaoFormComponent } from './organizacao-form/organizacao-form.component';
+import { OrganizacaoListComponent } from './organizacao-list/organizacao-list.component';
 
-import { OrganizacaoComponent } from './organizacao.component';
-import { OrganizacaoDetailComponent } from './organizacao-detail.component';
-import { OrganizacaoFormComponent } from './organizacao-form.component';
-
-import { AuthGuard } from '@basis/angular-components';
 
 export const organizacaoRoute: Routes = [
   {
     path: 'organizacao',
-    component: OrganizacaoComponent,
+    component: OrganizacaoListComponent,
     canActivate: [AuthGuard]
   },
   {

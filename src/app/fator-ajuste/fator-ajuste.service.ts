@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { HttpService } from '@basis/angular-components';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 import { FatorAjuste } from './fator-ajuste.model';
 import { ResponseWrapper, createRequestOption, JhiDateUtils } from '../shared';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class FatorAjusteService {
@@ -14,51 +13,42 @@ export class FatorAjusteService {
 
   searchUrl = environment.apiUrl + '/_search/fator-ajustes';
 
-  constructor(private http: HttpService) {}
+  constructor(private http: HttpClient) {}
 
   create(fatorAjuste: FatorAjuste): Observable<FatorAjuste> {
     const copy = this.convert(fatorAjuste);
     copy.fator = copy.fator/100;
-    return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+    return this.http.post<FatorAjuste>(this.resourceUrl, copy);
   }
 
   update(fatorAjuste: FatorAjuste): Observable<FatorAjuste> {
     const copy = this.convert(fatorAjuste);
     copy.fator = copy.fator/100;
-    return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+    return this.http.put<FatorAjuste>(this.resourceUrl, copy);
   }
 
   find(id: number): Observable<FatorAjuste> {
-    return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-      const jsonResponse = res.json();
-      return this.convertItemFromServer(jsonResponse);
-    });
+    return this.http.get<FatorAjuste>(`${this.resourceUrl}/${id}`);
   }
 
-  query(req?: any): Observable<ResponseWrapper> {
-    const options = createRequestOption(req);
-    return this.http.get(this.resourceUrl, options)
-      .map((res: Response) => this.convertResponse(res));
-  }
+  // query(req?: any): Observable<ResponseWrapper> {
+  //   const options = createRequestOption(req);
+  //   return this.http.get(this.resourceUrl, options)
+  //     .map((res: Response) => this.convertResponse(res));
+  // }
 
   delete(id: number): Observable<Response> {
-    return this.http.delete(`${this.resourceUrl}/${id}`);
+    return this.http.delete<Response>(`${this.resourceUrl}/${id}`);
   }
 
-  private convertResponse(res: Response): ResponseWrapper {
-    const jsonResponse = res.json();
-    const result = [];
-    for (let i = 0; i < jsonResponse.length; i++) {
-      result.push(this.convertItemFromServer(jsonResponse[i]));
-    }
-    return new ResponseWrapper(res.headers, result, res.status);
-  }
+  // private convertResponse(res: Response): ResponseWrapper {
+  //   const jsonResponse = res.json();
+  //   const result = [];
+  //   for (let i = 0; i < jsonResponse.length; i++) {
+  //     result.push(this.convertItemFromServer(jsonResponse[i]));
+  //   }
+  //   return new ResponseWrapper(res.headers, result, res.status);
+  // }
 
   /**
    * Convert a returned JSON object to FatorAjuste.

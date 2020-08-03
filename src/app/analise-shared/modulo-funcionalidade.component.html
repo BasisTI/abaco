@@ -11,11 +11,11 @@
                         [filter]="true"
                         optionLabel="nome"
                         name="modulo"
-                        [placeholder]="this.getLabel('Analise.Analise.Selecione')"
+                        [placeholder]="this.getLabel('Selecione')"
                         [options]="modulos"
                         [(ngModel)]="moduloSelecionado"
                         (onChange)="moduloSelected($event.value)"
-                        [autoWidth]="false">
+                        >
                 </p-dropdown>
                 <span class="md-inputfield">
                     <div *ngIf="erroModulo"
@@ -48,7 +48,7 @@
                         (onChange)="funcionalidadeSelected($event.value)"
                         [placeholder]="funcionalidadeDropdownPlaceholder()"
                         [disabled]="!isModuloSelected()"
-                        [autoWidth]="false">
+                        >
                 </p-dropdown>
                 <span class="md-inputfield">
                     <div *ngIf="erroModulo"
@@ -73,7 +73,7 @@
             [header]="this.getLabel('Cadastros.FuncaoDados.Modulo')"
             [(visible)]="mostrarDialogModulo"
             [contentStyle]="{'overflow':'visible'}"
-            [width]="800">
+           >
 
         <div class="ui-g">
             <div class="ui-g-12" style="margin-bottom: 05px">
@@ -112,7 +112,7 @@
             [header]="this.getLabel('Analise.Analise.Funcionalidade')"
             [(visible)]="mostrarDialogFuncionalidade"
             [contentStyle]="{'overflow':'visible'}"
-            [width]="800">
+           >
 
         <div class="ui-g">
             <div class="ui-g-12" style="margin-bottom: 05px">

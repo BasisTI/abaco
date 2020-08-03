@@ -5,13 +5,13 @@
       style="margin: 0px auto 0 auto; min-height: 400px;"
       *ngIf="authenticated">
         <div class="ui-g" style="justify-content: center;">
-          <div class="ui-g-4 ui-md-4 ui-sm-9">
+          <div class="ui-g-12 ui-md-12 ui-sm-12">
             <form
               name="passwordForm" 
               role="form" 
               (ngSubmit)="senha()">
 
-              <h1 translate="Configuracao.AlterarSenha.AlterarSenha">Alterar Senha</h1>
+              <h1 >Alterar Senha</h1>
 
                 <div class="ui-g-12 ui-md-12 ui-sm-12" style="margin-bottom: 25px;">
                   <span class="md-inputfield">
@@ -23,7 +23,7 @@
                       name="oldPassword" 
                       [(ngModel)]="this.oldPassword" 
                       [feedback]="false" />
-                      <label translate="Configuracao.AlterarSenha.SenhaAtual*">Senha Atual *</label>
+                      <label >Senha Atual *</label>
                   </span>
                 </div>
 
@@ -37,7 +37,7 @@
                       name="newPassword" 
                       [(ngModel)]="this.newPassword" 
                       [feedback]="false" />
-                      <label translate="Configuracao.AlterarSenha.DigiteNovaSenha*">Digite a Nova Senha *</label>
+                      <label >Digite a Nova Senha *</label>
                   </span>
                 </div>
 
@@ -51,11 +51,11 @@
                       name="newPasswordConfirm" 
                       [(ngModel)]="this.newPasswordConfirm" 
                       [feedback]="false" />
-                      <label translate="Configuracao.AlterarSenha.ConfirmeSenha*">Confirme a Nova Senha *</label>
+                      <label >Confirme a Nova Senha *</label>
                   </span>
                 </div>
-                <div class="ui-g-12" style="justify-content: center">
-                  <button pButton type="submit" [label]="this.getLabel('Configuracao.AlterarSenha.Botoes.AtualizarSenha')"></button>
+                <div class="ui-g-4" style="justify-content: center">
+                  <button pButton type="submit" [label]="this.getLabel('Atualizar senha')"></button>
                 </div>
             </form>
           </div>

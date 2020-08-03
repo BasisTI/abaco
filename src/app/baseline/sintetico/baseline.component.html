@@ -2,7 +2,7 @@
     <div class="ui-g-12 ui-md-12 ui-sm-12">
         <div class="card card-w-title">
 
-            <h1 translate="Analise.Baseline.Baseline">Baseline</h1>
+            <h1>Baseline</h1>
             <div class="ui-g">
                 <div class="ui-g-12 ui-md-12 ui-sm-12">
                     <p-dropdown
@@ -11,8 +11,8 @@
                             optionLabel="nome"
                             id="idNomeSistemaComponentAnalise"
                             [(ngModel)]="sistema"
-                            [autoWidth]="false"
-                            [placeholder]="this.getLabel('Analise.Analise.Sistema')">
+                            
+                            [placeholder]="this.getLabel('Sistema')">
                     </p-dropdown>
                 </div>
             </div>
@@ -21,7 +21,7 @@
 
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-white-button
-                                [buttonLabel]="'Global.Botoes.LimparPesquisa' | translate"
+                                [buttonLabel]="'Limpar Pesquisar'"
                                 id="idBtnLimparPesquisaComponentAnalise"
                                 buttonIcon="ui-icon-clear-all"
                                 (click)="limparPesquisa()">
@@ -29,7 +29,7 @@
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-blue-button
-                                [buttonLabel]="'Global.Botoes.Pesquisar' | translate"
+                                [buttonLabel]="'Pesquisar'"
                                 id="idBtnPesquisarComponentAnalise"
                                 buttonIcon="ui-icon-search"
                                 (click)="performSearch()">
@@ -37,7 +37,7 @@
                     </div>
                     <div class="ui-g-2 ui-md-2 ui-sm-12">
                         <app-green-button 
-                            [buttonLabel]="'Global.Botoes.Atualizar' | translate"
+                            [buttonLabel]="'Atualizar'"
                             buttonIcon="ui-icon-update"
                             (click)="atualizarAnalise()">
                         </app-green-button>
@@ -47,15 +47,17 @@
                     <div class="ui-g">
                         <div *ngIf="enableTable">
                             <basis-datatable
-                                    [url]="userAnaliseUrl"
+                                    type="server"
+                                    [scrollable]="true"
+                                    [style]="{width:'500px'}"
+                                    [url]="urlBaseline"
                                     (buttonClick)="datatableClick($event)"
                                     [rows]="20"
                                     [disableDelete]="true"
                                     [disableEdit]="true"
                                     [rowsPerPageOptions]="rowsPerPageOptions"
                                     [showPaginationFooter]="true"
-                                    type="memory"
-                                    #memory>
+                                    #datatable>
 
                                 <basis-datatable-button
                                     name="geraBaselinePdfBrowser"
@@ -64,11 +66,15 @@
                                     disabled="selecionada">
                                 </basis-datatable-button>
 
-                                <p-column [header]="this.getLabel('Analise.Baseline.Nome')" field="nome" [sortable]="true"></p-column>
-                                <p-column [header]="this.getLabel('Analise.Baseline.Sigla')" field="sigla" [sortable]="true"></p-column>
-                                <p-column [header]="this.getLabel('Analise.Baseline.NumeroOcorrencia')" field="numeroocorrencia" [sortable]="true"></p-column>
-                                <p-column [header]="this.getLabel('Analise.Baseline.PontosFuncao')" field="sum" [sortable]="true"></p-column>
-                                <p-column [header]="this.getLabel('Analise.Baseline.Equipe')" field="nomeEquipe" [sortable]="true"></p-column>
+                                <p-column [header]="this.getLabel('Nome')" field="nome" [sortable]="true">
+                                    <ng-template let-linhaResumo="rowData" pTemplate="body">
+                                      {{ linhaResumo.nome}}
+                                    </ng-template>
+                                </p-column>
+                                <p-column [header]="this.getLabel('Sigla')" field="sigla" [sortable]="true"></p-column>
+                                <p-column [header]="this.getLabel('NumeroOcorrencia')" field="numeroocorrencia" [sortable]="true"></p-column>
+                                <p-column [header]="this.getLabel('PontosFuncao')" field="sum" [sortable]="true"></p-column>
+                                <p-column [header]="this.getLabel('Equipe')" field="nomeEquipe" [sortable]="true"></p-column>
                             </basis-datatable>
                         </div>
                         <div class="ui-g-12 ui-md-2" *ngIf="enableTable">
@@ -81,11 +87,11 @@
         </div>
     </div>
 </div>
-<p-confirmDialog [header]="getLabel('Global.Mensagens.Confirmacao')" #dialog>
+<p-confirmDialog [header]="getLabel('Confirmação')" #dialog>
     <p-footer>
-        <button type="button" pButton icon="fa-close" [label]="this.getLabel('Global.Botoes.Nao')"
+        <button type="button" pButton icon="fa-close" [label]="this.getLabel('Não')"
                 (click)="dialog.reject()"></button>
-        <button type="button" pButton icon="fa-check" [label]="this.getLabel('Global.Botoes.Sim')"
+        <button type="button" pButton icon="fa-check" [label]="this.getLabel('Sim')"
                 (click)="dialog.accept()"></button>
     </p-footer>
 </p-confirmDialog>

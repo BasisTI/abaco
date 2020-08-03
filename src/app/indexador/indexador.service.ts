@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
-import {Observable} from 'rxjs/Rx';
-import {HttpService} from '@basis/angular-components';
-import {environment} from '../../environments/environment';
-import {BlockUI, NgBlockUI} from 'ng-block-ui';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/';
+import { finalize } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class IndexadorService {
@@ -12,19 +12,18 @@ export class IndexadorService {
     urlIndexarObject = environment.apiUrl + '/reindexar';
     urlListIndex = environment.apiUrl + '/listar-indexadores';
 
-    @BlockUI() blockUI: NgBlockUI;
 
-    constructor(private http: HttpService) {
+    constructor(private http: HttpClient, private router: Router) {
     }
 
-    reindexar(lstIndexadores: string[]): Observable<any> {
-        this.blockUI.start();
+    reindexar(lstIndexadores: String[]): Observable<any> {
         const url = this.urlIndexarObject + '?lstIndexadores=' + lstIndexadores.toString();
-        return this.http.get(url).map(
-            (res: Response) => {
-                this.blockUI.stop();
-                return res.json();
-            }).finally(() => this.blockUI.stop());
+        return this.http.get(url).pipe(
+            finalize(
+                () => { 
+                    this.router.navigate(['/']); 
+            })
+        );
     }
 
 }

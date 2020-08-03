@@ -1,74 +1,44 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DatatableModule } from '@basis/angular-components';
-import { BotoesExportacaoModule } from './../botoes-exportacao/botoes-exportacao.module';
-import {
-  ButtonModule,
-  InputTextModule,
-  SpinnerModule,
-  CalendarModule,
-  DropdownModule,
-  RadioButtonModule,
-  ConfirmDialogModule,
-  ConfirmationService,
-  MultiSelectModule
-} from 'primeng/primeng';
+
 
 import {
   TipoEquipeService,
-  TipoEquipeComponent,
+  TipoEquipeListComponent,
   TipoEquipeDetailComponent,
   TipoEquipeFormComponent,
   tipoEquipeRoute
 } from './';
 
-import { AbacoButtonsModule } from '../abaco-buttons/abaco-buttons.module';
 
-import { HttpClient } from '@angular/common/http';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClientModule } from '@angular/common/http';
+import { SharedModule } from '../shared/shared.module';
+import { DatatableModule } from '@nuvem/primeng-components';
+import { AbacoButtonsModule } from '../components/abaco-buttons/abaco-buttons.module';
+import { AdminGuard } from '../util/admin.guard';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
 
 @NgModule({
   imports: [
     CommonModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     RouterModule.forRoot(tipoEquipeRoute, { useHash: true }),
     DatatableModule,
-    ButtonModule,
-    SpinnerModule,
-    CalendarModule,
-    DropdownModule,
-    RadioButtonModule,
-    InputTextModule,
-    ConfirmDialogModule,
     AbacoButtonsModule,
-    MultiSelectModule,
-    BotoesExportacaoModule,
-    TranslateModule.forChild({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    })
+    SharedModule,
   ],
   declarations: [
-    TipoEquipeComponent,
+    TipoEquipeListComponent,
     TipoEquipeDetailComponent,
     TipoEquipeFormComponent
   ],
   providers: [
     TipoEquipeService,
-    ConfirmationService
+    AdminGuard
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AbacoTipoEquipeModule {}
+export class TipoEquipeModule {}

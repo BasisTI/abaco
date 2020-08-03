@@ -1,14 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
+import { ModuloDetailComponent } from './modulo-detail/modulo-detail.component';
+import { ModuloFormComponent } from './modulo-form/modulo-form.component';
+import { ModuloListComponent } from './modulo-list/modulo-list.component';
 
-import { ModuloComponent } from './modulo.component';
-import { ModuloDetailComponent } from './modulo-detail.component';
-import { ModuloFormComponent } from './modulo-form.component';
 
 export const moduloRoute: Routes = [
   {
     path: 'modulo',
-    component: ModuloComponent
+    component: ModuloListComponent
   },
   {
     path: 'modulo/new',

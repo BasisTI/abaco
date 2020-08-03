@@ -1,11 +1,9 @@
-import { FatorAjuste, TipoFatorAjuste } from '../../fator-ajuste/index';
-import { FuncaoDados, TipoFuncaoDados } from '../../funcao-dados/funcao-dados.model';
-
 import * as _ from 'lodash';
-import { FuncaoTransacao, TipoFuncaoTransacao } from '../../funcao-transacao';
-import { ComplexidadeFuncionalDados as CFDados } from './complexidade-funcional-dados';
-import { ComplexidadeFuncionalTransacao as CFTrans } from './complexidade-funcional-transacao';
-import { ComplexidadeFuncionalEE, ComplexidadeFuncionalSEeCE, ComplexidadeFuncionalALIeAIE } from './complexidade-funcional';
+import { FuncaoDados, TipoFuncaoDados } from 'src/app/funcao-dados';
+import { FuncaoTransacao, TipoFuncaoTransacao } from 'src/app/funcao-transacao';
+import { FatorAjuste, TipoFatorAjuste } from '../../fator-ajuste/index';
+import { ComplexidadeFuncionalALIeAIE, ComplexidadeFuncionalEE, ComplexidadeFuncionalSEeCE } from './complexidade-funcional';
+
 
 export class CalculadoraTestData {
 

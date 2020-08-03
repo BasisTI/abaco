@@ -1,9 +1,8 @@
-import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaselineService } from '../../baseline.service';
-import { Subscription } from '../../../../../node_modules/rxjs/Rx';
-import { DatatableComponent } from '@basis/angular-components';
+import { Subscription } from 'rxjs';
+import { DatatableComponent } from '@nuvem/primeng-components';
 
 
 @Component({
@@ -23,16 +22,11 @@ export class BaselineFuncaoTransacaoComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private baselineService: BaselineService,
-        private translate: TranslateService
     ) {
     }
 
     getLabel(label) {
-        let str: any;
-        this.translate.get(label).subscribe((res: string) => {
-            str = res;
-        }).unsubscribe();
-        return str;
+        return label;
     }
 
     ngOnInit(): void {

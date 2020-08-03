@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
-import {HttpService} from '@basis/angular-components';
-import {TranslateService} from '@ngx-translate/core';
-import {Observable} from 'rxjs/Rx';
 import {environment} from '../../environments/environment';
-import {createRequestOption, PageNotificationService, ResponseWrapper} from '../shared';
+import {createRequestOption, ResponseWrapper} from '../shared';
 import {TipoEquipe} from './tipo-equipe.model';
+import { HttpClient } from '@angular/common/http';
+import { PageNotificationService } from '@nuvem/primeng-components';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { AnaliseShareEquipe } from '../analise';
 
 
 @Injectable()
@@ -19,135 +20,129 @@ export class TipoEquipeService {
 
     searchUrl = environment.apiUrl + '/_search/tipo-equipes';
 
-    constructor(private http: HttpService, private pageNotificationService: PageNotificationService, private translate: TranslateService) {
+    constructor(private http: HttpClient, private pageNotificationService: PageNotificationService) {
     }
 
     getLabel(label) {
-        let str: any;
-        this.translate.get(label).subscribe((res: string) => {
-            str = res;
-        }).unsubscribe();
-        return str;
+
+        return label;
     }
 
     create(tipoEquipe: TipoEquipe): Observable<TipoEquipe> {
         const copy = this.convert(tipoEquipe);
-        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        }).catch((error: any) => {
+        return this.http.post(this.resourceUrl, copy).pipe(
+        catchError((error: any) => {
             if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                 return Observable.throw(new Error(error.status));
             }
-        });
+        }));
     }
 
     update(tipoEquipe: TipoEquipe): Observable<TipoEquipe> {
         const copy = this.convert(tipoEquipe);
-        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        }).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                return Observable.throw(new Error(error.status));
-            }
-        });
-    }
-
-    find(id: number): Observable<TipoEquipe> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
-            const jsonResponse = res.json();
-            return this.convertItemFromServer(jsonResponse);
-        }).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                return Observable.throw(new Error(error.status));
-            }
-        });
-    }
-
-    getAll(): Observable<ResponseWrapper> {
-        const url = `${this.findByOrganizacaoUrl}`;
-        return this.http.get(url).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                return Observable.throw(new Error(error.status));
-            }
-        });
-    }
-
-    findAllByOrganizacaoId(orgId: number): Observable<ResponseWrapper> {
-        const url = `${this.findByOrganizacaoUrl}/${orgId}`;
-        return this.http.get(url).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                return Observable.throw(new Error(error.status));
-            }
-        });
-    }
-
-    findAllEquipesByOrganizacaoIdAndLoggedUser(orgId: number): Observable<ResponseWrapper> {
-        const url = `${this.findByOrganizacaoAndUserUrl}/${orgId}`;
-        return this.http.get(url).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                return Observable.throw(new Error(error.status));
-            }
-        });
-    }
-
-    findAllCompartilhaveis(orgId, analiseId, equipeId: number): Observable<ResponseWrapper> {
-        const url = `${this.findAllCompartilhaveisUrl}/${orgId}/${analiseId}/${equipeId}`;
-        return this.http.get(url).map((res: Response) => this.convertResponse(res)).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                return Observable.throw(new Error(error.status));
-            }
-        });
-    }
-
-    dropDown(): Observable<ResponseWrapper> {
-        return this.http.get(this.resourceUrl + '/drop-down').map((res: Response) => this.convertResponse(res)).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                return Observable.throw(new Error(error.status));
-            }
-        });
-    }
-
-    dropDownByUser(): Observable<ResponseWrapper> {
-        return this.http.get(this.resourceUrl + '/user').map((res: Response) => this.convertResponse(res)).catch((error: any) => {
-            if (error.status === 403) {
-                this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
-                return Observable.throw(new Error(error.status));
-            }
-        });
-    }
-
-    getEquipesActiveLoggedUser(req?: any): Observable<ResponseWrapper> {
-        const options = createRequestOption(req);
-        return this.http.get(this.resourceUrl + '/active-user', options)
-            .map((res: Response) => this.convertResponse(res)).catch((error: any) => {
+        return this.http.put(this.resourceUrl, copy).pipe(
+            catchError((error: any) => {
                 if (error.status === 403) {
-                    this.pageNotificationService.addErrorMsg(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
                     return Observable.throw(new Error(error.status));
                 }
-            });
+            }));
+        }
+
+    find(id: number): Observable<TipoEquipe> {
+        return this.http.get(`${this.resourceUrl}/${id}`).pipe(
+            catchError((error: any) => {
+                if (error.status === 403) {
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    return Observable.throw(new Error(error.status));
+                }
+            }));
+        }
+    getAll(): Observable<ResponseWrapper> {
+        const url = `${this.findByOrganizacaoUrl}`;
+        return this.http.get<ResponseWrapper>(url).pipe(
+            catchError((error: any) => {
+                if (error.status === 403) {
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    return Observable.throw(new Error(error.status));
+                }
+            }));
+        }
+
+    findAllByOrganizacaoId(orgId: number): Observable<TipoEquipe[]> {
+        const url = `${this.findByOrganizacaoUrl}/${orgId}`;
+        return this.http.get<TipoEquipe[]>(url).pipe(
+            catchError((error: any) => {
+                if (error.status === 403) {
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    return Observable.throw(new Error(error.status));
+                }
+            }));
+        }
+
+    findAllEquipesByOrganizacaoIdAndLoggedUser(orgId: number): Observable<TipoEquipe[]> {
+        const url = `${this.findByOrganizacaoAndUserUrl}/${orgId}`;
+        return this.http.get<TipoEquipe[]>(url).pipe(
+            catchError((error: any) => {
+                if (error.status === 403) {
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    return Observable.throw(new Error(error.status));
+                }
+            }));
+        }
+
+    findAllCompartilhaveis(orgId, analiseId, equipeId: number): Observable<any[]> {
+        const url = `${this.findAllCompartilhaveisUrl}/${orgId}/${analiseId}/${equipeId}`;
+        return this.http.get<any[]>(url).pipe(
+        catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
     }
+    dropDown(): Observable<TipoEquipe[]> {
+        return this.http.get<TipoEquipe[]>(this.resourceUrl + '/drop-down').pipe(
+            catchError((error: any) => {
+                if (error.status === 403) {
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    return Observable.throw(new Error(error.status));
+                }
+            }));
+        }
+
+    dropDownByUser(): Observable<TipoEquipe[]> {
+        return this.http.get<TipoEquipe[]>(this.resourceUrl + '/user').pipe(
+        catchError((error: any) => {
+            if (error.status === 403) {
+                this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                return Observable.throw(new Error(error.status));
+            }
+        }));
+    }
+
+    getEquipesActiveLoggedUser(req?: any): Observable<TipoEquipe[]> {
+        const options = createRequestOption(req);
+        return this.http.get<TipoEquipe[]>(this.resourceUrl + '/active-user').pipe(
+            catchError((error: any) => {
+                if (error.status === 403) {
+                    this.pageNotificationService.addErrorMessage(this.getLabel('Global.Mensagens.VoceNaoPossuiPermissao'));
+                    return Observable.throw(new Error(error.status));
+                }
+            }));
+        }
 
     delete(id: number): Observable<Response> {
-        return this.http.delete(`${this.resourceUrl}/${id}`);
+        return this.http.delete<Response>(`${this.resourceUrl}/${id}`);
     }
 
-    private convertResponse(res: Response): ResponseWrapper {
-        const jsonResponse = res.json();
-        const result = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            result.push(this.convertItemFromServer(jsonResponse[i]));
+    private convertResponse(res: any): TipoEquipe[] {
+        const result:TipoEquipe[] = [];
+        for (let i = 0; i < res.length; i++) {
+            result.push(this.convertItemFromServer(res[i]));
         }
-        return new ResponseWrapper(res.headers, result, res.status);
+        return result;
     }
 
     private convertItemFromServer(json: any): TipoEquipe {

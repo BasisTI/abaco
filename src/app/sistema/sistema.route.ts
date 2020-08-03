@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
 
-import { SistemaComponent } from './sistema.component';
-import { SistemaDetailComponent } from './sistema-detail.component';
-import { SistemaFormComponent } from './sistema-form.component';
+import { SistemaDetailComponent } from './sistema-detail/sistema-detail.component';
+import { SistemaFormComponent } from './sistema-form/sistema-form.component';
 
-import { AuthGuard } from '@basis/angular-components';
+import { SistemaListComponent } from './sistema-list/sistema-list.component';
+import { AuthGuard } from '@nuvem/angular-base';
 
 export const sistemaRoute: Routes = [
   {
     path: 'sistema',
-    component: SistemaComponent,
+    component: SistemaListComponent,
     canActivate: [AuthGuard]
   },
   {

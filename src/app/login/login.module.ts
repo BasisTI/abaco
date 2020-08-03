@@ -1,62 +1,30 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SecurityModule, AuthService } from '@basis/angular-components';
-import { CookieService } from 'ngx-cookie-service';
-import {
-    ButtonModule,
-    InputTextModule,
-    SpinnerModule,
-    CalendarModule,
-    DropdownModule,
-    RadioButtonModule,
-    ConfirmDialogModule,
-    PasswordModule
-} from 'primeng/primeng';
-
+import { RouterModule } from '@angular/router';
+import { SecurityModule, AuthorizationService } from '@nuvem/angular-base';
+import { SharedModule } from '../shared/shared.module';
 import { LoginComponent, loginRoute, LoginService } from './';
 
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
 
 @NgModule({
     imports: [
         CommonModule,
-        HttpModule,
+        HttpClientModule,
         FormsModule,
         RouterModule.forRoot(loginRoute, { useHash: true }),
-        ButtonModule,
-        ButtonModule,
-        SpinnerModule,
-        CalendarModule,
-        DropdownModule,
-        RadioButtonModule,
-        InputTextModule,
-        ConfirmDialogModule,
-        PasswordModule,
-        SecurityModule.forRoot(),
-        TranslateModule.forChild({
-            loader: {
-              provide: TranslateLoader,
-              useFactory: (createTranslateLoader),
-              deps: [HttpClient]
-            }
-          })
+        SharedModule,
+        SecurityModule,
+        
     ],
     declarations: [
         LoginComponent
     ],
     providers: [
         LoginService,
-        AuthService,
-        CookieService
+        AuthorizationService,
+        // CookieService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
