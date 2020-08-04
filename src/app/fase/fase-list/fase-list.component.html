@@ -25,7 +25,6 @@
                             [url]="urlFaseService"
                             (buttonClick)="onClick($event)"
                             [filterOnColumn]="true"
-                            (onRowEditEvent)="editarClickEvent()"
                             #dataTable >
                             <p-column header="Nome" field="nome" [sortable]="true"></p-column>
                         </basis-datatable>
@@ -39,8 +38,8 @@
                 
                 <p-confirmDialog #dialog header="Confirmação" icon="pi pi-exclamation-triangle">
                     <p-footer>
-                        <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
-                        <button type="button" pButton icon="pi pi-check" label="Yes" (click)="cd.accept()"></button>
+                        <button type="button" pButton icon="pi pi-times" label="No" (click)="dialog.reject()"></button>
+                        <button type="button" pButton icon="pi pi-check" label="Yes" (click)="dialog.accept()"></button>
                     </p-footer>
                 </p-confirmDialog>
             </div>

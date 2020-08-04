@@ -14,9 +14,9 @@ import { SenhaService } from './senha.service';
 })
 export class SenhaFormComponent implements OnInit, OnDestroy {
 
-    private oldPassword: string;
-    private newPassword: string;
-    private newPasswordConfirm: string;
+    public oldPassword: string;
+    public newPassword: string;
+    public newPasswordConfirm: string;
     private url: string;
 
     authenticated = false;

@@ -17,7 +17,6 @@ import {
   imports: [
     CommonModule,
     HttpClientModule,
-    HttpClient,
     FormsModule,
     RouterModule.forRoot(fatorAjusteRoute, { useHash: true }),
     DatatableModule,

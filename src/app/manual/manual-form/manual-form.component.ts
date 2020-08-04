@@ -30,7 +30,7 @@ export class ManualFormComponent implements OnInit, OnDestroy {
     validaTipoDeflator;
     validaDeflator: boolean;
     private routeSub: Subscription;
-    arquivoManual: File;
+    arquivoManual;
     esforcoFases: Array<EsforcoFase>;
     showDialogPhaseEffort = false;
     showDialogEditPhaseEffort = false;
@@ -414,7 +414,6 @@ export class ManualFormComponent implements OnInit, OnDestroy {
                 (each.esforco !== undefined) ? (total = total + each.esforcoFormatado) : (total = total);
             });
         }
-
         return total;
     }
 

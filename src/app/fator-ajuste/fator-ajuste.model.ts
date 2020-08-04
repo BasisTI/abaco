@@ -1,4 +1,5 @@
 import { BaseEntity } from '../shared';
+import { Manual } from '../manual';
 
 export enum TipoFatorAjuste {
   'PERCENTUAL' = 'PERCENTUAL',
@@ -23,7 +24,7 @@ export class FatorAjuste implements BaseEntity {
     public codigo?: string,
     public tipoAjuste?: TipoFatorAjuste,
     public impacto?: ImpactoFatorAjuste,
-    public manual?: BaseEntity,
+    public manual?: Manual,
     public origem?: string,
     public artificialId?: number
   ) { }
